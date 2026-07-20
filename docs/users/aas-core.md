@@ -20,14 +20,17 @@ your project
   -> aas stack plan (preview; no skill changes)
 ```
 
-AAS MCP does not scan the repository and does not decide which skills are best. Codex or Claude uses its own project understanding and judgment. Every current catalog skill remains individually searchable, readable, selectable, and usable; missing or incomplete metadata never makes a skill ineligible. Core has no semantic policy that favors a small stack, while every stack manifest has an explicit technical maximum of 128 skills.
+AAS MCP does not scan the repository and does not decide which skills are best. Codex or Claude uses its own project understanding and judgment. Every current catalog skill remains individually searchable, readable, and available for agent selection; missing or incomplete metadata never makes a skill ineligible. Core has no semantic policy that favors a small stack, while every stack manifest has an explicit technical maximum of 128 skills.
+
+> [!IMPORTANT]
+> Structural and identity validity does not certify semantic fit, compatibility, setup correctness, operational safety, or safety to apply.
 
 ## Configure the local MCP
 
 > **Release boundary:** AAS Core landed after release 14.6.0. Use an exact Core-capable release rather than an unreviewed moving tag.
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@X.Y.Z -- aas mcp configure \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@15.1.0 -- aas mcp configure \
   --host codex \
   --scope user \
   --config /absolute/path/to/codex/config.toml \
@@ -41,6 +44,15 @@ Use `--host claude` with the appropriate absolute Claude MCP configuration path 
 ```
 
 Configuration is explicit and integrity-bound. AAS installs or reuses an exact content-addressed runtime, verifies it, and changes only its managed MCP configuration section. Restart the host if it does not reload MCP configuration automatically.
+
+## Quick path
+
+1. Run the exact-version MCP configuration command above, review its approval digest, and repeat it with `--approve <approval-digest>`.
+2. Give Codex or Claude the project outcome, target, constraints, and the selection prompt below.
+3. Let the agent search and inspect candidates, choose exact IDs, and call `compose_stack`; review the returned manifest before persisting it.
+4. Persist the selection as `aas-stack.json`, optionally with the separate evidence sidecar for an audit-enabled flow.
+5. Run `aas stack validate`, then `aas stack plan` with explicit absolute paths and integrity inputs.
+6. Review the immutable plan and stop. Apply and recovery remain experimental opt-in paths.
 
 ## Ask the agent to choose the stack
 
@@ -163,7 +175,7 @@ Stop after reviewing the plan unless you are deliberately participating in contr
 - MCP is local stdio, process-per-session, read-only, offline-capable, and contains no model credentials or telemetry.
 - Codex or Claude owns semantic selection. Different agents or project observations may reasonably produce different stacks.
 - Catalog integrity and manifest validation are deterministic; skill suitability is an agent judgment, not a Core score.
-- Core does not impose a semantic skill-count target. The technical manifest maximum is 128 skills, and every current catalog skill remains individually searchable, readable, selectable, and usable. Metadata remains visible but informational.
+- Core does not impose a semantic skill-count target. The technical manifest maximum is 128 skills, and every current catalog skill remains individually searchable, readable, and available for agent selection. Metadata remains visible but informational.
 - Evidence exports include raw `search_skills` queries; keep secrets and sensitive project content out of those queries.
 - Catalog updates and runtime changes are explicit. There is no resident daemon or implicit auto-update.
 - Skill prose is untrusted content and does not gain instruction authority by being returned through MCP.
@@ -171,6 +183,23 @@ Stop after reviewing the plan unless you are deliberately participating in contr
 ## Other ways to use the catalog
 
 Direct installs, specialized plugins, bundles, workflows, and the legacy installer remain available. These surfaces distribute or curate catalog content; AAS Core adds complete local access, durable agent-owned selection, manifest validation, and a reviewable plan.
+
+## Current preview status
+
+| Surface | Current status |
+| --- | --- |
+| Published package | Current npm release; AAS Core status is `agent-first-preview` |
+| Catalog search and inspection | Supported preview; local and read-only |
+| Agent-owned composition | Supported preview; Core validates IDs and structure, not semantic suitability |
+| Stack validation and plan preview | Supported preview; no target skill changes |
+| Workbench | Browser-local review of stack and plan artifacts |
+| Selection evidence | Exported and inspected through MCP/CLI contracts; not yet reviewed in Workbench |
+| Apply and recovery | Experimental, explicit opt-in, outside the supported safety claim |
+| Semantic suitability certification | Not provided |
+
+## Why not just search the skills directory?
+
+Direct file search can find candidate prose, but it leaves the result in the conversation. AAS Core adds verified catalog identity, explicit target binding, durable desired state, optional selection evidence, deterministic validation, immutable planning, and dedicated review surfaces. Its value is not choosing better than the coding agent; it is turning the agent's choice into reproducible, inspectable state.
 
 ## Next reads
 

@@ -86,12 +86,12 @@ assert.ok(
   "published README must not link to an AAS Core guide path excluded from the npm package",
 );
 assert.ok(
-  coreGuide.includes("--package=agentic-awesome-skills@X.Y.Z"),
-  "AAS Core onboarding must require an explicitly Core-capable release",
+  coreGuide.includes(`--package=agentic-awesome-skills@${packageJson.version}`),
+  "AAS Core onboarding must pin the exact published package version",
 );
 assert.ok(
   !coreGuide.includes("--package=agentic-awesome-skills@latest"),
-  "AAS Core onboarding must not resolve latest while the current dist-tag predates Core",
+  "AAS Core onboarding must not resolve a moving npm dist-tag",
 );
 assert.ok(
   !/^\s*--runtime-version\b/m.test(coreGuide),

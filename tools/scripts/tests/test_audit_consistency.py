@@ -71,7 +71,7 @@ class AuditConsistencyTests(unittest.TestCase):
             f"""<!-- registry-sync: version=8.4.0; skills={total_skills}; stars=26132; updated_at=2026-03-21T00:00:00+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
-> **A complete local skill catalog for coding agents—from project inspection and agent-owned selection to a reproducible, reviewable plan.**
+> **Local, agent-owned skill stacks for coding agents—from complete catalog access to a reproducible, reviewable plan.**
 
 [![GitHub stars](https://img.shields.io/badge/⭐%2026%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/stargazers)
 

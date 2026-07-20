@@ -13,7 +13,7 @@ The earlier deterministic recommendation design and goal documents are retained 
 
 ## Supported surfaces
 
-- A complete, integrity-verified local catalog in which every canonical skill is searchable, readable, selectable, and usable.
+- A complete, integrity-verified local catalog in which every canonical skill is searchable, readable, and available for agent selection.
 - Local stdio MCP tools `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, and `diff_stack`, plus `aas://skills/{id}`.
 - Minimal, schema-validated `aas-stack.json` with pinned catalog identity, targets, goals, and exact agent-selected skill IDs.
 - CLI manifest validation, immutable plan preview, and read-only diagnosis.
@@ -23,7 +23,7 @@ The earlier deterministic recommendation design and goal documents are retained 
 
 1. The coding agent owns semantic selection. It may inspect the project with its normal local capabilities, search broadly, read full skill content when useful, compare alternatives, and choose exact IDs.
 2. AAS Core does not rank, recommend, promote, demote, exclude, or abstain on skills.
-3. Catalog metadata is informational only. Missing, incomplete, cautionary, or manually reviewed metadata must never make a canonical skill unsearchable, unselectable, or unusable.
+3. Catalog metadata is informational only. Missing, incomplete, cautionary, or manually reviewed metadata must never make a canonical skill unsearchable or unavailable for agent selection.
 4. `compose_stack` validates catalog identity, target shape, goals, exact IDs, and structural limits, then returns the pinned stack shape. It does not substitute a different selection.
 5. `aas-stack.json` has no Core selection policy. User constraints can guide the agent's reasoning, but they are not an MCP eligibility filter or manifest gate.
 

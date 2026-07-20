@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Clarified the AAS Core activation path with an exact release-pinned MCP command, a concise end-to-end quick path, an explicit preview-status matrix, and a tested boundary between structural validity, semantic suitability, compatibility, and safety.
 - Made exact package/MCP version parity a mandatory maintainer release gate: after npm publishes a new AAS package, every already-configured local AAS MCP host must be updated through the approval-bound, backup-first configuration flow and verified with a real MCP handshake before the release task is complete.
 
 ## [15.1.0] - 2026-07-19 - "Agent-Owned Selection and Audit Evidence"
@@ -37,7 +38,7 @@ Start here:
 - Added an MCP session-level capability coverage contract for Codex and Claude: agents must enumerate primary project capabilities, search and compare candidates for each, cover every capability or report a catalog gap, and avoid smallest-stack optimization before `compose_stack`. Core imposes no semantic small-stack policy; each manifest retains an explicit technical maximum of 128 skills.
 - Moved semantic skill selection fully to Codex and Claude: agents inspect the project, search and read the complete local catalog, and choose exact skill IDs using their own judgment; AAS Core no longer ranks or recommends skills.
 - Replaced the recommendation workflow with read-only `compose_stack`, which validates and returns the agent-owned manifest in memory; clients or the CLI persist `aas-stack.json` for inspection, validation, and immutable plan preview.
-- Removed Core selection policy and metadata eligibility gates. Every canonical skill is searchable, readable, selectable, and usable; risk, source, setup, compatibility, review, and evidence metadata are informational only.
+- Removed Core selection policy and metadata eligibility gates. Every canonical skill is searchable, readable, and available for agent selection; risk, source, setup, compatibility, review, and evidence metadata are informational only.
 - Made `search_skills` retrieval neutral: matching results preserve stable catalog order and no longer expose relevance scores or ranking while exact-ID lookup and complete pagination remain deterministic.
 - Updated the public product narrative, host guides, Workbench-facing copy sources, package metadata, and maintainer workflow to describe the agent-owned selection boundary. Released entries below remain historical descriptions of their releases.
 

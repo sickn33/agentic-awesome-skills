@@ -88,6 +88,11 @@ The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
                 "# Getting Started with Agentic Awesome Skills (V8.3.0)\n",
                 encoding="utf-8",
             )
+            (root / "docs" / "users" / "aas-core.md").write_text(
+                "npm exec --yes --ignore-scripts --package=agentic-awesome-skills@X.Y.Z -- aas mcp configure\\\n\n"
+                "Every current catalog skill is searchable, readable, selectable, and usable.\n",
+                encoding="utf-8",
+            )
             (root / "docs" / "users" / "claude-code-skills.md").write_text(
                 "- It includes 1,273+ skills instead of a narrow single-domain starter pack.\n",
                 encoding="utf-8",
@@ -137,7 +142,9 @@ The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
             self.assertIn("1,304+ skills across development", readme)
             self.assertIn("[📚 Browse 1,304+ Skills](#browse-1304-skills)", readme)
             self.assertIn("[Browse 1,304+ Skills](#browse-1304-skills)", readme)
-            self.assertIn("Every current catalog skill remains individually searchable, readable, and selectable.", readme)
+            self.assertIn("Local, agent-owned skill stacks for coding agents", readme)
+            self.assertIn("AAS Core does not rank or recommend them", readme)
+            self.assertIn("can persist it as `aas-stack.json`", readme)
             self.assertIn("The reusable `SKILL.md` playbooks", readme)
             self.assertIn("Guide capability coverage", readme)
             self.assertIn("does not certify semantic completeness", readme)
@@ -145,6 +152,11 @@ The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
                 "# Getting Started with AAS Core\n",
                 (root / "docs" / "users" / "getting-started.md").read_text(encoding="utf-8"),
             )
+            aas_core = (root / "docs" / "users" / "aas-core.md").read_text(encoding="utf-8")
+            self.assertIn("--package=agentic-awesome-skills@8.4.0", aas_core)
+            self.assertIn("searchable, readable, and available for agent selection", aas_core)
+            self.assertNotIn("X.Y.Z", aas_core)
+            self.assertNotIn("selectable, and usable", aas_core)
             self.assertIn("1,304+ files", (root / "docs" / "users" / "gemini-cli-skills.md").read_text(encoding="utf-8"))
             self.assertIn("1,304+ specialized areas", (root / "docs" / "users" / "kiro-integration.md").read_text(encoding="utf-8"))
             self.assertIn("Total Bundles: 2", (root / "docs" / "users" / "bundles.md").read_text(encoding="utf-8"))

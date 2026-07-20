@@ -6,6 +6,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const repoRoot = path.resolve(__dirname, "../../..");
+const packageJson = JSON.parse(fs.readFileSync(path.join(repoRoot, "package.json"), "utf8"));
 
 const publicRoots = [
   "README.md",
@@ -79,6 +80,14 @@ for (const relativePath of publicFiles) {
 
 const coreGuide = fs.readFileSync(path.join(repoRoot, "docs/users/aas-core.md"), "utf8");
 const usageGuide = fs.readFileSync(path.join(repoRoot, "docs/users/usage.md"), "utf8");
+const readme = fs.readFileSync(path.join(repoRoot, "README.md"), "utf8");
+const validityBoundary = /Structural and identity validity does not certify semantic fit, compatibility, setup correctness, operational safety, or safety to apply\./;
+assert.match(coreGuide, new RegExp(`--package=agentic-awesome-skills@${packageJson.version.replaceAll(".", "\\.")}`));
+assert.doesNotMatch(coreGuide, /--package=agentic-awesome-skills@(?:X\.Y\.Z|latest)\b/);
+assert.match(coreGuide, validityBoundary);
+assert.match(readme, validityBoundary);
+assert.doesNotMatch(coreGuide, /selectable, and usable/i);
+assert.doesNotMatch(readme, /selectable, and usable/i);
 assert.match(coreGuide, /"schemaVersion"\s*:\s*2/);
 assert.match(coreGuide, /"profile"\s*:\s*\{/);
 assert.match(coreGuide, /"skills"\s*:\s*\[\s*\{\s*"id"\s*:/);
@@ -94,7 +103,7 @@ for (const guide of [coreGuide, usageGuide]) {
   assert.match(guide, /smallest\s+stack/i);
   assert.match(guide, /no semantic policy|no semantic small-stack policy/i);
   assert.match(guide, /technical maximum of 128/i);
-  assert.match(guide, /every current catalog skill[^.\n]{0,180}individually searchable, readable, (?:and )?selectable/i);
+  assert.match(guide, /every current catalog skill[^.\n]{0,180}individually searchable, readable, (?:and )?(?:selectable|available for agent selection)/i);
   assert.match(guide, /compose_stack[\s\S]{0,200}in memory/i);
   assert.match(guide, /client or (?:the )?CLI[\s\S]{0,200}persist/i);
   assert.match(guide, /export_selection_evidence/);
@@ -112,9 +121,9 @@ for (const guide of [coreGuide, usageGuide]) {
 for (const relativePath of ["README.md", "apps/web-app/public/llms.txt"]) {
   const content = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
   assert.doesNotMatch(content, /(?:no |without an? )?arbitrary (?:skill-)?count cap/i);
-  assert.match(content, /no semantic policy/i);
+  assert.match(content, /no semantic policy|does not rank or recommend/i);
   assert.match(content, /technical maximum of 128/i);
-  assert.match(content, /every current catalog skill[^.\n]{0,180}individually searchable, readable, (?:and )?selectable/i);
+  assert.match(content, /every (?:current )?catalog skill[^.\n]{0,180}(?:individually )?searchable, readable, (?:and )?(?:selectable|available for agent selection)/i);
   assert.match(content, /compose_stack[^.\n]{0,160}in memory/i);
   assert.match(content, /client or (?:the )?(?:`?aas`? )?CLI[^.\n]{0,160}persist/i);
 }
