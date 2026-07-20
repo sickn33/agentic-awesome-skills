@@ -378,7 +378,7 @@ Reject any PR that fails this:
 When cutting a new version, follow the maintainer playbook in [`docs/maintainers/release-process.md`](../docs/maintainers/release-process.md).
 
 **Release checklist (order matters):**  
-Preflight verification → Changelog → `npm run release:prepare -- X.Y.Z` → `npm run release:publish -- X.Y.Z` → npm publish (manual or via CI) → Close remaining linked issues.
+Preflight verification → Changelog → repository/plugin convergence → `npm run release:prepare -- X.Y.Z` → `npm run release:publish -- X.Y.Z` → npm publish → exact-SHA CI/CodeQL/Pages/live proof → update and handshake every configured local AAS MCP host → final no-drift reconciliation → Close remaining linked issues.
 
 ---
 
@@ -398,7 +398,7 @@ Preflight verification → Changelog → `npm run release:prepare -- X.Y.Z` → 
     ```bash
     npm run release:prepare -- X.Y.Z
     ```
-    This validates the release, aligns versioned files, writes the release notes artifact, creates the release commit on `release/vX.Y.Z`, pushes it, and opens the protected release PR. The tag is created only after that exact PR is merged.
+    This validates the release, aligns versioned files, writes the release notes artifact, creates the release commit on `release/vX.Y.Z`, pushes it, and opens the protected release PR. Alignment includes canonical registries, tracked web assets, the offline catalog, compatibility data, both marketplaces, every Codex/Claude plugin mirror, every editorial bundle, and all release-owned plugin manifests. The tag is created only after that exact PR is merged.
 4.  **Create GitHub Release** (REQUIRED):
 
     > ⚠️ **CRITICAL**: Pushing a tag (`git push --tags`) is NOT enough. You must create a **GitHub Release Object** for it to appear in the sidebar and trigger the NPM publish workflow.
@@ -412,17 +412,20 @@ Preflight verification → Changelog → `npm run release:prepare -- X.Y.Z` → 
     **Important:** The release tag must match `package.json`'s version. The [Publish to npm](workflows/publish-npm.yml) workflow runs on **Release published** and will run `npm publish`; npm rejects republishing the same version.
     Before publishing, that workflow re-runs `sync:release-state`, checks for canonical drift with `git diff --exit-code`, runs tests/docs security/web build, and performs `npm pack --dry-run --json`.
 
-    _Or create the release manually via GitHub UI > Releases > Draft a new release, then publish._
+    Manual GitHub UI publication is emergency-only and does not waive the protected-merge, identity, or full-alignment gates below.
 
 5.  **Publish to npm** (so `npx agentic-awesome-skills` works):
-    - **Option A (manual):** From repo root, with npm logged in and 2FA/token set up:
-      ```bash
-      npm publish
-      ```
-      You cannot republish the same version; always bump `package.json` before publishing.
-    - **Option B (CI):** On GitHub, create a **Release** (tag e.g. `v4.6.1`). The workflow [Publish to npm](.github/workflows/publish-npm.yml) runs on **Release published** and runs `npm publish` if the repo secret `NPM_TOKEN` is set (npm → Access Tokens → Granular token with Publish, then add as repo secret `NPM_TOKEN`).
+    - The normal path is CI: publishing the protected GitHub Release triggers [Publish to npm](.github/workflows/publish-npm.yml), which publishes the stable version to `latest` and a prerelease to `next` when `NPM_TOKEN` is configured.
+    - Manual `npm publish` is emergency-only. It must publish the exact protected tag contents with the intended dist-tag and does not waive any verification below.
 
-6.  **Close linked issue(s)**:
+6.  **Run the mandatory full-release-alignment gate**:
+    - Re-run `npm run sync:release-state`, `npm run plugin-compat:check`, and `npm run bundles:check`; require a clean, idempotent second pass.
+    - Confirm `package.json`, `package-lock.json`, generated registries and offline catalog, tracked web assets, `.agents/plugins/marketplace.json`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, and every published Codex/Claude plugin or editorial-bundle manifest are regenerated and versioned as `X.Y.Z`.
+    - Bind the local/remote `main`, tag, GitHub Release, npm version and intended dist-tag, required CI, CodeQL, and release-only Pages deployment to the exact released commit. Verify live `llms.txt`, `skills.json`, catalog/plugin routes, and the legacy bridge.
+    - Discover every existing AAS MCP entry from real local host configuration. Update each existing host with the published package's digest-bound two-pass `aas mcp configure` flow, pin `agentic-awesome-skills@X.Y.Z` and `--version X.Y.Z`, preserve a backup, restart or reconnect the client, and prove `initialize` plus `tools/list` reports `X.Y.Z`. Never create an absent host entry without separate authorization.
+    - Fetch `origin/main` again after automation settles, fast-forward local `main`, require `main...origin/main` to be `0 0`, and repeat the no-drift, public-surface, and MCP parity checks. Any mismatch or inaccessible configured host keeps the release incomplete.
+
+7.  **Close linked issue(s)**:
     - Issues that had `Closes #N` / `Fixes #N` in a merged PR are already closed.
     - For any issue that was fixed by the release but not auto-closed, close it manually and add a comment, e.g.:
       ```bash

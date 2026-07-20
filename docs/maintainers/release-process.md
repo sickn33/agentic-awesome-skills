@@ -60,7 +60,9 @@ This command:
 - checks `CHANGELOG.md` for `X.Y.Z`
 - aligns `package.json` / `package-lock.json`
 - runs the full release suite
+- explicitly proves `plugin-compat:check` and `bundles:check` after regeneration
 - refreshes release metadata in `README.md`
+- regenerates canonical registries, tracked web assets, both plugin marketplaces, every Codex/Claude mirror and editorial bundle, and every release-owned plugin manifest
 - stages canonical release files
 - creates and pushes `release/vX.Y.Z`
 - opens a release PR containing the scripted canonical release state
@@ -88,6 +90,19 @@ npm view agentic-awesome-skills dist-tags --json
 ```
 
 The workflow reruns `sync:release-state`, installs Python dependencies from `tools/requirements.txt`, refreshes tracked web assets, fails on canonical drift via `git diff --exit-code`, executes tests and docs security checks, runs the web-app coverage gate, enforces `npm audit --audit-level=high`, builds the web app, and dry-runs the npm package before publishing.
+
+8. Complete the mandatory full-release-alignment gate.
+
+A stable or prerelease version is not complete when only its tag, GitHub Release, or npm package exists. After publication:
+
+- rerun `npm run sync:release-state`, `npm run plugin-compat:check`, and `npm run bundles:check`, then require an idempotent second pass and a clean tree;
+- verify every release-owned Codex/Claude plugin manifest and Claude marketplace entry equals `X.Y.Z`, without treating nested third-party skill manifests as AAS release manifests;
+- bind local and remote `main`, the tag, GitHub Release, npm version and intended dist-tag, required CI, CodeQL, and the explicitly dispatched release-only Pages deployment to the exact released commit;
+- read back live `llms.txt`, `skills.json`, catalog/plugin routes, and the legacy redirect bridge;
+- discover every already-configured local AAS MCP host from real configuration, update each existing entry with the digest-bound two-pass `aas mcp configure` flow, pin `agentic-awesome-skills@X.Y.Z` and `--version X.Y.Z`, preserve a backup, restart or reconnect the host, and prove a real `initialize` plus `tools/list` handshake reports `X.Y.Z`;
+- fetch and fast-forward `main` again after automation settles, require `git rev-list --left-right --count main...origin/main` to return `0 0`, and repeat the no-drift, public-surface, and MCP parity checks.
+
+A release request covers updates to existing AAS MCP host entries only. Creating a previously absent host configuration still needs separate authorization. Any mismatch, inaccessible configured host, or stale public surface keeps the release incomplete.
 
 ## Canonical Sync Bot
 

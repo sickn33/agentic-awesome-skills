@@ -57,6 +57,22 @@ assert.match(
   "sync:release-state should enforce the frozen validation warning budget",
 );
 assert.match(
+  packageJson.scripts["sync:release-state"],
+  /chain/,
+  "sync:release-state should rebuild canonical release and plugin state",
+);
+assert.match(packageJson.scripts.chain, /plugin-compat:sync/);
+assert.match(packageJson.scripts.chain, /bundles:sync/);
+const releaseSuiteBlock = releaseWorkflowScript.slice(
+  releaseWorkflowScript.indexOf("function runReleaseSuite"),
+  releaseWorkflowScript.indexOf("function runReleasePreflight"),
+);
+assert.match(
+  releaseSuiteBlock,
+  /sync:release-state[\s\S]*plugin-compat:check[\s\S]*bundles:check/,
+  "every release suite should explicitly prove plugin compatibility and bundle alignment after regeneration",
+);
+assert.match(
   packageJson.scripts["sync:repo-state"],
   /sync:web-assets/,
   "sync:repo-state should refresh tracked web assets before maintainer audits",

@@ -196,6 +196,8 @@ function writeReleaseNotes(projectRoot, version, sectionContent) {
 function runReleaseSuite(projectRoot) {
   runCommand("npm", ["run", "validate:references"], projectRoot);
   runCommand("npm", ["run", "sync:release-state"], projectRoot);
+  runCommand("npm", ["run", "plugin-compat:check"], projectRoot);
+  runCommand("npm", ["run", "bundles:check"], projectRoot);
   runCommand("npm", ["run", "test"], projectRoot);
   runCommand("npm", ["run", "app:install"], projectRoot);
   runCommand("npm", ["run", "app:build"], projectRoot);
