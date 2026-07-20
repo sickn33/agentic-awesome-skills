@@ -112,6 +112,11 @@ Release only when requested.
 4. Merge that release PR through its required checks, update local `main` to equal `origin/main`, and wait for any canonical-sync PR to close.
 5. Run `npm run release:publish -- X.Y.Z`. It verifies the exact protected merge before creating or reusing the tag and GitHub Release.
 6. Wait for publishing workflows, then verify the tag/ref, GitHub Release, npm version and dist-tag, CI, Pages, CodeQL, live `llms.txt`, `skills.json`, and changed catalog routes.
+7. After npm confirms `X.Y.Z` as the published dist-tag, update every already-configured local AAS MCP host to the exact same package version before declaring the release complete.
+   - Use the published package's `aas mcp configure` two-pass flow: first preview the change, then repeat the identical command with its approval digest. Supply absolute host-config, cache, and backup paths; require a backup when replacing an existing configuration.
+   - Pin `agentic-awesome-skills@X.Y.Z` and `--version X.Y.Z`; never use `latest`, reuse an older cached runtime, or create a previously absent host configuration without explicit authorization.
+   - Verify that the managed host configuration points to a content-addressed `X.Y.Z` runtime, that the runtime package metadata reports `X.Y.Z`, and that a real MCP `initialize` plus `tools/list` handshake reports catalog package version `X.Y.Z`.
+   - Restart the host or open a fresh client session when required so the new MCP process is actually loaded. If configuration access, approval, or runtime verification is blocked, report the exact blocker and keep the maintainer task incomplete even though the package itself is already public.
 
 Never rebase a published release tag, force stale release state, reuse a failed published version, or claim npm publication from the GitHub Release alone.
 
@@ -124,7 +129,7 @@ Finish only when:
 - `main`, `origin/main`, required workflows, generated state, and public surfaces agree;
 - the source and legacy repositories have no unintended infrastructure PR, their protected branches and Actions settings remain enforced, and the live manifest identifies the source repository;
 - the user worktree is unchanged except for files the user explicitly placed in scope;
-- release proof is complete when a release was requested.
+- release proof is complete when a release was requested, including exact version parity between the published npm package and every already-configured local AAS MCP host.
 
 ## Failure Rules
 
