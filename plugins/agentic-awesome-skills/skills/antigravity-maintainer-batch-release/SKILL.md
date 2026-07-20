@@ -106,17 +106,21 @@ For AAS CLI, MCP, stack, catalog-cache, or Workbench changes:
 
 Release only when requested.
 
+Every stable or prerelease version requires full release alignment. Creating the tag, GitHub Release, or npm package is an intermediate milestone, never the completion condition.
+
 1. Include the target changelog entry in the maintainer batch PR so it is already on protected `main`; avoid a separate release-notes-only PR.
 2. From clean, current `main`, run `npm run release:preflight` and required security checks.
-3. Run `npm run release:prepare -- X.Y.Z`. This creates and pushes `release/vX.Y.Z` and opens the protected release PR.
-4. Merge that release PR through its required checks, update local `main` to equal `origin/main`, and wait for any canonical-sync PR to close.
-5. Run `npm run release:publish -- X.Y.Z`. It verifies the exact protected merge before creating or reusing the tag and GitHub Release.
-6. Wait for publishing workflows, then verify the tag/ref, GitHub Release, npm version and dist-tag, CI, Pages, CodeQL, live `llms.txt`, `skills.json`, and changed catalog routes.
-7. After npm confirms `X.Y.Z` as the published dist-tag, update every already-configured local AAS MCP host to the exact same package version before declaring the release complete.
+3. Run the release-state generator and its explicit plugin gates. Require a second no-drift pass before publication: `npm run sync:release-state`, `npm run plugin-compat:check`, and `npm run bundles:check` must leave a clean tree. Inspect `package.json`, `package-lock.json`, generated registries and the offline catalog, tracked web assets, `.agents/plugins/marketplace.json`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, and every published Codex/Claude plugin mirror and editorial-bundle manifest. Every release-owned manifest version must equal `X.Y.Z`.
+4. Run `npm run release:prepare -- X.Y.Z`. This creates and pushes `release/vX.Y.Z` and opens the protected release PR.
+5. Merge that release PR through its required checks, update local `main` to equal `origin/main`, and wait for every source, release, or canonical-sync PR in the release path to close. Re-run the release-state and plugin gates if protected `main` moved.
+6. Run `npm run release:publish -- X.Y.Z`. It verifies the exact protected merge before creating or reusing the tag and GitHub Release.
+7. Wait for publishing workflows, then bind every proof to the exact released commit: verify the tag/ref, GitHub Release, npm version and intended dist-tag, required CI, CodeQL, and the explicitly dispatched release-only Pages build. Verify live `llms.txt`, `skills.json`, catalog and plugin routes, and the legacy redirect bridge; do not accept a successful run for a different SHA.
+8. After npm confirms `X.Y.Z` as the published dist-tag, discover every already-configured local AAS MCP host from its real configuration and update each one to the exact same package version before declaring the release complete. Updating existing AAS host entries is part of the release; creating a previously absent host configuration still requires explicit authorization.
    - Use the published package's `aas mcp configure` two-pass flow: first preview the change, then repeat the identical command with its approval digest. Supply absolute host-config, cache, and backup paths; require a backup when replacing an existing configuration.
    - Pin `agentic-awesome-skills@X.Y.Z` and `--version X.Y.Z`; never use `latest`, reuse an older cached runtime, or create a previously absent host configuration without explicit authorization.
    - Verify that the managed host configuration points to a content-addressed `X.Y.Z` runtime, that the runtime package metadata reports `X.Y.Z`, and that a real MCP `initialize` plus `tools/list` handshake reports catalog package version `X.Y.Z`.
    - Restart the host or open a fresh client session when required so the new MCP process is actually loaded. If configuration access, approval, or runtime verification is blocked, report the exact blocker and keep the maintainer task incomplete even though the package itself is already public.
+9. Fetch `origin/main` again after automation settles, fast-forward the maintainer checkout, and repeat the release-state, plugin, version, public-surface, and MCP parity checks. The final generator pass must be idempotent, the tree must stay clean, and `git rev-list --left-right --count main...origin/main` must end at `0 0`.
 
 Never rebase a published release tag, force stale release state, reuse a failed published version, or claim npm publication from the GitHub Release alone.
 
@@ -126,10 +130,10 @@ Finish only when:
 
 - every in-scope PR, issue, and alert is resolved or has one exact blocker;
 - no open source or canonical-sync PR remains unintentionally;
-- `main`, `origin/main`, required workflows, generated state, and public surfaces agree;
+- for every stable or prerelease version, clean local `main`, `origin/main`, the released commit, canonical generated state, every Codex/Claude plugin mirror, bundle, manifest, marketplace, compatibility report, tag, GitHub Release, npm dist-tag, required workflow, and live public surface agree exactly;
 - the source and legacy repositories have no unintended infrastructure PR, their protected branches and Actions settings remain enforced, and the live manifest identifies the source repository;
 - the user worktree is unchanged except for files the user explicitly placed in scope;
-- release proof is complete when a release was requested, including exact version parity between the published npm package and every already-configured local AAS MCP host.
+- release proof is complete when a release was requested, including an idempotent no-drift regeneration and exact runtime parity between the published npm package and every already-configured local AAS MCP host. Any mismatch keeps the release incomplete.
 
 ## Failure Rules
 
