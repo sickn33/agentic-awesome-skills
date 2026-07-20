@@ -13,7 +13,7 @@
 - Agent selection contract: do not stop at the first few matches or optimize for the smallest stack; paginate or refine per-capability searches and compare multiple plausible skills with `get_skill` when available.
 - Coverage dimensions: explicitly evaluate architecture/runtime, languages/frameworks, domain behavior, data/storage, integrations, testing/quality, security/privacy, UX/accessibility, deployment/operations, and maintenance workflow; mark dimensions not applicable instead of silently omitting them.
 - Selection boundary: Core never ranks, recommends, excludes, or disables skills; catalog metadata is informational only.
-- Catalog access: all 1,968 current skills remain individually searchable, readable, and selectable.
+- Catalog access: every current catalog skill remains individually searchable, readable, and selectable.
 - Evidence privacy: the sidecar records raw `search_skills` queries, so catalog queries must not contain secrets or private source text.
 - Preview boundary: planning may write an explicitly requested plan artifact but does not write target state; apply and recovery are not part of the supported preview path.
 - Supported real clients include Codex CLI and Claude Code; the catalog also serves Cursor, Gemini CLI, Antigravity, and other compatible hosts.

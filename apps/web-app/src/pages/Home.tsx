@@ -173,7 +173,7 @@ export function Home(): React.ReactElement {
               <label>
                 <span className="sr-only">Sort skills</span>
                 <select aria-label="Sort skills" value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
-                  <option value="default">Recommended</option>
+                  <option value="default">Catalog order</option>
                   <option value="stars">Community saves</option>
                   <option value="newest">Newest</option>
                   <option value="az">A to Z</option>
@@ -237,7 +237,7 @@ export function Home(): React.ReactElement {
         <section className="catalog-support" aria-label="Catalog guides">
           <div className="catalog-support__intro">
             <h2>How AAS Core uses the catalog</h2>
-            <p>The local MCP and CLI choose from catalog evidence; the Workbench reviews what the agent proposed.</p>
+            <p>The coding agent chooses from catalog evidence; the local MCP validates the selection, the CLI persists and plans it, and Workbench reviews the resulting artifacts.</p>
           </div>
           <div className="catalog-support__concepts">
             {conceptCards.map((card) => (

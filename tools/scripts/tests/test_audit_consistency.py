@@ -163,6 +163,20 @@ class AuditConsistencyTests(unittest.TestCase):
 
             self.assertTrue(any("data/skills_index.json" in issue for issue in issues))
 
+    def test_local_consistency_flags_current_core_recommender_copy(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self.write_repo_state(root)
+            (root / "apps" / "web-app" / "scripts").mkdir(parents=True)
+            (root / "apps" / "web-app" / "scripts" / "prerender-routes.js").write_text(
+                "const copy = 'Discover. Recommend. Validate. Preview.';\n",
+                encoding="utf-8",
+            )
+
+            issues = audit_consistency.find_local_consistency_issues(root)
+
+            self.assertTrue(any("apps/web-app/scripts/prerender-routes.js" in issue for issue in issues))
+
     def test_local_consistency_flags_missing_manifest_fields(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

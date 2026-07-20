@@ -94,7 +94,7 @@ for (const guide of [coreGuide, usageGuide]) {
   assert.match(guide, /smallest\s+stack/i);
   assert.match(guide, /no semantic policy|no semantic small-stack policy/i);
   assert.match(guide, /technical maximum of 128/i);
-  assert.match(guide, /1,968[^.\n]{0,180}individually searchable, readable, (?:and )?selectable/i);
+  assert.match(guide, /every current catalog skill[^.\n]{0,180}individually searchable, readable, (?:and )?selectable/i);
   assert.match(guide, /compose_stack[\s\S]{0,200}in memory/i);
   assert.match(guide, /client or (?:the )?CLI[\s\S]{0,200}persist/i);
   assert.match(guide, /export_selection_evidence/);
@@ -114,9 +114,23 @@ for (const relativePath of ["README.md", "apps/web-app/public/llms.txt"]) {
   assert.doesNotMatch(content, /(?:no |without an? )?arbitrary (?:skill-)?count cap/i);
   assert.match(content, /no semantic policy/i);
   assert.match(content, /technical maximum of 128/i);
-  assert.match(content, /1,968[^.\n]{0,180}individually searchable, readable, (?:and )?selectable/i);
+  assert.match(content, /every current catalog skill[^.\n]{0,180}individually searchable, readable, (?:and )?selectable/i);
   assert.match(content, /compose_stack[^.\n]{0,160}in memory/i);
   assert.match(content, /client or (?:the )?(?:`?aas`? )?CLI[^.\n]{0,160}persist/i);
+}
+
+for (const relativePath of [
+  "apps/web-app/scripts/prerender-routes.js",
+  "apps/web-app/src/utils/seo.ts",
+  "apps/web-app/public/manifest.webmanifest",
+  "apps/web-app/public/site.webmanifest",
+]) {
+  const content = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+  assert.doesNotMatch(
+    content,
+    /\b(?:discover(?:y|ing)?,\s*)?recommend(?:ing|ation)?(?:,\s*validat|\s+and\s+stack review)/i,
+    `${relativePath} must not describe current AAS Core as a recommender`,
+  );
 }
 
 console.log(`AAS Core public documentation contract passed (${publicFiles.length} files scanned).`);

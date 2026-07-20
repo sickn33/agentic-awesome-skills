@@ -5,7 +5,7 @@
 
 **Current release: V15.1.0.** This release includes AAS Core for complete local catalog search, agent-owned selection, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
 
-Codex or Claude inspects your project, enumerates its primary capabilities, searches and compares candidates across the complete local AAS catalog, and chooses the exact skills. Core imposes no semantic policy that favors a small stack; the manifest format has an explicit technical maximum of 128 skills. All 1,968 skills in the current catalog remain individually searchable, readable, and selectable. AAS Core does not rank or recommend skills. Its read-only `compose_stack` tool validates and returns the agent-owned manifest in memory; a client or the `aas` CLI persists the reviewed stack and its optional selection-evidence sidecar.
+Codex or Claude inspects your project, enumerates its primary capabilities, searches and compares candidates across the complete local AAS catalog, and chooses the exact skills. Core imposes no semantic policy that favors a small stack; the manifest format has an explicit technical maximum of 128 skills. Every current catalog skill remains individually searchable, readable, and selectable. AAS Core does not rank or recommend skills. Its read-only `compose_stack` tool validates and returns the agent-owned manifest in memory; a client or the `aas` CLI persists the reviewed stack and its optional selection-evidence sidecar.
 
 **[Read the AAS Core preview guide →](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)**
 
@@ -21,7 +21,7 @@ Project
   -> human review (optionally in Workbench)
 ```
 
-The 1,967+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, and direct installers remain important. They are the content, curation, distribution, and compatibility layers around AAS Core—not competing primary products.
+The reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, and direct installers remain important. They are the content, curation, distribution, and compatibility layers around AAS Core—not competing primary products.
 
 This is an independent community project. It is not affiliated with, sponsored by, endorsed by, or authorized by Google. Google, Antigravity, Gemini, and related product names are referenced only to describe compatibility and install targets. The GitHub repository is canonical; the hosted catalog and browser-local Workbench are companion discovery and review surfaces, not a hosted control plane.
 
@@ -47,7 +47,7 @@ This is an independent community project. It is not affiliated with, sponsored b
 AAS Core gives the repository one product model:
 
 - **Let the agent choose.** The local MCP preserves `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, and `diff_stack`, and adds read-only `export_selection_evidence` and `inspect_selection_evidence`; Core does not rank, recommend, exclude, or hide skills.
-- **Require capability coverage.** MCP session instructions require the agent to evaluate the full project surface—from architecture, domain behavior, data and integrations through testing, security, UX, deployment, and maintenance—then search each applicable capability, compare multiple candidates, cover it with a non-redundant skill or report a catalog gap, and avoid stopping at a minimal shortlist.
+- **Guide capability coverage.** MCP session instructions require the agent to evaluate the full project surface—from architecture, domain behavior, data and integrations through testing, security, UX, deployment, and maintenance—then search each applicable capability, compare multiple candidates, cover it with a non-redundant skill or report a catalog gap, and avoid stopping at a minimal shortlist. Core records and validates the resulting selection, but it does not certify semantic completeness.
 - **Keep the chosen stack and evidence reviewable.** A client or the CLI can persist `aas-stack.json` and the separate `aas-selection-evidence.json` sidecar in an `artifact-dir`; the manifest preserves exact agent-selected IDs, while evidence records factual process trace and the agent-declared capability ledger.
 - **Validate and preview through the CLI.** `aas stack validate` checks the proposal, while `aas stack plan` produces an immutable, per-target plan without applying it.
 - **Review in Workbench.** The hosted Workbench imports and reviews stack/plan JSON in browser memory; it does not access your filesystem or install anything.

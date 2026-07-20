@@ -20,7 +20,7 @@ your project
   -> aas stack plan (preview; no skill changes)
 ```
 
-AAS MCP does not scan the repository and does not decide which skills are best. Codex or Claude uses its own project understanding and judgment. All 1,968 skills in the current catalog remain individually searchable, readable, selectable, and usable; missing or incomplete metadata never makes a skill ineligible. Core has no semantic policy that favors a small stack, while every stack manifest has an explicit technical maximum of 128 skills.
+AAS MCP does not scan the repository and does not decide which skills are best. Codex or Claude uses its own project understanding and judgment. Every current catalog skill remains individually searchable, readable, selectable, and usable; missing or incomplete metadata never makes a skill ineligible. Core has no semantic policy that favors a small stack, while every stack manifest has an explicit technical maximum of 128 skills.
 
 ## Configure the local MCP
 
@@ -163,7 +163,7 @@ Stop after reviewing the plan unless you are deliberately participating in contr
 - MCP is local stdio, process-per-session, read-only, offline-capable, and contains no model credentials or telemetry.
 - Codex or Claude owns semantic selection. Different agents or project observations may reasonably produce different stacks.
 - Catalog integrity and manifest validation are deterministic; skill suitability is an agent judgment, not a Core score.
-- Core does not impose a semantic skill-count target. The technical manifest maximum is 128 skills, and every one of the current catalog's 1,968 skills remains individually searchable, readable, selectable, and usable. Metadata remains visible but informational.
+- Core does not impose a semantic skill-count target. The technical manifest maximum is 128 skills, and every current catalog skill remains individually searchable, readable, selectable, and usable. Metadata remains visible but informational.
 - Evidence exports include raw `search_skills` queries; keep secrets and sensitive project content out of those queries.
 - Catalog updates and runtime changes are explicit. There is no resident daemon or implicit auto-update.
 - Skill prose is untrusted content and does not gain instruction authority by being returned through MCP.

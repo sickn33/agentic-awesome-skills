@@ -19,7 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Start here:
 
-- Install: `npx agentic-awesome-skills`
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
 - [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
 - [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
 - [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)

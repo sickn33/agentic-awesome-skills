@@ -71,6 +71,18 @@ README_TOC_BROWSE_RE = re.compile(
     r"^- \[Browse \d[\d,]*\+ Skills\]\(#browse-\d+-skills\)$",
     re.MULTILINE,
 )
+README_AGENT_SELECTION_PARAGRAPH_RE = re.compile(
+    r"^Codex or Claude inspects your project, enumerates its primary capabilities, searches and compares candidates across the complete local AAS catalog, and chooses the exact skills\..*$",
+    re.MULTILINE,
+)
+README_SUPPORTING_PLAYBOOKS_RE = re.compile(
+    r"^The (?:\d[\d,]*\+ )?reusable `SKILL\.md` playbooks, specialized plugins, bundles, workflows, and direct installers remain important\..*$",
+    re.MULTILINE,
+)
+README_CAPABILITY_COVERAGE_RE = re.compile(
+    r"^- \*\*(?:Require|Guide) capability coverage\.\*\* MCP session instructions require the agent to evaluate the full project surface.*$",
+    re.MULTILINE,
+)
 GETTING_STARTED_TITLE_RE = re.compile(
     r"^# Getting Started with (?:Agentic Awesome Skills \(V[\d.]+\)|AAS Core)$", re.MULTILINE
 )
@@ -169,6 +181,37 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
             ),
         ),
         (
+            README_AGENT_SELECTION_PARAGRAPH_RE,
+            (
+                "Codex or Claude inspects your project, enumerates its primary capabilities, searches and compares "
+                "candidates across the complete local AAS catalog, and chooses the exact skills. Core imposes no "
+                "semantic policy that favors a small stack; the manifest format has an explicit technical maximum "
+                "of 128 skills. Every current catalog skill remains individually searchable, readable, and "
+                "selectable. AAS Core does not rank or recommend skills. Its read-only `compose_stack` tool "
+                "validates and returns the agent-owned manifest in memory; a client or the `aas` CLI persists "
+                "the reviewed stack and its optional selection-evidence sidecar."
+            ),
+        ),
+        (
+            README_SUPPORTING_PLAYBOOKS_RE,
+            (
+                "The reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, and direct installers "
+                "remain important. They are the content, curation, distribution, and compatibility layers around "
+                "AAS Core—not competing primary products."
+            ),
+        ),
+        (
+            README_CAPABILITY_COVERAGE_RE,
+            (
+                "- **Guide capability coverage.** MCP session instructions require the agent to evaluate the full "
+                "project surface—from architecture, domain behavior, data and integrations through testing, "
+                "security, UX, deployment, and maintenance—then search each applicable capability, compare "
+                "multiple candidates, cover it with a non-redundant skill or report a catalog gap, and avoid "
+                "stopping at a minimal shortlist. Core records and validates the resulting selection, but it "
+                "does not certify semantic completeness."
+            ),
+        ),
+        (
             README_BROAD_COVERAGE_RE,
             (
                 f"- **Broad coverage with real utility**: {metadata['total_skills_label']} skills across "
@@ -234,6 +277,10 @@ def sync_llms_text(content: str, metadata: dict) -> str:
             (r"Skill count: \d[\d,]*\+\.", f"Skill count: {skill_label}."),
             (r"\d[\d,]*\+ reusable SKILL\.md playbooks", f"{skill_label} reusable SKILL.md playbooks"),
             (r"\d[\d,]*\+ skill catalog", f"{skill_label} skill catalog"),
+            (
+                r"Catalog access: (?:all \d[\d,]* current skills|every current catalog skill) remain individually searchable, readable, and selectable\.",
+                "Catalog access: every current catalog skill remains individually searchable, readable, and selectable.",
+            ),
         ],
     )
 

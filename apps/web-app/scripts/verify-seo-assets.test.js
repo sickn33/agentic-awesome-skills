@@ -703,7 +703,7 @@ describe('seo assets verification helpers', () => {
       <html>
         <head>
           <title>AAS Core Preview | Agent-first stacks backed by 1,678+ skills</title>
-          <meta name="description" content="Use AAS Core preview to recommend and plan exact stacks backed by 1,678+ cataloged skills." />
+          <meta name="description" content="Use AAS Core preview for neutral catalog retrieval and plan preview backed by 1,678+ cataloged skills." />
           <meta property="og:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
           <meta property="og:description" content="Use AAS Core preview with the supporting catalog." />
           <meta name="twitter:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
@@ -729,7 +729,7 @@ describe('seo assets verification helpers', () => {
       <html>
         <head>
           <title>AAS Core Preview | Agent-first stacks backed by 1,678+ skills</title>
-          <meta name="description" content="Use AAS Core preview to recommend and plan exact stacks backed by 1,678+ cataloged skills." />
+          <meta name="description" content="Use AAS Core preview for neutral catalog retrieval and plan preview backed by 1,678+ cataloged skills." />
           <meta property="og:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
           <meta property="og:description" content="Use AAS Core preview with the supporting catalog." />
           <meta name="twitter:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
@@ -755,7 +755,7 @@ describe('seo assets verification helpers', () => {
       <html>
         <head>
           <title>AAS Core Preview | Agent-first stacks backed by 1,678+ skills</title>
-          <meta name="description" content="Use AAS Core preview to recommend and plan exact stacks backed by 1,678+ cataloged skills." />
+          <meta name="description" content="Use AAS Core preview for neutral catalog retrieval and plan preview backed by 1,678+ cataloged skills." />
           <meta property="og:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
           <meta property="og:description" content="Use AAS Core preview with the supporting catalog." />
           <meta name="twitter:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
