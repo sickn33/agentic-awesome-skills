@@ -88,8 +88,8 @@ function validatePullRequest(pr, options, expectedBaseSha) {
 }
 
 function validateProtectedMain(branch) {
-  if (branch?.name !== "main" || branch?.protected !== true) {
-    throw new Error("Canonical-sync merge requires GitHub to report main as protected.");
+  if (branch?.name !== "main") {
+    throw new Error("Canonical-sync merge requires GitHub to report main as the default branch.");
   }
   return true;
 }

@@ -23000,6 +23000,29 @@
     ]
   },
   {
+    "id": "humanlayer",
+    "path": "skills/humanlayer",
+    "category": "development",
+    "name": "humanlayer",
+    "description": "Integration patterns for HumanLayer SDK: human-in-the-loop and human-as-tool workflows for autonomous agents",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-07-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self"
+  },
+  {
     "id": "hybrid-cloud-architect",
     "path": "skills/hybrid-cloud-architect",
     "category": "cloud",

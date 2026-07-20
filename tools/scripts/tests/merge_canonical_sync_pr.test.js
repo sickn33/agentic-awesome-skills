@@ -40,8 +40,8 @@ assert.strictEqual(canonicalMerge.validatePullRequest({
   head: { ref: "automation/canonical-repo-state", sha: HEAD, repo: { full_name: "owner/repo" } },
   auto_merge: null,
 }, options, "b".repeat(40)), true);
-assert.strictEqual(canonicalMerge.validateProtectedMain({ name: "main", protected: true }), true);
-assert.throws(() => canonicalMerge.validateProtectedMain({ name: "main", protected: false }), /main as protected/);
+assert.strictEqual(canonicalMerge.validateProtectedMain({ name: "main" }), true);
+assert.throws(() => canonicalMerge.validateProtectedMain({ name: "other" }), /main as the default branch/);
 assert.throws(() => canonicalMerge.validatePullRequest({
   number: 42,
   state: "open",

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-15T17:16:56.000Z",
-  "total": 1965,
+  "total": 1966,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -28108,6 +28108,29 @@
         "text"
       ],
       "path": "skills/humanize-chinese/SKILL.md"
+    },
+    {
+      "id": "humanlayer",
+      "canonical_id": "humanlayer",
+      "name": "humanlayer",
+      "description": "Integration patterns for HumanLayer SDK: human-in-the-loop and human-as-tool workflows for autonomous agents",
+      "category": "development",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "humanlayer"
+      ],
+      "triggers": [
+        "humanlayer",
+        "integration",
+        "sdk",
+        "human",
+        "loop",
+        "autonomous",
+        "agents"
+      ],
+      "path": "skills/humanlayer/SKILL.md"
     },
     {
       "id": "hybrid-cloud-architect",

@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-15T17:16:56.000Z
 
-Total skills: 1965
+Total skills: 1966
 
 ## agent-behavior (5)
 
@@ -999,7 +999,7 @@ Total skills: 1965
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (173)
+## development (174)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1103,6 +1103,7 @@ Total skills: 1965
 | `hig-platforms` | Apple Human Interface Guidelines for platform-specific design. | unknown | community | hig, platforms | hig, platforms, apple, human, interface, guidelines, platform, specific |
 | `hig-project-context` | Create or update a shared Apple design context document that other HIG skills use to tailor guidance. | unknown | community | hig | hig, context, update, shared, apple, document, other, skills, tailor, guidance |
 | `hig-technologies` | Check for .claude/apple-design-context.md before asking questions. Use existing context and only ask for information not already covered. | safe | community | hig, technologies | hig, technologies, check, claude, apple, context, md, before, asking, questions, existing, ask |
+| `humanlayer` | Integration patterns for HumanLayer SDK: human-in-the-loop and human-as-tool workflows for autonomous agents | safe | self | humanlayer | humanlayer, integration, sdk, human, loop, autonomous, agents |
 | `i18n-localization` | Internationalization and localization patterns. Detecting hardcoded strings, managing translations, locale files, RTL support. | safe | community | i18n, localization | i18n, localization, internationalization, detecting, hardcoded, strings, managing, translations, locale, files, rtl |
 | `improve-codebase-architecture` | Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick. | safe | mattpocock/skills | engineering, workflow, coding-agents | engineering, workflow, coding-agents, improve, codebase, architecture, scan, deepening, opportunities, present, them, visual |
 | `javascript-mastery` | 33+ essential JavaScript concepts every developer should know, inspired by [33-js-concepts](https://github.com/leonardomso/33-js-concepts). | unknown | community | javascript, mastery | javascript, mastery, 33, essential, concepts, every, developer, should, know, inspired, js, https |

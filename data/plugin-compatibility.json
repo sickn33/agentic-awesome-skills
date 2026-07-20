@@ -18686,6 +18686,25 @@
       "runtime_files": []
     },
     {
+      "id": "humanlayer",
+      "path": "skills/humanlayer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "hybrid-cloud-architect",
       "path": "skills/hybrid-cloud-architect",
       "targets": {
@@ -37762,10 +37781,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1965,
+    "total_skills": 1966,
     "supported": {
-      "codex": 1891,
-      "claude": 1913
+      "codex": 1892,
+      "claude": 1914
     },
     "blocked": {
       "codex": 74,
