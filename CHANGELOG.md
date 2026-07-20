@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Made exact package/MCP version parity a mandatory maintainer release gate: after npm publishes a new AAS package, every already-configured local AAS MCP host must be updated through the approval-bound, backup-first configuration flow and verified with a real MCP handshake before the release task is complete.
+
 ## [15.1.0] - 2026-07-19 - "Agent-Owned Selection and Audit Evidence"
 
 > AAS Core now leaves semantic skill selection to the coding agent, validates the exact chosen stack, and emits durable evidence that can be reviewed without exposing project content.

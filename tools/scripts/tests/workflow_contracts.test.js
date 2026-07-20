@@ -76,6 +76,14 @@ for (const instructions of [agentInstructions, maintenanceGuide]) {
 assert.doesNotMatch(agentInstructions, /review:skills:local|local-skill-reviewer-policy/);
 assert.doesNotMatch(maintenanceGuide, /review:skills:local|local-skill-reviewer-policy/);
 
+const maintainerSkill = fs.readFileSync(
+  path.join(repositoryRoot, "skills", "antigravity-maintainer-batch-release", "SKILL.md"),
+  "utf8",
+);
+assert.match(maintainerSkill, /update every already-configured local AAS MCP host to the exact same package version/);
+assert.match(maintainerSkill, /Pin `agentic-awesome-skills@X\.Y\.Z` and `--version X\.Y\.Z`; never use `latest`/);
+assert.match(maintainerSkill, /real MCP `initialize` plus `tools\/list` handshake reports catalog package version `X\.Y\.Z`/);
+
 const publishWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "publish-npm.yml"),
   "utf8",
