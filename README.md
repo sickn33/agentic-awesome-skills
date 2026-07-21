@@ -1,4 +1,4 @@
-<!-- registry-sync: version=15.2.0; skills=1987; stars=43679; updated_at=2026-07-21T21:15:50+00:00 -->
+<!-- registry-sync: version=15.2.0; skills=1987; stars=43679; updated_at=2026-07-21T21:34:22+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **Local, agent-owned skill stacks for coding agents—from complete catalog access to a reproducible, reviewable plan.**
