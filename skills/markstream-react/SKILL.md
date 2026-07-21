@@ -37,6 +37,32 @@ Before changing dependencies or source files, inspect the existing package manag
 7. Prefer `streamingComponents` for parser-backed tags and `htmlComponents` for sanitized props. Use scoped registry overrides for built-in nodes.
 8. Keep `htmlPolicy="safe"` and Mermaid strict; validate client, server, and incremental paths.
 
+## Example
+
+```tsx
+import MarkdownRender from 'markstream-react'
+import 'markstream-react/index.css'
+
+export function StreamingAnswer({
+  content,
+  isDone,
+}: {
+  content: string
+  isDone: boolean
+}) {
+  return (
+    <MarkdownRender
+      content={content}
+      final={isDone}
+      fade={isDone}
+      typewriter={!isDone}
+      smoothStreaming={isDone ? false : 'auto'}
+      htmlPolicy="safe"
+    />
+  )
+}
+```
+
 ## Limitations
 
 - The package is beta and requires React 18+.

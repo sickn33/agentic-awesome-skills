@@ -36,6 +36,29 @@ Before changing dependencies or source files, inspect the existing package manag
 6. Keep `content` with smooth streaming for chat; set `final` and disable pacing/cursor for completed history.
 7. Keep HTML safe and Mermaid strict; validate the actual legacy build.
 
+## Example
+
+```vue
+<script>
+import MarkdownRender from 'markstream-vue2'
+// Legacy Webpack may not resolve the package CSS export map.
+import 'markstream-vue2/dist/index.css'
+
+export default {
+  components: { MarkdownRender },
+  data: () => ({ content: '# Answer', done: false }),
+}
+</script>
+
+<template>
+  <MarkdownRender
+    :content="content"
+    :final="done"
+    :fade="false"
+  />
+</template>
+```
+
 ## Limitations
 
 - CDN workers require network access and compatible content-security policy.

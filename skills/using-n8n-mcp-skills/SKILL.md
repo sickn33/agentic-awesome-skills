@@ -173,6 +173,19 @@ closes the gap where a tool's full description isn't loaded until first use.
 These are opinionated best practices, not laws. Disagree with a call? It's all markdown —
 edit the skill.
 
+## Example
+
+```yaml
+request: Build a webhook that validates input, calls an API, and returns structured errors.
+specialists: [n8n-workflow-patterns, n8n-node-configuration, n8n-error-handling]
+sequence:
+  - inspect the target instance and live node schemas
+  - build and validate the graph
+  - preview side effects and obtain approval
+  - write changes, fetch the saved workflow with n8n_get_workflow, and revalidate
+  - activate and test only after approval
+```
+
 ## Limitations
 
 - The router describes a moving n8n MCP surface; live tool schemas and the target instance override stale examples.

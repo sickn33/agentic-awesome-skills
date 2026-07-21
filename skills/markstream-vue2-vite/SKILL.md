@@ -36,6 +36,28 @@ Before changing dependencies or source files, inspect the existing package manag
 6. Use `nodes` only for externally owned parsing. Keep HTML safe and Mermaid strict.
 7. Validate the Vite build and worker loading path.
 
+## Example
+
+```vue
+<script>
+import MarkdownRender from 'markstream-vue2'
+import 'markstream-vue2/index.css'
+
+export default {
+  components: { MarkdownRender },
+  props: { content: String, done: Boolean },
+}
+</script>
+
+<template>
+  <MarkdownRender
+    :content="content"
+    :final="done"
+    :fade="done"
+  />
+</template>
+```
+
 ## Limitations
 
 - Vite worker syntax is not portable to Vue CLI/Webpack 4.

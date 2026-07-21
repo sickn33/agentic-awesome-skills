@@ -37,6 +37,36 @@ Before changing dependencies or source files, inspect the existing package manag
 7. Preserve safe HTML and strict Mermaid defaults; scope and document any trusted legacy exception.
 8. Run relevant builds and behavior tests. Report mappings, intentional differences, and unresolved review.
 
+## Example
+
+```tsx
+// Before:
+// import ReactMarkdown from 'react-markdown'
+// return <ReactMarkdown>{markdown}</ReactMarkdown>
+
+import MarkdownRender from 'markstream-react'
+import 'markstream-react/index.css'
+
+export function AssistantAnswer({
+  markdown,
+  isDone,
+}: {
+  markdown: string
+  isDone: boolean
+}) {
+  return (
+    <MarkdownRender
+      content={markdown}
+      final={isDone}
+      fade={isDone}
+      typewriter={!isDone}
+      smoothStreaming={isDone ? false : 'auto'}
+      htmlPolicy="safe"
+    />
+  )
+}
+```
+
 ## Limitations
 
 - Markstream cannot reproduce every remark, rehype, or markdown-it plugin automatically.

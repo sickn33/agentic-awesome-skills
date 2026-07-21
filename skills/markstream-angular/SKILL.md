@@ -37,6 +37,34 @@ Before changing dependencies or source files, inspect the existing package manag
 7. Keep `[htmlPolicy]="'safe'"` and Mermaid strict mode unless a narrowly scoped trusted legacy surface requires otherwise.
 8. Validate with the smallest Angular build, typecheck, or dev command.
 
+## Example
+
+```ts
+import { Component, signal } from '@angular/core'
+import { MarkstreamAngularComponent } from 'markstream-angular'
+import 'markstream-angular/index.css'
+
+@Component({
+  selector: 'app-answer',
+  standalone: true,
+  imports: [MarkstreamAngularComponent],
+  template: `
+    <markstream-angular
+      [content]="markdown()"
+      [final]="done()"
+      [fade]="done()"
+      [typewriter]="!done()"
+      [smoothStreaming]="done() ? false : 'auto'"
+      [htmlPolicy]="'safe'"
+    />
+  `,
+})
+export class AnswerComponent {
+  markdown = signal('# Streaming answer')
+  done = signal(false)
+}
+```
+
 ## Limitations
 
 - Requires Angular 20+ and an alpha package.

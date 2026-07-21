@@ -37,6 +37,26 @@ Before changing dependencies or source files, inspect the existing package manag
 7. Prefer renderer-local `customComponents`; use scoped registration only when sharing is intentional.
 8. Keep browser-only workers behind SvelteKit client boundaries; validate with `svelte-check`, build, or e2e.
 
+## Example
+
+```svelte
+<script lang="ts">
+  import MarkdownRender from 'markstream-svelte'
+  import 'markstream-svelte/index.css'
+
+  let { content, isDone }: { content: string; isDone: boolean } = $props()
+</script>
+
+<MarkdownRender
+  {content}
+  final={isDone}
+  fade={isDone}
+  typewriter={!isDone}
+  smoothStreaming={isDone ? false : 'auto'}
+  htmlPolicy="safe"
+/>
+```
+
 ## Limitations
 
 - Svelte 4 is unsupported and the package is beta.

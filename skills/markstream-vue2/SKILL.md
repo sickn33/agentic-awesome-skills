@@ -36,6 +36,29 @@ Before changing dependencies or source files, inspect the existing package manag
 6. Use `nodes` only when another layer owns parsing. Use scoped mappings for overrides.
 7. Keep HTML safe and Mermaid strict; validate with the smallest build or dev command.
 
+## Example
+
+```vue
+<script>
+import MarkdownRender from 'markstream-vue2'
+import 'markstream-vue2/index.css'
+
+export default {
+  components: { MarkdownRender },
+  props: { content: String, done: Boolean },
+}
+</script>
+
+<template>
+  <MarkdownRender
+    :content="content"
+    :final="done"
+    :fade="done"
+    :typewriter="!done"
+  />
+</template>
+```
+
 ## Limitations
 
 - Vue 2.6 and 2.7 have different Composition API requirements.

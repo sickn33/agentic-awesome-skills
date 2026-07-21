@@ -37,6 +37,29 @@ Before changing dependencies or source files, inspect the existing package manag
 7. Use scoped component registration and preserve safe HTML and Mermaid strict mode.
 8. Validate the smallest build/typecheck plus one incremental stream and one long-message case.
 
+## Example
+
+```vue
+<script setup lang="ts">
+import MarkdownRender from 'markstream-vue'
+import 'markstream-vue/index.css'
+
+defineProps<{ content: string; isDone: boolean }>()
+</script>
+
+<template>
+  <MarkdownRender
+    mode="chat"
+    :content="content"
+    :final="isDone"
+    :fade="isDone"
+    :typewriter="!isDone"
+    :smooth-streaming="isDone ? false : 'auto'"
+    html-policy="safe"
+  />
+</template>
+```
+
 ## Limitations
 
 - Optional peers add bundle and browser-runtime cost.

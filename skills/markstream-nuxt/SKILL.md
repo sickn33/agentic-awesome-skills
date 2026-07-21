@@ -37,6 +37,29 @@ Before changing dependencies or source files, inspect the existing package manag
 7. Keep HTML safe and Mermaid strict. Put optional code, diagram, and worker runtimes behind client boundaries.
 8. Validate build/typecheck, hydration, and one incremental client update.
 
+## Example
+
+```vue
+<script setup lang="ts">
+import MarkdownRender from 'markstream-vue'
+import 'markstream-vue/index.css'
+
+defineProps<{ markdown: string; done: boolean }>()
+</script>
+
+<template>
+  <MarkdownRender
+    mode="chat"
+    :content="markdown"
+    :final="done"
+    :fade="done"
+    :typewriter="!done"
+    :smooth-streaming="done ? false : 'auto'"
+    html-policy="safe"
+  />
+</template>
+```
+
 ## Limitations
 
 - Browser-only peers cannot run during SSR.

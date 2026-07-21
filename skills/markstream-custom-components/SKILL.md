@@ -36,6 +36,33 @@ Before changing dependencies or source files, inspect the existing package manag
 6. Preserve node/loading props, identity keys, scope IDs, theme state, and preview-height estimates for async diagrams.
 7. Remove temporary scoped registrations on cleanup and validate repeated and nested tags.
 
+## Example
+
+```tsx
+import MarkdownRender, {
+  type NodeComponentProps,
+  setCustomComponents,
+} from 'markstream-react'
+import 'markstream-react/index.css'
+
+function ThinkingNode({ node }: NodeComponentProps<any>) {
+  return <details><summary>Thinking</summary>{node.content}</details>
+}
+
+setCustomComponents('assistant-panel', { thinking: ThinkingNode })
+
+export function Answer({ markdown }: { markdown: string }) {
+  return (
+    <MarkdownRender
+      content={markdown}
+      customId="assistant-panel"
+      customHtmlTags={['thinking']}
+      htmlPolicy="safe"
+    />
+  )
+}
+```
+
 ## Limitations
 
 - Component overrides cannot reproduce arbitrary remark/rehype transforms.
