@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.2.0] - 2026-07-21 - "Credited Repository Skill Expansion"
+
 ### Added
 
 - Added 18 source-verified skills from credited repositories: ten official Markstream framework and migration skills, seven n8n workflow-specialist skills, and one Hugging Face cloud-discovery skill.
