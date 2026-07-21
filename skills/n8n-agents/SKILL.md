@@ -72,22 +72,22 @@ A sub-node connects FROM itself TO the agent. In workflow JSON the connection li
 
 Multiple tools all connect into the same `ai_tool` index 0 — they stack, they don't fan into separate indices. With `n8n_update_partial_workflow` you wire each with an `addConnection` op using `sourceOutput: "ai_tool"`. The agent puts its final answer in **`$json.output`** (not `.text`, not `.response`) — downstream nodes read `{{ $json.output }}`.
 
-See **EXAMPLES.md** for a complete stateless agent-core node-object snippet.
+See **references/EXAMPLES.md** for a complete stateless agent-core node-object snippet.
 
 ---
 
 ## Two non-negotiables
 
-1. **Tool names and descriptions ARE part of the prompt.** The model picks a tool by reading its name and description — nothing else. A tool named `tool1` with an empty description is invisible to the model: it skips it, mis-selects it, or hallucinates parameters. There's usually no error — just an agent that "won't use my tool". Treat both like API design. → **TOOLS.md**
-2. **Structured output must parse AND autoFix.** An `outputParserStructured` with `autoFix: true` and a **coding-capable fixer model** is the production pattern. Without autoFix, one malformed JSON response halts the whole workflow. → **STRUCTURED_OUTPUT.md**
+1. **Tool names and descriptions ARE part of the prompt.** The model picks a tool by reading its name and description — nothing else. A tool named `tool1` with an empty description is invisible to the model: it skips it, mis-selects it, or hallucinates parameters. There's usually no error — just an agent that "won't use my tool". Treat both like API design. → **references/TOOLS.md**
+2. **Structured output must parse AND autoFix.** An `outputParserStructured` with `autoFix: true` and a **coding-capable fixer model** is the production pattern. Without autoFix, one malformed JSON response halts the whole workflow. → **references/STRUCTURED_OUTPUT.md**
 
 ---
 
 ## Strong defaults
 
-- **Per-tool usage goes in the tool description, not the system prompt.** Anything about *how to call this specific tool* belongs with the tool, so it travels across agents and keeps the system prompt focused. → **SYSTEM_PROMPT.md**
-- **Sub-workflow tools (`.toolWorkflow`) for anything multi-step.** Any workflow becomes a tool with typed `$fromAI()` inputs, and composes with branching, error handling, and reuse. Default here when in doubt. → **SUBWORKFLOW_AS_TOOL.md** and **n8n-subworkflows**.
-- **Wrap tools with user-visible side effects in human review.** Sends, payments, refunds, account changes get gated behind an approval node so a human signs off before the tool fires. → **HUMAN_REVIEW.md**
+- **Per-tool usage goes in the tool description, not the system prompt.** Anything about *how to call this specific tool* belongs with the tool, so it travels across agents and keeps the system prompt focused. → **references/SYSTEM_PROMPT.md**
+- **Sub-workflow tools (`.toolWorkflow`) for anything multi-step.** Any workflow becomes a tool with typed `$fromAI()` inputs, and composes with branching, error handling, and reuse. Default here when in doubt. → **references/SUBWORKFLOW_AS_TOOL.md** and **n8n-subworkflows**.
+- **Wrap tools with user-visible side effects in human review.** Sends, payments, refunds, account changes get gated behind an approval node so a human signs off before the tool fires. → **references/HUMAN_REVIEW.md**
 - **Raise `maxIterations`.** The default tool-call cap is **low** (single digits on most versions) — fine for a one-tool agent, far too low for a multi-tool agent that chains several calls per turn. It surfaces as "max iterations reached" or empty output. Set `options.maxIterations` to a realistic ceiling (15 for a focused sub-agent, 50-200 for a broad orchestrator).
 - **Put the current date in the system prompt** via `{{ $now }}` (or `{{ $now.format('DDDD') }}`). A hardcoded date is stale immediately.
 
@@ -119,7 +119,7 @@ Tool parameters the agent should decide are wrapped in `$fromAI()`. It is a **re
 - **type** (optional) — `'string'` (default), `'number'`, `'boolean'`, `'json'`. A wrong-typed value fails the call.
 - **defaultValue** (optional) — used when the model omits it.
 
-`$fromAI()` carries JSON only — it **cannot carry binary** (no base64, no file bytes). And not every parameter has to be `$fromAI`: plumb identity, authority limits, and correlation IDs (`userId`, refund caps, `sessionId`) deterministically from workflow context so the agent can't get them wrong or even see them. → **TOOLS.md** for the full anatomy and the "give the agent a button, not a steering wheel" pattern.
+`$fromAI()` carries JSON only — it **cannot carry binary** (no base64, no file bytes). And not every parameter has to be `$fromAI`: plumb identity, authority limits, and correlation IDs (`userId`, refund caps, `sessionId`) deterministically from workflow context so the agent can't get them wrong or even see them. → **references/TOOLS.md** for the full anatomy and the "give the agent a button, not a steering wheel" pattern.
 
 ---
 
@@ -134,7 +134,7 @@ Tool parameters the agent should decide are wrapped in `$fromAI()`. It is a **re
 | Universal context (current date via `$now`, user role) | Tool-specific gotchas (rate limits, edge cases) |
 | Inter-tool flow ("after generating, always display") | Tool-specific input transformations |
 
-Why split it: a well-described tool works in **any** agent that drops it in, tool details only "load" when the model considers that tool (token efficiency), and you update one tool description instead of a paragraph buried in a 5000-token prompt. → **SYSTEM_PROMPT.md**
+Why split it: a well-described tool works in **any** agent that drops it in, tool details only "load" when the model considers that tool (token efficiency), and you update one tool description instead of a paragraph buried in a 5000-token prompt. → **references/SYSTEM_PROMPT.md**
 
 ---
 
@@ -145,7 +145,7 @@ Add an `outputParserStructured` sub-node (wired `ai_outputParser`) when downstre
 1. **Use `schemaType: 'manual'` with a real JSON Schema, not `jsonSchemaExample`.** An example can't express required-vs-optional, enums, numeric ranges, or array constraints — you outgrow it the first time the shape gets non-trivial. Reach for `fromJson` + an example only for throwaway shapes.
 2. **`autoFix: true` with a coding-capable fixer model.** Wire a *second* model into the parser's `ai_languageModel` slot. Reconciling broken JSON against a schema is a coding task — a weak fixer just produces another malformed retry and burns tokens.
 
-→ **STRUCTURED_OUTPUT.md** for the schema patterns, the load-bearing "DO NOT wrap in markdown" retry line, and the parse-failure cookbook.
+→ **references/STRUCTURED_OUTPUT.md** for the schema patterns, the load-bearing "DO NOT wrap in markdown" retry line, and the parse-failure cookbook.
 
 ---
 
@@ -156,7 +156,7 @@ Memory is a sub-node (`ai_memory`). Without it, every call is stateless — corr
 - **`memoryBufferWindow`** — keeps the last N exchanges per key and persists across executions via n8n's store. The default for chat. **`contextWindowLength` defaults to 5, which is very low** — 50 is a saner starting point. Messages past the window are gone entirely.
 - **`memoryPostgresChat` / `memoryRedisChat`** — only when memory must be read *outside* the agent (your own UI, analytics, cross-system). Not needed just to survive restarts; BufferWindow already does that.
 
-**Plumb a stable key from the trigger to memory consistently.** Chat triggers fill `sessionId` automatically; for other surfaces derive one (Slack `thread_ts`, a webhook conversation ID). Never hardcode `sessionId: 'default'` and never put `sessionId` behind `$fromAI` (the model will fabricate a UUID). → **MEMORY.md**
+**Plumb a stable key from the trigger to memory consistently.** Chat triggers fill `sessionId` automatically; for other surfaces derive one (Slack `thread_ts`, a webhook conversation ID). Never hardcode `sessionId: 'default'` and never put `sessionId` behind `$fromAI` (the model will fabricate a UUID). → **references/MEMORY.md**
 
 ---
 
@@ -180,7 +180,7 @@ When a tool's effect needs human sign-off before execution (sends, payments, ref
 
 Whether sign-off is needed is a product/policy call — **surface the question to the user**, recommend based on blast radius, and let them decide.
 
-**The critical rule: show the actual parameters the wrapped tool will receive.** Use the literal `{{ $tool.parameters.<name> }}` in the approval message, never a `$fromAI()` paraphrase — otherwise the human approves text the model made up, not the call about to fire. → **HUMAN_REVIEW.md**
+**The critical rule: show the actual parameters the wrapped tool will receive.** Use the literal `{{ $tool.parameters.<name> }}` in the approval message, never a `$fromAI()` paraphrase — otherwise the human approves text the model made up, not the call about to fire. → **references/HUMAN_REVIEW.md**
 
 ---
 
@@ -194,7 +194,7 @@ Beyond the filter, a simple bot (trigger → agent → reply) lives fine in one 
 - **Core** — stateless agent, `chatInput` + `threadId` inputs, memory keyed on `threadId`, tools and sub-agents.
 - **Sub-agents** — one narrow domain each, called via `.toolWorkflow`, **stateless** (full context in `chatInput`).
 
-→ **CHAT_AGENT_PATTERNS.md** for per-surface semantics, threading-as-session, and the full topology.
+→ **references/CHAT_AGENT_PATTERNS.md** for per-surface semantics, threading-as-session, and the full topology.
 
 ---
 
@@ -205,7 +205,7 @@ n8n ships the LangChain RAG primitives (document loaders, splitters, embeddings,
 1. **Rule out cheaper lookups first.** Exact lookups → a database or Data Table query, not RAG. Freshness → a live search tool. A small/structured doc set → give the agent list/fetch tools. Reach for a vector store only when there are too many docs to list and queries are semantic.
 2. **Wire the vector store as a retrieval tool** (`mode: 'retrieve-as-tool'`, `ai_tool`) so the agent decides when retrieval is relevant and can phrase the query itself. Embed query and documents with the **same** model.
 
-→ **RAG.md** (intentionally thin — defaults depend on data shape and scale).
+→ **references/RAG.md** (intentionally thin — defaults depend on data shape and scale).
 
 ---
 
@@ -213,15 +213,15 @@ n8n ships the LangChain RAG primitives (document loaders, splitters, embeddings,
 
 | File | Read when |
 |---|---|
-| **TOOLS.md** | Adding tools, choosing among the four types, writing names/descriptions, `$fromAI` anatomy |
-| **SUBWORKFLOW_AS_TOOL.md** | Wiring a sub-workflow as a tool via `.toolWorkflow`, mapping agent-filled vs plumbed params |
-| **SYSTEM_PROMPT.md** | Writing/refactoring a system prompt, the system-prompt-vs-tool-description split |
-| **STRUCTURED_OUTPUT.md** | Forcing JSON output, configuring autoFix, the fixer model, parse-failure fixes |
-| **MEMORY.md** | Choosing a memory type, persistence, sessionId handling |
-| **HUMAN_REVIEW.md** | Adding human approval, approval-message content, multi-channel approver |
-| **CHAT_AGENT_PATTERNS.md** | Building a Slack/Discord/Teams/Telegram bot, shell + core + sub-agents topology |
-| **RAG.md** | Retrieval-augmented agents (thin by design) |
-| **EXAMPLES.md** | Concrete node-object snippets: stateless agent core, Slack router shell, domain sub-agent |
+| **references/TOOLS.md** | Adding tools, choosing among the four types, writing names/descriptions, `$fromAI` anatomy |
+| **references/SUBWORKFLOW_AS_TOOL.md** | Wiring a sub-workflow as a tool via `.toolWorkflow`, mapping agent-filled vs plumbed params |
+| **references/SYSTEM_PROMPT.md** | Writing/refactoring a system prompt, the system-prompt-vs-tool-description split |
+| **references/STRUCTURED_OUTPUT.md** | Forcing JSON output, configuring autoFix, the fixer model, parse-failure fixes |
+| **references/MEMORY.md** | Choosing a memory type, persistence, sessionId handling |
+| **references/HUMAN_REVIEW.md** | Adding human approval, approval-message content, multi-channel approver |
+| **references/CHAT_AGENT_PATTERNS.md** | Building a Slack/Discord/Teams/Telegram bot, shell + core + sub-agents topology |
+| **references/RAG.md** | Retrieval-augmented agents (thin by design) |
+| **references/EXAMPLES.md** | Concrete node-object snippets: stateless agent core, Slack router shell, domain sub-agent |
 
 ---
 

@@ -86,7 +86,7 @@ Valid `onError` values:
 | `"continueRegularOutput"` | Error item flows out the **normal** output. Rare, usually wrong — downstream gets error-shaped data and keeps going. |
 | `"continueErrorOutput"` | Error item flows out the **separate** error output (`main[1]`). The one you wire. |
 
-Full failure-mode catalog, fan-in/fan-out shapes, and verification: **NODE_ERROR_OUTPUTS.md**.
+Full failure-mode catalog, fan-in/fan-out shapes, and verification: **references/NODE_ERROR_OUTPUTS.md**.
 
 ---
 
@@ -125,11 +125,11 @@ Three things make this work:
 
 1. **Fan-in to one error responder.** Many fallible nodes can route their `main[1]` to a single `Respond` node. Keeps the graph readable.
 2. **Validation failures (4xx) are checked *upstream*, not via error outputs.** A missing field isn't a node *crashing* — it's an expected outcome with a known response. Branch on it with IF/Switch (or the schema validator below) and return 400/401/403/404 directly. Error outputs are for *unexpected* failures (5xx).
-3. **`responseCode` defaults to 200 — even on error branches.** This is its own silent trap (see RESPONSE_SHAPES.md and **n8n-node-configuration** NODE_FAMILY_GOTCHAS.md): an error branch that returns 200 with an error body looks like success to the caller's HTTP client, so their error handling never fires. Set `responseCode` explicitly on every Respond node.
+3. **`responseCode` defaults to 200 — even on error branches.** This is its own silent trap (see references/RESPONSE_SHAPES.md and **n8n-node-configuration** at `../n8n-node-configuration/references/NODE_FAMILY_GOTCHAS.md`): an error branch that returns 200 with an error body looks like success to the caller's HTTP client, so their error handling never fires. Set `responseCode` explicitly on every Respond node.
 
 ### Input validation: the Set-node schema validator
 
-For any endpoint doing structured input validation, run the check as an IIFE inside a single **Set** node rather than a chain of IF/Switch nodes per field. One node validates the whole payload, returns `{ valid, validationError, details, requiredSchema }`, and an IF branches on `valid` → your logic (200) or a 400 Respond that echoes the schema back so the caller can self-correct. It's also dramatically faster than a recursive validator in a Code node + sub-workflow. The full pattern, the constraint cookbook, and the expression-escaping gotchas live in **API_WORKFLOWS.md**.
+For any endpoint doing structured input validation, run the check as an IIFE inside a single **Set** node rather than a chain of IF/Switch nodes per field. One node validates the whole payload, returns `{ valid, validationError, details, requiredSchema }`, and an IF branches on `valid` → your logic (200) or a 400 Respond that echoes the schema back so the caller can self-correct. It's also dramatically faster than a recursive validator in a Code node + sub-workflow. The full pattern, the constraint cookbook, and the expression-escaping gotchas live in **references/API_WORKFLOWS.md**.
 
 ---
 
@@ -170,7 +170,7 @@ So there are two distinct flows: **4xx is decided before the work** (IF/Switch +
 
 Reserve Switch + multiple Responds for paths that diverge *structurally* (different headers, different body shapes, redirects). Same shape with a different number is one expression-driven Respond.
 
-The default envelope is `{ "error": "<code>", "message": "<human text>" }` — the HTTP status already says success-vs-failure, so no `ok: false` flag. **Never leak internals** (stack traces, SQL, upstream bodies, tokens) into the response — log those privately, return a sanitized message. Correlation IDs, `retry_after`, validation `details`, and the full do-not-leak list are in **RESPONSE_SHAPES.md**.
+The default envelope is `{ "error": "<code>", "message": "<human text>" }` — the HTTP status already says success-vs-failure, so no `ok: false` flag. **Never leak internals** (stack traces, SQL, upstream bodies, tokens) into the response — log those privately, return a sanitized message. Correlation IDs, `retry_after`, validation `details`, and the full do-not-leak list are in **references/RESPONSE_SHAPES.md**.
 
 ---
 
@@ -194,7 +194,7 @@ Minimal version — **capture → notify**:
 Error Trigger → Set (build alert from execution + error) → Slack/email (post to #incidents)
 ```
 
-A good alert includes the workflow name, a link to the editor and a link to the failed execution, the failed node name, and the **real** error message (not "Workflow failed"). Field expressions and the optional "fetch the failing input via the n8n node" upgrade are in **ERROR_WORKFLOWS.md**.
+A good alert includes the workflow name, a link to the editor and a link to the failed execution, the failed node name, and the **real** error message (not "Workflow failed"). Field expressions and the optional "fetch the failing input via the n8n node" upgrade are in **references/ERROR_WORKFLOWS.md**.
 
 Two traps worth flagging up front:
 
@@ -239,10 +239,10 @@ What the MCP **can** do: build the error workflow, set `onError`/`retryOnFail` o
 
 | File | Read when |
 |---|---|
-| **NODE_ERROR_OUTPUTS.md** | Wiring a per-node error output on individual fallible nodes |
-| **API_WORKFLOWS.md** | Building/reviewing a webhook → Respond workflow, including the schema validator |
-| **RESPONSE_SHAPES.md** | Defining response body conventions, status codes, and what not to leak |
-| **ERROR_WORKFLOWS.md** | Setting up the workflow-level catch-all for unattended workflows |
+| **references/NODE_ERROR_OUTPUTS.md** | Wiring a per-node error output on individual fallible nodes |
+| **references/API_WORKFLOWS.md** | Building/reviewing a webhook → Respond workflow, including the schema validator |
+| **references/RESPONSE_SHAPES.md** | Defining response body conventions, status codes, and what not to leak |
+| **references/ERROR_WORKFLOWS.md** | Setting up the workflow-level catch-all for unattended workflows |
 
 ---
 

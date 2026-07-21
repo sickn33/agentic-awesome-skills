@@ -119,7 +119,7 @@ Schema is defined via either:
 
 **Best for**: production tools with multiple typed parameters (calculators, API wrappers, anything with numeric fields the LLM tends to stringify).
 
-**See**: [INPUT_SCHEMA.md](INPUT_SCHEMA.md) for complete schema setup.
+**See**: [references/INPUT_SCHEMA.md](references/INPUT_SCHEMA.md) for complete schema setup.
 
 ---
 
@@ -239,7 +239,7 @@ monthly cost, total credit cost, or loan breakdown.
 
 **Fix**: either (a) include a concrete JSON example in the description, or (b) switch to `specifyInputSchema: true` so the LLM gets a typed schema.
 
-**See**: [ERROR_PATTERNS.md](ERROR_PATTERNS.md) for full catalog with reproductions.
+**See**: [references/ERROR_PATTERNS.md](references/ERROR_PATTERNS.md) for full catalog with reproductions.
 
 ---
 
@@ -339,8 +339,8 @@ Before deploying a Code Tool:
 
 ## Additional Resources
 
-- [INPUT_SCHEMA.md](INPUT_SCHEMA.md) — structured input (DynamicStructuredTool) in depth
-- [ERROR_PATTERNS.md](ERROR_PATTERNS.md) — full error catalog with causes and fixes
+- [references/INPUT_SCHEMA.md](references/INPUT_SCHEMA.md) — structured input (DynamicStructuredTool) in depth
+- [references/ERROR_PATTERNS.md](references/ERROR_PATTERNS.md) — full error catalog with causes and fixes
 
 ### Official sources
 - [n8n Custom Code Tool docs](https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.toolcode/)

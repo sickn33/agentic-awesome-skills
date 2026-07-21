@@ -40,7 +40,7 @@ n8n_list_workflows()                          # scan the library
 n8n_get_workflow({ id: "<candidate>" })       # read its inputs/outputs + body
 ```
 
-If something fits, use it and tell the user ("I found `Subworkflow: Parse RFC2822 date` — using that"). If nothing fits, build it *with a discoverable name* so the next search finds it. The discovery convention (verb-first prefixes) lives in **NAMING_AND_DISCOVERY.md**.
+If something fits, use it and tell the user ("I found `Subworkflow: Parse RFC2822 date` — using that"). If nothing fits, build it *with a discoverable name* so the next search finds it. The discovery convention (verb-first prefixes) lives in **references/NAMING_AND_DISCOVERY.md**.
 
 ### 2. The Execute Workflow Trigger uses "Define Below" with typed fields — not passthrough
 
@@ -168,7 +168,7 @@ So: when you need per-item iteration, prefer `mode: each` over dropping a Loop O
 
 ### The only true parallelization n8n offers
 
-`mode: each` + `waitForSubWorkflow: false` is **the only way to get genuinely concurrent sub-workflow execution**: N items dispatch N runs that execute in parallel (still bounded by per-instance concurrency limits). The caller doesn't know when — or whether — any of them finished, so it's only useful with a separate completion-tracking mechanism, typically a Data Table the sub-workflow updates as it progresses. The full stage → dispatch → poll pattern is in **SUBWORKFLOW_PATTERNS.md** ("Fire-and-forget parallelization").
+`mode: each` + `waitForSubWorkflow: false` is **the only way to get genuinely concurrent sub-workflow execution**: N items dispatch N runs that execute in parallel (still bounded by per-instance concurrency limits). The caller doesn't know when — or whether — any of them finished, so it's only useful with a separate completion-tracking mechanism, typically a Data Table the sub-workflow updates as it progresses. The full stage → dispatch → poll pattern is in **references/SUBWORKFLOW_PATTERNS.md** ("Fire-and-forget parallelization").
 
 ---
 
@@ -176,7 +176,7 @@ So: when you need per-item iteration, prefer `mode: each` over dropping a Loop O
 
 When a sub-workflow has multiple input paths whose contracts *genuinely* differ — binary vs JSON, sync vs async, divergent auth schemes — don't cram them under one trigger with passthrough + an internal Switch. The forcing function is real: passthrough (for binary or zero-input) and Define Below (for typed inputs) are mutually exclusive on a single trigger. The reflex to "pick passthrough because it's most permissive, then branch inside" costs you the typed schema (no clean agent tool), grows branch-shape cruft, and turns every new input shape into more branching.
 
-The fix: for N divergent input contracts, build **N+1 sub-workflows** — one outer per contract, each doing its input-specific prep (validation, fetching, hashing, extraction) and calling **one shared downstream** sub-workflow with a normalized shape. The shared core has a single typed input contract and knows nothing about which outer called it. The worked example (process a paper from an external ID *or* an uploaded PDF) is in **SUBWORKFLOW_PATTERNS.md**.
+The fix: for N divergent input contracts, build **N+1 sub-workflows** — one outer per contract, each doing its input-specific prep (validation, fetching, hashing, extraction) and calling **one shared downstream** sub-workflow with a normalized shape. The shared core has a single typed input contract and knows nothing about which outer called it. The worked example (process a paper from an external ID *or* an uploaded PDF) is in **references/SUBWORKFLOW_PATTERNS.md**.
 
 ---
 
@@ -223,8 +223,8 @@ What the MCP **can** do: build the sub-workflow and its callers (`n8n_update_par
 
 | File | Read when |
 |---|---|
-| **SUBWORKFLOW_PATTERNS.md** | `mode: all` vs `each` in depth, splitting by input shape (the N+1 worked example), fire-and-forget parallelization with Data Table polling |
-| **NAMING_AND_DISCOVERY.md** | Naming a new sub-workflow, the verb-first prefix convention, searching for existing ones, writing a discoverable description |
+| **references/SUBWORKFLOW_PATTERNS.md** | `mode: all` vs `each` in depth, splitting by input shape (the N+1 worked example), fire-and-forget parallelization with Data Table polling |
+| **references/NAMING_AND_DISCOVERY.md** | Naming a new sub-workflow, the verb-first prefix convention, searching for existing ones, writing a discoverable description |
 
 ---
 

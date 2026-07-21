@@ -29,9 +29,9 @@ This skill covers where binary lives, how to read and write it, how to keep it f
 
 1. **File contents are in `$binary`, not `$json`.** After an HTTP download, a "Read Files", or an email-attachment trigger, the bytes sit in `$binary.<key>`. `$json` holds metadata at most. Reading `$json.data` for file contents gives you nothing.
 
-2. **Binary cannot cross the AI-agent tool boundary — in either direction.** Tool arguments and tool return values are JSON only. An uploaded image can't be passed into a tool as a file, and a tool can't return raw bytes. Pre-stage to storage and pass a key or URL through JSON instead. See `AGENT_TOOL_BINARY.md`.
+2. **Binary cannot cross the AI-agent tool boundary — in either direction.** Tool arguments and tool return values are JSON only. An uploaded image can't be passed into a tool as a file, and a tool can't return raw bytes. Pre-stage to storage and pass a key or URL through JSON instead. See `references/AGENT_TOOL_BINARY.md`.
 
-3. **Chat surfaces render images by URL, not by `$binary`.** Slack, Discord, Teams, Telegram, embedded webhook chat — none of them read the binary slot. The image has to live somewhere a URL can fetch it. See `CDN_REQUIREMENT.md`.
+3. **Chat surfaces render images by URL, not by `$binary`.** Slack, Discord, Teams, Telegram, embedded webhook chat — none of them read the binary slot. The image has to live somewhere a URL can fetch it. See `references/CDN_REQUIREMENT.md`.
 
 ---
 
@@ -59,7 +59,7 @@ The key inside `binary` (`invoice` here) is the **binary property name**. Most f
 
 This split also explains a webhook gotcha: a Webhook trigger receiving `multipart/form-data` puts the uploaded file in `$binary` and the accompanying form fields in `$json.body` — so an uploaded file is not somewhere under `$json` at all. (The `$json.body` nesting for webhooks is **n8n-expression-syntax** territory.)
 
-See `BINARY_BASICS.md` for the full slot anatomy, mime types, and size limits.
+See `references/BINARY_BASICS.md` for the full slot anatomy, mime types, and size limits.
 
 ---
 
@@ -114,7 +114,7 @@ return [{
 }];
 ```
 
-The Code-node sandbox, helpers, and execution modes are the domain of **n8n-code-javascript** (and **n8n-code-python**) — use those for the language-level detail. The one binary-specific thing to remember here: a Code node that returns `[{ json: {...} }]` without re-attaching `binary` **silently drops the file**. See `BINARY_BASICS.md`.
+The Code-node sandbox, helpers, and execution modes are the domain of **n8n-code-javascript** (and **n8n-code-python**) — use those for the language-level detail. The one binary-specific thing to remember here: a Code node that returns `[{ json: {...} }]` without re-attaching `binary` **silently drops the file**. See `references/BINARY_BASICS.md`.
 
 ---
 
@@ -134,7 +134,7 @@ Two ways to keep it:
                           (bypass — binary passes through untouched)
 ```
 
-`combineByPosition` pairs item N from each input, so the field counts must line up. The connection wiring and the alternatives for many-strip-point chains (upload-early, sub-workflow) are in `MERGE_FOR_CONTEXT.md`.
+`combineByPosition` pairs item N from each input, so the field counts must line up. The connection wiring and the alternatives for many-strip-point chains (upload-early, sub-workflow) are in `references/MERGE_FOR_CONTEXT.md`.
 
 ---
 
@@ -154,7 +154,7 @@ This is the sharpest edge. An AI Agent talks to its tools (Custom Code Tool, Cal
 1. The tool sub-workflow generates the binary, uploads it to storage, and returns JSON like `{ "ok": true, "key": "...", "url": "https://...", "mimeType": "image/png" }`.
 2. The agent embeds the URL in its reply (or passes the key to another tool).
 
-`passthroughBinaryImages: true` on the agent only changes what the **LLM sees** for vision — it does **not** let tools receive the file, and it's image-only (no PDFs, audio, or video). You still need the upload-and-pass-key pattern for any tool. Full patterns, hash strategy, storage choices, and the long-running-tool variant are in `AGENT_TOOL_BINARY.md`.
+`passthroughBinaryImages: true` on the agent only changes what the **LLM sees** for vision — it does **not** let tools receive the file, and it's image-only (no PDFs, audio, or video). You still need the upload-and-pass-key pattern for any tool. Full patterns, hash strategy, storage choices, and the long-running-tool variant are in `references/AGENT_TOOL_BINARY.md`.
 
 > Building the tool itself? See **n8n-code-tool** for the Custom Code Tool contract and **n8n-workflow-patterns** for the AI-Agent-with-tools shape.
 
@@ -168,7 +168,7 @@ When a workflow generates an image and the user wants it shown inside a chat mes
 - **The bytes have to live somewhere a URL can fetch over HTTPS.** Upload to an object store or drive first, then embed the returned URL.
 - **n8n has no built-in CDN.** The user provides the storage.
 
-Ask which storage they already use rather than defaulting to S3 — object storage (S3, R2, GCS, Azure Blob, Backblaze B2, Supabase Storage) and drive-style services (Dropbox, Google Drive, OneDrive, Box) all work and all change the URL shape. Cloudflare R2 is the lowest-friction starting point if they have nothing. For sensitive content, use a signed URL with an expiry rather than a permanently public one. See `CDN_REQUIREMENT.md`.
+Ask which storage they already use rather than defaulting to S3 — object storage (S3, R2, GCS, Azure Blob, Backblaze B2, Supabase Storage) and drive-style services (Dropbox, Google Drive, OneDrive, Box) all work and all change the URL shape. Cloudflare R2 is the lowest-friction starting point if they have nothing. For sensitive content, use a signed URL with an expiry rather than a permanently public one. See `references/CDN_REQUIREMENT.md`.
 
 ---
 
@@ -207,10 +207,10 @@ For persistent tabular storage — reference-counting staged files, tracking whi
 
 | File | Read when |
 |---|---|
-| `BINARY_BASICS.md` | First time handling binary, or reading/writing the `$binary` slot, mime types, size limits |
-| `AGENT_TOOL_BINARY.md` | An agent tool needs an uploaded file, or produces one — the boundary in either direction |
-| `MERGE_FOR_CONTEXT.md` | Binary disappears after a JSON transform and you need to re-attach it |
-| `CDN_REQUIREMENT.md` | Showing images in a chat surface or anywhere that needs URL-referenced images |
+| `references/BINARY_BASICS.md` | First time handling binary, or reading/writing the `$binary` slot, mime types, size limits |
+| `references/AGENT_TOOL_BINARY.md` | An agent tool needs an uploaded file, or produces one — the boundary in either direction |
+| `references/MERGE_FOR_CONTEXT.md` | Binary disappears after a JSON transform and you need to re-attach it |
+| `references/CDN_REQUIREMENT.md` | Showing images in a chat surface or anywhere that needs URL-referenced images |
 
 ---
 
