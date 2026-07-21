@@ -9,6 +9,9 @@ function normalizeRelativePath(value) {
 
 const projectRoot = findProjectRoot(__dirname);
 const pluginsRoot = path.join(projectRoot, "plugins");
+const releaseVersion = JSON.parse(
+  fs.readFileSync(path.join(projectRoot, "package.json"), "utf8"),
+).version;
 const claudeMarketplace = JSON.parse(
   fs.readFileSync(path.join(projectRoot, ".claude-plugin", "marketplace.json"), "utf8"),
 );
@@ -23,6 +26,19 @@ const codexPluginPaths = new Set(
   codexMarketplace.plugins.map((plugin) => normalizeRelativePath(plugin.source.path)),
 );
 const knownPluginPaths = new Set([...claudePluginPaths, ...codexPluginPaths]);
+
+const rootClaudeManifest = JSON.parse(
+  fs.readFileSync(path.join(projectRoot, ".claude-plugin", "plugin.json"), "utf8"),
+);
+assert.strictEqual(rootClaudeManifest.version, releaseVersion);
+assert.strictEqual(claudeMarketplace.metadata.version, releaseVersion);
+for (const plugin of claudeMarketplace.plugins) {
+  assert.strictEqual(
+    plugin.version,
+    releaseVersion,
+    `Claude marketplace version must match the release: ${plugin.name}`,
+  );
+}
 
 for (const relativePluginPath of knownPluginPaths) {
   const pluginDir = path.join(projectRoot, relativePluginPath);
@@ -51,6 +67,11 @@ for (const relativePluginPath of knownPluginPaths) {
   const codexManifestPath = path.join(pluginDir, ".codex-plugin", "plugin.json");
   if (fs.existsSync(codexManifestPath)) {
     const codexManifest = JSON.parse(fs.readFileSync(codexManifestPath, "utf8"));
+    assert.strictEqual(
+      codexManifest.version,
+      releaseVersion,
+      `Codex plugin version must match the release: ${relativePluginPath}`,
+    );
     assert.strictEqual(codexManifest.skills, "./skills/");
     assert.ok(
       codexMarketplace.plugins.some((plugin) => plugin.name === codexManifest.name),
@@ -61,6 +82,11 @@ for (const relativePluginPath of knownPluginPaths) {
   const claudeManifestPath = path.join(pluginDir, ".claude-plugin", "plugin.json");
   if (fs.existsSync(claudeManifestPath)) {
     const claudeManifest = JSON.parse(fs.readFileSync(claudeManifestPath, "utf8"));
+    assert.strictEqual(
+      claudeManifest.version,
+      releaseVersion,
+      `Claude plugin version must match the release: ${relativePluginPath}`,
+    );
     assert.ok(
       claudeMarketplace.plugins.some((plugin) => plugin.name === claudeManifest.name),
       `Claude marketplace should expose ${claudeManifest.name}`,

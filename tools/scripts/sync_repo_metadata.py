@@ -45,7 +45,7 @@ RECOMMENDED_TOPICS = [
     "mcp",
 ]
 README_TAGLINE_RE = re.compile(
-    r"^> \*\*(?:Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change\.|AAS Core is the local, agent-first control plane for composing explainable, reproducible skill stacks from a catalog of \d[\d,]*\+ agentic skills\.|Installable GitHub library of \d[\d,]*\+ agentic skills for Claude Code, Cursor, Codex CLI, (?:Autohand Code, )?Gemini CLI, Antigravity, and other AI coding assistants\.)\*\*$",
+    r"^> \*\*(?:Local, agent-owned skill stacks for coding agents—from complete catalog access to a reproducible, reviewable plan\.|A complete local skill catalog for coding agents—from project inspection and agent-owned selection to a reproducible, reviewable plan\.|Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change\.|AAS Core is the local, agent-first control plane for composing explainable, reproducible skill stacks from a catalog of \d[\d,]*\+ agentic skills\.|Installable GitHub library of \d[\d,]*\+ agentic skills for Claude Code, Cursor, Codex CLI, (?:Autohand Code, )?Gemini CLI, Antigravity, and other AI coding assistants\.)\*\*$",
     re.MULTILINE,
 )
 README_TITLE_RE = re.compile(
@@ -71,6 +71,18 @@ README_TOC_BROWSE_RE = re.compile(
     r"^- \[Browse \d[\d,]*\+ Skills\]\(#browse-\d+-skills\)$",
     re.MULTILINE,
 )
+README_AGENT_SELECTION_PARAGRAPH_RE = re.compile(
+    r"^Codex or Claude inspects your project(?:, enumerates its primary capabilities, searches and compares candidates across| and chooses exact skills from) the complete local AAS catalog.*$",
+    re.MULTILINE,
+)
+README_SUPPORTING_PLAYBOOKS_RE = re.compile(
+    r"^The (?:\d[\d,]*\+ )?reusable `SKILL\.md` playbooks, specialized plugins, bundles, workflows, and direct installers remain important\..*$",
+    re.MULTILINE,
+)
+README_CAPABILITY_COVERAGE_RE = re.compile(
+    r"^- \*\*(?:Require|Guide) capability coverage\.\*\* MCP session instructions require the agent to evaluate the full project surface.*$",
+    re.MULTILINE,
+)
 GETTING_STARTED_TITLE_RE = re.compile(
     r"^# Getting Started with (?:Agentic Awesome Skills \(V[\d.]+\)|AAS Core)$", re.MULTILINE
 )
@@ -82,8 +94,8 @@ BUNDLES_FOOTER_RE = re.compile(
 
 def build_about_description(metadata: dict) -> str:
     return (
-        "AAS Core preview is the local, agent-first control plane for discovering, recommending, "
-        f"validating, and planning exact skill stacks, backed by {metadata['total_skills_label']} agentic skills. "
+        "AAS Core is the local, agent-first control plane for complete catalog discovery, agent-owned selection, "
+        f"stack validation, and planning, backed by {metadata['total_skills_label']} agentic skills. "
         "Includes CLI, local MCP, catalog, plugins, and Workbench."
     )
 
@@ -157,8 +169,8 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
         (
             README_TAGLINE_RE,
             (
-                "> **Local, deterministic skill-stack composition for coding agents—from an explicit "
-                "project profile to a reviewable plan before any target change.**"
+                "> **Local, agent-owned skill stacks for coding agents—from complete catalog access to a "
+                "reproducible, reviewable plan.**"
             ),
         ),
         (
@@ -166,6 +178,34 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
             (
                 f"**Current release: V{version}.** {release_status}Apply and recovery remain experimental "
                 "and outside the supported preview path."
+            ),
+        ),
+        (
+            README_AGENT_SELECTION_PARAGRAPH_RE,
+            (
+                "Codex or Claude inspects your project and chooses exact skills from the complete local AAS catalog. "
+                "AAS Core does not rank or recommend them: its read-only `compose_stack` tool validates the "
+                "agent-owned selection in memory, and a client or the `aas` CLI can persist it as `aas-stack.json` "
+                "and produce an immutable plan before any target change."
+            ),
+        ),
+        (
+            README_SUPPORTING_PLAYBOOKS_RE,
+            (
+                "The reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, and direct installers "
+                "remain important. They are the content, curation, distribution, and compatibility layers around "
+                "AAS Core—not competing primary products."
+            ),
+        ),
+        (
+            README_CAPABILITY_COVERAGE_RE,
+            (
+                "- **Guide capability coverage.** MCP session instructions require the agent to evaluate the full "
+                "project surface—from architecture, domain behavior, data and integrations through testing, "
+                "security, UX, deployment, and maintenance—then search each applicable capability, compare "
+                "multiple candidates, cover it with a non-redundant skill or report a catalog gap, and avoid "
+                "stopping at a minimal shortlist. Core records and validates the resulting selection, but it "
+                "does not certify semantic completeness."
             ),
         ),
         (
@@ -210,6 +250,20 @@ def sync_getting_started(content: str, metadata: dict) -> str:
     return content
 
 
+def sync_aas_core_guide(content: str, metadata: dict) -> str:
+    if metadata["core_included"]:
+        content = re.sub(
+            r"--package=agentic-awesome-skills@(?:X\.Y\.Z|[^\s\\]+)",
+            f"--package=agentic-awesome-skills@{metadata['version']}",
+            content,
+            count=1,
+        )
+    return content.replace(
+        "searchable, readable, selectable, and usable",
+        "searchable, readable, and available for agent selection",
+    )
+
+
 def sync_web_index_shell(content: str, metadata: dict) -> str:
     skill_label = metadata["total_skills_label"]
     return sync_regex_text(
@@ -234,6 +288,10 @@ def sync_llms_text(content: str, metadata: dict) -> str:
             (r"Skill count: \d[\d,]*\+\.", f"Skill count: {skill_label}."),
             (r"\d[\d,]*\+ reusable SKILL\.md playbooks", f"{skill_label} reusable SKILL.md playbooks"),
             (r"\d[\d,]*\+ skill catalog", f"{skill_label} skill catalog"),
+            (
+                r"Catalog access: (?:all \d[\d,]* current skills|every current catalog skill) remain individually searchable, readable, and selectable\.",
+                "Catalog access: every current catalog skill remains individually searchable, readable, and selectable.",
+            ),
         ],
     )
 
@@ -363,6 +421,7 @@ def sync_curated_docs(base_dir: str, metadata: dict, dry_run: bool) -> int:
     updated_files = 0
     updated_files += int(update_text_file(root / "README.md", sync_readme_copy, metadata, dry_run))
     updated_files += int(update_text_file(root / "docs" / "users" / "getting-started.md", sync_getting_started, metadata, dry_run))
+    updated_files += int(update_text_file(root / "docs" / "users" / "aas-core.md", sync_aas_core_guide, metadata, dry_run))
     updated_files += int(update_text_file(root / "apps" / "web-app" / "index.html", sync_web_index_shell, metadata, dry_run))
     updated_files += int(update_text_file(root / "apps" / "web-app" / "public" / "llms.txt", sync_llms_text, metadata, dry_run))
     updated_files += int(
@@ -394,7 +453,7 @@ def update_package_description(base_dir: str, metadata: dict, dry_run: bool) -> 
         content = file.read()
 
     new_description = (
-        "AAS Core preview: local skill discovery, recommendation, stack validation, and planning, "
+        "AAS Core: complete local skill discovery, agent-owned selection, stack validation, and planning, "
         f"backed by {metadata['total_skills_label']} agentic skills."
     )
     updated_content = ABOUT_DESCRIPTION_RE.sub(

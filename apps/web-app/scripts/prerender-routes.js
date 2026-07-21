@@ -10,7 +10,7 @@ const TEMPLATE_PATH = path.join(DIST_DIR, 'index.html');
 const SKILLS_PATH = path.join(PUBLIC_DIR, 'skills.json');
 const SEO_LANDING_PAGES_PATH = path.join(ROOT_DIR, 'src', 'data', 'seoLandingPages.json');
 
-const HOME_CATALOG_COUNT_FALLBACK = 1935;
+const HOME_CATALOG_COUNT_FALLBACK = 1969;
 const PRERENDER_SOCIAL_IMAGE = 'social-card.png';
 const SITE_NAME = 'Agentic Awesome Skills';
 const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
@@ -19,12 +19,12 @@ const FAQ_ITEMS = [
   {
     question: 'What is Agentic Awesome Skills?',
     answer: (countLabel) =>
-      `Agentic Awesome Skills is built around AAS Core, a local agent-first preview control plane for discovering, recommending, validating, and planning exact skill stacks. AAS Core is backed by an evidence-rich catalog of ${countLabel} reusable SKILL.md playbooks.`,
+      `Agentic Awesome Skills is built around AAS Core, a local agent-first preview boundary for neutral catalog retrieval, exact agent-owned selection, validation, and planning. AAS Core is backed by an evidence-rich catalog of ${countLabel} reusable SKILL.md playbooks.`,
   },
   {
     question: 'How do I use AAS Core preview?',
     answer:
-      'Configure the local stdio MCP with the AAS CLI, let the agent search, inspect, and recommend skills, then validate the proposed aas-stack.json and preview its immutable plan in the CLI. Apply and recovery are outside the non-applying preview path.',
+      'Configure the local stdio MCP with the AAS CLI, let the agent search and inspect the complete catalog, choose exact skill IDs itself, then validate the proposed aas-stack.json and preview its immutable plan in the CLI. Apply and recovery are outside the non-applying preview path.',
   },
   {
     question: 'Is Agentic Awesome Skills a GitHub repository?',
@@ -334,7 +334,7 @@ function buildHomeFallback({ landingPages, siteBaseUrl }) {
   return [
     '<main data-prerender-fallback="true">',
     '<h1>AAS Core: agent-first skill stacks for Codex, Claude Code, and compatible clients</h1>',
-    '<p><strong>Discover. Recommend. Validate. Preview.</strong></p>',
+    '<p><strong>Search. Choose. Validate. Preview.</strong></p>',
     '<p>Turn intent into an explainable aas-stack.json and immutable plan preview without target writes, backed by the AAS skill catalog.</p>',
     `<nav aria-label="Catalog hubs"><ul>${buildStaticLinkList(links)}</ul></nav>`,
     '</main>',
@@ -397,13 +397,13 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
   const visibleCount = Math.max(catalogCount, HOME_CATALOG_COUNT_FALLBACK);
   const formattedCount = visibleCount.toLocaleString('en-US');
   const title = `AAS Core Preview | Agent-first stacks backed by ${formattedCount}+ skills`;
-  const description = `Use AAS Core preview to discover, recommend, validate, and plan explainable skill stacks for Codex, Claude Code, and compatible clients, backed by ${formattedCount}+ cataloged skills.`;
+  const description = `Use AAS Core preview for neutral catalog retrieval, exact agent-owned selection, validation, and plan preview for Codex, Claude Code, and compatible clients, backed by ${formattedCount}+ cataloged skills.`;
   const catalogBaseUrl = canonicalUrl.replace(/\/$/, '');
   const sourceCodeEntity = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
-    description: `AAS Core preview is a local agent-first control plane for recommending, validating, and planning exact skill stacks backed by ${formattedCount}+ agentic skills.`,
+    description: `AAS Core preview is a local agent-first boundary for neutral catalog retrieval, exact agent-owned selection, validation, and planning, backed by ${formattedCount}+ agentic skills.`,
     url: REPOSITORY_URL,
     sameAs: [...new Set([
       canonicalUrl,
@@ -424,7 +424,7 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
       'GitHub AI skills repository',
       'AI agent skills GitHub',
       'AAS Core',
-      'skill recommendation',
+      'agent-selected skill stack',
       'agent stack',
       'Model Context Protocol',
       'specialized plugins',
@@ -631,7 +631,7 @@ function buildWorkbenchMeta({ imageUrl, canonicalUrl }) {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
         name: 'Agentic Awesome Skills Workbench',
-        headline: 'Review what AAS Core recommended',
+        headline: 'Review what your agent selected',
         description,
         url: canonicalUrl,
         mainEntityOfPage: canonicalUrl,

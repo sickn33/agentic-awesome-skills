@@ -10,22 +10,22 @@ This guide shows the primary AAS Core workflow and the supporting catalog and di
 PROJECT
    │ inspected by Codex or Claude, not by AAS
    ▼
-EXPLICIT PROJECT PROFILE
+AGENT SEARCHES + READS COMPLETE LOCAL CATALOG
    │
    ▼
-AAS MCP ── search · inspect · recommend
+CODEX OR CLAUDE CHOOSES EXACT SKILL IDS
    │
    ▼
-AAS CORE + LOCAL VERIFIED CATALOG
-   │ evidence · exclusions · coverage · unknowns
+compose_stack ── validates · pins · never recommends
+   │
    ▼
-AGENT PROPOSES aas-stack.json
+AGENT PROPOSES aas-stack.json (no selection policy)
    │
    ├────────► WORKBENCH (optional browser-local review)
    ▼
 CLI VALIDATE ──► CLI PLAN ──► HUMAN REVIEW
 
-Supported preview path: stop after plan review.
+Supported path: stop after plan review.
 Apply and recovery remain experimental.
 ```
 
@@ -40,7 +40,7 @@ agentic-awesome-skills/
 ├── 📄 CONTRIBUTING.md                  ← Contributor workflow
 ├── 📄 CATALOG.md                       ← Full generated catalog
 │
-├── 📁 skills/                          ← 1,968+ skills live here
+├── 📁 skills/                          ← 1,987+ skills live here
 │   │
 │   ├── 📁 brainstorming/
 │   │   └── 📄 SKILL.md                 ← Skill definition
@@ -53,7 +53,7 @@ agentic-awesome-skills/
 │   │   └── 📁 2d-games/
 │   │       └── 📄 SKILL.md             ← Nested skills also supported
 │   │
-│   └── ... (1,968+ total)
+│   └── ... (1,987+ total)
 │
 ├── 📁 apps/
 │   └── 📁 web-app/                     ← Interactive browser
@@ -106,7 +106,7 @@ agentic-awesome-skills/
 
 ```
                     ┌─────────────────────────┐
-                    │  1,968+ SKILLS          │
+                    │  1,987+ SKILLS          │
                     └────────────┬────────────┘
                                  │
         ┌────────────────────────┼────────────────────────┐
@@ -207,7 +207,7 @@ If you want a workspace-style manual install instead, cloning into `.agent/skill
 │   ├── 📁 brainstorming/                 │
 │   ├── 📁 stripe-integration/            │
 │   ├── 📁 react-best-practices/          │
-│   └── ... (1,968+ total)                │
+│   └── ... (1,987+ total)                │
 └─────────────────────────────────────────┘
 ```
 

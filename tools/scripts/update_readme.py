@@ -45,13 +45,13 @@ def core_release_status(metadata: dict) -> str:
     if not metadata["core_included"]:
         return (
             f"The published {version} package predates AAS Core. Core is available from `main` as an "
-            "**Agent-First Preview** for local search, inspection, recommendation, manifest validation, "
+            "**Agent-First Preview** for complete local catalog search, agent-owned selection, manifest validation, "
             "planning, and diagnosis. Wait for a release that explicitly includes Core before using the "
             "npm bootstrap. "
         )
     return (
-        "This release includes AAS Core under the **Agent-First Preview** claim for local search, "
-        "inspection, recommendation, manifest validation, planning, and diagnosis. "
+        "This release includes AAS Core for complete local catalog search, agent-owned selection, "
+        "manifest validation, planning, and diagnosis. "
     )
 
 

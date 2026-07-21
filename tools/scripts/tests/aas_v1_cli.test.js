@@ -7,7 +7,12 @@ const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
 const core = require("../../lib/aas-v1");
-const { execute, main, windowsOutputDurabilityDetails } = require("../../lib/aas-v1/cli/main");
+const {
+  execute,
+  main,
+  windowsOutputDurabilityDetails,
+  writeNewStackArtifactDirectory,
+} = require("../../lib/aas-v1/cli/main");
 
 const ROOT = path.resolve(__dirname, "../../..");
 const PACKAGE_VERSION = require(path.join(ROOT, "package.json")).version;
@@ -44,16 +49,32 @@ test("Windows output reports certified durability without marking the preview fa
   );
 });
 
-test("CLI stack lifecycle creates a minimal manifest, immutable plan, applies it, and diagnoses it", async (context) => {
+test("CLI stack lifecycle persists an explicit agent selection, plans it, applies it, and diagnoses it", async (context) => {
   const item = fixture();
   context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
   const manifestPath = path.join(item.root, "aas-stack.json");
-  const initialized = await execute(["stack", "init", "--out", manifestPath, "--name", "cli-test", "--goal", "build"]);
-  assert.equal(initialized.status, "initialized");
+  const selectionPath = path.join(item.root, "selection.json");
+  fs.writeFileSync(selectionPath, `${core.canonicalJson({
+    name: "cli-test",
+    targets: [{ host: "codex", scope: "project" }],
+    profile: {
+      goals: ["build"],
+      projectType: "agent application",
+      languages: ["javascript"],
+      frameworks: [],
+      constraints: ["local-only"],
+    },
+    skillIds: ["ai-agents-architect"],
+  })}\n`);
+  const created = await execute(["stack", "create", "--selection", selectionPath, "--out", manifestPath]);
+  assert.equal(created.status, "created");
+  assert.equal(created.selectionSource, "agent");
+  assert.deepEqual(created.selectedSkillIds, ["ai-agents-architect"]);
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-  assert.deepEqual(manifest.skills, []);
-  manifest.skills = [{ id: "ai-agents-architect" }];
-  fs.writeFileSync(manifestPath, `${core.canonicalJson(manifest)}\n`);
+  assert.equal(manifest.schemaVersion, 2);
+  assert.deepEqual(manifest.skills, [{ id: "ai-agents-architect" }]);
+  assert.deepEqual(manifest.profile.goals, ["build"]);
+  assert.equal(Object.hasOwn(manifest, "policy"), false);
   const planPath = path.join(item.root, "plan.json");
   const planned = await execute([
     "stack", "plan", "--manifest", manifestPath, "--target", "codex:project",
@@ -164,21 +185,255 @@ test("CLI rejects unknown flags and extra positional arguments fail-closed", asy
   );
 });
 
-test("CLI recommendation reads only the explicit profile file", async (context) => {
+test("CLI stack create reads the agent's explicit selection and persists it atomically", async (context) => {
   const item = fixture();
   context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
-  const profile = {
-    intent: "test-qa-automation",
+  const selection = {
+    name: "qa-stack",
     targets: [{ host: "codex", scope: "project" }],
-    profile: { languages: ["javascript"] },
-    criticalGoals: ["unit-testing"],
-    nonCriticalGoals: [],
-    policy: { allowedRisk: ["none", "safe"], requireKnownSource: true, allowManualSetup: false },
+    profile: {
+      goals: ["unit-testing"],
+      languages: ["javascript"],
+      frameworks: [],
+      constraints: [],
+    },
+    skillIds: ["playwright-skill"],
   };
-  const profilePath = path.join(item.root, "profile.json");
-  fs.writeFileSync(profilePath, `${core.canonicalJson(profile)}\n`);
-  const result = await execute(["stack", "recommend", "--profile", profilePath]);
-  assert.equal(result.ok, true);
+  const selectionPath = path.join(item.root, "selection.json");
+  const manifestPath = path.join(item.root, "selected-stack.json");
+  fs.writeFileSync(selectionPath, `${core.canonicalJson(selection)}\n`);
+  const result = await execute(["stack", "create", "--selection", selectionPath, "--out", manifestPath]);
+  assert.equal(result.status, "created");
+  assert.deepEqual(result.selectedSkillIds, selection.skillIds);
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  assert.deepEqual(manifest.skills, [{ id: "playwright-skill" }]);
+  await assert.rejects(
+    execute(["stack", "create", "--selection", selectionPath, "--out", manifestPath]),
+    { code: "AAS_CLI_OUTPUT_EXISTS" },
+  );
+});
+
+test("CLI publishes stack and selection evidence together as a durable artifact directory", (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const artifactDirectory = path.join(item.root, "audit-artifact");
+  const manifest = {
+    schemaVersion: 2,
+    profile: { goals: ["first", "second"] },
+    skills: [{ id: "playwright-skill" }, { id: "ai-agents-architect" }],
+  };
+  const evidence = { schemaVersion: 1, manifestDigest: `sha256-${"1".repeat(64)}` };
+
+  const written = writeNewStackArtifactDirectory(artifactDirectory, { manifest, evidence });
+
+  assert.deepEqual(written, { outputDurability: "directorySynced", certificationStatus: "certifiable" });
+  assert.equal(fs.statSync(artifactDirectory).mode & 0o777, 0o700);
+  const manifestPath = path.join(artifactDirectory, "aas-stack.json");
+  const evidencePath = path.join(artifactDirectory, "aas-selection-evidence.json");
+  assert.equal(fs.statSync(manifestPath).mode & 0o777, 0o600);
+  assert.equal(fs.statSync(evidencePath).mode & 0o777, 0o600);
+  assert.equal(fs.readFileSync(manifestPath, "utf8"), `${core.canonicalJson(manifest)}\n`);
+  assert.equal(fs.readFileSync(evidencePath, "utf8"), `${core.canonicalJson(evidence)}\n`);
+  assert.deepEqual(JSON.parse(fs.readFileSync(manifestPath, "utf8")).skills, manifest.skills);
+  assert.deepEqual(JSON.parse(fs.readFileSync(manifestPath, "utf8")).profile.goals, manifest.profile.goals);
+});
+
+test("CLI artifact directory publication refuses overwrite without changing existing state", (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const artifactDirectory = path.join(item.root, "audit-artifact");
+  fs.mkdirSync(artifactDirectory);
+  fs.writeFileSync(path.join(artifactDirectory, "keep.txt"), "unchanged\n");
+
+  assert.throws(
+    () => writeNewStackArtifactDirectory(artifactDirectory, {
+      manifest: { schemaVersion: 2 },
+      evidence: { schemaVersion: 1 },
+    }),
+    { code: "AAS_CLI_OUTPUT_EXISTS" },
+  );
+  assert.deepEqual(fs.readdirSync(artifactDirectory), ["keep.txt"]);
+  assert.equal(fs.readFileSync(path.join(artifactDirectory, "keep.txt"), "utf8"), "unchanged\n");
+});
+
+test("CLI artifact directory rechecks the destination immediately before publication", (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const artifactDirectory = path.join(item.root, "audit-artifact");
+  let destinationChecks = 0;
+  const racingFilesystem = new Proxy(fs, {
+    get(target, property) {
+      if (property === "lstatSync") {
+        return (candidate) => {
+          if (candidate === artifactDirectory) {
+            destinationChecks += 1;
+            if (destinationChecks === 2) target.mkdirSync(artifactDirectory);
+          }
+          return target.lstatSync(candidate);
+        };
+      }
+      return Reflect.get(target, property);
+    },
+  });
+
+  assert.throws(
+    () => writeNewStackArtifactDirectory(artifactDirectory, {
+      manifest: { schemaVersion: 2 },
+      evidence: { schemaVersion: 1 },
+    }, { filesystem: racingFilesystem }),
+    { code: "AAS_CLI_OUTPUT_EXISTS" },
+  );
+  assert.equal(destinationChecks, 2);
+  assert.deepEqual(fs.readdirSync(artifactDirectory), []);
+  assert.deepEqual(fs.readdirSync(item.root), ["audit-artifact"]);
+});
+
+test("CLI artifact directory rolls back staging when the second durable file write fails", (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const artifactDirectory = path.join(item.root, "audit-artifact");
+  let fileSyncs = 0;
+  const faultingFilesystem = new Proxy(fs, {
+    get(target, property) {
+      if (property === "fsyncSync") {
+        return (descriptor) => {
+          fileSyncs += 1;
+          if (fileSyncs === 2) throw Object.assign(new Error("fault after second file write"), { code: "EIO" });
+          return target.fsyncSync(descriptor);
+        };
+      }
+      return Reflect.get(target, property);
+    },
+  });
+
+  assert.throws(
+    () => writeNewStackArtifactDirectory(artifactDirectory, {
+      manifest: { schemaVersion: 2 },
+      evidence: { schemaVersion: 1 },
+    }, { filesystem: faultingFilesystem }),
+    /fault after second file write/,
+  );
+  assert.equal(fs.existsSync(artifactDirectory), false);
+  assert.deepEqual(fs.readdirSync(item.root), []);
+});
+
+test("CLI artifact directory removes the complete pair when final directory sync fails", (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const artifactDirectory = path.join(item.root, "audit-artifact");
+  let directorySyncs = 0;
+
+  assert.throws(
+    () => writeNewStackArtifactDirectory(artifactDirectory, {
+      manifest: { schemaVersion: 2 },
+      evidence: { schemaVersion: 1 },
+    }, {
+      syncDirectory(directory) {
+        directorySyncs += 1;
+        if (directorySyncs === 2) throw Object.assign(new Error(`fault syncing ${path.basename(directory)}`), { code: "EIO" });
+      },
+    }),
+    /fault syncing/,
+  );
+  assert.equal(fs.existsSync(artifactDirectory), false);
+  assert.deepEqual(fs.readdirSync(item.root), []);
+});
+
+test("CLI audit create preserves the agent selection and publishes the validated sidecar", async (context) => {
+  const item = fixture();
+  const originalValidator = core.validateSelectionEvidence;
+  context.after(() => {
+    if (originalValidator === undefined) delete core.validateSelectionEvidence;
+    else core.validateSelectionEvidence = originalValidator;
+    fs.rmSync(item.root, { recursive: true, force: true });
+  });
+  const selection = {
+    name: "audited-stack",
+    targets: [{ host: "claude", scope: "project" }, { host: "codex", scope: "project" }],
+    profile: {
+      goals: ["second", "first"],
+      languages: ["typescript", "javascript"],
+      frameworks: ["vite", "react"],
+      constraints: ["local-only", "read-only"],
+    },
+    skillIds: ["playwright-skill", "ai-agents-architect"],
+  };
+  const evidence = { schemaVersion: 1, trace: { source: "mcp-session" } };
+  const evidenceDigest = `sha256-${"2".repeat(64)}`;
+  core.validateSelectionEvidence = (received, { manifest }) => {
+    assert.deepEqual(received, evidence);
+    assert.deepEqual(manifest.skills.map(({ id }) => id), selection.skillIds);
+    return { ok: true, status: "valid", evidenceDigest };
+  };
+  const selectionPath = path.join(item.root, "selection.json");
+  const evidencePath = path.join(item.root, "evidence.json");
+  const artifactDirectory = path.join(item.root, "audit-artifact");
+  fs.writeFileSync(selectionPath, `${core.canonicalJson(selection)}\n`);
+  fs.writeFileSync(evidencePath, `${core.canonicalJson(evidence)}\n`);
+
+  const result = await execute([
+    "stack", "create", "--selection", selectionPath, "--evidence", evidencePath,
+    "--artifact-dir", artifactDirectory, "--require-evidence",
+  ]);
+
+  assert.equal(result.evidenceDigest, evidenceDigest);
+  assert.equal(result.artifactDirectory, artifactDirectory);
+  assert.equal(result.path, path.join(artifactDirectory, "aas-stack.json"));
+  assert.equal(result.evidencePath, path.join(artifactDirectory, "aas-selection-evidence.json"));
+  assert.deepEqual(result.selectedSkillIds, selection.skillIds);
+  const persistedManifest = JSON.parse(fs.readFileSync(result.path, "utf8"));
+  assert.deepEqual(persistedManifest.targets, selection.targets);
+  assert.deepEqual(persistedManifest.profile, selection.profile);
+  assert.deepEqual(persistedManifest.skills.map(({ id }) => id), selection.skillIds);
+  assert.deepEqual(JSON.parse(fs.readFileSync(result.evidencePath, "utf8")), evidence);
+});
+
+test("CLI audit create leaves no artifact when evidence validation fails", async (context) => {
+  const item = fixture();
+  const originalValidator = core.validateSelectionEvidence;
+  context.after(() => {
+    if (originalValidator === undefined) delete core.validateSelectionEvidence;
+    else core.validateSelectionEvidence = originalValidator;
+    fs.rmSync(item.root, { recursive: true, force: true });
+  });
+  core.validateSelectionEvidence = () => ({
+    ok: false,
+    status: "invalid",
+    code: "AAS_SELECTION_EVIDENCE_MANIFEST_MISMATCH",
+    category: "integrity",
+    details: { field: "manifestDigest" },
+  });
+  const selectionPath = path.join(item.root, "selection.json");
+  const evidencePath = path.join(item.root, "evidence.json");
+  const artifactDirectory = path.join(item.root, "audit-artifact");
+  fs.writeFileSync(selectionPath, `${core.canonicalJson({
+    profile: { goals: ["audit"], languages: [], frameworks: [], constraints: [] },
+    skillIds: ["playwright-skill"],
+  })}\n`);
+  fs.writeFileSync(evidencePath, "{}\n");
+
+  await assert.rejects(execute([
+    "stack", "create", "--selection", selectionPath, "--evidence", evidencePath,
+    "--artifact-dir", artifactDirectory, "--require-evidence",
+  ]), { code: "AAS_SELECTION_EVIDENCE_MANIFEST_MISMATCH" });
+  assert.equal(fs.existsSync(artifactDirectory), false);
+});
+
+test("CLI require-evidence fails closed before writing when the sidecar is absent", async (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const selectionPath = path.join(item.root, "selection.json");
+  const artifactDirectory = path.join(item.root, "audit-artifact");
+  fs.writeFileSync(selectionPath, `${core.canonicalJson({
+    profile: { goals: ["audit"], languages: [], frameworks: [], constraints: [] },
+    skillIds: ["playwright-skill"],
+  })}\n`);
+
+  await assert.rejects(execute([
+    "stack", "create", "--selection", selectionPath,
+    "--artifact-dir", artifactDirectory, "--require-evidence",
+  ]), { code: "AAS_CLI_EVIDENCE_REQUIRED" });
+  assert.equal(fs.existsSync(artifactDirectory), false);
 });
 
 test("production CLI resolves and re-verifies a content-addressed runtime cache", async (context) => {

@@ -8,19 +8,19 @@
 
 ### What is AAS Core?
 
-AAS Core is the deterministic, versioned control plane that turns this repository's catalog into an approved project stack. Codex or Claude can inspect a repository, send an explicit profile to the local read-only AAS MCP, explain the resulting recommendation, and propose an `aas-stack.json`. The `aas` CLI then validates the manifest and previews an immutable plan.
+AAS Core is the versioned control plane that gives Codex or Claude complete local catalog access and turns the agent's exact selection into a reproducible project stack. The agent inspects the repository, searches and reads skills, chooses exact IDs, and uses `compose_stack` to propose `aas-stack.json`. The `aas` CLI then validates the manifest and previews an immutable plan.
 
 AAS Core is the product; the approved `aas-stack.json` and immutable plan are its durable artifacts. Skills and the catalog provide content and evidence, MCP and CLI are interfaces, Workbench is a review surface, and plugins, bundles, workflows, and installers provide curation or distribution around Core. Start with [AAS Core](aas-core.md).
 
 ### Is AAS Core fully certified?
 
-No. The current public claim is **AAS Agent-First Preview**: it helps Codex and Claude compose a local, explainable, reproducible skill stack. Full-catalog recommendation quality and transactional apply/recovery safety are not yet certified.
+Core supports complete local catalog search and inspection, agent-owned selection, reproducible composition, manifest validation, and plan preview. Transactional apply/recovery safety remains outside the supported claim.
 
 `stack apply` and `stack recover` are experimental, disabled by default, and are not supported preview safety claims. The recommended public flow stops after reviewing `stack validate` and `stack plan` output.
 
 ### Does AAS upload my repository or use another model?
 
-No. The agent may inspect the project using its normal local capabilities, but AAS MCP does not scan the repository. It receives an explicit allowlisted profile and runs deterministic recommendation against a bundled or verified local catalog. MCP is local stdio, read-only, offline-capable, and contains no model credentials or telemetry.
+No. The agent inspects the project using its normal local capabilities. AAS MCP only exposes the complete bundled or verified local catalog and validates agent-selected IDs; it does not scan the repository, rank skills, or enforce selection policy. MCP is local stdio, read-only, offline-capable, and contains no model credentials or telemetry.
 
 ### What are "skills" exactly?
 
@@ -29,7 +29,7 @@ Skills are specialized instruction files that teach AI assistants how to handle 
 
 ### Do I need to install every skill?
 
-**No.** With AAS Core, ask the agent to recommend a small stack that matches your project, target, goals, and risk policy. On a broad direct install, all skills may be present locally while the host loads only the skills it invokes.
+**No.** With AAS Core, ask the agent to inspect the project and choose the exact skills from the complete catalog. On a broad direct install, all skills may be present locally while the host loads only the skills it invokes.
 
 Use [Starter Packs](bundles.md) as human-curated presets when you want a fixed starting point.
 
@@ -50,7 +50,7 @@ Start from:
 ### What is the difference between skills, AAS MCP, and the CLI?
 
 - **Skills** are reusable `SKILL.md` playbooks that guide an AI assistant through a workflow.
-- **AAS MCP** is the local, read-only discovery and composition interface to AAS Core. It searches and inspects the verified catalog, recommends a stack, and checks or compares manifests.
+- **AAS MCP** is the local, read-only discovery and composition interface to AAS Core. It exposes every catalog skill, reads requested content, validates agent-selected IDs, and checks or compares manifests.
 - **The `aas` CLI** manages explicit lifecycle operations such as catalog status/update, MCP configuration, stack validation, planning, and diagnostics.
 
 Other MCP servers may grant access to APIs, services, databases, or hosted systems. AAS MCP has a narrower boundary: it does not install, apply, update catalogs, scan repositories, or modify configuration through tool calls.
@@ -137,7 +137,7 @@ _Always check the Risk label and review the code._
 
 ### How do I start with AAS Core?
 
-Use the pinned `aas` binary from a release whose notes explicitly state that it includes AAS Core to preview and approve local MCP configuration for Codex or Claude. Release 14.6.0 predates Core; Core-capable packages begin with the 15.x line. Restart the host if needed, then ask the agent to recommend and explain a stack without applying it. The command template and trust boundaries are in [AAS Core](aas-core.md).
+Use the pinned `aas` binary from a release whose notes explicitly state that it includes AAS Core to preview and approve local MCP configuration for Codex or Claude. Release 14.6.0 predates Core; Core-capable packages begin with the 15.x line. Restart the host if needed, then ask the agent to search the full catalog, choose exact IDs, and compose a stack without applying it. The command template and trust boundaries are in [AAS Core](aas-core.md).
 
 The package publishes separate `agentic-awesome-skills`, `aas`, and `aas-mcp` binaries. Use the explicit `aas` binary for Core lifecycle commands; the legacy `agentic-awesome-skills` entrypoint remains the direct installer.
 
@@ -160,7 +160,7 @@ If you get a 404 from npm, use: `npx github:sickn33/agentic-awesome-skills`
 git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
 ```
 
-For direct skill distribution, the installer CLI performs a lighter shallow clone of the current library. Manual `git clone` remains appropriate when you want the full repository history or plan to contribute from the same checkout. For Codex or Claude users who want project-specific recommendation, start with AAS Core instead of treating a full-library install as the primary product path.
+For direct skill distribution, the installer CLI performs a lighter shallow clone of the current library. Manual `git clone` remains appropriate when you want the full repository history or plan to contribute from the same checkout. For Codex or Claude users who want project-specific agent selection with reproducible state, start with AAS Core instead of treating a full-library install as the primary product path.
 
 **Tool-specific paths:**
 
@@ -378,7 +378,7 @@ Examples:
 
 ### How do I know which skill to use?
 
-With AAS Core, describe the project outcome and constraints, then ask the agent to call `recommend_stack`. Review its coverage, evidence, exclusions, discovery candidates, and unknowns before accepting the proposed IDs.
+With AAS Core, describe the project outcome and constraints, then ask the agent to search and read the full catalog, choose exact IDs, and call `compose_stack`. Review the agent's rationale and proposed IDs before accepting the stack.
 
 For manual discovery:
 

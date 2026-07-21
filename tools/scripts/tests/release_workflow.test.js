@@ -23,10 +23,20 @@ const candidate = {
   headRefName: "release/v1.2.3",
   baseRefName: "main",
   mergeCommit: { oid: mergeOid },
+  mergedAt: "2026-01-01T00:00:00Z",
 };
 assert.strictEqual(release.selectMergedReleaseCandidate([candidate], "1.2.3"), candidate);
-assert.throws(() => release.selectMergedReleaseCandidate([], "1.2.3"), /exactly one/);
-assert.throws(() => release.selectMergedReleaseCandidate([candidate, { ...candidate, number: 11 }], "1.2.3"), /exactly one/);
+assert.throws(() => release.selectMergedReleaseCandidate([], "1.2.3"), /at least one/);
+const newerCandidate = {
+  ...candidate,
+  number: 11,
+  mergeCommit: { oid: "b".repeat(40) },
+  mergedAt: "2026-01-02T00:00:00Z",
+};
+assert.strictEqual(
+  release.selectMergedReleaseCandidate([candidate, newerCandidate], "1.2.3"),
+  newerCandidate,
+);
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), "release-workflow-"));
 const repo = path.join(root, "repo");

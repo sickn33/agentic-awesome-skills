@@ -99,12 +99,15 @@ function remoteTagTarget(projectRoot, tagName) {
 function selectMergedReleaseCandidate(pullRequests, version) {
   const branch = `release/v${version}`;
   const matches = pullRequests.filter((pr) => (
-    pr.headRefName === branch && pr.baseRefName === "main" && /^[0-9a-f]{40}$/u.test(String(pr.mergeCommit?.oid || ""))
+    pr.headRefName === branch
+    && pr.baseRefName === "main"
+    && /^[0-9a-f]{40}$/u.test(String(pr.mergeCommit?.oid || ""))
+    && Number.isFinite(Date.parse(String(pr.mergedAt || "")))
   ));
-  if (matches.length !== 1) {
-    throw new Error(`Expected exactly one merged protected release PR for ${branch}.`);
+  if (matches.length === 0) {
+    throw new Error(`Expected at least one merged protected release PR for ${branch}.`);
   }
-  return matches[0];
+  return matches.sort((left, right) => Date.parse(right.mergedAt) - Date.parse(left.mergedAt))[0];
 }
 
 function mergedReleaseCandidate(projectRoot, version) {
@@ -121,7 +124,7 @@ function mergedReleaseCandidate(projectRoot, version) {
       "--limit",
       "10",
       "--json",
-      "number,headRefName,baseRefName,mergeCommit",
+      "number,headRefName,baseRefName,mergeCommit,mergedAt",
     ],
     projectRoot,
     { capture: true },
@@ -196,6 +199,8 @@ function writeReleaseNotes(projectRoot, version, sectionContent) {
 function runReleaseSuite(projectRoot) {
   runCommand("npm", ["run", "validate:references"], projectRoot);
   runCommand("npm", ["run", "sync:release-state"], projectRoot);
+  runCommand("npm", ["run", "plugin-compat:check"], projectRoot);
+  runCommand("npm", ["run", "bundles:check"], projectRoot);
   runCommand("npm", ["run", "test"], projectRoot);
   runCommand("npm", ["run", "app:install"], projectRoot);
   runCommand("npm", ["run", "app:build"], projectRoot);

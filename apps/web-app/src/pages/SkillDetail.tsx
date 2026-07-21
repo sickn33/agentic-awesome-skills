@@ -335,7 +335,7 @@ export function SkillDetail(): React.ReactElement {
               Canonical skill ID
             </p>
             <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-              Use this exact ID when asking your agent for an AAS Core recommendation or when reviewing a proposed stack. Workbench reviews completed stack and plan artifacts; it does not compose or install them.
+              Give this exact ID to your agent when it selects an AAS Core stack, or use it when reviewing a proposed stack. Workbench reviews completed stack and plan artifacts; it does not compose or install them.
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <code className="inline-block border border-slate-800 bg-slate-900 px-3 py-2 font-mono text-sm text-slate-50">

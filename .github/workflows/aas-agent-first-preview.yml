@@ -44,7 +44,6 @@ jobs:
           npm run plugin-compat:sync
           npm run index
           npm run catalog
-          npm run build:aas-v1-review-queue
           npm run build:aas-v1-catalog
           npm run check:aas-v1-catalog
           npm run test:aas-v1

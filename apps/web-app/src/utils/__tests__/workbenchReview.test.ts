@@ -11,12 +11,17 @@ const D = `sha256-${'a'.repeat(64)}`;
 
 function validStack(): Record<string, unknown> {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     name: 'safe-stack',
     catalog: { package: 'agentic-awesome-skills', version: '15.0.0', integrity: D },
     targets: [{ host: 'codex', scope: 'project' }],
-    intent: { goals: ['build'] },
-    policy: { allowedRisk: ['safe'], requireKnownSource: true, allowManualSetup: false },
+    profile: {
+      goals: ['build'],
+      projectType: 'React web application',
+      languages: ['typescript'],
+      frameworks: ['react'],
+      constraints: [],
+    },
     skills: [{ id: 'react-best-practices' }],
   };
 }
@@ -24,9 +29,25 @@ function validStack(): Record<string, unknown> {
 describe('workbenchReview', () => {
   it('accepts the public stack shape and rejects duplicate skill IDs', () => {
     expect(parseWorkbenchArtifact(JSON.stringify(validStack()), 'stack').kind).toBe('stack');
+    const withoutProjectType = validStack();
+    const emptyProfile = withoutProjectType.profile as Record<string, unknown>;
+    delete emptyProfile.projectType;
+    emptyProfile.goals = [];
+    emptyProfile.languages = [];
+    emptyProfile.frameworks = [];
+    emptyProfile.constraints = [];
+    expect(parseWorkbenchArtifact(JSON.stringify(withoutProjectType), 'stack').kind).toBe('stack');
     const stack = validStack();
     stack.skills = [{ id: 'same' }, { id: 'same' }];
     expect(() => parseWorkbenchArtifact(JSON.stringify(stack), 'stack')).toThrow('duplicate IDs');
+  });
+
+  it('rejects the retired v1 policy shape', () => {
+    const stack = validStack();
+    stack.schemaVersion = 1;
+    stack.policy = { allowedRisk: ['safe'], requireKnownSource: true, allowManualSetup: false };
+    delete stack.profile;
+    expect(() => parseWorkbenchArtifact(JSON.stringify(stack), 'stack')).toThrow('unsupported property "policy"');
   });
 
   it('rejects an artifact of the wrong expected kind', () => {
@@ -54,7 +75,7 @@ describe('workbenchReview', () => {
 
   it('rejects forbidden object keys and does not echo their values', () => {
     const stack = validStack();
-    stack.intent = JSON.parse('{"goals":["build"],"__proto__":"secret-canary"}') as unknown;
+    stack.profile = JSON.parse('{"goals":["build"],"projectType":"web","languages":[],"frameworks":[],"constraints":[],"__proto__":"secret-canary"}') as unknown;
     try {
       parseWorkbenchArtifact(JSON.stringify(stack), 'stack');
       throw new Error('expected rejection');

@@ -2,212 +2,161 @@
 
 const assert = require("node:assert/strict");
 const test = require("node:test");
+const core = require("../../lib/aas-v1");
 const { validateInstance } = require("../../lib/aas-v1/schema-validator");
-const {
-  canonicalJson,
-  loadBundledCatalog,
-  judgment,
-  recommendStack,
-  searchSkills,
-  syntheticCatalog,
-  notApplicable,
-} = require("../../lib/aas-v1");
-const expectedSkillCount = require("../../../skills_index.json").length;
 
-function skill(id, { tokens, capabilities, risk = "safe", setup = "none", codex = "supported", claude = "supported" }) {
-  const evidence = [{ type: "maintainer-review", id: `review:${id}` }];
+const canonicalSkillIds = require("../../../skills_index.json")
+  .map((entry) => entry.id)
+  .sort();
+
+function selection(skillIds) {
   return {
-    id,
-    name: id,
-    description: "",
-    category: "test",
-    tags: [],
-    triggers: [],
-    searchTokens: tokens,
-    recommendationTokens: tokens,
-    metadata: {
-      capabilities: capabilities ? judgment(capabilities, evidence) : judgment(null),
-      risk: judgment(risk, evidence),
-      source: judgment("community", evidence),
-      license: judgment(null),
-      targets: { codex: judgment(codex, evidence), claude: judgment(claude, evidence) },
-      setup: judgment(setup, evidence),
-      dependencies: judgment([], evidence),
-      conflicts: judgment([], evidence),
-      validation: judgment(true, evidence),
-      tests: judgment(null),
-      reviews: judgment(true, evidence),
+    name: "agent-selected-stack",
+    targets: [
+      { host: "codex", scope: "project" },
+      { host: "claude", scope: "project" },
+    ],
+    profile: {
+      goals: ["exercise the selected skill"],
+      projectType: "catalog calibration",
+      languages: [],
+      frameworks: [],
+      constraints: [],
     },
-    untrustedContentPath: null,
+    skillIds,
   };
 }
 
-const input = {
-  intent: "test-qa-automation",
-  targets: [{ host: "codex", scope: "project" }],
-  profile: { languages: ["TypeScript"], frameworks: ["React"] },
-  criticalGoals: ["unit-testing"],
-  nonCriticalGoals: ["coverage-reporting"],
-  policy: { allowedRisk: ["none", "safe"], requireKnownSource: true, allowManualSetup: false },
-};
+function assertDoesNotContainKeys(value, forbiddenKeys) {
+  if (!value || typeof value !== "object") return;
+  for (const [key, child] of Object.entries(value)) {
+    assert.ok(!forbiddenKeys.has(key), `unexpected retired field: ${key}`);
+    assertDoesNotContainKeys(child, forbiddenKeys);
+  }
+}
 
 test("canonical JSON is byte-stable across object insertion order", () => {
-  assert.equal(canonicalJson({ z: 1, a: { y: 2, x: 3 } }), canonicalJson({ a: { x: 3, y: 2 }, z: 1 }));
-  assert.throws(() => canonicalJson({ invalid: Number.NaN }), /Non-finite/);
-  assert.throws(() => canonicalJson({ invalid: undefined }), /Unsupported/);
+  assert.equal(
+    core.canonicalJson({ z: 1, a: { y: 2, x: 3 } }),
+    core.canonicalJson({ a: { x: 3, y: 2 }, z: 1 }),
+  );
+  assert.throws(() => core.canonicalJson({ invalid: Number.NaN }), /Non-finite/);
+  assert.throws(() => core.canonicalJson({ invalid: undefined }), /Unsupported/);
 });
 
-test("recommendation input is schema-validated before normalization", () => {
-  const catalog = syntheticCatalog([]);
+test("empty-query pagination enumerates the complete canonical catalog exactly once", () => {
+  const catalog = core.loadBundledCatalog();
+  const enumerated = [];
+  let cursor = 0;
+
+  do {
+    const page = core.searchSkills(catalog, { cursor, limit: 50 });
+    assert.equal(page.cursor, cursor);
+    assert.equal(page.totalMatches, canonicalSkillIds.length);
+    assert.equal(page.resultCount, page.results.length);
+    enumerated.push(...page.results.map((entry) => entry.id));
+    cursor = page.nextCursor;
+  } while (cursor !== null);
+
+  assert.deepEqual(enumerated, canonicalSkillIds);
+  assert.equal(new Set(enumerated).size, canonicalSkillIds.length);
+  assert.equal(catalog.skills.length, canonicalSkillIds.length);
+});
+
+test("search retrieval preserves catalog order without scores or relevance ranking", () => {
+  const catalog = {
+    skills: [
+      { id: "z-first", name: "Z first", category: "test", searchTokens: ["alpha"], description: "", tags: [], triggers: [] },
+      { id: "a-many", name: "A many", category: "test", searchTokens: ["alpha", "beta"], description: "", tags: [], triggers: [] },
+      { id: "m-second", name: "M second", category: "test", searchTokens: ["beta"], description: "", tags: [], triggers: [] },
+      { id: "unrelated", name: "Unrelated", category: "test", searchTokens: ["gamma"], description: "", tags: [], triggers: [] },
+    ],
+  };
+
+  const firstPage = core.searchSkills(catalog, { query: "alpha beta", cursor: 0, limit: 2 });
+  const secondPage = core.searchSkills(catalog, { query: "alpha beta", cursor: firstPage.nextCursor, limit: 2 });
+  assert.deepEqual(firstPage.results.map((entry) => entry.id), ["z-first", "a-many"]);
+  assert.deepEqual(secondPage.results.map((entry) => entry.id), ["m-second"]);
+  assert.equal(firstPage.totalMatches, 3);
+  assert.equal(secondPage.nextCursor, null);
+  for (const result of [...firstPage.results, ...secondPage.results]) {
+    assert.equal(Object.hasOwn(result, "score"), false);
+    assert.equal(Object.hasOwn(result, "rank"), false);
+  }
+
+  const exact = core.searchSkills(catalog, { query: "a-many", limit: 50 });
+  assert.deepEqual(exact.results.map((entry) => entry.id), ["a-many"]);
+});
+
+test("every canonical skill is directly gettable, exactly searchable, and agent-composable", () => {
+  const catalog = core.loadBundledCatalog();
+
+  for (const id of canonicalSkillIds) {
+    const skill = core.getSkill(catalog, id);
+    assert.equal(skill.id, id);
+
+    const search = core.searchSkills(catalog, { query: id, limit: 1 });
+    assert.equal(search.totalMatches, 1);
+    assert.equal(search.results[0]?.id, id, `exact search did not return ${id} first`);
+    assert.equal(Object.hasOwn(search.results[0], "score"), false);
+    assert.equal(Object.hasOwn(search.results[0], "rank"), false);
+
+    const composed = core.composeStack(catalog, selection([id]));
+    assert.equal(composed.ok, true);
+    assert.equal(composed.status, "composed");
+    assert.equal(composed.selectionSource, "agent");
+    assert.deepEqual(composed.selectedSkills.map((entry) => entry.id), [id]);
+    assert.deepEqual(composed.manifest.skills, [{ id }]);
+    assert.equal(validateInstance("stack-manifest.schema.json", composed.manifest), composed.manifest);
+  }
+});
+
+test("composition rejects unknown, malformed, and duplicate skill IDs", () => {
+  const catalog = core.loadBundledCatalog();
+  const knownId = canonicalSkillIds[0];
+
   assert.throws(
-    () => recommendStack(catalog, { ...input, policy: { ...input.policy, requireKnownSource: "true" } }),
-    { code: "AAS_INPUT_SCHEMA_INVALID" },
+    () => core.composeStack(catalog, selection(["skill-that-is-not-in-the-catalog"])),
+    { code: "AAS_SKILL_NOT_FOUND" },
   );
   assert.throws(
-    () => recommendStack(catalog, { ...input, targets: [{ host: "unknown", scope: "project" }] }),
-    { code: "AAS_INPUT_SCHEMA_INVALID" },
+    () => core.composeStack(catalog, selection(["../unsafe-skill"])),
+    { code: "AAS_SELECTION_INPUT_INVALID" },
   );
   assert.throws(
-    () => recommendStack(catalog, { ...input, unexpected: true }),
-    { code: "AAS_INPUT_SCHEMA_INVALID" },
+    () => core.composeStack(catalog, selection([knownId, knownId])),
+    { code: "AAS_SELECTION_INPUT_INVALID" },
   );
 });
 
-test("recommendation is invariant to catalog order", () => {
-  const entries = [
-    skill("unit-skill", { tokens: ["unit", "testing", "typescript"], capabilities: ["unit-testing"] }),
-    skill("coverage-skill", { tokens: ["coverage", "reporting"], capabilities: ["coverage-reporting"] }),
-    skill("unknown-skill", { tokens: ["unit", "testing"], capabilities: null }),
-  ];
-  const first = recommendStack(syntheticCatalog(entries), input);
-  const second = recommendStack(syntheticCatalog([...entries].reverse()), input);
-  assert.equal(canonicalJson(first), canonicalJson(second));
-  assert.deepEqual(first.proposedStack.sort(), ["coverage-skill", "unit-skill"]);
-  assert.equal(first.status, "complete");
-  assert.equal(first.measures.goalCoverage, 1000);
-  assert.equal(first.discoveryCandidates[0].id, "unknown-skill");
-  assert.equal(first.recommended[0].metadata.targets.status, "known");
-  assert.equal(first.recommended[0].metadata.targets.value.codex.value, "supported");
-  assert.equal(validateInstance("recommendation-output.schema.json", first), first);
-});
-
-test("recommendation is invariant to non-semantic skill ID permutations", () => {
-  const makeEntries = (prefix) => [
-    skill(`${prefix}-unit`, { tokens: ["unit", "testing", "typescript"], capabilities: ["unit-testing"] }),
-    skill(`${prefix}-coverage`, { tokens: ["coverage", "reporting"], capabilities: ["coverage-reporting"] }),
-  ];
-  const first = recommendStack(syntheticCatalog(makeEntries("alpha")), input);
-  const second = recommendStack(syntheticCatalog(makeEntries("omega")), input);
-  const semanticProjection = (result) => ({
-    status: result.status,
-    factors: result.recommended.map((candidate) => candidate.factors),
-    coveredGoals: result.coveredGoals,
-    uncoveredGoals: result.uncoveredGoals,
-    measures: result.measures,
-  });
-  assert.deepEqual(semanticProjection(first), semanticProjection(second));
-});
-
-test("recommendation factors ignore search-only ID tokens", () => {
-  const firstSkill = skill("alpha-unit", { tokens: ["unit", "testing"], capabilities: ["unit-testing"] });
-  const secondSkill = skill("omega-unit", { tokens: ["unit", "testing"], capabilities: ["unit-testing"] });
-  firstSkill.searchTokens = ["alpha", ...firstSkill.searchTokens];
-  secondSkill.searchTokens = ["omega", ...secondSkill.searchTokens];
-  const first = recommendStack(syntheticCatalog([firstSkill]), input);
-  const second = recommendStack(syntheticCatalog([secondSkill]), input);
-  assert.deepEqual(first.recommended[0].factors, second.recommended[0].factors);
-});
-
-test("composition includes eligible dependencies and refuses conflicts", () => {
-  const base = skill("base", { tokens: ["typescript"], capabilities: [] });
-  const dependent = skill("dependent", { tokens: ["unit", "testing"], capabilities: ["unit-testing"] });
-  dependent.metadata.dependencies = judgment(["base"], [{ type: "maintainer-review", id: "review:dependent" }]);
-  const conflict = skill("conflict", { tokens: ["coverage", "reporting"], capabilities: ["coverage-reporting"] });
-  conflict.metadata.conflicts = judgment(["base"], [{ type: "maintainer-review", id: "review:conflict" }]);
-  const result = recommendStack(syntheticCatalog([base, dependent, conflict]), input);
-  assert.deepEqual(result.proposedStack, ["base", "dependent"]);
-  assert.equal(result.status, "partial");
-  assert.deepEqual(result.uncoveredGoals, ["coverage-reporting"]);
-});
-
-test("composition is coverage-first even when a partial candidate has a much larger lexical score", () => {
-  const complete = skill("complete", {
-    tokens: ["rare"],
-    capabilities: ["unit-testing", "coverage-reporting"],
-  });
-  const partial = skill("partial", {
-    tokens: ["test", "qa", "automation", "typescript", "react", "unit", "coverage", "reporting"],
-    capabilities: ["unit-testing"],
-  });
-  const result = recommendStack(syntheticCatalog([partial, complete]), input);
-  assert.deepEqual(result.proposedStack, ["complete"]);
-  assert.equal(result.status, "complete");
-});
-
-test("composition abstains instead of adding non-critical-only skills while critical goals remain uncovered", () => {
-  const result = recommendStack(syntheticCatalog([
-    skill("coverage-only", { tokens: ["coverage", "reporting"], capabilities: ["coverage-reporting"] }),
-  ]), input);
-  assert.deepEqual(result.proposedStack, []);
-  assert.equal(result.status, "insufficientCoverage");
-  assert.deepEqual(result.uncoveredGoals, ["coverage-reporting", "unit-testing"]);
-});
-
-test("goal matching requires an exact versioned capability rather than a shared token", () => {
-  const result = recommendStack(syntheticCatalog([
-    skill("generic", { tokens: ["unit", "testing"], capabilities: ["testing"] }),
-  ]), input);
-  assert.equal(result.status, "insufficientCoverage");
-  assert.deepEqual(result.coveredGoals, []);
-});
-
-test("unknown metadata is discovery, while proven policy violations are excluded", () => {
-  const catalog = syntheticCatalog([
-    skill("unknown", { tokens: ["unit", "testing"], capabilities: null }),
-    skill("offensive", { tokens: ["unit", "testing"], capabilities: ["unit-testing"], risk: "offensive" }),
-    skill("manual", { tokens: ["unit", "testing"], capabilities: ["unit-testing"], setup: "manual" }),
+test("Core exposes descriptive catalog data and agent selections without policy or recommendation fields", () => {
+  const catalog = core.loadBundledCatalog();
+  const composed = core.composeStack(catalog, selection(canonicalSkillIds.slice(0, 3)));
+  const search = core.searchSkills(catalog, { query: canonicalSkillIds[0], limit: 3 });
+  const forbiddenKeys = new Set([
+    "policy",
+    "metadata",
+    "recommendationTokens",
+    "recommended",
+    "recommendations",
+    "proposedStack",
+    "discoveryCandidates",
+    "exclusions",
+    "score",
+    "rank",
   ]);
-  const result = recommendStack(catalog, input);
-  assert.equal(result.status, "insufficientCoverage");
-  assert.deepEqual(result.proposedStack, []);
-  assert.deepEqual(result.discoveryCandidates.map((entry) => entry.id), ["unknown"]);
-  assert.deepEqual(result.exclusions.map((entry) => entry.id).sort(), ["manual", "offensive"]);
-});
 
-test("reviewed known-empty capabilities are excluded instead of presented as unknown discovery", () => {
-  const unsupported = skill("unsupported", { tokens: ["unit", "testing"], capabilities: [] });
-  unsupported.metadata.capabilities = notApplicable([{ type: "maintainer-review", id: "review:unsupported" }]);
-  const result = recommendStack(syntheticCatalog([unsupported]), input);
-  assert.deepEqual(result.discoveryCandidates, []);
-  assert.deepEqual(result.exclusions, [{
-    id: "unsupported",
-    reasonCodes: ["AAS_ELIGIBILITY_CAPABILITY_NOT_SUPPORTED"],
-  }]);
-});
-
-test("profile rejects raw repository data fields", () => {
-  assert.throws(
-    () => recommendStack(syntheticCatalog([]), { ...input, profile: { rawFiles: [{ path: "secret" }] } }),
-    (error) => error.code === "AAS_INPUT_PROFILE_FIELD_FORBIDDEN",
-  );
-});
-
-test("search is bounded and stable", () => {
-  const catalog = syntheticCatalog([
-    skill("beta-test", { tokens: ["react", "testing"], capabilities: null }),
-    skill("alpha-test", { tokens: ["react", "testing"], capabilities: null }),
+  assert.equal(core.recommendStack, undefined);
+  assert.equal(core.judgment, undefined);
+  assert.equal(core.notApplicable, undefined);
+  assertDoesNotContainKeys(catalog.skills[0], forbiddenKeys);
+  assertDoesNotContainKeys(search, forbiddenKeys);
+  assertDoesNotContainKeys(composed, forbiddenKeys);
+  assert.deepEqual(Object.keys(composed.manifest.profile).sort(), [
+    "constraints",
+    "frameworks",
+    "goals",
+    "languages",
+    "projectType",
   ]);
-  assert.deepEqual(searchSkills(catalog, { query: "react", limit: 2 }).results.map((entry) => entry.id), ["alpha-test", "beta-test"]);
-  assert.doesNotThrow(() => searchSkills(catalog, { query: "c++ node.js api/v1", limit: 2 }));
-  assert.throws(() => searchSkills(catalog, { query: "^(a+)+$", limit: 2 }), { code: "AAS_INPUT_QUERY_INVALID" });
-  assert.doesNotThrow(() => canonicalJson(searchSkills(catalog, { query: "react", limit: 2 })));
-  assert.throws(() => searchSkills(catalog, { query: "x", limit: 51 }), (error) => error.code === "AAS_INPUT_LIMIT_INVALID");
-});
-
-test("bundled catalog exposes every canonical registry ID exactly once", () => {
-  const catalog = loadBundledCatalog();
-  assert.equal(catalog.skills.length, expectedSkillCount);
-  assert.equal(new Set(catalog.skills.map((entry) => entry.id)).size, expectedSkillCount);
-  assert.ok(catalog.skills.some((entry) => entry.id === "2d-games"));
-  assert.ok(!catalog.skills.some((entry) => entry.id === "game-development/2d-games"));
 });

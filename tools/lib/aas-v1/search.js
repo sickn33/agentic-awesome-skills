@@ -1,7 +1,7 @@
 "use strict";
 
 const { canonicalJson } = require("./canonical-json");
-const { compareStrings, sortedUnique, tokenize } = require("./normalize");
+const { sortedUnique, tokenize } = require("./normalize");
 
 const FORBIDDEN_QUERY_SYNTAX = /[\u0000-\u001f\u007f\\^$*?()[\]{}|]/u;
 
@@ -16,45 +16,49 @@ function validateLimit(value, fallback = 20, maximum = 50) {
 }
 
 function searchSkills(catalog, input = {}) {
-  if (typeof input.query !== "string" || [...input.query].length > 256
-    || Buffer.byteLength(input.query, "utf8") > 1024 || FORBIDDEN_QUERY_SYNTAX.test(input.query)) {
+  const query = input.query === undefined ? "" : input.query;
+  if (typeof query !== "string" || [...query].length > 256
+    || Buffer.byteLength(query, "utf8") > 1024 || FORBIDDEN_QUERY_SYNTAX.test(query)) {
     const error = new Error("query must be a string of at most 256 characters");
     error.code = "AAS_INPUT_QUERY_INVALID";
     throw error;
   }
   const limit = validateLimit(input.limit);
-  const queryTokens = sortedUnique(tokenize(input.query));
-  const target = input.target;
-  if (target !== undefined && !["codex", "claude"].includes(target)) {
-    const error = new Error("target is unsupported in v1");
-    error.code = "AAS_INPUT_TARGET_UNSUPPORTED";
+  const cursor = input.cursor === undefined ? 0 : input.cursor;
+  if (!Number.isInteger(cursor) || cursor < 0 || cursor > catalog.skills.length) {
+    const error = new Error("cursor must be a valid catalog offset");
+    error.code = "AAS_INPUT_CURSOR_INVALID";
     throw error;
   }
-  const results = catalog.skills.map((skill) => {
+  const queryTokens = sortedUnique(tokenize(query));
+  const normalizedQuery = query.trim().toLowerCase();
+  const exactMatch = normalizedQuery
+    ? catalog.skills.find((skill) => skill.id === normalizedQuery)
+    : null;
+  const candidates = exactMatch ? [exactMatch] : catalog.skills;
+  const matches = candidates.map((skill) => {
     const document = new Set(skill.searchTokens || []);
     const matchedTokens = queryTokens.filter((token) => document.has(token));
-    const exactId = skill.id === input.query.trim().toLowerCase() ? 1 : 0;
-    const prefixId = skill.id.startsWith(input.query.trim().toLowerCase()) ? 1 : 0;
-    const score = exactId * 100000 + prefixId * 25000 + matchedTokens.length * 1000;
-    return { skill, score, matchedTokens };
-  }).filter((entry) => entry.score > 0)
-    .filter((entry) => !target || entry.skill.metadata.targets?.[target]?.value !== "blocked")
-    .sort((left, right) => right.score - left.score || compareStrings(left.skill.id, right.skill.id))
-    .slice(0, limit)
-    .map(({ skill, score, matchedTokens }) => {
+    const matchesQuery = !normalizedQuery
+      || skill.id.startsWith(normalizedQuery)
+      || matchedTokens.length > 0;
+    return { skill, matchedTokens, matchesQuery };
+  }).filter((entry) => entry.matchesQuery);
+  const results = matches.slice(cursor, cursor + limit)
+    .map(({ skill, matchedTokens }) => {
       const result = {
         id: skill.id,
         name: skill.name,
         category: skill.category,
-        score,
         matchedTokens,
-        risk: skill.metadata.risk,
-        source: skill.metadata.source,
+        description: skill.description,
+        tags: skill.tags,
+        triggers: skill.triggers,
       };
-      if (target) result.targetCompatibility = skill.metadata.targets?.[target];
       return result;
     });
-  return { queryTokens, resultCount: results.length, results };
+  const nextCursor = cursor + results.length < matches.length ? cursor + results.length : null;
+  return { queryTokens, totalMatches: matches.length, cursor, nextCursor, resultCount: results.length, results };
 }
 
 function getSkill(catalog, id) {

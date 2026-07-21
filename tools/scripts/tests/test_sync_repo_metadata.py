@@ -49,7 +49,13 @@ class SyncRepoMetadataTests(unittest.TestCase):
 
 **Current release: V8.3.0.** Trusted by 25k+ GitHub stargazers, this repository combines official and community skill collections with bundles, workflows, installation paths, and docs that help you go from first install to daily use quickly.
 
+Codex or Claude inspects your project, enumerates its primary capabilities, searches and compares candidates across the complete local AAS catalog, and chooses the exact skills. Core imposes no semantic policy that favors a small stack; the manifest format has an explicit technical maximum of 128 skills. All 1,273 skills in the current catalog remain individually searchable, readable, and selectable. AAS Core does not rank or recommend skills. Its read-only `compose_stack` tool validates and returns the agent-owned manifest in memory; a client or the `aas` CLI persists the reviewed stack and its optional selection-evidence sidecar.
+
+The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, and direct installers remain important. They are the content, curation, distribution, and compatibility layers around AAS Core—not competing primary products.
+
 - **Broad coverage with real utility**: 1,273+ skills across development, testing, security, infrastructure, product, and marketing.
+
+- **Require capability coverage.** MCP session instructions require the agent to evaluate the full project surface—from architecture, domain behavior, data and integrations through testing, security, UX, deployment, and maintenance—then search each applicable capability, compare multiple candidates, cover it with a non-redundant skill or report a catalog gap, and avoid stopping at a minimal shortlist.
 
 **Start here:** [Install in 1 minute](#installation) · [Recommended plugins](#recommended-specialized-plugins) · [Choose your tool](#choose-your-tool) · [📚 Browse 1,273+ Skills](#browse-1273-skills) · [Bundles & workflows](#bundles--workflows) · [Support the project](#support-the-project)
 
@@ -80,6 +86,11 @@ class SyncRepoMetadataTests(unittest.TestCase):
 
             (root / "docs" / "users" / "getting-started.md").write_text(
                 "# Getting Started with Agentic Awesome Skills (V8.3.0)\n",
+                encoding="utf-8",
+            )
+            (root / "docs" / "users" / "aas-core.md").write_text(
+                "npm exec --yes --ignore-scripts --package=agentic-awesome-skills@X.Y.Z -- aas mcp configure\\\n\n"
+                "Every current catalog skill is searchable, readable, selectable, and usable.\n",
                 encoding="utf-8",
             )
             (root / "docs" / "users" / "claude-code-skills.md").write_text(
@@ -131,11 +142,21 @@ class SyncRepoMetadataTests(unittest.TestCase):
             self.assertIn("1,304+ skills across development", readme)
             self.assertIn("[📚 Browse 1,304+ Skills](#browse-1304-skills)", readme)
             self.assertIn("[Browse 1,304+ Skills](#browse-1304-skills)", readme)
-            self.assertIn("1,304+ reusable `SKILL.md` playbooks", readme)
+            self.assertIn("Local, agent-owned skill stacks for coding agents", readme)
+            self.assertIn("AAS Core does not rank or recommend them", readme)
+            self.assertIn("can persist it as `aas-stack.json`", readme)
+            self.assertIn("The reusable `SKILL.md` playbooks", readme)
+            self.assertIn("Guide capability coverage", readme)
+            self.assertIn("does not certify semantic completeness", readme)
             self.assertEqual(
                 "# Getting Started with AAS Core\n",
                 (root / "docs" / "users" / "getting-started.md").read_text(encoding="utf-8"),
             )
+            aas_core = (root / "docs" / "users" / "aas-core.md").read_text(encoding="utf-8")
+            self.assertIn("--package=agentic-awesome-skills@8.4.0", aas_core)
+            self.assertIn("searchable, readable, and available for agent selection", aas_core)
+            self.assertNotIn("X.Y.Z", aas_core)
+            self.assertNotIn("selectable, and usable", aas_core)
             self.assertIn("1,304+ files", (root / "docs" / "users" / "gemini-cli-skills.md").read_text(encoding="utf-8"))
             self.assertIn("1,304+ specialized areas", (root / "docs" / "users" / "kiro-integration.md").read_text(encoding="utf-8"))
             self.assertIn("Total Bundles: 2", (root / "docs" / "users" / "bundles.md").read_text(encoding="utf-8"))
@@ -157,7 +178,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
                 "total_skills_label": "1,304+",
             }
         )
-        self.assertIn("AAS Core preview", description)
+        self.assertIn("AAS Core is the local, agent-first control plane", description)
         self.assertIn("1,304+ agentic skills", description)
         self.assertIn("local MCP", description)
 
@@ -184,8 +205,8 @@ class SyncRepoMetadataTests(unittest.TestCase):
             "version": "15.0.0-rc.1",
             "core_included": True,
             "core_included_from_major": 15,
-            "total_skills": 1968,
-            "total_skills_label": "1,968+",
+            "total_skills": 1969,
+            "total_skills_label": "1,969+",
             "star_badge_count": "44%2C000%2B",
             "star_milestone": "44,000+",
             "star_celebration": "44k",

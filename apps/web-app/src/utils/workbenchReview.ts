@@ -6,31 +6,28 @@ const ID_PATTERN = /^[a-z0-9][a-z0-9._-]*(\/[a-z0-9][a-z0-9._-]*)*$/;
 const PACKAGE_PATTERN = /^(@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/;
 const VERSION_PATTERN = /^[0-9A-Za-z][0-9A-Za-z.+-]*$/;
 const NAME_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._ -]*$/;
-const RISK_LEVELS = new Set(['none', 'safe', 'unknown', 'critical', 'offensive']);
 const HOSTS = new Set(['codex', 'claude']);
 const SCOPES = new Set(['project', 'user']);
 const OPERATION_KINDS = new Set(['install', 'replaceManaged', 'removeManaged']);
-const OVERRIDE_KINDS = new Set(['discoveryCandidate', 'managedDrift']);
 const FORBIDDEN_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
 
 export type WorkbenchArtifactKind = 'stack' | 'plan';
 
 export interface StackManifestReview {
-  schemaVersion: 1;
+  schemaVersion: 2;
   name: string;
   catalog: CatalogIdentity;
   targets: Target[];
-  intent: { goals: string[] };
-  policy: Policy;
+  profile: ProjectProfile;
   skills: Array<{ id: string }>;
 }
 
 export interface PlanReview {
-  schemaVersion: 1;
+  schemaVersion: 2;
   kind: 'aas.stack-plan';
   digest: string;
   payload: {
-    schemaVersion: 1;
+    schemaVersion: 2;
     kind: 'aas.stack-plan.payload';
     versions: Versions;
     manifestDigest: string;
@@ -42,7 +39,7 @@ export interface PlanReview {
       entries: Array<{ skillId: string; treeDigest: string; catalogIntegrity: string }>;
     };
     desiredSkills: string[];
-    policy: Policy;
+    profile: ProjectProfile;
     operations: PlanOperation[];
     overrides: PlanOverride[];
     stateCommit: { previousDigest: string; nextDigest: string; position: 'final' };
@@ -60,17 +57,18 @@ export interface Target {
   scope: 'project' | 'user';
 }
 
-export interface Policy {
-  allowedRisk: string[];
-  requireKnownSource: boolean;
-  allowManualSetup: boolean;
+export interface ProjectProfile {
+  goals: string[];
+  projectType?: string;
+  languages: string[];
+  frameworks: string[];
+  constraints: string[];
 }
 
 export interface Versions {
   protocolVersion: string;
   coreVersion: string;
-  metadataSchemaVersion: string;
-  scorerVersion: string;
+  catalogSchemaVersion: string;
 }
 
 export interface PlanOperation {
@@ -83,10 +81,9 @@ export interface PlanOperation {
 }
 
 export interface PlanOverride {
-  kind: 'discoveryCandidate' | 'managedDrift';
+  kind: 'managedDrift';
   skillId: string;
   reasonCodes: string[];
-  unknownFields: string[];
 }
 
 export type ParsedWorkbenchArtifact =
@@ -187,27 +184,28 @@ function parseTarget(value: unknown, path: string, planned = false): Target & { 
     : base;
 }
 
-function parsePolicy(value: unknown, path: string): Policy {
+function parseProfile(value: unknown, path: string): ProjectProfile {
   const entry = record(value, path);
-  exactKeys(entry, ['allowedRisk', 'requireKnownSource', 'allowManualSetup'], ['allowedRisk', 'requireKnownSource', 'allowManualSetup'], path);
-  const allowedRisk = stringArray(entry.allowedRisk, `${path}.allowedRisk`, { min: 1, max: 5 });
-  if (allowedRisk.some((risk) => !RISK_LEVELS.has(risk))) fail(`${path}.allowedRisk contains an unsupported risk level.`);
+  const allowed = ['goals', 'projectType', 'languages', 'frameworks', 'constraints'];
+  const required = ['goals', 'languages', 'frameworks', 'constraints'];
+  exactKeys(entry, allowed, required, path);
   return {
-    allowedRisk,
-    requireKnownSource: bool(entry.requireKnownSource, `${path}.requireKnownSource`),
-    allowManualSetup: bool(entry.allowManualSetup, `${path}.allowManualSetup`),
+    goals: stringArray(entry.goals, `${path}.goals`, { max: 32 }),
+    ...(entry.projectType === undefined ? {} : { projectType: text(entry.projectType, `${path}.projectType`, 2048) }),
+    languages: stringArray(entry.languages, `${path}.languages`, { max: 32 }),
+    frameworks: stringArray(entry.frameworks, `${path}.frameworks`, { max: 32 }),
+    constraints: stringArray(entry.constraints, `${path}.constraints`, { max: 32 }),
   };
 }
 
 function parseVersions(value: unknown, path: string): Versions {
   const entry = record(value, path);
-  const keys = ['protocolVersion', 'coreVersion', 'metadataSchemaVersion', 'scorerVersion'];
+  const keys = ['protocolVersion', 'coreVersion', 'catalogSchemaVersion'];
   exactKeys(entry, keys, keys, path);
   return {
     protocolVersion: text(entry.protocolVersion, `${path}.protocolVersion`, 64),
     coreVersion: text(entry.coreVersion, `${path}.coreVersion`, 64),
-    metadataSchemaVersion: text(entry.metadataSchemaVersion, `${path}.metadataSchemaVersion`, 64),
-    scorerVersion: text(entry.scorerVersion, `${path}.scorerVersion`, 64),
+    catalogSchemaVersion: text(entry.catalogSchemaVersion, `${path}.catalogSchemaVersion`, 64),
   };
 }
 
@@ -230,7 +228,7 @@ function checkDepth(root: unknown): void {
 
 function parseStack(value: unknown): StackManifestReview {
   const root = record(value, 'stack');
-  const keys = ['schemaVersion', 'name', 'catalog', 'targets', 'intent', 'policy', 'skills'];
+  const keys = ['schemaVersion', 'name', 'catalog', 'targets', 'profile', 'skills'];
   exactKeys(root, keys, keys, 'stack');
   const name = text(root.name, 'stack.name', 128);
   if (!NAME_PATTERN.test(name)) fail('stack.name contains unsupported characters.');
@@ -238,8 +236,6 @@ function parseStack(value: unknown): StackManifestReview {
   const targets = root.targets.map((target, index) => parseTarget(target, `stack.targets[${index}]`));
   const targetKeys = targets.map((target) => `${target.host}:${target.scope}`);
   if (new Set(targetKeys).size !== targetKeys.length) fail('stack.targets must not contain duplicates.');
-  const intent = record(root.intent, 'stack.intent');
-  exactKeys(intent, ['goals'], ['goals'], 'stack.intent');
   if (!Array.isArray(root.skills) || root.skills.length > 128) fail('stack.skills must contain at most 128 entries.');
   const skills = root.skills.map((skill, index) => {
     const entry = record(skill, `stack.skills[${index}]`);
@@ -248,12 +244,11 @@ function parseStack(value: unknown): StackManifestReview {
   });
   if (new Set(skills.map((skill) => skill.id)).size !== skills.length) fail('stack.skills must not contain duplicate IDs.');
   return {
-    schemaVersion: literal(root.schemaVersion, 1, 'stack.schemaVersion'),
+    schemaVersion: literal(root.schemaVersion, 2, 'stack.schemaVersion'),
     name,
     catalog: parseCatalog(root.catalog, 'stack.catalog') as CatalogIdentity,
     targets: targets as Target[],
-    intent: { goals: stringArray(intent.goals, 'stack.intent.goals', { min: 1, max: 32, ids: true }) },
-    policy: parsePolicy(root.policy, 'stack.policy'),
+    profile: parseProfile(root.profile, 'stack.profile'),
     skills,
   };
 }
@@ -279,14 +274,13 @@ function parseOperation(value: unknown, path: string): PlanOperation {
 
 function parseOverride(value: unknown, path: string): PlanOverride {
   const entry = record(value, path);
-  const keys = ['kind', 'skillId', 'reasonCodes', 'unknownFields'];
+  const keys = ['kind', 'skillId', 'reasonCodes'];
   exactKeys(entry, keys, keys, path);
-  if (typeof entry.kind !== 'string' || !OVERRIDE_KINDS.has(entry.kind)) fail(`${path}.kind is unsupported.`);
+  if (entry.kind !== 'managedDrift') fail(`${path}.kind must equal "managedDrift".`);
   return {
-    kind: entry.kind as PlanOverride['kind'],
+    kind: 'managedDrift',
     skillId: id(entry.skillId, `${path}.skillId`),
     reasonCodes: stringArray(entry.reasonCodes, `${path}.reasonCodes`, { min: 1, max: 128 }),
-    unknownFields: stringArray(entry.unknownFields, `${path}.unknownFields`, { max: 128 }),
   };
 }
 
@@ -294,7 +288,7 @@ function parsePlan(value: unknown): PlanReview {
   const root = record(value, 'plan');
   exactKeys(root, ['schemaVersion', 'kind', 'digest', 'payload'], ['schemaVersion', 'kind', 'digest', 'payload'], 'plan');
   const payload = record(root.payload, 'plan.payload');
-  const payloadKeys = ['schemaVersion', 'kind', 'versions', 'manifestDigest', 'catalog', 'runtime', 'target', 'installedState', 'desiredSkills', 'policy', 'operations', 'overrides', 'stateCommit'];
+  const payloadKeys = ['schemaVersion', 'kind', 'versions', 'manifestDigest', 'catalog', 'runtime', 'target', 'installedState', 'desiredSkills', 'profile', 'operations', 'overrides', 'stateCommit'];
   exactKeys(payload, payloadKeys, payloadKeys, 'plan.payload');
 
   const installedState = record(payload.installedState, 'plan.payload.installedState');
@@ -317,11 +311,11 @@ function parsePlan(value: unknown): PlanReview {
   exactKeys(stateCommit, ['previousDigest', 'nextDigest', 'position'], ['previousDigest', 'nextDigest', 'position'], 'plan.payload.stateCommit');
 
   return {
-    schemaVersion: literal(root.schemaVersion, 1, 'plan.schemaVersion'),
+    schemaVersion: literal(root.schemaVersion, 2, 'plan.schemaVersion'),
     kind: literal(root.kind, 'aas.stack-plan', 'plan.kind'),
     digest: digest(root.digest, 'plan.digest'),
     payload: {
-      schemaVersion: literal(payload.schemaVersion, 1, 'plan.payload.schemaVersion'),
+      schemaVersion: literal(payload.schemaVersion, 2, 'plan.payload.schemaVersion'),
       kind: literal(payload.kind, 'aas.stack-plan.payload', 'plan.payload.kind'),
       versions: parseVersions(payload.versions, 'plan.payload.versions'),
       manifestDigest: digest(payload.manifestDigest, 'plan.payload.manifestDigest'),
@@ -333,7 +327,7 @@ function parsePlan(value: unknown): PlanReview {
         entries: installedEntries,
       },
       desiredSkills: stringArray(payload.desiredSkills, 'plan.payload.desiredSkills', { max: 128, ids: true }),
-      policy: parsePolicy(payload.policy, 'plan.payload.policy'),
+      profile: parseProfile(payload.profile, 'plan.payload.profile'),
       operations: payload.operations.map((operation, index) => parseOperation(operation, `plan.payload.operations[${index}]`)),
       overrides: payload.overrides.map((override, index) => parseOverride(override, `plan.payload.overrides[${index}]`)),
       stateCommit: {

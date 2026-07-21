@@ -1,27 +1,27 @@
-<!-- registry-sync: version=15.0.0; skills=1968; stars=43529; updated_at=2026-07-18T14:28:18+00:00 -->
+<!-- registry-sync: version=15.2.0; skills=1987; stars=43679; updated_at=2026-07-21T21:34:22+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
-> **Local, deterministic skill-stack composition for coding agents—from an explicit project profile to a reviewable plan before any target change.**
+> **Local, agent-owned skill stacks for coding agents—from complete catalog access to a reproducible, reviewable plan.**
 
-**Current release: V15.0.0.** This release includes AAS Core under the **Agent-First Preview** claim for local search, inspection, recommendation, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
+**Current release: V15.2.0.** This release includes AAS Core for complete local catalog search, agent-owned selection, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
 
-Codex or Claude inspects your project using its own capabilities; AAS does not scan it. The agent sends the local, read-only AAS MCP an explicit project profile. AAS Core evaluates that profile and your policy against a verified local catalog, returns an explainable recommendation, and lets the agent propose `aas-stack.json`. The `aas` CLI validates that desired state and creates an immutable per-target plan before any skill changes are made.
+Codex or Claude inspects your project and chooses exact skills from the complete local AAS catalog. AAS Core does not rank or recommend them: its read-only `compose_stack` tool validates the agent-owned selection in memory, and a client or the `aas` CLI can persist it as `aas-stack.json` and produce an immutable plan before any target change.
 
 **[Read the AAS Core preview guide →](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)**
 
 ```text
 Project
   -> inspected by Codex or Claude (not by AAS)
-  -> explicit, allowlisted project profile
+  -> agent searches and reads the complete local catalog
   -> AAS MCP (local stdio, read-only)
-  -> deterministic AAS Core + verified local catalog
-  -> recommendation with evidence, exclusions, coverage, and unknowns
-  -> agent proposes aas-stack.json
+  -> Codex or Claude chooses exact skill IDs
+  -> compose_stack validates the selection in memory (read-only)
+  -> client or AAS CLI persists aas-stack.json and optional evidence
   -> AAS CLI validate + immutable plan preview
   -> human review (optionally in Workbench)
 ```
 
-The 1,967+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, and direct installers remain important. They are the content, curation, distribution, and compatibility layers around AAS Core—not competing primary products.
+The reusable `SKILL.md` playbooks, specialized plugins, bundles, workflows, and direct installers remain important. They are the content, curation, distribution, and compatibility layers around AAS Core—not competing primary products.
 
 This is an independent community project. It is not affiliated with, sponsored by, endorsed by, or authorized by Google. Google, Antigravity, Gemini, and related product names are referenced only to describe compatibility and install targets. The GitHub repository is canonical; the hosted catalog and browser-local Workbench are companion discovery and review surfaces, not a hosted control plane.
 
@@ -46,25 +46,44 @@ This is an independent community project. It is not affiliated with, sponsored b
 
 AAS Core gives the repository one product model:
 
-- **Discover and recommend through the agent.** The local MCP exposes `search_skills`, `get_skill`, `recommend_stack`, `inspect_stack`, and `diff_stack`; it does not install skills, scan source files, call a remote model, or write to the project.
-- **Keep approved intent in `aas-stack.json`.** The manifest pins catalog identity, targets, goals, policy, and exact skill IDs without storing repository source or model reasoning.
+- **Let the agent choose.** The local MCP preserves `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, and `diff_stack`, and adds read-only `export_selection_evidence` and `inspect_selection_evidence`; Core does not rank, recommend, exclude, or hide skills.
+- **Guide capability coverage.** MCP session instructions require the agent to evaluate the full project surface—from architecture, domain behavior, data and integrations through testing, security, UX, deployment, and maintenance—then search each applicable capability, compare multiple candidates, cover it with a non-redundant skill or report a catalog gap, and avoid stopping at a minimal shortlist. Core records and validates the resulting selection, but it does not certify semantic completeness.
+- **Keep the chosen stack and evidence reviewable.** A client or the CLI can persist `aas-stack.json` and the separate `aas-selection-evidence.json` sidecar in an `artifact-dir`; the manifest preserves exact agent-selected IDs, while evidence records factual process trace and the agent-declared capability ledger.
 - **Validate and preview through the CLI.** `aas stack validate` checks the proposal, while `aas stack plan` produces an immutable, per-target plan without applying it.
 - **Review in Workbench.** The hosted Workbench imports and reviews stack/plan JSON in browser memory; it does not access your filesystem or install anything.
 - **Retain every useful distribution path.** Direct installs, plugins, bundles, workflows, and the full catalog remain available as payload and compatibility surfaces.
+
+> [!IMPORTANT]
+> Structural and identity validity does not certify semantic fit, compatibility, setup correctness, operational safety, or safety to apply.
+
+| Surface | Current status |
+| --- | --- |
+| Published package | Current npm release; AAS Core status is `agent-first-preview` |
+| Catalog search and inspection | Supported preview; local and read-only |
+| Agent-owned composition | Supported preview; Core validates IDs and structure, not semantic suitability; manifests have a technical maximum of 128 skills |
+| Stack validation and plan preview | Supported preview; no target skill changes |
+| Workbench | Browser-local review of stack and plan artifacts |
+| Selection evidence | Exported and inspected through MCP/CLI contracts; not yet reviewed in Workbench |
+| Apply and recovery | Experimental, explicit opt-in, outside the supported safety claim |
+| Semantic suitability certification | Not provided |
 
 Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md) for the exact trust boundaries, current preview status, Codex/Claude setup model, and CLI lifecycle.
 
 ## Why This Repo
 
-- **Agent-first, locally controlled**: let Codex or Claude compose from structured catalog evidence without uploading your repository to AAS.
-- **Deterministic and inspectable**: the same normalized profile, catalog, schema, and scorer produce the same canonical recommendation.
+- **Agent-first, locally controlled**: Codex or Claude inspects the project and chooses from the complete local catalog without uploading your repository to AAS.
+- **Complete and inspectable**: every catalog skill is searchable, readable, and available for agent selection; Core does not certify suitability, compatibility, or operational safety, and metadata is informational rather than an eligibility gate.
 - **Approval before writes**: the durable artifacts are an approved stack and immutable plan, not an opaque one-shot install.
 - **Installable, not just inspirational**: use the compatible legacy installer or plugin distributions when direct delivery is the right path.
 - **Built for major agent workflows**: Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, Kiro, OpenCode, Copilot, and more.
-- **Broad coverage with real utility**: 1,968+ skills across development, testing, security, infrastructure, product, and marketing.
+- **Broad coverage with real utility**: 1,987+ skills across development, testing, security, infrastructure, product, and marketing.
 - **Inspect before installing**: the hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) reviews agent-produced stack manifests and immutable plans without browser-side installation.
 - **Focused delivery remains available**: specialized plugins package proven sets for web, security, data, docs, DevOps, QA, OSS, or agent/MCP workflows.
 - **Useful whether you want breadth or curation**: install the full catalog, choose a specialized plugin, start with bundles, or compare alternatives before installing.
+
+### Why not just search the skills directory?
+
+Direct file search can find candidate prose, but it leaves the result in the conversation. AAS Core adds verified catalog identity, explicit target binding, durable desired state, optional selection evidence, deterministic validation, immutable planning, and dedicated review surfaces. Its value is not choosing better than the coding agent; it is turning the agent's choice into reproducible, inspectable state.
 
 ## Table of Contents
 
@@ -75,7 +94,7 @@ Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob
 - [Choose Your Tool](#choose-your-tool)
 - [Quick FAQ](#quick-faq)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 1,968+ Skills](#browse-1968-skills)
+- [Browse 1,987+ Skills](#browse-1987-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Support the Project](#support-the-project)
@@ -88,7 +107,7 @@ Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob
 
 ## Installation
 
-For Codex and Claude, start with the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md): configure the local MCP through the explicit preview flow, ask the agent for a recommendation, review the proposed `aas-stack.json`, then run CLI validation and planning. The MCP and validation are read-only. Planning writes only the requested plan artifact; it does not materialize skill payloads or AAS managed state in the target.
+For Codex and Claude, start with the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md): configure the local MCP, ask the agent to inspect the project and choose exact IDs from the full catalog, review the proposed `aas-stack.json`, then run CLI validation and planning. The MCP and validation are read-only. Planning writes only the requested plan artifact; it does not materialize skill payloads or AAS managed state in the target.
 
 Use direct installation when your host does not yet have a native AAS Core adapter, when you already know the exact skill IDs, or when you deliberately prefer manual selection:
 
@@ -173,10 +192,10 @@ Use the same repository, but install or invoke it in the way your host expects.
 
 | Tool           | Install                                                                  | First Use                                              |
 | -------------- | ------------------------------------------------------------------------ | ------------------------------------------------------ |
-| Claude Code    | [AAS Core local MCP preview](docs/users/claude-code-skills.md), direct install, or Claude plugin marketplace | Ask Claude to recommend and propose an AAS stack |
+| Claude Code    | [AAS Core local MCP preview](docs/users/claude-code-skills.md), direct install, or Claude plugin marketplace | Ask Claude to choose and compose an AAS stack |
 | Cursor         | `npx agentic-awesome-skills --cursor`                              | `@brainstorming help me plan a feature`              |
 | Gemini CLI     | `npx agentic-awesome-skills --gemini`                              | `Use brainstorming to plan a feature`                |
-| Codex CLI      | [AAS Core local MCP preview](docs/users/codex-cli-skills.md) or `npx agentic-awesome-skills --codex` | Ask Codex to recommend and propose an AAS stack |
+| Codex CLI      | [AAS Core local MCP preview](docs/users/codex-cli-skills.md) or `npx agentic-awesome-skills --codex` | Ask Codex to choose and compose an AAS stack |
 | Autohand Code  | `npx agentic-awesome-skills --path ~/.autohand/skills` or `--path .autohand/skills` | `Use brainstorming to plan a feature`                |
 | Antigravity IDE | `npx agentic-awesome-skills --antigravity`                        | `Use @brainstorming to plan a feature`               |
 | Antigravity CLI (`agy`) | `npx agentic-awesome-skills --agy`                        | `/brainstorming help me plan a feature`              |
@@ -199,11 +218,11 @@ Use the Codex and Claude guides for the AAS Core MCP preview path. For other hos
 
 ### What is Agentic Awesome Skills?
 
-**Agentic Awesome Skills** is the repository behind AAS Core, a local agent-first control plane for composing explainable skill stacks. A deterministic core connects the read-only AAS MCP, the stack CLI, and Workbench to a catalog of 1,967+ reusable `SKILL.md` playbooks. Direct installers, specialized plugins, bundles, and workflows remain supported distribution and discovery surfaces.
+**Agentic Awesome Skills** is the repository behind AAS Core, a local agent-first control plane for recording and validating agent-chosen skill stacks. The read-only AAS MCP gives Codex and Claude complete catalog search and skill inspection; the stack CLI and Workbench make the chosen state reproducible and reviewable. Direct installers, specialized plugins, bundles, and workflows remain supported distribution and discovery surfaces.
 
 ### Is AAS Core fully certified?
 
-Not yet. The current **Agent-First Preview** supports local MCP search, recommendation and inspection plus CLI manifest validation, immutable planning, and diagnosis. Full-catalog recommendation quality and transactional apply/recovery safety are not certified v1 claims; apply and recovery remain explicitly experimental and disabled without additional opt-in flags.
+The supported path covers complete local catalog search and inspection, agent-owned selection, stack composition and validation, immutable planning, and diagnosis. Transactional apply/recovery safety remains outside the supported claim; apply and recovery are explicitly experimental and disabled without additional opt-in flags.
 
 ### How do I install it?
 
@@ -237,11 +256,11 @@ Start with [Specialized Plugins](#recommended-specialized-plugins) when you want
 
 ## Bundles & Workflows
 
-Core, plugins, bundles, and workflows answer different questions. AAS Core composes and validates the approved stack; plugins package a focused delivery surface; bundles are curated recommendations; workflows are ordered playbooks for getting a result.
+Core, plugins, bundles, and workflows answer different questions. Codex or Claude selects skills; AAS Core records and validates that selection; plugins package a focused delivery surface; bundles are curated starting points; workflows are ordered playbooks for getting a result.
 
 | Surface | Answers | Use it for |
 | --- | --- | --- |
-| AAS Core | What exact stack fits this project, target, intent, and policy? | Agent-first recommendation, an approved `aas-stack.json`, validation, and immutable plan preview. |
+| AAS Core | How do I search the full catalog and preserve the agent's chosen stack? | Agent-owned selection, a pinned `aas-stack.json`, validation, and immutable plan preview. |
 | Specialized plugin | What should I install or activate for this domain? | Focused Claude Code/Codex plugin packaging and Antigravity-compatible skill selection. |
 | Bundle | Which skills naturally belong together? | Role-based discovery after a full-library install or when building a custom subset. |
 | Workflow | What order should the agent run skills in? | Planning, shipping, auditing, testing, or incident-style execution. |
@@ -281,7 +300,7 @@ Remove `--dry-run` only after reviewing the install, update, and removal plan. U
 
 The hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) imports and reviews AAS Core stack manifests and immutable plans in browser memory. It does not access the filesystem, generate an approved plan, or install skills.
 
-## Browse 1,968+ Skills
+## Browse 1,987+ Skills
 
 Use the root repo as a landing page, then jump into the deeper surface that matches your intent.
 
@@ -329,7 +348,7 @@ Keep the root README short; use the dedicated docs for recovery and platform-spe
 
 ## Stable Skills Manifest v1
 
-This is the stable **direct-host discovery manifest** for integrations that load individual `SKILL.md` files. It is not `aas-stack.json`, the verified AAS Core catalog, or the Core recommendation contract. Core users should start with the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md); custom host integrations can continue using the manifest below.
+This is the stable **direct-host discovery manifest** for integrations that load individual `SKILL.md` files. It is not `aas-stack.json`, the verified AAS Core catalog, or the Core composition contract. Core users should start with the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md); custom host integrations can continue using the manifest below.
 
 Host integrations should use:
 
@@ -399,6 +418,7 @@ Key source families include:
 - **[openai/skills](https://github.com/openai/skills)**: OpenAI Codex skills catalog - Agent skills, Skill Creator, Concise Planning.
 - **[supabase/agent-skills](https://github.com/supabase/agent-skills)**: Supabase official skills - Postgres Best Practices.
 - **[microsoft/skills](https://github.com/microsoft/skills)**: Official Microsoft skills - Azure cloud services, Bot Framework, Cognitive Services, and enterprise development patterns across .NET, Python, TypeScript, Go, Rust, and Java.
+- **[Simon-He95/markstream-vue](https://github.com/Simon-He95/markstream-vue)**: Official Markstream skill for installing streaming Markdown renderers across Vue, React, Svelte, Angular, Nuxt, Next.js, and Vue 2 applications (MIT).
 - **[MiniMax-AI/cli](https://github.com/MiniMax-AI/cli)**: Official MiniMax CLI - text, image, video, speech, music, vision, and web-search workflows for MiniMax models and APIs.
 - **[google-gemini/gemini-skills](https://github.com/google-gemini/gemini-skills)**: Official Gemini skills - Gemini API, SDK and model interactions.
 - **[apify/agent-skills](https://github.com/apify/agent-skills)**: Official Apify skills - Web scraping, data extraction and automation.

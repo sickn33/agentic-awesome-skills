@@ -6,7 +6,7 @@
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
-  "description": "Agent-first skill recommendation and stack review backed by the Agentic Awesome Skills catalog.",
+  "description": "Neutral catalog retrieval, agent-owned skill selection, and stack review backed by the Agentic Awesome Skills catalog.",
   "icons": [
     {
       "src": "vite.svg",

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -10,6 +11,30 @@ from pathlib import Path
 from _project_paths import find_repo_root
 import sync_repo_metadata
 from update_readme import configure_utf8_output, load_metadata, apply_metadata
+
+
+CURRENT_CORE_PUBLIC_COPY_FILES = [
+    "README.md",
+    "docs/users/aas-core.md",
+    "docs/users/usage.md",
+    "apps/web-app/index.html",
+    "apps/web-app/public/llms.txt",
+    "apps/web-app/public/manifest.webmanifest",
+    "apps/web-app/public/site.webmanifest",
+    "apps/web-app/scripts/prerender-routes.js",
+    "apps/web-app/src/pages/Home.tsx",
+    "apps/web-app/src/utils/seo.ts",
+]
+
+STALE_CORE_COPY_PATTERNS = [
+    ("Core recommender copy", r"\bDiscover\. Recommend\. Validate\. Preview\."),
+    ("Core recommender copy", r"\bdiscover,\s*recommend,\s*validat"),
+    ("Core recommender copy", r"\brecommending,\s*validating,\s*and\s*planning"),
+    ("Core recommender copy", r"\brecommend\s+and\s+plan\s+exact\s+stacks"),
+    ("Core recommender copy", r"\bskill recommendation and stack review\b"),
+    ("Core recommender copy", r"\bReview what AAS Core recommended\b"),
+    ("obsolete catalog count fallback", r"\bHOME_CATALOG_COUNT_FALLBACK\s*=\s*1935\b"),
+]
 
 
 def _read_text(path: Path) -> str:
@@ -22,7 +47,7 @@ def _read_json(path: Path):
 
 def _package_expected_description(metadata: dict) -> str:
     return (
-        "AAS Core preview: local skill discovery, recommendation, stack validation, and planning, "
+        "AAS Core: complete local skill discovery, agent-owned selection, stack validation, and planning, "
         f"backed by {metadata['total_skills_label']} agentic skills."
     )
 
@@ -101,11 +126,26 @@ def _find_manifest_issues(root: Path) -> list[str]:
     return issues
 
 
+def _find_current_core_public_copy_issues(root: Path) -> list[str]:
+    issues: list[str] = []
+    for relative_path in CURRENT_CORE_PUBLIC_COPY_FILES:
+        path = root / relative_path
+        if not path.is_file():
+            continue
+        content = _read_text(path)
+        for label, pattern in STALE_CORE_COPY_PATTERNS:
+            if re.search(pattern, content, flags=re.IGNORECASE):
+                issues.append(f"{relative_path} contains stale {label}")
+                break
+    return issues
+
+
 def find_local_consistency_issues(base_dir: str | Path) -> list[str]:
     root = Path(base_dir)
     metadata = load_metadata(str(root))
     issues: list[str] = []
     issues.extend(_find_manifest_issues(root))
+    issues.extend(_find_current_core_public_copy_issues(root))
 
     package_json = json.loads(_read_text(root / "package.json"))
     if package_json.get("description") != _package_expected_description(metadata):

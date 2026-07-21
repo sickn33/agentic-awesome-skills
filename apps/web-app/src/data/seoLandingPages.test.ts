@@ -3,6 +3,12 @@ import { createMockSkill } from '../factories/skill';
 import { getCuratedSkillsForSeoLandingPage, getSeoLandingPage } from './seoLandingPages';
 
 describe('SEO landing page skill curation', () => {
+  it('keeps plural skills discovery copy in the Antigravity CLI metadata', () => {
+    const page = getSeoLandingPage('antigravity-cli-skills');
+
+    expect(page?.description).toMatch(/skills/i);
+  });
+
   it('keeps real editorial picks first and deterministically fills with scored matches', () => {
     const page = getSeoLandingPage('antigravity-cli-skills');
     expect(page).toBeDefined();

@@ -7,7 +7,7 @@ const test = require("node:test");
 const versions = require("../../lib/aas-v1/versions");
 const { canonicalJson, sha256 } = require("../../lib/aas-v1/canonical-json");
 const { buildPlanEnvelope, validateManifest, validatePlanEnvelope } = require("../../lib/aas-v1/stack");
-const { validateInstance } = require("../../lib/aas-v1/schema-validator");
+const { sanitizeValidationDetails, validateInstance } = require("../../lib/aas-v1/schema-validator");
 
 const DIGEST_A = `sha256-${"a".repeat(64)}`;
 const DIGEST_B = `sha256-${"b".repeat(64)}`;
@@ -18,7 +18,7 @@ const DIGEST_F = `sha256-${"f".repeat(64)}`;
 
 function manifest(overrides = {}) {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     name: "react-vite-production",
     catalog: {
       package: "agentic-awesome-skills",
@@ -29,11 +29,12 @@ function manifest(overrides = {}) {
       { host: "codex", scope: "project" },
       { host: "claude", scope: "user" },
     ],
-    intent: { goals: ["build", "test", "deploy"] },
-    policy: {
-      allowedRisk: ["none", "safe"],
-      requireKnownSource: true,
-      allowManualSetup: false,
+    profile: {
+      goals: ["build", "test", "deploy"],
+      projectType: "web application",
+      languages: ["typescript"],
+      frameworks: ["react", "vite"],
+      constraints: ["production-ready"],
     },
     skills: [
       { id: "react-best-practices" },
@@ -90,14 +91,11 @@ function planInput(overrides = {}) {
         backupRequired: true,
       },
     ],
-    overrides: [
-      {
-        kind: "discoveryCandidate",
-        skillId: "testing/playwright-skill",
-        reasonCodes: ["AAS_OVERRIDE_DISCOVERY_UNKNOWN"],
-        unknownFields: ["validation", "source"],
-      },
-    ],
+    overrides: [{
+      kind: "managedDrift",
+      skillId: "react-best-practices",
+      reasonCodes: ["AAS_PLAN_MANAGED_DRIFT_APPROVED", "AAS_PLAN_BACKUP_REQUIRED"],
+    }],
     stateCommit: {
       previousDigest: sha256(canonicalJson({ schemaVersion: 1, entries: installedEntries })),
       nextDigest: sha256(canonicalJson({ schemaVersion: 1, entries: nextEntries })),
@@ -107,7 +105,7 @@ function planInput(overrides = {}) {
   };
 }
 
-test("validateManifest returns a canonical digest without persisting derived profile data", () => {
+test("validateManifest returns a canonical digest with the agent-provided profile", () => {
   const value = manifest();
   const result = validateManifest(value);
   assert.equal(result.ok, true);
@@ -117,31 +115,85 @@ test("validateManifest returns a canonical digest without persisting derived pro
     {
       protocolVersion: result.protocolVersion,
       coreVersion: result.coreVersion,
-      metadataSchemaVersion: result.metadataSchemaVersion,
-      scorerVersion: result.scorerVersion,
+      catalogSchemaVersion: result.catalogSchemaVersion,
     },
     versions,
   );
 
-  const withDerivedProfile = { ...value, profile: { languages: ["typescript"] } };
-  const invalid = validateManifest(withDerivedProfile);
+  const withLegacyPolicy = { ...value, policy: { requireKnownSource: true } };
+  const invalid = validateManifest(withLegacyPolicy);
   assert.equal(invalid.ok, false);
-  assert(invalid.details.issues.some((entry) => entry.path === "$.profile" && entry.code === "AAS_STACK_FIELD_UNKNOWN"));
+  assert(invalid.details.issues.some((entry) => (
+    entry.field === "input"
+      && entry.keyword === "additionalProperties"
+      && entry.limit === false
+      && entry.code === "AAS_STACK_FIELD_UNKNOWN"
+  )));
 });
 
-test("validateManifest rejects duplicates, unsafe ids, unknown policy keys, and unsupported targets", () => {
+test("validateManifest reports bounded path-safe profile diagnostics without echoing input", () => {
+  const sensitiveKey = "/Users/example/private/TOKEN_CANARY";
+  const cases = [
+    {
+      value: manifest({ profile: { ...manifest().profile, goals: ["x".repeat(129)] } }),
+      expected: { field: "profile.goals[]", keyword: "maxLength", limit: 128 },
+    },
+    {
+      value: manifest({ profile: { ...manifest().profile, languages: Array.from({ length: 33 }, (_, index) => `lang-${index}`) } }),
+      expected: { field: "profile.languages", keyword: "maxItems", limit: 32 },
+    },
+    {
+      value: manifest({ profile: { ...manifest().profile, [sensitiveKey]: "SECRET_VALUE_CANARY" } }),
+      expected: { field: "profile", keyword: "additionalProperties", limit: false },
+    },
+    {
+      value: manifest({ profile: "SECRET_PROFILE_CANARY" }),
+      expected: { field: "profile", keyword: "type", limit: "object" },
+    },
+  ];
+
+  for (const { value, expected } of cases) {
+    const result = validateManifest(value);
+    assert.equal(result.ok, false);
+    assert(result.details.issues.some((entry) => (
+      entry.field === expected.field
+        && entry.keyword === expected.keyword
+        && entry.limit === expected.limit
+    )), `missing diagnostic ${JSON.stringify(expected)}`);
+    const serialized = JSON.stringify(result);
+    assert.doesNotMatch(serialized, /Users|TOKEN_CANARY|SECRET_VALUE_CANARY|SECRET_PROFILE_CANARY|schemaPath|instancePath/);
+    assert(result.details.issues.length <= 32);
+  }
+});
+
+test("schema diagnostics redact dynamic map keys even when they look path-safe", () => {
+  const details = sanitizeValidationDetails({
+    issues: [{
+      instancePath: "/metadata/TOKEN_SECRET_CANARY",
+      keyword: "type",
+      params: { type: "string" },
+    }],
+  });
+  assert.deepEqual(details, {
+    issues: [{ field: "metadata.[unknown]", keyword: "type", limit: "string" }],
+  });
+  assert.doesNotMatch(JSON.stringify(details), /TOKEN_SECRET_CANARY/);
+});
+
+test("validateManifest rejects duplicates, unsafe ids, legacy policy, and unsupported targets", () => {
   const value = manifest({
     targets: [
       { host: "codex", scope: "project" },
       { host: "codex", scope: "project" },
       { host: "gemini", scope: "project" },
     ],
-    policy: {
-      allowedRisk: ["safe", "safe"],
-      requireKnownSource: true,
-      allowManualSetup: false,
-      force: true,
+    profile: {
+      goals: ["build"],
+      languages: ["typescript", "typescript"],
+      frameworks: [],
+      constraints: [],
     },
+    policy: { requireKnownSource: true },
     skills: [{ id: "../escape" }, { id: "same" }, { id: "same" }],
   });
   const result = validateManifest(value);
@@ -164,7 +216,6 @@ test("buildPlanEnvelope is byte-deterministic, single-target, path-free, and dig
     overrides: [{
       ...firstInput.overrides[0],
       reasonCodes: [...firstInput.overrides[0].reasonCodes].reverse(),
-      unknownFields: [...firstInput.overrides[0].unknownFields].reverse(),
     }],
   });
   const first = buildPlanEnvelope(firstInput);
@@ -186,7 +237,7 @@ test("buildPlanEnvelope is byte-deterministic, single-target, path-free, and dig
 
 test("buildPlanEnvelope fails closed on handshake, catalog, target, drift, and physical path input", () => {
   assert.throws(
-    () => buildPlanEnvelope(planInput({ handshake: { ...versions, scorerVersion: "2.0.0" } })),
+    () => buildPlanEnvelope(planInput({ handshake: { ...versions, catalogSchemaVersion: "9.0.0" } })),
     (error) => error.code === "AAS_PLAN_VERSION_INCOMPATIBLE" && error.category === "incompatibleVersion",
   );
   assert.throws(
@@ -212,7 +263,7 @@ test("validatePlanEnvelope rejects a re-digested incompatible or internally inco
   assert.equal(validatePlanEnvelope(plan), plan);
 
   const incompatible = structuredClone(plan);
-  incompatible.payload.versions.scorerVersion = "9.0.0";
+  incompatible.payload.versions.catalogSchemaVersion = "9.0.0";
   incompatible.digest = sha256(canonicalJson(incompatible.payload));
   assert.throws(() => validatePlanEnvelope(incompatible), { code: "AAS_PLAN_VERSION_INCOMPATIBLE" });
 
@@ -231,10 +282,9 @@ test("all public v1 stack schemas are valid JSON Schema documents with unique id
     "journal.schema.json",
     "managed-state.schema.json",
     "plan.schema.json",
-    "recommendation-input.schema.json",
-    "recommendation-output.schema.json",
     "recovery-plan.schema.json",
     "result-envelope.schema.json",
+    "selection-input.schema.json",
     "stack-manifest.schema.json",
   ];
   const ids = new Set();

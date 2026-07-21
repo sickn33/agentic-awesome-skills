@@ -92,7 +92,7 @@ describe('Home', () => {
         level: 1,
         name: /AAS Core: agent-first skill stacks for Codex, Claude Code, and compatible clients/i,
       })).toBeInTheDocument();
-      expect(screen.getByText(/Discover\. Recommend\. Validate\. Preview\./i)).toBeInTheDocument();
+      expect(screen.getByText(/Search\. Choose\. Validate\. Preview\./i)).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /Review an AAS Core stack/i })).toHaveAttribute('href', '/workbench');
       expect(screen.getByText(/What is the difference between skills and MCP tools/i)).toBeInTheDocument();
       expect(document.querySelector('meta[property="og:title"]')).toHaveAttribute(

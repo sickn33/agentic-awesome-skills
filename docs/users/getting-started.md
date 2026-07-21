@@ -1,15 +1,15 @@
 # Getting Started with AAS Core
 
-**New here? Start with AAS Core and let your agent compose a small, reviewable skill stack for the project.**
+**New here? Start with AAS Core and let your agent choose a reviewable skill stack from the complete catalog.**
 
-> **Preview status:** AAS Agent-First Preview supports local, explainable stack composition with Codex and Claude. Full-catalog recommendation quality and transactional apply/recovery safety are not yet certified.
+> **Product boundary:** Codex or Claude owns skill selection. AAS Core provides complete local catalog access, reproducible composition, validation, and plan preview; apply and recovery remain experimental.
 
 ## Start with AAS Core
 
-AAS Core is the primary product path. Codex or Claude inspects your project, calls the local read-only AAS MCP, explains a deterministic catalog recommendation, and proposes an `aas-stack.json`. You review the exact policy and skill IDs before using the `aas` CLI to validate the manifest and preview a plan.
+AAS Core is the primary product path. Codex or Claude inspects your project, searches and reads the complete catalog through the local read-only AAS MCP, chooses the exact skill IDs, and uses `compose_stack` to propose an `aas-stack.json`. You review those IDs before using the `aas` CLI to validate the manifest and preview a plan.
 
 ```text
-project -> agent -> local AAS MCP -> recommendation -> aas-stack.json
+project -> agent -> full local catalog -> agent selection -> compose_stack -> aas-stack.json
         -> human review -> validate -> plan preview
 ```
 
@@ -167,7 +167,7 @@ For Claude Code, use:
 For Codex, this repository also ships a root plugin plus bundle plugins through the repo-local metadata described in [plugins.md](plugins.md).
 
 **Q: Do I need to install every skill?**
-A: No. With AAS Core, ask the agent to recommend a small stack under an explicit policy. On the legacy direct-install path, you can install the broad library while the host reads only invoked or relevant skills. **Starter Packs** in [bundles.md](bundles.md) remain human-curated discovery aids.
+A: No. With AAS Core, ask the agent to inspect the project and choose exact IDs from the complete catalog. On the legacy direct-install path, you can install the broad library while the host reads only invoked or relevant skills. **Starter Packs** in [bundles.md](bundles.md) remain human-curated discovery aids.
 
 **Q: Can I make my own skills?**
 A: Yes! Use the **@skill-creator** skill to build your own.

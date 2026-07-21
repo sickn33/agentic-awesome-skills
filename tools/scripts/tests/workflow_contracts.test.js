@@ -64,6 +64,39 @@ const contract = {
   releaseManagedFiles: ["CHANGELOG.md", "package.json", "package-lock.json", "README.md"],
 };
 
+const repositoryRoot = path.resolve(__dirname, "..", "..", "..");
+const agentInstructions = fs.readFileSync(path.join(repositoryRoot, "AGENTS.md"), "utf8");
+const maintenanceGuide = fs.readFileSync(path.join(repositoryRoot, ".github", "MAINTENANCE.md"), "utf8");
+for (const instructions of [agentInstructions, maintenanceGuide]) {
+  assert.match(instructions, /current[- ]base/i);
+  assert.match(instructions, /must exist on the current task base/i);
+  assert.match(instructions, /do not|never import/i);
+  assert.match(instructions, /another branch, worktree, stash, installed copy, or historical commit/i);
+}
+assert.doesNotMatch(agentInstructions, /review:skills:local|local-skill-reviewer-policy/);
+assert.doesNotMatch(maintenanceGuide, /review:skills:local|local-skill-reviewer-policy/);
+
+const maintainerSkill = fs.readFileSync(
+  path.join(repositoryRoot, "skills", "antigravity-maintainer-batch-release", "SKILL.md"),
+  "utf8",
+);
+assert.match(maintainerSkill, /discover every already-configured local AAS MCP host from its real configuration and update each one to the exact same package version/);
+assert.match(maintainerSkill, /Pin `agentic-awesome-skills@X\.Y\.Z` and `--version X\.Y\.Z`; never use `latest`/);
+assert.match(maintainerSkill, /real MCP `initialize` plus `tools\/list` handshake reports catalog package version `X\.Y\.Z`/);
+assert.match(maintainerSkill, /Every stable or prerelease version requires full release alignment/);
+assert.match(maintainerSkill, /npm run sync:release-state`, `npm run plugin-compat:check`, and `npm run bundles:check`/);
+assert.match(maintainerSkill, /every published Codex\/Claude plugin mirror and editorial-bundle manifest/);
+assert.match(maintainerSkill, /explicitly dispatched release-only Pages build/);
+assert.match(maintainerSkill, /final generator pass must be idempotent/);
+assert.match(agentInstructions, /Every stable or prerelease version must finish with the full-release-alignment gate/);
+assert.match(maintenanceGuide, /Run the mandatory full-release-alignment gate/);
+const releaseProcess = fs.readFileSync(
+  path.join(repositoryRoot, "docs", "maintainers", "release-process.md"),
+  "utf8",
+);
+assert.match(releaseProcess, /Complete the mandatory full-release-alignment gate/);
+assert.match(releaseProcess, /Any mismatch, inaccessible configured host, or stale public surface keeps the release incomplete/);
+
 const publishWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "publish-npm.yml"),
   "utf8",
@@ -105,8 +138,13 @@ assert.doesNotMatch(
 assert.match(ciWorkflow, /^permissions:\n  contents: read$/m);
 assert.match(
   ciWorkflow,
-  /source-validation:[\s\S]*?- name: Refresh ephemeral derived sources for tests\n\s+run: npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-review-queue && npm run build:aas-v1-catalog\n[\s\S]*?- name: Run tests\n\s+run: npm run test/,
+  /source-validation:[\s\S]*?- name: Refresh ephemeral derived sources for tests\n\s+run: npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-catalog\n[\s\S]*?- name: Run tests\n\s+run: npm run test/,
   "source-only skill PRs must refresh uncommitted mirrors and indexes before tests read them",
+);
+assert.doesNotMatch(
+  ciWorkflow,
+  /build:aas-v1-review-queue|metadata-overrides\.v1\.json|review-queue\.v1\.json/,
+  "CI should not rebuild retired Core policy or review assets",
 );
 assert.match(ciWorkflow, /name: pr-evidence-/);
 assert.doesNotMatch(ciWorkflow, /pull_request_target:/);

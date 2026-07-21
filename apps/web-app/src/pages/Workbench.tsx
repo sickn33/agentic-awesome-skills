@@ -41,12 +41,13 @@ function DefinitionList({ entries }: { entries: Array<[string, React.ReactNode]>
   );
 }
 
-function PolicyReview({ policy }: { policy: StackManifestReview['policy'] }): React.ReactElement {
+function ProfileReview({ profile }: { profile: StackManifestReview['profile'] }): React.ReactElement {
   return (
     <DefinitionList entries={[
-      ['Allowed risk', policy.allowedRisk.join(', ')],
-      ['Known source required', policy.requireKnownSource ? 'Yes' : 'No'],
-      ['Manual setup allowed', policy.allowManualSetup ? 'Yes' : 'No'],
+      ['Project type', profile.projectType ?? 'Not declared'],
+      ['Languages', profile.languages.length > 0 ? profile.languages.join(', ') : 'None declared'],
+      ['Frameworks', profile.frameworks.length > 0 ? profile.frameworks.join(', ') : 'None declared'],
+      ['Constraints', profile.constraints.length > 0 ? profile.constraints.join(', ') : 'None declared'],
     ]} />
   );
 }
@@ -79,21 +80,21 @@ function StackReview({ stack }: { stack: StackManifestReview }): React.ReactElem
             {stack.targets.map((target) => <li key={`${target.host}:${target.scope}`}><strong>{target.host}</strong><span>{target.scope}</span></li>)}
           </ul>
         </section>
-        <section aria-labelledby="stack-policy-title">
-          <h3 id="stack-policy-title">Policy</h3>
-          <PolicyReview policy={stack.policy} />
+        <section aria-labelledby="stack-profile-title">
+          <h3 id="stack-profile-title">Agent-saved project profile</h3>
+          <ProfileReview profile={stack.profile} />
         </section>
       </div>
 
       <div className="workbench-review__columns">
         <section aria-labelledby="stack-goals-title">
-          <h3 id="stack-goals-title">Approved goals</h3>
+          <h3 id="stack-goals-title">Project goals</h3>
           <ul className="workbench-review__code-list">
-            {stack.intent.goals.map((goal) => <li key={goal}><code>{goal}</code></li>)}
+            {stack.profile.goals.map((goal) => <li key={goal}><code>{goal}</code></li>)}
           </ul>
         </section>
         <section aria-labelledby="stack-skills-title">
-          <h3 id="stack-skills-title">Exact skills <span>{stack.skills.length}</span></h3>
+          <h3 id="stack-skills-title">Agent-selected skills <span>{stack.skills.length}</span></h3>
           {stack.skills.length === 0 ? <p className="workbench-review__empty">No skills selected.</p> : (
             <ol className="workbench-review__code-list">
               {stack.skills.map((skill) => <li key={skill.id}><code>{skill.id}</code></li>)}
@@ -107,7 +108,6 @@ function StackReview({ stack }: { stack: StackManifestReview }): React.ReactElem
 
 function PlanReviewView({ plan }: { plan: PlanReview }): React.ReactElement {
   const { payload } = plan;
-  const unknownCount = payload.overrides.reduce((total, override) => total + override.unknownFields.length, 0);
   return (
     <article className="workbench-review" aria-labelledby="plan-review-title">
       <header className="workbench-review__heading">
@@ -135,8 +135,7 @@ function PlanReviewView({ plan }: { plan: PlanReview }): React.ReactElement {
           <DefinitionList entries={[
             ['Protocol', payload.versions.protocolVersion],
             ['Core', payload.versions.coreVersion],
-            ['Metadata schema', payload.versions.metadataSchemaVersion],
-            ['Scorer', payload.versions.scorerVersion],
+            ['Catalog schema', payload.versions.catalogSchemaVersion],
           ]} />
         </section>
         <section aria-labelledby="plan-target-title">
@@ -149,6 +148,14 @@ function PlanReviewView({ plan }: { plan: PlanReview }): React.ReactElement {
           ]} />
         </section>
       </div>
+
+      <section aria-labelledby="plan-profile-title">
+        <h3 id="plan-profile-title">Bound project profile</h3>
+        <ProfileReview profile={payload.profile} />
+        <ul className="workbench-review__code-list">
+          {payload.profile.goals.map((goal) => <li key={goal}><code>{goal}</code></li>)}
+        </ul>
+      </section>
 
       <section aria-labelledby="plan-operations-title">
         <div className="workbench-review__section-heading">
@@ -173,8 +180,8 @@ function PlanReviewView({ plan }: { plan: PlanReview }): React.ReactElement {
 
       <section aria-labelledby="plan-overrides-title" className={payload.overrides.length > 0 ? 'workbench-review__attention' : ''}>
         <div className="workbench-review__section-heading">
-          <h3 id="plan-overrides-title">Overrides and unknowns</h3>
-          <span>{payload.overrides.length} overrides · {unknownCount} unknown fields</span>
+          <h3 id="plan-overrides-title">Managed drift overrides</h3>
+          <span>{payload.overrides.length} overrides</span>
         </div>
         {payload.overrides.length === 0 ? <p className="workbench-review__empty">No overrides recorded.</p> : (
           <ul className="workbench-review__override-list">
@@ -182,7 +189,6 @@ function PlanReviewView({ plan }: { plan: PlanReview }): React.ReactElement {
               <li key={`${override.kind}:${override.skillId}`}>
                 <header><strong>{override.kind}</strong><code>{override.skillId}</code></header>
                 <p><span>Reason codes</span> {override.reasonCodes.join(', ')}</p>
-                <p><span>Unknown fields</span> {override.unknownFields.length > 0 ? override.unknownFields.join(', ') : 'None'}</p>
               </li>
             ))}
           </ul>
@@ -268,7 +274,7 @@ function ArtifactImporter<T>({
         id={textareaId}
         value={draft}
         onChange={(event) => setDraft(event.target.value)}
-        placeholder={kind === 'stack' ? '{ "schemaVersion": 1, "name": "…" }' : '{ "schemaVersion": 1, "kind": "aas.stack-plan", … }'}
+        placeholder={kind === 'stack' ? '{ "schemaVersion": 2, "name": "…" }' : '{ "schemaVersion": 2, "kind": "aas.stack-plan", … }'}
         rows={8}
         spellCheck={false}
         autoComplete="off"
@@ -313,8 +319,8 @@ export function Workbench(): React.ReactElement {
       <header className="workbench-header">
         <div>
           <div>
-            <h1>Review what AAS Core recommended.</h1>
-            <p>Import the <code>aas-stack.json</code> proposed by your agent after an MCP recommendation and the immutable preview plan produced by the <code>aas</code> CLI to inspect identities, targets, operations, overrides, and unknowns.</p>
+            <h1>Review what your agent selected.</h1>
+            <p>Import the <code>aas-stack.json</code> saved from your agent's explicit catalog choices and the immutable preview plan produced by the <code>aas</code> CLI to inspect the project profile, exact skills, identities, targets, operations, and managed drift overrides.</p>
           </div>
           <dl>
             <div><dt>Privacy</dt><dd>In-memory only</dd></div>
@@ -334,7 +340,7 @@ export function Workbench(): React.ReactElement {
         <ArtifactImporter
           kind="stack"
           title="Import desired state"
-          description="Paste or explicitly select the minimal stack manifest your agent proposed."
+          description="Paste or explicitly select the stack manifest containing your agent's exact skill choices."
           state={stack}
           onState={setStack}
         />

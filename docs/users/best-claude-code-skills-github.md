@@ -1,16 +1,16 @@
 # Best Claude Code Skills on GitHub
 
-If you are looking for the **best Claude Code skills on GitHub**, there is no single perfect repository for every user. The right choice depends on whether you want deterministic project-level composition, curated discovery, or official reference material.
+If you are looking for the **best Claude Code skills on GitHub**, there is no single perfect repository for every user. The right choice depends on whether you want complete catalog access with Claude-owned selection, curated discovery, or official reference material.
 
-## Best for deterministic project stacks
+## Best for agent-selected project stacks
 
 ### 1. [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills)
 
-Best for teams and individual developers who want Claude to send an explicit project profile to a local, read-only MCP, receive an explainable recommendation, and produce a reviewable `aas-stack.json` before CLI validation and planning.
+Best for teams and individual developers who want Claude to inspect a project, search and read the complete catalog through a local read-only MCP, choose exact IDs, and produce a reviewable `aas-stack.json` before CLI validation and planning.
 
 Choose this if you want:
 
-- local deterministic recommendation with explicit policy and evidence;
+- complete local catalog access with Claude-owned selection;
 - durable desired state plus immutable plan preview;
 - a broad catalog, plugins, bundles, workflows, and direct distribution around Core.
 
