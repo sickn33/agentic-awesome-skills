@@ -36,6 +36,7 @@
     "CHANGELOG.md",
     "package.json",
     "package-lock.json",
-    "README.md"
+    "README.md",
+    "docs/users/aas-core.md"
   ]
 }
