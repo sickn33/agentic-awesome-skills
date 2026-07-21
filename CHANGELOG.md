@@ -9,18 +9,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [15.2.0] - 2026-07-21 - "Credited Repository Skill Expansion"
+## [15.2.0] - 2026-07-21 - "Credited Skills and Release Reliability"
+
+> Expanded the catalog to 1,987 source-verified skills, clarified the AAS Core product boundary, and strengthened protected release alignment across npm, plugins, public surfaces, and configured MCP hosts.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 ### Added
 
-- Added 18 source-verified skills from credited repositories: ten official Markstream framework and migration skills, seven n8n workflow-specialist skills, and one Hugging Face cloud-discovery skill.
-- Preserved each imported skill's required local references and templates, with explicit provenance, license evidence, risk metadata, usage boundaries, and limitations.
+- Added ten official Markstream skills: `markstream-angular`, `markstream-custom-components`, `markstream-migration`, `markstream-nuxt`, `markstream-react`, `markstream-svelte`, `markstream-vue`, `markstream-vue2`, `markstream-vue2-cli`, and `markstream-vue2-vite`.
+- Added seven n8n workflow-specialist skills: `n8n-agents`, `n8n-binary-and-data`, `n8n-code-tool`, `n8n-error-handling`, `n8n-multi-instance`, `n8n-subworkflows`, and `using-n8n-mcp-skills`.
+- Added the official Hugging Face `hf-cloud-aws-context-discovery` skill for resolving the effective AWS profile, region, account, and caller identity before cloud work.
+- Retained the local reference material required by the imported Markstream and n8n skills, and added the node-family compatibility reference to the existing `n8n-node-configuration` skill.
 
 ### Changed
 
-- Clarified the AAS Core activation path with an exact release-pinned MCP command, a concise end-to-end quick path, an explicit preview-status matrix, and a tested boundary between structural validity, semantic suitability, compatibility, and safety.
-- Made exact package/MCP version parity a mandatory maintainer release gate: after npm publishes a new AAS package, every already-configured local AAS MCP host must be updated through the approval-bound, backup-first configuration flow and verified with a real MCP handshake before the release task is complete.
-- Hardened imported guidance around dependency installation, project mutation, credentials, instance selection, workflow side effects, and cloud-planning boundaries.
+- Hardened `markstream-install` and the imported guidance around dependency installation, project mutation, credentials, instance selection, workflow side effects, and cloud-planning boundaries.
+- Aligned the README, hosted catalog, localized documentation, SEO metadata, Workbench copy, and package surfaces with the implemented AAS Core model: coding agents choose exact skills, while Core provides neutral catalog access, structural validation, durable state, and immutable plan preview rather than semantic recommendation.
+- Expanded the AAS Core guide with an exact version-pinned MCP setup command, a copyable end-to-end quick path, a preview-status matrix, and explicit boundaries between structural validity, semantic suitability, compatibility, setup correctness, and operational safety.
+- Made full release alignment mandatory across generated registries, Codex and Claude mirrors, editorial bundles, plugin manifests, marketplaces, GitHub Release, npm dist-tags, CI, CodeQL, Pages, public catalog routes, and every already-configured local AAS MCP host.
+- Regenerated the canonical catalog, compatibility data, plugin mirrors, bundles, marketplaces, and public discovery surfaces for 1,987 skills.
+
+### Fixed
+
+- Fixed same-version protected release retries so release staging includes the generated AAS Core version pin and publication selects the latest successfully merged protected release candidate.
+- Added regression guards that prevent generated metadata and public surfaces from restoring stale recommender claims or obsolete fixed catalog counts.
+
+### Who should care
+
+- Frontend teams using Markstream across Vue, React, Svelte, Angular, Nuxt, and Vue 2 projects.
+- n8n builders working with agents, Code nodes, binary data, error handling, multi-instance deployments, and subworkflows.
+- Hugging Face and AWS users who need reliable account and region discovery before cloud operations.
+- AAS Core operators who depend on reproducible, version-pinned releases and inspectable agent-selected stacks.
+
+### Validation
+
+- Audited all 208 credited repositories and selected 18 additions with usable source material, compatible licensing, clear provenance, and acceptable semantic and safety boundaries; unresolved, unsafe, or incomplete candidates were excluded.
+- Passed canonical skill validation, reference validation, documentation security checks, credit and source-chain checks, repository tests, protected CI, and CodeQL for the released commit.
+- Published npm package `15.2.0` and verified the configured local AAS MCP host with a real `initialize` and `tools/list` handshake against version `15.2.0`.
+
+### Known issue
+
+- The release-only Pages deployment was blocked by a high-severity transitive dependency advisory, so the live catalog remained on `15.1.0` pending a dependency refresh and follow-up release.
+
+### Credits
+
+- **[@Simon-He95](https://github.com/Simon-He95)** and **[Simon-He95/markstream-vue](https://github.com/Simon-He95/markstream-vue)** for the official Markstream skill family.
+- **[czlonkowski/n8n-skills](https://github.com/czlonkowski/n8n-skills)** for the n8n workflow-specialist material.
+- **[Hugging Face](https://github.com/huggingface)** and **[huggingface/skills](https://github.com/huggingface/skills)** for the official AWS context-discovery skill.
 
 ## [15.1.0] - 2026-07-19 - "Agent-Owned Selection and Audit Evidence"
 
