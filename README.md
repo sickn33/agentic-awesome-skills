@@ -1,9 +1,9 @@
-<!-- registry-sync: version=15.1.0; skills=1987; stars=43586; updated_at=2026-07-19T19:39:12+00:00 -->
+<!-- registry-sync: version=15.2.0; skills=1987; stars=43679; updated_at=2026-07-21T21:15:50+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **Local, agent-owned skill stacks for coding agents—from complete catalog access to a reproducible, reviewable plan.**
 
-**Current release: V15.1.0.** This release includes AAS Core for complete local catalog search, agent-owned selection, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
+**Current release: V15.2.0.** This release includes AAS Core for complete local catalog search, agent-owned selection, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
 
 Codex or Claude inspects your project and chooses exact skills from the complete local AAS catalog. AAS Core does not rank or recommend them: its read-only `compose_stack` tool validates the agent-owned selection in memory, and a client or the `aas` CLI can persist it as `aas-stack.json` and produce an immutable plan before any target change.
 
