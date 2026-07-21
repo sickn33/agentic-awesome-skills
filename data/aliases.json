@@ -149,6 +149,7 @@
     "vr-ar": "game-development/vr-ar",
     "web-games": "game-development/web-games",
     "git-pr-workflow": "git-pr-workflows-git-workflow",
+    "hf-cloud-discovery": "hf-cloud-aws-context-discovery",
     "hugging-face-evals": "hugging-face-community-evals",
     "hugging-face-publisher": "hugging-face-paper-publisher",
     "huggingface-lora-builder": "huggingface-lora-space-builder",

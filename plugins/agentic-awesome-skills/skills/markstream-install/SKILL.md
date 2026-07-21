@@ -2,7 +2,7 @@
 name: markstream-install
 description: "Install and configure Markstream streaming Markdown renderers for Vue, React, Svelte, Angular, Nuxt, Next.js, and Vue 2 applications."
 category: frontend
-risk: safe
+risk: critical
 source: https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-install
 source_repo: Simon-He95/markstream-vue
 source_type: official
@@ -47,6 +47,8 @@ Before changing dependencies, inspect:
 Do not select `markstream-vue` merely because the source repository has Vue in its name. Choose the framework-specific package from the scenario table.
 
 ### 2. Install the smallest dependency set
+
+Before installing or changing source files, preview the exact dependency and code changes and obtain explicit user approval. Do not switch package managers or replace an existing renderer implicitly.
 
 Install exactly one framework package and preserve the repository's package manager. Add optional peers only when the requested UI uses their feature.
 

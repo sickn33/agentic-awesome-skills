@@ -21883,6 +21883,39 @@
     }
   },
   {
+    "id": "hf-cloud-aws-context-discovery",
+    "path": "skills/hf-cloud-aws-context-discovery",
+    "category": "cloud",
+    "name": "hf-cloud-aws-context-discovery",
+    "description": "Discover the effective local AWS profile, region, account, and caller identity before any AWS task without exposing credentials.",
+    "risk": "safe",
+    "source": "https://github.com/huggingface/skills/tree/main/skills/hf-cloud-aws-context-discovery",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "huggingface/skills",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/huggingface/skills/blob/main/LICENSE",
+    "tags": [
+      "hugging-face",
+      "aws",
+      "credentials",
+      "discovery",
+      "cloud"
+    ]
+  },
+  {
     "id": "hf-mcp",
     "path": "skills/hf-mcp",
     "category": "ai-ml",
@@ -27651,12 +27684,79 @@
     }
   },
   {
+    "id": "markstream-angular",
+    "path": "skills/markstream-angular",
+    "category": "frontend",
+    "name": "markstream-angular",
+    "description": "Integrate the alpha markstream-angular renderer into Angular 20+ applications with standalone components, signals, safe HTML defaults, and optional peer features.",
+    "risk": "critical",
+    "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-angular",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Simon-He95/markstream-vue",
+    "license": "MIT",
+    "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+    "tags": [
+      "angular",
+      "markdown",
+      "streaming",
+      "ai-chat",
+      "frontend"
+    ]
+  },
+  {
+    "id": "markstream-custom-components",
+    "path": "skills/markstream-custom-components",
+    "category": "frontend",
+    "name": "markstream-custom-components",
+    "description": "Override Markstream node renderers and add trusted custom tags across Vue, React, Svelte, and Angular using scoped or renderer-local mappings.",
+    "risk": "critical",
+    "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-custom-components",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Simon-He95/markstream-vue",
+    "license": "MIT",
+    "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+    "tags": [
+      "markdown",
+      "components",
+      "vue",
+      "react",
+      "svelte",
+      "angular"
+    ]
+  },
+  {
     "id": "markstream-install",
     "path": "skills/markstream-install",
     "category": "frontend",
     "name": "markstream-install",
     "description": "Install and configure Markstream streaming Markdown renderers for Vue, React, Svelte, Angular, Nuxt, Next.js, and Vue 2 applications.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-install",
     "date_added": "2026-07-19",
     "plugin": {
@@ -27683,6 +27783,270 @@
       "svelte",
       "angular",
       "ai-chat"
+    ]
+  },
+  {
+    "id": "markstream-migration",
+    "path": "skills/markstream-migration",
+    "category": "frontend",
+    "name": "markstream-migration",
+    "description": "Audit and migrate an existing Markdown renderer to Markstream while preserving custom renderers, security policy, streaming behavior, and explicit parity gaps.",
+    "risk": "critical",
+    "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-migration",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Simon-He95/markstream-vue",
+    "license": "MIT",
+    "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+    "tags": [
+      "markdown",
+      "migration",
+      "streaming",
+      "security",
+      "frontend"
+    ]
+  },
+  {
+    "id": "markstream-nuxt",
+    "path": "skills/markstream-nuxt",
+    "category": "frontend",
+    "name": "markstream-nuxt",
+    "description": "Integrate markstream-vue into Nuxt 3 or 4 with SSR-safe client boundaries, renderer modes, explicit CSS, and browser-only optional peers.",
+    "risk": "critical",
+    "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-nuxt",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Simon-He95/markstream-vue",
+    "license": "MIT",
+    "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+    "tags": [
+      "nuxt",
+      "vue",
+      "ssr",
+      "markdown",
+      "streaming"
+    ]
+  },
+  {
+    "id": "markstream-react",
+    "path": "skills/markstream-react",
+    "category": "frontend",
+    "name": "markstream-react",
+    "description": "Integrate the beta markstream-react renderer into React 18+ or Next.js with correct client/server entrypoints, CSS, streaming state, and component overrides.",
+    "risk": "critical",
+    "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-react",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Simon-He95/markstream-vue",
+    "license": "MIT",
+    "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+    "tags": [
+      "react",
+      "nextjs",
+      "markdown",
+      "streaming",
+      "ssr"
+    ]
+  },
+  {
+    "id": "markstream-svelte",
+    "path": "skills/markstream-svelte",
+    "category": "frontend",
+    "name": "markstream-svelte",
+    "description": "Integrate the beta markstream-svelte renderer into Svelte 5 or SvelteKit with runes, explicit CSS, smooth streaming, workers, and SSR-safe boundaries.",
+    "risk": "critical",
+    "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-svelte",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Simon-He95/markstream-vue",
+    "license": "MIT",
+    "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+    "tags": [
+      "svelte",
+      "sveltekit",
+      "markdown",
+      "streaming",
+      "ssr"
+    ]
+  },
+  {
+    "id": "markstream-vue",
+    "path": "skills/markstream-vue",
+    "category": "frontend",
+    "name": "markstream-vue",
+    "description": "Integrate markstream-vue into plain Vue 3 with renderer modes, code and DOM choices, streaming state, virtualization, optional peers, and scoped components.",
+    "risk": "critical",
+    "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-vue",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Simon-He95/markstream-vue",
+    "license": "MIT",
+    "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+    "tags": [
+      "vue",
+      "markdown",
+      "streaming",
+      "virtualization",
+      "ai-chat"
+    ]
+  },
+  {
+    "id": "markstream-vue2",
+    "path": "skills/markstream-vue2",
+    "category": "frontend",
+    "name": "markstream-vue2",
+    "description": "Integrate markstream-vue2 into Vue 2.6 or 2.7 with correct Composition API decisions, CSS, streaming state, optional peers, and scoped overrides.",
+    "risk": "critical",
+    "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-vue2",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Simon-He95/markstream-vue",
+    "license": "MIT",
+    "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+    "tags": [
+      "vue2",
+      "markdown",
+      "streaming",
+      "compatibility",
+      "frontend"
+    ]
+  },
+  {
+    "id": "markstream-vue2-cli",
+    "path": "skills/markstream-vue2-cli",
+    "category": "frontend",
+    "name": "markstream-vue2-cli",
+    "description": "Integrate markstream-vue2 into Vue CLI or Webpack 4 with export-map-safe CSS, CDN worker fallbacks, and conservative code-block defaults.",
+    "risk": "critical",
+    "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-vue2-cli",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Simon-He95/markstream-vue",
+    "license": "MIT",
+    "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+    "tags": [
+      "vue2",
+      "vue-cli",
+      "webpack4",
+      "markdown",
+      "workers"
+    ]
+  },
+  {
+    "id": "markstream-vue2-vite",
+    "path": "skills/markstream-vue2-vite",
+    "category": "frontend",
+    "name": "markstream-vue2-vite",
+    "description": "Integrate markstream-vue2 into Vue 2 plus Vite with bundled worker imports, CSS ordering, Composition API compatibility, and safe streaming defaults.",
+    "risk": "critical",
+    "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-vue2-vite",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Simon-He95/markstream-vue",
+    "license": "MIT",
+    "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+    "tags": [
+      "vue2",
+      "vite",
+      "markdown",
+      "workers",
+      "streaming"
     ]
   },
   {
@@ -29424,6 +29788,58 @@
     }
   },
   {
+    "id": "n8n-agents",
+    "path": "skills/n8n-agents",
+    "category": "automation",
+    "name": "n8n-agents",
+    "description": "Design n8n AI agents, chains, classifiers, extractors, tool calling, memory, RAG, structured output, and human-review flows.",
+    "risk": "critical",
+    "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-agents",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "czlonkowski/n8n-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE"
+  },
+  {
+    "id": "n8n-binary-and-data",
+    "path": "skills/n8n-binary-and-data",
+    "category": "automation",
+    "name": "n8n-binary-and-data",
+    "description": "Handle n8n files and binary data across uploads, downloads, transforms, multimodal inputs, agent tools, and chat surfaces.",
+    "risk": "unknown",
+    "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-binary-and-data",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "czlonkowski/n8n-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE"
+  },
+  {
     "id": "n8n-code-javascript",
     "path": "skills/n8n-code-javascript",
     "category": "automation",
@@ -29466,6 +29882,58 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "n8n-code-tool",
+    "path": "skills/n8n-code-tool",
+    "category": "automation",
+    "name": "n8n-code-tool",
+    "description": "Write and debug JavaScript or Python for the AI-callable n8n Custom Code Tool, including schemas, sandbox limits, and return formats.",
+    "risk": "unknown",
+    "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-code-tool",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "czlonkowski/n8n-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE"
+  },
+  {
+    "id": "n8n-error-handling",
+    "path": "skills/n8n-error-handling",
+    "category": "automation",
+    "name": "n8n-error-handling",
+    "description": "Design visible, structured, recoverable n8n failures using error outputs, retries, Error Trigger workflows, and HTTP error responses.",
+    "risk": "unknown",
+    "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-error-handling",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "czlonkowski/n8n-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE"
   },
   {
     "id": "n8n-expression-syntax",
@@ -29512,6 +29980,32 @@
     }
   },
   {
+    "id": "n8n-multi-instance",
+    "path": "skills/n8n-multi-instance",
+    "category": "automation",
+    "name": "n8n-multi-instance",
+    "description": "Select, verify, and safely switch n8n MCP instances across production, staging, teams, or clients, especially before credential writes.",
+    "risk": "critical",
+    "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-multi-instance",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "czlonkowski/n8n-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE"
+  },
+  {
     "id": "n8n-node-configuration",
     "path": "skills/n8n-node-configuration",
     "category": "automation",
@@ -29532,6 +30026,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "n8n-subworkflows",
+    "path": "skills/n8n-subworkflows",
+    "category": "automation",
+    "name": "n8n-subworkflows",
+    "description": "Build reusable n8n sub-workflows with typed inputs, all-vs-each execution, discoverable naming, and agent-tool exposure.",
+    "risk": "unknown",
+    "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-subworkflows",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "czlonkowski/n8n-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE"
   },
   {
     "id": "n8n-validation-expert",
@@ -44760,6 +45280,32 @@
         "absolute_host_path"
       ]
     }
+  },
+  {
+    "id": "using-n8n-mcp-skills",
+    "path": "skills/using-n8n-mcp-skills",
+    "category": "uncategorized",
+    "name": "using-n8n-mcp-skills",
+    "description": "Route n8n MCP workflow design, editing, validation, testing, deployment, credential, execution, and debugging tasks to specialist guidance.",
+    "risk": "critical",
+    "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/using-n8n-mcp-skills",
+    "date_added": "2026-07-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "czlonkowski/n8n-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE"
   },
   {
     "id": "using-neon",

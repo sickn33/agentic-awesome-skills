@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-19T19:39:12.000Z
 
-Total skills: 1969
+Total skills: 1987
 
 ## agent-behavior (5)
 
@@ -304,7 +304,7 @@ Total skills: 1969
 | `site-architecture` | Plan or restructure website hierarchy, navigation, URL patterns, breadcrumbs, and internal linking. Use when mapping pages, sections, and site structure, but... | unknown | https://github.com/coreyhaines31/marketingskills | site, architecture | site, architecture, plan, restructure, website, hierarchy, navigation, url, breadcrumbs, internal, linking, mapping |
 | `software-architecture` | Guide for quality focused software architecture. This skill should be used when users want to write code, design architecture, analyze code, in any case that... | unknown | community | software, architecture | software, architecture, quality, skill, should, used, users, want, write, code, analyze, any |
 
-## automation (50)
+## automation (56)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -336,11 +336,17 @@ Total skills: 1969
 | `hubspot-automation` | Automate HubSpot CRM operations (contacts, companies, deals, tickets, properties) via Rube MCP using Composio integration. | critical | community | hubspot | hubspot, automation, automate, crm, operations, contacts, companies, deals, tickets, properties, via, rube |
 | `intercom-automation` | Automate Intercom tasks via Rube MCP (Composio): conversations, contacts, companies, segments, admins. Always search tools first for current schemas. | unknown | community | intercom | intercom, automation, automate, tasks, via, rube, mcp, composio, conversations, contacts, companies, segments |
 | `make-automation` | Automate Make (Integromat) tasks via Rube MCP (Composio): operations, enums, language and timezone lookups. Always search tools first for current schemas. | critical | community | make | make, automation, automate, integromat, tasks, via, rube, mcp, composio, operations, enums, language |
+| `n8n-agents` | Design n8n AI agents, chains, classifiers, extractors, tool calling, memory, RAG, structured output, and human-review flows. | critical | czlonkowski/n8n-skills | n8n, agents | n8n, agents, ai, chains, classifiers, extractors, calling, memory, rag, structured, output, human |
+| `n8n-binary-and-data` | Handle n8n files and binary data across uploads, downloads, transforms, multimodal inputs, agent tools, and chat surfaces. | unknown | czlonkowski/n8n-skills | n8n, binary, and, data | n8n, binary, and, data, handle, files, uploads, downloads, transforms, multimodal, inputs, agent |
 | `n8n-code-javascript` | Write JavaScript code in n8n Code nodes. Use when writing JavaScript in n8n, using $input/$json/$node syntax, making HTTP requests with $helpers, working wit... | unknown | community | n8n, code, javascript | n8n, code, javascript, write, nodes, writing, input, json, node, syntax, making, http |
 | `n8n-code-python` | Write Python code in n8n Code nodes. Use when writing Python in n8n, using _input/_json/_node syntax, working with standard library, or need to understand Py... | unknown | community | n8n, code, python | n8n, code, python, write, nodes, writing, input, json, node, syntax, working, standard |
+| `n8n-code-tool` | Write and debug JavaScript or Python for the AI-callable n8n Custom Code Tool, including schemas, sandbox limits, and return formats. | unknown | czlonkowski/n8n-skills | n8n, code | n8n, code, write, debug, javascript, python, ai, callable, custom, including, schemas, sandbox |
+| `n8n-error-handling` | Design visible, structured, recoverable n8n failures using error outputs, retries, Error Trigger workflows, and HTTP error responses. | unknown | czlonkowski/n8n-skills | n8n, error, handling | n8n, error, handling, visible, structured, recoverable, failures, outputs, retries, trigger, http, responses |
 | `n8n-expression-syntax` | Validate n8n expression syntax and fix common errors. Use when writing n8n expressions, using {{}} syntax, accessing $json/$node variables, troubleshooting e... | unknown | community | n8n, expression, syntax | n8n, expression, syntax, validate, fix, common, errors, writing, expressions, accessing, json, node |
 | `n8n-mcp-tools-expert` | Expert guide for using n8n-mcp MCP tools effectively. Use when searching for nodes, validating configurations, accessing templates, managing workflows, or us... | unknown | community | n8n, mcp | n8n, mcp, effectively, searching, nodes, validating, configurations, accessing, managing, any, provides, selection |
+| `n8n-multi-instance` | Select, verify, and safely switch n8n MCP instances across production, staging, teams, or clients, especially before credential writes. | critical | czlonkowski/n8n-skills | n8n, multi, instance | n8n, multi, instance, select, verify, safely, switch, mcp, instances, staging, teams, clients |
 | `n8n-node-configuration` | Operation-aware node configuration guidance. Use when configuring nodes, understanding property dependencies, determining required fields, choosing between g... | unknown | community | n8n, node, configuration | n8n, node, configuration, operation, aware, guidance, configuring, nodes, understanding, property, dependencies, determining |
+| `n8n-subworkflows` | Build reusable n8n sub-workflows with typed inputs, all-vs-each execution, discoverable naming, and agent-tool exposure. | unknown | czlonkowski/n8n-skills | n8n, subworkflows | n8n, subworkflows, reusable, sub, typed, inputs, all, vs, each, execution, discoverable, naming |
 | `n8n-validation-expert` | Expert guide for interpreting and fixing n8n validation errors. | unknown | community | n8n, validation | n8n, validation, interpreting, fixing, errors |
 | `n8n-workflow-patterns` | Proven architectural patterns for building n8n workflows. | unknown | community | n8n | n8n, proven, architectural, building |
 | `notion-automation` | Automate Notion tasks via Rube MCP (Composio): pages, databases, blocks, comments, users. Always search tools first for current schemas. | critical | community | notion | notion, automation, automate, tasks, via, rube, mcp, composio, pages, databases, blocks, comments |
@@ -503,7 +509,7 @@ Total skills: 1969
 | `kotler-macro-analyzer` | Professional PESTEL/SWOT analysis agent based on Kotler's methodology for strategic market audits. | safe | self | marketing, economics, strategy, kotler, pestel | marketing, economics, strategy, kotler, pestel, macro, analyzer, professional, swot, analysis, agent, methodology |
 | `osterwalder-canvas-architect` | Iterative consultant agent for building and validating logically consistent 9-block Business Model Canvases. | safe | self | business-model, osterwalder, strategy, bmc | business-model, osterwalder, strategy, bmc, canvas, architect, iterative, consultant, agent, building, validating, logically |
 
-## cloud (145)
+## cloud (146)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -646,6 +652,7 @@ Total skills: 1969
 | `cost-optimization` | Strategies and patterns for optimizing cloud costs across AWS, Azure, and GCP. | unknown | community | cost, optimization | cost, optimization, optimizing, cloud, costs, aws, azure, gcp |
 | `firebase` | Firebase gives you a complete backend in minutes - auth, database, storage, functions, hosting. But the ease of setup hides real complexity. Security rules a... | unknown | vibeship-spawner-skills (Apache 2.0) | firebase | firebase, gives, complete, backend, minutes, auth, database, storage, functions, hosting, ease, setup |
 | `gcp-cloud-run` | Specialized skill for building production-ready serverless applications on GCP. Covers Cloud Run services (containerized), Cloud Run Functions (event-driven)... | unknown | vibeship-spawner-skills (Apache 2.0) | gcp, cloud, run | gcp, cloud, run, specialized, skill, building, serverless, applications, covers, containerized, functions, event |
+| `hf-cloud-aws-context-discovery` | Discover the effective local AWS profile, region, account, and caller identity before any AWS task without exposing credentials. | safe | huggingface/skills | hugging-face, aws, credentials, discovery, cloud | hugging-face, aws, credentials, discovery, cloud, hf, context, discover, effective, local, profile, region |
 | `hybrid-cloud-architect` | Expert hybrid cloud architect specializing in complex multi-cloud solutions across AWS/Azure/GCP and private clouds (OpenStack/VMware). | unknown | community | hybrid, cloud | hybrid, cloud, architect, specializing, complex, multi, solutions, aws, azure, gcp, private, clouds |
 | `hybrid-cloud-networking` | Configure secure, high-performance connectivity between on-premises and cloud environments using VPN, Direct Connect, and ExpressRoute. | safe | community | hybrid, cloud, networking | hybrid, cloud, networking, configure, secure, high, performance, connectivity, between, premises, environments, vpn |
 | `istio-traffic-management` | Comprehensive guide to Istio traffic management for production service mesh deployments. | unknown | community | istio, traffic | istio, traffic, mesh, deployments |
@@ -1299,7 +1306,7 @@ Total skills: 1969
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | unknown | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | unknown | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (21)
+## frontend (31)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1313,7 +1320,17 @@ Total skills: 1969
 | `gpt-taste` | Use when generating elite GSAP-heavy frontend pages with strict AIDA structure, wide hero typography, and gapless bento grids. | safe | Leonxlnx/taste-skill | frontend, design, gsap, motion | frontend, design, gsap, motion, gpt, taste, generating, elite, heavy, pages, strict, aida |
 | `high-end-visual-design` | Use when designing expensive agency-grade interfaces with premium fonts, spatial rhythm, soft depth, and fluid microinteractions. | safe | Leonxlnx/taste-skill | frontend, visual-design, motion, ui | frontend, visual-design, motion, ui, high, visual, designing, expensive, agency, grade, interfaces, premium |
 | `industrial-brutalist-ui` | Use when creating raw industrial or tactical telemetry UIs with rigid grids, stark typography, CRT effects, and high-density data. | safe | Leonxlnx/taste-skill | frontend, design, brutalism, ui | frontend, design, brutalism, ui, industrial, brutalist, creating, raw, tactical, telemetry, uis, rigid |
-| `markstream-install` | Install and configure Markstream streaming Markdown renderers for Vue, React, Svelte, Angular, Nuxt, Next.js, and Vue 2 applications. | safe | Simon-He95/markstream-vue | markdown, streaming, vue, react, svelte, angular, ai-chat | markdown, streaming, vue, react, svelte, angular, ai-chat, markstream, install, configure, renderers, nuxt |
+| `markstream-angular` | Integrate the alpha markstream-angular renderer into Angular 20+ applications with standalone components, signals, safe HTML defaults, and optional peer feat... | critical | Simon-He95/markstream-vue | angular, markdown, streaming, ai-chat, frontend | angular, markdown, streaming, ai-chat, frontend, markstream, integrate, alpha, renderer, 20, applications, standalone |
+| `markstream-custom-components` | Override Markstream node renderers and add trusted custom tags across Vue, React, Svelte, and Angular using scoped or renderer-local mappings. | critical | Simon-He95/markstream-vue | markdown, components, vue, react, svelte, angular | markdown, components, vue, react, svelte, angular, markstream, custom, override, node, renderers, add |
+| `markstream-install` | Install and configure Markstream streaming Markdown renderers for Vue, React, Svelte, Angular, Nuxt, Next.js, and Vue 2 applications. | critical | Simon-He95/markstream-vue | markdown, streaming, vue, react, svelte, angular, ai-chat | markdown, streaming, vue, react, svelte, angular, ai-chat, markstream, install, configure, renderers, nuxt |
+| `markstream-migration` | Audit and migrate an existing Markdown renderer to Markstream while preserving custom renderers, security policy, streaming behavior, and explicit parity gaps. | critical | Simon-He95/markstream-vue | markdown, migration, streaming, security, frontend | markdown, migration, streaming, security, frontend, markstream, audit, migrate, existing, renderer, while, preserving |
+| `markstream-nuxt` | Integrate markstream-vue into Nuxt 3 or 4 with SSR-safe client boundaries, renderer modes, explicit CSS, and browser-only optional peers. | critical | Simon-He95/markstream-vue | nuxt, vue, ssr, markdown, streaming | nuxt, vue, ssr, markdown, streaming, markstream, integrate, safe, client, boundaries, renderer, modes |
+| `markstream-react` | Integrate the beta markstream-react renderer into React 18+ or Next.js with correct client/server entrypoints, CSS, streaming state, and component overrides. | critical | Simon-He95/markstream-vue | react, nextjs, markdown, streaming, ssr | react, nextjs, markdown, streaming, ssr, markstream, integrate, beta, renderer, 18, next, js |
+| `markstream-svelte` | Integrate the beta markstream-svelte renderer into Svelte 5 or SvelteKit with runes, explicit CSS, smooth streaming, workers, and SSR-safe boundaries. | critical | Simon-He95/markstream-vue | svelte, sveltekit, markdown, streaming, ssr | svelte, sveltekit, markdown, streaming, ssr, markstream, integrate, beta, renderer, runes, explicit, css |
+| `markstream-vue` | Integrate markstream-vue into plain Vue 3 with renderer modes, code and DOM choices, streaming state, virtualization, optional peers, and scoped components. | critical | Simon-He95/markstream-vue | vue, markdown, streaming, virtualization, ai-chat | vue, markdown, streaming, virtualization, ai-chat, markstream, integrate, plain, renderer, modes, code, dom |
+| `markstream-vue2` | Integrate markstream-vue2 into Vue 2.6 or 2.7 with correct Composition API decisions, CSS, streaming state, optional peers, and scoped overrides. | critical | Simon-He95/markstream-vue | vue2, markdown, streaming, compatibility, frontend | vue2, markdown, streaming, compatibility, frontend, markstream, integrate, vue, correct, composition, api, decisions |
+| `markstream-vue2-cli` | Integrate markstream-vue2 into Vue CLI or Webpack 4 with export-map-safe CSS, CDN worker fallbacks, and conservative code-block defaults. | critical | Simon-He95/markstream-vue | vue2, vue-cli, webpack4, markdown, workers | vue2, vue-cli, webpack4, markdown, workers, markstream, cli, integrate, vue, webpack, export, map |
+| `markstream-vue2-vite` | Integrate markstream-vue2 into Vue 2 plus Vite with bundled worker imports, CSS ordering, Composition API compatibility, and safe streaming defaults. | critical | Simon-He95/markstream-vue | vue2, vite, markdown, workers, streaming | vue2, vite, markdown, workers, streaming, markstream, integrate, vue, plus, bundled, worker, imports |
 | `minimalist-ui` | Use when creating clean editorial interfaces with warm monochrome palettes, crisp borders, restrained motion, and flat bento layouts. | safe | Leonxlnx/taste-skill | frontend, design, minimalism, ui | frontend, design, minimalism, ui, minimalist, creating, clean, editorial, interfaces, warm, monochrome, palettes |
 | `nextjs-best-practices` | Next.js App Router principles. Server Components, data fetching, routing patterns. | unknown | community | nextjs, best, practices | nextjs, best, practices, next, js, app, router, principles, server, components, data, fetching |
 | `premium-3d-website` | Guidelines for building premium 3D websites, focusing on custom WebGL shaders, post-processing, physics-based interactions, smooth animations, preloaders, an... | safe | self | threejs, webgl, shaders, post-processing, creative-coding, premium-design | threejs, webgl, shaders, post-processing, creative-coding, premium-design, premium, 3d, website, guidelines, building, websites |
@@ -2010,7 +2027,7 @@ Total skills: 1969
 | --- | --- | --- | --- | --- | --- |
 | `android-cli` | Orchestrates Android development tasks including project creation, deployment, SDK management, and environment diagnostics using the `android` command-line t... | critical | self | android, cli, adb, mobile, build, emulator | android, cli, adb, mobile, build, emulator, orchestrates, development, tasks, including, creation, deployment |
 
-## uncategorized (284)
+## uncategorized (285)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2276,6 +2293,7 @@ Total skills: 1969
 | `ui-update` | Update StyleSeed engine in your project — analyzes what's outdated and updates safely | unknown | bitjaru/styleseed | ui, update | ui, update, styleseed, engine, analyzes, what, outdated, updates, safely |
 | `unslop-review` | Rewrites code review comments so they read like a human teammate wrote them. Cuts corporate-AI throat-clearing ("I noticed...", "I was wondering if perhaps..... | unknown | MohamedAbdallah-14/unslop | unslop | unslop, review, rewrites, code, comments, so, read, like, human, teammate, wrote, them |
 | `use-dom` | Use Expo DOM components to run web code in a webview on native and as-is on web. Migrate web code to native incrementally. | unknown | expo/skills | use, dom | use, dom, expo, components, run, web, code, webview, native, migrate, incrementally |
+| `using-n8n-mcp-skills` | Route n8n MCP workflow design, editing, validation, testing, deployment, credential, execution, and debugging tasks to specialist guidance. | critical | czlonkowski/n8n-skills | using, n8n, mcp, skills | using, n8n, mcp, skills, route, editing, validation, testing, deployment, credential, execution, debugging |
 | `ux-audit` | Audit screens for UX issues using Nielsen's heuristics and modern mobile UX best practices | unknown | bitjaru/styleseed | ux, audit | ux, audit, screens, issues, nielsen, heuristics, mobile |
 | `ux-copy` | Generate UX microcopy (button labels, error messages, empty states, toasts) following a casual-but-polite voice and tone | unknown | bitjaru/styleseed | ux, copy | ux, copy, generate, microcopy, button, labels, error, messages, empty, states, toasts, following |
 | `ux-flow` | Design user flows and navigation structure following proven UX patterns | unknown | bitjaru/styleseed | ux, flow | ux, flow, user, flows, navigation, structure, following, proven |

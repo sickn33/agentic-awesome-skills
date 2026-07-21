@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-19T19:39:12.000Z",
-  "total": 1969,
+  "total": 1987,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -26809,6 +26809,41 @@
       "path": "skills/helpdesk-automation/SKILL.md"
     },
     {
+      "id": "hf-cloud-aws-context-discovery",
+      "canonical_id": "hf-cloud-aws-context-discovery",
+      "name": "hf-cloud-aws-context-discovery",
+      "description": "Discover the effective local AWS profile, region, account, and caller identity before any AWS task without exposing credentials.",
+      "category": "cloud",
+      "risk": "safe",
+      "source": "https://github.com/huggingface/skills/tree/main/skills/hf-cloud-aws-context-discovery",
+      "source_type": "official",
+      "source_repo": "huggingface/skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/huggingface/skills/blob/main/LICENSE",
+      "tags": [
+        "hugging-face",
+        "aws",
+        "credentials",
+        "discovery",
+        "cloud"
+      ],
+      "triggers": [
+        "hugging-face",
+        "aws",
+        "credentials",
+        "discovery",
+        "cloud",
+        "hf",
+        "context",
+        "discover",
+        "effective",
+        "local",
+        "profile",
+        "region"
+      ],
+      "path": "skills/hf-cloud-aws-context-discovery/SKILL.md"
+    },
+    {
       "id": "hf-mcp",
       "canonical_id": "hf-mcp",
       "name": "hf-mcp",
@@ -33556,12 +33591,83 @@
       "path": "skills/marketing-psychology/SKILL.md"
     },
     {
+      "id": "markstream-angular",
+      "canonical_id": "markstream-angular",
+      "name": "markstream-angular",
+      "description": "Integrate the alpha markstream-angular renderer into Angular 20+ applications with standalone components, signals, safe HTML defaults, and optional peer features.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-angular",
+      "source_type": "official",
+      "source_repo": "Simon-He95/markstream-vue",
+      "license": "MIT",
+      "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+      "tags": [
+        "angular",
+        "markdown",
+        "streaming",
+        "ai-chat",
+        "frontend"
+      ],
+      "triggers": [
+        "angular",
+        "markdown",
+        "streaming",
+        "ai-chat",
+        "frontend",
+        "markstream",
+        "integrate",
+        "alpha",
+        "renderer",
+        "20",
+        "applications",
+        "standalone"
+      ],
+      "path": "skills/markstream-angular/SKILL.md"
+    },
+    {
+      "id": "markstream-custom-components",
+      "canonical_id": "markstream-custom-components",
+      "name": "markstream-custom-components",
+      "description": "Override Markstream node renderers and add trusted custom tags across Vue, React, Svelte, and Angular using scoped or renderer-local mappings.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-custom-components",
+      "source_type": "official",
+      "source_repo": "Simon-He95/markstream-vue",
+      "license": "MIT",
+      "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+      "tags": [
+        "markdown",
+        "components",
+        "vue",
+        "react",
+        "svelte",
+        "angular"
+      ],
+      "triggers": [
+        "markdown",
+        "components",
+        "vue",
+        "react",
+        "svelte",
+        "angular",
+        "markstream",
+        "custom",
+        "override",
+        "node",
+        "renderers",
+        "add"
+      ],
+      "path": "skills/markstream-custom-components/SKILL.md"
+    },
+    {
       "id": "markstream-install",
       "canonical_id": "markstream-install",
       "name": "markstream-install",
       "description": "Install and configure Markstream streaming Markdown renderers for Vue, React, Svelte, Angular, Nuxt, Next.js, and Vue 2 applications.",
       "category": "frontend",
-      "risk": "safe",
+      "risk": "critical",
       "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-install",
       "source_type": "official",
       "source_repo": "Simon-He95/markstream-vue",
@@ -33591,6 +33697,286 @@
         "nuxt"
       ],
       "path": "skills/markstream-install/SKILL.md"
+    },
+    {
+      "id": "markstream-migration",
+      "canonical_id": "markstream-migration",
+      "name": "markstream-migration",
+      "description": "Audit and migrate an existing Markdown renderer to Markstream while preserving custom renderers, security policy, streaming behavior, and explicit parity gaps.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-migration",
+      "source_type": "official",
+      "source_repo": "Simon-He95/markstream-vue",
+      "license": "MIT",
+      "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+      "tags": [
+        "markdown",
+        "migration",
+        "streaming",
+        "security",
+        "frontend"
+      ],
+      "triggers": [
+        "markdown",
+        "migration",
+        "streaming",
+        "security",
+        "frontend",
+        "markstream",
+        "audit",
+        "migrate",
+        "existing",
+        "renderer",
+        "while",
+        "preserving"
+      ],
+      "path": "skills/markstream-migration/SKILL.md"
+    },
+    {
+      "id": "markstream-nuxt",
+      "canonical_id": "markstream-nuxt",
+      "name": "markstream-nuxt",
+      "description": "Integrate markstream-vue into Nuxt 3 or 4 with SSR-safe client boundaries, renderer modes, explicit CSS, and browser-only optional peers.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-nuxt",
+      "source_type": "official",
+      "source_repo": "Simon-He95/markstream-vue",
+      "license": "MIT",
+      "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+      "tags": [
+        "nuxt",
+        "vue",
+        "ssr",
+        "markdown",
+        "streaming"
+      ],
+      "triggers": [
+        "nuxt",
+        "vue",
+        "ssr",
+        "markdown",
+        "streaming",
+        "markstream",
+        "integrate",
+        "safe",
+        "client",
+        "boundaries",
+        "renderer",
+        "modes"
+      ],
+      "path": "skills/markstream-nuxt/SKILL.md"
+    },
+    {
+      "id": "markstream-react",
+      "canonical_id": "markstream-react",
+      "name": "markstream-react",
+      "description": "Integrate the beta markstream-react renderer into React 18+ or Next.js with correct client/server entrypoints, CSS, streaming state, and component overrides.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-react",
+      "source_type": "official",
+      "source_repo": "Simon-He95/markstream-vue",
+      "license": "MIT",
+      "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+      "tags": [
+        "react",
+        "nextjs",
+        "markdown",
+        "streaming",
+        "ssr"
+      ],
+      "triggers": [
+        "react",
+        "nextjs",
+        "markdown",
+        "streaming",
+        "ssr",
+        "markstream",
+        "integrate",
+        "beta",
+        "renderer",
+        "18",
+        "next",
+        "js"
+      ],
+      "path": "skills/markstream-react/SKILL.md"
+    },
+    {
+      "id": "markstream-svelte",
+      "canonical_id": "markstream-svelte",
+      "name": "markstream-svelte",
+      "description": "Integrate the beta markstream-svelte renderer into Svelte 5 or SvelteKit with runes, explicit CSS, smooth streaming, workers, and SSR-safe boundaries.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-svelte",
+      "source_type": "official",
+      "source_repo": "Simon-He95/markstream-vue",
+      "license": "MIT",
+      "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+      "tags": [
+        "svelte",
+        "sveltekit",
+        "markdown",
+        "streaming",
+        "ssr"
+      ],
+      "triggers": [
+        "svelte",
+        "sveltekit",
+        "markdown",
+        "streaming",
+        "ssr",
+        "markstream",
+        "integrate",
+        "beta",
+        "renderer",
+        "runes",
+        "explicit",
+        "css"
+      ],
+      "path": "skills/markstream-svelte/SKILL.md"
+    },
+    {
+      "id": "markstream-vue",
+      "canonical_id": "markstream-vue",
+      "name": "markstream-vue",
+      "description": "Integrate markstream-vue into plain Vue 3 with renderer modes, code and DOM choices, streaming state, virtualization, optional peers, and scoped components.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-vue",
+      "source_type": "official",
+      "source_repo": "Simon-He95/markstream-vue",
+      "license": "MIT",
+      "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+      "tags": [
+        "vue",
+        "markdown",
+        "streaming",
+        "virtualization",
+        "ai-chat"
+      ],
+      "triggers": [
+        "vue",
+        "markdown",
+        "streaming",
+        "virtualization",
+        "ai-chat",
+        "markstream",
+        "integrate",
+        "plain",
+        "renderer",
+        "modes",
+        "code",
+        "dom"
+      ],
+      "path": "skills/markstream-vue/SKILL.md"
+    },
+    {
+      "id": "markstream-vue2",
+      "canonical_id": "markstream-vue2",
+      "name": "markstream-vue2",
+      "description": "Integrate markstream-vue2 into Vue 2.6 or 2.7 with correct Composition API decisions, CSS, streaming state, optional peers, and scoped overrides.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-vue2",
+      "source_type": "official",
+      "source_repo": "Simon-He95/markstream-vue",
+      "license": "MIT",
+      "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+      "tags": [
+        "vue2",
+        "markdown",
+        "streaming",
+        "compatibility",
+        "frontend"
+      ],
+      "triggers": [
+        "vue2",
+        "markdown",
+        "streaming",
+        "compatibility",
+        "frontend",
+        "markstream",
+        "integrate",
+        "vue",
+        "correct",
+        "composition",
+        "api",
+        "decisions"
+      ],
+      "path": "skills/markstream-vue2/SKILL.md"
+    },
+    {
+      "id": "markstream-vue2-cli",
+      "canonical_id": "markstream-vue2-cli",
+      "name": "markstream-vue2-cli",
+      "description": "Integrate markstream-vue2 into Vue CLI or Webpack 4 with export-map-safe CSS, CDN worker fallbacks, and conservative code-block defaults.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-vue2-cli",
+      "source_type": "official",
+      "source_repo": "Simon-He95/markstream-vue",
+      "license": "MIT",
+      "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+      "tags": [
+        "vue2",
+        "vue-cli",
+        "webpack4",
+        "markdown",
+        "workers"
+      ],
+      "triggers": [
+        "vue2",
+        "vue-cli",
+        "webpack4",
+        "markdown",
+        "workers",
+        "markstream",
+        "cli",
+        "integrate",
+        "vue",
+        "webpack",
+        "export",
+        "map"
+      ],
+      "path": "skills/markstream-vue2-cli/SKILL.md"
+    },
+    {
+      "id": "markstream-vue2-vite",
+      "canonical_id": "markstream-vue2-vite",
+      "name": "markstream-vue2-vite",
+      "description": "Integrate markstream-vue2 into Vue 2 plus Vite with bundled worker imports, CSS ordering, Composition API compatibility, and safe streaming defaults.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "https://github.com/Simon-He95/markstream-vue/tree/main/.agents/skills/markstream-vue2-vite",
+      "source_type": "official",
+      "source_repo": "Simon-He95/markstream-vue",
+      "license": "MIT",
+      "license_source": "https://github.com/Simon-He95/markstream-vue/blob/main/license",
+      "tags": [
+        "vue2",
+        "vite",
+        "markdown",
+        "workers",
+        "streaming"
+      ],
+      "triggers": [
+        "vue2",
+        "vite",
+        "markdown",
+        "workers",
+        "streaming",
+        "markstream",
+        "integrate",
+        "vue",
+        "plus",
+        "bundled",
+        "worker",
+        "imports"
+      ],
+      "path": "skills/markstream-vue2-vite/SKILL.md"
     },
     {
       "id": "matematico-tao",
@@ -35511,6 +35897,72 @@
       "path": "skills/multi-platform-apps-multi-platform/SKILL.md"
     },
     {
+      "id": "n8n-agents",
+      "canonical_id": "n8n-agents",
+      "name": "n8n-agents",
+      "description": "Design n8n AI agents, chains, classifiers, extractors, tool calling, memory, RAG, structured output, and human-review flows.",
+      "category": "automation",
+      "risk": "critical",
+      "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-agents",
+      "source_type": "community",
+      "source_repo": "czlonkowski/n8n-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE",
+      "tags": [
+        "n8n",
+        "agents"
+      ],
+      "triggers": [
+        "n8n",
+        "agents",
+        "ai",
+        "chains",
+        "classifiers",
+        "extractors",
+        "calling",
+        "memory",
+        "rag",
+        "structured",
+        "output",
+        "human"
+      ],
+      "path": "skills/n8n-agents/SKILL.md"
+    },
+    {
+      "id": "n8n-binary-and-data",
+      "canonical_id": "n8n-binary-and-data",
+      "name": "n8n-binary-and-data",
+      "description": "Handle n8n files and binary data across uploads, downloads, transforms, multimodal inputs, agent tools, and chat surfaces.",
+      "category": "automation",
+      "risk": "unknown",
+      "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-binary-and-data",
+      "source_type": "community",
+      "source_repo": "czlonkowski/n8n-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE",
+      "tags": [
+        "n8n",
+        "binary",
+        "and",
+        "data"
+      ],
+      "triggers": [
+        "n8n",
+        "binary",
+        "and",
+        "data",
+        "handle",
+        "files",
+        "uploads",
+        "downloads",
+        "transforms",
+        "multimodal",
+        "inputs",
+        "agent"
+      ],
+      "path": "skills/n8n-binary-and-data/SKILL.md"
+    },
+    {
       "id": "n8n-code-javascript",
       "canonical_id": "n8n-code-javascript",
       "name": "n8n-code-javascript",
@@ -35567,6 +36019,71 @@
         "standard"
       ],
       "path": "skills/n8n-code-python/SKILL.md"
+    },
+    {
+      "id": "n8n-code-tool",
+      "canonical_id": "n8n-code-tool",
+      "name": "n8n-code-tool",
+      "description": "Write and debug JavaScript or Python for the AI-callable n8n Custom Code Tool, including schemas, sandbox limits, and return formats.",
+      "category": "automation",
+      "risk": "unknown",
+      "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-code-tool",
+      "source_type": "community",
+      "source_repo": "czlonkowski/n8n-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE",
+      "tags": [
+        "n8n",
+        "code"
+      ],
+      "triggers": [
+        "n8n",
+        "code",
+        "write",
+        "debug",
+        "javascript",
+        "python",
+        "ai",
+        "callable",
+        "custom",
+        "including",
+        "schemas",
+        "sandbox"
+      ],
+      "path": "skills/n8n-code-tool/SKILL.md"
+    },
+    {
+      "id": "n8n-error-handling",
+      "canonical_id": "n8n-error-handling",
+      "name": "n8n-error-handling",
+      "description": "Design visible, structured, recoverable n8n failures using error outputs, retries, Error Trigger workflows, and HTTP error responses.",
+      "category": "automation",
+      "risk": "unknown",
+      "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-error-handling",
+      "source_type": "community",
+      "source_repo": "czlonkowski/n8n-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE",
+      "tags": [
+        "n8n",
+        "error",
+        "handling"
+      ],
+      "triggers": [
+        "n8n",
+        "error",
+        "handling",
+        "visible",
+        "structured",
+        "recoverable",
+        "failures",
+        "outputs",
+        "retries",
+        "trigger",
+        "http",
+        "responses"
+      ],
+      "path": "skills/n8n-error-handling/SKILL.md"
     },
     {
       "id": "n8n-expression-syntax",
@@ -35626,6 +36143,39 @@
       "path": "skills/n8n-mcp-tools-expert/SKILL.md"
     },
     {
+      "id": "n8n-multi-instance",
+      "canonical_id": "n8n-multi-instance",
+      "name": "n8n-multi-instance",
+      "description": "Select, verify, and safely switch n8n MCP instances across production, staging, teams, or clients, especially before credential writes.",
+      "category": "automation",
+      "risk": "critical",
+      "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-multi-instance",
+      "source_type": "community",
+      "source_repo": "czlonkowski/n8n-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE",
+      "tags": [
+        "n8n",
+        "multi",
+        "instance"
+      ],
+      "triggers": [
+        "n8n",
+        "multi",
+        "instance",
+        "select",
+        "verify",
+        "safely",
+        "switch",
+        "mcp",
+        "instances",
+        "staging",
+        "teams",
+        "clients"
+      ],
+      "path": "skills/n8n-multi-instance/SKILL.md"
+    },
+    {
       "id": "n8n-node-configuration",
       "canonical_id": "n8n-node-configuration",
       "name": "n8n-node-configuration",
@@ -35653,6 +36203,38 @@
         "determining"
       ],
       "path": "skills/n8n-node-configuration/SKILL.md"
+    },
+    {
+      "id": "n8n-subworkflows",
+      "canonical_id": "n8n-subworkflows",
+      "name": "n8n-subworkflows",
+      "description": "Build reusable n8n sub-workflows with typed inputs, all-vs-each execution, discoverable naming, and agent-tool exposure.",
+      "category": "automation",
+      "risk": "unknown",
+      "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-subworkflows",
+      "source_type": "community",
+      "source_repo": "czlonkowski/n8n-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE",
+      "tags": [
+        "n8n",
+        "subworkflows"
+      ],
+      "triggers": [
+        "n8n",
+        "subworkflows",
+        "reusable",
+        "sub",
+        "typed",
+        "inputs",
+        "all",
+        "vs",
+        "each",
+        "execution",
+        "discoverable",
+        "naming"
+      ],
+      "path": "skills/n8n-subworkflows/SKILL.md"
     },
     {
       "id": "n8n-validation-expert",
@@ -53379,6 +53961,40 @@
         "branches"
       ],
       "path": "skills/using-git-worktrees/SKILL.md"
+    },
+    {
+      "id": "using-n8n-mcp-skills",
+      "canonical_id": "using-n8n-mcp-skills",
+      "name": "using-n8n-mcp-skills",
+      "description": "Route n8n MCP workflow design, editing, validation, testing, deployment, credential, execution, and debugging tasks to specialist guidance.",
+      "category": "uncategorized",
+      "risk": "critical",
+      "source": "https://github.com/czlonkowski/n8n-skills/tree/main/skills/using-n8n-mcp-skills",
+      "source_type": "community",
+      "source_repo": "czlonkowski/n8n-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE",
+      "tags": [
+        "using",
+        "n8n",
+        "mcp",
+        "skills"
+      ],
+      "triggers": [
+        "using",
+        "n8n",
+        "mcp",
+        "skills",
+        "route",
+        "editing",
+        "validation",
+        "testing",
+        "deployment",
+        "credential",
+        "execution",
+        "debugging"
+      ],
+      "path": "skills/using-n8n-mcp-skills/SKILL.md"
     },
     {
       "id": "using-neon",
