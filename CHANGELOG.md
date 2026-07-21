@@ -9,10 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added 18 source-verified skills from credited repositories: ten official Markstream framework and migration skills, seven n8n workflow-specialist skills, and one Hugging Face cloud-discovery skill.
+- Preserved each imported skill's required local references and templates, with explicit provenance, license evidence, risk metadata, usage boundaries, and limitations.
+
 ### Changed
 
 - Clarified the AAS Core activation path with an exact release-pinned MCP command, a concise end-to-end quick path, an explicit preview-status matrix, and a tested boundary between structural validity, semantic suitability, compatibility, and safety.
 - Made exact package/MCP version parity a mandatory maintainer release gate: after npm publishes a new AAS package, every already-configured local AAS MCP host must be updated through the approval-bound, backup-first configuration flow and verified with a real MCP handshake before the release task is complete.
+- Hardened imported guidance around dependency installation, project mutation, credentials, instance selection, workflow side effects, and cloud-planning boundaries.
 
 ## [15.1.0] - 2026-07-19 - "Agent-Owned Selection and Audit Evidence"
 
