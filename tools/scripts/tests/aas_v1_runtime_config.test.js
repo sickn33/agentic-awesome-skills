@@ -147,6 +147,26 @@ test("runtime promotion rejects a missing cache root under a group or world writ
   );
 });
 
+test("runtime promotion rejects a private parent beneath a replaceable ancestor", async (t) => {
+  if (process.platform === "win32") return;
+  const root = await temp(t);
+  const sharedAncestor = path.join(root, "shared");
+  const privateParent = path.join(sharedAncestor, "mine");
+  await fsp.mkdir(privateParent, { recursive: true, mode: 0o700 });
+  await fsp.chmod(sharedAncestor, 0o777);
+  await fsp.chmod(privateParent, 0o700);
+  const fixture = releaseFixture();
+  await assert.rejects(
+    core.cache.installRuntimeFromRegistry({
+      cacheRoot: path.join(privateParent, "aas-cache"),
+      version: "14.6.0",
+      expectedIntegrity: fixture.integrity,
+      fetcher: fixture.fetcher,
+    }),
+    (error) => error.code === "AAS_RUNTIME_DIRECTORY_UNSAFE",
+  );
+});
+
 test("the packed runtime launches MCP from an isolated verified dependency closure", async (t) => {
   const root = await temp(t);
   const repoRoot = path.resolve(__dirname, "../../..");

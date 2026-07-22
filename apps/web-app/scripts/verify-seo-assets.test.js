@@ -636,7 +636,7 @@ describe('seo assets verification helpers', () => {
     const llms = `
       # Agentic Awesome Skills
       AAS Core preview
-      Current release: V1.2.3.
+      - Current release: V1.2.3.
       The published package predates AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
@@ -651,7 +651,7 @@ describe('seo assets verification helpers', () => {
     const llms = `
       # Agentic Awesome Skills
       AAS Core preview
-      Current release: V1.2.2.
+      - Current release: V1.2.2.
       The published package predates AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
@@ -666,7 +666,7 @@ describe('seo assets verification helpers', () => {
     const llms = `
       # Agentic Awesome Skills
       AAS Core preview
-      Current release: V15.0.0.
+      - Current release: V15.0.0.
       This release includes AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
@@ -682,6 +682,27 @@ describe('seo assets verification helpers', () => {
       expectedReleaseLabel: 'V15.0.0',
       expectedCoreIncluded: false,
     })).toThrow('predates AAS Core');
+  });
+
+  it('rejects release prefix collisions, trailing garbage, and duplicate release lines', () => {
+    const base = `
+      # Agentic Awesome Skills
+      AAS Core preview
+      This release includes AAS Core.
+      1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
+      https://github.com/sickn33/agentic-awesome-skills
+      https://sickn33.github.io/agentic-awesome-skills/workbench
+      Canonical source of truth: the GitHub repository is the primary project URL.
+    `;
+    expect(() => assertLlms(`${base}\n- Current release: V15.0.0-rc.1.`, {
+      expectedReleaseLabel: 'V15.0.0', expectedCoreIncluded: true,
+    })).toThrow('exactly');
+    expect(() => assertLlms(`${base}\n- Current release: V15.0.0. trailing`, {
+      expectedReleaseLabel: 'V15.0.0', expectedCoreIncluded: true,
+    })).toThrow('exactly');
+    expect(() => assertLlms(`${base}\n- Current release: V15.0.0.\n- Current release: V15.0.0.`, {
+      expectedReleaseLabel: 'V15.0.0', expectedCoreIncluded: true,
+    })).toThrow('exactly one');
   });
 
   it('requires social image tags in rendered index html', () => {

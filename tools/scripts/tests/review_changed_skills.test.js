@@ -20,7 +20,8 @@ const changed = getChangedSkillFiles('base', 'head', {
     assert.deepStrictEqual(args, [
       'diff',
       '--name-only',
-      '--diff-filter=ACMR',
+      '--no-renames',
+      '--diff-filter=ACDMR',
       'base',
       'head',
       '--',
@@ -35,12 +36,14 @@ const changed = getChangedSkillFiles('base', 'head', {
   },
 });
 
-assert.deepStrictEqual(changed, ['skills/alpha/SKILL.md', 'plugins/example/SKILL.md']);
+assert.deepStrictEqual(changed, ['skills/alpha/SKILL.md', 'plugins/example/SKILL.md', 'skills/beta/notes.md']);
 
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'aas-review-skills-'));
 fs.mkdirSync(path.join(tempDir, 'skills', 'alpha'), { recursive: true });
 fs.mkdirSync(path.join(tempDir, 'plugins', 'example'), { recursive: true });
 fs.writeFileSync(path.join(tempDir, 'skills', 'alpha', 'SKILL.md'), 'alpha');
+fs.mkdirSync(path.join(tempDir, 'skills', 'alpha', 'references'));
+fs.writeFileSync(path.join(tempDir, 'skills', 'alpha', 'references', 'guide.md'), 'guide');
 fs.writeFileSync(path.join(tempDir, 'plugins', 'example', 'SKILL.md'), 'example');
 
 assert.deepStrictEqual(getChangedSkillDirs(changed, tempDir), [
@@ -119,6 +122,18 @@ assert.notStrictEqual(
 );
 
 fs.writeFileSync(path.join(tempDir, 'skills', 'alpha', 'SKILL.md'), 'alpha changed');
+assert.notStrictEqual(
+  reviewFingerprint(['skills/alpha'], {
+    cacheVersion: '1',
+    repoRoot: tempDir,
+    threshold: '80',
+    workspace: 'antigravity-awesome-skills',
+  }),
+  alphaFingerprint,
+);
+
+fs.writeFileSync(path.join(tempDir, 'skills', 'alpha', 'SKILL.md'), 'alpha');
+fs.writeFileSync(path.join(tempDir, 'skills', 'alpha', 'references', 'guide.md'), 'guide changed');
 assert.notStrictEqual(
   reviewFingerprint(['skills/alpha'], {
     cacheVersion: '1',

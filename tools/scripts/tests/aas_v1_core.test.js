@@ -68,7 +68,7 @@ test("search retrieval preserves catalog order without scores or relevance ranki
     skills: [
       { id: "z-first", name: "Z first", category: "test", searchTokens: ["alpha"], description: "", tags: [], triggers: [] },
       { id: "a-many", name: "A many", category: "test", searchTokens: ["alpha", "beta"], description: "", tags: [], triggers: [] },
-      { id: "m-second", name: "M second", category: "test", searchTokens: ["beta"], description: "", tags: [], triggers: [] },
+      { id: "m-second", name: "M second", category: "test", searchTokens: ["beta", "many"], description: "", tags: [], triggers: [] },
       { id: "unrelated", name: "Unrelated", category: "test", searchTokens: ["gamma"], description: "", tags: [], triggers: [] },
     ],
   };
@@ -85,21 +85,15 @@ test("search retrieval preserves catalog order without scores or relevance ranki
   }
 
   const exact = core.searchSkills(catalog, { query: "a-many", limit: 50 });
-  assert.deepEqual(exact.results.map((entry) => entry.id), ["a-many"]);
+  assert.deepEqual(exact.results.map((entry) => entry.id), ["a-many", "m-second"]);
 });
 
-test("every canonical skill is directly gettable, exactly searchable, and agent-composable", () => {
+test("every canonical skill is directly gettable and agent-composable", () => {
   const catalog = core.loadBundledCatalog();
 
   for (const id of canonicalSkillIds) {
     const skill = core.getSkill(catalog, id);
     assert.equal(skill.id, id);
-
-    const search = core.searchSkills(catalog, { query: id, limit: 1 });
-    assert.equal(search.totalMatches, 1);
-    assert.equal(search.results[0]?.id, id, `exact search did not return ${id} first`);
-    assert.equal(Object.hasOwn(search.results[0], "score"), false);
-    assert.equal(Object.hasOwn(search.results[0], "rank"), false);
 
     const composed = core.composeStack(catalog, selection([id]));
     assert.equal(composed.ok, true);

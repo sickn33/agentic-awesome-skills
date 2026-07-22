@@ -586,6 +586,7 @@ function loadPullRequestDetails(projectRoot, repoSlug, prNumber) {
     jsonFields: [
       "body",
       "autoMergeRequest",
+      "author",
       "baseRefName",
       "baseRefOid",
       "mergeStateStatus",
@@ -1064,8 +1065,13 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
   const mergeBaseOid = getMergeBase(projectRoot, baseOid, headOid, dependencies);
   const records = readRecords(projectRoot, mergeBaseOid, headOid, dependencies);
   const sameRepository = isSameRepositoryPullRequest(repoSlug, prDetails);
+  const reviewedHeads = new Set(options.reviewedHeads || []);
+  const repositoryOwner = String(repoSlug || "").split("/")[0].toLowerCase();
+  const ownerAuthorizedSensitiveChange = sameRepository
+    && String(prDetails?.author?.login || "").toLowerCase() === repositoryOwner
+    && reviewedHeads.has(headOid);
   const preliminaryPolicy = classifyRecords(records, { requireBlobSizes: false });
-  if (!sameRepository && !preliminaryPolicy?.approvalSafe) {
+  if (!preliminaryPolicy?.approvalSafe && !ownerAuthorizedSensitiveChange) {
     const reasons = Array.isArray(preliminaryPolicy?.reasons) && preliminaryPolicy.reasons.length
       ? preliminaryPolicy.reasons.slice(0, 12).join(", ")
       : "unclassified local diff";
@@ -1073,7 +1079,7 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
   }
   const blobSizes = getSizes(projectRoot, records, dependencies);
   const policy = classifyRecords(records, { blobSizes });
-  if (!sameRepository && !policy?.approvalSafe) {
+  if (!policy?.approvalSafe && !ownerAuthorizedSensitiveChange) {
     const reasons = Array.isArray(policy?.reasons) && policy.reasons.length
       ? policy.reasons.slice(0, 12).join(", ")
       : "unclassified local diff";
@@ -1094,7 +1100,6 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
     throw new Error(`PR #${prNumber} trusted changed-skill evidence is blocking: ${reasons}.`);
   }
 
-  const reviewedHeads = new Set(options.reviewedHeads || []);
   if (policy.requiresHumanReview && !reviewedHeads.has(headOid)) {
     throw new Error(
       `PR #${prNumber} changes canonical skill content. Re-run with --reviewed-head ${headOid} after reviewing that exact full SHA.`,
@@ -1248,9 +1253,9 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
   });
   const headSha = prDetails.headRefOid;
   const approvedRuns = approval.approvedRuns;
-  // The Skill Review workflow is path-filtered to SKILL.md. Supporting skill
-  // content still requires exact-head human attestation, but has no review
-  // check run to wait for.
+  // The Skill Review workflow covers canonical skill files and their tracked
+  // support trees. Exact-head attestation remains the fallback when Tessl is
+  // unavailable or does not produce a passing review.
   prDetails.hasSkillChanges = approval.policy.canonicalSkillChanges.length > 0;
   if (approvedRuns.length) {
     console.log(

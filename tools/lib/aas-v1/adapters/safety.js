@@ -16,15 +16,34 @@ function currentUid() {
   return typeof process.getuid === "function" ? process.getuid() : null;
 }
 
-function runWindowsAcl(script, filePath) {
-  const result = spawnSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", script, filePath], {
+function windowsAclDiagnostic(value) {
+  if (typeof value !== "string") return null;
+  const normalized = value.replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim();
+  return normalized ? normalized.slice(0, 512) : null;
+}
+
+function runWindowsAcl(script, filePath, options = {}) {
+  const runner = options.runner || spawnSync;
+  const result = runner("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", script], {
     encoding: "utf8",
     windowsHide: true,
     timeout: 15000,
     maxBuffer: 64 * 1024,
+    env: {
+      ...process.env,
+      AAS_WINDOWS_ACL_PATH: filePath,
+      ...(options.environment || {}),
+    },
   });
   if (result.status !== 0 || result.error) {
-    throw hostConfigError("AAS_ADAPTER_WINDOWS_ACL_FAILED", "filesystem", { status: result.status ?? null });
+    const details = {
+      status: result.status ?? null,
+      phase: options.phase || "windowsAcl",
+      path: filePath,
+    };
+    const diagnostic = windowsAclDiagnostic(result.stderr) || windowsAclDiagnostic(result.error?.message);
+    if (diagnostic) details.diagnostic = diagnostic;
+    throw hostConfigError("AAS_ADAPTER_WINDOWS_ACL_FAILED", "filesystem", details);
   }
   return result.stdout.trim();
 }
@@ -32,17 +51,18 @@ function runWindowsAcl(script, filePath) {
 function windowsAclSnapshot(filePath) {
   const script = [
     "$ErrorActionPreference='Stop'",
-    "$p=$args[0]",
+    "$p=$env:AAS_WINDOWS_ACL_PATH",
+    "function ConvertTo-SidValue($value){try{return ([Security.Principal.SecurityIdentifier]$value).Value}catch{};try{return ([Security.Principal.NTAccount]$value).Translate([Security.Principal.SecurityIdentifier]).Value}catch{return [string]$value}}",
     "$me=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value",
     "$a=Get-Acl -LiteralPath $p",
-    "$owner=(New-Object Security.Principal.NTAccount($a.Owner)).Translate([Security.Principal.SecurityIdentifier]).Value",
-    "$rules=@($a.Access | ForEach-Object { $_.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value + '|' + $_.AccessControlType + '|' + $_.IsInherited })",
+    "$owner=ConvertTo-SidValue $a.Owner",
+    "$rules=@($a.Access | ForEach-Object { (ConvertTo-SidValue $_.IdentityReference.Value) + '|' + $_.AccessControlType + '|' + $_.IsInherited })",
     "@{current=$me;owner=$owner;protected=$a.AreAccessRulesProtected;rules=$rules}|ConvertTo-Json -Compress",
   ].join(";");
   let snapshot;
-  try { snapshot = JSON.parse(runWindowsAcl(script, filePath)); } catch (cause) {
+  try { snapshot = JSON.parse(runWindowsAcl(script, filePath, { phase: "inspectAcl" })); } catch (cause) {
     if (cause && cause.code) throw cause;
-    throw hostConfigError("AAS_ADAPTER_WINDOWS_ACL_FAILED", "filesystem");
+    throw hostConfigError("AAS_ADAPTER_WINDOWS_ACL_FAILED", "filesystem", { phase: "parseAcl", path: filePath });
   }
   return snapshot;
 }
@@ -67,7 +87,7 @@ function hardenWindowsPrivatePath(filePath, directory = false) {
   if (process.platform !== "win32") return;
   const script = [
     "$ErrorActionPreference='Stop'",
-    "$p=$args[0]",
+    "$p=$env:AAS_WINDOWS_ACL_PATH",
     "$sid=[Security.Principal.WindowsIdentity]::GetCurrent().User",
     "$acl=Get-Acl -LiteralPath $p",
     "$acl.SetAccessRuleProtection($true,$false)",
@@ -78,17 +98,17 @@ function hardenWindowsPrivatePath(filePath, directory = false) {
     "$acl.SetAccessRule($rule)",
     "Set-Acl -LiteralPath $p -AclObject $acl",
   ].join(";");
-  runWindowsAcl(script, filePath);
+  runWindowsAcl(script, filePath, { phase: "hardenAcl" });
   assertWindowsPrivatePath(filePath);
 }
 
 function copyWindowsAcl(sourcePath, destinationPath) {
   if (process.platform !== "win32") return;
-  const script = "$ErrorActionPreference='Stop';$source=$args[0];$destination=$args[1];$acl=Get-Acl -LiteralPath $source;Set-Acl -LiteralPath $destination -AclObject $acl";
-  const result = spawnSync("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", script, sourcePath, destinationPath], {
-    encoding: "utf8", windowsHide: true, timeout: 15000, maxBuffer: 64 * 1024,
+  const script = "$ErrorActionPreference='Stop';$source=$env:AAS_WINDOWS_ACL_SOURCE_PATH;$destination=$env:AAS_WINDOWS_ACL_PATH;$acl=Get-Acl -LiteralPath $source;Set-Acl -LiteralPath $destination -AclObject $acl";
+  runWindowsAcl(script, destinationPath, {
+    phase: "copyAcl",
+    environment: { AAS_WINDOWS_ACL_SOURCE_PATH: sourcePath },
   });
-  if (result.status !== 0 || result.error) throw hostConfigError("AAS_ADAPTER_WINDOWS_ACL_FAILED", "filesystem", { status: result.status ?? null });
   assertWindowsOwned(destinationPath);
 }
 
@@ -202,6 +222,7 @@ module.exports = {
   fsyncDirectory,
   hardenWindowsPrivatePath,
   inspectRegularFile,
+  runWindowsAcl,
   sameIdentity,
   writeExclusiveSynced,
 };

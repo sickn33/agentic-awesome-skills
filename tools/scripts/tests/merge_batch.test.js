@@ -508,6 +508,7 @@ function approvalDependencies(overrides = {}) {
     headRefOid: HEAD_SHA,
     headRefName: "maintenance/internal",
     headRepository: { nameWithOwner: "OWNER/REPO" },
+    author: { login: "owner" },
   };
   let classifications = 0;
   const dependencies = approvalDependencies({
@@ -530,6 +531,30 @@ function approvalDependencies(overrides = {}) {
   assert.strictEqual(result.sameRepository, true);
   assert.strictEqual(classifications, 2);
   assert.deepStrictEqual(result.runs, []);
+}
+
+{
+  const prDetails = {
+    number: 451,
+    baseRefName: "main",
+    baseRefOid: BASE_SHA,
+    headRefOid: HEAD_SHA,
+    headRefName: "maintenance/internal",
+    headRepository: { nameWithOwner: "owner/repo" },
+    author: { login: "collaborator" },
+  };
+  const dependencies = approvalDependencies({
+    classifyChangeRecords() {
+      return { approvalSafe: false, reasons: ["record_0:new_unapproved_path"] };
+    },
+  });
+  assert.throws(
+    () => mergeBatch.approveActionRequiredRuns("/repo", "owner/repo", prDetails, {
+      dependencies,
+      reviewedHeads: [HEAD_SHA],
+    }),
+    /not fork-approval-safe/,
+  );
 }
 
 {

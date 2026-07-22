@@ -96,22 +96,36 @@ function remoteTagTarget(projectRoot, tagName) {
   return output ? output.split(/\s+/u)[0] : null;
 }
 
-function selectMergedReleaseCandidate(pullRequests, version) {
+function selectMergedReleaseCandidate(pullRequests, version, identity = {}) {
   const branch = `release/v${version}`;
+  const repoSlug = String(identity.repoSlug || "").toLowerCase();
+  const ownerLogin = String(identity.ownerLogin || "").toLowerCase();
+  if (!repoSlug || !ownerLogin) {
+    throw new Error("Release PR repository and owner identity are required.");
+  }
   const matches = pullRequests.filter((pr) => (
     pr.headRefName === branch
     && pr.baseRefName === "main"
+    && String(pr.headRepository?.nameWithOwner || "").toLowerCase() === repoSlug
+    && String(pr.author?.login || "").toLowerCase() === ownerLogin
+    && pr.title === `chore: release v${version}`
     && /^[0-9a-f]{40}$/u.test(String(pr.mergeCommit?.oid || ""))
     && Number.isFinite(Date.parse(String(pr.mergedAt || "")))
   ));
-  if (matches.length === 0) {
-    throw new Error(`Expected at least one merged protected release PR for ${branch}.`);
+  if (matches.length !== 1) {
+    throw new Error(`Expected exactly one owner-authored same-repository protected release PR for ${branch}; found ${matches.length}.`);
   }
-  return matches.sort((left, right) => Date.parse(right.mergedAt) - Date.parse(left.mergedAt))[0];
+  return matches[0];
 }
 
 function mergedReleaseCandidate(projectRoot, version) {
   const branch = `release/v${version}`;
+  const repository = JSON.parse(runCommand(
+    "gh",
+    ["repo", "view", "--json", "nameWithOwner,owner"],
+    projectRoot,
+    { capture: true },
+  ));
   const payload = runCommand(
     "gh",
     [
@@ -124,12 +138,15 @@ function mergedReleaseCandidate(projectRoot, version) {
       "--limit",
       "10",
       "--json",
-      "number,headRefName,baseRefName,mergeCommit,mergedAt",
+      "number,title,author,headRefName,headRepository,baseRefName,mergeCommit,mergedAt",
     ],
     projectRoot,
     { capture: true },
   );
-  return selectMergedReleaseCandidate(JSON.parse(payload || "[]"), version);
+  return selectMergedReleaseCandidate(JSON.parse(payload || "[]"), version, {
+    repoSlug: repository.nameWithOwner,
+    ownerLogin: repository.owner?.login,
+  });
 }
 
 function validateReleaseSuccessors(projectRoot, releaseCommit, headCommit, dependencies = {}) {

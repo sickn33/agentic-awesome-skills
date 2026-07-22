@@ -392,6 +392,26 @@ test("layout cleanup removes only exact marker-owned stages left before publicat
   fs.rmSync(fx.sandbox, { recursive: true });
 });
 
+test("layout stage cleanup propagates a failed deletion durability barrier", () => {
+  const fx = fixture();
+  fs.rmSync(fx.transactionDirectory, { recursive: true });
+  const inspected = inspectLayout(fx.adapter, { host: "codex", scope: "project", identityDigest: TARGET_ID });
+  const markerToken = "7".repeat(48);
+  const markerName = `.aas-layout-recovery-${"6".repeat(32)}`;
+  const directory = inspected.missingDirectories[0];
+  const stage = path.join(path.dirname(directory), `.aas-layout-stage-${markerToken}-${path.basename(directory)}`);
+  fs.mkdirSync(stage, { mode: 0o700 });
+  fs.writeFileSync(path.join(stage, markerName), `${markerToken}\n`, { mode: 0o600 });
+  assert.throws(() => cleanupMaterializedLayout(inspected, [directory], {
+    markerName,
+    markerToken,
+    fsyncDirectory() { throw new Error("injected parent fsync failure"); },
+  }), /injected parent fsync failure/);
+  assert.equal(fs.existsSync(stage), false);
+  cleanupMaterializedLayout(inspected, [directory], { markerName, markerToken });
+  fs.rmSync(fx.sandbox, { recursive: true });
+});
+
 test("layout cleanup postcondition detects a dangling symlink artifact", (t) => {
   const fx = fixture();
   fs.rmSync(fx.transactionDirectory, { recursive: true });

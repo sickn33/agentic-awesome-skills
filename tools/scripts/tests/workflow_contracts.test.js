@@ -180,7 +180,7 @@ assert.match(skillReviewWorkflow, /ref: \$\{\{ github\.event\.pull_request\.base
 assert.match(skillReviewWorkflow, /review_changed_skills\.cjs --plan/);
 assert.match(skillReviewWorkflow, /actions\/cache\/restore@[0-9a-f]{40}/);
 assert.match(skillReviewWorkflow, /actions\/cache\/save@[0-9a-f]{40}/);
-assert.match(skillReviewWorkflow, /tessl-review-v1-\$\{\{ steps\.plan\.outputs\.fingerprint \}\}/);
+assert.match(skillReviewWorkflow, /tessl-review-v2-\$\{\{ steps\.plan\.outputs\.fingerprint \}\}/);
 assert.match(skillReviewWorkflow, /steps\.review-cache\.outputs\.cache-hit != 'true'/);
 assert.match(skillReviewWorkflow, /needs\.review-attempt\.outputs\.outcome == 'reviewed'/);
 assert.ok(

@@ -286,3 +286,11 @@
 - Added explicit source-repository provenance to the live manifest and used that change to exercise the complete protected auto-sync cycle.
 - Documented the protected cross-repository synchronization contract for `sickn33/sickn33.github.io`.
 - Added regression coverage for webmaster tokens, reserved-path collisions, dynamic skill counts, local drift, stale files, and live manifest/route verification.
+
+# Maintenance Walkthrough - 2026-07-22 Security Findings and Windows Preview
+
+- Remediated the live dependency advisories for `fast-uri`, `brace-expansion`, and `body-parser` in their affected lockfiles.
+- Hardened AAS Core cache ancestry, transaction durability, bounded MCP manifest state, exact-search behavior, redirect-tree reads, release-PR selection, and maintainer merge authorization.
+- Expanded skill-review fingerprints and workflow triggers to cover bundled support files, and tightened unsafe guidance in the affected canonical skills.
+- Fixed native Windows ACL inspection for AAS preview by making PowerShell path handling explicit and returning bounded phase/path diagnostics for unresolved ACL identities.
+- Added regression coverage for every confirmed code-path finding and documented the Windows 10/11 Codex CLI preview contract from discussion `#956`.

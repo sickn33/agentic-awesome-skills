@@ -7,7 +7,7 @@ const { execFileSync, spawnSync } = require('node:child_process');
 
 const DEFAULT_THRESHOLD = '80';
 const DEFAULT_WORKSPACE = 'antigravity-awesome-skills';
-const DEFAULT_CACHE_VERSION = '1';
+const DEFAULT_CACHE_VERSION = '2';
 const QUOTA_EXIT_CODE = 75;
 
 function runGit(args, options = {}) {
@@ -31,8 +31,8 @@ function getChangedSkillFiles(baseSha, headSha, options = {}) {
   }
 
   const git = options.git || runGit;
-  const output = git(['diff', '--name-only', '--diff-filter=ACMR', baseSha, headSha, '--']);
-  return splitLines(output).filter((filePath) => filePath === 'SKILL.md' || filePath.endsWith('/SKILL.md'));
+  const output = git(['diff', '--name-only', '--no-renames', '--diff-filter=ACDMR', baseSha, headSha, '--']);
+  return splitLines(output).filter((filePath) => filePath.startsWith('skills/') || filePath.startsWith('plugins/'));
 }
 
 function ensureRepoRelative(filePath, repoRoot = process.cwd()) {
@@ -43,10 +43,6 @@ function ensureRepoRelative(filePath, repoRoot = process.cwd()) {
     throw new Error(`Path traversal detected: ${filePath}`);
   }
 
-  if (path.basename(filePath) !== 'SKILL.md') {
-    throw new Error(`Unexpected skill file path: ${filePath}`);
-  }
-
   return resolved;
 }
 
@@ -54,11 +50,14 @@ function getChangedSkillDirs(files, repoRoot = process.cwd()) {
   const dirs = new Set();
 
   for (const filePath of files) {
-    const resolved = ensureRepoRelative(filePath, repoRoot);
-    if (!fs.existsSync(resolved)) {
-      continue;
+    let directory = path.dirname(ensureRepoRelative(filePath, repoRoot));
+    while (directory !== repoRoot && directory.startsWith(`${repoRoot}${path.sep}`)) {
+      if (fs.existsSync(path.join(directory, 'SKILL.md'))) {
+        dirs.add(path.relative(repoRoot, directory).split(path.sep).join('/'));
+        break;
+      }
+      directory = path.dirname(directory);
     }
-    dirs.add(path.dirname(filePath));
   }
 
   return [...dirs].sort();
@@ -101,10 +100,26 @@ function reviewFingerprint(skillDirs, options = {}) {
 
   hash.update(`${JSON.stringify(policy)}\0`);
   for (const skillDir of [...skillDirs].sort()) {
-    const skillPath = ensureRepoRelative(path.join(skillDir, 'SKILL.md'), repoRoot);
+    const skillPath = ensureRepoRelative(skillDir, repoRoot);
     hash.update(`${skillDir}\0`);
-    hash.update(fs.readFileSync(skillPath));
-    hash.update('\0');
+    const files = [];
+    function visit(directory) {
+      for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+        const absolute = path.join(directory, entry.name);
+        const stat = fs.lstatSync(absolute);
+        if (stat.isSymbolicLink()) throw new Error(`Symlink is not reviewable: ${path.relative(repoRoot, absolute)}`);
+        if (entry.isDirectory()) visit(absolute);
+        else if (entry.isFile()) files.push({ absolute, stat });
+        else throw new Error(`Non-regular skill content is not reviewable: ${path.relative(repoRoot, absolute)}`);
+      }
+    }
+    visit(skillPath);
+    for (const { absolute, stat } of files) {
+      const relative = path.relative(repoRoot, absolute).split(path.sep).join('/');
+      hash.update(`${relative}\0file\0${(stat.mode & 0o7777).toString(8)}\0`);
+      hash.update(fs.readFileSync(absolute));
+      hash.update('\0');
+    }
   }
 
   return hash.digest('hex');

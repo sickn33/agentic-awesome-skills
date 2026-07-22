@@ -41,6 +41,26 @@ async function run() {
   assert.throws(() => verifyLocalDeployment({ ...generatorOptions, deploymentRoot }), /unexpected=.*stale\.txt/);
   fs.unlinkSync(stalePath);
 
+  const assertSymlinkRejected = (relativePath, type = 'file') => {
+    const target = path.join(deploymentRoot, relativePath);
+    const physical = `${target}.physical`;
+    fs.renameSync(target, physical);
+    try {
+      fs.symlinkSync(physical, target, type);
+      assert.throws(
+        () => verifyLocalDeployment({ ...generatorOptions, deploymentRoot }),
+        /physical|non-file entry|regular file/i,
+      );
+    } finally {
+      if (fs.existsSync(target) || fs.lstatSync(target).isSymbolicLink()) fs.unlinkSync(target);
+      fs.renameSync(physical, target);
+    }
+  };
+  assertSymlinkRejected('.nojekyll');
+  assertSymlinkRejected('redirect-manifest.json');
+  assertSymlinkRejected('antigravity-awesome-skills/index.html');
+  assertSymlinkRejected('antigravity-awesome-skills', 'dir');
+
   const fetchImpl = async (url) => {
     const parsed = new URL(url);
     if (parsed.pathname.startsWith('/agentic-awesome-skills/')) return new Response('current destination', { status: 200 });

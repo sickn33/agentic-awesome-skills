@@ -231,6 +231,8 @@ npx agentic-awesome-skills
 
 If you have an older clone created around the removed symlink workaround, reinstall into a fresh directory or rerun `npx agentic-awesome-skills`.
 
+For AAS Core MCP configuration, native Windows 10 and 11 with Node.js 22 are supported preview targets. A preview failure with `AAS_ADAPTER_WINDOWS_ACL_FAILED` refers to the Codex/Claude configuration directory or file checked with PowerShell `Get-Acl`, not the AAS cache and not `icacls`. Read the returned `path`, `phase`, `status`, and bounded diagnostic; correct the named configuration-path ownership problem, then rerun preview. Never add `--approve` before an approval digest is produced. See the [AAS Core Windows notes](aas-core.md#native-windows-and-codex).
+
 ### I hit a truncation or context crash loop on Windows. How do I recover?
 
 If Antigravity or a Jetski/Cortex-based host keeps reopening into:

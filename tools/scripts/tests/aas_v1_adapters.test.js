@@ -12,7 +12,7 @@ const {
   cleanupBackups,
   inspectHostConfig,
 } = require("../../lib/aas-v1/adapters");
-const { inspectRegularFile } = require("../../lib/aas-v1/adapters/safety");
+const { inspectRegularFile, runWindowsAcl } = require("../../lib/aas-v1/adapters/safety");
 
 const FIXTURES = path.join(__dirname, "fixtures", "aas-v1-adapters");
 const CODEX_SERVER = { command: "/opt/aas/aas-mcp", args: ["--stdio", "--runtime", "14.6.0"], enabled: true };
@@ -137,6 +137,31 @@ test("symlink, non-regular, and ownership mismatches are rejected", async (t) =>
   await assert.rejects(inspectHostConfig({ host: "codex", scope: "project", configPath: nonRegular }), (error) => error.code === "AAS_ADAPTER_CONFIG_UNSAFE");
   const stat = await fsp.stat(real);
   await assert.rejects(inspectRegularFile(real, { expectedUid: stat.uid + 1 }), (error) => error.code === "AAS_ADAPTER_OWNERSHIP_MISMATCH");
+});
+
+test("Windows ACL runner passes paths out of the command and reports bounded diagnostics", () => {
+  const inspectedPath = String.raw`C:\Users\Example\.codex\config.toml`;
+  let invocation;
+  const runner = (...args) => {
+    invocation = args;
+    return { status: 1, stdout: "", stderr: "Get-Acl failed\r\nwith details\u0000" };
+  };
+  assert.throws(
+    () => runWindowsAcl("$p=$env:AAS_WINDOWS_ACL_PATH", inspectedPath, { phase: "inspectAcl", runner }),
+    (error) => {
+      assert.equal(error.code, "AAS_ADAPTER_WINDOWS_ACL_FAILED");
+      assert.deepEqual(error.details, {
+        status: 1,
+        phase: "inspectAcl",
+        path: inspectedPath,
+        diagnostic: "Get-Acl failed with details",
+      });
+      return true;
+    },
+  );
+  assert.deepEqual(invocation[1], ["-NoProfile", "-NonInteractive", "-Command", "$p=$env:AAS_WINDOWS_ACL_PATH"]);
+  assert.equal(invocation[2].env.AAS_WINDOWS_ACL_PATH, inspectedPath);
+  assert.ok(!invocation[1].includes(inspectedPath));
 });
 
 test("ambiguous TOML and duplicate JSON keys fail closed", async (t) => {

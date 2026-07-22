@@ -969,7 +969,12 @@ export function assertLlms(
     assert(text.includes(snippet), `llms.txt missing required snippet: ${snippet}`);
   }
   if (expectedReleaseLabel) {
-    assert(text.includes(`Current release: ${expectedReleaseLabel}.`), `llms.txt missing current release: ${expectedReleaseLabel}`);
+    const releaseLines = text.split(/\r?\n/).filter((line) => line.trim().startsWith('- Current release:'));
+    assert(releaseLines.length === 1, 'llms.txt must expose exactly one canonical current-release line.');
+    assert(
+      releaseLines[0].trim() === `- Current release: ${expectedReleaseLabel}.`,
+      `llms.txt current release must equal ${expectedReleaseLabel} exactly.`,
+    );
   }
   assertOnlyExpectedSkillCountLabel(text, expectedSkillCountLabel, 'llms.txt');
 }

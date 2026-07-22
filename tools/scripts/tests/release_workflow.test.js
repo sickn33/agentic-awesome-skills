@@ -20,22 +20,34 @@ function git(cwd, ...args) {
 const mergeOid = "a".repeat(40);
 const candidate = {
   number: 10,
+  title: "chore: release v1.2.3",
+  author: { login: "owner" },
   headRefName: "release/v1.2.3",
+  headRepository: { nameWithOwner: "owner/repo" },
   baseRefName: "main",
   mergeCommit: { oid: mergeOid },
   mergedAt: "2026-01-01T00:00:00Z",
 };
-assert.strictEqual(release.selectMergedReleaseCandidate([candidate], "1.2.3"), candidate);
-assert.throws(() => release.selectMergedReleaseCandidate([], "1.2.3"), /at least one/);
+const releaseIdentity = { repoSlug: "owner/repo", ownerLogin: "owner" };
+assert.strictEqual(release.selectMergedReleaseCandidate([candidate], "1.2.3", releaseIdentity), candidate);
+assert.throws(() => release.selectMergedReleaseCandidate([], "1.2.3", releaseIdentity), /exactly one/);
 const newerCandidate = {
   ...candidate,
   number: 11,
   mergeCommit: { oid: "b".repeat(40) },
   mergedAt: "2026-01-02T00:00:00Z",
 };
-assert.strictEqual(
-  release.selectMergedReleaseCandidate([candidate, newerCandidate], "1.2.3"),
-  newerCandidate,
+assert.throws(
+  () => release.selectMergedReleaseCandidate([candidate, newerCandidate], "1.2.3", releaseIdentity),
+  /found 2/,
+);
+assert.throws(
+  () => release.selectMergedReleaseCandidate([{ ...candidate, headRepository: { nameWithOwner: "attacker/repo" } }], "1.2.3", releaseIdentity),
+  /found 0/,
+);
+assert.throws(
+  () => release.selectMergedReleaseCandidate([{ ...candidate, author: { login: "collaborator" } }], "1.2.3", releaseIdentity),
+  /found 0/,
 );
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), "release-workflow-"));

@@ -1,7 +1,9 @@
 name: Skill Review
 on:
   pull_request:
-    paths: ['**/SKILL.md']
+    paths:
+      - 'skills/**'
+      - 'plugins/**/skills/**'
 
 permissions:
   contents: read
@@ -26,7 +28,7 @@ jobs:
       outcome: ${{ steps.outcome.outputs.outcome }}
     env:
       TESSL_REVIEW_THRESHOLD: '80'
-      TESSL_REVIEW_CACHE_VERSION: '1'
+      TESSL_REVIEW_CACHE_VERSION: '2'
       # Tessl workspaces are account-scoped; keep the repository variable as
       # an override so a future workspace migration does not require code changes.
       TESSL_WORKSPACE: ${{ vars.TESSL_WORKSPACE || 'antigravity-awesome-skills' }}
@@ -58,7 +60,7 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .tmp/tessl-review-cache
-          key: tessl-review-v1-${{ steps.plan.outputs.fingerprint }}
+          key: tessl-review-v2-${{ steps.plan.outputs.fingerprint }}
       - name: Set up Tessl
         if: ${{ steps.plan.outputs.has-skills == 'true' && steps.review-cache.outputs.cache-hit != 'true' }}
         uses: tesslio/setup-tessl@25ec223fc0da33b41b8044ff5ab2b85235f4f91e
@@ -96,7 +98,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .tmp/tessl-review-cache
-          key: tessl-review-v1-${{ steps.plan.outputs.fingerprint }}
+          key: tessl-review-v2-${{ steps.plan.outputs.fingerprint }}
       - name: Resolve review outcome
         id: outcome
         env:
