@@ -158,6 +158,14 @@ For every canonical `SKILL.md` or tracked bundle-file change, run validation, re
 3.  **Quality Bar** — PR description confirms the [Quality Bar Checklist](.github/PULL_REQUEST_TEMPLATE.md) (metadata, risk label, credits if applicable).
 4.  **Issue link** — If the PR fixes an issue, the PR description should contain `Closes #N` or `Fixes #N` so GitHub auto-closes the issue on merge.
 
+**Required-CI execution contract:**
+
+- `pr-policy` executes the fork-safety intake with code materialized from the exact protected base before the dependent required jobs start. This is an early, unprivileged rejection of unsafe fork diffs; `merge:batch` still recomputes the trusted decision and remains the only fork-run approval and merge authority.
+- The reported `impact_profile` is shadow telemetry only. It does not skip, downgrade, or satisfy any required check.
+- For an ordinary source PR, `source-validation` performs the generated-state refresh once and publishes a manifest bound to the exact repository, workflow/run attempt, and PR head SHA. `artifact-preview` verifies that manifest and its digest; it does not regenerate the same source-PR tree.
+- For the protected canonical-sync PR, `pr-policy` reproduces the exact tree from trusted `main`, `source-validation` records a lightweight boundary, and `artifact-preview` confirms that regeneration leaves no drift. The merged commit still receives the explicit final `main` CI and CodeQL runs.
+- The test runner emits timing telemetry for measurement. Deterministic sharding is an explicit local opt-in through `npm run test:local -- --shard-index N --shard-count M`; required CI continues to run the complete unsharded `npm run test` gate.
+
 **How you merge:**
 
 - **Always merge with `npm run merge:batch`**, which uses GitHub's immediate squash-merge endpoint so the PR shows as **Merged** and the contributor gets credit. Do **not** integrate locally, use a raw merge command, or close the PR after copying its changes.

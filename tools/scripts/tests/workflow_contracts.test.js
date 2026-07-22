@@ -6,6 +6,7 @@ const {
   classifyChangeRecords,
   classifyChangedFiles,
   classifyPathPolicy,
+  classifyShadowImpact,
   extractChangelogSection,
   getDirectDerivedChanges,
   hasIssueLink,
@@ -64,6 +65,31 @@ const contract = {
   releaseManagedFiles: ["CHANGELOG.md", "package.json", "package-lock.json", "README.md"],
 };
 
+assert.deepStrictEqual(
+  classifyShadowImpact([modifiedRecord("skills/example/SKILL.md")], contract),
+  { profile: "narrow-skill", reasons: [] },
+);
+assert.deepStrictEqual(
+  classifyShadowImpact([modifiedRecord("docs/users/guide.md")], contract),
+  { profile: "narrow-docs", reasons: [] },
+);
+assert.strictEqual(
+  classifyShadowImpact([modifiedRecord("skills/example/SKILL.md"), modifiedRecord("docs/users/guide.md")], contract).profile,
+  "full",
+);
+assert.strictEqual(
+  classifyShadowImpact([modifiedRecord("tools/scripts/pr_preflight.cjs")], contract).profile,
+  "full",
+);
+assert.strictEqual(
+  classifyShadowImpact([addedRecord("walkthrough.md")], contract).profile,
+  "full",
+);
+assert.deepStrictEqual(
+  classifyShadowImpact([modifiedRecord("unclassified.bin")], contract),
+  { profile: "unknown", reasons: ["unclassified_path"] },
+);
+
 const repositoryRoot = path.resolve(__dirname, "..", "..", "..");
 const agentInstructions = fs.readFileSync(path.join(repositoryRoot, "AGENTS.md"), "utf8");
 const maintenanceGuide = fs.readFileSync(path.join(repositoryRoot, ".github", "MAINTENANCE.md"), "utf8");
@@ -95,7 +121,7 @@ assert.match(maintainerSkill, /authored by the repository owner/);
 assert.match(maintainerSkill, /exactly one merged release PR/);
 assert.match(maintenanceGuide, /canonical-repo-state` PR owns that state/);
 assert.match(autonomyGuide, /complete nearest skill-directory fingerprint/);
-for (const contractText of [maintainerSkill, maintenanceGuide, mergeBatchGuide]) {
+for (const contractText of [maintainerSkill, maintenanceGuide, mergeBatchGuide, autonomyGuide]) {
   assert.doesNotMatch(contractText, /may normalize the PR body|close\/reopen the PR|retries `Base branch was modified`/);
   assert.match(contractText, /does not (?:rewrite|mutate).*PR (?:body|metadata)|PR-body rewriting or normalization/);
   assert.match(contractText, /does not retry base drift|does not .*retry base drift|no automatic retry/);
@@ -106,6 +132,23 @@ assert.match(maintenanceGuide, /`npm run chain` already includes catalog generat
 assert.doesNotMatch(maintenanceGuide, /npm run chain\n\s+npm run catalog/);
 assert.match(autonomyGuide, /explicitly dispatches main CI and CodeQL/);
 assert.match(autonomyGuide, /Pages remains release-only/);
+for (const contractText of [maintainerSkill, maintenanceGuide, mergeBatchGuide, autonomyGuide]) {
+  assert.match(contractText, /protected[- ]base|protected base/);
+  assert.match(contractText, /impact_profile.*shadow|shadow-only.*impact_profile/s);
+  assert.match(contractText, /source-validation.*lightweight/s);
+  assert.match(contractText, /required CI.*(?:complete|full).*unsharded/is);
+}
+assert.match(maintenanceGuide, /merge:batch.*only fork-run approval and merge authority/);
+assert.match(mergeBatchGuide, /merge:batch.*only command allowed to approve fork runs or merge/s);
+assert.match(autonomyGuide, /merge:batch.*sole authority for fork-run approval and merge/s);
+assert.match(maintainerSkill, /merge:batch.*recompute the current trusted decision/s);
+for (const contractText of [maintenanceGuide, mergeBatchGuide, autonomyGuide]) {
+  assert.match(contractText, /source-validation.*(?:refresh|generate|generated-state).*once|(?:refresh|generate|generated-state).*once.*source-validation/s);
+  assert.match(contractText, /artifact-preview.*(?:verif(?:y|ies).*manifest|manifest.*verif(?:y|ies))/s);
+  assert.match(contractText, /final (?:CI and CodeQL|`main` CI and CodeQL)/i);
+}
+assert.match(autonomyGuide, /timing telemetry/);
+assert.match(autonomyGuide, /npm run test:local -- --shard-index N --shard-count M/);
 assert.match(mergingGuide, /No local-integration exception/);
 assert.doesNotMatch(mergingGuide, /Rare exception: local squash|`gh pr merge <PR_NUMBER>/);
 assert.match(maintainerSkillUi, /\$antigravity-maintainer-batch-release/);
@@ -208,7 +251,7 @@ assert.doesNotMatch(
 assert.match(ciWorkflow, /^permissions:\n  contents: read$/m);
 assert.match(
   ciWorkflow,
-  /source-validation:[\s\S]*?- name: Refresh ephemeral derived sources for tests\n\s+run: npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-catalog\n[\s\S]*?- name: Run tests\n\s+run: npm run test/,
+  /source-validation:[\s\S]*?- name: Refresh ephemeral derived sources for tests\n\s+if: env\.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'\n\s+run: npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-catalog && npm run sync:web-assets\n[\s\S]*?- name: Run tests\n\s+if: env\.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'\n\s+run: npm run test/,
   "source-only skill PRs must refresh uncommitted mirrors and indexes before tests read them",
 );
 assert.doesNotMatch(
@@ -218,7 +261,7 @@ assert.doesNotMatch(
 );
 assert.match(ciWorkflow, /name: pr-evidence-/);
 assert.doesNotMatch(ciWorkflow, /pull_request_target:/);
-assert.doesNotMatch(ciWorkflow, /actions\/download-artifact/);
+assert.match(ciWorkflow, /actions\/download-artifact@[0-9a-f]{40}/);
 const prEvidenceJob = ciWorkflow.match(/^  pr-evidence:\n([\s\S]*?)(?=^  artifact-preview:)/m)?.[0] || "";
 assert.ok(prEvidenceJob, "pr-evidence job must exist");
 assert.doesNotMatch(prEvidenceJob, /(?:contents|pull-requests|actions): write/);
@@ -244,18 +287,34 @@ assert.match(
 const sourceValidationJob = ciWorkflow.match(/^  source-validation:\n([\s\S]*?)(?=^  pr-evidence:)/m)?.[0] || "";
 assert.match(sourceValidationJob, /needs: pr-policy/, "source validation should not wait for independent PR evidence");
 assert.doesNotMatch(sourceValidationJob, /needs:.*pr-evidence/);
+assert.match(
+  sourceValidationJob,
+  /actions\/checkout@[0-9a-f]{40}[\s\S]*?ref: \$\{\{ github\.event\.pull_request\.head\.sha \}\}/,
+  "source validation must generate its preview from the exact PR head instead of GitHub's synthetic merge commit",
+);
+assert.match(sourceValidationJob, /preview_manifest_digest: \$\{\{ steps\.preview_manifest\.outputs\.manifest_digest \}\}/);
+assert.match(sourceValidationJob, /ci_artifact_preview\.cjs create/);
+assert.match(sourceValidationJob, /actions\/upload-artifact@[0-9a-f]{40}/);
+assert.match(
+  sourceValidationJob,
+  /- name: Record canonical source-validation boundary\n\s+if: env\.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'/,
+  "canonical source validation should become a lightweight boundary record after pr-policy exact-tree reproduction",
+);
 const artifactPreviewJob = ciWorkflow.match(/^  artifact-preview:\n([\s\S]*?)(?=^  main-validation-and-sync:)/m)?.[0] || "";
 assert.match(artifactPreviewJob, /needs: \[pr-policy, source-validation\]/);
+assert.match(artifactPreviewJob, /ref: \$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/);
 assert.match(
   artifactPreviewJob,
-  /- name: Generate canonical artifacts preview[\s\S]*?run: \|\n\s+npm run chain\n\s+npm run sync:web-assets/,
-  "artifact preview should rely on chain's catalog generation instead of repeating it",
+  /- name: Download exact-head artifact preview manifest[\s\S]*?actions\/download-artifact@[0-9a-f]{40}[\s\S]*?- name: Verify and report exact-head artifact preview[\s\S]*?ci_artifact_preview\.cjs" verify-summary/,
+  "artifact preview should consume and verify the source-validation manifest instead of regenerating the same tree",
 );
 assert.doesNotMatch(
   artifactPreviewJob,
-  /npm run chain\n\s+npm run catalog/,
-  "artifact preview must not build the catalog twice",
+  /npm run chain|Generate canonical artifacts preview/,
+  "artifact preview must not regenerate normal source-PR artifacts",
 );
+assert.match(artifactPreviewJob, /- name: Reproduce canonical-sync PR from main\n\s+if: env\.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'/);
+assert.match(artifactPreviewJob, /- name: Report generated drift\n\s+if: env\.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'/);
 
 const decisionModule = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "lib", "pr-decision.js"),

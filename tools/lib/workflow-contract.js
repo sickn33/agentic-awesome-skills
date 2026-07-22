@@ -317,6 +317,60 @@ function classifyChangeRecords(records, options = {}) {
   };
 }
 
+function classifyShadowImpact(records, contract) {
+  if (!Array.isArray(records) || records.length === 0) {
+    return { profile: "unknown", reasons: ["missing_change_records"] };
+  }
+
+  const changedPaths = [];
+  const reasons = [];
+  for (const [index, record] of records.entries()) {
+    const expectedSides = CHANGE_STATUS_SIDES[String(record?.status || "")];
+    if (!expectedSides) {
+      reasons.push(`record_${index}:unknown_status`);
+      continue;
+    }
+    for (const side of ["old", "new"]) {
+      if (!expectedSides[side]) continue;
+      const filePath = record?.[`${side}_path`];
+      const validation = validateRawRepoPath(filePath);
+      if (!validation.safe) {
+        reasons.push(...validation.reasons.map((reason) => `record_${index}:${side}_${reason}`));
+        continue;
+      }
+      changedPaths.push(filePath);
+    }
+  }
+
+  if (reasons.length > 0 || changedPaths.length === 0) {
+    return {
+      profile: "unknown",
+      reasons: [...new Set(reasons.length > 0 ? reasons : ["missing_changed_paths"])],
+    };
+  }
+
+  const uniquePaths = [...new Set(changedPaths)];
+  const pathPolicies = uniquePaths.map((filePath) => classifyPathPolicy(filePath));
+  if (pathPolicies.every((policy) => ["canonical_skill", "skill_support"].includes(policy.kind))) {
+    return { profile: "narrow-skill", reasons: [] };
+  }
+  if (pathPolicies.every((policy) => policy.kind === "documentation")) {
+    return { profile: "narrow-docs", reasons: [] };
+  }
+
+  const classification = classifyChangedFiles(uniquePaths, contract);
+  const hasKnownFullImpact = classification.categories.length > 0
+    || uniquePaths.some((filePath) => isDerivedFile(filePath, contract));
+  if (hasKnownFullImpact) {
+    return {
+      profile: "full",
+      reasons: ["mixed_or_broad_change"],
+    };
+  }
+
+  return { profile: "unknown", reasons: ["unclassified_path"] };
+}
+
 function matchesContractEntry(filePath, entry) {
   const normalizedPath = normalizeRepoPath(filePath);
   const normalizedEntry = normalizeRepoPath(entry);
@@ -481,6 +535,7 @@ module.exports = {
   classifyChangeRecords,
   classifyChangedFiles,
   classifyPathPolicy,
+  classifyShadowImpact,
   extractChangelogSection,
   getDirectDerivedChanges,
   getManagedFiles,

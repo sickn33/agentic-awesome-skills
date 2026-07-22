@@ -31,6 +31,8 @@ The manifest always contains:
 
 The `untrusted_advisory` marker is intentional. No workflow, merge command, or future bot may treat the artifact as privileged authorization.
 
+The `pr-policy` job also reports an `impact_profile` and its reasons. That profile is observational shadow telemetry only: it does not skip, downgrade, or satisfy any required job, test, review, or merge gate.
+
 ## Shadow Routes
 
 - `block`: deterministic repository policy failed, such as a newly introduced changed-skill regression or a direct edit to generated artifacts.
@@ -41,6 +43,8 @@ Every new or relocated skill and every canonical skill-content change requires m
 
 ## Fork Review States
 
+For an ordinary fork PR, `pr-policy` materializes the intake implementation from the exact protected base and evaluates fork safety before its dependent required jobs begin expensive setup or waiting. This makes unsafe paths, modes, objects, sizes, and repository identity fail fast in unprivileged CI. It is not authorization: `merge:batch` independently recomputes the full decision from trusted `main` and remains the sole authority for fork-run approval and merge.
+
 The Skill Review workflow separates two outcomes:
 
 - `review`: a semantic review actually ran using trusted base scripts;
@@ -50,7 +54,7 @@ A successful `manual-review-required` check means only that the requirement was 
 
 ## Maintainer Recalculation
 
-`merge:batch` must bind workflow approval and human attestation to one full head SHA. When it refreshes a PR body by closing and reopening the PR, it also records the pre-refresh workflow-run IDs and accepts checks only from post-refresh check suites. A shared head SHA is not sufficient evidence of freshness because multiple `pull_request` events can exist for the same commit. Before approving a waiting fork run, it independently:
+`merge:batch` must bind workflow approval and human attestation to one full head SHA. It does not rewrite the PR body or close and reopen the PR to manufacture replacement runs. Before approving a waiting fork run, it independently:
 
 1. captures base and head object IDs;
 2. fetches those objects without checking out pull-request code;
@@ -61,13 +65,21 @@ A successful `manual-review-required` check means only that the requirement was 
 7. rejects operational errors, malformed evidence, incomplete snapshots, score-component regressions, provenance identity regressions, or any other deterministic blocker;
 8. re-reads both pull-request base and head before and after approval and immediately before merge.
 
-A real merge also requires effective server-side protection for `main`: the four exact GitHub-Actions-owned checks (`pr-policy`, `pr-evidence`, `source-validation`, and `artifact-preview`), strict up-to-date enforcement, pull-request-only changes, administrator enforcement, no applicable ruleset bypass actors, and no merge queue. If that enforcement cannot be proven, `merge:batch` refuses non-dry-run operation. Base drift is never retried with stale evidence; the batch must be rerun from the new tuple. Pre-existing auto-merge state is rejected, and the immediate GitHub merge endpoint must return `merged: true` before post-merge work begins.
+A real merge also requires effective server-side protection for `main`: the four exact GitHub-Actions-owned checks (`pr-policy`, `pr-evidence`, `source-validation`, and `artifact-preview`), strict up-to-date enforcement, pull-request-only changes, administrator enforcement, no applicable ruleset bypass actors, and no merge queue. If that enforcement cannot be proven, `merge:batch` refuses non-dry-run operation. `merge:batch` does not retry base drift automatically or reuse stale evidence; the batch must be rerun from the new tuple. Pre-existing auto-merge state is rejected, and the immediate GitHub merge endpoint must return `merged: true` before post-merge work begins.
 
 Sensitive same-repository PRs may use the repository-wide source exception only when the PR author is the repository owner and the maintainer attests the exact full head SHA. Collaborator-authored sensitive PRs do not inherit trust from branch location and fail closed under the external safety policy. Every accepted PR remains bound to the protected branch, trusted-base evidence evaluator, exact PR/base/head tuple, semantic-review requirements, and required checks. Missing or mismatched head-repository identity is treated as external.
 
 For any tracked change under a canonical `skills/<skill-id>/**` subtree, the maintainer supplies `--reviewed-head <full-sha>`. A stale, abbreviated, or mismatched SHA fails closed. Skill Review triggers for `skills/**` and `plugins/**/skills/**`, and its reusable result is keyed by the complete nearest skill-directory fingerprint, so nested examples, scripts, lockfiles, references, assets, and other bundled files cannot bypass semantic review.
 
 Deletions, copies, ambiguous moves, and all canonical skill-content changes remain manual-only in this stage even when deterministic evidence contains no regression. A passing ratchet is not semantic approval and never makes a skill eligible for automatic merge.
+
+## Required CI Work Split
+
+For an ordinary source PR, `source-validation` runs validation, tests, security checks, and generated-state refresh once, then uploads a byte-canonical JSON preview manifest listing drift paths and bound to repository, workflow SHA, run ID and attempt, and exact PR head SHA. `artifact-preview` verifies the downloaded manifest, digest, and identity before reporting drift; it does not repeat source generation.
+
+For the protected canonical-sync PR, `pr-policy` already reproduces the exact expected tree from trusted `main`. `source-validation` is therefore a lightweight boundary record, while `artifact-preview` regenerates and confirms that the canonical head has no drift. After protected merge, explicitly dispatched final CI and CodeQL validate the resulting `main` commit.
+
+The test runner emits per-test and summary timing telemetry so maintainers can measure before changing the DAG. Deterministic sharding is available only through an explicit `npm run test:local -- --shard-index N --shard-count M` invocation. Required CI uses the complete unsharded `npm run test` path; neither timing, sharding, nor `impact_profile` removes assurance.
 
 ## Protected Canonical Sync
 

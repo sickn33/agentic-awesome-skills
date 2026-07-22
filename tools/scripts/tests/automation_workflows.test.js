@@ -171,6 +171,12 @@ assert.ok(
 );
 assert.match(
   ciWorkflow,
+  /- name: Intake PR change[\s\S]*?git worktree add --detach "\$trusted_root" "\$\{\{ github\.event\.pull_request\.base\.sha \}\}"[\s\S]*?"\$trusted_root\/tools\/scripts\/pr_preflight\.cjs"[\s\S]*?--base "\$\{\{ github\.event\.pull_request\.base\.sha \}\}"[\s\S]*?--head "\$\{\{ github\.event\.pull_request\.head\.sha \}\}"[\s\S]*?--check-fork-safety/,
+  "PR policy must execute trusted-base fork classification against the exact base/head tuple",
+);
+assert.match(ciWorkflow, /impact_profile: \$\{\{ steps\.intake\.outputs\.impact_profile \}\}/);
+assert.match(
+  ciWorkflow,
   /GH_TOKEN: \$\{\{ github\.token \}\}/,
   "main CI should provide GH_TOKEN for contributor synchronization",
 );
@@ -215,6 +221,11 @@ assert.match(
   ciWorkflow,
   /artifact-preview:[\s\S]*?actions\/checkout@[a-f0-9]{40}[\s\S]*?fetch-depth: 0[\s\S]*?persist-credentials: false/,
   "artifact-preview should retain history because canonical provenance generation reads git history",
+);
+assert.match(
+  ciWorkflow,
+  /source-validation:[\s\S]*?ci_artifact_preview\.cjs create[\s\S]*?actions\/upload-artifact@[a-f0-9]{40}[\s\S]*?artifact-preview:[\s\S]*?actions\/download-artifact@[a-f0-9]{40}[\s\S]*?ci_artifact_preview\.cjs" verify-summary/,
+  "normal PR artifact preview must reuse the exact-head manifest produced by source validation",
 );
 assert.doesNotMatch(
   offlineCatalogBuilder,

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Shortened PR feedback by parallelizing independent validation, cancelling superseded PR runs, and removing repeated canonical setup and catalog generation; also removed retired workflow/retry code and bound Pages deployments to the exact published release tag.
+- Added trusted-base fork fail-fast intake and shadow impact telemetry without weakening `merge:batch`; source validation now generates one exact-head preview manifest for verification, canonical checks split exact-tree reproduction from drift confirmation, and local timing/sharding remains observational and opt-in while required CI stays complete.
 
 ## [15.3.0] - 2026-07-22 - "Security Boundaries and Maintainer Reliability"
 
