@@ -566,6 +566,23 @@ function approvalDependencies(overrides = {}) {
     }),
     report,
   );
+  const nestedBundleRecord = {
+    ...record,
+    old_path: "skills/example/examples/app/package-lock.json",
+    new_path: "skills/example/examples/app/package-lock.json",
+  };
+  const nestedBundleReport = {
+    ...report,
+    changes: [{ ...report.changes[0], records: [nestedBundleRecord] }],
+  };
+  assert.strictEqual(
+    mergeBatch.validateChangedSkillEvidence(nestedBundleReport, {
+      mergeBaseOid: BASE_SHA,
+      headOid: HEAD_SHA,
+      rawRecords: [nestedBundleRecord],
+    }),
+    nestedBundleReport,
+  );
   assert.throws(
     () => mergeBatch.validateChangedSkillEvidence(
       { ...report, head_oid: BLOB_SHA },

@@ -186,7 +186,10 @@ function normalizeEvidenceRecord(record) {
 function isSkillContentRecord(record) {
   return [record?.old_path, record?.new_path]
     .filter((filePath) => typeof filePath === "string" && filePath)
-    .some((filePath) => ["canonical_skill", "skill_support"].includes(classifyPathPolicy(filePath).kind));
+    .some((filePath) => (
+      filePath.startsWith("skills/")
+      || ["canonical_skill", "skill_support"].includes(classifyPathPolicy(filePath).kind)
+    ));
 }
 
 function assertValidSnapshot(snapshot, label) {
