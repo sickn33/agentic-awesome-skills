@@ -2,6 +2,8 @@
 
 ### Phase 1: Understand the application
 
+Before using prior-run context, verify the current run's `target.json` against the candidate run: canonical physical path, normalized origin owner/repository URL, and derived target ID must all match exactly. A repository basename is never a target identity. Ignore mismatched or missing manifests rather than importing their findings.
+
 Before looking for bugs, understand what you're auditing. This requires depth, not just a directory listing. Launch **multiple `research` agents in parallel** to map different aspects of the codebase:
 
 **Agent 1a: Overview, tech stack, and comparable baseline**

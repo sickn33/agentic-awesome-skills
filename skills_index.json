@@ -2478,15 +2478,17 @@
     "date_added": "2026-07-15",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Requires a separately installed, user-approved anywrite executable at an explicit absolute path.",
+        "docs": "SKILL.md"
       },
-      "reasons": []
+      "reasons": [
+        "explicit_target_restriction"
+      ]
     },
     "source_type": "community",
     "source_repo": "Antheurus/anywrite",
@@ -41077,15 +41079,17 @@
     "date_added": "2026-07-15",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Requires a separately installed, user-approved sshepherd executable at an explicit absolute path.",
+        "docs": "SKILL.md"
       },
-      "reasons": []
+      "reasons": [
+        "explicit_target_restriction"
+      ]
     },
     "source_type": "community",
     "source_repo": "Antheurus/sshepherd",
