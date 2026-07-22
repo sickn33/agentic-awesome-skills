@@ -51,6 +51,10 @@ Before changing anything:
 3. Run checks in parallel where independent.
    - Use the repository validation, test, docs-security, source-credit, reference, warning-budget, and targeted app checks required by the changed files.
    - Fix deterministic policy failures in the source; do not wait for them as if they were flaky CI.
+   - Treat `pr-policy` fork classification from the exact protected-base implementation as an unprivileged fail-fast gate before dependent work, never as approval authority. `merge:batch` must still recompute the current trusted decision before approving any fork run or merging.
+   - Treat `impact_profile` as shadow-only telemetry. It must not skip, downgrade, or satisfy any required check.
+   - For ordinary source PRs, require `source-validation` to generate preview state once and `artifact-preview` to verify the manifest bound to the exact head and run identity. For canonical-sync PRs, rely on `pr-policy` exact-tree reproduction, keep `source-validation` lightweight, require `artifact-preview` to confirm no drift, and retain final CI and CodeQL on the merged `main` commit.
+   - Keep timing observational and test sharding opt-in. Required CI must continue to run the full unsharded `npm run test`; deterministic local shards may be used only through `npm run test:local -- --shard-index N --shard-count M`.
 
 4. Merge accepted source PRs in conflict-aware order.
    - Run a dry classification first when useful.
