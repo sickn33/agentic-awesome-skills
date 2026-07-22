@@ -29,6 +29,44 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Verify release provenance
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_REF_TYPE}" != "tag" ]]; then
+            echo "Pages deployment must be dispatched from an immutable release tag." >&2
+            exit 1
+          fi
+          if [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Pages deployment tag must match vX.Y.Z exactly: ${GITHUB_REF_NAME}" >&2
+            exit 1
+          fi
+
+          package_version="$(jq -r '.version // empty' package.json)"
+          expected_tag="v${package_version}"
+          if [[ "${GITHUB_REF_NAME}" != "${expected_tag}" ]]; then
+            echo "Pages deployment tag ${GITHUB_REF_NAME} does not match package.json ${expected_tag}." >&2
+            exit 1
+          fi
+
+          tag_commit="$(git rev-parse "refs/tags/${GITHUB_REF_NAME}^{commit}")"
+          head_commit="$(git rev-parse HEAD)"
+          if [[ "${tag_commit}" != "${GITHUB_SHA}" || "${head_commit}" != "${GITHUB_SHA}" ]]; then
+            echo "Pages deployment tag, checkout, and workflow SHA must resolve to the same commit." >&2
+            exit 1
+          fi
+
+          release_json="$(gh api --method GET "repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF_NAME}")"
+          if ! jq -e --arg tag "${GITHUB_REF_NAME}" \
+            '.tag_name == $tag and .draft == false and (.published_at | type == "string" and length > 0)' \
+            <<<"${release_json}" >/dev/null; then
+            echo "Pages deployment requires a published, non-draft GitHub Release for ${GITHUB_REF_NAME}." >&2
+            exit 1
+          fi
+
       - name: Setup Node
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:

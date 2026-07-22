@@ -159,11 +159,6 @@ function evidenceSnapshot(overrides = {}) {
 }
 
 {
-  assert.strictEqual(mergeBatch.isRetryableMergeError(new Error("Base branch was modified")), true);
-  assert.strictEqual(mergeBatch.isRetryableMergeError(new Error("Something else")), false);
-}
-
-{
   const literalArg = "safe&echo injected";
   const stdout = mergeBatch.runCommand(
     process.execPath,

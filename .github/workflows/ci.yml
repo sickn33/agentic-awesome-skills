@@ -19,6 +19,10 @@ permissions:
 env:
   IS_TRUSTED_CANONICAL_SYNC_PR: ${{ inputs.canonical_sync_pr == true || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'automation/canonical-repo-state' && github.event.pull_request.user.login == 'github-actions[bot]') }}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('run-{0}', github.run_id) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   pr-policy:
     if: github.event_name == 'pull_request' || inputs.canonical_sync_pr == true
@@ -137,7 +141,7 @@ jobs:
   source-validation:
     if: github.event_name == 'pull_request' || inputs.canonical_sync_pr == true
     runs-on: ubuntu-latest
-    needs: [pr-policy, pr-evidence]
+    needs: pr-policy
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
@@ -200,26 +204,31 @@ jobs:
     needs: pr-policy
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         with:
           fetch-depth: 0
           persist-credentials: false
 
       - name: Set up Python
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.10"
 
       - name: Set up Node
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "lts/*"
 
       - name: Install trusted dependencies
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: |
           pip install -r tools/requirements.txt
           npm ci --ignore-scripts
 
       - name: Fetch base branch
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: git fetch origin "${{ github.base_ref || 'main' }}"
 
       - name: Generate PR intake JSON
@@ -317,7 +326,6 @@ jobs:
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: |
           npm run chain
-          npm run catalog
           npm run sync:web-assets
 
       - name: Reproduce canonical-sync PR from main

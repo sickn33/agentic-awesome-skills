@@ -202,6 +202,16 @@ assert.match(
   "Pages should use an unshallowed, credential-free checkout because canonical provenance validation reads git history",
 );
 assert.match(
+  pagesWorkflow,
+  /- name: Checkout[\s\S]*?- name: Verify release provenance[\s\S]*?- name: Setup Node/,
+  "Pages should verify immutable release provenance before dependency setup or installation",
+);
+assert.match(
+  pagesWorkflow,
+  /Verify release provenance[\s\S]*?GH_TOKEN: \$\{\{ github\.token \}\}[\s\S]*?GITHUB_REF_TYPE[\s\S]*?expected_tag="v\$\{package_version\}"[\s\S]*?refs\/tags\/\$\{GITHUB_REF_NAME\}\^\{commit\}[\s\S]*?releases\/tags\/\$\{GITHUB_REF_NAME\}[\s\S]*?\.draft == false[\s\S]*?\.published_at/,
+  "Pages should bind deployment to the exact package tag, commit, and published GitHub Release using the read-only token",
+);
+assert.match(
   ciWorkflow,
   /artifact-preview:[\s\S]*?actions\/checkout@[a-f0-9]{40}[\s\S]*?fetch-depth: 0[\s\S]*?persist-credentials: false/,
   "artifact-preview should retain history because canonical provenance generation reads git history",
