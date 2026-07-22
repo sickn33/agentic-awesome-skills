@@ -9,6 +9,7 @@ const {
   ensureRepoRelative,
   getChangedSkillDirs,
   getChangedSkillFiles,
+  getUnresolvedChangedSkillFiles,
   isQuotaFailure,
   reviewFingerprint,
   reviewLabel,
@@ -29,27 +30,36 @@ const changed = getChangedSkillFiles('base', 'head', {
     return [
       'skills/alpha/SKILL.md',
       'README.md',
-      'plugins/example/SKILL.md',
+      'plugins/bundle/skills/example/SKILL.md',
+      'plugins/bundle/package.json',
       'skills/beta/notes.md',
       '',
     ].join('\n');
   },
 });
 
-assert.deepStrictEqual(changed, ['skills/alpha/SKILL.md', 'plugins/example/SKILL.md', 'skills/beta/notes.md']);
+assert.deepStrictEqual(changed, [
+  'skills/alpha/SKILL.md',
+  'plugins/bundle/skills/example/SKILL.md',
+  'skills/beta/notes.md',
+]);
 
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'aas-review-skills-'));
 fs.mkdirSync(path.join(tempDir, 'skills', 'alpha'), { recursive: true });
-fs.mkdirSync(path.join(tempDir, 'plugins', 'example'), { recursive: true });
+fs.mkdirSync(path.join(tempDir, 'plugins', 'bundle', 'skills', 'example'), { recursive: true });
 fs.writeFileSync(path.join(tempDir, 'skills', 'alpha', 'SKILL.md'), 'alpha');
 fs.mkdirSync(path.join(tempDir, 'skills', 'alpha', 'references'));
 fs.writeFileSync(path.join(tempDir, 'skills', 'alpha', 'references', 'guide.md'), 'guide');
-fs.writeFileSync(path.join(tempDir, 'plugins', 'example', 'SKILL.md'), 'example');
+fs.writeFileSync(path.join(tempDir, 'plugins', 'bundle', 'skills', 'example', 'SKILL.md'), 'example');
 
 assert.deepStrictEqual(getChangedSkillDirs(changed, tempDir), [
-  'plugins/example',
+  'plugins/bundle/skills/example',
   'skills/alpha',
 ]);
+assert.deepStrictEqual(
+  getUnresolvedChangedSkillFiles(changed, ['plugins/bundle/skills/example', 'skills/alpha']),
+  ['skills/beta/notes.md'],
+);
 
 assert.throws(
   () => ensureRepoRelative('../outside/SKILL.md', tempDir),
@@ -157,6 +167,20 @@ assert.strictEqual(plan.skillCount, 1);
 assert.match(fs.readFileSync(githubOutput, 'utf8'), /has-skills=true/);
 assert.match(fs.readFileSync(githubOutput, 'utf8'), /skill-count=1/);
 assert.match(fs.readFileSync(githubOutput, 'utf8'), /fingerprint=[0-9a-f]{64}/);
+
+const deletedOutput = path.join(tempDir, 'deleted-output.txt');
+const deletedPlan = writePlan([], {
+  githubOutput: deletedOutput,
+  unresolvedFiles: ['skills/deleted/SKILL.md', 'skills/deleted/examples/demo.md'],
+});
+assert.strictEqual(deletedPlan.hasSkills, false);
+assert.strictEqual(deletedPlan.requiresManual, true);
+assert.deepStrictEqual(deletedPlan.unresolvedFiles, [
+  'skills/deleted/SKILL.md',
+  'skills/deleted/examples/demo.md',
+]);
+assert.match(deletedPlan.fingerprint, /^manual-[0-9a-f]{64}$/);
+assert.match(fs.readFileSync(deletedOutput, 'utf8'), /requires-manual=true/);
 
 assert.strictEqual(isQuotaFailure('Credit quota exceeded for this workspace'), true);
 assert.strictEqual(isQuotaFailure('Insufficient credits remaining'), true);

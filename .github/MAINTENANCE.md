@@ -139,19 +139,20 @@ Before ANY commit that adds/modifies skills, run the chain:
     ```
     Risk labels are declared metadata. Validate the declared value and review ambiguous `risk: unknown` cases semantically; do not infer or rewrite risk from isolated words.
 
-6.  **COMMIT GENERATED FILES**:
+6.  **PROVE GENERATED STATE, BUT KEEP SOURCE PRS SOURCE-ONLY**:
     ```bash
-    git add README.md skills_index.json data/skills_index.json data/catalog.json data/bundles.json data/aliases.json CATALOG.md
-    git commit -m "chore: sync generated files"
+    npm run chain
+    npm run catalog
+    git status --short
     ```
-    > 🔴 **CRITICAL for maintainer pull requests**: If you skip this, CI may detect canonical drift after merge and open a follow-up bot PR. Do not bypass protected `main`.
-    > For contributor PRs, do **not** include derived registry artifacts. CI blocks direct edits to those files and previews drift separately.
+    > 🔴 **CRITICAL for maintainer pull requests**: Inspect the generated delta as validation, then exclude derived registries, plugin mirrors, marketplaces, and other generated outputs from the source PR. The protected `automation/canonical-repo-state` PR owns that state after source merge.
+    > The only exception is the exact set intentionally staged by the scripted `release:prepare` flow in its protected release PR. Never hand-stage generated state in an ordinary maintainer or contributor PR.
     > See [`docs/maintainers/ci-drift-fix.md`](../docs/maintainers/ci-drift-fix.md) for details.
     > Protected `main` never receives an automatic direct push. Canonical drift is published through the fixed `automation/canonical-repo-state` PR only when it stays inside the generated-files contract; unmanaged drift fails closed.
 
 ### B. When You Merge a PR (Step-by-Step)
 
-> **Agent instruction (when analyzing or handling PRs):** Always merge accepted PRs via GitHub (**Squash and merge**). Never integrate locally and then close the PR. If a PR is closed but its changes were integrated locally, reopen it and follow [Reopen & merge](#if-a-pr-was-closed-after-local-integration-reopen-and-merge) so it ends up **Merged**. Contributors must get credit.
+> **Agent instruction (when analyzing or handling PRs):** Always merge accepted PRs with the guarded `npm run merge:batch` command, which performs GitHub's protected squash merge. Never integrate locally and then close the PR. If a PR was historically closed after local integration, reopen and repair it before using the guarded command so it ends up **Merged**. Contributors must get credit.
 
 **Before merging:**
 
@@ -159,16 +160,16 @@ Before ANY commit that adds/modifies skills, run the chain:
 
 For every canonical `SKILL.md` or tracked bundle-file change, run validation, reference validation, documentation security, changed-skill evidence, and relevant tests. Review semantics, provenance, declared risk, limitations, and bundled files directly. The separate `skill-review` workflow or an exact-head maintainer attestation remains authoritative; local heuristic scores and inferred risk labels are not merge gates.
 
-1.  **CI is green** — Validation, warning-budget enforcement, README source-credit checks, reference checks, tests, and generated artifact steps passed (see [`.github/workflows/ci.yml`](workflows/ci.yml)). If the PR changes any `SKILL.md`, the separate [`skill-review` workflow](workflows/skill-review.yml) must also be green.
+1.  **CI is green** — Validation, warning-budget enforcement, README source-credit checks, reference checks, tests, and generated artifact steps passed (see [`.github/workflows/ci.yml`](workflows/ci.yml)). If the PR changes anything under `skills/**` or `plugins/**/skills/**`, the separate [`skill-review` workflow](workflows/skill-review.yml) must also report a truthful outcome.
 2.  **Generated drift understood** — On pull requests, generator drift is informational only. Do not block a good PR solely because canonical artifacts would be regenerated. Also do not accept PRs that directly edit `CATALOG.md`, `skills_index.json`, or `data/*.json`; those files are `main`-owned.
 3.  **Quality Bar** — PR description confirms the [Quality Bar Checklist](.github/PULL_REQUEST_TEMPLATE.md) (metadata, risk label, credits if applicable).
 4.  **Issue link** — If the PR fixes an issue, the PR description should contain `Closes #N` or `Fixes #N` so GitHub auto-closes the issue on merge.
 
 **How you merge:**
 
-- **Always merge via GitHub** so the PR shows as **Merged** and the contributor gets credit. Use **"Squash and merge"**. Do **not** integrate locally and then close the PR — that would show "Closed" and the contributor would not get proper attribution.
-- **If the PR has merge conflicts:** Resolve them **on the PR branch** (you or the contributor: merge `main` into the PR branch, fix conflicts, drop derived registry files from the branch if they appear, push). For generated registry files, prefer keeping `main`'s side rather than hand-editing conflicts. Then use **"Squash and merge"** on GitHub. Full steps: [docs/maintainers/merging-prs.md](../docs/maintainers/merging-prs.md).
-- **Rare exception:** Only if merging via GitHub is not possible, you may integrate locally and close the PR; in that case you **must** add a Co-authored-by line to the commit and explain in a comment. Prefer to avoid this so PRs are always **Merged**.
+- **Always merge with `npm run merge:batch`**, which uses GitHub's immediate squash-merge endpoint so the PR shows as **Merged** and the contributor gets credit. Do **not** integrate locally, use a raw merge command, or close the PR after copying its changes.
+- **If the PR has merge conflicts:** Resolve them **on the PR branch** (you or the contributor: merge `main` into the PR branch, fix conflicts, drop derived registry files from the branch if they appear, push). For generated registry files, prefer keeping `main`'s side rather than hand-editing conflicts. Then use `merge:batch`. Full steps: [docs/maintainers/merging-prs.md](../docs/maintainers/merging-prs.md).
+- There is no direct-`main` or local-integration exception. If the guarded merge path cannot complete, stop and repair the PR or the protected workflow.
 
 **If CI is blocked on fork approval or stale PR metadata:**
 
@@ -184,13 +185,13 @@ Use this playbook:
     ```bash
     npm run merge:batch -- --prs <PR_NUMBER> --dry-run
     ```
-    If canonical `SKILL.md` or its allowlisted supporting assets/references/resources changed, review the exact full head SHA shown by the command and supply it to the real run:
+    If any tracked file under a canonical `skills/<skill-id>/**` subtree changed, review the entire subtree and the exact full head SHA shown by the command, then supply it to the real run:
     ```bash
     npm run merge:batch -- --prs <PR_NUMBER> --reviewed-head <40-character-head-sha>
     ```
 2.  **Treat the checklist as guidance, not evidence.** A missing checklist emits a notice; objective path, blob, validation, reference, provenance, security, test, and exact-head review gates determine mergeability.
 3.  **Let `merge:batch` approve action-required fork runs.** GitHub Actions materializes those runs asynchronously, so an empty first lookup is not evidence that approval is unnecessary. Do not approve them directly by run ID; the command binds every approval to the current PR, exact head SHA, allowlisted workflow, locally recomputed diff, and immutable PR tuple.
-4.  **Wait for the required checks.** Merge only after `pr-policy`, `pr-evidence`, `source-validation`, `artifact-preview`, and a truthful skill-review outcome when `SKILL.md` changed. `review` means Tessl semantic review actually passed or reused a successful result for the identical skill-content fingerprint. `manual-review-required` means credentials or credits were unavailable, or Tessl did not produce a passing result; it requires the exact-SHA maintainer judgment above. Never describe `manual-review-required` as “Tessl passed,” and never rerun Tessl merely because the PR head or base moved when the changed skill content is identical.
+4.  **Wait for the required checks.** Merge only after `pr-policy`, `pr-evidence`, `source-validation`, `artifact-preview`, and a truthful skill-review outcome for any change under `skills/**` or `plugins/**/skills/**`. `review` means Tessl semantic review actually passed or reused a successful result for the identical complete skill-directory fingerprint. `manual-review-required` means credentials or credits were unavailable, or Tessl did not produce a passing result; it requires the exact-SHA maintainer judgment above. Never describe `manual-review-required` as “Tessl passed,” and never rerun Tessl merely because the PR head or base moved when the complete changed skill content is identical.
 5.  **If the merge endpoint says `Base branch was modified`**, refresh the PR state and retry. This is normal when you are merging a batch and `main` moved between attempts.
 
 **If a PR was closed after local integration (reopen and merge):**
@@ -216,9 +217,9 @@ If a PR was integrated via local squash and then **closed** (so it shows "Closed
     git remote add <user>-fork https://github.com/<USER>/agentic-awesome-skills.git
     git push <user>-fork pr-<PR_NUMBER>-tmp:<BRANCH>
     ```
-    This works if the contributor enabled **"Allow edits from maintainers"** (or you have push access). If push is denied, ask the contributor to merge `main` into their branch and push; then you use "Squash and merge" on GitHub.
-6.  **Merge the PR on GitHub:**  
-    `gh pr merge <PR_NUMBER> --squash`  
+    This works if the contributor enabled **"Allow edits from maintainers"** (or you have push access). If push is denied, ask the contributor to merge `main` into their branch and push; then use `merge:batch`.
+6.  **Merge the PR through the guarded command:**
+    `npm run merge:batch -- --prs <PR_NUMBER> [--reviewed-head <40-character-head-sha>]`
     The PR will show as **Merged** and the contributor will get credit.
 7.  **Switch back to `main`:**  
     `git checkout main`
@@ -238,7 +239,7 @@ We used this flow for PRs [#220](https://github.com/sickn33/agentic-awesome-skil
 
 - Use `npm run merge:batch -- --prs 450,449,446,451` to automate the ordered maintainer flow for multiple PRs. See [docs/maintainers/merge-batch.md](../docs/maintainers/merge-batch.md) for the short usage guide.
 - Pages is release-only: ordinary pushes to `main` never deploy it. Dispatch `.github/workflows/pages.yml` explicitly only at an approved publication gate. Canonical-sync merges still use `--skip-pages` and carry `[skip pages]` as a durable audit marker; the four routine app-bound checks and CodeQL remain enforced. The supported Core preview uses the targeted packed smoke workflow; retired certified-v1 verifier harnesses are not part of the repository workflow.
-- The script keeps the GitHub-only squash merge rule, handles fork-run approvals and stale PR metadata refresh, waits only on fresh required checks, retries `Base branch was modified`, and runs the mandatory post-merge `sync:contributors` follow-up on `main`. The fork content allowlist applies only to external PRs; same-repository maintainer PRs may change repository-wide source while remaining subject to protected checks, trusted changed-skill evidence, exact-head review, and immutable PR identity.
+- The script keeps the GitHub-only squash merge rule, handles fork-run approvals and stale PR metadata refresh, waits only on fresh required checks, retries `Base branch was modified`, and runs the mandatory post-merge `sync:contributors` follow-up on `main`. Sensitive repository-wide source changes use the same-repository exception only when the PR is authored by the repository owner and its exact full head SHA is attested; collaborator-authored sensitive PRs remain under the external safety policy.
 - It is intentionally not a conflict resolver. If a PR is conflicting, stop and follow the manual conflict playbook.
 
 ### C. Post-Merge Credits Sync (Mandatory After Every PR Merge)
@@ -408,6 +409,8 @@ Preflight verification → Changelog → repository/plugin convergence → `npm 
     ```bash
     npm run release:publish -- X.Y.Z
     ```
+
+    The publisher must resolve exactly one merged release PR from the same repository, authored by the repository owner, with base `main`, exact title `chore: release vX.Y.Z`, and head branch `release/vX.Y.Z`. Zero or multiple candidates fail closed; never select the newest approximate match.
 
     **Important:** The release tag must match `package.json`'s version. The [Publish to npm](workflows/publish-npm.yml) workflow runs on **Release published** and will run `npm publish`; npm rejects republishing the same version.
     Before publishing, that workflow re-runs `sync:release-state`, checks for canonical drift with `git diff --exit-code`, runs tests/docs security/web build, and performs `npm pack --dry-run --json`.

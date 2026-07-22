@@ -46,7 +46,7 @@ Use this as a diagnostic signal. It is useful for spotting legacy quality debt, 
 - Add the release entry to [`CHANGELOG.md`](../../CHANGELOG.md).
 - Confirm `README.md` reflects the current version and generated counts.
 - Confirm Credits & Sources, contributors, and support links are still correct.
-- If PR or CI workflow behavior changed during the cycle, confirm maintainer and contributor docs mention the active checks (for example the `skill-review` workflow for `SKILL.md` pull requests).
+- If PR or CI workflow behavior changed during the cycle, confirm maintainer and contributor docs mention the active checks (for example the `skill-review` workflow for any change under `skills/**` or `plugins/**/skills/**`).
 - If maintainers changed declared risk labels during the cycle, confirm that each change has semantic review evidence rather than lexical inference.
 
 5. Prepare the protected release PR:
@@ -75,7 +75,7 @@ Prerelease versions use the same protected flow, for example `15.0.0-rc.1`. They
 npm run release:publish -- X.Y.Z
 ```
 
-This command proves local `main` equals protected `origin/main` and the exact squash commit of the merged `release/vX.Y.Z` PR, checks that no canonical-sync PR or release-state drift remains, creates or reuses the matching local/remote tag safely, and creates the GitHub release object from the matching `CHANGELOG.md` section. SemVer prereleases are marked as GitHub prereleases. It never pushes `main` directly and can be retried after a partial tag/release failure.
+This command requires exactly one merged release PR from the same repository, authored by the repository owner, with base `main`, exact title `chore: release vX.Y.Z`, and head branch `release/vX.Y.Z`. Zero or multiple candidates fail closed; the command never chooses the newest approximate match. It then proves local `main` equals protected `origin/main` and that PR's exact squash commit, checks that no canonical-sync PR or release-state drift remains, creates or reuses the matching local/remote tag safely, and creates the GitHub release object from the matching `CHANGELOG.md` section. SemVer prereleases are marked as GitHub prereleases. It never pushes `main` directly and can be retried after a partial tag/release failure.
 
 7. Publish to npm if needed:
 

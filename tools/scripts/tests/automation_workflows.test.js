@@ -11,11 +11,20 @@ function readText(relativePath) {
 const packageJson = JSON.parse(readText("package.json"));
 const generatedFiles = JSON.parse(readText("tools/config/generated-files.json"));
 const ciWorkflow = readText(".github/workflows/ci.yml");
+const hygieneWorkflowForPages = readText(".github/workflows/repo-hygiene.yml");
 const offlineCatalogBuilder = readText("tools/scripts/build-aas-v1-offline-catalog.js");
 const canonicalMergeScript = readText("tools/scripts/merge_canonical_sync_pr.cjs");
 const publishWorkflow = readText(".github/workflows/publish-npm.yml");
 const releaseWorkflowScript = readText("tools/scripts/release_workflow.js");
 const hygieneWorkflowPath = path.join(repoRoot, ".github", "workflows", "repo-hygiene.yml");
+
+for (const [name, workflow] of [["main CI", ciWorkflow], ["repo hygiene", hygieneWorkflowForPages]]) {
+  assert.match(
+    workflow,
+    /merge_canonical_sync_pr\.cjs[\s\S]*?--head "\$PR_HEAD" \\\n+\s+--skip-pages/,
+    `${name} canonical sync must not dispatch release-only Pages`,
+  );
+}
 
 const prepareReleaseBlock = releaseWorkflowScript.slice(
   releaseWorkflowScript.indexOf("function prepareRelease"),

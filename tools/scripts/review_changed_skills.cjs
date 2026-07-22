@@ -32,7 +32,9 @@ function getChangedSkillFiles(baseSha, headSha, options = {}) {
 
   const git = options.git || runGit;
   const output = git(['diff', '--name-only', '--no-renames', '--diff-filter=ACDMR', baseSha, headSha, '--']);
-  return splitLines(output).filter((filePath) => filePath.startsWith('skills/') || filePath.startsWith('plugins/'));
+  return splitLines(output).filter(
+    (filePath) => filePath.startsWith('skills/') || /^plugins\/.+\/skills\//.test(filePath),
+  );
 }
 
 function ensureRepoRelative(filePath, repoRoot = process.cwd()) {
@@ -61,6 +63,12 @@ function getChangedSkillDirs(files, repoRoot = process.cwd()) {
   }
 
   return [...dirs].sort();
+}
+
+function getUnresolvedChangedSkillFiles(files, skillDirs) {
+  return files.filter(
+    (filePath) => !skillDirs.some((skillDir) => filePath === skillDir || filePath.startsWith(`${skillDir}/`)),
+  );
 }
 
 function buildReviewArgs(skillDir, options = {}) {
@@ -142,15 +150,26 @@ function appendGitHubOutput(name, value, outputPath = process.env.GITHUB_OUTPUT)
 
 function writePlan(skillDirs, options = {}) {
   const hasSkills = skillDirs.length > 0;
-  const fingerprint = hasSkills ? reviewFingerprint(skillDirs, options) : 'none';
+  const unresolvedFiles = [...(options.unresolvedFiles || [])].sort();
+  const requiresManual = unresolvedFiles.length > 0;
+  let fingerprint = hasSkills ? reviewFingerprint(skillDirs, options) : 'none';
+  if (requiresManual) {
+    const hash = crypto.createHash('sha256');
+    hash.update(`${fingerprint}\0`);
+    for (const filePath of unresolvedFiles) hash.update(`${filePath}\0`);
+    fingerprint = `manual-${hash.digest('hex')}`;
+  }
   const plan = {
     fingerprint,
     hasSkills,
+    requiresManual,
     skillCount: skillDirs.length,
+    unresolvedFiles,
   };
 
   appendGitHubOutput('fingerprint', fingerprint, options.githubOutput);
   appendGitHubOutput('has-skills', String(hasSkills), options.githubOutput);
+  appendGitHubOutput('requires-manual', String(requiresManual), options.githubOutput);
   appendGitHubOutput('skill-count', String(skillDirs.length), options.githubOutput);
   console.log(JSON.stringify(plan));
   return plan;
@@ -197,10 +216,12 @@ function main() {
 
   const files = getChangedSkillFiles(baseSha, headSha);
   const skillDirs = getChangedSkillDirs(files);
+  const unresolvedFiles = getUnresolvedChangedSkillFiles(files, skillDirs);
 
   if (planOnly) {
     writePlan(skillDirs, {
       cacheVersion: process.env.TESSL_REVIEW_CACHE_VERSION,
+      unresolvedFiles,
       reviewPlugin,
       threshold,
       workspace,
@@ -208,8 +229,12 @@ function main() {
     return;
   }
 
+  if (unresolvedFiles.length > 0) {
+    throw new Error(`Changed skill content cannot be reviewed from the pull-request tree: ${unresolvedFiles.join(', ')}`);
+  }
+
   if (skillDirs.length === 0) {
-    console.log('No changed SKILL.md files to review.');
+    console.log('No changed skill directories to review.');
     return;
   }
 
@@ -242,6 +267,7 @@ module.exports = {
   ensureRepoRelative,
   getChangedSkillDirs,
   getChangedSkillFiles,
+  getUnresolvedChangedSkillFiles,
   isQuotaFailure,
   reviewFingerprint,
   reviewLabel,
