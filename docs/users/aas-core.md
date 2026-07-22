@@ -30,7 +30,7 @@ AAS MCP does not scan the repository and does not decide which skills are best. 
 > **Release boundary:** AAS Core landed after release 14.6.0. Use an exact Core-capable release rather than an unreviewed moving tag.
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@15.2.0 -- aas mcp configure \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@15.3.0 -- aas mcp configure \
   --host codex \
   --scope user \
   --config /absolute/path/to/codex/config.toml \

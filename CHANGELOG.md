@@ -9,6 +9,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.3.0] - 2026-07-22 - "Security Boundaries and Maintainer Reliability"
+
+> Hardened AAS Core, skill distribution, the hosted catalog, and protected maintenance and release workflows; resolved current dependency advisories and the native Windows preview failure reported in discussion #956 without changing the 1,987-skill catalog.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Changed
+
+- Expanded semantic-review and merge evidence from `SKILL.md` to every tracked file under a canonical skill subtree, including nested examples, scripts, lockfiles, references, assets, deletions, and plugin skill mirrors. Deleted or otherwise unresolvable skill trees now require exact-head manual review instead of silently producing a successful no-skill result.
+- Restricted sensitive same-repository action approval to owner-authored PRs with exact 40-character reviewed-head attestation, and made protected release publication accept exactly one same-repository, owner-authored PR with the expected title, base, and `release/vX.Y.Z` branch.
+- Marked `anywrite` and `sshepherd` blocked in Codex and Claude plugin distributions until users provide separately installed, reviewed executables by explicit absolute path; the canonical source skills remain in the catalog.
+- Hardened `cloudflare-security-audit`, `hf-cloud-aws-context-discovery`, `pptx-deck-creation`, and `weaviate-cookbooks` against cross-repository evidence reuse, credential exposure, prompt injection from design references, and predictable temporary installer paths.
+
+### Fixed
+
+- Fixed native Windows Codex configuration preview so ACL checks pass paths through the environment, tolerate unresolved inherited ACE names, and return bounded path, phase, and status diagnostics for `AAS_ADAPTER_WINDOWS_ACL_FAILED`.
+- Hardened AAS Core runtime state: validate the complete cache-ancestor chain, bound per-session manifest state to 128 entries, preserve broader neutral search results for exact-ID queries, and surface directory-durability failures during transactional cleanup.
+- Removed the catalog markdown URL bypass, required exact release metadata in `llms.txt`, and rejected symlinked or escaping files in the legacy Pages redirect verifier.
+- Fixed changed-skill evidence for arbitrary nested bundle files, full-directory Tessl fingerprints, deleted skill trees, canonical-sync Pages suppression, and workflow and documentation contract drift; canonical synchronization no longer dispatches release-only Pages builds.
+- Updated `brace-expansion` to 1.1.16, `body-parser` to 1.20.6, and `fast-uri` to 3.1.4, resolving the live Dependabot findings and affected npm audit results.
+- Pinned published README links to the release-specific AAS Core guide and made release-state synchronization preserve that immutable version binding.
+
+### Who should care
+
+- Native Windows Codex users configuring AAS Core.
+- Maintainers merging skill bundles, canonical syncs, or protected releases.
+- Users of plugin distributions and security, cloud, and deck-generation skills.
+- Operators relying on Core cache, transaction, evidence, or legacy Pages verification boundaries.
+
+### Validation
+
+- Passed canonical skill and reference validation, documentation security checks, workflow linting, warning-budget enforcement, repository tests, web tests and build, deterministic regeneration, protected CI, and CodeQL on the merged source and canonical-sync commits.
+- Confirmed all six tracked lockfile surfaces report zero known npm vulnerabilities before release preparation, with zero open Dependabot, code-scanning, or secret-scanning alerts.
+- The release gate will verify tag, GitHub Release, npm `latest`, the release-only Pages deployment, live catalog and legacy bridge, and every already-configured AAS MCP host against the exact released commit.
+
+### Credits
+
+- **[@SpecializedBaby](https://github.com/SpecializedBaby)** for reporting the native Windows Codex ACL preview failure in [discussion #956](https://github.com/sickn33/agentic-awesome-skills/discussions/956).
+
 ## [15.2.0] - 2026-07-21 - "Credited Skills and Release Reliability"
 
 > Expanded the catalog to 1,987 source-verified skills, clarified the AAS Core product boundary, and strengthened protected release alignment across npm, plugins, public surfaces, and configured MCP hosts.
