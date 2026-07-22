@@ -1,13 +1,13 @@
-<!-- registry-sync: version=15.2.0; skills=1987; stars=43679; updated_at=2026-07-21T21:34:22+00:00 -->
+<!-- registry-sync: version=15.3.0; skills=1987; stars=43701; updated_at=2026-07-22T08:51:33+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **Local, agent-owned skill stacks for coding agents—from complete catalog access to a reproducible, reviewable plan.**
 
-**Current release: V15.2.0.** This release includes AAS Core for complete local catalog search, agent-owned selection, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
+**Current release: V15.3.0.** This release includes AAS Core for complete local catalog search, agent-owned selection, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
 
 Codex or Claude inspects your project and chooses exact skills from the complete local AAS catalog. AAS Core does not rank or recommend them: its read-only `compose_stack` tool validates the agent-owned selection in memory, and a client or the `aas` CLI can persist it as `aas-stack.json` and produce an immutable plan before any target change.
 
-**[Read the AAS Core preview guide →](https://github.com/sickn33/agentic-awesome-skills/blob/v15.2.0/docs/users/aas-core.md)**
+**[Read the AAS Core preview guide →](https://github.com/sickn33/agentic-awesome-skills/blob/v15.3.0/docs/users/aas-core.md)**
 
 ```text
 Project
@@ -67,7 +67,7 @@ AAS Core gives the repository one product model:
 | Apply and recovery | Experimental, explicit opt-in, outside the supported safety claim |
 | Semantic suitability certification | Not provided |
 
-Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v15.2.0/docs/users/aas-core.md) for the exact trust boundaries, current preview status, Codex/Claude setup model, and CLI lifecycle.
+Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v15.3.0/docs/users/aas-core.md) for the exact trust boundaries, current preview status, Codex/Claude setup model, and CLI lifecycle.
 
 ## Why This Repo
 
@@ -107,7 +107,7 @@ Direct file search can find candidate prose, but it leaves the result in the con
 
 ## Installation
 
-For Codex and Claude, start with the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v15.2.0/docs/users/aas-core.md): configure the local MCP, ask the agent to inspect the project and choose exact IDs from the full catalog, review the proposed `aas-stack.json`, then run CLI validation and planning. The MCP and validation are read-only. Planning writes only the requested plan artifact; it does not materialize skill payloads or AAS managed state in the target.
+For Codex and Claude, start with the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v15.3.0/docs/users/aas-core.md): configure the local MCP, ask the agent to inspect the project and choose exact IDs from the full catalog, review the proposed `aas-stack.json`, then run CLI validation and planning. The MCP and validation are read-only. Planning writes only the requested plan artifact; it does not materialize skill payloads or AAS managed state in the target.
 
 Use direct installation when your host does not yet have a native AAS Core adapter, when you already know the exact skill IDs, or when you deliberately prefer manual selection:
 
@@ -226,7 +226,7 @@ The supported path covers complete local catalog search and inspection, agent-ow
 
 ### How do I install it?
 
-For AAS Core, follow the [preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v15.2.0/docs/users/aas-core.md) and use only a package release whose notes explicitly state that it includes Core. Release 14.6.0 predates Core; Core-capable releases begin with the 15.x line.
+For AAS Core, follow the [preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v15.3.0/docs/users/aas-core.md) and use only a package release whose notes explicitly state that it includes Core. Release 14.6.0 predates Core; Core-capable releases begin with the 15.x line.
 
 For direct skill distribution, run `npx agentic-awesome-skills` for the default full-library install. Use a tool-specific flag such as `--codex`, `--cursor`, `--gemini`, `--claude`, or `--antigravity` when you want the legacy installer to place skills in the directory your assistant already watches.
 
@@ -338,7 +338,7 @@ Use the root repo as a landing page, then jump into the deeper surface that matc
 Keep the root README short; use the dedicated docs for recovery and platform-specific guidance.
 
 - If you are confused after installation, start with the [Usage Guide](docs/users/usage.md).
-- For Core setup, trust boundaries, stack manifests, and preview status, use the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v15.2.0/docs/users/aas-core.md).
+- For Core setup, trust boundaries, stack manifests, and preview status, use the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v15.3.0/docs/users/aas-core.md).
 - On native Windows, `AAS_ADAPTER_WINDOWS_ACL_FAILED` refers to the configuration path checked with PowerShell `Get-Acl`, not the cache and not `icacls`; do not approve until preview returns an approval digest.
 - If you integrate agentic-awesome-skills into a host, read the discovery contract first: [Stable Skills Manifest v1](docs/users/discovery-manifest.md).
 - For Windows truncation or context crash loops, use [docs/users/windows-truncation-recovery.md](docs/users/windows-truncation-recovery.md).
@@ -349,7 +349,7 @@ Keep the root README short; use the dedicated docs for recovery and platform-spe
 
 ## Stable Skills Manifest v1
 
-This is the stable **direct-host discovery manifest** for integrations that load individual `SKILL.md` files. It is not `aas-stack.json`, the verified AAS Core catalog, or the Core composition contract. Core users should start with the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v15.2.0/docs/users/aas-core.md); custom host integrations can continue using the manifest below.
+This is the stable **direct-host discovery manifest** for integrations that load individual `SKILL.md` files. It is not `aas-stack.json`, the verified AAS Core catalog, or the Core composition contract. Core users should start with the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v15.3.0/docs/users/aas-core.md); custom host integrations can continue using the manifest below.
 
 Host integrations should use:
 
