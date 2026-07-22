@@ -15,7 +15,7 @@ tools: [claude, codex, cursor]
 
 # AWS Context Discovery
 
-Before doing any AWS work, read the user's local AWS config. Don't guess the region, and don't ask the user for things their config already answers.
+Before doing any AWS work, inspect only masked AWS CLI metadata. Don't guess the region, and don't ask the user for things the CLI already answers. Never open or print `~/.aws/credentials`, credential-process output, secret environment variables, access keys, session tokens, or SSO token caches.
 
 ## When to Use
 
@@ -29,15 +29,14 @@ Run these at the start of the AWS work and remember the results for the rest of 
 
 ### 1. Active profile
 
-`AWS_PROFILE` env var, else `default`. If the user mentioned a profile in their prompt, that overrides. If the named profile doesn't exist in `~/.aws/config`, surface that clearly.
+Use a profile the user explicitly named, otherwise use the profile identified by masked AWS CLI metadata. If the named profile is absent from `aws configure list-profiles`, surface that clearly.
 
 ### 2. Region
 
 Resolution order — stop at the first one that produces a value:
 1. Region the user explicitly named in this conversation
-2. `AWS_REGION` env var
-3. `AWS_DEFAULT_REGION` env var
-4. `region` field on the active profile in `~/.aws/config`
+2. Region reported by `aws configure list --profile "$profile"`
+3. Region reported by `aws configure get region --profile "$profile"`
 5. Ask the user — but only after the first four have failed
 
 Do not fall back to `us-east-1` or any other hardcoded default.
@@ -45,7 +44,7 @@ Do not fall back to `us-east-1` or any other hardcoded default.
 ### 3. Credentials, account ID, caller ARN
 
 ```bash
-aws sts get-caller-identity --profile <profile> --region <region>
+aws sts get-caller-identity --profile "$profile" --region "$region"
 ```
 
 Three purposes in one call: confirms credentials are valid (stop if not), returns the `Account` ID (needed for ARN construction), returns the `Arn` of the caller.
@@ -69,15 +68,16 @@ This is the highest-leverage thing this skill does. Surfacing it now turns a con
 ## Commands to run
 
 ```bash
-# Effective profile and region (faster than parsing config files)
-aws configure list
+# Profiles and masked effective metadata; never read credential files directly
+aws configure list-profiles
+aws configure list --profile "$profile"
+aws configure get region --profile "$profile"
 
 # Validate credentials and get identity
-aws sts get-caller-identity
-aws sts get-caller-identity --profile <profile-name>  # if a profile was named
+aws sts get-caller-identity --profile "$profile" --region "$region"
 ```
 
-`aws configure list` handles env-var overrides and shows the resolved effective values. Prefer it over parsing `~/.aws/config` yourself. If you need to read raw config (e.g. to list profiles), `~/.aws/config` and `~/.aws/credentials` are plain INI files — read-only.
+`aws configure list` masks credential values and identifies their source. Use these metadata commands instead of parsing AWS files or inspecting secret-bearing environment variables. If the CLI cannot resolve a profile or region without exposing credentials, stop and ask the user for the non-secret profile or region value.
 
 ## What to report back
 

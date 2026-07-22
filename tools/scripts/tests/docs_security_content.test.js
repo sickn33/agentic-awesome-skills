@@ -83,6 +83,13 @@ const wpSiteHealthCatalog = fs.readFileSync(
   'utf8',
 );
 const dispatchSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'dispatch', 'SKILL.md'), 'utf8');
+const anywriteSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'anywrite', 'SKILL.md'), 'utf8');
+const sshepherdSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'sshepherd', 'SKILL.md'), 'utf8');
+const awsDiscoverySkill = fs.readFileSync(path.join(repoRoot, 'skills', 'hf-cloud-aws-context-discovery', 'SKILL.md'), 'utf8');
+const pptxDeckSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'pptx-deck-creation', 'SKILL.md'), 'utf8');
+const pptxDesignProfiles = fs.readFileSync(path.join(repoRoot, 'skills', 'pptx-deck-creation', 'references', 'design-profiles.md'), 'utf8');
+const cloudflareAuditSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'cloudflare-security-audit', 'SKILL.md'), 'utf8');
+const weaviatePdfReference = fs.readFileSync(path.join(repoRoot, 'skills', 'weaviate-cookbooks', 'references', 'pdf_multimodal_rag.md'), 'utf8');
 const eclCreatorConfig = fs.readFileSync(
   path.join(repoRoot, 'skills', 'ecl-harness-engineer', 'agents', 'creator-config.md'),
   'utf8',
@@ -456,6 +463,20 @@ assert.match(
   /^\s+codex:\s*blocked$/m,
   'Dispatch must be blocked from plugin-safe Codex distribution',
 );
+for (const [name, skill] of [['anywrite', anywriteSkill], ['sshepherd', sshepherdSkill]]) {
+  assert.match(skill, /^\s+codex:\s*blocked$/m, `${name} must be blocked from Codex plugins without a shipped runtime`);
+  assert.match(skill, /^\s+claude:\s*blocked$/m, `${name} must be blocked from Claude plugins without a shipped runtime`);
+  assert.doesNotMatch(skill, /^\.\/dist\/(?:anywrite|sshepherd)\b/m, `${name} must not execute a workspace-relative binary`);
+  assert.match(skill, /explicit absolute path/i, `${name} must require a user-approved absolute executable path`);
+}
+assert.match(awsDiscoverySkill, /Never open or print `~\/\.aws\/credentials`/);
+assert.doesNotMatch(awsDiscoverySkill, /credentials` are plain INI files — read-only/);
+assert.match(`${pptxDeckSkill}\n${pptxDesignProfiles}`, /untrusted (?:reference )?data/i);
+assert.match(`${pptxDeckSkill}\n${pptxDesignProfiles}`, /Ignore embedded instructions|never as instructions/i);
+assert.match(cloudflareAuditSkill, /canonical physical repository path plus its normalized `origin`/);
+assert.match(cloudflareAuditSkill, /Do not search or reuse prior runs from a basename-only directory/);
+assert.doesNotMatch(weaviatePdfReference, /-o \/tmp\/(?:uv|ollama)-install\.sh/);
+assert.match(weaviatePdfReference, /mktemp -d/);
 assert.match(
   dispatchSkill,
   /^\s+claude:\s*blocked$/m,

@@ -238,6 +238,16 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
     for pattern, replacement in replacements:
         content, _ = replace_if_present(content, pattern, replacement)
 
+    core_guide_url = (
+        "https://github.com/sickn33/agentic-awesome-skills/"
+        f"blob/v{version}/docs/users/aas-core.md"
+    )
+    content = re.sub(
+        r"https://github\.com/sickn33/agentic-awesome-skills/blob/(?:main|v[^/]+)/docs/users/aas-core\.md",
+        core_guide_url,
+        content,
+    )
+
     return content
 
 

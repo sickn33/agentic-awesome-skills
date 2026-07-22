@@ -508,6 +508,7 @@ function approvalDependencies(overrides = {}) {
     headRefOid: HEAD_SHA,
     headRefName: "maintenance/internal",
     headRepository: { nameWithOwner: "OWNER/REPO" },
+    author: { login: "owner" },
   };
   let classifications = 0;
   const dependencies = approvalDependencies({
@@ -530,6 +531,30 @@ function approvalDependencies(overrides = {}) {
   assert.strictEqual(result.sameRepository, true);
   assert.strictEqual(classifications, 2);
   assert.deepStrictEqual(result.runs, []);
+}
+
+{
+  const prDetails = {
+    number: 451,
+    baseRefName: "main",
+    baseRefOid: BASE_SHA,
+    headRefOid: HEAD_SHA,
+    headRefName: "maintenance/internal",
+    headRepository: { nameWithOwner: "owner/repo" },
+    author: { login: "collaborator" },
+  };
+  const dependencies = approvalDependencies({
+    classifyChangeRecords() {
+      return { approvalSafe: false, reasons: ["record_0:new_unapproved_path"] };
+    },
+  });
+  assert.throws(
+    () => mergeBatch.approveActionRequiredRuns("/repo", "owner/repo", prDetails, {
+      dependencies,
+      reviewedHeads: [HEAD_SHA],
+    }),
+    /not fork-approval-safe/,
+  );
 }
 
 {
@@ -565,6 +590,23 @@ function approvalDependencies(overrides = {}) {
       rawRecords: [record],
     }),
     report,
+  );
+  const nestedBundleRecord = {
+    ...record,
+    old_path: "skills/example/examples/app/package-lock.json",
+    new_path: "skills/example/examples/app/package-lock.json",
+  };
+  const nestedBundleReport = {
+    ...report,
+    changes: [{ ...report.changes[0], records: [nestedBundleRecord] }],
+  };
+  assert.strictEqual(
+    mergeBatch.validateChangedSkillEvidence(nestedBundleReport, {
+      mergeBaseOid: BASE_SHA,
+      headOid: HEAD_SHA,
+      rawRecords: [nestedBundleRecord],
+    }),
+    nestedBundleReport,
   );
   assert.throws(
     () => mergeBatch.validateChangedSkillEvidence(

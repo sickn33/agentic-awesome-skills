@@ -18,7 +18,7 @@ npm run merge:batch -- --prs 450,449,446,451
 
 Add `--poll-seconds <n>` if you want a slower or faster status loop while checks settle.
 
-If a PR changes canonical `SKILL.md` content or its allowlisted supporting assets/references/resources, first review the exact current head commit, then attest to that immutable revision:
+If a PR changes any tracked file under a canonical `skills/<skill-id>/**` subtree, review the entire affected subtree at the exact current head commit, then attest to that immutable revision:
 
 ```bash
 npm run merge:batch -- --prs 450 --reviewed-head <40-character-head-sha>
@@ -34,7 +34,7 @@ Use `--dry-run` to exercise local classification without approving a run or merg
 - recompute changed-skill evidence with evaluator code materialized from the trusted `main` commit
 - reject incomplete evidence coverage, deterministic quality/security/provenance regressions, and base/head drift
 - for external PRs, poll for asynchronously-created fork runs and approve only runs waiting on `action_required` when every path, mode, object, size, and workflow identity is allowlisted
-- for same-repository maintainer PRs, allow repository-wide source changes while still enforcing trusted changed-skill evidence, exact-head review, required checks, branch protection, and immutable PR identity
+- for sensitive same-repository source changes, allow the guarded exception only when the PR author is the repository owner and the exact full head SHA is attested; collaborator-authored sensitive changes fail closed under the external safety policy
 - wait for the latest required checks bound to the exact head SHA
 - call GitHub's immediate squash-merge endpoint and continue only when it reports `merged: true`
 - pull the protected `main`; its trusted workflow opens a canonical-sync bot PR for generated artifacts and contributor credits when needed
@@ -48,7 +48,7 @@ Use `--dry-run` to exercise local classification without approving a run or merg
 
 - conflict resolution on the PR branch
 - manual judgment for risky skill changes
-- semantic review when the distinct `manual-review-required` check is present
+- semantic review when the distinct `manual-review-required` check is present; the review fingerprint covers the complete nearest skill directory, including nested examples, scripts, lockfiles, references, and assets
 - README community-source audits when the source metadata is ambiguous
 - fork-only edge cases that require contributor coordination outside GitHub permissions
 - base-branch drift: stale evidence is discarded and the batch must be rerun

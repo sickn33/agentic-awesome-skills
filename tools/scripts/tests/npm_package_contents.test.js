@@ -78,12 +78,12 @@ assert.strictEqual(
   "published package must declare the first Core-capable major",
 );
 assert.ok(
-  readme.includes("https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md"),
-  "published README must link to the canonical AAS Core guide without relying on an unpackaged relative path",
+  readme.includes(`https://github.com/sickn33/agentic-awesome-skills/blob/v${packageJson.version}/docs/users/aas-core.md`),
+  "published README must link to the AAS Core guide pinned to the exact package release",
 );
 assert.ok(
-  !readme.includes("](docs/users/aas-core.md)"),
-  "published README must not link to an AAS Core guide path excluded from the npm package",
+  !readme.includes("/blob/main/docs/users/aas-core.md"),
+  "published README must not direct package readers to moving main-branch Core instructions",
 );
 assert.ok(
   coreGuide.includes(`--package=agentic-awesome-skills@${packageJson.version}`),

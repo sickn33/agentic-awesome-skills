@@ -495,7 +495,8 @@ jobs:
           node tools/scripts/merge_canonical_sync_pr.cjs \
             --repo "$GITHUB_REPOSITORY" \
             --pr "$PR_NUMBER" \
-            --head "$PR_HEAD"
+            --head "$PR_HEAD" \
+            --skip-pages
 
       - name: Check for uncommitted drift
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

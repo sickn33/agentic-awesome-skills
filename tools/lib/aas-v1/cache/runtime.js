@@ -208,12 +208,7 @@ async function ensureRealDirectory(directoryPath, created, cacheRoot) {
     if (error.code !== "ENOENT") throw error;
     const parent = path.dirname(resolved);
     if (resolved === boundary) {
-      const parentStat = await fsp.lstat(parent);
-      if (!parentStat.isDirectory() || parentStat.isSymbolicLink()
-        || ownershipUnsafe(parentStat)
-        || (process.platform !== "win32" && (parentStat.mode & 0o022) !== 0)) {
-        throw cacheError("AAS_RUNTIME_DIRECTORY_UNSAFE", "runtime cache parent is not a real directory");
-      }
+      await assertSafeCacheAncestorChain(parent);
     } else {
       await ensureRealDirectory(parent, created, boundary);
     }
@@ -227,6 +222,42 @@ async function ensureRealDirectory(directoryPath, created, cacheRoot) {
         throw cacheError("AAS_RUNTIME_DIRECTORY_UNSAFE", "runtime cache path is not a private real directory");
       }
     }
+  }
+}
+
+async function assertSafeCacheAncestorChain(directoryPath) {
+  const logical = path.resolve(directoryPath);
+  let logicalCursor = path.parse(logical).root;
+  for (const component of path.relative(logicalCursor, logical).split(path.sep).filter(Boolean)) {
+    logicalCursor = path.join(logicalCursor, component);
+    const stat = await fsp.lstat(logicalCursor);
+    if (stat.isSymbolicLink()) {
+      const stableSystemAlias = process.platform !== "win32"
+        && stat.uid === 0
+        && (stat.mode & 0o022) === 0;
+      if (!stableSystemAlias) {
+        throw cacheError("AAS_RUNTIME_DIRECTORY_UNSAFE", "runtime cache ancestor contains an untrusted symlink");
+      }
+    }
+  }
+  let current = await fsp.realpath(logical);
+  let childStat = null;
+  while (true) {
+    const stat = await fsp.lstat(current);
+    if (!stat.isDirectory() || stat.isSymbolicLink()) {
+      throw cacheError("AAS_RUNTIME_DIRECTORY_UNSAFE", "runtime cache ancestor is not a real directory");
+    }
+    if (process.platform !== "win32" && (stat.mode & 0o022) !== 0) {
+      const sticky = (stat.mode & 0o1000) !== 0;
+      const childOwnedByCurrentUser = childStat !== null && !ownershipUnsafe(childStat);
+      if (!sticky || !childOwnedByCurrentUser) {
+        throw cacheError("AAS_RUNTIME_DIRECTORY_UNSAFE", "runtime cache ancestor is replaceable by another user");
+      }
+    }
+    const parent = path.dirname(current);
+    if (parent === current) return;
+    childStat = stat;
+    current = parent;
   }
 }
 

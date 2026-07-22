@@ -152,19 +152,13 @@ export function SkillDetail(): React.ReactElement {
         const cleanPath = skill.path.startsWith('skills/')
           ? skill.path.replace('skills/', '')
           : skill.path;
-        const canonicalSkillPath = cleanPath.replace(/\/SKILL\.md$/i, '');
-        const canonicalUrl = new URL(
-          `${import.meta.env.BASE_URL}skills/${canonicalSkillPath}/SKILL.md`,
-          window.location.origin,
-        ).href;
-
-        const candidateUrls = Array.from(new Set([canonicalUrl, ...getSkillMarkdownCandidateUrls({
+        const candidateUrls = getSkillMarkdownCandidateUrls({
           baseUrl: import.meta.env.BASE_URL,
           origin: window.location.origin,
           pathname: window.location.pathname,
           documentBaseUrl: window.document.baseURI,
           skillPath: `skills/${cleanPath}`,
-        })]));
+        });
 
         let markdown: string | null = null;
         let lastError: Error | null = null;

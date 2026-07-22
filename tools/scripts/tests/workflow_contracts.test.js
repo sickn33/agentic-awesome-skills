@@ -80,6 +80,25 @@ const maintainerSkill = fs.readFileSync(
   path.join(repositoryRoot, "skills", "antigravity-maintainer-batch-release", "SKILL.md"),
   "utf8",
 );
+const mergeBatchGuide = fs.readFileSync(path.join(repositoryRoot, "docs", "maintainers", "merge-batch.md"), "utf8");
+const mergingGuide = fs.readFileSync(path.join(repositoryRoot, "docs", "maintainers", "merging-prs.md"), "utf8");
+const autonomyGuide = fs.readFileSync(path.join(repositoryRoot, "docs", "maintainers", "pr-autonomy.md"), "utf8");
+const maintainerSkillUi = fs.readFileSync(
+  path.join(repositoryRoot, "skills", "antigravity-maintainer-batch-release", "agents", "openai.yaml"),
+  "utf8",
+);
+for (const contractText of [maintainerSkill, maintenanceGuide, mergeBatchGuide, mergingGuide, autonomyGuide]) {
+  assert.match(contractText, /skills\/\*\*|skills\/<skill-id>\/\*\*/);
+}
+assert.match(maintainerSkill, /entire tracked `skills\/<skill-id>\/\*\*` subtree/);
+assert.match(maintainerSkill, /authored by the repository owner/);
+assert.match(maintainerSkill, /exactly one merged release PR/);
+assert.match(maintenanceGuide, /canonical-repo-state` PR owns that state/);
+assert.match(autonomyGuide, /complete nearest skill-directory fingerprint/);
+assert.match(mergingGuide, /No local-integration exception/);
+assert.doesNotMatch(mergingGuide, /Rare exception: local squash|`gh pr merge <PR_NUMBER>/);
+assert.match(maintainerSkillUi, /\$antigravity-maintainer-batch-release/);
+assert.doesNotMatch(maintainerSkillUi, /frozen matrix|product, verifier, and gold|recommend|rank/i);
 assert.match(maintainerSkill, /discover every already-configured local AAS MCP host from its real configuration and update each one to the exact same package version/);
 assert.match(maintainerSkill, /Pin `agentic-awesome-skills@X\.Y\.Z` and `--version X\.Y\.Z`; never use `latest`/);
 assert.match(maintainerSkill, /real MCP `initialize` plus `tools\/list` handshake reports catalog package version `X\.Y\.Z`/);
@@ -174,13 +193,16 @@ assert.match(
   /needs\.review-attempt\.outputs\.outcome != 'reviewed'/,
   "every non-passing Tessl outcome must route to exact-head manual review",
 );
+assert.match(skillReviewWorkflow, /paths:\s*\n\s+- 'skills\/\*\*'\s*\n\s+- 'plugins\/\*\*\/skills\/\*\*'/);
+assert.match(skillReviewWorkflow, /steps\.plan\.outputs\.requires-manual != 'true'/);
+assert.match(skillReviewWorkflow, /REQUIRES_MANUAL: \$\{\{ steps\.plan\.outputs\.requires-manual \}\}/);
 assert.match(skillReviewWorkflow, /result=manual/);
 assert.match(skillReviewWorkflow, /needs\.review-state\.outputs\.configured != 'true'/);
 assert.match(skillReviewWorkflow, /ref: \$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
 assert.match(skillReviewWorkflow, /review_changed_skills\.cjs --plan/);
 assert.match(skillReviewWorkflow, /actions\/cache\/restore@[0-9a-f]{40}/);
 assert.match(skillReviewWorkflow, /actions\/cache\/save@[0-9a-f]{40}/);
-assert.match(skillReviewWorkflow, /tessl-review-v1-\$\{\{ steps\.plan\.outputs\.fingerprint \}\}/);
+assert.match(skillReviewWorkflow, /tessl-review-v2-\$\{\{ steps\.plan\.outputs\.fingerprint \}\}/);
 assert.match(skillReviewWorkflow, /steps\.review-cache\.outputs\.cache-hit != 'true'/);
 assert.match(skillReviewWorkflow, /needs\.review-attempt\.outputs\.outcome == 'reviewed'/);
 assert.ok(

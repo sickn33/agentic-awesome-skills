@@ -23,6 +23,7 @@ const TRACED_TOOL_NAMES = new Set([
   "inspect_stack",
 ]);
 const MAX_TRACE_CALLS = 512;
+const MAX_SESSION_MANIFESTS = 128;
 const DIMENSION_IDS = Object.freeze([
   "architecture-runtime",
   "languages-frameworks",
@@ -583,8 +584,7 @@ class McpServer {
     this.traceAttempts = new Map();
     this.traceLastFailure = new Map();
     this.traceOverflow = false;
-    this.composedManifests = new Map();
-    this.inspectedManifestDigests = new Set();
+    this.manifestSessions = new Map();
     this.monotonicNow = options.monotonicNow || (() => process.hrtime.bigint());
   }
 
@@ -760,10 +760,11 @@ class McpServer {
       } else if (name === "export_selection_evidence") {
         assertExactKeys(args, ["manifestDigest", "project", "dimensions", "capabilities"]);
         if (this.traceOverflow) inputError("AAS_EVIDENCE_TRACE_LIMIT_EXCEEDED");
-        const manifest = this.composedManifests.get(args.manifestDigest);
-        if (!manifest || !this.inspectedManifestDigests.has(args.manifestDigest)) {
+        const manifestSession = this.manifestSessions.get(args.manifestDigest);
+        if (!manifestSession?.inspected) {
           inputError("AAS_EVIDENCE_MANIFEST_SESSION_MISSING");
         }
+        const { manifest } = manifestSession;
         const evidence = core.createSelectionEvidence({
           catalog: this.catalog,
           manifest,
@@ -802,13 +803,21 @@ class McpServer {
         };
       }
       if (name === "compose_stack" && payload.ok === true) {
-        this.composedManifests.set(
-          payload.manifestDigest,
-          JSON.parse(core.canonicalJson(payload.manifest)),
-        );
+        this.manifestSessions.delete(payload.manifestDigest);
+        this.manifestSessions.set(payload.manifestDigest, {
+          manifest: JSON.parse(core.canonicalJson(payload.manifest)),
+          inspected: false,
+        });
+        while (this.manifestSessions.size > MAX_SESSION_MANIFESTS) {
+          this.manifestSessions.delete(this.manifestSessions.keys().next().value);
+        }
       }
       if (name === "inspect_stack" && payload.ok === true && payload.status === "valid") {
-        this.inspectedManifestDigests.add(payload.manifestDigest);
+        const session = this.manifestSessions.get(payload.manifestDigest);
+        if (session) {
+          this.manifestSessions.delete(payload.manifestDigest);
+          this.manifestSessions.set(payload.manifestDigest, { ...session, inspected: true });
+        }
       }
       if (!Object.hasOwn(payload, "catalogDigest")) payload.catalogDigest = this.catalog.digest;
       this.recordTrace(name, args, payload, startedAt);
@@ -850,6 +859,7 @@ class McpServer {
 
 module.exports = {
   AGENT_SELECTION_CONTRACT,
+  MAX_SESSION_MANIFESTS,
   McpServer,
   TOOL_DEFINITIONS,
   TOOL_NAMES,

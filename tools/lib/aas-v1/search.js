@@ -32,11 +32,7 @@ function searchSkills(catalog, input = {}) {
   }
   const queryTokens = sortedUnique(tokenize(query));
   const normalizedQuery = query.trim().toLowerCase();
-  const exactMatch = normalizedQuery
-    ? catalog.skills.find((skill) => skill.id === normalizedQuery)
-    : null;
-  const candidates = exactMatch ? [exactMatch] : catalog.skills;
-  const matches = candidates.map((skill) => {
+  const matches = catalog.skills.map((skill) => {
     const document = new Set(skill.searchTokens || []);
     const matchedTokens = queryTokens.filter((token) => document.has(token));
     const matchesQuery = !normalizedQuery

@@ -10,6 +10,7 @@ const {
   AGENT_SELECTION_CONTRACT,
   MAX_JSON_DEPTH,
   MAX_LINE_BYTES,
+  MAX_SESSION_MANIFESTS,
   McpServer,
   TOOL_NAMES,
   parseStrictJsonLine,
@@ -37,6 +38,32 @@ async function initializedServer() {
   await server.handle({ jsonrpc: "2.0", method: "notifications/initialized", params: {} });
   return server;
 }
+
+test("MCP bounds composed manifest session state and evicts the oldest digest", async () => {
+  const server = await initializedServer();
+  const catalog = core.loadBundledCatalog({ root: ROOT });
+  const selectedId = catalog.skills[0].id;
+  const digests = [];
+  for (let index = 0; index <= MAX_SESSION_MANIFESTS; index += 1) {
+    const response = await server.handle({
+      jsonrpc: "2.0",
+      id: 1000 + index,
+      method: "tools/call",
+      params: {
+        name: "compose_stack",
+        arguments: {
+          profile: { goals: [`bounded-session-${index}`] },
+          skillIds: [selectedId],
+        },
+      },
+    });
+    assert.equal(response.result.isError, false);
+    digests.push(response.result.structuredContent.manifestDigest);
+  }
+  assert.equal(server.manifestSessions.size, MAX_SESSION_MANIFESTS);
+  assert.equal(server.manifestSessions.has(digests[0]), false);
+  assert.equal(server.manifestSessions.has(digests.at(-1)), true);
+});
 
 test("strict JSON-lines parser rejects invalid UTF-8, duplicate keys, excess depth, batches, and oversized input", () => {
   assert.deepEqual(parseStrictJsonLine(Buffer.from('{"jsonrpc":"2.0"}')), { jsonrpc: "2.0" });

@@ -7,7 +7,7 @@ const { execFileSync, spawnSync } = require('node:child_process');
 
 const DEFAULT_THRESHOLD = '80';
 const DEFAULT_WORKSPACE = 'antigravity-awesome-skills';
-const DEFAULT_CACHE_VERSION = '1';
+const DEFAULT_CACHE_VERSION = '2';
 const QUOTA_EXIT_CODE = 75;
 
 function runGit(args, options = {}) {
@@ -31,8 +31,10 @@ function getChangedSkillFiles(baseSha, headSha, options = {}) {
   }
 
   const git = options.git || runGit;
-  const output = git(['diff', '--name-only', '--diff-filter=ACMR', baseSha, headSha, '--']);
-  return splitLines(output).filter((filePath) => filePath === 'SKILL.md' || filePath.endsWith('/SKILL.md'));
+  const output = git(['diff', '--name-only', '--no-renames', '--diff-filter=ACDMR', baseSha, headSha, '--']);
+  return splitLines(output).filter(
+    (filePath) => filePath.startsWith('skills/') || /^plugins\/.+\/skills\//.test(filePath),
+  );
 }
 
 function ensureRepoRelative(filePath, repoRoot = process.cwd()) {
@@ -43,10 +45,6 @@ function ensureRepoRelative(filePath, repoRoot = process.cwd()) {
     throw new Error(`Path traversal detected: ${filePath}`);
   }
 
-  if (path.basename(filePath) !== 'SKILL.md') {
-    throw new Error(`Unexpected skill file path: ${filePath}`);
-  }
-
   return resolved;
 }
 
@@ -54,14 +52,23 @@ function getChangedSkillDirs(files, repoRoot = process.cwd()) {
   const dirs = new Set();
 
   for (const filePath of files) {
-    const resolved = ensureRepoRelative(filePath, repoRoot);
-    if (!fs.existsSync(resolved)) {
-      continue;
+    let directory = path.dirname(ensureRepoRelative(filePath, repoRoot));
+    while (directory !== repoRoot && directory.startsWith(`${repoRoot}${path.sep}`)) {
+      if (fs.existsSync(path.join(directory, 'SKILL.md'))) {
+        dirs.add(path.relative(repoRoot, directory).split(path.sep).join('/'));
+        break;
+      }
+      directory = path.dirname(directory);
     }
-    dirs.add(path.dirname(filePath));
   }
 
   return [...dirs].sort();
+}
+
+function getUnresolvedChangedSkillFiles(files, skillDirs) {
+  return files.filter(
+    (filePath) => !skillDirs.some((skillDir) => filePath === skillDir || filePath.startsWith(`${skillDir}/`)),
+  );
 }
 
 function buildReviewArgs(skillDir, options = {}) {
@@ -101,10 +108,26 @@ function reviewFingerprint(skillDirs, options = {}) {
 
   hash.update(`${JSON.stringify(policy)}\0`);
   for (const skillDir of [...skillDirs].sort()) {
-    const skillPath = ensureRepoRelative(path.join(skillDir, 'SKILL.md'), repoRoot);
+    const skillPath = ensureRepoRelative(skillDir, repoRoot);
     hash.update(`${skillDir}\0`);
-    hash.update(fs.readFileSync(skillPath));
-    hash.update('\0');
+    const files = [];
+    function visit(directory) {
+      for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+        const absolute = path.join(directory, entry.name);
+        const stat = fs.lstatSync(absolute);
+        if (stat.isSymbolicLink()) throw new Error(`Symlink is not reviewable: ${path.relative(repoRoot, absolute)}`);
+        if (entry.isDirectory()) visit(absolute);
+        else if (entry.isFile()) files.push({ absolute, stat });
+        else throw new Error(`Non-regular skill content is not reviewable: ${path.relative(repoRoot, absolute)}`);
+      }
+    }
+    visit(skillPath);
+    for (const { absolute, stat } of files) {
+      const relative = path.relative(repoRoot, absolute).split(path.sep).join('/');
+      hash.update(`${relative}\0file\0${(stat.mode & 0o7777).toString(8)}\0`);
+      hash.update(fs.readFileSync(absolute));
+      hash.update('\0');
+    }
   }
 
   return hash.digest('hex');
@@ -127,15 +150,26 @@ function appendGitHubOutput(name, value, outputPath = process.env.GITHUB_OUTPUT)
 
 function writePlan(skillDirs, options = {}) {
   const hasSkills = skillDirs.length > 0;
-  const fingerprint = hasSkills ? reviewFingerprint(skillDirs, options) : 'none';
+  const unresolvedFiles = [...(options.unresolvedFiles || [])].sort();
+  const requiresManual = unresolvedFiles.length > 0;
+  let fingerprint = hasSkills ? reviewFingerprint(skillDirs, options) : 'none';
+  if (requiresManual) {
+    const hash = crypto.createHash('sha256');
+    hash.update(`${fingerprint}\0`);
+    for (const filePath of unresolvedFiles) hash.update(`${filePath}\0`);
+    fingerprint = `manual-${hash.digest('hex')}`;
+  }
   const plan = {
     fingerprint,
     hasSkills,
+    requiresManual,
     skillCount: skillDirs.length,
+    unresolvedFiles,
   };
 
   appendGitHubOutput('fingerprint', fingerprint, options.githubOutput);
   appendGitHubOutput('has-skills', String(hasSkills), options.githubOutput);
+  appendGitHubOutput('requires-manual', String(requiresManual), options.githubOutput);
   appendGitHubOutput('skill-count', String(skillDirs.length), options.githubOutput);
   console.log(JSON.stringify(plan));
   return plan;
@@ -182,10 +216,12 @@ function main() {
 
   const files = getChangedSkillFiles(baseSha, headSha);
   const skillDirs = getChangedSkillDirs(files);
+  const unresolvedFiles = getUnresolvedChangedSkillFiles(files, skillDirs);
 
   if (planOnly) {
     writePlan(skillDirs, {
       cacheVersion: process.env.TESSL_REVIEW_CACHE_VERSION,
+      unresolvedFiles,
       reviewPlugin,
       threshold,
       workspace,
@@ -193,8 +229,12 @@ function main() {
     return;
   }
 
+  if (unresolvedFiles.length > 0) {
+    throw new Error(`Changed skill content cannot be reviewed from the pull-request tree: ${unresolvedFiles.join(', ')}`);
+  }
+
   if (skillDirs.length === 0) {
-    console.log('No changed SKILL.md files to review.');
+    console.log('No changed skill directories to review.');
     return;
   }
 
@@ -227,6 +267,7 @@ module.exports = {
   ensureRepoRelative,
   getChangedSkillDirs,
   getChangedSkillFiles,
+  getUnresolvedChangedSkillFiles,
   isQuotaFailure,
   reviewFingerprint,
   reviewLabel,

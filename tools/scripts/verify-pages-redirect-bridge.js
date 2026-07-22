@@ -7,6 +7,10 @@ const path = require('path');
 const { generateBridge } = require('./generate-pages-redirect-bridge');
 
 function listFiles(root) {
+  const rootStat = fs.lstatSync(root);
+  if (rootStat.isSymbolicLink() || !rootStat.isDirectory()) {
+    throw new Error(`managed bridge directory is not a physical directory: ${root}`);
+  }
   const files = [];
   function visit(directory) {
     for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
@@ -20,12 +24,35 @@ function listFiles(root) {
   return files;
 }
 
+function assertManagedRegularFile(root, relativePath) {
+  const absoluteRoot = path.resolve(root);
+  const absolutePath = path.resolve(absoluteRoot, relativePath);
+  if (absolutePath !== absoluteRoot && !absolutePath.startsWith(`${absoluteRoot}${path.sep}`)) {
+    throw new Error(`managed bridge path escapes deployment root: ${relativePath}`);
+  }
+  const stat = fs.lstatSync(absolutePath);
+  if (stat.isSymbolicLink() || !stat.isFile()) {
+    throw new Error(`managed bridge path is not a physical regular file: ${relativePath}`);
+  }
+  const physicalRoot = fs.realpathSync(absoluteRoot);
+  const physicalPath = fs.realpathSync(absolutePath);
+  if (physicalPath !== physicalRoot && !physicalPath.startsWith(`${physicalRoot}${path.sep}`)) {
+    throw new Error(`managed bridge path escapes physical deployment root: ${relativePath}`);
+  }
+  return absolutePath;
+}
+
 function managedFiles(root, legacyBase) {
   const required = ['.nojekyll', 'redirect-manifest.json'];
   const legacyDirectory = path.join(root, ...new URL(legacyBase).pathname.split('/').filter(Boolean));
-  if (!fs.existsSync(legacyDirectory) || !fs.statSync(legacyDirectory).isDirectory()) {
+  if (!fs.existsSync(legacyDirectory)) {
     throw new Error(`missing managed legacy directory: ${legacyDirectory}`);
   }
+  const legacyStat = fs.lstatSync(legacyDirectory);
+  if (legacyStat.isSymbolicLink() || !legacyStat.isDirectory()) {
+    throw new Error(`managed legacy directory is not a physical directory: ${legacyDirectory}`);
+  }
+  for (const file of required) assertManagedRegularFile(root, file);
   return [...required, ...listFiles(legacyDirectory).map((file) => path.join(path.relative(root, legacyDirectory), file))]
     .map((file) => file.split(path.sep).join('/'))
     .sort();
@@ -39,7 +66,7 @@ function compareManagedTrees(expectedRoot, actualRoot, legacyBase) {
   const missing = expectedFiles.filter((file) => !actualSet.has(file));
   const unexpected = actualFiles.filter((file) => !expectedSet.has(file));
   const mismatched = expectedFiles.filter((file) => actualSet.has(file)
-    && !fs.readFileSync(path.join(expectedRoot, file)).equals(fs.readFileSync(path.join(actualRoot, file))));
+    && !fs.readFileSync(assertManagedRegularFile(expectedRoot, file)).equals(fs.readFileSync(assertManagedRegularFile(actualRoot, file))));
   if (missing.length || unexpected.length || mismatched.length) {
     throw new Error(`managed bridge drift detected: missing=${missing.join(',') || '-'} unexpected=${unexpected.join(',') || '-'} mismatched=${mismatched.join(',') || '-'}`);
   }
@@ -115,17 +142,17 @@ async function verifyLiveDeployment(options) {
   if (!Number.isSafeInteger(concurrency) || concurrency < 1 || concurrency > 64) {
     throw new Error('--concurrency must be an integer from 1 to 64');
   }
-  const manifestSource = fs.readFileSync(path.join(deploymentRoot, 'redirect-manifest.json'), 'utf8');
+  const manifestSource = fs.readFileSync(assertManagedRegularFile(deploymentRoot, 'redirect-manifest.json'), 'utf8');
   const manifest = JSON.parse(manifestSource);
   const liveManifest = await fetchText(new URL('redirect-manifest.json', liveRoot), fetchImpl, timeoutMs);
   if (liveManifest !== manifestSource) throw new Error('live redirect manifest differs from the protected deployment');
 
   const googlePath = manifest.webmaster_verification.google.legacy_file;
-  const expectedGoogle = fs.readFileSync(path.join(deploymentRoot, googlePath), 'utf8');
+  const expectedGoogle = fs.readFileSync(assertManagedRegularFile(deploymentRoot, googlePath), 'utf8');
   const liveGoogle = await fetchText(new URL(googlePath, liveRoot), fetchImpl, timeoutMs);
   if (liveGoogle !== expectedGoogle) throw new Error('live Google verification file differs from the protected deployment');
 
-  const expectedSitemap = fs.readFileSync(path.join(deploymentRoot, manifest.legacy_sitemap), 'utf8');
+  const expectedSitemap = fs.readFileSync(assertManagedRegularFile(deploymentRoot, manifest.legacy_sitemap), 'utf8');
   const liveSitemap = await fetchText(new URL(manifest.legacy_sitemap, liveRoot), fetchImpl, timeoutMs);
   if (liveSitemap !== expectedSitemap) throw new Error('live legacy sitemap differs from the protected deployment');
 

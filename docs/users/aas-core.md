@@ -45,6 +45,12 @@ Use `--host claude` with the appropriate absolute Claude MCP configuration path 
 
 Configuration is explicit and integrity-bound. AAS installs or reuses an exact content-addressed runtime, verifies it, and changes only its managed MCP configuration section. Restart the host if it does not reload MCP configuration automatically.
 
+### Native Windows and Codex
+
+Native Windows 10 and 11 with Node.js 22 are supported preview targets for the Codex user-scoped adapter, including the Codex CLI `0.144.x` configuration shape. Use absolute Windows paths for `--config`, `--cache-root`, and, when replacing an existing configuration, `--backup-dir`.
+
+During preview, AAS checks the ownership of the configuration parent directory (normally `%USERPROFILE%\.codex`) and the existing `config.toml` with PowerShell `Get-Acl`; it does not inspect the cache DACL at that stage and does not invoke `icacls`. `AAS_ADAPTER_WINDOWS_ACL_FAILED` now reports the inspected `path`, ACL `phase`, exit `status`, and a bounded diagnostic. An unresolved inherited ACE name is treated as untrusted ACL data rather than crashing identity translation. If preview still fails, use those fields to inspect the named configuration path, not the cache, and do not add `--approve` until preview returns `approvalRequired` with an `approvalDigest`.
+
 ## Quick path
 
 1. Run the exact-version MCP configuration command above, review its approval digest, and repeat it with `--approve <approval-digest>`.

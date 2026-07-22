@@ -165,9 +165,12 @@ function materializeLayout(inspected, options) {
             logicalId: path.relative(inspected.root, directory).split(path.sep).join("/"),
           });
         }
-        fsyncDirectory(parent);
+        (options.fsyncDirectory || fsyncDirectory)(parent);
       } catch (cause) {
-        try { fs.rmSync(stage, { recursive: true, force: true }); } catch {}
+        if (fs.existsSync(stage)) {
+          fs.rmSync(stage, { recursive: true, force: true });
+          (options.fsyncDirectory || fsyncDirectory)(parent);
+        }
         throw transactionError("AAS_TRANSACTION_LAYOUT_CREATE_FAILED", "filesystem", {}, cause);
       }
       const stat = assertRegularDirectory(directory);
@@ -184,6 +187,7 @@ function materializeLayout(inspected, options) {
 
 function cleanupMaterializedLayout(inspected, directories, options) {
   const { markerName, markerToken } = ownershipMarker(options);
+  const syncDirectory = options.fsyncDirectory || fsyncDirectory;
   for (const directory of [...directories].reverse()) {
     if (!isContained(inspected.root, directory)) continue;
     const parent = path.dirname(directory);
@@ -196,14 +200,16 @@ function cleanupMaterializedLayout(inspected, directories, options) {
     if (fs.existsSync(stage)) {
       const stageStat = fs.lstatSync(stage);
       if (!stageStat.isSymbolicLink() && stageStat.isDirectory() && stageStat.dev === inspected.device) {
+        let removable = false;
         try {
           assertOwned(stageStat);
-          if (markerOwned(stage, markerName, markerToken)
-            && !fs.readdirSync(stage).some((name) => name !== markerName)) {
-            fs.rmSync(stage, { recursive: true });
-            fsyncDirectory(parent);
-          }
-        } catch {}
+          removable = markerOwned(stage, markerName, markerToken)
+            && !fs.readdirSync(stage).some((name) => name !== markerName);
+        } catch { removable = false; }
+        if (removable) {
+          fs.rmSync(stage, { recursive: true });
+          syncDirectory(parent);
+        }
       }
     }
     // A prior cleanup may have published the exact token-bound tombstone and
@@ -216,7 +222,7 @@ function cleanupMaterializedLayout(inspected, directories, options) {
       if (!markerOwned(tombstone, markerName, markerToken)) continue;
       if (fs.readdirSync(tombstone).some((name) => name !== markerName)) continue;
       fs.rmSync(tombstone, { recursive: true });
-      fsyncDirectory(parent);
+      syncDirectory(parent);
       continue;
     }
     if (!fs.existsSync(directory)) continue;
@@ -231,9 +237,9 @@ function cleanupMaterializedLayout(inspected, directories, options) {
         logicalId: path.relative(inspected.root, directory).split(path.sep).join("/"),
       });
     }
-    fsyncDirectory(parent);
+    syncDirectory(parent);
     fs.rmSync(tombstone, { recursive: true });
-    fsyncDirectory(parent);
+    syncDirectory(parent);
   }
 }
 

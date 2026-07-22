@@ -12,6 +12,14 @@ tags: [ssh, devops, cli, server-ops, postgres, deploy, zero-knowledge]
 tools: [claude, cursor, gemini, codex]
 license: "MIT"
 license_source: "https://github.com/Antheurus/sshepherd/blob/main/LICENSE"
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
+  setup:
+    type: manual
+    summary: "Requires a separately installed, user-approved sshepherd executable at an explicit absolute path."
+    docs: SKILL.md
 ---
 
 # sshepherd
@@ -34,6 +42,8 @@ Every connection detail is declared ahead of time and never appears on the comma
 
 ### Step 2: Invoke a group + action by name
 
+This repository does not ship the `sshepherd` executable. The user must install or build a reviewed upstream release outside the current workspace and provide its explicit absolute path. Verify it is an executable regular file, not a symlink, before use. Never auto-discover or execute `./dist/sshepherd` from the repository being operated on.
+
 ```
 sshepherd <group> <action> [positionals...] [--flag value]
 ```
@@ -43,8 +53,8 @@ Nine command groups — `hosts`, `check`, `logs`, `services`, `deploy`, `config`
 ### Step 3: Discover the command surface
 
 ```bash
-./dist/sshepherd --help                 # list groups
-./dist/sshepherd check --help           # list actions + flags for one group
+"/absolute/path/to/sshepherd" --help                 # list groups
+"/absolute/path/to/sshepherd" check --help           # list actions + flags for one group
 ```
 
 ## Examples
@@ -52,7 +62,7 @@ Nine command groups — `hosts`, `check`, `logs`, `services`, `deploy`, `config`
 ### Example 1: Server health overview
 
 ```bash
-./dist/sshepherd check overview lms-server
+"/absolute/path/to/sshepherd" check overview lms-server
 ```
 
 Returns a JSON envelope with disk, memory, CPU, listening ports, and OOM history for the host behind the `lms-server` alias — the agent never learns the host's address.
@@ -60,14 +70,14 @@ Returns a JSON envelope with disk, memory, CPU, listening ports, and OOM history
 ### Example 2: Restart a docker service and tail its logs
 
 ```bash
-./dist/sshepherd services restart lms-server --name api
-./dist/sshepherd logs tail lms-server --name api --lines 100
+"/absolute/path/to/sshepherd" services restart lms-server --name api
+"/absolute/path/to/sshepherd" logs tail lms-server --name api --lines 100
 ```
 
 ### Example 3: Read-only Postgres introspection
 
 ```bash
-./dist/sshepherd db tables prod
+"/absolute/path/to/sshepherd" db tables prod
 ```
 
 `prod` is a pg-target name that resolves to *how* to reach `psql` on a host — never a database password. `psql` runs inside the target container, authenticated by peer/trust/`.pgpass` already on the remote.
