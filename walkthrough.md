@@ -1,10 +1,3 @@
-# Contribution Walkthrough - 2026-07-22
-
-- Added the official [`nowork-studio/NotFair`](https://github.com/nowork-studio/NotFair) `seo-drift` skill as a source-only contribution under `skills/seo-drift/`.
-- Adapted the portable skill metadata and setup to the current repository quality bar while preserving MIT provenance and the original baseline/compare workflow.
-- Added explicit examples, limitations, data-boundary guidance, and read-only safety constraints.
-- Added the required official-source credit to `README.md`; generated registries remain excluded from the contributor branch.
-
 # Maintenance Walkthrough - 2026-04-17
 
 - Imported 8 frontend/design skills from [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) into `skills/`:
