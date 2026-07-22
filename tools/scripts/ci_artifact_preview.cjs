@@ -27,6 +27,15 @@ function sha256(value) {
   return crypto.createHash("sha256").update(value).digest("hex");
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function parsePositiveInteger(value, label) {
   if (!/^[1-9]\d*$/.test(String(value))) throw new Error(`${label} must be a positive integer`);
   const parsed = Number(value);
@@ -184,15 +193,15 @@ function readCanonicalManifest(filePath) {
 function appendSummary(manifest, digest) {
   if (!process.env.GITHUB_STEP_SUMMARY) throw new Error("GITHUB_STEP_SUMMARY is required with --write-step-summary");
   const drift = manifest.driftFiles.length
-    ? manifest.driftFiles.map((file) => `- \`${file.replace(/`/g, "\\`")}\``).join("\n")
+    ? manifest.driftFiles.map((file) => `- <code>${escapeHtml(file)}</code>`).join("\n")
     : "- none";
   const lines = [
     "## Artifact Preview", "",
-    `- Mode: \`${manifest.mode}\``,
-    `- Primary change: \`${manifest.primaryCategory.replace(/`/g, "\\`")}\``,
-    `- Categories: ${manifest.categories.length ? manifest.categories.map((item) => `\`${item.replace(/`/g, "\\`")}\``).join(", ") : "none"}`,
-    `- Workflow SHA: \`${manifest.workflowSha}\``,
-    `- Manifest SHA-256: \`${digest}\``, "", "Generated drift:", drift, "",
+    `- Mode: <code>${escapeHtml(manifest.mode)}</code>`,
+    `- Primary change: <code>${escapeHtml(manifest.primaryCategory)}</code>`,
+    `- Categories: ${manifest.categories.length ? manifest.categories.map((item) => `<code>${escapeHtml(item)}</code>`).join(", ") : "none"}`,
+    `- Workflow SHA: <code>${escapeHtml(manifest.workflowSha)}</code>`,
+    `- Manifest SHA-256: <code>${escapeHtml(digest)}</code>`, "", "Generated drift:", drift, "",
   ];
   fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join("\n"), "utf8");
 }
@@ -238,6 +247,7 @@ if (require.main === module) {
 module.exports = {
   canonicalJson,
   createManifest,
+  escapeHtml,
   main,
   parseOptions,
   readCanonicalManifest,

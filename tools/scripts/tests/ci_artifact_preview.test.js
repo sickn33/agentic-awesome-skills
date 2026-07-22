@@ -12,6 +12,12 @@ const SUMMARY = path.join(ROOT, "summary.md");
 const WORKFLOW_SHA = "a".repeat(40);
 const HEAD_SHA = "b".repeat(40);
 
+assert.strictEqual(
+  preview.escapeHtml(`<tag attr="value">&'\\\``),
+  "&lt;tag attr=&quot;value&quot;&gt;&amp;&#39;\\`",
+  "step-summary values must be HTML-encoded instead of relying on incomplete Markdown escaping",
+);
+
 process.env.GITHUB_OUTPUT = OUTPUT;
 const created = preview.createManifest({
   output: MANIFEST,
