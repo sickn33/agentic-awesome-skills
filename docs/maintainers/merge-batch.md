@@ -46,12 +46,14 @@ Use `--dry-run` to exercise local classification without approving a run or merg
 
 ## What It Does Not Automate
 
+- PR-body rewriting or normalization
+- closing or reopening PRs to refresh metadata or workflow runs
 - conflict resolution on the PR branch
 - manual judgment for risky skill changes
 - semantic review when the distinct `manual-review-required` check is present; the review fingerprint covers the complete nearest skill directory, including nested examples, scripts, lockfiles, references, and assets
 - README community-source audits when the source metadata is ambiguous
 - fork-only edge cases that require contributor coordination outside GitHub permissions
-- base-branch drift: stale evidence is discarded and the batch must be rerun
+- base-branch or head drift: stale evidence is discarded, the checkout must be refreshed to the current `origin/main`, and the batch must be rerun; there is no automatic retry
 - auto-merge and merge-queue enrollment; deferred merge state is rejected
 
 ## When To Stop

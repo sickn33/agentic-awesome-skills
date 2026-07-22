@@ -73,21 +73,34 @@ assert.strictEqual(release.validateReleaseSuccessors(repo, releaseCommit, canoni
 }), true);
 assert.strictEqual(managedValidationCalls, 1);
 
-fs.writeFileSync(path.join(repo, "README.md"), "unrelated\n");
-git(repo, "commit", "-am", "docs: unrelated change");
-const unrelatedCommit = git(repo, "rev-parse", "HEAD");
+fs.writeFileSync(path.join(repo, "README.md"), "release synced with pages skip\n");
+git(repo, "commit", "-am", "[skip pages] chore: synchronize canonical repository state");
+const skipPagesCanonicalCommit = git(repo, "rev-parse", "HEAD");
+managedValidationCalls = 0;
+assert.strictEqual(release.validateReleaseSuccessors(repo, releaseCommit, skipPagesCanonicalCommit, {
+  validateManagedRange() { managedValidationCalls += 1; },
+}), true);
+assert.strictEqual(managedValidationCalls, 1);
+
+fs.writeFileSync(path.join(repo, "README.md"), "near canonical but invalid\n");
+git(repo, "commit", "-am", "[skip ci] chore: synchronize canonical repository state");
+const invalidCanonicalCommit = git(repo, "rev-parse", "HEAD");
+let invalidManagedValidationCalls = 0;
 assert.throws(
-  () => release.validateReleaseSuccessors(repo, releaseCommit, unrelatedCommit, { validateManagedRange() {} }),
+  () => release.validateReleaseSuccessors(repo, releaseCommit, invalidCanonicalCommit, {
+    validateManagedRange() { invalidManagedValidationCalls += 1; },
+  }),
   /Unexpected commit/,
 );
+assert.strictEqual(invalidManagedValidationCalls, 0);
 
 git(root, "init", "--bare", remote);
 git(repo, "remote", "add", "origin", remote);
-git(repo, "tag", "v1.2.3", canonicalCommit);
-assert.strictEqual(release.localTagTarget(repo, "v1.2.3"), canonicalCommit);
+git(repo, "tag", "v1.2.3", skipPagesCanonicalCommit);
+assert.strictEqual(release.localTagTarget(repo, "v1.2.3"), skipPagesCanonicalCommit);
 assert.strictEqual(release.remoteTagTarget(repo, "v1.2.3"), null);
 git(repo, "push", "origin", "v1.2.3");
-assert.strictEqual(release.remoteTagTarget(repo, "v1.2.3"), canonicalCommit);
+assert.strictEqual(release.remoteTagTarget(repo, "v1.2.3"), skipPagesCanonicalCommit);
 
 fs.rmSync(root, { recursive: true, force: true });
 console.log("Release workflow tests passed.");

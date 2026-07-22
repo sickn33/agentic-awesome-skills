@@ -5,7 +5,7 @@
 This guide details the exact procedures for maintaining `agentic-awesome-skills`.
 It covers the **Quality Bar**, **Documentation Consistency**, and **Release Workflows**.
 
-**Maintainer shortcuts:** [Merge a PR](#b-when-you-merge-a-pr-step-by-step) · [Reopen & merge a closed PR](#if-a-pr-was-closed-after-local-integration-reopen-and-merge) · [Post-merge credits sync](#c-post-merge-credits-sync-mandatory-after-every-pr-merge) · [Close issues](#when-to-close-an-issue) · [Create a release](#4-release-workflow)
+**Maintainer shortcuts:** [Merge a PR](#b-when-you-merge-a-pr-step-by-step) · [Reopen & merge a closed PR](#if-a-pr-was-closed-after-local-integration-reopen-and-merge) · [Post-batch credits verification](#c-post-batch-credits-verification) · [Close issues](#when-to-close-an-issue) · [Create a release](#4-release-workflow)
 
 ---
 
@@ -39,7 +39,7 @@ If you touch **any of these**:
 …then you **MUST** run the Validation Chain **BEFORE** committing.
 
 - Running `npm run chain` is **NOT optional**.
-- Running `npm run catalog` is **NOT optional**.
+- `npm run chain` already includes catalog generation; do not invoke `npm run catalog` again immediately afterward.
 
 For contributor PRs, the contract is now **source-only**:
 
@@ -113,17 +113,11 @@ Before ANY commit that adds/modifies skills, run the chain:
     This verifies that changed skills with declared external upstream repos already have the required README credit under `### Official Sources` or `### Community Contributors`.
     The first rollout is warning-first for missing structured metadata: if a changed skill clearly looks externally sourced but still lacks `source_repo`, the check warns instead of failing. Once `source_repo` is declared, README coverage is mandatory.
 
-4.  **Build catalog**:
-
-    ```bash
-    npm run catalog
-    ```
-
-5.  **Optional maintainer sweep shortcut**:
+4.  **Optional maintainer sweep shortcut**:
     ```bash
     npm run sync:repo-state
     ```
-    This wraps `chain + catalog + sync:web-assets + sync:contributors + audit:consistency` for a full local repo-state refresh.
+    This wraps `chain + sync:web-assets + sync:contributors + audit:consistency` for a full local repo-state refresh; `chain` already generates the catalog.
     The scheduled GitHub Actions workflow `Repo Hygiene` runs this same sweep weekly to catch slow drift on `main`.
     It also enforces the frozen validation warning budget, so new warnings do not creep in silently while the legacy `135` known warnings remain accepted.
 
@@ -139,10 +133,9 @@ Before ANY commit that adds/modifies skills, run the chain:
     ```
     Risk labels are declared metadata. Validate the declared value and review ambiguous `risk: unknown` cases semantically; do not infer or rewrite risk from isolated words.
 
-6.  **PROVE GENERATED STATE, BUT KEEP SOURCE PRS SOURCE-ONLY**:
+5.  **PROVE GENERATED STATE, BUT KEEP SOURCE PRS SOURCE-ONLY**:
     ```bash
     npm run chain
-    npm run catalog
     git status --short
     ```
     > 🔴 **CRITICAL for maintainer pull requests**: Inspect the generated delta as validation, then exclude derived registries, plugin mirrors, marketplaces, and other generated outputs from the source PR. The protected `automation/canonical-repo-state` PR owns that state after source merge.
@@ -192,7 +185,9 @@ Use this playbook:
 2.  **Treat the checklist as guidance, not evidence.** A missing checklist emits a notice; objective path, blob, validation, reference, provenance, security, test, and exact-head review gates determine mergeability.
 3.  **Let `merge:batch` approve action-required fork runs.** GitHub Actions materializes those runs asynchronously, so an empty first lookup is not evidence that approval is unnecessary. Do not approve them directly by run ID; the command binds every approval to the current PR, exact head SHA, allowlisted workflow, locally recomputed diff, and immutable PR tuple.
 4.  **Wait for the required checks.** Merge only after `pr-policy`, `pr-evidence`, `source-validation`, `artifact-preview`, and a truthful skill-review outcome for any change under `skills/**` or `plugins/**/skills/**`. `review` means Tessl semantic review actually passed or reused a successful result for the identical complete skill-directory fingerprint. `manual-review-required` means credentials or credits were unavailable, or Tessl did not produce a passing result; it requires the exact-SHA maintainer judgment above. Never describe `manual-review-required` as “Tessl passed,” and never rerun Tessl merely because the PR head or base moved when the complete changed skill content is identical.
-5.  **If the merge endpoint says `Base branch was modified`**, refresh the PR state and retry. This is normal when you are merging a batch and `main` moved between attempts.
+5.  **If the merge endpoint says `Base branch was modified`**, stop that invocation, discard its stale evidence, refresh the checkout to the current `origin/main`, and rerun `merge:batch`. The command does not retry base drift automatically.
+
+`merge:batch` evaluates the PR as it exists. It does not rewrite or normalize the PR body, and it does not close or reopen the PR to manufacture replacement workflow runs. The reopen procedure below is only for repairing a PR that was historically closed after unsupported local integration.
 
 **If a PR was closed after local integration (reopen and merge):**
 
@@ -233,47 +228,47 @@ We used this flow for PRs [#220](https://github.com/sickn33/agentic-awesome-skil
     ```text
     Fixed in #<PR_NUMBER>. Shipped in release vX.Y.Z.
     ```
-3.  **Run the Post-Merge Credits Sync below** — this is mandatory after every PR merge, including single-PR merges.
+3.  **Complete the post-batch credits verification below** after the source batch, including a one-PR batch.
 
 **Maintainer shortcut for batched PRs:**
 
 - Use `npm run merge:batch -- --prs 450,449,446,451` to automate the ordered maintainer flow for multiple PRs. See [docs/maintainers/merge-batch.md](../docs/maintainers/merge-batch.md) for the short usage guide.
-- Pages is release-only: ordinary pushes to `main` never deploy it. Dispatch `.github/workflows/pages.yml` explicitly only at an approved publication gate. Canonical-sync merges still use `--skip-pages` and carry `[skip pages]` as a durable audit marker; the four routine app-bound checks and CodeQL remain enforced. The supported Core preview uses the targeted packed smoke workflow; retired certified-v1 verifier harnesses are not part of the repository workflow.
-- The script keeps the GitHub-only squash merge rule, handles fork-run approvals and stale PR metadata refresh, waits only on fresh required checks, retries `Base branch was modified`, and runs the mandatory post-merge `sync:contributors` follow-up on `main`. Sensitive repository-wide source changes use the same-repository exception only when the PR is authored by the repository owner and its exact full head SHA is attested; collaborator-authored sensitive PRs remain under the external safety policy.
+- Pages is release-only: ordinary pushes to `main` never deploy it. Dispatch `.github/workflows/pages.yml` only from the exact immutable `vX.Y.Z` tag at an approved publication gate, never from `main` or another branch. Canonical-sync merges still use `--skip-pages` and carry `[skip pages]` as a durable audit marker; the four routine app-bound checks and CodeQL remain enforced. The supported Core preview uses the targeted packed smoke workflow; retired certified-v1 verifier harnesses are not part of the repository workflow.
+- The script keeps the GitHub-only squash merge rule, handles guarded fork-run approvals, waits on required checks bound to the current PR and exact head, and hands contributor/generated drift to the protected canonical-sync lane. It does not run `sync:contributors` itself, mutate PR metadata, close/reopen PRs, or retry base drift; rerun it from fresh `origin/main` whenever the base or head moves. Sensitive repository-wide source changes use the same-repository exception only when the PR is authored by the repository owner and its exact full head SHA is attested; collaborator-authored sensitive PRs remain under the external safety policy.
 - It is intentionally not a conflict resolver. If a PR is conflicting, stop and follow the manual conflict playbook.
 
-### C. Post-Merge Credits Sync (Mandatory After Every PR Merge)
+### C. Post-Batch Credits Verification
 
-This section is **not optional**. Every time a PR is merged, you must ensure both README credit surfaces are correct on `main`:
+After every source batch, including a one-PR batch, verify that both README credit surfaces converge correctly on protected `main`:
 
 - `### Community Contributors` / `## Credits & Sources` for external repositories referenced by the merged work
 - `## Repo Contributors` for the human contributor list
 
-Do this **immediately after each PR merge**. Do not defer it to release prep.
+Do not run a local generator after every individual merge. The trusted `main` workflow coalesces contributor and generated drift in the protected canonical-sync PR after the source batch.
 
-1.  **Pull the merged `main` state locally**:
+1.  **Pull the final source-batch state locally**:
     ```bash
     git checkout main
     git pull --ff-only origin main
     ```
 
-2.  **Sync `Repo Contributors`**:
-    - Run: `npm run sync:contributors`
-    - This refreshes `## Repo Contributors` in `README.md` from the live GitHub contributor list while preserving custom bot/app links.
-    - If you are already doing a full maintainer sweep, `npm run sync:repo-state` is also acceptable.
+2.  **Verify the canonical-sync handoff**:
+    - Let the trusted workflow run `sync:repo-state`, which includes `sync:contributors`, and open or update `automation/canonical-repo-state` when drift exists.
+    - Verify that the protected canonical PR contains the expected `## Repo Contributors` update while preserving custom bot/app links.
+    - Do not commit generated or contributor drift to an ordinary source PR and do not push it directly to `main`.
 
-3.  **Audit external-source credits for the merged PR**:
-    - Read the merged PR description, changed files, linked issues, and any release-note draft text you plan to ship.
-    - If the PR added skills, references, or content sourced from an external GitHub repo that is not already credited in `README.md`, add it immediately.
+3.  **Audit external-source credits for the source batch**:
+    - Read the merged PR descriptions, changed files, linked issues, and any release-note draft text you plan to ship.
+    - External-source credits should already have passed the source-PR credit gate. If the batch still reveals a missing or inaccurate README credit, treat that as unmanaged source repair rather than generated canonical drift.
     - Treat skill frontmatter `source_repo` + `source_type` as the primary source of truth when present.
     - If the repo is from an official organization/project source, place it under `### Official Sources`.
     - If the repo is a non-official ecosystem/community source, place it under `### Community Contributors`.
     - If the PR reveals that a credited repo is dead, renamed, archived, or overstated, fix the README entry in the same follow-up pass instead of leaving stale metadata behind.
     - Release notes are not a substitute for README attribution. If a repo appears in the merged work or planned release notes and belongs in credits, add it to the README at merge time.
 
-4.  **Publish README credit updates through the protected sync lane**:
-    - After the source batch, let the trusted canonical-sync workflow open or update `automation/canonical-repo-state` and merge that PR after its required checks.
-    - If an unmanaged credit repair is still required, make it on a topic branch and merge it by pull request; never push the follow-up directly to `main`.
+4.  **Complete convergence through the correct protected lane**:
+    - Merge the managed-only canonical-sync PR after its required checks.
+    - If an unmanaged external-source credit repair is still required, make it on a topic branch and merge it by pull request; never add it to the canonical-sync PR or push it directly to `main`.
     - Do not leave contributor or community-credit drift until the next release.
 
 5.  **Then continue with normal maintenance**:

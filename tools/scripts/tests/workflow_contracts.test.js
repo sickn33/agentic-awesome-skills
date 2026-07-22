@@ -95,6 +95,17 @@ assert.match(maintainerSkill, /authored by the repository owner/);
 assert.match(maintainerSkill, /exactly one merged release PR/);
 assert.match(maintenanceGuide, /canonical-repo-state` PR owns that state/);
 assert.match(autonomyGuide, /complete nearest skill-directory fingerprint/);
+for (const contractText of [maintainerSkill, maintenanceGuide, mergeBatchGuide]) {
+  assert.doesNotMatch(contractText, /may normalize the PR body|close\/reopen the PR|retries `Base branch was modified`/);
+  assert.match(contractText, /does not (?:rewrite|mutate).*PR (?:body|metadata)|PR-body rewriting or normalization/);
+  assert.match(contractText, /does not retry base drift|does not .*retry base drift|no automatic retry/);
+}
+assert.doesNotMatch(maintenanceGuide, /runs the mandatory post-merge `sync:contributors`/);
+assert.match(maintenanceGuide, /hands contributor\/generated drift to the protected canonical-sync lane/);
+assert.match(maintenanceGuide, /`npm run chain` already includes catalog generation/);
+assert.doesNotMatch(maintenanceGuide, /npm run chain\n\s+npm run catalog/);
+assert.match(autonomyGuide, /explicitly dispatches main CI and CodeQL/);
+assert.match(autonomyGuide, /Pages remains release-only/);
 assert.match(mergingGuide, /No local-integration exception/);
 assert.doesNotMatch(mergingGuide, /Rare exception: local squash|`gh pr merge <PR_NUMBER>/);
 assert.match(maintainerSkillUi, /\$antigravity-maintainer-batch-release/);
@@ -130,6 +141,27 @@ const pagesWorkflow = fs.readFileSync(
 );
 assert.match(pagesWorkflow, /^on:\s*\n\s+workflow_dispatch:/m);
 assert.doesNotMatch(pagesWorkflow, /^\s+push:/m);
+assert.match(pagesWorkflow, /permissions:\s*\n\s+contents: read\s*\n\s+pages: write\s*\n\s+id-token: write/);
+const pagesCheckoutIndex = pagesWorkflow.indexOf("- name: Checkout");
+const pagesProvenanceIndex = pagesWorkflow.indexOf("- name: Verify release provenance");
+const pagesSetupIndex = pagesWorkflow.indexOf("- name: Setup Node");
+assert.ok(
+  pagesCheckoutIndex >= 0 && pagesCheckoutIndex < pagesProvenanceIndex && pagesProvenanceIndex < pagesSetupIndex,
+  "Pages must fail closed on release provenance immediately after checkout and before setup/install work",
+);
+for (const provenanceContract of [
+  /GH_TOKEN: \$\{\{ github\.token \}\}/,
+  /GITHUB_REF_TYPE[^\n]+tag/,
+  /GITHUB_REF_NAME[^\n]+\^v\[0-9\]\+\\\.\[0-9\]\+\\\.\[0-9\]\+\$/,
+  /expected_tag="v\$\{package_version\}"/,
+  /refs\/tags\/\$\{GITHUB_REF_NAME\}\^\{commit\}/,
+  /tag_commit[^\n]+GITHUB_SHA[^\n]+head_commit[^\n]+GITHUB_SHA/,
+  /gh api --method GET "repos\/\$\{GITHUB_REPOSITORY\}\/releases\/tags\/\$\{GITHUB_REF_NAME\}"/,
+  /\.draft == false/,
+  /\.published_at/,
+]) {
+  assert.match(pagesWorkflow, provenanceContract);
+}
 for (const command of [
   "npm run validate:strict",
   "npm run validate:glossary",
@@ -149,6 +181,25 @@ const ciWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "ci.yml"),
   "utf8",
 );
+const latestHeadConcurrency = [
+  "concurrency:",
+  "  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('run-{0}', github.run_id) }}",
+  "  cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
+].join("\n");
+for (const workflowPath of [
+  ".github/workflows/ci.yml",
+  ".github/workflows/codeql.yml",
+  ".github/workflows/dependency-review.yml",
+  ".github/workflows/skill-review.yml",
+  ".github/workflows/aas-agent-first-preview.yml",
+  ".github/workflows/actionlint.yml",
+]) {
+  const workflow = fs.readFileSync(path.resolve(__dirname, "..", "..", "..", workflowPath), "utf8");
+  assert.ok(
+    workflow.includes(latestHeadConcurrency),
+    `${workflowPath} must cancel superseded PR heads while keeping every non-PR run in a unique concurrency group`,
+  );
+}
 assert.doesNotMatch(
   ciWorkflow,
   /ENABLE_NETWORK_TESTS:\s*["']1["']/,
@@ -172,6 +223,39 @@ const prEvidenceJob = ciWorkflow.match(/^  pr-evidence:\n([\s\S]*?)(?=^  artifac
 assert.ok(prEvidenceJob, "pr-evidence job must exist");
 assert.doesNotMatch(prEvidenceJob, /(?:contents|pull-requests|actions): write/);
 assert.doesNotMatch(prEvidenceJob, /secrets\./);
+for (const stepName of ["Set up Python", "Set up Node", "Install trusted dependencies", "Fetch base branch"]) {
+  assert.match(
+    prEvidenceJob,
+    new RegExp(`- name: ${stepName}\\n\\s+if: env\\.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'`),
+    `${stepName} must be skipped for canonical-sync evidence`,
+  );
+}
+assert.match(
+  prEvidenceJob,
+  /- uses: actions\/checkout@[0-9a-f]{40}[^\n]*\n\s+if: env\.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'/,
+  "canonical-sync evidence must not perform an unused checkout",
+);
+assert.match(
+  prEvidenceJob,
+  /- name: Record canonical-sync evidence boundary\n\s+if: env\.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'/,
+  "canonical-sync evidence must retain its explicit successful boundary record",
+);
+
+const sourceValidationJob = ciWorkflow.match(/^  source-validation:\n([\s\S]*?)(?=^  pr-evidence:)/m)?.[0] || "";
+assert.match(sourceValidationJob, /needs: pr-policy/, "source validation should not wait for independent PR evidence");
+assert.doesNotMatch(sourceValidationJob, /needs:.*pr-evidence/);
+const artifactPreviewJob = ciWorkflow.match(/^  artifact-preview:\n([\s\S]*?)(?=^  main-validation-and-sync:)/m)?.[0] || "";
+assert.match(artifactPreviewJob, /needs: \[pr-policy, source-validation\]/);
+assert.match(
+  artifactPreviewJob,
+  /- name: Generate canonical artifacts preview[\s\S]*?run: \|\n\s+npm run chain\n\s+npm run sync:web-assets/,
+  "artifact preview should rely on chain's catalog generation instead of repeating it",
+);
+assert.doesNotMatch(
+  artifactPreviewJob,
+  /npm run chain\n\s+npm run catalog/,
+  "artifact preview must not build the catalog twice",
+);
 
 const decisionModule = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "lib", "pr-decision.js"),

@@ -162,9 +162,13 @@ function validateReleaseSuccessors(projectRoot, releaseCommit, headCommit, depen
   const commits = runCommand("git", ["rev-list", "--reverse", `${releaseCommit}..${headCommit}`], projectRoot, {
     capture: true,
   }).split(/\r?\n/u).filter(Boolean);
+  const canonicalSyncSubjects = new Set([
+    "chore: synchronize canonical repository state",
+    "[skip pages] chore: synchronize canonical repository state",
+  ]);
   for (const commit of commits) {
     const subject = runCommand("git", ["show", "-s", "--format=%s", commit], projectRoot, { capture: true });
-    if (subject !== "chore: synchronize canonical repository state") {
+    if (!canonicalSyncSubjects.has(subject)) {
       throw new Error(`Unexpected commit ${commit} landed after the release candidate: ${subject}`);
     }
   }

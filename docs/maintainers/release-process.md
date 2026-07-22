@@ -98,6 +98,7 @@ A stable or prerelease version is not complete when only its tag, GitHub Release
 - rerun `npm run sync:release-state`, `npm run plugin-compat:check`, and `npm run bundles:check`, then require an idempotent second pass and a clean tree;
 - verify every release-owned Codex/Claude plugin manifest and Claude marketplace entry equals `X.Y.Z`, without treating nested third-party skill manifests as AAS release manifests;
 - bind local and remote `main`, the tag, GitHub Release, npm version and intended dist-tag, required CI, CodeQL, and the explicitly dispatched release-only Pages deployment to the exact released commit;
+- dispatch Pages only from the exact immutable `vX.Y.Z` release tag, never from `main` or another branch, and require the tag, package version, and published GitHub Release to identify the same commit before build work begins;
 - read back live `llms.txt`, `skills.json`, catalog/plugin routes, and the legacy redirect bridge;
 - discover every already-configured local AAS MCP host from real configuration, update each existing entry with the digest-bound two-pass `aas mcp configure` flow, pin `agentic-awesome-skills@X.Y.Z` and `--version X.Y.Z`, preserve a backup, restart or reconnect the host, and prove a real `initialize` plus `tools/list` handshake reports `X.Y.Z`;
 - fetch and fast-forward `main` again after automation settles, require `git rev-list --left-right --count main...origin/main` to return `0 0`, and repeat the no-drift, public-surface, and MCP parity checks.
@@ -114,6 +115,7 @@ A release request covers updates to existing AAS MCP host entries only. Creating
 - Its explicitly dispatched required checks require both managed-only paths and an exact converged Git tree before an immediate protected merge.
 - If repo-state sync leaves any unmanaged tracked or untracked drift, the workflow fails instead of pushing a partial fix.
 - The scheduled hygiene workflow follows the same contract and shares the same concurrency group so only one canonical sync writer runs at a time.
+- Between the protected release merge and its tag, the only canonical-sync successor subjects accepted by the release contract are exactly `chore: synchronize canonical repository state` and `[skip pages] chore: synchronize canonical repository state`. The latter is the durable audit marker that the successor must not trigger the release-only Pages lane; both remain subject to the managed-only range validation.
 
 ## Rollback Notes
 

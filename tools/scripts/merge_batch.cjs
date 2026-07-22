@@ -13,11 +13,6 @@ const {
 } = require("../lib/workflow-contract");
 
 const DEFAULT_POLL_SECONDS = 20;
-const BASE_BRANCH_MODIFIED_PATTERNS = [
-  /base branch was modified/i,
-  /base branch has been modified/i,
-  /branch was modified/i,
-];
 const REQUIRED_CHECKS = [
   ["pr-policy", { label: "pr-policy", aliases: ["pr-policy"], appId: 15368 }],
   ["pr-evidence", { label: "pr-evidence", aliases: ["pr-evidence"], appId: 15368 }],
@@ -1222,11 +1217,6 @@ function mergePullRequestImmediately(projectRoot, repoSlug, prDetails, dependenc
   return response;
 }
 
-function isRetryableMergeError(error) {
-  const message = String(error?.message || error || "");
-  return BASE_BRANCH_MODIFIED_PATTERNS.some((pattern) => pattern.test(message));
-}
-
 function gitCheckoutMain(projectRoot) {
   runCommand("git", ["checkout", "main"], projectRoot);
 }
@@ -1364,7 +1354,6 @@ module.exports = {
   assertEffectiveMainProtection,
   assertFullSha,
   assertUnchangedTuple,
-  baseBranchModifiedPatterns: BASE_BRANCH_MODIFIED_PATTERNS,
   buildSquashMergeBody,
   buildSquashMergeSubject,
   checkRunMatchesAliases,
@@ -1376,7 +1365,6 @@ module.exports = {
   getRequiredCheckAliases,
   gitCheckoutMain,
   gitPullMain,
-  isRetryableMergeError,
   listActionRequiredRuns,
   listCheckRuns,
   listWorkflowDefinitions,
