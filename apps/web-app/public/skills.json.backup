@@ -38796,6 +38796,39 @@
     }
   },
   {
+    "id": "seo-drift",
+    "path": "skills/seo-drift",
+    "category": "marketing",
+    "name": "seo-drift",
+    "description": "Snapshot a site's SEO state and detect ranking, indexation, metadata, canonical, robots, schema, and on-page regressions over time.",
+    "risk": "safe",
+    "source": "https://github.com/nowork-studio/NotFair/tree/main/seo/seo-drift",
+    "date_added": "2026-07-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "nowork-studio/NotFair",
+    "license": "MIT",
+    "license_source": "https://github.com/nowork-studio/NotFair/blob/main/LICENSE",
+    "tags": [
+      "seo",
+      "monitoring",
+      "search-console",
+      "technical-seo",
+      "regression-testing"
+    ]
+  },
+  {
     "id": "seo-forensic-incident-response",
     "path": "skills/seo-forensic-incident-response",
     "category": "content",

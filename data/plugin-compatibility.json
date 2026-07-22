@@ -30695,6 +30695,25 @@
       "runtime_files": []
     },
     {
+      "id": "seo-drift",
+      "path": "skills/seo-drift",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "seo-forensic-incident-response",
       "path": "skills/seo-forensic-incident-response",
       "targets": {
@@ -38198,10 +38217,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1987,
+    "total_skills": 1988,
     "supported": {
-      "codex": 1910,
-      "claude": 1932
+      "codex": 1911,
+      "claude": 1933
     },
     "blocked": {
       "codex": 77,

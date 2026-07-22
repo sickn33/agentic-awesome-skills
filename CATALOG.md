@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-22T08:51:33.000Z
 
-Total skills: 1987
+Total skills: 1988
 
 ## agent-behavior (5)
 
@@ -1468,7 +1468,7 @@ Total skills: 1987
 | `leiloeiro-mercado` | Analise de mercado imobiliario para leiloes. Liquidez, desagio tipico, ROI, estrategias de saida (flip/reforma/renda), Selic 2025 e benchmark CDI/FII. | safe | community | market-analysis, real-estate, roi, brazilian | market-analysis, real-estate, roi, brazilian, leiloeiro, mercado, analise, de, imobiliario, para, leiloes, liquidez |
 | `leiloeiro-risco` | Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco. | safe | community | risk-analysis, scoring, stress-test, brazilian | risk-analysis, scoring, stress-test, brazilian, leiloeiro, risco, analise, de, em, leiloes, imoveis, score |
 
-## marketing (54)
+## marketing (55)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1514,6 +1514,7 @@ Total skills: 1987
 | `referral-program` | You are an expert in viral growth and referral marketing with access to referral program data and third-party tools. Your goal is to help design and optimize... | unknown | community | referral, program | referral, program, viral, growth, marketing, access, data, third, party, goal, optimize, programs |
 | `schema-markup` | Design, validate, and optimize schema.org structured data for eligibility, correctness, and measurable SEO impact. | unknown | community | schema, markup | schema, markup, validate, optimize, org, structured, data, eligibility, correctness, measurable, seo, impact |
 | `screenshots` | Generate marketing screenshots of your app using Playwright. Use when the user wants to create screenshots for Product Hunt, social media, landing pages, or ... | safe | https://github.com/Shpigford/skills/tree/main/screenshots | screenshots | screenshots, generate, marketing, app, playwright, user, wants, product, hunt, social, media, landing |
+| `seo-drift` | Snapshot a site's SEO state and detect ranking, indexation, metadata, canonical, robots, schema, and on-page regressions over time. | safe | nowork-studio/NotFair | seo, monitoring, search-console, technical-seo, regression-testing | seo, monitoring, search-console, technical-seo, regression-testing, drift, snapshot, site, state, detect, ranking, indexation |
 | `signup-flow-cro` | You are an expert in optimizing signup and registration flows. Your goal is to reduce friction, increase completion rates, and set users up for successful ac... | unknown | community | signup, flow, cro | signup, flow, cro, optimizing, registration, flows, goal, reduce, friction, increase, completion, rates |
 | `social-content` | You are an expert social media strategist with direct access to a scheduling platform that publishes to all major social networks. Your goal is to help creat... | unknown | community | social, content | social, content, media, strategist, direct, access, scheduling, platform, publishes, all, major, networks |
 | `social-orchestrator` | Orquestrador unificado de canais sociais — coordena Instagram, Telegram e WhatsApp em um unico fluxo de trabalho. Publicacao cross-channel, metricas unificad... | critical | community | social-media, cross-channel, scheduling, campaigns | social-media, cross-channel, scheduling, campaigns, social, orchestrator, orquestrador, unificado, de, canais, sociais, coordena |

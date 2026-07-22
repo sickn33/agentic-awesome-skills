@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-22T08:51:33.000Z",
-  "total": 1987,
+  "total": 1988,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -46362,6 +46362,41 @@
         "ai"
       ],
       "path": "skills/seo-dataforseo/SKILL.md"
+    },
+    {
+      "id": "seo-drift",
+      "canonical_id": "seo-drift",
+      "name": "seo-drift",
+      "description": "Snapshot a site's SEO state and detect ranking, indexation, metadata, canonical, robots, schema, and on-page regressions over time.",
+      "category": "marketing",
+      "risk": "safe",
+      "source": "https://github.com/nowork-studio/NotFair/tree/main/seo/seo-drift",
+      "source_type": "official",
+      "source_repo": "nowork-studio/NotFair",
+      "license": "MIT",
+      "license_source": "https://github.com/nowork-studio/NotFair/blob/main/LICENSE",
+      "tags": [
+        "seo",
+        "monitoring",
+        "search-console",
+        "technical-seo",
+        "regression-testing"
+      ],
+      "triggers": [
+        "seo",
+        "monitoring",
+        "search-console",
+        "technical-seo",
+        "regression-testing",
+        "drift",
+        "snapshot",
+        "site",
+        "state",
+        "detect",
+        "ranking",
+        "indexation"
+      ],
+      "path": "skills/seo-drift/SKILL.md"
     },
     {
       "id": "seo-forensic-incident-response",
