@@ -16,7 +16,7 @@ tools: [claude, cursor, codex, copilot, antigravity, lovable]
 
 ## Overview
 
-Use UIZZE to give coding agents real product-UI context before implementation rather than relying on a generic styling prompt. The public catalog is free to browse; the hosted MCP workflow requires full access and a configured UIZZE agent token.
+Use [UIZZE](https://uizze.com) to give coding agents real product-UI context before implementation rather than relying on a generic styling prompt. The public catalog is free to browse; the hosted MCP workflow requires full access and a configured UIZZE agent token.
 
 This skill turns UI research into an explicit workflow: retrieve relevant references, translate transferable patterns into a design contract, implement within the current project's system, and run the available validation or critique gates.
 
