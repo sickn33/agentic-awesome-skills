@@ -2,10 +2,8 @@ name: Sync Upstream
 
 on:
   schedule:
-    # Runs every day at 06:00 UTC
     - cron: '0 6 * * *'
   workflow_dispatch:
-    # Also allows manual trigger from the Actions tab
 
 jobs:
   sync:
@@ -39,6 +37,15 @@ jobs:
           echo "behind=$BEHIND" >> "$GITHUB_OUTPUT"
           echo "Upstream is $BEHIND commits ahead"
 
+      - name: Get commit summary
+        id: summary
+        if: steps.check.outputs.behind != '0'
+        run: |
+          LOG=$(git log HEAD..upstream/main --oneline --no-merges | head -20)
+          echo "log<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$LOG" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
       - name: Merge upstream into fork
         if: steps.check.outputs.behind != '0'
         run: |
@@ -49,6 +56,34 @@ jobs:
         if: steps.check.outputs.behind != '0'
         run: git push origin main
 
+      - name: Send email notification
+        if: steps.check.outputs.behind != '0'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "🆕 antigravity-awesome-skills — ${{ steps.check.outputs.behind }} new commits synced"
+          to: markeverest22@gmail.com
+          from: "GitHub Actions <${{ secrets.GMAIL_USER }}>"
+          body: |
+            Hi Mark,
+
+            Your fork has been automatically synced with upstream.
+
+            📅 Date: ${{ github.run_number }} — ${{ github.event.head_commit.timestamp }}
+            📦 New commits merged: ${{ steps.check.outputs.behind }}
+
+            Recent changes:
+            ${{ steps.summary.outputs.log }}
+
+            🔗 View repo: https://github.com/markeverest22/antigravity-awesome-skills
+
+            —
+            Sent automatically by GitHub Actions
+
       - name: Already up to date
         if: steps.check.outputs.behind == '0'
-        run: echo "Fork is already up to date with upstream. Nothing to do."
+        run: echo "Fork is already up to date. No email sent."
