@@ -55,7 +55,7 @@ Instead, contact the project owner privately through GitHub at
 
 If the situation also violates GitHub's platform policies, or you need
 platform-level intervention, you can additionally use GitHub's reporting tools:
-[Reporting abuse or spam](https://docs.github.com/en/site-policy/acceptable-use-policies/github-reporting-abuse-or-spam).
+[Reporting abuse or spam](https://docs.github.com/en/communities/maintaining-your-safety-on-github/reporting-abuse-or-spam).
 
 ## Response Process
 

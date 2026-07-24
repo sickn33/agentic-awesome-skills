@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Link, NavLink, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Link, NavLink, Route, Routes } from 'react-router';
 import { Icon } from './components/ui/Icon';
 
 const Home = lazy(() => import('./pages/Home'));

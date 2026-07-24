@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { usePageMeta } from '../hooks/usePageMeta';
 
 export default function NotFound(): React.ReactElement {

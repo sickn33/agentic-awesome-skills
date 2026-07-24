@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { SkillStarButton } from './SkillStarButton';
 import { Icon } from './ui/Icon';
 import type { Skill } from '../types';
