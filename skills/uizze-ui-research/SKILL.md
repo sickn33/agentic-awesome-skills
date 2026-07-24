@@ -1,10 +1,10 @@
 ---
 name: uizze-ui-research
-description: "Use when building or reviewing web and iOS product UI and you need real UI references, structured design contracts, or implementation validation through UIZZE MCP."
+description: "Use when building or reviewing web and iOS UI and you need real references from the free UIZZE public catalog, a structured design contract, or a hard pre-ship finish gate; use MCP when configured."
 category: design
 risk: safe
-source: https://github.com/aislon/uizze-mcp/tree/main/skills/uizze-ui-research
-source_repo: aislon/uizze-mcp
+source: https://github.com/uizze/uizze-mcp/tree/main/skills/uizze-ui-research
+source_repo: uizze/uizze-mcp
 source_type: official
 date_added: "2026-07-12"
 author: samuelbushi
@@ -16,7 +16,7 @@ tools: [claude, cursor, codex, copilot, antigravity, lovable]
 
 ## Overview
 
-Use UIZZE to give coding agents real product-UI context before implementation rather than relying on a generic styling prompt. The public catalog is free to browse; the hosted MCP workflow requires full access and a configured UIZZE agent token.
+Use [UIZZE](https://uizze.com) to give coding agents real product-UI context before implementation rather than relying on a generic styling prompt. The public catalog at https://uizze.com supports a free manual workflow without an account; the hosted MCP automates the workflow and requires full access plus a configured UIZZE agent token.
 
 This skill turns UI research into an explicit workflow: retrieve relevant references, translate transferable patterns into a design contract, implement within the current project's system, and run the available validation or critique gates.
 
@@ -29,21 +29,33 @@ This skill turns UI research into an explicit workflow: retrieve relevant refere
 
 ## How It Works
 
-### Step 1: Confirm access and scope
+### Step 1: Confirm product scope and access mode
 
-Confirm that the UIZZE MCP connection is already configured with a valid agent token before invoking hosted workflows. If it is unavailable, use the free public catalog for research or ask the user to configure access; do not attempt to bypass access controls or expose credentials.
+Identify the screen's primary user, job, action, existing design system, real content or data, and required loading, empty, error, success, and permission states. If UIZZE MCP is already configured, use it for the hosted workflow. Otherwise, continue with the free public catalog at https://uizze.com. If browsing is unavailable, ask the user for two or three relevant UIZZE links or screenshots. Do not block the manual workflow, bypass access controls, or expose credentials.
 
 ### Step 2: Retrieve relevant visual context
 
-Use the available UIZZE tools to find screens, flows, components, or elements that match the product task. Focus on transferable patterns such as hierarchy, navigation, interaction states, spacing, density, and responsive behavior.
+Find the smallest useful set of screens, flows, components, or elements that match the product task. Focus on transferable patterns such as hierarchy, navigation, interaction states, spacing, density, and responsive behavior. Distinguish observed evidence from assumptions, and do not claim that MCP returned results when the research was manual.
 
 ### Step 3: Make constraints explicit
 
-Create or use a structured design contract when the task needs explicit acceptance criteria. Adapt patterns to the existing project design system instead of treating any reference as a visual template.
+Write a short design contract that names the screen job, content hierarchy, primary action, allowed project components and tokens, required states, responsive behavior, product-specific decisions, forbidden generic patterns, and verification criteria. Adapt patterns to the existing project design system instead of treating any reference as a visual template.
 
-### Step 4: Validate before completion
+### Step 4: Implement within the product
 
-Use the available UIZZE validation, audit, or critique workflow when the implementation is ready for review. Resolve the findings in the project and run normal project tests before calling the work complete.
+Build with the repository's existing components and tokens. Preserve platform conventions and make the interface specific to the product's content and workflow rather than adding decorative cards, badges, gradients, or motion by default.
+
+### Step 5: Run a hard finish gate
+
+Inspect the rendered result when the environment supports it, use the available UIZZE validation, audit, or critique workflow when configured, and reject completion if any of these checks fail:
+
+- The hierarchy does not make the screen job and primary action immediately clear.
+- A visible control is inert, ambiguous, or missing its interaction outcome.
+- Required loading, empty, error, success, permission, or responsive states are absent.
+- The implementation drifts from the project's existing components, tokens, or platform conventions.
+- Interchangeable card grids, filler metrics, vague copy, or decorative effects replace product-specific decisions.
+
+Name each blocking issue, fix it, and rerun the gate plus the project's normal tests. Never claim a rendered or MCP-backed check that was not actually performed.
 
 ## Examples
 
@@ -64,6 +76,7 @@ Use UIZZE to inspect relevant real product settings screens, audit this implemen
 - ✅ Start with the smallest relevant set of references rather than collecting a broad gallery.
 - ✅ Separate observed patterns from the current project's brand and component rules.
 - ✅ Use validation findings as implementation feedback, not as permission to copy an interface.
+- ✅ Keep the manual workflow useful when hosted MCP access is unavailable.
 - ❌ Do not reproduce another product's brand, proprietary copy, assets, or exact layout.
 - ❌ Do not commit agent tokens, include them in prompts, or place them in client-side code.
 
@@ -79,6 +92,8 @@ Use UIZZE to inspect relevant real product settings screens, audit this implemen
   **Solution:** Extract the interaction or hierarchy pattern, then implement it using the target project's own design system and content.
 - **Problem:** Starting implementation before the agent has relevant UI context.
   **Solution:** Search for the smallest useful set of matching screens or flows first, then define constraints before coding.
+- **Problem:** Treating an unavailable MCP connection as a reason to stop.
+  **Solution:** Use the free public catalog manually, or ask the user for two or three relevant UIZZE links or screenshots, and continue with the same design-contract and finish-gate workflow.
 - **Problem:** Exposing an agent token in a repository or chat transcript.
   **Solution:** Store credentials only in supported local configuration or environment variables and rotate a token if it is exposed.
 
