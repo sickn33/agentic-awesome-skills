@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 import { Icon } from '../components/ui/Icon';
 import { useSkills } from '../context/SkillContext';
 import { getCuratedSkillsForSeoLandingPage, getSeoLandingPage, seoLandingPages } from '../data/seoLandingPages';

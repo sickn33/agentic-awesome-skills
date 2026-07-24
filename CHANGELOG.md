@@ -9,10 +9,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.4.0] - 2026-07-24 - "SEO Drift and Dependency Safety"
+
+> Added official SEO regression monitoring, closed the current high-severity frontend dependency advisories, and refreshed contributor and conduct links while preserving the protected release workflow.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added the official [`seo-drift`](skills/seo-drift/) skill from [nowork-studio/NotFair](https://github.com/nowork-studio/NotFair) for dated SEO baselines and regression detection across rankings, indexation, metadata, directives, schema, and on-page elements.
+- Regenerated the canonical catalog and distribution surfaces for 1,988 skills.
+
 ### Changed
 
 - Shortened PR feedback by parallelizing independent validation, cancelling superseded PR runs, and removing repeated canonical setup and catalog generation; also removed retired workflow/retry code and bound Pages deployments to the exact published release tag.
 - Added trusted-base fork fail-fast intake and shadow impact telemetry without weakening `merge:batch`; source validation now generates one exact-head preview manifest for verification, canonical checks split exact-tree reproduction from drift confirmation, and local timing/sharding remains observational and opt-in while required CI stays complete.
+
+### Fixed
+
+- Updated PostCSS to 8.5.18 in the hosted web app and canonical Loki frontend example, resolving GHSA-r28c-9q8g-f849 while preserving canonical and generated-mirror lock parity.
+- Migrated the hosted catalog from `react-router-dom` 7 to the patched `react-router` 8.3.0 API surface, resolving GHSA-qwww-vcr4-c8h2 without the unsafe 7.11.0 downgrade.
+- Replaced obsolete GitHub abuse-reporting and Pro Git links, and removed three dead or unsupported localized community destinations.
+
+### Who should care
+
+- Maintainers and Pages operators who require a zero-advisory web build and reproducible example locks.
+- SEO teams using Claude Code, Cursor, Codex CLI, Gemini CLI, or Antigravity to detect regressions after migrations and content changes.
+- Contributors following the repository's conduct, Git, and localized community guidance.
+
+### Validation
+
+- Confirmed all six tracked npm lockfile surfaces report zero known vulnerabilities after the dependency updates.
+- Passed canonical skill and reference validation, documentation security checks, warning-budget enforcement, repository tests, web tests, lint and production build, Loki frontend builds, plugin and bundle parity checks, and repository consistency checks.
+- The protected release gate will bind the source and release PRs, canonical synchronization, tag, GitHub Release, npm `latest`, CI, CodeQL, release-only Pages deployment, live catalog and legacy bridge, and every already-configured AAS MCP host to the exact released commit.
+
+### Credits
+
+- **[@ununununium](https://github.com/ununununium)** and **[nowork-studio/NotFair](https://github.com/nowork-studio/NotFair)** for the official `seo-drift` contribution in [PR #974](https://github.com/sickn33/agentic-awesome-skills/pull/974).
 
 ## [15.3.0] - 2026-07-22 - "Security Boundaries and Maintainer Reliability"
 

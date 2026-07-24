@@ -512,7 +512,7 @@ docs: add examples to react-best-practices
 
 ### New to Git/GitHub?
 - [GitHub's Hello World Guide](https://guides.github.com/activities/hello-world/)
-- [Git Basics](https://git-scm.com/book/en/v2/Getting-Started-Git-Basics)
+- [Git Basics](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository)
 
 ### New to Markdown?
 - [Markdown Guide](https://www.markdownguide.org/basic-syntax/)

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { VirtuosoGrid } from 'react-virtuoso';
 import { SkillCard } from '../components/SkillCard';
 import { Icon } from '../components/ui/Icon';

@@ -221,7 +221,7 @@ fix: correct typo in stripe-integration skill
 ### Bạn mới sử dụng Git/GitHub?
 
 - [Hướng dẫn Hello World của GitHub](https://guides.github.com/activities/hello-world/)
-- [Cơ bản về Git](https://git-scm.com/book/en/v2/Getting-Started-Git-Basics)
+- [Cơ bản về Git](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository)
 
 ### Bạn mới sử dụng Markdown?
 
