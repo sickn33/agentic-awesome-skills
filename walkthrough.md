@@ -1,5 +1,11 @@
 # Maintenance Walkthrough - 2026-07-26
 
+- Imported the MIT-licensed `fedora-hyprland-installer` contribution from
+  [maleksaadi0109/hyprfedora](https://github.com/maleksaadi0109/hyprfedora) at
+  upstream commit `3ec6d4fc5eecdb188613dd841dce9926ae5c8319`.
+- Hardened its privileged Fedora workflow with explicit critical-risk metadata,
+  provenance, limitations, consistent NVIDIA guidance, isolated tests, and
+  claims bounded to the behavior implemented by the bundled scripts.
 - Added the MIT-licensed `find-complementary-founders` skill from
   [merc1305/findMate](https://github.com/merc1305/findMate).
 - Preserved its own-owner-only invariant, offline evidence assessment,
