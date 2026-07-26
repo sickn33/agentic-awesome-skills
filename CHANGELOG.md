@@ -35,6 +35,10 @@ Start here:
 - Hardened the Fedora workflow with immutable source and license provenance, critical-risk classification, explicit approval before privileged changes, diagnostic-only repair by default, current NVIDIA guidance, and isolated tests.
 - Clarified that founder-match rankings are decision aids rather than evidence that a candidate is available, interested, or committed.
 
+### Fixed
+
+- Updated the hosted catalog's ESLint toolchain to the ESLint 10-compatible dependency set, removing the high-severity `brace-expansion` and `minimatch` advisory chain that would otherwise block the release-only Pages deployment.
+
 ### Who should care
 
 - Codex users coordinating multiple independent implementation or research lanes.
