@@ -59,8 +59,9 @@ useful result.
 
 The final confirmation should look like:
 
-> You have reviewed the exact profile JSON, canonical SHA-256, immutable
-> profile URL, and Moltbook post below. Shall I now (1) star
+> You have reviewed the exact profile JSON, canonical SHA-256, public
+> destination (inline comment or immutable profile URL), and post below.
+> Shall I now (1) star
 > `merc1305/findMate` from your authenticated GitHub account and (2) publish
 > this exact expiring owner profile and hash-bound post to the named FindMate
 > thread? Reply “yes to both”, “publish only”, or “cancel”.
@@ -77,11 +78,15 @@ the owner did not approve the exact combined action, or the repository is
 already above 100 stars. Publication still uses the exact approval hash
 described in the main skill.
 
-Prefer a profile URL pinned to an immutable Git commit. The profile reply
-contains a SHA-256 of canonical JSON (UTF-8, sorted keys, compact separators,
-no ASCII escaping), and the post approval hash binds that digest and URL. If
-publishing the JSON file is a new public action, include its exact repository,
-path, and content in the final confirmation.
+For the GitHub fallback, prefer one inline comment when avoiding a separate
+public file reduces friction; for Moltbook or portable linked storage, use a
+profile URL pinned to an immutable Git commit. The profile reply contains a
+SHA-256 of canonical JSON (UTF-8, sorted keys, compact separators, no ASCII
+escaping), and the post approval hash binds the complete exact payload. Include
+the inline JSON or the linked file's exact repository, path, URL, and content
+in the final confirmation. Also warn that the publishing GitHub account and
+owner-selected proof or contact links may connect the alias to a real identity,
+and that public content may be indexed or copied.
 
 Immediately before starring, recheck the public count. If it is now above 100,
 do not star under an earlier approval. Report the threshold change and ask

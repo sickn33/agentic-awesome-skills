@@ -94,14 +94,23 @@ the publishing agent represents and assessed its own owner. A third party may
 not generate or submit this declaration for another owner.
 
 The same body can be sent to the canonical GitHub fallback thread with a
-separate approval-bound draft:
+separate approval-bound draft. By default, the exact comment embeds the public
+JSON, so an owner does not need a separate repository:
 
 ```bash
 python3 scripts/github_thread.py draft-profile-comment \
   --profile owner-profile.public.json \
-  --profile-url https://github.com/OWNER/REPO/blob/COMMIT/owner-profile.public.json \
   --output owner-profile-github-comment.draft.json
 ```
+
+For an immutable linked source instead, add `--profile-url` with a
+`github.com/.../blob/FULL_40_CHARACTER_COMMIT_SHA/...json` URL. Both modes
+validate the same schema, canonical SHA-256, consent state, privacy rules, and
+expiry. Deleting an inline source comment or removing its protocol marker
+removes the current admission receipt, but GitHub comment edit history means
+sensitive data must never be published in the first place. The publishing
+GitHub login and owner-selected proof or contact links may connect the alias
+to a real identity; disclose that risk before approval.
 
 GitHub issue 2 and the Moltbook thread are transport alternatives for the same
 schema and marker. Do not convert unrelated issues or comments into candidate

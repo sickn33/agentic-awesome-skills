@@ -28,9 +28,12 @@ GITHUB_BLOB_PATTERN = re.compile(
 )
 
 REASON_MESSAGES = {
+    "comment_deleted": (
+        "The source owner-profile comment was deleted and is revoked."
+    ),
     "comment_shape": (
-        "The marked comment is missing its own-owner declaration, profile URL, "
-        "canonical SHA-256, or expiry."
+        "The marked comment is missing its own-owner declaration, inline or "
+        "linked profile, canonical SHA-256, or expiry."
     ),
     "event_scope": "The event does not belong to the canonical FindMate issue.",
     "profile_download_failed": (
@@ -42,8 +45,12 @@ REASON_MESSAGES = {
     "profile_hash_mismatch": (
         "The canonical SHA-256 in the comment does not match the validated profile."
     ),
-    "profile_json_invalid": "The linked profile is not a JSON object.",
-    "profile_too_large": "The linked profile exceeds the 64 KiB safety limit.",
+    "profile_json_invalid": (
+        "The linked or inline profile is not a valid JSON object."
+    ),
+    "profile_too_large": (
+        "The linked or inline profile exceeds its safety limit."
+    ),
     "profile_url_requires_immutable_github_blob": (
         "The profile URL must be a github.com blob URL pinned to a full 40-character "
         "commit SHA."
@@ -162,13 +169,19 @@ def rejected(code: str) -> dict:
 
 
 def verify_comment(body: str, *, profile_loader=download_profile) -> dict:
+    _, inline_error = GITHUB_THREAD.extract_inline_profile(body)
+    if inline_error:
+        return rejected(inline_error)
     submissions = GITHUB_THREAD.extract_marked_comments([{"body": body}])
     if len(submissions) != 1 or not submissions[0]["syntactically_eligible"]:
         return rejected("comment_shape")
     submission = submissions[0]
     try:
-        raw_url = immutable_raw_profile_url(submission["profile_url"])
-        profile = profile_loader(raw_url)
+        if submission["profile_source"] == "inline":
+            profile = submission["inline_profile"]
+        else:
+            raw_url = immutable_raw_profile_url(submission["profile_url"])
+            profile = profile_loader(raw_url)
         validation = PROFILE_VALIDATOR.validate_profile(profile)
     except SubmissionError as exc:
         return rejected(exc.code)
@@ -186,9 +199,10 @@ def verify_comment(body: str, *, profile_loader=download_profile) -> dict:
         "eligible": True,
         "reason_code": None,
         "message": (
-            "Schema, privacy, consent, expiry, immutable source, and canonical "
-            "hash checks passed."
+            "Schema, privacy, consent, expiry, source, and canonical hash "
+            "checks passed."
         ),
+        "profile_source": submission["profile_source"],
         "alias": validation["alias"],
         "expires_on": validation["expires_on"],
         "canonical_sha256": validation["canonical_sha256"],
@@ -209,13 +223,29 @@ def verify_event(event: dict, *, profile_loader=download_profile) -> dict:
         or not isinstance(comment.get("id"), int)
     ):
         return rejected("event_scope")
+    if event.get("action") == "deleted":
+        result = rejected("comment_deleted")
+        result["revoked"] = True
+        result["source_marked"] = False
+        result.update(
+            {
+                "repository": REPOSITORY,
+                "issue_number": ISSUE_NUMBER,
+                "source_comment_id": comment["id"],
+            }
+        )
+        return result
     body = comment.get("body")
     if not isinstance(body, str):
         result = rejected("comment_shape")
+        source_marked = False
     else:
+        source_marked = body.startswith(f"{PROFILE_REPLY_MARKER}\n")
         result = verify_comment(body, profile_loader=profile_loader)
     result.update(
         {
+            "revoked": False,
+            "source_marked": source_marked,
             "repository": REPOSITORY,
             "issue_number": ISSUE_NUMBER,
             "source_comment_id": comment["id"],

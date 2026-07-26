@@ -13,6 +13,19 @@
   one-sided seeking cards, source-identity self-exclusion, and the bundled
   Russian onboarding reference. The canonical suite passes 40 tests and the
   portable release resolves to commit `c78a78b0280f4168294b72f38aa39317e7b7d7b8`.
+- Synced the privacy-preserving G35 publication path from immutable canonical
+  release `v1.3.5` at
+  `d23cd66d0ee324c0ed7e85156606d8814250c1f8`: one exact owner-approved GitHub
+  comment may now carry bounded inline JSON, the existing immutable linked
+  source remains supported, and deleting or unmarking the source removes its
+  current validation receipt. The owner is warned that the publishing login
+  and proof/contact links may connect the alias to a real identity and that
+  public edit history or copies prevent any promise of complete erasure.
+- Preserved the AAS catalog metadata, usage guidance, provenance, limitations,
+  source-only contract, and all owner consent boundaries while updating the
+  five compatible reference/script files. The canonical FindMate suite passes
+  47 tests; no owner profile, credential, generated registry, or plugin mirror
+  is included in this contributor update.
 - Added the MIT-licensed `orchestrate` skill from
   [provencher/codex-skills](https://github.com/provencher/codex-skills) at
   upstream commit `8aa6c42b73781c905c55f8a1253a18127079ac21`.
