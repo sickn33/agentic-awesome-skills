@@ -2,7 +2,7 @@
 
 ## Symptom 1: Black Screen on Boot (NVIDIA)
 - **Cause**: Missing Wayland environment variables or modeset issue.
-- **Fix**: Check `nvidia_drm.modeset=1` kernel parameter and add `cursor { no_hardware_cursors = true }` in `hyprland.conf`.
+- **Investigation**: Check the installed NVIDIA driver documentation and whether `nvidia_drm.modeset=1` is active. If the symptom is specifically cursor-related, test `cursor { no_hardware_cursors = true }` in `hyprland.conf`.
 
 ## Symptom 2: Screen Sharing Not Working (OBS / Browser)
 - **Cause**: Inactive portal or pipewire environment variable missing.
@@ -46,8 +46,8 @@
 
 ## Symptom 7: Flickering / Tearing (NVIDIA)
 - **Cause**: Missing DRM kernel module setting.
-- **Fix**: Ensure `/etc/modprobe.d/nvidia.conf` contains:
+- **Investigation**: Confirm the installed driver's recommended DRM settings before changing boot configuration. If its documentation requires these options, review and add them to `/etc/modprobe.d/nvidia.conf`:
   ```text
   options nvidia_drm modeset=1 fbdev=1
   ```
-  Then regenerate initramfs: `sudo dracut --force`
+  Regenerating initramfs with `sudo dracut --force` is a privileged, boot-critical change. Back up the current configuration and obtain explicit approval before running it.

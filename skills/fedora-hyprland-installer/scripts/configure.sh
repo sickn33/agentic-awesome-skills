@@ -41,17 +41,19 @@ if [ -z "$LAUNCHER_BIN" ]; then
 fi
 
 # 3. Detect GPU Environment Variables
-GPU_ENVS=""
+GPU_CONFIG=""
 if command -v lspci &>/dev/null && lspci -nnk 2>/dev/null | grep -iq "nvidia"; then
-    echo "[i] NVIDIA GPU detected. Adding Wayland NVIDIA environment variables."
-    GPU_ENVS=$(cat <<'ENVEOF'
+    echo "[i] NVIDIA GPU detected. Adding conservative NVIDIA compatibility settings."
+    GPU_CONFIG=$(cat <<'ENVEOF'
 
-# NVIDIA Compatibility Envs
+# NVIDIA compatibility
 env = LIBVA_DRIVER_NAME,nvidia
 env = GBM_BACKEND,nvidia-drm
 env = __GLX_VENDOR_LIBRARY_NAME,nvidia
-env = WLR_NO_HARDWARE_CURSORS,1
 env = NVD_BACKEND,direct
+cursor {
+    no_hardware_cursors = true
+}
 ENVEOF
 )
 fi
@@ -114,7 +116,7 @@ exec-once = /usr/libexec/polkit-gnome-authentication-agent-1
 exec-once = waybar
 exec-once = dunst
 exec-once = swaybg -c '#1e1e2e'
-${GPU_ENVS}
+${GPU_CONFIG}
 
 # Keybindings
 \$mainMod = SUPER

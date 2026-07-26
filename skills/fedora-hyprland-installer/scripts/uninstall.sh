@@ -4,6 +4,11 @@ set -Eeuo pipefail
 # Uninstall Script for Fedora Hyprland Installer
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ "${1:-}" != "--yes" ] || [ "$#" -ne 1 ]; then
+    echo "Usage: $0 --yes" >&2
+    echo "Review the package list in this script before confirming removal." >&2
+    exit 2
+fi
 
 echo "=== Uninstall Hyprland Setup ==="
 
@@ -23,7 +28,7 @@ echo "Note: Base desktop environments (GNOME, KDE Plasma, Xfce) and user backup 
 # Run backup prior to uninstallation
 if [ -f "${SCRIPT_DIR}/backup.sh" ]; then
     echo "[+] Creating final backup before uninstallation..."
-    "${SCRIPT_DIR}/backup.sh" || true
+    bash "${SCRIPT_DIR}/backup.sh" || true
 fi
 
 if command -v dnf &>/dev/null; then

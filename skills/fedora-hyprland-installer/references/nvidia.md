@@ -1,7 +1,7 @@
 # NVIDIA Support on Fedora Wayland / Hyprland
 
 ## Recommended Environment Variables
-NVIDIA GPUs require specific Wayland environment flags in `~/.config/hypr/hyprland.conf`:
+Some NVIDIA setups may require Wayland environment flags in `~/.config/hypr/hyprland.conf`; confirm them against the installed driver and Hyprland versions:
 
 ```text
 env = LIBVA_DRIVER_NAME,nvidia
@@ -20,7 +20,7 @@ cursor {
 > **Note**: The old `WLR_NO_HARDWARE_CURSORS=1` environment variable is **deprecated** since Hyprland v0.36+. Use the `cursor` config block above instead.
 
 ## Drivers on Fedora
-Always use Fedora/RPM Fusion official packages (`akmod-nvidia`).
+If proprietary drivers are required, use packages maintained for Fedora, such as RPM Fusion's `akmod-nvidia`, after reviewing that repository's setup guidance. This skill does not enable RPM Fusion or install GPU drivers.
 Never use raw `.run` installers from NVIDIA's website as they break Fedora kernel updates.
 
 ## Hybrid Graphics (Intel + NVIDIA / AMD + NVIDIA)

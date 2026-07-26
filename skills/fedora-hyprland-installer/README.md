@@ -1,6 +1,6 @@
 # 🏔️ hyprfedora
 
-> An intelligent, safety-first **Antigravity CLI Agent Skill** that installs, configures, repairs, and manages Hyprland on Fedora Linux — without breaking your existing desktop setup.
+> A safety-first agent skill that installs, configures, verifies, repairs, and removes Hyprland on Fedora Linux while preserving existing desktop packages and user backups.
 
 ---
 
@@ -8,11 +8,11 @@
 
 Setting up Hyprland on Fedora can be tedious. You have to configure Wayland portals, sort out PipeWire audio, select launcher/terminal defaults, and configure GPU flags—especially if you're running NVIDIA or hybrid graphics.
 
-This skill allows you to open Google Antigravity CLI (`agy`) and simply say:
+After installing this skill through your agent's supported skill mechanism, ask:
 
 > **"Install Hyprland on my Fedora system."**
 
-The agent inspects your system hardware, creates timestamped backups of any existing settings, installs missing Fedora packages via `dnf`, configures your graphics drivers, and sets up a clean desktop session ready for your login screen.
+The agent inspects your system hardware, creates timestamped backups of existing settings, proposes Fedora package changes, and can create a minimal Hyprland configuration after you approve mutating steps. It detects GPU vendors but does not install or configure graphics drivers.
 
 ---
 
@@ -20,10 +20,10 @@ The agent inspects your system hardware, creates timestamped backups of any exis
 
 - 🛡️ **Safety First & Mandatory Backups**: Never overwrites your existing `~/.config/hypr/` without creating a timestamped backup in `~/.local/state/fedora-hyprland-installer/backups/`.
 - 🐧 **Fedora-Native**: Built specifically for Fedora. Uses `dnf`, `systemctl`, and standard Fedora package repositories.
-- ⚡ **GPU Aware**: Automatically detects NVIDIA, AMD Radeon, Intel, and Hybrid laptop setups, setting the right environment flags (like `WLR_NO_HARDWARE_CURSORS` for NVIDIA).
+- ⚡ **GPU Aware**: Detects NVIDIA, AMD Radeon, Intel, and hybrid setups and adds a conservative Hyprland-native cursor workaround for detected NVIDIA hardware.
 - 🤝 **Desktop Coexistence**: Never removes GNOME, KDE, or Xfce. Hyprland is added as a session option at your GDM/SDDM login screen.
-- 🛠️ **Automated Repair**: Diagnoses screen sharing, broken portals, or PipeWire audio issues without reinstalling everything.
-- 🧼 **Clean Removal**: Completely uninstallable while preserving your base desktop and backups.
+- 🛠️ **Scoped Repair**: Reports a missing config or portal package and inactive PipeWire/WirePlumber services; approved fixes can be applied with `repair.sh --apply`.
+- 🧼 **Scoped Removal**: Removes the listed Hyprland-specific packages while preserving your base desktop and backups.
 
 ---
 
@@ -46,29 +46,9 @@ When installing, the skill provisions a minimal, fast, and modern desktop stack:
 
 ## 🚀 Quick Start & Usage
 
-### 1. Installation
+### Agent usage
 
-Place this skill directory inside your project's `.agents/skills/` directory:
-
-```bash
-mkdir -p .agents/skills/
-cp -r fedora-hyprland-installer .agents/skills/
-```
-
-Or install it globally for all your terminal projects:
-
-```bash
-mkdir -p ~/.gemini/antigravity-cli/skills/
-cp -r fedora-hyprland-installer ~/.gemini/antigravity-cli/skills/
-```
-
-### 2. Using with `agy` (Antigravity CLI)
-
-Simply talk to `agy` in natural language:
-
-```bash
-agy
-```
+Use the installation method documented by your agent or by the repository catalog, then invoke the skill in natural language. The skill does not assume a particular global directory or CLI executable.
 
 - **Fresh Install**: `"Install Hyprland on my Fedora machine."`
 - **Health Check**: `"Verify my Hyprland installation."`
@@ -80,23 +60,23 @@ agy
 
 ## 🛠️ Direct Terminal Utilities
 
-If you prefer running standalone bash scripts without `agy`, you can use the built-in utilities in `scripts/`:
+You can also run the built-in utilities in `scripts/` directly:
 
 ```bash
 # Detect hardware, OS, and session information
-./scripts/detect-system.sh
+bash ./scripts/detect-system.sh
 
 # Detect GPU hardware (NVIDIA / AMD / Intel)
-./scripts/detect-gpu.sh
+bash ./scripts/detect-gpu.sh
 
 # Run preflight system verification
-./scripts/preflight.sh
+bash ./scripts/preflight.sh
 
 # Verify health of your current Hyprland installation
-./scripts/verify.sh
+bash ./scripts/verify.sh
 
-# Run automated non-destructive test suite
-./tests/test-scripts.sh
+# Run the isolated non-destructive test suite
+bash ./tests/test-scripts.sh
 ```
 
 ---
@@ -142,4 +122,4 @@ Contributions, bug reports, and improvements are welcome! Feel free to open an i
 
 ## 📜 License
 
-Distributed under the [MIT License](file:///home/supersusi/myprojects/hyperlandfedora/LICENSE).
+Distributed under the MIT License included in `LICENSE`.

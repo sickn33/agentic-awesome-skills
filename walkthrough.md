@@ -1,5 +1,37 @@
 # Maintenance Walkthrough - 2026-07-26
 
+- Imported the MIT-licensed `fedora-hyprland-installer` contribution from
+  [maleksaadi0109/hyprfedora](https://github.com/maleksaadi0109/hyprfedora) at
+  upstream commit `3ec6d4fc5eecdb188613dd841dce9926ae5c8319`.
+- Hardened its privileged Fedora workflow with explicit critical-risk metadata,
+  provenance, limitations, consistent NVIDIA guidance, isolated tests, and
+  claims bounded to the behavior implemented by the bundled scripts.
+- Added the MIT-licensed `find-complementary-founders` skill from
+  [merc1305/findMate](https://github.com/merc1305/findMate).
+- Preserved its own-owner-only invariant, offline evidence assessment,
+  hash-bound publication approvals, expiring profiles, and stop-at-101 star
+  rule while adapting metadata, triggers, provenance, and limitations to the
+  AAS quality contract.
+- Included the complete source skill directory without generated registry
+  artifacts, private owner data, credentials, or publication receipts.
+- Synced the five actionable review fixes from canonical FindMate release
+  `v1.3.4`: consent-free private drafts, temporal consent validation,
+  one-sided seeking cards, source-identity self-exclusion, and the bundled
+  Russian onboarding reference. The canonical suite passes 40 tests and the
+  portable release resolves to commit `c78a78b0280f4168294b72f38aa39317e7b7d7b8`.
+- Synced the privacy-preserving G35 publication path from immutable canonical
+  release `v1.3.5` at
+  `d23cd66d0ee324c0ed7e85156606d8814250c1f8`: one exact owner-approved GitHub
+  comment may now carry bounded inline JSON, the existing immutable linked
+  source remains supported, and deleting or unmarking the source removes its
+  current validation receipt. The owner is warned that the publishing login
+  and proof/contact links may connect the alias to a real identity and that
+  public edit history or copies prevent any promise of complete erasure.
+- Preserved the AAS catalog metadata, usage guidance, provenance, limitations,
+  source-only contract, and all owner consent boundaries while updating the
+  five compatible reference/script files. The canonical FindMate suite passes
+  47 tests; no owner profile, credential, generated registry, or plugin mirror
+  is included in this contributor update.
 - Added the MIT-licensed `orchestrate` skill from
   [provencher/codex-skills](https://github.com/provencher/codex-skills) at
   upstream commit `8aa6c42b73781c905c55f8a1253a18127079ac21`.
