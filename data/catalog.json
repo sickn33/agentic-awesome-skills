@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-24T18:38:00.000Z",
-  "total": 1989,
+  "total": 1991,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -22480,6 +22480,40 @@
       "path": "skills/feature-tracking/SKILL.md"
     },
     {
+      "id": "fedora-hyprland-installer",
+      "canonical_id": "fedora-hyprland-installer",
+      "name": "fedora-hyprland-installer",
+      "description": "Install, configure, verify, repair, update, and uninstall Hyprland on Fedora Linux with GPU-aware detection (NVIDIA/AMD/Intel).",
+      "category": "devops",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "maleksaadi0109/hyprfedora",
+      "license": "MIT",
+      "license_source": "https://github.com/maleksaadi0109/hyprfedora/blob/3ec6d4fc5eecdb188613dd841dce9926ae5c8319/LICENSE",
+      "tags": [
+        "fedora",
+        "hyprland",
+        "wayland",
+        "linux"
+      ],
+      "triggers": [
+        "fedora",
+        "hyprland",
+        "wayland",
+        "linux",
+        "installer",
+        "install",
+        "configure",
+        "verify",
+        "repair",
+        "update",
+        "uninstall",
+        "gpu"
+      ],
+      "path": "skills/fedora-hyprland-installer/SKILL.md"
+    },
+    {
       "id": "ffuf-claude-skill",
       "canonical_id": "ffuf-claude-skill",
       "name": "ffuf-claude-skill",
@@ -22694,6 +22728,41 @@
         "review"
       ],
       "path": "skills/find-bugs/SKILL.md"
+    },
+    {
+      "id": "find-complementary-founders",
+      "canonical_id": "find-complementary-founders",
+      "name": "find-complementary-founders",
+      "description": "Use when an owner asks to find a cofounder or project partner. Assess only that agent's own owner and rank only approved profiles other agents posted for their own owners.",
+      "category": "business-strategy",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "merc1305/findMate",
+      "license": "MIT",
+      "license_source": "https://github.com/merc1305/findMate/blob/main/LICENSE",
+      "tags": [
+        "cofounder",
+        "founder-matching",
+        "collaboration",
+        "privacy",
+        "agent-skills"
+      ],
+      "triggers": [
+        "cofounder",
+        "founder-matching",
+        "collaboration",
+        "privacy",
+        "agent-skills",
+        "find",
+        "complementary",
+        "founders",
+        "owner",
+        "asks",
+        "partner",
+        "assess"
+      ],
+      "path": "skills/find-complementary-founders/SKILL.md"
     },
     {
       "id": "finishing-a-development-branch",
