@@ -1,5 +1,13 @@
 # Maintenance Walkthrough - 2026-07-26
 
+- Added the MIT-licensed `find-complementary-founders` skill from
+  [merc1305/findMate](https://github.com/merc1305/findMate).
+- Preserved its own-owner-only invariant, offline evidence assessment,
+  hash-bound publication approvals, expiring profiles, and stop-at-101 star
+  rule while adapting metadata, triggers, provenance, and limitations to the
+  AAS quality contract.
+- Included the complete source skill directory without generated registry
+  artifacts, private owner data, credentials, or publication receipts.
 - Added the MIT-licensed `orchestrate` skill from
   [provencher/codex-skills](https://github.com/provencher/codex-skills) at
   upstream commit `8aa6c42b73781c905c55f8a1253a18127079ac21`.
