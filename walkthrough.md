@@ -4,6 +4,7 @@
 - Kept the free `check_ui_slop` preview optional while requiring explicit approval before persistent MCP configuration or external HTML/CSS transmission.
 - Added the official MIT license metadata and organizational author while preserving the existing immutable source identity; GitHub redirects the historical upstream URL to the transferred official repository.
 - Left generated registries and plugin mirrors out of the source PR so the protected canonical synchronization workflow remains their sole owner.
+- Merged the consolidated source through PR [#985](https://github.com/sickn33/agentic-awesome-skills/pull/985), then converged generated state and plugin mirrors through protected PR [#986](https://github.com/sickn33/agentic-awesome-skills/pull/986).
 
 # Maintenance Walkthrough - 2026-04-17
 
