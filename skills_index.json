@@ -18203,6 +18203,38 @@
     ]
   },
   {
+    "id": "fedora-hyprland-installer",
+    "path": "skills/fedora-hyprland-installer",
+    "category": "devops",
+    "name": "fedora-hyprland-installer",
+    "description": "Install, configure, verify, repair, update, and uninstall Hyprland on Fedora Linux with GPU-aware detection (NVIDIA/AMD/Intel).",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "maleksaadi0109/hyprfedora",
+    "license": "MIT",
+    "license_source": "https://github.com/maleksaadi0109/hyprfedora/blob/3ec6d4fc5eecdb188613dd841dce9926ae5c8319/LICENSE",
+    "tags": [
+      "fedora",
+      "hyprland",
+      "wayland",
+      "linux"
+    ]
+  },
+  {
     "id": "ffuf-claude-skill",
     "path": "skills/ffuf-claude-skill",
     "category": "security",
@@ -18377,6 +18409,39 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "find-complementary-founders",
+    "path": "skills/find-complementary-founders",
+    "category": "business-strategy",
+    "name": "find-complementary-founders",
+    "description": "Use when an owner asks to find a cofounder or project partner. Assess only that agent's own owner and rank only approved profiles other agents posted for their own owners.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-07-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "merc1305/findMate",
+    "license": "MIT",
+    "license_source": "https://github.com/merc1305/findMate/blob/main/LICENSE",
+    "tags": [
+      "cofounder",
+      "founder-matching",
+      "collaboration",
+      "privacy",
+      "agent-skills"
+    ]
   },
   {
     "id": "finishing-a-development-branch",
