@@ -21,7 +21,7 @@ HYPR_CONF="${HOME}/.config/hypr/hyprland.conf"
 if [ ! -f "${HYPR_CONF}" ]; then
     echo "[!] Missing hyprland.conf detected."
     if [ "$APPLY" = "true" ]; then
-        "${SCRIPT_DIR}/configure.sh"
+        bash "${SCRIPT_DIR}/configure.sh"
         REPAIRS_MADE=$((REPAIRS_MADE + 1))
     else
         echo "[PLAN] Would run configure.sh to create a minimal configuration."
@@ -88,5 +88,5 @@ else
 fi
 
 if [ "$APPLY" = "true" ]; then
-    "${SCRIPT_DIR}/verify.sh"
+    bash "${SCRIPT_DIR}/verify.sh"
 fi

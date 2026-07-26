@@ -64,19 +64,19 @@ You can also run the built-in utilities in `scripts/` directly:
 
 ```bash
 # Detect hardware, OS, and session information
-./scripts/detect-system.sh
+bash ./scripts/detect-system.sh
 
 # Detect GPU hardware (NVIDIA / AMD / Intel)
-./scripts/detect-gpu.sh
+bash ./scripts/detect-gpu.sh
 
 # Run preflight system verification
-./scripts/preflight.sh
+bash ./scripts/preflight.sh
 
 # Verify health of your current Hyprland installation
-./scripts/verify.sh
+bash ./scripts/verify.sh
 
 # Run the isolated non-destructive test suite
-./tests/test-scripts.sh
+bash ./tests/test-scripts.sh
 ```
 
 ---

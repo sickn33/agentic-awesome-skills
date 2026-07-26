@@ -18,7 +18,7 @@ done
 
 # 2. Dry run install test
 echo "Running install dry-run test..."
-INSTALL_OUT=$("${SCRIPT_DIR}/install.sh" --dry-run)
+INSTALL_OUT=$(bash "${SCRIPT_DIR}/install.sh" --dry-run)
 echo "$INSTALL_OUT"
 grep -Fq "[DRY-RUN] Would run: sudo dnf install" <<<"$INSTALL_OUT"
 
@@ -26,7 +26,7 @@ grep -Fq "[DRY-RUN] Would run: sudo dnf install" <<<"$INSTALL_OUT"
 echo "Running isolated backup test..."
 mkdir -p "$HOME/.config/hypr"
 printf '%s\n' 'monitor=,preferred,auto,1' > "$HOME/.config/hypr/hyprland.conf"
-BACKUP_OUT=$("${SCRIPT_DIR}/backup.sh")
+BACKUP_OUT=$(bash "${SCRIPT_DIR}/backup.sh")
 echo "$BACKUP_OUT"
 BACKUP_PATH=$(sed -n 's/^BACKUP_PATH=//p' <<<"$BACKUP_OUT")
 test -n "$BACKUP_PATH"
@@ -40,7 +40,7 @@ echo "[PASS] backup.sh copied configuration inside isolated HOME."
 
 # 4. Existing configuration must be preserved
 cp "$HOME/.config/hypr/hyprland.conf" "$TEST_HOME/hyprland.conf.before"
-"${SCRIPT_DIR}/configure.sh"
+bash "${SCRIPT_DIR}/configure.sh"
 cmp "$TEST_HOME/hyprland.conf.before" "$HOME/.config/hypr/hyprland.conf"
 echo "[PASS] configure.sh preserved an existing configuration."
 

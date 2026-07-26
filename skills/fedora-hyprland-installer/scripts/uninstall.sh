@@ -28,7 +28,7 @@ echo "Note: Base desktop environments (GNOME, KDE Plasma, Xfce) and user backup 
 # Run backup prior to uninstallation
 if [ -f "${SCRIPT_DIR}/backup.sh" ]; then
     echo "[+] Creating final backup before uninstallation..."
-    "${SCRIPT_DIR}/backup.sh" || true
+    bash "${SCRIPT_DIR}/backup.sh" || true
 fi
 
 if command -v dnf &>/dev/null; then
