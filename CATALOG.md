@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-24T18:38:00.000Z
 
-Total skills: 1989
+Total skills: 1991
 
 ## agent-behavior (5)
 
@@ -503,10 +503,11 @@ Total skills: 1989
 | `usage-based-pricing` | Design pricing models that developers understand, accept, and can predict. Trigger phrases: usage-based pricing, API pricing, metered billing, developer pric... | unknown | jonathimer/devmarketing-skills | usage, based, pricing | usage, based, pricing, models, developers, understand, accept, predict, trigger, phrases, api, metered |
 | `zoho-crm-automation` | Automate Zoho CRM tasks via Rube MCP (Composio): create/update records, search contacts, manage leads, and convert leads. Always search tools first for curre... | critical | community | zoho, crm | zoho, crm, automation, automate, tasks, via, rube, mcp, composio, update, records, search |
 
-## business-strategy (2)
+## business-strategy (3)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `find-complementary-founders` | Use when an owner asks to find a cofounder or project partner. Assess only that agent's own owner and rank only approved profiles other agents posted for the... | critical | merc1305/findMate | cofounder, founder-matching, collaboration, privacy, agent-skills | cofounder, founder-matching, collaboration, privacy, agent-skills, find, complementary, founders, owner, asks, partner, assess |
 | `kotler-macro-analyzer` | Professional PESTEL/SWOT analysis agent based on Kotler's methodology for strategic market audits. | safe | self | marketing, economics, strategy, kotler, pestel | marketing, economics, strategy, kotler, pestel, macro, analyzer, professional, swot, analysis, agent, methodology |
 | `osterwalder-canvas-architect` | Iterative consultant agent for building and validating logically consistent 9-block Business Model Canvases. | safe | self | business-model, osterwalder, strategy, bmc | business-model, osterwalder, strategy, bmc, canvas, architect, iterative, consultant, agent, building, validating, logically |
 
@@ -1197,7 +1198,7 @@ Total skills: 1989
 | `systematic-debugging` | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes | unknown | community | systematic, debugging | systematic, debugging, encountering, any, bug, test, failure, unexpected, behavior, before, proposing, fixes |
 | `test-fixing` | Systematically identify and fix all failing tests using smart grouping strategies. Use when explicitly asks to fix tests ("fix these tests", "make tests pass... | safe | community | fixing | fixing, test, systematically, identify, fix, all, failing, tests, smart, grouping, explicitly, asks |
 
-## devops (36)
+## devops (37)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1212,6 +1213,7 @@ Total skills: 1989
 | `devops-deploy` | DevOps e deploy de aplicacoes — Docker, CI/CD com GitHub Actions, AWS Lambda, SAM, Terraform, infraestrutura como codigo e monitoramento. | critical | community | devops, docker, ci-cd, aws, terraform, github-actions | devops, docker, ci-cd, aws, terraform, github-actions, deploy, de, aplicacoes, ci, cd, com |
 | `devops-troubleshooter` | Expert DevOps troubleshooter specializing in rapid incident response, advanced debugging, and modern observability. | unknown | community | devops, troubleshooter | devops, troubleshooter, specializing, rapid, incident, response, debugging, observability |
 | `docker-expert` | You are an advanced Docker containerization expert with comprehensive, practical knowledge of container optimization, security hardening, multi-stage builds,... | unknown | community | docker | docker, containerization, practical, knowledge, container, optimization, security, hardening, multi, stage, orchestration, deployment |
+| `fedora-hyprland-installer` | Install, configure, verify, repair, update, and uninstall Hyprland on Fedora Linux with GPU-aware detection (NVIDIA/AMD/Intel). | critical | maleksaadi0109/hyprfedora | fedora, hyprland, wayland, linux | fedora, hyprland, wayland, linux, installer, install, configure, verify, repair, update, uninstall, gpu |
 | `github-actions-advanced` | Design, debug, and harden GitHub Actions CI/CD workflows, including reusable workflows, matrix builds, self-hosted runners, OIDC authentication, caching, env... | safe | community | github, actions, advanced | github, actions, advanced, debug, harden, ci, cd, including, reusable, matrix, self, hosted |
 | `github-actions-debugger` | Specialized skill for diagnosing, analyzing, and fixing failing GitHub Actions workflows by parsing run logs and pipeline definitions. | safe | community | github-actions, ci-cd, devops, debugging, workflows | github-actions, ci-cd, devops, debugging, workflows, github, actions, debugger, specialized, skill, diagnosing, analyzing |
 | `gitops-workflow` | Complete guide to implementing GitOps workflows with ArgoCD and Flux for automated Kubernetes deployments. | critical | community | gitops | gitops, complete, implementing, argocd, flux, automated, kubernetes, deployments |

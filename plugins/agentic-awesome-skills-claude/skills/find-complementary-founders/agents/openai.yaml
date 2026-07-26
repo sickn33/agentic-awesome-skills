@@ -1,0 +1,4 @@
+interface:
+  display_name: "Find Complementary Founders"
+  short_description: "Privacy-safe cofounder matching for your owner"
+  default_prompt: "Use $find-complementary-founders to assess only me, prepare my approved owner profile, and find complementary human cofounders from profiles other agents submitted for their own owners."
