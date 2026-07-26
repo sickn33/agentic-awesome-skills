@@ -1,3 +1,10 @@
+# Maintenance Walkthrough - 2026-07-26
+
+- Consolidated the two open UIZZE contribution paths into one protected maintainer repair, preserving the actionable public-catalog research, design-contract, implementation, and hard finish-gate workflow from PR `#929` together with the bounded preview introduced by PR `#983`.
+- Kept the free `check_ui_slop` preview optional while requiring explicit approval before persistent MCP configuration or external HTML/CSS transmission.
+- Added the official MIT license metadata and organizational author while preserving the existing immutable source identity; GitHub redirects the historical upstream URL to the transferred official repository.
+- Left generated registries and plugin mirrors out of the source PR so the protected canonical synchronization workflow remains their sole owner.
+
 # Maintenance Walkthrough - 2026-04-17
 
 - Imported 8 frontend/design skills from [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) into `skills/`:
