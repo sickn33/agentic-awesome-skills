@@ -8,6 +8,11 @@
   AAS quality contract.
 - Included the complete source skill directory without generated registry
   artifacts, private owner data, credentials, or publication receipts.
+- Synced the five actionable review fixes from canonical FindMate release
+  `v1.3.4`: consent-free private drafts, temporal consent validation,
+  one-sided seeking cards, source-identity self-exclusion, and the bundled
+  Russian onboarding reference. The canonical suite passes 40 tests and the
+  portable release resolves to commit `c78a78b0280f4168294b72f38aa39317e7b7d7b8`.
 - Added the MIT-licensed `orchestrate` skill from
   [provencher/codex-skills](https://github.com/provencher/codex-skills) at
   upstream commit `8aa6c42b73781c905c55f8a1253a18127079ac21`.

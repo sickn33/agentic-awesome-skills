@@ -177,6 +177,8 @@ def validate_consent(value: object) -> dict:
     approved = parse_iso_date(value.get("approved_at"), "consent.approved_at")
     expires = parse_iso_date(value.get("expires_on"), "consent.expires_on")
     today = datetime.now(timezone.utc).date()
+    if approved > today:
+        raise ProfileError("consent.approved_at must not be in the future")
     if expires < today:
         raise ProfileError("consent.expires_on is already past")
     if expires < approved:
@@ -401,7 +403,7 @@ def write_json(path: Path, data: dict, *, private: bool) -> None:
         handle.write("\n")
 
 
-def build_profiles(data: dict) -> tuple[dict, dict]:
+def build_assessment_components(data: dict) -> dict:
     alias = validate_alias(data.get("alias"))
     summary = validate_public_text(
         require_string(data.get("summary"), "summary", maximum=280), "summary"
@@ -409,25 +411,60 @@ def build_profiles(data: dict) -> tuple[dict, dict]:
     evidence, public_evidence = validate_evidence(data.get("evidence"))
     preferences = validate_preferences(data.get("preferences"))
     seeking = validate_seeking(data.get("seeking"))
-    contact = validate_contact(data.get("public_contact"))
-    consent = validate_consent(data.get("consent"))
 
     stage_vectors = compute_vectors(evidence, STAGES)
     function_vectors = compute_vectors(evidence, FUNCTIONS)
     generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
+    return {
+        "alias": alias,
+        "summary": summary,
+        "evidence": evidence,
+        "public_evidence": public_evidence,
+        "preferences": preferences,
+        "seeking": seeking,
+        "stage_vectors": stage_vectors,
+        "function_vectors": function_vectors,
+        "generated_at": generated_at,
+    }
+
+
+def private_assessment_from_components(components: dict) -> dict:
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "alias": components["alias"],
+        "generated_at": components["generated_at"],
+        "evidence": components["evidence"],
+        "stage_contributions": components["stage_vectors"],
+        "functional_contributions": components["function_vectors"],
+        "preferences": components["preferences"],
+        "seeking": components["seeking"],
+        "publication_state": "private_draft_only",
+    }
+
+
+def build_private_assessment(data: dict) -> dict:
+    """Build a private draft without requiring any publication consent."""
+    return private_assessment_from_components(build_assessment_components(data))
+
+
+def build_profiles(data: dict) -> tuple[dict, dict]:
+    components = build_assessment_components(data)
+    contact = validate_contact(data.get("public_contact"))
+    consent = validate_consent(data.get("consent"))
+
     public_profile = {
         "schema_version": SCHEMA_VERSION,
         "profile_type": "founder-collaboration",
-        "alias": alias,
-        "summary": summary,
-        "generated_at": generated_at,
+        "alias": components["alias"],
+        "summary": components["summary"],
+        "generated_at": components["generated_at"],
         "expires_on": consent["expires_on"],
-        "stage_contributions": public_vectors(stage_vectors),
-        "functional_contributions": public_vectors(function_vectors),
-        "preferences": preferences,
-        "seeking": seeking,
-        "public_evidence": public_evidence,
+        "stage_contributions": public_vectors(components["stage_vectors"]),
+        "functional_contributions": public_vectors(components["function_vectors"]),
+        "preferences": components["preferences"],
+        "seeking": components["seeking"],
+        "public_evidence": components["public_evidence"],
         "contact": contact,
         "consent": consent,
         "interpretation": {
@@ -440,17 +477,9 @@ def build_profiles(data: dict) -> tuple[dict, dict]:
         },
     }
 
-    private_assessment = {
-        "schema_version": SCHEMA_VERSION,
-        "alias": alias,
-        "generated_at": generated_at,
-        "evidence": evidence,
-        "stage_contributions": stage_vectors,
-        "functional_contributions": function_vectors,
-        "preferences": preferences,
-        "seeking": seeking,
-        "public_profile_preview": public_profile,
-    }
+    private_assessment = private_assessment_from_components(components)
+    private_assessment["publication_state"] = "public_profile_approved"
+    private_assessment["public_profile_preview"] = public_profile
     return public_profile, private_assessment
 
 
@@ -473,7 +502,13 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     try:
-        public_profile, private_assessment = build_profiles(load_json(args.input))
+        data = load_json(args.input)
+        if args.private_output and not args.public_output:
+            private_assessment = build_private_assessment(data)
+            write_json(args.private_output, private_assessment, private=True)
+            return 0
+
+        public_profile, private_assessment = build_profiles(data)
         if args.public_output:
             write_json(args.public_output, public_profile, private=False)
         if args.private_output:

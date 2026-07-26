@@ -49,7 +49,7 @@ Use the owner's language and adapt this compact prompt:
 > private draft?
 
 For Russian-speaking owners, use the beta
-[Russian owner-onboarding pack](../../../docs/locales/ru/owner-onboarding.md).
+[Russian owner-onboarding pack](owner-onboarding.ru.md).
 It translates the invitation, field explanations, and final choices while
 keeping schema keys, hashes, and protocol markers canonical.
 

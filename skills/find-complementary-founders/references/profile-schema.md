@@ -16,7 +16,12 @@ JSON Schema covers the portable structure. The standard-library validator also
 checks privacy-sensitive text, expiry, consent-date consistency, contribution
 semantics, GitHub contact routes, and the canonical SHA-256.
 
-Create a private input shaped like:
+For a private-only assessment, `public_contact` and `consent` may be omitted.
+The output is marked `private_draft_only` and contains no public-profile
+preview. Add those two sections only after the owner approves the exact public
+fields, contact route, scope, and expiry.
+
+Create a publication-ready private input shaped like:
 
 ```json
 {

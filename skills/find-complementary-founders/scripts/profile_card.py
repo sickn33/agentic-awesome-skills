@@ -130,18 +130,22 @@ def validate_profile(profile: dict) -> None:
     seeking = profile.get("seeking")
     if not isinstance(seeking, dict):
         raise CardError("Profile seeking section is invalid")
-    validate_dimension_list(
+    sought_stages = validate_dimension_list(
         seeking.get("stages"),
         "seeking.stages",
         STAGE_LABELS,
         maximum=3,
     )
-    validate_dimension_list(
+    sought_functions = validate_dimension_list(
         seeking.get("functions"),
         "seeking.functions",
         FUNCTION_LABELS,
         maximum=8,
     )
+    if not sought_stages and not sought_functions:
+        raise CardError(
+            "seeking must name at least one stage or functional capability"
+        )
 
 
 def validate_vectors(
@@ -174,8 +178,8 @@ def validate_dimension_list(
     *,
     maximum: int,
 ) -> list[str]:
-    if not isinstance(values, list) or not values or len(values) > maximum:
-        raise CardError(f"{field} must contain 1-{maximum} values")
+    if not isinstance(values, list) or len(values) > maximum:
+        raise CardError(f"{field} must contain at most {maximum} values")
     output: list[str] = []
     for value in values:
         if value not in labels:

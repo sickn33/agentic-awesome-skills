@@ -392,6 +392,12 @@ def validate_profile(profile: dict) -> dict:
         raise ValidationError("consent.state must be public_profile_approved")
     approved_at = iso_date(consent["approved_at"], "consent.approved_at")
     consent_expires = iso_date(consent["expires_on"], "consent.expires_on")
+    if approved_at > today:
+        raise ValidationError("consent.approved_at must not be in the future")
+    if approved_at > generated_at.date():
+        raise ValidationError(
+            "consent.approved_at must not be after generated_at"
+        )
     if consent_expires != expires_on:
         raise ValidationError("consent.expires_on must equal profile expires_on")
     if consent_expires < approved_at:

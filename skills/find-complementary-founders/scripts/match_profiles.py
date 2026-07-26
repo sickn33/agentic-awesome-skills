@@ -55,7 +55,7 @@ def load_profile(path: Path) -> dict:
     if not isinstance(value, dict):
         raise MatchError(f"{path} must contain a JSON object")
     validate_profile(value, path)
-    value["_source_path"] = str(path)
+    value["_source_path"] = str(path.resolve())
     return value
 
 
@@ -191,6 +191,17 @@ def expand_candidate_paths(patterns: list[str]) -> list[Path]:
     return paths
 
 
+def exclude_owner_source(owner: dict, candidates: list[dict]) -> list[dict]:
+    owner_source = owner.get("_source_path")
+    if not isinstance(owner_source, str):
+        raise MatchError("Owner profile lacks source identity")
+    return [
+        candidate
+        for candidate in candidates
+        if candidate.get("_source_path") != owner_source
+    ]
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
@@ -220,8 +231,7 @@ def main() -> int:
             raise MatchError("No candidate profiles found")
         results = [
             score_match(owner, candidate)
-            for candidate in candidates
-            if candidate["alias"] != owner["alias"]
+            for candidate in exclude_owner_source(owner, candidates)
         ]
         results.sort(key=lambda item: item["score"], reverse=True)
         output = {

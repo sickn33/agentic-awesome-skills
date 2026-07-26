@@ -95,7 +95,20 @@ multiple concrete evidence items before labeling a vector `strong` or
 ### 3. Generate private and public profiles
 
 Prepare an input JSON using the schema in
-[references/profile-schema.md](references/profile-schema.md), then run:
+[references/profile-schema.md](references/profile-schema.md). For the
+consent-free private-draft phase, omit `public_contact` and `consent` and run:
+
+```bash
+python3 scripts/assess_profile.py owner-input.private.json \
+  --private-output owner-assessment.private.json
+```
+
+That command writes no public profile and marks the result
+`private_draft_only`. Keep private inputs and assessments outside public
+repositories.
+
+Only after the owner approves the exact public fields, contact route, scope,
+and expiry, add `public_contact` and `consent` to the input and run:
 
 ```bash
 python3 scripts/assess_profile.py owner-input.private.json \
@@ -103,9 +116,8 @@ python3 scripts/assess_profile.py owner-input.private.json \
   --private-output owner-assessment.private.json
 ```
 
-Keep private inputs and assessments outside public repositories. Inspect the
-public output with the owner. Publish only after the owner approves the exact
-fields, contact route, and expiry.
+Inspect the public output with the owner. Generation is still a local draft;
+publishing it requires separate approval of the exact content and target.
 
 The public profile must contain a pseudonym, contribution vectors, confidence,
 non-sensitive proof links selected by the owner, what complement is sought, a
