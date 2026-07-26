@@ -44770,7 +44770,7 @@
     "path": "skills/uizze-ui-research",
     "category": "design",
     "name": "uizze-ui-research",
-    "description": "Use when building or reviewing web and iOS product UI and you need real UI references, structured design contracts, or implementation validation through UIZZE MCP.",
+    "description": "Use when building or reviewing web and iOS UI and you need real references from the free UIZZE public catalog, a structured design contract, a consent-gated rendered HTML/CSS preview, or a hard pre-ship finish gate.",
     "risk": "safe",
     "source": "https://github.com/aislon/uizze-mcp/tree/main/skills/uizze-ui-research",
     "date_added": "2026-07-12",
@@ -44788,6 +44788,8 @@
     },
     "source_type": "official",
     "source_repo": "aislon/uizze-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/aislon/uizze-mcp/blob/main/LICENSE",
     "tags": [
       "ui-design",
       "ui-research",
