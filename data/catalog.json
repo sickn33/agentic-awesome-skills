@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-24T18:38:00.000Z",
-  "total": 1988,
+  "total": 1989,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -38703,6 +38703,41 @@
         "analyzer"
       ],
       "path": "skills/oral-health-analyzer/SKILL.md"
+    },
+    {
+      "id": "orchestrate",
+      "canonical_id": "orchestrate",
+      "name": "orchestrate",
+      "description": "Coordinate focused subagents on substantial work, keep their ownership non-overlapping, and integrate verified results. Use for large-scope Codex tasks; keep trivial work with the coordinator.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/provencher/codex-skills/tree/8aa6c42b73781c905c55f8a1253a18127079ac21/orchestrate",
+      "source_type": "community",
+      "source_repo": "provencher/codex-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/provencher/codex-skills/blob/8aa6c42b73781c905c55f8a1253a18127079ac21/LICENSE",
+      "tags": [
+        "codex",
+        "orchestration",
+        "multi-agent",
+        "delegation",
+        "subagents"
+      ],
+      "triggers": [
+        "codex",
+        "orchestration",
+        "multi-agent",
+        "delegation",
+        "subagents",
+        "orchestrate",
+        "coordinate",
+        "substantial",
+        "work",
+        "keep",
+        "ownership",
+        "non"
+      ],
+      "path": "skills/orchestrate/SKILL.md"
     },
     {
       "id": "orchestrate-batch-refactor",

@@ -32143,6 +32143,39 @@
     }
   },
   {
+    "id": "orchestrate",
+    "path": "skills/orchestrate",
+    "category": "agent-orchestration",
+    "name": "orchestrate",
+    "description": "Coordinate focused subagents on substantial work, keep their ownership non-overlapping, and integrate verified results. Use for large-scope Codex tasks; keep trivial work with the coordinator.",
+    "risk": "safe",
+    "source": "https://github.com/provencher/codex-skills/tree/8aa6c42b73781c905c55f8a1253a18127079ac21/orchestrate",
+    "date_added": "2026-07-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "provencher/codex-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/provencher/codex-skills/blob/8aa6c42b73781c905c55f8a1253a18127079ac21/LICENSE",
+    "tags": [
+      "codex",
+      "orchestration",
+      "multi-agent",
+      "delegation",
+      "subagents"
+    ]
+  },
+  {
     "id": "orchestrate-batch-refactor",
     "path": "skills/orchestrate-batch-refactor",
     "category": "uncategorized",

@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-24T18:38:00.000Z
 
-Total skills: 1988
+Total skills: 1989
 
 ## agent-behavior (5)
 
@@ -20,7 +20,7 @@ Total skills: 1988
 | --- | --- | --- | --- | --- | --- |
 | `run-deep-swe` | Run reproducible DeepSWE coding-agent benchmark evaluations through OpenRouter and mini-swe-agent. | critical | davidondrej/skills | benchmark, deepswe, openrouter, evaluation | benchmark, deepswe, openrouter, evaluation, run, deep, swe, reproducible, coding, agent, evaluations, through |
 
-## agent-orchestration (6)
+## agent-orchestration (7)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -30,6 +30,7 @@ Total skills: 1988
 | `goal-loop` | Draft and explain persistent goal-loop prompts for long-running agent work with clear stop conditions. | safe | davidondrej/skills | goals, autonomy, planning | goals, autonomy, planning, goal, loop, draft, explain, persistent, prompts, long, running, agent |
 | `grok-build` | Delegate well-specified implementation tasks to xAI's Grok Build CLI running headlessly while the orchestrating agent plans, writes task specs, reviews every... | critical | sanjay3290/ai-skills | grok, delegation, code-generation, xai | grok, delegation, code-generation, xai, delegate, well, specified, tasks, cli, running, headlessly, while |
 | `multi-agent-task-orchestrator` | Route tasks to specialized AI agents with anti-duplication, quality gates, and 30-minute heartbeat monitoring | safe | milkomida77/guardian-agent-prompts | multi-agent, orchestration, task-routing, quality-gates, anti-duplication | multi-agent, orchestration, task-routing, quality-gates, anti-duplication, multi, agent, task, orchestrator, route, tasks, specialized |
+| `orchestrate` | Coordinate focused subagents on substantial work, keep their ownership non-overlapping, and integrate verified results. Use for large-scope Codex tasks; keep... | safe | provencher/codex-skills | codex, orchestration, multi-agent, delegation, subagents | codex, orchestration, multi-agent, delegation, subagents, orchestrate, coordinate, substantial, work, keep, ownership, non |
 
 ## agent-squad (8)
 

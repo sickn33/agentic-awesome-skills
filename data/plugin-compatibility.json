@@ -25648,6 +25648,25 @@
       "runtime_files": []
     },
     {
+      "id": "orchestrate",
+      "path": "skills/orchestrate",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "orchestrate-batch-refactor",
       "path": "skills/orchestrate-batch-refactor",
       "targets": {
@@ -38217,10 +38236,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1988,
+    "total_skills": 1989,
     "supported": {
-      "codex": 1911,
-      "claude": 1933
+      "codex": 1912,
+      "claude": 1934
     },
     "blocked": {
       "codex": 77,
