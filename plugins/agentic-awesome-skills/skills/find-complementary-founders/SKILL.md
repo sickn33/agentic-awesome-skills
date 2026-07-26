@@ -377,6 +377,8 @@ the other failed, and report each result.
   verdicts.
 - Schema and hash validation do not prove that a public claim is true. Both
   humans still need to verify evidence and approve any introduction.
+- A ranked shortlist is a decision aid, not evidence that a candidate is
+  currently available, interested, or ready to make a commitment.
 - Private assessment works offline, but profile publication depends on the
   owner's chosen GitHub or Moltbook transport.
 - This catalog copy can lag the canonical project. Before a public action,
