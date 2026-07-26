@@ -1,5 +1,14 @@
 # Maintenance Walkthrough - 2026-07-26
 
+- Added the MIT-licensed `orchestrate` skill from
+  [provencher/codex-skills](https://github.com/provencher/codex-skills) at
+  upstream commit `8aa6c42b73781c905c55f8a1253a18127079ac21`.
+- Preserved its concise Codex-native delegation policy and UI metadata while
+  adding the repository-required usage guidance, limitations, immutable
+  provenance, and user-held approval boundaries.
+- Kept the source PR limited to canonical skill content, source credit, and this
+  maintenance evidence; generated registries and plugin mirrors remain owned by
+  protected canonical synchronization.
 - Consolidated the two open UIZZE contribution paths into one protected maintainer repair, preserving the actionable public-catalog research, design-contract, implementation, and hard finish-gate workflow contributed by [@samuelbushi](https://github.com/samuelbushi) in PR `#929` together with the bounded preview introduced by PR `#983`.
 - Kept the free `check_ui_slop` preview optional while requiring explicit approval before persistent MCP configuration or external HTML/CSS transmission.
 - Added the official MIT license metadata and organizational author while preserving the existing immutable source identity; GitHub redirects the historical upstream URL to the transferred official repository.
