@@ -119,7 +119,9 @@ First, understand what the user wants to achieve. Then select the best Actor fro
 | `xquik/x-tweet-scraper` | Tweet lookup, search, timelines, lists, threads, replies, quotes, and engagement |
 | `xquik/x-follower-scraper` | Followers, following, verified followers, lists, communities, and audience overlap |
 
-Check each Actor's live Apify pricing box before starting a paid run. Set a conservative result cap. `maxItems` applies across the whole run.
+Check each Actor's live Apify pricing box before starting a paid run. Show the
+Actor, targets, result cap, and maximum charge. Get explicit approval. Set a
+conservative result cap. `maxItems` applies across the whole run.
 
 Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
 
@@ -196,6 +198,8 @@ Before running, ask:
    - **CSV** - Full export with all fields
    - **JSON** - Full export in JSON format
 2. **Number of results**: Based on character of use case
+3. **Maximum charge**: Set a positive cap after reviewing live pricing
+4. **Paid-run approval**: Get explicit approval for this run
 
 ### Step 4: Run the Script
 
@@ -203,7 +207,9 @@ Before running, ask:
 ```bash
 node ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
   --actor "ACTOR_ID" \
-  --input 'JSON_INPUT'
+  --input 'JSON_INPUT' \
+  --max-total-charge-usd APPROVED_CAP \
+  --approve-paid-run
 ```
 
 **CSV:**
@@ -212,7 +218,9 @@ node ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
   --actor "ACTOR_ID" \
   --input 'JSON_INPUT' \
   --output YYYY-MM-DD_OUTPUT_FILE.csv \
-  --format csv
+  --format csv \
+  --max-total-charge-usd APPROVED_CAP \
+  --approve-paid-run
 ```
 
 **JSON:**
@@ -221,7 +229,9 @@ node ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
   --actor "ACTOR_ID" \
   --input 'JSON_INPUT' \
   --output YYYY-MM-DD_OUTPUT_FILE.json \
-  --format json
+  --format json \
+  --max-total-charge-usd APPROVED_CAP \
+  --approve-paid-run
 ```
 
 ### Step 5: Summarize Results and Offer Follow-ups
