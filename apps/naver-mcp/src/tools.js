@@ -26,6 +26,30 @@ const clampCount = (n, dflt = 10) => {
   return Math.min(MAX_COUNT, Math.max(1, v));
 };
 
+// Long posts otherwise dominate the caller's context. Most posts land well
+// under this, so the cap costs nothing in the common case.
+const DEFAULT_MAX_CHARS = 8000;
+
+/**
+ * Trim body text to a character budget, cutting at a paragraph break so the
+ * tail is not left mid-sentence. Truncation is always announced - silently
+ * dropping half a post would let a caller summarise it as if it were whole.
+ */
+function capLength(text, maxChars) {
+  const limit = Number.isFinite(Number(maxChars)) ? Math.floor(Number(maxChars)) : DEFAULT_MAX_CHARS;
+  if (limit <= 0 || text.length <= limit) return { text, truncated: false };
+
+  let cut = text.lastIndexOf("\n", limit);
+  if (cut < limit * 0.6) cut = limit; // no usable break; take the hard cut
+  const kept = text.slice(0, cut).trimEnd();
+  return {
+    text:
+      `${kept}\n\n---\n[본문이 길어 ${kept.length}/${text.length}자만 표시했습니다. ` +
+      `전체가 필요하면 max_chars 를 늘리거나 0(무제한)으로 호출하세요.]`,
+    truncated: true,
+  };
+}
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // UI chrome that appears as link text on result pages and is never a title.
@@ -135,7 +159,7 @@ export async function naverBlogSearch({ query, count = 10, sort = "sim" }) {
 
 /* ---------------------------------------------------------------- 2. blog read */
 
-export async function naverBlogRead({ url }) {
+export async function naverBlogRead({ url, max_chars }) {
   const ref = parseBlogUrl(url);
   if (!ref || !ref.logNo) {
     throw new NaverError(
@@ -157,7 +181,8 @@ export async function naverBlogRead({ url }) {
     .filter(Boolean)
     .join("\n");
 
-  return `${header}\n\n---\n\n${post.text}`;
+  const body = capLength(post.text, max_chars);
+  return `${header}\n\n---\n\n${body.text}`;
 }
 
 /**
@@ -208,7 +233,7 @@ const NEWS_BODY = [
   /<div[^>]*class="[^"]*newsct_article[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/i,
 ];
 
-export async function naverNewsRead({ url }) {
+export async function naverNewsRead({ url, max_chars }) {
   const ref = parseNewsUrl(url);
   if (!ref) {
     throw new NaverError(
@@ -252,7 +277,7 @@ export async function naverNewsRead({ url }) {
     .filter(Boolean)
     .join("\n");
 
-  return `${header}\n\n---\n\n${body}`;
+  return `${header}\n\n---\n\n${capLength(body, max_chars).text}`;
 }
 
 /* -------------------------------------------------------------- 5. cafe search */

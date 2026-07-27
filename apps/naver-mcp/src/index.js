@@ -54,6 +54,12 @@ const TOOLS = [
           type: "string",
           description: "블로그 글 URL. blog.naver.com / m.blog.naver.com / PostView 링크 모두 가능",
         },
+        max_chars: {
+          type: "integer",
+          description:
+            "본문 최대 글자수 (기본 8000). 컨텍스트를 아끼려면 2000~3000, 전체가 필요하면 0(무제한). 잘린 경우 응답에 명시된다.",
+          minimum: 0,
+        },
       },
       required: ["url"],
     },
@@ -75,7 +81,14 @@ const TOOLS = [
     description: "네이버 뉴스 기사 하나의 본문 전체를 읽어온다 (n.news.naver.com 기사 URL).",
     inputSchema: {
       type: "object",
-      properties: { url: { type: "string", description: "네이버 뉴스 기사 URL" } },
+      properties: {
+        url: { type: "string", description: "네이버 뉴스 기사 URL" },
+        max_chars: {
+          type: "integer",
+          description: "본문 최대 글자수 (기본 8000, 0이면 무제한). 잘린 경우 응답에 명시된다.",
+          minimum: 0,
+        },
+      },
       required: ["url"],
     },
   },

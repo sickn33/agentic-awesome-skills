@@ -71,6 +71,18 @@ const run = async () => {
     return naverBlogRead({ url: `https://blog.naver.com/${id}/${no}` });
   }, { minChars: 300 });
 
+  // max_chars must actually cap the body and say so, so a caller never
+  // summarises a half-post as if it were whole.
+  if (blogUrl) {
+    await step("naver_blog_read(max_chars=800) truncates and says so", async () => {
+      const out = await naverBlogRead({ url: blogUrl, max_chars: 800 });
+      const full = await naverBlogRead({ url: blogUrl, max_chars: 0 });
+      if (out.length >= full.length) throw new Error(`not capped: ${out.length} vs full ${full.length}`);
+      if (!out.includes("본문이 길어")) throw new Error("truncation not announced");
+      return out;
+    }, { minChars: 300 });
+  }
+
   // 2. news
   let newsUrl = null;
   await step("naver_news_search('금리', 5)", async () => {
