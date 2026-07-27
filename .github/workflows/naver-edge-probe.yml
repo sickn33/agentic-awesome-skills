@@ -35,11 +35,6 @@ jobs:
         continue-on-error: true
         run: python3 apps/naver-mcp/scripts/naver_probe.py
 
-      - name: Dump result markup
-        if: always()
-        continue-on-error: true
-        run: python3 apps/naver-mcp/scripts/dump_markup.py
-
       - name: Upload probe results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

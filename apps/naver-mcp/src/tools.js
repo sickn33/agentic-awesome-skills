@@ -7,7 +7,6 @@
 import {
   NaverError,
   blogReadRoutes,
-  decodeEntities,
   extractPostBody,
   extractTitle,
   extractDate,
@@ -29,56 +28,68 @@ const clampCount = (n, dflt = 10) => {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Chrome/UI labels that sit next to result links and are not titles.
-const UI_NOISE = new Set([
-  "저장하기", "공유하기", "더보기", "신고", "신고하기", "답글", "댓글",
-  "블로그", "카페", "네이버", "관련글", "본문 보기", "새글", "닫기", "열기",
-  "이미지", "동영상", "지도", "길찾기", "전화", "예약", "정보",
-]);
+// UI chrome that appears as link text on result pages and is never a title.
+const UI_NOISE = [
+  "저장하기", "Keep에 저장", "Keep 바로가기", "공유하기", "더보기", "신고",
+  "답글", "댓글", "관련글", "본문 보기", "바로가기", "옵션", "닫기", "열기",
+  "길찾기", "예약", "전화",
+];
 
-const isNoise = (t) => UI_NOISE.has(t) || /^[\s·|\-—]*$/.test(t);
+const isNoise = (t) =>
+  !t || t.length < 4 || t.length > 200 || UI_NOISE.some((n) => t.includes(n)) ||
+  /^[\s·|\-—RE]*$/.test(t);
+
+const cleanTitle = (raw) => {
+  const t = htmlToText(raw).replace(/\s+/g, " ").trim();
+  return isNoise(t) ? "" : t;
+};
 
 /**
- * Pull a human-readable title for a search hit.
+ * Collect search hits, preferring anchors whose href is the result URL.
  *
- * Naver wraps result titles in the anchor itself, so the anchor's own text is
- * the most reliable source. Attribute/class matches are only a fallback, and
- * both are filtered against UI chrome like "저장하기" which otherwise wins by
- * being physically nearer the link than the real title.
+ * The first occurrence of a result URL on the page is Keep's save button
+ * (`data-url="…"`), whose only text is "문서 저장하기" — so anything that
+ * searches by proximity to the URL finds the button, not the title. Matching
+ * `<a href="…">` skips the button and lands on the real title anchor.
+ *
+ * A second pass over bare URLs then picks up anything that only appears in an
+ * attribute, so coverage never drops below what a plain URL scan would find;
+ * those hits simply carry no title.
  */
-function titleNear(html, index) {
-  const clean = (raw) => {
-    const t = htmlToText(raw).replace(/\s+/g, " ").trim();
-    return t.length >= 4 && t.length <= 200 && !isNoise(t) ? t : "";
-  };
+function collectHits(html, urlSource, into, want) {
+  const { anchor, bare, key } = urlSource;
 
-  // 1. Text of the anchor that contains this URL.
-  const openIdx = html.lastIndexOf("<a ", index);
-  if (openIdx !== -1 && index - openIdx < 600) {
-    const gt = html.indexOf(">", openIdx);
-    const closeIdx = html.indexOf("</a>", gt);
-    if (gt !== -1 && closeIdx !== -1 && closeIdx - gt < 3000) {
-      const t = clean(html.slice(gt + 1, closeIdx));
-      if (t) return t;
-    }
+  anchor.lastIndex = 0;
+  let m;
+  while ((m = anchor.exec(html)) !== null && into.size < want) {
+    const k = key(m);
+    if (into.has(k)) continue;
+    into.set(k, { match: m, title: cleanTitle(m[m.length - 1]) });
   }
 
-  // 2. A titled element nearby, preferring Naver's result-title classes.
-  const window_ = html.slice(Math.max(0, index - 1800), index + 1800);
-  const pats = [
-    /class="[^"]*(?:title_link|api_txt_lines|total_tit|name_link|title_area|sub_tit)[^"]*"[^>]*>([\s\S]{4,300}?)<\/(?:a|strong|span|div)>/i,
-    /<strong[^>]*class="[^"]*title[^"]*"[^>]*>([\s\S]{4,300}?)<\/strong>/i,
-    /title="([^"]{4,150})"/,
-  ];
-  for (const p of pats) {
-    const m = window_.match(p);
-    if (m) {
-      const t = clean(m[1]);
-      if (t) return t;
-    }
+  bare.lastIndex = 0;
+  while ((m = bare.exec(html)) !== null && into.size < want) {
+    const k = key(m);
+    if (into.has(k)) continue;
+    into.set(k, { match: m, title: "" });
   }
-  return "";
+  return into;
 }
+
+/** Regexes for one result type: title-bearing anchors, then bare URLs. */
+function urlSource(pattern, keyFn) {
+  return {
+    anchor: new RegExp(`<a\\b[^>]*\\bhref="(?:${pattern})[^"]*"[^>]*>([\\s\\S]{0,2500}?)</a>`, "gi"),
+    bare: new RegExp(pattern, "gi"),
+    key: keyFn,
+  };
+}
+
+const BLOG_PATTERN = "https?://(?:m\\.)?blog\\.naver\\.com/([A-Za-z0-9_-]+)/(\\d{6,})";
+const CAFE_PATTERN = "https?://cafe\\.naver\\.com/([A-Za-z0-9_-]+)/(\\d{2,})";
+const NEWS_PATTERN = "https?://n\\.news\\.naver\\.com/(?:mnews/)?article/(\\d{3})/(\\d{10})";
+
+const pairKey = (m) => `${m[1]}/${m[2]}`;
 
 /* -------------------------------------------------------------- 1. blog search */
 
@@ -88,6 +99,7 @@ export async function naverBlogSearch({ query, count = 10, sort = "sim" }) {
   }
   const want = clampCount(count);
   const sortParam = sort === "date" ? "&nso=so%3Add%2Cp%3Aall" : "";
+  const src = urlSource(BLOG_PATTERN, pairKey);
   const seen = new Map();
 
   for (let start = 1; seen.size < want && start <= 91; start += PAGE_SIZE) {
@@ -96,26 +108,16 @@ export async function naverBlogSearch({ query, count = 10, sort = "sim" }) {
       `&query=${encodeURIComponent(query)}&start=${start}${sortParam}`;
     const html = await httpGet(url, { referer: SEARCH_REFERER });
 
-    const re = /https?:\/\/(?:m\.)?blog\.naver\.com\/([A-Za-z0-9_-]+)\/(\d{6,})/g;
-    let m;
-    let addedThisPage = 0;
-    while ((m = re.exec(html)) !== null) {
-      const key = `${m[1]}/${m[2]}`;
-      if (seen.has(key)) continue;
-      seen.set(key, {
-        blogId: m[1],
-        logNo: m[2],
-        url: `https://m.blog.naver.com/${m[1]}/${m[2]}`,
-        title: titleNear(html, m.index),
-      });
-      addedThisPage++;
-      if (seen.size >= want) break;
-    }
-    if (addedThisPage === 0) break; // no more results
+    const before = seen.size;
+    collectHits(html, src, seen, want);
+    if (seen.size === before) break; // page added nothing new
     if (seen.size < want) await sleep(600); // be polite between pages
   }
 
-  const items = [...seen.values()].slice(0, want);
+  const items = [...seen.entries()].slice(0, want).map(([key, v]) => ({
+    url: `https://m.blog.naver.com/${key}`,
+    title: v.title,
+  }));
   if (!items.length) {
     throw new NaverError("PARSE_FAILED", "Search page loaded but no blog posts were found in it.", { query });
   }
@@ -166,6 +168,7 @@ export async function naverNewsSearch({ query, count = 10 }) {
     throw new NaverError("BAD_INPUT", "query is required");
   }
   const want = clampCount(count);
+  const src = urlSource(NEWS_PATTERN, pairKey);
   const seen = new Map();
 
   for (let start = 1; seen.size < want && start <= 91; start += PAGE_SIZE) {
@@ -174,24 +177,16 @@ export async function naverNewsSearch({ query, count = 10 }) {
       `&query=${encodeURIComponent(query)}&start=${start}`;
     const html = await httpGet(url, { referer: SEARCH_REFERER });
 
-    const re = /https?:\/\/n\.news\.naver\.com\/(?:mnews\/)?article\/(\d{3})\/(\d{10})/g;
-    let m;
-    let added = 0;
-    while ((m = re.exec(html)) !== null) {
-      const key = `${m[1]}/${m[2]}`;
-      if (seen.has(key)) continue;
-      seen.set(key, {
-        url: `https://n.news.naver.com/mnews/article/${m[1]}/${m[2]}`,
-        title: titleNear(html, m.index),
-      });
-      added++;
-      if (seen.size >= want) break;
-    }
-    if (added === 0) break;
+    const before = seen.size;
+    collectHits(html, src, seen, want);
+    if (seen.size === before) break;
     if (seen.size < want) await sleep(600);
   }
 
-  const items = [...seen.values()].slice(0, want);
+  const items = [...seen.entries()].slice(0, want).map(([key, v]) => ({
+    url: `https://n.news.naver.com/mnews/article/${key}`,
+    title: v.title,
+  }));
   if (!items.length) {
     throw new NaverError("PARSE_FAILED", "News search page loaded but no articles were found in it.", { query });
   }
@@ -262,6 +257,9 @@ export async function naverCafeSearch({ query, count = 10 }) {
     throw new NaverError("BAD_INPUT", "query is required");
   }
   const want = clampCount(count);
+  // Only public cafe article links; member-only boards are not reachable
+  // without a login and are deliberately not attempted.
+  const src = urlSource(CAFE_PATTERN, pairKey);
   const seen = new Map();
 
   for (let start = 1; seen.size < want && start <= 91; start += PAGE_SIZE) {
@@ -270,27 +268,17 @@ export async function naverCafeSearch({ query, count = 10 }) {
       `&query=${encodeURIComponent(query)}&start=${start}`;
     const html = await httpGet(url, { referer: SEARCH_REFERER });
 
-    // Only public cafe article links; member-only boards are not reachable
-    // without a login and are deliberately not attempted.
-    const re = /https?:\/\/cafe\.naver\.com\/([A-Za-z0-9_-]+)\/(\d{2,})/g;
-    let m;
-    let added = 0;
-    while ((m = re.exec(html)) !== null) {
-      const key = `${m[1]}/${m[2]}`;
-      if (seen.has(key)) continue;
-      seen.set(key, {
-        url: `https://cafe.naver.com/${m[1]}/${m[2]}`,
-        cafe: m[1],
-        title: titleNear(html, m.index),
-      });
-      added++;
-      if (seen.size >= want) break;
-    }
-    if (added === 0) break;
+    const before = seen.size;
+    collectHits(html, src, seen, want);
+    if (seen.size === before) break;
     if (seen.size < want) await sleep(600);
   }
 
-  const items = [...seen.values()].slice(0, want);
+  const items = [...seen.entries()].slice(0, want).map(([key, v]) => ({
+    url: `https://cafe.naver.com/${key}`,
+    cafe: key.split("/")[0],
+    title: v.title,
+  }));
   if (!items.length) {
     throw new NaverError(
       "PARSE_FAILED",
@@ -319,17 +307,7 @@ export async function naverPlaceReviews({ query, count = 10 }) {
     `&query=${encodeURIComponent(query + " 후기")}&start=1`;
   const html = await httpGet(url, { referer: SEARCH_REFERER });
 
-  const seen = new Map();
-  const re = /https?:\/\/(?:m\.)?blog\.naver\.com\/([A-Za-z0-9_-]+)\/(\d{6,})/g;
-  let m;
-  while ((m = re.exec(html)) !== null && seen.size < want) {
-    const key = `${m[1]}/${m[2]}`;
-    if (seen.has(key)) continue;
-    seen.set(key, {
-      url: `https://m.blog.naver.com/${m[1]}/${m[2]}`,
-      title: titleNear(html, m.index),
-    });
-  }
+  const seen = collectHits(html, urlSource(BLOG_PATTERN, pairKey), new Map(), want);
 
   const placeIds = [
     ...new Set(
@@ -339,7 +317,10 @@ export async function naverPlaceReviews({ query, count = 10 }) {
     ),
   ].slice(0, 3);
 
-  const items = [...seen.values()];
+  const items = [...seen.entries()].slice(0, want).map(([key, v]) => ({
+    url: `https://m.blog.naver.com/${key}`,
+    title: v.title,
+  }));
   if (!items.length) {
     throw new NaverError("PARSE_FAILED", "No blog reviews were found for that place.", { query });
   }
