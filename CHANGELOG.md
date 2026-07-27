@@ -9,9 +9,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.5.1] - 2026-07-27 - "MCP Client Compatibility"
+
+> Restored AAS MCP connectivity for newer clients while preserving an explicit, fail-closed protocol boundary.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
 ### Fixed
 
 - Fixed AAS MCP initialization for newer clients such as Claude Code 2.1.x by negotiating the server-supported protocol revision instead of rejecting every request that advertises a different revision ([#1003](https://github.com/sickn33/agentic-awesome-skills/issues/1003)).
+
+### Who should care
+
+- Claude Code 2.1.x users whose MCP clients advertise protocol revision `2025-11-25`.
+- Other MCP clients that advertise a revision newer than the server-supported `2025-06-18` revision.
+- Integrators that require malformed or missing protocol revisions to remain rejected.
+
+### Validation
+
+- Passed direct server, stdio binary, isolated packed-runtime, and release-preview negotiation tests.
+- Passed the 150-test AAS Core suite, the 102-file repository suite, catalog integrity, reference validation, documentation security, warning-budget enforcement, protected CI, and CodeQL.
+
+### Credits
+
+- **[@rk2kaler](https://github.com/rk2kaler)** for reporting the protocol negotiation regression with a complete reproduction in [issue #1003](https://github.com/sickn33/agentic-awesome-skills/issues/1003).
 
 ## [15.5.0] - 2026-07-26 - "Coordination, Founder Matching, and Fedora Hyprland"
 
