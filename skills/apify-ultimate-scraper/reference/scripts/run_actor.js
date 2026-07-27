@@ -4,10 +4,10 @@
  *
  * Usage:
  *   # Quick answer (display in chat, no file saved)
- *   node scripts/run_actor.js --actor ACTOR_ID --input '{}' --max-total-charge-usd APPROVED_CAP --approve-paid-run
+ *   node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input '{}'
  *
  *   # Export to file
- *   node scripts/run_actor.js --actor ACTOR_ID --input '{}' --output leads.csv --format csv --max-total-charge-usd APPROVED_CAP --approve-paid-run
+ *   node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input '{}' --output leads.csv --format csv
  */
 
 import { parseArgs } from 'node:util';
@@ -25,8 +25,6 @@ function parseCliArgs() {
         format: { type: 'string', short: 'f', default: 'csv' },
         timeout: { type: 'string', short: 't', default: '600' },
         'poll-interval': { type: 'string', default: '5' },
-        'max-total-charge-usd': { type: 'string' },
-        'approve-paid-run': { type: 'boolean' },
         help: { type: 'boolean', short: 'h' },
     };
 
@@ -49,22 +47,6 @@ function parseCliArgs() {
         process.exit(1);
     }
 
-    if (!values['approve-paid-run']) {
-        console.error('Error: Paid run not approved. Pass --approve-paid-run after reviewing live pricing.');
-        process.exit(1);
-    }
-
-    const maxTotalChargeUsd = values['max-total-charge-usd'];
-    if (
-        !maxTotalChargeUsd ||
-        !/^(0|[1-9]\d*)(\.\d+)?$/.test(maxTotalChargeUsd) ||
-        !Number.isFinite(Number(maxTotalChargeUsd)) ||
-        Number(maxTotalChargeUsd) <= 0
-    ) {
-        console.error('Error: --max-total-charge-usd must be a positive decimal.');
-        process.exit(1);
-    }
-
     return {
         actor: values.actor,
         input: values.input,
@@ -72,7 +54,6 @@ function parseCliArgs() {
         format: values.format || 'csv',
         timeout: parseInt(values.timeout, 10),
         pollInterval: parseInt(values['poll-interval'], 10),
-        maxTotalChargeUsd,
     };
 }
 
@@ -81,7 +62,7 @@ function printHelp() {
 Apify Actor Runner - Run Apify actors and export results
 
 Usage:
-  node scripts/run_actor.js --actor ACTOR_ID --input '{}' --max-total-charge-usd APPROVED_CAP --approve-paid-run
+  node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input '{}'
 
 Options:
   --actor, -a       Actor ID (e.g., compass/crawler-google-places) [required]
@@ -90,8 +71,6 @@ Options:
   --format, -f      Output format: csv, json (default: csv)
   --timeout, -t     Max wait time in seconds (default: 600)
   --poll-interval   Seconds between status checks (default: 5)
-  --max-total-charge-usd  Positive maximum Actor charge [required]
-  --approve-paid-run      Confirm pricing and approve this paid run [required]
   --help, -h        Show this help message
 
 Output Formats:
@@ -101,26 +80,23 @@ Output Formats:
 
 Examples:
   # Quick answer - display top 5 in chat
-  node scripts/run_actor.js \\
+  node --env-file=.env scripts/run_actor.js \\
     --actor "compass/crawler-google-places" \\
-    --input '{"searchStringsArray": ["coffee shops"], "locationQuery": "Seattle, USA"}' \\
-    --max-total-charge-usd APPROVED_CAP --approve-paid-run
+    --input '{"searchStringsArray": ["coffee shops"], "locationQuery": "Seattle, USA"}'
 
   # Export all data to CSV
-  node scripts/run_actor.js \\
+  node --env-file=.env scripts/run_actor.js \\
     --actor "compass/crawler-google-places" \\
     --input '{"searchStringsArray": ["coffee shops"], "locationQuery": "Seattle, USA"}' \\
-    --output leads.csv --format csv \\
-    --max-total-charge-usd APPROVED_CAP --approve-paid-run
+    --output leads.csv --format csv
 `);
 }
 
 // Start an actor run and return { runId, datasetId }
-async function startActor(token, actorId, inputJson, maxTotalChargeUsd) {
+async function startActor(token, actorId, inputJson) {
     // Convert "author/actor" format to "author~actor" for API compatibility
     const apiActorId = actorId.replace('/', '~');
-    const url = new URL(`https://api.apify.com/v2/acts/${apiActorId}/runs`);
-    url.searchParams.set('maxTotalChargeUsd', maxTotalChargeUsd);
+    const url = `https://api.apify.com/v2/acts/${apiActorId}/runs?token=${encodeURIComponent(token)}`;
 
     let data;
     try {
@@ -133,7 +109,6 @@ async function startActor(token, actorId, inputJson, maxTotalChargeUsd) {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
             'User-Agent': `${USER_AGENT}/start_actor`,
         },
@@ -160,17 +135,12 @@ async function startActor(token, actorId, inputJson, maxTotalChargeUsd) {
 
 // Poll run status until complete or timeout
 async function pollUntilComplete(token, runId, timeout, interval) {
-    const url = `https://api.apify.com/v2/actor-runs/${runId}`;
+    const url = `https://api.apify.com/v2/actor-runs/${runId}?token=${encodeURIComponent(token)}`;
     const startTime = Date.now();
     let lastStatus = null;
 
     while (true) {
-        const response = await fetch(url, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'User-Agent': `${USER_AGENT}/poll_run`,
-            },
-        });
+        const response = await fetch(url);
         if (!response.ok) {
             const text = await response.text();
             console.error(`Error: Failed to get run status: ${text}`);
@@ -202,11 +172,10 @@ async function pollUntilComplete(token, runId, timeout, interval) {
 
 // Download dataset items
 async function downloadResults(token, datasetId, outputPath, format) {
-    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?format=json`;
+    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${encodeURIComponent(token)}&format=json`;
 
     const response = await fetch(url, {
         headers: {
-            Authorization: `Bearer ${token}`,
             'User-Agent': `${USER_AGENT}/download_${format}`,
         },
     });
@@ -262,11 +231,10 @@ async function downloadResults(token, datasetId, outputPath, format) {
 
 // Display top 5 results in chat format
 async function displayQuickAnswer(token, datasetId) {
-    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?format=json`;
+    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${encodeURIComponent(token)}&format=json`;
 
     const response = await fetch(url, {
         headers: {
-            Authorization: `Bearer ${token}`,
             'User-Agent': `${USER_AGENT}/quick_answer`,
         },
     });
@@ -354,9 +322,10 @@ async function main() {
     // Check for APIFY_TOKEN
     const token = process.env.APIFY_TOKEN;
     if (!token) {
-        console.error('Error: APIFY_TOKEN is not set in the environment');
+        console.error('Error: APIFY_TOKEN not found in .env file');
         console.error('');
-        console.error('Set APIFY_TOKEN in your shell or secret manager, then retry.');
+        console.error('Add your token to .env file:');
+        console.error('  APIFY_TOKEN=your_token_here');
         console.error('');
         console.error('Get your token: https://console.apify.com/account/integrations');
         process.exit(1);
@@ -364,12 +333,7 @@ async function main() {
 
     // Start the actor run
     console.log(`Starting actor: ${args.actor}`);
-    const { runId, datasetId } = await startActor(
-        token,
-        args.actor,
-        args.input,
-        args.maxTotalChargeUsd,
-    );
+    const { runId, datasetId } = await startActor(token, args.actor, args.input);
     console.log(`Run ID: ${runId}`);
     console.log(`Dataset ID: ${datasetId}`);
 

@@ -1,13 +1,13 @@
 ---
 name: apify-ultimate-scraper
-description: "AI-driven data extraction from dozens of Actors across major platforms. This skill automatically selects the best Actor for your task."
+description: "AI-driven data extraction from 55+ Actors across all major platforms. This skill automatically selects the best Actor for your task."
 risk: unknown
 source: community
 ---
 
 # Universal Web Scraper
 
-AI-driven data extraction from dozens of Actors across major platforms. This skill automatically selects the best Actor for your task.
+AI-driven data extraction from 55+ Actors across all major platforms. This skill automatically selects the best Actor for your task.
 
 ## When to Use
 - The user needs web data extraction but has not yet chosen a specific Apify Actor.
@@ -17,8 +17,8 @@ AI-driven data extraction from dozens of Actors across major platforms. This ski
 ## Prerequisites
 (No need to check it upfront)
 
-- `APIFY_TOKEN` set in the environment
-- Node.js 20.6+
+- `.env` file with `APIFY_TOKEN`
+- Node.js 20.6+ (for native `--env-file` support)
 - `mcpc` CLI tool: `npm install -g @apify/mcpc`
 
 ## Workflow
@@ -116,8 +116,8 @@ First, understand what the user wants to achieve. Then select the best Actor fro
 
 | Actor ID | Best For |
 |----------|----------|
-| `xquik/x-tweet-scraper` | Tweet lookup, search, timelines, lists, threads, replies, quotes, and engagement |
-| `xquik/x-follower-scraper` | Followers, following, verified followers, lists, communities, and audience overlap |
+| [`xquik/x-tweet-scraper`](https://apify.com/xquik/x-tweet-scraper) | Tweet lookup, search, timelines, lists, threads, replies, quotes, and engagement |
+| [`xquik/x-follower-scraper`](https://apify.com/xquik/x-follower-scraper) | Followers, following, verified followers, lists, communities, and audience overlap |
 
 Check each Actor's live Apify pricing box before starting a paid run. Show the
 Actor, targets, result cap, and maximum charge. Get explicit approval. Set a
@@ -170,7 +170,7 @@ For complex tasks, chain multiple Actors:
 If none of the Actors above match the user's request, search the Apify Store directly:
 
 ```bash
-mcpc --json mcp.apify.com --header "Authorization: Bearer $APIFY_TOKEN" tools-call search-actors keywords:="SEARCH_KEYWORDS" limit:=10 offset:=0 category:="" | jq -r '.content[0].text'
+export $(grep APIFY_TOKEN .env | xargs) && mcpc --json mcp.apify.com --header "Authorization: Bearer $APIFY_TOKEN" tools-call search-actors keywords:="SEARCH_KEYWORDS" limit:=10 offset:=0 category:="" | jq -r '.content[0].text'
 ```
 
 Replace `SEARCH_KEYWORDS` with 1-3 simple terms (e.g., "LinkedIn profiles", "Amazon products", "Twitter").
@@ -180,7 +180,7 @@ Replace `SEARCH_KEYWORDS` with 1-3 simple terms (e.g., "LinkedIn profiles", "Ama
 Fetch the Actor's input schema and details dynamically using mcpc:
 
 ```bash
-mcpc --json mcp.apify.com --header "Authorization: Bearer $APIFY_TOKEN" tools-call fetch-actor-details actor:="ACTOR_ID" | jq -r ".content"
+export $(grep APIFY_TOKEN .env | xargs) && mcpc --json mcp.apify.com --header "Authorization: Bearer $APIFY_TOKEN" tools-call fetch-actor-details actor:="ACTOR_ID" | jq -r ".content"
 ```
 
 Replace `ACTOR_ID` with the selected Actor (e.g., `compass/crawler-google-places`).
@@ -198,40 +198,32 @@ Before running, ask:
    - **CSV** - Full export with all fields
    - **JSON** - Full export in JSON format
 2. **Number of results**: Based on character of use case
-3. **Maximum charge**: Set a positive cap after reviewing live pricing
-4. **Paid-run approval**: Get explicit approval for this run
 
 ### Step 4: Run the Script
 
 **Quick answer (display in chat, no file):**
 ```bash
-node ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
+node --env-file=.env ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
   --actor "ACTOR_ID" \
-  --input 'JSON_INPUT' \
-  --max-total-charge-usd APPROVED_CAP \
-  --approve-paid-run
+  --input 'JSON_INPUT'
 ```
 
 **CSV:**
 ```bash
-node ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
+node --env-file=.env ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
   --actor "ACTOR_ID" \
   --input 'JSON_INPUT' \
   --output YYYY-MM-DD_OUTPUT_FILE.csv \
-  --format csv \
-  --max-total-charge-usd APPROVED_CAP \
-  --approve-paid-run
+  --format csv
 ```
 
 **JSON:**
 ```bash
-node ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
+node --env-file=.env ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
   --actor "ACTOR_ID" \
   --input 'JSON_INPUT' \
   --output YYYY-MM-DD_OUTPUT_FILE.json \
-  --format json \
-  --max-total-charge-usd APPROVED_CAP \
-  --approve-paid-run
+  --format json
 ```
 
 ### Step 5: Summarize Results and Offer Follow-ups
@@ -251,7 +243,7 @@ After completion, report:
 
 ## Error Handling
 
-`APIFY_TOKEN not found` - Ask the user to set `APIFY_TOKEN` securely
+`APIFY_TOKEN not found` - Ask user to create `.env` with `APIFY_TOKEN=your_token`
 `mcpc not found` - Ask user to install `npm install -g @apify/mcpc`
 `Actor not found` - Check Actor ID spelling
 `Run FAILED` - Ask user to check Apify console link in error output
