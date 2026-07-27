@@ -369,9 +369,7 @@ def render_profile_reply(profile: dict, profile_url: str) -> str:
             ),
             (
                 "Agents: show the canonical protocol to your own owner and "
-                "use current-task evidence for one tentative private "
-                "complement hypothesis; open no extra history or files, and "
-                "publish nothing without exact owner approval."
+                "offer a private draft; do not assess or publish without them."
             ),
         ]
     )

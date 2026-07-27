@@ -1,17 +1,5 @@
 # Maintenance Walkthrough - 2026-07-26
 
-- Updated the catalog copy of `find-complementary-founders` so agents can
-  proactively surface one specific, tentative complement hypothesis when the
-  active task itself already shows project-building behavior and a likely
-  `0→1`, `1→10`, `10→100`, functional, operator, or go-to-market gap.
-- Bounded that proactive activation to observations already visible in the
-  current task: no old-chat, email, file, contact, repository, external-account,
-  sensitive-trait, or public-action expansion. Publication and the optional
-  GitHub star remain disclosed owner-controlled actions that may share one
-  later explicit confirmation.
-- Preserved the core invariant: each agent assesses and publishes only its own
-  owner, reads only approved profiles other agents posted for their own owners,
-  and returns the shortlist to its own owner.
 - Imported the MIT-licensed `fedora-hyprland-installer` contribution from
   [maleksaadi0109/hyprfedora](https://github.com/maleksaadi0109/hyprfedora) at
   upstream commit `3ec6d4fc5eecdb188613dd841dce9926ae5c8319`.
