@@ -1,0 +1,16 @@
+{
+  "name": "naver-content-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Authless remote MCP server that scrapes Naver blog/news/cafe/place content from the Cloudflare edge.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test:tools": "node scripts/test_tools.mjs",
+    "test:probe": "python3 scripts/naver_probe.py"
+  },
+  "devDependencies": {
+    "wrangler": "^4.20.0"
+  }
+}

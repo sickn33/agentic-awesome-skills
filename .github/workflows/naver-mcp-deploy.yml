@@ -1,0 +1,95 @@
+name: Naver MCP Deploy
+
+# Deploys the authless Naver MCP server to Cloudflare Workers and then proves
+# it works by driving the deployed endpoint exactly like a Claude custom
+# connector does - initialize, tools/list, then a real tools/call.
+#
+# Requires two repository secrets:
+#   CLOUDFLARE_API_TOKEN   - token with the "Edit Cloudflare Workers" template
+#   CLOUDFLARE_ACCOUNT_ID  - your Cloudflare account ID
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["claude/naver-content-mcp-server-9h9t07"]
+    paths:
+      - "apps/naver-mcp/src/**"
+      - "apps/naver-mcp/wrangler.toml"
+      - ".github/workflows/naver-mcp-deploy.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: naver-mcp-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Workers and verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Set up Node
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "22"
+
+      - name: Check for Cloudflare credentials
+        id: creds
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CF_TOKEN" ]; then
+            {
+              echo "### Cloudflare credentials missing"
+              echo ""
+              echo "Add these repository secrets, then re-run this workflow:"
+              echo "- \`CLOUDFLARE_API_TOKEN\` (Edit Cloudflare Workers template)"
+              echo "- \`CLOUDFLARE_ACCOUNT_ID\`"
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "No CLOUDFLARE_API_TOKEN secret set - cannot deploy." >&2
+            exit 1
+          fi
+          echo "present=true" >> "$GITHUB_OUTPUT"
+
+      - name: Install wrangler
+        working-directory: apps/naver-mcp
+        run: npm install --no-audit --no-fund
+
+      - name: Deploy Worker
+        id: deploy
+        working-directory: apps/naver-mcp
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -o pipefail
+          npx wrangler deploy 2>&1 | tee deploy.log
+          URL=$(grep -oE 'https://[a-zA-Z0-9._-]+\.workers\.dev' deploy.log | head -1)
+          if [ -z "$URL" ]; then
+            echo "Could not determine the deployed URL from wrangler output." >&2
+            exit 1
+          fi
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Deployed to $URL"
+
+      - name: Smoke test the deployed MCP server
+        working-directory: apps/naver-mcp
+        run: node scripts/smoke_mcp.mjs "${{ steps.deploy.outputs.url }}"
+
+      - name: Publish connector URL
+        if: success()
+        run: |
+          {
+            echo "### Naver MCP server is live"
+            echo ""
+            echo "Add this as a custom connector in Claude:"
+            echo ""
+            echo '```'
+            echo "${{ steps.deploy.outputs.url }}/mcp"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

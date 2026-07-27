@@ -39,16 +39,20 @@ BASE_HEADERS = {
 }
 
 # Signatures that mean "Naver rejected us", as opposed to "we failed to parse".
+# Deliberately narrow: a bare "captcha" substring appears in Naver's ordinary
+# anti-abuse JS on pages that served fine, so matching it flags healthy pages.
+# A block is only declared when one of these shows up on a *small* body that
+# also yielded no usable content.
 BLOCK_SIGNS = (
     "많은 요청이 있습니다",
-    "비정상적인 접근",
-    "자동입력 방지",
-    "captcha",
-    "이용이 제한",
-    "접근이 차단",
-    "error.naver.com",
-    "일시적으로 제한",
+    "비정상적인 접근입니다",
+    "자동입력 방지문자",
+    "접근이 차단되었습니다",
+    "일시적으로 제한됩니다",
 )
+
+# A real block page is short. Anything large enough to hold a post is not one.
+BLOCK_MAX_BYTES = 20000
 
 TIMEOUT = 25
 results = []
@@ -101,23 +105,32 @@ def fetch(url, referer=None, extra=None, timeout=TIMEOUT):
         return None, "", f"{type(e).__name__}: {e}"
 
 
-def classify(status, text, err):
-    """Distinguish 'blocked' from 'parse failure' from 'transport error'."""
+def classify(status, text, err, extracted=None):
+    """Distinguish 'blocked' from 'parse failure' from 'transport error'.
+
+    `extracted` is the count of useful items pulled out of the body (links,
+    characters of post text). When it is positive the fetch demonstrably
+    worked, which outranks any heuristic signature match.
+    """
     if err:
         return "TRANSPORT_ERROR", err
     if status in (403, 429):
         return "BLOCKED", f"HTTP {status}"
     if status and status >= 500:
         return "SERVER_ERROR", f"HTTP {status}"
-    low = text.lower()
-    for sign in BLOCK_SIGNS:
-        if sign.lower() in low:
-            return "BLOCKED", f"block signature: {sign!r}"
     if status != 200:
         return "HTTP_ERROR", f"HTTP {status}"
+
+    if extracted:
+        return "OK", f"HTTP 200, {len(text)} bytes, {extracted} extracted"
+
+    if len(text) <= BLOCK_MAX_BYTES:
+        for sign in BLOCK_SIGNS:
+            if sign in text:
+                return "BLOCKED", f"block page: {sign!r}"
     if len(text) < 500:
         return "EMPTY", f"body only {len(text)} bytes"
-    return "OK", f"HTTP 200, {len(text)} bytes"
+    return "PARSE_FAILED", f"HTTP 200, {len(text)} bytes, nothing extracted"
 
 
 TAG_RE = re.compile(r"<[^>]+>")
@@ -159,8 +172,8 @@ def extract_body(html):
     return ("whole-document", text) if len(text) > 200 else ("none", "")
 
 
-def record(step, path, url, status, text, err, extra=None):
-    kind, detail = classify(status, text, err)
+def record(step, path, url, status, text, err, extra=None, extracted=None):
+    kind, detail = classify(status, text, err, extracted)
     row = {
         "step": step,
         "path": path,
@@ -193,9 +206,10 @@ def probe_blog_search():
     url = f"https://m.search.naver.com/search.naver?ssc=tab.m_blog.all&sm=mtb_jum&query={q}&start=1"
     status, text, err = fetch(url, referer="https://m.search.naver.com/")
     links = re.findall(r"https?://(?:m\.)?blog\.naver\.com/([A-Za-z0-9_-]+)/(\d{6,})", text)
-    ok, _ = record("blog_search", "m.search.naver.com", url, status, text, err,
-                   {"found": len(links), "sample": links[:3]})
-    return links
+    uniq = list(dict.fromkeys(links))
+    record("blog_search", "m.search.naver.com", url, status, text, err,
+           {"unique_posts": len(uniq), "sample": uniq[:3]}, extracted=len(uniq))
+    return uniq
 
 
 # ---------------------------------------------------------------- step 2
@@ -210,15 +224,17 @@ def probe_blog_read(blog_id, log_no):
     s, t, e = fetch(u1, referer="https://m.search.naver.com/")
     strat, body = extract_body(t) if t else ("none", "")
     ok, _ = record("blog_read", "1) direct m.blog", u1, s, t, e,
-                   {"extract": strat, "chars": len(body), "head": body[:180].replace("\n", " / ")})
-    order.append(("direct-mobile", ok and len(body) > 200))
+                   {"extract": strat, "chars": len(body),
+                    "head": body[:180].replace("\n", " / ")},
+                   extracted=len(body) if len(body) > 200 else 0)
+    order.append(("direct-mobile", ok))
 
     # Path 2: r.jina.ai reader prefix (no key)
     u2 = f"https://r.jina.ai/https://m.blog.naver.com/{blog_id}/{log_no}"
     s, t, e = fetch(u2, timeout=45)
-    ok2 = (s == 200 and len(t) > 300)
-    record("blog_read", "2) r.jina.ai", u2, s, t, e,
-           {"chars": len(t), "head": t[:180].replace("\n", " / ")})
+    ok2, _ = record("blog_read", "2) r.jina.ai", u2, s, t, e,
+                    {"chars": len(t), "head": t[:180].replace("\n", " / ")},
+                    extracted=len(t) if len(t) > 300 else 0)
     order.append(("jina", ok2))
 
     # Path 3: PC PostView.naver
@@ -226,17 +242,17 @@ def probe_blog_read(blog_id, log_no):
           f"&logNo={log_no}&redirect=Dlog&widgetTypeCall=true&directAccess=false")
     s, t, e = fetch(u3, referer=f"https://blog.naver.com/{blog_id}")
     strat3, body3 = extract_body(t) if t else ("none", "")
-    ok3 = (s == 200 and len(body3) > 200)
-    record("blog_read", "3) PC PostView.naver", u3, s, t, e,
-           {"extract": strat3, "chars": len(body3), "head": body3[:180].replace("\n", " / ")})
+    ok3, _ = record("blog_read", "3) PC PostView.naver", u3, s, t, e,
+                    {"extract": strat3, "chars": len(body3),
+                     "head": body3[:180].replace("\n", " / ")},
+                    extracted=len(body3) if len(body3) > 200 else 0)
     order.append(("pc-postview", ok3))
 
     # Path 4: blog RSS
     u4 = f"https://rss.blog.naver.com/{blog_id}.xml"
     s, t, e = fetch(u4)
     items = len(re.findall(r"<item>", t, re.I))
-    ok4 = (s == 200 and items > 0)
-    record("blog_read", "4) RSS", u4, s, t, e, {"items": items})
+    ok4, _ = record("blog_read", "4) RSS", u4, s, t, e, {"items": items}, extracted=items)
     order.append(("rss", ok4))
 
     return order
@@ -250,9 +266,10 @@ def probe_news():
     q = urllib.parse.quote("금리")
     url = f"https://m.search.naver.com/search.naver?ssc=tab.m_news.all&where=m_news&query={q}"
     s, t, e = fetch(url, referer="https://m.search.naver.com/")
-    arts = re.findall(r"https?://n\.news\.naver\.com/(?:mnews/)?article/(\d{3})/(\d{10})", t)
+    arts = list(dict.fromkeys(
+        re.findall(r"https?://n\.news\.naver\.com/(?:mnews/)?article/(\d{3})/(\d{10})", t)))
     record("news_search", "m.search.naver.com", url, s, t, e,
-           {"found": len(arts), "sample": arts[:3]})
+           {"unique_articles": len(arts), "sample": arts[:3]}, extracted=len(arts))
 
     if arts:
         oid, aid = arts[0]
@@ -263,7 +280,8 @@ def probe_news():
             re.search(r'<div[^>]*id="newsct_article"[^>]*>(.*?)</div>', t, re.S)
         body = html_to_text(m.group(1)) if m else ""
         record("news_read", "n.news.naver.com", u, s, t, e,
-               {"chars": len(body), "head": body[:180].replace("\n", " / ")})
+               {"chars": len(body), "head": body[:180].replace("\n", " / ")},
+               extracted=len(body) if len(body) > 100 else 0)
 
 
 # ---------------------------------------------------------------- step 4
@@ -274,17 +292,18 @@ def probe_cafe_and_place():
     q = urllib.parse.quote("캠핑 후기")
     url = f"https://m.search.naver.com/search.naver?ssc=tab.m_cafe.all&where=m_cafe&query={q}"
     s, t, e = fetch(url, referer="https://m.search.naver.com/")
-    hits = re.findall(r"cafe\.naver\.com/([A-Za-z0-9_-]+)", t)
+    hits = list(dict.fromkeys(re.findall(r"cafe\.naver\.com/([A-Za-z0-9_-]+)", t)))
     record("cafe_search", "m.search.naver.com", url, s, t, e,
-           {"found": len(hits), "sample": list(dict.fromkeys(hits))[:3]})
+           {"unique_cafes": len(hits), "sample": hits[:3]}, extracted=len(hits))
 
     q2 = urllib.parse.quote("성수동 카페")
     url2 = f"https://m.search.naver.com/search.naver?query={q2}"
     s, t, e = fetch(url2, referer="https://m.search.naver.com/")
-    places = re.findall(r"place\.naver\.com/(?:restaurant|place)/(\d+)", t) or \
-             re.findall(r"pcmap\.place\.naver\.com/[a-z]+/(\d+)", t)
+    places = list(dict.fromkeys(
+        re.findall(r"place\.naver\.com/(?:restaurant|place)/(\d+)", t) or
+        re.findall(r"pcmap\.place\.naver\.com/[a-z]+/(\d+)", t)))
     record("place_search", "m.search.naver.com", url2, s, t, e,
-           {"found": len(places), "sample": places[:3]})
+           {"unique_places": len(places), "sample": places[:3]}, extracted=len(places))
 
 
 def main():
