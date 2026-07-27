@@ -131,7 +131,7 @@ The server exposes only:
 
 Full skill text is returned only on request and is separated as `untrustedContent`; metadata and prose cannot acquire instruction authority. The server can signal this trust boundary but cannot guarantee how an external model will behave.
 
-Every structured response declares `protocolVersion`, `coreVersion`, `metadataSchemaVersion`, `scorerVersion`, and catalog digest. Incompatible versions fail explicitly.
+Every structured response declares `protocolVersion`, `coreVersion`, `metadataSchemaVersion`, `scorerVersion`, and catalog digest. MCP initialization responds with the server-supported protocol revision so the client can accept it or disconnect; incompatible artifact and schema versions still fail explicitly.
 
 ## CLI lifecycle
 

@@ -101,20 +101,38 @@ test("strict JSON-lines parser rejects invalid UTF-8, duplicate keys, excess dep
   );
 });
 
-test("initialize fails closed on a protocol version other than 2025-06-18", async () => {
+test("initialize negotiates the server-supported version for a newer client", async () => {
   const server = new McpServer({ root: ROOT });
   const response = await server.handle({
     jsonrpc: "2.0",
     id: "init",
     method: "initialize",
-    params: { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "test", version: "1" } },
+    params: { protocolVersion: "2025-11-25", capabilities: {}, clientInfo: { name: "test", version: "1" } },
   });
-  assert.equal(response.error.code, -32602);
-  assert.equal(response.error.data.code, "AAS_MCP_PROTOCOL_VERSION_INCOMPATIBLE");
-  assert.equal(response.error.data.expected, "2025-06-18");
+  assert.equal(response.result.protocolVersion, core.protocolVersion);
   await server.handle({ jsonrpc: "2.0", method: "notifications/initialized", params: {} });
-  const bypass = await server.handle({ jsonrpc: "2.0", id: 2, method: "tools/list", params: {} });
-  assert.equal(bypass.error.code, -32002);
+  const tools = await server.handle({ jsonrpc: "2.0", id: 2, method: "tools/list", params: {} });
+  assert.deepEqual(tools.result.tools.map((entry) => entry.name), TOOL_NAMES);
+});
+
+test("initialize rejects a missing or malformed protocol version", async () => {
+  const invalidVersions = [undefined, "", "   ", null, 20250618];
+  for (const protocolVersion of invalidVersions) {
+    const server = new McpServer({ root: ROOT });
+    const params = { capabilities: {}, clientInfo: { name: "test", version: "1" } };
+    if (protocolVersion !== undefined) params.protocolVersion = protocolVersion;
+    const response = await server.handle({
+      jsonrpc: "2.0",
+      id: "init",
+      method: "initialize",
+      params,
+    });
+    assert.equal(response.error.code, -32602);
+    assert.equal(response.error.data.code, "AAS_MCP_PROTOCOL_VERSION_INVALID");
+    await server.handle({ jsonrpc: "2.0", method: "notifications/initialized", params: {} });
+    const bypass = await server.handle({ jsonrpc: "2.0", id: 2, method: "tools/list", params: {} });
+    assert.equal(bypass.error.code, -32002);
+  }
 });
 
 test("MCP preserves the five stack tools and adds two read-only evidence tools", async () => {
@@ -733,7 +751,7 @@ test("stdio entrypoint emits protocol-only stdout and survives a malformed line"
   const stderr = [];
   child.stdout.on("data", (chunk) => stdout.push(chunk));
   child.stderr.on("data", (chunk) => stderr.push(chunk));
-  child.stdin.write('{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"test","version":"1"}}}\n');
+  child.stdin.write('{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"test","version":"1"}}}\n');
   child.stdin.write('{"a":1,"a":2}\n');
   child.stdin.write('{"jsonrpc":"2.0","method":"notifications/initialized","params":{}}\n');
   child.stdin.write('{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}\n');

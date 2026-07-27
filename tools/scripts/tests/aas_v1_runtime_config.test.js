@@ -218,7 +218,7 @@ test("the packed runtime launches MCP from an isolated verified dependency closu
     id: 1,
     method: "initialize",
     params: {
-      protocolVersion: core.protocolVersion,
+      protocolVersion: "2025-11-25",
       capabilities: {},
       clientInfo: { name: "isolated-runtime-test", version: "1" },
     },

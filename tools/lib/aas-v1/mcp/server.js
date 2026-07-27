@@ -679,10 +679,9 @@ class McpServer {
     if (!Object.hasOwn(request, "id") || !isPlainObject(request.params)) {
       return this.rpcError(id, -32600, "Invalid Request");
     }
-    if (request.params.protocolVersion !== core.protocolVersion) {
-      return this.rpcError(id, -32602, "Unsupported protocol version", {
-        code: "AAS_MCP_PROTOCOL_VERSION_INCOMPATIBLE",
-        expected: core.protocolVersion,
+    if (typeof request.params.protocolVersion !== "string" || request.params.protocolVersion.trim().length === 0) {
+      return this.rpcError(id, -32602, "Invalid protocolVersion", {
+        code: "AAS_MCP_PROTOCOL_VERSION_INVALID",
       });
     }
     this.initializeAccepted = true;

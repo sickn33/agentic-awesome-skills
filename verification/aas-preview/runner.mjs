@@ -364,7 +364,7 @@ async function main() {
   const beforeMcp = { project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) };
   const client = new JsonLineClient(mcpBin, ["--cache-root", cacheRoot], projectRoot);
   const initialize = await client.request(1, "initialize", {
-    protocolVersion: "2025-06-18",
+    protocolVersion: "2025-11-25",
     capabilities: {},
     clientInfo: { name: "aas-preview", version: "1" },
   });
