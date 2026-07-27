@@ -1,0 +1,53 @@
+name: Naver Edge Probe
+
+# Step 0 gate for the Naver MCP server.
+# Runs from a GitHub-hosted runner (a datacenter IP, like Cloudflare's edge) and
+# checks whether Naver actually serves content, across every fallback path.
+# If this fails, deploying the MCP server is pointless.
+
+on:
+  push:
+    branches: ["claude/naver-content-mcp-server-9h9t07"]
+    paths:
+      - "apps/naver-mcp/**"
+      - ".github/workflows/naver-edge-probe.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    name: Probe Naver from datacenter edge
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+
+      - name: Run Naver probe
+        id: probe
+        continue-on-error: true
+        run: python3 apps/naver-mcp/scripts/naver_probe.py
+
+      - name: Upload probe results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: probe-results
+          path: probe-results.json
+          if-no-files-found: warn
+
+      - name: Report gate outcome
+        if: always()
+        run: |
+          if [ "${{ steps.probe.outcome }}" = "success" ]; then
+            echo "STEP-0 GATE PASSED" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "STEP-0 GATE FAILED - see probe log" >> "$GITHUB_STEP_SUMMARY"
+          fi
