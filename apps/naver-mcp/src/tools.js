@@ -63,15 +63,20 @@ function collectHits(html, urlSource, into, want) {
   let m;
   while ((m = anchor.exec(html)) !== null && into.size < want) {
     const k = key(m);
-    if (into.has(k)) continue;
-    into.set(k, { match: m, title: cleanTitle(m[m.length - 1]) });
+    const title = cleanTitle(m[m.length - 1]);
+    const prev = into.get(k);
+    // The same URL appears in several anchors ("더보기", the snippet, the
+    // title). Let a later real title replace an earlier empty one instead of
+    // letting whichever came first win.
+    if (prev && (prev.title || !title)) continue;
+    into.set(k, { title });
   }
 
   bare.lastIndex = 0;
   while ((m = bare.exec(html)) !== null && into.size < want) {
     const k = key(m);
     if (into.has(k)) continue;
-    into.set(k, { match: m, title: "" });
+    into.set(k, { title: "" });
   }
   return into;
 }
