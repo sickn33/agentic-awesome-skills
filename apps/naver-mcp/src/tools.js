@@ -29,19 +29,52 @@ const clampCount = (n, dflt = 10) => {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-/** Pull a human-readable label near an anchor, for search result titles. */
+// Chrome/UI labels that sit next to result links and are not titles.
+const UI_NOISE = new Set([
+  "저장하기", "공유하기", "더보기", "신고", "신고하기", "답글", "댓글",
+  "블로그", "카페", "네이버", "관련글", "본문 보기", "새글", "닫기", "열기",
+  "이미지", "동영상", "지도", "길찾기", "전화", "예약", "정보",
+]);
+
+const isNoise = (t) => UI_NOISE.has(t) || /^[\s·|\-—]*$/.test(t);
+
+/**
+ * Pull a human-readable title for a search hit.
+ *
+ * Naver wraps result titles in the anchor itself, so the anchor's own text is
+ * the most reliable source. Attribute/class matches are only a fallback, and
+ * both are filtered against UI chrome like "저장하기" which otherwise wins by
+ * being physically nearer the link than the real title.
+ */
 function titleNear(html, index) {
-  const window_ = html.slice(Math.max(0, index - 700), index + 700);
+  const clean = (raw) => {
+    const t = htmlToText(raw).replace(/\s+/g, " ").trim();
+    return t.length >= 4 && t.length <= 200 && !isNoise(t) ? t : "";
+  };
+
+  // 1. Text of the anchor that contains this URL.
+  const openIdx = html.lastIndexOf("<a ", index);
+  if (openIdx !== -1 && index - openIdx < 600) {
+    const gt = html.indexOf(">", openIdx);
+    const closeIdx = html.indexOf("</a>", gt);
+    if (gt !== -1 && closeIdx !== -1 && closeIdx - gt < 3000) {
+      const t = clean(html.slice(gt + 1, closeIdx));
+      if (t) return t;
+    }
+  }
+
+  // 2. A titled element nearby, preferring Naver's result-title classes.
+  const window_ = html.slice(Math.max(0, index - 1800), index + 1800);
   const pats = [
-    /title="([^"]{4,120})"/,
-    /class="[^"]*(?:title_link|api_txt_lines|total_tit|name_link)[^"]*"[^>]*>([\s\S]{4,200}?)</,
-    /<strong[^>]*>([\s\S]{4,160}?)<\/strong>/,
+    /class="[^"]*(?:title_link|api_txt_lines|total_tit|name_link|title_area|sub_tit)[^"]*"[^>]*>([\s\S]{4,300}?)<\/(?:a|strong|span|div)>/i,
+    /<strong[^>]*class="[^"]*title[^"]*"[^>]*>([\s\S]{4,300}?)<\/strong>/i,
+    /title="([^"]{4,150})"/,
   ];
   for (const p of pats) {
     const m = window_.match(p);
     if (m) {
-      const t = decodeEntities(m[1]).replace(/\s+/g, " ").trim();
-      if (t.length >= 4) return t;
+      const t = clean(m[1]);
+      if (t) return t;
     }
   }
   return "";
