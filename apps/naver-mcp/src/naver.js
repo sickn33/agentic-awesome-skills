@@ -49,7 +49,7 @@ export class NaverError extends Error {
   }
 }
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /**
  * Single HTTP GET with retry. Workers' fetch decompresses gzip transparently.

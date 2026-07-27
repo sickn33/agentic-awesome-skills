@@ -70,3 +70,26 @@ jobs:
       - name: Exercise every tool
         working-directory: apps/naver-mcp
         run: node scripts/test_tools.mjs
+
+      - name: Build the pasteable single-file bundle
+        working-directory: apps/naver-mcp
+        run: node scripts/bundle.mjs
+
+      - name: Drive the bundled Worker over JSON-RPC
+        working-directory: apps/naver-mcp
+        run: node scripts/test_worker.mjs
+
+      - name: Confirm the committed bundle matches src
+        working-directory: apps/naver-mcp
+        run: |
+          if ! git diff --quiet -- dist/worker.js; then
+            echo "dist/worker.js is stale - run 'node scripts/bundle.mjs' and commit it." >&2
+            git diff --stat -- dist/worker.js
+            exit 1
+          fi
+
+      - name: Upload pasteable bundle
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: worker-bundle
+          path: apps/naver-mcp/dist/worker.js

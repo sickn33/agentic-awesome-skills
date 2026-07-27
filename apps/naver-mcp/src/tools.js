@@ -15,6 +15,7 @@ import {
   parseBlogUrl,
   parseNewsUrl,
   readViaChain,
+  sleep,
 } from "./naver.js";
 
 const SEARCH_REFERER = "https://m.search.naver.com/";
@@ -50,7 +51,6 @@ function capLength(text, maxChars) {
   };
 }
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // UI chrome that appears as link text on result pages and is never a title.
 const UI_NOISE = [
