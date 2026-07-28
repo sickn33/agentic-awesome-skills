@@ -1,7 +1,6 @@
 ---
 name: browser-act
 description: "Use BrowserAct for authenticated browser automation, JS-rendered extraction, screenshots, parallel sessions, verification handling, and human handoff."
-allowed-tools: Bash(browser-act:*)
 category: browser-automation
 risk: critical
 source: https://github.com/browser-act/skills/tree/main/browser-act
