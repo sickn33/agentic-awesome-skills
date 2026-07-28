@@ -4,14 +4,14 @@ description: "Integrate Modellix unified API/CLI for async AI image and video ge
 category: creative
 risk: critical
 source: community
-source_repo: Modellix/modellix-skill
+source_repo: Modellix/modellix-plugin
 source_type: official
 date_added: "2026-07-16"
 author: Modellix
 tags: [image-generation, video-generation, modellix, cli, api]
 tools: [claude, cursor, gemini]
 license: "MIT"
-license_source: "https://github.com/Modellix/modellix-skill/blob/main/LICENSE"
+license_source: "https://github.com/Modellix/modellix-plugin/blob/main/LICENSE"
 ---
 
 # Modellix
@@ -20,7 +20,7 @@ license_source: "https://github.com/Modellix/modellix-skill/blob/main/LICENSE"
 
 Modellix is a Model-as-a-Service platform for AI image and video generation. This skill teaches agents to use the official `modellix-cli` workflow (doctor → model run --wait → task download).
 
-Upstream package: https://github.com/Modellix/modellix-skill/tree/main/modellix-skill
+Upstream package: https://github.com/Modellix/modellix-plugin/tree/main/skills/modellix (the repository was renamed from `Modellix/modellix-skill`; the skill now ships inside an Open Plugins package).
 
 ## When to Use This Skill
 
@@ -33,7 +33,7 @@ Upstream package: https://github.com/Modellix/modellix-skill/tree/main/modellix-
 
 1. Authenticate with `MODELLIX_API_KEY` or `modellix-cli auth login`
 2. Run `modellix-cli doctor --json`
-3. Use default models when unspecified (T2I: `google/nano-banana-2-lite`, T2V: `bytedance/seedance-2.0-mini-t2v`)
+3. Use default models when unspecified (T2I: `google/nano-banana-2-lite`, T2V: `bytedance/seedance-2.0-mini-t2v`, I2I: `google/nano-banana-2-lite-edit`, I2V: `bytedance/seedance-2.0-fast-i2v`, V2V: `bytedance/seedance-2.0-fast-v2v`)
 4. Submit with `modellix-cli model run --wait --json`
 5. Persist outputs with `modellix-cli task download`
 
@@ -64,6 +64,7 @@ modellix-cli model run \
 - Prefer session-scoped API-key use; run `modellix-cli auth login` only when the user approves persistent local credential storage
 - Do not blindly retry paid submissions after unknown outcomes — check `task history`
 - Confirm the destination and overwrite policy before `task download`; never replace an existing file without explicit approval
+- Download results before they expire; hosted result URLs are retained for about 7 days
 - Fetch request schemas from `model describe` `docs_url` or https://docs.modellix.ai/llms.txt
 
 ## Security & Safety Notes

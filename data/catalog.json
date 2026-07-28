@@ -35068,9 +35068,9 @@
       "risk": "critical",
       "source": "community",
       "source_type": "official",
-      "source_repo": "Modellix/modellix-skill",
+      "source_repo": "Modellix/modellix-plugin",
       "license": "MIT",
-      "license_source": "https://github.com/Modellix/modellix-skill/blob/main/LICENSE",
+      "license_source": "https://github.com/Modellix/modellix-plugin/blob/main/LICENSE",
       "tags": [
         "image-generation",
         "video-generation",

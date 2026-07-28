@@ -811,7 +811,7 @@ Total skills: 1992
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `article-illustrations` | Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors. | safe | vipin-si/article-illustrations | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch, article, illustrations, generate, hand, drawn, 16, grav |
-| `modellix` | Integrate Modellix unified API/CLI for async AI image and video generation (model run --wait, task download). | critical | Modellix/modellix-skill | image-generation, video-generation, modellix, cli, api | image-generation, video-generation, modellix, cli, api, integrate, unified, async, ai, image, video, generation |
+| `modellix` | Integrate Modellix unified API/CLI for async AI image and video generation (model run --wait, task download). | critical | Modellix/modellix-plugin | image-generation, video-generation, modellix, cli, api | image-generation, video-generation, modellix, cli, api, integrate, unified, async, ai, image, video, generation |
 
 ## data (24)
 
