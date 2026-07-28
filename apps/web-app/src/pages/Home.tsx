@@ -7,7 +7,7 @@ import { useSkills } from '../context/SkillContext';
 import { seoLandingPages } from '../data/seoLandingPages';
 import { usePageMeta } from '../hooks/usePageMeta';
 import type { CategoryStats, SyncMessage } from '../types';
-import { buildHomeMeta, getHomeFaqItems } from '../utils/seo';
+import { buildHomeMeta, getHomeFaqItems, toIndexableRoutePath } from '../utils/seo';
 
 const conceptCards = [
   { title: 'AAS Core preview', body: 'The local boundary that validates an agent-selected skill stack and immutable plan preview.' },
@@ -120,7 +120,7 @@ export function Home(): React.ReactElement {
             </button>
           ))}
         </nav>
-        <Link to="/workbench" className="catalog-rail__workbench">
+        <Link to={toIndexableRoutePath('/workbench')} className="catalog-rail__workbench">
           <Icon name="fileCode" size={17} />
           AAS Core Workbench
         </Link>
@@ -180,7 +180,7 @@ export function Home(): React.ReactElement {
                 </select>
               </label>
             </div>
-            <Link to="/workbench">Review an AAS Core stack <Icon name="arrowRight" size={16} /></Link>
+            <Link to={toIndexableRoutePath('/workbench')}>Review an AAS Core stack <Icon name="arrowRight" size={16} /></Link>
           </div>
         </section>
 
@@ -251,7 +251,7 @@ export function Home(): React.ReactElement {
             </div>
             <div>
               <h2>Search topics</h2>
-              <nav>{seoLandingPages.map((page) => <Link key={page.slug} to={`/topics/${page.slug}`}>{page.h1}<Icon name="arrowRight" size={14} /></Link>)}</nav>
+              <nav>{seoLandingPages.map((page) => <Link key={page.slug} to={toIndexableRoutePath(`/topics/${page.slug}`)}>{page.h1}<Icon name="arrowRight" size={14} /></Link>)}</nav>
             </div>
           </div>
           <div className="catalog-faq">

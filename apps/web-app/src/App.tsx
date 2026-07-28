@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Link, NavLink, Route, Routes } from 'react-router';
 import { Icon } from './components/ui/Icon';
+import { toIndexableRoutePath } from './utils/seo';
 
 const Home = lazy(() => import('./pages/Home'));
 const SkillDetail = lazy(() => import('./pages/SkillDetail'));
@@ -38,13 +39,13 @@ function App(): React.ReactElement {
                 Core
               </NavLink>
               <NavLink
-                to="/workbench"
+                to={toIndexableRoutePath('/workbench')}
                 className={({ isActive }) => `app-nav__link ${isActive ? 'is-active' : ''}`}
               >
                 Workbench
               </NavLink>
               <NavLink
-                to="/plugins"
+                to={toIndexableRoutePath('/plugins')}
                 className={({ isActive }) => `app-nav__link ${isActive ? 'is-active' : ''}`}
               >
                 Plugins
@@ -66,8 +67,8 @@ function App(): React.ReactElement {
                 <summary aria-label="Open navigation">Menu</summary>
                 <nav aria-label="Mobile navigation">
                   <Link to="/">Core</Link>
-                  <Link to="/workbench">Workbench</Link>
-                  <Link to="/plugins">Plugins</Link>
+                  <Link to={toIndexableRoutePath('/workbench')}>Workbench</Link>
+                  <Link to={toIndexableRoutePath('/plugins')}>Plugins</Link>
                   <a href="https://github.com/sickn33/agentic-awesome-skills" target="_blank" rel="noreferrer">View on GitHub</a>
                 </nav>
               </details>

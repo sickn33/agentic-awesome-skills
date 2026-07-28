@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { SkillStarButton } from './SkillStarButton';
 import { Icon } from './ui/Icon';
 import type { Skill } from '../types';
+import { toIndexableRoutePath } from '../utils/seo';
 
 interface SkillCardProps {
   skill: Skill;
@@ -13,7 +14,7 @@ export const SkillCard = React.memo(({ skill, starCount }: SkillCardProps) => {
   return (
     <article className="skill-row group">
       <Link
-        to={`/skill/${skill.id}`}
+        to={toIndexableRoutePath(`/skill/${skill.id}`)}
         className="skill-row__link"
         aria-label={`Read skill ${skill.name}`}
       >

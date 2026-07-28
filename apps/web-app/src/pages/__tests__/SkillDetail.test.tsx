@@ -107,7 +107,7 @@ describe('SkillDetail', () => {
         expect(screen.getByText(/Related topic guides/i)).toBeInTheDocument();
         expect(screen.getByRole('link', { name: /Antigravity plugins/i })).toHaveAttribute(
           'href',
-          '/topics/antigravity-plugins',
+          '/topics/antigravity-plugins/',
         );
         expect(screen.getByTestId('markdown-content')).toHaveTextContent('This is the skill content.');
         expect(document.title).toContain('react-patterns');
@@ -294,7 +294,7 @@ describe('SkillDetail', () => {
 
       expect(screen.getByRole('link', { name: /Review Core artifacts/i })).toHaveAttribute(
         'href',
-        '/workbench',
+        '/workbench/',
       );
     });
   });

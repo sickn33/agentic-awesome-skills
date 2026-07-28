@@ -1,6 +1,14 @@
 # Maintenance Walkthrough - 2026-07-28
 
 - Added a fail-closed provenance exception ledger for maintainer-verified upstream repository renames. The initial Modellix entry records that `Modellix/modellix-skill` and `Modellix/modellix-plugin` resolve to GitHub repository ID `1150322983`; only the exact recorded transition is allowed, while unrelated provenance changes remain blocked.
+- Traced a live Search Console `Pagina con reindirizzamento` report to the
+  slashless `/plugins` URL, which GitHub Pages correctly redirects to the
+  indexable `/plugins/` route.
+- Normalized every runtime link to workbench, plugin, topic, and skill pages
+  through the existing trailing-slash route helper so crawlers are no longer
+  invited to request redirecting URL variants.
+- Added focused web-app assertions for trailing-slash navigation targets; the
+  sitemap, canonical metadata, and public route remain aligned on `/plugins/`.
 
 # Maintenance Walkthrough - 2026-07-26
 

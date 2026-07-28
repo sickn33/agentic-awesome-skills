@@ -18,6 +18,10 @@ describe('Plugins', () => {
       expect.stringContaining('docs/users/getting-started.md'),
     );
     expect(screen.getByText(/Plugins, bundles, and workflows serve different decisions/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '@frontend-developer' })).toHaveAttribute(
+      'href',
+      '/skill/frontend-developer/',
+    );
     expect(document.title).toContain('AAS Specialized Plugins');
     expect(document.querySelector('meta[name="description"]')).toHaveAttribute(
       'content',
