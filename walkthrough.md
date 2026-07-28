@@ -1,13 +1,6 @@
 # Maintenance Walkthrough - 2026-07-28
 
 - Added a fail-closed provenance exception ledger for maintainer-verified upstream repository renames. The initial Modellix entry records that `Modellix/modellix-skill` and `Modellix/modellix-plugin` resolve to GitHub repository ID `1150322983`; only the exact recorded transition is allowed, while unrelated provenance changes remain blocked.
-- Reviewed the official MIT-licensed `browser-act` contribution against
-  `browser-act/skills` and the published `browser-act-cli` `1.1.0` wheel.
-- Pinned the documented installation to the reviewed package version and made
-  analytics, exception reporting, provider-hosted verification, remote control,
-  compiled-package opacity, and dynamic-guide trust boundaries explicit.
-- Prevented runtime guide content from overriding user intent, repository
-  policy, or modifying Skill and configuration files without separate approval.
 
 # Maintenance Walkthrough - 2026-07-26
 
