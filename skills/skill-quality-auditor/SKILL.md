@@ -49,7 +49,7 @@ Check required fields exist and are not placeholder values:
 ✅ name        — slug-style, matches folder name
 ✅ description — one meaningful sentence (not "TODO" or blank)
 ✅ category    — valid category (development/security/testing/infra/etc.)
-✅ risk        — one of: safe | low | medium | high | critical
+✅ risk        — one of: none | safe | critical | offensive | unknown
 ✅ date_added  — valid ISO date
 ✅ tags        — at least 2 relevant tags
 ✅ tools       — at least one supported tool listed
@@ -173,7 +173,8 @@ Verdict: USE WITH CAUTION — verify React 19 hook patterns still apply
 Input: skills/deploy-helper/SKILL.md
 Result:
   Body Depth   ❌ — 8 lines, no examples
-  Safety       ❌ — risk: safe but body has: curl https://example.com | sh
+  Safety       ❌ — risk: safe but body pipes a remote download into sh
+                   (pattern: curl <url> piped to shell interpreter)
   Freshness    ❌ — date_added: 2023-01
 
 Verdict: DO NOT INSTALL

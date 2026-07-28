@@ -118,14 +118,29 @@ For each skill:
 # Apply one skill
 # (copy files, scaffold patterns per skill instructions)
 
+# Track what was added (new untracked files) BEFORE applying
+# so we can clean them up if rollback is needed
+$BEFORE_FILES = git ls-files --others --exclude-standard
+
 # Immediately verify
-npm run build 2>&1 | tail -20
+npm run build 2>&1 | Select-Object -Last 20
 # OR
-python -m pytest --co -q 2>&1 | tail -10
+python -m pytest --co -q 2>&1 | Select-Object -Last 10
 
 # If verify fails → rollback THIS skill only (not the whole stack)
+# Step 1: restore modified tracked files
 git diff --name-only HEAD
-git checkout HEAD -- <files changed by this skill>
+git checkout HEAD -- <tracked files changed by this skill>
+
+# Step 2: remove newly added files (untracked — not in HEAD)
+# git checkout HEAD cannot restore these; delete them explicitly
+$AFTER_FILES = git ls-files --others --exclude-standard
+$NEW_FILES = Compare-Object $BEFORE_FILES $AFTER_FILES | Where-Object { $_.SideIndicator -eq '=>' } | Select-Object -ExpandProperty InputObject
+foreach ($f in $NEW_FILES) { Remove-Item $f -Force }
+
+# Step 3: verify rollback is clean
+git status  # should show nothing staged/unstaged from this skill
+npm run build  # should pass again
 ```
 
 **Stop condition:** If any skill application breaks the build → stop, rollback that skill, log the gap, continue with the next.
@@ -202,13 +217,17 @@ Produce a verification report:
 
 ### Rollback a single skill
 ```bash
-# Find files changed by that skill
+# Find tracked files changed by that skill
 git diff --name-only HEAD~1 HEAD
 
-# Restore those files only
+# Restore modified tracked files
 git checkout HEAD~1 -- <file1> <file2>
 
-# Verify restore
+# Remove any files that were ADDED (new) by that skill
+# These are not in HEAD~1 so checkout cannot restore them — delete explicitly
+git diff --name-only --diff-filter=A HEAD~1 HEAD | ForEach-Object { Remove-Item $_ -Force }
+
+# Verify full restore
 npm run build
 ```
 
