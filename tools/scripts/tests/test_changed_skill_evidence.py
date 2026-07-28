@@ -432,6 +432,81 @@ class ChangedSkillEvidenceTests(unittest.TestCase):
         self.assertIn("external:provenance_identity_changed:source_type", report["reasons"])
         self.assertIn("external:provenance_identity_changed:source_repo", report["reasons"])
 
+    def test_exact_trusted_repo_rename_exception_allows_only_recorded_transition(self):
+        root, _ = init_repo(with_skill=False)
+        path = write_skill(
+            root,
+            "external",
+            source="community",
+            source_type="community",
+            source_repo="owner/old-name",
+        )
+        git(root, "add", ".")
+        git(root, "commit", "-m", "external base")
+        base = git(root, "rev-parse", "HEAD")
+        path.write_text(
+            path.read_text(encoding="utf-8").replace(
+                "source_repo: owner/old-name", "source_repo: owner/new-name"
+            ),
+            encoding="utf-8",
+        )
+        git(root, "add", ".")
+        git(root, "commit", "-m", "rename upstream")
+        head = git(root, "rev-parse", "HEAD")
+
+        blocked = changed_skill_evidence.build_report(root, base, head)
+        self.assertIn("external:provenance_identity_changed:source_repo", blocked["reasons"])
+
+        ledger = root / changed_skill_evidence.PROVENANCE_EXCEPTION_PATH
+        ledger.parent.mkdir(parents=True)
+        ledger.write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "exceptions": [
+                        {
+                            "skill_id": "external",
+                            "field": "source_repo",
+                            "before": "owner/old-name",
+                            "after": "owner/new-name",
+                            "upstream_repository_id": 12345,
+                            "verified_at": "2026-07-28",
+                            "evidence_url": "https://github.com/owner/new-name",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        git(root, "add", ".")
+        git(root, "commit", "-m", "trusted rename policy")
+        policy = git(root, "rev-parse", "HEAD")
+
+        allowed = changed_skill_evidence.build_report(
+            root, base, head, policy_ref=policy
+        )
+        self.assertFalse(allowed["blocking"])
+        self.assertEqual(
+            allowed["provenance_exceptions_applied"],
+            ["external:source_repo:owner/old-name->owner/new-name"],
+        )
+
+        path.write_text(
+            path.read_text(encoding="utf-8").replace(
+                "source_repo: owner/new-name", "source_repo: owner/other-name"
+            ),
+            encoding="utf-8",
+        )
+        git(root, "add", ".")
+        git(root, "commit", "-m", "unrecorded rename")
+        unrecorded_head = git(root, "rev-parse", "HEAD")
+        unrecorded = changed_skill_evidence.build_report(
+            root, base, unrecorded_head, policy_ref=policy
+        )
+        self.assertIn(
+            "external:provenance_identity_changed:source_repo", unrecorded["reasons"]
+        )
+
     def test_declared_risk_downgrade_blocks(self):
         before = {
             "audit": {"findings": {}},

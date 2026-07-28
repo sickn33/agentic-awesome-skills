@@ -42,6 +42,7 @@ Use `--dry-run` to exercise local classification without approving a run or merg
 - fetch the exact base/head objects and classify the complete raw Git diff
 - recompute changed-skill evidence with evaluator code materialized from the trusted `main` commit
 - reject incomplete evidence coverage, deterministic quality/security/provenance regressions, and base/head drift
+- allow only exact `source_repo` transitions recorded in the trusted protected-base provenance exception ledger; unrecorded or malformed transitions still fail closed
 - for external PRs, poll for asynchronously-created fork runs and approve only runs waiting on `action_required` when every path, mode, object, size, and workflow identity is allowlisted
 - for sensitive same-repository source changes, allow the guarded exception only when the PR author is the repository owner and the exact full head SHA is attested; collaborator-authored sensitive changes fail closed under the external safety policy
 - wait for the latest required checks bound to the exact head SHA

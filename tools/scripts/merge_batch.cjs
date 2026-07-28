@@ -348,6 +348,8 @@ function recomputeChangedSkillEvidence(
         mergeBaseOid,
         "--head",
         headOid,
+        "--policy-ref",
+        evaluatorOid,
         "--output",
         outputPath,
       ],

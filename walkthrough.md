@@ -1,3 +1,7 @@
+# Maintenance Walkthrough - 2026-07-28
+
+- Added a fail-closed provenance exception ledger for maintainer-verified upstream repository renames. The initial Modellix entry records that `Modellix/modellix-skill` and `Modellix/modellix-plugin` resolve to GitHub repository ID `1150322983`; only the exact recorded transition is allowed, while unrelated provenance changes remain blocked.
+
 # Maintenance Walkthrough - 2026-07-26
 
 - Imported the MIT-licensed `fedora-hyprland-installer` contribution from
