@@ -8609,6 +8609,39 @@
     "license_source": "https://github.com/hyhmrright/brooks-lint/blob/main/LICENSE"
   },
   {
+    "id": "browser-act",
+    "path": "skills/browser-act",
+    "category": "browser-automation",
+    "name": "browser-act",
+    "description": "Use BrowserAct for authenticated browser automation, JS-rendered extraction, screenshots, parallel sessions, verification handling, and human handoff.",
+    "risk": "critical",
+    "source": "https://github.com/browser-act/skills/tree/main/browser-act",
+    "date_added": "2026-07-28",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "browser-act/skills",
+    "license": "MIT",
+    "license_source": "https://github.com/browser-act/skills/blob/main/LICENSE",
+    "tags": [
+      "browser-automation",
+      "web-extraction",
+      "ai-agents",
+      "cli",
+      "multi-session"
+    ]
+  },
+  {
     "id": "browser-automation",
     "path": "skills/browser-automation",
     "category": "test-automation",

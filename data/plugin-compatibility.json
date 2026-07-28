@@ -6904,6 +6904,25 @@
       "runtime_files": []
     },
     {
+      "id": "browser-act",
+      "path": "skills/browser-act",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "browser-automation",
       "path": "skills/browser-automation",
       "targets": {
@@ -38293,10 +38312,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1992,
+    "total_skills": 1993,
     "supported": {
-      "codex": 1915,
-      "claude": 1937
+      "codex": 1916,
+      "claude": 1938
     },
     "blocked": {
       "codex": 77,

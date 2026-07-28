@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-27T05:03:49.000Z",
-  "total": 1992,
+  "total": 1993,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -10420,6 +10420,41 @@
         "art"
       ],
       "path": "skills/brooks-test/SKILL.md"
+    },
+    {
+      "id": "browser-act",
+      "canonical_id": "browser-act",
+      "name": "browser-act",
+      "description": "Use BrowserAct for authenticated browser automation, JS-rendered extraction, screenshots, parallel sessions, verification handling, and human handoff.",
+      "category": "browser-automation",
+      "risk": "critical",
+      "source": "https://github.com/browser-act/skills/tree/main/browser-act",
+      "source_type": "official",
+      "source_repo": "browser-act/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/browser-act/skills/blob/main/LICENSE",
+      "tags": [
+        "browser-automation",
+        "web-extraction",
+        "ai-agents",
+        "cli",
+        "multi-session"
+      ],
+      "triggers": [
+        "browser-automation",
+        "web-extraction",
+        "ai-agents",
+        "cli",
+        "multi-session",
+        "browser",
+        "act",
+        "browseract",
+        "authenticated",
+        "automation",
+        "js",
+        "rendered"
+      ],
+      "path": "skills/browser-act/SKILL.md"
     },
     {
       "id": "browser-automation",
