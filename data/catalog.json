@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-27T05:03:49.000Z",
-  "total": 1991,
+  "total": 1992,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -10103,6 +10103,43 @@
         "writing"
       ],
       "path": "skills/brave-man/SKILL.md"
+    },
+    {
+      "id": "brendangregg-use-tsa",
+      "canonical_id": "brendangregg-use-tsa",
+      "name": "brendangregg-use-tsa",
+      "description": "Methodical performance troubleshooting and root-cause analysis with Brendan Gregg's USE and TSA methods, plus evidence-backed RCA and postmortem reports.",
+      "category": "devops",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "thecsdoctor/brendangregg-use-tsa-skill",
+      "license": "MIT",
+      "license_source": "https://github.com/thecsdoctor/brendangregg-use-tsa-skill/blob/main/LICENSE",
+      "tags": [
+        "performance",
+        "troubleshooting",
+        "root-cause-analysis",
+        "linux",
+        "observability",
+        "sre",
+        "postmortem"
+      ],
+      "triggers": [
+        "performance",
+        "troubleshooting",
+        "root-cause-analysis",
+        "linux",
+        "observability",
+        "sre",
+        "postmortem",
+        "brendangregg",
+        "tsa",
+        "methodical",
+        "root",
+        "cause"
+      ],
+      "path": "skills/brendangregg-use-tsa/SKILL.md"
     },
     {
       "id": "brevo-automation",

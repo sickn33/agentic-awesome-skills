@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-27T05:03:49.000Z
 
-Total skills: 1991
+Total skills: 1992
 
 ## agent-behavior (5)
 
@@ -1198,12 +1198,13 @@ Total skills: 1991
 | `systematic-debugging` | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes | unknown | community | systematic, debugging | systematic, debugging, encountering, any, bug, test, failure, unexpected, behavior, before, proposing, fixes |
 | `test-fixing` | Systematically identify and fix all failing tests using smart grouping strategies. Use when explicitly asks to fix tests ("fix these tests", "make tests pass... | safe | community | fixing | fixing, test, systematically, identify, fix, all, failing, tests, smart, grouping, explicitly, asks |
 
-## devops (37)
+## devops (38)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `aegisops-ai` | Autonomous DevSecOps & FinOps Guardrails. Orchestrates Gemini 3 Flash to audit Linux Kernel patches, Terraform cost drifts, and K8s compliance. | safe | community | aegisops, ai | aegisops, ai, autonomous, devsecops, finops, guardrails, orchestrates, gemini, flash, audit, linux, kernel |
 | `apple-container` | Build, run, and manage OCI/Linux containers as lightweight per-container VMs on Apple-silicon macOS using Apple's open-source container CLI, no Docker daemon... | critical | sanjay3290/ai-skills | macos, containers, oci, apple-silicon | macos, containers, oci, apple-silicon, apple, container, run, linux, lightweight, per, vms, silicon |
+| `brendangregg-use-tsa` | Methodical performance troubleshooting and root-cause analysis with Brendan Gregg's USE and TSA methods, plus evidence-backed RCA and postmortem reports. | safe | thecsdoctor/brendangregg-use-tsa-skill | performance, troubleshooting, root-cause-analysis, linux, observability, sre, postmortem | performance, troubleshooting, root-cause-analysis, linux, observability, sre, postmortem, brendangregg, tsa, methodical, root, cause |
 | `cron-doctor` | Diagnose and validate cron expressions before they ship. Catches the five silent death-traps: impossible dates that never fire, OR-semantics that fire too of... | safe | takeaseatventure/devops-skills | cron, crontab, scheduling, devops, debugging, kubernetes, validation | cron, crontab, scheduling, devops, debugging, kubernetes, validation, doctor, diagnose, validate, expressions, before |
 | `deploy-to-vercel` | Deploy applications and websites to Vercel. Use when the user requests deployment actions like "deploy my app", "deploy and give me the link", "push this liv... | safe | https://github.com/vercel-labs/agent-skills | deploy, to, vercel | deploy, to, vercel, applications, websites, user, requests, deployment, actions, like, my, app |
 | `deployment-engineer` | Expert deployment engineer specializing in modern CI/CD pipelines, GitOps workflows, and advanced deployment automation. | critical | community | deployment | deployment, engineer, specializing, ci, cd, pipelines, gitops, automation |

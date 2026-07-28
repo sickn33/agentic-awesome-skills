@@ -6714,6 +6714,25 @@
       "runtime_files": []
     },
     {
+      "id": "brendangregg-use-tsa",
+      "path": "skills/brendangregg-use-tsa",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "brevo-automation",
       "path": "skills/brevo-automation",
       "targets": {
@@ -38274,10 +38293,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1991,
+    "total_skills": 1992,
     "supported": {
-      "codex": 1914,
-      "claude": 1936
+      "codex": 1915,
+      "claude": 1937
     },
     "blocked": {
       "codex": 77,

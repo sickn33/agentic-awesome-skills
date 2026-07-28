@@ -926,6 +926,7 @@
         "azure-mgmt-weightsandbiases-dotnet",
         "azure-monitor-opentelemetry-ts",
         "backend-development-feature-development",
+        "brendangregg-use-tsa",
         "brooks-harness",
         "ci-cd-and-automation",
         "cicd-automation-workflow-automate",
