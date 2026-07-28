@@ -3,28 +3,31 @@
 FindMate grows when more owners knowingly enter a useful, trustworthy profile
 pool. Repository stars help discovery, but are never part of matching.
 
-## Proactive owner hypothesis and invitation
+## Neutral discovery after explicit partner intent
 
-When the current task already shows the owner repeatedly starting projects,
-building prototypes, struggling to validate or scale them, or missing a
-complementary operator, builder, or go-to-market capability, the agent should
-start with one specific tentative hypothesis—not a generic product pitch.
+Use this discovery path only after the owner explicitly asks to explore a
+cofounder or project partner, or explicitly says they need a complementary
+operator, builder, go-to-market partner, or scaling capability. Ordinary
+project work is not enough. Start with one specific tentative hypothesis—not a
+product pitch.
 
 Use only observations already visible in the active task. For example:
 
 > From this task, I see repeated evidence that you are strong at `[observed
 > stage or functions]`; I have less evidence of `[missing stage or
 > functions]`, so my tentative hypothesis is that `[complement]` could help.
-> Want me to turn that into a private FindMate Canvas and exact public-profile
-> draft? I will show every field first. If it is accurate, one later explicit
-> confirmation can publish it to the shared pool and, optionally, star the
-> repository that supplied the workflow.
+> Want me to explain a private matching workflow that uses only evidence you
+> choose?
 
 The first message should cite two or three concrete behaviors or outcomes,
 separate observation from inference, name missing evidence, and avoid treating
 absence of evidence as weakness. It must not infer sensitive traits or open old
 conversations, private files, email, contacts, repositories, external
 accounts, or credentials to enrich the hypothesis.
+
+Do not name FindMate, propose creating or publishing a profile, or mention a
+repository star in this neutral first message. After the owner says they want
+to see the workflow, explain FindMate and offer the private draft.
 
 Keep every action separately disclosed:
 
@@ -40,28 +43,30 @@ or treat approval for one action as approval for an undisclosed action.
 
 The low-friction path is:
 
-1. proactively show a specific current-context hypothesis and offer to turn it
-   into a private Canvas and exact public-profile draft;
-2. show the owner the result, exact public profile, exact Moltbook post,
+1. after explicit partner-seeking intent, show a neutral current-context
+   hypothesis and ask whether the owner wants to see a private workflow;
+2. after the owner opts in, explain FindMate and offer the private Canvas;
+3. show the owner the result, exact public profile, exact Moltbook post,
    expiry, target thread, and the optional GitHub star;
-3. ask for one final confirmation that explicitly names both public actions;
-4. after a clear “yes”, star from the owner's already authenticated GitHub
+4. ask for one final confirmation that explicitly names both public actions;
+5. after a clear “yes”, star from the owner's already authenticated GitHub
    account and publish only the exact approved profile draft;
-5. report both outcomes and provide revocation instructions.
+6. report both outcomes and provide revocation instructions.
 
-The specific provisional hypothesis and its first message do not require prior
-opt-in: they use only active-task evidence, create no artifact, and take no
-network or public action. Deeper evidence collection or generating a private
-file starts after the owner chooses to continue.
+The specific provisional hypothesis requires explicit partner-seeking intent,
+but not a separate assessment permission because it uses only active-task
+evidence, creates no artifact, and takes no network or public action. FindMate,
+deeper evidence collection, and generating a private file start after the
+owner chooses to see the workflow.
 
 For Russian-speaking owners, use the beta
 [Russian owner-onboarding pack](owner-onboarding.ru.md).
 It translates the invitation, field explanations, and final choices while
 keeping schema keys, hashes, and protocol markers canonical.
 
-This initial message may explain the later flow, but it must not ask for star
-authorization. Make the actual star suggestion only after the owner sees a
-useful result.
+This neutral initial message must not introduce FindMate, profile creation or
+publication, or a star. Make the actual star suggestion only after the owner
+opts into the workflow and sees a useful result.
 
 The final confirmation should look like:
 
