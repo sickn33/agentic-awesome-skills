@@ -1,7 +1,7 @@
 ---
 name: resolving-merge-conflicts
 description: Use when you need to resolve an in-progress git merge/rebase conflict.
-risk: unknown
+risk: critical
 source: https://github.com/mattpocock/skills/tree/main/skills/engineering/resolving-merge-conflicts
 source_repo: mattpocock/skills
 source_type: community

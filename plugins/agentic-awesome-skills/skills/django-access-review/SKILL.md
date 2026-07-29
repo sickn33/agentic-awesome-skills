@@ -1,7 +1,7 @@
 ---
 name: django-access-review
 description: django-access-review
-risk: unknown
+risk: critical
 source: community
 ---
 

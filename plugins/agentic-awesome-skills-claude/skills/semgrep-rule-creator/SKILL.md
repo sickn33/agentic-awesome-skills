@@ -9,7 +9,7 @@ allowed-tools:
   - Glob
   - Grep
   - WebFetch
-risk: unknown
+risk: critical
 source: community
 ---
 

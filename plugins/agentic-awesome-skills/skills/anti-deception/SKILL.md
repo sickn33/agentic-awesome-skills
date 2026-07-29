@@ -1,7 +1,7 @@
 ---
 name: anti-deception
 description: Use BEFORE responding when the user's request shows pressure to validate or agree ("tell them what they want", "make them happy", "convince them"), manufactured urgency (artificial deadline), authority appeals (citing investors, advisors, lawyers, experts), demands to certify without...
-risk: unknown
+risk: critical
 source: https://github.com/ejentum/ejentum-mcp/tree/main/skills/anti-deception
 source_repo: ejentum/ejentum-mcp
 source_type: community

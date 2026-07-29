@@ -1,7 +1,7 @@
 ---
 name: update-swiftui-apis
 description: Scan Apple's SwiftUI documentation for deprecated APIs and update the SwiftUI Expert Skill with modern replacements. Use when asked to "update latest APIs", "refresh deprecated SwiftUI APIs", "check for new SwiftUI deprecations", "scan for API changes", or after a new iOS/Xcode...
-risk: unknown
+risk: critical
 source: https://github.com/AvdLee/SwiftUI-Agent-Skill/tree/main/.agents/skills/update-swiftui-apis
 source_repo: AvdLee/SwiftUI-Agent-Skill
 source_type: community

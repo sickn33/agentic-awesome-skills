@@ -1,7 +1,7 @@
 ---
 name: source-driven-development
 description: Grounds every implementation decision in official documentation. Use when you want authoritative, source-cited code free from outdated patterns. Use when building with any framework or library where correctness matters.
-risk: unknown
+risk: critical
 source: https://github.com/addyosmani/agent-skills/tree/main/skills/source-driven-development
 source_repo: addyosmani/agent-skills
 source_type: community

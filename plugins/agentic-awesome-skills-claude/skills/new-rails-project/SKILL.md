@@ -4,7 +4,7 @@ argument-hint: [project name]
 description: Create a new Rails project
 allowed-tools: Bash(rails *), Bash(bundle *), Bash(bin/*), Bash(npm *), Bash(yarn *)
 context: fork
-risk: unknown
+risk: critical
 source: community
 metadata:
   author: Shpigford

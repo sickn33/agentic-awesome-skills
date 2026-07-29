@@ -1,7 +1,7 @@
 ---
 name: vr-ar
 description: "VR/AR development principles. Comfort, interaction, performance requirements."
-risk: unknown
+risk: none
 source: community
 date_added: "2026-02-27"
 ---

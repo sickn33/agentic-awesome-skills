@@ -1,7 +1,7 @@
 ---
 name: design-ux
 description: UX / usability audit — heuristic evaluation of INTERACTIVE UIs (not just visual polish). Load with design when a UI "feels off", "sucks to use", is hard to learn, needs an instruction wall, or before shipping an interactive tool/editor/app. Scores the RENDERED UI against Nielsen's 10 +...
-risk: unknown
+risk: critical
 source: https://github.com/connerkward/ckw-design-skill/tree/main/deterministic-design/design-ux
 source_repo: connerkward/ckw-design-skill
 source_type: community

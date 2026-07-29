@@ -1,7 +1,7 @@
 ---
 name: ui-tokens
 description: View, add, or modify design tokens in the StyleSeed design system
-risk: unknown
+risk: critical
 source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-tokens
 source_repo: bitjaru/styleseed
 source_type: community

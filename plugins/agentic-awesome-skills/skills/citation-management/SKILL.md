@@ -4,7 +4,7 @@ description: "Manage citations systematically throughout the research and writin
 license: MIT License
 metadata:
     skill-author: K-Dense Inc.
-risk: unknown
+risk: critical
 source: community
 ---
 

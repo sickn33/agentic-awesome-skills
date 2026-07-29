@@ -1,7 +1,7 @@
 ---
 name: logic-review
 description: Find logic bugs in a single file or function via semi-formal execution tracing (Premises → Trace → Divergence → Trigger → Remedy). Trigger when a user shares code and suspects something is wrong without naming a concrete failure — phrases like "review this", "does this look right",...
-risk: unknown
+risk: critical
 source: https://github.com/hyhmrright/logic-lens/tree/main/skills/logic-review
 source_repo: hyhmrright/logic-lens
 source_type: community

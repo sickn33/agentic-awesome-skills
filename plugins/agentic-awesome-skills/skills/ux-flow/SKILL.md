@@ -1,7 +1,7 @@
 ---
 name: ux-flow
 description: Design user flows and navigation structure following proven UX patterns
-risk: unknown
+risk: critical
 source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-flow
 source_repo: bitjaru/styleseed
 source_type: community

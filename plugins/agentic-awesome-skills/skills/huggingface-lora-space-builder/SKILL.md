@@ -1,7 +1,7 @@
 ---
 name: huggingface-lora-space-builder
 description: Build and publish a Gradio demo on Hugging Face Spaces for a user-provided LoRA. Use when someone asks to create, generate, ship, or publish a Space, demo, Gradio app, or playground for a LoRA — including LoRAs for Qwen-Image, Qwen-Image-Edit, LTX-Video, Wan, FLUX, SDXL, or other...
-risk: unknown
+risk: critical
 source: https://github.com/huggingface/skills/tree/main/skills/huggingface-lora-space-builder
 source_repo: huggingface/skills
 source_type: official

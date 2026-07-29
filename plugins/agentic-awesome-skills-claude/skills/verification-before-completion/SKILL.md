@@ -1,7 +1,7 @@
 ---
 name: verification-before-completion
 description: "Claiming work is complete without verification is dishonesty, not efficiency. Use when ANY variation of success/completion claims, ANY expression of satisfaction, or ANY positive statement about work state."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

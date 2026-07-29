@@ -1,7 +1,7 @@
 ---
 name: performance-engineer
 description: "Expert performance engineer specializing in modern observability,"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

@@ -1,7 +1,7 @@
 ---
 name: parallel-agents
 description: "Multi-agent orchestration patterns. Use when multiple independent tasks can run with different domain expertise or when comprehensive analysis requires multiple perspectives."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

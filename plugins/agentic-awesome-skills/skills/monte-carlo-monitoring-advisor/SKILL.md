@@ -1,7 +1,7 @@
 ---
 name: monte-carlo-monitoring-advisor
 description: Analyze data coverage, create monitors for warehouse tables and AI agents. Covers coverage gaps, use-case analysis, data monitor creation, and agent observability.
-risk: unknown
+risk: critical
 source: https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/monitoring-advisor
 source_repo: monte-carlo-data/mc-agent-toolkit
 source_type: community

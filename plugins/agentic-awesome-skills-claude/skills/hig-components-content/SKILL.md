@@ -1,7 +1,7 @@
 ---
 name: hig-components-content
 description: Apple Human Interface Guidelines for content display components.
-risk: unknown
+risk: safe
 source: community
 date_added: '2026-02-27'
 ---

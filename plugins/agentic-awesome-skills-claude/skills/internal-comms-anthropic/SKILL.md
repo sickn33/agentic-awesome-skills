@@ -1,7 +1,7 @@
 ---
 name: internal-comms-anthropic
 description: "To write internal communications, use this skill for:"
-risk: unknown
+risk: safe
 source: community
 date_added: "2026-02-27"
 ---

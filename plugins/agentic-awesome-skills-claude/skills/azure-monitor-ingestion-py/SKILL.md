@@ -1,7 +1,7 @@
 ---
 name: azure-monitor-ingestion-py
 description: Azure Monitor Ingestion SDK for Python. Use for sending custom logs to Log Analytics workspace via Logs Ingestion API.
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---

@@ -1,7 +1,7 @@
 ---
 name: openapi-spec-generator
 description: Generate complete, production-ready OpenAPI 3.x and Swagger 2.0 specifications from natural language descriptions, code, or partial specs. Use this skill whenever the user mentions OpenAPI, Swagger, API spec, REST API documentation, YAML/JSON API schema, endpoint documentation, API...
-risk: unknown
+risk: critical
 source: https://github.com/LambdaTest/agent-skills/tree/main/api-skill/openapi-spec-generator
 source_repo: LambdaTest/agent-skills
 source_type: community

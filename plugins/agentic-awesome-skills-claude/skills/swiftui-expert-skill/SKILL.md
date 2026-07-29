@@ -1,7 +1,7 @@
 ---
 name: swiftui-expert-skill
 description: Use when writing, reviewing, or refactoring SwiftUI code for iOS or macOS, including state management and `@Observable` data flow, view composition and invalidation/performance, lists and `ForEach` identity, environment usage, localization, animations, Liquid Glass adoption, migrating...
-risk: unknown
+risk: critical
 source: https://github.com/AvdLee/SwiftUI-Agent-Skill/tree/main/swiftui-expert-skill
 source_repo: AvdLee/SwiftUI-Agent-Skill
 source_type: community

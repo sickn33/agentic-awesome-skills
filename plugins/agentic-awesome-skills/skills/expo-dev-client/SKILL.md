@@ -1,7 +1,7 @@
 ---
 name: expo-dev-client
 description: Build Expo app for development
-risk: unknown
+risk: critical
 source: https://github.com/expo/skills/tree/main/plugins/expo/skills/expo-dev-client
 source_repo: expo/skills
 source_type: official

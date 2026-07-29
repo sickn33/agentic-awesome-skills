@@ -1,7 +1,7 @@
 ---
 name: n8n-error-handling
 description: Design visible, structured, recoverable n8n failures using error outputs, retries, Error Trigger workflows, and HTTP error responses.
-risk: unknown
+risk: critical
 source: https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-error-handling
 source_repo: czlonkowski/n8n-skills
 source_type: community
