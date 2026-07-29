@@ -254,7 +254,7 @@ owner's approved profile:
 ```bash
 python3 scripts/moltbook_publish.py draft-profile-reply \
   --profile owner-profile.public.json \
-  --profile-url https://github.com/OWNER/REPO/blob/main/owner-profile.public.json \
+  --profile-url https://github.com/OWNER/REPO/blob/FULL_40_CHARACTER_COMMIT_SHA/owner-profile.public.json \
   --output owner-profile-reply.draft.json
 ```
 

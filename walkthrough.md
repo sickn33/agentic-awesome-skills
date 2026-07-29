@@ -1,3 +1,9 @@
+# Maintenance Walkthrough - 2026-07-29
+
+- Revalidated all 15 exported Codex Security findings against current protected `main` instead of treating historical scanner anchors as current code.
+- Removed BrowserAct's mutable provider-served guide from the supported operating path; the pinned local CLI help may describe syntax, while the checked-in skill remains the complete policy.
+- Enforced full-SHA GitHub blob URLs for linked FindMate profiles on both Moltbook drafts and GitHub thread parsing, with regression coverage for mutable branches, foreign hosts, query strings, and traversal-shaped paths.
+
 # Maintenance Walkthrough - 2026-07-28
 
 - Added a fail-closed provenance exception ledger for maintainer-verified upstream repository renames. The initial Modellix entry records that `Modellix/modellix-skill` and `Modellix/modellix-plugin` resolve to GitHub repository ID `1150322983`; only the exact recorded transition is allowed, while unrelated provenance changes remain blocked.

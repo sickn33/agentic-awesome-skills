@@ -209,3 +209,10 @@ test("canonical security fixes are synchronized to distributed plugin mirrors", 
     );
   }
 });
+
+test("BrowserAct never delegates its operating policy to mutable provider guides", () => {
+  const skill = read("skills/browser-act/SKILL.md");
+  assert.doesNotMatch(skill, /^browser-act get-skills\b/m);
+  assert.match(skill, /checked-in Skill remains the complete operating policy/);
+  assert.match(skill, /browser-act <subcommand> --help/);
+});
