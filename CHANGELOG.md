@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Updated the catalog web app from `@supabase/supabase-js` 2.110.0 to 2.111.0, including the auth fix for overlapping PKCE flows, while preserving platform-specific native package metadata in the lockfile.
+
+### Validation
+
+- Passed the repository test suite, web-app tests and production build, dependency audit, skill/reference validation, documentation security, and warning-budget checks.
+
 ## [15.6.0] - 2026-07-28 - "Browser Automation and Performance RCA"
 
 > Added safety-hardened browser automation and evidence-first performance troubleshooting while preserving verified upstream provenance across the catalog.
