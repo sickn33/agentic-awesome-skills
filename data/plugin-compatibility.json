@@ -8948,6 +8948,25 @@
       "runtime_files": []
     },
     {
+      "id": "cohesivity",
+      "path": "skills/cohesivity",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "cold-email",
       "path": "skills/cold-email",
       "targets": {
@@ -38308,10 +38327,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1993,
+    "total_skills": 1994,
     "supported": {
-      "codex": 1917,
-      "claude": 1938
+      "codex": 1918,
+      "claude": 1939
     },
     "blocked": {
       "codex": 76,

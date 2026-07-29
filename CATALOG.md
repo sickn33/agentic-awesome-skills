@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-28T15:21:12.000Z
 
-Total skills: 1993
+Total skills: 1994
 
 ## agent-behavior (5)
 
@@ -366,7 +366,7 @@ Total skills: 1993
 | `zendesk-automation` | Automate Zendesk tasks via Rube MCP (Composio): tickets, users, organizations, replies. Always search tools first for current schemas. | critical | community | zendesk | zendesk, automation, automate, tasks, via, rube, mcp, composio, tickets, users, organizations, replies |
 | `zoom-automation` | Automate Zoom meeting creation, management, recordings, webinars, and participant tracking via Rube MCP (Composio). Always search tools first for current sch... | critical | community | zoom | zoom, automation, automate, meeting, creation, recordings, webinars, participant, tracking, via, rube, mcp |
 
-## backend (39)
+## backend (40)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -389,6 +389,7 @@ Total skills: 1993
 | `backend-dev-guidelines` | You are a senior backend engineer operating production-grade services under strict architectural and reliability constraints. Use when routes, controllers, s... | critical | community | backend, dev, guidelines | backend, dev, guidelines, senior, engineer, operating, grade, under, strict, architectural, reliability, constraints |
 | `backend-development-feature-development` | Orchestrate end-to-end backend feature development from requirements to deployment. Use when coordinating multi-phase feature delivery across teams and servi... | critical | community | backend | backend, development, feature, orchestrate, requirements, deployment, coordinating, multi, phase, delivery, teams |
 | `backend-security-coder` | Expert in secure backend coding practices specializing in input validation, authentication, and API security. Use PROACTIVELY for backend security implementa... | critical | community | backend, security, coder | backend, security, coder, secure, coding, specializing, input, validation, authentication, api, proactively, implementations |
+| `cohesivity` | Provision backend infra through Cohesivity (cohesivity.ai): Postgres, hosting, auth, storage, and AI model APIs over one HTTP API. Use when a .cohesivity fil... | critical | cohesivity-org/cohesivity-skill | backend, infrastructure, database, hosting, auth | backend, infrastructure, database, hosting, auth, cohesivity, provision, infra, through, ai, postgres, storage |
 | `comfyui-gateway` | REST API gateway for ComfyUI servers. Workflow management, job queuing, webhooks, caching, auth, rate limiting, and image delivery (URL + base64). | safe | community | comfyui, api-gateway, image-generation, typescript | comfyui, api-gateway, image-generation, typescript, gateway, rest, api, servers, job, queuing, webhooks, caching |
 | `copilot-sdk` | Build applications that programmatically interact with GitHub Copilot. The SDK wraps the Copilot CLI via JSON-RPC, providing session management, custom tools... | critical | community | copilot, sdk | copilot, sdk, applications, programmatically, interact, github, wraps, cli, via, json, rpc, providing |
 | `django-access-review` | django-access-review | critical | community | django, access | django, access, review |
