@@ -1,7 +1,7 @@
 ---
 name: sexual-health-analyzer
 description: Sexual Health Analyzer
-risk: unknown
+risk: safe
 source: community
 ---
 

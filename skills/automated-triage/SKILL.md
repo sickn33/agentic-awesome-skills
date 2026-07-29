@@ -1,7 +1,7 @@
 ---
 name: automated-triage
 description: Triage Monte Carlo alerts interactively or build an automated workflow. Fetch, score, and troubleshoot alerts using MCP tools now, or design a reusable workflow that runs on a schedule.
-risk: unknown
+risk: critical
 source: https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/automated-triage
 source_repo: monte-carlo-data/mc-agent-toolkit
 source_type: community

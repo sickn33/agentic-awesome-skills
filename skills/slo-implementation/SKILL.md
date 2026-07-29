@@ -1,7 +1,7 @@
 ---
 name: slo-implementation
 description: "Framework for defining and implementing Service Level Indicators (SLIs), Service Level Objectives (SLOs), and error budgets."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

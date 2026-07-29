@@ -1,7 +1,7 @@
 ---
 name: azure-ai-projects-py
 description: "Build AI applications on Microsoft Foundry using the azure-ai-projects SDK."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

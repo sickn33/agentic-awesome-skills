@@ -1,7 +1,7 @@
 ---
 name: logic-fix-all
 description: 'Autonomous repository-wide audit-and-fix pipeline: health → review → locate/explain → fix → diff-verify → iterate until clean. Starts with a mandatory consent prompt (token-intensive); after consent runs hands-free. Trigger when the user wants ALL logic issues found and fixed — "fix...'
-risk: unknown
+risk: critical
 source: https://github.com/hyhmrright/logic-lens/tree/main/skills/logic-fix-all
 source_repo: hyhmrright/logic-lens
 source_type: community

@@ -7,7 +7,7 @@ allowed-tools:
   - Grep
   - Glob
   - WebSearch
-risk: unknown
+risk: critical
 source: community
 ---
 # Overview

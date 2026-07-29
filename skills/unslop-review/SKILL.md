@@ -1,7 +1,7 @@
 ---
 name: unslop-review
 description: 'Rewrites code review comments so they read like a human teammate wrote them. Cuts corporate-AI throat-clearing ("I noticed...", "I was wondering if perhaps...", "It might be worth considering..."). Each comment is direct: location, the issue, a concrete fix. Use when user says...'
-risk: unknown
+risk: critical
 source: https://github.com/MohamedAbdallah-14/unslop/tree/main/plugins/unslop/skills/unslop-review
 source_repo: MohamedAbdallah-14/unslop
 source_type: community

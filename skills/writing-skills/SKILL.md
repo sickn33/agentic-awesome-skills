@@ -2,7 +2,7 @@
 name: writing-skills
 description: "Use when creating, updating, or improving agent skills."
 category: meta
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
