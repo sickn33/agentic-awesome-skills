@@ -167,6 +167,30 @@ class ChangedSkillEvidenceTests(unittest.TestCase):
 
         self.assertTrue(any("unsafe_snapshot_regression:100755:run.sh" in reason for reason in report["reasons"]))
 
+    def test_legacy_executable_skill_markdown_can_be_normalized_and_compared(self):
+        root, _ = init_repo()
+        path = root / "skills/example/SKILL.md"
+        os.chmod(path, 0o755)
+        git(root, "add", ".")
+        git(root, "commit", "-m", "legacy executable skill markdown")
+        base = git(root, "rev-parse", "HEAD")
+        path.write_text(
+            path.read_text(encoding="utf-8").replace("risk: safe", "risk: critical"),
+            encoding="utf-8",
+        )
+        os.chmod(path, 0o644)
+        git(root, "add", ".")
+        git(root, "commit", "-m", "normalize skill markdown")
+
+        report = changed_skill_evidence.build_report(root, base, "HEAD")
+
+        change = report["changes"][0]
+        self.assertIsNotNone(change["before"])
+        self.assertIsNotNone(change["after"])
+        self.assertEqual(change["before"]["risk"]["declared"], "safe")
+        self.assertEqual(change["after"]["risk"]["declared"], "critical")
+        self.assertFalse(change["blocking"])
+
     def test_skill_markdown_replaced_by_gitlink_is_not_treated_as_deletion(self):
         root, base = init_repo()
         git(root, "rm", "skills/example/SKILL.md")

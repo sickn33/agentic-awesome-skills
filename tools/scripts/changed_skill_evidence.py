@@ -21,6 +21,7 @@ from git_change_records import (
     ChangeRecord,
     list_tree,
     materialize_tree,
+    read_blob,
     read_change_records,
     read_path,
     resolve_commit,
@@ -278,6 +279,44 @@ def evaluate_snapshot(snapshot_root: Path, skill_id: str) -> dict[str, object]:
     }
 
 
+def materialize_skill_snapshot(
+    repo: Path,
+    commit_oid: str,
+    skill_id: str,
+    snapshot_root: Path,
+) -> list[dict[str, str]]:
+    """Materialize a skill, parsing a legacy executable SKILL.md as inert data.
+
+    The generic tree helper intentionally rejects every executable blob. Some
+    historical canonical SKILL.md files nevertheless use mode 100755. Reading
+    that exact documentation blob into a private 0600 file lets the evidence
+    evaluator compare before/after metadata without executing it or admitting
+    any other unsafe tree entry.
+    """
+    skill_root = snapshot_root / "skills" / skill_id
+    unsafe = materialize_tree(
+        repo,
+        commit_oid,
+        f"skills/{skill_id}",
+        skill_root,
+    )
+    skill_file = skill_root / "SKILL.md"
+    if not skill_file.exists():
+        expected_path = f"skills/{skill_id}/SKILL.md"
+        legacy_entry = next(
+            (
+                entry
+                for entry in unsafe
+                if entry["path"] == expected_path and entry["mode"] == "100755"
+            ),
+            None,
+        )
+        if legacy_entry is not None:
+            skill_file.write_bytes(read_blob(repo, legacy_entry["oid"]))
+            skill_file.chmod(0o600)
+    return unsafe
+
+
 def _audit_severities(snapshot: dict[str, object] | None) -> dict[str, list[str]]:
     severities: dict[str, list[str]] = defaultdict(list)
     if not snapshot:
@@ -457,12 +496,12 @@ def build_report(
             after_unsafe: list[dict[str, str]] = []
             if base_exists and old_id:
                 before_root = temp_root / f"{index}-before"
-                before_unsafe = materialize_tree(root, base_oid, f"skills/{old_id}", before_root / "skills" / old_id)
+                before_unsafe = materialize_skill_snapshot(root, base_oid, old_id, before_root)
                 if (before_root / "skills" / old_id / "SKILL.md").is_file():
                     before = evaluate_snapshot(before_root, old_id)
             if head_exists and new_id:
                 after_root = temp_root / f"{index}-after"
-                after_unsafe = materialize_tree(root, head_oid, f"skills/{new_id}", after_root / "skills" / new_id)
+                after_unsafe = materialize_skill_snapshot(root, head_oid, new_id, after_root)
                 if (after_root / "skills" / new_id / "SKILL.md").is_file():
                     after = evaluate_snapshot(after_root, new_id)
 
