@@ -35098,7 +35098,7 @@
       "id": "modellix",
       "canonical_id": "modellix",
       "name": "modellix",
-      "description": "Integrate Modellix unified API/CLI for async AI image and video generation (model run --wait, task download).",
+      "description": "Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download).",
       "category": "creative",
       "risk": "critical",
       "source": "community",
@@ -35109,6 +35109,10 @@
       "tags": [
         "image-generation",
         "video-generation",
+        "audio-generation",
+        "text-to-speech",
+        "speech-to-text",
+        "speech-to-speech",
         "modellix",
         "cli",
         "api"
@@ -35116,16 +35120,16 @@
       "triggers": [
         "image-generation",
         "video-generation",
+        "audio-generation",
+        "text-to-speech",
+        "speech-to-text",
+        "speech-to-speech",
         "modellix",
         "cli",
         "api",
         "integrate",
-        "unified",
         "async",
-        "ai",
-        "image",
-        "video",
-        "generation"
+        "ai"
       ],
       "path": "skills/modellix/SKILL.md"
     },

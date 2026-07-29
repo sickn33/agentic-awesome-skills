@@ -1,6 +1,6 @@
 ---
 name: modellix
-description: "Integrate Modellix unified API/CLI for async AI image and video generation (model run --wait, task download)."
+description: "Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download)."
 category: creative
 risk: critical
 source: community
@@ -8,7 +8,7 @@ source_repo: Modellix/modellix-plugin
 source_type: official
 date_added: "2026-07-16"
 author: Modellix
-tags: [image-generation, video-generation, modellix, cli, api]
+tags: [image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api]
 tools: [claude, cursor, gemini]
 license: "MIT"
 license_source: "https://github.com/Modellix/modellix-plugin/blob/main/LICENSE"
@@ -18,22 +18,23 @@ license_source: "https://github.com/Modellix/modellix-plugin/blob/main/LICENSE"
 
 ## Overview
 
-Modellix is a Model-as-a-Service platform for AI image and video generation. This skill teaches agents to use the official `modellix-cli` workflow (doctor → model run --wait → task download).
+Modellix is a Model-as-a-Service platform for AI image, video, and speech generation or transcription. This skill teaches agents to use the official `modellix-cli` workflow (doctor → model run --wait → task download).
 
-Upstream package: https://github.com/Modellix/modellix-plugin/tree/main/skills/modellix (the repository was renamed from `Modellix/modellix-skill`; the skill now ships inside an Open Plugins package).
+Upstream package: https://github.com/Modellix/modellix-plugin/tree/main/skills/modellix (Open Plugins layout; skill tree under `skills/modellix/`).
 
 ## When to Use This Skill
 
 - Generate images from text prompts
 - Generate or edit videos from text or images
+- Generate speech from text, transcribe speech, or transform one voice into another
 - Call Modellix models through a unified API/CLI
-- The user mentions Modellix, Seedream, Seedance, Nano Banana, or similar providers via Modellix
+- The user mentions Modellix, Seedream, Seedance, Nano Banana, Whisper, Qwen Audio, CosyVoice, or similar providers via Modellix
 
 ## How It Works
 
 1. Authenticate with `MODELLIX_API_KEY` or `modellix-cli auth login`
 2. Run `modellix-cli doctor --json`
-3. Use default models when unspecified (T2I: `google/nano-banana-2-lite`, T2V: `bytedance/seedance-2.0-mini-t2v`, I2I: `google/nano-banana-2-lite-edit`, I2V: `bytedance/seedance-2.0-fast-i2v`, V2V: `bytedance/seedance-2.0-fast-v2v`)
+3. Use default models when unspecified (T2I: `google/nano-banana-2-lite`, T2V: `bytedance/seedance-2.0-mini-t2v`, I2I: `google/nano-banana-2-lite-edit`, I2V: `bytedance/seedance-2.0-fast-i2v`, V2V: `bytedance/seedance-2.0-fast-v2v`, TTS: `alibaba/qwen-audio-3.0-tts-flash`, STT: `openai/whisper-1`, STS: `alibaba/cosyvoice-clone`)
 4. Submit with `modellix-cli model run --wait --json`
 5. Persist outputs with `modellix-cli task download`
 
@@ -55,6 +56,33 @@ modellix-cli model run \
   --model-slug bytedance/seedance-2.0-mini-t2v \
   --body '{"prompt":"Ocean waves under a cloudy sunset"}' \
   --wait --timeout 10m --json
+```
+
+### Text-to-speech
+
+```bash
+modellix-cli model run \
+  --model-slug alibaba/qwen-audio-3.0-tts-flash \
+  --body '{"text":"There is a large garden behind my house.","voice":"longanhuan_v3.6"}' \
+  --wait --timeout 5m --json
+```
+
+### Speech-to-text
+
+```bash
+modellix-cli model run \
+  --model-slug openai/whisper-1 \
+  --body '{"url":"https://example.com/meeting.mp3"}' \
+  --wait --timeout 5m --json
+```
+
+### Speech-to-speech
+
+```bash
+modellix-cli model run \
+  --model-slug alibaba/cosyvoice-clone \
+  --body '{"model":"cosyvoice-v3.5-plus","url":"https://example.com/reference.wav","text":"There is a large garden behind my house."}' \
+  --wait --timeout 5m --json
 ```
 
 ## Best Practices

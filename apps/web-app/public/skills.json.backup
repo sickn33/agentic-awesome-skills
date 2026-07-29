@@ -29162,7 +29162,7 @@
     "path": "skills/modellix",
     "category": "creative",
     "name": "modellix",
-    "description": "Integrate Modellix unified API/CLI for async AI image and video generation (model run --wait, task download).",
+    "description": "Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download).",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-07-16",
@@ -29185,6 +29185,10 @@
     "tags": [
       "image-generation",
       "video-generation",
+      "audio-generation",
+      "text-to-speech",
+      "speech-to-text",
+      "speech-to-speech",
       "modellix",
       "cli",
       "api"
