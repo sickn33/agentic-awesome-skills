@@ -1,7 +1,7 @@
 ---
 name: error-debugging-multi-agent-review
 description: "Use when working with error debugging multi agent review"
-risk: unknown
+risk: safe
 source: community
 date_added: "2026-02-27"
 ---

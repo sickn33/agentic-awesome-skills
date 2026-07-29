@@ -1,7 +1,7 @@
 ---
 name: expo-api-routes
 description: Guidelines for creating API routes in Expo Router with EAS Hosting
-risk: unknown
+risk: critical
 source: https://github.com/expo/skills/tree/main/plugins/expo/skills/expo-api-routes
 source_repo: expo/skills
 source_type: official

@@ -1,7 +1,7 @@
 ---
 name: security-scanning-security-hardening
 description: "Coordinate multi-layer security scanning and hardening across application, infrastructure, and compliance controls."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

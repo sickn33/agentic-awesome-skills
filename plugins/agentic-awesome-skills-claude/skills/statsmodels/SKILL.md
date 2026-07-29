@@ -4,7 +4,7 @@ description: "Statsmodels is Python's premier library for statistical modeling, 
 license: BSD-3-Clause license
 metadata:
     skill-author: K-Dense Inc.
-risk: unknown
+risk: safe
 source: community
 ---
 

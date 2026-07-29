@@ -1,7 +1,7 @@
 ---
 name: ui-component
 description: Generate a new UI component following the StyleSeed design conventions
-risk: unknown
+risk: critical
 source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-component
 source_repo: bitjaru/styleseed
 source_type: community

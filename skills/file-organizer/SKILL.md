@@ -1,7 +1,7 @@
 ---
 name: file-organizer
 description: "6. Reduces Clutter: Identifies old files you probably don't need anymore"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

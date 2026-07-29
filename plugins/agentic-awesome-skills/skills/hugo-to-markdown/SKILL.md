@@ -1,7 +1,7 @@
 ---
 name: hugo-to-markdown
 description: Convert Hugo documentation sites and Hugo-managed content into standard Markdown. Use when Agent needs to inspect a local Hugo repository, read hugo.toml or config files, content/, archetypes/, layouts/_shortcodes/, layouts/_markup/, and related docs content, then produce Markdown...
-risk: unknown
+risk: critical
 source: https://github.com/chaunsin/agent-skills/tree/master/skills/hugo-to-markdown
 source_repo: chaunsin/agent-skills
 source_type: community

@@ -1,7 +1,7 @@
 ---
 name: sharp-edges
 description: sharp-edges
-risk: unknown
+risk: critical
 source: community
 ---
 

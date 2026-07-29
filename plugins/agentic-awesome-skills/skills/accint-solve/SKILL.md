@@ -1,7 +1,7 @@
 ---
 name: accint-solve
 description: Route a goal through acc's scored-memory loop via acc_act(runtime="solve"); deliberate any returned brain_frame and submit via continue.
-risk: unknown
+risk: critical
 source: https://github.com/maxbaluev/accreted-intelligence/tree/main/plugins/claude/skills/solve
 source_repo: maxbaluev/accreted-intelligence
 source_type: community

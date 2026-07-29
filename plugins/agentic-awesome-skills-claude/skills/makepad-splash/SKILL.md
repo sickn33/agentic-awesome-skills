@@ -4,7 +4,7 @@ description: |
   CRITICAL: Use for Makepad Splash scripting language. Triggers on:
   splash language, makepad script, makepad scripting, script!, cx.eval,
   makepad dynamic, makepad AI, splash 语言, makepad 脚本
-risk: unknown
+risk: critical
 source: community
 ---
 

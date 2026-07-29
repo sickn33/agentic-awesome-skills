@@ -1,7 +1,7 @@
 ---
 name: accint-frames
 description: Drain acc's deliberation queue — open/waiting brain_frames checkpointed by headless runs — via acc_act(runtime="continue").
-risk: unknown
+risk: critical
 source: https://github.com/maxbaluev/accreted-intelligence/tree/main/plugins/claude/skills/frames
 source_repo: maxbaluev/accreted-intelligence
 source_type: community

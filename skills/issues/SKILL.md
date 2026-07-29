@@ -2,7 +2,7 @@
 name: issues
 description: Interact with GitHub issues - create, list, and view issues.
 allowed-tools: Bash(gh *)
-risk: unknown
+risk: critical
 source: community
 metadata:
   author: Shpigford

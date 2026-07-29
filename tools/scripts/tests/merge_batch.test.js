@@ -8,6 +8,12 @@ const HEAD_SHA = "2".repeat(40);
 const BLOB_SHA = "3".repeat(40);
 const ZERO_SHA = "0".repeat(40);
 
+assert.strictEqual(
+  mergeBatch.EVIDENCE_TIMEOUT_MS,
+  300_000,
+  "repository-wide trusted evidence must have a five-minute execution budget",
+);
+
 function makeCheckRun(name, status, conclusion, startedAt, id, suiteId = 1) {
   return {
     name,

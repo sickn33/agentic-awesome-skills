@@ -1,7 +1,7 @@
 ---
 name: hf-mem
 description: Hugging Face CLI to estimate the required memory to load Safetensors or GGUF model weights for inference from the Hugging Face Hub
-risk: unknown
+risk: critical
 source: https://github.com/huggingface/skills/tree/main/skills/hf-mem
 source_repo: huggingface/skills
 source_type: official

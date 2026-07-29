@@ -1,7 +1,7 @@
 ---
 name: executing-plans
 description: "Use when you have a written implementation plan to execute in a separate session with review checkpoints"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

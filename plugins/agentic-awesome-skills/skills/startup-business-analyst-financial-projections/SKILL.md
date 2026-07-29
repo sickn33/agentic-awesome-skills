@@ -5,7 +5,7 @@ description: 'Create detailed 3-5 year financial model with revenue, costs, cash
   flow, and scenarios
 
   '
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---

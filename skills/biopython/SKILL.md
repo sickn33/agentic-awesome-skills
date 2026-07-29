@@ -4,7 +4,7 @@ description: "Biopython is a comprehensive set of freely available Python tools 
 license: Unknown
 metadata:
     skill-author: K-Dense Inc.
-risk: unknown
+risk: critical
 source: "https://github.com/biopython/biopython"
 ---
 

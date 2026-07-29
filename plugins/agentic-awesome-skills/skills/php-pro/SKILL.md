@@ -7,7 +7,7 @@ description: 'Write idiomatic PHP code with generators, iterators, SPL data
   applications.
 
   '
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---

@@ -1,7 +1,7 @@
 ---
 name: frontend-design
 description: "You are a frontend designer-engineer, not a layout generator."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

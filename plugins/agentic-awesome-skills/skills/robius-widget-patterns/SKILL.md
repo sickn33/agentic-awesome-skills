@@ -5,7 +5,7 @@ description: |
   apply_over, TextOrImage, modal, 可复用, 模态,
   collapsible, drag drop, reusable widget, widget design,
   pageflip, 组件设计, 组件模式
-risk: unknown
+risk: critical
 source: community
 ---
 

@@ -7,7 +7,7 @@ description: 'Analyzes content for E-E-A-T signals and suggests improvements to
   PROACTIVELY for YMYL topics.
 
   '
-risk: unknown
+risk: none
 source: community
 date_added: '2026-02-27'
 ---

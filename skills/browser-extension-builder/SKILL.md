@@ -4,7 +4,7 @@ description: Expert in building browser extensions that solve real problems -
   Chrome, Firefox, and cross-browser extensions. Covers extension architecture,
   manifest v3, content scripts, popup UIs, monetization strategies, and Chrome
   Web Store publishing.
-risk: unknown
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---

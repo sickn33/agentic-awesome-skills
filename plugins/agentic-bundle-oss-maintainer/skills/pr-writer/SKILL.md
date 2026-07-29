@@ -1,7 +1,7 @@
 ---
 name: pr-writer
 description: "Create pull requests following Sentry's engineering practices."
-risk: unknown
+risk: critical
 source: community
 ---
 

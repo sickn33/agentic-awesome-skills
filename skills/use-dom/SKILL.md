@@ -1,7 +1,7 @@
 ---
 name: use-dom
 description: Use Expo DOM components to run web code in a webview on native and as-is on web. Migrate web code to native incrementally.
-risk: unknown
+risk: critical
 source: https://github.com/expo/skills/tree/main/plugins/expo/skills/use-dom
 source_repo: expo/skills
 source_type: official

@@ -1,7 +1,7 @@
 ---
 name: tune-monitor
 description: Analyze a Monte Carlo monitor and recommend config changes to reduce alert noise. Supports metric, custom SQL, validation, and table monitors. Fetches the report, identifies patterns, and suggests tuning.
-risk: unknown
+risk: critical
 source: https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/tune-monitor
 source_repo: monte-carlo-data/mc-agent-toolkit
 source_type: community

@@ -4,7 +4,7 @@ description: "SymPy is a Python library for symbolic mathematics that enables ex
 license: https://github.com/sympy/sympy/blob/master/LICENSE
 metadata:
     skill-author: K-Dense Inc.
-risk: unknown
+risk: safe
 source: "https://github.com/sympy/sympy"
 ---
 

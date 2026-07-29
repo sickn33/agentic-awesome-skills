@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Hardened changed-skill evidence so legacy executable-mode canonical `SKILL.md` files can be compared as inert snapshot data without materializing other executable files, symlinks, or gitlinks.
 - Updated the catalog web app from `@supabase/supabase-js` 2.110.0 to 2.111.0, including the auth fix for overlapping PKCE flows, while preserving platform-specific native package metadata in the lockfile.
 
 ### Validation

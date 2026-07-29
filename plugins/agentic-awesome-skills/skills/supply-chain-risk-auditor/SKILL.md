@@ -7,7 +7,7 @@ allowed-tools:
   - Bash
   - Glob
   - Grep
-risk: unknown
+risk: critical
 source: community
 ---
 

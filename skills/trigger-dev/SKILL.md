@@ -3,7 +3,7 @@ name: trigger-dev
 description: Trigger.dev expert for background jobs, AI workflows, and reliable
   async execution with excellent developer experience and TypeScript-first
   design.
-risk: unknown
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---

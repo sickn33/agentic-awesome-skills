@@ -1,7 +1,7 @@
 ---
 name: paypal-integration
 description: "Master PayPal payment integration including Express Checkout, IPN handling, recurring billing, and refund workflows."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

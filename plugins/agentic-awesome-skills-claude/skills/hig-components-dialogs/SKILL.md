@@ -1,7 +1,7 @@
 ---
 name: hig-components-dialogs
 description: Apple HIG guidance for presentation components including alerts, action sheets, popovers, sheets, and digit entry views.
-risk: unknown
+risk: none
 source: community
 date_added: '2026-02-27'
 ---

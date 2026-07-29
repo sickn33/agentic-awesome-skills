@@ -1,7 +1,7 @@
 ---
 name: privacy-mask
 description: Mask, redact, anonymize and censor sensitive information (PII) in screenshots and images — phone numbers, emails, IDs, API keys, crypto wallets, credit cards, passwords, and more. Uses OCR (Tesseract + RapidOCR) with 47 regex rules and optional NER (GLiNER) to detect private data and...
-risk: unknown
+risk: critical
 source: https://github.com/fullstackcrew-alpha/privacy-mask/tree/main/
 source_repo: fullstackcrew-alpha/privacy-mask
 source_type: community
