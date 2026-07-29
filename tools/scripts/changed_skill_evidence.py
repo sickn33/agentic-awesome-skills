@@ -118,11 +118,14 @@ def canonical_skill_id(path: str | None, roots: set[str]) -> str | None:
     if path is None or not path.startswith("skills/"):
         return None
     relative = path[len("skills/") :]
-    candidates = [
-        root
-        for root in roots
-        if relative == f"{root}/SKILL.md" or relative.startswith(f"{root}/")
-    ]
+    parts = relative.split("/")
+    candidates = []
+    for end in range(1, len(parts)):
+        root = "/".join(parts[:end])
+        if root in roots and (
+            relative == f"{root}/SKILL.md" or relative.startswith(f"{root}/")
+        ):
+            candidates.append(root)
     return max(candidates, key=lambda root: (root.count("/"), len(root))) if candidates else None
 
 

@@ -96,6 +96,23 @@ def init_repo(*, with_skill: bool = True) -> tuple[Path, str]:
 
 
 class ChangedSkillEvidenceTests(unittest.TestCase):
+    def test_canonical_skill_lookup_checks_only_path_ancestors(self):
+        class NonIterableRoots(set):
+            def __iter__(self):
+                raise AssertionError("canonical lookup must not scan every skill root")
+
+        roots = NonIterableRoots({"parent", "parent/child", "unrelated"})
+
+        self.assertEqual(
+            changed_skill_evidence.canonical_skill_id(
+                "skills/parent/child/references/example.md", roots
+            ),
+            "parent/child",
+        )
+        self.assertIsNone(
+            changed_skill_evidence.canonical_skill_id("docs/example.md", roots)
+        )
+
     def test_mixed_copy_and_rename_keep_distinct_change_types(self):
         root, base = init_repo()
         original = root / "skills/example/SKILL.md"
