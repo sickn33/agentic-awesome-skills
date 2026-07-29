@@ -8137,12 +8137,12 @@
     "category": "planning",
     "name": "blueprint",
     "description": "Turn a one-line objective into a step-by-step construction plan any coding agent can execute cold. Each step has a self-contained context brief \u2014 a fresh agent in a new session can pick up any step without reading prior steps.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-10",
     "plugin": {
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -8150,9 +8150,7 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ]
+      "reasons": []
     }
   },
   {

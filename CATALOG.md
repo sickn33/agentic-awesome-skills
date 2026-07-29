@@ -1687,7 +1687,7 @@ Total skills: 1993
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
-| `blueprint` | Turn a one-line objective into a step-by-step construction plan any coding agent can execute cold. Each step has a self-contained context brief — a fresh age... | safe | community | blueprint | blueprint, turn, one, line, objective, step, construction, plan, any, coding, agent, execute |
+| `blueprint` | Turn a one-line objective into a step-by-step construction plan any coding agent can execute cold. Each step has a self-contained context brief — a fresh age... | critical | community | blueprint | blueprint, turn, one, line, objective, step, construction, plan, any, coding, agent, execute |
 | `concise-planning` | Use when a user asks for a plan for a coding task, to generate a clear, actionable, and atomic checklist. | unknown | community | concise, planning | concise, planning, user, asks, plan, coding, task, generate, clear, actionable, atomic, checklist |
 | `decision-navigator` | Guide stuck or overwhelmed users through targeted branching questions until they reach concrete next steps. | safe | community | decision, navigator | decision, navigator, stuck, overwhelmed, users, through, targeted, branching, questions, until, reach, concrete |
 | `plan-writing` | Structured task planning with clear breakdowns, dependencies, and verification criteria. Use when implementing features, refactoring, or any multi-step work. | unknown | community | plan, writing | plan, writing, structured, task, planning, clear, breakdowns, dependencies, verification, criteria, implementing, features |

@@ -6542,7 +6542,7 @@
       "id": "blueprint",
       "path": "skills/blueprint",
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -6550,13 +6550,9 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ],
+      "reasons": [],
       "blocked_reasons": {
-        "codex": [
-          "target_specific_home_path"
-        ],
+        "codex": [],
         "claude": []
       },
       "runtime_files": []
@@ -38314,11 +38310,11 @@
   "summary": {
     "total_skills": 1993,
     "supported": {
-      "codex": 1916,
+      "codex": 1917,
       "claude": 1938
     },
     "blocked": {
-      "codex": 77,
+      "codex": 76,
       "claude": 55
     },
     "manual_setup": 19
