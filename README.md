@@ -127,6 +127,22 @@ npx agentic-awesome-skills --agy
 
 The npm installer uses a shallow, release-pinned clone by default so first-run installs stay lighter than a full repository history checkout while matching the published npm package version. Use `--tag main` only when you intentionally want the current repository tip.
 
+For backward compatibility, running the installer without selectors installs the
+entire catalog. The CLI now prints the catalog's risk summary first: a full
+install includes `unknown`, `critical`, and authorized-use-only `offensive`
+instructions. Installation copies files; it does not execute their commands,
+but an agent may act on an installed skill later. Prefer an exact reviewed set:
+
+```bash
+npx agentic-awesome-skills audit --skills brainstorming,backend-dev-guidelines
+npx agentic-awesome-skills --skills brainstorming,backend-dev-guidelines --dry-run
+```
+
+The audit reads the selected skill directories without executing them and
+reports command, network, credential, filesystem, privileged, destructive,
+symlink, and binary signals. It is a review aid, not a safety certificate. See
+[Security, trust, and antivirus alerts](docs/users/security-and-antivirus.md).
+
 ### Focused single-skill install with GitHub CLI (preview)
 
 GitHub CLI can preview and install one exact skill for Copilot and other supported hosts. Use an exact `SKILL.md` path in this large, mirrored repository so the selected source is unambiguous and discovery stays fast:

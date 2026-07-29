@@ -41,7 +41,18 @@ LIMITATIONS_HEADING_PATTERNS = [
 ]
 MARKDOWN_LINK_PATTERN = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-SECURITY_DISCLAIMER_PATTERN = re.compile(r"AUTHORIZED USE ONLY", re.IGNORECASE)
+SECURITY_DISCLAIMER_PATTERN = re.compile(
+    r"> \*\*⚠️ AUTHORIZED USE ONLY\*\*\s*\n"
+    r"> This skill is for educational purposes or authorized security assessments only\.\s*\n"
+    r"> You must have explicit, written permission from the system owner before using this tool\.\s*\n"
+    r"> Misuse of this tool is illegal and strictly prohibited\.",
+)
+OFFENSIVE_CONFIRMATION_PATTERN = re.compile(
+    r"Mandatory confirmation gate[\s\S]{0,900}"
+    r"exact target URL, IP, account, or resource[\s\S]{0,900}"
+    r"Wait for explicit confirmation in the current conversation",
+    re.IGNORECASE,
+)
 VALID_RISK_LEVELS = {"none", "safe", "critical", "offensive", "unknown"}
 DEFAULT_MARKDOWN_TOP_FINDINGS = 15
 DEFAULT_MARKDOWN_TOP_SKILLS = 20
@@ -242,6 +253,14 @@ def build_skill_report(
                 "error",
                 "missing_authorized_use_only",
                 "Offensive skill is missing the required 'AUTHORIZED USE ONLY' disclaimer.",
+            )
+        )
+    if risk == "offensive" and not OFFENSIVE_CONFIRMATION_PATTERN.search(content):
+        findings.append(
+            Finding(
+                "error",
+                "missing_offensive_confirmation_gate",
+                "Offensive skill is missing the mandatory target, authorization, command preview, and explicit confirmation gate.",
             )
         )
 

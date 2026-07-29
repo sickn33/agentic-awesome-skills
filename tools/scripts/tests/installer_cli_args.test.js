@@ -23,6 +23,8 @@ const exactPreview = installer.parseArgs([
 ]);
 assert.strictEqual(exactPreview.skillsArg, 'frontend-design,game-development/2d-games');
 assert.strictEqual(exactPreview.dryRun, true);
+assert.strictEqual(installer.parseArgs(['--all', '--dry-run']).installAll, true);
+assert.strictEqual(installer.parseArgs(['audit', '--skills', 'frontend-design']).auditOnly, true);
 assert.deepStrictEqual(
   installer.parseExactSkillArg(exactPreview.skillsArg),
   ['frontend-design', 'game-development/2d-games'],
@@ -40,3 +42,20 @@ assert.doesNotMatch(version.stdout, /Cloning repository/i);
 const invalid = spawnSync(process.execPath, [installerPath, '--unknown'], { encoding: 'utf8' });
 assert.notStrictEqual(invalid.status, 0);
 assert.match(invalid.stderr, /unknown option/i);
+
+assert.throws(
+  () => installer.assertExplicitInstallSelection(
+    installer.parseArgs(['--all', '--skills', 'frontend-design']),
+    installer.buildInstallSelectors({}),
+    ['frontend-design'],
+  ),
+  /--all cannot be combined/i,
+);
+assert.throws(
+  () => installer.assertExplicitInstallSelection(
+    installer.parseArgs(['audit']),
+    installer.buildInstallSelectors({}),
+    [],
+  ),
+  /audit command requires --skills/i,
+);

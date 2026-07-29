@@ -99,6 +99,12 @@ const eclEnvironmentGuide = fs.readFileSync(
   'utf8',
 );
 const lovableCleanupSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'lovable-cleanup', 'SKILL.md'), 'utf8');
+const blueprintSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'blueprint', 'SKILL.md'), 'utf8');
+const uiUpdateSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'ui-update', 'SKILL.md'), 'utf8');
+const xTwitterScraperSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'x-twitter-scraper', 'SKILL.md'), 'utf8');
+const agentMemoryMcpSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'agent-memory-mcp', 'SKILL.md'), 'utf8');
+const speckitUpdaterSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'speckit-updater', 'SKILL.md'), 'utf8');
+const securityAntivirusGuide = fs.readFileSync(path.join(repoRoot, 'docs', 'users', 'security-and-antivirus.md'), 'utf8');
 
 function fencedBlocks(content, language) {
   const blocks = [];
@@ -522,6 +528,21 @@ assert.match(
   /react-native-keychain|expo-secure-store/,
   'React Native reference should direct token storage to platform-backed secure storage',
 );
+for (const [name, content] of [
+  ['blueprint', blueprintSkill],
+  ['ui-update', uiUpdateSkill],
+  ['x-twitter-scraper', xTwitterScraperSkill],
+  ['agent-memory-mcp', agentMemoryMcpSkill],
+]) {
+  assert.match(content, /checkout --detach [0-9a-f]{40}/, `${name} must pin its reviewed external source`);
+  assert.match(content, /mktemp -d/, `${name} must review external content outside active skill paths`);
+  assert.match(content, /explicit (?:user )?approval/i, `${name} must require approval before activation`);
+}
+assert.doesNotMatch(uiUpdateSkill, /git reset --hard|Always safe \(do without asking\)|safe and reversible/i);
+assert.doesNotMatch(speckitUpdaterSkill, /C:\\Users\\bobby/i);
+assert.match(securityAntivirusGuide, /does not itself run/i);
+assert.match(securityAntivirusGuide, /does not prove safety/i);
+assert.match(securityAntivirusGuide, /evidence of execution/i);
 
 for (const scriptName of ['generate_slides.py', 'create_pdf_slides.py']) {
   const helpRun = spawnSync(

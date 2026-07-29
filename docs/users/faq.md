@@ -31,6 +31,11 @@ Skills are specialized instruction files that teach AI assistants how to handle 
 
 **No.** With AAS Core, ask the agent to inspect the project and choose the exact skills from the complete catalog. On a broad direct install, all skills may be present locally while the host loads only the skills it invokes.
 
+The direct installer keeps its historical full-catalog default for compatibility,
+but now shows the risk distribution before writing. Use `audit --skills <ids>` to
+read an exact selection and its bundled files without executing them, then use
+the same `--skills` selection with `--dry-run` before installation.
+
 Use [Starter Packs](bundles.md) as human-curated presets when you want a fixed starting point.
 
 If you want a narrower install surface for **Claude Code** or **Codex**, use the new plugin distributions documented in [plugins.md](plugins.md) instead of the full library install.
@@ -128,8 +133,13 @@ We classify skills so you know what you're running. These values map directly to
 
 ### Can these skills hack my computer?
 
-**No.** Skills are text files. However, they _instruct_ the AI to run commands. If a skill says "delete all files", a compliant AI might try to do it.
-_Always check the Risk label and review the code._
+A Markdown file is not a running process, but calling it “just text” is not a
+sufficient security model. A loaded skill can instruct an agent to run commands,
+use credentials, access the network, or modify files. Installation alone is not
+evidence that any of that happened; execution logs and resulting system changes
+are. Review the exact skill and every bundled file before use, keep agent
+permissions narrow, and require confirmation for consequential actions. See
+[Security, trust, and antivirus alerts](security-and-antivirus.md).
 
 ---
 

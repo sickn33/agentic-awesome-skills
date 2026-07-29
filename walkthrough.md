@@ -1,5 +1,17 @@
 # Maintenance Walkthrough - 2026-07-29
 
+- Hardened the legacy full-catalog installer without breaking its historical
+  default: it now displays the selected risk distribution and provides a
+  read-only `audit --skills` mode that recursively reports sensitive behavior,
+  symlinks, and binary payloads before installation.
+- Added a documented trust and antivirus-response model that distinguishes a
+  signature match in instruction text from evidence of execution while treating
+  loaded skills as untrusted instructions with real agent-tool consequences.
+- Replaced thread-identified moving-branch installs with inspect-first,
+  full-commit-pinned workflows and removed blanket safety claims, hidden writes,
+  destructive rollback advice, and a developer-specific absolute path.
+- Enforced an exact authorized-use disclaimer and a per-action target, scope,
+  command, effect, and confirmation gate across every offensive-risk skill.
 - Revalidated all 15 exported Codex Security findings against current protected `main` instead of treating historical scanner anchors as current code.
 - Removed BrowserAct's mutable provider-served guide from the supported operating path; the pinned local CLI help may describe syntax, while the checked-in skill remains the complete policy.
 - Enforced full-SHA GitHub blob URLs for linked FindMate profiles on both Moltbook drafts and GitHub thread parsing, with regression coverage for mutable branches, foreign hosts, query strings, and traversal-shaped paths.

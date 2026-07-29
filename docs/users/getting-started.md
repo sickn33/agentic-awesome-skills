@@ -48,6 +48,20 @@ npx agentic-awesome-skills
 This clones to `~/.agents/skills` by default. Use `--cursor`, `--claude`, `--gemini`, `--codex`, `--kiro`, or `--agy` to install for a specific tool, or `--path <dir>` for a custom location. Run `npx agentic-awesome-skills --help` for details.
 The installer uses a shallow clone by default so you get the current library without paying for the full git history on first install.
 
+With no selector, the legacy-compatible default installs the complete catalog
+and prints a risk summary before writing. That includes `unknown`, `critical`,
+and authorized-use-only `offensive` skills. Installed text is not automatically
+executed, but it can influence an agent when loaded, so review an exact set first:
+
+```bash
+npx agentic-awesome-skills audit --skills brainstorming,backend-dev-guidelines
+npx agentic-awesome-skills --skills brainstorming,backend-dev-guidelines --dry-run
+```
+
+You can also ask your agent to read the selected `SKILL.md` and every bundled
+file before installation. The static audit reports risky capabilities; it does
+not prove that a skill is safe. See [Security, trust, and antivirus alerts](security-and-antivirus.md).
+
 If you see a 404 error, use: `npx github:sickn33/agentic-awesome-skills`
 
 **Option B — git clone:**
