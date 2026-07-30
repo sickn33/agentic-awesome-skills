@@ -194,7 +194,7 @@ Options:
   --gemini       Install to ~/.gemini/skills (Gemini CLI)
   --codex        Install to ~/.codex/skills (Codex CLI)
   --kiro         Install to ~/.kiro/skills (Kiro CLI)
-  --antigravity  Install to ~/.agents/skills (Antigravity IDE / OpenCode-style layout)
+  --antigravity  Install to ~/.agents/skills; requires a selection or explicit --all
   --agy          Install to ~/.gemini/antigravity-cli/skills (Antigravity CLI slash commands)
   --path <dir>   Install to <dir> (default: ~/.agents/skills)
   --risk <csv>     Install only skills matching these risk labels
@@ -213,6 +213,7 @@ Examples:
   npx agentic-awesome-skills --cursor --risk safe,none
   npx agentic-awesome-skills --all --dry-run
   npx agentic-awesome-skills --kiro --skills brainstorming
+  npx agentic-awesome-skills --antigravity --skills brainstorming --dry-run
   npx agentic-awesome-skills --antigravity --risk safe,none
   npx agentic-awesome-skills --agy --skills brainstorming
   npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none
@@ -294,6 +295,37 @@ function assertExplicitInstallSelection(opts, selectors, requestedSkills) {
   if (opts.auditOnly && requestedSkills.length === 0) {
     throw new Error("The audit command requires --skills with one or more exact skill ids.");
   }
+}
+
+function buildAntigravitySelectionMessage() {
+  return [
+    "Antigravity installation stopped before cloning or changing files.",
+    "",
+    "Installing the complete AAS catalog into ~/.agents/skills can exhaust the host context, slow startup, trigger truncation errors, or cause a crash loop.",
+    "",
+    "Recommended: ask a Codex or Claude agent with the read-only AAS Core MCP configured to inspect your project, search the complete catalog, and choose the exact skill IDs you need. Then have the agent preview the direct install with:",
+    "",
+    "  npx agentic-awesome-skills --antigravity --skills skill-id-1,skill-id-2 --dry-run",
+    "",
+    "Copyable agent prompt:",
+    "  Inspect this project and use the AAS MCP to search the complete catalog and choose the exact relevant skill IDs. Replace the example IDs and run npx agentic-awesome-skills --antigravity --skills skill-id-1,skill-id-2 --dry-run. Show me the plan and do not install the complete catalog.",
+    "",
+    "AAS MCP selects and validates IDs but does not install skills. After reviewing the dry run, repeat the generated command without --dry-run.",
+    "",
+    "AAS Core setup: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md",
+    "",
+    "If you intentionally accept the Antigravity context and crash-loop risk, use:",
+    "  npx agentic-awesome-skills --antigravity --all",
+    "",
+    "Recovery: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/windows-truncation-recovery.md",
+  ].join("\n");
+}
+
+function assertAntigravityInstallSelection(opts, targets, selectors, requestedSkills) {
+  if (opts.auditOnly || opts.installAll) return;
+  if (requestedSkills.length > 0 || hasInstallSelectors(selectors)) return;
+  if (!targets.some((target) => target.name === "Antigravity")) return;
+  throw new Error(buildAntigravitySelectionMessage());
 }
 
 function buildRiskSummary(repoRoot, installEntries) {
@@ -1075,6 +1107,14 @@ function main() {
     process.exit(1);
   }
 
+  try {
+    assertAntigravityInstallSelection(opts, targets, selectors, requestedSkills);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exitCode = 1;
+    return;
+  }
+
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-skills-"));
 
   try {
@@ -1161,6 +1201,7 @@ module.exports = {
   buildCloneArgs,
   buildDryRunPlan,
   buildDryRunTargetPlan,
+  assertAntigravityInstallSelection,
   assertExplicitInstallSelection,
   auditSkillEntries,
   buildRiskSummary,
@@ -1177,6 +1218,7 @@ module.exports = {
   normalizeManifestEntries,
   parseExactSkillArg,
   parseSelectorArg,
+  buildAntigravitySelectionMessage,
   printDryRunPlan,
   parseArgs,
   printImplicitFullInstallWarning,

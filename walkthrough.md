@@ -1,3 +1,15 @@
+# Maintenance Walkthrough - 2026-07-30
+
+- Changed only the Antigravity direct-install default: a bare Antigravity target
+  now stops before cloning or writing unless exact skills, metadata filters, or
+  the explicit `--all` override are supplied.
+- Added copyable guidance for an MCP-enabled Codex or Claude agent to inspect the
+  project, choose exact AAS skill IDs, and preview the resulting Antigravity
+  install while preserving AAS MCP's read-only boundary.
+- Added regression coverage proving the blocked path performs no clone or target
+  mutation, explicit selections and `--all` continue, and non-Antigravity hosts
+  retain their existing behavior.
+
 # Maintenance Walkthrough - 2026-07-29
 
 - Hardened the legacy full-catalog installer without breaking its historical

@@ -115,11 +115,11 @@ Use direct installation when your host does not yet have a native AAS Core adapt
 - **Full library install** when you want every skill available in a local skills directory.
 - **Bundles and workflows** when you want role-based recommendations or ordered execution playbooks.
 
-### Full library install
+### Direct skill install
 
 ```bash
-# Default: ~/.agents/skills (Antigravity 2.0 global). Use --path for other locations.
-npx agentic-awesome-skills
+# Antigravity: preview an exact, agent-selected set before writing.
+npx agentic-awesome-skills --antigravity --skills brainstorming,systematic-debugging --dry-run
 
 # Antigravity CLI slash commands (agy): ~/.gemini/antigravity-cli/skills/<skill>/SKILL.md
 npx agentic-awesome-skills --agy
@@ -127,15 +127,34 @@ npx agentic-awesome-skills --agy
 
 The npm installer uses a shallow, release-pinned clone by default so first-run installs stay lighter than a full repository history checkout while matching the published npm package version. Use `--tag main` only when you intentionally want the current repository tip.
 
-For backward compatibility, running the installer without selectors installs the
-entire catalog. The CLI now prints the catalog's risk summary first: a full
-install includes `unknown`, `critical`, and authorized-use-only `offensive`
+Antigravity watches `~/.agents/skills` and may load enough installed instructions
+to exhaust its context, slow startup, trigger truncation errors, or enter a crash
+loop. For that target, the installer stops before cloning or writing unless you
+provide `--skills`, a metadata filter, or the explicit `--all` override. The bare
+`npx agentic-awesome-skills` command uses the same protected Antigravity target.
+
+The recommended flow is to ask Codex or Claude with the read-only AAS Core MCP
+configured to inspect the project, search the complete catalog, and choose exact
+skill IDs. AAS MCP selects and validates IDs but does not install them; the agent
+or user then previews the direct installation with the command above and repeats
+it without `--dry-run` after review.
+
+Other direct-install targets retain the legacy-compatible full-catalog behavior
+when no selectors are supplied. The CLI prints the catalog's risk summary first:
+a full install includes `critical` and authorized-use-only `offensive`
 instructions. Installation copies files; it does not execute their commands,
 but an agent may act on an installed skill later. Prefer an exact reviewed set:
 
 ```bash
 npx agentic-awesome-skills audit --skills brainstorming,backend-dev-guidelines
 npx agentic-awesome-skills --skills brainstorming,backend-dev-guidelines --dry-run
+```
+
+If you deliberately accept the context and crash-loop risk, the complete
+Antigravity catalog remains available through explicit consent:
+
+```bash
+npx agentic-awesome-skills --antigravity --all
 ```
 
 The audit reads the selected skill directories without executing them and
@@ -213,7 +232,7 @@ Use the same repository, but install or invoke it in the way your host expects.
 | Gemini CLI     | `npx agentic-awesome-skills --gemini`                              | `Use brainstorming to plan a feature`                |
 | Codex CLI      | [AAS Core local MCP preview](docs/users/codex-cli-skills.md) or `npx agentic-awesome-skills --codex` | Ask Codex to choose and compose an AAS stack |
 | Autohand Code  | `npx agentic-awesome-skills --path ~/.autohand/skills` or `--path .autohand/skills` | `Use brainstorming to plan a feature`                |
-| Antigravity IDE | `npx agentic-awesome-skills --antigravity`                        | `Use @brainstorming to plan a feature`               |
+| Antigravity IDE | `npx agentic-awesome-skills --antigravity --skills <ids> --dry-run` | Ask an MCP-enabled agent to choose exact IDs first |
 | Antigravity CLI (`agy`) | `npx agentic-awesome-skills --agy`                        | `/brainstorming help me plan a feature`              |
 | Kiro CLI       | `npx agentic-awesome-skills --kiro`                                | `Use brainstorming to plan a feature`                |
 | Kiro IDE       | `npx agentic-awesome-skills --path ~/.kiro/skills`                 | `Use @brainstorming to plan a feature`               |
@@ -244,7 +263,11 @@ The supported path covers complete local catalog search and inspection, agent-ow
 
 For AAS Core, follow the [preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v15.7.0/docs/users/aas-core.md) and use only a package release whose notes explicitly state that it includes Core. Release 14.6.0 predates Core; Core-capable releases begin with the 15.x line.
 
-For direct skill distribution, run `npx agentic-awesome-skills` for the default full-library install. Use a tool-specific flag such as `--codex`, `--cursor`, `--gemini`, `--claude`, or `--antigravity` when you want the legacy installer to place skills in the directory your assistant already watches.
+For direct skill distribution, use a tool-specific flag such as `--codex`,
+`--cursor`, `--gemini`, or `--claude` to place skills in the directory your
+assistant watches. The default target is Antigravity; it requires `--skills`, a
+metadata filter, or explicit `--all` consent before cloning or writing because a
+full watched catalog can exhaust context or trigger a crash loop.
 
 For Autohand Code, use the installer with a custom path:
 

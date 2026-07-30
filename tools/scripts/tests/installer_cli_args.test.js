@@ -1,4 +1,6 @@
 const assert = require('assert');
+const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const packageVersion = require('../../../package.json').version;
@@ -59,3 +61,59 @@ assert.throws(
   ),
   /audit command requires --skills/i,
 );
+
+const antigravityTarget = [{ name: 'Antigravity', path: '/tmp/.agents/skills' }];
+assert.throws(
+  () => installer.assertAntigravityInstallSelection(
+    installer.parseArgs(['--antigravity']),
+    antigravityTarget,
+    installer.buildInstallSelectors({}),
+    [],
+  ),
+  /installation stopped before cloning or changing files/i,
+);
+assert.doesNotThrow(() => installer.assertAntigravityInstallSelection(
+  installer.parseArgs(['--antigravity', '--skills', 'frontend-design']),
+  antigravityTarget,
+  installer.buildInstallSelectors({}),
+  ['frontend-design'],
+));
+assert.doesNotThrow(() => installer.assertAntigravityInstallSelection(
+  installer.parseArgs(['--antigravity', '--category', 'development']),
+  antigravityTarget,
+  installer.buildInstallSelectors({ categoryArg: 'development' }),
+  [],
+));
+assert.doesNotThrow(() => installer.assertAntigravityInstallSelection(
+  installer.parseArgs(['--antigravity', '--all']),
+  antigravityTarget,
+  installer.buildInstallSelectors({}),
+  [],
+));
+assert.doesNotThrow(() => installer.assertAntigravityInstallSelection(
+  installer.parseArgs(['--codex']),
+  [{ name: 'Codex CLI', path: '/tmp/.codex/skills' }],
+  installer.buildInstallSelectors({}),
+  [],
+));
+
+const isolatedHome = fs.mkdtempSync(path.join(os.tmpdir(), 'installer-antigravity-block-'));
+try {
+  for (const args of [[], ['--antigravity']]) {
+    const blocked = spawnSync(process.execPath, [installerPath, ...args], {
+      encoding: 'utf8',
+      env: { ...process.env, HOME: isolatedHome },
+    });
+    assert.strictEqual(blocked.status, 1);
+    assert.match(blocked.stderr, /context.*crash loop/i);
+    assert.match(blocked.stderr, /AAS Core MCP/i);
+    assert.match(blocked.stderr, /docs\/users\/aas-core\.md/i);
+    assert.match(blocked.stderr, /--antigravity --skills skill-id-1,skill-id-2 --dry-run/i);
+    assert.match(blocked.stderr, /--antigravity --all/i);
+    assert.match(blocked.stderr, /windows-truncation-recovery\.md/i);
+    assert.doesNotMatch(`${blocked.stdout}\n${blocked.stderr}`, /Cloning repository/i);
+  }
+  assert.strictEqual(fs.existsSync(path.join(isolatedHome, '.agents')), false);
+} finally {
+  fs.rmSync(isolatedHome, { recursive: true, force: true });
+}

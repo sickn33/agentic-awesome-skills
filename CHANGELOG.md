@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Made direct Antigravity installation fail closed before cloning or writing when no skill selection is supplied. The installer now directs users to let a Codex or Claude agent choose exact IDs through the read-only AAS Core MCP, preview the resulting `--skills` install, and use `--all` only as explicit acceptance of full-catalog context and crash-loop risk. Other host targets retain their existing behavior.
+
 ## [15.7.0] - 2026-07-29 - "Risk Metadata and Installation Hardening"
 
 > Completed semantic risk classification across the catalog, hardened skill installation and maintainer evidence boundaries, and added a consent-gated backend provisioning skill.
