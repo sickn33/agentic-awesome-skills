@@ -11,7 +11,6 @@ permissions:
 on:
   release:
     types: [published]
-  workflow_dispatch:
 
 jobs:
   publish:
@@ -19,7 +18,23 @@ jobs:
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
+          ref: main
           fetch-depth: 0
+
+      - name: Verify protected release provenance
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          test "$GITHUB_EVENT_NAME" = "release"
+          test -n "$RELEASE_TAG"
+          git fetch --force origin main "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
+          tag_commit="$(git rev-list -n1 "$RELEASE_TAG")"
+          main_commit="$(git rev-parse origin/main)"
+          git merge-base --is-ancestor "$tag_commit" "$main_commit"
+          tag_version="$(git show "$RELEASE_TAG:package.json" | node -e 'let s=""; process.stdin.on("data",c=>s+=c); process.stdin.on("end",()=>process.stdout.write(JSON.parse(s).version))')"
+          test "$RELEASE_TAG" = "v$tag_version"
+          git checkout --detach "$tag_commit"
 
       - name: Setup Python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
@@ -35,13 +50,14 @@ jobs:
           node-version: "22.23.1"
           registry-url: "https://registry.npmjs.org"
 
-      - name: Verify release identity
+      - name: Verify checked-out release identity
         shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
-          test "$GITHUB_REF_TYPE" = "tag"
           expected_tag="v$(node -p "require('./package.json').version")"
-          test "$GITHUB_REF_NAME" = "$expected_tag"
-          test "$(git rev-list -n1 HEAD)" = "$(git rev-list -n1 "$GITHUB_REF_NAME")"
+          test "$RELEASE_TAG" = "$expected_tag"
+          test "$(git rev-parse HEAD)" = "$(git rev-list -n1 "$RELEASE_TAG")"
 
       - name: Install dependencies
         run: npm ci
