@@ -161,7 +161,7 @@ The script detects the previous state and continues from where it left off.
 
 | Feature | Manual Mode | Autonomy Mode |
 |---------|-------------|---------------|
-| Start | `claude --dangerously-skip-permissions` | `./autonomy/run.sh` |
+| Start | `claude` | `./autonomy/run.sh` |
 | Prereq check | Manual | Automatic |
 | Rate limit handling | Manual restart | Auto-resume |
 | State persistence | Manual checkpoint | Automatic |

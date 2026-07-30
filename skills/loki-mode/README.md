@@ -74,7 +74,7 @@ PRD → Research → Architecture → Development → Testing → Deployment →
 | **No testing** or basic unit tests | **14 automated quality gates**: security scans, load tests, accessibility audits, code reviews |
 | **Code only** - you handle the rest | **Full business operations**: marketing, sales, legal, HR, finance, investor relations |
 | **Stops on errors** | **Self-healing**: circuit breakers, dead letter queues, exponential backoff, automatic recovery |
-| **No visibility** into progress | **Real-time dashboard** with agent monitoring, task queues, and live status updates |
+| **No visibility** into progress | **Local status files** with agent monitoring and task queues |
 | **"Done" when code is written** | **Never "done"**: continuous optimization, A/B testing, customer feedback loops, perpetual improvement |
 
 ### **Core Advantages**
@@ -142,13 +142,13 @@ Tasks:
 Last Updated: 2026-01-04 20:45:32
 ```
 
-**Access the dashboard:**
+**Dashboard status:**
 ```bash
 # Automatically opens when running autonomously
 ./autonomy/run.sh ./docs/requirements.md
 
 # Or open manually
-open .loki/dashboard/index.html
+The legacy unauthenticated HTTP dashboard is disabled. Inspect `.loki/STATUS.txt` and the reviewed JSON state files locally instead.
 ```
 
 Auto-refreshes every 3 seconds. Works with any modern browser.
@@ -265,7 +265,7 @@ Save as `my-prd.md`.
 ./autonomy/run.sh ./my-prd.md
 
 # Or manual mode
-claude --dangerously-skip-permissions
+claude
 > Loki Mode with PRD at ./my-prd.md
 ```
 
@@ -432,7 +432,7 @@ channels:
 
 ## Requirements
 
-- **Claude Code** with `--dangerously-skip-permissions` flag
+- **Claude Code** with its normal permission prompts enabled
 - **Internet access** for competitive research and deployment
 - **Cloud provider credentials** (for deployment phase)
 - **Python 3** (for test suite)

@@ -25,7 +25,7 @@ from patchright.sync_api import sync_playwright, BrowserContext
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from config import BROWSER_STATE_DIR, STATE_FILE, AUTH_INFO_FILE, DATA_DIR
+from config import BROWSER_STATE_DIR, STATE_FILE, AUTH_INFO_FILE, DATA_DIR, ensure_private_state
 from browser_utils import BrowserFactory
 
 
@@ -56,8 +56,7 @@ class AuthManager:
     def __init__(self):
         """Initialize the authentication manager"""
         # Ensure directories exist
-        DATA_DIR.mkdir(parents=True, exist_ok=True)
-        BROWSER_STATE_DIR.mkdir(parents=True, exist_ok=True)
+        ensure_private_state()
 
         self.state_file = STATE_FILE
         self.auth_info_file = AUTH_INFO_FILE
@@ -176,6 +175,7 @@ class AuthManager:
         try:
             # Save storage state (cookies, localStorage)
             context.storage_state(path=str(self.state_file))
+            self.state_file.chmod(0o600)
             print(f"  💾 Saved browser state to: {self.state_file}")
         except Exception as e:
             print(f"  ❌ Failed to save browser state: {e}")
@@ -190,6 +190,7 @@ class AuthManager:
             }
             with open(self.auth_info_file, 'w') as f:
                 json.dump(info, f, indent=2)
+            self.auth_info_file.chmod(0o600)
         except Exception:
             pass  # Non-critical
 
@@ -216,7 +217,8 @@ class AuthManager:
             # Clear entire browser state directory
             if self.browser_state_dir.exists():
                 shutil.rmtree(self.browser_state_dir)
-                self.browser_state_dir.mkdir(parents=True, exist_ok=True)
+                self.browser_state_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+                self.browser_state_dir.chmod(0o700)
                 print("  ✅ Cleared browser data")
 
             return True
