@@ -9,6 +9,7 @@ const { validateInstance } = require("./schema-validator");
 
 const OFFLINE_MANIFEST = "data/aas-v1/catalog-manifest.v1.json";
 const CONTENT_INDEX = "data/aas-v1/skill-content-index.v1.json";
+const CATALOG_ASSET = "data/catalog.json";
 const CATALOG_PACKAGE = "agentic-awesome-skills";
 
 function readVerifiedAsset(root, asset) {
@@ -38,27 +39,33 @@ function loadOfflineIdentity(root) {
     || manifest.catalogSchemaVersion !== versions.catalogSchemaVersion || !Array.isArray(manifest.assets)) {
     throw new Error("Offline catalog manifest is invalid or incompatible");
   }
+  const verifiedAssets = new Map();
   const assets = manifest.assets.map((asset) => {
     const bytes = readVerifiedAsset(root, asset);
+    verifiedAssets.set(asset.path, bytes);
     return { path: asset.path, size: bytes.length, sha256: sha256(bytes) };
   }).sort((left, right) => compareStrings(left.path, right.path));
   const digest = sha256(canonicalJson({ digestVersion: 1, assets }));
   const indexAsset = manifest.assets.find((asset) => asset.path === CONTENT_INDEX);
   if (!indexAsset) throw new Error("Offline catalog content index is missing");
-  const contentIndex = JSON.parse(readVerifiedAsset(root, indexAsset));
+  const contentIndex = JSON.parse(verifiedAssets.get(indexAsset.path));
   const indexedSkillCount = Object.keys(contentIndex?.entries || {}).length;
   if (digest !== manifest.catalogDigest || !Number.isSafeInteger(manifest.skillCount)
     || manifest.skillCount <= 0 || manifest.skillCount !== indexedSkillCount) {
     throw new Error("Offline catalog identity mismatch");
   }
-  return { digest, manifest, contentIndex };
+  return { digest, manifest, contentIndex, verifiedAssets };
 }
 
 function loadBundledCatalog(options = {}) {
   const root = path.resolve(options.root || path.resolve(__dirname, "../../.."));
   const offline = loadOfflineIdentity(root);
-  const catalogPath = options.catalogPath || path.join(root, "data", "catalog.json");
-  const raw = JSON.parse(fs.readFileSync(catalogPath, "utf8"));
+  if (options.catalogPath && path.resolve(options.catalogPath) !== path.join(root, ...CATALOG_ASSET.split("/"))) {
+    throw new Error("Custom catalog paths cannot satisfy the bundled catalog integrity contract");
+  }
+  const catalogBytes = offline.verifiedAssets.get(CATALOG_ASSET);
+  if (!catalogBytes) throw new Error("Offline catalog data asset is missing");
+  const raw = JSON.parse(catalogBytes);
   const skills = (raw.skills || []).map((entry) => {
     const canonicalId = entry.canonical_id || entry.id;
     const contentRef = offline.contentIndex.entries?.[canonicalId];

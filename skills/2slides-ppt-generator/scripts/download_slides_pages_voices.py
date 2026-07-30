@@ -11,6 +11,9 @@ import argparse
 import ipaddress
 import re
 import socket
+import ssl
+import http.client
+import tempfile
 import requests
 from urllib.parse import urlparse
 from typing import Optional, Dict, Any
@@ -40,15 +43,54 @@ def validate_job_id(job_id: str) -> str:
     return job_id
 
 
-def validate_public_https_url(url: str) -> str:
+def validate_public_https_url(url: str) -> tuple[str, str]:
     parsed = urlparse(url)
-    if parsed.scheme != "https" or not parsed.hostname:
+    if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password or parsed.port not in (None, 443):
         raise ValueError("Download URL must be HTTPS")
+    public_ips = []
     for info in socket.getaddrinfo(parsed.hostname, None):
         ip = ipaddress.ip_address(info[4][0])
-        if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved:
+        if not ip.is_global:
             raise ValueError("Download URL resolves to a non-public address")
-    return url
+        public_ips.append(str(ip))
+    if not public_ips:
+        raise ValueError("Download URL did not resolve")
+    return url, public_ips[0]
+
+
+def download_pinned_https(url: str, pinned_ip: str, output_path: Path, maximum_bytes: int = 128 * 1024 * 1024) -> int:
+    """Download once from the verified IP while preserving TLS SNI/hostname checks."""
+    parsed = urlparse(url)
+    raw_socket = socket.create_connection((pinned_ip, 443), timeout=30)
+    tls_socket = ssl.create_default_context().wrap_socket(raw_socket, server_hostname=parsed.hostname)
+    request_target = parsed.path or "/"
+    if parsed.query:
+        request_target += f"?{parsed.query}"
+    host = parsed.hostname
+    tls_socket.sendall(
+        f"GET {request_target} HTTP/1.1\r\nHost: {host}\r\nUser-Agent: 2slides-downloader/1\r\nAccept: application/zip\r\nConnection: close\r\n\r\n".encode("ascii")
+    )
+    response = http.client.HTTPResponse(tls_socket)
+    response.begin()
+    if 300 <= response.status < 400:
+        raise ValueError("Download redirects are refused; request a fresh final URL from 2slides")
+    if response.status != 200:
+        raise ValueError(f"Download failed with HTTP {response.status}")
+    declared = response.getheader("Content-Length")
+    if declared and int(declared) > maximum_bytes:
+        raise ValueError("Download exceeds the 128 MiB limit")
+    total = 0
+    with output_path.open("wb") as destination:
+        while True:
+            chunk = response.read(8192)
+            if not chunk:
+                break
+            total += len(chunk)
+            if total > maximum_bytes:
+                raise ValueError("Download exceeds the 128 MiB limit")
+            destination.write(chunk)
+    response.close()
+    return total
 
 
 def get_api_key() -> str:
@@ -120,7 +162,7 @@ def download_slides_pages_voices(
     download_url = data.get("downloadUrl")
     if not download_url:
         raise ValueError("No download URL in response")
-    download_url = validate_public_https_url(download_url)
+    download_url, pinned_ip = validate_public_https_url(download_url)
 
     # Optional: log additional info
     file_name = data.get("fileName", "unknown.zip")
@@ -134,15 +176,16 @@ def download_slides_pages_voices(
 
     print(f"Downloading ZIP archive to: {output_path}...", file=sys.stderr)
 
-    zip_response = requests.get(download_url, stream=True, timeout=120)
-    zip_response.raise_for_status()
-
-    # Save to file
-    with safe_user_path(output_path).open('wb') as f:
-        for chunk in zip_response.iter_content(chunk_size=8192):
-            f.write(chunk)
-
-    file_size = os.path.getsize(output_path)
+    destination = safe_user_path(output_path)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(prefix=".2slides-", suffix=".zip", dir=destination.parent, delete=False) as tmp:
+        temporary = Path(tmp.name)
+    try:
+        file_size = download_pinned_https(download_url, pinned_ip, temporary)
+        os.chmod(temporary, 0o600)
+        os.replace(temporary, destination)
+    finally:
+        temporary.unlink(missing_ok=True)
     print(f"✓ Downloaded successfully!", file=sys.stderr)
     print(f"  File: {output_path}", file=sys.stderr)
     print(f"  Size: {file_size:,} bytes", file=sys.stderr)
