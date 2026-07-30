@@ -1,3 +1,21 @@
+# Secur0 coordinated remediation - 2026-07-30
+
+- Re-evaluated all 35 Secur0 reports against current protected `main`: 22 were
+  open and 13 already closed or duplicated; rejected scanner-only claims that
+  do not bypass exact-head semantic review and recovered three valid closed
+  findings covering CSV formula injection and npm release provenance.
+- Added source fixes for protected npm publication, read-only Supabase RLS,
+  authenticated Telegram webhooks, Loki permission/dashboard boundaries,
+  private credential storage, catalog read integrity, path and temporary-file
+  confinement, safe external links, Vercel exclusion handling, pinned 2slides
+  downloads, and spreadsheet-safe CSV exports.
+- Added focused regression contracts, ran the required skill/reference/docs and
+  workflow gates, regenerated the complete catalog once as validation, and
+  removed generated registries and plugin mirrors from this source-only branch.
+- Production Supabase migration, report status/comments, public PR, and any
+  release remain separate approval gates; no coordinated-disclosure material
+  was published by this local remediation pass.
+
 # Maintenance Walkthrough - 2026-07-30
 
 - Changed only the Antigravity direct-install default: a bare Antigravity target
