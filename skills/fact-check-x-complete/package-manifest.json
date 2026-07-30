@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "fact-check-x/public-workbuddy-package@1",
+  "version": "1.1.0",
+  "entrySkill": "fact-check-x-complete",
+  "bundledModules": [
+    "llm-answer-reference-compare",
+    "fact-check-x-knowledge-compare",
+    "fact-check-x-authoritative-verify"
+  ],
+  "externalModelApi": false,
+  "skillSourceTreeSha256": "cc3f62f1f21e01340f6b9ac37711c7435df5633d2aa442f667ce6429d0566105",
+  "upstreamCandidateSha256": null,
+  "officialPromoteSha256": null
+}

@@ -1,0 +1,29 @@
+{
+  "name": "llm-answer-reference-compare-runtime",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Fact-Check-X 多平台回答、引用与现场存证采集运行时。",
+  "type": "module",
+  "bin": {
+    "llm-compare": "dist/cli.js"
+  },
+  "scripts": {
+    "platforms": "node dist/cli.js platforms"
+  },
+  "keywords": [
+    "llm",
+    "playwright",
+    "comparison",
+    "citations",
+    "references"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@playwright/test": "^1.49.1",
+    "commander": "^12.1.0",
+    "zod": "^3.24.1"
+  }
+}

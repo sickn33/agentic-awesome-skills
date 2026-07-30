@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1",
+  "question": "广州无合同租房提取住房公积金每月最高多少？",
+  "createdAt": "2026-07-22T18:00:00+08:00",
+  "platforms": [
+    {
+      "platform": "dknowc-chat",
+      "label": "深知晓",
+      "url": "https://example.test/dknow",
+      "status": "success",
+      "answerMarkdown": "每人每月最高提取 1400 元。[1]",
+      "references": [
+        {"title": "广州住房公积金规则", "url": "https://gjj.gz.gov.cn/example", "normalizedUrl": "https://gjj.gz.gov.cn/example", "marker": "1", "snippet": "每人每月最高提取额度为1400元。", "contentAcquisition": "trusted_search_full_content", "sameMaterialVerified": true, "originAttributionStatus": "trusted_search_official_url"},
+        {"title": "未在答案标出的来源", "url": "https://example.com/unused", "marker": "2", "snippet": "这条来源不应被显式引用模式使用。"}
+      ]
+    },
+    {
+      "platform": "doubao",
+      "label": "豆包",
+      "url": "https://example.test/doubao",
+      "status": "success",
+      "answerMarkdown": "每人每月最高提取 2000 元。",
+      "references": [{"title": "租房提取介绍", "url": "https://example.com/article", "snippet": "部分城市的租房提取额度可能为每月2000元。", "citationScope": "global"}]
+    }
+  ]
+}

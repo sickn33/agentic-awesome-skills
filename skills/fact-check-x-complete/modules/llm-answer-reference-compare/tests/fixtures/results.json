@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1",
+  "question": "广州租房提取住房公积金每月最高能提多少？",
+  "createdAt": "2026-07-22T18:00:00+08:00",
+  "platforms": [
+    {
+      "platform": "dknowc-chat",
+      "label": "深知晓",
+      "url": "https://example.test/dknow",
+      "status": "success",
+      "answerMarkdown": "每人每月最高提取 1400 元。[1]",
+      "references": [{"title": "官方规则", "url": "https://gjj.gz.gov.cn/example", "normalizedUrl": "https://gjj.gz.gov.cn/example", "marker": "1", "snippet": "每人每月最高提取额度为1400元。"}]
+    },
+    {
+      "platform": "doubao",
+      "label": "豆包",
+      "url": "https://example.test/doubao",
+      "status": "failed",
+      "answerMarkdown": "",
+      "references": [],
+      "error": "测试失败状态"
+    }
+  ]
+}

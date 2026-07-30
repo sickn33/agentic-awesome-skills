@@ -1,0 +1,7 @@
+{
+  "authoritativeFinding": "官方规定原标准2000元并提高40%，显然算术结果为2800元。",
+  "verdicts": {
+    "dknowc-chat": {"verdict": "supported", "reason": "官方前提直接支持一步算术推导", "evidenceIds": ["E1"]},
+    "doubao": {"verdict": "supported", "reason": "官方前提直接支持一步算术推导", "evidenceIds": ["E1"]}
+  }
+}

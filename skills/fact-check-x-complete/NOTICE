@@ -1,0 +1,11 @@
+全知晓（Fact-Check-X）
+Copyright 2026 Fact-Check-X contributors
+
+This product includes the llm-answer-reference-compare runtime, whose
+component license is retained at:
+
+skills/llm-answer-reference-compare/assets/tool/LICENSE
+
+Third-party dependency notices are listed in THIRD_PARTY_NOTICES.md.
+The names and marks of third-party AI platforms remain the property of
+their respective owners. See TRADEMARKS.md.

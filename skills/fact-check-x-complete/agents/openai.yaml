@@ -1,0 +1,4 @@
+interface:
+  display_name: "全知晓（Fact-Check-X）"
+  short_description: "比较多个 AI 的完整回答与引用，再用权威证据逐点核验"
+  default_prompt: "请使用全知晓核验这个问题：采集我选择的平台原回答和引用，比较关键事实，再按需进行权威证据核验；每一步都交付可打开的报告。"

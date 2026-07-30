@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "fact-check-x/comparison-analysis@1",
+  "coreQuestion": "广州无合同租房提取月上限",
+  "synthesisDraft": {
+    "status": "unverified",
+    "answer": "各平台均给出了广州无合同租房提取额度，但金额存在冲突：深知晓为每人每月1400元，豆包为每人每月2000元。该草案尚未经过权威核验。",
+    "basisKnowledgePointIds": [
+      "K1"
+    ]
+  },
+  "knowledgePoints": [
+    {
+      "id": "K1",
+      "description": "广州无租赁合同或合同未备案时每人每月住房公积金最高提取额度",
+      "role": "direct",
+      "core": true,
+      "claims": {
+        "dknowc-chat": {
+          "covered": true,
+          "claim": "每人每月最高提取1400元",
+          "answerExcerpt": "每人每月最高提取 1400 元。[1]",
+          "locallyBoundReferenceIndexes": [
+            1
+          ],
+          "citationMode": "explicit",
+          "citedReferenceIndexes": [
+            1
+          ],
+          "answerLevelReferenceIndexes": [],
+          "referenceBinding": "local",
+          "sourceLevel": "dknow_trusted_search_official",
+          "faithfulness": "supported",
+          "reason": "逐段溯源；来源原文支持当前主张",
+          "evidence": [
+            {
+              "referenceIndex": 1,
+              "excerpt": "每人每月最高提取额度为1400元。"
+            }
+          ]
+        },
+        "doubao": {
+          "covered": true,
+          "claim": "每人每月最高提取2000元",
+          "answerExcerpt": "每人每月最高提取 2000 元。",
+          "locallyBoundReferenceIndexes": [],
+          "citationMode": "global",
+          "citedReferenceIndexes": [
+            1
+          ],
+          "answerLevelReferenceIndexes": [],
+          "referenceBinding": "declared_global",
+          "sourceLevel": "nonofficial",
+          "faithfulness": "supported",
+          "reason": "无对应的清单；来源原文支持当前主张",
+          "evidence": [
+            {
+              "referenceIndex": 1,
+              "excerpt": "租房提取额度可能为每月2000元"
+            }
+          ]
+        }
+      },
+      "comparison": {
+        "status": "conflict",
+        "summary": "深知晓为1400元，豆包为2000元，金额冲突"
+      },
+      "trustedAnchor": {
+        "eligible": true,
+        "platform": "dknowc-chat",
+        "trustedSearchUsed": true,
+        "officialAnswer": "每人每月最高提取1400元",
+        "evidence": [
+          {
+            "id": "A1",
+            "title": "广州住房公积金规则",
+            "url": "https://gjj.gz.gov.cn/example",
+            "excerpt": "每人每月最高提取额度为1400元。",
+            "referenceIndex": 1,
+            "contentAcquisition": "trusted_search_full_content",
+            "sameMaterialVerified": true,
+            "originAttributionStatus": "trusted_search_official_url",
+            "platformUrl": "",
+            "zone": "",
+            "platformTrustSource": "dknow_reference_capture"
+          }
+        ]
+      }
+    }
+  ]
+}
