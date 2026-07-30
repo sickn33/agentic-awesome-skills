@@ -65,7 +65,7 @@ loki-mode/
 
 ### Quick Start (Recommended)
 ```bash
-./autonomy/run.sh ./docs/requirements.md
+bash autonomy/run.sh ./docs/requirements.md
 ```
 
 ### What run.sh Does

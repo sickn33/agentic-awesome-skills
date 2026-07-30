@@ -145,7 +145,7 @@ Last Updated: 2026-01-04 20:45:32
 **Dashboard status:**
 ```bash
 # Automatically opens when running autonomously
-./autonomy/run.sh ./docs/requirements.md
+bash autonomy/run.sh ./docs/requirements.md
 
 # Or open manually
 The legacy unauthenticated HTTP dashboard is disabled. Inspect `.loki/STATUS.txt` and the reviewed JSON state files locally instead.
@@ -212,7 +212,7 @@ There is **NEVER** a "finished" state. After completing the PRD, Loki Mode:
 
 ```bash
 # Start autonomous mode
-./autonomy/run.sh ./docs/requirements.md
+bash autonomy/run.sh ./docs/requirements.md
 
 # Hit rate limit? Script automatically:
 # ├─ Saves state checkpoint
@@ -262,7 +262,7 @@ Save as `my-prd.md`.
 
 ```bash
 # Autonomous mode (recommended)
-./autonomy/run.sh ./my-prd.md
+bash autonomy/run.sh ./my-prd.md
 
 # Or manual mode
 claude
@@ -381,7 +381,7 @@ Test Loki Mode with these pre-built PRDs in the `examples/` directory:
 
 ```bash
 # Example: Run with simple todo app
-./autonomy/run.sh examples/simple-todo-app.md
+bash autonomy/run.sh examples/simple-todo-app.md
 ```
 
 ---
@@ -396,7 +396,7 @@ Customize the autonomous runner with environment variables:
 LOKI_MAX_RETRIES=100 \
 LOKI_BASE_WAIT=120 \
 LOKI_MAX_WAIT=7200 \
-./autonomy/run.sh ./docs/requirements.md
+bash autonomy/run.sh ./docs/requirements.md
 ```
 
 | Variable | Default | Description |
@@ -540,7 +540,7 @@ Built for the [Claude Code](https://claude.ai) ecosystem, powered by Anthropic's
 
 ```bash
 git clone https://github.com/asklokesh/loki-mode.git ~/.claude/skills/loki-mode
-./autonomy/run.sh your-prd.md
+bash autonomy/run.sh your-prd.md
 ```
 
 ---

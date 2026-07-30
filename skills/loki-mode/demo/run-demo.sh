@@ -1,6 +1,6 @@
 #!/bin/bash
 # Loki Mode Demo Runner
-# Usage: ./demo/run-demo.sh [simple-todo|full-stack]
+# Usage: bash demo/run-demo.sh [simple-todo|full-stack]
 
 set -euo pipefail
 

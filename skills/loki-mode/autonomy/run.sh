@@ -4,9 +4,9 @@
 # Single script that handles prerequisites, setup, and autonomous execution
 #
 # Usage:
-#   ./autonomy/run.sh [PRD_PATH]
-#   ./autonomy/run.sh ./docs/requirements.md
-#   ./autonomy/run.sh                          # Interactive mode
+#   bash autonomy/run.sh [PRD_PATH]
+#   bash autonomy/run.sh ./docs/requirements.md
+#   bash autonomy/run.sh                          # Interactive mode
 #
 # Environment Variables:
 #   LOKI_MAX_RETRIES    - Max retry attempts (default: 50)

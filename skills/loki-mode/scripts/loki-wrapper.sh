@@ -10,9 +10,9 @@
 # 5. Continues until successful completion or max retries exceeded
 #
 # Usage:
-#   ./scripts/loki-wrapper.sh [PRD_PATH]
-#   ./scripts/loki-wrapper.sh ./docs/requirements.md
-#   ./scripts/loki-wrapper.sh  # Interactive mode
+#   bash scripts/loki-wrapper.sh [PRD_PATH]
+#   bash scripts/loki-wrapper.sh ./docs/requirements.md
+#   bash scripts/loki-wrapper.sh  # Interactive mode
 
 set -uo pipefail
 umask 077
