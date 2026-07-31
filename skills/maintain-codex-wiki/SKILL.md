@@ -3,7 +3,7 @@ name: maintain-codex-wiki
 description: "Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks."
 category: knowledge-management
 risk: critical
-source: https://github.com/Phelan164/codex-howto/tree/cfe92ee9e4aac76ae674404f812b385e77f9f11f/skills/maintain-codex-wiki
+source: https://github.com/Phelan164/codex-howto/tree/4fe8de12e937ff041d69a933d8ee7c3cb38b9ab4/skills/maintain-codex-wiki
 source_repo: Phelan164/codex-howto
 source_type: community
 date_added: "2026-07-31"
@@ -11,7 +11,7 @@ author: Phelan164
 tags: [codex, wiki, knowledge-management, provenance, engineering]
 tools: [codex]
 license: MIT
-license_source: https://github.com/Phelan164/codex-howto/blob/cfe92ee9e4aac76ae674404f812b385e77f9f11f/LICENSE
+license_source: https://github.com/Phelan164/codex-howto/blob/4fe8de12e937ff041d69a933d8ee7c3cb38b9ab4/LICENSE
 ---
 
 # Maintain Codex Wiki
@@ -78,7 +78,8 @@ patterns to test, not product specifications.
 ## Confinement Invariant
 
 Apply this before any operation reads, searches, or changes wiki state. For
-every wiki page, index, registry, log, and registered repository `path`:
+every wiki page, index, registry, log, registered repository `path`, and cache
+target:
 
 1. require a normalized repository-relative path;
 2. reject absolute paths and `..` components;
@@ -118,15 +119,29 @@ require a public HTTPS destination with no embedded credentials. Reject
 loopback, private, link-local, reserved, and cloud-metadata destinations after
 name resolution, and apply the same validation to every redirect. If the tool
 cannot enforce destination and redirect validation, do not fetch; report the
-source record instead. Keep fetched content in an ignored cache.
+source record instead.
+
+Keep fetched content in a dedicated ignored directory such as `.wiki-cache/`
+only after confining that directory and every target through the Confinement
+Invariant. Reject a cache root or parent that is a symlink, a target that
+already exists, and any path that escapes the repository. Create missing cache
+directories one component at a time under the verified repository root, then
+verify the created artifact is a regular file still contained by that root
+before using it. Never overwrite an existing cache target.
 
 Every registered repository `path` must include the full immutable Git commit
 object ID that contains the evidence. Determine the repository's configured
 hash format with `git rev-parse --show-object-format`; require 40 hexadecimal
-characters for SHA-1 or 64 for SHA-256. Read that blob through the Git object
-database at the recorded revision, never from mutable working-tree bytes. Stop
-and report unverified drift when the revision is missing or unresolved, the
-path does not exist at that commit, or the record cannot be bound to the blob.
+characters for SHA-1 or 64 for SHA-256. Require that commit to be reachable
+from a repository-configured trusted ref, normally the protected default
+branch and, when explicitly allowed, signed release tags. Do not treat the
+current branch, an arbitrary remote branch, or mere presence in the local
+object database as trust. If trusted refs are not configured or cannot be
+verified, fail closed and ask the maintainer to identify them. Read the blob
+through the Git object database at the recorded revision, never from mutable
+working-tree bytes. Stop and report unverified drift when the revision is
+missing, unresolved, or unreachable from trusted history; the path does not
+exist at that commit; or the record cannot be bound to the blob.
 
 ## Choose One Operation
 
@@ -252,9 +267,10 @@ the repository root before reading. Require the file to be version-controlled
 and reject sensitive paths or content before inspection. Require `revision` to
 be the full immutable Git commit object ID containing the evidence: detect the
 repository object format with `git rev-parse --show-object-format` and require
-40 hexadecimal characters for SHA-1 or 64 for SHA-256. Read that blob from the
-Git object database instead of the working tree. Source IDs are permanent.
-Optional `supersedes` values point to older registered source IDs.
+40 hexadecimal characters for SHA-1 or 64 for SHA-256. Require the commit to be
+reachable from a configured trusted ref, then read that blob from the Git
+object database instead of the working tree. Source IDs are permanent. Optional
+`supersedes` values point to older registered source IDs.
 
 ## Safety and Provenance
 
