@@ -3,7 +3,7 @@ name: maintain-codex-wiki
 description: "Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks."
 category: knowledge-management
 risk: safe
-source: https://github.com/Phelan164/codex-howto/tree/3c968f8a6bdd70fd69f3411c6676f524cc21a0ee/skills/maintain-codex-wiki
+source: https://github.com/Phelan164/codex-howto/tree/fc8a41757714cc2846c79bdabf2dbeb4d5c7fae0/skills/maintain-codex-wiki
 source_repo: Phelan164/codex-howto
 source_type: community
 date_added: "2026-07-31"
@@ -11,7 +11,7 @@ author: Phelan164
 tags: [codex, wiki, knowledge-management, provenance, engineering]
 tools: [codex]
 license: MIT
-license_source: https://github.com/Phelan164/codex-howto/blob/3c968f8a6bdd70fd69f3411c6676f524cc21a0ee/LICENSE
+license_source: https://github.com/Phelan164/codex-howto/blob/fc8a41757714cc2846c79bdabf2dbeb4d5c7fae0/LICENSE
 ---
 
 # Maintain Codex Wiki
@@ -62,6 +62,8 @@ Each wiki page starts with one allowed status: `verified`, `community`,
 
 Choose the status from the evidence and operation. Capture and Archive pages
 default to `experimental`; never label them `verified` automatically.
+Use `Last verified` only for `verified` pages. For `community`, `experimental`,
+and `decision` pages, replace it with `Last updated: YYYY-MM-DD`.
 
 Use four source classes:
 
@@ -79,9 +81,10 @@ patterns to test, not product specifications.
 
 1. Read `knowledge/index.md`.
 2. Search `knowledge/` for the subject and its common synonyms.
-3. Before reading a registered repository `path`, require a normalized
-   repository-relative path, reject absolute paths and `..` components, resolve
-   symlinks, and verify the target remains inside the repository root.
+3. Before reading any wiki page, index, registry, log, or registered repository
+   `path`, require a normalized repository-relative path, reject absolute paths
+   and `..` components, resolve symlinks, require a regular file, and verify
+   the target remains inside the repository root.
 4. Read only the relevant pages and registered sources.
 5. Distinguish verified guidance, community practice, experimental results,
    and unresolved claims.
@@ -137,7 +140,8 @@ Check mechanically:
 - source registry schema, IDs, dates, HTTPS URLs, and local paths;
 - source revisions, supersession references, and supersession cycles;
 - affected-page declarations and reciprocal source citations;
-- page status, verification date, and registered source references;
+- page status, status-appropriate verification or update date, and registered
+  source references;
 - duplicate page titles;
 - index coverage; and
 - local links inside `knowledge/`.
@@ -150,7 +154,9 @@ Then review what automation cannot prove:
 - whether a conclusion deserves promotion; and
 - whether a page duplicates published guidance.
 
-Auto-fix only mechanical errors. Propose factual changes for review.
+Treat lint as read-only unless the user explicitly authorizes fixes. With that
+authorization, auto-fix only mechanical errors. Otherwise report the proposed
+edits. Always propose factual changes for review.
 
 ### Promote
 
