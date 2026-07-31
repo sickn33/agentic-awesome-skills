@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-29T17:27:11.000Z",
-  "total": 1995,
+  "total": 1996,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -14965,6 +14965,40 @@
         "gcp"
       ],
       "path": "skills/cost-optimization/SKILL.md"
+    },
+    {
+      "id": "cowork-to-code-bridge",
+      "canonical_id": "cowork-to-code-bridge",
+      "name": "cowork-to-code-bridge",
+      "description": "Use an already-installed, independently verified cowork-to-code bridge to run narrowly approved actions on the user's own macOS, Linux, or WSL2 machine through a local file queue.",
+      "category": "uncategorized",
+      "risk": "critical",
+      "source": "https://github.com/abhinaykrupa/cowork-to-code-bridge/tree/97f515d425df587c281effb02cda9ad0fd470790",
+      "source_type": "community",
+      "source_repo": "abhinaykrupa/cowork-to-code-bridge",
+      "license": "MIT",
+      "license_source": "https://github.com/abhinaykrupa/cowork-to-code-bridge/blob/97f515d425df587c281effb02cda9ad0fd470790/LICENSE",
+      "tags": [
+        "cowork",
+        "to",
+        "code",
+        "bridge"
+      ],
+      "triggers": [
+        "cowork",
+        "to",
+        "code",
+        "bridge",
+        "already",
+        "installed",
+        "independently",
+        "verified",
+        "run",
+        "narrowly",
+        "approved",
+        "actions"
+      ],
+      "path": "skills/cowork-to-code-bridge/SKILL.md"
     },
     {
       "id": "cpp-pro",

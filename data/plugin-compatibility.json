@@ -9982,6 +9982,31 @@
       "runtime_files": []
     },
     {
+      "id": "cowork-to-code-bridge",
+      "path": "skills/cowork-to-code-bridge",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "absolute_host_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "absolute_host_path"
+        ],
+        "claude": [
+          "absolute_host_path"
+        ]
+      },
+      "runtime_files": []
+    },
+    {
       "id": "cpp-pro",
       "path": "skills/cpp-pro",
       "targets": {
@@ -38346,14 +38371,14 @@
     }
   ],
   "summary": {
-    "total_skills": 1995,
+    "total_skills": 1996,
     "supported": {
       "codex": 1919,
       "claude": 1940
     },
     "blocked": {
-      "codex": 76,
-      "claude": 55
+      "codex": 77,
+      "claude": 56
     },
     "manual_setup": 19
   }
