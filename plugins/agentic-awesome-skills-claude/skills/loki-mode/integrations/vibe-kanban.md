@@ -26,7 +26,7 @@ Set environment variable before running:
 
 ```bash
 export LOKI_VIBE_KANBAN=true
-./scripts/loki-wrapper.sh ./docs/requirements.md
+bash scripts/loki-wrapper.sh ./docs/requirements.md
 ```
 
 Or create `.loki/config/integrations.yaml`:

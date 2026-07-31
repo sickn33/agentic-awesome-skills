@@ -12,6 +12,7 @@ LIB="${VIDEO_LIBRARY_DIR:-$HOME/video-deepdives}"
 YTID="$(printf '%s' "$IN" | sed -nE 's#.*(youtu\.be/|v=|/embed/|/shorts/)([A-Za-z0-9_-]{11}).*#\2#p')"
 [ -z "$YTID" ] && [ "${#IN}" -eq 11 ] && YTID="$IN"
 [ -z "$YTID" ] && { echo "Could not parse a YouTube id from: $IN" >&2; exit 1; }
+[[ "$YTID" =~ ^[A-Za-z0-9_-]{11}$ ]] || { echo "Invalid YouTube id" >&2; exit 1; }
 
 SCRATCH="/tmp/ytnote-$YTID"
 mkdir -p "$SCRATCH"
