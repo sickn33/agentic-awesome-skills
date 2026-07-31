@@ -12613,6 +12613,34 @@
     }
   },
   {
+    "id": "cowork-to-code-bridge",
+    "path": "skills/cowork-to-code-bridge",
+    "category": "uncategorized",
+    "name": "cowork-to-code-bridge",
+    "description": "Use an already-installed, independently verified cowork-to-code bridge to run narrowly approved actions on the user's own macOS, Linux, or WSL2 machine through a local file queue.",
+    "risk": "critical",
+    "source": "https://github.com/abhinaykrupa/cowork-to-code-bridge/tree/97f515d425df587c281effb02cda9ad0fd470790",
+    "date_added": "2026-07-30",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "absolute_host_path"
+      ]
+    },
+    "source_type": "community",
+    "source_repo": "abhinaykrupa/cowork-to-code-bridge",
+    "license": "MIT",
+    "license_source": "https://github.com/abhinaykrupa/cowork-to-code-bridge/blob/97f515d425df587c281effb02cda9ad0fd470790/LICENSE"
+  },
+  {
     "id": "cpp",
     "path": "skills/super-code/cpp",
     "category": "super-code",

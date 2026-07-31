@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-29T17:27:11.000Z
 
-Total skills: 1995
+Total skills: 1996
 
 ## agent-behavior (5)
 
@@ -2035,7 +2035,7 @@ Total skills: 1995
 | --- | --- | --- | --- | --- | --- |
 | `android-cli` | Orchestrates Android development tasks including project creation, deployment, SDK management, and environment diagnostics using the `android` command-line t... | critical | self | android, cli, adb, mobile, build, emulator | android, cli, adb, mobile, build, emulator, orchestrates, development, tasks, including, creation, deployment |
 
-## uncategorized (285)
+## uncategorized (286)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2088,6 +2088,7 @@ Total skills: 1995
 | `complexity-cuts` | Lower Big-O on existing code via a one-transformation-at-a-time playbook with verify-revert-stop. For new code use lemmaly; for math-level wins escalate to m... | safe | morsechimwai/lemmaly | algorithms, big-o, refactoring, optimization, performance, n-plus-one | algorithms, big-o, refactoring, optimization, performance, n-plus-one, complexity, cuts, lower, big, existing, code |
 | `composition-patterns` | Use when working with composition-patterns tasks or workflows | safe | https://github.com/vercel-labs/agent-skills | composition | composition, working, tasks |
 | `content-strategy` | Plan a content strategy, topic clusters, editorial roadmap, and content mix for traffic, authority, and lead generation. Use when deciding what to publish, w... | critical | https://github.com/coreyhaines31/marketingskills | content | content, plan, topic, clusters, editorial, roadmap, mix, traffic, authority, lead, generation, deciding |
+| `cowork-to-code-bridge` | Use an already-installed, independently verified cowork-to-code bridge to run narrowly approved actions on the user's own macOS, Linux, or WSL2 machine throu... | critical | abhinaykrupa/cowork-to-code-bridge | cowork, to, code, bridge | cowork, to, code, bridge, already, installed, independently, verified, run, narrowly, approved, actions |
 | `crewai` | Expert in CrewAI - the leading role-based multi-agent framework used by 60% of Fortune 500 companies. | critical | vibeship-spawner-skills (Apache 2.0) | crewai | crewai, leading, role, multi, agent, framework, used, 60, fortune, 500, companies |
 | `cro` | When the user wants to optimize, improve, or increase conversions on any marketing page or form — including homepage, landing pages, pricing pages, feature p... | safe | coreyhaines31/marketingskills | cro | cro, user, wants, optimize, improve, increase, conversions, any, marketing, page, form, including |
 | `cucumber-skill` | Generates Cucumber BDD tests with Gherkin feature files and step definitions in Java, JavaScript, or Ruby. Use when user mentions "Cucumber", "Gherkin", "Fea... | critical | LambdaTest/agent-skills | cucumber, skill | cucumber, skill, generates, bdd, tests, gherkin, feature, files, step, definitions, java, javascript |
