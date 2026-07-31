@@ -1,7 +1,7 @@
 ---
 name: reference-builder
 description: Creates exhaustive technical references and API documentation. Generates comprehensive parameter listings, configuration guides, and searchable reference materials.
-risk: unknown
+risk: safe
 source: community
 date_added: '2026-02-27'
 ---

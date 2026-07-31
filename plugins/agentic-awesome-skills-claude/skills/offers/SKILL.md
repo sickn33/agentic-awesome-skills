@@ -1,7 +1,7 @@
 ---
 name: offers
 description: When the user wants to design, construct, or improve an offer — the thing they actually sell — including value framing, bonus stacking, guarantee design, scarcity/urgency, naming, and payment structure. Also use when the user mentions 'offer,' 'offer design,' 'build an offer,' 'grand...
-risk: unknown
+risk: safe
 source: https://github.com/coreyhaines31/marketingskills/tree/main/skills/offers
 source_repo: coreyhaines31/marketingskills
 source_type: community

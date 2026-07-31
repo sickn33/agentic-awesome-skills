@@ -153,6 +153,8 @@ Before ANY commit that adds/modifies skills, run the chain:
 
 For every canonical `SKILL.md` or tracked bundle-file change, run validation, reference validation, documentation security, changed-skill evidence, and relevant tests. Review semantics, provenance, declared risk, limitations, and bundled files directly. The separate `skill-review` workflow or an exact-head maintainer attestation remains authoritative; local heuristic scores and inferred risk labels are not merge gates.
 
+Changed-skill evidence resolves canonical ownership from the changed path's ancestors rather than scanning the complete skill registry for every Git record. Keep this lookup bounded and preserve the five-minute trusted evaluator budget so repository-wide maintenance batches can complete without weakening fail-closed evidence checks. Legacy canonical `SKILL.md` blobs with executable mode are parsed only as private, non-executable snapshot data; they remain reported as unsafe entries, while symlinks, gitlinks, and every other executable file remain unmaterialized.
+
 1.  **CI is green** — Validation, warning-budget enforcement, README source-credit checks, reference checks, tests, and generated artifact steps passed (see [`.github/workflows/ci.yml`](workflows/ci.yml)). If the PR changes anything under `skills/**` or `plugins/**/skills/**`, the separate [`skill-review` workflow](workflows/skill-review.yml) must also report a truthful outcome.
 2.  **Generated drift understood** — On pull requests, generator drift is informational only. Do not block a good PR solely because canonical artifacts would be regenerated. Also do not accept PRs that directly edit `CATALOG.md`, `skills_index.json`, or `data/*.json`; those files are `main`-owned.
 3.  **Quality Bar** — PR description confirms the [Quality Bar Checklist](.github/PULL_REQUEST_TEMPLATE.md) (metadata, risk label, credits if applicable).
@@ -414,6 +416,8 @@ Preflight verification → Changelog → repository/plugin convergence → `npm 
     ```
 
     The publisher must resolve exactly one merged release PR from the same repository, authored by the repository owner, with base `main`, exact title `chore: release vX.Y.Z`, and head branch `release/vX.Y.Z`. Zero or multiple candidates fail closed; never select the newest approximate match.
+
+    Before any tagged repository code executes, the npm publication workflow checks out protected `main`, peels the published tag, requires that commit to be an ancestor of current `origin/main`, and reads the tagged `package.json` only as data to validate the version. Manual dispatch is disabled and cannot bypass this provenance gate.
 
     **Important:** The release tag must match `package.json`'s version. The [Publish to npm](workflows/publish-npm.yml) workflow runs on **Release published** and will run `npm publish`; npm rejects republishing the same version.
     Before publishing, that workflow re-runs `sync:release-state`, checks for canonical drift with `git diff --exit-code`, runs tests/docs security/web build, and performs `npm pack --dry-run --json`.

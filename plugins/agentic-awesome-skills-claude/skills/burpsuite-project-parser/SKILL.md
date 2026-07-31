@@ -4,7 +4,7 @@ description: Searches and explores Burp Suite project files (.burp) from the com
 allowed-tools:
   - Bash
   - Read
-risk: unknown
+risk: critical
 source: community
 ---
 

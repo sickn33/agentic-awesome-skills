@@ -6,10 +6,10 @@ Single script that handles everything: prerequisites, setup, Vibe Kanban monitor
 
 ```bash
 # Run with a PRD
-./autonomy/run.sh ./docs/requirements.md
+bash autonomy/run.sh ./docs/requirements.md
 
 # Run interactively
-./autonomy/run.sh
+bash autonomy/run.sh
 ```
 
 That's it! The script will:
@@ -90,14 +90,14 @@ export LOKI_MAX_WAIT=3600       # Max wait time in seconds (default: 3600)
 export LOKI_SKIP_PREREQS=true
 
 # Run with custom settings
-LOKI_MAX_RETRIES=100 LOKI_BASE_WAIT=120 ./autonomy/run.sh ./docs/prd.md
+LOKI_MAX_RETRIES=100 LOKI_BASE_WAIT=120 bash autonomy/run.sh ./docs/prd.md
 ```
 
 ## How Auto-Resume Works
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  ./autonomy/run.sh prd.md                                   │
+│  bash autonomy/run.sh prd.md                                │
 └─────────────────────────────────────────────────────────────┘
                           │
                           ▼
@@ -152,7 +152,7 @@ If you stop the script (Ctrl+C) or it crashes, just run it again:
 
 ```bash
 # State is saved, will resume from last checkpoint
-./autonomy/run.sh ./docs/requirements.md
+bash autonomy/run.sh ./docs/requirements.md
 ```
 
 The script detects the previous state and continues from where it left off.
@@ -161,7 +161,7 @@ The script detects the previous state and continues from where it left off.
 
 | Feature | Manual Mode | Autonomy Mode |
 |---------|-------------|---------------|
-| Start | `claude --dangerously-skip-permissions` | `./autonomy/run.sh` |
+| Start | `claude` | `bash autonomy/run.sh` |
 | Prereq check | Manual | Automatic |
 | Rate limit handling | Manual restart | Auto-resume |
 | State persistence | Manual checkpoint | Automatic |
@@ -181,7 +181,7 @@ Make sure you're running from the loki-mode directory or have installed the skil
 ```bash
 # Option 1: Run from project directory
 cd /path/to/loki-mode
-./autonomy/run.sh
+bash autonomy/run.sh
 
 # Option 2: Install skill globally
 cp -r . ~/.claude/skills/loki-mode/
@@ -197,5 +197,5 @@ cat .loki/logs/autonomy-*.log | tail -100
 cat .loki/state/orchestrator.json
 
 # Increase retries
-LOKI_MAX_RETRIES=200 ./autonomy/run.sh ./docs/prd.md
+LOKI_MAX_RETRIES=200 bash autonomy/run.sh ./docs/prd.md
 ```

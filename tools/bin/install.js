@@ -44,6 +44,8 @@ function parseArgs(argv = process.argv.slice(2)) {
   let skillsArg = null;
   let versionInfo = false;
   let dryRun = false;
+  let installAll = false;
+  let auditOnly = false;
   let cursor = false,
     claude = false,
     gemini = false,
@@ -77,6 +79,10 @@ function parseArgs(argv = process.argv.slice(2)) {
       dryRun = true;
       continue;
     }
+    if (a[i] === "--all") {
+      installAll = true;
+      continue;
+    }
     if (a[i] === "--cursor") {
       cursor = true;
       continue;
@@ -106,6 +112,10 @@ function parseArgs(argv = process.argv.slice(2)) {
       continue;
     }
     if (a[i] === "install") continue;
+    if (a[i] === "audit") {
+      auditOnly = true;
+      continue;
+    }
     throw new Error(`Unknown option or command: ${a[i]}`);
   }
 
@@ -119,6 +129,8 @@ function parseArgs(argv = process.argv.slice(2)) {
     skillsArg,
     versionInfo,
     dryRun,
+    installAll,
+    auditOnly,
     cursor,
     claude,
     gemini,
@@ -182,30 +194,34 @@ Options:
   --gemini       Install to ~/.gemini/skills (Gemini CLI)
   --codex        Install to ~/.codex/skills (Codex CLI)
   --kiro         Install to ~/.kiro/skills (Kiro CLI)
-  --antigravity  Install to ~/.agents/skills (Antigravity IDE / OpenCode-style layout)
+  --antigravity  Install to ~/.agents/skills; requires a selection or explicit --all
   --agy          Install to ~/.gemini/antigravity-cli/skills (Antigravity CLI slash commands)
   --path <dir>   Install to <dir> (default: ~/.agents/skills)
   --risk <csv>     Install only skills matching these risk labels
   --category <csv> Install only skills matching these categories
   --tags <csv>     Install only skills matching these tags
   --skills <csv>   Set exact managed skill names, ids, or nested skill paths
+  --all            Explicitly select the complete catalog, including offensive/unknown skills
   --dry-run        Preview installs/updates/removals for every target without writing
   --version        Print the installer version
   --release <ver>  Clone tag v<ver> (e.g. 4.6.0 -> v4.6.0)
   --tag <tag>      Clone this tag or branch (e.g. v4.6.0, main)
 
 Examples:
-  npx agentic-awesome-skills
-  npx agentic-awesome-skills --cursor
-  npx agentic-awesome-skills --kiro
-  npx agentic-awesome-skills --antigravity
-  npx agentic-awesome-skills --agy
+  npx agentic-awesome-skills --skills brainstorming --dry-run
+  npx agentic-awesome-skills audit --skills brainstorming
+  npx agentic-awesome-skills --cursor --risk safe,none
+  npx agentic-awesome-skills --all --dry-run
+  npx agentic-awesome-skills --kiro --skills brainstorming
+  npx agentic-awesome-skills --antigravity --skills brainstorming --dry-run
+  npx agentic-awesome-skills --antigravity --risk safe,none
+  npx agentic-awesome-skills --agy --skills brainstorming
   npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none
   npx agentic-awesome-skills --path .agents/skills --tags debugging,typescript-legacy-
   npx agentic-awesome-skills --codex --skills frontend-design,game-development/2d-games --dry-run
-  npx agentic-awesome-skills --release 4.6.0
-  npx agentic-awesome-skills --path ./my-skills
-  npx agentic-awesome-skills --claude --codex    Install to multiple targets
+  npx agentic-awesome-skills --release 4.6.0 --skills brainstorming
+  npx agentic-awesome-skills --path ./my-skills --skills brainstorming
+  npx agentic-awesome-skills --claude --codex --skills brainstorming
 `);
 }
 
@@ -269,6 +285,64 @@ function buildInstallSelectors(opts) {
 
 function hasInstallSelectors(selectors) {
   return Object.values(selectors).some(hasActiveSelector);
+}
+
+function assertExplicitInstallSelection(opts, selectors, requestedSkills) {
+  const hasSelection = hasInstallSelectors(selectors) || requestedSkills.length > 0;
+  if (opts.installAll && hasSelection) {
+    throw new Error("--all cannot be combined with --skills, --risk, --category, or --tags.");
+  }
+  if (opts.auditOnly && requestedSkills.length === 0) {
+    throw new Error("The audit command requires --skills with one or more exact skill ids.");
+  }
+}
+
+function buildAntigravitySelectionMessage() {
+  return [
+    "Antigravity installation stopped before cloning or changing files.",
+    "",
+    "Installing the complete AAS catalog into ~/.agents/skills can exhaust the host context, slow startup, trigger truncation errors, or cause a crash loop.",
+    "",
+    "Recommended: ask a Codex or Claude agent with the read-only AAS Core MCP configured to inspect your project, search the complete catalog, and choose the exact skill IDs you need. Then have the agent preview the direct install with:",
+    "",
+    "  npx agentic-awesome-skills --antigravity --skills skill-id-1,skill-id-2 --dry-run",
+    "",
+    "Copyable agent prompt:",
+    "  Inspect this project and use the AAS MCP to search the complete catalog and choose the exact relevant skill IDs. Replace the example IDs and run npx agentic-awesome-skills --antigravity --skills skill-id-1,skill-id-2 --dry-run. Show me the plan and do not install the complete catalog.",
+    "",
+    "AAS MCP selects and validates IDs but does not install skills. After reviewing the dry run, repeat the generated command without --dry-run.",
+    "",
+    "AAS Core setup: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md",
+    "",
+    "If you intentionally accept the Antigravity context and crash-loop risk, use:",
+    "  npx agentic-awesome-skills --antigravity --all",
+    "",
+    "Recovery: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/windows-truncation-recovery.md",
+  ].join("\n");
+}
+
+function assertAntigravityInstallSelection(opts, targets, selectors, requestedSkills) {
+  if (opts.auditOnly || opts.installAll) return;
+  if (requestedSkills.length > 0 || hasInstallSelectors(selectors)) return;
+  if (!targets.some((target) => target.name === "Antigravity")) return;
+  throw new Error(buildAntigravitySelectionMessage());
+}
+
+function buildRiskSummary(repoRoot, installEntries) {
+  const skillsRoot = path.join(repoRoot, "skills");
+  const summary = {};
+  for (const entry of installEntries.filter((item) => item !== "docs")) {
+    const risk = normalizeFilterValue(readSkill(skillsRoot, normalizeSourceEntry(entry)).risk) || "unclassified";
+    summary[risk] = (summary[risk] || 0) + 1;
+  }
+  return Object.fromEntries(Object.entries(summary).sort(([left], [right]) => left.localeCompare(right)));
+}
+
+function printImplicitFullInstallWarning(riskSummary) {
+  console.warn("\nWARNING: no skill selection was supplied, so the complete catalog will be installed for backward compatibility.");
+  console.warn(`Risk summary: ${Object.entries(riskSummary).map(([risk, count]) => `${risk}=${count}`).join(", ")}`);
+  console.warn("This can include offensive and unknown-risk skills. Prefer --skills, --risk, --category, or --tags.");
+  console.warn("Use audit --skills <ids> and --dry-run to inspect content and the write plan before installation.\n");
 }
 
 function matchesScalarSelector(value, selector) {
@@ -499,6 +573,86 @@ function getInstallEntries(tempDir, selectors = buildInstallSelectors({}), reque
     entries.push("docs");
   }
   return entries;
+}
+
+const AUDIT_PATTERNS = [
+  ["external-install", /\b(?:git\s+clone|npm\s+install|npx\s+|pip(?:3)?\s+install|brew\s+install|apt(?:-get)?\s+install|plugin\s+marketplace\s+add)\b/i],
+  ["network", /\b(?:curl|wget|Invoke-WebRequest|irm\s+https?:\/\/|fetch\s*\(|https?:\/\/)\b/i],
+  ["credential", /\b(?:api[_ -]?key|access[_ -]?token|secret|password|private[_ -]?key|wallet|seed phrase)\b/i],
+  ["filesystem-write", /\b(?:cp|mv|rm|chmod|chown|mkdir|git\s+reset|Set-Content|Add-Content|Remove-Item)\b/i],
+  ["privileged", /\b(?:sudo|runas|administrator|systemctl|launchctl)\b/i],
+  ["destructive-or-irreversible", /\b(?:rm\s+-rf|git\s+reset\s+--hard|drop\s+(?:database|table)|broadcast(?:ing)?\s+(?:a\s+)?transaction|format\s+[A-Z]:)\b/i],
+];
+
+function listAuditFiles(rootDir) {
+  const files = [];
+  const walk = (current) => {
+    for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+      const entryPath = path.join(current, entry.name);
+      if (entry.isSymbolicLink()) {
+        files.push({ path: entryPath, symlink: true });
+      } else if (entry.isDirectory()) {
+        walk(entryPath);
+      } else if (entry.isFile()) {
+        files.push({ path: entryPath, symlink: false });
+      }
+    }
+  };
+  walk(rootDir);
+  return files;
+}
+
+function auditSkillEntries(repoRoot, installEntries) {
+  const skillsRoot = path.join(repoRoot, "skills");
+  return installEntries
+    .filter((entry) => entry !== "docs")
+    .map((entry) => {
+      const skillRoot = path.join(skillsRoot, normalizeSourceEntry(entry));
+      const findings = [];
+      for (const item of listAuditFiles(skillRoot)) {
+        const relativePath = path.relative(skillRoot, item.path).split(path.sep).join("/");
+        if (item.symlink) {
+          findings.push({ file: relativePath, line: null, categories: ["symlink"], text: "Symbolic link" });
+          continue;
+        }
+        const stats = fs.statSync(item.path);
+        if (stats.size > 1024 * 1024) {
+          findings.push({ file: relativePath, line: null, categories: ["large-unread-file"], text: `${stats.size} bytes` });
+          continue;
+        }
+        const buffer = fs.readFileSync(item.path);
+        if (buffer.includes(0)) {
+          findings.push({ file: relativePath, line: null, categories: ["binary-file"], text: `${stats.size} bytes` });
+          continue;
+        }
+        const lines = buffer.toString("utf8").split(/\r?\n/);
+        lines.forEach((line, index) => {
+          const categories = AUDIT_PATTERNS.filter(([, pattern]) => pattern.test(line)).map(([name]) => name);
+          if (categories.length > 0) {
+            findings.push({ file: relativePath, line: index + 1, categories, text: line.trim().slice(0, 240) });
+          }
+        });
+      }
+      return { skill: normalizeInstallEntry(entry), findings };
+    });
+}
+
+function printAuditReport(report, ref) {
+  console.log("\nStatic pre-install audit. No skill content was executed or installed.");
+  console.log(`Ref: ${ref || "default release"}`);
+  for (const skill of report) {
+    console.log(`\n${skill.skill}: ${skill.findings.length} review signal(s)`);
+    if (skill.findings.length === 0) {
+      console.log("  No command, network, credential, filesystem, privilege, binary, or symlink signals found.");
+      continue;
+    }
+    for (const finding of skill.findings) {
+      const location = finding.line ? `${finding.file}:${finding.line}` : finding.file;
+      console.log(`  [${finding.categories.join(", ")}] ${location}`);
+      console.log(`    ${finding.text}`);
+    }
+  }
+  console.log("\nReview every signal and every external source before installation. This static report is not a guarantee of safety.");
 }
 
 function installSkillsIntoTarget(tempDir, target, installEntries) {
@@ -937,12 +1091,28 @@ function main() {
     return;
   }
 
-  const targets = getTargets(opts);
-  if (!targets.length || (!HOME && !opts.pathArg)) {
+  try {
+    assertExplicitInstallSelection(opts, selectors, requestedSkills);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exitCode = 1;
+    return;
+  }
+
+  const targets = opts.auditOnly ? [] : getTargets(opts);
+  if (!opts.auditOnly && (!targets.length || (!HOME && !opts.pathArg))) {
     console.error(
       "Could not resolve home directory. Use --path <absolute-path>.",
     );
     process.exit(1);
+  }
+
+  try {
+    assertAntigravityInstallSelection(opts, targets, selectors, requestedSkills);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exitCode = 1;
+    return;
   }
 
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-skills-"));
@@ -963,6 +1133,15 @@ function main() {
     } catch (error) {
       console.error(`Error: ${error.message}`);
       process.exitCode = 1;
+      return;
+    }
+
+    if (!opts.installAll && requestedSkills.length === 0 && !hasInstallSelectors(selectors)) {
+      printImplicitFullInstallWarning(buildRiskSummary(tempDir, installEntries));
+    }
+
+    if (opts.auditOnly) {
+      printAuditReport(auditSkillEntries(tempDir, installEntries), ref);
       return;
     }
 
@@ -1022,6 +1201,10 @@ module.exports = {
   buildCloneArgs,
   buildDryRunPlan,
   buildDryRunTargetPlan,
+  assertAntigravityInstallSelection,
+  assertExplicitInstallSelection,
+  auditSkillEntries,
+  buildRiskSummary,
   buildInstallSelectors,
   getInstallEntries,
   getManagedEntries,
@@ -1035,8 +1218,11 @@ module.exports = {
   normalizeManifestEntries,
   parseExactSkillArg,
   parseSelectorArg,
+  buildAntigravitySelectionMessage,
   printDryRunPlan,
   parseArgs,
+  printImplicitFullInstallWarning,
+  printAuditReport,
   pruneRemovedEntries,
   readInstallManifest,
   resolveExactSkillSelections,

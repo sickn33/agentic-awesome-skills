@@ -13,7 +13,6 @@ import re
 import sys
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 REPOSITORY = "merc1305/findMate"
@@ -85,7 +84,10 @@ def approval_hash(operation: str, payload: dict) -> str:
 
 
 def render_inline_profile_reply(profile: dict) -> str:
-    placeholder_url = "https://github.com/merc1305/findMate/issues/2"
+    placeholder_url = (
+        "https://github.com/merc1305/findMate/blob/"
+        f"{'0' * 40}/inline-profile.json"
+    )
     try:
         body = PUBLISHER.render_profile_reply(profile, placeholder_url)
     except PUBLISHER.PublishError as exc:
@@ -229,15 +231,9 @@ def safe_profile_url(body: str) -> str | None:
     matches = PROFILE_URL_PATTERN.findall(body)
     if len(matches) != 1:
         return None
-    url = matches[0]
-    parsed = urlparse(url)
-    if (
-        parsed.scheme != "https"
-        or not parsed.hostname
-        or parsed.username
-        or parsed.query
-        or parsed.fragment
-    ):
+    try:
+        url = PUBLISHER.immutable_github_profile_url(matches[0])
+    except PUBLISHER.PublishError:
         return None
     return url
 

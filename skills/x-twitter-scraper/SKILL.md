@@ -44,21 +44,23 @@ Because this workflow can automate authenticated X/Twitter account actions, trea
 
 ## Setup
 
-### Install the Skill
+### Inspect Before Installing
+
+Do not install a moving branch directly into an active agent directory. First
+ask the user to approve network access to the named repository. Clone the
+reviewed revision to a temporary directory and inspect every bundled file:
 
 ```bash
-npx skills add Xquik-dev/x-twitter-scraper
+review_dir="$(mktemp -d)"
+git clone --filter=blob:none https://github.com/Xquik-dev/x-twitter-scraper.git "$review_dir/x-twitter-scraper"
+git -C "$review_dir/x-twitter-scraper" checkout --detach bfa27fab00dbb8b5367e15153c5723ee608ba00b
+git -C "$review_dir/x-twitter-scraper" ls-files
 ```
 
-Or clone manually into your agent's skills directory:
-
-```bash
-# Claude Code
-git clone https://github.com/Xquik-dev/x-twitter-scraper.git .claude/skills/x-twitter-scraper
-
-# Cursor / Codex / Gemini CLI / Copilot
-git clone https://github.com/Xquik-dev/x-twitter-scraper.git .agents/skills/x-twitter-scraper
-```
+Read the skill and all bundled files; check package scripts, hooks, symlinks,
+network calls, credential handling, and account-write actions. Show the findings
+and exact commit to the user. Copy only the reviewed files into the chosen host
+directory after explicit approval. Re-review any newer revision before updating.
 
 ### Use the TypeScript SDK
 

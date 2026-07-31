@@ -1,7 +1,7 @@
 ---
 name: n8n-subworkflows
 description: Build reusable n8n sub-workflows with typed inputs, all-vs-each execution, discoverable naming, and agent-tool exposure.
-risk: unknown
+risk: critical
 source: https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-subworkflows
 source_repo: czlonkowski/n8n-skills
 source_type: community

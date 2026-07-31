@@ -21,8 +21,13 @@ Every offensive skill **MUST** begin with this exact disclaimer in its `SKILL.md
 
 Offensive skills must **NEVER** run fully autonomously.
 
-- **Requirement**: The skill description/instructions must explicitly tell the agent to _ask for user confirmation_ before executing any exploit or attack command.
-- **Agent Instruction**: "Ask the user to verify the target URL/IP before running."
+- **Requirement**: Before each command that probes, exploits, changes, persists
+  on, extracts data from, or attempts credential access against a target, the
+  agent must collect the exact target, written-authorization confirmation, and
+  permitted scope; show the exact command and expected effect; and wait for
+  explicit confirmation in the current conversation.
+- Without that confirmation, the skill must remain read-only and provide
+  defensive guidance only.
 
 ### 3. Safe by Design
 
@@ -41,6 +46,18 @@ _Examples: Linting, Log Analysis, Configuration Auditing._
 - **Non-Destructive**: Audits should be read-only by default.
 - **Documentation review**: Defensive skills with command examples must still be reviewed for unsafe command patterns.
 - **High-risk examples** (`curl|bash`, `wget|sh`, etc.) must use explicit allowlisting comments and clear warning context in the skill body when retained for operational examples.
+
+## External Source Installation
+
+- Do not clone or download a moving branch directly into an active skills,
+  plugin, hook, or agent-configuration directory.
+- Pin external examples to a full reviewed commit or immutable release, clone to
+  a temporary review directory, and inspect every bundled file before activation.
+- Report scripts, package lifecycle hooks, symlinks, binaries, network access,
+  credential handling, privileged actions, and destructive operations.
+- Obtain explicit user approval before downloading and again before copying,
+  installing dependencies, enabling hooks, or changing agent configuration.
+- A pin provides reproducibility, not proof of trust; upgrading requires a new review.
 
 ---
 

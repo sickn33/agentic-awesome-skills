@@ -5,7 +5,7 @@ description: |
   custom action, MatchEvent, post_action, cx.widget_action,
   handle_actions, DefaultNone, widget action, event handling,
   事件处理, 自定义动作
-risk: unknown
+risk: critical
 source: community
 ---
 

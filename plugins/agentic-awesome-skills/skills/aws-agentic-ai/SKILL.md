@@ -1,7 +1,7 @@
 ---
 name: aws-agentic-ai
 description: AWS Bedrock AgentCore comprehensive expert for deploying and managing AI agents at scale. Use when working with any AgentCore service including Gateway, Runtime, Memory, Identity, Code Interpreter, Browser, Observability, Agent Registry, or Evaluations. Covers agent deployment, MCP...
-risk: unknown
+risk: critical
 source: https://github.com/zxkane/aws-skills/tree/main/plugins/aws-agentic-ai/skills/aws-agentic-ai
 source_repo: zxkane/aws-skills
 source_type: community

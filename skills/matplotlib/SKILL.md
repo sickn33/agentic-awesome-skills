@@ -4,7 +4,7 @@ description: "Matplotlib is Python's foundational visualization library for crea
 license: https://github.com/matplotlib/matplotlib/tree/main/LICENSE
 metadata:
     skill-author: K-Dense Inc.
-risk: unknown
+risk: critical
 source: community
 ---
 

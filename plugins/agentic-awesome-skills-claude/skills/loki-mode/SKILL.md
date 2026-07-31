@@ -1,7 +1,7 @@
 ---
 name: loki-mode
 description: "Version 2.35.0 | PRD to Production | Zero Human Intervention > Research-enhanced: OpenAI SDK, DeepMind, Anthropic, AWS Bedrock, Agent SDK, HN Production (2025)"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -97,7 +97,7 @@ Development <- QA <- Deployment <- Business Ops <- Growth Loop
 
 ```bash
 # Launch with autonomous permissions
-claude --dangerously-skip-permissions
+claude
 ```
 
 ---
@@ -121,7 +121,7 @@ These files are part of the running Loki Mode process. Editing them will crash t
 | File | Reason |
 |------|--------|
 | `~/.claude/skills/loki-mode/autonomy/run.sh` | Currently executing bash script |
-| `.loki/dashboard/*` | Served by active HTTP server |
+| `.loki/dashboard/*` | Legacy dashboard assets; network serving is disabled |
 
 If bugs are found in these files, document them in `.loki/CONTINUITY.md` under "Pending Fixes" for manual repair after the session ends.
 

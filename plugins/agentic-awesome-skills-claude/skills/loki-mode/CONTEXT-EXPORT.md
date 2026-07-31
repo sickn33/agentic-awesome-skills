@@ -65,7 +65,7 @@ loki-mode/
 
 ### Quick Start (Recommended)
 ```bash
-./autonomy/run.sh ./docs/requirements.md
+bash autonomy/run.sh ./docs/requirements.md
 ```
 
 ### What run.sh Does
@@ -90,7 +90,7 @@ watch -n 2 cat .loki/STATUS.txt
 ### Claude Code Invocation
 The autonomy runner pipes the prompt through stdin for live output:
 ```bash
-echo "$prompt" | claude --dangerously-skip-permissions
+echo "$prompt" | claude
 ```
 
 **Important:** Using `-p` flag doesn't stream output properly. Piping through stdin shows interactive output.
@@ -130,7 +130,7 @@ echo "$prompt" | claude --dangerously-skip-permissions
 
 ### 1. "Blank output when running autonomously"
 **Cause:** Using `-p` flag doesn't stream output
-**Solution:** Use stdin pipe: `echo "$prompt" | claude --dangerously-skip-permissions`
+**Solution:** Use stdin pipe: `echo "$prompt" | claude` and retain normal permission prompts.
 
 ### 2. "Vibe Kanban not showing tasks"
 **Cause:** Vibe Kanban is UI-driven, doesn't read JSON files automatically

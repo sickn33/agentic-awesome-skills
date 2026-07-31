@@ -1,7 +1,7 @@
 ---
 name: programmatic-seo
 description: Design and evaluate programmatic SEO strategies for creating SEO-driven pages at scale using templates and structured data.
-risk: unknown
+risk: none
 source: community
 date_added: '2026-02-27'
 ---

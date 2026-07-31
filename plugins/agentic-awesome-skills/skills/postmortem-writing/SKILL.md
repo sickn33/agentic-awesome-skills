@@ -1,7 +1,7 @@
 ---
 name: postmortem-writing
 description: "Comprehensive guide to writing effective, blameless postmortems that drive organizational learning and prevent incident recurrence."
-risk: unknown
+risk: none
 source: community
 date_added: "2026-02-27"
 ---

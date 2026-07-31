@@ -1,7 +1,7 @@
 ---
 name: wiki-vitepress
 description: "Transform generated wiki Markdown files into a polished VitePress static site with dark theme and interactive Mermaid diagrams. Use when user asks to \"build a site\" or \"package as VitePress\", user runs the /deep-wiki, or user wants a browsable HTML output from generated wiki pages."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

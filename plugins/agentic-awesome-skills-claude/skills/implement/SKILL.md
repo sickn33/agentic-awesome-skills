@@ -1,7 +1,7 @@
 ---
 name: implement
 description: Implement a piece of work based on a PRD or set of issues.
-risk: unknown
+risk: critical
 source: https://github.com/mattpocock/skills/tree/main/skills/engineering/implement
 source_repo: mattpocock/skills
 source_type: community

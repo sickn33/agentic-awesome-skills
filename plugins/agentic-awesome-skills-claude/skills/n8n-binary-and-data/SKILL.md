@@ -1,7 +1,7 @@
 ---
 name: n8n-binary-and-data
 description: Handle n8n files and binary data across uploads, downloads, transforms, multimodal inputs, agent tools, and chat surfaces.
-risk: unknown
+risk: critical
 source: https://github.com/czlonkowski/n8n-skills/tree/main/skills/n8n-binary-and-data
 source_repo: czlonkowski/n8n-skills
 source_type: community

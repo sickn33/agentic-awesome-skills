@@ -1,7 +1,7 @@
 ---
 name: co-marketing
 description: When the user wants to find co-marketing partners, plan joint campaigns, or brainstorm partnership opportunities. Use when the user says 'co-marketing,' 'partner marketing,' 'joint campaign,' 'who should we partner with,' 'integration marketing,' 'cross-promotion,' 'collaborate with...
-risk: unknown
+risk: safe
 source: https://github.com/coreyhaines31/marketingskills/tree/main/skills/co-marketing
 source_repo: coreyhaines31/marketingskills
 source_type: community

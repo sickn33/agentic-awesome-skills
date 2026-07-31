@@ -1,7 +1,7 @@
 ---
 name: apify-ultimate-scraper
 description: "AI-driven data extraction from 55+ Actors across all major platforms. This skill automatically selects the best Actor for your task."
-risk: unknown
+risk: critical
 source: community
 ---
 
@@ -112,6 +112,19 @@ First, understand what the user wants to achieve. Then select the best Actor fro
 | `compass/Google-Maps-Reviews-Scraper` | Review extraction |
 | `poidata/google-maps-email-extractor` | Email discovery from listings |
 
+#### X/Twitter Actors (2)
+
+| Actor ID | Best For |
+|----------|----------|
+| [`xquik/x-tweet-scraper`](https://apify.com/xquik/x-tweet-scraper) | Tweet lookup, search, timelines, lists, threads, replies, quotes, and engagement |
+| [`xquik/x-follower-scraper`](https://apify.com/xquik/x-follower-scraper) | Followers, following, verified followers, lists, communities, and audience overlap |
+
+Check each Actor's live Apify pricing box before starting a paid run. Show the
+Actor, targets, result cap, and maximum charge. Get explicit approval. Set a
+conservative result cap. `maxItems` applies across the whole run.
+
+Xquik is an independent third-party service. Not affiliated with X Corp. "Twitter" and "X" are trademarks of X Corp.
+
 #### Other Actors (6)
 
 | Actor ID | Best For |
@@ -131,12 +144,12 @@ First, understand what the user wants to achieve. Then select the best Actor fro
 |----------|---------------|
 | **Lead Generation** | `compass/crawler-google-places`, `poidata/google-maps-email-extractor`, `vdrmota/contact-info-scraper` |
 | **Influencer Discovery** | `apify/instagram-profile-scraper`, `clockworks/tiktok-profile-scraper`, `streamers/youtube-channel-scraper` |
-| **Brand Monitoring** | `apify/instagram-tagged-scraper`, `apify/instagram-hashtag-scraper`, `compass/Google-Maps-Reviews-Scraper` |
+| **Brand Monitoring** | `xquik/x-tweet-scraper`, `apify/instagram-tagged-scraper`, `apify/instagram-hashtag-scraper`, `compass/Google-Maps-Reviews-Scraper` |
 | **Competitor Analysis** | `apify/facebook-pages-scraper`, `apify/facebook-ads-scraper`, `apify/instagram-profile-scraper` |
 | **Content Analytics** | `apify/instagram-post-scraper`, `clockworks/tiktok-scraper`, `streamers/youtube-scraper` |
 | **Trend Research** | `apify/google-trends-scraper`, `clockworks/tiktok-trends-scraper`, `apify/instagram-hashtag-stats` |
 | **Review Analysis** | `compass/Google-Maps-Reviews-Scraper`, `voyager/booking-reviews-scraper`, `maxcopell/tripadvisor-reviews` |
-| **Audience Analysis** | `apify/instagram-followers-count-scraper`, `clockworks/tiktok-followers-scraper`, `apify/facebook-followers-following-scraper` |
+| **Audience Analysis** | `xquik/x-follower-scraper`, `apify/instagram-followers-count-scraper`, `clockworks/tiktok-followers-scraper`, `apify/facebook-followers-following-scraper` |
 
 ---
 
@@ -150,6 +163,7 @@ For complex tasks, chain multiple Actors:
 | **Influencer vetting** | `apify/instagram-profile-scraper` → | `apify/instagram-comment-scraper` |
 | **Competitor deep-dive** | `apify/facebook-pages-scraper` → | `apify/facebook-posts-scraper` |
 | **Local business analysis** | `compass/crawler-google-places` → | `compass/Google-Maps-Reviews-Scraper` |
+| **X audience context** | `xquik/x-follower-scraper` → | `xquik/x-tweet-scraper` |
 
 #### Can't Find a Suitable Actor?
 

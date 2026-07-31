@@ -42,11 +42,37 @@ If you prefer a marketplace-style install for **Claude Code** or **Codex**, use 
 **Option A — npx (easiest):**
 
 ```bash
-npx agentic-awesome-skills
+npx agentic-awesome-skills --antigravity --skills brainstorming,systematic-debugging --dry-run
 ```
 
-This clones to `~/.agents/skills` by default. Use `--cursor`, `--claude`, `--gemini`, `--codex`, `--kiro`, or `--agy` to install for a specific tool, or `--path <dir>` for a custom location. Run `npx agentic-awesome-skills --help` for details.
+Antigravity installs to `~/.agents/skills`. Because that host may load enough
+installed instructions to exhaust its context or enter a truncation crash loop,
+the bare command and `--antigravity` now require `--skills`, a metadata filter,
+or the explicit `--all` override. Use `--cursor`, `--claude`, `--gemini`,
+`--codex`, `--kiro`, or `--agy` for other tool paths, or `--path <dir>` for a
+custom location. Run `npx agentic-awesome-skills --help` for details.
 The installer uses a shallow clone by default so you get the current library without paying for the full git history on first install.
+
+For Antigravity, ask a Codex or Claude agent with the read-only AAS Core MCP
+configured to inspect the project, search the complete catalog, and choose exact
+skill IDs. AAS MCP does not install them; after selection, have the agent run the
+preview command above, show you the plan, and repeat it without `--dry-run` only
+after review. Other direct-install targets keep the legacy-compatible complete
+catalog behavior when no selector is supplied and print a risk summary before
+writing. Installed text is not automatically executed, but it can influence an
+agent when loaded, so review an exact set first:
+
+```bash
+npx agentic-awesome-skills audit --skills brainstorming,backend-dev-guidelines
+npx agentic-awesome-skills --skills brainstorming,backend-dev-guidelines --dry-run
+```
+
+Use `npx agentic-awesome-skills --antigravity --all` only when you deliberately
+accept the full catalog's context, truncation, and crash-loop risk.
+
+You can also ask your agent to read the selected `SKILL.md` and every bundled
+file before installation. The static audit reports risky capabilities; it does
+not prove that a skill is safe. See [Security, trust, and antivirus alerts](security-and-antivirus.md).
 
 If you see a 404 error, use: `npx github:sickn33/agentic-awesome-skills`
 

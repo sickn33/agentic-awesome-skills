@@ -1,7 +1,7 @@
 ---
 name: event-store-design
 description: "Design and implement event stores for event-sourced systems. Use when building event sourcing infrastructure, choosing event store technologies, or implementing event persistence patterns."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

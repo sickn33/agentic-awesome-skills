@@ -86,7 +86,7 @@ vhs demo/vhs-tape.tape
 
 ### Option 3: Screen Recording
 
-1. Open terminal and run `./demo/run-demo.sh`
+1. Open terminal and run `bash demo/run-demo.sh`
 2. Use QuickTime or OBS to screen record
 3. Add voice-over using `voice-over-script.md`
 
@@ -107,7 +107,7 @@ See `voice-over-script.md` for the complete narration script with timestamps.
 Best for quick demos. Shows core Loki Mode workflow.
 
 ```bash
-./demo/run-demo.sh simple-todo
+bash demo/run-demo.sh simple-todo
 ```
 
 ### Full-Stack Demo (15-20 min)
@@ -118,7 +118,7 @@ Complete demonstration including:
 - Quality gates
 
 ```bash
-./demo/run-demo.sh full-stack
+bash demo/run-demo.sh full-stack
 ```
 
 ## Published Demos

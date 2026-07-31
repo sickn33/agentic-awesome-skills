@@ -265,12 +265,13 @@ All data is stored locally within the skill directory:
 ```
 ~/.claude/skills/notebooklm/data/
 ├── library.json       - Your notebook library with metadata
-├── auth_info.json     - Authentication status info
-└── browser_state/     - Browser cookies and session data
+~/.local/share/agentic-awesome-skills/notebooklm/
+├── auth_info.json     - Authentication status info (0600)
+└── browser_state/     - Browser cookies and session data (0700)
 ```
 
 **Important Security Note:**
-- The `data/` directory contains sensitive authentication data and personal notebooks
+- The private per-user state directory contains sensitive authentication data and personal notebooks
 - It's automatically excluded from git via `.gitignore`
 - NEVER manually commit or share the contents of the `data/` directory
 

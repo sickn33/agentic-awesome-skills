@@ -10,11 +10,12 @@
 # 5. Continues until successful completion or max retries exceeded
 #
 # Usage:
-#   ./scripts/loki-wrapper.sh [PRD_PATH]
-#   ./scripts/loki-wrapper.sh ./docs/requirements.md
-#   ./scripts/loki-wrapper.sh  # Interactive mode
+#   bash scripts/loki-wrapper.sh [PRD_PATH]
+#   bash scripts/loki-wrapper.sh ./docs/requirements.md
+#   bash scripts/loki-wrapper.sh  # Interactive mode
 
 set -uo pipefail
+umask 077
 
 # Configuration
 MAX_RETRIES=${LOKI_MAX_RETRIES:-50}           # Maximum retry attempts
@@ -195,7 +196,7 @@ main() {
         # Run Claude Code with the prompt
         # Using -p for non-interactive prompt mode
         set +e
-        claude --dangerously-skip-permissions -p "$prompt" 2>&1 | tee -a "$LOG_FILE"
+        claude -p "$prompt" 2>&1 | tee -a "$LOG_FILE"
         local exit_code=${PIPESTATUS[0]}
         set -e
 

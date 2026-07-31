@@ -1,7 +1,7 @@
 ---
 name: n8n-validation-expert
 description: "Expert guide for interpreting and fixing n8n validation errors."
-risk: unknown
+risk: critical
 source: community
 ---
 

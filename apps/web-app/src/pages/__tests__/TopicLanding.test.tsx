@@ -37,11 +37,11 @@ describe('TopicLanding', () => {
     expect(screen.getByRole('heading', { name: /Recommended skills for this workflow/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /@Antigravity Agent Manager/i })).toHaveAttribute(
       'href',
-      '/skill/antigravity-agent-manager',
+      '/skill/antigravity-agent-manager/',
     );
     expect(screen.getByRole('link', { name: /GitHub source for AAS Core and its skill catalog/i })).toHaveAttribute(
       'href',
-      '/topics/github-ai-skills-repository',
+      '/topics/github-ai-skills-repository/',
     );
     expect(screen.getAllByText(/Antigravity CLI skills/i).length).toBeGreaterThan(0);
 

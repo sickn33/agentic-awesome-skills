@@ -1,7 +1,7 @@
 ---
 name: cqrs-implementation
 description: "Implement Command Query Responsibility Segregation for scalable architectures. Use when separating read and write models, optimizing query performance, or building event-sourced systems."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

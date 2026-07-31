@@ -62,7 +62,7 @@ A successful `manual-review-required` check means only that the requirement was 
 4. for external PRs, rejects unsafe paths, modes, symlinks, gitlinks, executable files, unknown types, oversized blobs, incomplete metadata, or non-allowlisted workflows;
 5. verifies workflow event, workflow identity, pull-request number, and head SHA;
 6. recomputes changed-skill evidence over the exact merge-base-to-head record set and requires one-to-one coverage of every skill-content Git record;
-7. rejects operational errors, malformed evidence, incomplete snapshots, score-component regressions, provenance identity regressions, or any other deterministic blocker;
+7. rejects operational errors, malformed evidence, incomplete snapshots, score-component regressions, provenance identity regressions, or any other deterministic blocker; an exact `source_repo` rename may pass only when the trusted protected-base ledger records the skill, old slug, new slug, upstream repository ID, verification date, and canonical GitHub URL;
 8. re-reads both pull-request base and head before and after approval and immediately before merge.
 
 A real merge also requires effective server-side protection for `main`: the four exact GitHub-Actions-owned checks (`pr-policy`, `pr-evidence`, `source-validation`, and `artifact-preview`), strict up-to-date enforcement, pull-request-only changes, administrator enforcement, no applicable ruleset bypass actors, and no merge queue. If that enforcement cannot be proven, `merge:batch` refuses non-dry-run operation. `merge:batch` does not retry base drift automatically or reuse stale evidence; the batch must be rerun from the new tuple. Pre-existing auto-merge state is rejected, and the immediate GitHub merge endpoint must return `merged: true` before post-merge work begins.
@@ -96,7 +96,7 @@ Each phase requires evidence from the previous phase before activation:
 3. Keep `main` protected by stable app-bound checks and remove any newly introduced direct writer.
 4. Add schema-validated fork-safe semantic review whose privileged code always comes from the protected base.
 5. Build deterministic release-candidate pull requests with rendering separated from publication.
-6. Add immutable upstream commit/path/hash provenance and a delta-based exception ledger.
+6. Expand immutable upstream commit/path/hash provenance. The first narrow delta exception ledger now covers maintainer-verified `source_repo` renames only; broader provenance exceptions remain out of scope.
 7. Consider auto-merge only for empirically proven documentation or metadata classes. New skills, security-sensitive content, workflows, installers, releases, provenance exceptions, and policy changes remain human decisions.
 
 Merge queue is not part of the current plan. The repository is personally owned, and its workflows do not currently support a `merge_group` event.

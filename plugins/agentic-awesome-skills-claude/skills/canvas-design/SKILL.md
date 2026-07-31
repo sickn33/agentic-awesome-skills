@@ -1,7 +1,7 @@
 ---
 name: canvas-design
 description: "These are instructions for creating design philosophies - aesthetic movements that are then EXPRESSED VISUALLY. Output only .md files, .pdf files, and .png files."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

@@ -5,7 +5,7 @@ description: 'Static Application Security Testing (SAST) for code vulnerability
   analysis across multiple languages and frameworks
 
   '
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---

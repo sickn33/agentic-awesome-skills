@@ -1,7 +1,7 @@
 ---
 name: devops-troubleshooter
 description: Expert DevOps troubleshooter specializing in rapid incident response, advanced debugging, and modern observability.
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---

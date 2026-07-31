@@ -1,7 +1,7 @@
 ---
 name: ui-page
 description: Scaffold a new mobile page/screen using the StyleSeed layout patterns
-risk: unknown
+risk: critical
 source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-page
 source_repo: bitjaru/styleseed
 source_type: community

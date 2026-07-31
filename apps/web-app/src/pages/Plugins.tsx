@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { Icon } from '../components/ui/Icon';
 import { specializedPlugins, type SpecializedPlugin } from '../data/specializedPlugins';
 import { usePageMeta } from '../hooks/usePageMeta';
-import { buildPluginsMeta } from '../utils/seo';
+import { buildPluginsMeta, toIndexableRoutePath } from '../utils/seo';
 
 const repoBaseUrl = 'https://github.com/sickn33/agentic-awesome-skills';
 const pluginFolderUrl = (pluginId: string) => `${repoBaseUrl}/tree/main/plugins/agentic-bundle-${pluginId}`;
@@ -92,7 +92,7 @@ function PluginRow({ plugin }: { plugin: SpecializedPlugin }): React.ReactElemen
       <p role="cell">{plugin.audience}</p>
       <p role="cell">{plugin.why}</p>
       <div role="cell" className="plugin-row__skills">
-        {plugin.skills.slice(0, 4).map((skillId) => <Link key={skillId} to={`/skill/${encodeURIComponent(skillId)}`}>@{skillId}</Link>)}
+        {plugin.skills.slice(0, 4).map((skillId) => <Link key={skillId} to={toIndexableRoutePath(`/skill/${encodeURIComponent(skillId)}`)}>@{skillId}</Link>)}
         {plugin.skills.length > 4 && <span>+{plugin.skills.length - 4} more</span>}
       </div>
       <div role="cell" className="plugin-row__actions">

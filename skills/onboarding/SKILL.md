@@ -1,7 +1,7 @@
 ---
 name: onboarding
 description: When the user wants to optimize post-signup onboarding, user activation, first-run experience, or time-to-value. Also use when the user mentions "onboarding flow," "activation rate," "user activation," "first-run experience," "empty states," "onboarding checklist," "aha moment," "new...
-risk: unknown
+risk: safe
 source: https://github.com/coreyhaines31/marketingskills/tree/main/skills/onboarding
 source_repo: coreyhaines31/marketingskills
 source_type: community

@@ -4,7 +4,7 @@ description: Expert in LangGraph - the production-grade framework for building
   stateful, multi-actor AI applications. Covers graph construction, state
   management, cycles and branches, persistence with checkpointers,
   human-in-the-loop patterns, and the ReAct agent pattern.
-risk: unknown
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---

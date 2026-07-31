@@ -5,7 +5,7 @@ description: >-
   Canvas/WebGL, Three.js, Babylon.js), hybrid DOM+canvas, WebGPU, optimization,
   PWA, audio unlock. Use when building HTML5/WebGL/WebGPU games or choosing a
   browser runtime.
-risk: unknown
+risk: none
 source: community
 date_added: "2026-02-27"
 ---

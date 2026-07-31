@@ -1,7 +1,7 @@
 ---
 name: multi-agent-patterns
 description: This skill should be used when the user asks to "design multi-agent system", "implement supervisor pattern", "create swarm architecture", "coordinate multiple agents", or mentions multi-agent patterns, context isolation, agent handoffs, sub-agents, or parallel agent execution.
-risk: unknown
+risk: critical
 source: community
 ---
 

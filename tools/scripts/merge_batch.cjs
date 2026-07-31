@@ -36,7 +36,7 @@ const DISALLOWED_COAUTHOR_TRAILER_PATTERNS = [
 ];
 const FULL_SHA_PATTERN = /^[0-9a-f]{40}$/u;
 const EVIDENCE_SCHEMA_VERSION = 1;
-const EVIDENCE_TIMEOUT_MS = 120_000;
+const EVIDENCE_TIMEOUT_MS = 300_000;
 const MAX_EVIDENCE_BYTES = 8 * 1024 * 1024;
 const APPROVAL_WORKFLOW_PATHS = new Set([
   ".github/workflows/actionlint.yml",
@@ -348,6 +348,8 @@ function recomputeChangedSkillEvidence(
         mergeBaseOid,
         "--head",
         headOid,
+        "--policy-ref",
+        evaluatorOid,
         "--output",
         outputPath,
       ],
@@ -1312,6 +1314,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  EVIDENCE_TIMEOUT_MS,
   approvalWorkflowPaths: APPROVAL_WORKFLOW_PATHS,
   approveActionRequiredRuns,
   approveWorkflowRun,

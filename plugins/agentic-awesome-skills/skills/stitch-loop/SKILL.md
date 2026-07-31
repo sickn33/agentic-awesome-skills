@@ -7,7 +7,7 @@ allowed-tools:
   - "Read"
   - "Write"
   - "Bash"
-risk: unknown
+risk: critical
 source: community
 ---
 

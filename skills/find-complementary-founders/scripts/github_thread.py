@@ -13,7 +13,6 @@ import re
 import sys
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 REPOSITORY = "merc1305/findMate"
@@ -232,15 +231,9 @@ def safe_profile_url(body: str) -> str | None:
     matches = PROFILE_URL_PATTERN.findall(body)
     if len(matches) != 1:
         return None
-    url = matches[0]
-    parsed = urlparse(url)
-    if (
-        parsed.scheme != "https"
-        or not parsed.hostname
-        or parsed.username
-        or parsed.query
-        or parsed.fragment
-    ):
+    try:
+        url = PUBLISHER.immutable_github_profile_url(matches[0])
+    except PUBLISHER.PublishError:
         return None
     return url
 

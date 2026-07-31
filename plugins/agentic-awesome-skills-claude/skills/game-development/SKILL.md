@@ -5,7 +5,7 @@ description: >-
   (web 2D/3D, hybrid DOM+canvas, narrative tools). Use when starting or
   structuring a game project, choosing frameworks, or picking among Phaser,
   PixiJS, Kaplay, Canvas/WebGL, Three.js, Babylon.js, Godot, Unity, or Ink/Twine.
-risk: unknown
+risk: none
 source: community
 date_added: "2026-02-27"
 ---

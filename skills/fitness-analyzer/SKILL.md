@@ -2,7 +2,7 @@
 name: fitness-analyzer
 description: 分析运动数据、识别运动模式、评估健身进展，并提供个性化训练建议。支持与慢性病数据的关联分析。
 allowed-tools: Read, Grep, Glob, Write
-risk: unknown
+risk: critical
 source: community
 ---
 

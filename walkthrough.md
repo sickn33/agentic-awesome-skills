@@ -1,3 +1,63 @@
+# Secur0 coordinated remediation - 2026-07-30
+
+- Re-evaluated all 35 Secur0 reports against current protected `main`: 22 were
+  open and 13 already closed or duplicated; rejected scanner-only claims that
+  do not bypass exact-head semantic review and recovered three valid closed
+  findings covering CSV formula injection and npm release provenance.
+- Added source fixes for protected npm publication, read-only Supabase RLS,
+  authenticated Telegram webhooks, Loki permission/dashboard boundaries,
+  private credential storage, catalog read integrity, path and temporary-file
+  confinement, safe external links, Vercel exclusion handling, pinned 2slides
+  downloads, and spreadsheet-safe CSV exports.
+- Added focused regression contracts, ran the required skill/reference/docs and
+  workflow gates, regenerated the complete catalog once as validation, and
+  removed generated registries and plugin mirrors from this source-only branch.
+- Production Supabase migration, report status/comments, public PR, and any
+  release remain separate approval gates; no coordinated-disclosure material
+  was published by this local remediation pass.
+
+# Maintenance Walkthrough - 2026-07-30
+
+- Changed only the Antigravity direct-install default: a bare Antigravity target
+  now stops before cloning or writing unless exact skills, metadata filters, or
+  the explicit `--all` override are supplied.
+- Added copyable guidance for an MCP-enabled Codex or Claude agent to inspect the
+  project, choose exact AAS skill IDs, and preview the resulting Antigravity
+  install while preserving AAS MCP's read-only boundary.
+- Added regression coverage proving the blocked path performs no clone or target
+  mutation, explicit selections and `--all` continue, and non-Antigravity hosts
+  retain their existing behavior.
+
+# Maintenance Walkthrough - 2026-07-29
+
+- Hardened the legacy full-catalog installer without breaking its historical
+  default: it now displays the selected risk distribution and provides a
+  read-only `audit --skills` mode that recursively reports sensitive behavior,
+  symlinks, and binary payloads before installation.
+- Added a documented trust and antivirus-response model that distinguishes a
+  signature match in instruction text from evidence of execution while treating
+  loaded skills as untrusted instructions with real agent-tool consequences.
+- Replaced thread-identified moving-branch installs with inspect-first,
+  full-commit-pinned workflows and removed blanket safety claims, hidden writes,
+  destructive rollback advice, and a developer-specific absolute path.
+- Enforced an exact authorized-use disclaimer and a per-action target, scope,
+  command, effect, and confirmation gate across every offensive-risk skill.
+- Revalidated all 15 exported Codex Security findings against current protected `main` instead of treating historical scanner anchors as current code.
+- Removed BrowserAct's mutable provider-served guide from the supported operating path; the pinned local CLI help may describe syntax, while the checked-in skill remains the complete policy.
+- Enforced full-SHA GitHub blob URLs for linked FindMate profiles on both Moltbook drafts and GitHub thread parsing, with regression coverage for mutable branches, foreign hosts, query strings, and traversal-shaped paths.
+
+# Maintenance Walkthrough - 2026-07-28
+
+- Added a fail-closed provenance exception ledger for maintainer-verified upstream repository renames. The initial Modellix entry records that `Modellix/modellix-skill` and `Modellix/modellix-plugin` resolve to GitHub repository ID `1150322983`; only the exact recorded transition is allowed, while unrelated provenance changes remain blocked.
+- Traced a live Search Console `Pagina con reindirizzamento` report to the
+  slashless `/plugins` URL, which GitHub Pages correctly redirects to the
+  indexable `/plugins/` route.
+- Normalized every runtime link to workbench, plugin, topic, and skill pages
+  through the existing trailing-slash route helper so crawlers are no longer
+  invited to request redirecting URL variants.
+- Added focused web-app assertions for trailing-slash navigation targets; the
+  sitemap, canonical metadata, and public route remain aligned on `/plugins/`.
+
 # Maintenance Walkthrough - 2026-07-26
 
 - Imported the MIT-licensed `fedora-hyprland-installer` contribution from

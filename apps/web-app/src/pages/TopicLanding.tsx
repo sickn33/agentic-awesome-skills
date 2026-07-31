@@ -3,7 +3,7 @@ import { Icon } from '../components/ui/Icon';
 import { useSkills } from '../context/SkillContext';
 import { getCuratedSkillsForSeoLandingPage, getSeoLandingPage, seoLandingPages } from '../data/seoLandingPages';
 import { usePageMeta } from '../hooks/usePageMeta';
-import { buildTopicLandingFallbackMeta, buildTopicLandingMeta } from '../utils/seo';
+import { buildTopicLandingFallbackMeta, buildTopicLandingMeta, toIndexableRoutePath } from '../utils/seo';
 
 export function TopicLanding(): React.ReactElement {
   const { slug } = useParams<{ slug: string }>();
@@ -35,7 +35,7 @@ export function TopicLanding(): React.ReactElement {
           {seoLandingPages.slice(0, 2).map((landing) => (
             <Link
               key={landing.slug}
-              to={`/topics/${landing.slug}`}
+              to={toIndexableRoutePath(`/topics/${landing.slug}`)}
               className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
             >
               {landing.eyebrow}
@@ -68,7 +68,7 @@ export function TopicLanding(): React.ReactElement {
             {page.links.map((link) => link.to ? (
               <Link
                 key={`${link.label}-${link.to}`}
-                to={link.to}
+                to={toIndexableRoutePath(link.to)}
                 className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 {link.label}
@@ -131,7 +131,7 @@ export function TopicLanding(): React.ReactElement {
           {curatedSkills.map((skill) => (
             <article key={skill.id} className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
               <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
-                <Link to={`/skill/${encodeURIComponent(skill.id)}`}>@{skill.name}</Link>
+                <Link to={toIndexableRoutePath(`/skill/${encodeURIComponent(skill.id)}`)}>@{skill.name}</Link>
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{skill.description}</p>
               <p className="mt-3 text-xs font-medium uppercase tracking-wide text-slate-500">{skill.category}</p>
@@ -166,7 +166,7 @@ export function TopicLanding(): React.ReactElement {
             {relatedTopicPages.map((landing) => (
               <Link
                 key={landing.slug}
-                to={`/topics/${landing.slug}`}
+                to={toIndexableRoutePath(`/topics/${landing.slug}`)}
                 className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-3.5 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 {landing.h1}

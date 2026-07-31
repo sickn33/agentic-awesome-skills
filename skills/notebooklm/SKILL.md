@@ -1,7 +1,7 @@
 ---
 name: notebooklm
 description: "Interact with Google NotebookLM to query documentation with Gemini's source-grounded answers. Each question opens a fresh browser session, retrieves the answer exclusively from your uploaded documents, and closes."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -195,8 +195,8 @@ python -m patchright install chromium
 
 All data stored in `~/.claude/skills/notebooklm/data/`:
 - `library.json` - Notebook metadata
-- `auth_info.json` - Authentication status
-- `browser_state/` - Browser cookies and session
+- `~/.local/share/agentic-awesome-skills/notebooklm/auth_info.json` - private authentication status (`0600`)
+- `~/.local/share/agentic-awesome-skills/notebooklm/browser_state/` - private browser cookies and session (`0700`)
 
 **Security:** Protected by `.gitignore`, never commit to git.
 
@@ -263,7 +263,7 @@ Synthesize and respond to user
 **Important directories and files:**
 
 - `scripts/` - All automation scripts (ask_question.py, notebook_manager.py, etc.)
-- `data/` - Local storage for authentication and notebook library
+- `~/.local/share/agentic-awesome-skills/notebooklm/` - private per-user authentication and notebook storage
 - `references/` - Extended documentation:
   - `api_reference.md` - Detailed API documentation for all scripts
   - `troubleshooting.md` - Common issues and solutions

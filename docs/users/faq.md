@@ -31,6 +31,13 @@ Skills are specialized instruction files that teach AI assistants how to handle 
 
 **No.** With AAS Core, ask the agent to inspect the project and choose the exact skills from the complete catalog. On a broad direct install, all skills may be present locally while the host loads only the skills it invokes.
 
+The direct installer keeps its historical full-catalog default for other hosts,
+but Antigravity requires an exact selection, metadata filter, or explicit
+`--all` consent because its watched directory can overload the host. Use
+`audit --skills <ids>` to read an exact selection and its bundled files without
+executing them, then use the same `--skills` selection with `--dry-run` before
+installation.
+
 Use [Starter Packs](bundles.md) as human-curated presets when you want a fixed starting point.
 
 If you want a narrower install surface for **Claude Code** or **Codex**, use the new plugin distributions documented in [plugins.md](plugins.md) instead of the full library install.
@@ -128,8 +135,13 @@ We classify skills so you know what you're running. These values map directly to
 
 ### Can these skills hack my computer?
 
-**No.** Skills are text files. However, they _instruct_ the AI to run commands. If a skill says "delete all files", a compliant AI might try to do it.
-_Always check the Risk label and review the code._
+A Markdown file is not a running process, but calling it “just text” is not a
+sufficient security model. A loaded skill can instruct an agent to run commands,
+use credentials, access the network, or modify files. Installation alone is not
+evidence that any of that happened; execution logs and resulting system changes
+are. Review the exact skill and every bundled file before use, keep agent
+permissions narrow, and require confirmation for consequential actions. See
+[Security, trust, and antivirus alerts](security-and-antivirus.md).
 
 ---
 
@@ -146,7 +158,10 @@ The package publishes separate `agentic-awesome-skills`, `aas`, and `aas-mcp` bi
 It depends on how you install:
 
 - **Using the installer CLI (`npx agentic-awesome-skills`)**:
-  The default install target is `~/.agents/skills/` for Antigravity's global library.
+  The default target is `~/.agents/skills/` for Antigravity's global library.
+  Because Antigravity may overload when the complete catalog is present, the
+  installer requires `--skills`, a metadata filter, or explicit `--all` consent
+  before cloning or changing that target.
 - **Using a tool-specific flag**:
   Use `--claude`, `--cursor`, `--gemini`, `--codex`, `--kiro`, or `--antigravity` to target the matching tool path automatically.
 - **Using a manual clone or custom workspace path**:
@@ -161,6 +176,13 @@ git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
 ```
 
 For direct skill distribution, the installer CLI performs a lighter shallow clone of the current library. Manual `git clone` remains appropriate when you want the full repository history or plan to contribute from the same checkout. For Codex or Claude users who want project-specific agent selection with reproducible state, start with AAS Core instead of treating a full-library install as the primary product path.
+
+For Antigravity, ask a Codex or Claude agent with the read-only AAS Core MCP
+configured to inspect the project and choose exact IDs, then preview the selected
+set with `npx agentic-awesome-skills --antigravity --skills <ids> --dry-run`.
+AAS MCP selects and validates IDs but does not install them. The complete catalog
+requires the explicit `npx agentic-awesome-skills --antigravity --all` override
+because it can exhaust context or trigger a truncation crash loop.
 
 **Tool-specific paths:**
 
@@ -226,10 +248,11 @@ So it is normal for the **full library** to be larger than the **plugin-safe** p
 **Yes.** Use the same standard install flow as other platforms:
 
 ```bash
-npx agentic-awesome-skills
+npx agentic-awesome-skills --antigravity --skills brainstorming --dry-run
 ```
 
-If you have an older clone created around the removed symlink workaround, reinstall into a fresh directory or rerun `npx agentic-awesome-skills`.
+If you have an older clone created around the removed symlink workaround,
+reinstall into a fresh directory or rerun the installer with an exact selection.
 
 For AAS Core MCP configuration, native Windows 10 and 11 with Node.js 22 are supported preview targets. A preview failure with `AAS_ADAPTER_WINDOWS_ACL_FAILED` refers to the Codex/Claude configuration directory or file checked with PowerShell `Get-Acl`, not the AAS cache and not `icacls`. Read the returned `path`, `phase`, `status`, and bounded diagnostic; correct the named configuration-path ownership problem, then rerun preview. Never add `--approve` before an approval digest is produced. See the [AAS Core Windows notes](aas-core.md#native-windows-and-codex).
 

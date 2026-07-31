@@ -1,7 +1,7 @@
 ---
 name: security-auditor
 description: Expert security auditor specializing in DevSecOps, comprehensive cybersecurity, and compliance frameworks.
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---

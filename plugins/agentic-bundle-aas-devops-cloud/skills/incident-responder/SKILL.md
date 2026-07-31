@@ -1,7 +1,7 @@
 ---
 name: incident-responder
 description: Expert SRE incident responder specializing in rapid problem resolution, modern observability, and comprehensive incident management.
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---

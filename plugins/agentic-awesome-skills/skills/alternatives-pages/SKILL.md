@@ -1,7 +1,7 @@
 ---
 name: alternatives-pages
 description: 'Create "[Competitor] alternative" and comparison pages for developer tools. Build honest, high-converting comparison content that ranks for competitive search terms. Trigger phrases: "alternatives page", "comparison page", "vs page", "[competitor] alternative", "competitor comparison",...'
-risk: unknown
+risk: critical
 source: https://github.com/jonathimer/devmarketing-skills/tree/main/skills/alternatives-pages
 source_repo: jonathimer/devmarketing-skills
 source_type: community

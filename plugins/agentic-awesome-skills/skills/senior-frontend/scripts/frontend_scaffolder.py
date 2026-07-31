@@ -13,6 +13,7 @@ Usage:
 
 import argparse
 import json
+import re
 import os
 import sys
 from pathlib import Path
@@ -854,6 +855,11 @@ def scaffold_project(
 ) -> Dict:
     """Scaffold a complete frontend project."""
     features = features or []
+    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name) or len(name) > 64:
+        return {"error": "Project name must be 1-64 lowercase letters, digits, or hyphen-separated words"}
+    output_dir = output_dir.resolve()
+    if output_dir.is_symlink():
+        return {"error": "Output directory must not be a symbolic link"}
     project_path = output_dir / name
 
     if project_path.exists() and not dry_run:

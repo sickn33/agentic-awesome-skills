@@ -1,7 +1,7 @@
 ---
 name: longbridge-fundamentals
 description: "Financial statements, business segments, dividends, valuation multiples (PE/PB/PS), industry comparison, operating data, corporate actions, company and executive profiles, cross-stock comparison, and valuation ranking via Longbridge. Also: DCF models, value investing screens (low..."
-risk: unknown
+risk: critical
 source: https://github.com/longbridge/skills/tree/main/skills/longbridge-fundamentals
 source_repo: longbridge/skills
 source_type: official

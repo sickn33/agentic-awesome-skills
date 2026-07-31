@@ -22,6 +22,14 @@ USER_AGENT = "find-complementary-founders/1.1"
 MAX_RESPONSE_BYTES = 1_000_000
 PROFILE_REPLY_MARKER = "FINDMATE_OWNER_PROFILE_V1"
 DEFAULT_THREAD_ID = "25f3a177-acb6-4a88-8375-6dade2059042"
+GITHUB_BLOB_PATTERN = re.compile(
+    r"^/"
+    r"(?P<owner>[A-Za-z0-9][A-Za-z0-9-]{0,38})/"
+    r"(?P<repo>[A-Za-z0-9._-]{1,100})/"
+    r"blob/"
+    r"(?P<commit>[0-9a-fA-F]{40})/"
+    r"(?P<path>[A-Za-z0-9._/-]+\.json)$"
+)
 
 SECRET_PATTERNS = {
     "email address": re.compile(
@@ -36,15 +44,6 @@ SECRET_PATTERNS = {
     ),
     "local filesystem path": re.compile(r"(?:/Users/|/home/|[A-Z]:\\Users\\)"),
 }
-
-GITHUB_PROFILE_BLOB_PATTERN = re.compile(
-    r"^/"
-    r"(?P<owner>[A-Za-z0-9][A-Za-z0-9-]{0,38})/"
-    r"(?P<repo>[A-Za-z0-9._-]{1,100})/"
-    r"blob/"
-    r"(?P<commit>[0-9a-fA-F]{40})/"
-    r"(?P<path>[A-Za-z0-9._/-]+\.json)$"
-)
 
 LEVEL_RANK = {
     "unknown": 0,
@@ -179,35 +178,40 @@ def safe_https_url(value: object, field: str) -> str:
     return url
 
 
-def safe_profile_url(value: object) -> str:
-    url = safe_https_url(value, "profile_url")
+def immutable_github_profile_url(
+    value: object, field: str = "profile_url"
+) -> str:
+    url = safe_text(value, field, 500)
     parsed = urlparse(url)
     try:
         port = parsed.port
     except ValueError as exc:
         raise PublishError(
-            "profile_url must be a GitHub blob URL pinned to a full 40-character commit SHA"
+            f"{field} must be a github.com blob URL pinned to a full commit SHA"
         ) from exc
-    hostname = (parsed.hostname or "").lower()
+    match = GITHUB_BLOB_PATTERN.fullmatch(parsed.path)
     if (
-        hostname != "github.com"
+        parsed.scheme != "https"
+        or parsed.hostname != "github.com"
         or port is not None
-        or parsed.username is not None
+        or parsed.username
+        or parsed.password
         or parsed.query
         or parsed.fragment
+        or match is None
     ):
         raise PublishError(
-            "profile_url must be a GitHub blob URL pinned to a full 40-character commit SHA"
-        )
-    match = GITHUB_PROFILE_BLOB_PATTERN.fullmatch(parsed.path)
-    if match is None:
-        raise PublishError(
-            "profile_url must be a GitHub blob URL pinned to a full 40-character commit SHA"
+            f"{field} must be a github.com blob URL pinned to a full commit SHA"
         )
     path_parts = match.group("path").split("/")
     if any(part in {"", ".", ".."} for part in path_parts):
-        raise PublishError("profile_url contains an unsafe path")
+        raise PublishError(f"{field} contains an unsafe profile path")
     return url
+
+
+def safe_profile_url(value: object) -> str:
+    """Keep the renderer/test API while using the canonical validator."""
+    return immutable_github_profile_url(value)
 
 
 def safe_identifier(value: object, field: str) -> str:
@@ -347,7 +351,7 @@ def render_profile_reply(profile: dict, profile_url: str) -> str:
     validate_profile(profile)
     alias = safe_text(profile["alias"], "profile.alias", 50)
     summary = safe_text(profile["summary"], "profile.summary", 280)
-    profile_url = safe_profile_url(profile_url)
+    profile_url = immutable_github_profile_url(profile_url)
     contact_url = safe_https_url(profile["contact"]["url"], "profile.contact.url")
     seeking = profile.get("seeking", {})
     if not isinstance(seeking, dict):

@@ -1,7 +1,7 @@
 ---
 name: database-migrations-sql-migrations
 description: "SQL database migrations with zero-downtime strategies for PostgreSQL, MySQL, and SQL Server. Focus on data integrity and rollback plans."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

@@ -1,7 +1,7 @@
 ---
 name: apify-lead-generation
 description: "Scrape leads from multiple platforms using Apify Actors."
-risk: unknown
+risk: critical
 source: community
 ---
 

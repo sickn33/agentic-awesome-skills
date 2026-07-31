@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import tempfile
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -16,13 +17,93 @@ from check_readme_credits import (
     normalize_repo_slug,
     parse_frontmatter,
 )
-from git_change_records import ChangeRecord, list_tree, materialize_tree, read_change_records, read_path
+from git_change_records import (
+    ChangeRecord,
+    list_tree,
+    materialize_tree,
+    read_blob,
+    read_change_records,
+    read_path,
+    resolve_commit,
+)
 from security_scanner import scan_skill_file
 
 
 SCHEMA_VERSION = 1
 RISK_RANK = {"unknown": -1, "none": 0, "safe": 1, "critical": 2, "offensive": 3}
 SEVERITY_RANK = {"info": 0, "warning": 1, "error": 2}
+PROVENANCE_EXCEPTION_PATH = "docs/maintainers/provenance-identity-exceptions.json"
+DATE_PATTERN = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+
+def load_provenance_exceptions(
+    repo: Path,
+    policy_ref: str,
+) -> tuple[str, set[tuple[str, str, str, str]]]:
+    """Load exact, maintainer-reviewed provenance transitions from trusted policy."""
+    policy_oid = resolve_commit(repo, policy_ref)
+    payload = read_path(repo, policy_oid, PROVENANCE_EXCEPTION_PATH)
+    if payload is None:
+        return policy_oid, set()
+    try:
+        document = json.loads(payload.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ValueError(f"Invalid {PROVENANCE_EXCEPTION_PATH}: {error}") from error
+    if not isinstance(document, dict) or document.get("schema_version") != 1:
+        raise ValueError(f"Invalid {PROVENANCE_EXCEPTION_PATH}: schema_version must be 1")
+    entries = document.get("exceptions")
+    if not isinstance(entries, list):
+        raise ValueError(f"Invalid {PROVENANCE_EXCEPTION_PATH}: exceptions must be a list")
+
+    allowed: set[tuple[str, str, str, str]] = set()
+    required_fields = {
+        "skill_id",
+        "field",
+        "before",
+        "after",
+        "upstream_repository_id",
+        "verified_at",
+        "evidence_url",
+    }
+    for index, entry in enumerate(entries):
+        if not isinstance(entry, dict) or set(entry) != required_fields:
+            raise ValueError(
+                f"Invalid {PROVENANCE_EXCEPTION_PATH}: exception {index} has unexpected fields"
+            )
+        skill_id = entry["skill_id"]
+        field = entry["field"]
+        before = normalize_repo_slug(entry["before"])
+        after = normalize_repo_slug(entry["after"])
+        repository_id = entry["upstream_repository_id"]
+        verified_at = entry["verified_at"]
+        evidence_url = entry["evidence_url"]
+        if not isinstance(skill_id, str) or not skill_id or "/" in skill_id:
+            raise ValueError(f"Invalid {PROVENANCE_EXCEPTION_PATH}: exception {index} skill_id")
+        if field != "source_repo":
+            raise ValueError(f"Invalid {PROVENANCE_EXCEPTION_PATH}: exception {index} field")
+        if (
+            not isinstance(before, str)
+            or not SOURCE_REPO_PATTERN.fullmatch(before)
+            or not isinstance(after, str)
+            or not SOURCE_REPO_PATTERN.fullmatch(after)
+            or before == after
+        ):
+            raise ValueError(f"Invalid {PROVENANCE_EXCEPTION_PATH}: exception {index} transition")
+        if not isinstance(repository_id, int) or isinstance(repository_id, bool) or repository_id <= 0:
+            raise ValueError(f"Invalid {PROVENANCE_EXCEPTION_PATH}: exception {index} repository id")
+        if not isinstance(verified_at, str) or not DATE_PATTERN.fullmatch(verified_at):
+            raise ValueError(f"Invalid {PROVENANCE_EXCEPTION_PATH}: exception {index} verified_at")
+        if (
+            not isinstance(evidence_url, str)
+            or not evidence_url.startswith("https://github.com/")
+            or normalize_repo_slug(evidence_url) != after
+        ):
+            raise ValueError(f"Invalid {PROVENANCE_EXCEPTION_PATH}: exception {index} evidence_url")
+        transition = (skill_id, field, before, after)
+        if transition in allowed:
+            raise ValueError(f"Invalid {PROVENANCE_EXCEPTION_PATH}: duplicate exception {index}")
+        allowed.add(transition)
+    return policy_oid, allowed
 
 
 def canonical_skill_roots(repo: Path, commit_oid: str) -> set[str]:
@@ -38,11 +119,14 @@ def canonical_skill_id(path: str | None, roots: set[str]) -> str | None:
     if path is None or not path.startswith("skills/"):
         return None
     relative = path[len("skills/") :]
-    candidates = [
-        root
-        for root in roots
-        if relative == f"{root}/SKILL.md" or relative.startswith(f"{root}/")
-    ]
+    parts = relative.split("/")
+    candidates = []
+    for end in range(1, len(parts)):
+        root = "/".join(parts[:end])
+        if root in roots and (
+            relative == f"{root}/SKILL.md" or relative.startswith(f"{root}/")
+        ):
+            candidates.append(root)
     return max(candidates, key=lambda root: (root.count("/"), len(root))) if candidates else None
 
 
@@ -195,6 +279,44 @@ def evaluate_snapshot(snapshot_root: Path, skill_id: str) -> dict[str, object]:
     }
 
 
+def materialize_skill_snapshot(
+    repo: Path,
+    commit_oid: str,
+    skill_id: str,
+    snapshot_root: Path,
+) -> list[dict[str, str]]:
+    """Materialize a skill, parsing a legacy executable SKILL.md as inert data.
+
+    The generic tree helper intentionally rejects every executable blob. Some
+    historical canonical SKILL.md files nevertheless use mode 100755. Reading
+    that exact documentation blob into a private 0600 file lets the evidence
+    evaluator compare before/after metadata without executing it or admitting
+    any other unsafe tree entry.
+    """
+    skill_root = snapshot_root / "skills" / skill_id
+    unsafe = materialize_tree(
+        repo,
+        commit_oid,
+        f"skills/{skill_id}",
+        skill_root,
+    )
+    skill_file = skill_root / "SKILL.md"
+    if not skill_file.exists():
+        expected_path = f"skills/{skill_id}/SKILL.md"
+        legacy_entry = next(
+            (
+                entry
+                for entry in unsafe
+                if entry["path"] == expected_path and entry["mode"] == "100755"
+            ),
+            None,
+        )
+        if legacy_entry is not None:
+            skill_file.write_bytes(read_blob(repo, legacy_entry["oid"]))
+            skill_file.chmod(0o600)
+    return unsafe
+
+
 def _audit_severities(snapshot: dict[str, object] | None) -> dict[str, list[str]]:
     severities: dict[str, list[str]] = defaultdict(list)
     if not snapshot:
@@ -264,14 +386,16 @@ def provenance_reasons(
     before: dict[str, object] | None,
     after: dict[str, object] | None,
     readme_credits: dict[str, set[str]],
-) -> list[str]:
+    provenance_exceptions: set[tuple[str, str, str, str]],
+) -> tuple[list[str], list[str]]:
     if change_type == "deleted" or after is None:
-        return []
+        return [], []
     provenance = after["provenance"]
     source = provenance.get("source")
     source_type = provenance.get("source_type")
     source_repo = provenance.get("source_repo")
     reasons: list[str] = []
+    applied_exceptions: list[str] = []
     source_is_self = isinstance(source, str) and source.strip().lower() == "self"
     before_provenance = before.get("provenance") if before else None
     before_source = before_provenance.get("source") if before_provenance else None
@@ -282,8 +406,22 @@ def provenance_reasons(
     if change_type in {"modified", "renamed"} and before_provenance:
         if not before_is_self or not source_is_self:
             for field in ("source", "source_type", "source_repo"):
-                if before_provenance.get(field) != provenance.get(field):
-                    reasons.append(f"{skill_id}:provenance_identity_changed:{field}")
+                before_value = before_provenance.get(field)
+                after_value = provenance.get(field)
+                if before_value != after_value:
+                    transition = (
+                        (skill_id, field, before_value, after_value)
+                        if field == "source_repo"
+                        and isinstance(before_value, str)
+                        and isinstance(after_value, str)
+                        else None
+                    )
+                    if transition is not None and transition in provenance_exceptions:
+                        applied_exceptions.append(
+                            f"{skill_id}:{field}:{before_value}->{after_value}"
+                        )
+                    else:
+                        reasons.append(f"{skill_id}:provenance_identity_changed:{field}")
 
     needs_full_validation = change_type in {"added", "copied"} or (
         before_provenance is not None and before_is_self and not source_is_self
@@ -297,7 +435,7 @@ def provenance_reasons(
             reasons.append(
                 f"{skill_id}:new_external_skill_missing_readme_credit:{source_type}:{source_repo}"
             )
-    return reasons
+    return reasons, applied_exceptions
 
 
 def _unsafe_counter(entries: list[dict[str, str]], skill_id: str | None) -> Counter[tuple[str, str, str]]:
@@ -312,15 +450,24 @@ def _unsafe_counter(entries: list[dict[str, str]], skill_id: str | None) -> Coun
     )
 
 
-def build_report(repo: str | Path, base_ref: str, head_ref: str) -> dict[str, object]:
+def build_report(
+    repo: str | Path,
+    base_ref: str,
+    head_ref: str,
+    policy_ref: str | None = None,
+) -> dict[str, object]:
     root = Path(repo)
     base_oid, head_oid, records = read_change_records(root, base_ref, head_ref, merge_base=True)
+    policy_oid, provenance_exceptions = load_provenance_exceptions(
+        root, policy_ref or base_ref
+    )
     old_roots = canonical_skill_roots(root, base_oid)
     new_roots = canonical_skill_roots(root, head_oid)
     readme_bytes = read_path(root, head_oid, "README.md") or b""
     readme_credits = extract_credit_repos(readme_bytes.decode("utf-8", "replace"))
     changes: list[dict[str, object]] = []
     all_reasons: list[str] = []
+    all_applied_exceptions: list[str] = []
 
     with tempfile.TemporaryDirectory(prefix="changed-skill-evidence-") as temporary:
         temp_root = Path(temporary)
@@ -349,12 +496,12 @@ def build_report(repo: str | Path, base_ref: str, head_ref: str) -> dict[str, ob
             after_unsafe: list[dict[str, str]] = []
             if base_exists and old_id:
                 before_root = temp_root / f"{index}-before"
-                before_unsafe = materialize_tree(root, base_oid, f"skills/{old_id}", before_root / "skills" / old_id)
+                before_unsafe = materialize_skill_snapshot(root, base_oid, old_id, before_root)
                 if (before_root / "skills" / old_id / "SKILL.md").is_file():
                     before = evaluate_snapshot(before_root, old_id)
             if head_exists and new_id:
                 after_root = temp_root / f"{index}-after"
-                after_unsafe = materialize_tree(root, head_oid, f"skills/{new_id}", after_root / "skills" / new_id)
+                after_unsafe = materialize_skill_snapshot(root, head_oid, new_id, after_root)
                 if (after_root / "skills" / new_id / "SKILL.md").is_file():
                     after = evaluate_snapshot(after_root, new_id)
 
@@ -375,17 +522,18 @@ def build_report(repo: str | Path, base_ref: str, head_ref: str) -> dict[str, ob
                         )
             comparison_before = None if change_type in {"added", "copied"} else before
             reasons.extend(regression_reasons(effective_id, change_type, comparison_before, after))
-            reasons.extend(
-                provenance_reasons(
-                    effective_id,
-                    change_type,
-                    comparison_before,
-                    after,
-                    readme_credits,
-                )
+            provenance_blockers, applied_exceptions = provenance_reasons(
+                effective_id,
+                change_type,
+                comparison_before,
+                after,
+                readme_credits,
+                provenance_exceptions,
             )
+            reasons.extend(provenance_blockers)
             reasons = sorted(set(reasons))
             all_reasons.extend(reasons)
+            all_applied_exceptions.extend(applied_exceptions)
             changes.append(
                 {
                     "change_type": change_type,
@@ -397,6 +545,7 @@ def build_report(repo: str | Path, base_ref: str, head_ref: str) -> dict[str, ob
                     "unsafe_entries": {"before": before_unsafe, "after": after_unsafe},
                     "blocking": bool(reasons),
                     "reasons": reasons,
+                    "provenance_exceptions_applied": sorted(applied_exceptions),
                 }
             )
 
@@ -408,9 +557,11 @@ def build_report(repo: str | Path, base_ref: str, head_ref: str) -> dict[str, ob
         "head_ref": head_ref,
         "base_oid": base_oid,
         "head_oid": head_oid,
+        "policy_oid": policy_oid,
         "changes": changes,
         "blocking": bool(reasons),
         "reasons": reasons,
+        "provenance_exceptions_applied": sorted(set(all_applied_exceptions)),
     }
 
 
@@ -422,6 +573,10 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build changed-skill before/after evidence.")
     parser.add_argument("--base", required=True)
     parser.add_argument("--head", required=True)
+    parser.add_argument(
+        "--policy-ref",
+        help="Trusted policy commit containing provenance exception records (defaults to --base).",
+    )
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument(
         "--repo",
@@ -435,7 +590,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     root = args.repo.resolve() if args.repo else find_repo_root(__file__)
-    report = build_report(root, args.base, args.head)
+    report = build_report(root, args.base, args.head, policy_ref=args.policy_ref)
     payload = stable_json(report)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(payload, encoding="utf-8")

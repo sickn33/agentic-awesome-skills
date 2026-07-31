@@ -4,16 +4,16 @@
 # Single script that handles prerequisites, setup, and autonomous execution
 #
 # Usage:
-#   ./autonomy/run.sh [PRD_PATH]
-#   ./autonomy/run.sh ./docs/requirements.md
-#   ./autonomy/run.sh                          # Interactive mode
+#   bash autonomy/run.sh [PRD_PATH]
+#   bash autonomy/run.sh ./docs/requirements.md
+#   bash autonomy/run.sh                          # Interactive mode
 #
 # Environment Variables:
 #   LOKI_MAX_RETRIES    - Max retry attempts (default: 50)
 #   LOKI_BASE_WAIT      - Base wait time in seconds (default: 60)
 #   LOKI_MAX_WAIT       - Max wait time in seconds (default: 3600)
 #   LOKI_SKIP_PREREQS   - Skip prerequisite checks (default: false)
-#   LOKI_DASHBOARD      - Enable web dashboard (default: true)
+#   LOKI_DASHBOARD      - Reserved; the legacy file server is disabled for safety
 #   LOKI_DASHBOARD_PORT - Dashboard port (default: 57374)
 #
 # Resource Monitoring (prevents system overload):
@@ -25,9 +25,8 @@
 #   LOKI_STAGED_AUTONOMY    - Require approval before execution (default: false)
 #   LOKI_AUDIT_LOG          - Enable audit logging (default: false)
 #   LOKI_MAX_PARALLEL_AGENTS - Limit concurrent agent spawning (default: 10)
-#   LOKI_SANDBOX_MODE       - Run in sandboxed container (default: false, requires Docker)
-#   LOKI_ALLOWED_PATHS      - Comma-separated paths agents can modify (default: all)
-#   LOKI_BLOCKED_COMMANDS   - Comma-separated blocked shell commands (default: rm -rf /)
+#   LOKI_SANDBOX_MODE, LOKI_ALLOWED_PATHS, and LOKI_BLOCKED_COMMANDS are
+#   currently unsupported and fail closed instead of claiming enforcement.
 #
 # SDLC Phase Controls (all enabled by default, set to 'false' to skip):
 #   LOKI_PHASE_UNIT_TESTS      - Run unit tests (default: true)
@@ -52,6 +51,7 @@
 #===============================================================================
 
 set -uo pipefail
+umask 077
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -62,10 +62,13 @@ PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 # Solution: Copy ourselves to /tmp and run from there. The original can be safely edited.
 #===============================================================================
 if [[ -z "${LOKI_RUNNING_FROM_TEMP:-}" ]]; then
-    TEMP_SCRIPT="/tmp/loki-run-$$.sh"
+    TEMP_RUN_DIR="$(mktemp -d "${TMPDIR:-/tmp}/loki-run.XXXXXXXX")" || exit 1
+    chmod 700 "$TEMP_RUN_DIR"
+    TEMP_SCRIPT="$TEMP_RUN_DIR/run.sh"
     cp "${BASH_SOURCE[0]}" "$TEMP_SCRIPT"
-    chmod +x "$TEMP_SCRIPT"
+    chmod 700 "$TEMP_SCRIPT"
     export LOKI_RUNNING_FROM_TEMP=1
+    export LOKI_TEMP_RUN_DIR="$TEMP_RUN_DIR"
     export LOKI_ORIGINAL_SCRIPT_DIR="$SCRIPT_DIR"
     export LOKI_ORIGINAL_PROJECT_DIR="$PROJECT_DIR"
     exec "$TEMP_SCRIPT" "$@"
@@ -76,14 +79,14 @@ SCRIPT_DIR="${LOKI_ORIGINAL_SCRIPT_DIR:-$SCRIPT_DIR}"
 PROJECT_DIR="${LOKI_ORIGINAL_PROJECT_DIR:-$PROJECT_DIR}"
 
 # Clean up temp script on exit
-trap 'rm -f "${BASH_SOURCE[0]}" 2>/dev/null' EXIT
+trap 'rm -rf -- "${LOKI_TEMP_RUN_DIR:?}" 2>/dev/null' EXIT
 
 # Configuration
 MAX_RETRIES=${LOKI_MAX_RETRIES:-50}
 BASE_WAIT=${LOKI_BASE_WAIT:-60}
 MAX_WAIT=${LOKI_MAX_WAIT:-3600}
 SKIP_PREREQS=${LOKI_SKIP_PREREQS:-false}
-ENABLE_DASHBOARD=${LOKI_DASHBOARD:-true}
+ENABLE_DASHBOARD=${LOKI_DASHBOARD:-false}
 DASHBOARD_PORT=${LOKI_DASHBOARD_PORT:-57374}
 RESOURCE_CHECK_INTERVAL=${LOKI_RESOURCE_CHECK_INTERVAL:-300}  # Check every 5 minutes
 RESOURCE_CPU_THRESHOLD=${LOKI_RESOURCE_CPU_THRESHOLD:-80}     # CPU % threshold
@@ -96,6 +99,11 @@ MAX_PARALLEL_AGENTS=${LOKI_MAX_PARALLEL_AGENTS:-10}      # Limit concurrent agen
 SANDBOX_MODE=${LOKI_SANDBOX_MODE:-false}                 # Docker sandbox mode
 ALLOWED_PATHS=${LOKI_ALLOWED_PATHS:-""}                  # Empty = all paths allowed
 BLOCKED_COMMANDS=${LOKI_BLOCKED_COMMANDS:-"rm -rf /,dd if=,mkfs,:(){ :|:& };:"}
+
+if [ "$SANDBOX_MODE" != "false" ] || [ -n "$ALLOWED_PATHS" ] || [ -n "${LOKI_BLOCKED_COMMANDS+x}" ]; then
+    echo "Loki safety controls are not implemented; refusing to run with requested sandbox/path/blocklist settings." >&2
+    exit 2
+fi
 
 STATUS_MONITOR_PID=""
 DASHBOARD_PID=""
@@ -1172,47 +1180,8 @@ EXTRACT_SCRIPT
 }
 
 start_dashboard() {
-    log_header "Starting Loki Dashboard"
-
-    # Create dashboard directory
-    mkdir -p .loki/dashboard
-
-    # Generate HTML
-    generate_dashboard
-
-    # Kill any existing process on the dashboard port
-    if lsof -i :$DASHBOARD_PORT &>/dev/null; then
-        log_step "Killing existing process on port $DASHBOARD_PORT..."
-        lsof -ti :$DASHBOARD_PORT | xargs kill -9 2>/dev/null || true
-        sleep 1
-    fi
-
-    # Start Python HTTP server from .loki/ root so it can serve queue/ and state/
-    log_step "Starting dashboard server..."
-    (
-        cd .loki
-        python3 -m http.server $DASHBOARD_PORT --bind 127.0.0.1 2>&1 | while read line; do
-            echo "[dashboard] $line" >> logs/dashboard.log
-        done
-    ) &
-    DASHBOARD_PID=$!
-
-    sleep 1
-
-    if kill -0 $DASHBOARD_PID 2>/dev/null; then
-        log_info "Dashboard started (PID: $DASHBOARD_PID)"
-        log_info "Dashboard: ${CYAN}http://127.0.0.1:$DASHBOARD_PORT/dashboard/index.html${NC}"
-
-        # Open in browser (macOS)
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            open "http://127.0.0.1:$DASHBOARD_PORT/dashboard/index.html" 2>/dev/null || true
-        fi
-        return 0
-    else
-        log_warn "Dashboard failed to start"
-        DASHBOARD_PID=""
-        return 1
-    fi
+    log_error "The legacy dashboard is disabled because it exposed raw Loki state without authentication."
+    return 1
 }
 
 stop_dashboard() {
@@ -1601,7 +1570,7 @@ run_autonomous() {
         set +e
         # Run Claude with stream-json for real-time output
         # Parse JSON stream, display formatted output, and track agents
-        claude --dangerously-skip-permissions -p "$prompt" \
+        claude -p "$prompt" \
             --output-format stream-json --verbose 2>&1 | \
             tee -a "$log_file" | \
             python3 -u -c '
@@ -1955,7 +1924,7 @@ main() {
 
     # Start web dashboard (if enabled)
     if [ "$ENABLE_DASHBOARD" = "true" ]; then
-        start_dashboard
+        start_dashboard || exit 2
     else
         log_info "Dashboard disabled (LOKI_DASHBOARD=false)"
     fi

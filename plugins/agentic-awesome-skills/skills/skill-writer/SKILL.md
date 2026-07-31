@@ -1,7 +1,7 @@
 ---
 name: skill-writer
 description: Create and improve agent skills following the Agent Skills specification. Use when asked to create, write, or update skills.
-risk: unknown
+risk: critical
 source: community
 ---
 

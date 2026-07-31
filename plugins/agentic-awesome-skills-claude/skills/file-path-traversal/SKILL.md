@@ -6,8 +6,15 @@ source: community
 author: zebbern
 date_added: "2026-02-27"
 ---
+> **⚠️ AUTHORIZED USE ONLY**
+> This skill is for educational purposes or authorized security assessments only.
+> You must have explicit, written permission from the system owner before using this tool.
+> Misuse of this tool is illegal and strictly prohibited.
 
-> AUTHORIZED USE ONLY: Use this skill only for authorized security assessments, defensive validation, or controlled educational environments.
+> **Mandatory confirmation gate**
+> Before any command that probes, exploits, changes, persists on, extracts data from, or attempts credential access against a target, ask for the exact target URL, IP, account, or resource and confirmation of written authorization and permitted scope.
+> Show the exact command(s), explain their expected effect, and wait for explicit confirmation in the current conversation.
+> Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
 
 # File Path Traversal Testing
 

@@ -1,7 +1,7 @@
 ---
 name: apify-brand-reputation-monitoring
 description: "Scrape reviews, ratings, and brand mentions from multiple platforms using Apify Actors."
-risk: unknown
+risk: critical
 source: community
 ---
 

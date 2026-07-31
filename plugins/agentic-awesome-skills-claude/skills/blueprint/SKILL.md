@@ -2,7 +2,7 @@
 name: blueprint
 description: "Turn a one-line objective into a step-by-step construction plan any coding agent can execute cold. Each step has a self-contained context brief — a fresh agent in a new session can pick up any step without reading prior steps."
 category: planning
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-10"
 ---
@@ -53,15 +53,28 @@ Blueprint is for multi-session, multi-agent engineering projects where each step
 
 - **Cold-start execution**: Every step has a self-contained context brief
 - **Adversarial review gate**: Strongest-model review before execution
-- **Zero runtime risk**: Pure markdown — no hooks, no scripts, no executable code
+- **Markdown-first distribution**: The reviewed revision is primarily instructions and templates, but installing or following it can still cause an agent to run commands. Treat the repository as untrusted until inspected.
 - **Plan mutation protocol**: Steps can be split, inserted, skipped with audit trail
 
 ## Installation
 
+Do not clone a moving branch directly into an active skills directory. First ask
+the user to approve network access to the named repository. Then inspect the
+reviewed revision and ask separately before activating it:
+
 ```bash
-mkdir -p ~/.claude/skills
-git clone https://github.com/antbotlab/blueprint.git ~/.claude/skills/blueprint
+review_dir="$(mktemp -d)"
+git clone --filter=blob:none https://github.com/antbotlab/blueprint.git "$review_dir/blueprint"
+git -C "$review_dir/blueprint" checkout --detach 07c5b305cf2d95d584a0d0398c390e839fec5954
+git -C "$review_dir/blueprint" ls-files
+git -C "$review_dir/blueprint" status --short
 ```
+
+Read `SKILL.md` and every bundled file at that exact commit. Check for scripts,
+hooks, symlinks, network calls, credential access, and instructions that request
+commands or elevated permissions. Only after explicit user approval, copy the
+reviewed files into the selected host's skills directory. Re-review a newer
+revision instead of silently updating this pin.
 
 ## Additional Resources
 
@@ -73,3 +86,4 @@ git clone https://github.com/antbotlab/blueprint.git ~/.claude/skills/blueprint
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+- A pinned revision is reproducible, not automatically trustworthy; its contents still require review.

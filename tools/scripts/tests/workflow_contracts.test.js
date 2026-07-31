@@ -174,8 +174,10 @@ const publishWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "publish-npm.yml"),
   "utf8",
 );
-assert.match(publishWorkflow, /name: Verify release identity/);
-assert.match(publishWorkflow, /GITHUB_REF_TYPE" = "tag/);
+assert.match(publishWorkflow, /name: Verify protected release provenance/);
+assert.match(publishWorkflow, /git merge-base --is-ancestor "\$tag_commit" "\$main_commit"/);
+assert.match(publishWorkflow, /ref: main/);
+assert.doesNotMatch(publishWorkflow, /workflow_dispatch/);
 assert.match(publishWorkflow, /expected_tag="v\$\(node -p/);
 
 const pagesWorkflow = fs.readFileSync(

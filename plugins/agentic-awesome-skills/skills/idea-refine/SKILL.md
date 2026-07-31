@@ -1,7 +1,7 @@
 ---
 name: idea-refine
 description: Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on...
-risk: unknown
+risk: critical
 source: https://github.com/addyosmani/agent-skills/tree/main/skills/idea-refine
 source_repo: addyosmani/agent-skills
 source_type: community

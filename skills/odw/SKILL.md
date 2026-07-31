@@ -1,7 +1,7 @@
 ---
 name: odw
 description: Dynamic multi-agent workflows — plan first, then orchestrate parallel agents with adversarial verification via the local odw daemon. Use when the user asks for a "workflow", says "ultracode", or hands you a task spanning many files/items that benefits from parallel agents.
-risk: unknown
+risk: critical
 source: https://github.com/Suraj1235/open-dynamic-workflows/tree/main/packages/antigravity-adapter/skills/odw
 source_repo: Suraj1235/open-dynamic-workflows
 source_type: community

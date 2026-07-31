@@ -1,7 +1,7 @@
 ---
 name: agent-squad
 description: Main agent orchestrator that coordinates a specialized squad of agents
-risk: unknown
+risk: critical
 source: community
 role: Orchestrator / Agent Panel
 phase: all

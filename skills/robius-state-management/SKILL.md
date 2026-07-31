@@ -5,7 +5,7 @@ description: |
   AppState, persistence, theme switch, 状态管理,
   Scope::with_data, save state, load state, serde,
   状态持久化, 主题切换
-risk: unknown
+risk: critical
 source: community
 ---
 

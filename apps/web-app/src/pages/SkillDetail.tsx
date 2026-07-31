@@ -4,7 +4,7 @@ import { SkillStarButton } from '../components/SkillStarButton';
 import { Icon } from '../components/ui/Icon';
 import { useSkills } from '../context/SkillContext';
 import { usePageMeta } from '../hooks/usePageMeta';
-import { buildSkillFallbackMeta, buildSkillMeta, selectTopSkills } from '../utils/seo';
+import { buildSkillFallbackMeta, buildSkillMeta, selectTopSkills, toIndexableRoutePath } from '../utils/seo';
 import { getSkillMarkdownCandidateUrls } from '../utils/publicAssetUrls';
 import { getRelatedSeoLandingPagesForSkill } from '../data/seoLandingPages';
 import remarkGfm from 'remark-gfm';
@@ -336,7 +336,7 @@ export function SkillDetail(): React.ReactElement {
                 {skill.id}
               </code>
               <Link
-                to="/workbench"
+                to={toIndexableRoutePath('/workbench')}
                 className="inline-flex items-center border border-teal-700 px-3 py-2 text-sm font-semibold text-teal-800 transition-colors hover:bg-teal-50 dark:border-teal-400 dark:text-teal-200 dark:hover:bg-teal-950/40"
               >
                 Review Core artifacts
@@ -376,7 +376,7 @@ export function SkillDetail(): React.ReactElement {
               </p>
             </div>
             <Link
-              to="/topics/github-ai-skills-repository"
+              to={toIndexableRoutePath('/topics/github-ai-skills-repository')}
               className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
             >
               GitHub skills guide
@@ -386,7 +386,7 @@ export function SkillDetail(): React.ReactElement {
             {relatedTopicPages.map((page) => (
               <Link
                 key={page.slug}
-                to={`/topics/${page.slug}`}
+                to={toIndexableRoutePath(`/topics/${page.slug}`)}
                 className="rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 transition-colors hover:border-slate-400 dark:border-slate-800 dark:from-slate-950 dark:to-slate-900 dark:hover:border-slate-600"
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">

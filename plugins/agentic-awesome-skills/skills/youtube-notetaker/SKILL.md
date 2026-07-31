@@ -76,7 +76,7 @@ default. **Do not use em dashes (—) or arrows (→) in notes/titles.**
 
 ### 1. Resolve the id and check embeddability
 ```
-scripts/setup.sh "<youtube_url_or_id>"
+bash scripts/setup.sh "<youtube_url_or_id>"
 ```
 Prints the 11-char `YTID`, the scratch dir, the target library path, and whether YouTube
 **embedding is allowed** (oembed 200) or **blocked** (oembed 401, e.g. some university talks).

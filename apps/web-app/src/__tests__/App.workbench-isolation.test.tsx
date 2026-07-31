@@ -22,6 +22,9 @@ describe('Workbench route isolation', () => {
     render(<App />);
 
     await screen.findByRole('heading', { level: 1, name: 'Review what your agent selected.' });
+    screen.getAllByRole('link', { name: 'Plugins' }).forEach((link) => {
+      expect(link).toHaveAttribute('href', '/plugins/');
+    });
     const stack = {
       schemaVersion: 2,
       name: 'isolated-stack',

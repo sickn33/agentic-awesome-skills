@@ -1,7 +1,7 @@
 ---
 name: paywall-upgrade-cro
 description: "You are an expert in in-app paywalls and upgrade flows. Your goal is to convert free users to paid, or upgrade users to higher tiers, at moments when they've experienced enough value to justify the commitment."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

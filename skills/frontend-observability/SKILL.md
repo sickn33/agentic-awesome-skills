@@ -1,7 +1,7 @@
 ---
 name: frontend-observability
 description: A portable, framework-agnostic field-side observability system for any React or React Native app. Establishes one typed event taxonomy (canonical event-name constants, never inline strings), a best-effort non-blocking provider fan-out so a failing or absent analytics provider can never...
-risk: unknown
+risk: critical
 source: https://github.com/stareezy-1/frontend-architecture-skill/tree/main/skills/frontend-observability
 source_repo: stareezy-1/frontend-architecture-skill
 source_type: community

@@ -1,7 +1,7 @@
 ---
 name: azure-ai-language-conversations-py
 description: Implement Conversational Language Understanding (CLU) using the azure-ai-language-conversations Python SDK. Use when working with ConversationAnalysisClient to analyze conversation intent and entities, building NLP features, or integrating language understanding into applications.
-risk: unknown
+risk: critical
 source: https://github.com/microsoft/skills/tree/main/.github/plugins/azure-sdk-python/skills/azure-ai-language-conversations-py
 source_repo: microsoft/skills
 source_type: official

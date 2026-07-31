@@ -1,7 +1,7 @@
 ---
 name: templates
 description: "Project scaffolding templates for new applications. Use when creating new projects from scratch. Contains 12 templates for various tech stacks."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
