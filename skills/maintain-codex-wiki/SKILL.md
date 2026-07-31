@@ -3,7 +3,7 @@ name: maintain-codex-wiki
 description: "Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks."
 category: knowledge-management
 risk: critical
-source: https://github.com/Phelan164/codex-howto/tree/27fb581bd1070b7175e6891a89b046d44a669eab/skills/maintain-codex-wiki
+source: https://github.com/Phelan164/codex-howto/tree/98656ffcfc2ae354594201a4a066640e7260bc0f/skills/maintain-codex-wiki
 source_repo: Phelan164/codex-howto
 source_type: community
 date_added: "2026-07-31"
@@ -11,7 +11,7 @@ author: Phelan164
 tags: [codex, wiki, knowledge-management, provenance, engineering]
 tools: [codex]
 license: MIT
-license_source: https://github.com/Phelan164/codex-howto/blob/27fb581bd1070b7175e6891a89b046d44a669eab/LICENSE
+license_source: https://github.com/Phelan164/codex-howto/blob/98656ffcfc2ae354594201a4a066640e7260bc0f/LICENSE
 ---
 
 # Maintain Codex Wiki
@@ -98,7 +98,9 @@ A revision-bound registered repository `path` is not a working-tree read.
 Validate its normalized repository-relative name, sensitivity, trusted commit,
 and regular-file entry in the pinned Git tree, then read that immutable blob.
 Do not require the path to exist in the current checkout: durable evidence
-remains valid after a later rename or deletion.
+remains valid after a later rename or deletion. Set `GIT_NO_LAZY_FETCH=1` on
+every Git object probe and read so a partial clone cannot contact its promisor
+remote without explicit network authorization.
 
 ## Untrusted Knowledge Content
 
@@ -156,9 +158,12 @@ exist at that commit; or the record cannot be bound to the blob.
 Before classifying a missing or unreachable revision, run
 `git rev-parse --is-shallow-repository`. A shallow checkout may simply omit
 valid older evidence. Report the checkout as incomplete rather than calling the
-source drifted. Fetch or deepen only with explicit network authorization,
-against the configured trusted remote and branch; otherwise ask the maintainer
-for a complete checkout.
+source drifted. A partial clone may likewise omit a required object even when
+the checkout is not shallow; with lazy fetching disabled, report that state as
+an incomplete checkout rather than drift. Fetch missing objects or deepen
+history only with explicit network authorization, against the configured
+trusted remote and branch; otherwise ask the maintainer for a complete
+checkout.
 
 ## Choose One Operation
 
@@ -288,10 +293,11 @@ repository object format with `git rev-parse --show-object-format` and require
 40 hexadecimal characters for SHA-1 or 64 for SHA-256. Require the commit to be
 reachable from a configured trusted branch ref; reject tags. Then read that
 blob from the Git object database instead of the working tree. Detect shallow
-history before classifying a missing or unreachable revision; report an
-incomplete checkout separately and never deepen it without explicit network
-authorization. Source IDs are permanent. Optional `supersedes` values point to
-older registered source IDs.
+history before classifying a missing or unreachable revision. Set
+`GIT_NO_LAZY_FETCH=1` on every Git object probe and read, classify missing
+objects in partial/promisor clones as an incomplete checkout, and never fetch
+or deepen without explicit network authorization. Source IDs are permanent.
+Optional `supersedes` values point to older registered source IDs.
 
 ## Safety and Provenance
 
