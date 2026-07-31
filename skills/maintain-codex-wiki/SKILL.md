@@ -3,7 +3,7 @@ name: maintain-codex-wiki
 description: "Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks."
 category: knowledge-management
 risk: critical
-source: https://github.com/Phelan164/codex-howto/tree/4fe8de12e937ff041d69a933d8ee7c3cb38b9ab4/skills/maintain-codex-wiki
+source: https://github.com/Phelan164/codex-howto/tree/8b746fa8732d5f36440c944e62b9dbbb64830d83/skills/maintain-codex-wiki
 source_repo: Phelan164/codex-howto
 source_type: community
 date_added: "2026-07-31"
@@ -11,7 +11,7 @@ author: Phelan164
 tags: [codex, wiki, knowledge-management, provenance, engineering]
 tools: [codex]
 license: MIT
-license_source: https://github.com/Phelan164/codex-howto/blob/4fe8de12e937ff041d69a933d8ee7c3cb38b9ab4/LICENSE
+license_source: https://github.com/Phelan164/codex-howto/blob/8b746fa8732d5f36440c944e62b9dbbb64830d83/LICENSE
 ---
 
 # Maintain Codex Wiki
@@ -137,10 +137,13 @@ from a repository-configured trusted ref, normally the protected default
 branch and, when explicitly allowed, signed release tags. Do not treat the
 current branch, an arbitrary remote branch, or mere presence in the local
 object database as trust. If trusted refs are not configured or cannot be
-verified, fail closed and ask the maintainer to identify them. Read the blob
-through the Git object database at the recorded revision, never from mutable
-working-tree bytes. Stop and report unverified drift when the revision is
-missing, unresolved, or unreachable from trusted history; the path does not
+verified, fail closed and ask the maintainer to identify them. Configure an
+accepted ref explicitly with
+`git config --local --add codex.wikiTrustedRef <full-ref-name>`; CI must name
+its protected default branch rather than trust the checked-out PR. Read the
+blob through the Git object database at the recorded revision, never from
+mutable working-tree bytes. Stop and report unverified drift when the revision
+is missing, unresolved, or unreachable from trusted history; the path does not
 exist at that commit; or the record cannot be bound to the blob.
 
 ## Choose One Operation
