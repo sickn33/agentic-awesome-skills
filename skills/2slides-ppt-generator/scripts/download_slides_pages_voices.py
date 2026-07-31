@@ -62,7 +62,9 @@ def download_pinned_https(url: str, pinned_ip: str, output_path: Path, maximum_b
     """Download once from the verified IP while preserving TLS SNI/hostname checks."""
     parsed = urlparse(url)
     raw_socket = socket.create_connection((pinned_ip, 443), timeout=30)
-    tls_socket = ssl.create_default_context().wrap_socket(raw_socket, server_hostname=parsed.hostname)
+    tls_context = ssl.create_default_context()
+    tls_context.minimum_version = ssl.TLSVersion.TLSv1_2
+    tls_socket = tls_context.wrap_socket(raw_socket, server_hostname=parsed.hostname)
     request_target = parsed.path or "/"
     if parsed.query:
         request_target += f"?{parsed.query}"
