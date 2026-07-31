@@ -17897,6 +17897,38 @@
     ]
   },
   {
+    "id": "fact-check-x-complete",
+    "path": "skills/fact-check-x-complete",
+    "category": "research",
+    "name": "fact-check-x-complete",
+    "description": "Compare claims from one or more AI answers, verify their citations against public primary sources, and produce an evidence-linked fact-check report without installing a bundled browser runtime.",
+    "risk": "critical",
+    "source": "https://github.com/ASI2030/Fact-Check-X/tree/4dd7eef0452a4c31e4b3b3b0d643c9daeea7fdbe",
+    "date_added": "2026-07-31",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "ASI2030/Fact-Check-X",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/ASI2030/Fact-Check-X/blob/4dd7eef0452a4c31e4b3b3b0d643c9daeea7fdbe/LICENSE",
+    "tags": [
+      "fact-checking",
+      "research",
+      "evidence",
+      "source-verification"
+    ]
+  },
+  {
     "id": "faf-context",
     "path": "skills/faf-context",
     "category": "uncategorized",

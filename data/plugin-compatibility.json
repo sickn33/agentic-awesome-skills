@@ -14731,6 +14731,25 @@
       "runtime_files": []
     },
     {
+      "id": "fact-check-x-complete",
+      "path": "skills/fact-check-x-complete",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "faf-context",
       "path": "skills/faf-context",
       "targets": {
@@ -38371,10 +38390,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1996,
+    "total_skills": 1997,
     "supported": {
-      "codex": 1919,
-      "claude": 1940
+      "codex": 1920,
+      "claude": 1941
     },
     "blocked": {
       "codex": 77,

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-29T17:27:11.000Z",
-  "total": 1996,
+  "total": 1997,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -22133,6 +22133,40 @@
         "positive"
       ],
       "path": "skills/fable-safe-prompt/SKILL.md"
+    },
+    {
+      "id": "fact-check-x-complete",
+      "canonical_id": "fact-check-x-complete",
+      "name": "fact-check-x-complete",
+      "description": "Compare claims from one or more AI answers, verify their citations against public primary sources, and produce an evidence-linked fact-check report without installing a bundled browser runtime.",
+      "category": "research",
+      "risk": "critical",
+      "source": "https://github.com/ASI2030/Fact-Check-X/tree/4dd7eef0452a4c31e4b3b3b0d643c9daeea7fdbe",
+      "source_type": "official",
+      "source_repo": "ASI2030/Fact-Check-X",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/ASI2030/Fact-Check-X/blob/4dd7eef0452a4c31e4b3b3b0d643c9daeea7fdbe/LICENSE",
+      "tags": [
+        "fact-checking",
+        "research",
+        "evidence",
+        "source-verification"
+      ],
+      "triggers": [
+        "fact-checking",
+        "research",
+        "evidence",
+        "source-verification",
+        "fact",
+        "check",
+        "complete",
+        "compare",
+        "claims",
+        "one",
+        "ai",
+        "answers"
+      ],
+      "path": "skills/fact-check-x-complete/SKILL.md"
     },
     {
       "id": "faf-context",
