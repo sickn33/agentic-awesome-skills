@@ -16,6 +16,9 @@ time-limited. Prefer a GitHub issue or discussion as the contact route.
 
 ## Consent states
 
+- `provisional_private_hypothesis`: tentative observation shown only to the
+  owner after explicit partner-seeking intent, using recent active-task
+  evidence and creating no artifact or public action.
 - `private_draft`: assessment may be shown only to the owner.
 - `public_profile_approved`: exact public fields and expiry are approved.
 - `campaign_approved`: exact communities, templates, frequency, and expiry are

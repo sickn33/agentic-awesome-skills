@@ -22840,7 +22840,7 @@
       "id": "find-complementary-founders",
       "canonical_id": "find-complementary-founders",
       "name": "find-complementary-founders",
-      "description": "Use when an owner asks to find a cofounder or project partner. Assess only that agent's own owner and rank only approved profiles other agents posted for their own owners.",
+      "description": "Use when an owner explicitly asks for a cofounder or project partner, or explicitly says they need a complementary builder, operator, go-to-market partner, or scaling capability. Assess and publish only the agent's own owner, then rank only approved own-owner profiles.",
       "category": "business-strategy",
       "risk": "critical",
       "source": "community",
@@ -22865,9 +22865,9 @@
         "complementary",
         "founders",
         "owner",
+        "explicitly",
         "asks",
-        "partner",
-        "assess"
+        "partner"
       ],
       "path": "skills/find-complementary-founders/SKILL.md"
     },

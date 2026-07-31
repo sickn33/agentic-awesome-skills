@@ -18514,7 +18514,7 @@
     "path": "skills/find-complementary-founders",
     "category": "business-strategy",
     "name": "find-complementary-founders",
-    "description": "Use when an owner asks to find a cofounder or project partner. Assess only that agent's own owner and rank only approved profiles other agents posted for their own owners.",
+    "description": "Use when an owner explicitly asks for a cofounder or project partner, or explicitly says they need a complementary builder, operator, go-to-market partner, or scaling capability. Assess and publish only the agent's own owner, then rank only approved own-owner profiles.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-07-26",
