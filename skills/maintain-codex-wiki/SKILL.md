@@ -3,7 +3,7 @@ name: maintain-codex-wiki
 description: "Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks."
 category: knowledge-management
 risk: critical
-source: https://github.com/Phelan164/codex-howto/tree/019f27253866c76ce46ef8db56c71a613626039d/skills/maintain-codex-wiki
+source: https://github.com/Phelan164/codex-howto/tree/cfe92ee9e4aac76ae674404f812b385e77f9f11f/skills/maintain-codex-wiki
 source_repo: Phelan164/codex-howto
 source_type: community
 date_added: "2026-07-31"
@@ -11,7 +11,7 @@ author: Phelan164
 tags: [codex, wiki, knowledge-management, provenance, engineering]
 tools: [codex]
 license: MIT
-license_source: https://github.com/Phelan164/codex-howto/blob/019f27253866c76ce46ef8db56c71a613626039d/LICENSE
+license_source: https://github.com/Phelan164/codex-howto/blob/cfe92ee9e4aac76ae674404f812b385e77f9f11f/LICENSE
 ---
 
 # Maintain Codex Wiki
@@ -120,8 +120,10 @@ name resolution, and apply the same validation to every redirect. If the tool
 cannot enforce destination and redirect validation, do not fetch; report the
 source record instead. Keep fetched content in an ignored cache.
 
-Every registered repository `path` must include the immutable 40-character Git
-commit that contains the evidence. Read that blob through the Git object
+Every registered repository `path` must include the full immutable Git commit
+object ID that contains the evidence. Determine the repository's configured
+hash format with `git rev-parse --show-object-format`; require 40 hexadecimal
+characters for SHA-1 or 64 for SHA-256. Read that blob through the Git object
 database at the recorded revision, never from mutable working-tree bytes. Stop
 and report unverified drift when the revision is missing or unresolved, the
 path does not exist at that commit, or the record cannot be bound to the blob.
@@ -248,9 +250,11 @@ Accept only normalized repository-relative paths: reject absolute paths and
 `..` components, resolve symlinks, and verify the resolved target stays inside
 the repository root before reading. Require the file to be version-controlled
 and reject sensitive paths or content before inspection. Require `revision` to
-be the full immutable Git commit containing the evidence, then read that blob
-from the Git object database instead of the working tree. Source IDs are
-permanent. Optional `supersedes` values point to older registered source IDs.
+be the full immutable Git commit object ID containing the evidence: detect the
+repository object format with `git rev-parse --show-object-format` and require
+40 hexadecimal characters for SHA-1 or 64 for SHA-256. Read that blob from the
+Git object database instead of the working tree. Source IDs are permanent.
+Optional `supersedes` values point to older registered source IDs.
 
 ## Safety and Provenance
 
