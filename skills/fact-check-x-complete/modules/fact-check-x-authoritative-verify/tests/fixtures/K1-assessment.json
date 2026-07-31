@@ -1,7 +1,0 @@
-{
-  "authoritativeFinding": "广州无合同租房提取每人每月最高1400元。",
-  "verdicts": {
-    "dknowc-chat": {"verdict": "supported", "reason": "与深知晓所附官方证据一致", "evidenceIds": ["A1"]},
-    "doubao": {"verdict": "contradicted", "reason": "2000元与官方1400元冲突", "evidenceIds": ["A1"]}
-  }
-}
