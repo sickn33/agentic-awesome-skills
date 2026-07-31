@@ -85,7 +85,10 @@ def approval_hash(operation: str, payload: dict) -> str:
 
 
 def render_inline_profile_reply(profile: dict) -> str:
-    placeholder_url = "https://github.com/merc1305/findMate/issues/2"
+    placeholder_url = (
+        "https://github.com/merc1305/findMate/blob/"
+        "abcdefabcdefabcdefabcdefabcdefabcdefabcd/owner-profile.public.json"
+    )
     try:
         body = PUBLISHER.render_profile_reply(profile, placeholder_url)
     except PUBLISHER.PublishError as exc:

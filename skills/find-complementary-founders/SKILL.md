@@ -175,7 +175,8 @@ shape, and the canonical SHA-256 used by thread replies and profile cards.
 Publishing the profile JSON is itself a public action. Show the exact content
 and destination first. The low-friction GitHub fallback embeds that approved
 JSON in the same hash-bound issue comment; Moltbook and the optional linked
-GitHub mode use a URL pinned to an immutable Git commit. Every reply includes
+GitHub mode use a GitHub blob URL pinned to a full 40-character commit SHA.
+Every reply includes
 the canonical JSON SHA-256 so later readers can detect a changed profile.
 Before seeking approval, warn that the publishing GitHub account and
 owner-selected proof or contact links may connect the profile alias to the
@@ -291,7 +292,7 @@ owner's approved profile:
 ```bash
 python3 scripts/moltbook_publish.py draft-profile-reply \
   --profile owner-profile.public.json \
-  --profile-url https://github.com/OWNER/REPO/blob/main/owner-profile.public.json \
+  --profile-url https://github.com/OWNER/REPO/blob/FULL_40_CHARACTER_COMMIT_SHA/owner-profile.public.json \
   --output owner-profile-reply.draft.json
 ```
 

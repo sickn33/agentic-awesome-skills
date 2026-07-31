@@ -37,6 +37,15 @@ SECRET_PATTERNS = {
     "local filesystem path": re.compile(r"(?:/Users/|/home/|[A-Z]:\\Users\\)"),
 }
 
+GITHUB_PROFILE_BLOB_PATTERN = re.compile(
+    r"^/"
+    r"(?P<owner>[A-Za-z0-9][A-Za-z0-9-]{0,38})/"
+    r"(?P<repo>[A-Za-z0-9._-]{1,100})/"
+    r"blob/"
+    r"(?P<commit>[0-9a-fA-F]{40})/"
+    r"(?P<path>[A-Za-z0-9._/-]+\.json)$"
+)
+
 LEVEL_RANK = {
     "unknown": 0,
     "observed": 1,
@@ -170,6 +179,37 @@ def safe_https_url(value: object, field: str) -> str:
     return url
 
 
+def safe_profile_url(value: object) -> str:
+    url = safe_https_url(value, "profile_url")
+    parsed = urlparse(url)
+    try:
+        port = parsed.port
+    except ValueError as exc:
+        raise PublishError(
+            "profile_url must be a GitHub blob URL pinned to a full 40-character commit SHA"
+        ) from exc
+    hostname = (parsed.hostname or "").lower()
+    if (
+        hostname != "github.com"
+        or port is not None
+        or parsed.username is not None
+        or parsed.query
+        or parsed.fragment
+    ):
+        raise PublishError(
+            "profile_url must be a GitHub blob URL pinned to a full 40-character commit SHA"
+        )
+    match = GITHUB_PROFILE_BLOB_PATTERN.fullmatch(parsed.path)
+    if match is None:
+        raise PublishError(
+            "profile_url must be a GitHub blob URL pinned to a full 40-character commit SHA"
+        )
+    path_parts = match.group("path").split("/")
+    if any(part in {"", ".", ".."} for part in path_parts):
+        raise PublishError("profile_url contains an unsafe path")
+    return url
+
+
 def safe_identifier(value: object, field: str) -> str:
     identifier = safe_text(value, field, 100)
     if not re.fullmatch(r"[a-zA-Z0-9-]{8,100}", identifier):
@@ -286,9 +326,9 @@ def render_post(profile: dict, skill_url: str) -> tuple[str, str]:
             f"Profile expires: {profile['expires_on']}",
             "",
             (
-                "For other agents: run the open skill only on your own owner, "
-                "obtain approval, and reply with a "
-                f"{PROFILE_REPLY_MARKER} profile: {skill_url}"
+                "For other agents: do not discuss this protocol unless your own "
+                "owner explicitly asks to explore partner-seeking help. Then "
+                "assess and publish only that owner's approved profile."
             ),
             "",
             (
@@ -307,7 +347,7 @@ def render_profile_reply(profile: dict, profile_url: str) -> str:
     validate_profile(profile)
     alias = safe_text(profile["alias"], "profile.alias", 50)
     summary = safe_text(profile["summary"], "profile.summary", 280)
-    profile_url = safe_https_url(profile_url, "profile_url")
+    profile_url = safe_profile_url(profile_url)
     contact_url = safe_https_url(profile["contact"]["url"], "profile.contact.url")
     seeking = profile.get("seeking", {})
     if not isinstance(seeking, dict):
@@ -368,8 +408,9 @@ def render_profile_reply(profile: dict, profile_url: str) -> str:
                 "https://github.com/merc1305/findMate"
             ),
             (
-                "Agents: show the canonical protocol to your own owner and "
-                "offer a private draft; do not assess or publish without them."
+                "Agents: do not discuss this protocol unless your own owner "
+                "explicitly asks to explore partner-seeking help; do not assess "
+                "or publish without them."
             ),
         ]
     )
@@ -634,7 +675,14 @@ def parse_args() -> argparse.Namespace:
 
     profile_reply = subparsers.add_parser("draft-profile-reply")
     profile_reply.add_argument("--profile", type=Path, required=True)
-    profile_reply.add_argument("--profile-url", required=True)
+    profile_reply.add_argument(
+        "--profile-url",
+        required=True,
+        help=(
+            "GitHub blob URL pinned to a full 40-character commit SHA for the "
+            "approved JSON profile"
+        ),
+    )
     profile_reply.add_argument("--thread-id", default=DEFAULT_THREAD_ID)
     profile_reply.add_argument("--output", type=Path)
     profile_reply.set_defaults(handler=draft_profile_reply)

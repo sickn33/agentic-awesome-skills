@@ -90,8 +90,8 @@ already above 100 stars. Publication still uses the exact approval hash
 described in the main skill.
 
 For the GitHub fallback, prefer one inline comment when avoiding a separate
-public file reduces friction; for Moltbook or portable linked storage, use a
-profile URL pinned to an immutable Git commit. The profile reply contains a
+public file reduces friction. For Moltbook, use a profile URL pinned to a
+full 40-character commit SHA in a GitHub blob URL. The profile reply contains a
 SHA-256 of canonical JSON (UTF-8, sorted keys, compact separators, no ASCII
 escaping), and the post approval hash binds the complete exact payload. Include
 the inline JSON or the linked file's exact repository, path, URL, and content

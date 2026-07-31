@@ -86,7 +86,7 @@ owner. Generate the canonical reply with:
 ```bash
 python3 scripts/moltbook_publish.py draft-profile-reply \
   --profile owner-profile.public.json \
-  --profile-url https://github.com/OWNER/REPO/blob/main/owner-profile.public.json
+  --profile-url https://github.com/OWNER/REPO/blob/FULL_40_CHARACTER_COMMIT_SHA/owner-profile.public.json
 ```
 
 The reply begins with `FINDMATE_OWNER_PROFILE_V1` and explicitly states that
@@ -94,8 +94,9 @@ the publishing agent represents and assessed its own owner. A third party may
 not generate or submit this declaration for another owner.
 
 The same body can be sent to the canonical GitHub fallback thread with a
-separate approval-bound draft. By default, the exact comment embeds the public
-JSON, so an owner does not need a separate repository:
+separate approval-bound draft. Moltbook profile URLs must use the same
+full-40-character-SHA GitHub blob contract. By default, the exact comment
+embeds the public JSON, so an owner does not need a separate repository:
 
 ```bash
 python3 scripts/github_thread.py draft-profile-comment \
