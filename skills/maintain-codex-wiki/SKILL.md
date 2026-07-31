@@ -3,7 +3,7 @@ name: maintain-codex-wiki
 description: "Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks."
 category: knowledge-management
 risk: critical
-source: https://github.com/Phelan164/codex-howto/tree/8b746fa8732d5f36440c944e62b9dbbb64830d83/skills/maintain-codex-wiki
+source: https://github.com/Phelan164/codex-howto/tree/8933411a3509c4a25a6176f0f15df8097224d0fa/skills/maintain-codex-wiki
 source_repo: Phelan164/codex-howto
 source_type: community
 date_added: "2026-07-31"
@@ -11,7 +11,7 @@ author: Phelan164
 tags: [codex, wiki, knowledge-management, provenance, engineering]
 tools: [codex]
 license: MIT
-license_source: https://github.com/Phelan164/codex-howto/blob/8b746fa8732d5f36440c944e62b9dbbb64830d83/LICENSE
+license_source: https://github.com/Phelan164/codex-howto/blob/8933411a3509c4a25a6176f0f15df8097224d0fa/LICENSE
 ---
 
 # Maintain Codex Wiki
@@ -133,13 +133,13 @@ Every registered repository `path` must include the full immutable Git commit
 object ID that contains the evidence. Determine the repository's configured
 hash format with `git rev-parse --show-object-format`; require 40 hexadecimal
 characters for SHA-1 or 64 for SHA-256. Require that commit to be reachable
-from a repository-configured trusted ref, normally the protected default
-branch and, when explicitly allowed, signed release tags. Do not treat the
-current branch, an arbitrary remote branch, or mere presence in the local
-object database as trust. If trusted refs are not configured or cannot be
-verified, fail closed and ask the maintainer to identify them. Configure an
-accepted ref explicitly with
-`git config --local --add codex.wikiTrustedRef <full-ref-name>`; CI must name
+from a repository-configured trusted branch ref, normally the protected default
+branch. Accept only full `refs/heads/` or `refs/remotes/` names; do not accept
+tags. Do not treat the current branch, an arbitrary remote branch, or mere
+presence in the local object database as trust. If trusted refs are not
+configured or cannot be verified, fail closed and ask the maintainer to
+identify them. Configure an accepted branch explicitly with
+`git config --local --add codex.wikiTrustedRef <full-branch-ref>`; CI must name
 its protected default branch rather than trust the checked-out PR. Read the
 blob through the Git object database at the recorded revision, never from
 mutable working-tree bytes. Stop and report unverified drift when the revision
@@ -271,9 +271,9 @@ and reject sensitive paths or content before inspection. Require `revision` to
 be the full immutable Git commit object ID containing the evidence: detect the
 repository object format with `git rev-parse --show-object-format` and require
 40 hexadecimal characters for SHA-1 or 64 for SHA-256. Require the commit to be
-reachable from a configured trusted ref, then read that blob from the Git
-object database instead of the working tree. Source IDs are permanent. Optional
-`supersedes` values point to older registered source IDs.
+reachable from a configured trusted branch ref; reject tags. Then read that
+blob from the Git object database instead of the working tree. Source IDs are
+permanent. Optional `supersedes` values point to older registered source IDs.
 
 ## Safety and Provenance
 
