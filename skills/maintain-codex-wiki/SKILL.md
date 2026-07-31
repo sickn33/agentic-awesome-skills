@@ -3,7 +3,7 @@ name: maintain-codex-wiki
 description: "Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks."
 category: knowledge-management
 risk: safe
-source: https://github.com/Phelan164/codex-howto/tree/78385b814029d5702cf3f063be935ce6821b79bb/skills/maintain-codex-wiki
+source: https://github.com/Phelan164/codex-howto/tree/3c968f8a6bdd70fd69f3411c6676f524cc21a0ee/skills/maintain-codex-wiki
 source_repo: Phelan164/codex-howto
 source_type: community
 date_added: "2026-07-31"
@@ -11,7 +11,7 @@ author: Phelan164
 tags: [codex, wiki, knowledge-management, provenance, engineering]
 tools: [codex]
 license: MIT
-license_source: https://github.com/Phelan164/codex-howto/blob/78385b814029d5702cf3f063be935ce6821b79bb/LICENSE
+license_source: https://github.com/Phelan164/codex-howto/blob/3c968f8a6bdd70fd69f3411c6676f524cc21a0ee/LICENSE
 ---
 
 # Maintain Codex Wiki
@@ -49,15 +49,19 @@ knowledge/
 └── topics/
 ```
 
-Each wiki page starts with:
+Each wiki page starts with one allowed status: `verified`, `community`,
+`experimental`, or `decision`.
 
 ```markdown
 # Article title
 
-> Status: verified
+> Status: <verified|community|experimental|decision>
 > Last verified: YYYY-MM-DD
 > Sources: `source-id`, `another-source-id`
 ```
+
+Choose the status from the evidence and operation. Capture and Archive pages
+default to `experimental`; never label them `verified` automatically.
 
 Use four source classes:
 
@@ -75,10 +79,13 @@ patterns to test, not product specifications.
 
 1. Read `knowledge/index.md`.
 2. Search `knowledge/` for the subject and its common synonyms.
-3. Read only the relevant pages and registered sources.
-4. Distinguish verified guidance, community practice, experimental results,
+3. Before reading a registered repository `path`, require a normalized
+   repository-relative path, reject absolute paths and `..` components, resolve
+   symlinks, and verify the target remains inside the repository root.
+4. Read only the relevant pages and registered sources.
+5. Distinguish verified guidance, community practice, experimental results,
    and unresolved claims.
-5. Answer with links to wiki pages and state when the wiki has no evidence.
+6. Answer with links to wiki pages and state when the wiki has no evidence.
 
 Query is read-only by default. Do not use model memory to silently fill gaps.
 
@@ -96,15 +103,17 @@ Leave promotion for a separate decision.
 
 ### Ingest
 
-1. Reuse a source ID when it identifies the same material.
-2. Record external metadata rather than committing full external content.
-3. Classify the source and pin a release, commit, or document revision when
+1. Require an explicit request to ingest before changing the registry, pages,
+   index, or log. A general research request remains read-only.
+2. Reuse a source ID when it identifies the same material.
+3. Record external metadata rather than committing full external content.
+4. Classify the source and pin a release, commit, or document revision when
    evidence supports it.
-4. Update every materially affected page.
-5. Preserve disagreements instead of rewriting disputed claims as consensus.
-6. Update the index and append a concise event to the log.
-7. Run deterministic checks and review the diff.
-8. Report unverified claims and prepare a pull request; never push directly to
+5. Update every materially affected page.
+6. Preserve disagreements instead of rewriting disputed claims as consensus.
+7. Update the index and append a concise event to the log.
+8. Run deterministic checks and review the diff.
+9. Report unverified claims and prepare a pull request; never push directly to
    a protected branch.
 
 Compile sources sequentially because the registry, index, and log are shared
@@ -178,8 +187,10 @@ published prose.
 ```
 
 Use `path` instead of `url` for repository evidence and define exactly one.
-Source IDs are permanent. Optional `supersedes` values point to older
-registered source IDs.
+Accept only normalized repository-relative paths: reject absolute paths and
+`..` components, resolve symlinks, and verify the resolved target stays inside
+the repository root before reading. Source IDs are permanent. Optional
+`supersedes` values point to older registered source IDs.
 
 ## Safety and Provenance
 
