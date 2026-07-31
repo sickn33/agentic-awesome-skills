@@ -21965,6 +21965,25 @@
       "runtime_files": []
     },
     {
+      "id": "maintain-codex-wiki",
+      "path": "skills/maintain-codex-wiki",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "make-automation",
       "path": "skills/make-automation",
       "targets": {
@@ -38327,10 +38346,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1994,
+    "total_skills": 1995,
     "supported": {
-      "codex": 1918,
-      "claude": 1939
+      "codex": 1919,
+      "claude": 1940
     },
     "blocked": {
       "codex": 76,

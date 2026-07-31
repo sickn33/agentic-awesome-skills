@@ -27347,6 +27347,39 @@
     }
   },
   {
+    "id": "maintain-codex-wiki",
+    "path": "skills/maintain-codex-wiki",
+    "category": "knowledge-management",
+    "name": "maintain-codex-wiki",
+    "description": "Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks.",
+    "risk": "critical",
+    "source": "https://github.com/Phelan164/codex-howto/tree/47f36fd8aacfe6f222935e5c2e1d972ef06dcb99/skills/maintain-codex-wiki",
+    "date_added": "2026-07-31",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "Phelan164/codex-howto",
+    "license": "MIT",
+    "license_source": "https://github.com/Phelan164/codex-howto/blob/47f36fd8aacfe6f222935e5c2e1d972ef06dcb99/LICENSE",
+    "tags": [
+      "codex",
+      "wiki",
+      "knowledge-management",
+      "provenance",
+      "engineering"
+    ]
+  },
+  {
     "id": "make-automation",
     "path": "skills/make-automation",
     "category": "automation",

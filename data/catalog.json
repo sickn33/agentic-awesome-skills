@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-29T17:27:11.000Z",
-  "total": 1994,
+  "total": 1995,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -33149,6 +33149,41 @@
         "inspection"
       ],
       "path": "skills/mailtrap-testing-with-sandbox/SKILL.md"
+    },
+    {
+      "id": "maintain-codex-wiki",
+      "canonical_id": "maintain-codex-wiki",
+      "name": "maintain-codex-wiki",
+      "description": "Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks.",
+      "category": "knowledge-management",
+      "risk": "critical",
+      "source": "https://github.com/Phelan164/codex-howto/tree/47f36fd8aacfe6f222935e5c2e1d972ef06dcb99/skills/maintain-codex-wiki",
+      "source_type": "community",
+      "source_repo": "Phelan164/codex-howto",
+      "license": "MIT",
+      "license_source": "https://github.com/Phelan164/codex-howto/blob/47f36fd8aacfe6f222935e5c2e1d972ef06dcb99/LICENSE",
+      "tags": [
+        "codex",
+        "wiki",
+        "knowledge-management",
+        "provenance",
+        "engineering"
+      ],
+      "triggers": [
+        "codex",
+        "wiki",
+        "knowledge-management",
+        "provenance",
+        "engineering",
+        "maintain",
+        "review",
+        "first",
+        "citation",
+        "aware",
+        "queries",
+        "explicit"
+      ],
+      "path": "skills/maintain-codex-wiki/SKILL.md"
     },
     {
       "id": "make-automation",
