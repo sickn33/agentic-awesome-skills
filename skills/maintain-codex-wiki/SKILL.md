@@ -3,7 +3,7 @@ name: maintain-codex-wiki
 description: "Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks."
 category: knowledge-management
 risk: critical
-source: https://github.com/Phelan164/codex-howto/tree/f1414a6f1c75eee251c5f544b61f28d4698af597/skills/maintain-codex-wiki
+source: https://github.com/Phelan164/codex-howto/tree/27fb581bd1070b7175e6891a89b046d44a669eab/skills/maintain-codex-wiki
 source_repo: Phelan164/codex-howto
 source_type: community
 date_added: "2026-07-31"
@@ -11,7 +11,7 @@ author: Phelan164
 tags: [codex, wiki, knowledge-management, provenance, engineering]
 tools: [codex]
 license: MIT
-license_source: https://github.com/Phelan164/codex-howto/blob/f1414a6f1c75eee251c5f544b61f28d4698af597/LICENSE
+license_source: https://github.com/Phelan164/codex-howto/blob/27fb581bd1070b7175e6891a89b046d44a669eab/LICENSE
 ---
 
 # Maintain Codex Wiki
@@ -150,8 +150,15 @@ identify them. Configure an accepted branch explicitly with
 its protected default branch rather than trust the checked-out PR. Read the
 blob through the Git object database at the recorded revision, never from
 mutable working-tree bytes. Stop and report unverified drift when the revision
-is missing, unresolved, or unreachable from trusted history; the path does not
+is unreachable from trusted history in a complete checkout; the path does not
 exist at that commit; or the record cannot be bound to the blob.
+
+Before classifying a missing or unreachable revision, run
+`git rev-parse --is-shallow-repository`. A shallow checkout may simply omit
+valid older evidence. Report the checkout as incomplete rather than calling the
+source drifted. Fetch or deepen only with explicit network authorization,
+against the configured trusted remote and branch; otherwise ask the maintainer
+for a complete checkout.
 
 ## Choose One Operation
 
@@ -280,8 +287,11 @@ be the full immutable Git commit object ID containing the evidence: detect the
 repository object format with `git rev-parse --show-object-format` and require
 40 hexadecimal characters for SHA-1 or 64 for SHA-256. Require the commit to be
 reachable from a configured trusted branch ref; reject tags. Then read that
-blob from the Git object database instead of the working tree. Source IDs are
-permanent. Optional `supersedes` values point to older registered source IDs.
+blob from the Git object database instead of the working tree. Detect shallow
+history before classifying a missing or unreachable revision; report an
+incomplete checkout separately and never deepen it without explicit network
+authorization. Source IDs are permanent. Optional `supersedes` values point to
+older registered source IDs.
 
 ## Safety and Provenance
 
