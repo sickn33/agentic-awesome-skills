@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-29T17:27:11.000Z
 
-Total skills: 1994
+Total skills: 1995
 
 ## agent-behavior (5)
 
@@ -509,7 +509,7 @@ Total skills: 1994
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
-| `find-complementary-founders` | Use when an owner asks to find a cofounder or project partner. Assess only that agent's own owner and rank only approved profiles other agents posted for the... | critical | merc1305/findMate | cofounder, founder-matching, collaboration, privacy, agent-skills | cofounder, founder-matching, collaboration, privacy, agent-skills, find, complementary, founders, owner, asks, partner, assess |
+| `find-complementary-founders` | Use when an owner explicitly asks for a cofounder or project partner, or explicitly says they need a complementary builder, operator, go-to-market partner, o... | critical | merc1305/findMate | cofounder, founder-matching, collaboration, privacy, agent-skills | cofounder, founder-matching, collaboration, privacy, agent-skills, find, complementary, founders, owner, explicitly, asks, partner |
 | `kotler-macro-analyzer` | Professional PESTEL/SWOT analysis agent based on Kotler's methodology for strategic market audits. | safe | self | marketing, economics, strategy, kotler, pestel | marketing, economics, strategy, kotler, pestel, macro, analyzer, professional, swot, analysis, agent, methodology |
 | `osterwalder-canvas-architect` | Iterative consultant agent for building and validating logically consistent 9-block Business Model Canvases. | safe | self | business-model, osterwalder, strategy, bmc | business-model, osterwalder, strategy, bmc, canvas, architect, iterative, consultant, agent, building, validating, logically |
 
@@ -1444,10 +1444,11 @@ Total skills: 1994
 | `travel-health-analyzer` | 分析旅行健康数据、评估目的地健康风险、提供疫苗接种建议、生成多语言紧急医疗信息卡片。支持WHO/CDC数据集成的专业级旅行健康风险评估。 | critical | community | travel, health, analyzer | travel, health, analyzer, who, cdc |
 | `weightloss-analyzer` | 分析减肥数据、计算代谢率、追踪能量缺口、管理减肥阶段 | safe | community | weightloss, analyzer | weightloss, analyzer |
 
-## knowledge-management (1)
+## knowledge-management (2)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `maintain-codex-wiki` | Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks. | critical | Phelan164/codex-howto | codex, wiki, knowledge-management, provenance, engineering | codex, wiki, knowledge-management, provenance, engineering, maintain, review, first, citation, aware, queries, explicit |
 | `wiki-builder` | Create and maintain reusable research wikis with source provenance, configurable structure, and local markdown outputs. | safe | dair-ai/dair-academy-plugins | dair-academy, ai, workflow | dair-academy, ai, workflow, wiki, builder, maintain, reusable, research, wikis, source, provenance, configurable |
 
 ## legal (8)

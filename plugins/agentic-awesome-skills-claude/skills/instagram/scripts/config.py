@@ -6,20 +6,38 @@ Importado por todos os outros scripts.
 """
 from __future__ import annotations
 
+import os
+import shutil
 from pathlib import Path
 from typing import Any, Dict
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 ROOT_DIR = Path(__file__).parent.parent
 SCRIPTS_DIR = ROOT_DIR / "scripts"
-DATA_DIR = ROOT_DIR / "data"
+LEGACY_DATA_DIR = ROOT_DIR / "data"
+DATA_DIR = Path(os.environ.get(
+    "AAS_INSTAGRAM_DATA_DIR",
+    Path.home() / ".local" / "share" / "agentic-awesome-skills" / "instagram",
+)).expanduser()
 EXPORTS_DIR = DATA_DIR / "exports"
 STATIC_DIR = ROOT_DIR / "static"
 DB_PATH = DATA_DIR / "instagram.db"
 
-# Garante que diretórios existem
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-EXPORTS_DIR.mkdir(parents=True, exist_ok=True)
+# Tokens and app secrets are stored in the SQLite database. Keep every newly
+# created database, journal, and sidecar private, and migrate legacy state once.
+os.umask(0o077)
+if LEGACY_DATA_DIR.exists() and LEGACY_DATA_DIR != DATA_DIR and not DATA_DIR.exists():
+    DATA_DIR.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    shutil.move(str(LEGACY_DATA_DIR), str(DATA_DIR))
+    print(f"AVISO: dados sensiveis do Instagram migrados para {DATA_DIR}")
+for directory in (DATA_DIR.parent.parent, DATA_DIR.parent, DATA_DIR, EXPORTS_DIR):
+    directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+    try:
+        directory.chmod(0o700)
+    except OSError:
+        pass
+if DB_PATH.exists() and not DB_PATH.is_symlink():
+    DB_PATH.chmod(0o600)
 
 # ── Instagram Graph API ───────────────────────────────────────────────────────
 API_VERSION = "v21.0"

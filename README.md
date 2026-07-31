@@ -1,4 +1,4 @@
-<!-- registry-sync: version=15.7.0; skills=1994; stars=44128; updated_at=2026-07-29T17:27:11+00:00 -->
+<!-- registry-sync: version=15.7.0; skills=1995; stars=44128; updated_at=2026-07-29T17:27:11+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **Local, agent-owned skill stacks for coding agents—from complete catalog access to a reproducible, reviewable plan.**
@@ -76,7 +76,7 @@ Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob
 - **Approval before writes**: the durable artifacts are an approved stack and immutable plan, not an opaque one-shot install.
 - **Installable, not just inspirational**: use the compatible legacy installer or plugin distributions when direct delivery is the right path.
 - **Built for major agent workflows**: Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, Kiro, OpenCode, Copilot, and more.
-- **Broad coverage with real utility**: 1,994+ skills across development, testing, security, infrastructure, product, and marketing.
+- **Broad coverage with real utility**: 1,995+ skills across development, testing, security, infrastructure, product, and marketing.
 - **Inspect before installing**: the hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) reviews agent-produced stack manifests and immutable plans without browser-side installation.
 - **Focused delivery remains available**: specialized plugins package proven sets for web, security, data, docs, DevOps, QA, OSS, or agent/MCP workflows.
 - **Useful whether you want breadth or curation**: install the full catalog, choose a specialized plugin, start with bundles, or compare alternatives before installing.
@@ -94,7 +94,7 @@ Direct file search can find candidate prose, but it leaves the result in the con
 - [Choose Your Tool](#choose-your-tool)
 - [Quick FAQ](#quick-faq)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 1,994+ Skills](#browse-1994-skills)
+- [Browse 1,995+ Skills](#browse-1995-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Support the Project](#support-the-project)
@@ -115,11 +115,11 @@ Use direct installation when your host does not yet have a native AAS Core adapt
 - **Full library install** when you want every skill available in a local skills directory.
 - **Bundles and workflows** when you want role-based recommendations or ordered execution playbooks.
 
-### Full library install
+### Direct skill install
 
 ```bash
-# Default: ~/.agents/skills (Antigravity 2.0 global). Use --path for other locations.
-npx agentic-awesome-skills
+# Antigravity: preview an exact, agent-selected set before writing.
+npx agentic-awesome-skills --antigravity --skills brainstorming,systematic-debugging --dry-run
 
 # Antigravity CLI slash commands (agy): ~/.gemini/antigravity-cli/skills/<skill>/SKILL.md
 npx agentic-awesome-skills --agy
@@ -127,15 +127,34 @@ npx agentic-awesome-skills --agy
 
 The npm installer uses a shallow, release-pinned clone by default so first-run installs stay lighter than a full repository history checkout while matching the published npm package version. Use `--tag main` only when you intentionally want the current repository tip.
 
-For backward compatibility, running the installer without selectors installs the
-entire catalog. The CLI now prints the catalog's risk summary first: a full
-install includes `unknown`, `critical`, and authorized-use-only `offensive`
+Antigravity watches `~/.agents/skills` and may load enough installed instructions
+to exhaust its context, slow startup, trigger truncation errors, or enter a crash
+loop. For that target, the installer stops before cloning or writing unless you
+provide `--skills`, a metadata filter, or the explicit `--all` override. The bare
+`npx agentic-awesome-skills` command uses the same protected Antigravity target.
+
+The recommended flow is to ask Codex or Claude with the read-only AAS Core MCP
+configured to inspect the project, search the complete catalog, and choose exact
+skill IDs. AAS MCP selects and validates IDs but does not install them; the agent
+or user then previews the direct installation with the command above and repeats
+it without `--dry-run` after review.
+
+Other direct-install targets retain the legacy-compatible full-catalog behavior
+when no selectors are supplied. The CLI prints the catalog's risk summary first:
+a full install includes `critical` and authorized-use-only `offensive`
 instructions. Installation copies files; it does not execute their commands,
 but an agent may act on an installed skill later. Prefer an exact reviewed set:
 
 ```bash
 npx agentic-awesome-skills audit --skills brainstorming,backend-dev-guidelines
 npx agentic-awesome-skills --skills brainstorming,backend-dev-guidelines --dry-run
+```
+
+If you deliberately accept the context and crash-loop risk, the complete
+Antigravity catalog remains available through explicit consent:
+
+```bash
+npx agentic-awesome-skills --antigravity --all
 ```
 
 The audit reads the selected skill directories without executing them and
@@ -213,7 +232,7 @@ Use the same repository, but install or invoke it in the way your host expects.
 | Gemini CLI     | `npx agentic-awesome-skills --gemini`                              | `Use brainstorming to plan a feature`                |
 | Codex CLI      | [AAS Core local MCP preview](docs/users/codex-cli-skills.md) or `npx agentic-awesome-skills --codex` | Ask Codex to choose and compose an AAS stack |
 | Autohand Code  | `npx agentic-awesome-skills --path ~/.autohand/skills` or `--path .autohand/skills` | `Use brainstorming to plan a feature`                |
-| Antigravity IDE | `npx agentic-awesome-skills --antigravity`                        | `Use @brainstorming to plan a feature`               |
+| Antigravity IDE | `npx agentic-awesome-skills --antigravity --skills <ids> --dry-run` | Ask an MCP-enabled agent to choose exact IDs first |
 | Antigravity CLI (`agy`) | `npx agentic-awesome-skills --agy`                        | `/brainstorming help me plan a feature`              |
 | Kiro CLI       | `npx agentic-awesome-skills --kiro`                                | `Use brainstorming to plan a feature`                |
 | Kiro IDE       | `npx agentic-awesome-skills --path ~/.kiro/skills`                 | `Use @brainstorming to plan a feature`               |
@@ -244,7 +263,11 @@ The supported path covers complete local catalog search and inspection, agent-ow
 
 For AAS Core, follow the [preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v15.7.0/docs/users/aas-core.md) and use only a package release whose notes explicitly state that it includes Core. Release 14.6.0 predates Core; Core-capable releases begin with the 15.x line.
 
-For direct skill distribution, run `npx agentic-awesome-skills` for the default full-library install. Use a tool-specific flag such as `--codex`, `--cursor`, `--gemini`, `--claude`, or `--antigravity` when you want the legacy installer to place skills in the directory your assistant already watches.
+For direct skill distribution, use a tool-specific flag such as `--codex`,
+`--cursor`, `--gemini`, or `--claude` to place skills in the directory your
+assistant watches. The default target is Antigravity; it requires `--skills`, a
+metadata filter, or explicit `--all` consent before cloning or writing because a
+full watched catalog can exhaust context or trigger a crash loop.
 
 For Autohand Code, use the installer with a custom path:
 
@@ -316,7 +339,7 @@ Remove `--dry-run` only after reviewing the install, update, and removal plan. U
 
 The hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) imports and reviews AAS Core stack manifests and immutable plans in browser memory. It does not access the filesystem, generate an approved plan, or install skills.
 
-## Browse 1,994+ Skills
+## Browse 1,995+ Skills
 
 Use the root repo as a landing page, then jump into the deeper surface that matches your intent.
 
@@ -470,6 +493,7 @@ Key source families include:
 - **[maleksaadi0109/hyprfedora](https://github.com/maleksaadi0109/hyprfedora)**: Source for the `fedora-hyprland-installer` skill - GPU-aware Fedora Hyprland installation, configuration, verification, repair, and removal workflows (MIT).
 - **[merc1305/findMate](https://github.com/merc1305/findMate)**: Source for the `find-complementary-founders` skill - private-first own-owner assessment, approved expiring profiles, and evidence-backed human founder matching (MIT).
 - **[provencher/codex-skills](https://github.com/provencher/codex-skills)**: Source for the `orchestrate` skill - focused Codex multi-agent delegation with non-overlapping ownership, coordinator integration, and user-held approval gates (MIT).
+- **[Phelan164/codex-howto](https://github.com/Phelan164/codex-howto)**: Source for the `maintain-codex-wiki` skill - review-first engineering knowledge with provenance, explicit capture and promotion, and deterministic structural checks (MIT).
 - **[0xsarwagya/ontoly](https://github.com/0xsarwagya/ontoly)**: Source for the `ontoly-software-graph` skill - deterministic TypeScript software graphs, MCP-backed architecture review, request tracing, impact analysis, and dependency analysis (MIT).
 - [amElnagdy/guard-skills](https://github.com/amElnagdy/guard-skills) — Code Quality & Testing Guard Skills (by amElnagdy)
 

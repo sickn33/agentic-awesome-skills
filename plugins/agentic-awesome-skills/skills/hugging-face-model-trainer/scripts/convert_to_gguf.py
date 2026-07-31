@@ -47,6 +47,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 from huggingface_hub import HfApi
 import subprocess
+import tempfile
 
 
 def check_system_dependencies():
@@ -130,6 +131,14 @@ def env_flag(name):
 print("🔄 GGUF Conversion Script")
 print("=" * 60)
 
+# Every run receives a private, unpredictable workspace. Keeping the
+# TemporaryDirectory object alive until process exit also guarantees cleanup.
+WORKSPACE = tempfile.TemporaryDirectory(prefix="aas-gguf-")
+WORK_ROOT = WORKSPACE.name
+MERGED_DIR = os.path.join(WORK_ROOT, "merged-model")
+LLAMA_DIR = os.path.join(WORK_ROOT, "llama.cpp")
+GGUF_OUTPUT_DIR = os.path.join(WORK_ROOT, "gguf-output")
+
 # Check system dependencies first
 if not check_system_dependencies():
     print("\n❌ Please install the missing system dependencies and try again.")
@@ -194,7 +203,7 @@ except Exception as e:
 
 # Step 2: Save merged model temporarily
 print("\n💾 Step 2: Saving merged model...")
-merged_dir = "/tmp/merged_model"
+merged_dir = MERGED_DIR
 try:
     merged_model.save_pretrained(merged_dir, safe_serialization=True)
     tokenizer.save_pretrained(merged_dir)
@@ -208,13 +217,13 @@ print("\n📥 Step 3: Setting up llama.cpp for GGUF conversion...")
 
 # Clone llama.cpp repository
 if not run_command(
-    ["git", "clone", "https://github.com/ggerganov/llama.cpp.git", "/tmp/llama.cpp"],
+    ["git", "clone", "https://github.com/ggerganov/llama.cpp.git", LLAMA_DIR],
     "Cloning llama.cpp repository"
 ):
     print("   Trying alternative clone method...")
     # Try shallow clone
     if not run_command(
-        ["git", "clone", "--depth", "1", "https://github.com/ggerganov/llama.cpp.git", "/tmp/llama.cpp"],
+        ["git", "clone", "--depth", "1", "https://github.com/ggerganov/llama.cpp.git", LLAMA_DIR],
         "Cloning llama.cpp (shallow)"
     ):
         sys.exit(1)
@@ -222,7 +231,7 @@ if not run_command(
 # Install Python dependencies
 print("   Installing Python dependencies...")
 if not run_command(
-    ["pip", "install", "-r", "/tmp/llama.cpp/requirements.txt"],
+    ["pip", "install", "-r", os.path.join(LLAMA_DIR, "requirements.txt")],
     "Installing llama.cpp requirements"
 ):
     print("   ⚠️  Some requirements may already be installed")
@@ -235,10 +244,10 @@ if not run_command(
 
 # Step 4: Convert to GGUF (FP16)
 print("\n🔄 Step 4: Converting to GGUF format (FP16)...")
-gguf_output_dir = "/tmp/gguf_output"
+gguf_output_dir = GGUF_OUTPUT_DIR
 os.makedirs(gguf_output_dir, exist_ok=True)
 
-convert_script = "/tmp/llama.cpp/convert_hf_to_gguf.py"
+convert_script = os.path.join(LLAMA_DIR, "convert_hf_to_gguf.py")
 model_name = safe_filename_component(ADAPTER_MODEL.split('/')[-1], "ADAPTER_MODEL repo name")
 gguf_file = f"{gguf_output_dir}/{model_name}-f16.gguf"
 
@@ -262,11 +271,12 @@ print("\n⚙️  Step 5: Creating quantized versions...")
 
 # Build quantize tool using CMake (more reliable than make)
 print("   Building quantize tool with CMake...")
-os.makedirs("/tmp/llama.cpp/build", exist_ok=True)
+build_dir = os.path.join(LLAMA_DIR, "build")
+os.makedirs(build_dir, exist_ok=True)
 
 # Configure with CMake
 if not run_command(
-    ["cmake", "-B", "/tmp/llama.cpp/build", "-S", "/tmp/llama.cpp",
+    ["cmake", "-B", build_dir, "-S", LLAMA_DIR,
      "-DGGML_CUDA=OFF"],
     "Configuring with CMake"
 ):
@@ -275,7 +285,7 @@ if not run_command(
 
 # Build just the quantize tool
 if not run_command(
-    ["cmake", "--build", "/tmp/llama.cpp/build", "--target", "llama-quantize", "-j", "4"],
+    ["cmake", "--build", build_dir, "--target", "llama-quantize", "-j", "4"],
     "Building llama-quantize"
 ):
     print("   ❌ Build failed!")
@@ -284,7 +294,7 @@ if not run_command(
 print("   ✅ Quantize tool built")
 
 # Use the CMake build output path
-quantize_bin = "/tmp/llama.cpp/build/bin/llama-quantize"
+quantize_bin = os.path.join(build_dir, "bin", "llama-quantize")
 
 # Common quantization formats
 quant_formats = [

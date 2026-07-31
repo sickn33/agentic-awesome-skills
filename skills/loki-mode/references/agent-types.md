@@ -107,14 +107,14 @@ Loki Mode has 37 predefined agent types organized into 7 specialized swarms. The
 ```bash
 # Option 1: Sequential (simple, reliable)
 for agent in frontend backend database; do
-  claude -p "Act as $agent agent..." --dangerously-skip-permissions
+  claude -p "Act as $agent agent..."
 done
 
 # Option 2: Parallel via tmux (complex, faster)
 tmux new-session -d -s loki-pool
 for i in {1..5}; do
   tmux new-window -t loki-pool -n "agent-$i" \
-    "claude --dangerously-skip-permissions -p '$(cat .loki/prompts/agent-$i.md)'"
+    "claude -p '$(cat .loki/prompts/agent-$i.md)'"
 done
 
 # Option 3: Role switching (recommended)

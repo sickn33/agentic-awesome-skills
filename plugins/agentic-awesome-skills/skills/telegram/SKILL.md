@@ -379,7 +379,7 @@ app = Flask(__name__)
 TOKEN = "SEU_TOKEN"
 BASE = f"https://api.telegram.org/bot{TOKEN}"
 
-@app.route(f"/webhook/{TOKEN}", methods=["POST"])
+@app.route("/webhook", methods=["POST"])
 def webhook():
     update = request.get_json()
     if "message" in update and "text" in update["message"]:
@@ -394,7 +394,7 @@ def webhook():
 ## Registrar Webhook
 
 requests.post(f"{BASE}/setWebhook", json={
-    "url": "https://seu-dominio.com/webhook/" + TOKEN,
+    "url": "https://seu-dominio.com/webhook",
     "allowed_updates": ["message", "callback_query"],
     "secret_token": "seu_secret_seguro_aqui"
 })

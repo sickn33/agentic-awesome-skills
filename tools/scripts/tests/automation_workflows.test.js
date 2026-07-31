@@ -414,6 +414,16 @@ assert.match(
   /run: npm audit --audit-level=high/,
   "npm publish workflow should block on high-severity npm audit findings",
 );
+assert.doesNotMatch(
+  publishWorkflow,
+  /workflow_dispatch/,
+  "npm publish workflow must not expose a manual provenance bypass",
+);
+assert.match(
+  publishWorkflow,
+  /ref: main[\s\S]*git merge-base --is-ancestor "\$tag_commit" "\$main_commit"[\s\S]*git checkout --detach "\$tag_commit"/,
+  "npm publish workflow must verify the release tag against protected main before checking out tag-controlled code",
+);
 assert.match(
   publishWorkflow,
   /run: npm run app:install/,
