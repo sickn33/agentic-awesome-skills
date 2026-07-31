@@ -3,7 +3,7 @@ name: maintain-codex-wiki
 description: "Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks."
 category: knowledge-management
 risk: critical
-source: https://github.com/Phelan164/codex-howto/tree/98656ffcfc2ae354594201a4a066640e7260bc0f/skills/maintain-codex-wiki
+source: https://github.com/Phelan164/codex-howto/tree/6f2ebdac8d580e970da1e69cc992f4f80c70eded/skills/maintain-codex-wiki
 source_repo: Phelan164/codex-howto
 source_type: community
 date_added: "2026-07-31"
@@ -11,7 +11,7 @@ author: Phelan164
 tags: [codex, wiki, knowledge-management, provenance, engineering]
 tools: [codex]
 license: MIT
-license_source: https://github.com/Phelan164/codex-howto/blob/98656ffcfc2ae354594201a4a066640e7260bc0f/LICENSE
+license_source: https://github.com/Phelan164/codex-howto/blob/6f2ebdac8d580e970da1e69cc992f4f80c70eded/LICENSE
 ---
 
 # Maintain Codex Wiki
@@ -84,7 +84,8 @@ file inspected while capturing new evidence:
 1. require a normalized repository-relative path;
 2. reject absolute paths and `..` components;
 3. resolve symlinks;
-4. for an existing read or update target, require a regular file and verify the
+4. for an existing read or update target, reject a symlink at the target or any
+   parent below the repository root, require a regular file, and verify the
    resolved target remains inside the repository root; and
 5. for a new page, require a nonexistent target under an existing,
    repository-contained directory, reject symlinked parents and name
@@ -100,7 +101,9 @@ and regular-file entry in the pinned Git tree, then read that immutable blob.
 Do not require the path to exist in the current checkout: durable evidence
 remains valid after a later rename or deletion. Set `GIT_NO_LAZY_FETCH=1` on
 every Git object probe and read so a partial clone cannot contact its promisor
-remote without explicit network authorization.
+remote without explicit network authorization. Also set
+`GIT_NO_REPLACE_OBJECTS=1` so local replacement refs cannot substitute
+different commits or blobs for recorded object IDs.
 
 ## Untrusted Knowledge Content
 
@@ -294,10 +297,11 @@ repository object format with `git rev-parse --show-object-format` and require
 reachable from a configured trusted branch ref; reject tags. Then read that
 blob from the Git object database instead of the working tree. Detect shallow
 history before classifying a missing or unreachable revision. Set
-`GIT_NO_LAZY_FETCH=1` on every Git object probe and read, classify missing
-objects in partial/promisor clones as an incomplete checkout, and never fetch
-or deepen without explicit network authorization. Source IDs are permanent.
-Optional `supersedes` values point to older registered source IDs.
+`GIT_NO_LAZY_FETCH=1` and `GIT_NO_REPLACE_OBJECTS=1` on every Git object probe
+and read, classify missing objects in partial/promisor clones as an incomplete
+checkout, and never fetch or deepen without explicit network authorization.
+Source IDs are permanent. Optional `supersedes` values point to older registered
+source IDs.
 
 ## Safety and Provenance
 
