@@ -19,7 +19,7 @@ Loki Mode has **unique differentiation** in business operations automation but f
 | **SWE-bench Score** | **99.67% patch gen (299/300)** | Unknown | Unknown | Unknown | Unknown | 15% complex |
 | **Full SDLC** | Yes (8 phases) | Yes | Partial | Partial | No | Partial |
 | **Business Ops** | **Yes (8 agents)** | No | No | No | No | No |
-| **Enterprise Security** | `--dangerously-skip-permissions` | MCP sandboxed | Sandboxed | Audit logs, RBAC | Staged autonomy | Sandboxed |
+| **Enterprise Security** | Normal permission prompts | MCP sandboxed | Sandboxed | Audit logs, RBAC | Staged autonomy | Sandboxed |
 | **Cross-Project Learning** | No | AgentDB | No | No | No | Limited |
 | **Observability** | Dashboard + STATUS.txt | Real-time tracing | Logs | Full tracing | Built-in | Full |
 | **Pricing** | Free (OSS) | Free (OSS) | Free (OSS) | $25+/mo | $20-400/mo | $20-500/mo |
@@ -235,7 +235,7 @@ Loki Mode has **unique differentiation** in business operations automation but f
 - **Next:** Run full SWE-bench harness for resolve rate validation
 
 ### Priority 2: Security Model (Critical for Enterprise)
-- **Gap:** Relies on `--dangerously-skip-permissions`
+- **Current posture:** Normal permission prompts remain enabled; advertised sandbox/path controls fail closed until implemented.
 - **Impact:** Enterprise adoption blocked
 - **Solution:** Implement sandbox mode, staged autonomy, audit logs
 

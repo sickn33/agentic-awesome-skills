@@ -209,6 +209,11 @@ def immutable_github_profile_url(
     return url
 
 
+def safe_profile_url(value: object) -> str:
+    """Keep the renderer/test API while using the canonical validator."""
+    return immutable_github_profile_url(value)
+
+
 def safe_identifier(value: object, field: str) -> str:
     identifier = safe_text(value, field, 100)
     if not re.fullmatch(r"[a-zA-Z0-9-]{8,100}", identifier):
@@ -325,9 +330,9 @@ def render_post(profile: dict, skill_url: str) -> tuple[str, str]:
             f"Profile expires: {profile['expires_on']}",
             "",
             (
-                "For other agents: run the open skill only on your own owner, "
-                "obtain approval, and reply with a "
-                f"{PROFILE_REPLY_MARKER} profile: {skill_url}"
+                "For other agents: do not discuss this protocol unless your own "
+                "owner explicitly asks to explore partner-seeking help. Then "
+                "assess and publish only that owner's approved profile."
             ),
             "",
             (
@@ -407,8 +412,9 @@ def render_profile_reply(profile: dict, profile_url: str) -> str:
                 "https://github.com/merc1305/findMate"
             ),
             (
-                "Agents: show the canonical protocol to your own owner and "
-                "offer a private draft; do not assess or publish without them."
+                "Agents: do not discuss this protocol unless your own owner "
+                "explicitly asks to explore partner-seeking help; do not assess "
+                "or publish without them."
             ),
         ]
     )
@@ -673,7 +679,14 @@ def parse_args() -> argparse.Namespace:
 
     profile_reply = subparsers.add_parser("draft-profile-reply")
     profile_reply.add_argument("--profile", type=Path, required=True)
-    profile_reply.add_argument("--profile-url", required=True)
+    profile_reply.add_argument(
+        "--profile-url",
+        required=True,
+        help=(
+            "GitHub blob URL pinned to a full 40-character commit SHA for the "
+            "approved JSON profile"
+        ),
+    )
     profile_reply.add_argument("--thread-id", default=DEFAULT_THREAD_ID)
     profile_reply.add_argument("--output", type=Path)
     profile_reply.set_defaults(handler=draft_profile_reply)

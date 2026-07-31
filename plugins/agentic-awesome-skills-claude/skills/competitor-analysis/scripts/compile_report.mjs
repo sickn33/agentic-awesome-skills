@@ -247,6 +247,22 @@ function escapeHtml(str) {
   return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function safeHttpUrl(value) {
+  try {
+    const parsed = new URL(String(value || '').trim());
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed.href : '';
+  } catch {
+    return '';
+  }
+}
+
+function externalLink(url, label, extra = '') {
+  const safe = safeHttpUrl(url);
+  return safe
+    ? `<a href="${escapeHtml(safe)}" target="_blank" rel="noopener noreferrer"${extra}>${escapeHtml(label || safe)}</a>`
+    : escapeHtml(label || url || '');
+}
+
 function mdToHtml(md) {
   const lines = md.split('\n');
   const out = [];
@@ -283,7 +299,7 @@ function mdToHtml(md) {
           url = url.slice(0, -1);
         }
         if (!url) return raw;
-        return `<a href="${url}" target="_blank">${url}</a>${trail}`;
+        return `${externalLink(url, url)}${trail}`;
       });
       out.push(`<li>${text}</li>`);
       continue;
@@ -394,7 +410,7 @@ const tableRows = competitorRows.map(c => {
     ? `<a href="competitors/${c.slug}.html">${escapeHtml(c.competitor_name)}</a>`
     : escapeHtml(c.competitor_name);
   const websiteHtml = c.website
-    ? `<span class="muted-line"><a href="${escapeHtml(c.website)}" target="_blank" style="color:var(--muted);">${escapeHtml(c.website.replace(/^https?:\/\/(www\.)?/, ''))}</a></span>`
+    ? `<span class="muted-line">${externalLink(c.website, c.website.replace(/^https?:\/\/(www\.)?/, ''), ' style="color:var(--muted);"')}</span>`
     : '';
   // Pricing: prefer pipe-split summary; if there are no pipes (prose drift), truncate hard.
   let pricingShort = splitPipes(c.pricing_tiers).slice(0, 3).join(' · ');
@@ -573,7 +589,7 @@ for (const c of competitorRows) {
   const mentionsHtml = c.mentions.length
     ? c.mentions.map(m => {
         const dateStr = m.date ? `<span class="muted-line" style="color:var(--muted);font-size:0.75rem;margin-left:auto;">${escapeHtml(m.date)}</span>` : '';
-        const linkText = m.url ? `<a href="${escapeHtml(m.url)}" target="_blank">${escapeHtml(m.title || m.url)}</a>` : escapeHtml(m.title);
+        const linkText = m.url ? externalLink(m.url, m.title || m.url) : escapeHtml(m.title);
         const snippet = m.snippet ? ` — <span style="color:var(--muted);">${escapeHtml(m.snippet)}</span>` : '';
         return `<div class="mention-item"><span class="src-pill src-${escapeHtml(m.sourceType)}">${escapeHtml(m.sourceType)}</span><div style="flex:1;">${linkText}${snippet}</div>${dateStr}</div>`;
       }).join('\n')
@@ -581,7 +597,7 @@ for (const c of competitorRows) {
 
   const benchmarksHtml = c.benchmarks.length
     ? `<ul>${c.benchmarks.map(b => {
-        const link = b.url ? `<a href="${escapeHtml(b.url)}" target="_blank">${escapeHtml(b.title || b.url)}</a>` : escapeHtml(b.title);
+        const link = b.url ? externalLink(b.url, b.title || b.url) : escapeHtml(b.title);
         const src = b.source ? ` <span style="color:var(--muted);">(${escapeHtml(b.source)})</span>` : '';
         const finding = b.finding ? ` — ${escapeHtml(b.finding)}` : '';
         return `<li>${link}${src}${finding}</li>`;
@@ -622,7 +638,7 @@ for (const c of competitorRows) {
   <header>
     <h1>${escapeHtml(c.competitor_name)}</h1>
     <div class="meta">
-      ${c.website ? `<a href="${escapeHtml(c.website)}" target="_blank">${escapeHtml(c.website)}</a>` : ''}
+      ${c.website ? externalLink(c.website, c.website) : ''}
       ${c.tagline ? ` · ${escapeHtml(c.tagline)}` : ''}
     </div>
   </header>${screenshotsHtml}
@@ -838,7 +854,7 @@ const sourceFilterButtons = ['All', ...sourceTypes].map(t =>
 ).join('');
 
 const mentionItems = allMentions.map(m => {
-  const link = m.url ? `<a href="${escapeHtml(m.url)}" target="_blank">${escapeHtml(m.title || m.url)}</a>` : escapeHtml(m.title);
+  const link = m.url ? externalLink(m.url, m.title || m.url) : escapeHtml(m.title);
   const snippet = m.snippet ? `<div class="snippet">${escapeHtml(m.snippet)}</div>` : '';
   const date = m.date ? `<span class="date">${escapeHtml(m.date)}</span>` : '';
   return `<div class="mention" data-type="${escapeHtml(m.sourceType)}">

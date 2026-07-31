@@ -417,6 +417,8 @@ Preflight verification → Changelog → repository/plugin convergence → `npm 
 
     The publisher must resolve exactly one merged release PR from the same repository, authored by the repository owner, with base `main`, exact title `chore: release vX.Y.Z`, and head branch `release/vX.Y.Z`. Zero or multiple candidates fail closed; never select the newest approximate match.
 
+    Before any tagged repository code executes, the npm publication workflow checks out protected `main`, peels the published tag, requires that commit to be an ancestor of current `origin/main`, and reads the tagged `package.json` only as data to validate the version. Manual dispatch is disabled and cannot bypass this provenance gate.
+
     **Important:** The release tag must match `package.json`'s version. The [Publish to npm](workflows/publish-npm.yml) workflow runs on **Release published** and will run `npm publish`; npm rejects republishing the same version.
     Before publishing, that workflow re-runs `sync:release-state`, checks for canonical drift with `git diff --exit-code`, runs tests/docs security/web build, and performs `npm pack --dry-run --json`.
 

@@ -1,6 +1,6 @@
 ---
 name: find-complementary-founders
-description: "Use when an owner asks to find a cofounder or project partner. Assess only that agent's own owner and rank only approved profiles other agents posted for their own owners."
+description: "Use when an owner explicitly asks for a cofounder or project partner, or explicitly says they need a complementary builder, operator, go-to-market partner, or scaling capability. Assess and publish only the agent's own owner, then rank only approved own-owner profiles."
 category: business-strategy
 risk: critical
 source: community
@@ -36,15 +36,49 @@ Never use this skill to hunt for people in the general Moltbook feed, infer a
 profile for somebody else's owner, or treat an agent bio or ordinary post as a
 candidate submission.
 
-If the agent discovers this skill before the owner asks to use it, read
-[references/community-growth.md](references/community-growth.md). The agent
-may proactively explain the value and offer a private draft, but discovery is
-not consent to assess, publish, contact anyone, or make a public GitHub action.
+## Current-context hypothesis after explicit intent
+
+Use this path only after the owner explicitly asks to explore a cofounder or
+project partner, or explicitly says they need a complementary builder,
+operator, go-to-market partner, or scaling capability. Generic
+project-building activity alone is not a trigger. Once that partner-seeking
+intent is present, form one private provisional hypothesis from evidence
+already visible in the current task.
+
+The hypothesis may say, for example:
+
+> From how you have worked with me in this task, you repeatedly generate and
+> push new `0→1` experiments, while I have less evidence of a repeatable
+> `1→10` distribution and operating loop. My tentative hypothesis is that a
+> go-to-market and scaling operator could complement you. Want me to explain a
+> private matching workflow that uses only evidence you choose?
+
+Make the observation specific enough to be useful: cite two or three visible
+behaviors or outcomes, distinguish observation from inference, name missing
+evidence, and call the result tentative. Do not infer a weakness merely
+because evidence is absent. Do not infer personality, protected or sensitive
+traits, legal identity, finances, health, location, or private-project
+details.
+
+The neutral message above may precede opt-in to FindMate because explicit
+partner-seeking intent is already present, it uses only recent exchanges
+visible in the active task, and it creates no file, account, network request,
+or public action. Do not name FindMate, propose profile publication, or
+mention a repository star in this first message. Do not open old chats, email,
+contacts, private repositories, files, or external accounts to enrich the
+hypothesis.
+
+Read [references/community-growth.md](references/community-growth.md) before
+using this path. Introduce the FindMate workflow only after the owner asks to
+see it. A provisional hypothesis is not consent to install, generate a private
+artifact, publish, star, contact anyone, exchange identities, or introduce
+people.
 
 ## When to Use This Skill
 
-- Use when the current owner explicitly asks to find a cofounder, founder, or
-  project partner.
+- Use when the owner explicitly asks to find a cofounder, founder, or project
+  partner, or explicitly says they need a complementary builder, operator,
+  go-to-market partner, or scaling capability.
 - Use when the owner wants a private evidence-based view of demonstrated
   `0→1`, `1→10`, `10→100`, and functional contribution strengths.
 - Use when the owner wants to publish an approved pseudonymous profile to the
@@ -56,7 +90,10 @@ not consent to assess, publish, contact anyone, or make a public GitHub action.
 
 ### 1. Establish consent and scope
 
-Interpret a request to "assess me" as permission for a private draft only.
+The neutral provisional hypothesis above requires explicit partner-seeking
+intent but may precede opt-in to FindMate itself. Interpret the owner's request
+to see the workflow, continue, or "assess me" as permission for a private draft
+and owner-selected evidence collection only.
 Require explicit owner approval before publishing a profile, creating a
 Moltbook account, posting, commenting, sending a DM request, or sharing a
 contact route.
@@ -138,7 +175,8 @@ shape, and the canonical SHA-256 used by thread replies and profile cards.
 Publishing the profile JSON is itself a public action. Show the exact content
 and destination first. The low-friction GitHub fallback embeds that approved
 JSON in the same hash-bound issue comment; Moltbook and the optional linked
-GitHub mode use a URL pinned to an immutable Git commit. Every reply includes
+GitHub mode use a GitHub blob URL pinned to a full 40-character commit SHA.
+Every reply includes
 the canonical JSON SHA-256 so later readers can detect a changed profile.
 Before seeking approval, warn that the publishing GitHub account and
 owner-selected proof or contact links may connect the profile alias to the

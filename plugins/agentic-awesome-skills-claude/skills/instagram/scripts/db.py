@@ -12,6 +12,7 @@ Uso:
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
@@ -239,7 +240,14 @@ class Database:
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
 
     def _connect(self) -> sqlite3.Connection:
+        self.db_path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if self.db_path.is_symlink():
+            raise RuntimeError("Instagram database must not be a symbolic link")
+        if not self.db_path.exists():
+            descriptor = os.open(self.db_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+            os.close(descriptor)
         conn = sqlite3.connect(self.db_path)
+        os.chmod(self.db_path, 0o600)
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA journal_mode=WAL")
         conn.execute("PRAGMA synchronous=NORMAL")
