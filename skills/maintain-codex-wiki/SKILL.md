@@ -2,8 +2,8 @@
 name: maintain-codex-wiki
 description: "Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks."
 category: knowledge-management
-risk: safe
-source: https://github.com/Phelan164/codex-howto/tree/fc8a41757714cc2846c79bdabf2dbeb4d5c7fae0/skills/maintain-codex-wiki
+risk: critical
+source: https://github.com/Phelan164/codex-howto/tree/e2fd7cba40afbc7a85fe3aa1a5d5b0a536c05ba1/skills/maintain-codex-wiki
 source_repo: Phelan164/codex-howto
 source_type: community
 date_added: "2026-07-31"
@@ -11,7 +11,7 @@ author: Phelan164
 tags: [codex, wiki, knowledge-management, provenance, engineering]
 tools: [codex]
 license: MIT
-license_source: https://github.com/Phelan164/codex-howto/blob/fc8a41757714cc2846c79bdabf2dbeb4d5c7fae0/LICENSE
+license_source: https://github.com/Phelan164/codex-howto/blob/e2fd7cba40afbc7a85fe3aa1a5d5b0a536c05ba1/LICENSE
 ---
 
 # Maintain Codex Wiki
@@ -75,20 +75,31 @@ Use four source classes:
 Official sources establish current product behavior. Community sources are
 patterns to test, not product specifications.
 
+## Confinement Invariant
+
+Apply this before any operation reads, searches, or changes wiki state. For
+every wiki page, index, registry, log, and registered repository `path`:
+
+1. require a normalized repository-relative path;
+2. reject absolute paths and `..` components;
+3. resolve symlinks;
+4. require a regular file; and
+5. verify the resolved target remains inside the repository root.
+
+Do not begin Query, Capture, Ingest, Archive, Lint, or Promote until every file
+the operation will touch passes this check. Report an unsafe path as a
+validation error; never inspect it as content.
+
 ## Choose One Operation
 
 ### Query
 
 1. Read `knowledge/index.md`.
 2. Search `knowledge/` for the subject and its common synonyms.
-3. Before reading any wiki page, index, registry, log, or registered repository
-   `path`, require a normalized repository-relative path, reject absolute paths
-   and `..` components, resolve symlinks, require a regular file, and verify
-   the target remains inside the repository root.
-4. Read only the relevant pages and registered sources.
-5. Distinguish verified guidance, community practice, experimental results,
+3. Read only the relevant pages and registered sources.
+4. Distinguish verified guidance, community practice, experimental results,
    and unresolved claims.
-6. Answer with links to wiki pages and state when the wiki has no evidence.
+5. Answer with links to wiki pages and state when the wiki has no evidence.
 
 Query is read-only by default. Do not use model memory to silently fill gaps.
 
