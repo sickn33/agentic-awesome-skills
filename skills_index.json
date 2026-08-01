@@ -20581,6 +20581,41 @@
     ]
   },
   {
+    "id": "gh-attach",
+    "path": "skills/gh-attach",
+    "category": "developer-tools",
+    "name": "gh-attach",
+    "description": "Upload and download GitHub user-attachments (screenshots, PDFs, zips, videos) from the terminal; use when asked to attach or embed a file in a PR, issue, or comment, or download an attachment URL.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-08-01",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "manual",
+        "summary": "Installs and runs a third-party gh extension that needs a GitHub user_session cookie or GH_ATTACH_SESSION_TOKEN.",
+        "docs": "SKILL.md"
+      },
+      "reasons": [
+        "explicit_target_restriction"
+      ]
+    },
+    "source_type": "community",
+    "source_repo": "sudosubin/gh-attach",
+    "license": "MIT",
+    "license_source": "https://github.com/sudosubin/gh-attach/blob/main/LICENSE",
+    "tags": [
+      "github",
+      "attachments",
+      "screenshots",
+      "gh-extension",
+      "cli"
+    ]
+  },
+  {
     "id": "gh-image",
     "path": "skills/gh-image",
     "category": "developer-tools",

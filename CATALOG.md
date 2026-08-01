@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-31T17:37:00.000Z
 
-Total skills: 1997
+Total skills: 1998
 
 ## agent-behavior (5)
 
@@ -1003,10 +1003,11 @@ Total skills: 1997
 | `design-it/widget-based-design` | Web and App implementation guide for Widget-Based Design. Trigger when user wants modular blocks, iOS Home Screen aesthetics, and customizable mini-apps. | safe | self | it/widget, based | it/widget, based, widget, web, app, trigger, user, wants, modular, blocks, ios, home |
 | `design-it/y2k-design` | Web and App implementation guide for Y2K Design. Trigger when user wants chrome effects, futuristic 2000s look, blob shapes, and tech optimism. | safe | self | it/y2k | it/y2k, y2k, web, app, trigger, user, wants, chrome, effects, futuristic, 2000s, look |
 
-## developer-tools (3)
+## developer-tools (4)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `gh-attach` | Upload and download GitHub user-attachments (screenshots, PDFs, zips, videos) from the terminal; use when asked to attach or embed a file in a PR, issue, or ... | critical | sudosubin/gh-attach | github, attachments, screenshots, gh-extension, cli | github, attachments, screenshots, gh-extension, cli, gh, attach, upload, download, user, pdfs, zips |
 | `gh-image` | Upload local images to GitHub and get canonical user-attachments embed URLs; use when asked to attach a screenshot to a PR, issue, or comment, or to embed be... | critical | drogers0/gh-image | github, images, screenshots, gh-extension, cli | github, images, screenshots, gh-extension, cli, gh, image, upload, local, get, canonical, user |
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
