@@ -29,32 +29,76 @@ installations require the manual setup below.
 1. Confirm that Codex CLI and Docker are installed and Docker is running.
 2. If the eight tools are already visible, skip setup and do not register a
    duplicate server.
-3. Explain the first stage: it downloads the reviewed immutable image into the
-   Docker cache and inspects metadata without starting a container. Obtain
-   explicit user approval for this download and inspection only.
-4. After that first approval, pull and inspect the exact multi-platform digest:
+3. Explain the first stage: it downloads the reviewed immutable linux/amd64
+   image into Docker's cache, inspects its metadata and layer history, creates
+   but never starts a temporary container, exports its root filesystem, removes
+   that temporary container, and writes an inspection inventory to a temporary
+   directory. Obtain explicit user approval for those download and inspection
+   changes only.
+4. After that first approval, pull the reviewed platform manifest and complete
+   the inspection. Do not execute the image or register it yet:
 
 ```bash
-docker pull ghcr.io/happy520ai/unified-ai-system/mcp-server@sha256:22efd2f6b04926a03a8d5b96d840192570da0b4557f5c754b3e9b7157ddbaa05
-docker image inspect ghcr.io/happy520ai/unified-ai-system/mcp-server@sha256:22efd2f6b04926a03a8d5b96d840192570da0b4557f5c754b3e9b7157ddbaa05 --format 'Digests={{json .RepoDigests}} User={{json .Config.User}} Entrypoint={{json .Config.Entrypoint}} Cmd={{json .Config.Cmd}} Labels={{json .Config.Labels}}'
+IMAGE='ghcr.io/happy520ai/unified-ai-system/mcp-server@sha256:cc17e923335f953631f59fb6a5ffcdce0e12e16c5abf362f1d28747452adadee'
+PLATFORM='linux/amd64'
+REVIEW_DIR="$(mktemp -d)"
+
+docker pull --platform "$PLATFORM" "$IMAGE"
+docker image inspect "$IMAGE" --format 'Id={{.Id}} OS={{.Os}} Architecture={{.Architecture}} User={{json .Config.User}} Entrypoint={{json .Config.Entrypoint}} Cmd={{json .Config.Cmd}} Labels={{json .Config.Labels}}'
+docker image history --no-trunc "$IMAGE" > "$REVIEW_DIR/image-history.txt"
+
+REVIEW_CONTAINER="$(docker create --platform "$PLATFORM" --pull never --entrypoint /bin/true "$IMAGE")"
+docker export --output "$REVIEW_DIR/rootfs.tar" "$REVIEW_CONTAINER"
+docker rm "$REVIEW_CONTAINER"
+
+tar -tf "$REVIEW_DIR/rootfs.tar" > "$REVIEW_DIR/rootfs-files.txt"
+mkdir -p "$REVIEW_DIR/rootfs"
+tar -xf "$REVIEW_DIR/rootfs.tar" -C "$REVIEW_DIR/rootfs"
+find "$REVIEW_DIR/rootfs/app" -type f -print > "$REVIEW_DIR/app-files.txt"
+find "$REVIEW_DIR/rootfs/app" \( -type l -o -type f -links +1 \) -exec ls -ld {} + > "$REVIEW_DIR/app-links.txt"
+find "$REVIEW_DIR/rootfs/app" -type f -name '*.node' -exec sha256sum {} + > "$REVIEW_DIR/native-binaries.sha256"
+find "$REVIEW_DIR/rootfs" -type f -perm -111 -print > "$REVIEW_DIR/executable-files.txt"
+find "$REVIEW_DIR/rootfs" -type f \( -perm -4000 -o -perm -2000 \) -print > "$REVIEW_DIR/suid-sgid-files.txt"
+find "$REVIEW_DIR/rootfs/app" -type f \( -name '.env' -o -name '.env.*' -o -name '*.pem' -o -name '*.key' -o -name '*.p12' -o -name '*.pfx' -o -name 'id_rsa*' \) -print > "$REVIEW_DIR/credential-like-files.txt"
+find "$REVIEW_DIR/rootfs/app" -type f -name package.json -exec grep -nHE '"(preinstall|install|postinstall|prepare|prepack|postpack)"' {} + > "$REVIEW_DIR/lifecycle-hooks.txt"
+grep -RInE 'child_process|spawn\(|fetch\(|AI_GATEWAY_MCP_URL|process\.env|writeFile|appendFile|unlink|rm\(' "$REVIEW_DIR/rootfs/app/packages/mcp-server/src" "$REVIEW_DIR/rootfs/app/packages/shared-sdk/src" > "$REVIEW_DIR/runtime-sensitive-code.txt"
 ```
 
-5. Report the inspection before proceeding. Require the exact digest above;
-   source `https://github.com/happy520ai/unified-ai-system`; revision
-   `541430d68fac6b35c512ea7d2df20fe45334e0a5`; version `0.3.2`; license
-   `Apache-2.0`; entrypoint `docker-entrypoint.sh`; and command
-   `node packages/mcp-server/src/index.js`. Also report `Config.User`;
-   this release leaves it empty and therefore uses the image's default root
-   user. Stop on any mismatch.
+If `sha256sum` is unavailable, use the platform's SHA-256 utility and preserve
+the same report. Keep the review directory until the report is accepted; its
+deletion is another filesystem change and requires approval for the exact path.
+
+5. Read every generated inventory and report the inspection before proceeding.
+   Compare it with the versioned
+   [image content review](https://github.com/happy520ai/unified-ai-system/blob/e1646b5455f4ece87f15e7f85509d47fcd75b8e7/docs/security/mcp-image-review-0.3.2.md).
+   Require linux/amd64 manifest digest
+   `sha256:cc17e923335f953631f59fb6a5ffcdce0e12e16c5abf362f1d28747452adadee`,
+   config digest
+   `sha256:c28166511ca9d95ab6f4c0c8ac0cbc2acbbfdac20f971d074ff6744d39e0248f`,
+   source `https://github.com/happy520ai/unified-ai-system`, revision
+   `541430d68fac6b35c512ea7d2df20fe45334e0a5`, version `0.3.2`, license
+   `Apache-2.0`, entrypoint `docker-entrypoint.sh`, and command
+   `node packages/mcp-server/src/index.js`.
+
+   Report these reviewed risks explicitly: the image uses the default root
+   user; includes Debian shell/package utilities and 11 base-image SUID/SGID
+   files; contains 549 internal pnpm links, two native Node binaries, and eight
+   lifecycle-hook declarations; and starts a child gateway with loopback HTTP.
+   The optional `AI_GATEWAY_MCP_URL` can make an HTTP or HTTPS connection only
+   when explicitly passed. The registered command below passes no host files,
+   environment variables, or ports and disables container networking. Stop on
+   any mismatch, unexpected link, credential-like file, native binary, hook,
+   privileged file, or sensitive-code behavior.
 6. Explain the second stage: it persists a Codex MCP configuration and permits
    Codex to launch the inspected image in a later task. Obtain a separate
    explicit approval for registration and activation; the download approval
    does not carry over.
-7. After that second approval, register the digest with network pulling
+7. After that second approval, register the reviewed platform digest with
+   pulling, container networking, Linux capabilities, and privilege escalation
    disabled, then inspect the stored configuration:
 
 ```bash
-codex mcp add unified-ai-system -- docker run --rm -i --pull never ghcr.io/happy520ai/unified-ai-system/mcp-server@sha256:22efd2f6b04926a03a8d5b96d840192570da0b4557f5c754b3e9b7157ddbaa05
+codex mcp add unified-ai-system -- docker run --rm -i --pull never --platform linux/amd64 --network none --cap-drop ALL --security-opt no-new-privileges ghcr.io/happy520ai/unified-ai-system/mcp-server@sha256:cc17e923335f953631f59fb6a5ffcdce0e12e16c5abf362f1d28747452adadee
 codex mcp get unified-ai-system --json
 ```
 
@@ -123,11 +167,14 @@ Agent:
 - Do not enable or call a real provider without explicit scoped authorization.
 - Treat MCP registration, image pulls, container creation, networking, and
   teardown as host-state changes that require informed user approval.
-- Never substitute a mutable tag for the reviewed digest. Keep download and
+- Never substitute a mutable tag, the multi-platform index, or an unreviewed
+  platform manifest for the reviewed linux/amd64 digest. Keep download and
   inspection approval separate from registration and activation approval.
 - Keep `--pull never` in the registered command. If the reviewed image is
   absent from the local cache, fail closed and return to the first approval
   stage.
+- Keep `--network none`, `--cap-drop ALL`, and
+  `--security-opt no-new-privileges` in the registered command.
 - Do not claim production readiness, L5 autonomy, or AGI from a healthy handshake.
 - Treat a zero exit code as transport evidence, not proof that readiness gates
   passed.
@@ -141,8 +188,12 @@ Agent:
 - The credential-free chat tool proves only the deterministic local fake path.
 - It does not configure real providers or handle provider credentials.
 - The published MCP image requires Docker.
-- The reviewed `0.3.2` image runs as the container's default root user and
-  remains in Docker's cache after the Codex registration is removed.
+- The reviewed `0.3.2` path is limited to linux/amd64. Do not activate an arm64
+  or other platform image without a separate content review.
+- The image runs as the container's default root user and bundles the gateway
+  source, package-manager tooling, native dependencies, and base-image
+  SUID/SGID files. The registered command drops capabilities, prevents new
+  privileges, disables networking, and leaves the image in Docker's cache.
 - Existing Codex tasks may not hot-load a newly installed MCP configuration.
 
 ## Troubleshooting
@@ -160,3 +211,4 @@ Agent:
 - [Unified AI System](https://github.com/happy520ai/unified-ai-system)
 - [60-second Codex MCP quickstart](https://github.com/happy520ai/unified-ai-system/blob/master/docs/codex-mcp-quickstart.md)
 - [MCP server guide](https://github.com/happy520ai/unified-ai-system/blob/master/packages/mcp-server/README.md)
+- [MCP image content review](https://github.com/happy520ai/unified-ai-system/blob/e1646b5455f4ece87f15e7f85509d47fcd75b8e7/docs/security/mcp-image-review-0.3.2.md)
