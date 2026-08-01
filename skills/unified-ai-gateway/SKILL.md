@@ -29,23 +29,46 @@ installations require the manual setup below.
 1. Confirm that Codex CLI and Docker are installed and Docker is running.
 2. If the eight tools are already visible, skip setup and do not register a
    duplicate server.
-3. Otherwise, explain that registration changes the user's Codex configuration
-   and that the first connection may pull an image and create a temporary
-   container. Obtain explicit user approval before continuing.
-4. After approval, register and inspect the pinned release:
+3. Explain the first stage: it downloads the reviewed immutable image into the
+   Docker cache and inspects metadata without starting a container. Obtain
+   explicit user approval for this download and inspection only.
+4. After that first approval, pull and inspect the exact multi-platform digest:
 
 ```bash
-codex mcp add unified-ai-system -- docker run --rm -i ghcr.io/happy520ai/unified-ai-system/mcp-server:0.3.2
+docker pull ghcr.io/happy520ai/unified-ai-system/mcp-server@sha256:22efd2f6b04926a03a8d5b96d840192570da0b4557f5c754b3e9b7157ddbaa05
+docker image inspect ghcr.io/happy520ai/unified-ai-system/mcp-server@sha256:22efd2f6b04926a03a8d5b96d840192570da0b4557f5c754b3e9b7157ddbaa05 --format 'Digests={{json .RepoDigests}} User={{json .Config.User}} Entrypoint={{json .Config.Entrypoint}} Cmd={{json .Config.Cmd}} Labels={{json .Config.Labels}}'
+```
+
+5. Report the inspection before proceeding. Require the exact digest above;
+   source `https://github.com/happy520ai/unified-ai-system`; revision
+   `541430d68fac6b35c512ea7d2df20fe45334e0a5`; version `0.3.2`; license
+   `Apache-2.0`; entrypoint `docker-entrypoint.sh`; and command
+   `node packages/mcp-server/src/index.js`. Also report `Config.User`;
+   this release leaves it empty and therefore uses the image's default root
+   user. Stop on any mismatch.
+6. Explain the second stage: it persists a Codex MCP configuration and permits
+   Codex to launch the inspected image in a later task. Obtain a separate
+   explicit approval for registration and activation; the download approval
+   does not carry over.
+7. After that second approval, register the digest with network pulling
+   disabled, then inspect the stored configuration:
+
+```bash
+codex mcp add unified-ai-system -- docker run --rm -i --pull never ghcr.io/happy520ai/unified-ai-system/mcp-server@sha256:22efd2f6b04926a03a8d5b96d840192570da0b4557f5c754b3e9b7157ddbaa05
 codex mcp get unified-ai-system --json
 ```
 
-5. Restart Codex or open a new task, then use `/mcp verbose` to confirm that all
+8. Restart Codex or open a new task, then use `/mcp verbose` to confirm that all
    eight tools are available. Remove the registration when it is no longer
    wanted:
 
 ```bash
 codex mcp remove unified-ai-system
 ```
+
+Removing the registration does not remove the pulled image from Docker's
+cache. Treat image-cache deletion as a separate host-state change and obtain
+approval before doing it.
 
 ## When to Use This Skill
 
@@ -100,6 +123,11 @@ Agent:
 - Do not enable or call a real provider without explicit scoped authorization.
 - Treat MCP registration, image pulls, container creation, networking, and
   teardown as host-state changes that require informed user approval.
+- Never substitute a mutable tag for the reviewed digest. Keep download and
+  inspection approval separate from registration and activation approval.
+- Keep `--pull never` in the registered command. If the reviewed image is
+  absent from the local cache, fail closed and return to the first approval
+  stage.
 - Do not claim production readiness, L5 autonomy, or AGI from a healthy handshake.
 - Treat a zero exit code as transport evidence, not proof that readiness gates
   passed.
@@ -113,6 +141,8 @@ Agent:
 - The credential-free chat tool proves only the deterministic local fake path.
 - It does not configure real providers or handle provider credentials.
 - The published MCP image requires Docker.
+- The reviewed `0.3.2` image runs as the container's default root user and
+  remains in Docker's cache after the Codex registration is removed.
 - Existing Codex tasks may not hot-load a newly installed MCP configuration.
 
 ## Troubleshooting
