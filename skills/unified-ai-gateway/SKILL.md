@@ -70,7 +70,7 @@ deletion is another filesystem change and requires approval for the exact path.
 
 5. Read every generated inventory and report the inspection before proceeding.
    Compare it with the versioned
-   [image content review](https://github.com/happy520ai/unified-ai-system/blob/e1646b5455f4ece87f15e7f85509d47fcd75b8e7/docs/security/mcp-image-review-0.3.2.md).
+   [image content review](https://github.com/happy520ai/unified-ai-system/blob/2967617bb266c79992a6ed40e70bb59e67f661ca/docs/security/mcp-image-review-0.3.2.md).
    Require linux/amd64 manifest digest
    `sha256:cc17e923335f953631f59fb6a5ffcdce0e12e16c5abf362f1d28747452adadee`,
    config digest
@@ -211,4 +211,4 @@ Agent:
 - [Unified AI System](https://github.com/happy520ai/unified-ai-system)
 - [60-second Codex MCP quickstart](https://github.com/happy520ai/unified-ai-system/blob/master/docs/codex-mcp-quickstart.md)
 - [MCP server guide](https://github.com/happy520ai/unified-ai-system/blob/master/packages/mcp-server/README.md)
-- [MCP image content review](https://github.com/happy520ai/unified-ai-system/blob/e1646b5455f4ece87f15e7f85509d47fcd75b8e7/docs/security/mcp-image-review-0.3.2.md)
+- [MCP image content review](https://github.com/happy520ai/unified-ai-system/blob/2967617bb266c79992a6ed40e70bb59e67f661ca/docs/security/mcp-image-review-0.3.2.md)
