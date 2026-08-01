@@ -2,7 +2,7 @@
 name: unified-ai-gateway
 description: Operate and evaluate Unified AI System through eight governed MCP tools while preserving fake-provider, authorization, and evidence boundaries.
 category: ai-ml
-risk: safe
+risk: critical
 source: https://github.com/happy520ai/unified-ai-system/tree/master/skills/unified-ai-gateway
 source_repo: happy520ai/unified-ai-system
 source_type: official
@@ -18,10 +18,34 @@ license_source: https://github.com/happy520ai/unified-ai-system/blob/master/LICE
 
 ## Overview
 
-Use the bundled `unified-ai-system` MCP server to inspect and exercise a local
-AI gateway without provider credentials. The published integration starts an
-isolated gateway in Docker, keeps the deterministic fake provider enabled, and
-removes the gateway when the MCP session ends.
+Use the official `unified-ai-system` MCP server to inspect and exercise a local
+AI gateway without provider credentials. This skill file provides operating
+guidance; it does not install the server or change Codex configuration by
+itself. The official Codex plugin bundles the MCP definition, while skill-only
+installations require the manual setup below.
+
+## Prerequisites And Setup
+
+1. Confirm that Codex CLI and Docker are installed and Docker is running.
+2. If the eight tools are already visible, skip setup and do not register a
+   duplicate server.
+3. Otherwise, explain that registration changes the user's Codex configuration
+   and that the first connection may pull an image and create a temporary
+   container. Obtain explicit user approval before continuing.
+4. After approval, register and inspect the pinned release:
+
+```bash
+codex mcp add unified-ai-system -- docker run --rm -i ghcr.io/happy520ai/unified-ai-system/mcp-server:0.3.2
+codex mcp get unified-ai-system --json
+```
+
+5. Restart Codex or open a new task, then use `/mcp verbose` to confirm that all
+   eight tools are available. Remove the registration when it is no longer
+   wanted:
+
+```bash
+codex mcp remove unified-ai-system
+```
 
 ## When to Use This Skill
 
@@ -38,7 +62,8 @@ deploying a production gateway.
 ## Workflow
 
 1. Confirm that the `unified-ai-system` MCP tools are available in the current
-   task.
+   task. If they are absent, follow the approved setup above and wait for a
+   restarted or new task.
 2. Call `gateway_health`, then `gateway_readiness`, before attempting chat.
 3. Select the narrowest additional tool that answers the request.
 4. Report returned provider, execution mode, readiness, and blockers exactly.
@@ -73,14 +98,18 @@ Agent:
 - Keep the credential-free local fake provider as the default.
 - Never request, read, or transmit provider credentials through this skill.
 - Do not enable or call a real provider without explicit scoped authorization.
+- Treat MCP registration, image pulls, container creation, networking, and
+  teardown as host-state changes that require informed user approval.
 - Do not claim production readiness, L5 autonomy, or AGI from a healthy handshake.
 - Treat a zero exit code as transport evidence, not proof that readiness gates
   passed.
 
 ## Limitations
 
-- This skill operates the bundled MCP surface; it does not deploy, benchmark,
-  or certify the gateway for production use.
+- This skill file does not bundle the MCP server, Docker image, or Codex
+  configuration. It only operates tools supplied by the separately installed
+  official integration.
+- It does not deploy, benchmark, or certify the gateway for production use.
 - The credential-free chat tool proves only the deterministic local fake path.
 - It does not configure real providers or handle provider credentials.
 - The published MCP image requires Docker.
@@ -88,7 +117,9 @@ Agent:
 
 ## Troubleshooting
 
-- If the tools are missing after installation, reload Codex or start a new task.
+- If the tools are missing after approved registration, inspect
+  `codex mcp get unified-ai-system --json`, then restart Codex or start a new
+  task.
 - If readiness is blocked, report the returned blocker instead of retrying chat
   blindly.
 - If the runtime might use a real provider, stop before chat and keep the
