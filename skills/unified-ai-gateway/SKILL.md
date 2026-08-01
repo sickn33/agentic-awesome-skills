@@ -53,7 +53,7 @@ docker rm "$REVIEW_CONTAINER"
 
 tar -tf "$REVIEW_DIR/rootfs.tar" > "$REVIEW_DIR/rootfs-files.txt"
 mkdir -p "$REVIEW_DIR/rootfs"
-tar -xf "$REVIEW_DIR/rootfs.tar" -C "$REVIEW_DIR/rootfs"
+tar --same-permissions -xf "$REVIEW_DIR/rootfs.tar" -C "$REVIEW_DIR/rootfs"
 find "$REVIEW_DIR/rootfs/app" -type f -print > "$REVIEW_DIR/app-files.txt"
 find "$REVIEW_DIR/rootfs/app" \( -type l -o -type f -links +1 \) -exec ls -ld {} + > "$REVIEW_DIR/app-links.txt"
 find "$REVIEW_DIR/rootfs/app" -type f -name '*.node' -exec sha256sum {} + > "$REVIEW_DIR/native-binaries.sha256"
