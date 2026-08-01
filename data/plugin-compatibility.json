@@ -16835,6 +16835,31 @@
       "runtime_files": []
     },
     {
+      "id": "gh-attach",
+      "path": "skills/gh-attach",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "manual",
+        "summary": "Installs and runs a third-party gh extension that needs a GitHub user_session cookie or GH_ATTACH_SESSION_TOKEN.",
+        "docs": "SKILL.md"
+      },
+      "reasons": [
+        "explicit_target_restriction"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "explicit_target_restriction"
+        ],
+        "claude": [
+          "explicit_target_restriction"
+        ]
+      },
+      "runtime_files": []
+    },
+    {
       "id": "gh-image",
       "path": "skills/gh-image",
       "targets": {
@@ -38390,15 +38415,15 @@
     }
   ],
   "summary": {
-    "total_skills": 1997,
+    "total_skills": 1998,
     "supported": {
       "codex": 1920,
       "claude": 1941
     },
     "blocked": {
-      "codex": 77,
-      "claude": 56
+      "codex": 78,
+      "claude": 57
     },
-    "manual_setup": 19
+    "manual_setup": 20
   }
 }
