@@ -9,6 +9,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.8.0] - 2026-08-02 - "Governed Integrations and Agent Project Workflows"
+
+> Added four evidence-first skills for GitHub attachments, governed AI gateways, project-specific agent instructions, and revenue analytics through MCP.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added [`gh-attach`](skills/gh-attach/) for uploading and downloading GitHub user attachments through the `gh` CLI, with repository-scoped visibility and GitHub Enterprise Server support.
+- Added [`unified-ai-gateway`](skills/unified-ai-gateway/) for governed inspection of Unified AI System's eight Codex MCP tools, with pinned image provenance, non-executing review, and separate activation approvals.
+- Added [`agents-generator`](skills/agents-generator/) for generating project-specific `AGENTS.md` and companion rules with package-manager detection, monorepo handling, backups, dry-run/update modes, and command validation.
+- Added [`talivia-agent-kit`](skills/talivia-agent-kit/) for revenue-first website analytics through the official Talivia MCP server, with explicit confirmation for tracking, deployment, and payment-attribution changes.
+
+### Changed
+
+- Regenerated the canonical catalog and Codex/Claude distribution surfaces for 2,001 skills.
+
+### Who should care
+
+- Developers who need to attach or retrieve GitHub artifacts directly from the terminal.
+- Teams evaluating a self-hosted AI gateway with bounded, fake-provider, and approval-aware MCP workflows.
+- Maintainers who want reproducible project-specific agent instructions and companion rules.
+- Revenue and growth teams using Talivia analytics while keeping website, deployment, and payment-attribution mutations consent-gated.
+
+### Validation
+
+- Passed canonical skill and reference validation, documentation security, warning-budget enforcement, repository tests, protected CI, and CodeQL.
+- Confirmed canonical synchronization reproduced the four new skills across Codex and Claude plugin distributions with no generated-state drift.
+- Confirmed npm package audit has no moderate-or-higher production vulnerabilities on the release base.
+
+### Credits
+
+- **[sudosubin/gh-attach](https://github.com/sudosubin/gh-attach)** for `gh-attach` in [PR #1060](https://github.com/sickn33/agentic-awesome-skills/pull/1060).
+- **[happy520ai/unified-ai-system](https://github.com/happy520ai/unified-ai-system)** for `unified-ai-gateway` in [PR #1061](https://github.com/sickn33/agentic-awesome-skills/pull/1061).
+- **[OJPalenzuela/agents-generator](https://github.com/OJPalenzuela/agents-generator)** for `agents-generator` in [PR #1067](https://github.com/sickn33/agentic-awesome-skills/pull/1067), which closes issue #1065.
+- **[talivia-group/agent](https://github.com/talivia-group/agent)** for `talivia-agent-kit` in [PR #1069](https://github.com/sickn33/agentic-awesome-skills/pull/1069).
+
 ## [15.7.1] - 2026-07-31 - "Verified Knowledge and Cross-Environment Workflows"
 
 > Added evidence-first knowledge maintenance, cross-environment task handoff, multi-platform fact checking, and proactive founder-complement discovery.
