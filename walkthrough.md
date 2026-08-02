@@ -1,3 +1,14 @@
+# Maintenance Walkthrough - 2026-08-02
+
+- Repaired PR #1069 by adding the canonical `talivia-agent-kit` skill instead
+  of keeping only a README attribution line.
+- Pinned the attribution to the reviewed MIT upstream commit
+  `f4ed3fc6b554ad5183a57ae13ca2a9bd5162c12a` and added critical-risk metadata,
+  explicit website/file/payment confirmation gates, endpoint restrictions, and
+  limitations for the external Talivia MCP service.
+- Kept generated registries, plugin mirrors, and marketplaces out of the
+  source PR so protected canonical synchronization remains their owner.
+
 # Secur0 coordinated remediation - 2026-07-30
 
 - Re-evaluated all 35 Secur0 reports against current protected `main`: 22 were
