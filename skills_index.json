@@ -45158,6 +45158,39 @@
     ]
   },
   {
+    "id": "unified-ai-gateway",
+    "path": "skills/unified-ai-gateway",
+    "category": "ai-ml",
+    "name": "unified-ai-gateway",
+    "description": "Operate and evaluate Unified AI System through eight governed MCP tools while preserving fake-provider, authorization, and evidence boundaries.",
+    "risk": "critical",
+    "source": "https://github.com/happy520ai/unified-ai-system/tree/master/skills/unified-ai-gateway",
+    "date_added": "2026-08-01",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "happy520ai/unified-ai-system",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/happy520ai/unified-ai-system/blob/master/LICENSE",
+    "tags": [
+      "ai-gateway",
+      "codex",
+      "mcp",
+      "self-hosted",
+      "governance"
+    ]
+  },
+  {
     "id": "uniprot-database",
     "path": "skills/uniprot-database",
     "category": "backend",

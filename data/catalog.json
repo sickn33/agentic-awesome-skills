@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-31T17:37:00.000Z",
-  "total": 1998,
+  "total": 1999,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -53774,6 +53774,41 @@
         "review"
       ],
       "path": "skills/uncle-bob-craft/SKILL.md"
+    },
+    {
+      "id": "unified-ai-gateway",
+      "canonical_id": "unified-ai-gateway",
+      "name": "unified-ai-gateway",
+      "description": "Operate and evaluate Unified AI System through eight governed MCP tools while preserving fake-provider, authorization, and evidence boundaries.",
+      "category": "ai-ml",
+      "risk": "critical",
+      "source": "https://github.com/happy520ai/unified-ai-system/tree/master/skills/unified-ai-gateway",
+      "source_type": "official",
+      "source_repo": "happy520ai/unified-ai-system",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/happy520ai/unified-ai-system/blob/master/LICENSE",
+      "tags": [
+        "ai-gateway",
+        "codex",
+        "mcp",
+        "self-hosted",
+        "governance"
+      ],
+      "triggers": [
+        "ai-gateway",
+        "codex",
+        "mcp",
+        "self-hosted",
+        "governance",
+        "unified",
+        "ai",
+        "gateway",
+        "operate",
+        "evaluate",
+        "through",
+        "eight"
+      ],
+      "path": "skills/unified-ai-gateway/SKILL.md"
     },
     {
       "id": "uniprot-database",

@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-31T17:37:00.000Z
 
-Total skills: 1998
+Total skills: 1999
 
 ## agent-behavior (5)
 
@@ -76,7 +76,7 @@ Total skills: 1998
 | `pilot-protocol` | Give an AI agent a permanent network address, encrypted P2P messaging, and an installable app store via Pilot Protocol | critical | pilot-protocol/pilotprotocol | agent-networking, p2p, nat-traversal, overlay-network, agent-apps | agent-networking, p2p, nat-traversal, overlay-network, agent-apps, pilot, protocol, give, ai, agent, permanent, network |
 | `pydantic-ai` | Build production-ready AI agents with PydanticAI — type-safe tool use, structured outputs, dependency injection, and multi-model support. | safe | community | pydantic-ai, ai-agents, llm, openai, anthropic, gemini, tool-use, structured-output, python | pydantic-ai, ai-agents, llm, openai, anthropic, gemini, tool-use, structured-output, python, pydantic, ai, agents |
 
-## ai-ml (129)
+## ai-ml (130)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -201,6 +201,7 @@ Total skills: 1998
 | `train-sentence-transformers` | Train or fine-tune sentence-transformers models across `SentenceTransformer` (bi-encoder; dense or static embedding model; for retrieval, similarity, cluster... | critical | huggingface/skills | train, sentence, transformers | train, sentence, transformers, fine, tune, models, sentencetransformer, bi, encoder, dense, static, embedding |
 | `trl-training` | Train and fine-tune transformer language models using TRL (Transformers Reinforcement Learning). Supports SFT, DPO, GRPO, KTO, RLOO and Reward Model training... | critical | huggingface/skills | trl, training | trl, training, train, fine, tune, transformer, language, models, transformers, reinforcement, learning, supports |
 | `ui-skills` | Opinionated, evolving constraints to guide agents when building interfaces | safe | https://github.com/ibelick/ui-skills | ui, skills | ui, skills, opinionated, evolving, constraints, agents, building, interfaces |
+| `unified-ai-gateway` | Operate and evaluate Unified AI System through eight governed MCP tools while preserving fake-provider, authorization, and evidence boundaries. | critical | happy520ai/unified-ai-system | ai-gateway, codex, mcp, self-hosted, governance | ai-gateway, codex, mcp, self-hosted, governance, unified, ai, gateway, operate, evaluate, through, eight |
 | `unslop-commit` | Rewrites commit messages so they sound like a careful human engineer wrote them. Strips AI/marketing slop ("comprehensive solution", "robust implementation",... | critical | MohamedAbdallah-14/unslop | unslop, commit | unslop, commit, rewrites, messages, so, sound, like, careful, human, engineer, wrote, them |
 | `unslop-file` | Humanize natural-language memory files (CLAUDE.md, todos, preferences, docs) by removing AI-isms and adding burstiness while preserving every code block, URL... | critical | MohamedAbdallah-14/unslop | unslop, file | unslop, file, humanize, natural, language, memory, files, claude, md, todos, preferences, docs |
 | `voice-agents` | Voice agents represent the frontier of AI interaction - humans speaking naturally with AI systems. | safe | vibeship-spawner-skills (Apache 2.0) | voice, agents | voice, agents, represent, frontier, ai, interaction, humans, speaking, naturally |

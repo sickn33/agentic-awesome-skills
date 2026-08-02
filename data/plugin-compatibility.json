@@ -35713,6 +35713,25 @@
       "runtime_files": []
     },
     {
+      "id": "unified-ai-gateway",
+      "path": "skills/unified-ai-gateway",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "uniprot-database",
       "path": "skills/uniprot-database",
       "targets": {
@@ -38415,10 +38434,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1998,
+    "total_skills": 1999,
     "supported": {
-      "codex": 1920,
-      "claude": 1941
+      "codex": 1921,
+      "claude": 1942
     },
     "blocked": {
       "codex": 78,
