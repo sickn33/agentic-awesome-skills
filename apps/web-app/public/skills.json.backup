@@ -1146,6 +1146,39 @@
     }
   },
   {
+    "id": "agents-generator",
+    "path": "skills/agents-generator",
+    "category": "developer-tools",
+    "name": "agents-generator",
+    "description": "Generate project-specific AGENTS.md and companion rules by analyzing a codebase. Supports full, minimal, update, and dry-run modes with package-manager detection, monorepos, backups, managed blocks, confidence scoring, and command validation.",
+    "risk": "critical",
+    "source": "https://github.com/OJPalenzuela/agents-generator/tree/7a3201208a01bd25e69ad11e665efc1392f5356a",
+    "date_added": "2026-08-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "OJPalenzuela/agents-generator",
+    "license": "MIT",
+    "license_source": "https://github.com/OJPalenzuela/agents-generator/blob/7a3201208a01bd25e69ad11e665efc1392f5356a/LICENSE",
+    "tags": [
+      "agents-md",
+      "project-conventions",
+      "developer-tools",
+      "codebase-analysis",
+      "ai-agents"
+    ]
+  },
+  {
     "id": "agents-md",
     "path": "skills/agents-md",
     "category": "ai-ml",

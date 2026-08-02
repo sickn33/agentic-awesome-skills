@@ -1024,6 +1024,25 @@
       "runtime_files": []
     },
     {
+      "id": "agents-generator",
+      "path": "skills/agents-generator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "agents-md",
       "path": "skills/agents-md",
       "targets": {
@@ -38434,10 +38453,10 @@
     }
   ],
   "summary": {
-    "total_skills": 1999,
+    "total_skills": 2000,
     "supported": {
-      "codex": 1921,
-      "claude": 1942
+      "codex": 1922,
+      "claude": 1943
     },
     "blocked": {
       "codex": 78,

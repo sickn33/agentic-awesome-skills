@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-07-31T17:37:00.000Z",
-  "total": 1999,
+  "total": 2000,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1517,6 +1517,41 @@
         "numbers"
       ],
       "path": "skills/agentphone/SKILL.md"
+    },
+    {
+      "id": "agents-generator",
+      "canonical_id": "agents-generator",
+      "name": "agents-generator",
+      "description": "Generate project-specific AGENTS.md and companion rules by analyzing a codebase. Supports full, minimal, update, and dry-run modes with package-manager detection, monorepos, backups, managed blocks, confidence scoring, and command validation.",
+      "category": "developer-tools",
+      "risk": "critical",
+      "source": "https://github.com/OJPalenzuela/agents-generator/tree/7a3201208a01bd25e69ad11e665efc1392f5356a",
+      "source_type": "community",
+      "source_repo": "OJPalenzuela/agents-generator",
+      "license": "MIT",
+      "license_source": "https://github.com/OJPalenzuela/agents-generator/blob/7a3201208a01bd25e69ad11e665efc1392f5356a/LICENSE",
+      "tags": [
+        "agents-md",
+        "project-conventions",
+        "developer-tools",
+        "codebase-analysis",
+        "ai-agents"
+      ],
+      "triggers": [
+        "agents-md",
+        "project-conventions",
+        "developer-tools",
+        "codebase-analysis",
+        "ai-agents",
+        "agents",
+        "generator",
+        "generate",
+        "specific",
+        "md",
+        "companion",
+        "rules"
+      ],
+      "path": "skills/agents-generator/SKILL.md"
     },
     {
       "id": "agents-md",
