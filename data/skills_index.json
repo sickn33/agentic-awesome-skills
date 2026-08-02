@@ -42506,6 +42506,40 @@
     ]
   },
   {
+    "id": "talivia-agent-kit",
+    "path": "skills/talivia-agent-kit",
+    "category": "marketing",
+    "name": "talivia-agent-kit",
+    "description": "Set up and verify Talivia revenue analytics through MCP, with explicit confirmation for website changes and payment attribution.",
+    "risk": "critical",
+    "source": "https://github.com/talivia-group/agent/tree/f4ed3fc6b554ad5183a57ae13ca2a9bd5162c12a",
+    "date_added": "2026-08-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "talivia-group/agent",
+    "license": "MIT",
+    "license_source": "https://github.com/talivia-group/agent/blob/f4ed3fc6b554ad5183a57ae13ca2a9bd5162c12a/LICENSE",
+    "tags": [
+      "analytics",
+      "revenue",
+      "attribution",
+      "mcp",
+      "talivia",
+      "marketing"
+    ]
+  },
+  {
     "id": "tanstack-query-expert",
     "path": "skills/tanstack-query-expert",
     "category": "framework",

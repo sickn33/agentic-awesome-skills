@@ -2,7 +2,7 @@
 
 Generated at: 2026-07-31T17:37:00.000Z
 
-Total skills: 2000
+Total skills: 2001
 
 ## agent-behavior (5)
 
@@ -1478,7 +1478,7 @@ Total skills: 2000
 | `leiloeiro-mercado` | Analise de mercado imobiliario para leiloes. Liquidez, desagio tipico, ROI, estrategias de saida (flip/reforma/renda), Selic 2025 e benchmark CDI/FII. | safe | community | market-analysis, real-estate, roi, brazilian | market-analysis, real-estate, roi, brazilian, leiloeiro, mercado, analise, de, imobiliario, para, leiloes, liquidez |
 | `leiloeiro-risco` | Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco. | safe | community | risk-analysis, scoring, stress-test, brazilian | risk-analysis, scoring, stress-test, brazilian, leiloeiro, risco, analise, de, em, leiloes, imoveis, score |
 
-## marketing (55)
+## marketing (56)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1530,6 +1530,7 @@ Total skills: 2000
 | `social-orchestrator` | Orquestrador unificado de canais sociais — coordena Instagram, Telegram e WhatsApp em um unico fluxo de trabalho. Publicacao cross-channel, metricas unificad... | critical | community | social-media, cross-channel, scheduling, campaigns | social-media, cross-channel, scheduling, campaigns, social, orchestrator, orquestrador, unificado, de, canais, sociais, coordena |
 | `socialclaw` | Agent-first social media publishing skill — schedule and publish posts across 13 platforms (X, LinkedIn, Instagram, Facebook Pages, TikTok, Discord, Telegram... | critical | ndesv21/socialclaw | social-media, publishing, scheduling, marketing, twitter, linkedin, instagram, tiktok, discord, telegram, reddit, wordpress, pinterest | social-media, publishing, scheduling, marketing, twitter, linkedin, instagram, tiktok, discord, telegram, reddit, wordpress |
 | `taisly-social-media-posting` | Use Taisly Agent Kit to prepare and publish approved short-form video posts across TikTok, Instagram Reels, YouTube Shorts, X, and Facebook. | critical | taisly/agent | social-media, video, publishing, mcp, cli, sdk, tiktok, instagram, youtube-shorts, x, facebook | social-media, video, publishing, mcp, cli, sdk, tiktok, instagram, youtube-shorts, x, facebook, taisly |
+| `talivia-agent-kit` | Set up and verify Talivia revenue analytics through MCP, with explicit confirmation for website changes and payment attribution. | critical | talivia-group/agent | analytics, revenue, attribution, mcp, talivia, marketing | analytics, revenue, attribution, mcp, talivia, marketing, agent, kit, set, up, verify, through |
 | `tiktok-automation` | Automate TikTok tasks via Rube MCP (Composio): upload/publish videos, post photos, manage content, and view user profiles/stats. Always search tools first fo... | critical | community | tiktok | tiktok, automation, automate, tasks, via, rube, mcp, composio, upload, publish, videos, post |
 | `twitter-automation` | Automate Twitter/X tasks via Rube MCP (Composio): posts, search, users, bookmarks, lists, media. Always search tools first for current schemas. | critical | community | twitter | twitter, automation, automate, tasks, via, rube, mcp, composio, posts, search, users, bookmarks |
 | `viral-generator-builder` | Expert in building shareable generator tools that go viral - name generators, quiz makers, avatar creators, personality tests, and calculator tools. Covers t... | critical | vibeship-spawner-skills (Apache 2.0) | viral, generator, builder | viral, generator, builder, building, shareable, go, name, generators, quiz, makers, avatar, creators |

@@ -33759,6 +33759,25 @@
       "runtime_files": []
     },
     {
+      "id": "talivia-agent-kit",
+      "path": "skills/talivia-agent-kit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "tanstack-query-expert",
       "path": "skills/tanstack-query-expert",
       "targets": {
@@ -38453,10 +38472,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2000,
+    "total_skills": 2001,
     "supported": {
-      "codex": 1922,
-      "claude": 1943
+      "codex": 1923,
+      "claude": 1944
     },
     "blocked": {
       "codex": 78,
