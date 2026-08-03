@@ -72,7 +72,26 @@ These are not style preferences. Breaking one makes the output worse than nothin
 
 ### Step 1: Collect the rows
 
-Ask for one review per line. The full form keeps the source link, which the brief needs:
+**First ask which app names the team owns.** Before any row is classified, ask for two lists of
+app names, spelled exactly as they appear in the rows:
+
+```text
+owned: Example Popup App, Example Currency App
+competitors: Rival Popup App, Rival Currency App
+```
+
+This is the only thing that makes tie-break 4 (*a competitor's incident never becomes your P0*)
+applicable, so collect it first. It stays public data: app names as published on their listings,
+nothing about accounts, merchants, org structure, or internal identifiers. Do not ask for more
+than the names, and do not infer ownership from the review text, the first-person voice in a
+review, or which app appears most often.
+
+If an app name in a row appears in neither list, its ownership is unknown. Classify the row's
+content normally, then file it under **needs human read** with `ownership: not supplied` instead
+of placing it in a priority bucket or in competitor watch — a guessed owner is exactly the kind
+of invented evidence hard rule 2 forbids.
+
+Then ask for one review per line. The full form keeps the source link, which the brief needs:
 
 ```text
 rating | app name | review date | public reviews URL | review text
@@ -158,8 +177,11 @@ provisional placement in the queue, not as a severity judgment — nothing has b
    reviews within about 60 days, move it up one level and say how many rows drove the change.
 3. **Age discounts.** A review older than a year is background, not evidence of a current
    problem, unless a recent row corroborates it. Cite it as context, never as the headline.
-4. **Competitor reviews never create a P0 for you.** A competitor's incident is roadmap,
-   positioning, or copy input — it belongs in the competitor watch section.
+4. **Competitor reviews never create a P0 for you.** Resolve the row's app name against the
+   ownership lists from step 1: `owned` keeps its rubric bucket, `competitors` moves to the
+   competitor watch section whatever its keywords matched, and a name in neither list goes to
+   needs human read with `ownership: not supplied`. A competitor's incident is roadmap,
+   positioning, or copy input — never your P0.
 5. **When unsure, choose needs human read.** The bucket exists so the rubric never launders
    uncertainty into a priority label.
 
@@ -217,7 +239,7 @@ unverified keyword matches; "human-checked" means a person read the review and c
 - **{App} — {request}** ({rating}★, {date}, [source](<{public reviews URL}>)) — {log it / already exists → reply with where to find it}
 
 ## Needs human read
-- **{App}** ({rating}★, {date}, [source](<{public reviews URL}>)) — {no keyword matched; what a human should look for}
+- **{App}** ({rating}★, {date}, [source](<{public reviews URL}>)) — {no keyword matched; what a human should look for}{, or: ownership: not supplied — app name on neither list}
 
 ## Competitor watch
 - **{Competitor} — {signal}**: {what it implies for our roadmap, copy, or positioning}
@@ -236,6 +258,8 @@ Refuse to deliver until every line is true:
 
 - [ ] Every item names its bucket and priority from the rubric above, and nothing else.
 - [ ] Every item carries a source link or an explicit `source: not captured`.
+- [ ] Every P0–P3 item is an app on the `owned` list; every competitor row sits in competitor
+      watch; every unlisted app name says `ownership: not supplied` under needs human read.
 - [ ] No review text, rating, date, app name, or URL appears that was not supplied.
 - [ ] Every unverified item says *first pass — not human-checked*; nothing claims a human check
       that did not happen.
@@ -252,6 +276,13 @@ Refuse to deliver until every line is true:
 These eight fictional rows are the worksheet's own example set, so the two tools can be compared
 directly. Two of them are deliberately 4★ and 5★, to exercise the feature-request and
 needs-human-read buckets.
+
+Ownership context, collected before any of it is classified:
+
+```text
+owned: Example Popup App, Example Currency App, Example Reviews App
+competitors: (none supplied)
+```
 
 ```text
 1 | Example Popup App | The editor shows a blank screen and the popup won't load. We are losing sales every day.
@@ -280,8 +311,11 @@ row 8 → needs human read
 **Explanation:** Rows 4 and 5 both matched `confusing`, so they are flagged as a repeated theme —
 two rows, which is a cluster to watch, not yet the three that trigger escalation. Row 3 is a
 single P0 item with pricing recorded as secondary, never two items. Row 8 matched nothing and
-stays unjudged. None of these rows carried a source URL, so each item would read
-`source: not captured` until the team supplies the listing links.
+stays unjudged. All three app names are on the `owned` list, so every bucket above is the team's
+own queue and competitor watch is empty; had `Example Reviews App` been listed as a competitor
+instead, rows 5, 7, and 8 would move there and none of them could become a P0. None of these rows
+carried a source URL, so each item would read `source: not captured` until the team supplies the
+listing links.
 
 ### Example 2: A row that carries its source link
 
@@ -300,9 +334,11 @@ Rendered into the brief:
   - Next action: attempt reproduction on a development store today — owner {name}, due {date}
 ```
 
-**Explanation:** The wording stays a report ("the reviewer reports"), the status stays
-*first pass — not human-checked* until a person verifies it, and the source link is the listing's
-public reviews page with the rating filter kept — the App Store has no per-review permalink.
+**Explanation:** It files as a P0 only because `Example Popup App` is on the `owned` list; the
+same row from a competitor listing would render under competitor watch instead. The wording stays
+a report ("the reviewer reports"), the status stays *first pass — not human-checked* until a
+person verifies it, and the source link is the listing's public reviews page with the rating
+filter kept — the App Store has no per-review permalink.
 
 ## Best Practices
 
