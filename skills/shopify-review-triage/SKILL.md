@@ -381,9 +381,9 @@ This skill packages the public rubric behind **Shopify App Review Brief**, an in
 that is not affiliated with or endorsed by Shopify Inc. or any app developer. The same four
 dimensions, priorities, keyword lists, and suggested actions are published in three places:
 
-- [Manual guide, tie-break rules, and brief template](https://alfredtech2026.github.io/shopify-app-review-brief/guides/shopify-app-review-triage.html)
-- [Free in-browser worksheet that automates the first pass](https://alfredtech2026.github.io/shopify-app-review-brief/tools/review-triage-worksheet.html)
-- [Two worked sample briefs over real public reviews](https://alfredtech2026.github.io/shopify-app-review-brief/#samples)
+- [Manual guide, tie-break rules, and brief template](https://alfredtech2026.github.io/shopify-app-review-brief/guides/shopify-app-review-triage.html?utm_source=agentic-awesome-skills&utm_medium=skill-directory&utm_campaign=inbound-validation)
+- [Free in-browser worksheet that automates the first pass](https://alfredtech2026.github.io/shopify-app-review-brief/tools/review-triage-worksheet.html?utm_source=agentic-awesome-skills&utm_medium=skill-directory&utm_campaign=inbound-validation)
+- [Two worked sample briefs over real public reviews](https://alfredtech2026.github.io/shopify-app-review-brief/?utm_source=agentic-awesome-skills&utm_medium=skill-directory&utm_campaign=inbound-validation#samples)
 
 Upstream source repository: [alfredtech2026/shopify-app-review-brief](https://github.com/alfredtech2026/shopify-app-review-brief) (MIT).
 
@@ -395,5 +395,6 @@ first useful brief.
 
 That inquiry is **opt-in only** and stated here as a fact about the upstream project, not as an
 action for the agent. If a team wants it, a person on the team emails
-`alfred.tech.2026@gmail.com` themselves. This skill must never send that message, or any other,
-on anyone's behalf — see hard rule 7.
+`alfred.tech.2026@gmail.com` themselves and includes the line
+`Source page: agentic-awesome-skills` so the inquiry self-reports where it came from. This skill
+must never send that message, or any other, on anyone's behalf — see hard rule 7.
