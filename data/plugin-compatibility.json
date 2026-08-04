@@ -31562,6 +31562,25 @@
       "runtime_files": []
     },
     {
+      "id": "shopify-review-triage",
+      "path": "skills/shopify-review-triage",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "short",
       "path": "skills/short",
       "targets": {
@@ -38472,10 +38491,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2001,
+    "total_skills": 2002,
     "supported": {
-      "codex": 1923,
-      "claude": 1944
+      "codex": 1924,
+      "claude": 1945
     },
     "blocked": {
       "codex": 78,

@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-02T16:27:13.000Z
 
-Total skills: 2001
+Total skills: 2002
 
 ## agent-behavior (5)
 
@@ -201,7 +201,7 @@ Total skills: 2001
 | `train-sentence-transformers` | Train or fine-tune sentence-transformers models across `SentenceTransformer` (bi-encoder; dense or static embedding model; for retrieval, similarity, cluster... | critical | huggingface/skills | train, sentence, transformers | train, sentence, transformers, fine, tune, models, sentencetransformer, bi, encoder, dense, static, embedding |
 | `trl-training` | Train and fine-tune transformer language models using TRL (Transformers Reinforcement Learning). Supports SFT, DPO, GRPO, KTO, RLOO and Reward Model training... | critical | huggingface/skills | trl, training | trl, training, train, fine, tune, transformer, language, models, transformers, reinforcement, learning, supports |
 | `ui-skills` | Opinionated, evolving constraints to guide agents when building interfaces | safe | https://github.com/ibelick/ui-skills | ui, skills | ui, skills, opinionated, evolving, constraints, agents, building, interfaces |
-| `unified-ai-gateway` | Operate and evaluate Unified AI System through eight governed MCP tools while preserving fake-provider, authorization, and evidence boundaries. | critical | happy520ai/unified-ai-system | ai-gateway, codex, mcp, self-hosted, governance | ai-gateway, codex, mcp, self-hosted, governance, unified, ai, gateway, operate, evaluate, through, eight |
+| `unified-ai-gateway` | Operate and evaluate Unified AI System through nine governed MCP tools, including provider-free prompt enhancement, while preserving fake-provider, authoriza... | critical | happy520ai/unified-ai-system | ai-gateway, codex, mcp, self-hosted, governance | ai-gateway, codex, mcp, self-hosted, governance, unified, ai, gateway, operate, evaluate, through, nine |
 | `unslop-commit` | Rewrites commit messages so they sound like a careful human engineer wrote them. Strips AI/marketing slop ("comprehensive solution", "robust implementation",... | critical | MohamedAbdallah-14/unslop | unslop, commit | unslop, commit, rewrites, messages, so, sound, like, careful, human, engineer, wrote, them |
 | `unslop-file` | Humanize natural-language memory files (CLAUDE.md, todos, preferences, docs) by removing AI-isms and adding burstiness while preserving every code block, URL... | critical | MohamedAbdallah-14/unslop | unslop, file | unslop, file, humanize, natural, language, memory, files, claude, md, todos, preferences, docs |
 | `voice-agents` | Voice agents represent the frontier of AI interaction - humans speaking naturally with AI systems. | safe | vibeship-spawner-skills (Apache 2.0) | voice, agents | voice, agents, represent, frontier, ai, interaction, humans, speaking, naturally |
@@ -1711,13 +1711,14 @@ Total skills: 2001
 | `nanobanana-ppt-skills` | AI-powered PPT generation with document analysis and styled images | safe | https://github.com/op7418/NanoBanana-PPT-Skills | nanobanana, ppt, skills | nanobanana, ppt, skills, ai, powered, generation, document, analysis, styled, images |
 | `pptx-official` | A user may ask you to create, edit, or analyze the contents of a .pptx file. A .pptx file is essentially a ZIP archive containing XML files and other resourc... | critical | community | pptx, official | pptx, official, user, may, ask, edit, analyze, contents, file, essentially, zip, archive |
 
-## product (3)
+## product (4)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `before-you-build` | Review product risk before coding by checking demand, alternatives, channels, switching costs, and failure signals. | safe | bin1874/before-you-build-skill | product-validation, planning, ai-coding, risk-review | product-validation, planning, ai-coding, risk-review, before, review, product, risk, coding, checking, demand, alternatives |
 | `idea-autopsy` | Autopsy a business idea before you build it: kill-list check, five hard filters, a free-AI one-prompt test, live ad-market verification, and a verdict with a... | critical | hafiz-actyte/idea-autopsy | business-ideas, idea-validation, market-research, startup, founders | business-ideas, idea-validation, market-research, startup, founders, idea, autopsy, business, before, kill, list, check |
 | `product-decision-agent` | 中文产品决策 Agent。用于需求优先级、Roadmap、增长、留存、运营、数据异常、A/B Test、项目延期和跨团队协作；先判断事实、阶段、核心阻塞与主导机制，再给出下一步、停止清单和切换条件。默认中文，不引用原文或讲历史。 | safe | atdy/maoxuan-product-agent | product-management, decision-making, growth, operations, chinese | product-management, decision-making, growth, operations, chinese, product, decision, agent, roadmap, test |
+| `shopify-review-triage` | Turn public 1-3-star Shopify App Store review rows into a P0-P3 triage brief: incident risk, repeated friction, pricing confusion, feature requests, and an e... | none | alfredtech2026/shopify-app-review-brief | shopify, app-store-reviews, customer-feedback, triage, product-management, support | shopify, app-store-reviews, customer-feedback, triage, product-management, support, review, turn, public, star, app, store |
 
 ## product-management (1)
 

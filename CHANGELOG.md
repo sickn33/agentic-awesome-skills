@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- Pinned and bundled Ajv's `fast-uri` dependency on the patched 3.1.x line, resolving GHSA-7p8r-x3mc-p8w7 in the production dependency tree.
+
 ## [15.8.0] - 2026-08-02 - "Governed Integrations and Agent Project Workflows"
 
 > Added four evidence-first skills for GitHub attachments, governed AI gateways, project-specific agent instructions, and revenue analytics through MCP.
