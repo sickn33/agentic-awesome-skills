@@ -48,7 +48,7 @@
     "express-rate-limit": "^8.5.2",
     "globals": "^16.5.0",
     "jsdom": "^24.0.0",
-    "postcss": "8.5.18",
+    "postcss": "8.5.25",
     "tailwindcss": "^4.2.0",
     "typescript": "^5.4.0",
     "typescript-eslint": "^8.65.0",
