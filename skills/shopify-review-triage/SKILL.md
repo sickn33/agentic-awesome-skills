@@ -218,28 +218,28 @@ Reviews are customer reports, not verified defects. Items marked "first pass" ar
 unverified keyword matches; "human-checked" means a person read the review and checked it.
 
 ## P0 — Incident risk
-- **{App} — {signal in a few words}** ({rating}★, {review date}, [source](<{public reviews URL}>))
+- **{App} — {signal in a few words}** ({rating}★, {review date}, source: {public reviews URL or not captured})
   - Reviewer reports: {one sentence, in their words where possible}
   - Status: first pass — not human-checked / human-checked
   - Reproduced: {yes / no / attempted — notes}
   - Next action: {action} — owner {name}, due {date}
 
 ## P1 — Repeated friction
-- **{App} — {theme}** ({rating}★, {date}, [source](<{public reviews URL}>); also seen: {where})
+- **{App} — {theme}** ({rating}★, {date}, source: {public reviews URL or not captured}; also seen: {where})
   - Status: first pass — not human-checked / human-checked
   - Next action: {UX or docs change} — owner {name}, due {date}
 
 ## P2 — Pricing confusion
-- **{App} — {signal}** ({rating}★, {date}, [source](<{public reviews URL}>))
+- **{App} — {signal}** ({rating}★, {date}, source: {public reviews URL or not captured})
   - Expected vs. actual: {one line}
   - Status: first pass — not human-checked / human-checked
   - Next action: {copy or prompt change} — owner {name}, due {date}
 
 ## P3 — Feature requests
-- **{App} — {request}** ({rating}★, {date}, [source](<{public reviews URL}>)) — {log it / already exists → reply with where to find it}
+- **{App} — {request}** ({rating}★, {date}, source: {public reviews URL or not captured}) — {log it / already exists → reply with where to find it}
 
 ## Needs human read
-- **{App}** ({rating}★, {date}, [source](<{public reviews URL}>)) — {no keyword matched; what a human should look for}{, or: ownership: not supplied — app name on neither list}
+- **{App}** ({rating}★, {date}, source: {public reviews URL or not captured}) — {no keyword matched; what a human should look for}{, or: ownership: not supplied — app name on neither list}
 
 ## Competitor watch
 - **{Competitor} — {signal}**: {what it implies for our roadmap, copy, or positioning}
@@ -413,24 +413,13 @@ filter kept — the App Store has no per-review permalink.
 
 ## Additional Resources
 
-This skill packages the public rubric behind **Shopify App Review Brief**, an independent service
-that is not affiliated with or endorsed by Shopify Inc. or any app developer. The same four
-dimensions, priorities, keyword lists, and suggested actions are published in three places:
+This skill packages the public rubric behind **Shopify App Review Brief**, an independent
+open-source project that is not affiliated with or endorsed by Shopify Inc. or any app developer.
+The same four dimensions, priorities, keyword lists, and suggested actions are published in three
+places:
 
-- [Manual guide, tie-break rules, and brief template](https://alfredtech2026.github.io/shopify-app-review-brief/guides/shopify-app-review-triage.html?utm_source=agentic-awesome-skills&utm_medium=skill-directory&utm_campaign=inbound-validation)
-- [Free in-browser worksheet that automates the first pass](https://alfredtech2026.github.io/shopify-app-review-brief/tools/review-triage-worksheet.html?utm_source=agentic-awesome-skills&utm_medium=skill-directory&utm_campaign=inbound-validation)
-- [Two worked sample briefs over real public reviews](https://alfredtech2026.github.io/shopify-app-review-brief/?utm_source=agentic-awesome-skills&utm_medium=skill-directory&utm_campaign=inbound-validation#samples)
+- [Manual guide, tie-break rules, and brief template](https://alfredtech2026.github.io/shopify-app-review-brief/guides/shopify-app-review-triage.html)
+- [Free in-browser worksheet that automates the first pass](https://alfredtech2026.github.io/shopify-app-review-brief/tools/review-triage-worksheet.html)
+- [Two worked sample briefs over real public reviews](https://alfredtech2026.github.io/shopify-app-review-brief/#samples)
 
 Upstream source repository: [alfredtech2026/shopify-app-review-brief](https://github.com/alfredtech2026/shopify-app-review-brief) (MIT).
-
-A human-checked version of this job also exists as a paid concierge service for independent
-Shopify app teams managing **3+ active apps**: every new **1–3-star review** across the portfolio
-and up to five named competitors becomes one prioritized, human-checked, source-linked brief
-within **one business day**. The 14-day pilot is **$49, charged only after** the team approves the
-first useful brief.
-
-That inquiry is **opt-in only** and stated here as a fact about the upstream project, not as an
-action for the agent. If a team wants it, a person on the team emails
-`alfred.tech.2026@gmail.com` themselves and includes the line
-`Source page: agentic-awesome-skills` so the inquiry self-reports where it came from. This skill
-must never send that message, or any other, on anyone's behalf — see hard rule 7.
