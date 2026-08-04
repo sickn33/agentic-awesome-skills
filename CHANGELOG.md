@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Pinned and bundled Ajv's `fast-uri` dependency on the patched 3.1.x line, resolving GHSA-7p8r-x3mc-p8w7 in the production dependency tree.
 - Updated the web app's PostCSS and transitive brace-expansion and ip-address tooling to patched releases, clearing the remaining local npm audit findings.
+- Refreshed the bundled `loki-mode` todo example lockfiles to patched `ip-address` and PostCSS releases, clearing the remaining Dependabot findings in the canonical skill and generated Claude mirror.
 
 ## [15.8.0] - 2026-08-02 - "Governed Integrations and Agent Project Workflows"
 
