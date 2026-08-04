@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-02T16:27:13.000Z",
-  "total": 2001,
+  "total": 2002,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -47698,6 +47698,42 @@
       "path": "skills/shopify-development/SKILL.md"
     },
     {
+      "id": "shopify-review-triage",
+      "canonical_id": "shopify-review-triage",
+      "name": "shopify-review-triage",
+      "description": "Turn public 1-3-star Shopify App Store review rows into a P0-P3 triage brief: incident risk, repeated friction, pricing confusion, feature requests, and an explicit needs-human-read bucket.",
+      "category": "product",
+      "risk": "none",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "alfredtech2026/shopify-app-review-brief",
+      "license": "MIT",
+      "license_source": "https://github.com/alfredtech2026/shopify-app-review-brief/blob/main/LICENSE",
+      "tags": [
+        "shopify",
+        "app-store-reviews",
+        "customer-feedback",
+        "triage",
+        "product-management",
+        "support"
+      ],
+      "triggers": [
+        "shopify",
+        "app-store-reviews",
+        "customer-feedback",
+        "triage",
+        "product-management",
+        "support",
+        "review",
+        "turn",
+        "public",
+        "star",
+        "app",
+        "store"
+      ],
+      "path": "skills/shopify-review-triage/SKILL.md"
+    },
+    {
       "id": "short",
       "canonical_id": "short",
       "name": "short",
@@ -53850,7 +53886,7 @@
       "id": "unified-ai-gateway",
       "canonical_id": "unified-ai-gateway",
       "name": "unified-ai-gateway",
-      "description": "Operate and evaluate Unified AI System through eight governed MCP tools while preserving fake-provider, authorization, and evidence boundaries.",
+      "description": "Operate and evaluate Unified AI System through nine governed MCP tools, including provider-free prompt enhancement, while preserving fake-provider, authorization, and evidence boundaries.",
       "category": "ai-ml",
       "risk": "critical",
       "source": "https://github.com/happy520ai/unified-ai-system/tree/master/skills/unified-ai-gateway",
@@ -53877,7 +53913,7 @@
         "operate",
         "evaluate",
         "through",
-        "eight"
+        "nine"
       ],
       "path": "skills/unified-ai-gateway/SKILL.md"
     },

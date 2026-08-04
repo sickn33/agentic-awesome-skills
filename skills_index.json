@@ -39942,6 +39942,40 @@
     }
   },
   {
+    "id": "shopify-review-triage",
+    "path": "skills/shopify-review-triage",
+    "category": "product",
+    "name": "shopify-review-triage",
+    "description": "Turn public 1-3-star Shopify App Store review rows into a P0-P3 triage brief: incident risk, repeated friction, pricing confusion, feature requests, and an explicit needs-human-read bucket.",
+    "risk": "none",
+    "source": "community",
+    "date_added": "2026-08-03",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "alfredtech2026/shopify-app-review-brief",
+    "license": "MIT",
+    "license_source": "https://github.com/alfredtech2026/shopify-app-review-brief/blob/main/LICENSE",
+    "tags": [
+      "shopify",
+      "app-store-reviews",
+      "customer-feedback",
+      "triage",
+      "product-management",
+      "support"
+    ]
+  },
+  {
     "id": "short",
     "path": "skills/short",
     "category": "writing",
@@ -45229,7 +45263,7 @@
     "path": "skills/unified-ai-gateway",
     "category": "ai-ml",
     "name": "unified-ai-gateway",
-    "description": "Operate and evaluate Unified AI System through eight governed MCP tools while preserving fake-provider, authorization, and evidence boundaries.",
+    "description": "Operate and evaluate Unified AI System through nine governed MCP tools, including provider-free prompt enhancement, while preserving fake-provider, authorization, and evidence boundaries.",
     "risk": "critical",
     "source": "https://github.com/happy520ai/unified-ai-system/tree/master/skills/unified-ai-gateway",
     "date_added": "2026-08-01",
