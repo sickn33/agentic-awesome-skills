@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- Closed the August Codex Security sweep by making image review symlink-safe, treating project scripts and credentials as untrusted, pinning the GitHub attachment helper, confining Loki cleanup, loading PR-policy dependencies only from protected `main`, scoping oversized MCP requests to bounded metadata, and removing the public Star History token.
 - Pinned and bundled Ajv's `fast-uri` dependency on the patched 3.1.x line, resolving GHSA-7p8r-x3mc-p8w7 in the production dependency tree.
 - Updated the web app's PostCSS and transitive brace-expansion and ip-address tooling to patched releases, clearing the remaining local npm audit findings.
 - Refreshed the bundled `loki-mode` todo example lockfiles to patched `ip-address` and PostCSS releases, clearing the remaining Dependabot findings in the canonical skill and generated Claude mirror.

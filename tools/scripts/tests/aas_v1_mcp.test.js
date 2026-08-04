@@ -8,12 +8,14 @@ const { PassThrough } = require("node:stream");
 const test = require("node:test");
 const {
   AGENT_SELECTION_CONTRACT,
+  MAX_BASE_REQUEST_BYTES,
   MAX_JSON_DEPTH,
   MAX_LINE_BYTES,
   MAX_SESSION_MANIFESTS,
   McpServer,
   TOOL_NAMES,
   parseStrictJsonLine,
+  parseMcpRequestLine,
   runStdio,
 } = require("../../lib/aas-v1/mcp");
 const core = require("../../lib/aas-v1");
@@ -67,7 +69,7 @@ test("MCP bounds composed manifest session state and evicts the oldest digest", 
 
 test("strict JSON-lines parser rejects invalid UTF-8, duplicate keys, excess depth, batches, and oversized input", () => {
   assert.deepEqual(parseStrictJsonLine(Buffer.from('{"jsonrpc":"2.0"}')), { jsonrpc: "2.0" });
-  assert.doesNotThrow(() => parseStrictJsonLine(Buffer.from(JSON.stringify({
+  const codexMetadataRequest = Buffer.from(JSON.stringify({
     jsonrpc: "2.0",
     id: 1,
     method: "tools/call",
@@ -76,7 +78,29 @@ test("strict JSON-lines parser rejects invalid UTF-8, duplicate keys, excess dep
       arguments: { query: "android ui", target: "codex", limit: 5 },
       _meta: { "x-codex-turn-metadata": { workspaces: { remotes: "x".repeat(6 * 1024) } } },
     },
-  }))));
+  }));
+  assert.ok(codexMetadataRequest.length > MAX_BASE_REQUEST_BYTES);
+  assert.throws(() => parseStrictJsonLine(codexMetadataRequest), { code: "AAS_MCP_LINE_TOO_LARGE" });
+  assert.doesNotThrow(() => parseMcpRequestLine(codexMetadataRequest));
+  const oversizedArguments = Buffer.from(JSON.stringify({
+    jsonrpc: "2.0",
+    id: 2,
+    method: "tools/call",
+    params: { name: "search_skills", arguments: { query: "x".repeat(6 * 1024) }, _meta: {} },
+  }));
+  assert.throws(() => parseMcpRequestLine(oversizedArguments), { code: "AAS_MCP_LINE_TOO_LARGE" });
+  const arbitraryMetadata = Buffer.from(JSON.stringify({
+    jsonrpc: "2.0",
+    id: 3,
+    method: "tools/call",
+    params: { name: "search_skills", arguments: {}, _meta: { arbitrary: "x".repeat(6 * 1024) } },
+  }));
+  assert.throws(() => parseMcpRequestLine(arbitraryMetadata), { code: "AAS_MCP_LINE_TOO_LARGE" });
+  const whitespaceInflated = Buffer.concat([
+    Buffer.from('{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"search_skills","arguments":{},"_meta":{}}}'),
+    Buffer.alloc(6 * 1024, 0x20),
+  ]);
+  assert.throws(() => parseMcpRequestLine(whitespaceInflated), { code: "AAS_MCP_LINE_TOO_LARGE" });
   assert.throws(
     () => parseStrictJsonLine(Buffer.from('{"key":1,"key":2}')),
     { code: "AAS_MCP_JSON_DUPLICATE_KEY" },
@@ -92,7 +116,7 @@ test("strict JSON-lines parser rejects invalid UTF-8, duplicate keys, excess dep
   );
   assert.throws(() => parseStrictJsonLine(Buffer.from("[]")), { code: "AAS_MCP_JSONRPC_BATCH_FORBIDDEN" });
   assert.throws(
-    () => parseStrictJsonLine(Buffer.alloc(MAX_LINE_BYTES + 1, 0x20)),
+    () => parseStrictJsonLine(Buffer.alloc(MAX_BASE_REQUEST_BYTES + 1, 0x20)),
     { code: "AAS_MCP_LINE_TOO_LARGE" },
   );
   assert.throws(
@@ -711,8 +735,17 @@ test("stdio counts the newline in the byte boundary and bounds its pending reque
   }
 
   const acceptingServer = { handle: async (request) => ({ jsonrpc: "2.0", id: request.id ?? null, result: {} }) };
-  const base = JSON.stringify({ jsonrpc: "2.0", id: 1, method: "ping", pad: "" });
-  const framed = (length) => Buffer.from(`${base.slice(0, -2)}${"x".repeat(length - Buffer.byteLength(base) - 1)}\"}\n`);
+  const padMarker = "__PAD__";
+  const base = JSON.stringify({
+    jsonrpc: "2.0",
+    id: 1,
+    method: "tools/call",
+    params: { name: "search_skills", arguments: {}, _meta: { "x-codex-turn-metadata": { pad: padMarker } } },
+  });
+  const framed = (length) => Buffer.from(`${base.replace(
+    padMarker,
+    "x".repeat(length - Buffer.byteLength(base) + Buffer.byteLength(padMarker) - 1),
+  )}\n`);
   const boundary = await exercise(framed(MAX_LINE_BYTES), acceptingServer);
   assert.equal(boundary[0].result !== undefined, true);
   const exploit = await exercise(framed(MAX_LINE_BYTES + 1), acceptingServer);

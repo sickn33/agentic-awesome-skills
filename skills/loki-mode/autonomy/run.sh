@@ -74,12 +74,34 @@ if [[ -z "${LOKI_RUNNING_FROM_TEMP:-}" ]]; then
     exec "$TEMP_SCRIPT" "$@"
 fi
 
+# A caller can set environment variables before launch, so the child must prove
+# that it is the private self-copy created above before trusting the temp marker.
+CURRENT_TEMP_RUN_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)" || exit 1
+case "$CURRENT_TEMP_RUN_DIR" in
+    "${TMPDIR:-/tmp}"/loki-run.*) ;;
+    *)
+        echo "Invalid Loki temporary self-copy directory; refusing to continue." >&2
+        exit 2
+        ;;
+esac
+if [[ "${BASH_SOURCE[0]}" != "$CURRENT_TEMP_RUN_DIR/run.sh" \
+   || "${LOKI_TEMP_RUN_DIR:-}" != "$CURRENT_TEMP_RUN_DIR" \
+   || ! -O "$CURRENT_TEMP_RUN_DIR" ]]; then
+    echo "Invalid Loki temporary self-copy state; refusing to continue." >&2
+    exit 2
+fi
+
 # Restore original paths when running from temp
 SCRIPT_DIR="${LOKI_ORIGINAL_SCRIPT_DIR:-$SCRIPT_DIR}"
 PROJECT_DIR="${LOKI_ORIGINAL_PROJECT_DIR:-$PROJECT_DIR}"
 
-# Clean up temp script on exit
-trap 'rm -rf -- "${LOKI_TEMP_RUN_DIR:?}" 2>/dev/null' EXIT
+# Remove only the verified self-copy file, then remove its directory only if it
+# is empty. Never recursively delete a path supplied through the environment.
+cleanup_temp_self_copy() {
+    rm -f -- "$CURRENT_TEMP_RUN_DIR/run.sh" 2>/dev/null || true
+    rmdir -- "$CURRENT_TEMP_RUN_DIR" 2>/dev/null || true
+}
+trap cleanup_temp_self_copy EXIT
 
 # Configuration
 MAX_RETRIES=${LOKI_MAX_RETRIES:-50}

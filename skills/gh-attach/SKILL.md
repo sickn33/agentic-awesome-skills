@@ -27,7 +27,7 @@ plugin:
     claude: blocked
   setup:
     type: manual
-    summary: "Installs and runs a third-party gh extension that needs a GitHub user_session cookie or GH_ATTACH_SESSION_TOKEN."
+    summary: "Installs a reviewed gh-attach release and, for uploads, uses an explicitly approved interactive browser session cookie."
     docs: SKILL.md
 ---
 
@@ -65,16 +65,17 @@ Use this skill when asked to:
 
 ```bash
 gh auth status                                   # gh installed and authenticated
-gh extension list | grep -q 'gh attach' \
-  || gh extension install sudosubin/gh-attach    # review/pin the extension source first
+gh extension install sudosubin/gh-attach --pin v0.4.2 --force
+gh extension list | grep -F 'sudosubin/gh-attach' # require the reviewed v0.4.2 release
 ```
 
 Uploads use a GitHub `user_session` browser cookie, **not** the `gh` token (that
 endpoint rejects tokens). By default `gh` must be authenticated so `gh-attach` can
 select the matching browser account (Chromium family, Firefox family, or Safari).
-If the wrong account is selected, add `--browser <name> --profile <name>`. For
-headless or CI use, set `GH_ATTACH_SESSION_TOKEN` to the bare `user_session` cookie
-value and treat it as a full account credential.
+If the wrong account is selected, add `--browser <name> --profile <name>`. Obtain
+explicit approval before allowing the pinned extension to access that interactive
+browser profile. Headless and CI uploads are intentionally unsupported: never export,
+store, or pass a raw `user_session` cookie to the extension.
 
 ### Step 2: Upload
 
@@ -123,15 +124,17 @@ an authorization fallback.
   Unicode.
 - For display sizing, embed an HTML tag instead of the bare URL:
   `<img width="800" src="$URL">`.
-- In CI, set `GH_ATTACH_SESSION_TOKEN` from a dedicated bot account.
+- Keep uploads interactive. Do not place a GitHub browser session in CI, an
+  environment variable, a secret store consumed by this extension, or an agent log.
 - `gh-attach` can upload multiple files concurrently and emit Markdown or JSON
   output with jq-style filtering when you need to script around the result.
 
 ## Limitations
 
-- **Session cookie required.** A `user_session` cookie grants full account access
-  (it is not scoped like a PAT), so treat it like a password and prefer a bot
-  account in CI.
+- **Interactive session cookie required.** A `user_session` cookie grants full
+  account access and is not scoped like a PAT. The supported path is the reviewed,
+  pinned extension reading an explicitly approved local browser profile; CI and
+  headless cookie injection are out of scope.
 - **Write access to the target repo is required** to upload.
 - **Private-repo attachments stay private:** the `user-attachments` URL inherits
   repo visibility, so an anonymous fetch on a private repo returns 404 or 403 by
@@ -142,9 +145,10 @@ an authorization fallback.
 
 ## Security & Safety Notes
 
-- The `user_session` cookie and `GH_ATTACH_SESSION_TOKEN` are full-account
-  credentials. Never print them, never paste them on a command line, and never
-  commit them. Prefer a dedicated bot account for headless or CI use.
+- The `user_session` cookie is a full-account credential. Never print, export,
+  paste, log, or commit it, and never make it available to CI or headless agents.
+- Do not install or upgrade `gh-attach` from a moving branch or an unpinned latest
+  release. Re-review and update the exact `--pin` only in a repository change.
 - Uploaded attachments are auto-rendered by GitHub, so only upload files you intend
   to share with everyone who can view the target repository.
 - Confirm the destination `-R <owner>/<repo>` before uploading so an attachment is

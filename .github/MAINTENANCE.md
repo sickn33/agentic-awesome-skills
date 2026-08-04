@@ -162,7 +162,7 @@ Changed-skill evidence resolves canonical ownership from the changed path's ance
 
 **Required-CI execution contract:**
 
-- `pr-policy` executes the fork-safety intake with code materialized from the exact protected base before the dependent required jobs start. This is an early, unprivileged rejection of unsafe fork diffs; `merge:batch` still recomputes the trusted decision and remains the only fork-run approval and merge authority.
+- `pr-policy` executes the fork-safety intake with code and dependencies materialized from the exact protected base before the dependent required jobs start. The classifier's `NODE_PATH` must point only at that protected-base worktree, never at pull-request-controlled `node_modules`. This is an early, unprivileged rejection of unsafe fork diffs; `merge:batch` still recomputes the trusted decision and remains the only fork-run approval and merge authority.
 - The reported `impact_profile` is shadow telemetry only. It does not skip, downgrade, or satisfy any required check.
 - For an ordinary source PR, `source-validation` performs the generated-state refresh once and publishes a manifest bound to the exact repository, workflow/run attempt, and PR head SHA. `artifact-preview` verifies that manifest and its digest; it does not regenerate the same source-PR tree.
 - For the protected canonical-sync PR, `pr-policy` reproduces the exact tree from trusted `main`, `source-validation` records a lightweight boundary, and `artifact-preview` confirms that regeneration leaves no drift. The merged commit still receives the explicit final `main` CI and CodeQL runs.

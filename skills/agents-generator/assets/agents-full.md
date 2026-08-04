@@ -246,7 +246,7 @@ If `docs/` or `doc/` has 3+ markdown files. Ordered list of files to read before
 
 ### `{{ENVIRONMENT_VARIABLES}}`
 
-If `.env.example`, `.env`, or `process.env.` calls found. Table: Variable | Required | Purpose. 3-8 vars.
+If placeholder-only `.env.example` entries or source references such as `process.env.NAME` are found, produce a table with Variable | Required | Purpose for 3-8 variables. Never open `.env`, `.env.local`, or another secret-bearing environment file, and never copy values into generated instructions or the transcript.
 
 ### `{{E2E_MATRIX}}`
 

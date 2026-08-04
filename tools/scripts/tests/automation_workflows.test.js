@@ -164,15 +164,15 @@ assert.match(
   /- name: Run repo-state sync[\s\S]*?run: npm run sync:repo-state/,
   "main CI should use the unified repo-state sync command",
 );
-assert.ok(
-  ciWorkflow.indexOf("- name: Install PR policy dependencies") <
-    ciWorkflow.indexOf("- name: Intake PR change"),
-  "PR policy dependencies must be installed before preflight executes",
-);
 assert.match(
   ciWorkflow,
-  /- name: Intake PR change[\s\S]*?git worktree add --detach "\$trusted_root" "\$\{\{ github\.event\.pull_request\.base\.sha \}\}"[\s\S]*?"\$trusted_root\/tools\/scripts\/pr_preflight\.cjs"[\s\S]*?--base "\$\{\{ github\.event\.pull_request\.base\.sha \}\}"[\s\S]*?--head "\$\{\{ github\.event\.pull_request\.head\.sha \}\}"[\s\S]*?--check-fork-safety/,
-  "PR policy must execute trusted-base fork classification against the exact base/head tuple",
+  /- name: Intake PR change[\s\S]*?git worktree add --detach "\$trusted_root" "\$\{\{ github\.event\.pull_request\.base\.sha \}\}"[\s\S]*?npm ci --ignore-scripts --prefix "\$trusted_root"[\s\S]*?NODE_PATH="\$trusted_root\/node_modules" node "\$trusted_root\/tools\/scripts\/pr_preflight\.cjs"[\s\S]*?--base "\$\{\{ github\.event\.pull_request\.base\.sha \}\}"[\s\S]*?--head "\$\{\{ github\.event\.pull_request\.head\.sha \}\}"[\s\S]*?--check-fork-safety/,
+  "PR policy must install trusted-base dependencies and execute classification against the exact base/head tuple",
+);
+assert.doesNotMatch(
+  ciWorkflow,
+  /NODE_PATH="\$GITHUB_WORKSPACE\/node_modules"/,
+  "PR policy must never load dependencies from the pull-request workspace",
 );
 assert.match(ciWorkflow, /impact_profile: \$\{\{ steps\.intake\.outputs\.impact_profile \}\}/);
 assert.match(

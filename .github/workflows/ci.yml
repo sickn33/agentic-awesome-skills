@@ -48,10 +48,6 @@ jobs:
         with:
           node-version: "lts/*"
 
-      - name: Install PR policy dependencies
-        if: github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
-        run: npm ci --ignore-scripts
-
       - name: Fetch base branch
         run: git fetch origin "${{ github.base_ref || 'main' }}"
 
@@ -61,7 +57,8 @@ jobs:
         run: |
           trusted_root="$RUNNER_TEMP/pr-policy-main"
           git worktree add --detach "$trusted_root" "${{ github.event.pull_request.base.sha }}"
-          NODE_PATH="$GITHUB_WORKSPACE/node_modules" node "$trusted_root/tools/scripts/pr_preflight.cjs" \
+          npm ci --ignore-scripts --prefix "$trusted_root"
+          NODE_PATH="$trusted_root/node_modules" node "$trusted_root/tools/scripts/pr_preflight.cjs" \
             --repo "$GITHUB_WORKSPACE" \
             --base "${{ github.event.pull_request.base.sha }}" \
             --head "${{ github.event.pull_request.head.sha }}" \

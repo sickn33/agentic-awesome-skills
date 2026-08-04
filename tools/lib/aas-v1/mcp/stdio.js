@@ -1,8 +1,46 @@
 "use strict";
 
-const { MAX_LINE_BYTES, StrictJsonError, parseStrictJsonLine } = require("./strict-json");
+const {
+  MAX_BASE_REQUEST_BYTES,
+  MAX_LINE_BYTES,
+  StrictJsonError,
+  parseStrictJsonLine,
+} = require("./strict-json");
 
 const MAX_PENDING_REQUESTS = 32;
+const MAX_JSON_FORMATTING_OVERHEAD_BYTES = 64;
+const CODEX_TURN_METADATA_KEY = "x-codex-turn-metadata";
+
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function parseMcpRequestLine(bytes) {
+  const buffer = Buffer.isBuffer(bytes) ? bytes : Buffer.from(bytes);
+  const request = parseStrictJsonLine(buffer, { maximumBytes: MAX_LINE_BYTES });
+  if (buffer.length <= MAX_BASE_REQUEST_BYTES) return request;
+
+  if (
+    request.method !== "tools/call"
+    || !isPlainObject(request.params)
+    || !isPlainObject(request.params._meta)
+    || !isPlainObject(request.params._meta[CODEX_TURN_METADATA_KEY])
+  ) {
+    throw new StrictJsonError("AAS_MCP_LINE_TOO_LARGE");
+  }
+  const metaWithoutCodexTurn = { ...request.params._meta };
+  delete metaWithoutCodexTurn[CODEX_TURN_METADATA_KEY];
+  const paramsWithoutCodexTurn = { ...request.params, _meta: metaWithoutCodexTurn };
+  const requestWithoutCodexTurn = { ...request, params: paramsWithoutCodexTurn };
+  if (Buffer.byteLength(JSON.stringify(requestWithoutCodexTurn), "utf8") > MAX_BASE_REQUEST_BYTES) {
+    throw new StrictJsonError("AAS_MCP_LINE_TOO_LARGE");
+  }
+  const canonicalBytes = Buffer.byteLength(JSON.stringify(request), "utf8");
+  if (buffer.length > canonicalBytes + MAX_JSON_FORMATTING_OVERHEAD_BYTES) {
+    throw new StrictJsonError("AAS_MCP_LINE_TOO_LARGE");
+  }
+  return request;
+}
 
 function parseErrorResponse(code = "AAS_MCP_PARSE_FAILED") {
   return {
@@ -38,7 +76,7 @@ function runStdio(server, options = {}) {
     sequence = sequence.then(async () => {
       let request;
       try {
-        request = parseStrictJsonLine(line);
+        request = parseMcpRequestLine(line);
       } catch (error) {
         const code = error instanceof StrictJsonError ? error.code : "AAS_MCP_PARSE_FAILED";
         writeJsonLine(output, parseErrorResponse(code));
@@ -95,4 +133,4 @@ function runStdio(server, options = {}) {
   return { completed: () => sequence };
 }
 
-module.exports = { MAX_PENDING_REQUESTS, parseErrorResponse, runStdio, writeJsonLine };
+module.exports = { MAX_PENDING_REQUESTS, parseErrorResponse, parseMcpRequestLine, runStdio, writeJsonLine };

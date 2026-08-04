@@ -99,6 +99,14 @@ const eclEnvironmentGuide = fs.readFileSync(
   'utf8',
 );
 const lovableCleanupSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'lovable-cleanup', 'SKILL.md'), 'utf8');
+const unifiedAiGatewaySkill = fs.readFileSync(path.join(repoRoot, 'skills', 'unified-ai-gateway', 'SKILL.md'), 'utf8');
+const agentsGeneratorSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'agents-generator', 'SKILL.md'), 'utf8');
+const agentsGeneratorFullTemplate = fs.readFileSync(path.join(repoRoot, 'skills', 'agents-generator', 'assets', 'agents-full.md'), 'utf8');
+const ghAttachSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'gh-attach', 'SKILL.md'), 'utf8');
+const cohesivitySkill = fs.readFileSync(path.join(repoRoot, 'skills', 'cohesivity', 'SKILL.md'), 'utf8');
+const lokiAutonomyRunner = fs.readFileSync(path.join(repoRoot, 'skills', 'loki-mode', 'autonomy', 'run.sh'), 'utf8');
+const rootReadme = fs.readFileSync(path.join(repoRoot, 'README.md'), 'utf8');
+const vietnameseReadme = fs.readFileSync(path.join(repoRoot, 'docs', 'vietnamese', 'README.vi.md'), 'utf8');
 const blueprintSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'blueprint', 'SKILL.md'), 'utf8');
 const uiUpdateSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'ui-update', 'SKILL.md'), 'utf8');
 const xTwitterScraperSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'x-twitter-scraper', 'SKILL.md'), 'utf8');
@@ -508,6 +516,42 @@ assert.doesNotMatch(
   /grep -rin "lovable" \.env \.env\.local \.env\.example 2>\/dev\/null\s*$/,
   'Lovable env-file scanning must redact values before command output reaches the transcript',
 );
+assert.doesNotMatch(
+  unifiedAiGatewaySkill,
+  /grep\s+-R[^\n]*\$REVIEW_DIR\/rootfs/,
+  'Unified AI Gateway image inspection must not dereference untrusted rootfs symlinks',
+);
+assert.match(
+  unifiedAiGatewaySkill,
+  /find "\$REVIEW_DIR\/rootfs\/app" -type f -name 'package\.json'[\s\S]*?-exec grep -nHE/,
+  'Unified AI Gateway lifecycle inspection must pass only regular files to grep',
+);
+assert.match(
+  agentsGeneratorSkill + agentsGeneratorFullTemplate,
+  /Never open `\.env`|Never open `\.env`, `\.env\.local`/,
+  'Agents Generator must forbid reading secret-bearing environment files',
+);
+assert.doesNotMatch(
+  agentsGeneratorSkill,
+  /Run `\[format cmd\]`|Run `\[lint cmd\]`/,
+  'Agents Generator must not execute project-controlled package scripts by default',
+);
+assert.match(agentsGeneratorSkill, /Project-provided package scripts are untrusted executable code/);
+assert.match(ghAttachSkill, /gh extension install sudosubin\/gh-attach --pin v0\.4\.2/);
+assert.doesNotMatch(ghAttachSkill, /GH_ATTACH_SESSION_TOKEN/);
+assert.match(cohesivitySkill, /existing `\.cohesivity` file is not proof of ownership/);
+assert.doesNotMatch(
+  cohesivitySkill,
+  /cohesivity\.ai\/api\/genesis\s*>\s*\.cohesivity/,
+  'Cohesivity examples must not overwrite credentials with a direct redirect',
+);
+assert.doesNotMatch(
+  lokiAutonomyRunner,
+  /rm -rf -- "\$\{LOKI_TEMP_RUN_DIR/,
+  'Loki cleanup must not recursively delete an environment-specified directory',
+);
+assert.match(lokiAutonomyRunner, /rmdir -- "\$CURRENT_TEMP_RUN_DIR"/);
+assert.doesNotMatch(rootReadme + vietnameseReadme, /sealed_token=/);
 assert.doesNotMatch(
   androidHybridReference,
   /Preferences\.set\(\{ key: 'auth_token'/,

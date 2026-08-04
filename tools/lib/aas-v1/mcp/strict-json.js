@@ -1,6 +1,7 @@
 "use strict";
 
 const MAX_LINE_BYTES = 256 * 1024;
+const MAX_BASE_REQUEST_BYTES = 4 * 1024;
 const MAX_JSON_DEPTH = 16;
 
 class StrictJsonError extends Error {
@@ -128,7 +129,7 @@ function scanJson(text, maximumDepth = MAX_JSON_DEPTH) {
 
 function parseStrictJsonLine(bytes, options = {}) {
   const buffer = Buffer.isBuffer(bytes) ? bytes : Buffer.from(bytes);
-  const maximumBytes = options.maximumBytes ?? MAX_LINE_BYTES;
+  const maximumBytes = options.maximumBytes ?? MAX_BASE_REQUEST_BYTES;
   if (buffer.length > maximumBytes) strictJsonError("AAS_MCP_LINE_TOO_LARGE");
   let text;
   try {
@@ -149,6 +150,7 @@ function parseStrictJsonLine(bytes, options = {}) {
 }
 
 module.exports = {
+  MAX_BASE_REQUEST_BYTES,
   MAX_JSON_DEPTH,
   MAX_LINE_BYTES,
   StrictJsonError,
