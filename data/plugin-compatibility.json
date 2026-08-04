@@ -16881,7 +16881,7 @@
       },
       "setup": {
         "type": "manual",
-        "summary": "Installs and runs a third-party gh extension that needs a GitHub user_session cookie or GH_ATTACH_SESSION_TOKEN.",
+        "summary": "Installs a reviewed gh-attach release and, for uploads, uses an explicitly approved interactive browser session cookie.",
         "docs": "SKILL.md"
       },
       "reasons": [

@@ -67,8 +67,15 @@ done < <(find "$REVIEW_DIR/rootfs/app" -type f -name '*.node' -print0)
 find "$REVIEW_DIR/rootfs" -type f \( -perm -0100 -o -perm -0010 -o -perm -0001 \) -print > "$REVIEW_DIR/executable-files.txt"
 find "$REVIEW_DIR/rootfs" -type f \( -perm -4000 -o -perm -2000 \) -print > "$REVIEW_DIR/suid-sgid-files.txt"
 find "$REVIEW_DIR/rootfs/app" -type f \( -name '.env' -o -name '.env.*' -o -name '*.pem' -o -name '*.key' -o -name '*.p12' -o -name '*.pfx' -o -path '*/.ssh/id_*' \) -print > "$REVIEW_DIR/credential-like-files.txt"
-grep -RInHE --include='package.json' '"(preinstall|install|postinstall|prepare|prepack|postpack)"' "$REVIEW_DIR/rootfs/app" > "$REVIEW_DIR/lifecycle-hooks.txt"
-grep -RInE 'child_process|spawn\(|fetch\(|AI_GATEWAY_MCP_URL|process\.env|writeFile|appendFile|unlink|rm\(' "$REVIEW_DIR/rootfs/app/packages/mcp-server/src" "$REVIEW_DIR/rootfs/app/packages/shared-sdk/src" > "$REVIEW_DIR/runtime-sensitive-code.txt"
+find "$REVIEW_DIR/rootfs/app" -type f -name 'package.json' \
+  -exec grep -nHE '"(preinstall|install|postinstall|prepare|prepack|postpack)"' -- {} + \
+  > "$REVIEW_DIR/lifecycle-hooks.txt"
+find \
+  "$REVIEW_DIR/rootfs/app/packages/mcp-server/src" \
+  "$REVIEW_DIR/rootfs/app/packages/shared-sdk/src" \
+  -type f \
+  -exec grep -nHE 'child_process|spawn\(|fetch\(|AI_GATEWAY_MCP_URL|process\.env|writeFile|appendFile|unlink|rm\(' -- {} + \
+  > "$REVIEW_DIR/runtime-sensitive-code.txt"
 ```
 
 If `sha256sum` is unavailable, use the platform's SHA-256 utility and preserve
