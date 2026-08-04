@@ -62,7 +62,8 @@ interaction = client.interactions.create(
 
 ### REST API (`curl`)
 ```bash
-cat > /tmp/pro_image_request.json << 'EOF'
+mkdir -p generations
+cat > generations/pro_image_request.json << 'EOF'
 {
   "model": "gemini-3-pro-image",
   "input": [
@@ -80,7 +81,7 @@ curl -s -X POST \
   "https://generativelanguage.googleapis.com/v1beta/interactions" \
   -H "x-goog-api-key: $GEMINI_API_KEY" \
   -H "Content-Type: application/json" \
-  -d @/tmp/pro_image_request.json > /tmp/response.json
+  -d @generations/pro_image_request.json > generations/pro_image_response.json
 ```
 
 The response's `output_image.data` field holds the base64-encoded image bytes; decode and write them to the target file.

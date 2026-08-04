@@ -82,7 +82,7 @@ The skill resolves the `brand` reference set from `generations/refs/sets.json`, 
   "reference_set": "brand",
   "response_id": "v1_...",
   "params": { "aspect_ratio": "16:9", "image_size": "1K" },
-  "cost": "$0.04 (quoted from the live pricing page before running)",
+  "cost": "{price quoted from the live pricing page before running}",
   "created": "2026-07-31T14:20:00Z",
   "approved_by_user": true
 }
@@ -108,9 +108,9 @@ The skill resolves the `brand` reference set from `generations/refs/sets.json`, 
 
 ## Security & Safety Notes
 
-- **Network** — HTTPS calls to `generativelanguage.googleapis.com` only, per the model reference files. No other endpoint.
+- **Network** — Generation and file-transfer calls go to `generativelanguage.googleapis.com`; checking current docs or pricing contacts `ai.google.dev`, and an explicitly approved package install contacts the configured PyPI index. Never send prompts or reference media to any other endpoint.
 - **Secrets** — `GEMINI_API_KEY` is only ever read from the environment or a workspace `.env` the user already set up; it is never logged, printed, or written into a sidecar, prompt, or committed file. The skill never creates or edits `.env`, `.env.example`, or `.gitignore` itself.
-- **File writes** — confined to the workspace's `generations/` folder (including `generations/refs/` and `sets.json`); nothing outside the current project.
+- **File writes** — skill-authored project outputs are confined to the workspace's `generations/` folder (including `generations/refs/`, REST request/response files, and `sets.json`); nothing is written outside the current project except an explicitly approved package installation in its selected environment.
 - **Package installs** — only the official `google-genai` PyPI package, and only when missing; never installed silently or alongside any other package.
 - **Cost** — every call spends real money against the user's Google AI Studio billing; that, plus filesystem writes, is why this skill is `risk: critical` rather than `safe`.
 - Treat any change that would add a new network endpoint, a new package install, or a write outside `generations/` as a design decision for the user to approve, not something to do quietly.
