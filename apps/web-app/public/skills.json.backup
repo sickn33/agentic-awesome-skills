@@ -20564,6 +20564,39 @@
     ]
   },
   {
+    "id": "generate-nanobanana",
+    "path": "skills/generate-nanobanana",
+    "category": "media",
+    "name": "generate-nanobanana",
+    "description": "Generate and edit images/video with Google's Gemini media models (Nano Banana 2/Pro, Gemini Omni Flash), with cost-approval gates, reference-image support, and a prompt/output log per call.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-08-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "AntonioCardenas/generate-nanobanana",
+    "license": "MIT",
+    "license_source": "https://github.com/AntonioCardenas/generate-nanobanana/blob/main/LICENSE",
+    "tags": [
+      "nanobanana",
+      "gemini",
+      "google-ai-studio",
+      "image-generation",
+      "video-generation"
+    ]
+  },
+  {
     "id": "geo-fundamentals",
     "path": "skills/geo-fundamentals",
     "category": "marketing",

@@ -16816,6 +16816,25 @@
       "runtime_files": []
     },
     {
+      "id": "generate-nanobanana",
+      "path": "skills/generate-nanobanana",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "geo-fundamentals",
       "path": "skills/geo-fundamentals",
       "targets": {
@@ -38491,10 +38510,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2002,
+    "total_skills": 2003,
     "supported": {
-      "codex": 1924,
-      "claude": 1945
+      "codex": 1925,
+      "claude": 1946
     },
     "blocked": {
       "codex": 78,
