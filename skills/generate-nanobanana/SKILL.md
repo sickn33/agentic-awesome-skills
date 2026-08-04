@@ -1,6 +1,6 @@
 ---
 name: generate-nanobanana
-description: "Generate and edit images/video with Google's Gemini media models (Nano Banana 2/Pro, Gemini Omni Flash), with cost-approval gates, reference-image support, and a prompt/seed log per output."
+description: "Generate and edit images/video with Google's Gemini media models (Nano Banana 2/Pro, Gemini Omni Flash), with cost-approval gates, reference-image support, and a prompt/output log per call."
 category: media
 risk: critical
 source: community
@@ -18,9 +18,9 @@ license_source: "https://github.com/AntonioCardenas/generate-nanobanana/blob/mai
 
 ## Overview
 
-`generate-nanobanana` calls Google's Gemini media models directly through the Gemini API — no third-party routing layer — to generate and edit images and video. It routes each request to the right model tier (draft, standard, quality, or video), loads real reference images instead of relying on text descriptions, gates paid video runs behind explicit user approval, and writes a JSON sidecar next to every output recording the exact prompt, model, seed, and cost. It registers a single `/generate` command.
+`generate-nanobanana` calls Google's Gemini media models directly through the Gemini API — no third-party routing layer — to generate and edit images and video. It routes each request to the right model tier (draft, standard, quality, or video), loads real reference images instead of relying on text descriptions, gates every paid call behind explicit user approval, and writes a JSON sidecar next to every output recording the exact prompt, model, and cost. It registers a single `/generate` command.
 
-This skill adapts the `SKILL.md` and workflow from [AntonioCardenas/generate-nanobanana](https://github.com/AntonioCardenas/generate-nanobanana).
+This skill adapts the workflow (model routing, reference-image handling, sidecar logging) from [AntonioCardenas/generate-nanobanana](https://github.com/AntonioCardenas/generate-nanobanana). The actual request shapes in `references/` were independently verified against the live [Gemini API docs](https://ai.google.dev/gemini-api/docs/image-generation) rather than copied from that upstream repo, whose examples predate Google's migration to the Interactions API and use stale, non-functional request methods. Model IDs, request contracts, and pricing all change on Google's own schedule — re-verify against the docs linked from each reference file before relying on this skill in a new session.
 
 ## When to Use This Skill
 
@@ -33,70 +33,34 @@ This skill adapts the `SKILL.md` and workflow from [AntonioCardenas/generate-nan
 
 ### Step 1: Route to a model
 
-Pick the model for the job based on requirements. Exact request shapes are inlined below and bundled in `models/<model_id>.md`.
+Pick the model for the job and read its reference file under [`references/`](references/) before calling anything — each file holds the current, verified request shape for that model.
 
-| Task | Model | Model ID | Recipe File | Ballpark cost |
-| --- | --- | --- | --- | --- |
-| Image (draft) | Nano Banana 2 Lite | `gemini-3.1-flash-lite-image` | [`models/gemini-3.1-flash-lite-image.md`](models/gemini-3.1-flash-lite-image.md) | $0.03–0.05 |
-| Image (standard) | Nano Banana 2 | `gemini-3.1-flash-image` | [`models/gemini-3.1-flash-image.md`](models/gemini-3.1-flash-image.md) | $0.07–0.15 |
-| Image (quality, multi-image fusion) | Nano Banana Pro | `gemini-3-pro-image-preview` | [`models/gemini-3-pro-image-preview.md`](models/gemini-3-pro-image-preview.md) | $0.13–0.30 |
-| Video | Gemini Omni Flash | `gemini-omni-flash-preview` | [`models/gemini-omni-flash-preview.md`](models/gemini-omni-flash-preview.md) | per-second, quoted before running |
+| Task | Model | Model ID | Reference |
+| --- | --- | --- | --- |
+| Image (draft) | Nano Banana 2 Lite | `gemini-3.1-flash-lite-image` | [`references/gemini-3.1-flash-lite-image.md`](references/gemini-3.1-flash-lite-image.md) |
+| Image (standard) | Nano Banana 2 | `gemini-3.1-flash-image` | [`references/gemini-3.1-flash-image.md`](references/gemini-3.1-flash-image.md) |
+| Image (quality, multi-image fusion) | Nano Banana Pro | `gemini-3-pro-image` | [`references/gemini-3-pro-image.md`](references/gemini-3-pro-image.md) |
+| Video | Gemini Omni Flash | `gemini-omni-flash-preview` | [`references/gemini-omni-flash-preview.md`](references/gemini-omni-flash-preview.md) |
+
+All four models are called through the **Interactions API** (`client.interactions.create(...)`, REST `POST /v1beta/interactions`) — see each reference file for the exact shape, including reference-image input and, for video, large-output retrieval. Every call is billable; see Step 3.
 
 Draft on Nano Banana 2 Lite first and rerun the picked favorite on Nano Banana 2 or Pro; reserve Pro for heavy multi-image fusion, character-consistent series, or dense on-image text.
-
-#### Request Shapes Summary
-
-**Image Models (`gemini-3.1-flash-lite-image`, `gemini-3.1-flash-image`, `gemini-3-pro-image-preview`):**
-- **Python SDK (`google-genai`)**:
-  ```python
-  from google import genai
-  from google.genai import types
-
-  client = genai.Client()
-  response = client.models.generate_content(
-      model="<model_id>", # e.g. gemini-3.1-flash-lite-image
-      contents=["<prompt>", *ref_images],
-      config=types.GenerateContentConfig(
-          response_modalities=["TEXT", "IMAGE"],
-          image_config=types.ImageConfig(aspect_ratio="16:9", image_size="1K"),
-          seed=481047
-      )
-  )
-  ```
-- **REST API (`curl`)**: `POST https://generativelanguage.googleapis.com/v1beta/models/<model_id>:generateContent` with header `x-goog-api-key: $GEMINI_API_KEY` and payload `{"contents": [{"parts": [{"text": "<prompt>"}]}], "generationConfig": {"responseModalities": ["TEXT", "IMAGE"], "imageConfig": {"aspectRatio": "16:9"}, "seed": 481047}}`.
-
-**Video Model (`gemini-omni-flash-preview`):**
-- **Python SDK (`google-genai`)**:
-  ```python
-  import time
-  from google import genai
-  from google.genai import types
-
-  client = genai.Client()
-  # Quote cost and wait for user approval first!
-  op = client.models.generate_videos(
-      model="gemini-omni-flash-preview",
-      prompt="<prompt>",
-      config=types.GenerateVideosConfig(duration_seconds=5, aspect_ratio="16:9", seed=481047)
-  )
-  while not op.done:
-      time.sleep(5)
-      op = client.operations.get(op)
-  ```
 
 ### Step 2: Load references
 
 Pull real reference images from `generations/refs/`, or from a named reference set when the request says "on brand" or invokes `/generate frf <set>`. Never substitute a text description for a reference image (logo, face, brand mark) that already exists — stop and ask if a named reference is missing instead of approximating it.
 
-Reference sets are registered by **importing** (copying files into `generations/refs/<set>/`, a snapshot) or **linking** (recording the source path in `generations/refs/sets.json`, read live at generation time). A set may carry a `style.md` whose contents are prepended verbatim to every prompt generated from that set, and an optional pinned `seed` for reproducible results.
+Reference sets are registered by **importing** (copying files into `generations/refs/<set>/`, a snapshot) or **linking** (recording the source path in `generations/refs/sets.json`, read live at generation time). A set may carry a `style.md` whose contents are prepended verbatim to every prompt generated from that set.
 
 ### Step 3: Generate
 
-Call the Gemini API per the model's recipe. Images return synchronously; video is submit-then-poll. Always pass an explicit `seed` (random if the user doesn't care) so the generation can be reproduced later. **Quote cost and wait for explicit go-ahead before any paid video run** — one approval covers exactly one run. Run generations one at a time, never in parallel, to keep cost and rate-limit tracking accurate.
+Call the Gemini API per the model's reference file. **Every generation — image or video — is billable and requires an explicit approval gate**: quote the current per-unit price from the live [pricing page](https://ai.google.dev/gemini-api/docs/pricing) for the selected model and get explicit user go-ahead before that specific call. One approval covers exactly one call; a rerun needs its own. Run generations one at a time, never in parallel, so approval and cost tracking stay accurate.
+
+No model in this skill documents a `seed` or reproducibility parameter — do not promise an identical re-roll. For "same image but change X" requests, reuse the exact original prompt and reference images (from the sidecar log) and change only the requested delta; for video, chain edits via `previous_interaction_id` where supported (see the Omni Flash reference).
 
 ### Step 4: Verify and log
 
-Confirm the generated file is on disk and non-empty, then write a matching `.json` sidecar next to it (see Examples) recording the exact model ID, prompt, references used, params (including seed), cost, and timestamp. Never log a generation whose file isn't there, and never write a sidecar for a failed or safety-blocked call.
+Confirm the generated file is on disk and non-empty, then write a matching `.json` sidecar next to it (see Examples) recording the exact model ID, prompt, references used, response `id`, cost, and timestamp. Never log a generation whose file isn't there, and never write a sidecar for a failed or safety-blocked call.
 
 ## Examples
 
@@ -106,7 +70,7 @@ Confirm the generated file is on disk and non-empty, then write a matching `.jso
 User: generate a thumbnail on brand for the new pricing page
 ```
 
-The skill resolves the `brand` reference set from `generations/refs/sets.json`, prepends its `style.md` (if present), picks the relevant reference images (e.g. the logo and a style shot), drafts on Nano Banana 2 Lite, and saves the result to `generations/pricing_page_thumbnail_<timestamp>.png` with a sidecar reporting the seed used.
+The skill resolves the `brand` reference set from `generations/refs/sets.json`, prepends its `style.md` (if present), picks the relevant reference images (e.g. the logo and a style shot), quotes the current Nano Banana 2 Lite price and gets approval, then saves the result to `generations/pricing_page_thumbnail_<timestamp>.png` with a sidecar.
 
 ### Example 2: Sidecar log written beside an output
 
@@ -116,8 +80,9 @@ The skill resolves the `brand` reference set from `generations/refs/sets.json`, 
   "prompt": "the exact prompt sent",
   "reference_images": ["generations/refs/brand/logo_dark.png"],
   "reference_set": "brand",
-  "params": { "aspect_ratio": "16:9", "image_size": "1K", "seed": 481047 },
-  "cost": "$0.04",
+  "response_id": "v1_...",
+  "params": { "aspect_ratio": "16:9", "image_size": "1K" },
+  "cost": "$0.04 (quoted from the live pricing page before running)",
   "created": "2026-07-31T14:20:00Z",
   "approved_by_user": true
 }
@@ -125,25 +90,29 @@ The skill resolves the `brand` reference set from `generations/refs/sets.json`, 
 
 ## Best Practices
 
-- ✅ Pass an explicit `seed` on every image call and report it back to the user so a favorite result can be reproduced or pinned.
+- ✅ Quote the current price and get explicit approval before **every** paid generation — image or video, not just video. A quote is not approval, and each rerun needs its own.
 - ✅ Use real reference images for faces, logos, and brand marks instead of describing them in text.
-- ✅ Quote cost and get explicit approval before every paid video run — a quote is not approval, and each rerun needs its own.
+- ✅ Read the model's reference file in `references/` before calling it — model IDs and request shapes have already changed once in this skill's lifetime (Interactions API migration, `gemini-3-pro-image-preview` shutdown).
 - ❌ Don't generate "on brand" from an empty or nonexistent reference set — bootstrap the folder and stop until it has at least one real image.
-- ❌ Don't run generations in parallel or reconstruct a prompt from memory when the original's sidecar still has the exact text and seed.
+- ❌ Don't claim a generation is exactly reproducible — no model here documents a seed parameter. Reuse the exact prompt and references instead of promising identical output.
+- ❌ Don't run generations in parallel or reconstruct a prompt from memory when the original's sidecar still has the exact text.
 
 ## Limitations
 
 - Covers Google Gemini models only; there is no multi-provider routing to other image/video generators.
 - Requires a Google AI Studio API key (`GEMINI_API_KEY`) and, outside Antigravity's native tool fallback, the `google-genai` Python package.
+- No model documents a seed or reproducibility guarantee; reruns are best-effort via the saved prompt and references, not identical output.
+- Model IDs and pricing are Google's to change; the reference files carry the model IDs verified at the time this skill was last updated, and each links to the live docs to re-verify against.
 - This skill does not replace environment-specific validation, testing, or expert review of generated assets.
 - Stop and ask for clarification if a required reference image, permission, or the API key is missing.
 
 ## Security & Safety Notes
 
-- **Network** — HTTPS calls to `generativelanguage.googleapis.com` only, per the model recipes. No other endpoint.
+- **Network** — HTTPS calls to `generativelanguage.googleapis.com` only, per the model reference files. No other endpoint.
 - **Secrets** — `GEMINI_API_KEY` is only ever read from the environment or a workspace `.env` the user already set up; it is never logged, printed, or written into a sidecar, prompt, or committed file. The skill never creates or edits `.env`, `.env.example`, or `.gitignore` itself.
 - **File writes** — confined to the workspace's `generations/` folder (including `generations/refs/` and `sets.json`); nothing outside the current project.
 - **Package installs** — only the official `google-genai` PyPI package, and only when missing; never installed silently or alongside any other package.
+- **Cost** — every call spends real money against the user's Google AI Studio billing; that, plus filesystem writes, is why this skill is `risk: critical` rather than `safe`.
 - Treat any change that would add a new network endpoint, a new package install, or a write outside `generations/` as a design decision for the user to approve, not something to do quietly.
 
 ## Common Pitfalls
@@ -151,9 +120,11 @@ The skill resolves the `brand` reference set from `generations/refs/sets.json`, 
 - **Problem:** Requesting "on brand" generation before any reference images exist.
   **Solution:** Create `generations/refs/<name>/`, tell the user its path, and wait for at least one image before generating.
 - **Problem:** Varying an existing image by re-describing it from memory.
-  **Solution:** Read the original's sidecar for its exact prompt and seed, and change only the requested delta.
-- **Problem:** Running a video generation without a cost quote.
-  **Solution:** Always quote per-second cost and get explicit approval before submitting a video job.
+  **Solution:** Read the original's sidecar for its exact prompt and references, and change only the requested delta.
+- **Problem:** Running an image or video generation without a cost quote.
+  **Solution:** Always quote the current per-unit price from the live pricing page and get explicit approval before submitting any paid call.
+- **Problem:** Calling a model ID from memory instead of the reference file.
+  **Solution:** Model IDs shift (e.g. `gemini-3-pro-image-preview` was shut down and replaced by `gemini-3-pro-image`) — always read `references/<model>.md` first.
 
 ## Related Skills
 

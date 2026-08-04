@@ -1,88 +1,80 @@
 # Gemini 3.1 Flash Image (`gemini-3.1-flash-image`)
 
 ## Overview
-Nano Banana 2 is the standard production model for image generation ($0.07–$0.15 per generation). It balances crisp details, accurate style adherence, and high speed.
+Nano Banana 2 is the standard production model for image generation. It balances crisp detail, accurate style adherence, and high speed for most finished work.
 
 ## Model Specification
 - **Model ID**: `gemini-3.1-flash-image`
-- **Primary Use**: Production image generation, brand assets, social media graphics
-- **Ballpark Cost**: $0.07–$0.15
-- **Supported Resolutions**: 1K, 2K
-- **Supported Aspect Ratios**: `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `3:2`, `2:3`
+- **API**: Interactions API (`client.interactions.create`) — this model does not use the older `generate_content` method.
+- **Primary Use**: Production image generation, brand assets, social media graphics.
+- **Cost**: Billable per call. Quote the current price from the live [pricing page](https://ai.google.dev/gemini-api/docs/pricing) and get explicit user approval before every generation — see the skill's cost-approval rule.
+- **Reference images**: Up to 14 supported as additional `image` input parts.
+- **Reproducibility**: No `seed` parameter is documented for this model. Treat every generation as non-deterministic; for "same image but change X" requests, reuse the exact original prompt and reference images rather than promising an identical re-roll.
 
 ## Request Shape
 
-### Python SDK (`google-genai`)
+### Python SDK (`google-genai`, Interactions API)
 ```python
 from google import genai
-from google.genai import types
+import base64
 
 client = genai.Client()
 
-response = client.models.generate_content(
+interaction = client.interactions.create(
     model="gemini-3.1-flash-image",
-    contents=["A sleek modern product advertisement for wireless headphones on a clean marble table, studio lighting"],
-    config=types.GenerateContentConfig(
-        response_modalities=["TEXT", "IMAGE"],
-        image_config=types.ImageConfig(
-            aspect_ratio="16:9",
-            image_size="2K"
-        ),
-        seed=481047
-    )
+    input="A sleek modern product advertisement for wireless headphones on a clean marble table, studio lighting",
+    response_format={
+        "type": "image",
+        "aspect_ratio": "16:9",
+        "image_size": "2K",
+    },
 )
 
-for part in response.parts:
-    if part.inline_data is not None:
-        image = part.as_image()
-        image.save("generations/headphones.png")
+with open("generations/headphones.png", "wb") as f:
+    f.write(base64.b64decode(interaction.output_image.data))
+```
+
+### Reference Image Input
+```python
+from google import genai
+import base64
+
+client = genai.Client()
+
+with open("generations/refs/brand/style_sample.png", "rb") as f:
+    style_bytes = f.read()
+
+interaction = client.interactions.create(
+    model="gemini-3.1-flash-image",
+    input=[
+        {"type": "text", "text": "Generate a pricing page banner adhering to the color scheme and lighting of this style reference"},
+        {"type": "image", "data": base64.b64encode(style_bytes).decode("utf-8"), "mime_type": "image/png"},
+    ],
+    response_format={"type": "image", "aspect_ratio": "16:9", "image_size": "2K"},
+)
 ```
 
 ### REST API (`curl`)
 ```bash
 cat > /tmp/flash_image_request.json << 'EOF'
 {
-  "contents": [
-    {
-      "parts": [
-        {"text": "A sleek modern product advertisement for wireless headphones on a clean marble table, studio lighting"}
-      ]
-    }
+  "model": "gemini-3.1-flash-image",
+  "input": [
+    {"type": "text", "text": "A sleek modern product advertisement for wireless headphones on a clean marble table, studio lighting"}
   ],
-  "generationConfig": {
-    "responseModalities": ["TEXT", "IMAGE"],
-    "imageConfig": {
-      "aspectRatio": "16:9",
-      "imageSize": "2K"
-    },
-    "seed": 481047
+  "response_format": {
+    "type": "image",
+    "aspect_ratio": "16:9",
+    "image_size": "2K"
   }
 }
 EOF
 
 curl -s -X POST \
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent" \
+  "https://generativelanguage.googleapis.com/v1beta/interactions" \
   -H "x-goog-api-key: $GEMINI_API_KEY" \
   -H "Content-Type: application/json" \
   -d @/tmp/flash_image_request.json > /tmp/response.json
 ```
 
-### Reference Image Input
-```python
-from google import genai
-from google.genai import types
-from PIL import Image
-
-client = genai.Client()
-ref_style = Image.open("generations/refs/brand/style_sample.png")
-
-response = client.models.generate_content(
-    model="gemini-3.1-flash-image",
-    contents=["Generate a pricing page banner adhering to the color scheme and lighting of this style reference", ref_style],
-    config=types.GenerateContentConfig(
-        response_modalities=["TEXT", "IMAGE"],
-        image_config=types.ImageConfig(aspect_ratio="16:9", image_size="2K"),
-        seed=481047
-    )
-)
-```
+The response's `output_image.data` field holds the base64-encoded image bytes; decode and write them to the target file.
