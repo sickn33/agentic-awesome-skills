@@ -455,7 +455,7 @@ Integrate with [Vibe Kanban](https://github.com/BloopAI/vibe-kanban) for a visua
 npx vibe-kanban
 
 # Export Loki tasks to Vibe Kanban
-./scripts/export-to-vibe-kanban.sh
+bash scripts/export-to-vibe-kanban.sh
 ```
 
 **Benefits:**

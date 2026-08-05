@@ -5,7 +5,42 @@ APP_NAME=${APP_NAME:-MyApp}
 APP_IDENTITY=${APP_IDENTITY:-"Developer ID Application: Example (TEAMID)"}
 APP_BUNDLE="${APP_NAME}.app"
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
-source "$ROOT/version.env"
+
+read_version_env() {
+  local file=$1 line key value
+  local saw_marketing=0 saw_build=0
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    line=${line%$'\r'}
+    [[ "$line" =~ ^[[:space:]]*$ || "$line" =~ ^[[:space:]]*# ]] && continue
+    [[ "$line" == *=* ]] || { echo "Invalid version.env line" >&2; return 1; }
+    key=${line%%=*}
+    value=${line#*=}
+    case "$key" in
+      MARKETING_VERSION)
+        [[ "$value" =~ ^[0-9]+(\.[0-9]+){1,3}([+-][0-9A-Za-z.-]+)?$ ]] || {
+          echo "Invalid MARKETING_VERSION in version.env" >&2; return 1;
+        }
+        MARKETING_VERSION=$value
+        saw_marketing=1
+        ;;
+      BUILD_NUMBER)
+        [[ "$value" =~ ^[0-9]+$ ]] || {
+          echo "Invalid BUILD_NUMBER in version.env" >&2; return 1;
+        }
+        BUILD_NUMBER=$value
+        saw_build=1
+        ;;
+      *) echo "Unknown key in version.env: $key" >&2; return 1 ;;
+    esac
+  done < "$file"
+  (( saw_marketing == 1 && saw_build == 1 )) || {
+    echo "version.env must define MARKETING_VERSION and BUILD_NUMBER" >&2
+    return 1
+  }
+}
+
+[[ -f "$ROOT/version.env" ]] || { echo "Missing version.env" >&2; exit 1; }
+read_version_env "$ROOT/version.env"
 ZIP_NAME="${APP_NAME}-${MARKETING_VERSION}.zip"
 
 if [[ -z "${APP_STORE_CONNECT_API_KEY_P8:-}" || -z "${APP_STORE_CONNECT_KEY_ID:-}" || -z "${APP_STORE_CONNECT_ISSUER_ID:-}" ]]; then

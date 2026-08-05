@@ -1,8 +1,8 @@
 // Pure async claim verifier. No LLM, no network — fs + grep only.
 
-import { readFile, access, readdir } from 'node:fs/promises';
+import { readFile, access, readdir, realpath } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
-import { dirname, isAbsolute, join, normalize } from 'node:path';
+import { dirname, isAbsolute, join, normalize, relative, resolve, sep } from 'node:path';
 import { promisify } from 'node:util';
 import { isKnownUrl, sanitizeCitations } from './citations.mjs';
 import { findRecContradictions } from './project-facts.mjs';
@@ -1215,10 +1215,17 @@ async function readClaimFile(claim) {
 
 async function firstAccessiblePath({ repoRoot = '.', file, projectRootDirectory = null }) {
   let lastErr;
+  const resolvedRoot = resolve(repoRoot);
+  const canonicalRoot = await realpath(resolvedRoot).catch(() => resolvedRoot);
   for (const p of repoPaths(repoRoot, file, projectRootDirectory)) {
     try {
       await access(p);
-      return p;
+      const canonicalPath = await realpath(p);
+      if (!pathIsWithin(canonicalRoot, canonicalPath)) {
+        lastErr = new Error(`claim path escapes repoRoot: ${file}`);
+        continue;
+      }
+      return canonicalPath;
     } catch (err) {
       lastErr = err;
     }
@@ -1228,14 +1235,21 @@ async function firstAccessiblePath({ repoRoot = '.', file, projectRootDirectory 
 
 function repoPaths(repoRoot, file, projectRootDirectory = null) {
   if (!file) return [];
-  if (isAbsolute(file)) return [file];
-  const out = [join(repoRoot, file)];
+  const rawFile = String(file);
+  if (isAbsolute(rawFile) || /^[A-Za-z]:[\\/]/.test(rawFile) || rawFile.includes('\0')) return [];
+  const root = resolve(repoRoot);
+  const out = [resolve(root, rawFile)];
   const projectRoot = normalizeProjectRootDirectory(projectRootDirectory);
-  const normalizedFile = normalizeProjectRootDirectory(file);
+  const normalizedFile = normalizeProjectRootDirectory(rawFile);
   if (projectRoot && normalizedFile && !normalizedFile.startsWith(`${projectRoot}/`)) {
-    out.push(join(repoRoot, projectRoot, file));
+    out.push(resolve(root, projectRoot, rawFile));
   }
-  return Array.from(new Set(out.map((p) => normalize(p))));
+  return Array.from(new Set(out.map((p) => normalize(p)).filter((p) => pathIsWithin(root, p))));
+}
+
+function pathIsWithin(root, candidate) {
+  const rel = relative(root, candidate);
+  return rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel));
 }
 
 function normalizeProjectRootDirectory(value) {

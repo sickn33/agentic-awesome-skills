@@ -39,7 +39,7 @@ python scripts/run.py ask_question.py --question "..." --show-browser
 - `--notebook-url`: Use URL directly
 - `--show-browser`: Make browser visible
 
-**Returns:** Answer text with follow-up prompt appended
+**Returns:** A path to a private `0600` JSON file whose `content` field holds the bounded untrusted NotebookLM text; trusted follow-up guidance is printed separately
 
 ### notebook_manager.py
 Manage notebook library with CRUD operations.
@@ -47,7 +47,8 @@ Manage notebook library with CRUD operations.
 ```bash
 # Smart Add (discover content first)
 python scripts/run.py ask_question.py --question "What is the content of this notebook? What topics are covered? Provide a complete overview briefly and concisely" --notebook-url "[URL]"
-# Then add with discovered info
+# Review the proposed metadata with the user. Only after explicit confirmation,
+# add the approved values:
 python scripts/run.py notebook_manager.py add \
   --url "https://notebooklm.google.com/notebook/..." \
   --name "Name" \

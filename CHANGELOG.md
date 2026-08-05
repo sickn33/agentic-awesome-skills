@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- Hardened coordinated-disclosure trust boundaries across NotebookLM, YouTube ingestion, Instagram OAuth/CSV export, Telegram HTML replies, Loki task export, Vercel claim verification, macOS packaging templates, and generated TSX content.
+
 ## [15.9.0] - 2026-08-04 - "Security Boundaries and Multimodal Workflows"
 
 > Hardened repository and runtime trust boundaries while adding governed Gemini media generation and evidence-first Shopify review triage.
