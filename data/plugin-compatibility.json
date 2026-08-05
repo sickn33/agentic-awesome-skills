@@ -24797,12 +24797,10 @@
         "docs": null
       },
       "reasons": [
-        "target_specific_home_path",
         "undeclared_runtime_dependency"
       ],
       "blocked_reasons": {
         "codex": [
-          "target_specific_home_path",
           "undeclared_runtime_dependency"
         ],
         "claude": [

@@ -14,8 +14,13 @@ YTID="$(printf '%s' "$IN" | sed -nE 's#.*(youtu\.be/|v=|/embed/|/shorts/)([A-Za-
 [ -z "$YTID" ] && { echo "Could not parse a YouTube id from: $IN" >&2; exit 1; }
 [[ "$YTID" =~ ^[A-Za-z0-9_-]{11}$ ]] || { echo "Invalid YouTube id" >&2; exit 1; }
 
-SCRATCH="/tmp/ytnote-$YTID"
-mkdir -p "$SCRATCH"
+umask 077
+TEMP_ROOT=${TMPDIR:-/tmp}
+[[ -d "$TEMP_ROOT" ]] || { echo "Temporary directory does not exist: $TEMP_ROOT" >&2; exit 1; }
+SCRATCH=$(mktemp -d "$TEMP_ROOT/ytnote-$YTID.XXXXXXXX")
+chmod 700 "$SCRATCH"
+printf '%s\n' "$YTID" > "$SCRATCH/.aas-youtube-notetaker"
+chmod 600 "$SCRATCH/.aas-youtube-notetaker"
 
 # Embeddability: oembed returns 200 if embedding allowed, 401 if the owner disabled it.
 CODE="$(curl -s -o /dev/null -w '%{http_code}' \

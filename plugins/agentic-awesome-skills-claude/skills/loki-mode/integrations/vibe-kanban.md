@@ -157,7 +157,7 @@ while true; do
         inotifywait -e modify,create "$LOKI_DIR/queue/" 2>/dev/null
     fi
 
-    ./scripts/export-to-vibe-kanban.sh
+    bash scripts/export-to-vibe-kanban.sh
     sleep 2
 done
 ```

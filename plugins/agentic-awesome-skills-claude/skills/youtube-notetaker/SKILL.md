@@ -70,8 +70,9 @@ fetches from the server and writes notes back. Never hardcode video data into th
 
 ## Adding a video — the pipeline
 
-All helper scripts are in `scripts/`. Work in a scratch dir (e.g. `/tmp/ytnote-<id>/`), then
-copy final assets into the library. Set `VIDEO_LIBRARY_DIR` once per shell if you don't want the
+All helper scripts are in `scripts/`. `setup.sh` creates a private, unpredictable scratch
+directory; copy the printed `SCRATCH` path into a shell variable, then copy final assets into the
+library. Set `VIDEO_LIBRARY_DIR` once per shell if you don't want the
 default. **Do not use em dashes (—) or arrows (→) in notes/titles.**
 
 ### 1. Resolve the id and check embeddability
@@ -83,32 +84,37 @@ Prints the 11-char `YTID`, the scratch dir, the target library path, and whether
 If blocked, inline playback won't work but the artifact degrades gracefully to an "open at this
 moment on YouTube" link, so proceed normally.
 
+Copy the exact unpredictable path printed by the command before continuing:
+```
+SCRATCH="/path/printed/by/setup.sh"
+```
+
 ### 2. Download video + subtitles
 ```
-scripts/download.sh "<YTID>" /tmp/ytnote-<YTID>
+bash scripts/download.sh "<YTID>" "$SCRATCH"
 ```
 Uses `yt-dlp` to grab the video (≤720p is plenty for slide frames) and the best available
 subtitles (manual if present, else auto-captions) as `.vtt`. Also fetches title/uploader.
 
 ### 3. Detect candidate slide timestamps
 ```
-scripts/detect_slides.sh /tmp/ytnote-<YTID>/video.mp4 /tmp/ytnote-<YTID>
+bash scripts/detect_slides.sh "$SCRATCH/video.mp4" "$SCRATCH"
 ```
 Runs ffmpeg scene detection (`select='gt(scene,0.3)'`) and writes `scene_times.txt` (seconds).
 0.3 is a good default; lower it (0.2) for subtle slide decks, raise it (0.4) for busy video.
 
 ### 4. Build a contact sheet and CURATE
 ```
-python3 scripts/contact_sheet.py /tmp/ytnote-<YTID>/video.mp4 /tmp/ytnote-<YTID>/scene_times.txt /tmp/ytnote-<YTID>/contact.jpg
+python3 scripts/contact_sheet.py "$SCRATCH/video.mp4" "$SCRATCH/scene_times.txt" "$SCRATCH/contact.jpg"
 ```
 Read `contact.jpg` (labeled with index + timestamp). **This is the human-judgment step:** keep
 frames that are real content slides; **drop talking-head shots, transitions, duplicates, and
-blurry mid-animation frames.** Save the kept timestamps (seconds) to `/tmp/ytnote-<YTID>/keep.txt`,
+blurry mid-animation frames.** Save the kept timestamps (seconds) to `$SCRATCH/keep.txt`,
 one per line. Typical talk yields 15-25 slides.
 
 ### 5. Extract the curated slides at full quality and install to _media
 ```
-python3 scripts/extract_slides.py <YTID> /tmp/ytnote-<YTID>/video.mp4 /tmp/ytnote-<YTID>/keep.txt > /tmp/ytnote-<YTID>/slides.json
+python3 scripts/extract_slides.py <YTID> "$SCRATCH/video.mp4" "$SCRATCH/keep.txt" > "$SCRATCH/slides.json"
 ```
 Extracts each kept timestamp at 1280px wide, JPEG, and copies them into
 `$VIDEO_LIBRARY_DIR/_media/` as `<YTID>-slide-01.jpg`, `-02.jpg`, … (numbered in time order).
@@ -121,7 +127,7 @@ slide's `t` to where it is actually discussed in the transcript (better "play fr
 
 ### 6. Build the transcript
 ```
-python3 scripts/vtt_to_transcript.py /tmp/ytnote-<YTID>/*.vtt /tmp/ytnote-<YTID>/transcript.txt
+python3 scripts/vtt_to_transcript.py "$SCRATCH"/*.vtt "$SCRATCH/transcript.txt"
 ```
 Parses the VTT into clean, de-duplicated `[HH:MM:SS] text` lines (YouTube auto-captions repeat
 rolling text; the script collapses it). This becomes the markdown body.
@@ -135,8 +141,8 @@ python3 scripts/write_library_item.py \
   --title "Talk title" \
   --speaker "Name, Role, Org" \
   --tags tag1,tag2,tag3 \
-  --slides /tmp/ytnote-<YTID>/slides.json \
-  --transcript /tmp/ytnote-<YTID>/transcript.txt
+  --slides "$SCRATCH/slides.json" \
+  --transcript "$SCRATCH/transcript.txt"
 ```
 Writes `$VIDEO_LIBRARY_DIR/<YTID>.md` with correct frontmatter + body.
 

@@ -6,6 +6,7 @@ Usage:
     python webhook_server.py
 """
 
+import html
 import os
 import hmac
 import re
@@ -38,7 +39,7 @@ application = Application.builder().token(TOKEN).build()
 
 async def start(update: Update, context):
     await update.message.reply_html(
-        f"Ola, <b>{update.effective_user.first_name}</b>! Bot ativo via webhook."
+        f"Ola, <b>{html.escape(update.effective_user.first_name or '')}</b>! Bot ativo via webhook."
     )
 
 async def echo(update: Update, context):
