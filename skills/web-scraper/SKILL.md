@@ -319,9 +319,10 @@ curl -s "API_URL" | jq '[.items[] | {field1: .key1, field2: .key2}]'
 
 ## Csv Download
 
-## Confirm File Downloads With The User First; Save To The Session's Working/Scratch Directory
+## Confirm The Exact Output Path With The User Before Downloading
 
-curl -s "CSV_URL" -o "$WORK_DIR/scraped_data.csv"
+curl --fail --silent --show-error --location \
+  --output "<CONFIRMED_OUTPUT_PATH>/scraped_data.csv" -- "CSV_URL"
 
 ## Xml Parsing
 
