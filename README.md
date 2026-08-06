@@ -186,17 +186,17 @@ test -d ~/.agents/skills && echo "Skills installed in ~/.agents/skills"
 Use @brainstorming to plan a SaaS MVP.
 ```
 
-### Prefer plugins for Claude Code or Codex?
+### Prefer plugins for Claude Code, Codex, or another compatible client?
 
 - Use a specialized plugin when you want a focused marketplace-style distribution.
 - Use the full-library plugin only when you want the widest plugin-safe catalog.
-- Read [Plugins for Claude Code and Codex](docs/users/plugins.md) for full-library plugin install vs specialized plugin install vs direct skills install.
+- Read [Plugins for compatible agent clients](docs/users/plugins.md) for host-specific installs, portable Agent Plugins bundles, and direct skills installs.
 
 ## Recommended Specialized Plugins
 
 Do not install everything first if you already know the work. Start with the focused plugin for your job, then add more only when the task expands.
 
-All specialized plugins are generated as Claude Code and Codex plugin bundles. For Antigravity, use the same `SKILL.md` content through the installer or supported skills paths.
+All specialized plugins are generated as Claude Code and Codex plugin bundles. Bundles with flat, cross-host-safe skill layouts also receive a standard Agent Plugins 1.0 root manifest. For Antigravity, use the same `SKILL.md` content through the installer or supported skills paths.
 
 | Plugin | Skills | Best for |
 | --- | ---: | --- |
@@ -217,7 +217,7 @@ All specialized plugins are generated as Claude Code and Codex plugin bundles. F
 Next-wave plugins cover marketing/SEO/growth, automation, observability/incident response, Python APIs, mobile apps, data engineering, privacy/compliance, and localization/international growth.
 
 - Read the [specialized plugin roadmap](docs/users/specialized-plugin-roadmap.md).
-- Read the [plugin guide for Claude Code and Codex](docs/users/plugins.md).
+- Read the [plugin guide for compatible agent clients](docs/users/plugins.md).
 - Compare the hosted [specialized plugin landing page](https://sickn33.github.io/agentic-awesome-skills/plugins).
 - Browse the generated plugin folders in [`plugins/`](plugins/).
 
