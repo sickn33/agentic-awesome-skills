@@ -32676,6 +32676,39 @@
     }
   },
   {
+    "id": "outreachagent",
+    "path": "skills/outreachagent",
+    "category": "marketing",
+    "name": "outreachagent",
+    "description": "Operate reply-aware cold outbound email workflows for AI agents with inboxes, contacts, templates, pacing, approvals, webhooks, and delivery metrics.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-08-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "email",
+      "cold-outreach",
+      "sales",
+      "ai-agents",
+      "workflows",
+      "deliverability",
+      "webhooks",
+      "rest-api"
+    ]
+  },
+  {
     "id": "page-cro",
     "path": "skills/page-cro",
     "category": "marketing",

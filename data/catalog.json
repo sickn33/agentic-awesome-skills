@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-04T18:38:39.000Z",
-  "total": 2003,
+  "total": 2004,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -39295,6 +39295,41 @@
         "find"
       ],
       "path": "skills/outlook-calendar-automation/SKILL.md"
+    },
+    {
+      "id": "outreachagent",
+      "canonical_id": "outreachagent",
+      "name": "outreachagent",
+      "description": "Operate reply-aware cold outbound email workflows for AI agents with inboxes, contacts, templates, pacing, approvals, webhooks, and delivery metrics.",
+      "category": "marketing",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "email",
+        "cold-outreach",
+        "sales",
+        "ai-agents",
+        "workflows",
+        "deliverability",
+        "webhooks",
+        "rest-api"
+      ],
+      "triggers": [
+        "email",
+        "cold-outreach",
+        "sales",
+        "ai-agents",
+        "workflows",
+        "deliverability",
+        "webhooks",
+        "rest-api",
+        "outreachagent",
+        "operate",
+        "reply",
+        "aware"
+      ],
+      "path": "skills/outreachagent/SKILL.md"
     },
     {
       "id": "page-cro",

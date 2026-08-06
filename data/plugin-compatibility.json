@@ -25996,6 +25996,25 @@
       "runtime_files": []
     },
     {
+      "id": "outreachagent",
+      "path": "skills/outreachagent",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "page-cro",
       "path": "skills/page-cro",
       "targets": {
@@ -38508,10 +38527,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2003,
+    "total_skills": 2004,
     "supported": {
-      "codex": 1925,
-      "claude": 1946
+      "codex": 1926,
+      "claude": 1947
     },
     "blocked": {
       "codex": 78,

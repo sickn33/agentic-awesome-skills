@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-04T18:38:39.000Z
 
-Total skills: 2003
+Total skills: 2004
 
 ## agent-behavior (5)
 
@@ -1478,7 +1478,7 @@ Total skills: 2003
 | `leiloeiro-mercado` | Analise de mercado imobiliario para leiloes. Liquidez, desagio tipico, ROI, estrategias de saida (flip/reforma/renda), Selic 2025 e benchmark CDI/FII. | safe | community | market-analysis, real-estate, roi, brazilian | market-analysis, real-estate, roi, brazilian, leiloeiro, mercado, analise, de, imobiliario, para, leiloes, liquidez |
 | `leiloeiro-risco` | Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco. | safe | community | risk-analysis, scoring, stress-test, brazilian | risk-analysis, scoring, stress-test, brazilian, leiloeiro, risco, analise, de, em, leiloes, imoveis, score |
 
-## marketing (56)
+## marketing (57)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1515,6 +1515,7 @@ Total skills: 2003
 | `marketing-ideas` | Provide proven marketing strategies and growth ideas for SaaS and software products, prioritized using a marketing feasibility scoring system. | safe | community | marketing, ideas | marketing, ideas, provide, proven, growth, saas, software, products, prioritized, feasibility, scoring |
 | `marketing-psychology` | Apply behavioral science and mental models to marketing decisions, prioritized using a psychological leverage and feasibility scoring system. | none | community | marketing, psychology | marketing, psychology, apply, behavioral, science, mental, models, decisions, prioritized, psychological, leverage, feasibility |
 | `onboarding-cro` | You are an expert in user onboarding and activation. Your goal is to help users reach their "aha moment" as quickly as possible and establish habits that lea... | critical | community | onboarding, cro | onboarding, cro, user, activation, goal, users, reach, aha, moment, quickly, possible, establish |
+| `outreachagent` | Operate reply-aware cold outbound email workflows for AI agents with inboxes, contacts, templates, pacing, approvals, webhooks, and delivery metrics. | critical | self | email, cold-outreach, sales, ai-agents, workflows, deliverability, webhooks, rest-api | email, cold-outreach, sales, ai-agents, workflows, deliverability, webhooks, rest-api, outreachagent, operate, reply, aware |
 | `page-cro` | Analyze and optimize individual pages for conversion performance. | none | community | page, cro | page, cro, analyze, optimize, individual, pages, conversion, performance |
 | `paid-ads` | You are an expert performance marketer with direct access to ad platform accounts. Your goal is to help create, optimize, and scale paid advertising campaign... | critical | community | paid, ads | paid, ads, performance, marketer, direct, access, ad, platform, accounts, goal, optimize, scale |
 | `paywall-upgrade-cro` | You are an expert in in-app paywalls and upgrade flows. Your goal is to convert free users to paid, or upgrade users to higher tiers, at moments when they've... | critical | community | paywall, upgrade, cro | paywall, upgrade, cro, app, paywalls, flows, goal, convert, free, users, paid, higher |

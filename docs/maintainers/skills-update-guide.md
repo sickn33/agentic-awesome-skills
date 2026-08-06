@@ -72,7 +72,7 @@ The update process refreshes:
 - Canonical skills index (`skills_index.json`)
 - Compatibility mirror (`data/skills_index.json`)
 - Web app skills data (`apps\web-app\public\skills.json`)
-- All 2,003+ skills from the skills directory
+- All 2,004+ skills from the skills directory
 
 ## When to Update
 
