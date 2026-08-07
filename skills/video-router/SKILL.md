@@ -26,7 +26,7 @@ Knowledge for picking a video production line and locking it before work begins.
 
 ## Packaged Source Note
 
-This AAS-ready adaptation preserves the routing rules from the official OrkasVideoStudio `video-router` skill at upstream commit `dd4a0f40b2bc6c6b0fe6f2e732c9540ffffefe08`. It adds catalog metadata, examples, limitations, and an included copy of the upstream MIT license under `references/LICENSE.txt`; it does not bundle or install the OrkasVideoStudio runtime.
+This AAS-ready adaptation preserves the routing rules from the official OrkasVideoStudio `video-router` skill at upstream commit `dd4a0f40b2bc6c6b0fe6f2e732c9540ffffefe08`. It adds catalog metadata, examples, and limitations; it does not bundle or install the OrkasVideoStudio runtime. The immutable `license_source` above points to the upstream MIT license reviewed for this import.
 
 ## Unavailable Production Runtime
 
