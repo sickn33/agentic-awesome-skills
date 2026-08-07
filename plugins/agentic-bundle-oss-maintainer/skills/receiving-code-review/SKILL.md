@@ -1,9 +1,10 @@
 ---
 name: receiving-code-review
-description: "Code review requires technical evaluation, not emotional performance."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Code review requires technical evaluation, not emotional performance.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Code Review Reception

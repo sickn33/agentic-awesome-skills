@@ -158,7 +158,7 @@ assert.match(maintainerSkill, /Pin `agentic-awesome-skills@X\.Y\.Z` and `--versi
 assert.match(maintainerSkill, /real MCP `initialize` plus `tools\/list` handshake reports catalog package version `X\.Y\.Z`/);
 assert.match(maintainerSkill, /Every stable or prerelease version requires full release alignment/);
 assert.match(maintainerSkill, /npm run sync:release-state`, `npm run plugin-compat:check`, and `npm run bundles:check`/);
-assert.match(maintainerSkill, /every published Codex\/Claude plugin mirror and editorial-bundle manifest/);
+assert.match(maintainerSkill, /every published Codex\/Claude plugin mirror, and every eligible Agent Plugins editorial-bundle manifest/);
 assert.match(maintainerSkill, /explicitly dispatched release-only Pages build/);
 assert.match(maintainerSkill, /final generator pass must be idempotent/);
 assert.match(agentInstructions, /Every stable or prerelease version must finish with the full-release-alignment gate/);

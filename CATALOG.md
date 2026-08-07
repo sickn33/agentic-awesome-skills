@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-04T18:38:39.000Z
 
-Total skills: 2004
+Total skills: 2005
 
 ## agent-behavior (5)
 
@@ -1547,7 +1547,7 @@ Total skills: 2004
 | `ai-dev-jobs-mcp` | Search 8,400+ AI and ML jobs across 489 companies, inspect listings and employers, match roles, and view salary and market stats via AI Dev Jobs MCP | safe | https://aidevboard.com | mcp, jobs, ai-jobs, ml-jobs, recruiting, job-search, career | mcp, jobs, ai-jobs, ml-jobs, recruiting, job-search, career, ai, dev, search, 400, ml |
 | `not-human-search-mcp` | Search AI-ready websites, inspect indexed site details, verify MCP endpoints, and discover tools and APIs using the Not Human Search MCP server | safe | https://nothumansearch.ai | mcp, search, ai-discovery, api-discovery, mcp-verification, agent-tools | mcp, search, ai-discovery, api-discovery, mcp-verification, agent-tools, human, ai, websites, inspect, indexed, site |
 
-## media (7)
+## media (8)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1556,6 +1556,7 @@ Total skills: 2004
 | `remotion` | Generate walkthrough videos from Stitch projects using Remotion with smooth transitions, zooming, and text overlays | critical | community | remotion | remotion, generate, walkthrough, videos, stitch, smooth, transitions, zooming, text, overlays |
 | `remotion-best-practices` | Best practices for Remotion - Video creation in React | safe | community | remotion, video, react, animation, composition | remotion, video, react, animation, composition, creation |
 | `stability-ai` | Geracao de imagens via Stability AI (SD3.5, Ultra, Core). Text-to-image, img2img, inpainting, upscale, remove-bg, search-replace. 15 estilos artisticos. | safe | community | image-generation, stable-diffusion, ai-art, api | image-generation, stable-diffusion, ai-art, api, stability, ai, geracao, de, imagens, via, sd3, ultra |
+| `video-router` | Route a video-production brief to generation, deterministic composition, supplied-footage editing, or an automatic cross-modal plan before production begins. | none | Orkas-AI/Orkas-VideoStudio | video, routing, editing, composition, generation | video, routing, editing, composition, generation, router, route, brief, deterministic, supplied, footage, automatic |
 | `videodb` | Video and audio perception, indexing, and editing. Ingest files/URLs/live streams, build visual/spoken indexes, search with timestamps, edit timelines, add o... | safe | community | video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture | video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture, videodb, audio |
 | `videodb-skills` | Upload, stream, search, edit, transcribe, and generate AI video and audio using the VideoDB SDK. | safe | community | video, editing, transcription, subtitles, search, streaming, ai-generation, media | video, editing, transcription, subtitles, search, streaming, ai-generation, media, videodb, skills, upload, stream |
 

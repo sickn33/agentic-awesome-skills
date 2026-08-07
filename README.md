@@ -1,4 +1,4 @@
-<!-- registry-sync: version=15.9.0; skills=2004; stars=44432; updated_at=2026-08-04T18:38:39+00:00 -->
+<!-- registry-sync: version=15.9.0; skills=2005; stars=44432; updated_at=2026-08-04T18:38:39+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **Local, agent-owned skill stacks for coding agents—from complete catalog access to a reproducible, reviewable plan.**
@@ -76,7 +76,7 @@ Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob
 - **Approval before writes**: the durable artifacts are an approved stack and immutable plan, not an opaque one-shot install.
 - **Installable, not just inspirational**: use the compatible legacy installer or plugin distributions when direct delivery is the right path.
 - **Built for major agent workflows**: Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, Kiro, OpenCode, Copilot, and more.
-- **Broad coverage with real utility**: 2,004+ skills across development, testing, security, infrastructure, product, and marketing.
+- **Broad coverage with real utility**: 2,005+ skills across development, testing, security, infrastructure, product, and marketing.
 - **Inspect before installing**: the hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) reviews agent-produced stack manifests and immutable plans without browser-side installation.
 - **Focused delivery remains available**: specialized plugins package proven sets for web, security, data, docs, DevOps, QA, OSS, or agent/MCP workflows.
 - **Useful whether you want breadth or curation**: install the full catalog, choose a specialized plugin, start with bundles, or compare alternatives before installing.
@@ -94,7 +94,7 @@ Direct file search can find candidate prose, but it leaves the result in the con
 - [Choose Your Tool](#choose-your-tool)
 - [Quick FAQ](#quick-faq)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 2,004+ Skills](#browse-2004-skills)
+- [Browse 2,005+ Skills](#browse-2005-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Support the Project](#support-the-project)
@@ -186,17 +186,17 @@ test -d ~/.agents/skills && echo "Skills installed in ~/.agents/skills"
 Use @brainstorming to plan a SaaS MVP.
 ```
 
-### Prefer plugins for Claude Code or Codex?
+### Prefer plugins for Claude Code, Codex, or another compatible client?
 
 - Use a specialized plugin when you want a focused marketplace-style distribution.
 - Use the full-library plugin only when you want the widest plugin-safe catalog.
-- Read [Plugins for Claude Code and Codex](docs/users/plugins.md) for full-library plugin install vs specialized plugin install vs direct skills install.
+- Read [Plugins for compatible agent clients](docs/users/plugins.md) for host-specific installs, portable Agent Plugins bundles, and direct skills installs.
 
 ## Recommended Specialized Plugins
 
 Do not install everything first if you already know the work. Start with the focused plugin for your job, then add more only when the task expands.
 
-All specialized plugins are generated as Claude Code and Codex plugin bundles. For Antigravity, use the same `SKILL.md` content through the installer or supported skills paths.
+All specialized plugins are generated as Claude Code and Codex plugin bundles. Bundles with flat, cross-host-safe skill layouts also receive a standard Agent Plugins 1.0 root manifest. For Antigravity, use the same `SKILL.md` content through the installer or supported skills paths.
 
 | Plugin | Skills | Best for |
 | --- | ---: | --- |
@@ -217,7 +217,7 @@ All specialized plugins are generated as Claude Code and Codex plugin bundles. F
 Next-wave plugins cover marketing/SEO/growth, automation, observability/incident response, Python APIs, mobile apps, data engineering, privacy/compliance, and localization/international growth.
 
 - Read the [specialized plugin roadmap](docs/users/specialized-plugin-roadmap.md).
-- Read the [plugin guide for Claude Code and Codex](docs/users/plugins.md).
+- Read the [plugin guide for compatible agent clients](docs/users/plugins.md).
 - Compare the hosted [specialized plugin landing page](https://sickn33.github.io/agentic-awesome-skills/plugins).
 - Browse the generated plugin folders in [`plugins/`](plugins/).
 
@@ -339,7 +339,7 @@ Remove `--dry-run` only after reviewing the install, update, and removal plan. U
 
 The hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) imports and reviews AAS Core stack manifests and immutable plans in browser memory. It does not access the filesystem, generate an approved plan, or install skills.
 
-## Browse 2,004+ Skills
+## Browse 2,005+ Skills
 
 Use the root repo as a landing page, then jump into the deeper surface that matches your intent.
 
@@ -453,6 +453,7 @@ Key source families include:
 - **[aislon/uizze-mcp](https://github.com/aislon/uizze-mcp)**: Official source for the `uizze-ui-research` skill and UIZZE MCP-assisted UI research workflows.
 - **[anthropics/skills](https://github.com/anthropics/skills)**: Official Anthropic skills repository - Document manipulation (DOCX, PDF, PPTX, XLSX), Brand Guidelines, Internal Communications.
 - **[anthropics/claude-cookbooks](https://github.com/anthropics/claude-cookbooks)**: Official notebooks and recipes for building with Claude.
+- **[Orkas-AI/Orkas-VideoStudio](https://github.com/Orkas-AI/Orkas-VideoStudio)**: Official source for the `video-router` skill - choose and lock generation, deterministic composition, supplied-footage editing, or an automatic cross-modal production plan (MIT).
 - **[remotion-dev/skills](https://github.com/remotion-dev/skills)**: Official Remotion skills - Video creation in React with 28 modular rules.
 - **[vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)**: Vercel Labs official skills - React Best Practices, Web Design Guidelines.
 - **[openai/skills](https://github.com/openai/skills)**: OpenAI Codex skills catalog - Agent skills, Skill Creator, Concise Planning.

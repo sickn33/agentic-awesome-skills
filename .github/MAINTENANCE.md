@@ -404,7 +404,7 @@ Preflight verification → Changelog → repository/plugin convergence → `npm 
     ```bash
     npm run release:prepare -- X.Y.Z
     ```
-    This validates the release, aligns versioned files, writes the release notes artifact, creates the release commit on `release/vX.Y.Z`, pushes it, and opens the protected release PR. Alignment includes canonical registries, tracked web assets, the offline catalog, compatibility data, both marketplaces, every Codex/Claude plugin mirror, every editorial bundle, and all release-owned plugin manifests. The tag is created only after that exact PR is merged.
+    This validates the release, aligns versioned files, writes the release notes artifact, creates the release commit on `release/vX.Y.Z`, pushes it, and opens the protected release PR. Alignment includes canonical registries, tracked web assets, the offline catalog, compatibility data, both marketplaces, every Codex/Claude plugin mirror, every eligible Agent Plugins bundle manifest, every editorial bundle, and all release-owned plugin manifests. The tag is created only after that exact PR is merged.
 4.  **Create GitHub Release** (REQUIRED):
 
     > ⚠️ **CRITICAL**: Pushing a tag (`git push --tags`) is NOT enough. You must create a **GitHub Release Object** for it to appear in the sidebar and trigger the NPM publish workflow.
@@ -430,7 +430,7 @@ Preflight verification → Changelog → repository/plugin convergence → `npm 
 
 6.  **Run the mandatory full-release-alignment gate**:
     - Re-run `npm run sync:release-state`, `npm run plugin-compat:check`, and `npm run bundles:check`; require a clean, idempotent second pass.
-    - Confirm `package.json`, `package-lock.json`, generated registries and offline catalog, tracked web assets, `.agents/plugins/marketplace.json`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, and every published Codex/Claude plugin or editorial-bundle manifest are regenerated and versioned as `X.Y.Z`.
+    - Confirm `package.json`, `package-lock.json`, generated registries and offline catalog, tracked web assets, `.agents/plugins/marketplace.json`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, every published Codex/Claude plugin manifest, and every eligible Agent Plugins editorial-bundle manifest are regenerated and versioned as `X.Y.Z`.
     - Bind the local/remote `main`, tag, GitHub Release, npm version and intended dist-tag, required CI, CodeQL, and release-only Pages deployment to the exact released commit. Verify live `llms.txt`, `skills.json`, catalog/plugin routes, and the legacy bridge.
     - Discover every existing AAS MCP entry from real local host configuration. Update each existing host with the published package's digest-bound two-pass `aas mcp configure` flow, pin `agentic-awesome-skills@X.Y.Z` and `--version X.Y.Z`, preserve a backup, restart or reconnect the client, and prove `initialize` plus `tools/list` reports `X.Y.Z`. Never create an absent host entry without separate authorization.
     - Fetch `origin/main` again after automation settles, fast-forward local `main`, require `main...origin/main` to be `0 0`, and repeat the no-drift, public-surface, and MCP parity checks. Any mismatch or inaccessible configured host keeps the release incomplete.

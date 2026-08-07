@@ -1,12 +1,17 @@
 ---
 name: makepad-shaders
-description: |
-  CRITICAL: Use for Makepad shader system. Triggers on:
+description: 'CRITICAL: Use for Makepad shader system. Triggers on:
+
   makepad shader, makepad draw_bg, Sdf2d, makepad pixel,
+
   makepad glsl, makepad sdf, draw_quad, makepad gpu,
+
   makepad 着色器, makepad shader 语法, makepad 绘制
-risk: critical
-source: community
+
+  '
+metadata:
+  aas-risk: critical
+  aas-source: community
 ---
 
 # Makepad Shaders Skill

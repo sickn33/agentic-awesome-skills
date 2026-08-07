@@ -1,9 +1,10 @@
 ---
 name: cpp-pro
 description: Write idiomatic C++ code with modern features, RAII, smart pointers, and STL algorithms. Handles templates, move semantics, and performance optimization.
-risk: critical
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 ## Use this skill when

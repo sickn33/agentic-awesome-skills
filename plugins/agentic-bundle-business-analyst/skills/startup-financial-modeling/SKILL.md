@@ -1,9 +1,10 @@
 ---
 name: startup-financial-modeling
-description: "Build comprehensive 3-5 year financial models with revenue projections, cost structures, cash flow analysis, and scenario planning for early-stage startups."
-risk: none
-source: community
-date_added: '2026-02-27'
+description: Build comprehensive 3-5 year financial models with revenue projections, cost structures, cash flow analysis, and scenario planning for early-stage startups.
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Startup Financial Modeling

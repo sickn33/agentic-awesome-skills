@@ -1,9 +1,10 @@
 ---
 name: game-design
-description: "Game design principles. GDD structure, balancing, player psychology, progression."
-risk: none
-source: community
-date_added: "2026-02-27"
+description: Game design principles. GDD structure, balancing, player psychology, progression.
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Game Design Principles

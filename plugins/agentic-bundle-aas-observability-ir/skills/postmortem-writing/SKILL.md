@@ -1,9 +1,10 @@
 ---
 name: postmortem-writing
-description: "Comprehensive guide to writing effective, blameless postmortems that drive organizational learning and prevent incident recurrence."
-risk: none
-source: community
-date_added: "2026-02-27"
+description: Comprehensive guide to writing effective, blameless postmortems that drive organizational learning and prevent incident recurrence.
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Postmortem Writing

@@ -1,8 +1,9 @@
 ---
 name: django-access-review
 description: django-access-review
-risk: critical
-source: community
+metadata:
+  aas-risk: critical
+  aas-source: community
 ---
 
 ---

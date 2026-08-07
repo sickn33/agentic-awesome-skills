@@ -1,9 +1,10 @@
 ---
 name: airflow-dag-patterns
-description: "Build production Apache Airflow DAGs with best practices for operators, sensors, testing, and deployment. Use when creating data pipelines, orchestrating workflows, or scheduling batch jobs."
-risk: safe
-source: community
-date_added: "2026-02-27"
+description: Build production Apache Airflow DAGs with best practices for operators, sensors, testing, and deployment. Use when creating data pipelines, orchestrating workflows, or scheduling batch jobs.
+metadata:
+  aas-risk: safe
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Apache Airflow DAG Patterns

@@ -1,9 +1,10 @@
 ---
 name: embedding-strategies
-description: "Guide to selecting and optimizing embedding models for vector search applications."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Guide to selecting and optimizing embedding models for vector search applications.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Embedding Strategies

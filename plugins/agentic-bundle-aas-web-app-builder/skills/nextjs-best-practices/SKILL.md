@@ -1,9 +1,10 @@
 ---
 name: nextjs-best-practices
-description: "Next.js App Router principles. Server Components, data fetching, routing patterns."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Next.js App Router principles. Server Components, data fetching, routing patterns.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Next.js Best Practices

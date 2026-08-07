@@ -1,12 +1,10 @@
 ---
 name: agent-memory-systems
-description: "Memory is the cornerstone of intelligent agents. Without it, every
-  interaction starts from zero. This skill covers the architecture of agent
-  memory: short-term (context window), long-term (vector stores), and the
-  cognitive architectures that organize them."
-risk: safe
-source: vibeship-spawner-skills (Apache 2.0)
-date_added: 2026-02-27
+description: 'Memory is the cornerstone of intelligent agents. Without it, every interaction starts from zero. This skill covers the architecture of agent memory: short-term (context window), long-term (vector stores), and the cognitive architectures that organize them.'
+metadata:
+  aas-risk: safe
+  aas-source: vibeship-spawner-skills (Apache 2.0)
+  aas-date-added: '2026-02-27'
 ---
 
 # Agent Memory Systems

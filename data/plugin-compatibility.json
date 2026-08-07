@@ -36772,6 +36772,25 @@
       "runtime_files": []
     },
     {
+      "id": "video-router",
+      "path": "skills/video-router",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "videodb",
       "path": "skills/videodb",
       "targets": {
@@ -38527,10 +38546,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2004,
+    "total_skills": 2005,
     "supported": {
-      "codex": 1926,
-      "claude": 1947
+      "codex": 1927,
+      "claude": 1948
     },
     "blocked": {
       "codex": 78,

@@ -1,9 +1,10 @@
 ---
 name: tailwind-patterns
-description: "Tailwind CSS v4 principles. CSS-first configuration, container queries, modern patterns, design token architecture."
-risk: none
-source: community
-date_added: "2026-02-27"
+description: Tailwind CSS v4 principles. CSS-first configuration, container queries, modern patterns, design token architecture.
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Tailwind CSS Patterns (v4 - 2025)
