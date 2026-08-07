@@ -27,7 +27,9 @@
       "Interactive",
       "Write"
     ],
-    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "defaultPrompt": [
       "Use @brainstorming to plan a new feature.",
       "Use @test-driven-development to fix a bug safely.",

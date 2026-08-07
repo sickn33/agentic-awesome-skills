@@ -27,7 +27,9 @@
       "Interactive",
       "Write"
     ],
-    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
       "Use the \"Mobile Developer\" skills to help me complete this task.",

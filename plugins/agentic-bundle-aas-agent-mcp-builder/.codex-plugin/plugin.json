@@ -27,8 +27,12 @@
       "Interactive",
       "Write"
     ],
-    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
+    "composerIcon": "./assets/composer-icon.png",
+    "logo": "./assets/logo.png",
     "defaultPrompt": [
       "Use this plugin to design an MCP server for this workflow, including tools, schemas, and test cases.",
       "Use this plugin to create an eval plan for this agent and define reliability metrics.",
