@@ -1,3 +1,15 @@
+# Video Router Skill Import - 2026-08-07
+
+- Imported the MIT-licensed `video-router` skill from the official
+  [Orkas-AI/Orkas-VideoStudio](https://github.com/Orkas-AI/Orkas-VideoStudio)
+  repository at upstream commit
+  `dd4a0f40b2bc6c6b0fe6f2e732c9540ffffefe08`.
+- Preserved its generate / compose / edit / AUTO routing contract while adding
+  AAS catalog metadata, immutable provenance, the upstream license, explicit
+  triggers, examples, runtime boundaries, and limitations.
+- Kept the contribution source-only: no generated catalog, index, data, plugin,
+  or marketplace artifacts are included.
+
 # Secur0 coordinated remediation - 2026-07-30
 
 - Re-evaluated all 35 Secur0 reports against current protected `main`: 22 were
