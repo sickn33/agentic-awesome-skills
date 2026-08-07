@@ -1,13 +1,14 @@
 ---
 name: expo-api-routes
 description: Guidelines for creating API routes in Expo Router with EAS Hosting
-risk: critical
-source: https://github.com/expo/skills/tree/main/plugins/expo/skills/expo-api-routes
-source_repo: expo/skills
-source_type: official
-date_added: 2026-07-01
 license: MIT
-license_source: https://github.com/expo/skills/blob/main/LICENSE
+metadata:
+  aas-risk: critical
+  aas-source: https://github.com/expo/skills/tree/main/plugins/expo/skills/expo-api-routes
+  aas-source-repo: expo/skills
+  aas-source-type: official
+  aas-date-added: '2026-07-01'
+  aas-license-source: https://github.com/expo/skills/blob/main/LICENSE
 ---
 
 ## When to Use API Routes

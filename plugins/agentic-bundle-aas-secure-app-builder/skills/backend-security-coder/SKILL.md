@@ -1,9 +1,10 @@
 ---
 name: backend-security-coder
 description: Expert in secure backend coding practices specializing in input validation, authentication, and API security. Use PROACTIVELY for backend security implementations or security code reviews.
-risk: critical
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 ## Use this skill when

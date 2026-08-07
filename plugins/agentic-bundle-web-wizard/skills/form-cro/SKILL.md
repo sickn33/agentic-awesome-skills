@@ -1,9 +1,10 @@
 ---
 name: form-cro
 description: Optimize any form that is NOT signup or account registration — including lead capture, contact, demo request, application, survey, quote, and checkout forms.
-risk: critical
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Form Conversion Rate Optimization (Form CRO)

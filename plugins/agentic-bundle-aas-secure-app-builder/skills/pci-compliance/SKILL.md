@@ -1,9 +1,10 @@
 ---
 name: pci-compliance
-description: "Master PCI DSS (Payment Card Industry Data Security Standard) compliance for secure payment processing and handling of cardholder data."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Master PCI DSS (Payment Card Industry Data Security Standard) compliance for secure payment processing and handling of cardholder data.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # PCI Compliance

@@ -1,13 +1,14 @@
 ---
 name: fixing-accessibility
 description: Audit and fix HTML accessibility issues including ARIA labels, keyboard navigation, focus management, color contrast, and form errors. Use when adding interactive controls, forms, dialogs, or reviewing WCAG compliance.
-risk: critical
-source: https://github.com/ibelick/ui-skills/tree/main/skills/fixing-accessibility
-source_repo: ibelick/ui-skills
-source_type: community
-date_added: 2026-07-01
 license: MIT
-license_source: https://github.com/ibelick/ui-skills/blob/main/LICENSE
+metadata:
+  aas-risk: critical
+  aas-source: https://github.com/ibelick/ui-skills/tree/main/skills/fixing-accessibility
+  aas-source-repo: ibelick/ui-skills
+  aas-source-type: community
+  aas-date-added: '2026-07-01'
+  aas-license-source: https://github.com/ibelick/ui-skills/blob/main/LICENSE
 ---
 
 # fixing-accessibility

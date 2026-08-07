@@ -1,9 +1,10 @@
 ---
 name: cc-skill-security-review
-description: "This skill ensures all code follows security best practices and identifies potential vulnerabilities. Use when implementing authentication or authorization, handling user input or file uploads, or creating new API endpoints."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: This skill ensures all code follows security best practices and identifies potential vulnerabilities. Use when implementing authentication or authorization, handling user input or file uploads, or creating new API endpoints.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Security Review Skill

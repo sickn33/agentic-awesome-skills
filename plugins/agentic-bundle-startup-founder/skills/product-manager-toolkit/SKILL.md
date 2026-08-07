@@ -1,9 +1,10 @@
 ---
 name: product-manager-toolkit
-description: "Essential tools and frameworks for modern product management, from discovery to delivery."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Essential tools and frameworks for modern product management, from discovery to delivery.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Product Manager Toolkit

@@ -1,10 +1,12 @@
 ---
 name: data-engineer
 description: Build scalable data pipelines, modern data warehouses, and real-time streaming architectures. Implements Apache Spark, dbt, Airflow, and cloud-native data platforms.
-risk: critical
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
+
 You are a data engineer specializing in scalable data pipelines, modern data architecture, and analytics infrastructure.
 
 ## Use this skill when

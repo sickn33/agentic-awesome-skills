@@ -1,13 +1,14 @@
 ---
 name: security-and-hardening
 description: Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts untrusted data, manages user sessions, or interacts with third-party services.
-risk: critical
-source: https://github.com/addyosmani/agent-skills/tree/main/skills/security-and-hardening
-source_repo: addyosmani/agent-skills
-source_type: community
-date_added: 2026-07-01
 license: MIT
-license_source: https://github.com/addyosmani/agent-skills/blob/main/LICENSE
+metadata:
+  aas-risk: critical
+  aas-source: https://github.com/addyosmani/agent-skills/tree/main/skills/security-and-hardening
+  aas-source-repo: addyosmani/agent-skills
+  aas-source-type: community
+  aas-date-added: '2026-07-01'
+  aas-license-source: https://github.com/addyosmani/agent-skills/blob/main/LICENSE
 ---
 
 # Security and Hardening

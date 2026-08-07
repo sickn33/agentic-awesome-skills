@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "agentic-bundle-indie-game-dev",
+  "version": "15.9.0",
+  "description": "Portable skills-only \"Indie Game Dev\" plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "agent-plugins",
+    "agent-skills",
+    "bundle",
+    "indie-game-dev",
+    "agentic-awesome-skills"
+  ]
+}

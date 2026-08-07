@@ -1,10 +1,11 @@
 ---
 name: security-audit
-description: "Comprehensive security auditing workflow covering web application testing, API security, penetration testing, vulnerability scanning, and security hardening."
-category: workflow-bundle
-risk: safe
-source: personal
-date_added: "2026-02-27"
+description: Comprehensive security auditing workflow covering web application testing, API security, penetration testing, vulnerability scanning, and security hardening.
+metadata:
+  aas-category: workflow-bundle
+  aas-risk: safe
+  aas-source: personal
+  aas-date-added: '2026-02-27'
 ---
 
 # Security Auditing Workflow Bundle

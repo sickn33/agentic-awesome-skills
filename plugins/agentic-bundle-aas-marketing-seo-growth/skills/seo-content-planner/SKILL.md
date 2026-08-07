@@ -7,9 +7,10 @@ description: 'Creates comprehensive content outlines and topic clusters for SEO.
   strategy and planning.
 
   '
-risk: none
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 ## Use this skill when

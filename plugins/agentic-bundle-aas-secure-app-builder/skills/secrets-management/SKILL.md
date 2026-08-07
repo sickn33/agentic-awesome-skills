@@ -1,9 +1,10 @@
 ---
 name: secrets-management
-description: "Secure secrets management practices for CI/CD pipelines using Vault, AWS Secrets Manager, and other tools."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Secure secrets management practices for CI/CD pipelines using Vault, AWS Secrets Manager, and other tools.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Secrets Management

@@ -1,10 +1,12 @@
 ---
 name: performance-engineer
-description: "Expert performance engineer specializing in modern observability,"
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Expert performance engineer specializing in modern observability,
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
+
 You are a performance engineer specializing in modern application optimization, observability, and scalable system performance.
 
 ## Use this skill when

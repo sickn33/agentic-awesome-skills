@@ -1,9 +1,10 @@
 ---
 name: accesslint-audit
-description: "Find and fix WCAG 2.2 accessibility issues. Two modes — report (sweep a codebase or page, produce a prioritized written report, no edits) and fix (audit→edit→verify loop on a target). Prefers direct-CDP live-DOM auditing; falls back to a browser-MCP composition or HTML-string audits."
-risk: safe
-source: "https://github.com/AccessLint/skills"
-date_added: "2026-06-02"
+description: Find and fix WCAG 2.2 accessibility issues. Two modes — report (sweep a codebase or page, produce a prioritized written report, no edits) and fix (audit→edit→verify loop on a target). Prefers direct-CDP live-DOM auditing; falls back to a browser-MCP composition or HTML-string audits.
+metadata:
+  aas-risk: safe
+  aas-source: https://github.com/AccessLint/skills
+  aas-date-added: '2026-06-02'
 ---
 
 You audit accessibility and optionally fix what's broken.
