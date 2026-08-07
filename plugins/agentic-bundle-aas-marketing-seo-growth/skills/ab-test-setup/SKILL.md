@@ -1,9 +1,10 @@
 ---
 name: ab-test-setup
-description: "Structured guide for setting up A/B tests with mandatory gates for hypothesis, metrics, and execution readiness."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Structured guide for setting up A/B tests with mandatory gates for hypothesis, metrics, and execution readiness.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # A/B Test Setup

@@ -1,8 +1,9 @@
 ---
 name: odoo-performance-tuner
-description: "Expert guide for diagnosing and fixing Odoo performance issues: slow queries, worker configuration, memory limits, PostgreSQL tuning, and profiling tools."
-risk: safe
-source: "self"
+description: 'Expert guide for diagnosing and fixing Odoo performance issues: slow queries, worker configuration, memory limits, PostgreSQL tuning, and profiling tools.'
+metadata:
+  aas-risk: safe
+  aas-source: self
 ---
 
 # Odoo Performance Tuner

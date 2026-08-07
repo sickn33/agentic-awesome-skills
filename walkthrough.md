@@ -1,15 +1,3 @@
-# Video Router Skill Import - 2026-08-07
-
-- Imported the MIT-licensed `video-router` skill from the official
-  [Orkas-AI/Orkas-VideoStudio](https://github.com/Orkas-AI/Orkas-VideoStudio)
-  repository at upstream commit
-  `dd4a0f40b2bc6c6b0fe6f2e732c9540ffffefe08`.
-- Preserved its generate / compose / edit / AUTO routing contract while adding
-  AAS catalog metadata, immutable provenance, the upstream license, explicit
-  triggers, examples, runtime boundaries, and limitations.
-- Kept the contribution source-only: no generated catalog, index, data, plugin,
-  or marketplace artifacts are included.
-
 # Secur0 coordinated remediation - 2026-07-30
 
 - Re-evaluated all 35 Secur0 reports against current protected `main`: 22 were
@@ -415,3 +403,10 @@
 - Expanded skill-review fingerprints and workflow triggers to cover bundled support files, and tightened unsafe guidance in the affected canonical skills.
 - Fixed native Windows ACL inspection for AAS preview by making PowerShell path handling explicit and returning bounded phase/path diagnostics for unresolved ACL identities.
 - Added regression coverage for every confirmed code-path finding and documented the Windows 10/11 Codex CLI preview contract from discussion `#956`.
+
+# Maintenance Walkthrough - 2026-08-06 Agent Plugins 1.0 Portability
+
+- Added a standard root `plugin.json` to every editorial bundle that passes the existing Codex/Claude safety gates and the Agent Plugins immediate-child skill-layout rule.
+- Kept the host-specific full-library roots separate, flattened qualified paths only inside generated packages, and normalized AAS provenance/risk fields into standard string metadata without changing instruction bodies.
+- Pinned offline validation to an attributed snapshot of the official Agent Plugins 1.0.0 JSON Schema, added deterministic Codex prompt fallbacks, and covered closed-schema, fixed-discovery, pilot-bundle, and release-alignment regressions.
+- Updated the user onboarding trinity, plugin/bundle guides, maintainer contract, and release checklist while leaving the active release-notes PR untouched.

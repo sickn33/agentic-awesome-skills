@@ -1,9 +1,10 @@
 ---
 name: concise-planning
-description: "Use when a user asks for a plan for a coding task, to generate a clear, actionable, and atomic checklist."
-risk: safe
-source: community
-date_added: "2026-02-27"
+description: Use when a user asks for a plan for a coding task, to generate a clear, actionable, and atomic checklist.
+metadata:
+  aas-risk: safe
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Concise Planning

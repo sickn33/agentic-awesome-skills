@@ -1,13 +1,14 @@
 ---
 name: observability-and-instrumentation
 description: Instruments code so production behavior is visible and diagnosable. Use when adding logging, metrics, tracing, or alerting. Use when shipping any feature that runs in production and you need evidence it works. Use when production issues are reported but you can't tell what happened...
-risk: critical
-source: https://github.com/addyosmani/agent-skills/tree/main/skills/observability-and-instrumentation
-source_repo: addyosmani/agent-skills
-source_type: community
-date_added: 2026-07-01
 license: MIT
-license_source: https://github.com/addyosmani/agent-skills/blob/main/LICENSE
+metadata:
+  aas-risk: critical
+  aas-source: https://github.com/addyosmani/agent-skills/tree/main/skills/observability-and-instrumentation
+  aas-source-repo: addyosmani/agent-skills
+  aas-source-type: community
+  aas-date-added: '2026-07-01'
+  aas-license-source: https://github.com/addyosmani/agent-skills/blob/main/LICENSE
 ---
 
 # Observability and Instrumentation

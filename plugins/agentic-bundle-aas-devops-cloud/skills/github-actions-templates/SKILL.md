@@ -1,9 +1,10 @@
 ---
 name: github-actions-templates
-description: "Production-ready GitHub Actions workflow patterns for testing, building, and deploying applications."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Production-ready GitHub Actions workflow patterns for testing, building, and deploying applications.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # GitHub Actions Templates

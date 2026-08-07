@@ -1,12 +1,10 @@
 ---
 name: 2d-games
-description: >-
-  2D game development principles. Sprites, atlases, tilemaps, physics, cameras,
-  and genre patterns (platformer, top-down). Use for canvas/Phaser/Kaplay/Pixi
-  2D games or guest viewports inside hybrid web apps.
-risk: none
-source: community
-date_added: "2026-02-27"
+description: 2D game development principles. Sprites, atlases, tilemaps, physics, cameras, and genre patterns (platformer, top-down). Use for canvas/Phaser/Kaplay/Pixi 2D games or guest viewports inside hybrid web apps.
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # 2D Game Development

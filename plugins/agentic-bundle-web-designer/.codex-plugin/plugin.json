@@ -28,6 +28,10 @@
       "Write"
     ],
     "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
-    "brandColor": "#111827"
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the \"Web Designer\" skills to help me complete this task.",
+      "Review this project with the \"Web Designer\" workflow."
+    ]
   }
 }

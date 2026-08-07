@@ -1,13 +1,14 @@
 ---
 name: api-integration
 description: Designs event-driven architectures, webhook systems, API chaining flows, ETL pipelines, and integration patterns between services. Use whenever the user asks about webhooks, event streaming, API composition, connecting two or more APIs, building pipelines, Pub/Sub, Kafka topics, ETL...
-risk: none
-source: https://github.com/LambdaTest/agent-skills/tree/main/api-skill/api-integration-helper
-source_repo: LambdaTest/agent-skills
-source_type: community
-date_added: 2026-07-01
 license: MIT
-license_source: https://github.com/LambdaTest/agent-skills/blob/main/LICENSE
+metadata:
+  aas-risk: none
+  aas-source: https://github.com/LambdaTest/agent-skills/tree/main/api-skill/api-integration-helper
+  aas-source-repo: LambdaTest/agent-skills
+  aas-source-type: community
+  aas-date-added: '2026-07-01'
+  aas-license-source: https://github.com/LambdaTest/agent-skills/blob/main/LICENSE
 ---
 
 # API Integration Skill

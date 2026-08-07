@@ -1,9 +1,10 @@
 ---
 name: grafana-dashboards
-description: "Create and manage production-ready Grafana dashboards for comprehensive system observability."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Create and manage production-ready Grafana dashboards for comprehensive system observability.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Grafana Dashboards

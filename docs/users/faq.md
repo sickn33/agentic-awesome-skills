@@ -209,6 +209,10 @@ This repository also includes repo-local plugin metadata for Codex:
 
 That path exposes the new plugin-safe Codex root plugin plus generated bundle plugins. For the full explanation, read [plugins.md](plugins.md).
 
+**Portable Agent Plugins alternative:**
+
+Cross-host-safe specialized bundles also include a standard Agent Plugins 1.0 `plugin.json` at the bundle root. Compatible clients discover the included skills from the adjacent `skills/` directory. AAS omits that root manifest when a bundle does not satisfy the portable flat-layout gate, and the host-specific full-library roots remain separate.
+
 ### Why do I not see `Sync Skills` on the hosted website?
 
 Because the public site is a static GitHub Pages catalog, not a maintainer control surface.
@@ -233,7 +237,7 @@ The app may show optional read-only community counts when configured, but clicki
 
 ### What does `plugin-safe` mean?
 
-Plugin-safe means the published Claude Code and Codex plugins only include the subset of skills that is ready for marketplace-style distribution.
+Plugin-safe means the published Claude Code and Codex plugins only include the subset of skills that is ready for packaged distribution. Agent Plugins portability is a stricter package-level claim: the bundle must also have a standard root manifest and directly discoverable immediate skill directories.
 
 Skills can stay repo-only for a while if they still need:
 

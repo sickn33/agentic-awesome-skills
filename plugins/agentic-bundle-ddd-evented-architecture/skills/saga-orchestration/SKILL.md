@@ -1,9 +1,10 @@
 ---
 name: saga-orchestration
-description: "Patterns for managing distributed transactions and long-running business processes."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Patterns for managing distributed transactions and long-running business processes.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Saga Orchestration

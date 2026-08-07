@@ -1,9 +1,10 @@
 ---
 name: accesslint-scan
-description: "Audit a live page for accessibility issues, locate each WCAG violation precisely, and return a selector-grounded fix worklist without editing."
-risk: safe
-source: "https://github.com/AccessLint/skills"
-date_added: "2026-06-02"
+description: Audit a live page for accessibility issues, locate each WCAG violation precisely, and return a selector-grounded fix worklist without editing.
+metadata:
+  aas-risk: safe
+  aas-source: https://github.com/AccessLint/skills
+  aas-date-added: '2026-06-02'
 ---
 
 Audit a live page and report what's broken and where. Locate; don't fix. If no URL in `$ARGUMENTS`, ask for one.

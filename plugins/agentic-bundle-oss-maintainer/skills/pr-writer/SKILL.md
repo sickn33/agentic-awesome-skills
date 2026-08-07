@@ -1,8 +1,9 @@
 ---
 name: pr-writer
-description: "Create pull requests following Sentry's engineering practices."
-risk: critical
-source: community
+description: Create pull requests following Sentry's engineering practices.
+metadata:
+  aas-risk: critical
+  aas-source: community
 ---
 
 # PR Writer

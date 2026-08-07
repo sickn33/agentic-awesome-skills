@@ -35,7 +35,7 @@ We have curated **Starter Packs** to get you running immediately.
 
 On the direct-install path, you install the library once (npx or clone); Starter Packs are curated lists to help you **pick which skills to use** by role (e.g. Web Wizard, Hacker Pack)—they are not a different way to install.
 
-If you prefer a marketplace-style install for **Claude Code** or **Codex**, use the new plugin distributions described in [plugins.md](plugins.md).
+If you prefer a packaged install for **Claude Code**, **Codex**, or another Agent Plugins-compatible client, use the plugin distributions described in [plugins.md](plugins.md).
 
 ### 1. Install Skills Directly
 
@@ -192,6 +192,8 @@ For Claude Code, use:
 
 For Codex, this repository also ships a root plugin plus bundle plugins through the repo-local metadata described in [plugins.md](plugins.md).
 
+For clients implementing Agent Plugins 1.0, use a specialized bundle whose generated status says `Agent Plugins 1.0 portable`. Its directory contains the standard root `plugin.json` and directly discoverable `skills/`; installation itself follows the client's instructions.
+
 **Q: Do I need to install every skill?**
 A: No. With AAS Core, ask the agent to inspect the project and choose exact IDs from the complete catalog. On the legacy direct-install path, you can install the broad library while the host reads only invoked or relevant skills. **Starter Packs** in [bundles.md](bundles.md) remain human-curated discovery aids.
 
@@ -220,7 +222,7 @@ A: Yes. Original code and tooling are MIT-licensed, and original documentation/n
 Need a tool-specific starting point first?
 
 - [Claude Code skills](claude-code-skills.md)
-- [Plugins for Claude Code and Codex](plugins.md)
+- [Plugins for compatible agent clients](plugins.md)
 - [Cursor skills](cursor-skills.md)
 - [Codex CLI skills](codex-cli-skills.md)
 - [Gemini CLI skills](gemini-cli-skills.md)

@@ -1,9 +1,10 @@
 ---
 name: hig-patterns
 description: Apple Human Interface Guidelines interaction and UX patterns.
-risk: none
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Apple HIG: Interaction Patterns

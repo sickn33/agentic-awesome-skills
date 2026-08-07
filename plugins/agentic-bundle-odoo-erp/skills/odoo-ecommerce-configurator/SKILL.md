@@ -1,8 +1,9 @@
 ---
 name: odoo-ecommerce-configurator
-description: "Expert guide for Odoo eCommerce and Website: product catalog, payment providers, shipping methods, SEO, and order-to-fulfillment workflow."
-risk: safe
-source: "self"
+description: 'Expert guide for Odoo eCommerce and Website: product catalog, payment providers, shipping methods, SEO, and order-to-fulfillment workflow.'
+metadata:
+  aas-risk: safe
+  aas-source: self
 ---
 
 # Odoo eCommerce Configurator

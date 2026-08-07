@@ -1,13 +1,19 @@
 ---
 name: makepad-deployment
-description: |
-  CRITICAL: Use for Makepad packaging and deployment. Triggers on:
+description: 'CRITICAL: Use for Makepad packaging and deployment. Triggers on:
+
   deploy, package, APK, IPA, 打包, 部署,
+
   cargo-packager, cargo-makepad, WASM, Android, iOS,
+
   distribution, installer, .deb, .dmg, .nsis,
+
   GitHub Actions, CI, action, marketplace
-risk: critical
-source: community
+
+  '
+metadata:
+  aas-risk: critical
+  aas-source: community
 ---
 
 # Makepad Packaging & Deployment
