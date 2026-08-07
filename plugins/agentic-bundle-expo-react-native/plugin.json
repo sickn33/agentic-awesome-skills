@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "agentic-bundle-expo-react-native",
-  "version": "15.10.0",
+  "version": "15.11.0",
   "description": "Portable skills-only \"Expo & React Native\" plugin from Agentic Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
