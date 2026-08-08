@@ -7,7 +7,7 @@ import { useSkills } from '../context/SkillContext';
 import { seoLandingPages } from '../data/seoLandingPages';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useSkillShortlist } from '../hooks/useSkillShortlist';
-import type { CategoryStats, SyncMessage } from '../types';
+import type { CategoryStats, Skill, SyncMessage } from '../types';
 import { buildHomeMeta, getHomeFaqItems, toIndexableRoutePath } from '../utils/seo';
 
 const conceptCards = [
@@ -39,17 +39,81 @@ function getInitialFilter(searchParams: URLSearchParams, key: string, fallback: 
   return searchParams.get(key)?.trim() || fallback;
 }
 
-function matchesSearch(value: string, query: string): boolean {
-  const normalized = value.toLowerCase();
-  const tokens = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
-  return tokens.every((token) => normalized.includes(token));
+/** Keep a ref pointing at the latest committed value without writing during render. */
+function useLatest<T>(value: T): { readonly current: T } {
+  const ref = useRef(value);
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref;
 }
+
+interface SearchField {
+  key: 'id' | 'name' | 'description' | 'category' | 'source' | 'tags';
+  weight: number;
+}
+
+// Fields searched, weighted by how specific they are for ranking a skill.
+const SEARCH_FIELDS: SearchField[] = [
+  { key: 'name', weight: 3 },
+  { key: 'id', weight: 2 },
+  { key: 'category', weight: 2 },
+  { key: 'tags', weight: 2 },
+  { key: 'description', weight: 1 },
+  { key: 'source', weight: 1 },
+];
+
+/**
+ * fzf-style fuzzy matcher: every character of the token must appear in the
+ * haystack in order (with gaps allowed). This gives typo tolerance for free —
+ * "reactj" matches "reactjs" — unlike a plain substring test. Returns a score
+ * that rewards tight matches, or 0 when the token does not match.
+ */
+function fuzzyTokenScore(token: string, haystack: string): number {
+  if (!haystack || !token) return 0;
+  let cursor = 0;
+  let gapPenalty = 0;
+  for (let i = 0; i < token.length; i += 1) {
+    const next = haystack.indexOf(token.charAt(i), cursor);
+    if (next === -1) return 0;
+    gapPenalty += next - cursor;
+    cursor = next + 1;
+  }
+  return Math.max(1, token.length - gapPenalty);
+}
+
+/** Score a skill against the query tokens. 0 means a token matched nowhere. */
+function fuzzySearchSkill(skill: Skill, tokens: string[]): number {
+  let total = 0;
+  for (const token of tokens) {
+    let bestTokenScore = 0;
+    for (const field of SEARCH_FIELDS) {
+      const value = field.key === 'tags'
+        ? (skill.tags || []).join(' ')
+        : String(skill[field.key] || '');
+      const fieldScore = fuzzyTokenScore(token, value.toLowerCase());
+      if (fieldScore > 0) bestTokenScore = Math.max(bestTokenScore, fieldScore * field.weight);
+    }
+    if (bestTokenScore === 0) return 0;
+    total += bestTokenScore;
+  }
+  return total;
+}
+
+const isMacLike =
+  typeof navigator !== 'undefined' &&
+  /Mac|iPhone|iPad|iPod/i.test(
+    (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform ??
+    navigator.platform ??
+    '',
+  );
+const searchShortcutHint = isMacLike ? '⌘K' : 'Ctrl K';
 
 export function Home(): React.ReactElement {
   const { skills, stars, loading, error, refreshSkills } = useSkills();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(() => getInitialFilter(searchParams, 'q', ''));
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(() => getInitialFilter(searchParams, 'q', ''));
   const [categoryFilter, setCategoryFilter] = useState(() => getInitialFilter(searchParams, 'category', 'all'));
   const [riskFilter, setRiskFilter] = useState(() => getInitialFilter(searchParams, 'risk', 'all'));
   const [sourceFilter, setSourceFilter] = useState(() => getInitialFilter(searchParams, 'source', 'all'));
@@ -59,6 +123,18 @@ export function Home(): React.ReactElement {
   const [syncMsg, setSyncMsg] = useState<SyncMessage | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { ids: shortlistIds, toggle: toggleShortlist, clear: clearShortlist } = useSkillShortlist();
+  // Set right before writing the URL ourselves so the URL->state listener below
+  // can tell its own writes apart from browser navigation (back/forward) and
+  // restore filters from the URL instead of letting them get overwritten back.
+  const skipNextUrlSyncRef = useRef(false);
+  // Latest committed URL. The state->URL effect compares against this ref
+  // instead of subscribing to searchParams, so it never re-fires on
+  // back/forward navigation and overwrites the restored URL with stale state.
+  const searchParamsRef = useLatest(searchParams);
+  // setSearchParams is not referentially stable in react-router v8 (it is
+  // rebuilt whenever location.search changes), so holding it in a ref keeps the
+  // state->URL effect from re-running on every navigation.
+  const setSearchParamsRef = useLatest(setSearchParams);
 
   usePageMeta(buildHomeMeta(skills.length));
 
@@ -81,6 +157,8 @@ export function Home(): React.ReactElement {
     return () => window.removeEventListener('keydown', handleSearchShortcut);
   }, []);
 
+  // State -> URL: keep the address bar shareable/bookmarkable as the user
+  // changes filters. Uses replace so typing in search does not pollute history.
   useEffect(() => {
     const next = new URLSearchParams();
     if (search) next.set('q', search);
@@ -89,15 +167,39 @@ export function Home(): React.ReactElement {
     if (sourceFilter !== 'all') next.set('source', sourceFilter);
     if (scopeFilter !== 'all') next.set('scope', scopeFilter);
     if (sortBy !== 'default') next.set('sort', sortBy);
-    if (next.toString() !== searchParams.toString()) setSearchParams(next, { replace: true });
-  }, [categoryFilter, riskFilter, scopeFilter, search, searchParams, setSearchParams, sortBy, sourceFilter]);
+    if (next.toString() !== searchParamsRef.current.toString()) {
+      skipNextUrlSyncRef.current = true;
+      setSearchParamsRef.current(next, { replace: true });
+    }
+  }, [categoryFilter, riskFilter, scopeFilter, search, searchParamsRef, setSearchParamsRef, sortBy, sourceFilter]);
+
+  // URL -> State: restore filters after browser back/forward navigation or a
+  // manual address-bar edit. Without this, the state->URL effect would
+  // immediately overwrite the restored URL with the stale in-memory filters.
+  useEffect(() => {
+    if (skipNextUrlSyncRef.current) {
+      skipNextUrlSyncRef.current = false;
+      return;
+    }
+    const nextSearch = getInitialFilter(searchParams, 'q', '');
+    setSearch(nextSearch);
+    setDebouncedSearch(nextSearch); // avoid a 300ms unfiltered flash on load/nav
+    setCategoryFilter(getInitialFilter(searchParams, 'category', 'all'));
+    setRiskFilter(getInitialFilter(searchParams, 'risk', 'all'));
+    setSourceFilter(getInitialFilter(searchParams, 'source', 'all'));
+    setScopeFilter(getInitialFilter(searchParams, 'scope', 'all'));
+    setSortBy(getInitialFilter(searchParams, 'sort', 'default'));
+  }, [searchParams]);
 
   const filteredSkills = useMemo(() => {
     let result = [...skills];
     if (debouncedSearch) {
-      result = result.filter((skill) => matchesSearch([
-        skill.id, skill.name, skill.description, skill.category, skill.source || '', ...(skill.tags || []),
-      ].join(' '), debouncedSearch));
+      const tokens = debouncedSearch.toLowerCase().trim().split(/\s+/).filter(Boolean);
+      result = result
+        .map((skill) => ({ skill, score: fuzzySearchSkill(skill, tokens) }))
+        .filter((entry) => entry.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map((entry) => entry.skill);
     }
     if (categoryFilter !== 'all') result = result.filter((skill) => skill.category === categoryFilter);
     if (riskFilter !== 'all') result = result.filter((skill) => (skill.risk || 'unknown') === riskFilter);
@@ -206,7 +308,7 @@ export function Home(): React.ReactElement {
               ref={searchInputRef}
               onChange={(event) => setSearch(event.target.value)}
             />
-            <kbd>⌘K</kbd>
+            <kbd>{searchShortcutHint}</kbd>
           </label>
 
           <div className="catalog-mobile-categories" aria-label="Quick category filters">

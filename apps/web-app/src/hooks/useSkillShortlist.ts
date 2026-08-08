@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const STORAGE_KEY = 'aas_skill_shortlist';
 const CHANGE_EVENT = 'aas-skill-shortlist-change';
@@ -24,6 +24,10 @@ function writeShortlist(ids: string[]): void {
 /** A browser-local working set for comparing and exporting exact skill IDs. */
 export function useSkillShortlist() {
   const [ids, setIds] = useState<string[]>(readShortlist);
+  // Snapshot of the last value we persisted. Guards the persistence effect so
+  // it never echoes a change back that its own change/storage listeners caused
+  // (which would make two hooks ping-pong and re-render forever).
+  const persistedRef = useRef<string | null>(null);
 
   useEffect(() => {
     const sync = () => setIds(readShortlist());
@@ -35,18 +39,27 @@ export function useSkillShortlist() {
     };
   }, []);
 
+  // Persist the current ids whenever they change. Writing here (instead of
+  // inside the setIds updater above) keeps the updater pure: React StrictMode
+  // double-invokes updaters in dev, and a side effect there would fire twice.
+  useEffect(() => {
+    const next = JSON.stringify(ids);
+    if (next === persistedRef.current) return;
+    persistedRef.current = next;
+    // Only actually write when the stored value differs, so storage-synced
+    // updates don't get re-broadcast (or dispatch a spurious change event).
+    if (localStorage.getItem(STORAGE_KEY) !== next) writeShortlist(ids);
+  }, [ids]);
+
   const toggle = useCallback((skillId: string) => {
-    setIds((current) => {
-      const next = current.includes(skillId)
+    setIds((current) =>
+      current.includes(skillId)
         ? current.filter((id) => id !== skillId)
-        : [...current, skillId];
-      writeShortlist(next);
-      return next;
-    });
+        : [...current, skillId]
+    );
   }, []);
 
   const clear = useCallback(() => {
-    writeShortlist([]);
     setIds([]);
   }, []);
 
