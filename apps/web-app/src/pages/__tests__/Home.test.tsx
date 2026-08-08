@@ -120,6 +120,21 @@ describe('Home', () => {
   });
 
   describe('Search and Filtering', () => {
+    it('focuses search when the advertised keyboard shortcut is pressed', () => {
+      (useSkills as Mock).mockReturnValue({
+        skills: [],
+        stars: {},
+        loading: false,
+        error: null,
+      });
+
+      renderWithRouter(<Home />, { useProvider: false });
+      const searchInput = screen.getByLabelText(/Search skills/i);
+      fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
+
+      expect(searchInput).toHaveFocus();
+    });
+
     it('should filter skills based on search term', async () => {
       const mockSkills = [
         createMockSkill({ id: 'react', name: 'React Patterns' }),
@@ -168,6 +183,32 @@ describe('Home', () => {
         expect(screen.getByText('@Frontend Skill')).toBeInTheDocument();
         expect(screen.queryByText('@Backend Skill')).not.toBeInTheDocument();
       });
+    });
+
+    it('filters by risk and keeps a browser-local shortlist', async () => {
+      const mockSkills = [
+        createMockSkill({ id: 'safe-skill', name: 'Safe Skill', risk: 'safe' }),
+        createMockSkill({ id: 'critical-skill', name: 'Critical Skill', risk: 'critical' }),
+      ];
+
+      (useSkills as Mock).mockReturnValue({
+        skills: mockSkills,
+        stars: {},
+        loading: false,
+        error: null,
+      });
+
+      renderWithRouter(<Home />, { useProvider: false });
+      fireEvent.change(screen.getByLabelText(/Filter by risk/i), { target: { value: 'critical' } });
+
+      await waitFor(() => {
+        expect(screen.getByText('@Critical Skill')).toBeInTheDocument();
+        expect(screen.queryByText('@Safe Skill')).not.toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: /Add to shortlist/i }));
+      expect(screen.getByRole('button', { name: /In shortlist/i })).toBeInTheDocument();
+      expect(screen.getByText(/1 selected/i)).toBeInTheDocument();
     });
   });
 
