@@ -55,6 +55,14 @@ FRONTMATTER_BLOCK_RE = re.compile(
     re.DOTALL,
 )
 REPO_URL = "https://github.com/sickn33/agentic-awesome-skills"
+CATALOG_URL = "https://sickn33.github.io/agentic-awesome-skills/"
+PRIVACY_POLICY_URL = f"{REPO_URL}/blob/main/PRIVACY.md"
+TERMS_OF_SERVICE_URL = f"{REPO_URL}/blob/main/TERMS.md"
+FLAGSHIP_BUNDLE_ID = "aas-agent-mcp-builder"
+FLAGSHIP_ASSET_SOURCES = {
+    "assets/logo.png": Path("apps") / "web-app" / "public" / "web-app-manifest-512x512.png",
+    "assets/composer-icon.png": Path("apps") / "web-app" / "public" / "favicon-96x96.png",
+}
 AUTHOR = {
     "name": "sickn33 and contributors",
     "url": REPO_URL,
@@ -666,7 +674,9 @@ def _root_codex_plugin_manifest(metadata: dict[str, Any], supported_skill_count:
             "developerName": AUTHOR["name"],
             "category": "Productivity",
             "capabilities": ["Interactive", "Write"],
-            "websiteURL": REPO_URL,
+            "websiteURL": CATALOG_URL,
+            "privacyPolicyURL": PRIVACY_POLICY_URL,
+            "termsOfServiceURL": TERMS_OF_SERVICE_URL,
             "defaultPrompt": [
                 "Use @brainstorming to plan a new feature.",
                 "Use @test-driven-development to fix a bug safely.",
@@ -715,9 +725,18 @@ def _bundle_codex_plugin_manifest(metadata: dict[str, Any], bundle: dict[str, An
         "developerName": AUTHOR["name"],
         "category": category,
         "capabilities": ["Interactive", "Write"],
-        "websiteURL": REPO_URL,
+        "websiteURL": CATALOG_URL,
+        "privacyPolicyURL": PRIVACY_POLICY_URL,
+        "termsOfServiceURL": TERMS_OF_SERVICE_URL,
         "brandColor": "#111827",
     }
+    if bundle["id"] == FLAGSHIP_BUNDLE_ID:
+        interface.update(
+            {
+                "composerIcon": "./assets/composer-icon.png",
+                "logo": "./assets/logo.png",
+            }
+        )
     default_prompts = _string_list(bundle.get("defaultPrompts")) or [
         f'Use the "{bundle["name"]}" skills to help me complete this task.',
         f'Review this project with the "{bundle["name"]}" workflow.',
@@ -1005,6 +1024,30 @@ def _assert_plugin_metadata_layout(
         raise ValueError(f"{label} metadata layout is out of sync: {detail}")
 
 
+def _bundle_asset_sources(root: Path, bundle: dict[str, Any]) -> dict[str, Path]:
+    if bundle["id"] != FLAGSHIP_BUNDLE_ID:
+        return {}
+    return {
+        relative_path: root / source_path
+        for relative_path, source_path in FLAGSHIP_ASSET_SOURCES.items()
+    }
+
+
+def _assert_bundle_assets(
+    plugin_root: Path,
+    asset_sources: dict[str, Path],
+    label: str,
+) -> None:
+    for relative_path, source_path in asset_sources.items():
+        destination_path = plugin_root / relative_path
+        if not source_path.is_file():
+            raise ValueError(f"{label} source asset is missing: {source_path}")
+        if destination_path.is_symlink() or not destination_path.is_file():
+            raise ValueError(f"{label} asset is missing or unsafe: {relative_path}")
+        if destination_path.read_bytes() != source_path.read_bytes():
+            raise ValueError(f"{label} asset is out of sync: {relative_path}")
+
+
 def check_editorial_bundle_plugins(
     root: Path,
     metadata: dict[str, Any],
@@ -1134,6 +1177,13 @@ def check_editorial_bundle_plugins(
                 raise ValueError(
                     f'Bundle {bundle["id"]} contains an unsupported {target} manifest: {manifest_path}'
                 )
+        asset_sources = _bundle_asset_sources(root, bundle)
+        expected_manifest_paths.update(asset_sources)
+        _assert_bundle_assets(
+            plugin_root,
+            asset_sources,
+            f'bundle plugin {bundle["id"]}',
+        )
         _assert_plugin_metadata_layout(
             plugin_root,
             expected_manifest_paths,
@@ -1272,6 +1322,13 @@ def _sync_bundle_plugin_directory(
                 staging_root / ".codex-plugin" / "plugin.json",
                 _bundle_codex_plugin_manifest(metadata, bundle),
             )
+
+        for relative_path, source_path in _bundle_asset_sources(root, bundle).items():
+            if not source_path.is_file():
+                raise ValueError(f"Flagship plugin source asset is missing: {source_path}")
+            destination_path = staging_root / relative_path
+            destination_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source_path, destination_path)
 
     _replace_directory_atomically(plugin_root, populate_bundle_plugin)
 

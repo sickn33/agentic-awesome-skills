@@ -130,6 +130,38 @@ class EditorialBundlesTests(unittest.TestCase):
                 {**manifest, "name": "invalid--name"}
             )
 
+    def test_flagship_codex_manifest_has_public_listing_metadata_and_assets(self):
+        metadata = editorial_bundles.load_metadata(str(REPO_ROOT))
+        flagship = next(
+            bundle
+            for bundle in self.manifest_bundles
+            if bundle["id"] == editorial_bundles.FLAGSHIP_BUNDLE_ID
+        )
+        manifest = editorial_bundles._bundle_codex_plugin_manifest(metadata, flagship)
+        interface = manifest["interface"]
+
+        self.assertEqual(interface["websiteURL"], editorial_bundles.CATALOG_URL)
+        self.assertEqual(
+            interface["privacyPolicyURL"],
+            editorial_bundles.PRIVACY_POLICY_URL,
+        )
+        self.assertEqual(
+            interface["termsOfServiceURL"],
+            editorial_bundles.TERMS_OF_SERVICE_URL,
+        )
+        self.assertEqual(interface["logo"], "./assets/logo.png")
+        self.assertEqual(interface["composerIcon"], "./assets/composer-icon.png")
+
+        plugin_root = REPO_ROOT / "plugins" / "agentic-bundle-aas-agent-mcp-builder"
+        for relative_path, source_path in editorial_bundles._bundle_asset_sources(
+            REPO_ROOT,
+            flagship,
+        ).items():
+            self.assertEqual(
+                (plugin_root / relative_path).read_bytes(),
+                source_path.read_bytes(),
+            )
+
     def test_portable_skill_export_preserves_body_and_moves_aas_metadata(self):
         source = """---
 name: sample-skill

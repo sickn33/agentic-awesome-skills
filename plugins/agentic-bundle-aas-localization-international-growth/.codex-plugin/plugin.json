@@ -1,6 +1,6 @@
 {
   "name": "aasb-aas-localization-international-growth",
-  "version": "15.9.0",
+  "version": "15.11.0",
   "description": "Install the \"AAS Localization & International Growth\" workflow plugin from Agentic Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
@@ -27,7 +27,9 @@
       "Interactive",
       "Write"
     ],
-    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
+    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
       "Use this plugin to plan international SEO and localization for this product, including hreflang and content priorities.",

@@ -9,6 +9,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.11.0] - 2026-08-07 - "Agent Plugin Directory Readiness"
+
+> Prepared the flagship AAS Agent & MCP Builder for the OpenAI Plugins Directory with production metadata, public policies, and a reproducible evaluation dossier.
+
+This release turns the portable Agent Plugins work from 15.10.0 into a directory-ready product surface. The flagship bundle now carries the listing metadata and assets needed by compatible clients, while the repository records the exact claims, prompts, test cases, execution evidence, and publisher-only approval boundaries required for a truthful public submission.
+
+Start here:
+
+- Flagship plugin: [`AAS Agent & MCP Builder`](plugins/agentic-bundle-aas-agent-mcp-builder/)
+- Submission dossier: [`docs/plugin-submissions/aas-agent-mcp-builder/`](docs/plugin-submissions/aas-agent-mcp-builder/)
+- Plugin guide: [`docs/users/plugins.md`](docs/users/plugins.md)
+- Privacy: [`PRIVACY.md`](PRIVACY.md)
+- Terms: [`TERMS.md`](TERMS.md)
+
+### Added
+
+- Added a version-controlled OpenAI Plugins Directory submission dossier for `AAS Agent & MCP Builder`, including public listing copy, starter prompts, six positive and four negative evaluation cases, a recorded 10/10 Codex execution pass, release notes, and explicit publisher-owned approval boundaries.
+- Added project privacy and terms documents covering skills-only plugins, the browser-local catalog and Workbench behavior, third-party services, and support channels.
+
+### Changed
+
+- Enriched generated Codex plugin manifests with public website, privacy, and terms metadata, and added production logo assets to the flagship Agent & MCP Builder package.
+
+### Who should care
+
+- Agent builders who want an installable, curated path through AAS architecture, MCP, RAG, LangGraph, evaluation, and context-management skills.
+- Compatible agent clients that surface plugin identity, artwork, website, privacy, and terms metadata.
+- Maintainers who need a reviewable boundary between repository evidence and publisher-only OpenAI platform attestations.
+
+### Validation
+
+- Executed all ten dossier cases in fresh, read-only Codex sessions: six expected activations and four expected non-activations, with 10/10 passing.
+- Validated the dossier against the generated flagship manifest, required listing fields, asset paths, starter prompts, case coverage, and recorded execution results.
+- Passed repository skill validation, reference validation, documentation security checks, warning-budget enforcement, bundle checks, plugin compatibility checks, Agent Plugin schema tests, and the Codex plugin validator across all 58 packages.
+
 ## [15.10.0] - 2026-08-07 - "Portable Agent Plugins and Governed Workflows"
 
 > Added portable Agent Plugins 1.0 exports, a video-production router, consent-gated outreach, and stronger trust boundaries across the catalog.

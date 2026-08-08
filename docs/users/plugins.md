@@ -122,6 +122,8 @@ AAS generates this portable manifest only when every skill in the bundle is plug
 
 These packages are currently **skills-only**. They do not bundle AAS Core's MCP server, credentials, hooks, or a portable `mcp.json`. Installation and enablement remain client-owned parts of the ecosystem, so use the instructions for your [compatible client](https://agent-plugins.org/compatible-clients) and point it at the desired `plugins/agentic-bundle-*` directory.
 
+`AAS Agent & MCP Builder` is the first public-directory flagship. Its version-controlled [submission dossier](../plugin-submissions/aas-agent-mcp-builder/) contains listing copy, public policy and support URLs, starter prompts, and reviewer-reproducible positive and negative evaluations. The dossier being ready does not mean the plugin is already public: OpenAI Platform review and the verified publisher's final publish action remain separate steps.
+
 The broad Codex and Claude root plugins remain host-specific because their filtered skill sets are not identical. They intentionally do not have a root Agent Plugins manifest. Choose a portable specialized bundle when cross-client packaging matters.
 
 ## Claude Code plugin surface
@@ -196,3 +198,4 @@ The hosted [specialized plugin landing page](https://sickn33.github.io/agentic-a
 - [Bundles](bundles.md)
 - [Specialized Plugin Roadmap](specialized-plugin-roadmap.md)
 - [Usage](usage.md)
+- [AAS Agent & MCP Builder submission dossier](../plugin-submissions/aas-agent-mcp-builder/)
