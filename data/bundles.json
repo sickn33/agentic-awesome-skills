@@ -836,6 +836,7 @@
         "odoo-edi-connector",
         "odoo-inventory-optimizer",
         "pci-compliance",
+        "people-data",
         "php-pro",
         "polars",
         "postgres-best-practices",

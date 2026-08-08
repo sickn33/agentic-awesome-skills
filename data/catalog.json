@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-07T08:29:26.000Z",
-  "total": 2005,
+  "total": 2007,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -39762,6 +39762,41 @@
       "path": "skills/pentest-commands/SKILL.md"
     },
     {
+      "id": "people-data",
+      "canonical_id": "people-data",
+      "name": "people-data",
+      "description": "Research LinkedIn professional profiles and public business-contact data, including email/phone lookup, people search, and YouTube channel business-email discovery.",
+      "category": "research",
+      "risk": "safe",
+      "source": "https://github.com/agentbody/skills/blob/main/skills/people-data/SKILL.md",
+      "source_type": "community",
+      "source_repo": "agentbody/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/agentbody/skills/blob/main/LICENSE",
+      "tags": [
+        "linkedin",
+        "youtube",
+        "people-search",
+        "business-contacts",
+        "research"
+      ],
+      "triggers": [
+        "linkedin",
+        "youtube",
+        "people-search",
+        "business-contacts",
+        "research",
+        "people",
+        "data",
+        "professional",
+        "profiles",
+        "public",
+        "business",
+        "contact"
+      ],
+      "path": "skills/people-data/SKILL.md"
+    },
+    {
       "id": "performance-engineer",
       "canonical_id": "performance-engineer",
       "name": "performance-engineer",
@@ -52993,6 +53028,35 @@
         "cdc"
       ],
       "path": "skills/travel-health-analyzer/SKILL.md"
+    },
+    {
+      "id": "travel-planner",
+      "canonical_id": "travel-planner",
+      "name": "travel-planner",
+      "description": "旅行/行程规划需求时使用:规划去某地旅行、X天X城、带老人孩子、自驾、假期安排等。产出逐日行程表、预算估算(经济/舒适/奢华三档)、交通住宿建议、景点美食清单。必须先问预算,预算未确认只输出问题清单;事实数据带来源和查询日期。",
+      "category": "travel",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "saudademjj/luopan",
+      "license": "MIT",
+      "license_source": "https://github.com/saudademjj/luopan/blob/main/LICENSE",
+      "tags": [
+        "travel",
+        "itinerary",
+        "planning",
+        "trip",
+        "chinese"
+      ],
+      "triggers": [
+        "travel",
+        "itinerary",
+        "planning",
+        "trip",
+        "chinese",
+        "planner"
+      ],
+      "path": "skills/travel-planner/SKILL.md"
     },
     {
       "id": "tree-ring-memory",

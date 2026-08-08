@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-07T08:29:26.000Z
 
-Total skills: 2005
+Total skills: 2007
 
 ## agent-behavior (5)
 
@@ -1824,7 +1824,7 @@ Total skills: 2005
 | `slo-implementation` | Framework for defining and implementing Service Level Indicators (SLIs), Service Level Objectives (SLOs), and error budgets. | critical | community | slo | slo, framework, defining, implementing, level, indicators, slis, objectives, slos, error, budgets |
 | `tool-use-guardian` | FREE — Intelligent tool-call reliability wrapper. Monitors, retries, fixes, and learns from tool failures. Auto-recovers from truncated JSON, timeouts, rate ... | safe | community | reliability, tool-use, error-handling, retries, recovery, agent-infrastructure | reliability, tool-use, error-handling, retries, recovery, agent-infrastructure, guardian, free, intelligent, call, wrapper, monitors |
 
-## research (10)
+## research (11)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1834,6 +1834,7 @@ Total skills: 2005
 | `ii-commons` | Deterministic search across arXiv, PubMed/PMC, and US policy corpora with daily freshness cutoffs. | safe | Intelligent-Internet/II-Commons-Skills | research, arxiv, pubmed, pmc, policy, retrieval, cli, codex | research, arxiv, pubmed, pmc, policy, retrieval, cli, codex, ii, commons, deterministic, search |
 | `news-sentiment-engine` | Multi-source RSS news aggregation with Claude-powered sentiment analysis and structured briefing output | critical | tellmefrankie/news-engine | news, rss, sentiment-analysis, briefing, research | news, rss, sentiment-analysis, briefing, research, sentiment, engine, multi, source, aggregation, claude, powered |
 | `papers-skill` | Skill for academic research workflows: search Semantic Scholar (200M+ papers), inspect citations, download arXiv PDFs, and extract PDF text. Bundles a self-c... | safe | xwmxcz/papers-skill | research, academic, papers, citations, arxiv, semantic-scholar, pdf | research, academic, papers, citations, arxiv, semantic-scholar, pdf, skill, search, semantic, scholar, 200m |
+| `people-data` | Research LinkedIn professional profiles and public business-contact data, including email/phone lookup, people search, and YouTube channel business-email dis... | safe | agentbody/skills | linkedin, youtube, people-search, business-contacts, research | linkedin, youtube, people-search, business-contacts, research, people, data, professional, profiles, public, business, contact |
 | `pi-web-search` | Give Pi Agents a safe web-search and fetch workflow using the installed pi-web-access package. | safe | davidondrej/skills | web-search, pi-agent, research | web-search, pi-agent, research, pi, web, search, give, agents, safe, fetch, installed, access |
 | `research-prompt` | Turn vague research needs into one precise deep-research prompt with context and output criteria. | safe | davidondrej/skills | research, prompting, briefs | research, prompting, briefs, prompt, turn, vague, one, precise, deep, context, output, criteria |
 | `survey-generator` | Generate source-backed AI/ML survey paper artifacts with curated bibliographies and Fireworks/Kimi HTML rendering. | safe | dair-ai/dair-academy-plugins | dair-academy, ai, workflow | dair-academy, ai, workflow, survey, generator, generate, source, backed, ml, paper, artifacts, curated |
@@ -2043,6 +2044,12 @@ Total skills: 2005
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `android-cli` | Orchestrates Android development tasks including project creation, deployment, SDK management, and environment diagnostics using the `android` command-line t... | critical | self | android, cli, adb, mobile, build, emulator | android, cli, adb, mobile, build, emulator, orchestrates, development, tasks, including, creation, deployment |
+
+## travel (1)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `travel-planner` | 旅行/行程规划需求时使用:规划去某地旅行、X天X城、带老人孩子、自驾、假期安排等。产出逐日行程表、预算估算(经济/舒适/奢华三档)、交通住宿建议、景点美食清单。必须先问预算,预算未确认只输出问题清单;事实数据带来源和查询日期。 | safe | saudademjj/luopan | travel, itinerary, planning, trip, chinese | travel, itinerary, planning, trip, chinese, planner |
 
 ## uncategorized (286)
 
