@@ -26,7 +26,7 @@
     "react-dom": "^19.2.7",
     "react-markdown": "^10.1.0",
     "react-router": "^8.3.0",
-    "react-virtuoso": "^4.18.7",
+    "react-virtuoso": "^4.18.11",
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1",
     "sanitize-filename": "^1.6.4"
