@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "generator": "OpenAI ImageGen",
+  "generatedAt": "2026-07-18",
+  "dimensions": {
+    "width": 1200,
+    "height": 630
+  },
+  "sha256": "6c51cb201eef2aa43e9d5c4e17efca28d98787634455cfd9e4c26deac7734f39",
+  "visibleCopy": [
+    "AAS Core",
+    "Local. Deterministic. Agent-first.",
+    "profile → stack → plan",
+    "Catalog-backed skill composition"
+  ],
+  "promptSummary": "A dark technical GitHub social preview that presents AAS Core as the single primary product and visualizes the explicit profile-to-stack-to-plan pipeline.",
+  "invariants": [
+    "No catalog count",
+    "No npm or npx call to action",
+    "No vendor logos",
+    "No hosted-cloud implication"
+  ]
+}

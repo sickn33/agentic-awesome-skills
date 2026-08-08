@@ -1,8 +1,21 @@
-# Getting Started with Antigravity Awesome Skills (V11.0.0)
+# Getting Started with AAS Core
 
-**New here? This guide will help you supercharge your AI Agent in 5 minutes.**
+**New here? Start with AAS Core and let your agent choose a reviewable skill stack from the complete catalog.**
 
-> **💡 Confused about what to do after installation?** Check out the [**Complete Usage Guide**](usage.md) for detailed explanations and examples!
+> **Product boundary:** Codex or Claude owns skill selection. AAS Core provides complete local catalog access, reproducible composition, validation, and plan preview; apply and recovery remain experimental.
+
+## Start with AAS Core
+
+AAS Core is the primary product path. Codex or Claude inspects your project, searches and reads the complete catalog through the local read-only AAS MCP, chooses the exact skill IDs, and uses `compose_stack` to propose an `aas-stack.json`. You review those IDs before using the `aas` CLI to validate the manifest and preview a plan.
+
+```text
+project -> agent -> full local catalog -> agent selection -> compose_stack -> aas-stack.json
+        -> human review -> validate -> plan preview
+```
+
+Start with the canonical [AAS Core guide](aas-core.md) to configure the MCP and run that flow. The direct installer, plugins, bundles, and manual skill invocation described below remain useful alternatives, especially for hosts without a native AAS MCP adapter.
+
+> **Need more examples after setup?** Continue with the [Complete Usage Guide](usage.md).
 
 ---
 
@@ -15,34 +28,70 @@ AI Agents (like **Claude Code**, **Gemini**, **Cursor**) are smart, but they lac
 
 ---
 
-## Quick Start: The "Starter Packs"
+## Alternative Path: Direct Skill Distribution and Starter Packs
 
 Don't panic about the size of the repository. You don't need everything at once.
 We have curated **Starter Packs** to get you running immediately.
 
-You **install the full repo once** (npx or clone); Starter Packs are curated lists to help you **pick which skills to use** by role (e.g. Web Wizard, Hacker Pack)—they are not a different way to install.
+On the direct-install path, you install the library once (npx or clone); Starter Packs are curated lists to help you **pick which skills to use** by role (e.g. Web Wizard, Hacker Pack)—they are not a different way to install.
 
-If you prefer a marketplace-style install for **Claude Code** or **Codex**, use the new plugin distributions described in [plugins.md](plugins.md).
+If you prefer a packaged install for **Claude Code**, **Codex**, or another Agent Plugins-compatible client, use the plugin distributions described in [plugins.md](plugins.md).
 
-### 1. Install the Repo
+### 1. Install Skills Directly
 
 **Option A — npx (easiest):**
 
 ```bash
-npx antigravity-awesome-skills
+npx agentic-awesome-skills --antigravity --skills brainstorming,systematic-debugging --dry-run
 ```
 
-This clones to `~/.gemini/antigravity/skills` by default. Use `--cursor`, `--claude`, `--gemini`, `--codex`, or `--kiro` to install for a specific tool, or `--path <dir>` for a custom location. Run `npx antigravity-awesome-skills --help` for details.
+Antigravity installs to `~/.agents/skills`. Because that host may load enough
+installed instructions to exhaust its context or enter a truncation crash loop,
+the bare command and `--antigravity` now require `--skills`, a metadata filter,
+or the explicit `--all` override. Use `--cursor`, `--claude`, `--gemini`,
+`--codex`, `--kiro`, or `--agy` for other tool paths, or `--path <dir>` for a
+custom location. Run `npx agentic-awesome-skills --help` for details.
 The installer uses a shallow clone by default so you get the current library without paying for the full git history on first install.
 
-If you see a 404 error, use: `npx github:sickn33/antigravity-awesome-skills`
+For Antigravity, ask a Codex or Claude agent with the read-only AAS Core MCP
+configured to inspect the project, search the complete catalog, and choose exact
+skill IDs. AAS MCP does not install them; after selection, have the agent run the
+preview command above, show you the plan, and repeat it without `--dry-run` only
+after review. Other direct-install targets keep the legacy-compatible complete
+catalog behavior when no selector is supplied and print a risk summary before
+writing. Installed text is not automatically executed, but it can influence an
+agent when loaded, so review an exact set first:
+
+```bash
+npx agentic-awesome-skills audit --skills brainstorming,backend-dev-guidelines
+npx agentic-awesome-skills --skills brainstorming,backend-dev-guidelines --dry-run
+```
+
+Use `npx agentic-awesome-skills --antigravity --all` only when you deliberately
+accept the full catalog's context, truncation, and crash-loop risk.
+
+You can also ask your agent to read the selected `SKILL.md` and every bundled
+file before installation. The static audit reports risky capabilities; it does
+not prove that a skill is safe. See [Security, trust, and antivirus alerts](security-and-antivirus.md).
+
+If you see a 404 error, use: `npx github:sickn33/agentic-awesome-skills`
 
 **Option B — git clone:**
 
 ```bash
 # Universal (works for most agents)
-git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
 ```
+
+**Option C — one exact skill with GitHub CLI (preview):**
+
+```bash
+gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md
+gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md \
+  --agent github-copilot --scope user --pin v14.2.0
+```
+
+GitHub CLI skill support is currently in preview. In this large repository, use an exact `SKILL.md` path to avoid ambiguous canonical/plugin mirrors and unnecessary full-tree discovery. Avoid `--all` unless you intentionally want every discovered skill.
 
 ### 2. Pick Your Persona
 
@@ -100,16 +149,17 @@ Once installed, just talk to your AI naturally.
 
 | Tool            | Status          | Path                                                                  |
 | :-------------- | :-------------- | :-------------------------------------------------------------------- |
-| **Claude Code** | ✅ Full Support | `.claude/skills/` or install via `/plugin marketplace add sickn33/antigravity-awesome-skills` |
+| **Claude Code** | ✅ Full Support | `.claude/skills/` or install via `/plugin marketplace add sickn33/agentic-awesome-skills` |
 | **Gemini CLI**  | ✅ Full Support | `.gemini/skills/`                                                     |
 | **Codex CLI**   | ✅ Full Support | `.codex/skills/` or use the repo-local plugin metadata described in [plugins.md](plugins.md) |
 | **Kiro CLI**    | ✅ Full Support | Global: `~/.kiro/skills/` · Workspace: `.kiro/skills/`                |
 | **Kiro IDE**    | ✅ Full Support | Global: `~/.kiro/skills/` · Workspace: `.kiro/skills/`                |
-| **Antigravity** | ✅ Native       | Global: `~/.gemini/antigravity/skills/` · Workspace: `.agent/skills/` |
+| **Antigravity** | ✅ Native       | Global: `~/.agents/skills/` · Workspace: `.agent/skills/` |
+| **Antigravity CLI (`agy`)** | ✅ Full Support | Global slash-command directories: `~/.gemini/antigravity-cli/skills/<skill>/SKILL.md` |
 | **Cursor**      | ✅ Native       | `.cursor/skills/`                                                     |
 | **OpenCode**    | ✅ Full Support | `.agents/skills/` (prefer reduced installs with `--risk`, `--category`, or `--tags`) |
 | **AdaL CLI**    | ✅ Full Support | `.adal/skills/`                                                       |
-| **Copilot**     | ⚠️ Text Only    | Manual copy-paste                                                     |
+| **Copilot**     | ✅ Native (preview) | `gh skill install ... --agent github-copilot` at project or user scope |
 
 ---
 
@@ -136,26 +186,31 @@ If you prefer a plugin install instead of copying skills into tool directories, 
 For Claude Code, use:
 
 ```text
-/plugin marketplace add sickn33/antigravity-awesome-skills
-/plugin install antigravity-awesome-skills
+/plugin marketplace add sickn33/agentic-awesome-skills
+/plugin install agentic-awesome-skills
 ```
 
 For Codex, this repository also ships a root plugin plus bundle plugins through the repo-local metadata described in [plugins.md](plugins.md).
 
+For clients implementing Agent Plugins 1.0, use a specialized bundle whose generated status says `Agent Plugins 1.0 portable`. Its directory contains the standard root `plugin.json` and directly discoverable `skills/`; installation itself follows the client's instructions.
+
 **Q: Do I need to install every skill?**
-A: You clone the whole repo once; your AI only _reads_ the skills you invoke (or that are relevant), so it stays lightweight. **Starter Packs** in [bundles.md](bundles.md) are curated lists to help you discover the right skills for your role—they don't change how you install.
+A: No. With AAS Core, ask the agent to inspect the project and choose exact IDs from the complete catalog. On the legacy direct-install path, you can install the broad library while the host reads only invoked or relevant skills. **Starter Packs** in [bundles.md](bundles.md) remain human-curated discovery aids.
 
 **Q: Can I make my own skills?**
 A: Yes! Use the **@skill-creator** skill to build your own.
 
 **Q: What if Antigravity on Windows gets stuck in a truncation crash loop?**
-A: Follow the recovery steps in [windows-truncation-recovery.md](windows-truncation-recovery.md). It explains which Antigravity storage folders to back up and clear, and includes an optional batch helper adapted from [issue #274](https://github.com/sickn33/antigravity-awesome-skills/issues/274).
+A: Follow the recovery steps in [windows-truncation-recovery.md](windows-truncation-recovery.md). It explains which Antigravity storage folders to back up and clear, and includes an optional batch helper adapted from [issue #274](https://github.com/sickn33/agentic-awesome-skills/issues/274).
 
 **Q: What if Antigravity overloads on Linux or macOS when too many skills are active?**
 A: Use the activation flow in [agent-overload-recovery.md](agent-overload-recovery.md). It shows how to run `scripts/activate-skills.sh` from a cloned repo so you can keep the full library archived and activate only the bundles or skills you need in the live Antigravity directory.
 
+**Q: What if `agy` does not show installed skills when I type `/`?**
+A: The Antigravity CLI reads skill directories from `~/.gemini/antigravity-cli/skills/<skill>/SKILL.md`. Run `npx agentic-awesome-skills --agy`, restart `agy`, then open `/skills` or type a specific slash command such as `/brainstorming`.
+
 **Q: What if OpenCode or another `.agents/skills` host becomes unstable with a full install?**
-A: Start with a reduced install instead of copying the whole library. For example: `npx antigravity-awesome-skills --path .agents/skills --category development,backend --risk safe,none`. You can narrow further with `--tags` and use a trailing `-` to exclude values such as `typescript-`.
+A: Start with a reduced install instead of copying the whole library. For example: `npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none`. You can narrow further with `--tags` and use a trailing `-` to exclude values such as `typescript-`. To manage a reproducible exact set, first preview it with `npx agentic-awesome-skills@14.3.0 --path .agents/skills --release 14.3.0 --skills frontend-design,backend-dev-guidelines --dry-run`, then remove `--dry-run` only after reviewing the plan.
 
 **Q: Is this free?**
 A: Yes. Original code and tooling are MIT-licensed, and original documentation/non-code written content is CC BY 4.0. See [../../LICENSE](../../LICENSE) and [../../LICENSE-CONTENT](../../LICENSE-CONTENT).
@@ -167,11 +222,12 @@ A: Yes. Original code and tooling are MIT-licensed, and original documentation/n
 Need a tool-specific starting point first?
 
 - [Claude Code skills](claude-code-skills.md)
-- [Plugins for Claude Code and Codex](plugins.md)
+- [Plugins for compatible agent clients](plugins.md)
 - [Cursor skills](cursor-skills.md)
 - [Codex CLI skills](codex-cli-skills.md)
 - [Gemini CLI skills](gemini-cli-skills.md)
 
-1. [Browse the Bundles](bundles.md)
-2. [See Real-World Examples](../contributors/examples.md)
-3. [Contribute a Skill](../../CONTRIBUTING.md)
+1. [Configure and use AAS Core](aas-core.md)
+2. [Browse the Bundles](bundles.md)
+3. [See Real-World Examples](../contributors/examples.md)
+4. [Contribute a Skill](../../CONTRIBUTING.md)

@@ -5,15 +5,31 @@ const path = require("path");
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 
 function readText(relativePath) {
-  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+  return fs.readFileSync(path.join(repoRoot, relativePath), "utf8").replace(/\r\n/g, "\n");
 }
 
 const packageJson = JSON.parse(readText("package.json"));
 const generatedFiles = JSON.parse(readText("tools/config/generated-files.json"));
 const ciWorkflow = readText(".github/workflows/ci.yml");
+const hygieneWorkflowForPages = readText(".github/workflows/repo-hygiene.yml");
+const offlineCatalogBuilder = readText("tools/scripts/build-aas-v1-offline-catalog.js");
+const canonicalMergeScript = readText("tools/scripts/merge_canonical_sync_pr.cjs");
 const publishWorkflow = readText(".github/workflows/publish-npm.yml");
 const releaseWorkflowScript = readText("tools/scripts/release_workflow.js");
 const hygieneWorkflowPath = path.join(repoRoot, ".github", "workflows", "repo-hygiene.yml");
+
+for (const [name, workflow] of [["main CI", ciWorkflow], ["repo hygiene", hygieneWorkflowForPages]]) {
+  assert.match(
+    workflow,
+    /merge_canonical_sync_pr\.cjs[\s\S]*?--head "\$PR_HEAD" \\\n+\s+--skip-pages/,
+    `${name} canonical sync must not dispatch release-only Pages`,
+  );
+}
+
+const prepareReleaseBlock = releaseWorkflowScript.slice(
+  releaseWorkflowScript.indexOf("function prepareRelease"),
+  releaseWorkflowScript.indexOf("function publishRelease"),
+);
 
 assert.ok(
   packageJson.scripts["sync:release-state"],
@@ -50,6 +66,22 @@ assert.match(
   "sync:release-state should enforce the frozen validation warning budget",
 );
 assert.match(
+  packageJson.scripts["sync:release-state"],
+  /chain/,
+  "sync:release-state should rebuild canonical release and plugin state",
+);
+assert.match(packageJson.scripts.chain, /plugin-compat:sync/);
+assert.match(packageJson.scripts.chain, /bundles:sync/);
+const releaseSuiteBlock = releaseWorkflowScript.slice(
+  releaseWorkflowScript.indexOf("function runReleaseSuite"),
+  releaseWorkflowScript.indexOf("function runReleasePreflight"),
+);
+assert.match(
+  releaseSuiteBlock,
+  /sync:release-state[\s\S]*plugin-compat:check[\s\S]*bundles:check/,
+  "every release suite should explicitly prove plugin compatibility and bundle alignment after regeneration",
+);
+assert.match(
   packageJson.scripts["sync:repo-state"],
   /sync:web-assets/,
   "sync:repo-state should refresh tracked web assets before maintainer audits",
@@ -58,6 +90,11 @@ assert.match(
   packageJson.scripts["sync:repo-state"],
   /check:warning-budget/,
   "sync:repo-state should enforce the frozen validation warning budget",
+);
+assert.match(
+  packageJson.scripts.chain,
+  /build:aas-v1-catalog/,
+  "chain should refresh the offline AAS v1 catalog after skill index generation",
 );
 assert.strictEqual(
   packageJson.scripts["app:install"],
@@ -69,6 +106,7 @@ for (const filePath of [
   "apps/web-app/public/sitemap.xml",
   "apps/web-app/public/skills.json.backup",
   "data/plugin-compatibility.json",
+  "data/aas-v1/",
   ".agents/plugins/",
   ".claude-plugin/plugin.json",
   ".claude-plugin/marketplace.json",
@@ -77,6 +115,17 @@ for (const filePath of [
   assert.ok(
     generatedFiles.derivedFiles.includes(filePath),
     `generated-files derivedFiles should include ${filePath}`,
+  );
+}
+
+for (const retiredCoreAsset of [
+  "tools/lib/aas-v1/metadata-overrides.v1.json",
+  "tools/lib/aas-v1/metadata-reviews.v1.json",
+  "tools/lib/aas-v1/review-queue.v1.json",
+]) {
+  assert.ok(
+    !generatedFiles.derivedFiles.includes(retiredCoreAsset),
+    `generated-files should not retain retired Core policy asset ${retiredCoreAsset}`,
   );
 }
 
@@ -90,6 +139,8 @@ assert.match(
 for (const filePath of [
   "README.md",
   "package.json",
+  "apps/web-app/index.html",
+  "apps/web-app/public/llms.txt",
   "docs/users/getting-started.md",
   "docs/users/bundles.md",
   "docs/users/claude-code-skills.md",
@@ -115,6 +166,17 @@ assert.match(
 );
 assert.match(
   ciWorkflow,
+  /- name: Intake PR change[\s\S]*?git worktree add --detach "\$trusted_root" "\$\{\{ github\.event\.pull_request\.base\.sha \}\}"[\s\S]*?npm ci --ignore-scripts --prefix "\$trusted_root"[\s\S]*?NODE_PATH="\$trusted_root\/node_modules" node "\$trusted_root\/tools\/scripts\/pr_preflight\.cjs"[\s\S]*?--base "\$\{\{ github\.event\.pull_request\.base\.sha \}\}"[\s\S]*?--head "\$\{\{ github\.event\.pull_request\.head\.sha \}\}"[\s\S]*?--check-fork-safety/,
+  "PR policy must install trusted-base dependencies and execute classification against the exact base/head tuple",
+);
+assert.doesNotMatch(
+  ciWorkflow,
+  /NODE_PATH="\$GITHUB_WORKSPACE\/node_modules"/,
+  "PR policy must never load dependencies from the pull-request workspace",
+);
+assert.match(ciWorkflow, /impact_profile: \$\{\{ steps\.intake\.outputs\.impact_profile \}\}/);
+assert.match(
+  ciWorkflow,
   /GH_TOKEN: \$\{\{ github\.token \}\}/,
   "main CI should provide GH_TOKEN for contributor synchronization",
 );
@@ -135,12 +197,49 @@ assert.match(
 );
 assert.match(
   ciWorkflow,
-  /source-validation:[\s\S]*?- uses: actions\/checkout@v\d+[\s\S]*?with:[\s\S]*?fetch-depth: 0/,
+  /source-validation:[\s\S]*?- uses: actions\/checkout@[a-f0-9]{40}[\s\S]*?with:[\s\S]*?fetch-depth: 0/,
   "source-validation should use an unshallowed checkout so base-branch diffs have a merge base",
+);
+
+const pagesWorkflow = readText(".github/workflows/pages.yml");
+assert.match(
+  pagesWorkflow,
+  /- name: Checkout[\s\S]*?uses: actions\/checkout@[a-f0-9]{40}[\s\S]*?with:[\s\S]*?fetch-depth: 0[\s\S]*?persist-credentials: false/,
+  "Pages should use an unshallowed, credential-free checkout because canonical provenance validation reads git history",
+);
+assert.match(
+  pagesWorkflow,
+  /- name: Checkout[\s\S]*?- name: Verify release provenance[\s\S]*?- name: Setup Node/,
+  "Pages should verify immutable release provenance before dependency setup or installation",
+);
+assert.match(
+  pagesWorkflow,
+  /Verify release provenance[\s\S]*?GH_TOKEN: \$\{\{ github\.token \}\}[\s\S]*?GITHUB_REF_TYPE[\s\S]*?expected_tag="v\$\{package_version\}"[\s\S]*?refs\/tags\/\$\{GITHUB_REF_NAME\}\^\{commit\}[\s\S]*?releases\/tags\/\$\{GITHUB_REF_NAME\}[\s\S]*?\.draft == false[\s\S]*?\.published_at/,
+  "Pages should bind deployment to the exact package tag, commit, and published GitHub Release using the read-only token",
 );
 assert.match(
   ciWorkflow,
-  /source-validation:[\s\S]*?- name: Fetch base branch[\s\S]*?run: git fetch origin "\$\{\{ github\.base_ref \}\}"/,
+  /artifact-preview:[\s\S]*?actions\/checkout@[a-f0-9]{40}[\s\S]*?fetch-depth: 0[\s\S]*?persist-credentials: false/,
+  "artifact-preview should retain history because canonical provenance generation reads git history",
+);
+assert.match(
+  ciWorkflow,
+  /source-validation:[\s\S]*?ci_artifact_preview\.cjs create[\s\S]*?actions\/upload-artifact@[a-f0-9]{40}[\s\S]*?artifact-preview:[\s\S]*?actions\/download-artifact@[a-f0-9]{40}[\s\S]*?ci_artifact_preview\.cjs" verify-summary/,
+  "normal PR artifact preview must reuse the exact-head manifest produced by source validation",
+);
+assert.doesNotMatch(
+  offlineCatalogBuilder,
+  /buildMetadataOverrides|metadata-overrides|review-queue/,
+  "offline catalog builds should not bind retired Core policy or review assets",
+);
+assert.match(
+  offlineCatalogBuilder,
+  /catalogSchemaVersion:\s*versions\.catalogSchemaVersion/,
+  "offline catalog manifests should bind the explicit catalog schema version",
+);
+assert.match(
+  ciWorkflow,
+  /source-validation:[\s\S]*?- name: Fetch base branch[\s\S]*?run: git fetch origin "\$\{\{ github\.base_ref \|\| 'main' \}\}"/,
   "source-validation should fetch the PR base branch before changed-skill README credit checks",
 );
 assert.match(
@@ -180,8 +279,33 @@ assert.doesNotMatch(
 );
 assert.match(
   ciWorkflow,
-  /git commit -m "chore: sync repo state \[ci skip\]"/,
-  "main CI should keep bot-generated canonical sync commits out of the normal CI loop",
+  /uses: peter-evans\/create-pull-request@[a-f0-9]{40}/,
+  "main CI should publish canonical drift through a pinned pull-request action",
+);
+assert.match(
+  ciWorkflow,
+  /branch: automation\/canonical-repo-state/,
+  "main CI should maintain one fixed canonical-sync branch",
+);
+assert.doesNotMatch(
+  ciWorkflow,
+  /gh workflow run ci\.yml --ref "\$PR_BRANCH" -f canonical_sync_pr=true/,
+  "canonical checks must remain associated with the pull request",
+);
+assert.match(
+  canonicalMergeScript,
+  /actions\/runs\/\$\{run\.id\}\/rerun/,
+  "main CI should restart the PR-associated workflow suppressed for a GITHUB_TOKEN-created PR",
+);
+assert.match(
+  ciWorkflow,
+  /- name: Reproduce canonical-sync PR from main[\s\S]*?GH_TOKEN: \$\{\{ github\.token \}\}[\s\S]*?run: npm run sync:repo-state/,
+  "canonical reproducibility should scope a read token to contributor synchronization",
+);
+assert.doesNotMatch(
+  ciWorkflow,
+  /git push origin (?:HEAD|main)/,
+  "main CI must not push directly to protected main",
 );
 assert.match(
   ciWorkflow,
@@ -230,8 +354,18 @@ assert.match(
 );
 assert.match(
   hygieneWorkflow,
-  /git commit -m "chore: scheduled repo hygiene sync \[ci skip\]"/,
-  "repo hygiene workflow should keep bot-generated sync commits out of the normal CI loop",
+  /uses: peter-evans\/create-pull-request@[a-f0-9]{40}/,
+  "repo hygiene should publish canonical drift through a pinned pull-request action",
+);
+assert.doesNotMatch(
+  hygieneWorkflow,
+  /gh workflow run ci\.yml --ref "\$PR_BRANCH" -f canonical_sync_pr=true/,
+  "repo hygiene should use the exact PR-associated workflow instead of a redundant dispatch",
+);
+assert.doesNotMatch(
+  hygieneWorkflow,
+  /git push origin (?:HEAD|main)/,
+  "repo hygiene must not push directly to protected main",
 );
 assert.match(
   hygieneWorkflow,
@@ -247,6 +381,31 @@ assert.match(
 assert.match(publishWorkflow, /run: npm ci/, "npm publish workflow should install dependencies");
 assert.match(
   publishWorkflow,
+  /node-version: "22\.23\.1"/,
+  "npm publish workflow should use the supported Node 22 runtime",
+);
+assert.match(
+  publishWorkflow,
+  /npm publish --tag next/,
+  "npm prereleases should publish to the next dist-tag",
+);
+assert.match(
+  publishWorkflow,
+  /else[\s\S]*npm publish --tag latest/,
+  "stable npm releases should publish explicitly to latest",
+);
+assert.doesNotMatch(
+  publishWorkflow,
+  /^\s*npm publish\s*$/mu,
+  "npm releases should never publish without an explicit dist-tag",
+);
+assert.match(
+  publishWorkflow,
+  /semver\.test/,
+  "npm releases should fail closed on an invalid package version",
+);
+assert.match(
+  publishWorkflow,
   /pip install -r tools\/requirements\.txt/,
   "npm publish workflow should install Python dependencies from tools/requirements.txt",
 );
@@ -254,6 +413,16 @@ assert.match(
   publishWorkflow,
   /run: npm audit --audit-level=high/,
   "npm publish workflow should block on high-severity npm audit findings",
+);
+assert.doesNotMatch(
+  publishWorkflow,
+  /workflow_dispatch/,
+  "npm publish workflow must not expose a manual provenance bypass",
+);
+assert.match(
+  publishWorkflow,
+  /ref: main[\s\S]*git merge-base --is-ancestor "\$tag_commit" "\$main_commit"[\s\S]*git checkout --detach "\$tag_commit"/,
+  "npm publish workflow must verify the release tag against protected main before checking out tag-controlled code",
 );
 assert.match(
   publishWorkflow,
@@ -276,6 +445,21 @@ assert.match(
   releaseWorkflowScript,
   /runCommand\("npm", \["run", "app:install"\], projectRoot\);[\s\S]*runCommand\("npm", \["run", "app:build"\], projectRoot\);/,
   "release workflow should install web-app dependencies before building the app",
+);
+assert.ok(
+  prepareReleaseBlock.indexOf('["run", "sync:metadata", "--", "--refresh-volatile"]') <
+    prepareReleaseBlock.indexOf("runReleaseSuite(projectRoot)"),
+  "release preparation should refresh volatile metadata before generating canonical release artifacts",
+);
+assert.match(
+  releaseWorkflowScript,
+  /const releaseBranch = `release\/v\$\{version\}`/,
+  "release preparation should use a protected release branch",
+);
+assert.doesNotMatch(
+  releaseWorkflowScript,
+  /\["push", "origin", "main"\]/,
+  "release tooling must not push directly to protected main",
 );
 assert.match(
   publishWorkflow,

@@ -26,9 +26,9 @@ Examples:
 
 What the script does:
 
-- syncs the repository `skills/` tree into `~/.gemini/antigravity/skills_library`
+- syncs the repository `skills/` tree into `~/.agents/skills_library`
 - preserves your full library in the backing store
-- activates only the requested bundles or skill ids into `~/.gemini/antigravity/skills`
+- activates only the requested bundles or skill ids into `~/.agents/skills`
 - `--clear` archives the current live directory first, then restores the selected set
 
 Optional environment overrides:

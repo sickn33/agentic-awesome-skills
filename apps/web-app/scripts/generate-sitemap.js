@@ -5,18 +5,22 @@ import { fileURLToPath } from 'node:url';
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const SKILLS_JSON = path.join(PUBLIC_DIR, 'skills.json');
+const SEO_LANDING_PAGES_JSON = path.join(ROOT_DIR, 'src', 'data', 'seoLandingPages.json');
 const OUTPUT_PATH = path.join(PUBLIC_DIR, 'sitemap.xml');
 const BASE_PATH =
   (process.env.VITE_BASE_PATH || '/').trim().replace(/\/+$/, '');
 const NORMALIZED_BASE_PATH = BASE_PATH && BASE_PATH !== '/' ? BASE_PATH : '';
-const DEFAULT_SITE_URL = `http://localhost${NORMALIZED_BASE_PATH}`;
+const DEFAULT_SITE_URL = 'https://sickn33.github.io/agentic-awesome-skills';
 
 const SITE_URL = (process.env.SEO_SITE_URL || process.env.WEBSITE_BASE_URL || DEFAULT_SITE_URL).replace(/\/$/, '');
-const TOP_SKILL_COUNT = Number.parseInt(process.env.TOP_SKILL_COUNT || '40', 10);
+// Keep this curated: broad enough to form a crawlable catalog, well below the
+// full library so thin/low-signal detail pages are not mass-submitted.
+export const DEFAULT_TOP_SKILL_COUNT = 180;
+const TOP_SKILL_COUNT = Number.parseInt(process.env.TOP_SKILL_COUNT || String(DEFAULT_TOP_SKILL_COUNT), 10);
 const DEFAULT_LASTMOD = new Date().toISOString().slice(0, 10);
 
 function getTopSkillCount() {
-  return Number.isFinite(TOP_SKILL_COUNT) ? Math.max(TOP_SKILL_COUNT, 0) : 40;
+  return Number.isFinite(TOP_SKILL_COUNT) ? Math.max(TOP_SKILL_COUNT, 0) : DEFAULT_TOP_SKILL_COUNT;
 }
 
 function escapeXml(text) {
@@ -37,6 +41,16 @@ export function getDateScore(dateValue) {
 
 function normalizeSkillId(skillId) {
   return encodeURIComponent(String(skillId).trim());
+}
+
+function toIndexableRoutePath(pathName) {
+  const normalized = String(pathName || '/').trim();
+  if (!normalized || normalized === '/') {
+    return '/';
+  }
+
+  const withLeadingSlash = normalized.startsWith('/') ? normalized : `/${normalized}`;
+  return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`;
 }
 
 export function selectTopSkillEntries(skills, topCount = TOP_SKILL_COUNT) {
@@ -81,9 +95,27 @@ export function selectTopSkillEntries(skills, topCount = TOP_SKILL_COUNT) {
   return dedupedEntries;
 }
 
+export function getSeoLandingPaths() {
+  if (!fs.existsSync(SEO_LANDING_PAGES_JSON)) {
+    return [];
+  }
+
+  const raw = fs.readFileSync(SEO_LANDING_PAGES_JSON, 'utf-8');
+  const pages = JSON.parse(raw);
+
+  if (!Array.isArray(pages)) {
+    return [];
+  }
+
+  return pages
+    .map((page) => String(page?.slug || '').trim())
+    .filter(Boolean)
+    .map((slug) => toIndexableRoutePath(`/topics/${encodeURIComponent(slug)}`));
+}
+
 export function generateSitemapXml({ baseUrl, paths, lastmod = DEFAULT_LASTMOD }) {
   const normalizedBase = String(baseUrl).replace(/\/$/, '');
-  const uniquePaths = [...new Set(paths)];
+  const uniquePaths = [...new Set(paths.map(toIndexableRoutePath))];
 
   const urlsXml = uniquePaths
     .map((pathName) => {
@@ -92,7 +124,7 @@ export function generateSitemapXml({ baseUrl, paths, lastmod = DEFAULT_LASTMOD }
     })
     .join('\n');
 
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">\n${urlsXml}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlsXml}\n</urlset>\n`;
 }
 
 function readSkillsCatalog() {
@@ -106,9 +138,16 @@ function readSkillsCatalog() {
 
 export function buildSitemap(skills, topCount = TOP_SKILL_COUNT, baseUrl = SITE_URL) {
   const topSkillPaths = selectTopSkillEntries(skills, topCount);
+  const landingPaths = getSeoLandingPaths();
   return generateSitemapXml({
     baseUrl,
-    paths: ['/', ...topSkillPaths],
+    paths: [
+      '/',
+      toIndexableRoutePath('/workbench'),
+      toIndexableRoutePath('/plugins'),
+      ...landingPaths,
+      ...topSkillPaths.map(toIndexableRoutePath),
+    ],
   });
 }
 

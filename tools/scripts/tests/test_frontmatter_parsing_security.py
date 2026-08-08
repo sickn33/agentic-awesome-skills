@@ -10,6 +10,8 @@ TOOLS_SCRIPTS_DIR = REPO_ROOT / "tools" / "scripts"
 if str(TOOLS_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_SCRIPTS_DIR))
 
+from symlink_test_utils import symlink_or_skip
+
 
 def load_module(relative_path: str, module_name: str):
     module_path = REPO_ROOT / relative_path
@@ -128,7 +130,7 @@ class FrontmatterParsingSecurityTests(unittest.TestCase):
             (safe_skill / "SKILL.md").write_text("---\nname: safe-skill\ndescription: safe\n---\n", encoding="utf-8")
             target = outside_dir / "SKILL.md"
             target.write_text("---\nname: outside\ndescription: outside\n---\n", encoding="utf-8")
-            (linked_skill / "SKILL.md").symlink_to(target)
+            symlink_or_skip(self, target, linked_skill / "SKILL.md")
 
             skills = generate_index.generate_index(str(skills_dir), str(output_file))
 

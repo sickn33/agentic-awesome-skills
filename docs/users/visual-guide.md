@@ -1,26 +1,32 @@
-# Visual Quick Start Guide
+# Visual Guide: AAS Core and Skill Distribution
 
-**Learn by seeing!** This guide uses diagrams and visual examples to help you understand skills.
+This guide shows the primary AAS Core workflow and the supporting catalog and distribution surfaces.
 
 ---
 
 ## The Big Picture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    YOU (Developer)                          │
-│                          ↓                                  │
-│              "Help me build a payment system"               │
-│                          ↓                                  │
-├─────────────────────────────────────────────────────────────┤
-│                  AI ASSISTANT                               │
-│                          ↓                                  │
-│              Loads @stripe-integration skill                │
-│                          ↓                                  │
-│         Becomes an expert in Stripe payments                │
-│                          ↓                                  │
-│    Provides specialized help with code examples             │
-└─────────────────────────────────────────────────────────────┘
+PROJECT
+   │ inspected by Codex or Claude, not by AAS
+   ▼
+AGENT SEARCHES + READS COMPLETE LOCAL CATALOG
+   │
+   ▼
+CODEX OR CLAUDE CHOOSES EXACT SKILL IDS
+   │
+   ▼
+compose_stack ── validates · pins · never recommends
+   │
+   ▼
+AGENT PROPOSES aas-stack.json (no selection policy)
+   │
+   ├────────► WORKBENCH (optional browser-local review)
+   ▼
+CLI VALIDATE ──► CLI PLAN ──► HUMAN REVIEW
+
+Supported path: stop after plan review.
+Apply and recovery remain experimental.
 ```
 
 ---
@@ -28,13 +34,13 @@
 ## Repository Structure (Visual)
 
 ```
-antigravity-awesome-skills/
+agentic-awesome-skills/
 │
 ├── 📄 README.md                         ← Overview and quick start
 ├── 📄 CONTRIBUTING.md                  ← Contributor workflow
 ├── 📄 CATALOG.md                       ← Full generated catalog
 │
-├── 📁 skills/                          ← 1,450+ skills live here
+├── 📁 skills/                          ← 2,007+ skills live here
 │   │
 │   ├── 📁 brainstorming/
 │   │   └── 📄 SKILL.md                 ← Skill definition
@@ -47,7 +53,7 @@ antigravity-awesome-skills/
 │   │   └── 📁 2d-games/
 │   │       └── 📄 SKILL.md             ← Nested skills also supported
 │   │
-│   └── ... (1,450+ total)
+│   └── ... (2,007+ total)
 │
 ├── 📁 apps/
 │   └── 📁 web-app/                     ← Interactive browser
@@ -66,7 +72,7 @@ antigravity-awesome-skills/
 
 ---
 
-## How Skills Work (Flow Diagram)
+## Alternative: Direct Skill Distribution
 
 ```
 ┌──────────────┐
@@ -90,7 +96,7 @@ antigravity-awesome-skills/
        │
        ↓
 ┌──────────────┐
-│ 5. RESULT    │  You get specialized help!
+│ 5. RESULT    │  The agent follows the selected instructions
 └──────────────┘
 ```
 
@@ -100,7 +106,7 @@ antigravity-awesome-skills/
 
 ```
                     ┌─────────────────────────┐
-                    │  1,450+ SKILLS          │
+                    │  2,007+ SKILLS          │
                     └────────────┬────────────┘
                                  │
         ┌────────────────────────┼────────────────────────┐
@@ -183,10 +189,10 @@ antigravity-awesome-skills/
 ┌─────────────────────────────────────────┐
 │ Terminal                                │
 ├─────────────────────────────────────────┤
-│ $ npx antigravity-awesome-skills        │
+│ $ npx agentic-awesome-skills        │
 │                                         │
 │ ✓ Installing to                         │
-│   ~/.gemini/antigravity/skills/         │
+│   ~/.agents/skills/                     │
 └─────────────────────────────────────────┘
 ```
 
@@ -197,11 +203,11 @@ If you want a workspace-style manual install instead, cloning into `.agent/skill
 ┌─────────────────────────────────────────┐
 │ File Explorer                           │
 ├─────────────────────────────────────────┤
-│ 📁 ~/.gemini/antigravity/skills/        │
+│ 📁 ~/.agents/skills/                    │
 │   ├── 📁 brainstorming/                 │
 │   ├── 📁 stripe-integration/            │
 │   ├── 📁 react-best-practices/          │
-│   └── ... (1,450+ total)                │
+│   └── ... (2,007+ total)                │
 └─────────────────────────────────────────┘
 ```
 
@@ -434,7 +440,7 @@ START HERE
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  📥 INSTALL                                                 │
-│  npx antigravity-awesome-skills                             │
+│  npx agentic-awesome-skills                             │
 │                                                             │
 │  🎯 USE                                                     │
 │  @skill-name [your request]                                 │
@@ -470,19 +476,19 @@ START HERE
 Day 1: Install skills
   │
   └─→ "Wow, @brainstorming helped me design my app!"
-  
+
 Day 3: Use 5 different skills
   │
   └─→ "These skills save me so much time!"
-  
+
 Week 1: Create first skill
   │
   └─→ "I shared my expertise as a skill!"
-  
+
 Week 2: Skill gets merged
   │
   └─→ "My skill is helping others! 🎉"
-  
+
 Month 1: Regular contributor
   │
   └─→ "I've contributed 5 skills and improved docs!"

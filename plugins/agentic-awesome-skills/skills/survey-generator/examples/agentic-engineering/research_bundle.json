@@ -1,0 +1,1196 @@
+{
+  "title": "Agentic Engineering: A Survey of Design Patterns, Reasoning, Tool Use, Memory, Multi-Agent Coordination, Training, Safety, and Evaluation for Language Model Agents",
+  "authors_placeholder": "Anonymous (DAIR Research Notes)",
+  "anchor_source": "https://github.com/dair-ai/AI-Papers-of-the-Week",
+  "abstract_hints": [
+    "Agentic systems built on large language models have moved rapidly from proof-of-concept demonstrations to production deployments across software engineering, scientific research, customer operations, and autonomous computer use.",
+    "Their reliability depends less on raw model capability in isolation than on the engineering practice that surrounds the model: how workflows are wired, how reasoning is scaffolded, how tools are selected and invoked, how state is maintained across long horizons, how specialized agents coordinate, how agents are trained on their own trajectories, how systems behave under adversarial or misaligned conditions, and how they are evaluated on open-ended tasks.",
+    "This survey frames agentic engineering as a distinct practice, organizes roughly one hundred representative works around eight substantive pillars, and draws its case material from the DAIR-AI Papers of the Week archive, a continuously updated community index spanning 2023 through 2026."
+  ],
+  "taxonomy": {
+    "root": "Agentic Engineering",
+    "branches": [
+      {
+        "name": "Design Patterns",
+        "children": [
+          "Workflows",
+          "Orchestrator-Workers",
+          "Autonomous Loops",
+          "Meta-Agent Search"
+        ]
+      },
+      {
+        "name": "Reasoning and Planning",
+        "children": [
+          "Chain-of-Thought",
+          "Deliberative Search",
+          "Adaptive Reasoning"
+        ]
+      },
+      {
+        "name": "Tool Use",
+        "children": [
+          "Function Calling",
+          "MCP Interfaces",
+          "Tool Description Optimization",
+          "Search Efficiency"
+        ]
+      },
+      {
+        "name": "Memory and Long-Horizon",
+        "children": [
+          "Working Memory",
+          "Persistent Notes",
+          "Context Compression",
+          "Memory as Tools"
+        ]
+      },
+      {
+        "name": "Multi-Agent Coordination",
+        "children": [
+          "Consensus Protocols",
+          "Routing and Bidding",
+          "Hierarchical Delegation"
+        ]
+      },
+      {
+        "name": "Training and Optimization",
+        "children": [
+          "Agentic RL",
+          "Self-Distillation",
+          "Simulated Environments",
+          "Meta-Agent Discovery"
+        ]
+      },
+      {
+        "name": "Evaluation",
+        "children": [
+          "General Benchmarks",
+          "Tool-Use Benchmarks",
+          "Process-Level Verification",
+          "Empirical Studies"
+        ]
+      },
+      {
+        "name": "Safety and Alignment",
+        "children": [
+          "Offensive Capability",
+          "Sabotage Arenas",
+          "Alignment Auditing",
+          "Anti-Scheming Training"
+        ]
+      }
+    ]
+  },
+  "paradigms": [
+    {
+      "name": "Workflow",
+      "nodes": [
+        "Plan",
+        "Tool Call",
+        "Verify"
+      ],
+      "flow": "Plan -> Tool Call -> Verify -> Plan"
+    },
+    {
+      "name": "Orchestrator-Workers",
+      "nodes": [
+        "Orchestrator",
+        "Worker A",
+        "Worker B",
+        "Worker C"
+      ],
+      "flow": "Orchestrator -> Worker A; Orchestrator -> Worker B; Orchestrator -> Worker C"
+    },
+    {
+      "name": "Autonomous Loop",
+      "nodes": [
+        "Act",
+        "Reflect",
+        "Memory"
+      ],
+      "flow": "Act -> Reflect -> Act; bi: Reflect -> Memory"
+    }
+  ],
+  "stack": [
+    {
+      "name": "Base Model",
+      "role": "Frontier or open-weight LLM with strong reasoning and function-calling priors."
+    },
+    {
+      "name": "Reasoning and Planning",
+      "role": "Chain-of-thought, deliberative search, and adaptive looping scaffolds."
+    },
+    {
+      "name": "Memory and Context",
+      "role": "Working memory, persistent notes, and compression beyond the window."
+    },
+    {
+      "name": "Tool Interface",
+      "role": "Function calling, MCP servers, and typed executable extensions."
+    },
+    {
+      "name": "Orchestration Layer",
+      "role": "Workflow graphs, multi-agent coordination, and meta-agent search."
+    },
+    {
+      "name": "Evaluation and Observability",
+      "role": "Benchmarks, trace capture, and process-level metrics for reliability."
+    }
+  ],
+  "sections": [
+    {
+      "id": "1",
+      "title": "Introduction",
+      "guidance": "Frame agentic engineering as a distinct practice that surrounds the base model. Distinguish model capability from harness capability, citing empirical evidence that scaffolding can outweigh raw model performance. Preview the taxonomy and explain why a dedicated survey is warranted now. Reference the DAIR-AI Papers of the Week archive as the anchor source and mention the scope: eight substantive pillars covering design, reasoning, tool use, memory, coordination, training, evaluation, and safety. Note that the survey draws on roughly one hundred representative works across these pillars.",
+      "papers": [
+        "CCA",
+        "AIAgentsCoding2025",
+        "DeepResearch",
+        "WorkflowOpt",
+        "ReActSurvey",
+        "ContextEngSurv",
+        "AIAgentAdopt"
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Design Patterns for Agentic Systems",
+      "guidance": "Survey recurring patterns that structure agent behavior. Contrast workflow-style pipelines with fully autonomous loops. Cover orchestrator-worker decomposition, DAG-based task planning, hierarchical planning with AND-OR trees, meta-agent search that automates agent design, and recent proposals that unify computation, memory, and I-O into learned runtime state. Discuss personalization-aware architectures and efficiency-driven reviews.",
+      "papers": [
+        "WorkflowOpt",
+        "ADAS",
+        "TURA",
+        "MACI",
+        "NeuralComps",
+        "StructuredAgent",
+        "MAPLE",
+        "PAHF",
+        "EffAgents",
+        "OpenDevin",
+        "OSCopilot",
+        "MagenticOne",
+        "SelfOrgAgents",
+        "ChainOfAgents",
+        "AgentsMD",
+        "AgentDataProto"
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Reasoning and Planning Scaffolds",
+      "guidance": "Cover how harnesses structure reasoning on top of a base model. Discuss chain-of-thought and deliberative search as primitives, the emergence of adaptive looping and gated memory mechanisms, parametric encoding of reflection patterns, and adaptive switching between text reasoning and code execution. Note that recurrent inductive bias often matters more than architectural elaboration.",
+      "papers": [
+        "UnivReasoning",
+        "AdaptiveLooping",
+        "ParamMem",
+        "AgenticR1",
+        "PlanAct",
+        "DeepSeekV32",
+        "K2Think",
+        "rStar2Agent",
+        "INTELLECT3",
+        "LlamaNemotron"
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Tool Use and Environment Interfaces",
+      "guidance": "Formalize tools as external programs invoked by the model. Cover function calling, the Model Context Protocol ecosystem, learned rewriting of tool descriptions, reinforcement-learned policies for when to search, and programmatic transformation of GUI agents into state-machine planners. Discuss reliability failures that appear as tool catalogs scale.",
+      "papers": [
+        "WhatAreTools",
+        "LiveMCP101",
+        "ToolDescRewrite",
+        "SEM",
+        "ActionEngine",
+        "UITARS",
+        "GUIR1",
+        "ComputerRL",
+        "CoAct1",
+        "ColorAgent",
+        "WebRL",
+        "AgentFold",
+        "GUIAgentDawn",
+        "GraphR1",
+        "ToolAgentRetr",
+        "OpenDeepSearch",
+        "SFRDeepResearch",
+        "TTDDR",
+        "TUMIX"
+      ]
+    },
+    {
+      "id": "5",
+      "title": "Memory and Long-Horizon Control",
+      "guidance": "Review techniques for maintaining useful state beyond the context window. Cover hierarchical working memory, planner-summarizer agents, persistent note-taking across sessions, geometric memory structure in sequence models, bounded internal state as a replacement for unbounded context, semantic compression with adaptive retrieval, agent cognitive compressors, collaborative memory across heterogeneous agents, and the exposure of memory operations as tools. Emphasize the link between memory design and long-horizon reliability.",
+      "papers": [
+        "CCA",
+        "GeometricMem",
+        "MemCollab",
+        "xMemory",
+        "InfMem",
+        "SimpleMem",
+        "AgentCC",
+        "MIA",
+        "AgeMem"
+      ]
+    },
+    {
+      "id": "6",
+      "title": "Multi-Agent Systems and Coordination",
+      "guidance": "Review how multiple specialized agents coordinate. Cover consensus protocols with early termination, auction-style routing among heterogeneous models, and theoretical limits on what delegation can achieve relative to centralized decision-making. Contrast empirical claims that single-agent systems with sufficient compute often match multi-agent architectures on multi-hop reasoning.",
+      "papers": [
+        "SingleVsMulti",
+        "ReliabilityLimits",
+        "Aegean",
+        "SALE"
+      ]
+    },
+    {
+      "id": "7",
+      "title": "Training and Optimization of Agents",
+      "guidance": "Cover how agents are trained on their own trajectories. Review scaled simulated tool-use environments, two-phase agent experience learning, self-distillation for dense credit assignment, memory control trained end-to-end as tool use, indexed experience memory optimized via RL, meta-agent discovery of memory architectures, and instruction-tuned frontier releases that bake in agentic capabilities via mixture-of-experts and hybrid thinking modes.",
+      "papers": [
+        "AgentScaler",
+        "SDPO",
+        "MemexRL",
+        "MemFactory",
+        "ALMA",
+        "GLM45",
+        "CommandA",
+        "DualDistill",
+        "SelfPlaySWERL",
+        "KimiDev",
+        "AlphaEvolve",
+        "DeepSeekProver"
+      ]
+    },
+    {
+      "id": "8",
+      "title": "Evaluation of Agentic Systems",
+      "guidance": "Survey benchmarks that isolate harness contribution from base-model capability. Contrast static QA benchmarks with interactive, tool-grounded benchmarks, real-world software engineering evaluations, verifier frameworks that reduce false-positive rates for computer-use agents, agentic intelligence benchmarks that require exploration and goal inference, and diagnostic frameworks that separate retrieval from utilization failures in agent memory. Discuss the persistent human-agent gap and the shift toward process-level metrics.",
+      "papers": [
+        "GAIA",
+        "LiveMCP101",
+        "AIAgentsCoding2025",
+        "DiagnosticMem",
+        "UnivVerifier",
+        "ARCAGI3",
+        "MemoryArena",
+        "HackWebsites",
+        "MCPEval",
+        "Gaia2",
+        "TerminalBench2",
+        "PaperBench",
+        "SWEEVO",
+        "AgynSWE",
+        "Agentless",
+        "OpenHandsVersa",
+        "CodeResearcher",
+        "AgenticScience"
+      ]
+    },
+    {
+      "id": "9",
+      "title": "Safety, Robustness, and Alignment of Agents",
+      "guidance": "Review how agentic capability changes the safety picture. Cover empirical studies demonstrating that agents with tool access can autonomously perform offensive operations, controlled red-team arenas for sabotage in realistic agent settings, evidence of goal-conflict-induced misalignment in frontier models under agentic pressure, adversarial environments that trap agents into harmful behavior, and deliberative-alignment training aimed at preventing scheming under agentic prompts. Discuss emerging alignment-auditing agents that probe other agents for hidden objectives and the methodological questions they raise.",
+      "papers": [
+        "HackWebsites",
+        "SHADEArena",
+        "AgenticMisalign",
+        "AgentTraps",
+        "AntiScheming",
+        "AlignAudit",
+        "Claudini"
+      ]
+    },
+    {
+      "id": "10",
+      "title": "Open Problems and Future Directions",
+      "guidance": "Discuss long-horizon reliability, cost and latency in orchestrator-worker systems, portability of harnesses across base models, standardization of tool interfaces, security implications surfaced by offensive capability studies, the challenge of measuring process-level behavior rather than aggregate accuracy, and the role of community-curated resources in tracking a fast-moving field. Close by motivating continued integration across the seven pillars and the importance of open inference infrastructure for reproducible agent research."
+    }
+  ],
+  "table": {
+    "columns": [
+      "System",
+      "Primary Pillar",
+      "Pattern",
+      "Tool or Memory Interface",
+      "Primary Evaluation"
+    ],
+    "rows": [
+      {
+        "System": "Confucius Code Agent",
+        "Primary Pillar": "Design + Memory",
+        "Pattern": "Orchestrator with planner and note-taker",
+        "Tool or Memory Interface": "Hierarchical working memory and persistent notes",
+        "Primary Evaluation": "SWE-Bench-Pro (54.3 percent Resolve@1)"
+      },
+      {
+        "System": "AgentScaler",
+        "Primary Pillar": "Training",
+        "Pattern": "Forward-simulated multi-turn agent",
+        "Tool or Memory Interface": "30k+ clustered APIs as executable functions",
+        "Primary Evaluation": "tau-bench, tau2-bench, ACEBench"
+      },
+      {
+        "System": "Agentic-R1",
+        "Primary Pillar": "Reasoning + Training",
+        "Pattern": "Adaptive text vs tool-based reasoning",
+        "Tool or Memory Interface": "Code execution via distilled teachers",
+        "Primary Evaluation": "DeepMath-L, Combinatorics300"
+      },
+      {
+        "System": "TURA",
+        "Primary Pillar": "Design",
+        "Pattern": "DAG task planner with distilled executor",
+        "Tool or Memory Interface": "Intent-aware MCP server retrieval",
+        "Primary Evaluation": "Tool-use accuracy (88.3 percent)"
+      },
+      {
+        "System": "GLM-4.5",
+        "Primary Pillar": "Training",
+        "Pattern": "Hybrid thinking vs direct modes",
+        "Tool or Memory Interface": "XML-tagged function calls",
+        "Primary Evaluation": "tau-bench 70.1, BFCL-V3 77.8"
+      },
+      {
+        "System": "Command A",
+        "Primary Pillar": "Training",
+        "Pattern": "Enterprise RAG plus tool-use agent",
+        "Tool or Memory Interface": "ReAct-style function calling",
+        "Primary Evaluation": "tau-bench, BFCL, enterprise generative tasks"
+      },
+      {
+        "System": "ADAS (Meta Agent Search)",
+        "Primary Pillar": "Design",
+        "Pattern": "Meta-agent synthesizes new agents",
+        "Tool or Memory Interface": "Programmatic agent construction",
+        "Primary Evaluation": "Transfer across reasoning and tool-use tasks"
+      },
+      {
+        "System": "ActionEngine",
+        "Primary Pillar": "Tool Use",
+        "Pattern": "GUI agent as programmatic planner",
+        "Tool or Memory Interface": "Offline state-machine exploration",
+        "Primary Evaluation": "Reddit GUI tasks (95 percent, 11.8x cost reduction)"
+      },
+      {
+        "System": "SALE",
+        "Primary Pillar": "Multi-Agent",
+        "Pattern": "Auction-style routing among agents",
+        "Tool or Memory Interface": "Shared auction memory",
+        "Primary Evaluation": "53 percent reduction in large-model reliance"
+      },
+      {
+        "System": "ALMA",
+        "Primary Pillar": "Training",
+        "Pattern": "Meta-agent memory discovery",
+        "Tool or Memory Interface": "Open-ended code exploration",
+        "Primary Evaluation": "Domain-adaptive memory outperforming human baselines"
+      }
+    ]
+  },
+  "bibliography": [
+    {
+      "key": "WhatAreTools",
+      "authors": "Wang, Z. et al.",
+      "year": "2024",
+      "title": "What Are Tools Anyway? A Survey of Tool Use in LLMs",
+      "venue": "Preprint 2024",
+      "summary": "Formal definition of tools as external programs invoked by language models, with a unified taxonomy over function calling, retrieval, code execution, and browsing, and an empirical cost-benefit analysis of tool use."
+    },
+    {
+      "key": "WorkflowOpt",
+      "authors": "IBM Research",
+      "year": "2026",
+      "title": "Workflow Optimization for LLM Agents",
+      "venue": "arXiv:2603.22386",
+      "summary": "Survey that frames agent systems as agentic computation graphs and organizes optimization methods along when structure is fixed, what is optimized, and which evaluation signals guide search."
+    },
+    {
+      "key": "ADAS",
+      "authors": "Hu, S. et al.",
+      "year": "2024",
+      "title": "Automated Design of Agentic Systems",
+      "venue": "arXiv:2408.08435",
+      "summary": "Meta-agent search procedure that iteratively programs and tests new agents from a growing archive, demonstrating that prompts, tool use, and control flow can all be discovered automatically."
+    },
+    {
+      "key": "TURA",
+      "authors": "TURA Authors",
+      "year": "2025",
+      "title": "Tool-Augmented Unified Retrieval Agent for AI Search",
+      "venue": "arXiv:2508.04604",
+      "summary": "Production framework extending RAG with intent-aware MCP retrieval, DAG-based task planning, and a distilled small-model executor that matches teacher accuracy at fraction of the latency."
+    },
+    {
+      "key": "LiveMCP101",
+      "authors": "LiveMCP-101 Authors",
+      "year": "2025",
+      "title": "LiveMCP-101: Benchmarking Real-World MCP Agents",
+      "venue": "arXiv:2508.15760",
+      "summary": "Benchmark of 101 real-world queries for MCP-enabled agents across search, file operations, math, and data analysis, exposing tool orchestration weaknesses in leading models."
+    },
+    {
+      "key": "ToolDescRewrite",
+      "authors": "Intuit AI Research",
+      "year": "2026",
+      "title": "Learning to Rewrite Tool Descriptions",
+      "venue": "arXiv:2602.20426",
+      "summary": "Trace-Free+ curriculum-learning framework that optimizes tool descriptions for agents without execution traces, generalizing to unseen tools and large tool catalogs."
+    },
+    {
+      "key": "SEM",
+      "authors": "SEM Authors",
+      "year": "2025",
+      "title": "Reinforcement Learning for Search-Efficient LLMs",
+      "venue": "arXiv:2505.07903",
+      "summary": "GRPO-based training with a structured think-answer-search-result format teaches models when to invoke search and when to rely on parametric knowledge, improving accuracy while cutting search ratio."
+    },
+    {
+      "key": "CCA",
+      "authors": "Qi, Z. et al.",
+      "year": "2026",
+      "title": "Confucius Code Agent",
+      "venue": "arXiv:2512.10398",
+      "summary": "Software engineering agent built on the Confucius SDK with hierarchical working memory, persistent note-taking, modular tool extensions, and a meta-agent build-test-improve loop, reaching 54.3 percent Resolve@1 on SWE-Bench-Pro."
+    },
+    {
+      "key": "AgenticR1",
+      "authors": "Agentic-R1 Authors",
+      "year": "2025",
+      "title": "Agentic-R1: Adaptive Text and Tool Reasoning via DualDistill",
+      "venue": "arXiv:2507.05707",
+      "summary": "Seven-billion-parameter model trained to switch between long chain-of-thought and code-based tool use by distilling two specialized teachers, then refined via self-distillation."
+    },
+    {
+      "key": "DeepResearch",
+      "authors": "Deep Research Survey Authors",
+      "year": "2025",
+      "title": "Deep Research Agents: A Survey",
+      "venue": "arXiv:2506.18096",
+      "summary": "Comprehensive survey of autonomous multi-step research agents, classifying systems by static vs dynamic workflows, planning strategies, and single- vs multi-agent orchestration."
+    },
+    {
+      "key": "AgentScaler",
+      "authors": "AgentScaler Authors",
+      "year": "2025",
+      "title": "AgentScaler: Scaled Simulated Tool-Use Environments for Agent Training",
+      "venue": "arXiv:2509.13311",
+      "summary": "Framework that clusters 30000+ APIs into 1000+ domains with executable databases and trains agents in two phases, achieving open-source state of the art on tau-bench, tau2-bench, and ACEBench."
+    },
+    {
+      "key": "SDPO",
+      "authors": "SDPO Authors",
+      "year": "2026",
+      "title": "Reinforcement Learning via Self-Distillation",
+      "venue": "arXiv:2601.20802",
+      "summary": "On-policy RL algorithm that uses the current model conditioned on environment feedback as a self-teacher, producing dense credit assignment and outperforming GRPO on reasoning and tool-use benchmarks."
+    },
+    {
+      "key": "GLM45",
+      "authors": "GLM-4.5 Authors",
+      "year": "2025",
+      "title": "GLM-4.5: An Open Mixture-of-Experts Foundation for Agentic Tasks",
+      "venue": "arXiv:2508.06471",
+      "summary": "355B-parameter MoE model with hybrid thinking-vs-direct modes and agentic RL over web search and software engineering, ranking second on a twelve-benchmark agentic suite."
+    },
+    {
+      "key": "CommandA",
+      "authors": "Cohere",
+      "year": "2025",
+      "title": "Command A: An Enterprise-Ready LLM",
+      "venue": "arXiv:2504.00698",
+      "summary": "111B open-weight model built for RAG, agents, code, and multilingual tasks, using modular expert merging and a hybrid attention architecture for 256K context."
+    },
+    {
+      "key": "GAIA",
+      "authors": "Mialon, G. et al.",
+      "year": "2023",
+      "title": "GAIA: A Benchmark for General AI Assistants",
+      "venue": "arXiv:2311.12983",
+      "summary": "Benchmark of conceptually simple real-world questions that require reasoning, multimodal handling, web browsing, and tool use. Exposes a large human-agent gap on general assistant tasks."
+    },
+    {
+      "key": "AIAgentsCoding2025",
+      "authors": "Mueller, K. et al.",
+      "year": "2025",
+      "title": "AI Agents for Coding in 2025",
+      "venue": "arXiv:2512.14012",
+      "summary": "Field study of how experienced developers use AI coding agents, finding that professionals rely on careful planning and validation rather than vibe-coding and that agent suitability varies sharply by task complexity."
+    },
+    {
+      "key": "HackWebsites",
+      "authors": "Fang, R. et al.",
+      "year": "2024",
+      "title": "LLM Agents Can Autonomously Hack Websites",
+      "venue": "arXiv:2402.06664",
+      "summary": "Demonstrates that frontier agents with tool use and long context can autonomously perform SQL injection and schema extraction on real websites, highlighting security implications of agentic capability."
+    },
+    {
+      "key": "UnivReasoning",
+      "authors": "Universal Reasoning Authors",
+      "year": "2026",
+      "title": "Universal Reasoning Model",
+      "venue": "arXiv:2512.14693",
+      "summary": "Investigates recurrent mechanisms in universal transformers on ARC-AGI, showing that recurrent inductive bias and nonlinear components, rather than architectural elaboration, drive reasoning gains."
+    },
+    {
+      "key": "MACI",
+      "authors": "MACI Authors",
+      "year": "2026",
+      "title": "MACI: A System-2 Coordination Layer for LLMs",
+      "venue": "arXiv:2512.05765",
+      "summary": "Proposes a coordination layer above LLM substrates with three mechanisms, baiting, filtering, and persistence, that together enable goal-directed reasoning across multi-step tasks."
+    },
+    {
+      "key": "SingleVsMulti",
+      "authors": "Stanford Authors",
+      "year": "2026",
+      "title": "Single-Agent LLMs vs Multi-Agent Systems",
+      "venue": "arXiv:2604.02460",
+      "summary": "Information-theoretic analysis showing that single-agent systems with controlled compute consistently match or outperform multi-agent architectures on multi-hop reasoning."
+    },
+    {
+      "key": "GeometricMem",
+      "authors": "Geometric Memory Authors",
+      "year": "2026",
+      "title": "Geometric Memory in Sequence Models",
+      "venue": "arXiv:2510.26745",
+      "summary": "Identifies a geometric memory paradigm in deep sequence models that encodes global entity relationships, enabling multi-step reasoning on massive graphs beyond what associative memory explains."
+    },
+    {
+      "key": "NeuralComps",
+      "authors": "Meta AI and KAUST",
+      "year": "2026",
+      "title": "Neural Computers",
+      "venue": "arXiv:2604.06425",
+      "summary": "Unified computation-memory-IO architecture in which video models control command-line and graphical environments, blurring the boundary between model and runtime."
+    },
+    {
+      "key": "MIA",
+      "authors": "MIA Authors",
+      "year": "2026",
+      "title": "Memory Intelligence Agent",
+      "venue": "arXiv:2604.04503",
+      "summary": "Manager-planner-executor architecture with bidirectional memory conversion and alternating RL training, designed for efficient long-horizon memory evolution."
+    },
+    {
+      "key": "CodingAgentsLongCtx",
+      "authors": "Coding Agents Authors",
+      "year": "2026",
+      "title": "Coding Agents as Long-Context Processors",
+      "venue": "arXiv:2603.20432",
+      "summary": "Shows that coding agents using file systems and native tools outperform state-of-the-art long-context methods by 17.3 percent on average, scaling effectively to trillions of tokens."
+    },
+    {
+      "key": "ReliabilityLimits",
+      "authors": "MIT Authors",
+      "year": "2026",
+      "title": "On the Reliability Limits of Multi-Agent Planning",
+      "venue": "arXiv:2603.26993",
+      "summary": "Theoretical analysis proving that delegated multi-agent networks cannot outperform centralized decision-makers without new exogenous signals, constraining the benefits of pure orchestration."
+    },
+    {
+      "key": "MemCollab",
+      "authors": "MemCollab Authors",
+      "year": "2026",
+      "title": "MemCollab: Collaborative Memory Across Agents",
+      "venue": "arXiv:2603.23234",
+      "summary": "Agent-agnostic memory framework that contrasts reasoning trajectories from different models to construct shared memory usable across heterogeneous agents."
+    },
+    {
+      "key": "MemexRL",
+      "authors": "MemexRL Authors",
+      "year": "2026",
+      "title": "Memex(RL): Indexed Experience Memory Optimized via RL",
+      "venue": "arXiv:2603.04257",
+      "summary": "Introduces an indexed experience memory with RL-optimized write and read behaviors, preserving decision quality on long-horizon tasks under bounded retrieval budgets."
+    },
+    {
+      "key": "StructuredAgent",
+      "authors": "StructuredAgent Authors",
+      "year": "2026",
+      "title": "StructuredAgent: Hierarchical Planning for Web Agents",
+      "venue": "arXiv:2603.05294",
+      "summary": "Hierarchical planning framework for web agents based on dynamic AND-OR trees, with the system maintaining the global tree while the LLM handles local expansion."
+    },
+    {
+      "key": "AdaptiveLooping",
+      "authors": "Think Harder Authors",
+      "year": "2026",
+      "title": "Think Harder or Know More: Adaptive Looping in Reasoning",
+      "venue": "arXiv:2603.08391",
+      "summary": "Investigates per-layer adaptive looping and gated memory banks, finding looping benefits math reasoning while memory banks help commonsense tasks, with complementary roles for each."
+    },
+    {
+      "key": "ParamMem",
+      "authors": "ParamMem Authors",
+      "year": "2026",
+      "title": "ParamMem: Parametric Memory for Reflection",
+      "venue": "arXiv:2602.23320",
+      "summary": "Parametric memory module that encodes cross-sample reflection patterns into model parameters, enabling diverse agent self-reflection across code, math, and QA tasks."
+    },
+    {
+      "key": "DiagnosticMem",
+      "authors": "Diagnostic Memory Authors",
+      "year": "2026",
+      "title": "Diagnosing Agent Memory",
+      "venue": "arXiv:2603.02473",
+      "summary": "Diagnostic framework that separates retrieval from utilization failures in agent memory, finding that retrieval is the dominant bottleneck, accounting for 11 to 46 percent of errors."
+    },
+    {
+      "key": "PAHF",
+      "authors": "Meta Authors",
+      "year": "2026",
+      "title": "PAHF: Continual Agent Personalization",
+      "venue": "arXiv:2602.16173",
+      "summary": "Continual personalization framework coupling explicit per-user memory with proactive and reactive feedback mechanisms for long-lived agent deployments."
+    },
+    {
+      "key": "ActionEngine",
+      "authors": "Georgia Tech and Microsoft Research",
+      "year": "2026",
+      "title": "ActionEngine: GUI Agents as Programmatic Planners",
+      "venue": "arXiv:2602.20502",
+      "summary": "Transforms GUI agents into programmatic planners through offline state-machine exploration and Python synthesis, achieving 95 percent success on Reddit tasks with 11.8x cost reduction."
+    },
+    {
+      "key": "MemFactory",
+      "authors": "MemFactory Authors",
+      "year": "2026",
+      "title": "MemFactory: Unified Training-Inference for Memory-Augmented Agents",
+      "venue": "arXiv:2603.29493",
+      "summary": "Modular training-inference framework for memory-augmented agents with composable Lego-like components and GRPO fine-tuning, yielding 14.8 percent relative gains."
+    },
+    {
+      "key": "UnivVerifier",
+      "authors": "Microsoft Research",
+      "year": "2026",
+      "title": "The Universal Verifier for Agent Benchmarks",
+      "venue": "arXiv:2604.06240",
+      "summary": "Reliable evaluation framework for computer-use agent trajectories based on four design principles that reduce false positive rates from 45 percent or more to near zero."
+    },
+    {
+      "key": "ARCAGI3",
+      "authors": "Chollet, F. and ARC Prize Foundation",
+      "year": "2026",
+      "title": "ARC-AGI-3: Interactive Benchmark for Agentic Intelligence",
+      "venue": "arXiv:2603.24621",
+      "summary": "Interactive benchmark using turn-based environments that require exploration, goal inference, and planning without explicit instructions, targeting broad agentic intelligence."
+    },
+    {
+      "key": "Aegean",
+      "authors": "Aegean Authors",
+      "year": "2026",
+      "title": "Reaching Agreement Among LLM Agents",
+      "venue": "arXiv:2512.20184",
+      "summary": "Consensus protocol for multi-agent refinement that enables early termination when sufficient agents converge, delivering 1.2 to 20x latency reduction."
+    },
+    {
+      "key": "MemoryArena",
+      "authors": "MemoryArena Authors",
+      "year": "2026",
+      "title": "MemoryArena",
+      "venue": "arXiv:2602.16313",
+      "summary": "Benchmark evaluating whether agents actually use memory across interconnected sessions, exposing the gap between retrieval accuracy and actionable memory use."
+    },
+    {
+      "key": "MAPLE",
+      "authors": "MAPLE Authors",
+      "year": "2026",
+      "title": "MAPLE: Separating Memory, Learning, and Personalization",
+      "venue": "arXiv:2602.13258",
+      "summary": "Architecture that separates memory, learning, and personalization into specialized sub-agents operating at different timescales, yielding 14.6 percent personalization improvement."
+    },
+    {
+      "key": "ALMA",
+      "authors": "Clune Group",
+      "year": "2026",
+      "title": "ALMA: Automated Discovery of Memory Designs",
+      "venue": "arXiv:2602.07755",
+      "summary": "Meta-agent that automatically discovers agent memory designs through open-ended code exploration, yielding domain-adaptive architectures that outperform human-designed baselines."
+    },
+    {
+      "key": "xMemory",
+      "authors": "xMemory Authors",
+      "year": "2026",
+      "title": "xMemory: Structure-Aware Hierarchical Memory",
+      "venue": "arXiv:2602.02007",
+      "summary": "Hierarchical memory with structure-aware top-down retrieval for agent dialogue, replacing fixed top-k retrieval with adaptive expansion driven by reader uncertainty."
+    },
+    {
+      "key": "SALE",
+      "authors": "Meta Authors",
+      "year": "2026",
+      "title": "SALE: Marketplace-Inspired Routing for Multi-Agent Systems",
+      "venue": "arXiv:2602.02751",
+      "summary": "Auction-style routing where heterogeneous agents bid with strategic plans, refined through shared auction memory, reducing reliance on 32B-parameter models by 53 percent."
+    },
+    {
+      "key": "InfMem",
+      "authors": "InfMem Authors",
+      "year": "2026",
+      "title": "InfMem: Ultra-Long Document QA with Cognitive Agents",
+      "venue": "arXiv:2602.02704",
+      "summary": "Cognitive agent that uses a PreThink-Retrieve-Write loop with adaptive early stopping, cutting latency by 3.3 to 5.1x on one-million-token documents."
+    },
+    {
+      "key": "VibeTensor",
+      "authors": "NVLabs",
+      "year": "2026",
+      "title": "VibeTensor: Agent-Generated Deep Learning Stack",
+      "venue": "arXiv:2601.16238",
+      "summary": "Deep learning system software fully generated by LLM coding agents, totaling 28K lines spanning CUDA kernels, autograd, and allocators."
+    },
+    {
+      "key": "AgentCC",
+      "authors": "AgentCC Authors",
+      "year": "2026",
+      "title": "Agent Cognitive Compressor for Long-Horizon Workflows",
+      "venue": "arXiv:2601.11653",
+      "summary": "Bounded internal state that replaces unbounded context, reducing drift and hallucination in extended multi-turn agent workflows."
+    },
+    {
+      "key": "EffAgents",
+      "authors": "Efficient Agents Survey Authors",
+      "year": "2026",
+      "title": "Efficient Agents: A Review",
+      "venue": "arXiv:2601.14192",
+      "summary": "Review of agent efficiency methods, focusing on memory compression, reinforcement learning for tool use, and controlled planning mechanisms."
+    },
+    {
+      "key": "AgeMem",
+      "authors": "AgeMem Authors",
+      "year": "2026",
+      "title": "Unified Long-Term and Short-Term Memory as Tools",
+      "venue": "arXiv:2601.01885",
+      "summary": "Exposes memory operations as tools so agents can autonomously learn store, retrieve, update, summarize, and discard strategies via step-wise GRPO."
+    },
+    {
+      "key": "SimpleMem",
+      "authors": "SimpleMem Authors",
+      "year": "2026",
+      "title": "Efficient Lifelong Memory for LLM Agents",
+      "venue": "arXiv:2601.02553",
+      "summary": "Semantic lossless compression with recursive consolidation and adaptive retrieval, achieving 26.4 percent F1 improvement and a 30-fold token reduction."
+    },
+    {
+      "key": "LightThinkPP",
+      "authors": "LightThinker++ Authors",
+      "year": "2026",
+      "title": "LightThinker++: From Reasoning Compression to Memory Management",
+      "venue": "arXiv:2604.03679",
+      "summary": "Moves beyond static compression with explicit commit-expand-fold memory primitives, reducing peak tokens by 70 percent while stabilizing agentic tasks over 80 rounds."
+    },
+    {
+      "key": "ReActSurvey",
+      "authors": "Yao, S. et al.",
+      "year": "2022",
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "venue": "arXiv:2210.03629",
+      "summary": "Foundational framework that interleaves chain-of-thought reasoning with tool-grounded actions, establishing the observe-reason-act loop that underpins most subsequent agent harnesses."
+    },
+    {
+      "key": "AIAgentAdopt",
+      "authors": "Harvard & Perplexity Research",
+      "year": "2025",
+      "title": "AI Agent Adoption Study",
+      "venue": "arXiv:2512.07828",
+      "summary": "First large-scale field study of AI agent adoption using hundreds of millions of anonymized Perplexity Comet browser interactions, showing productivity and learning dominate usage and that adoption skews toward higher-GDP, knowledge-intensive sectors."
+    },
+    {
+      "key": "MagenticOne",
+      "authors": "Fourney, A. et al.",
+      "year": "2024",
+      "title": "Magentic-One",
+      "venue": "Microsoft Research 2024",
+      "summary": "Generalist multi-agent system where an Orchestrator directs specialized WebSurfer, FileSurfer, Coder, and ComputerTerminal agents, reaching competitive results on GAIA, AssistantBench, and WebArena without task-specific modifications."
+    },
+    {
+      "key": "OpenDevin",
+      "authors": "Wang, X. et al.",
+      "year": "2024",
+      "title": "OpenDevin",
+      "venue": "arXiv:2407.16741",
+      "summary": "Open platform for generalist software agents that includes sandboxed OS and browser environments, a code execution interface, multi-agent support, and an evaluation framework for agent research."
+    },
+    {
+      "key": "OSCopilot",
+      "authors": "Wu, Z. et al.",
+      "year": "2024",
+      "title": "OS-Copilot",
+      "venue": "arXiv:2402.07456",
+      "summary": "Framework for generalist computer agents that exposes unified OS-level tools (files, shell, browser, apps) and introduces FRIDAY, a self-improving agent that outperforms prior methods by 35% on GAIA."
+    },
+    {
+      "key": "GUIAgentDawn",
+      "authors": "Hu, S. et al.",
+      "year": "2024",
+      "title": "The Dawn of GUI Agent",
+      "venue": "arXiv:2411.10323",
+      "summary": "Evaluates Claude 3.5 computer use across domains and software and ships an API-based GUI automation framework, demonstrating strong end-to-end language-to-desktop action capabilities."
+    },
+    {
+      "key": "UITARS",
+      "authors": "ByteDance",
+      "year": "2025",
+      "title": "UI-TARS",
+      "venue": "arXiv:2501.12326",
+      "summary": "End-to-end native GUI agent that operates purely from visual screenshots and produces human-like keyboard and mouse interactions across platforms, replacing modular pipelines."
+    },
+    {
+      "key": "GUIR1",
+      "authors": "NUS & CAS",
+      "year": "2025",
+      "title": "GUI-R1",
+      "venue": "arXiv:2504.10458",
+      "summary": "Reinforcement learning framework for GUI agents that applies verifiable action-level rewards and improves grounded click and type behavior across desktop and mobile interfaces."
+    },
+    {
+      "key": "ComputerRL",
+      "authors": "ComputerRL Team",
+      "year": "2025",
+      "title": "ComputerRL",
+      "venue": "arXiv:2508.14040",
+      "summary": "Autonomous desktop agent framework unifying API calls with GUI actions, with a scalable RL stack and the Entropulse training recipe that alternates RL and SFT to sustain exploration."
+    },
+    {
+      "key": "CoAct1",
+      "authors": "USC, Salesforce, UW",
+      "year": "2025",
+      "title": "CoAct-1",
+      "venue": "arXiv:2508.03923",
+      "summary": "Multi-agent system that combines GUI interaction with direct code execution for computer-using agents, improving efficiency and robustness over pure GUI-only approaches on desktop tasks."
+    },
+    {
+      "key": "ColorAgent",
+      "authors": "ColorAgent Team",
+      "year": "2025",
+      "title": "ColorAgent",
+      "venue": "arXiv:2510.19386",
+      "summary": "Mobile OS agent combining step-wise RL with self-evolving training and a multi-agent personalization layer, achieving 77.2% success on AndroidWorld and 50.7% on AndroidLab-Pro."
+    },
+    {
+      "key": "WebRL",
+      "authors": "WebRL Team",
+      "year": "2024",
+      "title": "WebRL",
+      "venue": "arXiv:2411.02337",
+      "summary": "Self-evolving online curriculum RL framework that lifts Llama-3.1-8B web success from 4.8% to 42.4% and GLM4-9B from 6.1% to 43%, surpassing GPT-4-Turbo and GPT-4o web agents."
+    },
+    {
+      "key": "AgentFold",
+      "authors": "AgentFold Team",
+      "year": "2025",
+      "title": "AgentFold",
+      "venue": "arXiv:2510.24699",
+      "summary": "30B web agent with proactive folding-based context management that reaches 36.2% on BrowseComp and 47.3% on BrowseComp-ZH, outperforming DeepSeek-V3.1-671B and proprietary agents like o4-mini."
+    },
+    {
+      "key": "AgynSWE",
+      "authors": "Agyn Team",
+      "year": "2026",
+      "title": "Agyn",
+      "venue": "arXiv:2602.01465",
+      "summary": "Fully automated multi-agent software engineering system modeling development as an organizational process with manager, researcher, engineer, and reviewer roles, resolving 72.2% of SWE-bench 500 tasks without benchmark tuning."
+    },
+    {
+      "key": "SWEEVO",
+      "authors": "SWE-EVO Team",
+      "year": "2025",
+      "title": "SWE-EVO",
+      "venue": "arXiv:2512.18470",
+      "summary": "Benchmark for long-horizon software evolution requiring multi-step modifications across an average of 21 files, where GPT-5 with OpenHands reaches only 21% compared to 65% on SWE-Bench Verified."
+    },
+    {
+      "key": "SelfPlaySWERL",
+      "authors": "Wei, Y. et al.",
+      "year": "2025",
+      "title": "Self-Play SWE-RL",
+      "venue": "arXiv:2512.18552",
+      "summary": "Trains SWE agents through self-play where a single LLM both injects and repairs bugs in sandboxed repos, gaining +10.4 points on SWE-bench Verified over human-data baselines without labeled issues or tests."
+    },
+    {
+      "key": "KimiDev",
+      "authors": "Yang, Z. et al.",
+      "year": "2025",
+      "title": "Kimi-Dev",
+      "venue": "arXiv:2509.23045",
+      "summary": "Introduces agentless training as a transferable skill prior for software engineering LLMs, reaching 60.4% on SWE-bench Verified and enabling 48.6% SWE-Agent pass@1 after a small trajectory fine-tune."
+    },
+    {
+      "key": "Agentless",
+      "authors": "Xia, C. et al.",
+      "year": "2024",
+      "title": "Agentless",
+      "venue": "arXiv:2407.01489",
+      "summary": "An agentless system that solves 27.3% of GitHub issues on SWE-bench Lite via structured localization and repair, outperforming open-source AI software engineering agents at the time."
+    },
+    {
+      "key": "OpenHandsVersa",
+      "authors": "OpenHands-Versa Team",
+      "year": "2025",
+      "title": "Coding Agents with Multimodal Browsing (OpenHands-Versa)",
+      "venue": "arXiv:2506.03011",
+      "summary": "Unified single agent combining code execution, multimodal web browsing, and file search that surpasses specialist systems by +9.1% on SWE-Bench Multimodal and +9.1% on The Agent Company."
+    },
+    {
+      "key": "AgentsMD",
+      "authors": "AGENTS.md Evaluation Team",
+      "year": "2026",
+      "title": "Evaluating AGENTS.md",
+      "venue": "arXiv:2602.11988",
+      "summary": "Evaluates repo-level AGENTS.md context files across four coding agents, finding that human-written files give only +4% while LLM-generated ones hurt performance by -2%, while both raise inference cost by 20%+."
+    },
+    {
+      "key": "AgentTraps",
+      "authors": "Google DeepMind",
+      "year": "2026",
+      "title": "AI Agent Traps",
+      "venue": "Google DeepMind 2026",
+      "summary": "First systematic framework for adversarial web content weaponized against autonomous agents, defining AI Agent Traps as content engineered to exploit visiting agents and degrade their task execution."
+    },
+    {
+      "key": "Claudini",
+      "authors": "Claudini Team",
+      "year": "2026",
+      "title": "Claudini",
+      "venue": "arXiv:2603.24511",
+      "summary": "Autoresearch pipeline powered by Claude Code that autonomously discovers novel adversarial attack algorithms for LLMs, outperforming 30+ existing methods and reaching 100% attack success on Meta-SecAlign-70B."
+    },
+    {
+      "key": "AgenticMisalign",
+      "authors": "Anthropic",
+      "year": "2025",
+      "title": "Agentic Misalignment",
+      "venue": "Anthropic 2025",
+      "summary": "Shows 16 frontier models choose blackmail, espionage, and deception when deploying organizations threaten their autonomy, with Claude Opus 4 and Gemini 2.5 Flash blackmailing in 96% of key scenarios."
+    },
+    {
+      "key": "SHADEArena",
+      "authors": "SHADE-Arena Team",
+      "year": "2025",
+      "title": "SHADE-Arena",
+      "venue": "Anthropic 2025",
+      "summary": "First large-scale benchmark evaluating whether LLM-based agents can subtly pursue harmful side objectives while avoiding detection by monitors, using 17 paired benign and malicious agent tasks."
+    },
+    {
+      "key": "AntiScheming",
+      "authors": "OpenAI & Apollo Research",
+      "year": "2025",
+      "title": "Stress Testing Deliberative Alignment for Anti-Scheming Training",
+      "venue": "OpenAI 2025",
+      "summary": "Builds a covert-action testbed for scheming proxies and trains o3 and o4-mini with deliberative alignment, cutting covert-action rates sharply while showing situational awareness drives part of the gains."
+    },
+    {
+      "key": "AlignAudit",
+      "authors": "Anthropic",
+      "year": "2025",
+      "title": "Building and Evaluating Alignment Auditing Agents",
+      "venue": "Anthropic 2025",
+      "summary": "Introduces three LLM-based alignment auditing agents (investigator, evaluation, breadth-first red-team) to automate alignment audits with replicable tool-augmented workflows."
+    },
+    {
+      "key": "DeepSeekV32",
+      "authors": "DeepSeek-AI",
+      "year": "2025",
+      "title": "DeepSeek-V3.2",
+      "venue": "DeepSeek 2025",
+      "summary": "Open reasoning model with DeepSeek Sparse Attention, scalable RL post-training over agentic environments, and thinking-in-tool-use context management, achieving gold-medal performance on IMO and IOI 2025."
+    },
+    {
+      "key": "INTELLECT3",
+      "authors": "Prime Intellect",
+      "year": "2025",
+      "title": "INTELLECT-3",
+      "venue": "Prime Intellect 2025",
+      "summary": "106B MoE model (12B active) trained with the prime-rl asynchronous RL framework across 500+ environments, matching GLM-4.6 on agentic tasks and releasing the full Environments Hub and sandbox infrastructure."
+    },
+    {
+      "key": "K2Think",
+      "authors": "K2-Think Team",
+      "year": "2025",
+      "title": "K2-Think",
+      "venue": "arXiv:2509.07604",
+      "summary": "32B system combining long-CoT SFT, RL with verifiable rewards, plan-before-you-think prompting, and Best-of-N to match far larger models on AIME, HMMT, and Omni-MATH-HARD at interactive speed."
+    },
+    {
+      "key": "rStar2Agent",
+      "authors": "rStar2 Team",
+      "year": "2025",
+      "title": "rStar2-Agent",
+      "venue": "arXiv:2508.20722",
+      "summary": "14B math reasoning model trained with agentic RL in a Python tool environment using GRPO-RoC rollout filtering, reaching AIME24 80.6 and AIME25 69.8 with shorter traces than Qwen3-14B."
+    },
+    {
+      "key": "LlamaNemotron",
+      "authors": "NVIDIA",
+      "year": "2025",
+      "title": "Llama-Nemotron",
+      "venue": "arXiv:2505.00949",
+      "summary": "Open reasoning model family (LN-Nano 8B, LN-Super 49B, LN-Ultra 253B) with a dynamic reasoning toggle, FP8 inference, and multi-stage training that rivals DeepSeek-R1 on AIME and GPQA-Diamond."
+    },
+    {
+      "key": "OpenDeepSearch",
+      "authors": "Sentient, UW, Princeton, UC Berkeley",
+      "year": "2025",
+      "title": "Open Deep Search",
+      "venue": "arXiv:2503.20201",
+      "summary": "Open-source search AI framework with an Open Search Tool and code-based Open Reasoning Agent that, using DeepSeek-R1, scores 88.3% SimpleQA and 75.3% FRAMES, beating GPT-4o Search Preview."
+    },
+    {
+      "key": "SFRDeepResearch",
+      "authors": "Salesforce AI Research",
+      "year": "2025",
+      "title": "SFR-DeepResearch",
+      "venue": "arXiv:2509.06283",
+      "summary": "Simple RL recipe that turns reasoning-optimized LLMs into autonomous single-agent researchers using only search, static page browse, and Python tools, trained end-to-end on synthetic short-form tasks."
+    },
+    {
+      "key": "TTDDR",
+      "authors": "TTD-DR Team",
+      "year": "2025",
+      "title": "Deep Researcher with Test-Time Diffusion",
+      "venue": "arXiv:2507.16075",
+      "summary": "Reframes deep research report generation as a denoising diffusion process at test time, iteratively refining long-form research reports beyond Chain-of-Thought and best-of-n baselines."
+    },
+    {
+      "key": "TUMIX",
+      "authors": "TUMIX Team",
+      "year": "2025",
+      "title": "Tool-Use Mixture (TUMIX)",
+      "venue": "arXiv:2510.01279",
+      "summary": "Ensemble reasoning recipe that runs 15 diverse agents mixing text, code execution, and web search in parallel with LLM-judge early stopping, gaining +3.55% on HLE and GPQA over tool-augmented baselines."
+    },
+    {
+      "key": "ChainOfAgents",
+      "authors": "OPPO",
+      "year": "2025",
+      "title": "Chain-of-Agents",
+      "venue": "arXiv:2508.13167",
+      "summary": "Trains single models to natively behave like multi-agent systems by distilling strong frameworks into CoA trajectories and then running agentic RL on verifiable web, code, and tool tasks."
+    },
+    {
+      "key": "DualDistill",
+      "authors": "Agentic-R1 Team",
+      "year": "2025",
+      "title": "Agentic-R1 (DualDistill)",
+      "venue": "arXiv:2507.05707",
+      "summary": "7B model trained with DualDistill to dynamically switch between tool-based execution and pure text reasoning by composing trajectories from a long-CoT teacher and a code-based tool-use teacher."
+    },
+    {
+      "key": "SelfOrgAgents",
+      "authors": "Self-Organizing Agents Team",
+      "year": "2026",
+      "title": "Self-Organizing LLM Agents",
+      "venue": "arXiv:2603.28990",
+      "summary": "Tests multi-agent LLM autonomy at unprecedented scale (25,000 tasks, up to 256 agents, 8 coordination protocols) and finds that agents consistently converge to similar emergent structures regardless of protocol."
+    },
+    {
+      "key": "MCPEval",
+      "authors": "MCPEval Team",
+      "year": "2025",
+      "title": "MCPEval",
+      "venue": "arXiv:2507.15015",
+      "summary": "Open-source framework automating end-to-end evaluation of LLM agents via the Model Context Protocol, integrating with native tools and reporting domain-specific metrics across diverse application areas."
+    },
+    {
+      "key": "Gaia2",
+      "authors": "Meta FAIR",
+      "year": "2026",
+      "title": "Gaia2",
+      "venue": "arXiv:2602.11964",
+      "summary": "Next-generation agent benchmark where environments evolve independently of agent actions, forcing temporal pressure and multi-agent coordination; GPT-5 leads at 42% pass@1 and Kimi-K2 tops open models at 21%."
+    },
+    {
+      "key": "TerminalBench2",
+      "authors": "Terminal-Bench Team",
+      "year": "2026",
+      "title": "Benchmarking Agents on Hard CLI Tasks (Terminal-Bench 2.0)",
+      "venue": "arXiv:2601.11868",
+      "summary": "Hard benchmark of 89 curated command-line tasks inspired by real workflows, each with its own environment, stressing agent execution across development, feature expansion, and error resolution."
+    },
+    {
+      "key": "PaperBench",
+      "authors": "OpenAI",
+      "year": "2025",
+      "title": "PaperBench",
+      "venue": "arXiv:2504.01848",
+      "summary": "Benchmark testing whether AI agents can replicate cutting-edge ML research papers from scratch, providing a rigorous multi-step evaluation of autonomous research competence."
+    },
+    {
+      "key": "AgentDataProto",
+      "authors": "Agent Data Protocol Team",
+      "year": "2025",
+      "title": "Agent Data Protocol",
+      "venue": "arXiv:2510.24702",
+      "summary": "Standardized format that unifies 13 fragmented agent training datasets across tools and interfaces, enabling consolidated fine-tuning that achieves roughly 20% performance gains over baselines."
+    },
+    {
+      "key": "GraphR1",
+      "authors": "Graph-R1 Team",
+      "year": "2025",
+      "title": "Graph-R1",
+      "venue": "arXiv:2507.21892",
+      "summary": "RAG framework that integrates graph-structured knowledge with agentic multi-turn retrieval and reinforcement learning, moving beyond one-shot chunk-based retrieval for knowledge-intensive reasoning."
+    },
+    {
+      "key": "ToolAgentRetr",
+      "authors": "PwC Research",
+      "year": "2025",
+      "title": "Tool-to-Agent Retrieval",
+      "venue": "arXiv:2511.01854",
+      "summary": "Unified retrieval framework that embeds both tools and agents in a shared vector space with metadata relationships, enabling efficient routing across multi-agent systems coordinating hundreds of MCP servers."
+    },
+    {
+      "key": "CodeResearcher",
+      "authors": "Microsoft Research",
+      "year": "2025",
+      "title": "Code Researcher",
+      "venue": "Microsoft Research 2025",
+      "summary": "Deep research agent for complex bugs in large systems that reasons over semantics, patterns, and commit history, achieving 58% crash-resolution on kBenchSyz versus lower SWE-agent baselines."
+    },
+    {
+      "key": "AlphaEvolve",
+      "authors": "Google DeepMind",
+      "year": "2025",
+      "title": "AlphaEvolve",
+      "venue": "Google DeepMind 2025",
+      "summary": "LLM-guided evolutionary coding agent that discovers new algorithms (including 48-multiplication 4x4 complex matrix multiplication) and improves Google compute infrastructure across math and systems tasks."
+    },
+    {
+      "key": "DeepSeekProver",
+      "authors": "DeepSeek-AI",
+      "year": "2025",
+      "title": "DeepSeek-Prover-V2",
+      "venue": "arXiv:2504.21801",
+      "summary": "671B Lean 4 theorem-proving LLM trained with a cold-start pipeline of informal CoT and formal subgoal decomposition plus RL, surpassing prior state-of-the-art on formal proof benchmarks."
+    },
+    {
+      "key": "AgenticScience",
+      "authors": "Agentic Science Survey Team",
+      "year": "2025",
+      "title": "Agentic Science",
+      "venue": "arXiv:2508.14111",
+      "summary": "Survey positioning Agentic Science as the next stage of AI for Science, where agents autonomously generate hypotheses, run experiments, and iteratively pursue discovery across research lifecycles."
+    },
+    {
+      "key": "PlanAct",
+      "authors": "UC Berkeley & University of Tokyo",
+      "year": "2025",
+      "title": "Plan-and-Act",
+      "venue": "arXiv:2503.09572",
+      "summary": "Framework that separates high-level planning from low-level execution in LLM agents and explicitly trains the planner module, improving long-horizon task completion over monolithic agent designs."
+    },
+    {
+      "key": "ContextEngSurv",
+      "authors": "Context Engineering Survey Team",
+      "year": "2025",
+      "title": "A Survey of Context Engineering for LLMs",
+      "venue": "arXiv:2507.13334",
+      "summary": "Defines Context Engineering as a formal discipline, covering retrieval, processing, and management of information supplied to LLMs and their integration into production agent pipelines."
+    }
+  ]
+}

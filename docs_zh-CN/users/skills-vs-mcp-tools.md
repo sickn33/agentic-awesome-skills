@@ -70,7 +70,7 @@ MCP 工具为模型提供其原本不具备的能力，例如：
 
 ## 本仓库适合的位置
 
-Antigravity Awesome Skills 主要是一个**技能库**：
+Agentic Awesome Skills 主要是一个**技能库**：
 
 - 可安装的 `SKILL.md` 剧本
 - 基于角色的入门点的包

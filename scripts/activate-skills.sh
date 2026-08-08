@@ -3,7 +3,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEFAULT_BASE_DIR="${HOME:-$PWD}/.gemini/antigravity"
+DEFAULT_BASE_DIR="${HOME:-$PWD}/.agents"
 BASE_DIR="${AG_BASE_DIR:-$DEFAULT_BASE_DIR}"
 SKILLS_DIR="${AG_SKILLS_DIR:-$BASE_DIR/skills}"
 LIBRARY_DIR="${AG_LIBRARY_DIR:-$BASE_DIR/skills_library}"
@@ -161,7 +161,7 @@ fi
 
 if [[ ! -s "$SKILLS_LIST_FILE" ]]; then
   if [[ "${#EXTRA_ARGS[@]}" -eq 0 ]]; then
-    printf '%s\n' brainstorming systematic-debugging test-driven-development >"$SKILLS_LIST_FILE"
+    printf '%s\n' concise-planning git-pushing kaizen lint-and-validate systematic-debugging >"$SKILLS_LIST_FILE"
   else
     : >"$SKILLS_LIST_FILE"
     for arg in "${EXTRA_ARGS[@]}"; do

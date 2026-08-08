@@ -1,0 +1,39 @@
+{
+  "name": "aasb-qa-testing",
+  "version": "15.11.0",
+  "description": "Install the \"QA & Testing\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "qa-testing",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "QA & Testing",
+    "shortDescription": "Quality Assurance · 7 curated skills",
+    "longDescription": "For breaking things before users do. Covers Test Driven Development, E2E Testing Patterns, and 5 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Quality Assurance",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the \"QA & Testing\" skills to help me complete this task.",
+      "Review this project with the \"QA & Testing\" workflow."
+    ]
+  }
+}

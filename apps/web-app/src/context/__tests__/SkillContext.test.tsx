@@ -27,7 +27,7 @@ describe('SkillProvider', () => {
   beforeEach(() => {
     (global.fetch as Mock).mockReset();
     (global.fetch as Mock).mockImplementation(() => Promise.reject(new Error('unexpected fetch')));
-    window.history.pushState({}, '', '/antigravity-awesome-skills/');
+    window.history.pushState({}, '', '/agentic-awesome-skills/');
   });
 
   it('loads skills from a fallback candidate when the first URL fails', async () => {

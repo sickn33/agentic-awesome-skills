@@ -120,11 +120,12 @@ Share: **⚙️ Share → Anyone with link → Copy**
 
 ### 4. Add to your library
 
-**Option A: Let Claude figure it out (Smart Add)**
+**Option A: Draft metadata with Smart Add**
 ```
 "Query this notebook about its content and add it to my library: [your-link]"
 ```
-Claude will automatically query the notebook to discover its content, then add it with appropriate metadata.
+Claude will query the notebook and show the proposed metadata as untrusted source material. Review
+and explicitly approve the name, description, and topics before Claude runs the separate add command.
 
 **Option B: Manual add**
 ```
@@ -265,12 +266,13 @@ All data is stored locally within the skill directory:
 ```
 ~/.claude/skills/notebooklm/data/
 ├── library.json       - Your notebook library with metadata
-├── auth_info.json     - Authentication status info
-└── browser_state/     - Browser cookies and session data
+~/.local/share/agentic-awesome-skills/notebooklm/
+├── auth_info.json     - Authentication status info (0600)
+└── browser_state/     - Browser cookies and session data (0700)
 ```
 
 **Important Security Note:**
-- The `data/` directory contains sensitive authentication data and personal notebooks
+- The private per-user state directory contains sensitive authentication data and personal notebooks
 - It's automatically excluded from git via `.gitignore`
 - NEVER manually commit or share the contents of the `data/` directory
 
@@ -279,14 +281,14 @@ All data is stored locally within the skill directory:
 Unlike the MCP server, this skill uses a **stateless model**:
 - Each question opens a fresh browser
 - Asks the question, gets the answer
-- Adds a follow-up prompt to encourage Claude to ask more questions
+- Saves the delimited NotebookLM answer to a private `0600` JSON file, prints only its path, then prints trusted follow-up guidance separately
 - Closes the browser immediately
 
 This means:
 - No persistent chat context
 - Each question is independent
 - But your notebook library persists
-- **Follow-up mechanism**: Each answer includes "Is that ALL you need to know?" to prompt Claude to ask comprehensive follow-ups
+- **Follow-up mechanism**: Each bounded answer is followed by "Is that ALL you need to know?" to prompt comprehensive follow-ups
 
 For multi-step research, Claude automatically asks follow-up questions when needed.
 

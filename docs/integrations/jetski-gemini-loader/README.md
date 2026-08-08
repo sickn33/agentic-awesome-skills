@@ -1,6 +1,8 @@
 # Jetski + Gemini Lazy Skill Loader (Example)
 
-This example shows one way to integrate **antigravity-awesome-skills** with a Jetski/Cortex‑style agent using **lazy loading** based on `@skill-id` mentions, instead of concatenating every `SKILL.md` into the prompt.
+> **Custom-host example:** This is a low-level, direct-manifest integration for Jetski/Cortex-style hosts. Codex and Claude Code users should start with [AAS Core](../../users/aas-core.md), which exposes neutral, deterministic catalog retrieval and validates exact agent-selected IDs through a bounded, read-only MCP server.
+
+This example shows one way to integrate **agentic-awesome-skills** with a Jetski/Cortex‑style agent using **lazy loading** based on `@skill-id` mentions, instead of concatenating every `SKILL.md` into the prompt.
 
 > This is **not** a production‑ready library – it is a minimal reference you can adapt to your own host/agent implementation.
 
@@ -9,7 +11,8 @@ This example shows one way to integrate **antigravity-awesome-skills** with a Je
 ## What this example demonstrates
 
 - How to:
-  - load the global manifest `data/skills_index.json` once at startup;
+  - load the canonical manifest `skills_index.json` once at startup;
+  - optionally support `data/skills_index.json` for compatibility-only hosts.
   - scan conversation messages for `@skill-id` patterns;
   - resolve those ids to entries in the manifest;
   - read only the corresponding `SKILL.md` files from disk (lazy loading);
@@ -20,7 +23,12 @@ This example shows one way to integrate **antigravity-awesome-skills** with a Je
 - How to enforce a **maximum number of skills per turn** via `maxSkillsPerTurn`.
 - How to choose whether to **truncate or error** when too many skills are requested via `overflowBehavior`.
 
-This pattern avoids context overflow when you have 1,450+ skills installed.
+This pattern avoids context overflow when you have 2,007+ skills installed.
+
+Manifest contract references:
+
+- [`../../../schemas/skills-index.v1.schema.json`](../../../schemas/skills-index.v1.schema.json)
+- [`../../users/discovery-manifest.md`](../../users/discovery-manifest.md)
 
 ---
 
@@ -33,7 +41,7 @@ This pattern avoids context overflow when you have 1,450+ skills installed.
     - `loadSkillBodies(skillsRoot, metas)`;
     - `buildModelMessages({...})`.
 - See also the integration guide:
-  - [`docs/integrations/jetski-cortex.md`](../../docs/integrations/jetski-cortex.md)
+  - [`docs/integrations/jetski-cortex.md`](../jetski-cortex.md)
 
 ---
 
@@ -47,11 +55,11 @@ import {
   Message,
 } from "./loader.mjs";
 
-const REPO_ROOT = "/path/to/antigravity-awesome-skills";
+const REPO_ROOT = "/path/to/agentic-awesome-skills";
 const SKILLS_ROOT = REPO_ROOT;
-const INDEX_PATH = path.join(REPO_ROOT, "data", "skills_index.json");
+const INDEX_PATH = path.join(REPO_ROOT, "skills_index.json");
 
-// 1. Bootstrap once at agent startup
+// 1. Bootstrap once at agent startup (optionally validate `data/skills_index.json` for compatibility hosts).
 const skillIndex = loadSkillIndex(INDEX_PATH);
 
 // 2. Before calling the model, build messages with lazy‑loaded skills
@@ -85,7 +93,8 @@ Adapt the paths and model call to your environment.
 
 - **Do not** iterate through `skills/*/SKILL.md` and load everything at once.
 - This example:
-  - assumes skills live under the same repo root as `data/skills_index.json`;
+  - assumes skills live under the same repo root as `skills_index.json`;
+  - keeps `data/skills_index.json` for compatibility readers only;
   - uses a plain Node.js ESM module so it can be imported directly without a TypeScript runtime.
 - In a real host:
   - wire `buildModelMessages` into the point where you currently assemble the prompt before `TrajectoryChatConverter`;

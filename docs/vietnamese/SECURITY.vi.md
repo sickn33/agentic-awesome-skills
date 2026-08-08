@@ -15,5 +15,5 @@ Nếu bạn tìm thấy một lỗ hổng bảo mật (ví dụ: một kỹ năn
 
 ## Chính sách Kỹ năng Tấn công (Offensive Skills Policy)
 
-Vui lòng đọc [Rào chắn Bảo mật (Security Guardrails)](docs/vietnamese/SECURITY_GUARDRAILS.vi.md) của chúng tôi.
+Vui lòng đọc [Rào chắn Bảo mật (Security Guardrails)](SECURITY_GUARDRAILS.vi.md) của chúng tôi.
 Tất cả các kỹ năng tấn công (offensive skills) chỉ dành nghiêm ngặt cho **mục đích giáo dục và hoạt động chuyên nghiệp đã được cấp phép**.

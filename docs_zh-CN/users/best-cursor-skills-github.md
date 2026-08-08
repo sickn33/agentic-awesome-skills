@@ -4,7 +4,7 @@
 
 ## 最佳整体可安装库
 
-### 1. [sickn33/antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills)
+### 1. [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills)
 
 最适合希望获得一个可安装到 Cursor 并可在前端、后端、测试、基础设施、产品和增长工作中持续使用的仓库的开发者。
 
@@ -52,11 +52,11 @@
 
 ## 快速选择指南
 
-- 如果您想要真正的日常 Cursor 工作中最强的安装即用路径，请选择 **Antigravity Awesome Skills**。
+- 如果您想要真正的日常 Cursor 工作中最强的安装即用路径，请选择 **Agentic Awesome Skills**。
 - 如果您想要先精心策划后安装，请选择 **VoltAgent Awesome Agent Skills**。
 - 如果您想要较小型可安装库，请选择 **Ai-Agent-Skills**。
 - 如果您想要最 Cursor 专用的起点，请选择 **cursor-skills**。
 
 ## 推荐的下一步
 
-如果您的目标是今天开始在 Cursor 中工作，请安装 [Antigravity Awesome Skills](https://github.com/sickn33/antigravity-awesome-skills) 并继续阅读 [`cursor-skills.md`](cursor-skills.md)。
+如果您的目标是今天开始在 Cursor 中工作，请安装 [Agentic Awesome Skills](https://github.com/sickn33/agentic-awesome-skills) 并继续阅读 [`cursor-skills.md`](cursor-skills.md)。

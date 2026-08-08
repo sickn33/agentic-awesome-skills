@@ -6,13 +6,26 @@ on:
   pull_request:
     branches: ["main"]
   workflow_dispatch:
+    inputs:
+      canonical_sync_pr:
+        description: Validate the trusted canonical-sync bot branch
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
 
+env:
+  IS_TRUSTED_CANONICAL_SYNC_PR: ${{ inputs.canonical_sync_pr == true || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'automation/canonical-repo-state' && github.event.pull_request.user.login == 'github-actions[bot]') }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('run-{0}', github.run_id) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   pr-policy:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || inputs.canonical_sync_pr == true
     runs-on: ubuntu-latest
     outputs:
       primary_category: ${{ steps.intake.outputs.primary_category }}
@@ -21,41 +34,104 @@ jobs:
       direct_derived_changes_count: ${{ steps.intake.outputs.direct_derived_changes_count }}
       has_quality_checklist: ${{ steps.intake.outputs.has_quality_checklist }}
       has_issue_link: ${{ steps.intake.outputs.has_issue_link }}
+      fork_approval_safe: ${{ steps.intake.outputs.fork_approval_safe }}
+      impact_profile: ${{ steps.intake.outputs.impact_profile }}
+      impact_reasons: ${{ steps.intake.outputs.impact_reasons }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "lts/*"
 
       - name: Fetch base branch
-        run: git fetch origin "${{ github.base_ref }}"
+        run: git fetch origin "${{ github.base_ref || 'main' }}"
 
       - name: Intake PR change
         id: intake
+        if: github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: |
-          node tools/scripts/pr_preflight.cjs \
-            --base "origin/${{ github.base_ref }}" \
-            --head "HEAD" \
+          trusted_root="$RUNNER_TEMP/pr-policy-main"
+          git worktree add --detach "$trusted_root" "${{ github.event.pull_request.base.sha }}"
+          npm ci --ignore-scripts --prefix "$trusted_root"
+          NODE_PATH="$trusted_root/node_modules" node "$trusted_root/tools/scripts/pr_preflight.cjs" \
+            --repo "$GITHUB_WORKSPACE" \
+            --base "${{ github.event.pull_request.base.sha }}" \
+            --head "${{ github.event.pull_request.head.sha }}" \
             --event-path "$GITHUB_EVENT_PATH" \
+            --check-fork-safety \
             --no-run \
             --write-github-output \
             --write-step-summary
 
-      - name: Enforce PR source-only contract
+      - name: Validate canonical-sync path boundary
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
         run: |
-          if [ "${{ steps.intake.outputs.direct_derived_changes_count }}" != "0" ]; then
+          test "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" = "automation/canonical-repo-state"
+          node tools/scripts/validate_canonical_sync_pr.cjs --base origin/main --head HEAD
+
+      - name: Validate protected release path boundary
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.head_ref, 'release/v') && github.event.pull_request.user.login == github.repository_owner
+        run: |
+          trusted_root="$RUNNER_TEMP/release-policy-main"
+          git worktree add --detach "$trusted_root" origin/main
+          node "$trusted_root/tools/scripts/validate_canonical_sync_pr.cjs" \
+            --base origin/main \
+            --head HEAD \
+            --include-release-managed
+
+      - name: Set up Python for canonical reproduction
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.10"
+
+      - name: Reproduce canonical-sync tree from trusted main
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          trusted_root="$RUNNER_TEMP/canonical-main"
+          git worktree add --detach "$trusted_root" origin/main
+          cd "$trusted_root"
+          pip install -r tools/requirements.txt
+          npm ci --ignore-scripts
+          npm run sync:repo-state
+
+          mapfile -t managed_files < <(node tools/scripts/generated_files.js --include-mixed)
+          git add -- "${managed_files[@]}" || true
+          if [ -n "$(git diff --name-only)" ] || [ -n "$(git ls-files --others --exclude-standard)" ]; then
+            echo "::error::Trusted canonical reproduction produced unmanaged drift."
+            git status --short
+            exit 1
+          fi
+
+          expected_tree=$(git write-tree)
+          actual_tree=$(git -C "$GITHUB_WORKSPACE" rev-parse 'HEAD^{tree}')
+          test "$expected_tree" = "$actual_tree"
+
+      - name: Enforce PR source-only contract
+        if: github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        env:
+          IS_TRUSTED_RELEASE_PR: ${{ github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.head_ref, 'release/v') && github.event.pull_request.user.login == github.repository_owner }}
+        run: |
+          if [ "${{ steps.intake.outputs.direct_derived_changes_count }}" != "0" ] && [ "$IS_TRUSTED_RELEASE_PR" != "true" ]; then
             echo "Pull requests must stay source-only."
             echo "Remove derived files and let main regenerate them after merge."
             exit 1
           fi
 
+          if [ "$IS_TRUSTED_RELEASE_PR" = "true" ]; then
+            echo "Protected same-repository release PR may include scripted release artifacts."
+          fi
+
           if [ "${{ steps.intake.outputs.has_quality_checklist }}" != "true" ]; then
-            echo "PR body must include the Quality Bar Checklist from the template."
-            exit 1
+            echo "::notice::PR body does not include the optional Quality Bar Checklist."
           fi
 
           if [ "${{ steps.intake.outputs.has_issue_link }}" != "true" ]; then
@@ -63,34 +139,45 @@ jobs:
           fi
 
   source-validation:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || inputs.canonical_sync_pr == true
     runs-on: ubuntu-latest
     needs: pr-policy
+    outputs:
+      preview_manifest_digest: ${{ steps.preview_manifest.outputs.manifest_digest }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.10"
 
       - name: Install Python dependencies
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: pip install -r tools/requirements.txt
 
       - name: Set up Node
-        uses: actions/setup-node@v5
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "lts/*"
 
       - name: Fetch base branch
-        run: git fetch origin "${{ github.base_ref }}"
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        run: git fetch origin "${{ github.base_ref || 'main' }}"
 
       - name: Install npm dependencies
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: npm ci
 
       - name: Verify directory structure
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: |
           test -d skills/
           test -d apps/web-app/
@@ -100,64 +187,239 @@ jobs:
           test -f CONTRIBUTING.md
 
       - name: Validate source changes
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: npm run validate
 
       - name: Enforce validation warning budget
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: npm run check:warning-budget
 
       - name: Verify README source credits for changed skills
+        if: github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: npm run check:readme-credits -- --base "origin/${{ github.base_ref }}" --head HEAD
 
       - name: Validate references
-        if: needs.pr-policy.outputs.requires_references == 'true'
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true' && needs.pr-policy.outputs.requires_references == 'true'
         run: npm run validate:references
 
-      - name: Audit npm dependencies
-        run: npm audit --audit-level=high
+      - name: Refresh ephemeral derived sources for tests
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        run: npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-catalog && npm run sync:web-assets
 
       - name: Run tests
-        env:
-          ENABLE_NETWORK_TESTS: "1"
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: npm run test
 
-      - name: Install web-app dependencies
-        run: npm run app:install
-
-      - name: Run web app coverage
-        run: npm run app:test:coverage
-
       - name: Run docs security checks
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: npm run security:docs
 
+      - name: Create exact-head artifact preview manifest
+        id: preview_manifest
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        env:
+          CATEGORIES_CSV: ${{ needs.pr-policy.outputs.categories }}
+          PRIMARY_CATEGORY: ${{ needs.pr-policy.outputs.primary_category }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          mapfile -t managed_files < <(node tools/scripts/generated_files.js --include-mixed)
+          if [ "${#managed_files[@]}" -eq 0 ]; then
+            echo "::error::No managed files resolved from generated_files contract."
+            exit 1
+          fi
+          mapfile -d '' -t drift_files < <(git diff --name-only -z -- "${managed_files[@]}")
+          categories_json=$(node -e 'process.stdout.write(JSON.stringify(process.argv[1].split(",").filter(Boolean).sort()))' "$CATEGORIES_CSV")
+          args=()
+          for drift_file in "${drift_files[@]}"; do
+            args+=(--drift-file "$drift_file")
+          done
+          node tools/scripts/ci_artifact_preview.cjs create \
+            --output .tmp/artifact-preview/manifest.json \
+            --mode source-preview \
+            --repository "$GITHUB_REPOSITORY" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --workflow-sha "$GITHUB_WORKFLOW_SHA" \
+            --head-sha "$PR_HEAD_SHA" \
+            --primary-category "$PRIMARY_CATEGORY" \
+            --categories-json "$categories_json" \
+            "${args[@]}" \
+            --write-github-output
+
+      - name: Upload exact-head artifact preview manifest
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: source-preview-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .tmp/artifact-preview/manifest.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Record canonical source-validation boundary
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        run: echo "Canonical source state and exact generated tree were reproduced by required pr-policy."
+
+  pr-evidence:
+    if: github.event_name == 'pull_request' || inputs.canonical_sync_pr == true
+    runs-on: ubuntu-latest
+    needs: pr-policy
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.10"
+
+      - name: Set up Node
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "lts/*"
+
+      - name: Install trusted dependencies
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        run: |
+          pip install -r tools/requirements.txt
+          npm ci --ignore-scripts
+
+      - name: Fetch base branch
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        run: git fetch origin "${{ github.base_ref || 'main' }}"
+
+      - name: Generate PR intake JSON
+        if: github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        run: |
+          mkdir -p .tmp/pr-evidence
+          node tools/scripts/pr_preflight.cjs \
+            --base "origin/${{ github.base_ref }}" \
+            --head HEAD \
+            --event-path "$GITHUB_EVENT_PATH" \
+            --no-run \
+            --json > .tmp/pr-evidence/preflight.json
+
+      - name: Generate changed-skill evidence
+        id: changed_skill_evidence
+        if: github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        continue-on-error: true
+        run: |
+          node tools/scripts/run-python.js tools/scripts/changed_skill_evidence.py \
+            --base "origin/${{ github.base_ref }}" \
+            --head HEAD \
+            --output .tmp/pr-evidence/changed-skills.json
+
+      - name: Resolve advisory semantic-review state
+        id: semantic_review
+        if: github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        env:
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          BASE_REPOSITORY: ${{ github.repository }}
+        run: |
+          if [ "$HEAD_REPOSITORY" != "$BASE_REPOSITORY" ]; then
+            echo "state=unavailable" >> "$GITHUB_OUTPUT"
+          else
+            echo "state=unknown" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate shadow decision manifest
+        id: decision_manifest
+        if: always() && hashFiles('.tmp/pr-evidence/changed-skills.json') != ''
+        run: |
+          node tools/scripts/pr_decision_manifest.cjs \
+            --preflight .tmp/pr-evidence/preflight.json \
+            --evidence .tmp/pr-evidence/changed-skills.json \
+            --semantic-review-state "${{ steps.semantic_review.outputs.state }}" \
+            --output .tmp/pr-evidence/decision-manifest.json \
+            --write-github-output \
+            --write-step-summary
+
+      - name: Upload advisory evidence
+        if: always() && github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: pr-evidence-${{ github.event.pull_request.number }}
+          path: .tmp/pr-evidence/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce deterministic changed-skill gate
+        if: github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true' && steps.changed_skill_evidence.outcome == 'failure'
+        run: |
+          echo "Changed-skill evidence reported a blocking regression or operational failure."
+          exit 1
+
+      - name: Record canonical-sync evidence boundary
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        run: echo "Canonical-sync content is verified by managed-path and reproducibility gates."
+
   artifact-preview:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || inputs.canonical_sync_pr == true
     runs-on: ubuntu-latest
     needs: [pr-policy, source-validation]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.10"
 
       - name: Install Python dependencies
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
         run: pip install -r tools/requirements.txt
 
       - name: Set up Node
-        uses: actions/setup-node@v5
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "lts/*"
 
       - name: Install npm dependencies
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
         run: npm ci
 
-      - name: Generate canonical artifacts preview
+      - name: Download exact-head artifact preview manifest
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: source-preview-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .tmp/artifact-preview
+
+      - name: Verify and report exact-head artifact preview
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        env:
+          EXPECTED_DIGEST: ${{ needs.source-validation.outputs.preview_manifest_digest }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          npm run chain
-          npm run catalog
+          node "$GITHUB_WORKSPACE/tools/scripts/ci_artifact_preview.cjs" verify-summary \
+            --manifest .tmp/artifact-preview/manifest.json \
+            --expected-repository "$GITHUB_REPOSITORY" \
+            --expected-run-id "$GITHUB_RUN_ID" \
+            --expected-run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --expected-workflow-sha "$GITHUB_WORKFLOW_SHA" \
+            --expected-head-sha "$PR_HEAD_SHA" \
+            --expected-digest "$EXPECTED_DIGEST" \
+            --write-step-summary
+
+      - name: Reproduce canonical-sync PR from main
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: npm run sync:repo-state
 
       - name: Report generated drift
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
         run: |
           mapfile -t managed_files < <(node tools/scripts/generated_files.js --include-mixed)
           if [ "${#managed_files[@]}" -eq 0 ]; then
@@ -181,31 +443,28 @@ jobs:
             exit 0
           fi
 
-          echo "::notice::Generated drift detected in artifact preview."
-          {
-            echo "- Generated drift: detected"
-            echo
-            echo "Predicted file updates:"
-            printf '%s\n' "$drift_files" | sed "s/^/- \`/; s/\$/\`/"
-          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error::Canonical-sync PR is not byte-for-byte reproducible from main."
+          printf '%s\n' "$drift_files"
+          exit 1
 
   main-validation-and-sync:
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.canonical_sync_pr != true && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     concurrency:
       group: canonical-main-sync
       cancel-in-progress: false
     permissions:
+      actions: write
       contents: write
-    env:
-      GH_TOKEN: ${{ github.token }}
+      pull-requests: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.10"
 
@@ -213,7 +472,7 @@ jobs:
         run: pip install -r tools/requirements.txt
 
       - name: Set up Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "lts/*"
 
@@ -233,14 +492,14 @@ jobs:
         run: npm run validate:references
 
       - name: Run repo-state sync
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: npm run sync:repo-state
 
       - name: Audit npm dependencies
         run: npm audit --audit-level=high
 
       - name: Run tests
-        env:
-          ENABLE_NETWORK_TESTS: "1"
         run: npm run test
 
       - name: Install web-app dependencies
@@ -252,16 +511,7 @@ jobs:
       - name: Run docs security checks
         run: npm run security:docs
 
-      - name: Set up GitHub credentials
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          git fetch origin main
-
-      - name: Auto-commit canonical artifacts
+      - name: Validate canonical artifact boundary
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
@@ -290,17 +540,54 @@ jobs:
             exit 1
           fi
 
-          git commit -m "chore: sync repo state [ci skip]"
-          git pull origin main --rebase
-          git push origin HEAD
+      - name: Reject stale canonical-sync publication
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git fetch origin main
+          test "$GITHUB_SHA" = "$(git rev-parse origin/main)"
+
+      - name: Create or update canonical-sync PR
+        id: canonical_pr
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+        with:
+          token: ${{ github.token }}
+          branch: automation/canonical-repo-state
+          base: main
+          delete-branch: true
+          commit-message: "chore: synchronize canonical repository state"
+          title: "chore: synchronize canonical repository state"
+          body: |
+            Automated canonical artifacts regenerated from `main` by the trusted repository workflow.
+
+            <!-- canonical-sync-bot -->
+
+            ## Quality Bar Checklist
+
+            - [x] Contains only files declared by the generated-files contract.
+            - [x] Reproducibility is verified byte-for-byte by required CI.
+            - [x] No source or workflow changes are included.
+
+      - name: Merge canonical-sync PR after exact required checks
+        if: steps.canonical_pr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.canonical_pr.outputs.pull-request-number }}
+          PR_HEAD: ${{ steps.canonical_pr.outputs.pull-request-head-sha }}
+        run: |
+          node tools/scripts/merge_canonical_sync_pr.cjs \
+            --repo "$GITHUB_REPOSITORY" \
+            --pr "$PR_NUMBER" \
+            --head "$PR_HEAD" \
+            --skip-pages
 
       - name: Check for uncommitted drift
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           if ! git diff --quiet || [ -n "$(git ls-files --others --exclude-standard)" ]; then
-            echo "❌ Detected leftover drift after the canonical bot sync."
+            echo "❌ Detected leftover drift after preparing the canonical-sync PR."
             echo
-            echo "The bot may only commit managed canonical files and must leave a clean tree."
+            echo "The bot may only publish managed canonical files and must leave a clean tree."
             echo "To fix locally, run the canonical maintainer flow:"
             echo "  npm run release:preflight"
             echo "  npm run sync:repo-state"

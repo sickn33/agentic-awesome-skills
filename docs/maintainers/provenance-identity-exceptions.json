@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "exceptions": [
+    {
+      "skill_id": "modellix",
+      "field": "source_repo",
+      "before": "Modellix/modellix-skill",
+      "after": "Modellix/modellix-plugin",
+      "upstream_repository_id": 1150322983,
+      "verified_at": "2026-07-28",
+      "evidence_url": "https://github.com/Modellix/modellix-plugin"
+    }
+  ]
+}

@@ -209,7 +209,7 @@ python tools/scripts/generate_skills_report.py --output reports/skills_report.js
 
 确保您从项目根目录运行:
 ```bash
-cd path/to/antigravity-awesome-skills
+cd path/to/agentic-awesome-skills
 python tools/scripts/manage_skill_dates.py list
 ```
 

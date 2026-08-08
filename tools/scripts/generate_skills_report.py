@@ -13,9 +13,19 @@ import sys
 import argparse
 from datetime import datetime
 from pathlib import Path
+
+
+def safe_user_path(path_value, base_dir="."):
+    """Resolve a path under an explicit trusted base directory."""
+    base_path = Path(base_dir).expanduser().resolve()
+    resolved_path = Path(path_value).expanduser().resolve()
+    try:
+        resolved_path.relative_to(base_path)
+    except ValueError as exc:
+        raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    return resolved_path
 import yaml
 from _project_paths import find_repo_root
-from risk_classifier import suggest_risk
 
 def get_project_root():
     """Get the project root directory."""
@@ -35,8 +45,8 @@ def parse_frontmatter(content):
 
 def generate_skills_report(output_file=None, sort_by='date', project_root=None):
     """Generate a report of all skills with their metadata."""
-    root = str(project_root or get_project_root())
-    skills_dir = os.path.join(root, 'skills')
+    project_root_path = Path(project_root or get_project_root()).resolve()
+    skills_dir = project_root_path / 'skills'
     skills_data = []
     
     for root, dirs, files in os.walk(skills_dir):
@@ -48,15 +58,13 @@ def generate_skills_report(output_file=None, sort_by='date', project_root=None):
             skill_path = os.path.join(root, "SKILL.md")
             
             try:
-                with open(skill_path, 'r', encoding='utf-8') as f:
+                with safe_user_path(skill_path, skills_dir).open('r', encoding='utf-8') as f:
                     content = f.read()
                 
                 metadata = parse_frontmatter(content)
                 if metadata is None:
                     continue
 
-                suggested_risk = suggest_risk(content, metadata)
-                
                 date_added = metadata.get('date_added', None)
                 if date_added is not None:
                     date_added = date_added.isoformat() if hasattr(date_added, 'isoformat') else str(date_added)
@@ -68,8 +76,6 @@ def generate_skills_report(output_file=None, sort_by='date', project_root=None):
                     'date_added': date_added,
                     'source': metadata.get('source', 'unknown'),
                     'risk': metadata.get('risk', 'unknown'),
-                    'suggested_risk': suggested_risk.risk,
-                    'suggested_risk_reasons': list(suggested_risk.reasons),
                     'category': metadata.get('category', metadata.get('id', '').split('-')[0] if '-' in metadata.get('id', '') else 'other'),
                 }
                 
@@ -90,11 +96,6 @@ def generate_skills_report(output_file=None, sort_by='date', project_root=None):
         'total_skills': len(skills_data),
         'skills_with_dates': sum(1 for s in skills_data if s['date_added']),
         'skills_without_dates': sum(1 for s in skills_data if not s['date_added']),
-        'skills_with_suggested_risk': sum(1 for s in skills_data if s['suggested_risk'] != 'unknown'),
-        'suggested_risk_counts': {
-            risk: sum(1 for skill in skills_data if skill['suggested_risk'] == risk)
-            for risk in sorted({skill['suggested_risk'] for skill in skills_data if skill['suggested_risk'] != 'unknown'})
-        },
         'coverage_percentage': round(
             sum(1 for s in skills_data if s['date_added']) / len(skills_data) * 100 if skills_data else 0, 
             1
@@ -106,8 +107,9 @@ def generate_skills_report(output_file=None, sort_by='date', project_root=None):
     # Output
     if output_file:
         try:
-            with open(output_file, 'w', encoding='utf-8') as f:
-                json.dump(report, f, indent=2, ensure_ascii=False)
+            output_path = Path(output_file).expanduser().resolve()
+            with safe_user_path(output_path, output_path.parent).open('w', encoding='utf-8') as f:
+                f.write(json.dumps(report, indent=2, ensure_ascii=False))
             print(f"✅ Report saved to: {output_file}")
         except Exception as e:
             print(f"❌ Error saving report: {str(e)}")

@@ -1,16 +1,20 @@
 import { describe, it, expect } from 'vitest';
 import type { Skill } from '../../types';
 import {
+  DEFAULT_TOP_SKILL_COUNT,
   DEFAULT_SOCIAL_IMAGE,
   buildHomeMeta,
   buildSkillFallbackMeta,
   buildSkillMeta,
+  buildTopicLandingMeta,
   getCanonicalUrl,
   isTopSkill,
   selectTopSkills,
   setPageMeta,
   toCanonicalPath,
+  toIndexableRoutePath,
 } from '../seo';
+import { seoLandingPages } from '../../data/seoLandingPages';
 
 function createSkill(overrides: Record<string, unknown> = {}) {
   return {
@@ -25,11 +29,17 @@ function createSkill(overrides: Record<string, unknown> = {}) {
 }
 
 describe('SEO helpers', () => {
-  it('builds homepage metadata with the canonical catalog message', () => {
+  it('keeps hydrated priority metadata aligned with the curated sitemap scope', () => {
+    expect(DEFAULT_TOP_SKILL_COUNT).toBe(180);
+  });
+
+  it('builds homepage metadata with the canonical AAS Core preview message', () => {
     const meta = buildHomeMeta(10);
 
-    expect(meta.title).toContain('10 installable AI skills');
-    expect(meta.description).toContain('10 installable agentic skills');
+    expect(meta.title).toContain('AAS Core Preview');
+    expect(meta.title).toContain('10+ skills');
+    expect(meta.description).toContain('neutral catalog retrieval, exact agent-owned selection, validation, and planning');
+    expect(meta.description).toContain('10+ cataloged skills');
     expect(meta.canonicalPath).toBe('/');
     expect(meta.ogTitle).toBe(meta.title);
     expect(meta.ogImage).toBe(DEFAULT_SOCIAL_IMAGE);
@@ -80,6 +90,19 @@ describe('SEO helpers', () => {
     expect(typeof meta.jsonLd).toBe('function');
   });
 
+  it('builds topic landing metadata for high-intent search pages', () => {
+    const topic = seoLandingPages.find((page) => page.slug === 'github-ai-skills-repository');
+    expect(topic).toBeDefined();
+
+    const meta = buildTopicLandingMeta(topic!);
+
+    expect(meta.title).toContain('GitHub AI Skills Repository');
+    expect(meta.description).toContain('GitHub source for AAS Core preview');
+    expect(meta.canonicalPath).toBe('/topics/github-ai-skills-repository');
+    expect(meta.ogImage).toBe(DEFAULT_SOCIAL_IMAGE);
+    expect(typeof meta.jsonLd).toBe('function');
+  });
+
   it('returns coherent fallback metadata for unresolved skill ids', () => {
     const meta = buildSkillFallbackMeta('sample-skill');
 
@@ -118,10 +141,11 @@ describe('SEO helpers', () => {
     expect(toCanonicalPath('/')).toBe('/');
     expect(toCanonicalPath('skill/react/')).toBe('/skill/react');
     expect(toCanonicalPath('/skill//react/')).toBe('/skill/react');
+    expect(toIndexableRoutePath('/skill/react')).toBe('/skill/react/');
   });
 
   it('builds canonical urls with optional overrides', () => {
-    expect(getCanonicalUrl('/skill/react', 'https://example.com/site')).toBe('https://example.com/site/skill/react');
+    expect(getCanonicalUrl('/skill/react', 'https://example.com/site')).toBe('https://example.com/site/skill/react/');
   });
 
   it('setPageMeta updates the same meta tags on repeated invocations', () => {
@@ -147,7 +171,19 @@ describe('SEO helpers', () => {
     expect(document.querySelectorAll('meta[name="twitter:image:alt"]')).toHaveLength(1);
     expect(document.querySelectorAll('script[data-seo-jsonld="true"]')).toHaveLength(4);
     expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
-    expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toContain('/skill/react-patterns');
+    expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toContain('/skill/react-patterns/');
+  });
+
+  it('honors a noindex route directive', () => {
+    document.head.innerHTML = '';
+    setPageMeta({
+      title: 'Not found',
+      description: 'Missing page',
+      canonicalPath: '/missing',
+      robots: 'noindex, follow',
+    });
+
+    expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
   });
 
 });

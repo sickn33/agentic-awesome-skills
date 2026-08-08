@@ -1,6 +1,6 @@
 # 🏆 Quality Bar & Validation Standards
 
-To transform **Antigravity Awesome Skills** from a collection of scripts into a trusted platform, every skill must meet a specific standard of quality and safety.
+To transform **Agentic Awesome Skills** from a collection of scripts into a trusted platform, every skill must meet a specific standard of quality and safety.
 
 ## The "Validated" Badge ✅
 
@@ -27,6 +27,7 @@ Accepted headings: `## When to Use`, `## Use this skill when`, `## When to Use T
 
 Every skill must declare its risk level:
 
+- ⚪ **unknown**: Legacy or unclassified content. Avoid this for new skills unless maintainer triage is genuinely needed.
 - 🟢 **none**: Pure text/reasoning (e.g., Brainstorming).
 - 🔵 **safe**: Reads files, runs safe commands (e.g., Linter).
 - 🟠 **critical**: Modifies state, deletes files, pushes to prod (e.g., Git Push).
@@ -46,7 +47,7 @@ A list of known edge cases or things the skill _cannot_ do.
 
 If a skill includes command examples, remote fetch steps, secrets, or mutation guidance, the PR must document the risk and pass `npm run security:docs` in addition to normal validation.
 
-For pull requests that add or modify `SKILL.md`, GitHub also runs the automated `skill-review` workflow. Treat that review as part of the normal PR quality gate and address any actionable findings before merge.
+For pull requests that add or modify `SKILL.md`, GitHub also runs the automated `skill-review` workflow. Treat that review as part of the normal PR quality gate and address any actionable findings before merge. A successful result is reused when a later push has the identical changed-skill content; if Tessl credits are unavailable, the workflow records `manual-review-required` for exact-head maintainer attestation instead of pretending an automated review passed.
 Automated checks are necessary, but they do **not** replace manual reviewer judgment on logic, safety, and likely failure modes.
 
 `npm run security:docs` enforces a repo-wide scan for:
@@ -64,7 +65,7 @@ Use `npm run audit:skills` when you need a repo-wide report that goes beyond sch
 - which skills are missing examples or limitations,
 - and which skills have the highest concentration of warnings/errors.
 
-Maintainers can pair that report with `npm run sync:risk-labels` for conservative legacy cleanup. That sync only rewrites `risk: unknown` when the suggested label is explicit and high-confidence enough to automate safely, and it preserves the contributor-facing rule that new or uncertain submissions can still start as `unknown`.
+Risk labels remain declared metadata. The audit validates their presence and shape, while ambiguous `risk: unknown` cases require semantic review rather than lexical inference.
 
 ---
 
@@ -96,7 +97,6 @@ Notes:
 
 - `npm run validate` is the operational contributor gate.
 - `npm run audit:skills` is the maintainer-facing compliance/usability report for the full library.
-- `npm run sync:risk-labels` is a maintainer cleanup tool for high-confidence legacy `risk:` fixes.
 - `npm run security:docs` is required for command-heavy or risky skill content.
 - PRs that touch `SKILL.md` also get an automated `skill-review` GitHub Actions check.
 - Skill changes and risky guidance still require a manual logic review before merge, even when the automated gates pass.

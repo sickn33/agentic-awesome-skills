@@ -1,18 +1,18 @@
 # Best Claude Code Skills on GitHub
 
-If you are looking for the **best Claude Code skills on GitHub**, there is no single perfect repository for every user. The right choice depends on whether you want breadth, curation, or official reference material.
+If you are looking for the **best Claude Code skills on GitHub**, there is no single perfect repository for every user. The right choice depends on whether you want complete catalog access with Claude-owned selection, curated discovery, or official reference material.
 
-## Best overall installable library
+## Best for agent-selected project stacks
 
-### 1. [sickn33/antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills)
+### 1. [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills)
 
-Best for teams and individual developers who want one large installable library with onboarding docs, bundles, workflows, and support for more than just Claude Code.
+Best for teams and individual developers who want Claude to inspect a project, search and read the complete catalog through a local read-only MCP, choose exact IDs, and produce a reviewable `aas-stack.json` before CLI validation and planning.
 
 Choose this if you want:
 
-- a broad library you can install and use immediately;
-- bundles and workflows to reduce choice overload;
-- compatibility beyond Claude Code alone.
+- complete local catalog access with Claude-owned selection;
+- durable desired state plus immutable plan preview;
+- a broad catalog, plugins, bundles, workflows, and direct distribution around Core.
 
 ## Best curated shortlist
 
@@ -52,11 +52,11 @@ Choose this if you want:
 
 ## How to choose quickly
 
-- Choose **Antigravity Awesome Skills** if you want the most practical install-and-use path.
+- Choose **Agentic Awesome Skills** if you want project-specific composition and a reviewable lifecycle before any target change.
 - Choose **VoltAgent Awesome Agent Skills** if you want the strongest curated shortlist.
 - Choose **anthropics/skills** if official vendor reference matters most.
 - Choose **karanb192/awesome-claude-skills** if you want a smaller community-first Claude library.
 
 ## Recommended next step
 
-If you want to get productive quickly, install [Antigravity Awesome Skills](https://github.com/sickn33/antigravity-awesome-skills) and start with [`claude-code-skills.md`](claude-code-skills.md) plus [`bundles.md`](bundles.md).
+If you want a project-specific stack, start with the [AAS Core guide](aas-core.md) and [`claude-code-skills.md`](claude-code-skills.md). Use direct distribution only when you already know the exact skills or fixed plugin you want.

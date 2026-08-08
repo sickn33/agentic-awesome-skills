@@ -1,0 +1,4 @@
+interface:
+  display_name: "CrossFrame Casebook"
+  short_description: "把聊天记录、组织材料、项目复盘和公共争议整理成可复用、可脱敏、可追溯的 CrossFrame 案例库。"
+  default_prompt: "将这组材料整理成 CrossFrame 案例库条目：先读取相邻 canonical CrossFrame 与路由图，区分事实和推测，脱敏来源，再输出案例摘要、事实边界、材料来源、尺度窗口、机制链、责任链、反向条件、可复用概念和后续观察。"

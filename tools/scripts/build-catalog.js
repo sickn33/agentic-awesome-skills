@@ -214,6 +214,24 @@ const CATEGORY_RULES = [
     ],
   },
   {
+    name: "education",
+    keywords: [
+      "education",
+      "student",
+      "syllabus",
+      "exam",
+      "study",
+      "teacher",
+      "curriculum",
+      "classroom",
+      "school",
+      "examprep",
+      "roadmap",
+      "academic",
+      "university",
+    ],
+  },
+  {
     name: "data-ai",
     keywords: [
       "data",
@@ -319,6 +337,11 @@ const CATEGORY_RULES = [
   },
 ];
 
+const FRONTMATTER_CATEGORY_OVERRIDES = new Map([
+  ["business", "business"],
+  ["product", "business"],
+]);
+
 const BUNDLE_RULES = {
   "core-dev": {
     description:
@@ -349,6 +372,7 @@ const BUNDLE_RULES = {
   },
   "security-core": {
     description: "Security, privacy, and compliance essentials.",
+    excludeCategories: new Set(["business", "product"]),
     keywords: [
       "security",
       "sast",
@@ -541,6 +565,12 @@ function deriveTags(skill) {
 }
 
 function detectCategory(skill, tags) {
+  const explicitCategory =
+    typeof skill.category === "string" ? skill.category.trim().toLowerCase() : "";
+  if (FRONTMATTER_CATEGORY_OVERRIDES.has(explicitCategory)) {
+    return FRONTMATTER_CATEGORY_OVERRIDES.get(explicitCategory);
+  }
+
   const haystack = normalizeTokens([
     ...tags,
     ...tokenize(skill.name),
@@ -634,8 +664,13 @@ function buildBundles(skills) {
   for (const [bundleName, rule] of Object.entries(BUNDLE_RULES)) {
     const bundleSkills = [];
     const keywords = rule.keywords.map((keyword) => keyword.toLowerCase());
+    const excludeCategories = rule.excludeCategories || new Set();
 
     for (const skill of skills) {
+      if (excludeCategories.has(skill.category)) {
+        continue;
+      }
+
       const tokenSet = skillTokens.get(skill.id) || new Set();
       if (keywords.some((keyword) => tokenSet.has(keyword))) {
         bundleSkills.push(skill.id);
@@ -683,15 +718,17 @@ function renderCatalogMarkdown(catalog) {
     );
     lines.push(`## ${category} (${grouped.length})`);
     lines.push("");
-    lines.push("| Skill | Description | Tags | Triggers |");
-    lines.push("| --- | --- | --- | --- |");
+    lines.push("| Skill | Description | Risk | Source | Tags | Triggers |");
+    lines.push("| --- | --- | --- | --- | --- | --- |");
 
     for (const skill of grouped) {
       const description = escapeMarkdownTableCell(truncate(skill.description, 160));
       const tags = escapeMarkdownTableCell(skill.tags.join(", "));
       const triggers = escapeMarkdownTableCell(skill.triggers.join(", "));
+      const risk = escapeMarkdownTableCell(skill.risk || "unknown");
+      const source = escapeMarkdownTableCell(skill.source_repo || skill.source || "unknown");
       lines.push(
-        `| \`${skill.id}\` | ${description} | ${tags} | ${triggers} |`,
+        `| \`${skill.id}\` | ${description} | ${risk} | ${source} | ${tags} | ${triggers} |`,
       );
     }
 
@@ -701,21 +738,58 @@ function renderCatalogMarkdown(catalog) {
   return lines.join("\n");
 }
 
+function readCanonicalIndex() {
+  const indexPath = path.join(ROOT, "skills_index.json");
+  const parsed = JSON.parse(fs.readFileSync(indexPath, "utf8"));
+  if (!Array.isArray(parsed)) {
+    throw new Error("skills_index.json must be an array.");
+  }
+  return new Map(parsed.map((skill) => [skill.path, skill]));
+}
+
+function readCatalogGeneratedAt() {
+  if (process.env.SOURCE_DATE_EPOCH) {
+    return new Date(process.env.SOURCE_DATE_EPOCH * 1000).toISOString();
+  }
+
+  const readmePath = path.join(ROOT, "README.md");
+  try {
+    const readme = fs.readFileSync(readmePath, "utf8");
+    const match = readme.match(/<!-- registry-sync: .*?updated_at=([^ ]+) -->/);
+    if (match) {
+      return new Date(match[1]).toISOString();
+    }
+  } catch {
+    // Keep catalog builds available in minimal fixtures without README.md.
+  }
+
+  return "2026-02-08T00:00:00.000Z";
+}
+
 function buildCatalog() {
   const skillRelPaths = listSkillIdsRecursive(SKILLS_DIR);
   const skills = skillRelPaths.map((relPath) => readSkill(SKILLS_DIR, relPath));
+  const canonicalIndex = readCanonicalIndex();
   const catalogSkills = [];
 
   for (const skill of skills) {
     const tags = deriveTags(skill);
-    const category = detectCategory(skill, tags);
+    const canonical = canonicalIndex.get(`skills/${skillRelPaths[catalogSkills.length]}`);
+    const category = canonical?.category || detectCategory(skill, tags);
     const triggers = buildTriggers(skill, tags);
 
     catalogSkills.push({
       id: skill.id,
+      canonical_id: canonical?.id || skill.id,
       name: skill.name,
       description: skill.description,
       category,
+      risk: canonical?.risk || skill.risk || "unknown",
+      source: canonical?.source || skill.source || "unknown",
+      source_type: canonical?.source_type || skill.sourceType || undefined,
+      source_repo: canonical?.source_repo || skill.sourceRepo || undefined,
+      license: canonical?.license || skill.license || undefined,
+      license_source: canonical?.license_source || skill.licenseSource || undefined,
       tags,
       triggers,
       // Normalize separators for deterministic cross-platform output.
@@ -724,9 +798,7 @@ function buildCatalog() {
   }
 
   const catalog = {
-    generatedAt: process.env.SOURCE_DATE_EPOCH
-      ? new Date(process.env.SOURCE_DATE_EPOCH * 1000).toISOString()
-      : "2026-02-08T00:00:00.000Z",
+    generatedAt: readCatalogGeneratedAt(),
     total: catalogSkills.length,
     skills: catalogSkills.sort((a, b) =>
       a.id < b.id ? -1 : a.id > b.id ? 1 : 0,

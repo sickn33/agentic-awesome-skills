@@ -28,13 +28,13 @@
 ## 📦 仓库结构（可视化）
 
 ```
-antigravity-awesome-skills/
+agentic-awesome-skills/
 │
 ├── 📄 README.md                         ← 概述和快速入门
 ├── 📄 CONTRIBUTING.md                  ← 贡献者工作流程
 ├── 📄 CATALOG.md                       ← 完整生成的目录
 │
-├── 📁 skills/                          ← 1,204+ 技能在这里
+├── 📁 skills/                          ← 1,936+ 技能在这里
 │   │
 │   ├── 📁 brainstorming/
 │   │   └── 📄 SKILL.md                 ← 技能定义
@@ -47,7 +47,7 @@ antigravity-awesome-skills/
 │   │   └── 📁 2d-games/
 │   │       └── 📄 SKILL.md             ← 也支持嵌套技能
 │   │
-│   └── ... (1,200+ 总计)
+│   └── ... (1,936+ 总计)
 │
 ├── 📁 apps/
 │   └── 📁 web-app/                     ← 交互式浏览器
@@ -100,7 +100,7 @@ antigravity-awesome-skills/
 
 ```
                     ┌─────────────────────────┐
-                    │  1,204+ 技能             │
+                    │  1,936+ 技能             │
                     └────────────┬────────────┘
                                  │
         ┌────────────────────────┼────────────────────────┐
@@ -184,7 +184,7 @@ antigravity-awesome-skills/
 │ 终端                                     │
 ├─────────────────────────────────────────┤
 │ $ git clone https://github.com/          │
-│   sickn33/antigravity-awesome-skills     │
+│   sickn33/agentic-awesome-skills     │
 │   .agent/skills                          │
 │                                         │
 │ ✓ 正在克隆到 '.agent/skills'...          │
@@ -202,7 +202,7 @@ antigravity-awesome-skills/
 │       ├── 📁 brainstorming/             │
 │       ├── 📁 stripe-integration/        │
 │       ├── 📁 react-best-practices/      │
-│       └── ... (1,200+ 总计)             │
+│       └── ... (1,936+ 总计)             │
 └─────────────────────────────────────────┘
 ```
 

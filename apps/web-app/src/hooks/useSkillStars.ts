@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 const STORAGE_KEY = 'saved_skills';
 const LEGACY_STORAGE_KEY = 'user_stars';
@@ -50,18 +50,9 @@ function saveUserStarsToStorage(stars: UserStars): void {
  * Hook to manage local skill saves in the browser.
  */
 export function useSkillStars(skillId: string | undefined): UseSkillStarsReturn {
-  const [hasSaved, setHasSaved] = useState<boolean>(false);
+  const [userStars, setUserStars] = useState<UserStars>(() => getUserStarsFromStorage());
   const [isSaving, setIsSaving] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!skillId) {
-      setHasSaved(false);
-      return;
-    }
-
-    const userStars = getUserStarsFromStorage();
-    setHasSaved(!!userStars[skillId]);
-  }, [skillId]);
+  const hasSaved = Boolean(skillId && userStars[skillId]);
 
   /**
    * Save a skill locally in this browser without pretending to update shared metrics.
@@ -69,15 +60,18 @@ export function useSkillStars(skillId: string | undefined): UseSkillStarsReturn 
   const handleSaveClick = useCallback(async () => {
     if (!skillId || isSaving) return;
 
-    const userStars = getUserStarsFromStorage();
-    if (userStars[skillId]) return;
+    const storedStars = getUserStarsFromStorage();
+    if (storedStars[skillId]) {
+      setUserStars(storedStars);
+      return;
+    }
 
     setIsSaving(true);
-    setHasSaved(true);
 
     try {
-      const updatedStars = { ...userStars, [skillId]: true };
+      const updatedStars = { ...storedStars, [skillId]: true };
       saveUserStarsToStorage(updatedStars);
+      setUserStars(updatedStars);
     } catch (error) {
       console.error('Failed to save skill locally:', error);
     } finally {

@@ -2,10 +2,30 @@
 Validator for tracked changes in Word documents.
 """
 
+import shutil
 import subprocess
 import tempfile
 import zipfile
 from pathlib import Path
+
+from defusedxml import ElementTree as ET
+
+
+def safe_extract_all(zip_ref, destination):
+    """Extract a zip archive without allowing members to escape destination."""
+    destination = Path(destination).resolve()
+    for member in zip_ref.infolist():
+        target = (destination / member.filename).resolve()
+        try:
+            target.relative_to(destination)
+        except ValueError as exc:
+            raise ValueError(f"Unsafe archive member: {member.filename}") from exc
+        if member.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with zip_ref.open(member) as src, target.open("wb") as dst:
+            shutil.copyfileobj(src, dst)
 
 
 class RedliningValidator:
@@ -29,8 +49,6 @@ class RedliningValidator:
 
         # First, check if there are any tracked changes by Claude to validate
         try:
-            import xml.etree.ElementTree as ET
-
             tree = ET.parse(modified_file)
             root = tree.getroot()
 
@@ -67,7 +85,7 @@ class RedliningValidator:
             # Unpack original docx
             try:
                 with zipfile.ZipFile(self.original_docx, "r") as zip_ref:
-                    zip_ref.extractall(temp_path)
+                    safe_extract_all(zip_ref, temp_path)
             except Exception as e:
                 print(f"FAILED - Error unpacking original docx: {e}")
                 return False
@@ -81,8 +99,6 @@ class RedliningValidator:
 
             # Parse both XML files using xml.etree.ElementTree for redlining validation
             try:
-                import xml.etree.ElementTree as ET
-
                 modified_tree = ET.parse(modified_file)
                 modified_root = modified_tree.getroot()
                 original_tree = ET.parse(original_file)

@@ -1,0 +1,4 @@
+interface:
+  display_name: "CrossFrame"
+  short_description: "跨尺度结构诊断框架 v3.0 的中文结构推理、概念保真与深水区诊断 skill"
+  default_prompt: "使用 CrossFrame 对复杂关系、组织、制度、公共议题或长期演化问题进行结构诊断：先按需读取完整概念和深水区模块，抽取事实、过五闸、列机制候选，再输出推理提纲和人话判断。"

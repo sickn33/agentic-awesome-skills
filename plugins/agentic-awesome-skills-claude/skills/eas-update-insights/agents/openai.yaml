@@ -1,0 +1,4 @@
+interface:
+  display_name: "EAS Update Insights"
+  short_description: "Check EAS Update health, adoption, crash rates, launch counts, payload size, and OTA vs embedded usage"
+  default_prompt: "Use $eas-update-insights to inspect published EAS Updates with eas-cli, compare rollout health, gather update or channel metrics, parse JSON output, and gate releases on aggregate update performance."

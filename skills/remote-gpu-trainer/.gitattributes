@@ -1,0 +1,8 @@
+# Normalize line endings to LF on commit — this repo is authored on Windows but
+# every .sh / .template runs on a Linux remote, where a CRLF shebang or `do\r`
+# silently breaks bash (see references/gotchas_universal.md, the CRLF entry).
+* text=auto eol=lf
+*.sh text eol=lf
+*.template text eol=lf
+*.py text eol=lf
+*.md text eol=lf

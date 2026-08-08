@@ -1,0 +1,4 @@
+interface:
+  display_name: "Expo Dev Client"
+  short_description: "Create and use Expo development clients when Expo Go is not enough"
+  default_prompt: "Use $expo-dev-client to decide whether an Expo development client is required, configure development EAS profiles, build local or cloud dev clients, and connect them to Metro."

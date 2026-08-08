@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Competitor Analysis — {{TITLE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand: #F03603;
+    --blue: #4DA9E4;
+    --green: #90C94D;
+    --amber: #F4BA41;
+    --black: #100D0D;
+    --gray: #514F4F;
+    --border: #edebeb;
+    --bg: #F9F6F4;
+    --card: #ffffff;
+    --text: #100D0D;
+    --muted: #514F4F;
+    --high: #5a8a1a;
+    --low: #F03603;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 16px; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  header { margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .header-left h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--black); }
+  .header-left .meta { color: var(--muted); font-size: 0.875rem; }
+
+  nav.views { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
+  nav.views a { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem 0.875rem; font-size: 0.8125rem; color: var(--muted); text-decoration: none; font-weight: 500; }
+  nav.views a:hover { border-color: var(--brand); color: var(--brand); }
+  nav.views a.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+
+  .summary { display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 1rem 1.25rem; flex: 1; min-width: 140px; }
+  .stat .label { font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 600; margin-bottom: 0.25rem; }
+  .stat .value { font-size: 1.5rem; font-weight: 700; color: var(--black); }
+
+  /* Strategic win/loss cards */
+  .strategic { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+  @media (max-width: 720px) { .strategic { grid-template-columns: 1fr; } }
+  .strategic .card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 1.25rem; }
+  .strategic .card.win { border-left: 3px solid var(--high); }
+  .strategic .card.loss { border-left: 3px solid var(--low); }
+  .strategic h3 { font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.125rem; color: var(--black); display: flex; align-items: center; gap: 0.5rem; }
+  .strategic h3 .badge { font-size: 0.6875rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+  .strategic h3 .badge.win { background: rgba(144,201,77,0.12); color: #5a8a1a; border: 1px solid rgba(144,201,77,0.3); }
+  .strategic h3 .badge.loss { background: rgba(240,54,3,0.08); color: var(--low); border: 1px solid rgba(240,54,3,0.2); }
+  .strategic .sub { font-size: 0.8125rem; color: var(--muted); margin-bottom: 0.75rem; }
+  .strategic .prose { font-size: 0.9375rem; line-height: 1.6; color: var(--text); margin: 0.5rem 0 0; }
+  .strategic ul { list-style: none; }
+  .strategic li { padding: 0.375rem 0; font-size: 0.875rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: baseline; gap: 0.75rem; }
+  .strategic li:first-child { border-top: 0; }
+  .strategic li .who { color: var(--muted); font-size: 0.75rem; white-space: nowrap; }
+  .strategic .empty { color: var(--muted); font-size: 0.8125rem; padding: 0.5rem 0; }
+
+  .results-table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 2rem; }
+  .results-table th { text-align: left; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 600; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); background: #fafafa; }
+  .results-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.875rem; vertical-align: top; }
+  .results-table tr:last-child td { border-bottom: none; }
+  .results-table tr:hover { background: #fdfcfb; }
+  .results-table a { color: var(--brand); text-decoration: none; font-weight: 500; }
+  .results-table a:hover { text-decoration: underline; }
+  .muted-line { color: var(--muted); font-size: 0.75rem; display: block; margin-top: 2px; }
+
+  .pill { display: inline-block; font-size: 0.6875rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; margin-right: 4px; margin-bottom: 3px; }
+  .pill-feature { background: rgba(77,169,228,0.12); color: #2172a3; border: 1px solid rgba(77,169,228,0.3); }
+
+  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.75rem; color: var(--muted); }
+  footer a { color: var(--brand); text-decoration: none; font-weight: 500; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-left">
+      <h1>{{TITLE}}</h1>
+      <div class="meta">{{META}}</div>
+    </div>
+    <a href="https://browserbase.com" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:0.5rem;text-decoration:none;color:var(--muted);font-size:0.8125rem;font-weight:500;">
+      <span>Powered by Browserbase</span>
+      <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="8" fill="#F03603"/><path d="M36 72.2222V27.7778H51.2381C57.5873 27.7778 62.6667 32.8571 62.6667 39.2063V41.746C62.6667 44.6667 61.5873 47.3968 59.7461 49.3651C62.2858 51.4603 63.9366 54.6349 63.9366 58.254V60.7936C63.9366 67.1428 58.8572 72.2222 52.508 72.2222H36ZM42.3493 65.873H52.508C55.3651 65.873 57.5873 63.6508 57.5873 60.7936V58.254C57.5873 55.3968 55.3651 53.1746 52.508 53.1746H42.3493V65.873ZM42.3493 46.8254H51.2381C54.0953 46.8254 56.3175 44.6032 56.3175 41.746V39.2063C56.3175 36.3492 54.0953 34.127 51.2381 34.127H42.3493V46.8254Z" fill="white"/></svg>
+    </a>
+  </header>
+
+  <nav class="views">
+    <a href="index.html" class="active">Overview</a>
+    <a href="matrix.html">Matrix</a>
+    <a href="mentions.html">Mentions</a>
+  </nav>
+
+  <div class="summary">
+    <div class="stat"><div class="label">Competitors</div><div class="value">{{TOTAL}}</div></div>
+    <div class="stat"><div class="label">Mentions</div><div class="value">{{MENTION_COUNT}}</div></div>
+    <div class="stat"><div class="label">Benchmarks</div><div class="value">{{BENCHMARK_COUNT}}</div></div>
+    <div class="stat"><div class="label">With Pricing</div><div class="value">{{WITH_PRICING}}</div></div>
+  </div>
+
+  {{STRATEGIC_SUMMARY}}
+
+  <table class="results-table">
+    <thead>
+      <tr>
+        <th>Competitor</th>
+        <th>Positioning</th>
+        <th>Pricing</th>
+        <th>Key Features</th>
+        <th>Strategic Diff</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{TABLE_ROWS}}
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  <svg width="16" height="16" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="8" fill="#F03603"/><path d="M36 72.2222V27.7778H51.2381C57.5873 27.7778 62.6667 32.8571 62.6667 39.2063V41.746C62.6667 44.6667 61.5873 47.3968 59.7461 49.3651C62.2858 51.4603 63.9366 54.6349 63.9366 58.254V60.7936C63.9366 67.1428 58.8572 72.2222 52.508 72.2222H36ZM42.3493 65.873H52.508C55.3651 65.873 57.5873 63.6508 57.5873 60.7936V58.254C57.5873 55.3968 55.3651 53.1746 52.508 53.1746H42.3493V65.873ZM42.3493 46.8254H51.2381C54.0953 46.8254 56.3175 44.6032 56.3175 41.746V39.2063C56.3175 36.3492 54.0953 34.127 51.2381 34.127H42.3493V46.8254Z" fill="white"/></svg>
+  Generated by <a href="https://github.com/anthropics/skills">competitor-analysis</a> · Powered by <a href="https://browserbase.com">Browserbase</a>
+</footer>
+</body>
+</html>

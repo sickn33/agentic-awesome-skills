@@ -1,6 +1,6 @@
 # 常见问题解答 (FAQ)
 
-**有问题？**你并不孤单！这里是关于 Antigravity Awesome Skills 最常见问题的答案。
+**有问题？**你并不孤单！这里是关于 Agentic Awesome Skills 最常见问题的答案。
 
 ---
 
@@ -68,7 +68,7 @@
 
 相反，主机应该：
 
-- 使用 `data/skills_index.json` 作为**轻量级清单**进行发现；以及
+- 使用根目录 `skills_index.json` 作为**规范轻量级清单**进行发现；`data/skills_index.json` 仅作为兼容性镜像；以及
 - **仅在调用技能时**（例如，通过对话中的 `@skill-id`）加载单个 `SKILL.md` 文件。
 
 有关具体示例（包括伪代码），请参阅：
@@ -87,11 +87,11 @@
 
 我们对技能进行分类，以便你知道你正在运行什么。这些值直接映射到每个 `SKILL.md` 前置元数据中的 `risk:` 字段：
 
-- 🔵 **`none`**：纯参考或规划内容 — 无 shell 命令、无变更、无网络访问。
-- ⚪ **`safe`**：非破坏性的社区技能（只读、规划、代码审查、分析）。
-- 🔴 **`critical`**：修改文件、删除数据、使用网络扫描器或执行破坏性操作的技能。**谨慎使用。**
-- 🟣 **`offensive`**：专注于安全性的进攻技术（渗透测试、利用）。**仅授权使用** — 始终确认目标在范围内。
-- ⬜ **`unknown`**：遗留或未分类的内容。在使用前手动检查技能。
+- ⚪ **`unknown`**：遗留或未分类的内容。在使用前手动检查技能。
+- 🟢 **`none`**：纯参考或规划内容 — 无 shell 命令、无变更、无网络访问。
+- 🔵 **`safe`**：非破坏性指导，例如只读命令、规划、代码审查和分析。
+- 🟠 **`critical`**：修改文件、删除数据、使用网络扫描器或执行破坏性操作的技能。**谨慎使用。**
+- 🔴 **`offensive`**：专注于安全性的进攻技术（渗透测试、利用）。**仅授权使用** — 始终确认目标在范围内。
 
 ### 这些技能可以入侵我的计算机吗？
 
@@ -106,19 +106,19 @@ _始终检查风险标签并审查代码。_
 
 这取决于你如何安装：
 
-- **使用安装程序 CLI (`npx antigravity-awesome-skills`)**：
-  默认安装目标是 Antigravity 全局库的 `~/.gemini/antigravity/skills/`。
+- **使用安装程序 CLI (`npx agentic-awesome-skills`)**：
+  默认安装目标是 Antigravity 全局库的 `~/.agents/skills/`。
 - **使用特定于工具的标志**：
   使用 `--claude`、`--cursor`、`--gemini`、`--codex`、`--kiro` 或 `--antigravity` 自动定位匹配的工具路径。
 - **使用手动克隆或自定义工作区路径**：
   `.agent/skills/` 对于 Antigravity/自定义设置仍然是一个很好的通用工作区约定。
 
-如果你从 npm 收到 404，请使用：`npx github:sickn33/antigravity-awesome-skills`
+如果你从 npm 收到 404，请使用：`npx github:sickn33/agentic-awesome-skills`
 
 **使用 git clone：**
 
 ```bash
-git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
 ```
 
 **特定于工具的路径：**
@@ -131,8 +131,8 @@ git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skill
 **Claude Code 插件市场替代方案：**
 
 ```text
-/plugin marketplace add sickn33/antigravity-awesome-skills
-/plugin install antigravity-awesome-skills
+/plugin marketplace add sickn33/agentic-awesome-skills
+/plugin install agentic-awesome-skills
 ```
 
 此仓库现在包括 `.claude-plugin/marketplace.json` 和 `.claude-plugin/plugin.json`，因此 Claude Code 可以通过插件市场安装相同的技能树。
@@ -142,10 +142,10 @@ git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skill
 **可以。**使用与其他平台相同的标准安装流程：
 
 ```bash
-npx antigravity-awesome-skills
+npx agentic-awesome-skills
 ```
 
-如果你在已删除的符号链接解决方法周围创建了较旧的克隆，请重新安装到新目录或重新运行 `npx antigravity-awesome-skills`。
+如果你在已删除的符号链接解决方法周围创建了较旧的克隆，请重新安装到新目录或重新运行 `npx agentic-awesome-skills`。
 
 ### 我在 Windows 上遇到截断或上下文崩溃循环。如何恢复？
 
@@ -161,7 +161,7 @@ npx antigravity-awesome-skills
 
 - 针对损坏的本地存储/会话存储/IndexedDB 状态的手动清理步骤
 - 首先要备份的默认 Antigravity Windows 路径
-- 根据 [issue #274](https://github.com/sickn33/antigravity-awesome-skills/issues/274) 改编的可选批处理脚本
+- 根据 [issue #274](https://github.com/sickn33/agentic-awesome-skills/issues/274) 改编的可选批处理脚本
 
 ### 我在 Linux 或 macOS 上遇到上下文过载。我该怎么办？
 
@@ -169,7 +169,7 @@ npx antigravity-awesome-skills
 
 - [agent-overload-recovery.md](agent-overload-recovery.md)
 
-该指南展示了如何从此仓库的克隆副本运行 `scripts/activate-skills.sh`，以便只有你需要的捆绑包或技能 ID 在 `~/.gemini/antigravity/skills` 中保持活动状态。
+该指南展示了如何从此仓库的克隆副本运行 `scripts/activate-skills.sh`，以便只有你需要的捆绑包或技能 ID 在 `~/.agents/skills` 中保持活动状态。
 
 ### Gemini CLI 在几轮之后挂起或说"This is taking a bit longer, we're still on it"。我该怎么办？
 
@@ -258,7 +258,7 @@ git pull origin main
 
 ### 技能给出了不正确或过时的建议
 
-请[打开问题](https://github.com/sickn33/antigravity-awesome-skills/issues)！包括：
+请[打开问题](https://github.com/sickn33/agentic-awesome-skills/issues)！包括：
 
 - 哪个技能
 - 出了什么问题
@@ -342,4 +342,4 @@ npm run security:docs
 - 尝试 `@test-driven-development` 以获得更好的代码质量
 - 探索 `@skill-creator` 制作你自己的技能
 
-**仍然困惑？**[打开讨论](https://github.com/sickn33/antigravity-awesome-skills/discussions)，我们会帮助你！🙌
+**仍然困惑？**[打开讨论](https://github.com/sickn33/agentic-awesome-skills/discussions)，我们会帮助你！🙌

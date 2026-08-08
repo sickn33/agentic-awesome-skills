@@ -1,0 +1,4 @@
+interface:
+  display_name: "CrossFrame Dialogue"
+  short_description: "答读者问、编辑回信和咨询式回应的短结构答复。"
+  default_prompt: "用 crossframe-dialogue 回答这个读者问题：先接住问题，划清事实边界，再给出结构判断和稳妥行动边界。"

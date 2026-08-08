@@ -1,0 +1,280 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Video Deep-Dives</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#f4f1eb;color:#1c1a17;line-height:1.55;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+:root{--slide-max:560px;--vid-max:100%}
+header{padding:11px 18px;border-bottom:1px solid #e2dccf;background:#fbf9f4;flex:0 0 auto}
+.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8a7e6e;font-weight:600}
+.backlink{display:none;font-size:11.5px;color:#2a5cbf;text-decoration:none;font-weight:600;cursor:pointer}
+.backlink:hover{text-decoration:underline}
+h1{font-family:'Playfair Display',serif;font-size:clamp(17px,2.3vw,25px);font-weight:900;color:#111;line-height:1.05;margin:2px 0}
+.speaker{color:#4a4236;font-size:12.5px}.speaker a{color:#2a5cbf;text-decoration:none}
+/* ---------- HOME (index) ---------- */
+#home{flex:1 1 auto;overflow:auto;padding:22px 26px}
+.home-intro{max-width:760px;margin:0 auto 22px}
+.home-intro .lede{font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,34px);font-weight:900;color:#111;line-height:1.08}
+.home-intro p{color:#5a5145;font-size:13.5px;margin-top:8px;max-width:640px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;max-width:1100px;margin:0 auto}
+.card{background:#fff;border:1px solid #e2dccf;border-radius:14px;overflow:hidden;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:transform .14s,box-shadow .14s,border-color .14s}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.10);border-color:#c8920a}
+.card .thumb{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden}
+.card .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.card .badge{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.74);color:#fff;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px}
+.card .play{position:absolute;inset:0;margin:auto;width:54px;height:54px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5);color:#fff;border-radius:50%;font-size:20px;opacity:0;transition:.2s}
+.card:hover .play{opacity:1}
+.card .body{padding:13px 15px 15px}
+.card .ct{font-family:'Playfair Display',serif;font-size:16.5px;font-weight:700;color:#111;line-height:1.22}
+.card .cs{color:#7a6f5d;font-size:12px;margin-top:6px}
+.card .tags{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.card .tag{font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:#7a5010;background:rgba(180,130,20,.14);border-radius:5px;padding:2px 7px;font-weight:600}
+#homeErr{display:none;max-width:760px;margin:0 auto;padding:10px 14px;background:#fff0ec;border:1px solid #c87060;border-radius:8px;color:#8a1a1a;font-size:13px}
+/* ---------- DEEP-DIVE ---------- */
+#deepdive{flex:1 1 auto;display:none;min-height:0;overflow:hidden}
+#split{flex:1 1 auto;display:flex;min-height:0;overflow:hidden;width:100%}
+#left{flex:0 0 58%;min-width:240px;overflow:auto;padding:14px 18px;display:flex;flex-direction:column}
+#divider{flex:0 0 8px;cursor:col-resize;background:linear-gradient(#ddd6c8,#cfc7b6);position:relative}
+#divider::after{content:"⋮⋮";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(90deg);color:#8a7e6e;font-size:11px;letter-spacing:-2px}
+#divider:hover,#divider.drag{background:#c8920a}
+/* RIGHT pane: fixed video region + independently scrolling transcript */
+#right{flex:1 1 0;min-width:280px;display:flex;flex-direction:column;overflow:hidden;padding:14px 16px;background:#fbf9f4;border-left:1px solid #e2dccf}
+.rtop{flex:0 0 auto}
+.toolbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid #ddd8d0;border-radius:10px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#4a4236}
+.toolbar label{display:flex;align-items:center;gap:7px}.toolbar input[type=range]{accent-color:#c8920a}
+.deck-h{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:3px}
+.deck-sub{color:#8a7e6e;font-size:12px;margin-bottom:12px}
+.slide{background:#fff;border:1px solid #ddd8d0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.05);padding:11px;margin:0 auto 16px;width:100%;max-width:var(--slide-max);transition:border-color .15s,box-shadow .15s}
+.slide.active{border-color:#b0357a;box-shadow:0 0 0 3px rgba(176,53,122,.16)}
+.slide-img{position:relative;cursor:pointer;border-radius:9px;overflow:hidden;background:#000}
+.slide-img img{width:100%;display:block;aspect-ratio:16/9;object-fit:contain;background:#000}
+.slide-img:hover img{opacity:.85}
+.play-badge{position:absolute;inset:0;margin:auto;width:54px;height:54px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);color:#fff;border-radius:50%;font-size:20px;opacity:0;transition:.2s}
+.slide-img:hover .play-badge{opacity:1}
+.slide-t{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.72);color:#fff;font-size:11px;font-weight:600;padding:2px 7px;border-radius:5px}
+.slide-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 2px 8px}
+.slide-meta h3{font-family:'Playfair Display',serif;font-size:15.5px;color:#111;font-weight:700;line-height:1.25}
+.btn{cursor:pointer;border:0;background:#2a5cbf;color:#fff;font-size:11.5px;font-weight:600;padding:5px 11px;border-radius:6px;white-space:nowrap;font-family:'DM Sans'}
+.btn:hover{background:#1d4699}
+.note-lbl{display:block;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#8a7e6e;font-weight:600;margin:2px 2px 4px}
+.saved{color:#2e8b57;letter-spacing:0;text-transform:none;font-weight:500;margin-left:6px}
+.note-area{width:100%;min-height:70px;resize:vertical;border:1px solid #e3dccb;border-radius:8px;background:#fdfcf8;padding:9px 11px;font-family:'DM Sans';font-size:13px;color:#3a342b;line-height:1.55}
+.note-area:focus{outline:none;border-color:#c8920a;background:#fffdf6}
+.vidwrap{max-width:var(--vid-max);margin:0 auto}
+.vid{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.now{margin-top:10px;background:#fdf9f0;border:1px solid #e6dcc4;border-radius:9px;padding:10px 13px}
+.now .lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#7a5010;font-weight:600;display:flex;gap:8px;align-items:center}
+.now .lbl b{background:rgba(180,130,20,.14);color:#7a5010;border-radius:5px;padding:2px 7px;font-size:11px}
+.now p{margin-top:6px;font-size:13px;color:#3a342b;max-height:96px;overflow:auto}
+.tr-h{font-family:'Playfair Display',serif;font-size:15px;margin:12px 2px 6px}
+.tsearch{width:100%;padding:8px 11px;border:1px solid #ddd8d0;border-radius:8px;font-size:12.5px;margin-bottom:8px;font-family:'DM Sans'}
+#transcript{flex:1 1 0;overflow:auto;border:1px solid #eee4d4;border-radius:9px;background:#fffdf8}
+.trow{display:flex;gap:9px;padding:6px 11px;cursor:pointer;border-bottom:1px solid #f1ead9;font-size:12.5px}
+.trow:hover{background:#fdf3df}.trow.hl{background:#fce9bd}
+.tt{color:#2a5cbf;font-weight:600;font-size:11.5px;min-width:54px;flex-shrink:0}
+#err{display:none;padding:10px 14px;background:#fff0ec;border:1px solid #c87060;border-radius:8px;color:#8a1a1a;font-size:13px;margin:10px 0}
+@media(max-width:760px){#split{flex-direction:column}#left,#right{flex:1 1 auto}#divider{display:none}}
+</style></head><body>
+<header>
+  <a class="backlink" id="backlink" href="#/">← All videos</a>
+  <div class="eyebrow">Video deep-dives · markdown-backed</div>
+  <h1 id="title">Video Deep-Dives</h1>
+  <div class="speaker" id="speaker">A growing library of talks I'm studying. Slides, transcripts, and editable notes, all backed by markdown files.</div>
+</header>
+
+<!-- ===================== HOME / INDEX ===================== -->
+<div id="home">
+  <div id="homeErr"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- ===================== DEEP-DIVE ===================== -->
+<div id="deepdive">
+  <div id="split">
+    <div id="left">
+      <div class="toolbar">
+        <label>Slide size <input type="range" id="slideSize" min="320" max="900" value="560" oninput="document.documentElement.style.setProperty('--slide-max',this.value+'px')"></label>
+        <span style="color:#cfc7b6">|</span><span class="deck-sub" style="margin:0" id="deckcount"></span>
+      </div>
+      <div class="deck-h">Slide deck</div>
+      <div class="deck-sub">Click a slide (or ▶) to play the video from that moment. Notes are editable and saved to markdown.</div>
+      <div id="err"></div>
+      <div id="deck"></div>
+    </div>
+    <div id="divider" title="Drag to resize"></div>
+    <div id="right">
+      <div class="rtop">
+        <div class="toolbar"><label>Video size <input type="range" id="vidSize" min="40" max="100" value="100" oninput="document.documentElement.style.setProperty('--vid-max',this.value+'%')"></label></div>
+        <div class="vidwrap"><div class="vid"><iframe id="ytplayer" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe></div></div>
+        <div class="now"><div class="lbl">Now playing <b id="now-t">--:--</b> <a id="yt-jump" target="_blank" rel="noopener" style="margin-left:auto;color:#2a5cbf;text-decoration:none;font-weight:600;letter-spacing:0;text-transform:none;display:none">open at this moment on YouTube ↗</a></div><p id="now-tx">Click any slide to play the video from that point.</p></div>
+        <div class="tr-h">Full transcript</div>
+        <input class="tsearch" id="tsearch" placeholder="Search transcript…" oninput="filt(this.value)">
+      </div>
+      <div id="transcript"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+var API_URL='/api/video-deepdives';
+var player,ready=false,pending=null,DATA=null,SLIDES=[],SEGS=[];
+var CURRENT_ID=null, YTID=null, INDEX=null;
+
+function onYouTubeIframeAPIReady(){player=new YT.Player('ytplayer',{events:{'onReady':function(){ready=true;if(pending!=null){doPlay(pending);pending=null;}}}});}
+function fmt(t){t=Math.floor(t);return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');}
+function esc(s){var d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML;}
+function clear(el){while(el.firstChild)el.removeChild(el.firstChild);}
+function node(tag,cls,text){var el=document.createElement(tag);if(cls)el.className=cls;if(text!=null)el.textContent=text;return el;}
+function safeUrl(url,fallback){try{var u=new URL(url||'',window.location.href);return /^https?:$/.test(u.protocol)?u.href:(fallback||'#');}catch(e){return fallback||'#';}}
+
+/* ---------------- Router ---------------- */
+function route(){
+  var h=(location.hash||'').replace(/^#\/?/,'').trim();
+  if(h){showVideo(h);} else {showHome();}
+}
+function showHome(){
+  document.getElementById('deepdive').style.display='none';
+  document.getElementById('home').style.display='block';
+  document.getElementById('backlink').style.display='none';
+  document.getElementById('title').textContent='Video Deep-Dives';
+  document.getElementById('speaker').textContent="A growing library of talks I'm studying. Slides, transcripts, and editable notes, all backed by markdown files.";
+  document.title='Video Deep-Dives';
+  if(INDEX===null) loadIndex();
+}
+function showVideo(id){
+  document.getElementById('home').style.display='none';
+  document.getElementById('deepdive').style.display='flex';
+  document.getElementById('backlink').style.display='inline-block';
+  loadVideo(id);
+}
+
+/* ---------------- Home / index ---------------- */
+async function loadIndex(){
+  try{
+    var r=await fetch(API_URL); if(!r.ok) throw new Error('HTTP '+r.status);
+    var d=await r.json();
+    INDEX=(d.items||[]).filter(function(it){return it.youtube_id;});
+    var g=document.getElementById('grid'); clear(g);
+    if(!INDEX.length){var empty=node('p','', 'No videos in the library yet.');empty.style.color='#7a6f5d';g.appendChild(empty);return;}
+    INDEX.forEach(function(it){
+      var slides=it.slides||[]; var thumb=(slides[0]&&slides[0].img)||'';
+      var a=document.createElement('a'); a.className='card'; a.href='#/'+encodeURIComponent(it.id);
+      var thumbBox=node('div','thumb');
+      if(thumb){var img=document.createElement('img');img.src=safeUrl(thumb,'');img.alt='';thumbBox.appendChild(img);}
+      thumbBox.appendChild(node('span','play','▶'));
+      thumbBox.appendChild(node('span','badge',(it.slide_count||slides.length)+' slides'));
+      var body=node('div','body');body.appendChild(node('div','ct',it.title||it.id));body.appendChild(node('div','cs',it.speaker||''));
+      var tagList=(it.tags||[]).slice(0,3);
+      if(tagList.length){var tags=node('div','tags');tagList.forEach(function(t){tags.appendChild(node('span','tag',t));});body.appendChild(tags);}
+      a.appendChild(thumbBox);a.appendChild(body);
+      g.appendChild(a);
+    });
+  }catch(e){var el=document.getElementById('homeErr');el.style.display='block';el.textContent='Could not load the video library: '+e.message+'. Is the backend running?';}
+}
+
+/* ---------------- Deep-dive ---------------- */
+async function loadVideo(id){
+  if(CURRENT_ID===id && DATA){return;} // already loaded
+  CURRENT_ID=id;
+  document.getElementById('err').style.display='none';
+  document.getElementById('deck').innerHTML='';
+  document.getElementById('transcript').innerHTML='';
+  try{
+    var r=await fetch(API_URL+'/'+encodeURIComponent(id)); if(!r.ok) throw new Error('HTTP '+r.status);
+    DATA=await r.json(); var m=DATA.meta||{};
+    YTID=m.youtube_id||id;
+    SLIDES=(m.slides||[]).slice().sort(function(a,b){return a.t-b.t;});
+    document.title=m.title||'Video deep-dive';
+    document.getElementById('title').textContent=m.title||'';
+    var speaker=document.getElementById('speaker');clear(speaker);speaker.appendChild(document.createTextNode((m.speaker||'')+' · '));
+    var watch=document.createElement('a');watch.target='_blank';watch.rel='noopener noreferrer';watch.href=safeUrl(m.source_url,'#');watch.textContent='watch on YouTube ↗';speaker.appendChild(watch);
+    document.getElementById('deckcount').textContent=SLIDES.length+' slides · drag the divider ⋮⋮ to resize';
+    document.getElementById('now-t').textContent='--:--';
+    document.getElementById('now-tx').textContent='Click any slide to play the video from that point.';
+    document.getElementById('ytplayer').src='https://www.youtube.com/embed/'+YTID+'?enablejsapi=1&rel=0&playsinline=1';
+    SEGS=parseTranscript(DATA.body||'');
+    renderDeck(); renderTranscript();
+  }catch(e){var el=document.getElementById('err');el.style.display='block';el.textContent='Could not load library data: '+e.message+'. Is the server running?';}
+}
+function parseTranscript(body){
+  var out=[],re=/^\[(\d{2}):(\d{2}):(\d{2})\]\s*(.*)$/;
+  body.split('\n').forEach(function(line){var mm=line.match(re);if(mm){var sec=(+mm[1])*3600+(+mm[2])*60+(+mm[3]);out.push({t:sec,text:mm[4]});}});
+  return out;
+}
+function renderDeck(){
+  var deck=document.getElementById('deck');clear(deck);
+  SLIDES.forEach(function(s,i){
+    var d=document.createElement('div');d.className='slide';d.id='slide-'+i;d.dataset.t=s.t;
+    var imgBox=node('div','slide-img');
+    var img=document.createElement('img');img.src=safeUrl(s.img,'');img.alt=s.title||'';imgBox.appendChild(img);
+    imgBox.appendChild(node('span','play-badge','▶'));imgBox.appendChild(node('span','slide-t',s.mmss||fmt(s.t)));
+    var meta=node('div','slide-meta');meta.appendChild(node('h3','',s.title||''));
+    var playBtn=node('button','btn','▶ Play '+(s.mmss||fmt(s.t)));meta.appendChild(playBtn);
+    var label=node('label','note-lbl','Notes ');var saved=node('span','saved');saved.id='saved-'+i;label.appendChild(saved);
+    var note=document.createElement('textarea');note.className='note-area';note.id='note-'+i;
+    d.appendChild(imgBox);d.appendChild(meta);d.appendChild(label);d.appendChild(note);
+    deck.appendChild(d);
+    note.value=s.note||'';
+    d.querySelector('.slide-img').onclick=function(){play(i);};
+    playBtn.onclick=function(){play(i);};
+    note.addEventListener('input',function(){onNote(i,this.value);});
+  });
+}
+function renderTranscript(){
+  var c=document.getElementById('transcript');clear(c);
+  SEGS.forEach(function(seg){
+    var r=document.createElement('div');r.className='trow';r.dataset.t=seg.t;r.dataset.text=seg.text.toLowerCase();
+    r.appendChild(node('span','tt',fmt(seg.t)));r.appendChild(node('span','tx',seg.text));
+    r.onclick=function(){seekOnly(seg.t);};c.appendChild(r);
+  });
+}
+function loadAt(t){
+  // Robust across video switches: use the JS API to load the right video at t.
+  var vd=player.getVideoData?player.getVideoData():null;
+  if(vd && vd.video_id===YTID){player.seekTo(t,true);player.playVideo();}
+  else{player.loadVideoById({videoId:YTID,startSeconds:Math.floor(t)});}
+}
+function doPlay(t){loadAt(t);}
+function srcFallback(t){document.getElementById('ytplayer').src='https://www.youtube.com/embed/'+YTID+'?enablejsapi=1&rel=0&playsinline=1&autoplay=1&start='+Math.floor(t);}
+function setJump(t){var a=document.getElementById('yt-jump');if(a){a.href='https://www.youtube.com/watch?v='+YTID+'&t='+Math.floor(t)+'s';a.style.display='inline';}}
+function play(i){
+  var s=SLIDES[i];
+  document.querySelectorAll('.slide.active').forEach(function(x){x.classList.remove('active')});
+  var card=document.getElementById('slide-'+i);if(card)card.classList.add('active');
+  document.getElementById('now-t').textContent=s.mmss||fmt(s.t);
+  document.getElementById('now-tx').textContent=transcriptAt(s.t)||'(no transcript here)';
+  setJump(s.t);
+  if(ready&&player&&player.loadVideoById)doPlay(s.t);else{pending=s.t;srcFallback(s.t);}
+  hlRow(s.t);
+}
+function seekOnly(t){document.getElementById('now-t').textContent=fmt(t);document.getElementById('now-tx').textContent=transcriptAt(t);setJump(t);if(ready&&player&&player.loadVideoById)doPlay(t);else{pending=t;srcFallback(t);}hlRow(t);}
+function transcriptAt(t){var out=[];SEGS.forEach(function(s){if(s.t>=t-1&&s.t<=t+10)out.push(s.text);});return out.join(' ');}
+function hlRow(t){var rows=document.querySelectorAll('.trow'),best=null;rows.forEach(function(r){if(parseFloat(r.dataset.t)<=t+0.5)best=r;});document.querySelectorAll('.trow.hl').forEach(function(r){r.classList.remove('hl')});if(best){best.classList.add('hl');best.scrollIntoView({block:'nearest'});}}
+function filt(q){q=q.toLowerCase().trim();document.querySelectorAll('.trow').forEach(function(r){r.style.display=(!q||r.dataset.text.indexOf(q)>-1)?'flex':'none';});}
+// note write-back to markdown via PATCH
+var timers={};
+function onNote(i,val){
+  SLIDES[i].note=val;
+  var s=document.getElementById('saved-'+i);s.textContent='saving…';
+  clearTimeout(timers[i]);
+  timers[i]=setTimeout(function(){saveNotes(i,s);},700);
+}
+async function saveNotes(i,badge){
+  try{
+    var payload={fields:{slides:SLIDES.map(function(s){return {idx:s.idx,t:s.t,mmss:s.mmss,title:s.title,note:s.note,img:s.img};})}};
+    var r=await fetch(API_URL+'/'+encodeURIComponent(CURRENT_ID),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    badge.textContent=r.ok?'✓ saved':'save failed';
+  }catch(e){badge.textContent='save failed';}
+  setTimeout(function(){badge.textContent='';},1500);
+}
+(function(){var dv=document.getElementById('divider'),sp=document.getElementById('split'),lf=document.getElementById('left'),drag=false;
+dv.addEventListener('mousedown',function(e){drag=true;dv.classList.add('drag');e.preventDefault();});
+window.addEventListener('mousemove',function(e){if(!drag)return;var r=sp.getBoundingClientRect();var pct=(e.clientX-r.left)/r.width*100;pct=Math.max(25,Math.min(80,pct));lf.style.flexBasis=pct+'%';});
+window.addEventListener('mouseup',function(){drag=false;dv.classList.remove('drag');});})();
+
+window.addEventListener('hashchange',route);
+route();
+</script></body></html>

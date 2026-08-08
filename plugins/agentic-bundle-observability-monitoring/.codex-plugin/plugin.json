@@ -1,0 +1,39 @@
+{
+  "name": "aasb-observability-monitoring",
+  "version": "15.11.0",
+  "description": "Install the \"Observability & Monitoring\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "observability-monitoring",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Observability & Monitoring",
+    "shortDescription": "DevOps & Infrastructure · 6 curated skills",
+    "longDescription": "For production reliability. Covers Observability Engineer, Distributed Tracing, and 4 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "DevOps & Infrastructure",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the \"Observability & Monitoring\" skills to help me complete this task.",
+      "Review this project with the \"Observability & Monitoring\" workflow."
+    ]
+  }
+}

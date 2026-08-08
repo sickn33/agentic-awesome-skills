@@ -2,7 +2,7 @@
 
 Total Security Skills Found: 128
 
-This report lists all security-related skills found in the `antigravity-awesome-skills` repository, including their descriptions, use cases, and example prompts.
+This report lists all security-related skills found in the `agentic-awesome-skills` repository, including their descriptions, use cases, and example prompts.
 
 ## accessibility-compliance-accessibility-audit (`accessibility-compliance-accessibility-audit`)
 

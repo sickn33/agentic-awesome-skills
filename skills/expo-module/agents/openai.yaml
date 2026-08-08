@@ -1,0 +1,4 @@
+interface:
+  display_name: "Expo Module"
+  short_description: "Build Expo native modules and native views with Swift, Kotlin, TypeScript, autolinking, and config plugins"
+  default_prompt: "Use $expo-module to scaffold, implement, clean up, or review Expo native modules, native views, shared objects, lifecycle hooks, autolinking configuration, and config plugins."

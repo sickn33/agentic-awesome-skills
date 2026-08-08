@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { Home } from '../Home';
 import { renderWithRouter } from '../../utils/testUtils';
 import { createMockSkill } from '../../factories/skill';
@@ -85,19 +85,23 @@ describe('Home', () => {
       renderWithRouter(<Home />, { useProvider: false });
 
       await waitFor(() => {
-        expect(document.title).toContain('Antigravity Awesome Skills');
+        expect(document.title).toContain('AAS Core Preview');
       });
 
-      expect(screen.getByRole('button', { name: /Copy install command/i })).toBeInTheDocument();
-      expect(screen.getAllByText(/npx antigravity-awesome-skills/i).length).toBeGreaterThan(0);
+      expect(screen.getByRole('heading', {
+        level: 1,
+        name: /AAS Core: agent-first skill stacks for Codex, Claude Code, and compatible clients/i,
+      })).toBeInTheDocument();
+      expect(screen.getByText(/Search\. Choose\. Validate\. Preview\./i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Review an AAS Core stack/i })).toHaveAttribute('href', '/workbench/');
       expect(screen.getByText(/What is the difference between skills and MCP tools/i)).toBeInTheDocument();
       expect(document.querySelector('meta[property="og:title"]')).toHaveAttribute(
         'content',
-        expect.stringContaining('Antigravity Awesome Skills'),
+        expect.stringContaining('AAS Core Preview'),
       );
     });
 
-    it('should copy install command from hero CTA', async () => {
+    it('routes the primary catalog action to exact composition', async () => {
       (useSkills as Mock).mockReturnValue({
         skills: [],
         stars: {},
@@ -108,20 +112,10 @@ describe('Home', () => {
       renderWithRouter(<Home />, { useProvider: false });
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /Copy install command/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /Review an AAS Core stack/i })).toBeInTheDocument();
       });
 
-      vi.useFakeTimers();
-      try {
-        await act(async () => {
-          fireEvent.click(screen.getByRole('button', { name: /Copy install command/i }));
-          await vi.runAllTimersAsync();
-        });
-      } finally {
-        vi.useRealTimers();
-      }
-
-      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('npx antigravity-awesome-skills');
+      expect(screen.getByText(/Inspect evidence, select exact IDs/i)).toBeInTheDocument();
     });
   });
 

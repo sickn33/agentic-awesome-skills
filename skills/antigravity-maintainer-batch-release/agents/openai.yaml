@@ -1,0 +1,4 @@
+interface:
+  display_name: "Antigravity Maintainer Batch Release"
+  short_description: "Run protected AAS maintenance and releases"
+  default_prompt: "Use $antigravity-maintainer-batch-release to run a protected AAS maintenance sweep with exact-head review, source-only merges, canonical sync, and fail-closed release verification."

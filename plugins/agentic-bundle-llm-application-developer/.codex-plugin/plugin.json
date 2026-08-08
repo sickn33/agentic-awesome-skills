@@ -1,0 +1,39 @@
+{
+  "name": "aasb-llm-application-developer",
+  "version": "15.11.0",
+  "description": "Install the \"LLM Application Developer\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "llm-application-developer",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "LLM Application Developer",
+    "shortDescription": "AI & Agents · 6 curated skills",
+    "longDescription": "For building production LLM applications. Covers LLM App Patterns, RAG Implementation, and 4 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "AI & Agents",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the \"LLM Application Developer\" skills to help me complete this task.",
+      "Review this project with the \"LLM Application Developer\" workflow."
+    ]
+  }
+}

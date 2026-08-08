@@ -46,8 +46,10 @@ skills/
 name: skill-name                    # 必需：技能名称
 description: "简要技能描述"         # 必需：一句话描述，200字符以内
 category: development               # 必需：技能分类
-risk: safe                         # 必需：风险级别（safe/medium/high）
-source: community                   # 必需：来源（community/official）
+risk: safe                         # 必需：风险级别（none/safe/critical/offensive/unknown）
+source: community                   # 必需：来源（community/official/self）
+source_repo: owner/repo             # 外部 GitHub 来源必需：上游仓库
+source_type: community              # 外部 GitHub 来源必需：official/community/self
 date_added: "2024-01-15"         # 必需：添加日期，YYYY-MM-DD格式
 author: your-username              # 可选：作者
 tags: [react, frontend, patterns]  # 可选：标签列表，最多5个
@@ -62,8 +64,10 @@ tools: [claude, cursor, gemini]   # 可选：支持工具列表
 | `name` | ✅ | 小写+连字符 | 技能标识符，用于`@skill-name`调用 |
 | `description` | ✅ | 引号字符串 | 简洁描述，说明技能用途 |
 | `category` | ✅ | 小写字符串 | 技能分类（见分类列表） |
-| `risk` | ✅ | safe/medium/high | 风险级别，影响使用警告 |
-| `source` | ✅ | community/official | 来源标识，官方或社区 |
+| `risk` | ✅ | none/safe/critical/offensive/unknown | 风险级别，影响使用警告 |
+| `source` | ✅ | community/official/self | 来源标识，官方、社区或本仓库原创 |
+| `source_repo` | 外部来源必需 | OWNER/REPO | 外部 GitHub 来源仓库 |
+| `source_type` | 外部来源必需 | official/community/self | README 来源致谢分组 |
 | `date_added` | ✅ | YYYY-MM-DD | 技能添加日期 |
 | `author` | ❌ | 字符串 | 贡献者用户名 |
 | `tags` | ❌ | 数组 | 搜索和分类标签 |
@@ -350,8 +354,10 @@ fix: 修复登录页面重定向问题
 name: react-performance-optimization
 description: "React应用性能优化和调试"
 category: frontend
-risk: medium
+risk: safe
 source: community
+source_repo: owner/repo
+source_type: community
 date_added: "2024-01-15"
 tags: [react, performance, optimization]
 tools: [claude, cursor, gemini]

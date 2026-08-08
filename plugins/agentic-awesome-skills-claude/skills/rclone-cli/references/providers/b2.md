@@ -1,0 +1,879 @@
+---
+title: "B2"
+description: "Backblaze B2"
+versionIntroduced: "v1.26"
+---
+
+> **Official documentation:** [https://rclone.org/b2/](https://rclone.org/b2/)
+# Backblaze B2
+
+B2 is [Backblaze's cloud storage system](https://www.backblaze.com/cloud-storage).
+
+Paths are specified as `remote:bucket` (or `remote:` for the `lsd`
+command.)  You may put subdirectories in too, e.g. `remote:bucket/path/to/dir`.
+
+## Configuration
+
+Here is an example of making a b2 configuration.  First run
+
+```console
+rclone config
+```
+
+This will guide you through an interactive setup process.  To authenticate
+you will either need your Account ID (a short hex number) and Master
+Application Key (a long hex number) OR an Application Key, which is the
+recommended method. See below for further details on generating and using
+an Application Key.
+
+```text
+No remotes found, make a new one\?
+n) New remote
+q) Quit config
+n/q> n
+name> remote
+Type of storage to configure.
+Choose a number from below, or type in your own value
+[snip]
+XX / Backblaze B2
+   \ "b2"
+[snip]
+Storage> b2
+Account ID or Application Key ID
+account> 123456789abc
+Application Key
+key> 0123456789abcdef0123456789abcdef0123456789
+Endpoint for the service - leave blank normally.
+endpoint>
+Remote config
+Configuration complete.
+Options:
+- type: b2
+- account: 123456789abc
+- key: 0123456789abcdef0123456789abcdef0123456789
+- endpoint:
+Keep this "remote" remote?
+y) Yes this is OK
+e) Edit this remote
+d) Delete this remote
+y/e/d> y
+```
+
+This remote is called `remote` and can now be used like this
+
+See all buckets
+
+```console
+rclone lsd remote:
+```
+
+Create a new bucket
+
+```console
+rclone mkdir remote:bucket
+```
+
+List the contents of a bucket
+
+```console
+rclone ls remote:bucket
+```
+
+Sync `/home/local/directory` to the remote bucket, deleting any
+excess files in the bucket.
+
+```console
+rclone sync --interactive /home/local/directory remote:bucket
+```
+
+### Application Keys
+
+B2 supports multiple [Application Keys for different access permission
+to B2 Buckets](https://www.backblaze.com/docs/cloud-storage-application-keys).
+
+You can use these with rclone too; you will need to use rclone version 1.43
+or later.
+
+Follow Backblaze's docs to create an Application Key with the required
+permission and add the `applicationKeyId` as the `account` and the
+`Application Key` itself as the `key`.
+
+Note that you must put the *applicationKeyId* as the `account` – you
+can't use the master Account ID.  If you try then B2 will return 401
+errors.
+
+### --fast-list
+
+This remote supports `--fast-list` which allows you to use fewer
+transactions in exchange for more memory. See the [rclone
+docs](/docs/#fast-list) for more details.
+
+### Modification times
+
+The modification time is stored as metadata on the object as
+`X-Bz-Info-src_last_modified_millis` as milliseconds since 1970-01-01
+in the Backblaze standard.  Other tools should be able to use this as
+a modified time.
+
+Modified times are used in syncing and are fully supported. Note that
+if a modification time needs to be updated on an object then it will
+create a new version of the object.
+
+### Restricted filename characters
+
+In addition to the [default restricted characters set](/overview/#restricted-characters)
+the following characters are also replaced:
+
+| Character | Value | Replacement |
+| --------- |:-----:|:-----------:|
+| \         | 0x5C  | ＼           |
+
+Invalid UTF-8 bytes will also be [replaced](/overview/#invalid-utf8),
+as they can't be used in JSON strings.
+
+Note that in 2020-05 Backblaze started allowing \ characters in file
+names. Rclone hasn't changed its encoding as this could cause syncs to
+re-transfer files. If you want rclone not to replace \ then see the
+`--b2-encoding` flag below and remove the `BackSlash` from the
+string. This can be set in the config.
+
+### SHA1 checksums
+
+The SHA1 checksums of the files are checked on upload and download and
+will be used in the syncing process.
+
+Large files (bigger than the limit in `--b2-upload-cutoff`) which are
+uploaded in chunks will store their SHA1 on the object as
+`X-Bz-Info-large_file_sha1` as recommended by Backblaze.
+
+For a large file to be uploaded with an SHA1 checksum, the source
+needs to support SHA1 checksums. The local disk supports SHA1
+checksums so large file transfers from local disk will have an SHA1.
+See [the overview](/overview/#features) for exactly which remotes
+support SHA1.
+
+Sources which don't support SHA1, in particular `crypt` will upload
+large files without SHA1 checksums.  This may be fixed in the future
+(see [#1767](https://github.com/rclone/rclone/issues/1767)).
+
+Files sizes below `--b2-upload-cutoff` will always have an SHA1
+regardless of the source.
+
+### Transfers
+
+Backblaze recommends that you do lots of transfers simultaneously for
+maximum speed.  In tests from my SSD equipped laptop the optimum
+setting is about `--transfers 32` though higher numbers may be used
+for a slight speed improvement. The optimum number for you may vary
+depending on your hardware, how big the files are, how much you want
+to load your computer, etc.  The default of `--transfers 4` is
+definitely too low for Backblaze B2 though.
+
+Note that uploading big files (bigger than 200 MiB by default) will use
+a 96 MiB RAM buffer by default.  There can be at most `--transfers` of
+these in use at any moment, so this sets the upper limit on the memory
+used.
+
+### Versions
+
+The default setting of B2 is to keep old versions of files. This means
+when rclone uploads a new version of a file it creates a [new version
+of it](https://www.backblaze.com/docs/cloud-storage-file-versions).
+Likewise when you delete a file, the old version will be marked hidden
+and still be available.
+
+Whether B2 keeps old versions of files or not can be adjusted on a per
+bucket basis using the "Lifecycle settings" on the B2 control panel or
+when creating the bucket using the [--b2-lifecycle](#b2-lifecycle)
+flag or after creation using the [rclone backend lifecycle](#lifecycle)
+command.
+
+You may opt in to a "hard delete" of files with the `--b2-hard-delete`
+flag which permanently removes files on deletion instead of hiding
+them.
+
+Old versions of files, where available, are visible using the
+`--b2-versions` flag. These can be deleted as required with `delete`.
+
+It is also possible to view a bucket as it was at a certain point in time,
+using the `--b2-version-at` flag. This will show the file versions as they
+were at that time, showing files that have been deleted afterwards, and
+hiding files that were created since.
+
+If you wish to remove all the old versions, and unfinished large file
+uploads, then you can use the `rclone cleanup remote:bucket` command
+which will delete all the old versions of files, leaving the current ones
+intact.  You can also supply a path and only old versions under that path
+will be deleted, e.g. `rclone cleanup remote:bucket/path/to/stuff`.
+
+Note that `cleanup` will remove partially uploaded files from the bucket
+if they are more than a day old. If you want more control over the
+expiry date then run `rclone backend cleanup b2:bucket -o max-age=1h`
+to remove all unfinished large file uploads older than one hour, leaving
+old versions intact.
+
+If you wish to remove all the old versions, leaving current files and
+unfinished large files intact, then you can use the
+[`rclone backend cleanup-hidden remote:bucket`](#cleanup-hidden)
+command. You can also supply a path and only old versions under that
+path will be deleted, e.g.
+`rclone backend cleanup-hidden remote:bucket/path/to/stuff`.
+
+When you `purge` a bucket, the current and the old versions will be
+deleted then the bucket will be deleted.
+
+However `delete` will cause the current versions of the files to
+become hidden old versions.
+
+Here is a session showing the listing and retrieval of an old
+version followed by a `cleanup` of the old versions.
+
+Show current version and all the versions with `--b2-versions` flag.
+
+```console
+$ rclone -q ls b2:cleanup-test
+        9 one.txt
+
+$ rclone -q --b2-versions ls b2:cleanup-test
+        9 one.txt
+        8 one-v2016-07-04-141032-000.txt
+       16 one-v2016-07-04-141003-000.txt
+       15 one-v2016-07-02-155621-000.txt
+```
+
+Retrieve an old version
+
+```console
+$ rclone -q --b2-versions copy b2:cleanup-test/one-v2016-07-04-141003-000.txt /tmp
+
+$ ls -l /tmp/one-v2016-07-04-141003-000.txt
+-rw-rw-r-- 1 ncw ncw 16 Jul  2 17:46 /tmp/one-v2016-07-04-141003-000.txt
+```
+
+Clean up all the old versions and show that they've gone.
+
+```console
+$ rclone -q cleanup b2:cleanup-test
+
+$ rclone -q ls b2:cleanup-test
+        9 one.txt
+
+$ rclone -q --b2-versions ls b2:cleanup-test
+        9 one.txt
+```
+
+#### Versions naming caveat
+
+When using `--b2-versions` flag rclone is relying on the file name
+to work out whether the objects are versions or not. Versions' names
+are created by inserting timestamp between file name and its extension.
+
+```console
+        9 file.txt
+        8 file-v2023-07-17-161032-000.txt
+       16 file-v2023-06-15-141003-000.txt
+```
+
+If there are real files present with the same names as versions, then
+behaviour of `--b2-versions` can be unpredictable.
+
+### Data usage
+
+It is useful to know how many requests are sent to the server in different scenarios.
+
+All copy commands send the following 4 requests:
+
+```text
+/b2api/v4/b2_authorize_account
+/b2api/v1/b2_create_bucket
+/b2api/v1/b2_list_buckets
+/b2api/v1/b2_list_file_names
+```
+
+The `b2_list_file_names` request will be sent once for every 1k files
+in the remote path, providing the checksum and modification time of
+the listed files. As of version 1.33 issue
+[#818](https://github.com/rclone/rclone/issues/818) causes extra requests
+to be sent when using B2 with Crypt. When a copy operation does not
+require any files to be uploaded, no more requests will be sent.
+
+Uploading files that do not require chunking, will send 2 requests per
+file upload:
+
+```text
+/b2api/v1/b2_get_upload_url
+/b2api/v1/b2_upload_file/
+```
+
+Uploading files requiring chunking, will send 2 requests (one each to
+start and finish the upload) and another 2 requests for each chunk:
+
+```text
+/b2api/v1/b2_start_large_file
+/b2api/v1/b2_get_upload_part_url
+/b2api/v1/b2_upload_part/
+/b2api/v1/b2_finish_large_file
+```
+
+#### Versions
+
+Versions can be viewed with the `--b2-versions` flag. When it is set
+rclone will show and act on older versions of files.  For example
+
+Listing without `--b2-versions`
+
+```console
+$ rclone -q ls b2:cleanup-test
+        9 one.txt
+```
+
+And with
+
+```console
+$ rclone -q --b2-versions ls b2:cleanup-test
+        9 one.txt
+        8 one-v2016-07-04-141032-000.txt
+       16 one-v2016-07-04-141003-000.txt
+       15 one-v2016-07-02-155621-000.txt
+```
+
+Showing that the current version is unchanged but older versions can
+be seen.  These have the UTC date that they were uploaded to the
+server to the nearest millisecond appended to them.
+
+Note that when using `--b2-versions` no file write operations are
+permitted, so you can't upload files or delete them.
+
+### B2 and rclone link
+
+Rclone supports generating file share links for private B2 buckets.
+They can either be for a file for example:
+
+```console
+./rclone link B2:bucket/path/to/file.txt
+https://f002.backblazeb2.com/file/bucket/path/to/file.txt?Authorization=xxxxxxxx
+
+```
+
+or if run on a directory you will get:
+
+```console
+./rclone link B2:bucket/path
+https://f002.backblazeb2.com/file/bucket/path?Authorization=xxxxxxxx
+```
+
+you can then use the authorization token (the part of the url from the
+ `?Authorization=` on) on any file path under that directory. For example:
+
+```text
+https://f002.backblazeb2.com/file/bucket/path/to/file1?Authorization=xxxxxxxx
+https://f002.backblazeb2.com/file/bucket/path/file2?Authorization=xxxxxxxx
+https://f002.backblazeb2.com/file/bucket/path/folder/file3?Authorization=xxxxxxxx
+
+```
+
+<!-- autogenerated options start - DO NOT EDIT - instead edit fs.RegInfo in backend/b2/b2.go and run make backenddocs to verify --> <!-- markdownlint-disable-line line-length -->
+### Standard options
+
+Here are the Standard options specific to b2 (Backblaze B2).
+
+#### --b2-account
+
+Account ID or Application Key ID.
+
+Properties:
+
+- Config:      account
+- Env Var:     RCLONE_B2_ACCOUNT
+- Type:        string
+- Required:    true
+
+#### --b2-key
+
+Application Key.
+
+Properties:
+
+- Config:      key
+- Env Var:     RCLONE_B2_KEY
+- Type:        string
+- Required:    true
+
+#### --b2-hard-delete
+
+Permanently delete files on remote removal, otherwise hide files.
+
+Properties:
+
+- Config:      hard_delete
+- Env Var:     RCLONE_B2_HARD_DELETE
+- Type:        bool
+- Default:     false
+
+### Advanced options
+
+Here are the Advanced options specific to b2 (Backblaze B2).
+
+#### --b2-endpoint
+
+Endpoint for the service.
+
+Leave blank normally.
+
+Properties:
+
+- Config:      endpoint
+- Env Var:     RCLONE_B2_ENDPOINT
+- Type:        string
+- Required:    false
+
+#### --b2-test-mode
+
+A flag string for X-Bz-Test-Mode header for debugging.
+
+This is for debugging purposes only. Setting it to one of the strings
+below will cause b2 to return specific errors:
+
+  * "fail_some_uploads"
+  * "expire_some_account_authorization_tokens"
+  * "force_cap_exceeded"
+
+These will be set in the "X-Bz-Test-Mode" header which is documented
+in the [b2 integrations checklist](https://www.backblaze.com/docs/cloud-storage-integration-checklist).
+
+Properties:
+
+- Config:      test_mode
+- Env Var:     RCLONE_B2_TEST_MODE
+- Type:        string
+- Required:    false
+
+#### --b2-versions
+
+Include old versions in directory listings.
+
+Note that when using this no file write operations are permitted,
+so you can't upload files or delete them.
+
+Properties:
+
+- Config:      versions
+- Env Var:     RCLONE_B2_VERSIONS
+- Type:        bool
+- Default:     false
+
+#### --b2-version-at
+
+Show file versions as they were at the specified time.
+
+Note that when using this no file write operations are permitted,
+so you can't upload files or delete them.
+
+Properties:
+
+- Config:      version_at
+- Env Var:     RCLONE_B2_VERSION_AT
+- Type:        Time
+- Default:     off
+
+#### --b2-upload-cutoff
+
+Cutoff for switching to chunked upload.
+
+Files above this size will be uploaded in chunks of "--b2-chunk-size".
+
+This value should be set no larger than 4.657 GiB (== 5 GB).
+
+Properties:
+
+- Config:      upload_cutoff
+- Env Var:     RCLONE_B2_UPLOAD_CUTOFF
+- Type:        SizeSuffix
+- Default:     200Mi
+
+#### --b2-copy-cutoff
+
+Cutoff for switching to multipart copy.
+
+Any files larger than this that need to be server-side copied will be
+copied in chunks of this size.
+
+The minimum is 0 and the maximum is 4.6 GiB.
+
+Properties:
+
+- Config:      copy_cutoff
+- Env Var:     RCLONE_B2_COPY_CUTOFF
+- Type:        SizeSuffix
+- Default:     4Gi
+
+#### --b2-chunk-size
+
+Upload chunk size.
+
+When uploading large files, chunk the file into this size.
+
+Must fit in memory. These chunks are buffered in memory and there
+might a maximum of "--transfers" chunks in progress at once.
+
+5,000,000 Bytes is the minimum size.
+
+Properties:
+
+- Config:      chunk_size
+- Env Var:     RCLONE_B2_CHUNK_SIZE
+- Type:        SizeSuffix
+- Default:     96Mi
+
+#### --b2-upload-concurrency
+
+Concurrency for multipart uploads.
+
+This is the number of chunks of the same file that are uploaded
+concurrently.
+
+Note that chunks are stored in memory and there may be up to
+"--transfers" * "--b2-upload-concurrency" chunks stored at once
+in memory.
+
+Properties:
+
+- Config:      upload_concurrency
+- Env Var:     RCLONE_B2_UPLOAD_CONCURRENCY
+- Type:        int
+- Default:     4
+
+#### --b2-disable-checksum
+
+Disable checksums for large (> upload cutoff) files.
+
+Normally rclone will calculate the SHA1 checksum of the input before
+uploading it so it can add it to metadata on the object. This is great
+for data integrity checking but can cause long delays for large files
+to start uploading.
+
+Properties:
+
+- Config:      disable_checksum
+- Env Var:     RCLONE_B2_DISABLE_CHECKSUM
+- Type:        bool
+- Default:     false
+
+#### --b2-download-url
+
+Custom endpoint for downloads.
+
+This is usually set to a Cloudflare CDN URL as Backblaze offers
+free egress for data downloaded through the Cloudflare network.
+Rclone works with private buckets by sending an "Authorization" header.
+If the custom endpoint rewrites the requests for authentication,
+e.g., in Cloudflare Workers, this header needs to be handled properly.
+Leave blank if you want to use the endpoint provided by Backblaze.
+
+The URL provided here SHOULD have the protocol and SHOULD NOT have
+a trailing slash or specify the /file/bucket subpath as rclone will
+request files with "{download_url}/file/{bucket_name}/{path}".
+
+Example:
+> https://mysubdomain.mydomain.tld
+(No trailing "/", "file" or "bucket")
+
+Properties:
+
+- Config:      download_url
+- Env Var:     RCLONE_B2_DOWNLOAD_URL
+- Type:        string
+- Required:    false
+
+#### --b2-download-auth-duration
+
+Time before the public link authorization token will expire in s or suffix ms|s|m|h|d.
+
+This is used in combination with "rclone link" for making files
+accessible to the public and sets the duration before the download
+authorization token will expire.
+
+The minimum value is 1 second. The maximum value is one week.
+
+Properties:
+
+- Config:      download_auth_duration
+- Env Var:     RCLONE_B2_DOWNLOAD_AUTH_DURATION
+- Type:        Duration
+- Default:     1w
+
+#### --b2-memory-pool-flush-time
+
+How often internal memory buffer pools will be flushed. (no longer used)
+
+Properties:
+
+- Config:      memory_pool_flush_time
+- Env Var:     RCLONE_B2_MEMORY_POOL_FLUSH_TIME
+- Type:        Duration
+- Default:     1m0s
+
+#### --b2-memory-pool-use-mmap
+
+Whether to use mmap buffers in internal memory pool. (no longer used)
+
+Properties:
+
+- Config:      memory_pool_use_mmap
+- Env Var:     RCLONE_B2_MEMORY_POOL_USE_MMAP
+- Type:        bool
+- Default:     false
+
+#### --b2-lifecycle
+
+Set the number of days deleted files should be kept when creating a bucket.
+
+On bucket creation, this parameter is used to create a lifecycle rule
+for the entire bucket.
+
+If lifecycle is 0 (the default) it does not create a lifecycle rule so
+the default B2 behaviour applies. This is to create versions of files
+on delete and overwrite and to keep them indefinitely.
+
+If lifecycle is >0 then it creates a single rule setting the number of
+days before a file that is deleted or overwritten is deleted
+permanently. This is known as daysFromHidingToDeleting in the b2 docs.
+
+The minimum value for this parameter is 1 day.
+
+You can also enable hard_delete in the config also which will mean
+deletions won't cause versions but overwrites will still cause
+versions to be made.
+
+See: [rclone backend lifecycle](#lifecycle) for setting lifecycles after bucket creation.
+
+
+Properties:
+
+- Config:      lifecycle
+- Env Var:     RCLONE_B2_LIFECYCLE
+- Type:        int
+- Default:     0
+
+#### --b2-encoding
+
+The encoding for the backend.
+
+See the [encoding section in the overview](/overview/#encoding) for more info.
+
+Properties:
+
+- Config:      encoding
+- Env Var:     RCLONE_B2_ENCODING
+- Type:        Encoding
+- Default:     Slash,BackSlash,Del,Ctl,InvalidUtf8,Dot
+
+#### --b2-sse-customer-algorithm
+
+If using SSE-C, the server-side encryption algorithm used when storing this object in B2.
+
+Properties:
+
+- Config:      sse_customer_algorithm
+- Env Var:     RCLONE_B2_SSE_CUSTOMER_ALGORITHM
+- Type:        string
+- Required:    false
+- Examples:
+  - ""
+    - None
+  - "AES256"
+    - Advanced Encryption Standard (256 bits key length)
+
+#### --b2-sse-customer-key
+
+To use SSE-C, you may provide the secret encryption key encoded in a UTF-8 compatible string to encrypt/decrypt your data
+
+Alternatively you can provide --sse-customer-key-base64.
+
+Properties:
+
+- Config:      sse_customer_key
+- Env Var:     RCLONE_B2_SSE_CUSTOMER_KEY
+- Type:        string
+- Required:    false
+- Examples:
+  - ""
+    - None
+
+#### --b2-sse-customer-key-base64
+
+To use SSE-C, you may provide the secret encryption key encoded in Base64 format to encrypt/decrypt your data
+
+Alternatively you can provide --sse-customer-key.
+
+Properties:
+
+- Config:      sse_customer_key_base64
+- Env Var:     RCLONE_B2_SSE_CUSTOMER_KEY_BASE64
+- Type:        string
+- Required:    false
+- Examples:
+  - ""
+    - None
+
+#### --b2-sse-customer-key-md5
+
+If using SSE-C you may provide the secret encryption key MD5 checksum (optional).
+
+If you leave it blank, this is calculated automatically from the sse_customer_key provided.
+
+
+Properties:
+
+- Config:      sse_customer_key_md5
+- Env Var:     RCLONE_B2_SSE_CUSTOMER_KEY_MD5
+- Type:        string
+- Required:    false
+- Examples:
+  - ""
+    - None
+
+#### --b2-description
+
+Description of the remote.
+
+Properties:
+
+- Config:      description
+- Env Var:     RCLONE_B2_DESCRIPTION
+- Type:        string
+- Required:    false
+
+## Backend commands
+
+Here are the commands specific to the b2 backend.
+
+Run them with:
+
+```console
+rclone backend COMMAND remote:
+```
+
+The help below will explain what arguments each command takes.
+
+See the [backend](/commands/rclone_backend/) command for more
+info on how to pass options and arguments.
+
+These can be run on a running backend using the rc command
+[backend/command](/rc/#backend-command).
+
+### lifecycle
+
+Read or set the lifecycle for a bucket.
+
+```console
+rclone backend lifecycle remote: [options] [<arguments>+]
+```
+
+This command can be used to read or set the lifecycle for a bucket.
+
+To show the current lifecycle rules:
+
+```console
+rclone backend lifecycle b2:bucket
+```
+
+This will dump something like this showing the lifecycle rules.
+
+```json
+[
+    {
+        "daysFromHidingToDeleting": 1,
+        "daysFromUploadingToHiding": null,
+        "daysFromStartingToCancelingUnfinishedLargeFiles": null,
+        "fileNamePrefix": ""
+    }
+]
+```
+
+If there are no lifecycle rules (the default) then it will just return `[]`.
+
+To reset the current lifecycle rules:
+
+```console
+rclone backend lifecycle b2:bucket -o daysFromHidingToDeleting=30
+rclone backend lifecycle b2:bucket -o daysFromUploadingToHiding=5 -o daysFromHidingToDeleting=1
+```
+
+This will run and then print the new lifecycle rules as above.
+
+Rclone only lets you set lifecycles for the whole bucket with the
+fileNamePrefix = "".
+
+You can't disable versioning with B2. The best you can do is to set
+the daysFromHidingToDeleting to 1 day. You can enable hard_delete in
+the config also which will mean deletions won't cause versions but
+overwrites will still cause versions to be made.
+
+```console
+rclone backend lifecycle b2:bucket -o daysFromHidingToDeleting=1
+```
+
+See: <https://www.backblaze.com/docs/cloud-storage-lifecycle-rules>
+
+Options:
+
+- "daysFromHidingToDeleting": After a file has been hidden for this many days
+it is deleted. 0 is off.
+- "daysFromStartingToCancelingUnfinishedLargeFiles": Cancels any unfinished
+large file versions after this many days.
+- "daysFromUploadingToHiding": This many days after uploading a file is hidden.
+
+### cleanup
+
+Remove unfinished large file uploads.
+
+```console
+rclone backend cleanup remote: [options] [<arguments>+]
+```
+
+This command removes unfinished large file uploads of age greater than
+max-age, which defaults to 24 hours.
+
+Note that you can use --interactive/-i or --dry-run with this command to see what
+it would do.
+
+```console
+rclone backend cleanup b2:bucket/path/to/object
+rclone backend cleanup -o max-age=7w b2:bucket/path/to/object
+```
+
+Durations are parsed as per the rest of rclone, 2h, 7d, 7w etc.
+
+Options:
+
+- "max-age": Max age of upload to delete.
+
+### cleanup-hidden
+
+Remove old versions of files.
+
+```console
+rclone backend cleanup-hidden remote: [options] [<arguments>+]
+```
+
+This command removes any old hidden versions of files.
+
+Note that you can use --interactive/-i or --dry-run with this command to see what
+it would do.
+
+```console
+rclone backend cleanup-hidden b2:bucket/path/to/dir
+```
+
+<!-- autogenerated options stop -->
+
+## Limitations
+
+`rclone about` is not supported by the B2 backend. Backends without
+this capability cannot determine free space for an rclone mount or
+use policy `mfs` (most free space) as a member of an rclone union
+remote.
+
+See [List of backends that do not support rclone about](https://rclone.org/overview/#optional-features)
+and [rclone about](https://rclone.org/commands/rclone_about/).

@@ -10,9 +10,9 @@
 
 ### 你刚刚做了什么
 
-当你运行 `npx antigravity-awesome-skills` 或克隆仓库时，你：
+当你运行 `npx agentic-awesome-skills` 或克隆仓库时，你：
 
-✅ **下载了 1,436+ 个技能文件**到你的计算机（默认路径：`~/.gemini/antigravity/skills/`；如果你使用了 `--path`，则是自定义路径如 `~/.agent/skills/`）
+✅ **下载了 1,936+ 个技能文件**到你的计算机（默认路径：`~/.agents/skills/`；如果你使用了 `--path`，则是自定义路径如 `~/.agent/skills/`）
 ✅ **使它们对你的 AI 助手可用**
 ❌ **并未自动启用所有技能**（它们只是在那里等待使用）
 
@@ -32,15 +32,15 @@
 
 **类比：**
 
-- 你安装了一个包含 1,436+ 个工具的工具箱（✅ 完成）
+- 你安装了一个包含 1,936+ 个工具的工具箱（✅ 完成）
 - 捆绑包就像**贴有标签的整理托盘**，上面写着："如果你是木匠，从这 10 个工具开始"
-- 你不需要安装捆绑包——你从它们中**选择技能**
+- 你通常从捆绑包中**选择技能**；维护者也可以把它们用作插件子集或 Antigravity 激活预设
 
 ### 捆绑包不是什么
 
-❌ 单独的安装
-❌ 不同的下载命令
-❌ 大多数用户在正常安装期间需要激活的东西
+❌ 可调用的单个超级技能
+❌ 与技能本身不同的内容格式
+❌ 大多数用户每天都必须单独管理的东西
 ❌ 可调用的超级技能，如 `@essentials` 或 `/web-wizard`
 
 ### 示例："Web Wizard" 捆绑包
@@ -202,7 +202,7 @@ Use @brainstorming to plan this feature
 
 ## 步骤 5：选择你的前几个技能（实用建议）
 
-不要试图一次使用所有 1,436+ 个技能。这里有一个明智的方法：
+不要试图一次使用所有 1,936+ 个技能。这里有一个明智的方法：
 
 如果在选择技能之前你需要特定于工具的起点，请使用：
 
@@ -320,7 +320,7 @@ AI: [创建测试，设置 CI/CD，部署到 Vercel]
 可以！三种方式：
 
 1. 浏览 [CATALOG.md](../../CATALOG.md)（可搜索列表）
-2. 运行 `ls ~/.gemini/antigravity/skills/`（或你的实际安装路径）
+2. 运行 `ls ~/.agents/skills/`（或你的实际安装路径）
 3. 询问你的 AI："你有哪些关于[主题]的技能？"
 
 ### "安装后我需要重启 IDE 吗？"
@@ -329,15 +329,15 @@ AI: [创建测试，设置 CI/CD，部署到 Vercel]
 
 1. 尝试重启你的 IDE/CLI
 2. 检查安装路径是否与你的工具匹配
-3. 尝试显式路径：`npx antigravity-awesome-skills --claude`（或 `--cursor`、`--gemini` 等）
+3. 尝试显式路径：`npx agentic-awesome-skills --claude`（或 `--cursor`、`--gemini` 等）
 
 ### "我可以一次将所有技能加载到模型中吗？"
 
-不可以。即使你在本地安装了 1,436+ 个技能，你**不应该**将每个 `SKILL.md` 连接到单个系统提示词或上下文块中。
+不可以。即使你在本地安装了 1,936+ 个技能，你**不应该**将每个 `SKILL.md` 连接到单个系统提示词或上下文块中。
 
 预期的模式是：
 
-- 使用 `data/skills_index.json`（清单）来发现存在哪些技能；以及
+- 使用根目录 `skills_index.json`（规范清单）来发现存在哪些技能；仅在宿主必须读取 `data/` 子树时使用 `data/skills_index.json` 兼容性镜像；以及
 - 仅为你实际在对话中使用的特定 `@skill-id` 值加载 `SKILL.md` 文件。
 
 如果你正在构建自己的主机/代理（例如 Jetski/Cortex + Gemini），请参阅：
@@ -354,9 +354,9 @@ Use @skill-creator to help me build a custom skill for [your task]
 
 ### "如果技能没有按预期工作怎么办？"
 
-1. 直接在安装路径中检查技能的 `SKILL.md` 文件，例如：`~/.gemini/antigravity/skills/[skill-name]/SKILL.md`
+1. 直接在安装路径中检查技能的 `SKILL.md` 文件，例如：`~/.agents/skills/[skill-name]/SKILL.md`
 2. 阅读描述以确保你正确使用它
-3. [打开问题](https://github.com/sickn33/antigravity-awesome-skills/issues)并提供详细信息
+3. [打开问题](https://github.com/sickn33/agentic-awesome-skills/issues)并提供详细信息
 
 ---
 
@@ -418,7 +418,7 @@ Use @skill-creator to help me build a custom skill for [your task]
 
 1. 查看 [FAQ](faq.md)
 2. 查看[真实示例](../contributors/examples.md)
-3. [打开讨论](https://github.com/sickn33/antigravity-awesome-skills/discussions)
-4. [提交问题](https://github.com/sickn33/antigravity-awesome-skills/issues)以帮助我们改进此指南！
+3. [打开讨论](https://github.com/sickn33/agentic-awesome-skills/discussions)
+4. [提交问题](https://github.com/sickn33/agentic-awesome-skills/issues)以帮助我们改进此指南！
 
 记住：你并不孤单！这个项目的全部意义是让 AI 助手更易于使用。如果本指南没有帮助，请告诉我们，以便我们修复它。🙌

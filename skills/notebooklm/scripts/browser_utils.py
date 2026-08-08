@@ -8,7 +8,7 @@ import time
 import random
 
 from patchright.sync_api import Playwright, BrowserContext, Page
-from config import BROWSER_PROFILE_DIR, STATE_FILE, BROWSER_ARGS, USER_AGENT
+from config import BROWSER_PROFILE_DIR, STATE_FILE, BROWSER_ARGS, USER_AGENT, ensure_private_state
 
 
 class BrowserFactory:
@@ -25,6 +25,7 @@ class BrowserFactory:
         and cookie workaround.
         """
         # Launch persistent context
+        ensure_private_state()
         context = playwright.chromium.launch_persistent_context(
             user_data_dir=user_data_dir,
             channel="chrome",  # Use real Chrome

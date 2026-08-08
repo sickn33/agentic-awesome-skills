@@ -1,12 +1,10 @@
-# Build and deploy the web app to GitHub Pages.
+# Build and deploy the web app to GitHub Pages only after an explicit release dispatch.
 # Enable in repo: Settings → Pages → Source: GitHub Actions.
 # Site URL: https://<owner>.github.io/<repo>/
 
 name: Deploy Web App to GitHub Pages
 
 on:
-  push:
-    branches: ["main", "master"]
   workflow_dispatch:
 
 permissions:
@@ -26,22 +24,90 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify release provenance
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_REF_TYPE}" != "tag" ]]; then
+            echo "Pages deployment must be dispatched from an immutable release tag." >&2
+            exit 1
+          fi
+          if [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Pages deployment tag must match vX.Y.Z exactly: ${GITHUB_REF_NAME}" >&2
+            exit 1
+          fi
+
+          package_version="$(jq -r '.version // empty' package.json)"
+          expected_tag="v${package_version}"
+          if [[ "${GITHUB_REF_NAME}" != "${expected_tag}" ]]; then
+            echo "Pages deployment tag ${GITHUB_REF_NAME} does not match package.json ${expected_tag}." >&2
+            exit 1
+          fi
+
+          tag_commit="$(git rev-parse "refs/tags/${GITHUB_REF_NAME}^{commit}")"
+          head_commit="$(git rev-parse HEAD)"
+          if [[ "${tag_commit}" != "${GITHUB_SHA}" || "${head_commit}" != "${GITHUB_SHA}" ]]; then
+            echo "Pages deployment tag, checkout, and workflow SHA must resolve to the same commit." >&2
+            exit 1
+          fi
+
+          release_json="$(gh api --method GET "repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF_NAME}")"
+          if ! jq -e --arg tag "${GITHUB_REF_NAME}" \
+            '.tag_name == $tag and .draft == false and (.published_at | type == "string" and length > 0)' \
+            <<<"${release_json}" >/dev/null; then
+            echo "Pages deployment requires a published, non-draft GitHub Release for ${GITHUB_REF_NAME}." >&2
+            exit 1
+          fi
 
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "lts/*"
           cache: "npm"
 
+      - name: Setup Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.10"
+
+      - name: Install Python dependencies
+        run: pip install -r tools/requirements.txt
+
       - name: Install root dependencies
         run: npm ci
+
+      - name: Validate canonical repository state
+        run: |
+          npm run validate:strict
+          npm run validate:glossary
+          npm run validate:references
+          npm run audit:consistency
+          npm run check:warning-budget
+          npm run security:docs
+          npm run security:scan:strict
+          npm run plugin-compat:check
+          npm run bundles:check
+          npm run test
 
       - name: Prepare web app (index + skills)
         run: npm run app:setup
 
       - name: Install web-app dependencies
         run: cd apps/web-app && npm ci
+
+      - name: Run web app coverage
+        run: npm run app:test:coverage
+
+      - name: Audit web app dependencies
+        run: npm --prefix apps/web-app audit --audit-level=high
 
       - name: Build web app for GitHub Pages
         run: cd apps/web-app && npm run build
@@ -50,14 +116,14 @@ jobs:
           SEO_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
 
       - name: Validate SEO artifact quality
-        run: cd apps/web-app && npm run verify:seo
+        run: cd apps/web-app && npm run verify:seo -- --require-hosted-url
 
       - name: Validate generated sitemap and asset consistency
         run: |
           cd apps/web-app
           test -f dist/robots.txt
           test -f dist/sitemap.xml
-          test -f dist/manifest.webmanifest
+          test -f dist/site.webmanifest
 
       - name: Prepare artifact (404 + .nojekyll)
         run: |
@@ -67,10 +133,10 @@ jobs:
           test -f 404.html
 
       - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: apps/web-app/dist
 
@@ -83,4 +149,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deploy
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5

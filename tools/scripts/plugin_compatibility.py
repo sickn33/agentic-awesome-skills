@@ -252,6 +252,11 @@ def analyze_skill(skill_dir: Path, skills_root: Path) -> dict[str, Any]:
     for target, explicit_state in restrictions.items():
         if explicit_state == "blocked":
             target_reasons[target].add("explicit_target_restriction")
+        elif explicit_state == "supported":
+            # A supported declaration is a maintainer-reviewed override for
+            # alternative agent-home paths documented in the same skill. It
+            # must not suppress independent portability or runtime findings.
+            target_reasons[target].discard("target_specific_home_path")
 
     statuses = {
         target: "blocked" if target_reasons[target] else "supported"

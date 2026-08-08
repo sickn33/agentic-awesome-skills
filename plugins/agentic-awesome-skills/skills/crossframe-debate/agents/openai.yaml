@@ -1,0 +1,4 @@
+interface:
+  display_name: "CrossFrame Debate"
+  short_description: "把命题拆成正反结构、证据要求与撤回条件。"
+  default_prompt: "用 crossframe-debate 检验这个命题，给出正反双方最好版本、隐藏前提、证据要求、最强反驳、反向条件、撤回条件和更稳表达。"

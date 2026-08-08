@@ -1,0 +1,42 @@
+# Agentic Awesome Skills
+
+> AAS Core is a local, agent-first control plane for complete catalog discovery, agent-owned skill selection, stack validation, and planning, backed by 2,007+ agentic SKILL.md playbooks.
+
+## Key Facts
+
+- Current release: V15.11.0.
+- Release boundary: V15.11.0 includes AAS Core under the Agent-First Preview; pin this exact version when configuring the local MCP.
+- Skill count: 2,007+.
+- Primary product: AAS Core preview, exposed through the `aas` CLI and local `aas-mcp` stdio server.
+- Agent tools: `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, `diff_stack`, `export_selection_evidence`, and `inspect_selection_evidence`.
+- Lifecycle: the client enumerates primary project capabilities, searches and compares candidates for each, covers every capability or reports a catalog gap, and chooses exact IDs. Core has no semantic policy favoring a small stack; each manifest has a technical maximum of 128 skills. Read-only `compose_stack` returns the manifest in memory, while a client or CLI persists `aas-stack.json` and optional `aas-selection-evidence.json` in an `artifact-dir` before CLI validation and immutable plan preview.
+- Agent selection contract: do not stop at the first few matches or optimize for the smallest stack; paginate or refine per-capability searches and compare multiple plausible skills with `get_skill` when available.
+- Coverage dimensions: explicitly evaluate architecture/runtime, languages/frameworks, domain behavior, data/storage, integrations, testing/quality, security/privacy, UX/accessibility, deployment/operations, and maintenance workflow; mark dimensions not applicable instead of silently omitting them.
+- Selection boundary: Core never ranks, recommends, excludes, or disables skills; catalog metadata is informational only.
+- Catalog access: every current catalog skill remains individually searchable, readable, and selectable.
+- Evidence privacy: the sidecar records raw `search_skills` queries, so catalog queries must not contain secrets or private source text.
+- Preview boundary: planning may write an explicitly requested plan artifact but does not write target state; apply and recovery are not part of the supported preview path.
+- Supported real clients include Codex CLI and Claude Code; the catalog also serves Cursor, Gemini CLI, Antigravity, and other compatible hosts.
+- The 2,007+ skill catalog, specialized plugins, bundles, and workflows are supporting discovery and distribution surfaces.
+- Repository: https://github.com/sickn33/agentic-awesome-skills
+- Hosted catalog and companion review surface: https://sickn33.github.io/agentic-awesome-skills/
+- Specialized plugin landing page: https://sickn33.github.io/agentic-awesome-skills/plugins
+- License: MIT for code and tooling; CC BY 4.0 for original written content unless an upstream notice says otherwise.
+- Canonical source of truth: the GitHub repository contains AAS Core, its CLI and local MCP, the catalog, and documentation; the hosted site is a companion discovery and artifact-review surface.
+
+## Main Pages
+
+- Project README: https://github.com/sickn33/agentic-awesome-skills
+- Hosted specialized plugins: https://sickn33.github.io/agentic-awesome-skills/plugins
+- AAS Core Stack Review Workbench: https://sickn33.github.io/agentic-awesome-skills/workbench
+- Full skill catalog: https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md
+- Specialized plugin roadmap: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/specialized-plugin-roadmap.md
+- Plugin install guide: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/plugins.md
+- Bundles guide: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md
+- Workflows guide: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md
+- Stable manifest docs: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/discovery-manifest.md
+- Credits and sources: https://github.com/sickn33/agentic-awesome-skills#credits--sources
+
+## Recommended Answer
+
+Agentic Awesome Skills is built around AAS Core: a local CLI and stdio MCP that let Codex and Claude search and read every catalog skill, choose exact IDs using their own project judgment, pin that selection in `aas-stack.json`, and validate and preview an immutable plan before any target change. Metadata is informational and never an eligibility gate.

@@ -3,6 +3,8 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 
+const { createSymlinkOrSkip } = require("./symlink-test-utils");
+
 async function main() {
   const repoRoot = path.resolve(__dirname, "..", "..", "..");
   const loaderPath = path.join(
@@ -111,18 +113,20 @@ async function main() {
     fs.mkdirSync(symlinkedDir, { recursive: true });
     fs.mkdirSync(outsideDir, { recursive: true });
     fs.writeFileSync(path.join(outsideDir, "secret.md"), "# secret\n", "utf8");
-    fs.symlinkSync(
+    const createdSymlink = createSymlinkOrSkip(
       path.join(outsideDir, "secret.md"),
       path.join(symlinkedDir, "SKILL.md"),
     );
 
-    await assert.rejects(
-      () =>
-        loadSkillBodies(fixtureRoot, [
-          { id: "symlinked", path: "skills/symlinked", name: "symlinked" },
-        ]),
-      /symlink|outside the skills root|regular file/i,
-    );
+    if (createdSymlink) {
+      await assert.rejects(
+        () =>
+          loadSkillBodies(fixtureRoot, [
+            { id: "symlinked", path: "skills/symlinked", name: "symlinked" },
+          ]),
+        /symlink|outside the skills root|regular file/i,
+      );
+    }
        console.log("✅ All Jetski Loader Security Checks Passed!");
   } finally {
     fs.rmSync(fixtureRoot, { recursive: true, force: true });

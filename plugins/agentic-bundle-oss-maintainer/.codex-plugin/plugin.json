@@ -1,0 +1,39 @@
+{
+  "name": "aasb-oss-maintainer",
+  "version": "15.11.0",
+  "description": "Install the \"OSS Maintainer\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "oss-maintainer",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "OSS Maintainer",
+    "shortDescription": "Maintainer & OSS · 10 curated skills",
+    "longDescription": "For shipping clean changes in public repositories. Covers Commit, Create Branch, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Maintainer & OSS",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the \"OSS Maintainer\" skills to help me complete this task.",
+      "Review this project with the \"OSS Maintainer\" workflow."
+    ]
+  }
+}

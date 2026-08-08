@@ -15,7 +15,7 @@ If bundles are your toolbox, workflows are your execution playbook.
 
 ## How to Use Workflows
 
-1. Install the repository once (`npx antigravity-awesome-skills`).
+1. Install the repository once (`npx agentic-awesome-skills`).
 2. Pick a workflow matching your immediate goal.
 3. Execute steps in order and invoke the listed skills in each step.
 4. Keep output artifacts at each step (plan, decisions, tests, validation evidence).

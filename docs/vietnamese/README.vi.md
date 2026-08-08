@@ -1,6 +1,10 @@
-# 🌌 Antigravity Awesome Skills: 560+ Kỹ năng (Skills) cho Claude Code, Gemini CLI, Cursor, Copilot và nhiều hơn nữa
+# AAS Core — Agentic Awesome Skills
 
-> **Bộ sưu tập tối ưu gồm hơn 560 Kỹ năng Phổ quát cho các Trợ lý Lập trình AI — Claude Code, Gemini CLI, Codex CLI, Antigravity IDE, GitHub Copilot, Cursor, OpenCode**
+> **Ghép stack kỹ năng cục bộ, xác định cho coding agent: từ hồ sơ dự án tường minh đến kế hoạch có thể xem lại trước mọi thay đổi trên target.**
+
+Codex hoặc Claude tự kiểm tra dự án; AAS không quét repository. Agent tìm kiếm catalog cục bộ đầy đủ theo thứ tự ổn định, tự đánh giá kết quả không có điểm số hay xếp hạng, rồi gửi `profile` cùng chính xác các ID đã chọn tới `compose_stack`. AAS Core ghi nhận lựa chọn trong `aas-stack.json` schema 2; CLI xác thực manifest và tạo kế hoạch preview bất biến trước khi thay đổi kỹ năng.
+
+> **Ranh giới phát hành:** Dòng 15.x hiện tại bao gồm AAS Core. Chỉ dùng một phiên bản chính xác có release notes tuyên bố rõ rằng nó bao gồm Core. Luồng preview được hỗ trợ dừng sau khi xem kế hoạch; `apply` và `recover` vẫn mang tính thử nghiệm. [Tìm hiểu AAS Core](AAS_CORE.vi.md).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Anthropic-purple)](https://claude.ai)
@@ -9,29 +13,28 @@
 [![Cursor](https://img.shields.io/badge/Cursor-AI%20IDE-orange)](https://cursor.sh)
 [![Copilot](https://img.shields.io/badge/GitHub%20Copilot-VSCode-lightblue)](https://github.com/features/copilot)
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray)](https://github.com/opencode-ai/opencode)
-[![Antigravity](https://img.shields.io/badge/Antigravity-DeepMind-red)](https://github.com/sickn33/antigravity-awesome-skills)
+[![Antigravity](https://img.shields.io/badge/Antigravity-DeepMind-red)](https://github.com/sickn33/agentic-awesome-skills)
 
-**Antigravity Awesome Skills** là một thư viện được tuyển chọn và kiểm chứng kỹ lưỡng với **560 kỹ năng hiệu suất cao** được thiết kế để hoạt động mượt mà trên tất cả các trợ lý lập trình AI lớn:
+Các playbook `SKILL.md`, plugin chuyên biệt, bundle, workflow và installer trực tiếp vẫn rất quan trọng. Chúng là lớp nội dung, tuyển chọn, phân phối và tương thích xung quanh AAS Core, không phải sản phẩm chính cạnh tranh với Core:
 
 - 🟣 **Claude Code** (Anthropic CLI)
 - 🔵 **Gemini CLI** (Google DeepMind)
 - 🟢 **Codex CLI** (OpenAI)
-- 🔴 **Antigravity IDE** (Google DeepMind)
+- 🔴 **Antigravity IDE** và **Antigravity CLI (`agy`)**
 - 🩵 **GitHub Copilot** (VSCode Extension)
 - 🟠 **Cursor** (AI-native IDE)
 - ⚪ **OpenCode** (Mã nguồn mở CLI)
+- 🟡 **Kiro CLI / IDE** và **AdaL CLI**
 
-**Chào mừng bạn đến với Phiên bản V4.0.0 Enterprise.** Đây không chỉ là một danh sách các tập lệnh (scripts); nó là một hệ điều hành hoàn chỉnh cho Trợ lý AI của bạn.
+**Ranh giới phiên bản:** Dòng 14.x là baseline phân phối kỹ năng trực tiếp và không chứa AAS Core; dòng 15.x hiện tại chứa Core. GitHub là nguồn chuẩn cho Core, catalog, plugin và tài liệu; website được host chỉ là bề mặt duyệt catalog và review trong trình duyệt, không phải control plane được host.
 
 ### 1. 🐣 Bối cảnh: Đây là gì?
 
-**Antigravity Awesome Skills** (Phiên bản 4.0.0) là một bản nâng cấp khổng lồ cho khả năng của AI.
+**Agentic Awesome Skills** là repository chuẩn của AAS Core. Core là lớp sản phẩm cục bộ và xác định; catalog, bundle, workflow, plugin và installer CLI cung cấp bằng chứng, tuyển chọn, phân phối và khả năng tương thích xung quanh Core.
 
 Các trợ lý AI (như Claude Code, Cursor, hoặc Gemini) rất thông minh, nhưng chúng thiếu các **công cụ chuyên biệt**. Chúng không biết "Quy trình Triển khai" của công ty bạn hoặc cú pháp cụ thể cho "AWS CloudFormation".  
 **Skills** là các tệp markdown nhỏ dạy cho chúng cách thực hiện những tác vụ cụ thể này một cách chính xác trong mọi lần thực thi.
-...
 Repository này cung cấp các kỹ năng thiết yếu để biến trợ lý AI của bạn thành một **đội ngũ chuyên gia số toàn năng**, bao gồm các khả năng chính thức từ **Anthropic**, **OpenAI**, **Google**, **Supabase**, **Apify**, và **Vercel Labs**.
-...
 Cho dù bạn đang sử dụng **Gemini CLI**, **Claude Code**, **Codex CLI**, **Cursor**, **GitHub Copilot**, **Antigravity**, hay **OpenCode**, những kỹ năng này được thiết kế để có thể sử dụng ngay lập tức và tăng cường sức mạnh cho trợ lý AI của bạn.
 
 Repository này tập hợp những khả năng tốt nhất từ khắp cộng đồng mã nguồn mở, biến trợ lý AI của bạn thành một đội ngũ chuyên gia số toàn năng có khả năng Kỹ thuật, Thiết kế, Bảo mật, Marketing và Vận hành Tự động.
@@ -42,42 +45,40 @@ Repository được tổ chức thành các lĩnh vực chuyên biệt để bi�
 
 | Danh mục          | Trọng tâm                                                      | Ví dụ kỹ năng                                                                   |
 | :---------------- | :------------------------------------------------------------- | :------------------------------------------------------------------------------ |
-| Kiến trúc (52)    | Thiết kế hệ thống, ADRs, C4 và các mẫu có thể mở rộng          | `architecture`, `c4-context`, `senior-architect`                                |
-| Kinh doanh (35)   | Tăng trưởng, định giá, CRO, SEO và thâm nhập thị trường        | `copywriting`, `pricing-strategy`, `seo-audit`                                  |
-| Dữ liệu & AI (81) | Ứng dụng LLM, RAG, agents, khả năng quan sát, phân tích        | `rag-engineer`, `prompt-engineer`, `langgraph`                                  |
-| Phát triển (72)   | Làm chủ ngôn ngữ, mẫu thiết kế framework, chất lượng code      | `typescript-expert`, `python-patterns`, `react-patterns`                        |
-| Tổng quát (95)    | Lập kế hoạch, tài liệu, vận hành sản phẩm, viết bài, hướng dẫn | `brainstorming`, `doc-coauthoring`, `writing-plans`                             |
-| Hạ tầng (72)      | DevOps, cloud, serverless, triển khai, CI/CD                   | `docker-expert`, `aws-serverless`, `vercel-deployment`                          |
-| Bảo mật (107)     | AppSec, pentesting, phân tích lỗ hổng, tuân thủ                | `api-security-best-practices`, `sql-injection-testing`, `vulnerability-scanner` |
-| Kiểm thử (21)     | TDD, thiết kế kiểm thử, sửa lỗi, quy trình QA                  | `test-driven-development`, `testing-patterns`, `test-fixing`                    |
-| Quy trình (17)    | Tự động hóa, điều phối, công việc, agents                      | `workflow-automation`, `inngest`, `trigger-dev`                                 |
+| Kiến trúc         | Thiết kế hệ thống, ADRs, C4 và các mẫu có thể mở rộng          | `architecture`, `c4-context`, `senior-architect`                                |
+| Kinh doanh        | Tăng trưởng, định giá, CRO, SEO và thâm nhập thị trường        | `copywriting`, `pricing-strategy`, `seo-audit`                                  |
+| Dữ liệu & AI      | Ứng dụng LLM, RAG, agents, khả năng quan sát, phân tích        | `rag-engineer`, `prompt-engineer`, `langgraph`                                  |
+| Phát triển        | Làm chủ ngôn ngữ, mẫu thiết kế framework, chất lượng code      | `typescript-expert`, `python-patterns`, `react-patterns`                        |
+| Tổng quát         | Lập kế hoạch, tài liệu, vận hành sản phẩm, viết bài, hướng dẫn | `brainstorming`, `doc-coauthoring`, `writing-plans`                             |
+| Hạ tầng           | DevOps, cloud, serverless, triển khai, CI/CD                   | `docker-expert`, `aws-serverless`, `vercel-deployment`                          |
+| Bảo mật           | AppSec, pentesting, phân tích lỗ hổng, tuân thủ                | `api-security-best-practices`, `sql-injection-testing`, `vulnerability-scanner` |
+| Kiểm thử          | TDD, thiết kế kiểm thử, sửa lỗi, quy trình QA                  | `test-driven-development`, `testing-patterns`, `test-fixing`                    |
+| Quy trình         | Tự động hóa, điều phối, công việc, agents                      | `workflow-automation`, `inngest`, `trigger-dev`                                 |
 
 ## Bộ sưu tập Tuyển chọn
 
-[Xem các Gói khởi đầu tại docs/vietnamese/BUNDLES.md](docs/vietnamese/BUNDLES.vi.md) để tìm bộ công cụ hoàn hảo cho vai trò của bạn.
+[Xem các Gói khởi đầu tại docs/vietnamese/BUNDLES.md](BUNDLES.vi.md) để tìm bộ công cụ hoàn hảo cho vai trò của bạn.
 
-## Duyệt hơn 560 Kỹ năng
+## Duyệt kỹ năng
 
 Chúng tôi đã chuyển danh sách đầy đủ các kỹ năng sang một danh mục riêng biệt để giữ cho file README này gọn gàng.
 
-👉 **[Xem Danh mục Kỹ năng Đầy đủ (CATALOG.vi.md)](CATALOG.vi.md)**
+👉 **[Xem Danh mục Kỹ năng Đầy đủ (../../CATALOG.md)](../../CATALOG.md)**
 
 ## Cài đặt
 
-Để sử dụng các kỹ năng này với **Claude Code**, **Gemini CLI**, **Codex CLI**, **Cursor**, **Antigravity**, hoặc **OpenCode**, hãy clone repository này vào thư mục kỹ năng của assistant của bạn:
+Để sử dụng các kỹ năng này với **Claude Code**, **Gemini CLI**, **Codex CLI**, **Cursor**, **Antigravity**, **Kiro**, **OpenCode** hoặc **AdaL**, hãy dùng installer CLI:
 
 ```bash
-# Cài đặt phổ thông (hoạt động với hầu hết các công cụ)
-git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+npx agentic-awesome-skills
 
-# Dành riêng cho Claude Code
-git clone https://github.com/sickn33/antigravity-awesome-skills.git .claude/skills
-
-# Dành riêng cho Gemini CLI
-git clone https://github.com/sickn33/antigravity-awesome-skills.git .gemini/skills
-
-# Dành riêng cho Cursor
-git clone https://github.com/sickn33/antigravity-awesome-skills.git .cursor/skills
+# Ví dụ theo công cụ:
+npx agentic-awesome-skills --claude
+npx agentic-awesome-skills --gemini
+npx agentic-awesome-skills --codex
+npx agentic-awesome-skills --cursor
+npx agentic-awesome-skills --kiro
+npx agentic-awesome-skills --agy
 ```
 
 ---
@@ -88,8 +89,8 @@ Chúng tôi chào đón mọi sự đóng góp từ cộng đồng! Để thêm 
 
 1. **Fork** repository.
 2. **Tạo một thư mục mới** bên trong `skills/` cho kỹ năng của bạn.
-3. **Thêm file `SKILL.md`** với phần frontmatter bắt buộc (tên và mô tả).
-4. **Chạy kiểm tra xác thực**: `python3 scripts/validate_skills.py`.
+3. **Thêm file `SKILL.md`** theo mẫu `docs/contributors/skill-template.md`.
+4. **Chạy kiểm tra xác thực**: `npm run validate`.
 5. **Gửi một Pull Request**.
 
 Vui lòng đảm bảo kỹ năng của bạn tuân thủ các thực hành tốt nhất của Antigravity/Claude Code.
@@ -100,7 +101,7 @@ Vui lòng đảm bảo kỹ năng của bạn tuân thủ các thực hành tố
 
 Chúng tôi đứng trên vai của những người khổng lồ.
 
-👉 **[Xem Sổ cái Ghi công Đầy đủ (docs/vietnamese/SOURCES.vi.md)](docs/vietnamese/SOURCES.vi.md)**
+👉 **[Xem Sổ cái Ghi công Đầy đủ (docs/vietnamese/SOURCES.vi.md)](SOURCES.vi.md)**
 
 Các nguồn đóng góp và nguồn chính bao gồm:
 
@@ -148,12 +149,12 @@ Bộ sưu tập này sẽ không thể hình thành nếu không có công việ
 
 ## Giấy phép
 
-Giấy phép MIT. Xem file [LICENSE](LICENSE) để biết chi tiết.
+Giấy phép MIT. Xem file [LICENSE](../../LICENSE) để biết chi tiết.
 
 ## Cộng đồng
 
-- [Cộng đồng (Community Guidelines)](docs/vietnamese/COMMUNITY_GUIDELINES.vi.md)
-- [Chính sách Bảo mật (Security Policy)](docs/vietnamese/SECURITY_GUARDRAILS.vi.md)
+- [Cộng đồng (Community Guidelines)](../../CODE_OF_CONDUCT.md)
+- [Chính sách Bảo mật (Security Policy)](SECURITY_GUARDRAILS.vi.md)
 
 ---
 
@@ -187,4 +188,4 @@ Chúng tôi chính thức cảm ơn những người đóng góp sau đây đã 
 
 ## Lịch sử Star
 
-[![Star History Chart](https://api.star-history.com/svg?repos=sickn33/antigravity-awesome-skills&type=date&legend=top-left)](https://www.star-history.com/#sickn33/antigravity-awesome-skills&type=date&legend=top-left)
+[Xem biểu đồ Star History trực tiếp](https://www.star-history.com/?repos=sickn33%2Fagentic-awesome-skills&type=date&legend=top-left).

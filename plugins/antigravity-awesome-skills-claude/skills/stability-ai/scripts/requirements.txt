@@ -1,4 +1,0 @@
-# Stability AI Skill - Dependencies
-# Instalacao: pip install -r requirements.txt
-
-Pillow>=10.0.0

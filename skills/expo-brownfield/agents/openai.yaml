@@ -1,0 +1,4 @@
+interface:
+  display_name: "Expo Brownfield"
+  short_description: "Integrate Expo and React Native into existing native iOS or Android apps"
+  default_prompt: "Use $expo-brownfield when adding Expo or React Native to an existing native app, choosing isolated vs integrated brownfield architecture, embedding AAR/XCFramework outputs, wiring Gradle or CocoaPods, and troubleshooting native integration issues."

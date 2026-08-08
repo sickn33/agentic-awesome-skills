@@ -9,6 +9,8 @@ import unittest
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "tools" / "scripts"))
 
+from symlink_test_utils import symlink_or_skip
+
 
 def load_module(module_path: str, module_name: str):
     spec = importlib.util.spec_from_file_location(module_name, REPO_ROOT / module_path)
@@ -40,7 +42,7 @@ class GenerateIndexSecurityTests(unittest.TestCase):
             (safe_skill_dir / "SKILL.md").write_text("---\nname: Safe Skill\n---\nbody\n", encoding="utf-8")
             target = outside_dir / "secret.txt"
             target.write_text("outside data", encoding="utf-8")
-            (linked_skill_dir / "SKILL.md").symlink_to(target)
+            symlink_or_skip(self, target, linked_skill_dir / "SKILL.md")
 
             skills = generate_index.generate_index(str(skills_dir), str(output_file))
 

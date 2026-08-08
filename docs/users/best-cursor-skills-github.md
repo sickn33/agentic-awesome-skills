@@ -1,12 +1,12 @@
 # Best Cursor Skills on GitHub
 
-If you are searching for the **best Cursor skills on GitHub**, the best option depends on whether you want a broad installable library, a curated discovery list, or a smaller community collection.
+If you are searching for the **best Cursor skills on GitHub**, the best option depends on whether you want an agent-composed project stack, a broad direct distribution, a curated discovery list, or a smaller community collection. Cursor does not yet have a native AAS Core adapter, so its current AAS path is direct distribution rather than the Codex/Claude Core workflow.
 
-## Best overall installable library
+## Broadest AAS direct distribution for Cursor
 
-### 1. [sickn33/antigravity-awesome-skills](https://github.com/sickn33/antigravity-awesome-skills)
+### 1. [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills)
 
-Best for developers who want one repository they can install into Cursor and keep using across frontend, backend, testing, infra, product, and growth work.
+Best for developers who want the AAS catalog delivered into Cursor across frontend, backend, testing, infra, product, and growth work while treating AAS Core as the repository's primary product for supported agent clients.
 
 Choose this if you want:
 
@@ -52,11 +52,11 @@ Choose this if you want:
 
 ## How to choose quickly
 
-- Choose **Antigravity Awesome Skills** if you want the strongest install-and-use path for real day-to-day Cursor work.
+- Choose **Agentic Awesome Skills** if you want its broad supporting catalog and direct Cursor distribution today, with a clear boundary that this is not yet the native AAS Core path.
 - Choose **VoltAgent Awesome Agent Skills** if you want curation first and installation later.
 - Choose **Ai-Agent-Skills** if you want a smaller installable library.
 - Choose **cursor-skills** if you want the most Cursor-specific starting point.
 
 ## Recommended next step
 
-If your goal is to start working in Cursor today, install [Antigravity Awesome Skills](https://github.com/sickn33/antigravity-awesome-skills) and continue with [`cursor-skills.md`](cursor-skills.md).
+If your goal is to start working in Cursor today, use the direct distribution guidance in [`cursor-skills.md`](cursor-skills.md). For the primary product model and current Codex/Claude path, read the [AAS Core guide](aas-core.md).

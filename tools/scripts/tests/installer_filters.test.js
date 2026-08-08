@@ -170,4 +170,60 @@ withTempDir((root) => {
     false,
     "accidental skills/ prefixed entries should not create target/skills/*",
   );
+
+  writeSkill(
+    repoRoot,
+    "parent-skill",
+    'name: parent-skill\ncategory: development\nrisk: unknown\ntags: [parent]',
+  );
+  writeSkill(
+    repoRoot,
+    path.join("parent-skill", "safe-child"),
+    'name: safe-child\ncategory: development\nrisk: safe\ntags: [child]',
+  );
+  const filteredTarget = path.join(root, "filtered-target");
+  const unknownEntries = installer.getInstallEntries(
+    repoRoot,
+    installer.buildInstallSelectors({ riskArg: "unknown" }),
+  );
+  assert.deepStrictEqual(
+    unknownEntries,
+    ["parent-skill", "skills/x402-express-wrapper", "docs"],
+    "the selected parent must not implicitly select its differently classified child",
+  );
+  installer.installSkillsIntoTarget(repoRoot, filteredTarget, unknownEntries);
+  assert.strictEqual(
+    fs.existsSync(path.join(filteredTarget, "parent-skill", "SKILL.md")),
+    true,
+    "the selected parent skill should be installed",
+  );
+  assert.strictEqual(
+    fs.existsSync(path.join(filteredTarget, "parent-skill", "safe-child", "SKILL.md")),
+    false,
+    "a nested skill that does not match filters must not leak into the installation",
+  );
+});
+
+withTempDir((root) => {
+  const repoRoot = path.join(root, "repo");
+  fs.mkdirSync(path.join(repoRoot, "skills"), { recursive: true });
+  fs.mkdirSync(path.join(repoRoot, "docs"), { recursive: true });
+  writeSkill(
+    repoRoot,
+    "audited-skill",
+    'name: audited-skill\ncategory: testing\nrisk: unknown\ntags: [audit]',
+  );
+  fs.appendFileSync(
+    path.join(repoRoot, "skills", "audited-skill", "SKILL.md"),
+    "\n```bash\ngit clone https://example.com/tool.git /tmp/tool\nrm -rf /tmp/tool\n```\n",
+  );
+  const report = installer.auditSkillEntries(repoRoot, ["audited-skill", "docs"]);
+  assert.strictEqual(report.length, 1);
+  assert.strictEqual(report[0].skill, "audited-skill");
+  assert.ok(report[0].findings.some((finding) => finding.categories.includes("external-install")));
+  assert.ok(report[0].findings.some((finding) => finding.categories.includes("destructive-or-irreversible")));
+  assert.deepStrictEqual(
+    installer.buildRiskSummary(repoRoot, ["audited-skill", "docs"]),
+    { unknown: 1 },
+  );
 });

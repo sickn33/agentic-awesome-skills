@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildSitemap, selectTopSkillEntries } from './generate-sitemap.js';
+import { buildSitemap, DEFAULT_TOP_SKILL_COUNT, getSeoLandingPaths, selectTopSkillEntries } from './generate-sitemap.js';
 
 describe('sitemap generation script helpers', () => {
   it('builds top skill entries sorted by stars/date/name without duplicates', () => {
@@ -23,7 +23,9 @@ describe('sitemap generation script helpers', () => {
     const xml = buildSitemap(catalog, 1, 'https://example.com');
 
     expect(xml).toContain('https://example.com/</loc>');
-    expect(xml).toContain('https://example.com/skill/gamma</loc>');
+    expect(xml).toContain('https://example.com/workbench/</loc>');
+    expect(xml).toContain('https://example.com/topics/antigravity-cli-skills/</loc>');
+    expect(xml).toContain('https://example.com/skill/gamma/</loc>');
     expect(xml).not.toContain('/skill/delta');
   });
 
@@ -33,10 +35,10 @@ describe('sitemap generation script helpers', () => {
     const xml = buildSitemap(catalog, 1, 'https://example.com/search?q=ai&lang=en');
 
     expect(xml).toContain('https://example.com/search?q=ai&amp;lang=en/</loc>');
-    expect(xml).toContain('/safe%26id</loc>');
+    expect(xml).toContain('/safe%26id/</loc>');
   });
 
-  it('returns only homepage when top skill limit is zero', () => {
+  it('returns homepage, workbench, and topic routes when top skill limit is zero', () => {
     const catalog = [
       { id: 'gamma', stars: 2 },
       { id: 'delta', stars: 1 },
@@ -45,6 +47,33 @@ describe('sitemap generation script helpers', () => {
     const xml = buildSitemap(catalog, 0, 'https://example.com');
 
     expect(xml).toContain('https://example.com/</loc>');
+    expect(xml).toContain('https://example.com/workbench/</loc>');
+    expect(xml).toContain('https://example.com/topics/github-ai-skills-repository/</loc>');
     expect(xml).not.toContain('https://example.com/skill');
+  });
+
+  it('loads stable SEO landing paths from shared catalog data', () => {
+    expect(getSeoLandingPaths()).toEqual(
+      expect.arrayContaining([
+        '/topics/antigravity-cli-skills/',
+        '/topics/github-ai-skills-repository/',
+        '/topics/antigravity-plugins/',
+        '/topics/skills-para-antigravity/',
+      ]),
+    );
+  });
+
+  it('keeps the default public sitemap skill count reproducible', () => {
+    const catalog = Array.from({ length: DEFAULT_TOP_SKILL_COUNT + 1 }, (_, index) => ({
+      id: `skill-${String(index).padStart(2, '0')}`,
+      stars: DEFAULT_TOP_SKILL_COUNT + 1 - index,
+    }));
+
+    const xml = buildSitemap(catalog, undefined, 'https://example.com');
+    const skillRoutes = xml.match(/https:\/\/example\.com\/skill\//g) || [];
+
+    expect(skillRoutes).toHaveLength(180);
+    expect(xml).toContain('https://example.com/skill/skill-179/</loc>');
+    expect(xml).not.toContain('https://example.com/skill/skill-180/</loc>');
   });
 });

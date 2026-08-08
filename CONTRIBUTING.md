@@ -8,8 +8,8 @@
 
 ```bash
 # 1. Fork and clone
-git clone https://github.com/YOUR-USERNAME/antigravity-awesome-skills.git
-cd antigravity-awesome-skills
+git clone https://github.com/YOUR-USERNAME/agentic-awesome-skills.git
+cd agentic-awesome-skills
 
 # 2. Install dependencies
 npm install
@@ -85,8 +85,8 @@ You don't need to be an expert! Here are ways anyone can help:
 # 1. Fork the repo on GitHub (click the Fork button)
 
 # 2. Clone your fork
-git clone https://github.com/YOUR-USERNAME/antigravity-awesome-skills.git
-cd antigravity-awesome-skills
+git clone https://github.com/YOUR-USERNAME/agentic-awesome-skills.git
+cd agentic-awesome-skills
 
 # 3. Create a branch
 git checkout -b improve-docs
@@ -146,15 +146,21 @@ touch SKILL.md
 
 Every skill should start from the canonical template in [`docs/contributors/skill-template.md`](docs/contributors/skill-template.md).
 
-Minimum frontmatter:
+Contributor baseline frontmatter:
 
 ```markdown
 ---
 name: my-awesome-skill
 description: "Brief one-line description of what this skill does"
+category: development
 risk: safe
 source: community
+source_repo: owner/repo
+source_type: community
 date_added: "2026-03-06"
+author: your-name-or-handle
+tags: [tag-one, tag-two]
+tools: [claude, cursor, gemini]
 ---
 
 # Skill Title
@@ -162,6 +168,8 @@ date_added: "2026-03-06"
 ## Overview
 
 Explain what this skill does and when to use it.
+
+If the skill adapts material from an external GitHub repository, declare both `source_repo: owner/repo` and `source_type: official` or `source_type: community`. For original repository content, use `source: self` and `source_type: self`.
 
 ## When to Use This Skill
 
@@ -214,7 +222,7 @@ More examples...
 
 1. **Copy it to your AI tool's skills directory:**
    ```bash
-   cp -r skills/my-awesome-skill ~/.gemini/antigravity/skills/
+   cp -r skills/my-awesome-skill ~/.agents/skills/
    ```
 
    Or copy it into the specific tool path you are testing against, such as `~/.claude/skills/`, `~/.cursor/skills/`, or a custom workspace path like `.agent/skills/`.
@@ -246,7 +254,7 @@ Passing `npm run validate` or `skill-review` is not enough on its own for skill 
 - obvious failure modes, unsafe assumptions, and user-facing edge cases,
 - whether the declared `risk:` level still matches the actual behavior.
 
-Submitting `risk: unknown` is still acceptable for genuinely legacy or not-yet-classified content. Maintainers may later use `npm run audit:skills` and `npm run sync:risk-labels` to reconcile high-confidence legacy labels without asking contributors to regenerate catalog artifacts in their PRs.
+Submitting `risk: unknown` is still acceptable for genuinely legacy or not-yet-classified content. Maintainers review ambiguous labels semantically; the repository does not infer or rewrite risk from isolated words.
 
 For **docs / workflows / infra changes**:
 
@@ -348,9 +356,15 @@ The canonical template now lives at [`docs/contributors/skill-template.md`](docs
 ---
 name: your-skill-name
 description: "One sentence describing what this skill does and when to use it"
+category: development
 risk: safe
 source: community
+source_repo: owner/repo
+source_type: community
 date_added: "2026-03-06"
+author: your-name-or-handle
+tags: [tag-one, tag-two]
+tools: [claude, cursor, gemini]
 ---
 
 # Your Skill Name
@@ -458,7 +472,8 @@ date_added: "2026-03-06"
 Before submitting your contribution:
 
 - [ ] My skill has a clear, descriptive name
-- [ ] The `SKILL.md` has proper frontmatter (`name`, `description`, `risk`, `source`, `date_added`)
+- [ ] The `SKILL.md` starts from the canonical template and includes proper frontmatter (`name`, `description`, `category`, `risk`, `source`, `date_added`)
+- [ ] External GitHub-derived skills declare `source_repo` and `source_type`; original repository content uses `source: self` and `source_type: self`
 - [ ] I've included examples
 - [ ] I've tested the skill with an AI assistant
 - [ ] I've run `npm run validate`
@@ -497,7 +512,7 @@ docs: add examples to react-best-practices
 
 ### New to Git/GitHub?
 - [GitHub's Hello World Guide](https://guides.github.com/activities/hello-world/)
-- [Git Basics](https://git-scm.com/book/en/v2/Getting-Started-Git-Basics)
+- [Git Basics](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository)
 
 ### New to Markdown?
 - [Markdown Guide](https://www.markdownguide.org/basic-syntax/)
@@ -511,15 +526,15 @@ docs: add examples to react-best-practices
 
 ## Need Help?
 
-- **Questions?** Open a [Discussion](https://github.com/sickn33/antigravity-awesome-skills/discussions)
-- **Stuck?** Open an [Issue](https://github.com/sickn33/antigravity-awesome-skills/issues)
-- **Want feedback?** Open a [Draft Pull Request](https://github.com/sickn33/antigravity-awesome-skills/pulls)
+- **Questions?** Open a [Discussion](https://github.com/sickn33/agentic-awesome-skills/discussions)
+- **Stuck?** Open an [Issue](https://github.com/sickn33/agentic-awesome-skills/issues)
+- **Want feedback?** Open a [Draft Pull Request](https://github.com/sickn33/agentic-awesome-skills/pulls)
 
 ---
 
 ## Recognition
 
-All contributors are recognized in our [Contributors](https://github.com/sickn33/antigravity-awesome-skills/graphs/contributors) page.
+All contributors are recognized in our [Contributors](https://github.com/sickn33/agentic-awesome-skills/graphs/contributors) page.
 
 We **always merge accepted PRs via GitHub** ("Squash and merge") so your PR shows as **Merged** and you get full credit. We do not close PRs after integrating your work locally. If your PR has merge conflicts, we will resolve them on the branch (or ask you to merge main and push) so we can merge it on GitHub.
 

@@ -1,6 +1,7 @@
 import os
 import json
 import pathlib
+import shutil
 import re
 import sys
 from collections.abc import Mapping
@@ -116,6 +117,14 @@ CATEGORY_RULES = [
         "keywords": [
             "content", "copy", "copywriting", "writing", "documentation",
             "transcription", "transcribe", "seo", "blog", "markdown",
+        ],
+    },
+    {
+        "name": "education",
+        "keywords": [
+            "education", "student", "syllabus", "exam", "study",
+            "teacher", "curriculum", "classroom", "school",
+            "examprep", "roadmap", "academic", "university",
         ],
     },
     {
@@ -488,6 +497,7 @@ CURATED_CATEGORY_OVERRIDES = {
     "cpp-pro": "code",
     "cred-omega": "security",
     "csharp-pro": "code",
+    "cv-generator": "content",
     "datadog-automation": "reliability",
     "dependency-upgrade": "development",
     "differential-review": "security",
@@ -588,6 +598,7 @@ CURATED_CATEGORY_OVERRIDES = {
     "evaluation": "ai-ml",
     "event-store-design": "architecture",
     "exa-search": "data-ai",
+    "examprep-ai": "education",
     "explain-like-socrates": "content",
     "family-health-analyzer": "health",
     "find-bugs": "code-quality",
@@ -820,6 +831,18 @@ def coerce_metadata_text(value):
         return value
     return str(value)
 
+
+def coerce_metadata_list(value):
+    if isinstance(value, set):
+        values = [coerce_metadata_text(item) for item in sorted(value, key=str)]
+    elif isinstance(value, (list, tuple)):
+        values = [coerce_metadata_text(item) for item in value]
+    elif isinstance(value, str):
+        values = value.split(",") if "," in value else value.split()
+    else:
+        return []
+    return list(dict.fromkeys(item.strip() for item in values if item and item.strip()))
+
 def parse_frontmatter(content):
     """
     Parses YAML frontmatter, sanitizing unquoted values containing @.
@@ -919,8 +942,17 @@ def generate_index(skills_dir, output_file, compatibility_report=None):
             description = coerce_metadata_text(metadata.get("description"))
             risk = coerce_metadata_text(metadata.get("risk"))
             source = coerce_metadata_text(metadata.get("source"))
+            source_type = coerce_metadata_text(metadata.get("source_type"))
+            source_repo = coerce_metadata_text(metadata.get("source_repo"))
+            license_value = coerce_metadata_text(metadata.get("license"))
+            license_source = coerce_metadata_text(metadata.get("license_source"))
             date_added = coerce_metadata_text(metadata.get("date_added"))
             category = coerce_metadata_text(metadata.get("category"))
+            tags_value = metadata.get("tags")
+            nested_metadata = metadata.get("metadata")
+            if tags_value is None and isinstance(nested_metadata, Mapping):
+                tags_value = nested_metadata.get("tags")
+            tags = coerce_metadata_list(tags_value)
 
             if name is not None:
                 skill_info["name"] = name
@@ -930,8 +962,18 @@ def generate_index(skills_dir, output_file, compatibility_report=None):
                 skill_info["risk"] = risk
             if source is not None:
                 skill_info["source"] = source
+            if source_type is not None:
+                skill_info["source_type"] = source_type
+            if source_repo is not None:
+                skill_info["source_repo"] = source_repo
+            if license_value is not None:
+                skill_info["license"] = license_value
+            if license_source is not None:
+                skill_info["license_source"] = license_source
             if date_added is not None:
                 skill_info["date_added"] = date_added
+            if tags:
+                skill_info["tags"] = tags
             
             # Category: prefer frontmatter, then folder structure, then conservative inference
             if category is not None:
@@ -976,6 +1018,21 @@ def generate_index(skills_dir, output_file, compatibility_report=None):
 
             skills.append(skill_info)
 
+    seen_ids: dict[str, str] = {}
+    duplicate_ids: list[tuple[str, str, str]] = []
+    for skill in skills:
+        existing_path = seen_ids.get(skill["id"])
+        if existing_path is not None:
+            duplicate_ids.append((skill["id"], existing_path, skill["path"]))
+        else:
+            seen_ids[skill["id"]] = skill["path"]
+    if duplicate_ids:
+        details = "; ".join(
+            f"{skill_id}: {first_path} conflicts with {second_path}"
+            for skill_id, first_path, second_path in duplicate_ids
+        )
+        raise ValueError(f"Duplicate skill ids in generated index: {details}")
+
     # Sort validation: by name
     skills.sort(key=lambda x: (x["name"].lower(), x["id"].lower()))
 
@@ -985,8 +1042,23 @@ def generate_index(skills_dir, output_file, compatibility_report=None):
     print(f"✅ Generated rich index with {len(skills)} skills at: {output_file}")
     return skills
 
+def mirror_canonical_index(output_path):
+    """Mirror the root public manifest into data/ for compatibility consumers."""
+    output_path = pathlib.Path(output_path)
+    root = pathlib.Path(find_repo_root(__file__))
+    root_index = root / "skills_index.json"
+    if output_path.resolve() != root_index.resolve():
+        return None
+
+    data_index = root / "data" / "skills_index.json"
+    data_index.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(output_path, data_index)
+    print(f"✅ Mirrored canonical index to: {data_index}")
+    return data_index
+
 if __name__ == "__main__":
     base_dir = str(find_repo_root(__file__))
     skills_path = os.path.join(base_dir, "skills")
     output_path = os.path.join(base_dir, "skills_index.json")
     generate_index(skills_path, output_path)
+    mirror_canonical_index(output_path)

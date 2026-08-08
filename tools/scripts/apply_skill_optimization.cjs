@@ -23,7 +23,7 @@ async function githubRequest(pathname, options = {}) {
     headers: {
       Accept: 'application/vnd.github+json',
       Authorization: `Bearer ${token}`,
-      'User-Agent': 'antigravity-awesome-skills/apply-skill-optimization',
+      'User-Agent': 'agentic-awesome-skills/apply-skill-optimization',
       ...(options.headers || {}),
     },
   });

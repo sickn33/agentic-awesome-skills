@@ -1,11 +1,11 @@
 ---
 title: Jetski/Cortex + Gemini 集成指南
-description: "如何在不超出上下文窗口的情况下,在 Jetski/Cortex 中使用 antigravity-awesome-skills 的 1,436+ 技能。"
+description: "如何在不超出上下文窗口的情况下,在 Jetski/Cortex 中使用 agentic-awesome-skills 的 1,936+ 技能。"
 ---
 
-# Jetski/Cortex + Gemini:与 1,436+ 技能的安全集成
+# Jetski/Cortex + Gemini:与 1,936+ 技能的安全集成
 
-本指南展示如何将 `antigravity-awesome-skills` 仓库与基于 **Jetski/Cortex + Gemini** (或类似框架)的代理集成,**而不会超出模型的上下文窗口**。
+本指南展示如何将 `agentic-awesome-skills` 仓库与基于 **Jetski/Cortex + Gemini** (或类似框架)的代理集成,**而不会超出模型的上下文窗口**。
 
 在 Jetski/Cortex 中看到的典型错误是:
 
@@ -23,7 +23,7 @@ description: "如何在不超出上下文窗口的情况下,在 Jetski/Cortex �
 - 将所有 `SKILL.md` 的内容连接到单个系统提示词中;
 - 为**每次**请求重新注入整个库。
 
-对于超过 1,436 个技能,这种方法在添加用户消息之前就填满了上下文窗口,导致截断错误。
+对于超过 1,936 个技能,这种方法在添加用户消息之前就填满了上下文窗口,导致截断错误。
 
 ---
 
@@ -31,14 +31,14 @@ description: "如何在不超出上下文窗口的情况下,在 Jetski/Cortex �
 
 关键原则:
 
-- **轻量级清单**: 使用 `data/skills_index.json` 来了解存在*哪些*技能,而无需加载完整文本。
+- **轻量级清单**: 使用根目录的 `skills_index.json` 作为规范清单来了解存在*哪些*技能,而无需加载完整文本。`data/skills_index.json` 只是兼容性镜像。
 - **延迟加载**: 仅针对对话中实际调用的技能(例如,当出现 `@skill-id` 时)读取 `SKILL.md`。
 - **显式限制**: 对每轮加载的最大技能数/tokens数施加限制,并提供清晰的回退机制。
 - **路径安全**: 在读取 `SKILL.md` 之前,验证清单中的路径是否保持在 `SKILLS_ROOT` 内。
 
 推荐的流程是:
 
-1. **引导**: 在代理启动时读取 `data/skills_index.json` 并构建 `id -> meta` 映射。
+1. **引导**: 在代理启动时读取 `skills_index.json` 并构建 `id -> meta` 映射。
 2. **消息解析**: 在调用模型之前,从用户/系统消息中提取所有 `@skill-id` 引用。
 3. **解析**: 使用引导映射将找到的 id 映射到 `SkillMeta` 对象。
 4. **延迟加载**: 仅针对这些 id 读取 `SKILL.md` 文件(最多可达可配置的最大值)。
@@ -48,7 +48,7 @@ description: "如何在不超出上下文窗口的情况下,在 Jetski/Cortex �
 
 ## 3. `skills_index.json` 的结构
 
-文件 `data/skills_index.json` 是一个对象数组,例如:
+文件 `skills_index.json` 是一个对象数组。`data/skills_index.json` 必须保持相同内容,但只作为兼容性镜像。例如:
 
 ```json
 {
@@ -72,7 +72,7 @@ description: "如何在不超出上下文窗口的情况下,在 Jetski/Cortex �
 
 - `fullPath = path.join(SKILLS_ROOT, meta.path, "SKILL.md")`。
 
-> 注意: `SKILLS_ROOT` 是安装仓库的根目录(例如 `~/.agent/skills`)。
+> 注意: `SKILLS_ROOT` 是安装仓库的根目录(例如 `~/.agents/skills`)。
 
 ---
 
@@ -265,8 +265,8 @@ async function buildModelMessages(
 ## 9. 总结
 
 - 切勿将所有 `SKILL.md` 连接到单个提示词中。
-- 使用 `data/skills_index.json` 作为轻量级清单。
+- 使用根目录 `skills_index.json` 作为轻量级规范清单；仅在宿主必须读取 `data/` 子树时使用 `data/skills_index.json` 兼容性镜像。
 - 基于 `@skill-id` **按需**加载技能。
 - 设置明确的限制(每轮最大技能数、token 阈值)。
 
-遵循此模式,Jetski/Cortex + Gemini 可以安全、可扩展且与现代模型的上下文窗口兼容的方式使用整个 `antigravity-awesome-skills` 库。
+遵循此模式,Jetski/Cortex + Gemini 可以安全、可扩展且与现代模型的上下文窗口兼容的方式使用整个 `agentic-awesome-skills` 库。

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the **Antigravity Awesome Skills** collection are documented in this file.
+All notable changes to **AAS Core** and its surrounding catalog, distribution, compatibility, and community surfaces are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -9,7 +9,2536 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_No unreleased changes yet._
+## [15.11.0] - 2026-08-07 - "Agent Plugin Directory Readiness"
+
+> Prepared the flagship AAS Agent & MCP Builder for the OpenAI Plugins Directory with production metadata, public policies, and a reproducible evaluation dossier.
+
+This release turns the portable Agent Plugins work from 15.10.0 into a directory-ready product surface. The flagship bundle now carries the listing metadata and assets needed by compatible clients, while the repository records the exact claims, prompts, test cases, execution evidence, and publisher-only approval boundaries required for a truthful public submission.
+
+Start here:
+
+- Flagship plugin: [`AAS Agent & MCP Builder`](plugins/agentic-bundle-aas-agent-mcp-builder/)
+- Submission dossier: [`docs/plugin-submissions/aas-agent-mcp-builder/`](docs/plugin-submissions/aas-agent-mcp-builder/)
+- Plugin guide: [`docs/users/plugins.md`](docs/users/plugins.md)
+- Privacy: [`PRIVACY.md`](PRIVACY.md)
+- Terms: [`TERMS.md`](TERMS.md)
+
+### Added
+
+- Added a version-controlled OpenAI Plugins Directory submission dossier for `AAS Agent & MCP Builder`, including public listing copy, starter prompts, six positive and four negative evaluation cases, a recorded 10/10 Codex execution pass, release notes, and explicit publisher-owned approval boundaries.
+- Added project privacy and terms documents covering skills-only plugins, the browser-local catalog and Workbench behavior, third-party services, and support channels.
+
+### Changed
+
+- Enriched generated Codex plugin manifests with public website, privacy, and terms metadata, and added production logo assets to the flagship Agent & MCP Builder package.
+
+### Who should care
+
+- Agent builders who want an installable, curated path through AAS architecture, MCP, RAG, LangGraph, evaluation, and context-management skills.
+- Compatible agent clients that surface plugin identity, artwork, website, privacy, and terms metadata.
+- Maintainers who need a reviewable boundary between repository evidence and publisher-only OpenAI platform attestations.
+
+### Validation
+
+- Executed all ten dossier cases in fresh, read-only Codex sessions: six expected activations and four expected non-activations, with 10/10 passing.
+- Validated the dossier against the generated flagship manifest, required listing fields, asset paths, starter prompts, case coverage, and recorded execution results.
+- Passed repository skill validation, reference validation, documentation security checks, warning-budget enforcement, bundle checks, plugin compatibility checks, Agent Plugin schema tests, and the Codex plugin validator across all 58 packages.
+
+## [15.10.0] - 2026-08-07 - "Portable Agent Plugins and Governed Workflows"
+
+> Added portable Agent Plugins 1.0 exports, a video-production router, consent-gated outreach, and stronger trust boundaries across the catalog.
+
+This release gives Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants a safer, more portable 2,005-skill catalog. It packages 58 eligible editorial bundles in the shared Agent Plugins format alongside the existing Codex and Claude distributions, adds reply-aware outreach with explicit approval before real sends, introduces an upstream-pinned video routing guide, and hardens web scraping against hostile page content.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added [`outreachagent`](skills/outreachagent/) for inbox, contact, template, workflow, webhook, and delivery-metric operations through OutreachAgent's public REST API, with separate draft and final-send approvals, exact rendered-payload review, reply-aware exits, and untrusted-inbound handling.
+- Added [`video-router`](skills/video-router/) from the official OrkasVideoStudio source for locking generation, deterministic composition, supplied-footage editing, or an automatic cross-modal production plan before execution, with explicit runtime and produced-vs-planned boundaries.
+
+### Changed
+
+- Added Agent Plugins 1.0 as a portable packaging target for eligible editorial bundles, with schema-pinned root manifests, collision-safe flattened skill IDs, Agent Skills-compatible packaged frontmatter, and preserved AAS provenance and risk metadata. Broad host-specific roots remain on their existing Codex and Claude surfaces rather than making a false portability claim.
+- Regenerated the canonical catalog, offline AAS Core data, marketplaces, bundles, Agent Plugins exports, and Codex/Claude plugin distributions for 2,005 skills.
+
+### Security
+
+- Hardened [`web-scraper`](skills/web-scraper/) against prompt injection from page content, constrained downloads to an exact user-confirmed output path, required consent before browser escalation, and clarified stop conditions for authenticated or sensitive pages.
+- Hardened coordinated-disclosure trust boundaries across NotebookLM, YouTube ingestion, Instagram OAuth and CSV export, Telegram HTML replies, Loki task export, Vercel claim verification, macOS packaging templates, and generated TSX content.
+- Added focused regression coverage for path containment, private temporary storage, inert rendering, OAuth callback binding, data-only version parsing, and untrusted browser or model output.
+
+### Who should care
+
+- Agent clients and plugin authors adopting the shared Agent Plugins format across compatible hosts.
+- Video teams that need an explicit, reviewable decision between generation, composition, editing, and a cross-modal production plan before execution.
+- Teams building AI-assisted outbound workflows that need explicit recipient, sender, payload, schedule, and real-send approval boundaries.
+- Agents extracting public web content where hostile page instructions must remain untrusted data.
+- Security-conscious users relying on NotebookLM, YouTube, Instagram, Telegram, Loki, Vercel, or macOS packaging skills.
+- Claude Code, Cursor, Codex CLI, Gemini CLI, and Antigravity users installing from canonical or plugin distributions.
+
+### Validation
+
+- Passed canonical skill and reference validation, documentation security, warning-budget enforcement, changed-skill evidence, the complete repository suite, web-app coverage, package dry-run checks, and dependency audits.
+- Validated every generated portable manifest against the pinned official Agent Plugins 1.0 schema, every eligible package with the Codex plugin validator, and each packaged skill instance against the Agent Skills reference validator.
+- Confirmed protected `main` CI and CodeQL are green and canonical regeneration is idempotent before release preparation.
+
+### Credits
+
+- **[@pagefarms](https://github.com/pagefarms)** for `outreachagent` in [PR #1090](https://github.com/sickn33/agentic-awesome-skills/pull/1090).
+- **[@lorocopey-ocs](https://github.com/lorocopey-ocs)** for the `web-scraper` safety improvements in [PR #1092](https://github.com/sickn33/agentic-awesome-skills/pull/1092).
+- **[@BlueSkyID666](https://github.com/BlueSkyID666)** for the official-source `video-router` import in [PR #1099](https://github.com/sickn33/agentic-awesome-skills/pull/1099).
+
+## [15.9.0] - 2026-08-04 - "Security Boundaries and Multimodal Workflows"
+
+> Hardened repository and runtime trust boundaries while adding governed Gemini media generation and evidence-first Shopify review triage.
+
+This release gives Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants a safer 2,003-skill catalog. It closes the August Codex Security sweep, clears the remaining local dependency alerts, and adds two human-gated workflows for multimodal generation and public-review triage.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added [`generate-nanobanana`](skills/generate-nanobanana/) for routing image and video generation across Nano Banana and Gemini Omni models, with reference-image support, explicit video-cost approval, and prompt/seed sidecar logs.
+- Added [`shopify-review-triage`](skills/shopify-review-triage/) for turning supplied public Shopify App Store reviews into a source-linked P0-P3 first-pass brief, with private-data stop conditions, human-verification labels, and no outbound messaging.
+
+### Changed
+
+- Updated [`unified-ai-gateway`](skills/unified-ai-gateway/) to the reviewed v0.4.0 release, documenting its ninth governed MCP tool and the pinned Linux arm64 image-review path while preserving provider-free, no-network, and separate-approval boundaries.
+- Regenerated the canonical catalog, offline AAS Core data, marketplaces, bundles, and Codex/Claude plugin distributions for 2,003 skills.
+
+### Security
+
+- Closed the August Codex Security sweep by making image review symlink-safe, treating project scripts and credentials as untrusted, pinning the GitHub attachment helper, confining Loki cleanup, loading PR-policy dependencies only from protected `main`, scoping oversized MCP requests to bounded metadata, and removing the public Star History token.
+- Pinned and bundled Ajv's `fast-uri` dependency on the patched 3.1.x line, resolving GHSA-7p8r-x3mc-p8w7 in the production dependency tree.
+- Updated the web app's PostCSS and transitive brace-expansion and ip-address tooling to patched releases, clearing the remaining local npm audit findings.
+- Refreshed the bundled `loki-mode` todo example lockfiles to patched `ip-address` and PostCSS releases, clearing the remaining Dependabot findings in the canonical skill and generated Claude mirror.
+
+### Who should care
+
+- Claude Code, Cursor, Codex CLI, Gemini CLI, and Antigravity users who install skills from the canonical or plugin distributions.
+- Security-conscious teams relying on bounded MCP framing, protected CI dependencies, credential handling, or container-image review guidance.
+- Creators using Gemini image or video generation who need explicit cost approval and reproducible prompt metadata.
+- Shopify app teams triaging low-star public reviews without treating unverified reports as confirmed incidents.
+
+### Validation
+
+- Resolved all 22 findings from the August Codex Security sweep: 19 verified fixes and 3 documented false positives; the refreshed open-findings view is empty.
+- Passed canonical skill and reference validation, documentation security, warning-budget enforcement, the complete 106-group repository suite, the 150-test AAS Core suite, web build and prerender, and package dry-run checks.
+- Confirmed root and web-app npm audits report zero vulnerabilities and protected `main` CI and CodeQL are green before release preparation.
+
+### Credits
+
+- **[@AntonioCardenas](https://github.com/AntonioCardenas)** and **[AntonioCardenas/generate-nanobanana](https://github.com/AntonioCardenas/generate-nanobanana)** for `generate-nanobanana` in [PR #1076](https://github.com/sickn33/agentic-awesome-skills/pull/1076).
+- **[@alfredtech2026](https://github.com/alfredtech2026)** and **[alfredtech2026/shopify-app-review-brief](https://github.com/alfredtech2026/shopify-app-review-brief)** for `shopify-review-triage` in [PR #1075](https://github.com/sickn33/agentic-awesome-skills/pull/1075).
+- **[@happy520ai](https://github.com/happy520ai)** and **[happy520ai/unified-ai-system](https://github.com/happy520ai/unified-ai-system)** for the v0.4.0 `unified-ai-gateway` refresh in [PR #1073](https://github.com/sickn33/agentic-awesome-skills/pull/1073).
+
+## [15.8.0] - 2026-08-02 - "Governed Integrations and Agent Project Workflows"
+
+> Added four evidence-first skills for GitHub attachments, governed AI gateways, project-specific agent instructions, and revenue analytics through MCP.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added [`gh-attach`](skills/gh-attach/) for uploading and downloading GitHub user attachments through the `gh` CLI, with repository-scoped visibility and GitHub Enterprise Server support.
+- Added [`unified-ai-gateway`](skills/unified-ai-gateway/) for governed inspection of Unified AI System's eight Codex MCP tools, with pinned image provenance, non-executing review, and separate activation approvals.
+- Added [`agents-generator`](skills/agents-generator/) for generating project-specific `AGENTS.md` and companion rules with package-manager detection, monorepo handling, backups, dry-run/update modes, and command validation.
+- Added [`talivia-agent-kit`](skills/talivia-agent-kit/) for revenue-first website analytics through the official Talivia MCP server, with explicit confirmation for tracking, deployment, and payment-attribution changes.
+
+### Changed
+
+- Regenerated the canonical catalog and Codex/Claude distribution surfaces for 2,001 skills.
+
+### Who should care
+
+- Developers who need to attach or retrieve GitHub artifacts directly from the terminal.
+- Teams evaluating a self-hosted AI gateway with bounded, fake-provider, and approval-aware MCP workflows.
+- Maintainers who want reproducible project-specific agent instructions and companion rules.
+- Revenue and growth teams using Talivia analytics while keeping website, deployment, and payment-attribution mutations consent-gated.
+
+### Validation
+
+- Passed canonical skill and reference validation, documentation security, warning-budget enforcement, repository tests, protected CI, and CodeQL.
+- Confirmed canonical synchronization reproduced the four new skills across Codex and Claude plugin distributions with no generated-state drift.
+- Confirmed npm package audit has no moderate-or-higher production vulnerabilities on the release base.
+
+### Credits
+
+- **[sudosubin/gh-attach](https://github.com/sudosubin/gh-attach)** for `gh-attach` in [PR #1060](https://github.com/sickn33/agentic-awesome-skills/pull/1060).
+- **[happy520ai/unified-ai-system](https://github.com/happy520ai/unified-ai-system)** for `unified-ai-gateway` in [PR #1061](https://github.com/sickn33/agentic-awesome-skills/pull/1061).
+- **[OJPalenzuela/agents-generator](https://github.com/OJPalenzuela/agents-generator)** for `agents-generator` in [PR #1067](https://github.com/sickn33/agentic-awesome-skills/pull/1067), which closes issue #1065.
+- **[talivia-group/agent](https://github.com/talivia-group/agent)** for `talivia-agent-kit` in [PR #1069](https://github.com/sickn33/agentic-awesome-skills/pull/1069).
+
+## [15.7.1] - 2026-07-31 - "Verified Knowledge and Cross-Environment Workflows"
+
+> Added evidence-first knowledge maintenance, cross-environment task handoff, multi-platform fact checking, and proactive founder-complement discovery.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added [`maintain-codex-wiki`](skills/maintain-codex-wiki/) for review-first repository knowledge capture, ingestion, archiving, linting, and promotion with immutable provenance and explicit mutation gates.
+- Added [`cowork-to-code-bridge`](skills/cowork-to-code-bridge/) for consent-scoped task handoff from sandboxed agents to a user's own development machine through a shared-directory queue.
+- Added [`fact-check-x-complete`](skills/fact-check-x-complete/) as the complete official Fact-Check-X workflow for capturing and comparing claims, citations, screenshots, and HTML evidence across supported AI platforms.
+
+### Changed
+
+- Updated [`find-complementary-founders`](skills/find-complementary-founders/) to surface a tentative founder, operator, go-to-market, or scaling complement hypothesis from active-task evidence before offering the private Canvas and owner-controlled public-profile flow.
+- Made direct Antigravity installation fail closed before cloning or writing when no skill selection is supplied. The installer now directs users to let a Codex or Claude agent choose exact IDs through the read-only AAS Core MCP, preview the resulting `--skills` install, and use `--all` only as explicit acceptance of full-catalog context and crash-loop risk. Other host targets retain their existing behavior.
+- Regenerated the canonical catalog and Codex/Claude distribution surfaces for 1,997 skills.
+
+### Who should care
+
+- Claude Code, Cursor, Codex CLI, Gemini CLI, Windsurf, and Antigravity users who need auditable knowledge, verification, or machine-handoff workflows.
+- Teams maintaining repository-local engineering knowledge with explicit provenance and human review.
+- Users comparing AI-platform claims or coordinating sandboxed agents with their own development machines.
+- Founders who want a concrete, evidence-bound complement hypothesis without an unsolicited public action.
+
+### Validation
+
+- Passed canonical skill and reference validation, documentation security, warning-budget enforcement, changed-skill evidence, repository tests, protected CI, and CodeQL.
+- Confirmed canonical synchronization reproduced all four source changes across Codex and Claude plugin distributions with no generated-state drift.
+- The protected release gate binds the release PR, tag, GitHub Release, npm `latest`, CI, CodeQL, release-only Pages deployment, live catalog and legacy bridge, and every already-configured AAS MCP host to the exact released commit.
+
+### Credits
+
+- **[@Phelan164](https://github.com/Phelan164)** and **[Phelan164/codex-howto](https://github.com/Phelan164/codex-howto)** for `maintain-codex-wiki` in [PR #1052](https://github.com/sickn33/agentic-awesome-skills/pull/1052).
+- **[@merc1305](https://github.com/merc1305)** and **[merc1305/findMate](https://github.com/merc1305/findMate)** for the `find-complementary-founders` improvements in [PR #1011](https://github.com/sickn33/agentic-awesome-skills/pull/1011).
+- **[@abhinaykrupa](https://github.com/abhinaykrupa)** and **[abhinaykrupa/cowork-to-code-bridge](https://github.com/abhinaykrupa/cowork-to-code-bridge)** for `cowork-to-code-bridge` in [PR #1046](https://github.com/sickn33/agentic-awesome-skills/pull/1046).
+- **[@ASI2030](https://github.com/ASI2030)** and **[ASI2030/Fact-Check-X](https://github.com/ASI2030/Fact-Check-X)** for `fact-check-x-complete` in [PR #1049](https://github.com/sickn33/agentic-awesome-skills/pull/1049).
+
+## [15.7.0] - 2026-07-29 - "Risk Metadata and Installation Hardening"
+
+> Completed semantic risk classification across the catalog, hardened skill installation and maintainer evidence boundaries, and added a consent-gated backend provisioning skill.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added [`cohesivity`](skills/cohesivity/) for consent-gated provisioning of Postgres, Redis, object and vector storage, hosting, authentication, email, managed browser, and model APIs, with private credential storage, explicit retention disclosure, and budget controls.
+- Regenerated the canonical catalog and Codex/Claude distribution surfaces for 1,994 skills.
+
+### Changed
+
+- Replaced all 940 remaining `risk: unknown` declarations with individually reviewed semantic classifications: 798 `critical`, 71 `none`, 60 `safe`, and 11 `offensive`.
+- Added the repository-standard authorized-use disclaimer and per-action confirmation gate to the 11 newly classified offensive skills.
+- Added a pre-install audit and prominent risk summary while preserving the full-catalog installation default.
+- Replaced mutable external installation guidance with approval-gated, full-commit-SHA inspect-first workflows and clarified the difference between antivirus text detections and evidence of execution.
+- Bounded changed-skill ownership lookup by changed-path depth, extended the trusted evaluator budget for repository-wide reviews, and safely supported legacy executable-mode `SKILL.md` snapshots without materializing executable files, symlinks, or gitlinks.
+- Updated Modellix vendored source URLs and speech defaults, upgraded the catalog web app to `@supabase/supabase-js` 2.111.0, and normalized indexable catalog links for GitHub Pages.
+
+### Security
+
+- Removed mutable provider instructions from BrowserAct's operating-policy boundary and required full 40-character Git commit pins for linked FindMate profiles.
+- Strengthened installation safety for offensive and externally sourced skills with explicit authorization, command confirmation, provenance inspection, and immutable source pins.
+- Hardened Cohesivity credential files to private permissions and documented privacy, retention, billing, overage, and x402 self-payment boundaries.
+
+### Who should care
+
+- Claude Code, Cursor, Codex CLI, Gemini CLI, Windsurf, and Antigravity users who want actionable risk metadata before installing or running skills.
+- Security-conscious teams auditing offensive, networked, credential-bearing, or externally sourced skills.
+- Maintainers running large repository-wide skill reviews through the protected evidence and merge workflow.
+- Developers who need a consent-gated, agent-provisioned backend without manually copying credentials.
+
+### Validation
+
+- Passed canonical skill and reference validation, documentation security, warning-budget enforcement, changed-skill evidence, repository and AAS Core tests, protected CI, and CodeQL.
+- Confirmed canonical synchronization reproduced all risk labels and Cohesivity content byte-for-byte across Codex and Claude plugin distributions.
+- The protected release gate binds the release PR, tag, GitHub Release, npm `latest`, CI, CodeQL, release-only Pages deployment, live catalog and legacy bridge, and every already-configured AAS MCP host to the exact released commit.
+
+### Credits
+
+- **[@shouryamaanjain](https://github.com/shouryamaanjain)** and **[cohesivity-org/cohesivity-skill](https://github.com/cohesivity-org/cohesivity-skill)** for `cohesivity` in [PR #1032](https://github.com/sickn33/agentic-awesome-skills/pull/1032).
+- **[@alen-hh](https://github.com/alen-hh)** for the Modellix source URL and speech-default refresh in [PR #1025](https://github.com/sickn33/agentic-awesome-skills/pull/1025).
+
+## [15.6.0] - 2026-07-28 - "Browser Automation and Performance RCA"
+
+> Added safety-hardened browser automation and evidence-first performance troubleshooting while preserving verified upstream provenance across the catalog.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added [`browser-act`](skills/browser-act/) for real-browser automation, authenticated and JavaScript-rendered workflows, isolated sessions, screenshots, verification handling, and consent-gated human handoff.
+- Added [`brendangregg-use-tsa`](skills/brendangregg-use-tsa/) for structured USE and TSA performance analysis, evidence-backed root-cause analysis, and postmortem reporting.
+- Regenerated the canonical catalog and distribution surfaces for 1,993 skills.
+
+### Changed
+
+- Expanded [`apify-ultimate-scraper`](skills/apify-ultimate-scraper/) with Xquik X Actors guidance for authenticated X/Twitter extraction, including explicit legal, privacy, and credential-handling boundaries.
+- Updated the [`modellix`](skills/modellix/) provenance record after its verified upstream repository rename, preserving the stable repository identity and canonical source link.
+- Added a protected-base exception ledger for verified upstream repository renames while keeping all unverified provenance changes fail-closed.
+- Hardened BrowserAct guidance with a pinned CLI version, untrusted-runtime-guide handling, explicit confirmation gates, and disclosures for telemetry, error reporting, machine identification, CAPTCHA services, and remote assistance.
+
+### Who should care
+
+- Claude Code, Cursor, Codex CLI, Gemini CLI, and Windsurf users who need browser-backed automation with explicit approval and data-exposure boundaries.
+- SRE and platform teams diagnosing CPU, memory, storage, network, thread-state, and application latency regressions.
+- Maintainers who need upstream repository renames to retain provenance without weakening the source-identity gate.
+
+### Validation
+
+- Passed canonical skill and reference validation, documentation security, warning-budget enforcement, changed-skill evidence, repository tests, protected CI, and CodeQL.
+- Confirmed canonical synchronization reproduced the new skills across Codex and Claude plugin distributions and left generated state drift-free.
+- The protected release gate will bind the release PR, tag, GitHub Release, npm `latest`, CI, CodeQL, release-only Pages deployment, live catalog and legacy bridge, and every already-configured AAS MCP host to the exact released commit.
+
+### Credits
+
+- **[@browseract-skill](https://github.com/browseract-skill)** and **[browser-act/skills](https://github.com/browser-act/skills)** for `browser-act` in [PR #1019](https://github.com/sickn33/agentic-awesome-skills/pull/1019).
+- **[@thecsdoctor](https://github.com/thecsdoctor)** and **[thecsdoctor/brendangregg-use-tsa-skill](https://github.com/thecsdoctor/brendangregg-use-tsa-skill)** for `brendangregg-use-tsa` in [PR #1012](https://github.com/sickn33/agentic-awesome-skills/pull/1012).
+- **[@alen-hh](https://github.com/alen-hh)** for the verified Modellix upstream rename in [PR #1009](https://github.com/sickn33/agentic-awesome-skills/pull/1009).
+- **[@kriptoburak](https://github.com/kriptoburak)** for the Xquik X Actors documentation in [PR #1002](https://github.com/sickn33/agentic-awesome-skills/pull/1002).
+
+## [15.5.1] - 2026-07-27 - "MCP Client Compatibility"
+
+> Restored AAS MCP connectivity for newer clients while preserving an explicit, fail-closed protocol boundary.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Fixed
+
+- Fixed AAS MCP initialization for newer clients such as Claude Code 2.1.x by negotiating the server-supported protocol revision instead of rejecting every request that advertises a different revision ([#1003](https://github.com/sickn33/agentic-awesome-skills/issues/1003)).
+
+### Who should care
+
+- Claude Code 2.1.x users whose MCP clients advertise protocol revision `2025-11-25`.
+- Other MCP clients that advertise a revision newer than the server-supported `2025-06-18` revision.
+- Integrators that require malformed or missing protocol revisions to remain rejected.
+
+### Validation
+
+- Passed direct server, stdio binary, isolated packed-runtime, and release-preview negotiation tests.
+- Passed the 150-test AAS Core suite, the 102-file repository suite, catalog integrity, reference validation, documentation security, warning-budget enforcement, protected CI, and CodeQL.
+
+### Credits
+
+- **[@rk2kaler](https://github.com/rk2kaler)** for reporting the protocol negotiation regression with a complete reproduction in [issue #1003](https://github.com/sickn33/agentic-awesome-skills/issues/1003).
+
+## [15.5.0] - 2026-07-26 - "Coordination, Founder Matching, and Fedora Hyprland"
+
+> Added focused multi-agent orchestration, privacy-preserving founder matching, and a consent-gated Fedora Hyprland lifecycle workflow; also expanded UIZZE with a free manual path and a harder UI finish gate.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added [`orchestrate`](skills/orchestrate/) for delegating independent, large-scope work to focused agents while keeping trivial tasks with the coordinator and preserving user-held approval boundaries.
+- Added [`find-complementary-founders`](skills/find-complementary-founders/) for private owner assessment, consent-gated pseudonymous profiles, locally ranked complementary founder candidates, expiry controls, and explicit privacy boundaries.
+- Added [`fedora-hyprland-installer`](skills/fedora-hyprland-installer/) for GPU-aware Fedora Hyprland preflight, backup, installation, configuration, verification, scoped repair, and confirmation-gated removal across NVIDIA, AMD, Intel, and hybrid systems.
+- Regenerated the canonical catalog and distribution surfaces for 1,991 skills.
+
+### Changed
+
+- Expanded [`uizze-ui-research`](skills/uizze-ui-research/) with a useful no-account manual workflow, explicit evidence labels, a consent-gated rendered HTML/CSS preview, and a hard pre-ship finish gate.
+- Hardened the Fedora workflow with immutable source and license provenance, critical-risk classification, explicit approval before privileged changes, diagnostic-only repair by default, current NVIDIA guidance, and isolated tests.
+- Clarified that founder-match rankings are decision aids rather than evidence that a candidate is available, interested, or committed.
+
+### Fixed
+
+- Updated the hosted catalog's ESLint toolchain to the ESLint 10-compatible dependency set, removing the high-severity `brace-expansion` and `minimatch` advisory chain that would otherwise block the release-only Pages deployment.
+
+### Who should care
+
+- Codex users coordinating multiple independent implementation or research lanes.
+- Founders and agents who need privacy-preserving, owner-approved matching instead of profiling strangers or mining private data.
+- Fedora users adopting Hyprland while preserving an existing GNOME or KDE installation.
+- Product teams needing UIZZE-backed UI research or a bounded manual finish gate without requiring a full hosted connection.
+
+### Validation
+
+- Passed canonical skill and reference validation, documentation security checks, warning-budget enforcement, repository tests, changed-skill evidence, and plugin and bundle parity checks.
+- Exercised the Fedora detection and isolated script suites and compiled and smoke-tested the founder-matching Python utilities.
+- Confirmed the protected canonical synchronization reproduced all three new skills across Codex and Claude plugin distributions.
+- The protected release gate will bind the source and release PRs, canonical synchronization, tag, GitHub Release, npm `latest`, CI, CodeQL, release-only Pages deployment, live catalog and legacy bridge, and every already-configured AAS MCP host to the exact released commit.
+
+### Credits
+
+- **[@provencher](https://github.com/provencher)** and **[provencher/codex-skills](https://github.com/provencher/codex-skills)** for the upstream `orchestrate` skill integrated in [PR #989](https://github.com/sickn33/agentic-awesome-skills/pull/989).
+- **[@merc1305](https://github.com/merc1305)** and **[merc1305/findMate](https://github.com/merc1305/findMate)** for `find-complementary-founders` in [PR #992](https://github.com/sickn33/agentic-awesome-skills/pull/992).
+- **[@maleksaadi0109](https://github.com/maleksaadi0109)** and **[maleksaadi0109/hyprfedora](https://github.com/maleksaadi0109/hyprfedora)** for `fedora-hyprland-installer` in [PR #994](https://github.com/sickn33/agentic-awesome-skills/pull/994).
+- **Samuel Bushi** and **UIZZE** for the expanded `uizze-ui-research` workflow finalized in [PR #988](https://github.com/sickn33/agentic-awesome-skills/pull/988).
+
+## [15.4.0] - 2026-07-24 - "SEO Drift and Dependency Safety"
+
+> Added official SEO regression monitoring, closed the current high-severity frontend dependency advisories, and refreshed contributor and conduct links while preserving the protected release workflow.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added the official [`seo-drift`](skills/seo-drift/) skill from [nowork-studio/NotFair](https://github.com/nowork-studio/NotFair) for dated SEO baselines and regression detection across rankings, indexation, metadata, directives, schema, and on-page elements.
+- Regenerated the canonical catalog and distribution surfaces for 1,988 skills.
+
+### Changed
+
+- Shortened PR feedback by parallelizing independent validation, cancelling superseded PR runs, and removing repeated canonical setup and catalog generation; also removed retired workflow/retry code and bound Pages deployments to the exact published release tag.
+- Added trusted-base fork fail-fast intake and shadow impact telemetry without weakening `merge:batch`; source validation now generates one exact-head preview manifest for verification, canonical checks split exact-tree reproduction from drift confirmation, and local timing/sharding remains observational and opt-in while required CI stays complete.
+
+### Fixed
+
+- Updated PostCSS to 8.5.18 in the hosted web app and canonical Loki frontend example, resolving GHSA-r28c-9q8g-f849 while preserving canonical and generated-mirror lock parity.
+- Migrated the hosted catalog from `react-router-dom` 7 to the patched `react-router` 8.3.0 API surface, resolving GHSA-qwww-vcr4-c8h2 without the unsafe 7.11.0 downgrade.
+- Replaced obsolete GitHub abuse-reporting and Pro Git links, and removed three dead or unsupported localized community destinations.
+
+### Who should care
+
+- Maintainers and Pages operators who require a zero-advisory web build and reproducible example locks.
+- SEO teams using Claude Code, Cursor, Codex CLI, Gemini CLI, or Antigravity to detect regressions after migrations and content changes.
+- Contributors following the repository's conduct, Git, and localized community guidance.
+
+### Validation
+
+- Confirmed all six tracked npm lockfile surfaces report zero known vulnerabilities after the dependency updates.
+- Passed canonical skill and reference validation, documentation security checks, warning-budget enforcement, repository tests, web tests, lint and production build, Loki frontend builds, plugin and bundle parity checks, and repository consistency checks.
+- The protected release gate will bind the source and release PRs, canonical synchronization, tag, GitHub Release, npm `latest`, CI, CodeQL, release-only Pages deployment, live catalog and legacy bridge, and every already-configured AAS MCP host to the exact released commit.
+
+### Credits
+
+- **[@ununununium](https://github.com/ununununium)** and **[nowork-studio/NotFair](https://github.com/nowork-studio/NotFair)** for the official `seo-drift` contribution in [PR #974](https://github.com/sickn33/agentic-awesome-skills/pull/974).
+
+## [15.3.0] - 2026-07-22 - "Security Boundaries and Maintainer Reliability"
+
+> Hardened AAS Core, skill distribution, the hosted catalog, and protected maintenance and release workflows; resolved current dependency advisories and the native Windows preview failure reported in discussion #956 without changing the 1,987-skill catalog.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Changed
+
+- Expanded semantic-review and merge evidence from `SKILL.md` to every tracked file under a canonical skill subtree, including nested examples, scripts, lockfiles, references, assets, deletions, and plugin skill mirrors. Deleted or otherwise unresolvable skill trees now require exact-head manual review instead of silently producing a successful no-skill result.
+- Restricted sensitive same-repository action approval to owner-authored PRs with exact 40-character reviewed-head attestation, and made protected release publication accept exactly one same-repository, owner-authored PR with the expected title, base, and `release/vX.Y.Z` branch.
+- Marked `anywrite` and `sshepherd` blocked in Codex and Claude plugin distributions until users provide separately installed, reviewed executables by explicit absolute path; the canonical source skills remain in the catalog.
+- Hardened `cloudflare-security-audit`, `hf-cloud-aws-context-discovery`, `pptx-deck-creation`, and `weaviate-cookbooks` against cross-repository evidence reuse, credential exposure, prompt injection from design references, and predictable temporary installer paths.
+
+### Fixed
+
+- Fixed native Windows Codex configuration preview so ACL checks pass paths through the environment, tolerate unresolved inherited ACE names, and return bounded path, phase, and status diagnostics for `AAS_ADAPTER_WINDOWS_ACL_FAILED`.
+- Hardened AAS Core runtime state: validate the complete cache-ancestor chain, bound per-session manifest state to 128 entries, preserve broader neutral search results for exact-ID queries, and surface directory-durability failures during transactional cleanup.
+- Removed the catalog markdown URL bypass, required exact release metadata in `llms.txt`, and rejected symlinked or escaping files in the legacy Pages redirect verifier.
+- Fixed changed-skill evidence for arbitrary nested bundle files, full-directory Tessl fingerprints, deleted skill trees, canonical-sync Pages suppression, and workflow and documentation contract drift; canonical synchronization no longer dispatches release-only Pages builds.
+- Updated `brace-expansion` to 1.1.16, `body-parser` to 1.20.6, and `fast-uri` to 3.1.4, resolving the live Dependabot findings and affected npm audit results.
+- Pinned published README links to the release-specific AAS Core guide and made release-state synchronization preserve that immutable version binding.
+
+### Who should care
+
+- Native Windows Codex users configuring AAS Core.
+- Maintainers merging skill bundles, canonical syncs, or protected releases.
+- Users of plugin distributions and security, cloud, and deck-generation skills.
+- Operators relying on Core cache, transaction, evidence, or legacy Pages verification boundaries.
+
+### Validation
+
+- Passed canonical skill and reference validation, documentation security checks, workflow linting, warning-budget enforcement, repository tests, web tests and build, deterministic regeneration, protected CI, and CodeQL on the merged source and canonical-sync commits.
+- Confirmed all six tracked lockfile surfaces report zero known npm vulnerabilities before release preparation, with zero open Dependabot, code-scanning, or secret-scanning alerts.
+- The release gate will verify tag, GitHub Release, npm `latest`, the release-only Pages deployment, live catalog and legacy bridge, and every already-configured AAS MCP host against the exact released commit.
+
+### Credits
+
+- **[@SpecializedBaby](https://github.com/SpecializedBaby)** for reporting the native Windows Codex ACL preview failure in [discussion #956](https://github.com/sickn33/agentic-awesome-skills/discussions/956).
+
+## [15.2.0] - 2026-07-21 - "Credited Skills and Release Reliability"
+
+> Expanded the catalog to 1,987 source-verified skills, clarified the AAS Core product boundary, and strengthened protected release alignment across npm, plugins, public surfaces, and configured MCP hosts.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added ten official Markstream skills: `markstream-angular`, `markstream-custom-components`, `markstream-migration`, `markstream-nuxt`, `markstream-react`, `markstream-svelte`, `markstream-vue`, `markstream-vue2`, `markstream-vue2-cli`, and `markstream-vue2-vite`.
+- Added seven n8n workflow-specialist skills: `n8n-agents`, `n8n-binary-and-data`, `n8n-code-tool`, `n8n-error-handling`, `n8n-multi-instance`, `n8n-subworkflows`, and `using-n8n-mcp-skills`.
+- Added the official Hugging Face `hf-cloud-aws-context-discovery` skill for resolving the effective AWS profile, region, account, and caller identity before cloud work.
+- Retained the local reference material required by the imported Markstream and n8n skills, and added the node-family compatibility reference to the existing `n8n-node-configuration` skill.
+
+### Changed
+
+- Hardened `markstream-install` and the imported guidance around dependency installation, project mutation, credentials, instance selection, workflow side effects, and cloud-planning boundaries.
+- Aligned the README, hosted catalog, localized documentation, SEO metadata, Workbench copy, and package surfaces with the implemented AAS Core model: coding agents choose exact skills, while Core provides neutral catalog access, structural validation, durable state, and immutable plan preview rather than semantic recommendation.
+- Expanded the AAS Core guide with an exact version-pinned MCP setup command, a copyable end-to-end quick path, a preview-status matrix, and explicit boundaries between structural validity, semantic suitability, compatibility, setup correctness, and operational safety.
+- Made full release alignment mandatory across generated registries, Codex and Claude mirrors, editorial bundles, plugin manifests, marketplaces, GitHub Release, npm dist-tags, CI, CodeQL, Pages, public catalog routes, and every already-configured local AAS MCP host.
+- Regenerated the canonical catalog, compatibility data, plugin mirrors, bundles, marketplaces, and public discovery surfaces for 1,987 skills.
+
+### Fixed
+
+- Fixed same-version protected release retries so release staging includes the generated AAS Core version pin and publication selects the latest successfully merged protected release candidate.
+- Added regression guards that prevent generated metadata and public surfaces from restoring stale recommender claims or obsolete fixed catalog counts.
+
+### Who should care
+
+- Frontend teams using Markstream across Vue, React, Svelte, Angular, Nuxt, and Vue 2 projects.
+- n8n builders working with agents, Code nodes, binary data, error handling, multi-instance deployments, and subworkflows.
+- Hugging Face and AWS users who need reliable account and region discovery before cloud operations.
+- AAS Core operators who depend on reproducible, version-pinned releases and inspectable agent-selected stacks.
+
+### Validation
+
+- Audited all 208 credited repositories and selected 18 additions with usable source material, compatible licensing, clear provenance, and acceptable semantic and safety boundaries; unresolved, unsafe, or incomplete candidates were excluded.
+- Passed canonical skill validation, reference validation, documentation security checks, credit and source-chain checks, repository tests, protected CI, and CodeQL for the released commit.
+- Published npm package `15.2.0` and verified the configured local AAS MCP host with a real `initialize` and `tools/list` handshake against version `15.2.0`.
+
+### Known issue
+
+- The release-only Pages deployment was blocked by a high-severity transitive dependency advisory, so the live catalog remained on `15.1.0` pending a dependency refresh and follow-up release.
+
+### Credits
+
+- **[@Simon-He95](https://github.com/Simon-He95)** and **[Simon-He95/markstream-vue](https://github.com/Simon-He95/markstream-vue)** for the official Markstream skill family.
+- **[czlonkowski/n8n-skills](https://github.com/czlonkowski/n8n-skills)** for the n8n workflow-specialist material.
+- **[Hugging Face](https://github.com/huggingface)** and **[huggingface/skills](https://github.com/huggingface/skills)** for the official AWS context-discovery skill.
+
+## [15.1.0] - 2026-07-19 - "Agent-Owned Selection and Audit Evidence"
+
+> AAS Core now leaves semantic skill selection to the coding agent, validates the exact chosen stack, and emits durable evidence that can be reviewed without exposing project content.
+
+Start here:
+
+- AAS Core setup: configure the exact `aas` runtime with the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md)
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added the canonical `aas-selection-evidence.json` sidecar, with a server-owned MCP process trace, agent-declared ten-dimension capability ledger, path-safe project fingerprint, catalog and manifest binding, and structural-only inspection through `export_selection_evidence` and `inspect_selection_evidence`.
+- Added an audit-enabled CLI artifact-directory path that validates and publishes `aas-stack.json` and `aas-selection-evidence.json` together with a single durable directory rename, while preserving the existing manifest-only command.
+- Added the official `markstream-install` skill for integrating streaming Markdown renderers across Vue, React, Svelte, Angular, Nuxt, Next.js, and Vue 2 applications (PR #940).
+
+### Changed
+
+- Added an MCP session-level capability coverage contract for Codex and Claude: agents must enumerate primary project capabilities, search and compare candidates for each, cover every capability or report a catalog gap, and avoid smallest-stack optimization before `compose_stack`. Core imposes no semantic small-stack policy; each manifest retains an explicit technical maximum of 128 skills.
+- Moved semantic skill selection fully to Codex and Claude: agents inspect the project, search and read the complete local catalog, and choose exact skill IDs using their own judgment; AAS Core no longer ranks or recommends skills.
+- Replaced the recommendation workflow with read-only `compose_stack`, which validates and returns the agent-owned manifest in memory; clients or the CLI persist `aas-stack.json` for inspection, validation, and immutable plan preview.
+- Removed Core selection policy and metadata eligibility gates. Every canonical skill is searchable, readable, and available for agent selection; risk, source, setup, compatibility, review, and evidence metadata are informational only.
+- Made `search_skills` retrieval neutral: matching results preserve stable catalog order and no longer expose relevance scores or ranking while exact-ID lookup and complete pagination remain deterministic.
+- Updated the public product narrative, host guides, Workbench-facing copy sources, package metadata, and maintainer workflow to describe the agent-owned selection boundary. Released entries below remain historical descriptions of their releases.
+
+### Fixed
+
+- Preserved bounded, path-safe schema diagnostics across Core and MCP errors so invalid profiles identify the logical field, validation keyword, and applicable limit without echoing input values, unknown property names, schema internals, or filesystem paths.
+- Corrected current public Core examples to use manifest schema 2 with `profile` and exact agent-selected IDs, with a regression test spanning English, Chinese, Vietnamese, integration, and hosted-app copy.
+- Marked all five local MCP tools explicitly read-only, non-destructive, idempotent, and closed-world so isolated non-interactive Codex clients can invoke the catalog workflow without treating the calls as approval-gated mutations.
+- Restored and protected CLI topic-page SEO metadata so generated titles, descriptions, and catalog routes retain their topic-specific contract.
+
+### Validation
+
+- Passed the protected repository CI and all CodeQL analyzers on the final pre-release `main` commit, including the packed Core preview and dynamic catalog enumeration regressions.
+
+### Credits
+
+- **[@Simon-He95](https://github.com/Simon-He95)** and **[Simon-He95/markstream-vue](https://github.com/Simon-He95/markstream-vue)** for the official `markstream-install` skill (PR #940).
+
+## [15.0.0] - 2026-07-18 - "AAS Core: Local Composition and Reviewable Plans"
+
+> AAS Core becomes the primary product: a local, deterministic engine shared by the `aas` CLI and read-only `aas-mcp`, taking coding agents from an explicit project profile to an explainable recommendation, `aas-stack.json`, validation, and immutable plan preview before any target change.
+
+### Added
+
+- Added a repository-canonical `antigravity-maintainer-batch-release` skill so external clones can follow the mandatory protected maintainer workflow without relying on a machine-local copy.
+- Added a public AAS Core guide covering the local agent-first MCP flow, `aas-stack.json`, CLI validation and immutable plan preview, Workbench review, privacy boundaries, and the current preview qualification.
+
+### Changed
+
+- Made the OSS Maintainer bundle self-contained, made the Git pushing helper portable outside this repository, and removed dead maintenance-skill references.
+- Aligned secondary user guides, hosted discovery copy, Workbench verification labels, and an ImageGen-produced social card with the AAS Core product hierarchy while preserving direct-distribution, contributor, governance, and historical content.
+- Clarified the first-screen AAS Core narrative with one primary product, an explicit project-profile trust boundary, a single Core CTA, and durable generator guards that keep future metadata syncs from restoring the legacy library-first headline.
+- Reduced the Core preview workflow to one packed Linux/Node LTS smoke path plus Workbench review, while retaining release-time validation for publication.
+- Recentered the README, user onboarding, host guides, package metadata, and hosted catalog narrative on AAS Core while preserving contributor, catalog, plugin, bundle, workflow, compatibility, community, and source-credit content.
+- Expanded the curated hosted sitemap from 42 to 180 deterministic skill routes and added crawlable static home/topic fallbacks so search engines can discover useful catalog hubs without mass-indexing the full library.
+- Enriched the four search-intent landing pages with real recommended skills, stronger internal links, and matching `ItemList` structured data while preserving canonical trailing-slash identities.
+- Replaced the marketing-only homepage heading with a descriptive AI-agent-skills heading while retaining the existing slogan as supporting copy.
+
+### Fixed
+
+- Fixed invalid `aas stack validate` manifests so the CLI returns the documented structured error and non-zero exit status.
+- Corrected the AAS Core release boundary, Workbench artifact-review flow, localized and search-facing narrative, and npm packaging assertions without changing contributor, governance, community, or historical sections.
+- Removed the retired certified-v1 verifier corpus, six-job harnesses, tuning runner, paused optimization workflows, heuristic local reviewer, lexical risk inference, and quality-score merge regressions. Objective validation, reference, security, provenance, Tessl-or-exact-head semantic review, and protected canonical-sync gates remain.
+- Made the future AAS Core npm onboarding release-safe by linking the published README to the canonical Core guide and deriving the plan runtime version from the manifest catalog identity instead of hardcoding a release number.
+- Added the current Bing Webmaster verification identity and updated the legacy Pages redirect generator contract to cover the expanded 187-route sitemap.
+- Expanded the legacy Pages bridge to every one of the 1,968 current catalog skills plus seven structural routes, while keeping crawler discovery limited to the curated 187-route sitemap and making migration-readiness checks enforce the same exact catalog coverage.
+- Corrected public Workbench copy that implied browser-side install-command generation; Workbench reviews user-supplied Core stack and plan artifacts without filesystem access or installation.
+
+### Validation
+
+- Verified the published `15.0.0-rc.3` package end to end in a fresh real Codex client: official MCP configuration, native `search_skills`, `get_skill`, `recommend_stack`, and `inspect_stack` calls, a valid agent-proposed `aas-stack.json`, packaged CLI validation, and immutable read-only plan preview without apply or recovery.
+- Passed repository validation, reference and documentation-security checks, AAS Core tests, web-app coverage and build, package-content checks, protected CI, CodeQL, Dependency Review, Snyk, Socket, and npm publication verification.
+
+## [15.0.0-rc.3] - 2026-07-18 - "AAS Core Onboarding Candidate"
+
+> Supersedes `15.0.0-rc.2` after real Codex validation exposed three onboarding defects. This candidate remains on npm's `next` channel until the complete fresh-client flow passes without workarounds.
+
+### Fixed
+
+- Allowed the official runtime bootstrap to create a private AAS cache under a normal real user configuration directory without requiring the parent directory itself to be private.
+- Published exact nested MCP input schemas for recommendation profiles, targets, policy, and stack manifests, and aligned `projectType` with the Core recommendation contract.
+- Directed MCP clients to validate every proposed `aas-stack.json` with `inspect_stack` before handing it to the CLI, preventing malformed manifest contracts from reaching `stack validate`.
+
+### Validation
+
+- `15.0.0-rc.2` proved real Codex discovery and invocation of `search_skills`, `get_skill`, and `recommend_stack`, but stable promotion was stopped because bootstrap required a cache workaround and the agent-proposed manifest failed CLI validation.
+- Stable `15.0.0` remains gated on repeating the full fresh-client flow with the packaged `15.0.0-rc.3` runtime and packaged CLI, ending in successful manifest validation and read-only plan preview.
+
+## [15.0.0-rc.2] - 2026-07-18 - "AAS Core Release Candidate"
+
+> Supersedes the unpublished `15.0.0-rc.1` candidate after hardening prerelease metadata synchronization. This candidate is published on npm's `next` channel for real-client validation before the stable 15.0.0 release.
+
+### Fixed
+
+- Made prerelease metadata synchronization idempotent across the README and crawler-facing release metadata, including repeated RC syncs and the later RC-to-stable transition.
+- Reprepared the protected release candidate from the exact post-fix `main` lineage so the release tag, generated state, and published package share one verified source identity.
+
+### Validation
+
+- Stable `15.0.0` remains gated on a fresh Codex client discovering and invoking the packaged AAS MCP, followed by packaged CLI validation and read-only plan preview.
+
+## [15.0.0-rc.1] - 2026-07-18 - "AAS Core Release Candidate (Unpublished)"
+
+> Prepared as the first AAS Core release candidate but not tagged or published; superseded by `15.0.0-rc.2` after prerelease metadata synchronization was hardened.
+
+### Added
+
+- Added the local, deterministic AAS Core shared by the `aas` CLI and local stdio MCP, with catalog search, skill inspection, explainable stack recommendation, manifest validation, immutable plan preview, and read-only diagnosis.
+- Added the versioned `aas-stack.json` and plan contracts, integrity-bound offline catalog runtime, Codex and Claude MCP configuration flow, and browser-local Workbench artifact review.
+
+### Changed
+
+- Repositioned the repository around AAS Core while preserving the catalog, plugins, bundles, workflows, direct installers, compatibility documentation, contributor guidance, governance, community, credits, and historical release notes.
+- Raised the supported Node.js runtime to 22 or newer and made prereleases publish explicitly to npm's `next` channel while stable releases publish to `latest`.
+- Kept target mutation outside the supported preview claim: `stack apply` and `stack recover` remain experimental and opt-in.
+
+### Fixed
+
+- Removed obsolete heuristic reviewer, lexical risk classifier, score gates, certified-v1 evaluation corpus, and paused optimization machinery that produced false positives or unnecessary merge friction. Objective validation, reference, security, provenance, protected canonical synchronization, and Tessl-or-exact-head semantic review remain.
+- Made AAS Core release capability explicit in package metadata so future documentation and release synchronization no longer depend on hardcoded version strings.
+
+### Validation
+
+- This candidate is intentionally published before the stable release so a fresh Codex client can discover and invoke the packaged AAS MCP and the packaged CLI can validate and preview the proposed stack end to end.
+
+### Credits
+
+- **[@alen-hh](https://github.com/alen-hh)** for `modellix` (PR #867).
+- **[@Siphon880gh](https://github.com/Siphon880gh)** for `game-development/engine-selection` and related game-development updates (PR #879).
+- **[@kimtth](https://github.com/kimtth)** for the OOXML reference-deck analysis added to `pptx-deck-creation` (PR #871).
+
+## [14.6.0] - 2026-07-16 - "Diagnostics, Review Efficiency, and Protected Maintenance"
+
+> Three new skills for Claude Code, Codex CLI, Gemini CLI, Cursor, Antigravity, and other agent workflows: Android overheating diagnosis, evidence-labeled competitor ad research, and uncertainty-aware campaign optimization, backed by more reliable Tessl review and protected maintainer automation.
+
+## Start Here
+
+- Install: `npx agentic-awesome-skills@14.6.0`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+## Added
+
+- Added **diagnose-android-overheating**, a read-only-first Android and HyperOS investigation workflow for correlating thermal state, power use, wakelocks, radio activity, and workload evidence without treating one snapshot as proof (PR #854).
+- Added **competitor-ad-intelligence** for evidence-labeled competitor paid-ad research across public libraries, landing pages, offer structure, and creative patterns while keeping observations separate from inference (PR #852).
+- Added **ad-campaign-analyzer** for diagnosing campaign efficiency and proposing bounded budget reallocation tests with uncertainty, measurement quality, and rollback conditions made explicit (PR #853).
+
+## Changed
+
+- Made repository maintenance consistently pull-request-only across maintainer policy and the `git-pushing`, `git-pr-workflows-git-workflow`, `finishing-a-development-branch`, `github-automation`, and `repo-maintainer` skills (PR #864).
+- Extended `merge:batch` to support same-repository maintainer PRs while keeping external PRs behind the strict fork content allowlist, trusted changed-skill evidence, exact-head review, required checks, and protected `main`.
+- Regenerated the canonical catalog, hosted assets, skill indexes, plugin bundles, and Claude/Codex mirrors for 1,965 skills.
+
+## Fixed
+
+- Corrected Tessl workspace selection and added a repository-variable override for future workspace migrations (PRs #856 and #858).
+- Reused successful Tessl review only for an identical changed-skill fingerprint, conserving review credits without weakening semantic-review truthfulness; explicit quota failures now route to exact-head manual review while unrelated failures remain fail-closed (PR #860).
+- Bound PR body-refresh retries to newly materialized workflow and check-suite IDs, preventing older runs on the same commit from satisfying or failing a refreshed merge gate (PR #864).
+- Made check selection prefer workflow creation time over late completion time and added regression coverage for delayed fork approvals, fresh Skill Review suites, and internal maintainer batches.
+
+## Validation
+
+- Passed protected `pr-policy`, `pr-evidence`, `source-validation`, and `artifact-preview` checks for every source and canonical-sync PR in the cycle.
+- Passed Tessl review for the five updated maintenance skills with scores of 93, 99, 88, 93, and 96 against the required threshold of 80.
+- Passed the full repository suite, documentation security, reference validation, warning-budget enforcement, Dependency Review, Snyk, Socket, all CodeQL analyzers, canonical mirror checks, and final Pages deployment.
+- Verified the three new skills and updated maintenance metadata on the live hosted catalog.
+
+## Credits
+
+- **[@himanshub42](https://github.com/himanshub42)** and **[gooseworks-ai/goose-skills](https://github.com/gooseworks-ai/goose-skills)** for `competitor-ad-intelligence` and `ad-campaign-analyzer` (PRs #852 and #853).
+
+## [14.5.0] - 2026-07-15 - "Private Context, Optimization, and Local Operations"
+
+> Four reviewed community skills for private session-derived profiles, bounded parameter optimization, credential-isolated SSH operations, and low-context Anytype automation, with maintainer hardening and synchronized distributions.
+
+## Added
+
+- Added **ditto** for extracting private, session-derived context into a local profile without introducing fork-supplied executable runtime files (PR #842).
+- Added **optim-agent** for bounded parameter optimization and evidence-driven tuning workflows (PR #844).
+- Added **sshepherd** for credential-isolated SSH operations with explicit remote-operation boundaries (PR #846).
+- Added **anywrite** for low-context Anytype workspace automation and safe local writes (PR #847).
+
+## Changed
+
+- Classified session mining, remote infrastructure operations, and mutable local workspace automation at `critical` risk.
+- Made Ditto require an existing trusted runtime instead of accepting executable bootstrap code supplied by a fork.
+- Synchronized the canonical catalog, plugin mirrors, contributor/source credits, web assets, and public discovery surfaces for 1,962+ skills.
+
+## Fixed
+
+- Added missing source credits for `sshepherd` and `anywrite` and resolved overlapping README credit changes without dropping either source.
+
+## Validation
+
+- Passed exact-head policy, evidence, source-validation, artifact-preview, and skill-review gates for PRs #842, #844, #846, and #847.
+- Passed consistency and maintainer audits, the root and web-app suites, CodeQL, and Pages deployment; verified all four skills on the live catalog.
+
+## Credits
+
+- **[@ohad6k](https://github.com/ohad6k)** for `ditto` (PR #842).
+- **[@Optim-Agent](https://github.com/Optim-Agent)** for `optim-agent` (PR #844).
+- **[@Antheurus](https://github.com/Antheurus)** for `sshepherd` and `anywrite` (PRs #846 and #847).
+
+## [14.4.0] - 2026-07-14 - "Protected Automation and Production Skills"
+
+> Ten reviewed community skills for durable project memory, software-graph analysis, Cloudflare and codebase guardrails, data warehousing, and presentation production, backed by protected exact-commit maintainer automation.
+
+## Added
+
+- Added **feature-tracking** for durable feature decisions, implementation state, and project memory across sessions (PR #819).
+- Added **ontoly-software-graph** for querying and reasoning over Ontoly software knowledge graphs (PR #827).
+- Added **cloudflare-security-audit** plus the **clean-code**, **documentation**, **testing**, **WooCommerce**, and **WordPress** guard skills (PR #822).
+- Added **warehouse** for production-oriented data warehouse architecture and implementation workflows (PR #818).
+- Added **pptx-deck-creation** for structured PowerPoint research, authoring, rendering, and visual QA (PR #830).
+
+## Changed
+
+- Protected canonical repository writers with exact pull-request and commit binding, trusted regression gates, fail-closed approval handling, and a single guarded canonical-sync path.
+- Restored the explicit fork-approval flow while preventing workflow runs from being reused across unrelated pull requests or head commits.
+- Improved curated plugin bundle composition, tracked ignored Claude mirror files correctly, and combined npm package-rename traffic without double counting.
+- Made hosted catalog SEO identities reproducible across canonical URLs, social metadata, sitemaps, and prerendered output.
+
+## Fixed
+
+- Closed the two open Security and Quality findings by declaring least-privilege workflow permissions and making the SEO package-identity regression test exact.
+- Made skill review fail closed when same-repository credentials are missing, while preserving the explicit manual-review path for forks.
+- Hardened Lore mirror targets against traversal and symlink escapes, Telegram approvals against unauthorized group senders and token leakage through process arguments, and Auto Research against implicit external-query disclosure.
+- Restored legacy Git ref-format detection, updated the redirect bridge to the current 49-route sitemap, and made Go In Depth reject non-string query inputs cleanly.
+- Regenerated ephemeral plugin mirrors and the skill index before source-only PR tests so contributions can satisfy distribution and Workbench contracts without committing generated artifacts.
+
+## Validation
+
+- Added regression coverage for workflow fail-closed behavior, mirror containment guidance, Telegram authorization and token transport, legacy Git, production redirect counts, and non-string research queries.
+- Passed the canonical 1,958-skill validation and reference checks, full root test suite, documentation security gate, web-app coverage and production build, npm high-severity audit, package dry run, CodeQL, and protected exact-head PR checks.
+
+## Credits
+
+- **[@JunsW](https://github.com/JunsW)** for `feature-tracking` (PR #819).
+- **[@0xsarwagya](https://github.com/0xsarwagya)** for `ontoly-software-graph` (PR #827).
+- **[@FrancoStino](https://github.com/FrancoStino)** for the Cloudflare security audit and guard skills (PR #822).
+- **[@Rudra-G-23](https://github.com/Rudra-G-23)** for `warehouse` (PR #818).
+- **[@kimtth](https://github.com/kimtth)** for `pptx-deck-creation` (PR #830).
+
+## [14.3.1] - 2026-07-13 - "Expert Workbench and Community Surface Cleanup"
+
+> A public expert workbench for exact, inspectable skill sets, with the rejected maintainer-only product removed from the current installable distribution.
+
+## Added
+
+- Added the hosted **Expert Skill Workbench** for searching recorded catalog fields and filtering category, risk, provenance, host compatibility, and setup burden across all 1,948 canonical skills (PR #815).
+- Added exact skill selection, raw evidence warnings, shareable selection/host URLs, and package-and-release-pinned preview/install commands that fail closed for missing or explicitly incompatible IDs.
+- Added a canonical-data contract proving every Workbench skill ID resolves exactly once through the real installer.
+
+## Changed
+
+- Made the static web skill count, release version, Workbench route, sitemap entry, prerender route, and `llms.txt` discovery surface part of the canonical metadata/build contract.
+- Kept the general-purpose review, Git, changelog, and validation skills independently available in the full catalog instead of packaging them as a maintainer product.
+
+## Removed
+
+- Retired **AAS OSS Maintainer** from the editorial manifest, specialized-plugin candidates, hosted plugin catalog, README, plugin guides, Claude/Codex marketplaces, and generated plugin distribution (PR #816).
+
+## Fixed
+
+- Made bundle-retirement tests compatible with source-only pull requests while retaining an isolated regression test that proves canonical sync deletes stale generated plugin directories.
+
+## Validation
+
+- Passed source-only PR policy, Dependency Review, Snyk, Socket, all CodeQL analyzers, repository validation, reference checks, documentation security, the full root test suite, and bundle synchronization tests.
+- Passed 115 web-app tests and coverage gates, TypeScript, ESLint, production build, prerender, SEO verification, sitemap validation, Pages deployment, and live Workbench interaction checks.
+
+## [14.3.0] - 2026-07-13 - "Exact Selection, Safe Preview, and Community Memory"
+
+> Version-pinned exact skill sets for active users and teams, plus two reviewed community skills with maintainer safety and correctness hardening.
+
+## Added
+
+- Added `--skills <csv>` for exact canonical skill names, IDs, and nested paths, with unknown or ambiguous selectors rejected before target writes.
+- Added `--dry-run` to show the pinned ref, exact selected skills, per-target installs or updates, stale managed removals, repository-clone migration, and ignored unsafe manifest entries without mutating targets.
+- Added **lore**, a project-local Markdown memory workflow with five stdlib Python helpers, explicit mirror boundaries, and project-input trust controls (PR #810).
+- Added **quit-sponsor**, an opt-in smoking-cessation support workflow aligned to current CDC, WHO, and NICE guidance with local-data and emergency-escalation boundaries (PR #809).
+
+## Changed
+
+- Preserved recorded top-level and nested metadata tags in the canonical generated skill index for downstream expert discovery.
+- Preflight every selected target before the first multi-target mutation and treat `--skills` as explicit desired state for installer-managed entries.
+- Corrected the documented `Wolfe-Jam/faf-skills` inventory from 17 skills to the seven currently published upstream (PR #811).
+
+## Fixed
+
+- Ignore unsafe managed paths from a local installer manifest instead of resolving or pruning outside the install root.
+- Fixed `lore` candidate duplicate detection, clean helper failures, audit mutation wording, and higher-priority instruction boundaries before merge.
+- Removed categorical cessation guidance from `quit-sponsor`; quit dates, abrupt cessation, gradual reduction, and medications now remain individualized and clinically bounded.
+
+## Validation
+
+- Added exact-selection, ambiguity, filter-intersection, stale-removal preview, unsafe-manifest, no-write, and multi-target atomicity coverage.
+- Required fresh policy, source-validation, artifact-preview, and skill-review checks for PRs #809–#811, then regenerated canonical catalog and plugin surfaces.
+- Ran strict repository validation, documentation security checks, the full root and web-app test suites, TypeScript, ESLint, production build, prerender, sitemap, and SEO verification.
+
+## Credits
+
+- **[@metrox-eth](https://github.com/metrox-eth)** for `quit-sponsor` (PR #809).
+- **[@TheaDust](https://github.com/TheaDust)** for `lore` (PR #810).
+- **[@Wolfe-Jam](https://github.com/Wolfe-Jam)** for correcting the `faf-skills` source inventory (PR #811).
+
+## [14.2.0] - 2026-07-12 - "Workflow Reliability and UI Research"
+
+> Three reviewed community skills for idea validation, deterministic AI workflows, and source-grounded UI research, with maintainer hardening and synchronized distributions.
+
+## Added
+
+- Added **idea-autopsy**, a consent-gated business-idea validation workflow with explicit mutation boundaries for `REJECTION.md` (PR #805).
+- Added **nika**, a critical-risk workflow runner guide with provenance, paid-run safeguards, cost-limit caveats, trace verification, and explicit limitations (PR #806).
+- Added **uizze-ui-research**, an official-source workflow for turning UIZZE references into implementation constraints without copying product identity or assets (PR #807).
+
+## Changed
+
+- Added the required community and official-source README credits for Nika and UIZZE.
+- Regenerated canonical indexes, catalogs, web assets, bundle data, contributor surfaces, and Codex/Claude plugin mirrors for the 1,946-skill catalog.
+
+## Validation
+
+- Required fresh `pr-policy`, `source-validation`, `artifact-preview`, and `review` checks before each squash merge.
+- Ran repository validation, warning-budget enforcement, README source-credit checks, documentation security checks, the full test suite, and canonical consistency synchronization.
+
+## Credits
+
+- **[@hafiz-actyte](https://github.com/hafiz-actyte)** for PR #805 (`idea-autopsy`).
+- **[@ThibautMelen](https://github.com/ThibautMelen)** and **[supernovae-st/nika-agents](https://github.com/supernovae-st/nika-agents)** for PR #806 (`nika`).
+- **[@samuelbushi](https://github.com/samuelbushi)** and **[aislon/uizze-mcp](https://github.com/aislon/uizze-mcp)** for PR #807 (`uizze-ui-research`).
+
+## [14.1.0] - 2026-07-10 - "Maintainer Batch and Security Boundary Hardening"
+
+> Four reviewed community contributions plus targeted hardening for third-party consultation, update, install, connector-routing, and workspace-instruction boundaries.
+
+## Added
+
+- Added a self-contained Flutter implementation playbook covering architecture, typed failures, testing, and performance guidance (PR #799).
+- Added **auto-research** with explicit per-consultation approval and redaction requirements (PR #800).
+- Added **apple-container**, **gemini-deep-research**, **grok-build**, **postgres-readonly-queries**, and **telegram-bot-messaging** (PR #801).
+- Added **product-decision-agent** with Chinese product-decision playbooks, quality gate, and source-neutral metadata (PR #802).
+
+## Fixed
+
+- Hardened **ask-copilot** and both distributed plugin copies: no blanket path access for review and no shell construction from untrusted prompt text or filenames.
+- Removed remote self-overwrite guidance from **deepapi** and made **browser-harness** updates explicitly user-approved.
+- Replaced Pilot Protocol's predictable installer path with a private `mktemp` directory and cleanup trap.
+- Require a user-confirmed Notion database ID before **trading-ledger** reads or writes trade data.
+- Require explicit user approval before **atlas-contract** imports project-local `Atlas.md` clauses.
+
+## Changed
+
+- Regenerated canonical Codex and Claude plugin distributions from the hardened skill sources.
+
+## Validation
+
+- Ran `npm run security:docs`, `npm run validate`, `npm run validate:references`, generated plugin synchronization, and the release verification suite.
+
+## Credits
+
+- **[@Franklyn-R-Silva](https://github.com/Franklyn-R-Silva)** for PR #799 (`flutter-expert`).
+- **[@zyu51847-maker](https://github.com/zyu51847-maker)** for PR #800 (`auto-research`).
+- **[@sanjay3290](https://github.com/sanjay3290)** and **[sanjay3290/ai-skills](https://github.com/sanjay3290/ai-skills)** for PR #801.
+- **[@atdy](https://github.com/atdy)** for PR #802 (`product-decision-agent`).
+
+## [14.0.0] - 2026-07-09 - "Agentic Awesome Skills Rename and Catalog Continuity"
+
+> Project identity, package metadata, public URLs, source provenance, social preview assets, and reference completeness aligned after the rename from Antigravity Awesome Skills to Agentic Awesome Skills.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1936-skills](README.md#browse-1936-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This is a major release because the public project identity changed from **Antigravity Awesome Skills** to **Agentic Awesome Skills**. The rename reflects the catalog's broader role across Claude Code, Codex, Cursor, Gemini CLI, Antigravity, and other agentic coding environments while preserving Antigravity compatibility.
+
+## Added
+
+- Added **ask-copilot**, a critical-risk Copilot CLI consultation skill with explicit user-consent requirements for sending local context to GitHub Copilot and separate approval gates before any tool execution or workspace mutation (PR #792).
+
+## Changed
+
+- Promoted the renamed **Agentic Awesome Skills** identity as the canonical package, repository, hosted catalog, changelog, and public metadata surface.
+- Refreshed **x-twitter-scraper** with current Xquik source metadata, MIT license provenance, SDK setup guidance, and official-source README placement (PR #794).
+- Replaced the public social preview card with a PNG asset and updated web SEO verification to validate the 1200x630 PNG dimensions.
+
+## Fixed
+
+- Restored the missing `pytest-skill/reference/playbook.md` file in the canonical skill and both plugin mirrors, resolving the broken reference reported in issue #793.
+
+## Validation
+
+- Hardened and merged PR #792 after `Skills Registry CI`, `Skill Review`, `Dependency Review`, `CodeQL`, Socket, and Snyk checks passed.
+- Verified and merged PR #794 after `Skills Registry CI`, `Skill Review`, `Dependency Review`, `CodeQL`, Socket, and Snyk checks passed.
+- Reproduced issue #793 locally by confirming `pytest-skill` referenced `reference/playbook.md` while the distributed skill folders lacked the file, then restored it from the LambdaTest upstream source.
+- Closed issue #793 after restoring the missing pytest reference file on `main`.
+
+## Credits
+
+- **[@cshara1](https://github.com/cshara1)** for PR #792 (`ask-copilot`).
+- **[@kriptoburak](https://github.com/kriptoburak)** and **[Xquik-dev/x-twitter-scraper](https://github.com/Xquik-dev/x-twitter-scraper)** for PR #794 (`x-twitter-scraper` source refresh).
+- **[@grabear](https://github.com/grabear)** for reporting the missing pytest reference in issue #793.
+- **[LambdaTest/agent-skills](https://github.com/LambdaTest/agent-skills)** for the upstream `pytest-skill` playbook restored in this release.
+
+## [13.13.0] - 2026-07-08 - "Codex Profiles, Deep Research, and Agent Reliability Gates"
+
+> Codex profile isolation, deep research orchestration, pre-ship verification, agent networking, tree-ring memory, and synchronized public metadata for the 1,935+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1935-skills](README.md#browse-1935-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This release ships the July 8 maintenance batch: five merged community PRs, a source-backed Codex Profiles follow-up for issue #789, generated registry/plugin mirror sync, and refreshed public SEO/LLM metadata for the 1,935+ skill catalog.
+
+## Added
+
+- Added **go-in-depth**, a self-authored deep research workflow skill with multi-agent fan-out, evidence synthesis, and verification guidance (PR #786).
+- Added **routerbase-model-gateway**, a community skill for RouterBase model gateway setup, routing, observability, and fallback operations (PR #787).
+- Added **pre-ship-gate**, a community pre-release verification skill for catching silent failures across migrations, feature flags, build caches, release pointers, staged rollouts, and environment drift (PR #788).
+- Added **pilot-protocol**, a community agent-networking skill for cross-agent coordination, handoff, and message protocol reliability (PR #790).
+- Added **tree-ring-memory**, a community memory governance skill for durable, append-only learning records and reviewable decision history (PR #791).
+- Added **codex-profiles**, a critical-risk Codex CLI/Desktop profile isolation skill sourced from `Ducksss/codex-profiles`, with guidance for separate `CODEX_HOME` profiles and explicit warnings not to copy or expose auth tokens (issue #789).
+
+## Changed
+
+- Refreshed generated registry artifacts, plugin compatibility metadata, plugin mirrors, package metadata, public docs, sitemap, web catalog assets, `llms.txt`, social-card metadata, and SEO fallbacks for the 1,935+ skill catalog.
+- Added or repaired README source credits for RouterBase, pre-ship-gate, pilot-protocol, tree-ring-memory, and codex-profiles source material.
+
+## Validation
+
+- Verified and merged PR #786, PR #787, PR #788, PR #790, and PR #791 after maintainer review and targeted fixes.
+- Closed issue #789 after adding the source-backed `codex-profiles` skill and regenerated catalog surfaces.
+- Ran `npm run check:readme-credits`, `npm run validate`, `npm run security:docs`, `npm run app:build`, and `env npm_config_cache=/private/tmp/aas-npm-cache npm run test` during the maintainer sweep.
+- Ran `npm run sync:repo-state` and refreshed public SEO/LLM surfaces before release preparation.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #786 (`go-in-depth`).
+- **[@zenlee123](https://github.com/zenlee123)** and **[zenlee123/routerbase-agent-skills](https://github.com/zenlee123/routerbase-agent-skills)** for PR #787 (`routerbase-model-gateway`).
+- **[@Sharrmavishal](https://github.com/Sharrmavishal)** and **[Sharrmavishal/operating-kit](https://github.com/Sharrmavishal/operating-kit)** for PR #788 (`pre-ship-gate`).
+- **[@philip638](https://github.com/philip638)** for PR #790 (`pilot-protocol`).
+- **[@TerminallyLazy](https://github.com/TerminallyLazy)** and **[TerminallyLazy/Tree-Ring-Memory](https://github.com/TerminallyLazy/Tree-Ring-Memory)** for PR #791 (`tree-ring-memory`).
+- **[@Ducksss](https://github.com/Ducksss)** and **[Ducksss/codex-profiles](https://github.com/Ducksss/codex-profiles)** for the issue #789 source used by `codex-profiles`.
+
+## [13.12.0] - 2026-07-07 - "Agent Workflow Skills, Social Publishing, and Loki Dependency Refresh"
+
+> Agent-orchestration workflows, social publishing coverage, LinkedIn writing support, and synchronized dependency maintenance for the 1,929+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1929-skills](README.md#browse-1929-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This release ships the July 7 maintenance batch: three merged PRs, a source-backed Taisly follow-up skill, 26 imported David Ondrej agent workflow skills, a LinkedIn post-writing skill with bundled hook references, a canonical Loki example dependency refresh, and regenerated registry/public catalog state for the 1,929+ skill catalog.
+
+## Added
+
+- Added **linkedin-post-writer**, a community LinkedIn post drafting skill adapted from `sergebulaev/linkedin-skills`, including bundled reference material for 16 hook formulas mapped to engagement goals (PR #785).
+- Added **taisly-social-media-posting**, a critical-risk social video publishing workflow skill backed by `taisly/agent`, with explicit approval gates for publishing, scheduling, account-linking, and metadata updates (PR #783 plus maintainer source-backed skill follow-up).
+- Imported 26 non-colliding MIT-licensed skills from **davidondrej/skills**:
+  - **agent-self-scheduling**
+  - **anti-sleep**
+  - **brain-to-docs**
+  - **browser-harness**
+  - **cmux**
+  - **codex-subagent**
+  - **cyber-audit**
+  - **deepapi**
+  - **delegating-to-agents**
+  - **distribute-skill-to-all-agents**
+  - **effective-agent-skills**
+  - **fable-safe-prompt**
+  - **folder-specific-claude-and-agents-md**
+  - **goal-loop**
+  - **interview-style-doc-building**
+  - **markdown-rendering**
+  - **pi-custom-model**
+  - **pi-web-search**
+  - **push-skill-to-github**
+  - **read-all-adrs**
+  - **research-prompt**
+  - **run-deep-swe**
+  - **setup-help**
+  - **short**
+  - **vps-server-management**
+  - **youtube-transcript**
+- Added README source credits for **sergebulaev/linkedin-skills**, **taisly/agent**, and **davidondrej/skills**.
+
+## Changed
+
+- Updated the Loki generated todo backend example dependency `better-sqlite3` from `^12.10.1` to `^12.11.1` in the canonical skill source, then synchronized plugin mirror state from the maintained source (PR #784).
+- Normalized imported David Ondrej skills with AAS frontmatter, concise descriptions, source/license metadata, `## When to Use` sections, and safety-oriented limitations.
+- Refreshed generated registry artifacts, plugin compatibility metadata, plugin mirrors, public web skill assets, sitemap, package description, and README/docs counters for the 1,929+ skill catalog.
+
+## Validation
+
+- Verified and merged PR #783, PR #784, and PR #785 after required GitHub checks passed.
+- Repaired PR #784 from a generated mirror-only dependency bump into a source-only canonical Loki example dependency update before merge.
+- Ran `npm run validate`, `npm run security:docs`, `npm run check:warning-budget`, and `npm run check:readme-credits -- --base origin/main --head HEAD` during the maintainer import pass.
+- Ran `npm run sync:repo-state` after merging PRs and importing new skills.
+
+## Credits
+
+- **[@sergebulaev](https://github.com/sergebulaev)** and **[sergebulaev/linkedin-skills](https://github.com/sergebulaev/linkedin-skills)** for PR #785 (`linkedin-post-writer`).
+- **[@taisly](https://github.com/taisly)** and **[taisly/agent](https://github.com/taisly/agent)** for PR #783 and the Taisly Agent Kit source used by `taisly-social-media-posting`.
+- **[@davidondrej](https://github.com/davidondrej)** and **[davidondrej/skills](https://github.com/davidondrej/skills)** for the imported agent workflow skills.
+- **Snyk** for the `better-sqlite3` maintenance signal in PR #784.
+
+## [13.11.0] - 2026-07-05 - "Ledger Skills, WGM, and Loki Dependency Maintenance"
+
+> Notion-backed ledger skills, a governed build-loop methodology, and synchronized dependency maintenance for the 1,901+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1899-skills](README.md#browse-1899-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This release ships the July 5 maintenance batch: three source-backed skills, README upstream credits, a maintainer-side Snyk dependency repair for the Loki generated todo example, and refreshed registry/public catalog state for the 1,901+ skill catalog.
+
+## Added
+
+- Added **time-ledger**, a critical-risk Notion skill that parses natural-language time reports into a user-owned Notion database while marking uncertain entries `To-confirm` instead of guessing (PR #777).
+- Added **trading-ledger**, a critical-risk Notion trading journal skill that records thesis, plan, emotion, fills, closes, and reviews while explicitly avoiding financial advice and market-data lookups (PR #778).
+- Added **wgm**, a safe meta skill for governed build loops with triage, alignment, planning, deterministic backpressure, holdout-scenario judging, and handoff audits (PR #782).
+- Added README upstream credits for **cruisekkk/time-ledger**, **cruisekkk/trading-ledger**, and **agent-frontier/wgm**.
+
+## Changed
+
+- Updated the Loki generated todo backend example dependency `better-sqlite3` from `^12.10.0` to `^12.10.1` in both the canonical skill source and Claude plugin mirror, superseding the generated-only Snyk PR #779 with a source-synchronized maintainer patch.
+- Refreshed generated registry artifacts, plugin compatibility metadata, plugin mirrors, public web skill assets, sitemap, package description, and README/docs counters for the 1,901+ skill catalog.
+
+## Validation
+
+- Verified and merged PR #777, PR #778, and PR #782 after required GitHub checks passed.
+- Ran `npm run security:docs` and `git diff --check` for the Loki dependency maintenance patch.
+- Ran `npm run validate:references`, `npm run check:readme-credits -- --base origin/main --head HEAD`, and `git diff --check` during the maintainer fixes for PR #778 and PR #782.
+- Ran `npm run sync:repo-state` before release preparation.
+- Ran the release prepare suite for v13.11.0, including reference validation, release-state sync, tests, web-app install, web-app build, and package dry run.
+- Ran `cd apps/web-app && npm run verify:seo`.
+
+## Credits
+
+- **[@cruisekkk](https://github.com/cruisekkk)** and **[cruisekkk/time-ledger](https://github.com/cruisekkk/time-ledger)** for PR #777 (`time-ledger`).
+- **[@cruisekkk](https://github.com/cruisekkk)** and **[cruisekkk/trading-ledger](https://github.com/cruisekkk/trading-ledger)** for PR #778 (`trading-ledger`).
+- **[@SchwartzKamel](https://github.com/SchwartzKamel)** and **[agent-frontier/wgm](https://github.com/agent-frontier/wgm)** for PR #782 (`wgm`).
+- **Snyk** for the `better-sqlite3` maintenance signal in PR #779.
+
+## [13.10.0] - 2026-07-04 - "Context, WordPress, and PR Intake Hardening"
+
+> Community skill intake, ASO research guidance, pull-request CI hardening, and catalog sync for the 1,898+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1898-skills](README.md#browse-1898-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This release ships the July 4 maintenance batch: two new source-backed skills, one ASO documentation improvement, repaired pull-request intake checks for fork contributions, generated registry and plugin mirror sync, and refreshed public catalog surfaces for the 1,898+ skill catalog.
+
+## Added
+
+- Added **wp-site-health-auditor**, a critical-risk WordPress Site Health skill that turns Site Health reports into risk-tiered, backup-first remediation plans with WP-CLI, PHP, `.htaccess`, cache, HTTPS, and rollback guidance (PR #775).
+- Added **context-kit**, a critical-risk personal-context hygiene skill for safely evaluating, adapting, and installing Context Kit-style Personal Context Artifact workflows without leaking secrets or private Markdown context (PR #776).
+- Added the **JDDavenport/context-kit** source reference to README Community Contributors so the new external-source-backed skill has explicit attribution.
+
+## Changed
+
+- Updated **app-store-optimization** with optional AppNiche external research tools for directional iOS revenue benchmarks and keyword opportunity checks, with retrieval-date and approximation guidance (PR #774).
+- Refreshed generated registry artifacts, plugin compatibility metadata, plugin mirrors, public web skill assets, sitemap, package description, and README/docs counters for the 1,898+ skill catalog.
+
+## Fixed
+
+- Fixed PR intake CI by installing npm dependencies before `tools/scripts/pr_preflight.cjs` runs in the `pr-policy` job.
+- Fixed `tools/scripts/pr_preflight.cjs` so GitHub Actions absolute `GITHUB_EVENT_PATH` values are read correctly, with a regression test for absolute event paths.
+
+## Validation
+
+- Verified and merged PR #774, PR #775, and PR #776 after required GitHub checks passed.
+- Ran `npm run test` after the PR intake fix.
+- Ran `npm run sync:repo-state`.
+- Ran `npm run validate` and `npm run security:docs` during the Context Kit repair pass.
+- Ran `npm run check:readme-credits -- --base origin/main --head HEAD` for the Context Kit source-credit gate.
+
+## Credits
+
+- **[@skiffer](https://github.com/skiffer)** and **[GetAppNiche](https://getappniche.com/)** for PR #774 (`app-store-optimization` AppNiche research links).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #775 (`wp-site-health-auditor`).
+- **[@JDDavenport](https://github.com/JDDavenport)** and **[JDDavenport/context-kit](https://github.com/JDDavenport/context-kit)** for PR #776 (`context-kit` source reference).
+
+## [13.9.0] - 2026-07-03 - "WorkorAI, Autohand, and Web Dependency Refresh"
+
+> Community skill intake, host documentation, dependency maintenance, and catalog sync for the 1,896+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1896-skills](README.md#browse-1896-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This release completes the July 3 maintenance batch after v13.8.0: the WorkorAI community skill, Autohand Code install notes, a web-app Supabase dependency refresh, generated registry and public catalog updates, and refreshed SEO/public surfaces for the 1,896+ skill catalog.
+
+## Added
+
+- Added **workorai**, a critical-risk WorkorAI MCP skill for candidate job search/application flows and employer job lifecycle, candidate discovery, invitations, and applicant review workflows (PR #773).
+- Added Autohand Code as a documented host in the README tool matrix, badges, intro copy, and install FAQ using the generic `--path ~/.autohand/skills` and `--path .autohand/skills` installer flow (manual integration of PR #772).
+
+## Changed
+
+- Updated README metadata sync tooling so Autohand Code remains part of generated README copy instead of being removed by future maintainer sync runs.
+- Updated the web app `@supabase/supabase-js` dependency manifest to `^2.110.0`, matching the current lockfile resolution and superseding the stale Snyk 2.108.1 upgrade PR (#770).
+- Refreshed generated registry artifacts, plugin compatibility metadata, catalog data, sitemap, public web skill assets, package description, and README counters for the 1,896+ skill catalog.
+
+## Validation
+
+- Verified and merged PR #773 after GitHub reported it mergeable and external security checks were successful.
+- Reviewed PR #772 and integrated its README changes against the current 13.8.0/1,896+ public copy instead of applying its stale 13.7.0 patch.
+- Reviewed PR #770 and applied the newer resolved Supabase dependency state rather than downgrading from the current lockfile to 2.108.1.
+- Ran `npm install @supabase/supabase-js@^2.110.0 --package-lock-only` in `apps/web-app` with 0 vulnerabilities.
+- Ran `npm run sync:repo-state`.
+- Ran the release prepare suite for v13.9.0, including reference validation, release-state sync, tests, web-app install, web-app build, and package dry run.
+- Ran `cd apps/web-app && npm run verify:seo`.
+
+## Credits
+
+- **[@m1amgn](https://github.com/m1amgn)** and **[work0r-ai/agent-kit](https://github.com/work0r-ai/agent-kit)** for PR #773 (`workorai`).
+- **[@igorcosta](https://github.com/igorcosta)** for PR #772 (Autohand Code README install notes).
+- **Snyk** for PR #770 dependency-maintenance signal.
+
+## [13.8.0] - 2026-07-03 - "Code Polish and Catalog Sync"
+
+> Community skill intake and maintainer sync for the 1,895+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1895-skills](README.md#browse-1895-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This release packages the July 3 maintenance pass: one fully-checked community skill PR, generated registry and plugin mirror sync, public catalog counters, and a clean SEO/public-surface refresh for the 1,895+ skill catalog.
+
+## Added
+
+- Added **code-polish**, a constraint-based cleanup skill for professionalizing code comments, removing redundant or stale comment noise, and keeping behavior changes out of scope (PR #771).
+
+## Changed
+
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, plugin compatibility metadata, public docs, sitemap, package description, and README counters for the 1,895+ skill catalog.
+
+## Validation
+
+- Verified and merged PR #771 after required GitHub checks passed.
+- Ran `npm run sync:repo-state`.
+- Ran `npm_config_cache=/private/tmp/aas-npm-cache npm audit --audit-level=moderate` with 0 vulnerabilities.
+- Ran the release prepare suite for v13.8.0, including reference validation, release-state sync, tests, web-app install, web-app build, and package dry run.
+- Ran `cd apps/web-app && npm run verify:seo`.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #771 (`code-polish`).
+
+## [13.7.0] - 2026-07-02 - "Security Hardening and Community Intake"
+
+> Maintainer security sweep, PR maintenance, and catalog sync for the 1,894+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1894-skills](README.md#browse-1894-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This release packages the July 2 maintenance batch: three community PRs, hardening for the reviewed security findings CSV, generated registry and plugin mirror sync, and a catalog quality fix for product-risk skill categorization.
+
+## Added
+
+- Added **mdpr-skill**, a Codex-assisted MDPR presentation review skill for semantic hints, visual checks, theme candidates, and deterministic renderer boundaries (PR #767).
+- Added **dispatch**, a multi-CLI delegation skill for routing work from Claude Code to Codex, Antigravity, and Gemini agents (PR #768).
+- Added **before-you-build**, a product-risk review skill for checking demand, alternatives, switching costs, channels, and validation steps before coding (PR #769).
+
+## Changed
+
+- Hardened the `skill-review` workflow so Tessl credentials are only exposed to trusted, pinned setup steps while PR content is reviewed through repository-owned trusted scripts.
+- Hardened **hugging-face-model-trainer** GGUF conversion by validating Hugging Face repo IDs and making `trust_remote_code` an explicit `TRUST_REMOTE_CODE` opt-in.
+- Hardened **weaviate** connection handling so provider API keys are forwarded only through an explicit `WEAVIATE_PROVIDER_KEYS` allowlist.
+- Reclassified **sql-sentinel** and **gh-image** as `critical` and removed them from generated Codex/Claude plugin mirrors until their upstream execution and browser-session guidance is reviewed for plugin distribution.
+- Reclassified **riffkit** as `critical` because it can use a session token and paid generation endpoint.
+- Fixed symlink handling in **youtube-notetaker**, malformed numeric token parsing in **cron-doctor**, and the misplaced Hive helper import in **monte-carlo-push-ingestion**.
+- Updated catalog generation so explicit product/business skill frontmatter is kept in the business catalog lane instead of being misclassified as security because of generic risk wording.
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, plugin compatibility metadata, public docs, sitemap, `llms.txt`, package description, and README counters for the 1,894+ skill catalog.
+
+## Validation
+
+- Verified and merged PR #767, PR #768, and PR #769 after required GitHub checks passed.
+- Ran `npm run sync:repo-state`.
+- Ran `npm run security:docs`.
+- Ran `npm_config_cache=/private/tmp/aas-npm-cache npm audit --json` with 0 vulnerabilities.
+- Ran `npm_config_cache=/private/tmp/aas-npm-cache npm run test`.
+- Ran `node tools/scripts/tests/build_catalog_bundles.test.js`.
+- Ran `npm run app:test`.
+- Ran `npm run app:build`.
+- Ran `cd apps/web-app && npm run verify:seo`.
+
+## Credits
+
+- **[@ch040602](https://github.com/ch040602)** and **[ch040602/mdpr-skill](https://github.com/ch040602/mdpr-skill)** for PR #767 (`mdpr-skill`).
+- **[@deveweber](https://github.com/deveweber)** and **[sparklingneuronics/sparkling-skills](https://github.com/sparklingneuronics/sparkling-skills)** for PR #768 (`dispatch`).
+- **[@bin1874](https://github.com/bin1874)** and **[bin1874/before-you-build-skill](https://github.com/bin1874/before-you-build-skill)** for PR #769 (`before-you-build`).
+
+## [13.6.1] - 2026-07-01 - "LLMS SEO Metadata Refresh"
+
+> Patch release for hosted catalog SEO metadata after the 1,891+ skill refresh.
+
+## Fixed
+
+- Refreshed `apps/web-app/public/llms.txt` so the GitHub Pages SEO verification gate matches the current V13.6.1 release metadata and 1,891+ skill count.
+
+## Validation
+
+- Ran `npm run release:preflight`.
+- Ran `npm run security:docs`.
+- Verified GitHub Pages deploy after publishing the patch release.
+
+## [13.6.0] - 2026-07-01 - "Source Catalog, Riffkit, and Tessl Review"
+
+> Maintainer source sweep, community intake, and workflow maintenance for the 1,891+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1891-skills](README.md#browse-1891-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This release packages the July 1 maintainer batch: a source-repository refresh across official, community, inspiration, and additional source collections; 191 newly-added canonical `SKILL.md` entries; 38 refreshed canonical `SKILL.md` entries; editorial pruning and normalization; plugin mirror sync; two community PRs; and pull-request workflow maintenance. No canonical skill entries were removed.
+
+## Added
+
+- Added 191 canonical `SKILL.md` entries from the source sweep, including the families below.
+- Added experimentation, analytics, growth, and product-marketing skills: **ab-testing**, **analytics**, **alternatives-pages**, **co-marketing**, **community-building**, **competitor-profiling**, **competitor-tracking**, **cro**, **customer-research**, **developer-advocacy**, **developer-audience-context**, **developer-churn**, **developer-listening**, **developer-newsletter**, **developer-onboarding**, **developer-sandbox**, **developer-seo**, **developer-signup-flow**, **devrel-content**, **docs-as-marketing**, **free-tier-strategy**, **github-presence**, **marketing-plan**, **offers**, **onboarding**, **open-source-marketing**, **power-user-cultivation**, **pricing**, **product-marketing**, **public-relations**, **sdk-dx**, and **usage-based-pricing**.
+- Added API, platform, cloud, and database skills: **api-analyzer**, **api-and-interface-design**, **api-designer**, **api-integration**, **api-onboarding**, **api-sdk-generator**, **applicationinsights-web-ts**, **aws-agentic-ai**, **aws-cdk-development**, **aws-cost-operations**, **aws-mcp-setup**, **aws-serverless-eda**, **aws-sst-development**, **azure-ai-language-conversations-py**, **azure-servicebus-rust**, **azure-storage-queue-rust**, **graphql-schema**, **neon-ai-gateway**, **neon-functions**, **neon-object-storage**, **neon-postgres-branches**, **neon-postgres-egress-optimizer**, **openapi-spec-generator**, **postgresql-cli**, **postman-collection-generator**, **postman-newman-automation**, **postman-openapi-converter**, **rclone-cli**, **redis-cli**, **supabase**, and **supabase-postgres-best-practices**.
+- Added Expo, mobile, native-app, and SwiftUI-adjacent skills: **add-app-clip**, **eas-update-insights**, **expo-brownfield**, **expo-examples**, **expo-module**, **expo-observe**, **expo-ui**, and **use-dom**.
+- Added AI, agent, context-engineering, Hugging Face, Gemini, and model-building skills: **agent-memory**, **anti-deception**, **context-engineering**, **doubt-driven-development**, **faf-context**, **faf-go**, **gemini-interactions-api**, **gemini-live-api-dev**, **gemini-omni-flash-api**, **hf-mcp**, **hf-mem**, **huggingface-best**, **huggingface-local-models**, **huggingface-lora-space-builder**, **huggingface-spaces**, **huggingface-tool-builder**, **huggingface-zerogpu**, **privacy-mask**, **train-sentence-transformers**, **trl-training**, and **tune-monitor**.
+- Added frontend, UI, UX, design, and presentation skills: **design-philosophy**, **design-spatial**, **design-system**, **design-thinking**, **design-ux**, **formik-patterns**, **frontend-architecture**, **frontend-data-contracts**, **frontend-observability**, **frontend-optimistic-mutations**, **frontend-seo**, **frontend-slides-frontend-slides**, **frontend-ui-engineering**, **styleseed-design-review**, **ui-lint**, **ui-motion**, **ui-score**, **ui-skills-root**, and **ui-update**.
+- Added testing and QA skills: **appium-skill**, **cucumber-skill**, **cypress-skill**, **jest-skill**, **junit-5-skill**, **newman-cicd-integration**, **puppeteer-skill**, **pytest-skill**, **robot-framework-skill**, **selenium-skill**, **test-framework-migration-skill**, **testng-skill**, **vitest-skill**, **webdriverio-skill**, **wjttc-builder**, and **wjttc-tester**.
+- Added code-quality, review, release, and maintainer workflow skills: **accint-commitments**, **accint-frames**, **automated-triage**, **brooks-audit**, **brooks-debt**, **brooks-harness**, **brooks-review**, **brooks-sweep**, **brooks-test**, **bug-hunt-swarm**, **changelog-updates**, **ci-cd-and-automation**, **code-review-and-quality**, **code-showcase-core-components**, **code-showcase-react-ui-patterns**, **code-showcase-systematic-debugging**, **code-showcase-testing-patterns**, **code-simplification**, **debugging-and-error-recovery**, **debugging-code**, **deprecation-and-migration**, **documentation-and-adrs**, **git-workflow-and-versioning**, **implement**, **incremental-implementation**, **logic-diff**, **logic-explain**, **logic-fix-all**, **logic-locate**, **logic-review**, **loopy**, **planning-and-task-breakdown**, **repo-maintainer**, **resolving-merge-conflicts**, **review-and-simplify-changes**, **review-swarm**, **security-and-hardening**, **shipping-and-launch**, **source-driven-development**, **spec-driven-development**, **unslop-commit**, **unslop-file**, and **unslop-review**.
+- Added docs, content, tutorial, data-observability, finance, and specialized utility skills: **dev-to-hashnode**, **hugo-to-markdown**, **hyperexecute-skill**, **idea-refine**, **longbridge-content**, **longbridge-fundamentals**, **longbridge-market-data**, **monte-carlo-analyze-root-cause**, **monte-carlo-asset-health**, **monte-carlo-monitoring-advisor**, **monte-carlo-performance-diagnosis**, **monte-carlo-remediation**, **monte-carlo-storage-cost-analysis**, **observability-and-instrumentation**, **odw**, **performance-optimization**, **polis-protocol-a-self-optimizing-city-of-agents**, **smartui-skill**, **technical-tutorials**, and **update-swiftui-apis**.
+- Added **riffkit**, a hosted short-form video skill for generating user-confirmed TikTok/UGC ad riffs from a source video, product, character, and language (PR #765).
+- Added **Vexilo** to the README comparison resources as a visual field guide for Claude Code primitives and workflows (PR #766).
+
+## Changed
+
+- Migrated the `skill-review` pull-request workflow from the deprecated Tessl Skill Review action to Tessl Review via `tesslio/setup-tessl` and a repository-owned changed-skill runner.
+- Paused the maintainer-only `/apply-optimize` shortcut and its manual runner until the new `tessl review fix` output contract is wired safely.
+- Refreshed 38 existing canonical `SKILL.md` entries: **accint-solve**, **baseline-ui**, **building-native-ui**, **claimable-postgres**, **expo-api-routes**, **expo-cicd-workflows**, **expo-deployment**, **expo-dev-client**, **expo-tailwind-setup**, **fixing-accessibility**, **fixing-metadata**, **fixing-motion-performance**, **gemini-api-dev**, **hugging-face-cli**, **hugging-face-community-evals**, **hugging-face-dataset-viewer**, **hugging-face-gradio**, **hugging-face-model-trainer**, **hugging-face-paper-publisher**, **hugging-face-papers**, **hugging-face-trackio**, **hugging-face-vision-trainer**, **native-data-fetching**, **neon-postgres**, **swiftui-expert-skill**, **transformers-js**, **ui-a11y**, **ui-component**, **ui-page**, **ui-pattern**, **ui-review**, **ui-setup**, **ui-tokens**, **upgrading-expo**, **ux-audit**, **ux-copy**, **ux-feedback**, and **ux-flow**.
+- Added or refreshed bundled references, agents, evals, and scripts for source-backed skills, including Expo agents/references, Hugging Face model and Spaces references, Postman/Newman workflows, RClone command/provider references, Redis command references, SwiftUI trace tooling, UI/design references, and training scripts for sentence-transformers and Gemini Omni Flash workflows.
+- Normalized imported skill metadata, limitations, safety notes, source provenance, license fields, bundled references, scripts, and plugin compatibility surfaces across the source-sweep batch.
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, plugin compatibility metadata, public docs, sitemap, package description, `llms.txt`, and README counters for the 1,891+ skill catalog.
+
+## Validation
+
+- Verified PR #765 checks for Devin Review, Socket, Snyk license, and Snyk security before merging.
+- Verified PR #766 checks for Devin Review, Socket, Snyk license, and Snyk security before merging.
+- Ran `npm run validate`.
+- Ran `npm run validate:references`.
+- Ran `npm run security:docs`.
+- Ran `env npm_config_cache=/private/tmp/aas-npm-cache npm run test:local`.
+- Ran `npm run check:readme-credits`.
+- Ran the maintainer source-credit gate and `git diff --cached --check` before publishing the source refresh.
+
+## Credits
+
+- **[@owengu-ai](https://github.com/owengu-ai)** and **[riffkit/skill](https://github.com/riffkit/skill)** for PR #765 (`riffkit`).
+- **[@lilhawk7077](https://github.com/lilhawk7077)** and **[lilhawk7077/claude-code-resources](https://github.com/lilhawk7077/claude-code-resources)** for PR #766 (`Vexilo`).
+- All official, community, inspiration, and additional source repositories reviewed during the July 1 source sweep.
+
+## [13.5.0] - 2026-06-29 - "Release Readiness, Weaviate, and Browser Runtime Gates"
+
+> Community skill intake and curated-source release for the 1,700+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1700-skills](README.md#browse-1700-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This release packages the June 29 maintainer batch: one community PR, six curated external skill imports, source-credit updates, generated registry and plugin mirror sync, and public count refresh for the 1,700+ skill catalog.
+
+## Added
+
+- Added **re-create**, a controlled erasure and rebuild protocol for cases where a file or module must be rewritten from scratch after explicitly preserving public interfaces, working behavior, and blast-radius knowledge (PR #760).
+- Added **pre-release-review** from [chaunsin/agent-skills](https://github.com/chaunsin/agent-skills), a read-only production release-readiness audit for migrations, config, secrets, deploy ordering, rollback risk, and launch blockers.
+- Added **drizzle-migration-conflict** from [chaunsin/agent-skills](https://github.com/chaunsin/agent-skills), a focused Drizzle Kit migration-conflict diagnosis, repair, and prevention workflow with references and a database-free helper script.
+- Added **weaviate** from [weaviate/agent-skills](https://github.com/weaviate/agent-skills), an official Weaviate operations skill for collection inspection, semantic/hybrid/keyword search, data imports, and query-agent workflows.
+- Added **weaviate-cookbooks** from [weaviate/agent-skills](https://github.com/weaviate/agent-skills), an official cookbook index for Weaviate RAG, agentic RAG, multimodal PDF search, data explorer, chatbot, frontend, and async-client blueprints.
+- Added **frontend-lighthouse** from [stareezy-1/frontend-architecture-skill](https://github.com/stareezy-1/frontend-architecture-skill), a portable Lighthouse CI performance gate for Core Web Vitals budgets, category floors, median runs, and CI artifacts.
+- Added **browser-testing-with-devtools** from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills), a Chrome DevTools MCP browser-verification skill for live DOM, console, network, screenshot, accessibility, and performance evidence.
+
+## Changed
+
+- Added README source credits for `chaunsin/agent-skills`, `weaviate/agent-skills`, `stareezy-1/frontend-architecture-skill`, and `addyosmani/agent-skills`.
+- Normalized imported skill metadata with repository categories, risk labels, source provenance, dates, authors, tags, tools, license fields, `When to Use` sections, and explicit `Limitations`.
+- Rewrote Weaviate cookbook install snippets that piped remote install scripts into a shell so the docs-security check keeps download, inspection, and execution as separate steps.
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, plugin compatibility metadata, package description, README counters, and public docs for the 1,700+ skill catalog.
+
+## Validation
+
+- Verified PR #760 checks for source validation, artifact preview, review, CodeQL, Dependency Review, Socket, Snyk, and PR policy before merging.
+- Ran `npm run validate`.
+- Ran `npm run security:docs` after normalizing the imported Weaviate install snippets.
+- Ran `npm run check:warning-budget`.
+- Ran `npm run chain`, including validation, plugin compatibility sync, index generation, bundle sync, and metadata sync.
+- Ran `npm run catalog`.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #760 (`re-create`).
+- **[@chaunsin](https://github.com/chaunsin)** and **[chaunsin/agent-skills](https://github.com/chaunsin/agent-skills)** for `pre-release-review` and `drizzle-migration-conflict` (Apache-2.0).
+- **[Weaviate](https://github.com/weaviate)** and **[weaviate/agent-skills](https://github.com/weaviate/agent-skills)** for `weaviate` and `weaviate-cookbooks` (BSD-3-Clause).
+- **[@stareezy-1](https://github.com/stareezy-1)** and **[stareezy-1/frontend-architecture-skill](https://github.com/stareezy-1/frontend-architecture-skill)** for `frontend-lighthouse` (MIT).
+- **[@addyosmani](https://github.com/addyosmani)** and **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)** for `browser-testing-with-devtools` (MIT).
+
+## [13.4.0] - 2026-06-27 - "Planning Loops, Cron Safety, and SQL Cost Review"
+
+> Community skill intake and maintainer-sync release for the 1,693+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1693-skills](README.md#browse-1693-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This release packages the June 27 maintainer batch: four community skill PRs, source-credit fixes for imported MIT-licensed community repositories, generated registry and plugin mirror sync, and public count refresh for the 1,693+ skill catalog.
+
+## Added
+
+- Added **web-project-brainstorming**, a project-scoping skill for web concepts, UX flows, responsive layouts, design-system direction, technical architecture, SEO, and MVP planning (PR #756).
+- Added **cron-doctor** from [takeaseatventure/devops-skills](https://github.com/takeaseatventure/devops-skills), a cron expression diagnosis skill with a bundled zero-dependency parser, validator, CLI, and trap checklist for silent schedule failures (PR #757).
+- Added **sql-sentinel** from [takeaseatventure/sql-sentinel](https://github.com/takeaseatventure/sql-sentinel), a SQL warehouse cost and performance audit skill for BigQuery, Snowflake, Redshift, and Postgres anti-pattern review (PR #758).
+- Added **ai-loop**, a bounded spec-build-review workflow skill for scoped development loops with explicit verification evidence, iteration budgets, and human approval gates (PR #759).
+
+## Changed
+
+- Added README source credits for the `takeaseatventure/devops-skills` and `takeaseatventure/sql-sentinel` community repositories.
+- Hardened the **ai-loop** contribution during maintainer review so it describes bounded, approval-gated workflows rather than unqualified autonomous execution.
+- Normalized the **sql-sentinel** limitations heading to the repository's canonical quality gate.
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, contributor/source metadata, sitemap, package description, and public docs for the 1,693+ skill catalog.
+
+## Validation
+
+- Verified PR checks for source validation, skill review, artifact preview, CodeQL, Dependency Review, Socket, Snyk, and PR policy before merging PRs #756, #757, #758, and #759.
+- Ran `npm run check:readme-credits -- --base origin/main --head HEAD` on the source-credit fixes for `cron-doctor` and `sql-sentinel`.
+- Ran the focused audit-skills test after normalizing `sql-sentinel` limitations: `node tools/scripts/run-python.js tools/scripts/tests/test_audit_skills.py`.
+- Ran `npm run validate` after the maintainer edits.
+- Ran `npm run sync:repo-state`, including validation, plugin compatibility sync, index/catalog generation, web asset sync, contributor sync, consistency audit, and warning-budget enforcement.
+
+## Credits
+
+- **[@Rsmiyani](https://github.com/Rsmiyani)** for PR #756 (`web-project-brainstorming`).
+- **[@takeaseatventure](https://github.com/takeaseatventure)** and **[takeaseatventure/devops-skills](https://github.com/takeaseatventure/devops-skills)** for PR #757 (`cron-doctor`).
+- **[@takeaseatventure](https://github.com/takeaseatventure)** and **[takeaseatventure/sql-sentinel](https://github.com/takeaseatventure/sql-sentinel)** for PR #758 (`sql-sentinel`).
+- **[@PzocikErwin](https://github.com/PzocikErwin)** for PR #759 (`ai-loop`).
+
+## [13.3.0] - 2026-06-26 - "Agent Discipline, 3D Web, and GitHub Media"
+
+> Community skill intake and dependency-maintenance release for the 1,689+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1689-skills](README.md#browse-1689-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This release packages the June 26 maintainer batch: five community skill PRs, source-credit and license-provenance fixes, generated registry and plugin mirror sync, Windows path test hardening, and a React/React DOM dependency refresh for the Loki generated frontend example.
+
+## Added
+
+- Added **the-honoured-one**, a context-loading discipline skill for complex multi-file tasks, architecture changes, and debugging work (PR #749).
+- Added **github-actions-debugger**, a CI/CD diagnostic skill for reading GitHub Actions logs, identifying root causes, and proposing focused workflow or code fixes (PR #750).
+- Added **premium-3d-website**, a Three.js/WebGL guidance skill for high-end 3D websites, shaders, post-processing, interaction physics, asset loading, and mobile performance (PR #751).
+- Added **arrowspace** from [Genefold/arrowspace-skills](https://github.com/Genefold/arrowspace-skills), a spectral vector-search skill using graph Laplacian eigenstructure for structurally aware retrieval (PR #752).
+- Added **gh-image** from [drogers0/gh-image](https://github.com/drogers0/gh-image), a GitHub CLI image-upload skill for producing canonical `user-attachments` URLs for PRs, issues, comments, and README screenshots (PR #753).
+
+## Changed
+
+- Normalized Windows path-separator expectations in installer manifest tests (PR #751).
+- Updated the Loki generated frontend example to React 19.2.7 and React DOM 19.2.7, combining the Snyk upgrade intent from PRs #754 and #755 into a maintainer patch because those PRs directly touched generated example files.
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, contributor/source metadata, sitemap, package description, and public docs for the 1,689+ skill catalog.
+
+## Validation
+
+- Verified PR checks for source validation, skill review, artifact preview, CodeQL, Dependency Review, Socket, and Snyk before merging the community skill PRs.
+- Ran `npm run sync:repo-state`, including validation, plugin compatibility sync, index/catalog generation, web asset sync, contributor sync, consistency audit, and warning-budget enforcement.
+- Ran focused dependency and documentation checks for the Snyk maintainer patch, including the Loki example `npm install --package-lock-only` audit result and `npm run security:docs`.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #749 (`the-honoured-one`).
+- **[@GeekLuffy](https://github.com/GeekLuffy)** for PR #750 (`github-actions-debugger`).
+- **[@Rsmiyani](https://github.com/Rsmiyani)** for PR #751 (`premium-3d-website`) and the Windows path test fix.
+- **[@genefold-ai](https://github.com/genefold-ai)** and **[Genefold/arrowspace-skills](https://github.com/Genefold/arrowspace-skills)** for PR #752 (`arrowspace`).
+- **[@drogers0](https://github.com/drogers0)** and **[drogers0/gh-image](https://github.com/drogers0/gh-image)** for PR #753 (`gh-image`).
+- **Snyk** and maintainer automation for the React and React DOM upgrade signal in PRs #754 and #755.
+
+## [13.2.0] - 2026-06-25 - "Design Engineering and Web Dependency Refresh"
+
+> Community skill intake and maintainer dependency release for the 1,684+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Browse skills: [README.md#browse-1684-skills](README.md#browse-1684-skills)
+- Hosted catalog: https://sickn33.github.io/agentic-awesome-skills/
+
+This release packages the June 24-25 maintainer batch: Snyk dependency PRs, two Emil Kowalski design-engineering skills, generated registry sync, plugin mirror updates, and public SEO metadata refresh.
+
+## Added
+
+- Added **infinity**, a community defensive input-boundary skill for detecting, classifying, filtering, and verifying untrusted data entry points (PR #733).
+- Added **emil-design-eng** from [emilkowalski/skills](https://github.com/emilkowalski/skills), a design engineering skill for UI polish, animation decisions, component craft, and interaction detail.
+- Added **review-animations** from [emilkowalski/skills](https://github.com/emilkowalski/skills), a strict motion-review skill with a dedicated `STANDARDS.md` reference for easing, duration, physicality, performance, gestures, and accessibility.
+
+## Changed
+
+- Updated runtime and example dependencies from the Snyk maintenance batch: `yaml`, Loki example `better-sqlite3`, `cors`, and `express-rate-limit`.
+- Merged the web-app Snyk dependency batch: `@supabase/supabase-js` 2.107.0 (PR #738), `framer-motion` 12.40.0 (PR #739), `tailwind-merge` 3.6.0 (PR #740), `react-virtuoso` 4.18.7 (PR #741), and React 19.2.7 with React DOM aligned to 19.2.7 (PR #742 plus maintainer fix).
+- Reverted **surgical-fix** after maintainer review found it overlapped existing debugging protocol skills; the useful ideas should land as focused improvements to existing skills instead of a duplicate standalone skill (PR #732).
+- Refreshed generated registry artifacts, plugin mirrors, catalog data, contributor/source metadata, sitemap, `llms.txt`, and public social-card metadata for the 1,684+ skill catalog.
+
+## Validation
+
+- Verified repository validation, warning budget, source credits, root script tests, documentation security checks, web app tests, web app production build, SEO asset verification, and production dependency audits.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #733 (`infinity`) and the reverted PR #732 follow-up review context.
+- **[emilkowalski/skills](https://github.com/emilkowalski/skills)** and Emil Kowalski for the imported design-engineering and animation-review skills.
+- **Snyk** and maintainer automation for PRs #738, #739, #740, #741, and #742.
+
+## [13.1.1] - 2026-06-23 - "Security Scan Hardening"
+
+> Patch release for the June 23 Snyk and GitHub code-scanning cleanup.
+
+This release packages the security-maintenance pass after the 13.1.0 maintainer batch.
+
+## Security
+
+- Hardened Snyk-reported command and path-handling examples across security tooling documentation.
+- Updated vulnerable Python example dependencies for Slack GIF, Shopify, and WhatsApp Cloud API skills, including mirrored plugin bundles.
+- Added a persistent Snyk Code exclusion for generated plugin mirrors so canonical `skills/**` sources remain the direct scan target.
+
+## Validation
+
+- Re-ran repository validation, script tests, documentation security checks, catalog build, web app tests, and web app production build after the security fixes.
+
+## [13.1.0] - 2026-06-21 - "Remote GPU, Agent Creation, and Workflow Reconstruction"
+
+> Community skill intake and maintainer-sync release for the 1,681+ skill catalog.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+
+This release packages the June 21 maintainer batch: three new community skills, README source-credit cleanup, generated registry sync, and plugin mirror updates.
+
+## New Skills
+
+- **agent-creator** - creates custom subagents inside plugin structures with persona generation and optional routing skills (PR #727).
+- **ax-extract-workflow** - reconstructs the workflow behind past coding-agent artifacts from local ax sessions, commits, skills, and tool traces (PR #730).
+- **remote-gpu-trainer** - rented and remote GPU job orchestration with monitoring, teardown safety, spot resilience, checkpoint verification, and DL-debug workflows (PR #729).
+
+## Credits and Source Metadata
+
+- Updated the **Xquik x-twitter-scraper** README credit to match the current X/Twitter data workflow scope (PR #728).
+- Added the **Hanyuyuan6/remote-gpu-trainer** community source credit and MIT license provenance for `remote-gpu-trainer`.
+
+## Maintainer Sync
+
+- Synced generated registry artifacts, web catalog data, contributor/source credits, and Codex/Claude plugin mirrors after the merged PR batch.
+- Refreshed `apps/web-app/public/llms.txt` so GitHub Pages SEO verification matches the current 1,681+ skill catalog.
+- Verified the PR batch through fork-run approvals, source validation, skill review, repository tests, docs security checks, and main registry sync.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #727 (`agent-creator`).
+- **[@kriptoburak](https://github.com/kriptoburak)** for PR #728 (Xquik source-credit update).
+- **[@Hanyuyuan6](https://github.com/Hanyuyuan6)** and **[Hanyuyuan6/remote-gpu-trainer](https://github.com/Hanyuyuan6/remote-gpu-trainer)** for PR #729 (`remote-gpu-trainer`).
+- **[@Necmttn](https://github.com/Necmttn)** and **[Necmttn/ax](https://github.com/Necmttn/ax)** for PR #730 (`ax-extract-workflow`).
+
+## [13.0.0] - 2026-06-20 - "Specialized Plugins and Security Metadata"
+
+> Major installable plugin update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Specialized plugin roadmap: [docs/users/specialized-plugin-roadmap.md](docs/users/specialized-plugin-roadmap.md)
+
+This release packages the June 20 plugin and security-maintenance batch: expanded specialized plugin coverage, seven new bundle plugins built only from existing repository skills, installability metadata for higher-risk skills, CodeQL and CSV security fixes, generated registry sync, and release metadata for the 1,678+ skill catalog.
+
+## Breaking / Installability Changes
+
+- Reclassified high-risk skills including **android-cli**, **apple-notes-search**, **atlas-contract**, **atlas-ledger**, **codex-fable5**, **dos-verify-done-claims**, **macos-screen-recorder**, and **screenstudio-alt** so generated plugin mirrors no longer expose them as safe default installs.
+- Removed newly-blocked high-risk skills from the general Codex and Claude plugin mirrors while keeping their canonical source skills in `skills/`.
+- Added explicit plugin setup metadata for manual-only skills that require pinned third-party tools, host permissions, or local system access.
+
+## New Specialized Plugin Bundles
+
+- **AAS Accessibility & Inclusive UX** - accessibility audit, screen-reader testing, UI a11y, Playwright, and webapp testing workflows.
+- **AAS API Platform Builder** - API design, documentation, auth patterns, OpenAPI, load testing, observability, and backend architecture workflows.
+- **AAS AI Product & Evaluation Ops** - agent evaluation, LLM app patterns, analytics, KPI dashboards, Langfuse, A/B tests, and product-management workflows.
+- **AAS Data Engineering Platform** - Airflow, dbt, data engineering, database architecture, Postgres best practices, SQL, RAG, embeddings, and vector database workflows.
+- **AAS Localization & International Growth** - i18n, hreflang, SEO content, schema markup, analytics, copywriting, and market-research workflows.
+- **AAS Privacy & Compliance Engineering** - GDPR, PCI, FSI compliance, privacy-by-design, security audit, and spec-to-code compliance workflows.
+- **AAS SaaS Launch & Revenue** - launch strategy, pricing, monetization, referrals, Stripe, email sequences, SEO audit, and SaaS MVP workflows.
+
+## Plugin Bundle Expansion
+
+- Expanded existing AAS bundles with additional existing skills, including prompt engineering, n8n expressions, Zapier/Make patterns, analytics-product, business-analyst, DevOps troubleshooting, Google Docs automation, SEO content planning, multi-platform app workflows, Claude monitoring, UI review, OpenAPI generation, Pydantic models, screen-reader testing, broken-authentication review, Django access review, web security testing, and UI accessibility.
+- Updated generated Codex and Claude plugin manifests with richer positioning, recommended audience, exclusions, rationale, and default prompt metadata.
+- Refreshed marketplace data and user-facing bundle docs so specialized plugin candidates now reflect 22 evaluated installable bundles.
+
+## Security Fixes
+
+- Hardened **youtube-notetaker** local artifact server path handling, media serving, content-type handling, and write behavior; PATCH writes are disabled by default unless a write token is explicitly configured.
+- Hardened **competitor-analysis** HTML stripping to avoid script/style regex bypasses and entity-decoding order issues.
+- Replaced mutable or unsafe install guidance in **android-cli**, **apple-notes-search**, **codex-fable5**, and **dos-verify-done-claims** with reviewable, pinned, or manually confirmed setup flows.
+- Added prompt-injection guardrails for **loop-library** live prompt-catalog usage and Atlas workspace documents.
+- Redacted sensitive Android UI journey logging examples and avoided storing password/token/OTP/payment input values in journey logs.
+- Bound ECL harness database service examples to localhost and removed destructive volume deletion from teardown guidance.
+- Replaced predictable `/tmp` paths in cleanup/build examples with `mktemp`-based temporary paths.
+- Added payment/privacy guardrails to **event-staffing-ordering**.
+- Updated Mailtrap and screen-recording related risk labels to avoid safe-install misclassification.
+
+## Maintainer Tooling
+
+- Fixed drift detection normalization so `author:` and `date_added:` are ignored only inside YAML frontmatter, not in meaningful skill body content.
+- Added regression coverage for body-level drift detection.
+- Clarified **2slides-ppt-generator** dependency setup and removed scanner-triggering API-key placeholder examples.
+- Refreshed `apps/web-app/public/social-card.svg` so catalog-count metadata matches the current release surface.
+
+## Maintainer Sync
+
+- Synced generated registry artifacts, plugin mirrors, bundle manifests, web catalog data, README release metadata, specialized plugin roadmap, and marketplace surfaces for the 1,678+ skill catalog.
+- Added the repo-local `AGENTS.md` contributor/agent guidance file to the release.
+- Verified the release path with validation, generated bundle checks, plugin-compatibility checks, docs security tests, repository tests, targeted self-tests, and whitespace checks.
+
+## [12.10.0] - 2026-06-19 - "External Skill Imports and Email Workflows"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 19 follow-up maintainer batch: 32 new skills from manual external imports and community PRs, generated registry sync, and refreshed hosted-catalog SEO metadata for the 1,678+ skill catalog.
+
+## New Skills
+
+- **bugs-are-annoying** - aggressive bug-hunting workflow for logic errors, edge cases, null safety, security flaws, and prioritized `bugs.md` reports (PR #724).
+- **Browserbase competitor analysis** - added **competitor-analysis** from `browserbase/skills` for Browserbase-backed competitor discovery, enrichment lanes, screenshots, matrices, and HTML reports.
+- **DAIR Academy skills** - imported `dair-ai/dair-academy-plugins` as standalone skills instead of plugins: **image-generator**, **learn**, **lesson-generator**, **llm-council**, **survey-generator**, **wiki-builder**, and **youtube-notetaker**.
+- **Loop Library** - added **loop-library** from `Forward-Future/loop-library` for finding, adapting, and designing bounded AI-agent feedback loops with checks, stop rules, guardrails, and handoffs.
+- **Mailtrap email skill suite** - added **mailtrap-sending-emails**, **mailtrap-testing-with-sandbox**, **mailtrap-setting-up-sending-domain**, and **mailtrap-managing-contacts** for sending, sandbox testing, DNS/domain setup, and contact operations (PR #725).
+- **Matt Pocock workflow suite** - imported 17 workflow skills from `mattpocock/skills`: **ask-matt**, **codebase-design**, **diagnosing-bugs**, **domain-modeling**, **grill-me**, **grill-with-docs**, **grilling**, **handoff**, **improve-codebase-architecture**, **prototype**, **setup-matt-pocock-skills**, **tdd**, **teach**, **to-issues**, **to-prd**, **triage**, and **writing-great-skills**.
+- **Yao Meta Skill** - added **yao-meta-skill** from `yaojingang/yao-meta-skill` for governed skill creation, refactoring, evaluation, packaging, review, and distribution workflows.
+
+## Maintainer Sync
+
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, contributor data, and release metadata for the 1,678+ skill catalog.
+- Refreshed `apps/web-app/public/llms.txt` so GitHub Pages SEO verification matches the current catalog count and release metadata.
+- Added README source credits for the official/community external imports from Browserbase, DAIR Academy, Forward Future, Matt Pocock, and Yao Jingang.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #724 (`bugs-are-annoying`).
+- **[@dieudonneAwa](https://github.com/dieudonneAwa)** for PR #725 (Mailtrap email skill suite).
+- **[Browserbase](https://github.com/browserbase/skills)** for the upstream `competitor-analysis` skill.
+- **[DAIR.AI](https://github.com/dair-ai/dair-academy-plugins)** for the upstream DAIR Academy skill workflows.
+- **[Forward Future](https://github.com/Forward-Future/loop-library)** for the upstream Loop Library skill.
+- **[Matt Pocock](https://github.com/mattpocock/skills)** for the upstream workflow skill suite.
+- **[Yao Jingang](https://github.com/yaojingang/yao-meta-skill)** for the upstream `yao-meta-skill` workflow.
+
+## [12.9.0] - 2026-06-19 - "Design Skills and Registry Quality Tools"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 19 maintainer batch: 51 new canonical skills, a production QA skill rewrite, optional registry quality tooling, generated catalog sync, and the hosted catalog refreshed to 1,646+ skills.
+
+## New Skills
+
+- **design-it** - a large design-direction suite covering 3D UI, AI-native UI, aurora UI, bento layouts, brutalism, cyberpunk, dashboards, data-dense interfaces, editorial design, glassmorphism, gradients, material design, minimalism, neumorphism, retro styles, spatial UI, Swiss design, typography-first design, vaporwave, Y2K, and related visual systems (PR #717).
+- **android-ui-journey-testing** - Android UI journey testing workflow for validating navigation, state, screenshots, and mobile flows (PR #721).
+- **tools-page-seo-optimizer** - 11-phase SEO workflow for tool and feature pages, including positioning, keyword targeting, metadata, schema, internal links, and launch checks (PR #722).
+
+## Skill Fixes
+
+- Reworked **vibecode-production-qa-validator** into a 13-phase conditional production QA workflow for fullstack Next.js apps, covering build verification, SEO tags, OG images, favicon checks, API auth, performance, database state, cleanup, and launch readiness (PR #719).
+
+## Maintainer Tooling
+
+- Added optional Python registry quality tooling for skill scoring, security scanning, drift detection, and consolidated registry reports, with schema docs and tests (PR #718).
+- Added scripts for `score:skills`, `security:scan`, `drift:check`, `drift:update`, and `registry:report` without changing the normal PR merge gates.
+
+## Maintainer Sync
+
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, contributor data, and release metadata for the 1,646+ skill catalog.
+- Removed an unimported README-only NotFair source entry so community/source credits continue to represent repositories actually imported, mirrored, or used by this repo.
+- Verified the release preflight path, including reference validation, repo-state sync, tests, web-app install/build, and npm package dry-run.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #717 (`design-it` suite).
+- **[@GeekLuffy](https://github.com/GeekLuffy)** for PR #721 (`android-ui-journey-testing`).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #722 (`tools-page-seo-optimizer`) and PR #719 (`vibecode-production-qa-validator` rewrite).
+- **[@fkauanGIT](https://github.com/fkauanGIT)** for PR #718 (registry quality tooling).
+
+## [12.8.0] - 2026-06-17 - "Community Skills and Maintainer Fixes"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 17 maintainer batch: 11 merged PRs, six issue-closing workflow fixes, new community skill families, maintainer safety edits before merge, and a generated catalog refresh to 1,595+ skills.
+
+## New Skills
+
+- **super-code** - a multi-language coding skill with 16 companion subskills for Bash, C, C++, C#, Dart, Elixir, Go, Java, Kotlin, PHP, Python, Ruby, Rust, Scala, Swift, and TypeScript (PR #701).
+- **apple-notes-search** - Apple Notes MCP search workflow for local note discovery, with maintainer-added limitations, README source credit, safer Bun setup guidance, and Full Disk Access path guidance (PR #703).
+- **Conner K Ward skill set** - **ckw-design**, **deterministic-design**, **lookdev**, **lookdev-auto**, **macos-screen-recorder**, **screenstudio-alt**, and **web-media-getter**, all merged with README credits and added limitations sections (PR #704).
+- **pr-merge-champion** - pull request merge review and maintainer workflow guidance for checking PR readiness, risk, and merge hygiene (PR #691).
+
+## Skill Fixes
+
+- Tightened **youtube-seo-optimizer** badge guidance by addressing exact-match tag count and Shorts exemption feedback (PR #700).
+- Fixed the duplicate **Extension Architecture** heading in **browser-extension-builder** (PR #706, closes #705).
+- Added missing **astropy** reference stubs that point users to the appropriate upstream Astropy documentation areas (PR #708, closes #707).
+- Added category-level scoring guidance before **schema-markup** eligibility bands (PR #710, closes #709).
+- Added category-level scoring guidance before **programmatic-seo** feasibility bands (PR #712, closes #711).
+- Made **lint-and-validate** quality-loop commands ecosystem-aware instead of Node.js-only (PR #714, closes #713).
+- Added a concrete **ab-test-setup** tracking verification procedure before Gate 8 (PR #716, closes #715).
+
+## Maintainer Sync
+
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, and release metadata for the 1,595+ skill catalog.
+- Refreshed `apps/web-app/public/llms.txt` so GitHub Pages SEO verification matches the current catalog count and v12.8.0 release metadata.
+- Left PR #702, the AI Skill Registry validation framework, open for contributor follow-up because it combines broad Python tooling, a parallel .NET CLI, baseline behavior, and release-surface changes that should be split before merge.
+
+## Credits
+
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #701 (`super-code`).
+- **[@connerkward](https://github.com/connerkward)** and the referenced Conner K Ward upstream projects for PR #703 (`apple-notes-search`) and PR #704 (`ckw-design`, `deterministic-design`, `lookdev`, `lookdev-auto`, `macos-screen-recorder`, `screenstudio-alt`, `web-media-getter`).
+- **[@himanshu-2l](https://github.com/himanshu-2l)** for PR #691 (`pr-merge-champion`).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #700 (`youtube-seo-optimizer` fixes).
+- **[@specterslient95-lgtm](https://github.com/specterslient95-lgtm)** for PRs #706, #708, #710, #712, #714, and #716, which closed issues #705, #707, #709, #711, #713, and #715.
+
+## [12.7.0] - 2026-06-16 - "CrossFrame Suite and Workflow Fixes"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 16 maintainer batch: three accepted community PRs, the CrossFrame skill suite, workflow heading fixes, generated registry sync, and the hosted catalog refreshed to 1,569+ skills.
+
+## New Skills
+
+- **youtube-seo-optimizer** - YouTube and podcast SEO workflow for keyword research, metadata generation, transcript repurposing, and content optimization.
+- **brave-man** - project-specification interview workflow that slows down vague build requests and turns clarified requirements into an implementation prompt.
+- **crossframe** and companion skills - Chinese-canonical structural diagnosis, dialogue, essay, debate, teaching, review, notebook, public-issue, organization, and casebook workflows.
+
+## Fixes
+
+- Fixed **ab-test-setup** heading levels so workflow phases 3-8 render as peers instead of nesting under Pre-Requisites.
+- Fixed **apify-actorization** step numbering after schema configuration by renumbering local testing and deployment to Steps 7 and 8.
+- Refreshed `llms.txt` SEO metadata so Pages verification matches the current 1,569+ skill catalog.
+
+## Improvements
+
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, and release metadata for the 1,569+ skill catalog.
+- Approved and re-ran maintainer-required fork checks for remaining community PRs, leaving PR #691 open until its PR body and Quality Bar Checklist are completed.
+
+## Credits
+
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #698 (`youtube-seo-optimizer`).
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #696 (`brave-man`).
+- **[@xi-kari](https://github.com/xi-kari)** and **[xi-kari/crossframe-skill](https://github.com/xi-kari/crossframe-skill)** for PR #693 (`crossframe` suite).
+- **[@specterslient95-lgtm](https://github.com/specterslient95-lgtm)** for reporting the `ab-test-setup` and `apify-actorization` workflow structure issues.
+
+## [12.6.0] - 2026-06-15 - "Community Research Skills and Dependency Hardening"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 15 maintainer batch: five accepted community PRs, a web-app dependency security refresh, generated registry sync, and the hosted catalog refreshed to 1,555+ skills.
+
+## New Skills
+
+- **android-cli** - Android CLI workflow guidance for SDK management, project creation, emulator control, screenshots, layout inspection, and XML journey tests.
+- **codex-fable5** - community skill adapted from FableCodex for structured coding-agent workflows.
+- **accint-solve** - AccInt MCP workflow guidance for retrieve-first solving, commitment frames, continuation handling, and evidence-based closure.
+- **sharp-coder** - concise coding discipline skill combining surgical edit thinking with terse response patterns.
+- **efficient-web-research** - token-efficient web research protocol for URLs, GitHub repositories, search queries, multi-URL lists, and file-backed retrieval.
+
+## Security
+
+- Refreshed the web-app lockfile to resolve GitHub Dependabot alerts for vulnerable transitive dependencies: `@babel/core`, `form-data`, `js-yaml`, and `ws`.
+- Verified both root and web-app npm audit surfaces report zero vulnerabilities after the refresh.
+
+## Improvements
+
+- Added missing `android-cli` limitations before merging PR #685.
+- Normalized PR #686 metadata so the source-only quality gate could run on a fresh pull-request event.
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, `llms.txt`, and release metadata for the 1,555+ skill catalog.
+
+## Credits
+
+- **[@GeekLuffy](https://github.com/GeekLuffy)** for PR #685 (`android-cli`).
+- **[@baskduf](https://github.com/baskduf)** and **[baskduf/FableCodex](https://github.com/baskduf/FableCodex)** for PR #686 (`codex-fable5`).
+- **[@maxbaluev](https://github.com/maxbaluev)** and **[maxbaluev/accreted-intelligence](https://github.com/maxbaluev/accreted-intelligence)** for PR #687 (`accint-solve`).
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #688 (`sharp-coder`) and PR #690 (`efficient-web-research`).
+
+## [12.5.0] - 2026-06-14 - "Security Remediation and Agent Harness Batch"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 14 maintainer batch: confirmed Codex Security and GitHub Dependabot remediations, four accepted community PRs, source-only registry sync, and the web catalog refreshed to 1,550+ skills.
+
+## New Skills
+
+- **pagespeed-enhancer** - Lighthouse/PageSpeed audit and remediation workflow across performance, accessibility, best practices, and SEO.
+- **lovable-cleanup** - cleanup workflow for removing Lovable scaffolding from Vite and React projects.
+- **dos-verify-done-claims** - done-claim verification workflow that checks shipped/fixed claims against deterministic git evidence.
+- **monopoly** - senior system-design engineering skill with nested references for architecture patterns, scale benchmarks, security checklist, and technology selection.
+- **ecl-harness-engineer** - ECL Agent Harness creation and audit workflow for `AGENTS.md`, change tracking, repository guidance, lint checks, CI gates, and handoff docs.
+
+## Security
+
+- Remediated confirmed Codex Security findings across external CLI install guidance, remote installer review steps, Android token-storage guidance, Atlas untrusted workspace instructions, installer symlink pruning, and stale/broken skill examples.
+- Updated Vite-related dependencies to remove the GitHub Dependabot/esbuild alert path in the web app and Loki example lockfiles.
+- Added regression checks for unsafe command guidance, untrusted instruction precedence, Android plaintext token storage, installer symlink pruning, and 2slides CLI examples.
+
+## Improvements
+
+- Added maintainer fixes for README source credits, PR quality-bar metadata, and missing limitations discovered during the PR merge batch.
+- Synced generated registry artifacts, plugin mirrors, web catalog assets, sitemap, and release metadata for the 1,550+ skill catalog.
+- Preserved the source-only contributor contract while keeping `main` as the owner of generated registry artifacts.
+
+## Credits
+
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #683 (`pagespeed-enhancer`, `lovable-cleanup`, and author metadata).
+- **[@anthony-chaudhary](https://github.com/anthony-chaudhary)** and **[anthony-chaudhary/dos-kernel](https://github.com/anthony-chaudhary/dos-kernel)** for PR #679 (`dos-verify-done-claims`).
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #684 (`monopoly`).
+- **[@qinghui316](https://github.com/qinghui316)** and **[qinghui316/ecl-harness-engineer](https://github.com/qinghui316/ecl-harness-engineer)** for PR #678 (`ecl-harness-engineer`).
+
+## [12.4.0] - 2026-06-12 - "Community Skill Batch and Web Catalog Sync"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 12 maintainer batch: seven accepted community PRs, finance compliance and academic research workflows, Atlas long-running-agent integrity skills, refreshed Polis Protocol install guidance, and a web catalog sync to 1,541+ skills.
+
+## New Skills
+
+- **agent-squad** - multi-persona development squad workflows for coordinating specialized AI roles across planning, implementation, review, and delivery.
+- **not-a-vibe-coder** - disciplined engineering workflow guidance for avoiding vague implementation loops and keeping AI-assisted coding grounded in requirements, tests, and review.
+- **fsi-compliance-checker** - PCI-DSS v4.0 and MAS TRM compliance review guidance for financial-services systems.
+- **papers-skill** - academic paper research workflow for finding, reading, summarizing, and organizing scholarly sources.
+- **atlas-contract** - long-running agent contract workflow for preserving task intent, scope, evidence, and acceptance criteria.
+- **atlas-ledger** - execution-ledger workflow for tracking decisions, state changes, validation, and handoff evidence during extended agent tasks.
+
+## Improvements
+
+- Upgraded **zipai-optimizer** to v14.0 guidance for extreme token optimization workflows.
+- Updated **polis-protocol** to v2 with always-latest PyPI install guidance, Polis CLI usage, and a corrected skill path.
+- Added missing README credits, provenance metadata, risk labels, and `## Limitations` sections while repairing accepted community PRs.
+- Synced generated registry artifacts, web catalog assets, sitemap, `llms.txt`, social-card copy, and SEO verification to the 1,541+ skill catalog.
+- Closed PR #671 because it remained conflicted and only touched generated/presentation assets rather than a mergeable skill contribution.
+
+## Credits
+
+- **[@nickdesi](https://github.com/nickdesi)** for PR #674 (`zipai-optimizer` v14.0).
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #673 (`not-a-vibe-coder`) and PR #669 (`agent-squad`).
+- **[@timwukp](https://github.com/timwukp)** for PR #677 (`fsi-compliance-checker`).
+- **[@xwmxcz](https://github.com/xwmxcz)** for PR #668 (`papers-skill`).
+- **[@yehudalevy-collab](https://github.com/yehudalevy-collab)** for PR #667 (`polis-protocol` v2).
+- **[@wede-wx](https://github.com/wede-wx)** and **[wede-wx/atlas](https://github.com/wede-wx/atlas)** for PR #675 (`atlas-contract` and `atlas-ledger`).
+
+## [12.3.0] - 2026-06-10 - "Android, Unship, 40K Stars, and Security Hardening"
+
+> Community release for the June 10 maintainer batch, installer hardening, and the repository crossing 40K GitHub stars.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release accepts the validated June 10 community PRs, refreshes the catalog with Android and shipping workflows, and celebrates the repository passing **40,000 GitHub stars**. At release time the live repository count was 40,206 stars.
+
+## New Skills
+
+- **android-dev** - end-to-end Android development workflow guidance, including project setup, build/debug loops, testing, release preparation, and production quality checks.
+- **unship** - product and codebase teardown workflow for deprecating features, removing dead paths, and shipping safer cleanup plans.
+
+## Security
+
+- Hardened the installer so nested skill installs refuse symlinked intermediate destination directories instead of copying outside the selected install root.
+- Added regression coverage proving Antigravity installs cannot escape through pre-existing target-path symlinks.
+- Tightened `accesslint-diff` branch-switching guidance so branch names stay quoted, option-like names are rejected, and the branch ref must resolve before `git switch`.
+- Removed unsupported `2slides-ppt-generator` narration flags from root and plugin docs, aligning examples with the actual script interface.
+
+## Improvements
+
+- Updated `event-staffing-ordering` to remove the stale `request_quote` action from implementation references.
+- Synced the accepted PR batch on `main`; PR #642 remains open because it is still conflicting and targets non-canonical generated paths.
+
+## Credits
+
+- **[@kissmyabs32](https://github.com/kissmyabs32)** for PR #666 (`event-staffing-ordering` cleanup).
+- **[@mbenhard](https://github.com/mbenhard)** and **[mbenhard/unship](https://github.com/mbenhard/unship)** for PR #663 (`unship`).
+- **[@Prince-1652](https://github.com/Prince-1652)** for PR #664 (`android-dev`).
+- Thank you to every contributor, issue reporter, user, and stargazer who helped the project reach 40K GitHub stars.
+
+## [12.2.1] - 2026-06-07 - "Security Scan Follow-up"
+
+> Patch release for the June 7 security scan remediation after `12.2.0`.
+
+## Security
+
+- Hardened `user-thoughts` runtime file handling against symlink traversal and realpath escapes inside `.ustht/`.
+- Fixed tar archive validation to prefer PAX `path` / `linkpath` headers before GNU long-name headers.
+- Replaced risky documentation examples for unquoted Git branches, placeholder `git add`, predictable `/tmp` installer paths, token-printing Vercel commands, and unsafe JSON-LD injection.
+- Removed public Google and Bing site-verification tokens from the web app.
+- Raised risk labels and plugin metadata for external-code and remote-execution skills, including `runapi-cli`, `open-dynamic-workflows`, and `polis-protocol`.
+
+## Improvements
+
+- Marked `2slides-ppt-generator` plugin setup as manual with declared Python requirements.
+- Fixed broken plugin bundle links and the mobile plugin skill list.
+- Regenerated plugin compatibility reports, skill indexes, web assets, and plugin mirrors after the remediation.
+
+## [12.2.0] - 2026-06-07 - "Education, Media, Workflow, and Creative Skill Intake"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 7 maintainer batch: accepted community PRs for education, media processing, workflow orchestration, media-generation APIs, and article illustration workflows. The catalog is synced to 1,525+ skills, plugin mirrors are refreshed, and the hosted web-app SEO metadata now matches the current catalog count.
+
+## New Skills
+
+- **cv-generator** - ATS-ready CV and resume generation guidance for FlowCV, Canva, and structured career-document workflows.
+- **open-dynamic-workflows** - dynamic multi-agent workflow orchestration guidance for planning, parallel execution, and adversarial verification.
+- **video-content-extractor** - FFmpeg and Tesseract OCR workflows for extracting timestamped screen text and structured Markdown reports from MP4 videos.
+- **runapi-cli** - official RunAPI CLI guidance for generating AI images, videos, music, audio, and related model API jobs.
+- **article-illustrations** - Grav-style hand-drawn article illustration workflow with whiteboard sketches, sparse annotations, visual metaphors, and QA checks.
+
+## Improvements
+
+- Refined `examprep-ai` release metadata and education category support as part of the accepted education skill update.
+- Added README source credits and structured provenance metadata for newly imported external/community skills.
+- Synced generated registry, catalog, compatibility reports, plugin mirrors, docs, sitemap, and web assets for the 1,525-skill catalog.
+- Updated web-app home metadata, `llms.txt`, social preview copy, prerender fallback text, and SEO verification tests from `1,520+` to `1,525+`.
+- Kept PR #642 open because it still targets a non-canonical shadow path and includes generated star-history noise instead of the live registry pipeline.
+
+## Credits
+
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #658 (`cv-generator` and `examprep-ai` refinements).
+- **[@Suraj1235](https://github.com/Suraj1235)** and **[Suraj1235/open-dynamic-workflows](https://github.com/Suraj1235/open-dynamic-workflows)** for PR #659 (`open-dynamic-workflows`).
+- **[@274326424](https://github.com/274326424)** and **[274326424/video-content-extractor](https://github.com/274326424/video-content-extractor)** for PR #660 (`video-content-extractor`).
+- **[@runapi-builder](https://github.com/runapi-builder)** and **[runapi-ai/cli-skill](https://github.com/runapi-ai/cli-skill)** for PR #661 (`runapi-cli`).
+- **[@vipin-si](https://github.com/vipin-si)** and **[vipin-si/article-illustrations](https://github.com/vipin-si/article-illustrations)** for PR #662 (`article-illustrations`).
+
+## [12.1.0] - 2026-06-05 - "Community Skills, Release Sync, and Dependency Hardening"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 5 maintainer batch: accepted community PRs, dependency security updates, web-app SEO count fixes, generated registry sync, and data-use guardrails for scraping-oriented documentation. The catalog is synced to 1,520+ skills.
+
+## New Skills
+
+- **antigravity-agent-manager** - agent lifecycle and project orchestration guidance for Antigravity workflows.
+- **linkedin-content-generator** - LinkedIn post, carousel, newsletter, and content-calendar generation helpers.
+- **event-staffing-ordering** - staffing-order workflow guidance for event operations.
+- **event-staffing-compliance** - compliance review guidance for event staffing workflows.
+- **2slides-ppt-generator** - 2Slides API workflows for generating, exporting, and narrating presentation decks.
+- **examprep-ai** - education and exam-preparation assistant workflows.
+- **hasdata** - HasData API workflows for compliant web-data collection.
+- **hasdata-cli** - HasData CLI workflows with safer install guidance and data-use guardrails.
+- **anti-sycophancy** - prompt and review patterns for reducing agreement bias in AI assistants.
+- **permission-manager** - permission review and approval-flow guidance for agent work.
+- **skill-suggester** - skill recommendation workflow for routing tasks to relevant playbooks.
+- **smart-git-automation** - Git automation patterns for safer repository operations.
+
+## Improvements
+
+- Updated React Router dependencies to resolve the current high-severity Dependabot/audit findings.
+- Hardened `vercel-optimize` sanitizer coverage and star-history refresh automation.
+- Fixed web-app SEO count verification after the catalog grew to 1,520+ skills.
+- Synced generated registry, catalog, compatibility reports, plugin mirrors, docs, sitemap, and web assets for the 1,520-skill catalog.
+- Tightened scraping-related wording and documentation safety guidance for HasData skills.
+
+## Credits
+
+- **[@PzocikErwin](https://github.com/PzocikErwin)** for PR #652 (`antigravity-agent-manager`).
+- **[@sarveshtalele](https://github.com/sarveshtalele)** for PR #654 (`linkedin-content-generator`).
+- **[@kissmyabs32](https://github.com/kissmyabs32)** for PR #655 (`event-staffing-ordering`, `event-staffing-compliance`).
+- **[@2slides](https://github.com/2slides)** for PR #656 (`2slides-ppt-generator`).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #657 (`examprep-ai`).
+- **[@valka465](https://github.com/valka465)** for PR #651 (`hasdata`, `hasdata-cli`).
+- **[@FrancoStino](https://github.com/FrancoStino)** and **[mskadu/opencode-agent-skills](https://github.com/mskadu/opencode-agent-skills)** for PR #653 (`anti-sycophancy`, `permission-manager`, `skill-suggester`, `smart-git-automation`).
+
+## [12.0.0] - 2026-06-03 - "Specialized Plugins, Discovery SEO, and Community Skill Intake"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release packages the June 2-3 maintainer work into a major catalog update: specialized Codex bundle plugins, stronger GitHub/AI discovery metadata, webmaster verification, star-history refreshes, and the accepted community PR batch. It keeps PR #642 open because it still targets a non-canonical shadow path rather than the live registry pipeline.
+
+## New Skills
+
+- **skill-issue** - activation-audit workflow for grading skill descriptions, diagnosing prompt matching, and finding collision clusters before a skill fails to fire.
+- **polis-protocol** - multi-agent coordination workflow using capability cards, routing history, and protocol amendments.
+- **accesslint-scan** - full-page accessibility scans through AccessLint Chrome and CLI tooling.
+- **accesslint-diff** - baseline-vs-branch accessibility regression review for changed pages.
+- **accesslint-audit** - issue-focused accessibility audit workflow for larger remediation passes.
+- **composition-patterns** - React composition guidance for compound components, explicit variants, state boundaries, and React 19 patterns.
+- **debugging-toolkit** - structured debugging workflow for reproducible traces, hypotheses, and fixes.
+- **deploy-to-vercel** - Vercel deployment workflow with CLI/scripted project setup.
+- **python-development** - Python project workflow guidance for implementation, testing, and environment hygiene.
+- **react-native-skills** - React Native rules for performance, UI primitives, navigation, state, and Expo-friendly implementation.
+- **tdd-workflows** - test-first development workflow for small, verified changes.
+- **vercel-cli-with-tokens** - token-aware Vercel CLI operations for automation contexts.
+- **vercel-optimize** - deep Vercel performance and cost optimization workflow with scanners, gates, support topics, and report rendering.
+- **vercel-react-view-transitions** - React/Next.js View Transitions guidance and implementation recipes.
+
+## Improvements
+
+- Added specialized Codex bundle plugins for agent/MCP building, automation, data analytics, DevOps/cloud, documents/presentations, marketing/SEO/growth, and related high-signal workflows.
+- Refreshed plugin marketplace manifests, editorial bundle docs, specialized-plugin documentation, and candidate analysis so the plugin direction is visible from the README and docs.
+- Improved AI and search discovery signals with stronger repository metadata, prerendered home/catalog metadata, a specialized plugin landing page, and a live SEO discovery smoke check.
+- Added Bing and Google webmaster verification assets and standardized the sitemap namespace for crawler compatibility.
+- Updated the star-history chart and removed the old contributor-grid explainer from the README.
+- Replaced deprecated `shadcn-ui` CLI references with the current `shadcn` command in the Radix UI design-system guidance.
+- Synced generated registry, catalog, compatibility reports, plugin mirrors, docs, sitemap, web assets, and SEO skill-count claims for the 1,508-skill catalog.
+- Fixed the web app SEO verifier after the catalog grew from `1,494+` to `1,508+`, restoring the Pages deploy workflow to green.
+
+## Credits
+
+- **[@mishanefedov](https://github.com/mishanefedov)** and **[mishanefedov/skill-issue](https://github.com/mishanefedov/skill-issue)** for PR #646 (`skill-issue`).
+- **[@FrancoStino](https://github.com/FrancoStino)** for PR #647 (community skills and aliases for SkillPointer coverage).
+- **[@yehudalevy-collab](https://github.com/yehudalevy-collab)** and **[yehudalevy-collab/polis-protocol](https://github.com/yehudalevy-collab/polis-protocol)** for PR #648 (`polis-protocol`).
+- **[@PzocikErwin](https://github.com/PzocikErwin)** for PR #649 (`shadcn` CLI documentation refresh).
+
+## [11.11.0] - 2026-06-02 - "User Thoughts, MiniMax M3, and Registry Hardening"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release merges the accepted maintainer batch from June 2, adds project-local user intent persistence, updates MiniMax CLI guidance for MiniMax-M3, fixes the `agy` installer layout, and closes the current Dependabot critical alerts.
+
+## New Skills
+
+- **user-thoughts** - project-local mdbase memory for persisting user decisions, constraints, UI/UX rationale, backlog items, and project preferences across sessions and agents.
+
+## Improvements
+
+- Updated `mmx-cli` documentation so chat workflows point at MiniMax-M3 as the default model.
+- Added batch output guidance across the accepted SEO and production QA skill updates.
+- Normalized `user-thoughts` source metadata, README attribution, runtime templates, references, scripts, and plugin mirrors in English for public catalog use.
+- Fixed `agy` installer guidance so Antigravity installs use directory-based skill layouts instead of flat markdown files.
+- Bumped the web app Vitest stack to close the critical Dependabot alerts and verified `npm audit` returns zero open vulnerabilities.
+- Synced generated registry, catalog, compatibility reports, plugin mirrors, docs, sitemap, and web assets for the 1,494-skill catalog.
+
+## Credits
+
+- **[@JularDepick](https://github.com/JularDepick)** and **[JularDepick/user-thoughts.SKILL](https://github.com/JularDepick/user-thoughts.SKILL)** for PR #639 (`user-thoughts`).
+- **[@octo-patch](https://github.com/octo-patch)** for PR #640 (`mmx-cli` MiniMax-M3 guidance).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #641 (batch output updates).
+
+## [11.10.0] - 2026-05-31 - "SEO, Yield, YouTube, and Release Hardening"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release merges the accepted community PRs from the current maintainer batch, adding SEO production workflows, passive-income analysis, grounded math-spec extraction, AI disruption planning, and API-backed YouTube research.
+
+## New Skills
+
+- **nextjs-seo-indexing** - Next.js indexing diagnostics and production SEO remediation for metadata, rendering, canonicals, sitemaps, robots, and Search Console workflows.
+- **schema-markup-generator** - structured-data generation and validation for products, articles, FAQs, breadcrumbs, organizations, local businesses, and rich-result eligibility.
+- **social-metadata-hardening** - Open Graph, Twitter/X card, preview-image, and share-surface hardening for production web pages.
+- **vibe-code-cleanup** - production cleanup workflow for AI-generated web apps, removing placeholders, fragile logic, and demo-only artifacts before launch.
+- **vibecode-production-qa-validator** - launch QA for AI-assisted web builds across SEO, accessibility, copy, responsive behavior, performance, and deployment readiness.
+- **yield-intelligence** - passive-income portfolio analysis across Treasuries, dividend ETFs, REITs, and preferred stocks.
+- **doc2math** - grounded conversion of narrative technical documents into Mathematical Problem Specifications.
+- **moatmri** - AI disruption pressure mapping with 10-vector exposure scoring and a 90-day defensive plan.
+- **youtube-full** - TranscriptAPI-backed YouTube transcript, search, channel, playlist, and monitoring workflows for cloud-safe video research.
+
+## Improvements
+
+- Added batch output options and refreshed generated registry, catalog, compatibility, plugin mirror, documentation, and web assets for the expanded catalog.
+- Hardened unsafe skill guidance and made security hygiene tests self-contained for CI.
+- Improved `agy install` handling and Windows test portability.
+- Updated the star history chart and release-state metadata.
+
+## Credits
+
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for PR #638 (`nextjs-seo-indexing`, `schema-markup-generator`, `social-metadata-hardening`, `vibe-code-cleanup`, `vibecode-production-qa-validator`, and SEO batch output updates).
+- **[@KyleMillion](https://github.com/KyleMillion)** and **[IntuiTek¹](https://intuitek.ai)** for PR #637 (`yield-intelligence`, `doc2math`, `moatmri`).
+- **[@therohitdas](https://github.com/therohitdas)** and **[ZeroPointRepo/youtube-skills](https://github.com/ZeroPointRepo/youtube-skills)** for PR #633 (`youtube-full`).
+
+## [11.9.0] - 2026-05-30 - "Container, CI, Market, and Wallet Guard Skills"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release merges the accepted community and official skill PRs from the current maintainer batch, adding container hardening, advanced GitHub Actions workflows, Longbridge market-data guidance, and paid-inference wallet guards.
+
+## New Skills
+
+- **container-security-hardening** - Docker/container image and runtime hardening for base images, CVE scanning, SBOM/signing, seccomp/AppArmor, and Kubernetes pod-security controls.
+- **github-actions-advanced** - production-grade GitHub Actions CI/CD design, debugging, reusable workflows, OIDC authentication, caching, environments, secrets, and release automation.
+- **longbridge** - official Longbridge Securities market-data workflow for quotes, charts, fundamentals, portfolios, options, and trilingual HK/US/A-share/SG market analysis.
+- **runaway-guard** - cost-safety discipline for paid AI/inference APIs with per-run, per-day, iteration, concurrency, and provider-dashboard wallet caps.
+
+## Improvements
+
+- Normalized incoming PR metadata, source credits, and security-sensitive install snippets before merge so maintainer CI stayed green.
+- Synced generated registry, catalog, compatibility, plugin mirror, documentation, and web assets for the expanded skill catalog.
+
+## Credits
+
+- **[@sahilaghara1911](https://github.com/sahilaghara1911)** for PR #632 (`container-security-hardening`) and PR #631 (`github-actions-advanced`).
+- **[@hogan-yuan](https://github.com/hogan-yuan)** and **[longbridge/skills](https://github.com/longbridge/skills)** for PR #630 (`longbridge`).
+- **[@morsechimwai](https://github.com/morsechimwai)** and **[morsechimwai/lemmaly](https://github.com/morsechimwai/lemmaly)** for PR #629 (`runaway-guard`).
+
+## [11.8.0] - 2026-05-27 - "Decision, Messaging, Algorithm, and Supply-Chain Skills"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release merges the accepted community skill PRs from the current maintainer batch, adding decision support, Sendblue messaging workflows, algorithmic discipline playbooks, and a Bumblebee supply-chain inventory wrapper.
+
+## New Skills
+
+- **lemmaly** - gateway discipline for stating Big-O, data structure, and algorithm family before writing loops, queries, or recursion.
+- **mathguard** - large-input acceleration playbook for Bloom filters, HyperLogLog, Count-Min Sketch, FFT, LSH, and related techniques.
+- **invariant-guard** - correctness-first workflow for contracts, loop invariants, termination arguments, and edge cases.
+- **complexity-cuts** - corrective workflow for improving shipped code with poor Big-O one transformation at a time.
+- **sendblue-cli** - Sendblue CLI guidance for iMessage, SMS, and RCS workflows.
+- **sendblue-api** - Sendblue HTTP/JSON API guidance for application code.
+- **sendblue-notify** - notification patterns for texting a user when an agent task is done.
+- **textme** - local daemon workflow for bridging inbound iMessages into Claude Code sessions.
+- **bumblebee** - read-only supply-chain inventory and exposure scanning with Perplexity's Bumblebee CLI.
+- **decision-navigator** - targeted-question workflow for helping users gain clarity on decisions before choosing a path.
+
+## Improvements
+
+- Added a stdlib-only Bumblebee report renderer for local Markdown summaries from NDJSON scan output.
+- Synced generated registry, catalog, compatibility, plugin mirror, documentation, and web assets for the expanded skill catalog.
+
+## Credits
+
+- **[@morsechimwai](https://github.com/morsechimwai)** and **[morsechimwai/lemmaly](https://github.com/morsechimwai/lemmaly)** for PR #622 (`lemmaly`, `mathguard`, `invariant-guard`, `complexity-cuts`).
+- **[@AnthonyFirth](https://github.com/AnthonyFirth)** for PR #623 (`sendblue-cli`, `sendblue-api`, `sendblue-notify`, `textme`).
+- **[@stefan-kp](https://github.com/stefan-kp)**, **[perplexityai/bumblebee](https://github.com/perplexityai/bumblebee)**, and **[mycelos-ai/bumblebee-skill](https://github.com/mycelos-ai/bumblebee-skill)** for PR #625 (`bumblebee`).
+- **[@kavinduUdhara](https://github.com/kavinduUdhara)** for PR #627 (`decision-navigator`).
+
+## [11.7.0] - 2026-05-26 - "Community Skill Intake and Merge Hygiene"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release merges the clean community skill PRs from the current maintainer batch, refreshes generated catalog/plugin/web assets to `1,470+` skills, and hardens batch merges so unwanted Claude co-author trailers are stripped from future squash commits.
+
+## New Skills
+
+- **mesh-memory** - structured memory mesh workflow for persistent agent context and recall.
+- **flowhunt-skill** - automation discovery audit for workflow intake, tool-by-tool review, and productivity opportunity prioritization.
+- **socialclaw** - social media campaign scheduling and publishing across major platforms from a single workspace API key.
+- **geminiignore-finops** - `.geminiignore` setup patterns for context-window efficiency and token cost reduction.
+- **ii-commons** - deterministic research retrieval across arXiv, PubMed/PMC, and supported US policy corpora.
+
+## Improvements
+
+- Synced generated registry, catalog, compatibility, plugin mirror, documentation, and web assets to the new `1,470+` skill count.
+- Updated the maintainer batch merge script to pass explicit squash commit subjects/bodies and remove Claude/Anthropic co-author trailers from future merge commits.
+
+## Credits
+
+- **[@dklymentiev](https://github.com/dklymentiev)** for PR #613 (`mesh-memory`).
+- **[@konradbachowski](https://github.com/konradbachowski)** and **[heyneuron/flowhunt-skill](https://github.com/heyneuron/flowhunt-skill)** for PR #614 (`flowhunt-skill`).
+- **[@ndesv21](https://github.com/ndesv21)** for PR #619 (`socialclaw`).
+- **[@iradoweck](https://github.com/iradoweck)** for PR #620 (`geminiignore-finops`).
+- **[@liujuanjuan1984](https://github.com/liujuanjuan1984)** and **[Intelligent-Internet/II-Commons-Skills](https://github.com/Intelligent-Internet/II-Commons-Skills)** for PR #621 (`ii-commons`).
+
+## [11.6.0] - 2026-05-23 - "Audit Hardening and Karpathy Guidelines"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills --help`
+- Choose your tool: [README.md#choose-your-tool](README.md#choose-your-tool)
+- Best skills by tool: [README.md#best-skills-by-tool](README.md#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](docs/users/workflows.md)
+
+This release hardens the repository after a full audit pass, fixes issue #611 by syncing `andrej-karpathy` to English upstream guidelines, and improves release/security guardrails.
+
+## Security
+
+- Replaced executable pipe-to-shell install examples across canonical skills with package-manager or download-inspect-execute flows, and removed the obsolete allowlist comments.
+- Hardened the web-app refresh archive fallback by pre-validating tar/zip paths, rejecting archive symlink entries, and verifying extracted real paths before moving downloaded skills into place.
+- Replaced the Telegram Node boilerplate and docs examples with Telegraf to remove the deprecated vulnerable `request` dependency chain and avoid putting bot tokens in webhook URLs.
+- Hardened WhatsApp webhook signature validation so malformed `x-hub-signature-256` headers return `401` instead of throwing on `timingSafeEqual` buffer length mismatches.
+- Refused installer migrations through symlinked target directories and added regression coverage for symlink target failures.
+- Restored TLS verification by default in Junta scraper implementations, with insecure TLS only available through the shared `JUNTA_INSECURE_TLS` escape hatch.
+
+## Fixed
+
+- Replaced the non-English `andrej-karpathy` skill content with English Karpathy coding guidelines synced from the upstream `multica-ai/andrej-karpathy-skills` source.
+- Made `audit:skills:strict` enforce an explicit legacy warning budget so strict skill-audit debt is tracked and regressions fail without blocking on the historical backlog.
+- Replaced realistic AWS/private-key examples with unmistakable placeholders and taught `security:docs` to block those patterns from returning.
+- Rebuilt local documentation link validation as a deterministic, path-aware checker for `README.md`, `docs/`, and `docs_zh-CN/`, and repaired the broken localized/internal markdown links it now catches.
+- Refreshed stale Chinese documentation release/count claims to `11.5.0` / `1,465+` and marked the old final validation report as a historical snapshot.
+- Made the Chinese glossary validation report deterministic by removing timestamps and machine-specific absolute paths.
+- Stopped publishing `.disabled` skills as web static assets during `app:setup`.
+- Updated web-app SEO counts and social metadata to `1,465+`, aligned the SEO verifier and Pages workflow with the linked `site.webmanifest`, and corrected the documented canonical URL environment variables.
+- Added generated-index duplicate-ID protection so future nested skill basename collisions fail during index generation.
+- Fixed the Remotion chart rule typo from `implmentation` to `implementation`.
+
+## [11.5.0] - 2026-05-21 - "Security Boundary Hardening and New Agent Skills"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+This release hardens plugin-safe distribution boundaries, resolves the current Dependabot `ws` alert in the web app lockfile, and merges PR #604 and PR #605 through the maintainer workflow.
+
+## New Skills
+
+- **subagent-orchestrator** - quota-aware parallel subagent coordination for large, multi-file Antigravity tasks.
+- **bilig-workpaper** - formula-backed WorkPaper JSON and MCP guidance for deterministic spreadsheet-style agent workflows.
+
+## Security
+
+- **plugin-safe boundary hardening** - blocks critical-risk or third-party setup-sensitive community skills from the generated Codex and Claude plugin-safe distributions.
+- **ingest-youtube input hardening** - validates single-video YouTube URLs, terminates `yt-dlp` options with `--`, ignores user config, adds subprocess timeouts, and neutralizes untrusted metadata in generated markdown.
+- **web app dependency fixes** - updates `ws` to the patched `8.20.1` range and refreshes vulnerable transitive audit entries in `apps/web-app/package-lock.json`.
+
+## Improvements
+
+- **generated artifact sync** - refreshes compatibility data, skill indexes, plugin mirrors, docs, and visible skill counts to `1,464+`.
+- **subagent-orchestrator metadata** - normalizes PR #604 metadata so the skill passes repository validation.
+
+## Who should care
+
+- **Plugin users** get a safer marketplace-style distribution that excludes setup-sensitive critical workflows from safe plugin bundles.
+- **Vault users** get safer YouTube transcript ingestion with stricter URL and markdown handling.
+- **Agent workflow builders** get two new community skills for parallel agent coordination and formula-backed workbook automation.
+
+## Credits
+
+- **[@sulavmgr456-byte](https://github.com/sulavmgr456-byte)** for PR #604 (`subagent-orchestrator`).
+- **[@gregkonush](https://github.com/gregkonush)** for PR #605 (`bilig-workpaper`).
+
+## [11.4.1] - 2026-05-20 - "Installer Supply-Chain Hardening"
+
+> Patch release for the npm installer used by Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+This release hardens the npm installer after reviewing Socket.dev's AI-detected code-anomaly warning for `tools/bin/install.js`.
+
+## Improvements
+
+- **release-pinned installs** - default `npx agentic-awesome-skills` installs now clone the matching package release tag instead of the repository tip, reducing drift between npm package contents and installed skills.
+- **git ref validation** - `--tag` and `--version` refs are validated before invoking `git clone`, while still allowing explicit branch installs such as `--tag main`.
+- **destination symlink guard** - installer copy operations now refuse to write through pre-existing destination symlinks.
+- **installer docs and regression coverage** - documents the release-pinned default and adds installer tests for release-tag resolution and unsafe ref rejection.
+
+## Who should care
+
+- **npm users** get installer behavior that is pinned to the published package version by default.
+- **security scanners and maintainers** get a narrower supply-chain surface for the installer path Socket flagged.
+
+## [11.4.0] - 2026-05-20 - "Mercury MCP, Photopea Embeds, and Codex Bundle Names"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+This release merges PR #598 and PR #601 through the maintainer workflow, fixes issue #597 by shortening Codex bundle plugin identifiers, and reduces antivirus false-positive risk in the Linux privilege-escalation guidance from issue #600.
+
+## New Skills
+
+- **mercury-mcp** - lookup reference for Mercury MCP tools covering messages, threads, tasks, automations, agent context, and admin-scoped team graph tools.
+- **photopea-embedded-editor** - web-app integration guide for embedding Photopea with `photopea.js`, file loading, scripting, exports, layers, text, selections, and template editing patterns.
+
+## Improvements
+
+- **Codex bundle names** - generated Codex bundle plugins now use compact `aasb-*` names while preserving existing repo-local source directories, keeping qualified skill names within the 64-character loader limit.
+- **bundle regression tests** - adds coverage that every generated Codex bundle plugin name and `plugin:skill` qualified name stays within the 64-character limit.
+- **security skill false-positive reduction** - replaces a pipe-to-shell LinPEAS example with download, inspect, chmod, and explicit execution steps for authorized labs.
+- **generated artifact sync** - refreshes catalog, skill index, plugin mirrors, web assets, contributor credits, package metadata, and visible skill counts to `1,462+`.
+
+## Who should care
+
+- **Codex CLI users** can enable editorial bundles without losing valid skills to long qualified plugin names.
+- **MCP users** get a compact Mercury tool reference for agent messaging, task tracking, and automations.
+- **Web app builders** get a practical Photopea embedding guide for browser-based image editing workflows.
+- **Security learners and maintainers** get safer documentation patterns that are less likely to trigger local antivirus heuristics.
+
+## Credits
+
+- **[@boeto](https://github.com/boeto)** for issue #597 and the concrete Codex bundle-name reproduction.
+- **[@WagnerFFreitas](https://github.com/WagnerFFreitas)** for issue #600 and the Norton false-positive report.
+- **[@Karthikeya-Meesala](https://github.com/Karthikeya-Meesala)** for PR #598 (`mercury-mcp`).
+- **[@bulkmockupsfiller-ai](https://github.com/bulkmockupsfiller-ai)** and **[@abdul-karim-mia](https://github.com/abdul-karim-mia)** for PR #601 (`photopea-embedded-editor`).
+
+## [11.3.0] - 2026-05-16 - "Discovery Manifests and Recommendation Pipelines"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+This release closes issue #596 with a stable discovery-manifest contract and merges PR #595 through the maintainer squash-merge workflow. It keeps contributor PRs source-only while making `main` the canonical owner of generated manifests, web assets, and release metadata.
+
+## New Skills
+
+- **recsys-pipeline-architect** - recommendation, ranking, and feed pipeline design using a Source -> Hydrator -> Filter -> Scorer -> Selector -> SideEffect architecture.
+
+## Improvements
+
+- **stable discovery manifest** - keeps root `skills_index.json` as the canonical public manifest, mirrors it exactly to `data/skills_index.json`, and documents lazy-loading usage for downstream tools.
+- **manifest schema and docs** - adds `schemas/skills-index.v1.schema.json` plus user and integration docs that distinguish the canonical root manifest from the compatibility mirror.
+- **CI-safe drift checks** - extends consistency auditing and PR artifact previews so root/data/web-backup manifest drift is visible and enforced on `main`.
+- **generated artifact sync** - refreshes catalog, skill index, plugin mirrors, web assets, contributor credits, package metadata, and visible skill counts to `1,460+`.
+
+## Who should care
+
+- **Tool builders and indexers** get a stable manifest contract they can validate and consume without loading every skill up front.
+- **Users with large installs** get clearer guidance for filtering by category, risk, source, and description before lazy-loading individual skills.
+- **Recommendation-system builders** get a focused skill for designing composable feed and ranking pipelines across TypeScript, Go, Python, and adjacent stacks.
+- **Maintainers** get a source-only PR path with canonical generated artifacts refreshed on `main` before release.
+
+## Credits
+
+- **[@latentloop07](https://github.com/latentloop07)** for issue #596 and the discovery/installability prompt.
+- **[@mturac](https://github.com/mturac)** for PR #595 (`recsys-pipeline-architect`).
+
+## [11.2.0] - 2026-05-13 - "Market Intelligence, Token Routing, and Chinese Growth Skills"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+This release merges PRs #587, #588, #589, #590, and #591 through the maintainer workflow. It adds measurement-driven model routing, Chinese market strategy skills, MCP tool-building guidance, options-flow analysis, RSS news sentiment briefings, and a refreshed Hermes Tweet path for the X/Twitter scraper.
+
+## New Skills
+
+- **tokenwise** - measurement-driven Claude Code model routing with local cost logs, A/B validation, and guarded Haiku/Sonnet/Opus task routing.
+- **mcp-tool-developer** - end-to-end MCP server and tool development guidance across schema design, TypeScript/Python implementation, testing, deployment, and registry publishing.
+- **wechat-official-account-strategist** - WeChat Official Account content strategy, publishing cadence, topic planning, and growth guidance.
+- **xiaohongshu-content-strategist** - Xiaohongshu content planning, SEO-style discovery, visual hooks, and China-market creator workflows.
+- **options-flow-analyzer** - real-versus-lottery options flow analysis that filters deep OTM noise from raw put/call ratios.
+- **news-sentiment-engine** - multi-source RSS news aggregation and Claude-powered sentiment briefing workflow.
+
+## Improvements
+
+- **x-twitter-scraper refresh** - documents the Hermes Tweet plugin path alongside the existing X/Twitter scraping guidance.
+- **overlap cleanup** - resolves the duplicate `options-flow-analyzer` PR overlap by keeping the richer release-ready metadata, usage, and limitations coverage.
+- **generated artifact sync** - refreshes catalog, skill index, plugin mirrors, web assets, package metadata, and visible skill counts to `1,459+`.
+
+## Who should care
+
+- **Claude Code users** get a practical cost-routing skill for measuring and reducing model spend.
+- **Market and research users** get options-flow filtering plus structured news sentiment briefings.
+- **China-market operators** get platform-specific WeChat and Xiaohongshu strategy workflows.
+- **MCP builders** get a focused skill for designing, testing, and shipping tool servers.
+- **Maintainers** get a cleaned-up five-PR batch with synced contributors, generated assets, and release validation.
+
+## Credits
+
+- **[@memurcie](https://github.com/memurcie)** for PR #587 (`tokenwise`).
+- **[@kriptoburak](https://github.com/kriptoburak)** for PR #588 (`x-twitter-scraper` Hermes Tweet path).
+- **[@demo112](https://github.com/demo112)** for PR #589 (`mcp-tool-developer`, `wechat-official-account-strategist`, `xiaohongshu-content-strategist`).
+- **[@tellmefrankie](https://github.com/tellmefrankie)** for PRs #590 and #591 (`options-flow-analyzer`, `news-sentiment-engine`).
+
+## [11.1.0] - 2026-05-11 - "Trace Audits, YouTube Ingest, and Reasoning Harnesses"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+This release merges PRs #582, #583, #584, and #586 through the maintainer squash-merge workflow, including fork-run approval, PR body normalization, source-credit fixes, branch conflict refreshes, and generated-state syncs on `main`. It refreshes the X/Twitter scraper skill, adds local session auditing with agenttrace, adds single-video YouTube transcript ingestion, and adds an Ejentum MCP reasoning-harness workflow.
+
+## New Skills
+
+- **agenttrace-session-audit** - local AI coding-agent session audits for token and cost spikes, tool failures, retry loops, latency gaps, anomalies, health scores, and session diffs.
+- **ingest-youtube** - YouTube video transcript ingestion into markdown vaults with yt-dlp metadata, VTT cleanup, idempotent vault writes, and capture-seed stubs.
+- **ejentum-reasoning-harness** - MCP-based cognitive harness workflow for reasoning, code review, anti-deception checks, and memory-drift analysis.
+
+## Improvements
+
+- **x-twitter-scraper refresh** - updates the existing skill to the current Xquik public API surface and TweetClaw plugin path.
+- **source provenance and credits** - adds README community credits for agenttrace, ai-brain-starter, and ejentum-mcp, with license provenance for the new externally sourced skills.
+- **generated artifact sync** - refreshes catalog, skill index, plugin mirrors, web assets, package metadata, and visible skill counts to `1,453+`.
+
+## Who should care
+
+- **Maintainers and power users** get trace-level visibility into local AI coding sessions before retrying or comparing runs.
+- **Knowledge-base builders** get a source-normalized YouTube transcript ingest path for markdown vault workflows.
+- **Agent workflow designers** get MCP-backed reasoning harnesses for higher-risk reasoning, coding, honesty, and memory-drift tasks.
+- **Social and automation users** get fresher X/Twitter scraper guidance aligned with the current source API and plugin ecosystem.
+
+## Credits
+
+- **[@kriptoburak](https://github.com/kriptoburak)** for PR #582 (`x-twitter-scraper` refresh).
+- **[@luoyuctl](https://github.com/luoyuctl)** for PR #583 (`agenttrace-session-audit`).
+- **[@adelaidasofia](https://github.com/adelaidasofia)** for PR #584 (`ingest-youtube`).
+- **[@ejentum](https://github.com/ejentum)** for PR #586 (`ejentum-reasoning-harness`).
 
 ## [11.0.0] - 2026-05-08 - "Agent Execution, Game Planning, and Skill Writer References"
 
@@ -17,11 +2546,11 @@ _No unreleased changes yet._
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PRs #575, #577, #578, #579, and #581 through the maintainer squash-merge workflow, including fork-run approval, PR body refreshes, source-credit fixes, contributor sync, and generated-state refreshes on `main`. It adds on-chain transaction orchestration, richer clarification, mock-data auditing, multi-agent architecture guidance, Unity game-planning workflows, and restores the missing `skill-writer` reference files reported in issue #576.
 
@@ -61,11 +2590,11 @@ This release merges PRs #575, #577, #578, #579, and #581 through the maintainer 
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PRs #571, #573, and #574 through the maintainer squash-merge workflow, including fork-run approval, PR body normalization, source validation fixes, contributor credit sync, and generated-state refreshes on `main`. It adds production-readiness auditing, context/token budgeting guidance, and updates the BuyWhere source link to the general MCP server.
 
@@ -99,11 +2628,11 @@ This release merges PRs #571, #573, and #574 through the maintainer squash-merge
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PRs #565, #569, and #570 through the maintainer squash-merge workflow, closes issue #568 with a repo-wide heading cleanup, and closes issue #566 as out of scope for this skill-library repository.
 
@@ -137,11 +2666,11 @@ This release merges PRs #565, #569, and #570 through the maintainer squash-merge
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PRs #556, #561, #562, and #564 through the maintainer squash-merge workflow, with fork-run approval, source provenance cleanup, contributor credit sync, and generated-state refreshes on `main`. It adds Kubernetes/MCP operations, commerce-agent product catalog onboarding, two code-review skills, and a full-cycle development workflow.
 
@@ -180,11 +2709,11 @@ This release merges PRs #556, #561, #562, and #564 through the maintainer squash
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PRs #549, #553, and #554 with maintainer source-only enforcement, fork-run approval, contributor credit sync, and generated-state refreshes on `main`. It adds a new `unslop` prose cleanup skill, improves the WordPress/social SEO writing guidance, and upgrades `zipai-optimizer` with MCP-aware operating rules.
 
@@ -218,11 +2747,11 @@ This release merges PRs #549, #553, and #554 with maintainer source-only enforce
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PRs #541, #545, #547, and #548 with maintainer source-only enforcement, generated-state sync, and checklist normalization for fork PRs. It adds four new skills across structured bullet formatting, frontend API integration, Skyvern browser automation, and lambda-lang agent coordination, and it patches the NotebookLM `python-dotenv` pin for Dependabot alert #40.
 
@@ -261,11 +2790,11 @@ This release merges PRs #541, #545, #547, and #548 with maintainer source-only e
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PRs #531, #532, #534, #535, #536, #537, and #538 with maintainer source-only enforcement, then closes follow-up audit items directly on `main`. It adds governance/IT framework depth, README count automation, parser and frontmatter fixes, security risk-label corrections, and explicit OpenCode troubleshooting guidance for Windows crash and compaction-loop scenarios.
 
@@ -301,11 +2830,11 @@ This release merges PRs #531, #532, #534, #535, #536, #537, and #538 with mainta
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PRs #525, #526, #528, #529, and #530 and refreshes canonical generated state on `main`. It expands the catalog with new strategy, SEO, product-planning, IT service-management, and x402 monetization guidance while preserving maintainer quality gates (checklist normalization, contributor sync, source credit coverage, and release-state preflight).
 
@@ -346,11 +2875,11 @@ This release merges PRs #525, #526, #528, #529, and #530 and refreshes canonical
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release expands the installable library to 1,423+ skills with a new Taste Skill design collection, a mise toolchain configuration skill, and two remote MCP discovery workflows for AI-ready websites and AI/ML job-market data. It also includes maintainer hardening before merge: live MCP tool-name verification, deterministic mise examples, Taste Skill limitations coverage, regenerated catalogs, plugin mirrors, and source-only PR hygiene.
 
@@ -394,11 +2923,11 @@ This release expands the installable library to 1,423+ skills with a new Taste S
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PRs #520 and #521 to add a relationship-aware creative gift workflow and a broad LambdaTest test-automation skill index. It also includes the maintainer follow-up required after the merges: README source-credit coverage, contributor syncing, generated registry refresh, plugin mirror updates, and release-state verification before tagging `v10.2.0`.
 
@@ -433,11 +2962,11 @@ This release merges PRs #520 and #521 to add a relationship-aware creative gift 
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PRs #514, #516, and #517, then lands the direct maintainer fix for issue #518 on `main` before cutting `v10.1.0`. It expands the skill library with the new `mmx-cli` installer-ready MiniMax workflow, upgrades `zipai-optimizer` to the latest protocol shape, adds optional license provenance fields to the contributor-facing skill schema, and folds in the post-`v10.0.0` limitations-backfill work plus the required maintainer follow-up on contributor syncing and README source credits.
 
@@ -472,11 +3001,11 @@ This release merges PRs #514, #516, and #517, then lands the direct maintainer f
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release folds in the current seven-PR maintenance batch: PR #500 refreshes the web app branding with a favicon bundle and header logo, PRs #503, #508, #509, #512, and #513 add new skills for LinkedIn authority building, first-principles assumption audits, indexing diagnosis, Helium MCP research workflows, and ZipAI protocol design, and PR #501 corrects author attribution on the WordPress SEO writing skill. It also includes the required maintainer follow-up on `main`: contributor syncing, canonical generated-file refresh, plugin mirror updates, and release-state cleanup before tagging `v10.0.0`.
 
@@ -515,11 +3044,11 @@ This release folds in the current seven-PR maintenance batch: PR #500 refreshes 
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PRs #492, #494, #495, and #496 to expand the library with WordPress-focused writing and migration workflows, a VS Code extension development guide, and stronger `security-auditor` instructions for IDOR and data-flow tracing. It also includes the required maintainer follow-up on `main`: contributor syncing, README source-credit coverage for the new community-sourced VS Code skill, and the canonical post-merge state before tagging `v9.13.0`.
 
@@ -554,11 +3083,11 @@ This release merges PRs #492, #494, #495, and #496 to expand the library with Wo
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PRs #487 through #490 to expand the library with Rayden UI build workflows, puzzle activity planning, and skill-diagnostic analysis, while also repairing malformed YAML in `sales-automator`. It includes the required maintainer follow-up on `main`: PR metadata normalization for forked runs, README source-credit fixes, contributor syncing, and the canonical post-merge repository-state refresh before tagging `v9.12.0`.
 
@@ -597,11 +3126,11 @@ This release merges PRs #487 through #490 to expand the library with Rayden UI b
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PR #481 and PR #482 to expand the library in two directions: data observability workflows for Monte Carlo users and cross-tool skill maintenance guidance for teams operating across multiple agent coding environments. It also carries the required maintainer follow-up on `main`, including contributor syncing, README source-credit coverage, and canonical post-merge repository hygiene before the release cut.
 
@@ -637,11 +3166,11 @@ This release merges PR #481 and PR #482 to expand the library in two directions:
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges PR #479 to add an 11-skill StyleSeed-derived UI and UX pack sourced from `bitjaru/styleseed`. It expands the library with design-aware setup, component and page scaffolding, token management, accessibility review, UX audit flows, and feedback-state guidance, then carries the required README source-credit and maintainer follow-up state on `main`.
 
@@ -681,11 +3210,11 @@ This release merges PR #479 to add an 11-skill StyleSeed-derived UI and UX pack 
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release restores the full imported content for the affected `vibeship-spawner-skills` set after the truncation reported in issue `#473`, then folds in the current approved community PR batch. It also refreshes contributor syncing and README source credits so the repository state, plugin mirrors, and public credit surfaces stay aligned on `main`.
 
@@ -721,11 +3250,11 @@ This release restores the full imported content for the affected `vibeship-spawn
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release merges five community contributions that expand the library across MCP governance, change tracking, multi-agent orchestration, agent discovery, and scripted slide generation. It also ships the corresponding README source-credit updates and maintainer follow-up syncs required by the current PR quality bar.
 
@@ -763,11 +3292,11 @@ This release merges five community contributions that expand the library across 
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release focuses on repository reliability rather than new skill volume. It merges the Windows validation and activation hardening from PR #457, adds stronger smoke coverage for the batch activation path, and finishes a broad `## When to Use` cleanup so the repository stays within the current quality bar without carrying contributor-side generated drift.
 
@@ -799,11 +3328,11 @@ This release focuses on repository reliability rather than new skill volume. It 
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release folds the full open PR batch into `main` and centers on two major content expansions for growth teams. It adds an SEO/AEO content engine and a large psychology-driven marketing pack, while also tightening the web-app skill card hover state and pulling in the latest `yaml` patch release so the repository and installer surface stay current.
 
@@ -833,7 +3362,7 @@ This release folds the full open PR batch into `main` and centers on two major c
 
 ## [9.5.1] - 2026-04-03 - "npm Runtime Dependency Fix"
 
-> **Patch release to restore `npx antigravity-awesome-skills` installs after the published CLI started failing to resolve `yaml` at runtime**
+> **Patch release to restore `npx agentic-awesome-skills` installs after the published CLI started failing to resolve `yaml` at runtime**
 
 This release fixes a packaging regression in `9.5.0`. The installer entrypoint loads `tools/lib/skill-utils.js`, which depends on `yaml`, but the published npm package declared that module only as a development dependency. In clean `npx` environments this caused the installer to crash immediately with `Error: Cannot find module 'yaml'`, as reported in issue `#445`.
 
@@ -857,11 +3386,11 @@ This release fixes a packaging regression in `9.5.0`. The installer entrypoint l
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release expands the library with four practical additions while making installs much more manageable for context-sensitive runtimes. It merges the current open PR batch, adds `humanize-chinese` directly on `main`, introduces first-class installer filtering by `risk`, `category`, and `tags`, and updates the docs so OpenCode-style `.agents/skills` setups start from a reduced install instead of overwhelming the runtime. It also marks a project milestone: the repository crossed **30K GitHub stars** on April 3, 2026. Thank you to every contributor, source project, issue reporter, and user who keeps this library useful.
 
@@ -902,11 +3431,11 @@ Upgrade now: `git pull origin main` to fetch the latest skills.
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release focuses on repository reliability rather than adding new skills. It hardens marketplace and plugin validation, adds stronger release-facing CI checks, refreshes the root README and source-credit ledger, and cleans up several maintainer and user docs so the public repo matches the active merge and release workflow on `main`.
 
@@ -942,11 +3471,11 @@ This release focuses on repository reliability rather than adding new skills. It
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release makes the repository much easier to use for Chinese-speaking developers while tightening contributor docs and expanding community-skill discovery. It ships the full `docs_zh-CN` translation batch, folds in a markdown fence fix for contributor documentation, strengthens `github-issue-creator` discoverability metadata, and carries forward the recent `SoulPass` community listing on `main`.
 
@@ -978,11 +3507,11 @@ This release makes the repository much easier to use for Chinese-speaking develo
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release expands practical day-to-day coverage for Claude Code, Cursor, Codex CLI, Gemini CLI, and similar agent workflows. It adds a full batch of Hugging Face ecosystem skills, new shell and terminal expertise for `jq` and `tmux`, a new `viboscope` collaboration skill, and stronger Odoo guidance for safer credentials and more reliable EDI flows.
 
@@ -1031,11 +3560,11 @@ This release expands practical day-to-day coverage for Claude Code, Cursor, Code
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release adds two new skills for phase-gated debugging and multi-tenant SaaS architecture, modernizes the Three.js skill stack for r183 and newer WebGPU/TSL-era patterns, and expands community discovery with `claude-dash` for Claude Code status visibility.
 
@@ -1067,18 +3596,18 @@ This release adds two new skills for phase-gated debugging and multi-tenant SaaS
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Plugin explainer: [docs/users/plugins.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/plugins.md)
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Plugin explainer: [docs/users/plugins.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/plugins.md)
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release makes the new plugin distribution model a user-facing feature. Claude Code now has a formal root marketplace plugin plus generated bundle plugins, and Codex now ships the equivalent repo-local root plugin plus generated bundle plugins. The release also consolidates plugin documentation into a canonical user guide, aligns onboarding docs around the difference between the full repository and the plugin-safe subset, and packages the latest merge batch on `main`.
 
 ## New
 
 - **Claude Code plugin distribution** - formalized the root `.claude-plugin` marketplace entry plus generated bundle plugins as a first-class install path.
-- **Codex plugin distribution** - formalized the root Codex plugin metadata in `.agents/plugins/marketplace.json` and `plugins/antigravity-awesome-skills/.codex-plugin/plugin.json`, alongside generated bundle plugins.
+- **Codex plugin distribution** - formalized the root Codex plugin metadata in `.agents/plugins/marketplace.json` and `plugins/agentic-awesome-skills/.codex-plugin/plugin.json`, alongside generated bundle plugins.
 - **Canonical plugin documentation** - added `docs/users/plugins.md` to explain plugin-safe filtering, root plugin vs bundle plugins, and when to prefer plugins over the full library install.
 - **akf-trust-metadata** - merged PR #406, adding the new `akf-trust-metadata` skill to the repository.
 
@@ -1105,11 +3634,11 @@ This release makes the new plugin distribution model a user-facing feature. Clau
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release improves discovery and day-to-day usefulness for Claude Code, Cursor, Codex CLI, Windsurf, Cline, and similar agent workflows. It adds two new installable skills for X/Twitter extraction and MCP server evaluation, brings in two more community skill collections for study automation and HubSpot CRM operations, and refreshes the registry/docs surface to `1,328+` skills.
 
@@ -1145,11 +3674,11 @@ Upgrade now: `git pull origin main` to fetch the latest skills.
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release combines a curated import from `Dimillian/Skills` with two merged community pull requests on `main`. It expands Apple-platform workflows, GitHub/refactor guidance, and SwiftUI performance coverage, adds a new Snowflake engineering skill, updates WordPress skills for 7.0, and refreshes the registry/docs surface to `1,326+` indexed skills.
 
@@ -1199,11 +3728,11 @@ Upgrade now: `git pull origin main` to fetch the latest skills.
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release packages the post-`v8.7.1` merge batch: two new community skills and a maintainer workflow upgrade that expands pull request review into review-and-optimize flows. It also refreshes generated catalog metadata, contributor sync, and tracked web assets so `main` stays aligned at `1,311+` indexed skills.
 
@@ -1237,11 +3766,11 @@ Upgrade now: `git pull origin main` to fetch the latest skills.
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This patch release keeps the `8.7.0` skill/library content intact and fixes the release pipeline so npm publication works end-to-end again. The root cause was that the publish workflow only installed root dependencies before building `apps/web-app`, leaving the web app without its own `node_modules` in CI.
 
@@ -1263,11 +3792,11 @@ This patch release keeps the `8.7.0` skill/library content intact and fixes the 
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release packages the maintainer sweep after `v8.6.0`: restored missing C++ reference material, added three new community skills plus the maintainer-integrated `jobgpt` skill, and fixed the Jetski lazy-loader example so release validation no longer fails on a raw TypeScript import.
 
@@ -1305,11 +3834,11 @@ Upgrade now: `git pull origin main` to fetch the latest skills.
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release packages the maintainer sweep after `v8.5.0`: the new `gdb-cli` community skill, removal of the stale in-repo `goldrush-api` copy, and a cross-platform recovery path for Antigravity users who hit truncation or context overload with too many active skills.
 
@@ -1344,11 +3873,11 @@ Upgrade now: `git pull origin main` to fetch the latest skills.
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release captures everything that landed after `v8.4.0`: a safety fix for the installer migration path, two new in-repo bdistill skills, broader maintainer automation for metadata/release hygiene, refreshed generated artifacts for the `1,306+` skill catalog, and a new README community section for five OpenClaw skills.
 
@@ -1386,11 +3915,11 @@ Upgrade now: `git pull origin main` to fetch the latest skills.
 
 Start here:
 
-- Install: `npx antigravity-awesome-skills`
-- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/antigravity-awesome-skills#choose-your-tool)
-- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/antigravity-awesome-skills#best-skills-by-tool)
-- Bundles: [docs/users/bundles.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/bundles.md)
-- Workflows: [docs/users/workflows.md](https://github.com/sickn33/antigravity-awesome-skills/blob/main/docs/users/workflows.md)
+- Install: `npx agentic-awesome-skills`
+- Choose your tool: [README -> Choose Your Tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- Best skills by tool: [README -> Best Skills By Tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- Bundles: [docs/users/bundles.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- Workflows: [docs/users/workflows.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
 
 This release packages everything that landed after `v8.3.0`: new discovery and SEO surfaces for the catalog, GitHub Pages/web-app reliability fixes, metadata and index curation across the 1,273-skill registry, maintainer release/support polish, and the final merge sweep for PRs #363, #362, and #360.
 
@@ -1549,9 +4078,9 @@ This release closes the open PR maintenance batch in one pass. It adds new skill
 
 ## [7.9.2] - 2026-03-15 - "npm CLI Packaging Fix"
 
-> **Patch release to fix the published npm CLI bundle so `npx antigravity-awesome-skills` resolves its runtime helper modules correctly**
+> **Patch release to fix the published npm CLI bundle so `npx agentic-awesome-skills` resolves its runtime helper modules correctly**
 
-This release fixes a packaging regression in the published npm artifact. Version `7.9.1` shipped `tools/bin/install.js` without the required `tools/lib` runtime helpers, causing `npx antigravity-awesome-skills` to fail with `MODULE_NOT_FOUND` for `../lib/symlink-safety`.
+This release fixes a packaging regression in the published npm artifact. Version `7.9.1` shipped `tools/bin/install.js` without the required `tools/lib` runtime helpers, causing `npx agentic-awesome-skills` to fail with `MODULE_NOT_FOUND` for `../lib/symlink-safety`.
 
 ## New Skills
 
@@ -2402,7 +4931,7 @@ Ingest files/URLs/live streams, build visual/spoken indexes, search with timesta
 
 ### 📦 Improvements
 
-- **Multi-Tool Install Support**: The installer now supports installing skills for multiple tools simultaneously (e.g., `npx antigravity-awesome-skills --claude --codex`). Fixes #182.
+- **Multi-Tool Install Support**: The installer now supports installing skills for multiple tools simultaneously (e.g., `npx agentic-awesome-skills --claude --codex`). Fixes #182.
 - **Web-App Sync Optimization**: Hybrid sync strategy using git fetch for faster updates (5+ min → < 2 sec when no changes). Includes sort by "Most Stars" feature.
 - **Registry Update**: Now tracking 970 skills (+2 new).
 
@@ -3435,7 +5964,7 @@ Integrates the full official Microsoft skills collection (129 skills) and Google
 
 ### Changed
 
-- **Documentation**: Clarified in README.md and GETTING_STARTED.md that installation means cloning the full repo once; Starter Packs are curated lists to discover skills by role, not a different installation method (fixes [#44](https://github.com/sickn33/antigravity-awesome-skills/issues/44)).
+- **Documentation**: Clarified in README.md and GETTING_STARTED.md that installation means cloning the full repo once; Starter Packs are curated lists to discover skills by role, not a different installation method (fixes [#44](https://github.com/sickn33/agentic-awesome-skills/issues/44)).
 
 ### Registry
 

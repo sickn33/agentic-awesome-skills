@@ -1,10 +1,15 @@
 {
-  "name": "antigravity-awesome-skills",
-  "version": "11.0.0",
-  "description": "1,450+ agentic skills for Claude Code, Gemini CLI, Cursor, Antigravity & more. Installer CLI.",
+  "name": "agentic-awesome-skills",
+  "version": "15.11.0",
+  "aasCore": {
+    "includedFromMajor": 15,
+    "status": "agent-first-preview"
+  },
+  "description": "AAS Core: complete local skill discovery, agent-owned selection, stack validation, and planning, backed by 2,007+ agentic skills.",
   "license": "MIT",
   "scripts": {
     "validate": "node tools/scripts/run-python.js tools/scripts/validate_skills.py",
+    "validate:glossary": "bash scripts/validate-glossary.sh",
     "validate:strict": "node tools/scripts/run-python.js tools/scripts/validate_skills.py --strict",
     "audit:skills": "node tools/scripts/run-python.js tools/scripts/audit_skills.py",
     "audit:skills:strict": "node tools/scripts/run-python.js tools/scripts/audit_skills.py --strict",
@@ -20,30 +25,44 @@
     "bundles:sync": "node tools/scripts/run-python.js tools/scripts/sync_editorial_bundles.py",
     "bundles:check": "node tools/scripts/run-python.js tools/scripts/sync_editorial_bundles.py --check",
     "sync:metadata": "node tools/scripts/run-python.js tools/scripts/sync_repo_metadata.py",
-    "sync:risk-labels": "node tools/scripts/run-python.js tools/scripts/sync_risk_labels.py",
     "sync:github-about": "node tools/scripts/run-python.js tools/scripts/sync_repo_metadata.py --apply-github-about",
     "sync:contributors": "node tools/scripts/run-python.js tools/scripts/sync_contributors.py",
     "sync:web-assets": "npm run app:setup && cd apps/web-app && npm run generate:sitemap",
-    "chain": "npm run validate && npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata",
+    "chain": "npm run validate && npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-catalog",
     "sync:all": "npm run chain",
-    "sync:release-state": "npm run chain && npm run catalog && npm run sync:web-assets && npm run audit:consistency && npm run check:warning-budget",
-    "sync:repo-state": "npm run chain && npm run catalog && npm run sync:web-assets && npm run sync:contributors && npm run audit:consistency && npm run check:warning-budget",
+    "sync:release-state": "npm run chain && npm run sync:web-assets && npm run audit:consistency && npm run check:warning-budget",
+    "sync:repo-state": "npm run chain && npm run sync:web-assets && npm run sync:contributors && npm run audit:consistency && npm run check:warning-budget",
     "sync:repo-state:full": "npm run sync:repo-state && npm run sync:github-about && npm run audit:consistency:github",
     "catalog": "node tools/scripts/build-catalog.js",
-    "build": "npm run chain && npm run catalog",
+    "build": "npm run chain",
     "check:stale-claims": "node tools/scripts/run-python.js tools/scripts/check_stale_claims.py",
+    "check:live-seo": "node tools/scripts/check-live-seo-geo.js",
+    "pages:redirect-bridge": "node tools/scripts/generate-pages-redirect-bridge.js",
+    "pages:redirect-verify": "node tools/scripts/verify-pages-redirect-bridge.js",
+    "traffic:normalize": "node tools/scripts/normalize_traffic_snapshots.js",
+    "traffic:migration-readiness": "node tools/scripts/audit_search_migration_readiness.js",
     "check:warning-budget": "node tools/scripts/run-python.js tools/scripts/check_validation_warning_budget.py",
     "check:readme-credits": "node tools/scripts/run-python.js tools/scripts/check_readme_credits.py",
     "audit:consistency": "node tools/scripts/run-python.js tools/scripts/audit_consistency.py",
     "audit:consistency:github": "node tools/scripts/run-python.js tools/scripts/audit_consistency.py --check-github-about",
     "audit:maintainer": "node tools/scripts/run-python.js tools/scripts/maintainer_audit.py",
     "security:docs": "node tools/scripts/tests/docs_security_content.test.js",
+    "security:scan": "node tools/scripts/run-python.js tools/scripts/security_scanner.py",
+    "security:scan:strict": "node tools/scripts/run-python.js tools/scripts/security_scanner.py --strict",
+    "lint:workflows": "node tools/scripts/run_actionlint.js",
+    "drift:check": "node tools/scripts/run-python.js tools/scripts/detect_drift.py",
+    "drift:update": "node tools/scripts/run-python.js tools/scripts/detect_drift.py --update-baseline",
     "pr:preflight": "node tools/scripts/pr_preflight.cjs",
+    "pr:evidence": "node tools/scripts/run-python.js tools/scripts/changed_skill_evidence.py",
+    "pr:decision": "node tools/scripts/pr_decision_manifest.cjs",
     "merge:batch": "node tools/scripts/merge_batch.cjs",
     "release:preflight": "node tools/scripts/release_workflow.js preflight",
     "release:prepare": "node tools/scripts/release_workflow.js prepare",
     "release:publish": "node tools/scripts/release_workflow.js publish",
     "test": "node tools/scripts/tests/run-test-suite.js",
+    "test:aas-v1": "node --test tools/scripts/tests/aas_v1_*.test.js",
+    "build:aas-v1-catalog": "node tools/scripts/build-aas-v1-offline-catalog.js",
+    "check:aas-v1-catalog": "node tools/scripts/build-aas-v1-offline-catalog.js --check",
     "test:local": "node tools/scripts/tests/run-test-suite.js --local",
     "test:network": "node tools/scripts/tests/run-test-suite.js --network",
     "sync:microsoft": "node tools/scripts/run-python.js tools/scripts/sync_microsoft_skills.py",
@@ -59,20 +78,44 @@
     "app:preview": "cd apps/web-app && npm run preview"
   },
   "dependencies": {
-    "yaml": "^2.8.2"
+    "ajv": "^8.20.0",
+    "fast-uri": "^3.1.5",
+    "sanitize-filename": "^1.6.4",
+    "yaml": "^2.9.0"
   },
+  "bundledDependencies": [
+    "ajv",
+    "fast-uri",
+    "sanitize-filename",
+    "yaml"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sickn33/antigravity-awesome-skills.git"
+    "url": "git+https://github.com/sickn33/agentic-awesome-skills.git"
+  },
+  "engines": {
+    "node": ">=22"
   },
   "bin": {
-    "antigravity-awesome-skills": "tools/bin/install.js"
+    "agentic-awesome-skills": "tools/bin/install.js",
+    "aas": "tools/bin/aas.js",
+    "aas-mcp": "tools/bin/aas-mcp.js"
   },
   "files": [
+    "data/catalog.json",
+    "data/plugin-compatibility.json",
+    "data/aas-v1",
+    "schemas/aas-v1",
+    "skills",
+    "skills_index.json",
     "tools/bin",
     "tools/lib"
   ],
   "keywords": [
+    "aas-core",
+    "mcp",
+    "agent-skill-selection",
+    "agent-stack",
     "claude-code",
     "cursor",
     "gemini-cli",

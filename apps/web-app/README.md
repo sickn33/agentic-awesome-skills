@@ -1,18 +1,18 @@
 # Antigravity Web App
 
-This app is the static catalog and skill browser for `antigravity-awesome-skills`. It ships the generated registry, renders searchable skill detail pages, and publishes the public site to GitHub Pages.
+This app is the static catalog and skill browser for `agentic-awesome-skills`. It ships the generated registry, renders searchable skill detail pages, and publishes the public site to GitHub Pages.
 
 ## What This App Does
 
 - Loads the generated skill catalog and related metadata from tracked assets in `public/`.
-- Renders home, category, bundle, and skill detail routes for the published library.
+- Renders home, specialized plugin, category, bundle, and skill detail routes for the published library.
 - Adds SEO metadata, sitemap-backed URLs, and static asset resolution for GitHub Pages.
 - Supports a local-only "refresh skills" developer flow through the Vite dev server plugin.
 - Treats save/star interactions as browser-local UX, even when optional read-only Supabase counts are configured.
 
 ## Architecture
 
-- `src/pages/` contains top-level route screens such as `Home.tsx` and `SkillDetail.tsx`.
+- `src/pages/` contains top-level route screens such as `Home.tsx`, `Plugins.tsx`, and `SkillDetail.tsx`.
 - `src/context/` holds catalog loading and shared app state.
 - `src/hooks/` contains feature-specific client hooks such as star state and filters.
 - `src/utils/` contains URL, SEO, and content helpers.
@@ -55,8 +55,12 @@ The app reads configuration from `.env` files in `apps/web-app/`.
 
 - `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`: optional read access for read-only community save counts.
 - `VITE_ENABLE_SKILLS_SYNC=true`: explicitly exposes the local maintainer-only sync button during development.
-- `VITE_SYNC_SKILLS_TOKEN`: local development token accepted by the Vite refresh plugin.
-- `VITE_SITE_URL`: optional override for canonical URL generation when testing non-default hosts.
+- `ENABLE_LOCAL_SKILLS_SYNC=true`: explicitly enables the server endpoint. Both flags are required; the endpoint refuses to run otherwise.
+- `SKILLS_REFRESH_TOKEN`: optional server-side token for manual API callers. Do not expose it as a `VITE_` variable.
+
+Local sync only runs from a clean `main`/`master` checkout with Git available. Before its fast-forward merge it creates a rollback ref, returned by the endpoint; restore it manually with `git reset --hard <rollback-ref>` only after reviewing the diff.
+- `SEO_SITE_URL`: optional override for sitemap and prerendered canonical URL generation when testing non-default hosts.
+- `WEBSITE_BASE_URL`: optional sitemap-only fallback used when `SEO_SITE_URL` is not set.
 
 Saving a skill is intentionally browser-local for now. The UI should not imply a shared write path until the project has a real backend contract for persistence, abuse controls, and deployment.
 

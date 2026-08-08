@@ -1,6 +1,6 @@
 # 🛡️ Chính sách Bảo mật & Rào chắn An toàn (Guardrails)
 
-Antigravity Awesome Skills là một bộ công cụ mạnh mẽ. Và quyền lực lớn luôn đi kèm với trách nhiệm lớn. Tài liệu này xác định **Quy tắc Ứng xử** cho tất cả các khả năng bảo mật và tấn công trong repository này.
+Agentic Awesome Skills là một bộ công cụ mạnh mẽ. Và quyền lực lớn luôn đi kèm với trách nhiệm lớn. Tài liệu này xác định **Quy tắc Ứng xử** cho tất cả các khả năng bảo mật và tấn công trong repository này.
 
 ## 🔴 Chính sách đối với Skill Tấn công (Vạch kẻ đỏ)
 

@@ -1,29 +1,32 @@
 # AI Agent Skills
 
-If you are researching **AI agent skills** on GitHub, the biggest decision is usually not "which single skill is best?" but "do I want a broad installable library or a smaller curated collection?"
+If you are researching **AI agent skills** on GitHub, the useful first decision is whether you want agent-owned project selection with reproducible state or manual catalog browsing.
 
-Antigravity Awesome Skills is built for the first path: broad coverage, multiple supported tools, installation help, onboarding docs, bundles, workflows, and a catalog that supports both beginner and advanced users.
+Agentic Awesome Skills is built around **AAS Core**: Codex or Claude inspects the project, searches and reads the complete local catalog, chooses exact skill IDs, and uses `compose_stack` to pin them in `aas-stack.json`. The CLI validates that agent-owned state and produces an immutable preview plan before any target change.
 
-## What to look for in an AI agent skills library
+The catalog, plugins, bundles, workflows, and direct installer remain supporting content and distribution surfaces. AAS does not scan the repository, call a remote model, or write project files through MCP.
 
-- **Installability**: can you put the skills where your tool expects them without manual copying?
-- **Supported tools**: does the repo work with Claude Code, Cursor, Codex CLI, Gemini CLI, and related environments?
-- **Breadth vs curation**: do you want many options or a smaller shortlist of high-signal entries?
-- **Onboarding quality**: are there docs, bundles, workflows, and examples, or only raw files?
-- **Trust model**: does the repo identify official sources, security posture, and community review expectations?
+## What to look for in an AI agent skill system
 
-## When Antigravity Awesome Skills is a good fit
+- **Explicit input boundary**: is project analysis performed by the coding agent and passed as a reviewable profile?
+- **Agent-owned selection**: can the coding agent search and read every skill before choosing exact IDs?
+- **Reproducibility**: can the chosen IDs be pinned to a catalog identity and replayed without a metadata eligibility gate?
+- **Durable desired state**: can the approved selection be recorded independently of the agent conversation?
+- **Preview before change**: can the system validate the manifest and produce an exact plan without changing the target?
+- **Source and compatibility evidence**: are provenance, risk, host support, and distribution boundaries explicit?
 
-- You want one library that spans planning, coding, debugging, testing, security, infra, product, and marketing.
-- You care about installation paths and practical onboarding, not only catalog size.
-- You want bundles and workflows to reduce choice overload.
-- You need compatibility across more than one AI coding assistant.
+## When Agentic Awesome Skills is a good fit
+
+- You use Codex or Claude and want the agent to choose a focused stack for a real project.
+- You want complete local search and inspection without repository scanning or remote-model calls by AAS.
+- You need a reviewable `aas-stack.json` and CLI validation and planning before target changes.
+- You also value a broad catalog and multiple distribution options around the Core workflow.
 
 ## When a smaller curated repo may be better
 
-- You only want a narrow shortlist of highly curated or vendor-focused skills.
-- You prefer reviewing fewer files even if coverage is lower.
-- You are evaluating alternatives for a single tool and want a quick comparison first.
+- You only want a fixed, vendor-maintained shortlist and do not need project-aware composition.
+- You prefer selecting and invoking individual skills manually.
+- Your host does not yet have an AAS Core adapter and direct distribution is sufficient.
 
 ## Start with a tool-specific guide
 
@@ -32,14 +35,14 @@ Antigravity Awesome Skills is built for the first path: broad coverage, multiple
 - [`codex-cli-skills.md`](codex-cli-skills.md)
 - [`gemini-cli-skills.md`](gemini-cli-skills.md)
 
-## Compare broad vs curated libraries
+## Compare catalogs and distribution models
 
-- [`antigravity-awesome-skills-vs-awesome-claude-skills.md`](antigravity-awesome-skills-vs-awesome-claude-skills.md)
+- [`agentic-awesome-skills-vs-awesome-claude-skills.md`](agentic-awesome-skills-vs-awesome-claude-skills.md)
 - [`best-claude-code-skills-github.md`](best-claude-code-skills-github.md)
 - [`best-cursor-skills-github.md`](best-cursor-skills-github.md)
 
 ## Quick recommendation
 
-- Choose **Antigravity Awesome Skills** if you want a large, installable, multi-tool library with onboarding help.
-- Choose a smaller curated repo if you want fewer choices and more editorial filtering.
-- If you are unsure, install this repo first, start with [`bundles.md`](bundles.md), and then compare alternatives once you know your preferred workflow.
+- Choose **AAS Core** if you want complete local catalog access, agent-owned selection, reproducible stack composition, and a preview plan.
+- Choose direct distribution if you already know the exact skills you want or your host does not support the Core path.
+- Choose a smaller curated repository if a fixed editorial shortlist matters more than complete catalog access and durable desired state.

@@ -1,4 +1,4 @@
-# Antigravity Awesome Skills 入门指南 (V10.7.0)
+# Agentic Awesome Skills 入门指南 (V14.0.0)
 
 **新手入门？本指南将在 5 分钟内帮助您增强 AI 代理的能力。**
 
@@ -27,18 +27,18 @@ AI 代理（如 **Claude Code**、**Gemini**、**Cursor**）非常智能，但�
 **选项 A — npx（最简单）：**
 
 ```bash
-npx antigravity-awesome-skills
+npx agentic-awesome-skills
 ```
 
-默认情况下，这会克隆到 `~/.gemini/antigravity/skills`。使用 `--cursor`、`--claude`、`--gemini`、`--codex` 或 `--kiro` 为特定工具安装，或使用 `--path <dir>` 指定自定义位置。运行 `npx antigravity-awesome-skills --help` 查看详细信息。
+默认情况下，这会克隆到 `~/.agents/skills`。使用 `--cursor`、`--claude`、`--gemini`、`--codex`、`--kiro`、`--antigravity` 或 `--agy` 为特定工具安装，或使用 `--path <dir>` 指定自定义位置。你也可以用 `--risk`、`--category` 和 `--tags` 缩小安装范围。运行 `npx agentic-awesome-skills --help` 查看详细信息。
 
-如果看到 404 错误，请使用：`npx github:sickn33/antigravity-awesome-skills`
+如果看到 404 错误，请使用：`npx github:sickn33/agentic-awesome-skills`
 
 **选项 B — git clone：**
 
 ```bash
 # 通用（适用于大多数代理）
-git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
 ```
 
 ### 2. 选择您的角色
@@ -97,26 +97,36 @@ git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skill
 
 | 工具            | 状态          | 路径                                                                  |
 | :-------------- | :-------------- | :-------------------------------------------------------------------- |
-| **Claude Code** | ✅ 完全支持 | `.claude/skills/` 或通过 `/plugin marketplace add sickn33/antigravity-awesome-skills` 安装 |
+| **Claude Code** | ✅ 完全支持 | `.claude/skills/` 或通过 `/plugin marketplace add sickn33/agentic-awesome-skills` 安装 |
 | **Gemini CLI**  | ✅ 完全支持 | `.gemini/skills/`                                                     |
 | **Codex CLI**   | ✅ 完全支持 | `.codex/skills/`                                                      |
 | **Kiro CLI**    | ✅ 完全支持 | 全局：`~/.kiro/skills/` · 工作区：`.kiro/skills/`                |
 | **Kiro IDE**    | ✅ 完全支持 | 全局：`~/.kiro/skills/` · 工作区：`.kiro/skills/`                |
-| **Antigravity** | ✅ 原生支持       | 全局：`~/.gemini/antigravity/skills/` · 工作区：`.agent/skills/` |
+| **Antigravity** | ✅ 原生支持       | 全局：`~/.agents/skills/` · 工作区：`.agent/skills/` |
+| **Antigravity CLI (`agy`)** | ✅ 完全支持 | `~/.gemini/antigravity-cli/skills/` |
 | **Cursor**      | ✅ 原生支持       | `.cursor/skills/`                                                     |
-| **OpenCode**    | ✅ 完全支持 | `.agents/skills/`                                                     |
+| **OpenCode**    | ✅ 完全支持 | `.agents/skills/`（建议用 `--risk`、`--category` 或 `--tags` 做缩小安装） |
 | **AdaL CLI**    | ✅ 完全支持 | `.adal/skills/`                                                       |
-| **Copilot**     | ⚠️ 仅文本    | 手动复制粘贴                                                     |
+| **Copilot**     | 🧪 `gh skill` 预览支持 | 使用 GitHub CLI 的 `gh skill`，并指定精确技能路径 |
+
+> **GitHub Copilot（预览）**：`gh skill` 目前处于 preview 阶段。由于本仓库规模较大且同时包含 canonical 与 plugin 镜像，请使用精确路径，避免歧义；除非你确实要安装所有发现的副本，否则不要使用 `--all`：
+>
+> ```bash
+> gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md
+> gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent github-copilot --scope user --pin v14.2.0
+> ```
 
 ---
 
 ## 信任与安全
 
-我们对技能进行分类，以便您了解正在运行的内容：
+我们对技能进行分类，以便您了解正在运行的内容。这些值直接映射到每个 `SKILL.md` 前置元数据中的 `risk:` 字段：
 
-- 🟣 **官方**：由 Anthropic/Google/供应商维护（高信任度）。
-- 🔵 **安全**：非破坏性的社区技能（只读/规划）。
-- 🔴 **风险**：修改系统或执行安全测试的技能（仅授权使用）。
+- ⚪ **`unknown`**：遗留或未分类内容，仍需要维护者分流。
+- 🟢 **`none`**：纯文本/推理指导。
+- 🔵 **`safe`**：只读或低风险操作指导。
+- 🟠 **`critical`**：会改变状态或影响部署的指导。
+- 🔴 **`offensive`**：渗透测试/红队指导，必须包含明确的 Authorized Use Only 警告。
 
 添加新技能时，高风险指导会在发布前通过仓库范围的 `security:docs` 扫描进行额外审查。
 
@@ -129,8 +139,8 @@ _查看 [技能目录](../../CATALOG.md) 获取完整列表。_
 如果您更喜欢使用 Claude Code 的插件市场流程而不是复制到 `.claude/skills/`，请使用：
 
 ```text
-/plugin marketplace add sickn33/antigravity-awesome-skills
-/plugin install antigravity-awesome-skills
+/plugin marketplace add sickn33/agentic-awesome-skills
+/plugin install agentic-awesome-skills
 ```
 
 **问：我需要安装每个技能吗？**
@@ -140,7 +150,7 @@ _查看 [技能目录](../../CATALOG.md) 获取完整列表。_
 答：可以！使用 **@skill-creator** 技能来构建您自己的技能。
 
 **问：如果 Antigravity 在 Windows 上遇到截断崩溃循环卡住怎么办？**
-答：按照 [windows-truncation-recovery.md](windows-truncation-recovery.md) 中的恢复步骤操作。它说明了哪些 Antigravity 存储文件夹需要备份和清除，并包含可选的批处理助手，改编自 [issue #274](https://github.com/sickn33/antigravity-awesome-skills/issues/274)。
+答：按照 [windows-truncation-recovery.md](windows-truncation-recovery.md) 中的恢复步骤操作。它说明了哪些 Antigravity 存储文件夹需要备份和清除，并包含可选的批处理助手，改编自 [issue #274](https://github.com/sickn33/agentic-awesome-skills/issues/274)。
 
 **问：如果 Antigravity 在 Linux 或 macOS 上因太多技能激活而过载怎么办？**
 答：使用 [agent-overload-recovery.md](agent-overload-recovery.md) 中的激活流程。它展示如何从克隆的仓库运行 `scripts/activate-skills.sh`，以便您可以将完整的库归档，并仅激活实时 Antigravity 目录中所需的捆绑包或技能。

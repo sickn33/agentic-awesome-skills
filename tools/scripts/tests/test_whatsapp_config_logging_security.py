@@ -47,11 +47,11 @@ class WhatsAppConfigLoggingSecurityTests(unittest.TestCase):
     MODULE_PATHS = [
         ("skills/whatsapp-cloud-api/scripts/validate_config.py", "whatsapp_validate_root"),
         (
-            "plugins/antigravity-awesome-skills/skills/whatsapp-cloud-api/scripts/validate_config.py",
+            "plugins/agentic-awesome-skills/skills/whatsapp-cloud-api/scripts/validate_config.py",
             "whatsapp_validate_codex_plugin",
         ),
         (
-            "plugins/antigravity-awesome-skills-claude/skills/whatsapp-cloud-api/scripts/validate_config.py",
+            "plugins/agentic-awesome-skills-claude/skills/whatsapp-cloud-api/scripts/validate_config.py",
             "whatsapp_validate_claude_plugin",
         ),
     ]

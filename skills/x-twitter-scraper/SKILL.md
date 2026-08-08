@@ -1,26 +1,42 @@
 ---
 name: x-twitter-scraper
-description: "X (Twitter) data platform skill — tweet search, user lookup, follower extraction, engagement metrics, giveaway draws, monitoring, webhooks, 19 extraction tools, MCP server."
+description: "Use Xquik for X data workflows: tweet search, user lookup, follower export, media downloads, monitors, webhooks, REST API, MCP, SDK setup, and approval-gated account actions."
 category: data
-risk: safe
+risk: critical
 source: community
-tags: "[twitter, x-api, scraping, mcp, social-media, data-extraction, giveaway, monitoring, webhooks]"
+source_repo: Xquik-dev/x-twitter-scraper
+source_type: official
+author: Xquik
+tags: [twitter, x, social-media, x-api, tweet-search, follower-export, automation, mcp, sdk, webhooks]
 date_added: "2026-02-28"
+license: MIT
+license_source: https://github.com/Xquik-dev/x-twitter-scraper/blob/master/LICENSE
+plugin:
+  targets:
+    codex: blocked
+    claude: blocked
 ---
 
-# X (Twitter) Scraper — Xquik
+# X (Twitter) Scraper - Xquik
 
 ## Overview
 
-Gives your AI agent full access to X (Twitter) data through the Xquik platform. Covers tweet search, user profiles, follower extraction, engagement metrics, giveaway draws, account monitoring, webhooks, and 19 bulk extraction tools — all via REST API or MCP server.
+Gives AI agents X (Twitter) data and automation workflows through the Xquik platform. Covers tweet search, profile tweets, user lookup, follower export, media download, replies, DMs, giveaway draws, account monitoring, webhooks, bulk extraction tools, remote MCP, OpenAPI, and official SDKs.
+
+This repository entry is documentation-only: it does not include an executable scraper, binary, package, or vendored runtime code. Review the Xquik service, public docs, and SDK package before use.
+
+Because this workflow can automate authenticated X/Twitter account actions, treat it as critical-risk guidance. Only use it with accounts and targets you are authorized to operate, and require explicit user approval before posting, replying, liking, reposting, following, unfollowing, sending DMs, creating monitors, registering webhooks, or starting bulk extraction.
 
 ## When to Use This Skill
 
 - User needs to search X/Twitter for tweets by keyword, hashtag, or user
+- User asks for advanced Twitter search, profile tweets, or user timeline data
 - User wants to look up a user profile (bio, follower counts, etc.)
 - User needs engagement metrics for a specific tweet (likes, retweets, views)
 - User wants to check if one account follows another
 - User needs to extract followers, replies, retweets, quotes, or community members in bulk
+- User wants to download tweet media, export results, or connect an official SDK
+- User wants to send tweets, post replies, like, repost, follow, unfollow, or send DMs
 - User wants to run a giveaway draw from tweet replies
 - User needs real-time monitoring of an X account (new tweets, follower changes)
 - User wants webhook delivery of monitored events
@@ -28,21 +44,33 @@ Gives your AI agent full access to X (Twitter) data through the Xquik platform. 
 
 ## Setup
 
-### Install the Skill
+### Inspect Before Installing
+
+Do not install a moving branch directly into an active agent directory. First
+ask the user to approve network access to the named repository. Clone the
+reviewed revision to a temporary directory and inspect every bundled file:
 
 ```bash
-npx skills add Xquik-dev/x-twitter-scraper
+review_dir="$(mktemp -d)"
+git clone --filter=blob:none https://github.com/Xquik-dev/x-twitter-scraper.git "$review_dir/x-twitter-scraper"
+git -C "$review_dir/x-twitter-scraper" checkout --detach bfa27fab00dbb8b5367e15153c5723ee608ba00b
+git -C "$review_dir/x-twitter-scraper" ls-files
 ```
 
-Or clone manually into your agent's skills directory:
+Read the skill and all bundled files; check package scripts, hooks, symlinks,
+network calls, credential handling, and account-write actions. Show the findings
+and exact commit to the user. Copy only the reviewed files into the chosen host
+directory after explicit approval. Re-review any newer revision before updating.
+
+### Use the TypeScript SDK
+
+For JavaScript or TypeScript integrations, install the validated SDK package:
 
 ```bash
-# Claude Code
-git clone https://github.com/Xquik-dev/x-twitter-scraper.git .claude/skills/x-twitter-scraper
-
-# Cursor / Codex / Gemini CLI / Copilot
-git clone https://github.com/Xquik-dev/x-twitter-scraper.git .agents/skills/x-twitter-scraper
+npm install x-developer@2.4.16
 ```
+
+Use REST, the SDK, or MCP depending on the host environment. Verify unfamiliar endpoint parameters against the current docs or OpenAPI spec before constructing calls.
 
 ### Get an API Key
 
@@ -51,22 +79,26 @@ git clone https://github.com/Xquik-dev/x-twitter-scraper.git .agents/skills/x-tw
 3. Set it as an environment variable or pass it directly
 
 ```bash
-export XQUIK_API_KEY="xq_YOUR_KEY_HERE"
+read -rsp "X API key: " XQUIK_API_KEY
+echo
+export XQUIK_API_KEY
 ```
 
 ## Capabilities
 
 | Capability | Description |
 |---|---|
-| Tweet Search | Find tweets by keyword, hashtag, from:user, "exact phrase" |
+| Tweet Search | Find tweets by keyword, hashtag, from:user, "exact phrase", and advanced operators |
 | User Lookup | Profile info, bio, follower/following counts |
-| Tweet Lookup | Full metrics — likes, retweets, replies, quotes, views, bookmarks |
+| Tweet Lookup | Full metrics: likes, retweets, replies, quotes, views, bookmarks |
 | Follow Check | Check if A follows B (both directions) |
 | Trending Topics | Top trends by region (free, no quota) |
 | Account Monitoring | Track new tweets, replies, retweets, quotes, follower changes |
 | Webhooks | HMAC-signed real-time event delivery to your endpoint |
 | Giveaway Draws | Random winner selection from tweet replies with filters |
-| 19 Extraction Tools | Followers, following, verified followers, mentions, posts, replies, reposts, quotes, threads, articles, communities, lists, Spaces, people search |
+| Bulk Extraction Tools | Followers, following, verified followers, mentions, posts, replies, reposts, quotes, threads, articles, communities, lists, Spaces, people search, media, likes, and more |
+| Write Actions | Send tweets, post replies, like, repost, follow, unfollow, and send DMs after explicit approval |
+| SDKs | Official TypeScript, Python, Ruby, Go, Kotlin, Java, PHP, C#, CLI, and Terraform clients |
 | MCP Server | StreamableHTTP endpoint for AI-native integrations |
 
 ## Examples
@@ -101,6 +133,11 @@ export XQUIK_API_KEY="xq_YOUR_KEY_HERE"
 "Extract all followers of @anthropic"
 ```
 
+**Post a reply:**
+```
+"Draft and post a reply to this tweet after I approve the final text"
+```
+
 ## API Reference
 
 | Endpoint | Method | Purpose |
@@ -116,6 +153,8 @@ export XQUIK_API_KEY="xq_YOUR_KEY_HERE"
 | `/draws` | POST | Run giveaway draw |
 | `/extractions` | POST | Start bulk extraction |
 | `/extractions/estimate` | POST | Estimate extraction cost |
+| `/drafts` | POST | Create tweet drafts |
+| `/styles` | POST | Analyze or apply tweet style |
 | `/account` | GET | Account & usage info |
 
 **Base URL:** `https://xquik.com/api/v1`

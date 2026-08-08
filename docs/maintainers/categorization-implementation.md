@@ -5,14 +5,16 @@
 ### 1. **Intelligent Auto-Categorization Script**
 Created [`tools/scripts/auto_categorize_skills.py`](../../tools/scripts/auto_categorize_skills.py) that:
 - Analyzes skill names and descriptions
-- Matches against keyword libraries for 13 categories
+- Matches against keyword libraries that seeded the current generated category metadata
 - Automatically assigns meaningful categories
 - Removes "uncategorized" bulk assignment
 
-**Results:**
+**Historical initial-run result:**
 - ✅ 776 skills auto-categorized
 - ✅ 46 already had categories preserved
-- ✅ 124 remaining uncategorized (edge cases)
+- ✅ 124 remained uncategorized at the time of that run
+
+For current counts, use `skills_index.json`; the active repository has grown beyond this historical snapshot.
 
 ### 2. **Category Distribution**
 
@@ -26,20 +28,8 @@ security: 4
 
 **After:**
 ```
-Backend: 164          ████████████████
-Web Dev: 107          ███████████
-Automation: 103       ███████████
-DevOps: 83            ████████
-AI/ML: 79             ████████
-Content: 47           █████
-Database: 44          █████
-Testing: 38           ████
-Security: 36          ████
-Cloud: 33             ███
-Mobile: 21            ██
-Game Dev: 15          ██
-Data Science: 14      ██
-Uncategorized: 126    █
+Generated category metadata is now derived from the current skills_index.json.
+Do not preserve these historical counts in user-facing docs.
 ```
 
 ### 3. **Updated Index Generation**
@@ -54,16 +44,16 @@ Modified [`tools/scripts/generate_index.py`](../../tools/scripts/generate_index.
 **Home Page Changes:**
 - ✅ Categories sorted by skill count (most first)
 - ✅ "Uncategorized" moved to bottom
-- ✅ Each shows count: "Backend (164)", "Web Dev (107)"
+- ✅ Each shows counts computed from the generated index
 - ✅ Much easier to navigate
 
 **Updated Code:**
 - [`apps/web-app/src/pages/Home.tsx`](../../apps/web-app/src/pages/Home.tsx) - Smart category sorting
 - Sorts categories by count using categoryStats
 - Uncategorized always last
-- Displays count in dropdown
+- Displays generated counts in dropdown
 
-### 5. **Categorization Keywords** (13 Categories)
+### 5. **Categorization Keywords** (seed buckets)
 
 | Category | Key Keywords |
 |----------|--------------|
@@ -97,16 +87,16 @@ Created [`smart-auto-categorization.md`](smart-auto-categorization.md) with:
 
 ### Better UX
 1. **Smarter Filtering**: Categories sorted by relevance
-2. **Visual Cues**: Shows count "(164 skills)""
+2. **Visual Cues**: Shows current generated counts
 3. **Uncategorized Last**: Put bad options out of sight
 4. **Meaningful Groups**: Find skills by actual function
 
 ### Example Workflow
 User wants to find database skills:
 1. Opens web app
-2. Sees filter dropdown: "Backend (164) | Database (44) | Web Dev (107)..."
-3. Clicks "Database (44)"
-4. Gets 44 relevant SQL/MongoDB/Postgres skills
+2. Sees filter dropdown with generated category counts
+3. Clicks the current database-related category
+4. Gets the current matching SQL/MongoDB/Postgres skills
 5. Done! 🎉
 
 ## 🚀 Usage

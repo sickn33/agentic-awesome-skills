@@ -1,31 +1,85 @@
 import type { SeoJsonLdValue, SeoMeta, TwitterCard, Skill } from '../types';
 import { getAbsolutePublicAssetUrl } from './publicAssetUrls';
 
-export const DEFAULT_TOP_SKILL_COUNT = 40;
-export const DEFAULT_SOCIAL_IMAGE = 'social-card.svg';
-const SITE_NAME = 'Antigravity Awesome Skills';
+export const DEFAULT_TOP_SKILL_COUNT = 180;
+export const DEFAULT_SOCIAL_IMAGE = 'social-card.png';
+const SITE_NAME = 'Agentic Awesome Skills';
+const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
+const HOSTED_CATALOG_URL = 'https://sickn33.github.io/agentic-awesome-skills/';
+const TOPIC_ROUTE_PREFIX = '/topics';
+const HOME_CATALOG_COUNT_FALLBACK = 1969;
+
+export interface SeoLandingPageLink {
+  label: string;
+  href?: string;
+  to?: string;
+}
+
+export interface SeoLandingPageSection {
+  heading: string;
+  body: string;
+}
+
+export interface SeoLandingPage {
+  slug: string;
+  title: string;
+  description: string;
+  eyebrow: string;
+  h1: string;
+  summary: string;
+  primaryIntent: string;
+  keywords: string[];
+  relatedTerms?: string[];
+  relatedCategories?: string[];
+  featuredSkillIds?: string[];
+  sections: SeoLandingPageSection[];
+  links: SeoLandingPageLink[];
+}
 const FAQ_ITEMS = [
   {
-    question: 'What is Antigravity Awesome Skills?',
-    answer:
-      'Antigravity Awesome Skills is an installable GitHub library of reusable SKILL.md playbooks for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants.',
+    question: 'What is Agentic Awesome Skills?',
+    answer: (countLabel: string) =>
+      `Agentic Awesome Skills is built around AAS Core, a local agent-first preview boundary for neutral catalog retrieval, exact agent-owned selection, validation, and planning. AAS Core is backed by an evidence-rich catalog of ${countLabel} reusable SKILL.md playbooks.`,
   },
   {
-    question: 'How do I install Antigravity Awesome Skills?',
+    question: 'How do I use AAS Core preview?',
     answer:
-      'Install the library with npx antigravity-awesome-skills, then use tool-specific flags such as --codex, --cursor, --gemini, or --claude when you want the installer to target a specific skills directory.',
+      'Configure the local stdio MCP with the AAS CLI, let the agent search and inspect the complete catalog, choose exact skill IDs itself, then validate the schema 2 aas-stack.json with its project profile and preview the immutable plan in the CLI. Apply and recovery are outside the non-applying preview path.',
+  },
+  {
+    question: 'Is Agentic Awesome Skills a GitHub repository?',
+    answer:
+      'Yes. The GitHub repository at https://github.com/sickn33/agentic-awesome-skills is the canonical source for AAS Core, its CLI and local MCP, the skill catalog, plugins, and documentation. The hosted site is a companion catalog and local artifact-review surface.',
+  },
+  {
+    question: 'What are AAS specialized plugins?',
+    answer:
+      'AAS specialized plugins are focused, domain-specific distributions of the skill library. They package relevant skills for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, and agent or MCP work so users can start with the right surface instead of activating the entire catalog.',
   },
   {
     question: 'What is the difference between skills and MCP tools?',
     answer:
-      'Skills are reusable playbooks that tell an AI assistant how to execute a workflow, while MCP tools expose external systems or actions the assistant can call. Skills guide behavior; MCP tools provide capabilities.',
+      'Skills are reusable playbooks that tell an AI assistant how to execute a workflow. MCP tools expose external systems or callable actions. Skills guide behavior, context, constraints, and output quality; MCP tools provide the external capabilities an assistant may need while following those instructions.',
   },
   {
-    question: 'What is the difference between bundles and workflows?',
+    question: 'How are plugins, bundles, and workflows different?',
     answer:
-      'Bundles are curated sets of recommended skills for a role or domain, while workflows are ordered execution playbooks that show how to combine skills step by step for a concrete outcome.',
+      'Plugins are installable packaging surfaces, bundles are curated skill recommendations, and workflows are ordered execution playbooks. Start with a plugin when the domain is clear, use bundles to compare adjacent skills, and use workflows when sequencing planning, coding, testing, auditing, or release work matters.',
   },
 ] as const;
+
+function getCatalogCountLabel(skillCount = 0): string {
+  const visibleCount = skillCount > 0 ? skillCount : HOME_CATALOG_COUNT_FALLBACK;
+  return `${visibleCount.toLocaleString('en-US')}+`;
+}
+
+function getResolvedHomeFaqItems(skillCount = 0): Array<{ question: string; answer: string }> {
+  const countLabel = getCatalogCountLabel(skillCount);
+  return FAQ_ITEMS.map((item) => ({
+    question: item.question,
+    answer: typeof item.answer === 'function' ? item.answer(countLabel) : item.answer,
+  }));
+}
 
 export function toCanonicalPath(pathname: string): string {
   if (!pathname || pathname === '/') {
@@ -38,15 +92,20 @@ export function toCanonicalPath(pathname: string): string {
   return normalized || '/';
 }
 
+export function toIndexableRoutePath(pathname: string): string {
+  const canonicalPath = toCanonicalPath(pathname);
+  return canonicalPath === '/' ? '/' : `${canonicalPath}/`;
+}
+
 export function getCanonicalUrl(canonicalPath: string, siteBaseUrl?: string): string {
-  const base = toCanonicalPath(canonicalPath);
+  const base = toIndexableRoutePath(canonicalPath);
   const siteBase = siteBaseUrl?.trim() || window.location.origin;
   const normalizedBase = siteBase.replace(/\/+$/, '');
   return `${normalizedBase}${base === '/' ? '/' : base}`;
 }
 
 export function getAssetCanonicalUrl(canonicalPath: string): string {
-  return getAbsolutePublicAssetUrl(toCanonicalPath(canonicalPath), {
+  return getAbsolutePublicAssetUrl(toIndexableRoutePath(canonicalPath), {
     baseUrl: import.meta.env.BASE_URL || '/',
     origin: window.location.origin,
   });
@@ -75,8 +134,14 @@ function buildOrganizationSchema(): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
+    '@id': `${REPOSITORY_URL}#organization`,
     name: SITE_NAME,
-    url: 'https://github.com/sickn33/antigravity-awesome-skills',
+    url: REPOSITORY_URL,
+    sameAs: [
+      'https://x.com/AASkills_',
+      'https://www.npmjs.com/package/agentic-awesome-skills',
+      HOSTED_CATALOG_URL,
+    ],
     brand: {
       '@type': 'Brand',
       name: SITE_NAME,
@@ -90,7 +155,13 @@ function buildWebSiteSchema(canonicalUrl: string): Record<string, unknown> {
     '@type': 'WebSite',
     name: SITE_NAME,
     url: getCatalogBaseUrl(canonicalUrl),
+    sameAs: REPOSITORY_URL,
     inLanguage: 'en',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${getCatalogBaseUrl(canonicalUrl).replace(/\/+$/, '')}/?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
   };
 }
 
@@ -103,24 +174,49 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
-    description: `Installable GitHub library of ${visibleCountLabel} for AI coding assistants.`,
-    url: canonicalUrl,
-    codeRepository: 'https://github.com/sickn33/antigravity-awesome-skills',
+    description: `AAS Core preview is a local agent-first boundary for neutral catalog retrieval, exact agent-owned selection, validation, and planning backed by ${visibleCountLabel}.`,
+    url: REPOSITORY_URL,
+    sameAs: [
+      canonicalUrl,
+      HOSTED_CATALOG_URL,
+      'https://www.npmjs.com/package/agentic-awesome-skills',
+    ],
+    mainEntityOfPage: canonicalUrl,
+    codeRepository: REPOSITORY_URL,
+    applicationCategory: 'DeveloperApplication',
+    keywords: [
+      'AI coding assistant skills',
+      'Claude Code skills',
+      'Codex CLI skills',
+      'Cursor skills',
+      'Gemini CLI skills',
+      'Antigravity skills',
+      'Antigravity CLI skills',
+      'GitHub AI skills repository',
+      'AI agent skills GitHub',
+      'AAS Core',
+      'agent-selected skill stack',
+      'agent stack',
+      'Model Context Protocol',
+      'specialized plugins',
+      'SKILL.md',
+    ],
+    isAccessibleForFree: true,
     programmingLanguage: {
       '@type': 'ComputerLanguage',
       name: 'Markdown',
       url: 'https://en.wikipedia.org/wiki/Markdown',
     },
-    license: 'https://github.com/sickn33/antigravity-awesome-skills/blob/main/LICENSE',
+    license: `${REPOSITORY_URL}/blob/main/LICENSE`,
   };
 }
 
-function buildHomeFaqSchema(canonicalUrl: string): Record<string, unknown> {
+function buildHomeFaqSchema(canonicalUrl: string, skillCount: number): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     url: canonicalUrl,
-    mainEntity: FAQ_ITEMS.map((item) => ({
+    mainEntity: getResolvedHomeFaqItems(skillCount).map((item) => ({
       '@type': 'Question',
       name: item.question,
       acceptedAnswer: {
@@ -131,8 +227,8 @@ function buildHomeFaqSchema(canonicalUrl: string): Record<string, unknown> {
   };
 }
 
-export function getHomeFaqItems(): Array<{ question: string; answer: string }> {
-  return [...FAQ_ITEMS];
+export function getHomeFaqItems(skillCount = 0): Array<{ question: string; answer: string }> {
+  return getResolvedHomeFaqItems(skillCount);
 }
 
 function ensureMetaTag(name: string, content: string, attributeName: 'name' | 'property'): void {
@@ -228,7 +324,7 @@ export function setPageMeta(meta: SeoMeta): void {
     }
   }
 
-  ensureMetaTag('robots', 'index, follow', 'name');
+  ensureMetaTag('robots', meta.robots || 'index, follow', 'name');
 }
 
 export function parseDateString(dateValue: string | undefined): number {
@@ -281,13 +377,13 @@ export function isTopSkill(skillId: string, skills: ReadonlyArray<Skill>, limit 
 
 export function buildHomeMeta(skillCount: number): SeoMeta {
   const visibleCount = Math.max(skillCount, 0);
-  const visibleCountLabel = visibleCount > 0
-    ? `${visibleCount.toLocaleString('en-US')} installable AI skills`
-    : 'installable AI skills';
-  const title = `Antigravity Awesome Skills | ${visibleCountLabel} catalog`;
+  const visibleCountLabel = visibleCount > 0 ? getCatalogCountLabel(visibleCount) : '';
+  const title = visibleCount > 0
+    ? `AAS Core Preview | Agent-first stacks backed by ${visibleCountLabel} skills`
+    : 'AAS Core Preview | Agent-first skill stacks';
   const description = visibleCount > 0
-    ? `Explore ${visibleCount.toLocaleString('en-US')} installable agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, and Antigravity. Browse bundles, workflows, FAQs, and integration guides in one place.`
-    : 'Explore installable agentic skills for Claude Code, Cursor, Codex CLI, Gemini CLI, and Antigravity. Browse bundles, workflows, FAQs, and integration guides in one place.';
+    ? `Use AAS Core preview for neutral catalog retrieval, exact agent-owned selection, validation, and planning for Codex, Claude Code, and compatible clients, backed by ${visibleCountLabel} cataloged skills.`
+    : 'Use AAS Core preview for neutral catalog retrieval, exact agent-owned selection, validation, and planning for Codex, Claude Code, and compatible clients.';
   return {
     title,
     description,
@@ -300,20 +396,132 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
       {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
-        name: 'Antigravity Awesome Skills',
+        name: 'Agentic Awesome Skills',
         description,
         url: canonicalUrl,
         isPartOf: buildWebSiteSchema(canonicalUrl),
+        sameAs: REPOSITORY_URL,
+        about: buildSoftwareSourceCodeSchema(canonicalUrl, visibleCount),
         mainEntity: {
           '@type': 'ItemList',
-          name: 'Antigravity Awesome Skills catalog',
+          name: 'AAS Core skill catalog',
         },
       },
       buildOrganizationSchema(),
       buildWebSiteSchema(canonicalUrl),
       buildSoftwareSourceCodeSchema(canonicalUrl, visibleCount),
-      buildHomeFaqSchema(canonicalUrl),
+      buildHomeFaqSchema(canonicalUrl, visibleCount),
     ],
+  };
+}
+
+export function buildPluginsMeta(pluginCount: number): SeoMeta {
+  const countLabel = pluginCount > 0 ? `${pluginCount.toLocaleString('en-US')} ` : '';
+  const title = `AAS Specialized Plugins | ${countLabel}AI coding workflow packs`;
+  const description = `Compare ${countLabel}specialized plugin packs for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, mobile apps, automation, and agent or MCP systems.`;
+
+  return {
+    title,
+    description,
+    canonicalPath: '/plugins',
+    ogTitle: 'AAS Specialized Plugins | AI coding workflow packs',
+    ogDescription: description,
+    ogImage: DEFAULT_SOCIAL_IMAGE,
+    twitterCard: 'summary_large_image',
+    jsonLd: (canonicalUrl: string) => [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'AAS Specialized Plugins',
+        description,
+        url: canonicalUrl,
+        isPartOf: buildWebSiteSchema(canonicalUrl),
+        mainEntity: {
+          '@type': 'ItemList',
+          name: 'AAS specialized plugin packs',
+          numberOfItems: pluginCount,
+        },
+      },
+      buildOrganizationSchema(),
+      buildWebSiteSchema(canonicalUrl),
+    ],
+  };
+}
+
+export function buildTopicLandingMeta(page: SeoLandingPage, featuredSkills: ReadonlyArray<Skill> = []): SeoMeta {
+  const canonicalPath = `${TOPIC_ROUTE_PREFIX}/${page.slug}`;
+  const keywords = page.keywords.join(', ');
+
+  return {
+    title: page.title,
+    description: page.description,
+    canonicalPath,
+    ogTitle: page.title,
+    ogDescription: page.description,
+    ogImage: DEFAULT_SOCIAL_IMAGE,
+    twitterCard: 'summary_large_image',
+    jsonLd: (canonicalUrl: string) => [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: page.h1,
+        headline: page.h1,
+        description: page.description,
+        url: canonicalUrl,
+        isPartOf: buildWebSiteSchema(canonicalUrl),
+        about: buildSoftwareSourceCodeSchema(canonicalUrl, 0),
+        keywords,
+        mainEntity: {
+          '@type': 'ItemList',
+          name: `${page.eyebrow} featured skills`,
+          numberOfItems: featuredSkills.length || page.sections.length,
+          itemListElement: (featuredSkills.length > 0 ? featuredSkills : page.sections).map((entry, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: 'id' in entry ? entry.name : entry.heading,
+            description: 'id' in entry ? entry.description : entry.body,
+            ...('id' in entry ? { url: getCanonicalUrl(`/skill/${encodeURIComponent(entry.id)}`, canonicalUrl.replace(/\/topics\/[^/]+\/?$/, '')) } : {}),
+          })),
+        },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: SITE_NAME,
+            item: HOSTED_CATALOG_URL,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: page.h1,
+            item: canonicalUrl,
+          },
+        ],
+      },
+      buildOrganizationSchema(),
+      buildWebSiteSchema(canonicalUrl),
+      buildSoftwareSourceCodeSchema(canonicalUrl, 0),
+    ],
+  };
+}
+
+export function buildTopicLandingFallbackMeta(slug: string | undefined): SeoMeta {
+  const safeSlug = encodeURIComponent((slug || 'topic').trim() || 'topic');
+  const title = `Topic guide loading | ${SITE_NAME}`;
+  const description = 'This Agentic Awesome Skills topic guide is loading from the hosted catalog.';
+
+  return {
+    title,
+    description,
+    canonicalPath: `${TOPIC_ROUTE_PREFIX}/${safeSlug}`,
+    ogTitle: title,
+    ogDescription: description,
+    ogImage: DEFAULT_SOCIAL_IMAGE,
+    twitterCard: 'summary',
   };
 }
 
@@ -324,13 +532,13 @@ export function buildSkillMeta(skill: Skill, isPriority = false, canonicalPath =
   const safeSource = skill.source || 'community contributors';
   const added = skill.date_added ? `Added ${skill.date_added}. ` : '';
   const trust = isPriority ? ` Prioritized in our catalog for quality and reuse. ` : ' ';
-  const title = `${safeName} | Antigravity Awesome Skills`;
+  const title = `${safeName} | Agentic Awesome Skills`;
   const description = `${added}Use the @${safeName} skill for ${safeDescription} (${safeCategory}, ${safeSource}).${trust}Install and run quickly with your CLI workflow.`;
   return {
     title,
     description: description.trim(),
     canonicalPath,
-    ogTitle: `@${safeName} | Antigravity Awesome Skills`,
+    ogTitle: `@${safeName} | Agentic Awesome Skills`,
     ogDescription: description,
     ogImage: DEFAULT_SOCIAL_IMAGE,
     twitterCard: 'summary',
@@ -351,14 +559,14 @@ export function buildSkillMeta(skill: Skill, isPriority = false, canonicalPath =
         },
         provider: {
           '@type': 'Organization',
-          name: 'Antigravity Awesome Skills',
+          name: 'Agentic Awesome Skills',
         },
         keywords: [safeCategory, safeSource],
         inLanguage: 'en',
         operatingSystem: 'Cross-platform',
         isPartOf: {
           '@type': 'CollectionPage',
-          name: 'Antigravity Awesome Skills',
+          name: 'Agentic Awesome Skills',
           url: getCatalogBaseUrl(canonicalUrl),
         },
       },
@@ -382,10 +590,10 @@ export function buildSkillMeta(skill: Skill, isPriority = false, canonicalPath =
 export function buildSkillFallbackMeta(skillId: string): SeoMeta {
   const safeId = skillId || 'skill';
   return {
-    title: `${safeId} | Antigravity Awesome Skills`,
-    description: 'Installable AI skill details are loading. Browse the catalog and launch the right skill with the antigravity-awesome-skills CLI.',
+    title: `${safeId} | Agentic Awesome Skills`,
+    description: 'Installable AI skill details are loading. Browse the catalog and launch the right skill with the agentic-awesome-skills CLI.',
     canonicalPath: `/skill/${encodeURIComponent(safeId)}`,
-    ogTitle: `@${safeId} | Antigravity Awesome Skills`,
+    ogTitle: `@${safeId} | Agentic Awesome Skills`,
     ogDescription: 'Installable AI skill details are loading. Browse the catalog and launch the right skill quickly.',
     ogImage: DEFAULT_SOCIAL_IMAGE,
     twitterCard: 'summary',
@@ -399,7 +607,7 @@ export function buildSkillFallbackMeta(skillId: string): SeoMeta {
         url: canonicalUrl,
         provider: {
           '@type': 'Organization',
-          name: 'Antigravity Awesome Skills',
+          name: 'Agentic Awesome Skills',
         },
         inLanguage: 'en',
       },

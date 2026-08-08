@@ -1,3 +1,112 @@
+# Secur0 coordinated remediation - 2026-07-30
+
+- Re-evaluated all 35 Secur0 reports against current protected `main`: 22 were
+  open and 13 already closed or duplicated; rejected scanner-only claims that
+  do not bypass exact-head semantic review and recovered three valid closed
+  findings covering CSV formula injection and npm release provenance.
+- Added source fixes for protected npm publication, read-only Supabase RLS,
+  authenticated Telegram webhooks, Loki permission/dashboard boundaries,
+  private credential storage, catalog read integrity, path and temporary-file
+  confinement, safe external links, Vercel exclusion handling, pinned 2slides
+  downloads, and spreadsheet-safe CSV exports.
+- Added focused regression contracts, ran the required skill/reference/docs and
+  workflow gates, regenerated the complete catalog once as validation, and
+  removed generated registries and plugin mirrors from this source-only branch.
+- Production Supabase migration, report status/comments, public PR, and any
+  release remain separate approval gates; no coordinated-disclosure material
+  was published by this local remediation pass.
+
+# Maintenance Walkthrough - 2026-07-30
+
+- Changed only the Antigravity direct-install default: a bare Antigravity target
+  now stops before cloning or writing unless exact skills, metadata filters, or
+  the explicit `--all` override are supplied.
+- Added copyable guidance for an MCP-enabled Codex or Claude agent to inspect the
+  project, choose exact AAS skill IDs, and preview the resulting Antigravity
+  install while preserving AAS MCP's read-only boundary.
+- Added regression coverage proving the blocked path performs no clone or target
+  mutation, explicit selections and `--all` continue, and non-Antigravity hosts
+  retain their existing behavior.
+
+# Maintenance Walkthrough - 2026-07-29
+
+- Hardened the legacy full-catalog installer without breaking its historical
+  default: it now displays the selected risk distribution and provides a
+  read-only `audit --skills` mode that recursively reports sensitive behavior,
+  symlinks, and binary payloads before installation.
+- Added a documented trust and antivirus-response model that distinguishes a
+  signature match in instruction text from evidence of execution while treating
+  loaded skills as untrusted instructions with real agent-tool consequences.
+- Replaced thread-identified moving-branch installs with inspect-first,
+  full-commit-pinned workflows and removed blanket safety claims, hidden writes,
+  destructive rollback advice, and a developer-specific absolute path.
+- Enforced an exact authorized-use disclaimer and a per-action target, scope,
+  command, effect, and confirmation gate across every offensive-risk skill.
+- Revalidated all 15 exported Codex Security findings against current protected `main` instead of treating historical scanner anchors as current code.
+- Removed BrowserAct's mutable provider-served guide from the supported operating path; the pinned local CLI help may describe syntax, while the checked-in skill remains the complete policy.
+- Enforced full-SHA GitHub blob URLs for linked FindMate profiles on both Moltbook drafts and GitHub thread parsing, with regression coverage for mutable branches, foreign hosts, query strings, and traversal-shaped paths.
+
+# Maintenance Walkthrough - 2026-07-28
+
+- Added a fail-closed provenance exception ledger for maintainer-verified upstream repository renames. The initial Modellix entry records that `Modellix/modellix-skill` and `Modellix/modellix-plugin` resolve to GitHub repository ID `1150322983`; only the exact recorded transition is allowed, while unrelated provenance changes remain blocked.
+- Traced a live Search Console `Pagina con reindirizzamento` report to the
+  slashless `/plugins` URL, which GitHub Pages correctly redirects to the
+  indexable `/plugins/` route.
+- Normalized every runtime link to workbench, plugin, topic, and skill pages
+  through the existing trailing-slash route helper so crawlers are no longer
+  invited to request redirecting URL variants.
+- Added focused web-app assertions for trailing-slash navigation targets; the
+  sitemap, canonical metadata, and public route remain aligned on `/plugins/`.
+
+# Maintenance Walkthrough - 2026-07-26
+
+- Imported the MIT-licensed `fedora-hyprland-installer` contribution from
+  [maleksaadi0109/hyprfedora](https://github.com/maleksaadi0109/hyprfedora) at
+  upstream commit `3ec6d4fc5eecdb188613dd841dce9926ae5c8319`.
+- Hardened its privileged Fedora workflow with explicit critical-risk metadata,
+  provenance, limitations, consistent NVIDIA guidance, isolated tests, and
+  claims bounded to the behavior implemented by the bundled scripts.
+- Added the MIT-licensed `find-complementary-founders` skill from
+  [merc1305/findMate](https://github.com/merc1305/findMate).
+- Preserved its own-owner-only invariant, offline evidence assessment,
+  hash-bound publication approvals, expiring profiles, and stop-at-101 star
+  rule while adapting metadata, triggers, provenance, and limitations to the
+  AAS quality contract.
+- Included the complete source skill directory without generated registry
+  artifacts, private owner data, credentials, or publication receipts.
+- Synced the five actionable review fixes from canonical FindMate release
+  `v1.3.4`: consent-free private drafts, temporal consent validation,
+  one-sided seeking cards, source-identity self-exclusion, and the bundled
+  Russian onboarding reference. The canonical suite passes 40 tests and the
+  portable release resolves to commit `c78a78b0280f4168294b72f38aa39317e7b7d7b8`.
+- Synced the privacy-preserving G35 publication path from immutable canonical
+  release `v1.3.5` at
+  `d23cd66d0ee324c0ed7e85156606d8814250c1f8`: one exact owner-approved GitHub
+  comment may now carry bounded inline JSON, the existing immutable linked
+  source remains supported, and deleting or unmarking the source removes its
+  current validation receipt. The owner is warned that the publishing login
+  and proof/contact links may connect the alias to a real identity and that
+  public edit history or copies prevent any promise of complete erasure.
+- Preserved the AAS catalog metadata, usage guidance, provenance, limitations,
+  source-only contract, and all owner consent boundaries while updating the
+  five compatible reference/script files. The canonical FindMate suite passes
+  47 tests; no owner profile, credential, generated registry, or plugin mirror
+  is included in this contributor update.
+- Added the MIT-licensed `orchestrate` skill from
+  [provencher/codex-skills](https://github.com/provencher/codex-skills) at
+  upstream commit `8aa6c42b73781c905c55f8a1253a18127079ac21`.
+- Preserved its concise Codex-native delegation policy and UI metadata while
+  adding the repository-required usage guidance, limitations, immutable
+  provenance, and user-held approval boundaries.
+- Kept the source PR limited to canonical skill content, source credit, and this
+  maintenance evidence; generated registries and plugin mirrors remain owned by
+  protected canonical synchronization.
+- Consolidated the two open UIZZE contribution paths into one protected maintainer repair, preserving the actionable public-catalog research, design-contract, implementation, and hard finish-gate workflow contributed by [@samuelbushi](https://github.com/samuelbushi) in PR `#929` together with the bounded preview introduced by PR `#983`.
+- Kept the free `check_ui_slop` preview optional while requiring explicit approval before persistent MCP configuration or external HTML/CSS transmission.
+- Added the official MIT license metadata and organizational author while preserving the existing immutable source identity; GitHub redirects the historical upstream URL to the transferred official repository.
+- Left generated registries and plugin mirrors out of the source PR so the protected canonical synchronization workflow remains their sole owner.
+- Merged the consolidated source through PR [#985](https://github.com/sickn33/agentic-awesome-skills/pull/985), then converged generated state and plugin mirrors through protected PR [#986](https://github.com/sickn33/agentic-awesome-skills/pull/986).
+
 # Maintenance Walkthrough - 2026-04-17
 
 - Imported 8 frontend/design skills from [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) into `skills/`:
@@ -125,7 +234,7 @@
   - `data/bundles.json`
   - curated user/maintainer docs updated by `sync_repo_metadata.py`
 
-# Maintenance Walkthrough - 2026-03-21
+# Maintenance Walkthrough - 2026-03-21 Follow-up Import Sync
 
 - Imported and normalized a new batch of external skills into `skills/`, covering Anthropic Claude API/internal comms entries, marketing workflows, SEO orchestration/sub-skills, and Obsidian-focused file-format/CLI skills.
 - Added and standardized the following imported skill families:
@@ -234,7 +343,7 @@
   - `npm run catalog`
 - Refreshed `CHANGELOG.md`, `README.md`, `docs/users/getting-started.md`, `docs/users/faq.md`, and the contributor acknowledgements to prepare the single `7.8.0` release cut.
 
-# Maintenance Walkthrough - 2026-03-21
+# Maintenance Walkthrough - 2026-03-21 Initial Import Batch
 
 - Imported the missing external skill coverage identified from `travisvn/awesome-claude-skills`, `anthropics/skills`, `coreyhaines31/marketingskills`, `AgriciDaniel/claude-seo`, and `kepano/obsidian-skills`, bringing the indexed registry to `1,304` skills on `main`.
 - Added maintainer attribution notes in `docs/maintainers/skills-import-2026-03-21.md` and refreshed the generated registry artifacts after the import batch.
@@ -257,3 +366,47 @@
 - Added maintainer automation for repo-state hygiene: `sync:contributors` updates the README contributor list from GitHub contributors, `check:stale-claims`/`audit:consistency` catch drift in count-sensitive docs, and `sync:repo-state` now chains the local maintainer sweep into a single command.
 - Hardened automation surfaces beyond the local CLI: `main` CI now runs the unified repo-state sync, tracked web artifacts are refreshed through `sync:web-assets`, release verification now uses a deterministic `sync:release-state` path plus `npm pack --dry-run`, the npm publish workflow reruns those checks before publishing, and a weekly `Repo Hygiene` GitHub Actions workflow now sweeps slow drift on `main`.
 - Added two maintainer niceties on top of the hardening work: `check:warning-budget` freezes the accepted `135` validation warnings so they cannot silently grow, and `audit:maintainer` prints a read-only health snapshot of warning budget, consistency drift, and git cleanliness.
+
+# Maintenance Walkthrough - 2026-07-16 Android Overheating Diagnostics
+
+- Audited the cached third-party `adb-performance` skill and rejected a direct import because its linked source repository is unavailable, its license cannot be verified, and it mixes weak snapshot heuristics with unguarded device mutations.
+- Added the clean-room canonical `diagnose-android-overheating` skill, grounded in current Android and AOSP documentation.
+- Replaced generic “optimization” commands with a read-only-first evidence workflow, controlled comparisons, OEM-aware interpretation, confidence labels, privacy handling, explicit approval gates, rollback requirements, and a hardware-safety stop.
+- Added `references/evidence-and-interpretation.md` for symptom-specific ADB evidence, thermal status interpretation, correlation rules, Batterystats capture discipline, and bugreport privacy.
+
+# Maintenance Walkthrough - 2026-07-16 Tessl Workspace Repair
+
+- Corrected the Skill Review workflow and trusted review helper to use the token-visible `antigravity-awesome-skills` Tessl workspace instead of the renamed repository slug.
+- Added a repository-variable override so future Tessl workspace migrations can be handled through `TESSL_WORKSPACE` without another workflow patch.
+- Updated the review command regression test to lock the corrected workspace argument.
+
+# Maintenance Walkthrough - 2026-07-16 Tessl Credit Guard
+
+- Added a deterministic fingerprint over the changed `SKILL.md` content and active review policy.
+- Reuse a previously successful review for identical content, avoiding Tessl setup and another charged review after unrelated PR pushes or base refreshes.
+- Route an explicit Tessl credit/quota failure to `manual-review-required` with exact-head attestation; unrelated Tessl failures still fail closed.
+- Added regression coverage for fingerprint invalidation, GitHub Actions cache wiring, quota classification, and truthful review outcomes.
+# Maintenance Walkthrough - 2026-07-17 Legacy Redirect Infrastructure
+
+- Preserved the Google Search Console HTML verification file on the legacy Pages path and the Bing Webmaster Tools meta token on the legacy root redirect.
+- Made redirect generation follow the current `skills_index.json` count while retaining the curated sitemap-count lock and exact route-set validation.
+- Added `pages:redirect-verify` for byte-exact managed-tree validation plus bounded or full live route probing.
+- Versioned the redirect manifest contract as schema `3`, including webmaster-verification evidence consumed by the protected sync.
+- Added explicit source-repository provenance to the live manifest and used that change to exercise the complete protected auto-sync cycle.
+- Documented the protected cross-repository synchronization contract for `sickn33/sickn33.github.io`.
+- Added regression coverage for webmaster tokens, reserved-path collisions, dynamic skill counts, local drift, stale files, and live manifest/route verification.
+
+# Maintenance Walkthrough - 2026-07-22 Security Findings and Windows Preview
+
+- Remediated the live dependency advisories for `fast-uri`, `brace-expansion`, and `body-parser` in their affected lockfiles.
+- Hardened AAS Core cache ancestry, transaction durability, bounded MCP manifest state, exact-search behavior, redirect-tree reads, release-PR selection, and maintainer merge authorization.
+- Expanded skill-review fingerprints and workflow triggers to cover bundled support files, and tightened unsafe guidance in the affected canonical skills.
+- Fixed native Windows ACL inspection for AAS preview by making PowerShell path handling explicit and returning bounded phase/path diagnostics for unresolved ACL identities.
+- Added regression coverage for every confirmed code-path finding and documented the Windows 10/11 Codex CLI preview contract from discussion `#956`.
+
+# Maintenance Walkthrough - 2026-08-06 Agent Plugins 1.0 Portability
+
+- Added a standard root `plugin.json` to every editorial bundle that passes the existing Codex/Claude safety gates and the Agent Plugins immediate-child skill-layout rule.
+- Kept the host-specific full-library roots separate, flattened qualified paths only inside generated packages, and normalized AAS provenance/risk fields into standard string metadata without changing instruction bodies.
+- Pinned offline validation to an attributed snapshot of the official Agent Plugins 1.0.0 JSON Schema, added deterministic Codex prompt fallbacks, and covered closed-schema, fixed-discovery, pilot-bundle, and release-alignment regressions.
+- Updated the user onboarding trinity, plugin/bundle guides, maintainer contract, and release checklist while leaving the active release-notes PR untouched.

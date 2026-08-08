@@ -6,16 +6,16 @@
 
 > **Important:** bundles are installable plugin subsets and activation presets, not invokable mega-skills such as `@web-wizard` or `/essentials-bundle`. Use the individual skills listed in the pack, install the bundle as a dedicated marketplace plugin, or use the activation scripts if you want only that bundle's skills active in your live Antigravity directory.
 
-> **Plugin compatibility:** root plugins and bundle plugins only publish plugin-safe skills. If a bundle shows `pending hardening`, the skills still exist in the repository, but that bundle is not yet published for that target. `Requires manual setup` means the bundle is installable, but one or more included skills need an explicit setup step before first use.
+> **Plugin compatibility:** root plugins and bundle plugins only publish plugin-safe skills. `Agent Plugins 1.0 portable` means the bundle also has a standard root `plugin.json` and a flat, directly discoverable `skills/` layout. If a bundle shows `pending hardening` or `pending flat skill layout`, its skills still exist in the repository but AAS does not claim that packaging target yet. `Requires manual setup` means the bundle is installable, but one or more included skills need an explicit setup step before first use.
 
 ## Quick Start
 
 1. **Install the repository or bundle plugin:**
 
    ```bash
-   npx antigravity-awesome-skills
+   npx agentic-awesome-skills
    # or clone manually
-   git clone https://github.com/sickn33/antigravity-awesome-skills.git .agent/skills
+   git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
    ```
 
 2. **Choose your bundle** from the list below based on your role or interests.
@@ -23,6 +23,7 @@
 3. **Use bundle plugins or individual skills** in your AI assistant:
    - Claude Code: install the matching marketplace bundle plugin, or invoke `>> /skill-name help me...`
    - Codex CLI / Codex app: install the matching bundle plugin where plugin marketplaces are available, or invoke `Use skill-name...`
+   - Agent Plugins 1.0 clients: load the matching `plugins/agentic-bundle-*/` directory when its status says `Agent Plugins 1.0 portable`
    - Cursor: `@skill-name` in chat
    - Gemini CLI: `Use skill-name...`
 
@@ -52,6 +53,7 @@ Pick the minimum set for your current milestone. Expand only when you hit a real
 
 - **Claude Code**: install a bundle plugin or use `>> /skill-name help me...`
 - **Codex CLI**: install a bundle plugin where marketplaces are available, or use `Use skill-name...`
+- **Agent Plugins clients**: load the portable bundle directory using the client-specific installation flow
 - **Cursor**: `@skill-name` in chat
 - **Gemini CLI**: `Use skill-name...`
 
@@ -115,7 +117,7 @@ Keep a small list of high-frequency skills and reuse it across tasks to reduce c
 
 ## Contributing
 
-Found a skill that should be in a bundle? Or want to create a new bundle? [Open an issue](https://github.com/sickn33/antigravity-awesome-skills/issues) or submit a PR!
+Found a skill that should be in a bundle? Or want to create a new bundle? [Open an issue](https://github.com/sickn33/agentic-awesome-skills/issues) or submit a PR!
 
 ---
 
@@ -127,4 +129,4 @@ Found a skill that should be in a bundle? Or want to create a new bundle? [Open 
 
 ---
 
-_Last updated: March 2026 | Total Skills: {{total_skills_label}} | Total Bundles: {{bundle_count}}_
+_Last updated: June 2026 | Total Skills: {{total_skills_label}} | Total Bundles: {{bundle_count}}_

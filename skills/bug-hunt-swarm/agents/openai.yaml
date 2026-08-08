@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bug Hunt Swarm"
+  short_description: "Parallel multi-agent root cause hunt"
+  default_prompt: "Use $bug-hunt-swarm to investigate this bug with four read-only lanes and return the most likely root cause plus the fastest proof path."

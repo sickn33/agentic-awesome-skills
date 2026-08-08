@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hugo To Markdown"
+  short_description: "Convert Hugo docs into standard Markdown safely."
+  default_prompt: "Use $hugo-to-markdown to convert the Hugo docs under a local site into standard Markdown files."

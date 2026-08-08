@@ -9,13 +9,63 @@ import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 
-GITHUB_REPO = "sickn33/antigravity-awesome-skills"
+GITHUB_REPO = "sickn33/agentic-awesome-skills"
 SYNC_COMMENT_RE = re.compile(r"<!-- registry-sync: .*? -->")
 SYNC_COMMENT_FIELDS_RE = re.compile(
     r"<!-- registry-sync: version=(?P<version>[^;]+); skills=(?P<skills>\d+); "
     r"stars=(?P<stars>\d+); updated_at=(?P<updated_at>[^ ]+) -->"
 )
-CURRENT_RELEASE_LINE_RE = re.compile(r"^\*\*Current release: V[\d.]+\.\*\* .*?$", re.MULTILINE)
+VERSION_TOKEN_PATTERN = r"[0-9A-Za-z][0-9A-Za-z.+-]*"
+CURRENT_RELEASE_LINE_RE = re.compile(
+    rf"^\*\*Current release: V{VERSION_TOKEN_PATTERN}\.\*\* .*?$",
+    re.MULTILINE,
+)
+
+
+def release_major(version: str) -> int:
+    match = re.match(r"^(\d+)\.", version)
+    if not match:
+        raise ValueError(f"Invalid package version: {version}")
+    return int(match.group(1))
+
+
+def core_release_metadata(package: dict) -> tuple[bool, int]:
+    config = package.get("aasCore")
+    if not isinstance(config, dict):
+        raise ValueError("package.json must define aasCore release capability metadata")
+    included_from_major = config.get("includedFromMajor")
+    if not isinstance(included_from_major, int) or included_from_major < 1:
+        raise ValueError("package.json aasCore.includedFromMajor must be a positive integer")
+    version = str(package.get("version", "0.0.0"))
+    return release_major(version) >= included_from_major, included_from_major
+
+
+def core_release_status(metadata: dict) -> str:
+    version = metadata["version"]
+    if not metadata["core_included"]:
+        return (
+            f"The published {version} package predates AAS Core. Core is available from `main` as an "
+            "**Agent-First Preview** for complete local catalog search, agent-owned selection, manifest validation, "
+            "planning, and diagnosis. Wait for a release that explicitly includes Core before using the "
+            "npm bootstrap. "
+        )
+    return (
+        "This release includes AAS Core for complete local catalog search, agent-owned selection, "
+        "manifest validation, planning, and diagnosis. "
+    )
+
+
+def core_release_boundary(metadata: dict) -> str:
+    version = metadata["version"]
+    if not metadata["core_included"]:
+        return (
+            f"Release boundary: the published V{version} package predates AAS Core; use only a release "
+            "whose notes explicitly state that it includes Core."
+        )
+    return (
+        f"Release boundary: V{version} includes AAS Core under the Agent-First Preview; pin this exact "
+        "version when configuring the local MCP."
+    )
 
 
 def configure_utf8_output() -> None:
@@ -84,7 +134,7 @@ def fetch_star_count(repo: str) -> int | None:
         url,
         headers={
             "Accept": "application/vnd.github+json",
-            "User-Agent": "antigravity-awesome-skills-readme-sync",
+            "User-Agent": "agentic-awesome-skills-readme-sync",
         },
     )
     try:
@@ -121,6 +171,8 @@ def load_metadata(
 
     with open(package_path, "r", encoding="utf-8") as file:
         package = json.load(file)
+
+    core_included, core_included_from_major = core_release_metadata(package)
 
     with open(readme_path, "r", encoding="utf-8") as file:
         current_readme = file.read()
@@ -161,6 +213,8 @@ def load_metadata(
     return {
         "repo": repo,
         "version": str(package.get("version", "0.0.0")),
+        "core_included": core_included,
+        "core_included_from_major": core_included_from_major,
         "total_skills": len(skills),
         "total_skills_label": format_skill_count(len(skills)),
         "stars": total_stars,
@@ -180,17 +234,15 @@ def apply_metadata(content: str, metadata: dict) -> str:
     star_badge_count = metadata["star_badge_count"]
     star_milestone = metadata["star_milestone"]
     star_celebration = metadata["star_celebration"]
+    release_status = core_release_status(metadata)
     sync_comment = (
         f"<!-- registry-sync: version={version}; skills={total_skills}; "
         f"stars={metadata['stars']}; updated_at={metadata['updated_at']} -->"
     )
 
     content = re.sub(
-        r"^# 🌌 Antigravity Awesome Skills: .*?$",
-        (
-            f"# 🌌 Antigravity Awesome Skills: {total_skills_label} "
-            "Agentic Skills for Claude Code, Gemini CLI, Cursor, Copilot & More"
-        ),
+        r"^# (?:🌌 Agentic Awesome Skills: .*|AAS Core — Agentic Awesome Skills)$",
+        "# AAS Core — Agentic Awesome Skills",
         content,
         count=1,
         flags=re.MULTILINE,
@@ -215,17 +267,16 @@ def apply_metadata(content: str, metadata: dict) -> str:
     content = re.sub(
         CURRENT_RELEASE_LINE_RE,
         (
-            f"**Current release: V{version}.** Trusted by {star_celebration}+ GitHub stargazers, "
-            "this repository combines official and community skill collections with bundles, "
-            "workflows, installation paths, and docs that help you go from first install to daily use quickly."
+            f"**Current release: V{version}.** {release_status}Apply and recovery remain experimental "
+            "and outside the supported preview path."
         ),
         content,
         count=1,
     )
     content = re.sub(
-        r"^\*\*Antigravity Awesome Skills\*\* is a curated, battle-tested library of \*\*.*?\*\* designed",
+        r"^\*\*Agentic Awesome Skills\*\* is a curated, battle-tested library of \*\*.*?\*\* designed",
         (
-            f"**Antigravity Awesome Skills** is a curated, battle-tested library of "
+            f"**Agentic Awesome Skills** is a curated, battle-tested library of "
             f"**{total_skills_label} high-performance agentic skills** designed"
         ),
         content,
@@ -251,9 +302,9 @@ def apply_metadata(content: str, metadata: dict) -> str:
         count=1,
     )
     content = re.sub(
-        r"\*\*Antigravity Awesome Skills\*\* \(Release [\d.]+\) is a massive upgrade to your AI's capabilities, now featuring \*\*.*?\*\* skills",
+        r"\*\*Agentic Awesome Skills\*\* \(Release [\d.]+\) is a massive upgrade to your AI's capabilities, now featuring \*\*.*?\*\* skills",
         (
-            f"**Antigravity Awesome Skills** (Release {version}) is a massive upgrade "
+            f"**Agentic Awesome Skills** (Release {version}) is a massive upgrade "
             f"to your AI's capabilities, now featuring **{total_skills_label} skills**"
         ),
         content,

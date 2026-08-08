@@ -1,0 +1,4 @@
+interface:
+  display_name: "Expo CI/CD Workflows"
+  short_description: "Write and validate EAS workflow YAML files for Expo projects"
+  default_prompt: "Use $expo-cicd-workflows when creating or editing .eas/workflows YAML, validating EAS workflow configuration, or answering questions about workflow triggers, jobs, runners, and expressions."

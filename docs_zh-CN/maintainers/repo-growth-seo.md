@@ -6,7 +6,7 @@
 
 首选定位:
 
-> 适用于 Claude Code、Cursor、Codex CLI、Gemini CLI、Antigravity 和其他 AI 编码助手的 1,436+ 代理技能的可安装 GitHub 库。
+> 适用于 Claude Code、Cursor、Codex CLI、Gemini CLI、Antigravity 和其他 AI 编码助手的 1,936+ 代理技能的可安装 GitHub 库。
 
 关键框架:
 
@@ -20,15 +20,15 @@
 
 首选描述:
 
-> 适用于 Claude Code、Cursor、Codex CLI、Gemini CLI、Antigravity 等的 1,436+ 代理技能的可安装 GitHub 库。包括安装程序 CLI、捆绑包、工作流以及官方/社区技能集合。
+> 适用于 Claude Code、Cursor、Codex CLI、Gemini CLI、Antigravity 等的 1,936+ 代理技能的可安装 GitHub 库。包括安装程序 CLI、捆绑包、工作流以及官方/社区技能集合。
 
 首选主页:
 
-> `https://github.com/sickn33/antigravity-awesome-skills`
+> `https://github.com/sickn33/agentic-awesome-skills`
 
 首选社交预览:
 
-- 使用清晰的预览图像，显示 `1,436+ 代理技能`
+- 使用清晰的预览图像，显示 `1,936+ 代理技能`
 - 提及 Claude Code、Cursor、Codex CLI 和 Gemini CLI
 - 避免在社交卡片中出现密集文本和微小徽标
 
@@ -79,7 +79,7 @@
 
 从这里开始:
 
-- 安装: `npx antigravity-awesome-skills`
+- 安装: `npx agentic-awesome-skills`
 - 选择您的工具: `README.md#choose-your-tool`
 - 按工具分类的最佳技能: `README.md#best-skills-by-tool`
 - 捆绑包: `docs/users/bundles.md`

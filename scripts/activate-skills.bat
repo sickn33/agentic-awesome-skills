@@ -3,7 +3,7 @@ setlocal EnableDelayedExpansion
 
 :: --- CONFIGURATION ---
 set "BASE_DIR=%AG_BASE_DIR%"
-if not defined BASE_DIR set "BASE_DIR=%USERPROFILE%\.gemini\antigravity"
+if not defined BASE_DIR set "BASE_DIR=%USERPROFILE%\.agents"
 set "SKILLS_DIR=%AG_SKILLS_DIR%"
 if not defined SKILLS_DIR set "SKILLS_DIR=%BASE_DIR%\skills"
 set "LIBRARY_DIR=%AG_LIBRARY_DIR%"
@@ -98,41 +98,11 @@ if not exist "%SKILLS_LIST_FILE%" (
     if "!EXTRA_ARGS!"=="" (
         echo Using default essentials...
         > "%SKILLS_LIST_FILE%" (
-            echo api-security-best-practices
-            echo auth-implementation-patterns
-            echo backend-security-coder
-            echo frontend-security-coder
-            echo cc-skill-security-review
-            echo pci-compliance
-            echo frontend-design
-            echo react-best-practices
-            echo react-patterns
-            echo nextjs-best-practices
-            echo tailwind-patterns
-            echo form-cro
-            echo seo-audit
-            echo ui-ux-pro-max
-            echo 3d-web-experience
-            echo canvas-design
-            echo mobile-design
-            echo scroll-experience
-            echo senior-fullstack
-            echo frontend-developer
-            echo backend-dev-guidelines
-            echo api-patterns
-            echo database-design
-            echo stripe-integration
-            echo agent-evaluation
-            echo langgraph
-            echo mcp-builder
-            echo prompt-engineering
-            echo ai-agents-architect
-            echo rag-engineer
-            echo llm-app-patterns
-            echo rag-implementation
-            echo prompt-caching
-            echo context-window-management
-            echo langfuse
+            echo concise-planning
+            echo git-pushing
+            echo kaizen
+            echo lint-and-validate
+            echo systematic-debugging
         )
     ) else (
         :: Use only literal arguments that match the safe skill-id allowlist

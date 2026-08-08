@@ -29,4 +29,4 @@
 
 ---
 
-_升级: `git pull origin main` 或 `npx antigravity-awesome-skills`。_
+_升级: `git pull origin main` 或 `npx agentic-awesome-skills`。_

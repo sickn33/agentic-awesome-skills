@@ -3,9 +3,35 @@ Base validator with common validation logic for document files.
 """
 
 import re
+import shutil
 from pathlib import Path
 
 import lxml.etree
+
+
+def hardened_xml_parser():
+    return lxml.etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False, huge_tree=False)
+
+
+def parse_xml(source, **kwargs):
+    return lxml.etree.parse(source, parser=hardened_xml_parser(), **kwargs)
+
+
+def safe_extract_all(zip_ref, destination):
+    """Extract a zip archive without allowing members to escape destination."""
+    destination = Path(destination).resolve()
+    for member in zip_ref.infolist():
+        target = (destination / member.filename).resolve()
+        try:
+            target.relative_to(destination)
+        except ValueError as exc:
+            raise ValueError(f"Unsafe archive member: {member.filename}") from exc
+        if member.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with zip_ref.open(member) as src, target.open("wb") as dst:
+            shutil.copyfileobj(src, dst)
 
 
 class BaseSchemaValidator:
@@ -131,7 +157,7 @@ class BaseSchemaValidator:
         for xml_file in self.xml_files:
             try:
                 # Try to parse the XML file
-                lxml.etree.parse(str(xml_file))
+                parse_xml(str(xml_file))
             except lxml.etree.XMLSyntaxError as e:
                 errors.append(
                     f"  {xml_file.relative_to(self.unpacked_dir)}: "
@@ -159,7 +185,7 @@ class BaseSchemaValidator:
 
         for xml_file in self.xml_files:
             try:
-                root = lxml.etree.parse(str(xml_file)).getroot()
+                root = parse_xml(str(xml_file)).getroot()
                 declared = set(root.nsmap.keys()) - {None}  # Exclude default namespace
 
                 for attr_val in [
@@ -190,7 +216,7 @@ class BaseSchemaValidator:
 
         for xml_file in self.xml_files:
             try:
-                root = lxml.etree.parse(str(xml_file)).getroot()
+                root = parse_xml(str(xml_file)).getroot()
                 file_ids = {}  # Track IDs that must be unique within this file
 
                 # Remove all mc:AlternateContent elements from the tree
@@ -310,7 +336,7 @@ class BaseSchemaValidator:
         for rels_file in rels_files:
             try:
                 # Parse relationships file
-                rels_root = lxml.etree.parse(str(rels_file)).getroot()
+                rels_root = parse_xml(str(rels_file)).getroot()
 
                 # Get the directory where this .rels file is located
                 rels_dir = rels_file.parent
@@ -411,7 +437,7 @@ class BaseSchemaValidator:
 
             try:
                 # Parse the .rels file to get valid relationship IDs and their types
-                rels_root = lxml.etree.parse(str(rels_file)).getroot()
+                rels_root = parse_xml(str(rels_file)).getroot()
                 rid_to_type = {}
 
                 for rel in rels_root.findall(
@@ -434,7 +460,7 @@ class BaseSchemaValidator:
                         rid_to_type[rid] = type_name
 
                 # Parse the XML file to find all r:id references
-                xml_root = lxml.etree.parse(str(xml_file)).getroot()
+                xml_root = parse_xml(str(xml_file)).getroot()
 
                 # Find all elements with r:id attributes
                 for elem in xml_root.iter():
@@ -531,7 +557,7 @@ class BaseSchemaValidator:
 
         try:
             # Parse and get all declared parts and extensions
-            root = lxml.etree.parse(str(content_types_file)).getroot()
+            root = parse_xml(str(content_types_file)).getroot()
             declared_parts = set()
             declared_extensions = set()
 
@@ -593,7 +619,7 @@ class BaseSchemaValidator:
                     continue
 
                 try:
-                    root_tag = lxml.etree.parse(str(xml_file)).getroot().tag
+                    root_tag = parse_xml(str(xml_file)).getroot().tag
                     root_name = root_tag.split("}")[-1] if "}" in root_tag else root_tag
 
                     if root_name in declarable_roots and path_str not in declared_parts:
@@ -832,15 +858,12 @@ class BaseSchemaValidator:
         try:
             # Load schema
             with open(schema_path, "rb") as xsd_file:
-                parser = lxml.etree.XMLParser()
-                xsd_doc = lxml.etree.parse(
-                    xsd_file, parser=parser, base_url=str(schema_path)
-                )
+                xsd_doc = parse_xml(xsd_file, base_url=str(schema_path))
                 schema = lxml.etree.XMLSchema(xsd_doc)
 
             # Load and preprocess XML
             with open(xml_file, "r") as f:
-                xml_doc = lxml.etree.parse(f)
+                xml_doc = parse_xml(f)
 
             xml_doc, _ = self._remove_template_tags_from_text_nodes(xml_doc)
             xml_doc = self._preprocess_for_mc_ignorable(xml_doc)
@@ -888,7 +911,7 @@ class BaseSchemaValidator:
 
             # Extract original file
             with zipfile.ZipFile(self.original_file, "r") as zip_ref:
-                zip_ref.extractall(temp_path)
+                safe_extract_all(zip_ref, temp_path)
 
             # Find corresponding file in original
             original_xml_file = temp_path / relative_path

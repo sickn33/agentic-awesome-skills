@@ -1,4 +1,5 @@
-pillow>=10.0.0
+pillow>=12.2.0
 imageio>=2.31.0
 imageio-ffmpeg>=0.4.9
 numpy>=1.24.0
+setuptools>=78.1.1

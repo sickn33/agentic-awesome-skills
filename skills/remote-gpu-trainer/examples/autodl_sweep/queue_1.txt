@@ -1,0 +1,6 @@
+# Queue file for instance 1 — one ablation cell per line: <cfg_path> <task> [epochs]
+# Blank epochs => wrapper default (20). Detection needs more epochs (U32) => 50.
+# Split cells across queue_1.txt / queue_2.txt by COST so queues finish together.
+configs/ablation/baseline.yaml        reconstruction 20
+configs/ablation/no_aug.yaml          reconstruction 20
+configs/ablation/det_baseline.yaml    detection      50

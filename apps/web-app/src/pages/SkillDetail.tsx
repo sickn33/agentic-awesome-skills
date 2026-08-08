@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router';
 import { SkillStarButton } from '../components/SkillStarButton';
 import { Icon } from '../components/ui/Icon';
 import { useSkills } from '../context/SkillContext';
 import { usePageMeta } from '../hooks/usePageMeta';
-import { buildSkillFallbackMeta, buildSkillMeta, selectTopSkills } from '../utils/seo';
+import { buildSkillFallbackMeta, buildSkillMeta, selectTopSkills, toIndexableRoutePath } from '../utils/seo';
 import { getSkillMarkdownCandidateUrls } from '../utils/publicAssetUrls';
+import { getRelatedSeoLandingPagesForSkill } from '../data/seoLandingPages';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 
@@ -15,6 +16,28 @@ const Markdown = lazy(() => import('react-markdown'));
 function looksLikeHtmlDocument(text: string): boolean {
   const trimmed = text.trim().toLowerCase();
   return trimmed.startsWith('<!doctype html') || trimmed.startsWith('<html');
+}
+
+const inFlightMarkdownRequests = new Map<string, Promise<string>>();
+
+function fetchMarkdownOnce(url: string, scope: string): Promise<string> {
+  const requestKey = `${scope}:${url}`;
+  const existing = inFlightMarkdownRequests.get(requestKey);
+  if (existing) return existing;
+
+  const request = fetch(url).then(async (response) => {
+    if (!response.ok) throw new Error(`Request failed (${response.status}) for ${url}`);
+    const text = await response.text();
+    if (looksLikeHtmlDocument(text)) throw new Error(`HTML fallback returned instead of markdown for ${url}`);
+    return text;
+  });
+
+  inFlightMarkdownRequests.set(requestKey, request);
+  void request.then(
+    () => inFlightMarkdownRequests.delete(requestKey),
+    () => inFlightMarkdownRequests.delete(requestKey),
+  );
+  return request;
 }
 
 /** Split YAML frontmatter (--- ... ---) and markdown body */
@@ -52,6 +75,14 @@ function parseFrontmatterRows(frontmatter: string): Array<{ key: string; value: 
     .filter((row): row is { key: string; value: string } => row !== null);
 }
 
+function slugifyHeading(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[`*_~[\]()]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
 interface RouteParams {
   id: string;
   [key: string]: string | undefined;
@@ -66,9 +97,7 @@ export function SkillDetail(): React.ReactElement {
   const [copiedFull, setCopiedFull] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [customContext, setCustomContext] = useState('');
-  const [commandCopied, setCommandCopied] = useState(false);
   const [retryToken, setRetryToken] = useState(0);
-  const installCommand = 'npx antigravity-awesome-skills';
   const skill = useMemo(() => skills.find(s => s.id === id), [skills, id]);
 
   const topPrioritySkills = useMemo(() => selectTopSkills(skills), [skills]);
@@ -100,6 +129,18 @@ export function SkillDetail(): React.ReactElement {
   const communityCount = useMemo(() => (id ? stars[id] || 0 : 0), [stars, id]);
   const { frontmatter, body: markdownBody } = useMemo(() => splitFrontmatter(content), [content]);
   const frontmatterRows = useMemo(() => parseFrontmatterRows(frontmatter), [frontmatter]);
+  const headingLinks = useMemo(() => markdownBody
+    .split('\n')
+    .flatMap((line) => {
+      const match = line.match(/^##\s+(.+)$/);
+      if (!match) return [];
+      const label = match[1].replace(/[`*_~]/g, '').trim();
+      return label ? [{ label, id: slugifyHeading(label) }] : [];
+    }), [markdownBody]);
+  const relatedTopicPages = useMemo(
+    () => skill ? getRelatedSeoLandingPagesForSkill(skill) : [],
+    [skill],
+  );
 
   useEffect(() => {
     if (contextLoading || !skill) return;
@@ -111,7 +152,6 @@ export function SkillDetail(): React.ReactElement {
         const cleanPath = skill.path.startsWith('skills/')
           ? skill.path.replace('skills/', '')
           : skill.path;
-
         const candidateUrls = getSkillMarkdownCandidateUrls({
           baseUrl: import.meta.env.BASE_URL,
           origin: window.location.origin,
@@ -125,17 +165,7 @@ export function SkillDetail(): React.ReactElement {
 
         for (const url of candidateUrls) {
           try {
-            const mdRes = await fetch(url);
-            if (!mdRes.ok) {
-              throw new Error(`Request failed (${mdRes.status}) for ${url}`);
-            }
-
-            const text = await mdRes.text();
-            if (looksLikeHtmlDocument(text)) {
-              throw new Error(`HTML fallback returned instead of markdown for ${url}`);
-            }
-
-            markdown = text;
+            markdown = await fetchMarkdownOnce(url, skill.id);
             break;
           } catch (err) {
             lastError = err instanceof Error ? err : new Error(String(err));
@@ -169,12 +199,6 @@ export function SkillDetail(): React.ReactElement {
     navigator.clipboard.writeText(finalPrompt);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const copyInstallCommand = async () => {
-    await navigator.clipboard.writeText(installCommand);
-    setCommandCopied(true);
-    window.setTimeout(() => setCommandCopied(false), 2000);
   };
 
   const copyFullToClipboard = () => {
@@ -236,8 +260,8 @@ export function SkillDetail(): React.ReactElement {
   }
 
   return (
-    <div className="mx-auto max-w-5xl">
-      <div className="relative mb-8 overflow-hidden rounded-3xl border border-slate-200/80 bg-gradient-to-br from-white via-slate-50 to-teal-50 p-6 shadow-sm dark:border-slate-800 dark:from-slate-950 dark:via-slate-950 dark:to-teal-950/20 sm:p-8">
+    <div className="skill-detail">
+      <div className="skill-detail__hero">
         <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-teal-300/20 blur-3xl dark:bg-teal-500/20" />
         <div className="pointer-events-none absolute -bottom-24 -left-20 h-56 w-56 rounded-full bg-slate-300/20 blur-3xl dark:bg-slate-600/20" />
 
@@ -249,7 +273,7 @@ export function SkillDetail(): React.ReactElement {
           Back to Catalog
         </Link>
 
-        <div className="relative flex flex-col justify-between gap-5 rounded-2xl border border-slate-200/80 bg-white/95 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/80 md:flex-row md:items-center">
+        <div className="skill-detail__summary">
           <div className="flex-1">
             <div className="mb-2 flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-teal-100 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-teal-700 dark:bg-teal-900/50 dark:text-teal-300">
@@ -299,24 +323,24 @@ export function SkillDetail(): React.ReactElement {
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-slate-200/80 bg-white/95 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
-          <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900">
+        <div className="skill-detail__install-and-context">
+          <div className="mb-4 border border-slate-300 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-              Use it now
+              Canonical skill ID
             </p>
             <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-              Start quickly: install the package, open your workspace, and run this skill prompt directly.
+              Give this exact ID to your agent when it selects an AAS Core stack, or use it when reviewing a proposed stack. Workbench reviews completed stack and plan artifacts; it does not compose or install them.
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-3">
-              <code className="inline-block rounded-md border border-slate-800 bg-slate-900 px-3 py-2 font-mono text-sm text-slate-50">
-                {installCommand}
+              <code className="inline-block border border-slate-800 bg-slate-900 px-3 py-2 font-mono text-sm text-slate-50">
+                {skill.id}
               </code>
-              <button
-                onClick={copyInstallCommand}
-                className="inline-flex items-center text-sm font-medium text-teal-700 transition-colors hover:text-teal-600 dark:text-teal-300 dark:hover:text-teal-200"
+              <Link
+                to={toIndexableRoutePath('/workbench')}
+                className="inline-flex items-center border border-teal-700 px-3 py-2 text-sm font-semibold text-teal-800 transition-colors hover:bg-teal-50 dark:border-teal-400 dark:text-teal-200 dark:hover:bg-teal-950/40"
               >
-                {commandCopied ? 'Copied' : 'Copy command'}
-              </button>
+                Review Core artifacts
+              </Link>
             </div>
           </div>
 
@@ -337,8 +361,51 @@ export function SkillDetail(): React.ReactElement {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <div className="p-6 sm:p-8">
+      {relatedTopicPages.length > 0 && (
+        <section className="skill-detail__related">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+            Related topic guides
+          </p>
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                Place @{skill.name} in the larger AAS catalog
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                These entry points connect this skill to installable agentic skills, the GitHub repository, and focused plugin packs.
+              </p>
+            </div>
+            <Link
+              to={toIndexableRoutePath('/topics/github-ai-skills-repository')}
+              className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+            >
+              GitHub skills guide
+            </Link>
+          </div>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            {relatedTopicPages.map((page) => (
+              <Link
+                key={page.slug}
+                to={toIndexableRoutePath(`/topics/${page.slug}`)}
+                className="rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 transition-colors hover:border-slate-400 dark:border-slate-800 dark:from-slate-950 dark:to-slate-900 dark:hover:border-slate-600"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  {page.eyebrow}
+                </p>
+                <h3 className="mt-2 text-base font-semibold text-slate-900 dark:text-slate-100">
+                  {page.h1}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                  {page.primaryIntent}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <div className="skill-detail__reading">
+        <article className="skill-detail__article">
           {frontmatterRows.length > 0 && (
             <div className="mb-6">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
@@ -380,12 +447,33 @@ export function SkillDetail(): React.ReactElement {
               <Markdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeHighlight]}
+                components={{
+                  h2: ({ children }) => {
+                    const label = String(children);
+                    return <h2 id={slugifyHeading(label)}>{children}</h2>;
+                  },
+                }}
               >
                 {markdownBody}
               </Markdown>
             </Suspense>
           </div>
-        </div>
+        </article>
+        <aside className="skill-detail__toc" aria-label="On this page">
+          <h2>On this page</h2>
+          {headingLinks.length > 0 ? (
+            <nav>
+              {headingLinks.map((heading) => <a key={heading.id} href={`#${heading.id}`}>{heading.label}</a>)}
+            </nav>
+          ) : <p>Skill documentation</p>}
+          <dl>
+            <div><dt>Canonical ID</dt><dd>{skill.id}</dd></div>
+            <div><dt>Category</dt><dd>{skill.category}</dd></div>
+            <div><dt>Risk</dt><dd>{skill.risk || 'unknown'}</dd></div>
+            {skill.source && <div><dt>Source</dt><dd>{skill.source}</dd></div>}
+            {skill.date_added && <div><dt>Added</dt><dd>{skill.date_added}</dd></div>}
+          </dl>
+        </aside>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 
 ## 概述
 
-本文档定义了Antigravity Awesome Skills项目中技能的质量标准和评估标准。所有提交的技能都必须满足这些标准才能被接受。
+本文档定义了Agentic Awesome Skills项目中技能的质量标准和评估标准。所有提交的技能都必须满足这些标准才能被接受。
 
 ---
 
@@ -341,14 +341,14 @@ npm run quality:compare skills/skill-name/
 
 **参考标准：**
 - [技能结构指南](skill-anatomy.md)
-- [代码规范指南](coding-standards.md)
-- [安全最佳实践](security-best-practices.md)
-- [性能优化指南](performance-guidelines.md)
+- [代码规范指南](contributors/quality-bar.md)
+- [安全最佳实践](contributors/security-guardrails.md)
+- [性能优化指南](contributors/quality-bar.md)
 
 **质量模板：**
-- [优秀技能示例](examples/excellent-skill/)
-- [常见错误示例](examples/common-mistakes/)
-- [改进前后的对比](examples/before-after/)
+- [优秀技能示例](contributors/examples.md)
+- [常见错误示例](contributors/examples.md)
+- [改进前后的对比](contributors/examples.md)
 
 ---
 
@@ -387,7 +387,7 @@ npm run quality:compare skills/skill-name/
 
 ## 总结
 
-这个质量标准确保了Antigravity Awesome Skills项目中每个技能都能为用户提供高质量、实用、安全的价值。通过明确的标准、严格的评估流程和持续的改进机制，我们建立了技能质量的信任和可靠性。
+这个质量标准确保了Agentic Awesome Skills项目中每个技能都能为用户提供高质量、实用、安全的价值。通过明确的标准、严格的评估流程和持续的改进机制，我们建立了技能质量的信任和可靠性。
 
 所有贡献者都应该仔细阅读并遵循这些标准，在提交技能前进行自我评估。维护者将根据这些标准进行公平、透明的评估。
 

@@ -1,36 +1,43 @@
-# Claude Code Skills
+# AAS Core with Claude Code
 
-If you are looking for **Claude Code skills** you can install from GitHub, this repository is designed to get you from first clone to first useful prompt quickly.
+For Claude Code, the recommended AAS path is **AAS Core**: a local, agent-first control plane for complete catalog search, Claude-owned skill selection, manifest inspection, and preview-first planning.
 
-Antigravity Awesome Skills gives Claude Code users an installable library of `SKILL.md` playbooks, role-based bundles, and execution workflows. The goal is not just to collect prompts, but to make repeatable engineering tasks easier to invoke, review, and reuse.
+The local AAS MCP is read-only. It lets Claude search and read every catalog skill, then validate and pin Claude's chosen IDs in `aas-stack.json`; planning and any approved changes stay in the AAS CLI lifecycle.
 
-Release `9.0.0` also adds a first-class Claude Code plugin distribution plus bundle plugins. If you want the full explanation of root plugin vs bundle plugin vs full install, read [plugins.md](plugins.md).
+Start with the [AAS Core guide](aas-core.md). The Claude plugin marketplace and direct skill installation remain supported delivery paths after you know which skills you want.
 
-## How to use Antigravity Awesome Skills with Claude Code
+> **Preview status:** Complete catalog search, agent-owned selection, manifest validation, and planning are the documented path. Stop after plan review; apply and recovery remain experimental.
 
-Install the library into Claude Code, then invoke focused skills directly in the conversation or through the plugin marketplace path. Claude Code benefits most when you keep the prompt specific about the skill, the scope, and the intended output.
+## How to use Agentic Awesome Skills with Claude Code
+
+Configure AAS Core for Claude Code, describe the task and constraints, let Claude choose exact IDs from the complete catalog, then review the composed stack and preview the CLI plan. Core does not install or mutate through MCP.
 
 ## Why use this repo for Claude Code
 
-- It includes 1,450+ skills instead of a narrow single-domain starter pack.
+- It lets Claude search the verified local catalog without loading the full library into context.
+- It preserves Claude's exact selection without using metadata as an eligibility gate.
+- It keeps MCP discovery read-only and CLI changes approval-gated.
+- It includes 2,007+ skills instead of a narrow single-domain starter pack.
 - It supports the standard `.claude/skills/` path and the Claude Code plugin marketplace flow.
 - It also ships generated bundle plugins so teams can install focused packs like `Essentials` or `Security Developer` from the marketplace metadata.
 - It includes onboarding docs, bundles, and workflows so new users do not need to guess where to begin.
 - It covers both everyday engineering tasks and specialized work like security reviews, infrastructure, product planning, and documentation.
 
-## Install Claude Code Skills
+## Direct install and plugins
+
+These are alternative delivery paths for users who already know which skill payload they want.
 
 ### Option A: installer CLI
 
 ```bash
-npx antigravity-awesome-skills --claude
+npx agentic-awesome-skills --claude
 ```
 
 ### Option B: Claude Code plugin marketplace
 
 ```text
-/plugin marketplace add sickn33/antigravity-awesome-skills
-/plugin install antigravity-awesome-skills
+/plugin marketplace add sickn33/agentic-awesome-skills
+/plugin install agentic-awesome-skills
 ```
 
 The Claude marketplace plugin is a plugin-safe filtered distribution of the repo. Skills that still require portability hardening or explicit setup metadata remain available in the repository, but are excluded from the plugin until they are ready.
@@ -53,6 +60,14 @@ test -d .claude/skills || test -d ~/.claude/skills
 
 ## Example Claude Code prompts
 
+With AAS Core configured:
+
+```text
+Inspect this security-review project, search and read the complete AAS catalog, and choose the exact skill IDs you judge most useful. Use compose_stack with a project profile, show me the schema 2 aas-stack.json, inspect it, and preview the plan without applying it.
+```
+
+After installing or activating a chosen skill, direct invocation still works:
+
 ```text
 Use @brainstorming to design a new billing workflow for my SaaS.
 ```
@@ -67,6 +82,7 @@ Use @create-pr to turn these changes into a clean PR summary and checklist.
 
 ## What to do next
 
+- Start with [`aas-core.md`](aas-core.md) for setup, trust boundaries, and the stack lifecycle.
 - Start with [`bundles.md`](bundles.md) if you want a role-based shortlist.
 - Use [`workflows.md`](workflows.md) if you want step-by-step execution playbooks.
 - Compare options in [`best-claude-code-skills-github.md`](best-claude-code-skills-github.md) if you are still evaluating repositories.

@@ -1,0 +1,39 @@
+{
+  "name": "aasb-security-engineer",
+  "version": "15.11.0",
+  "description": "Install the \"Security Engineer\" editorial skill bundle from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "security-engineer",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Security Engineer",
+    "shortDescription": "Security & Compliance · 8 curated skills",
+    "longDescription": "For pentesting, auditing, and hardening. Covers Ethical Hacking Methodology, Threat Modeling Expert, and 6 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Security & Compliance",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the \"Security Engineer\" skills to help me complete this task.",
+      "Review this project with the \"Security Engineer\" workflow."
+    ]
+  }
+}

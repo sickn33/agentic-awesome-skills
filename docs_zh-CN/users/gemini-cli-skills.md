@@ -2,9 +2,9 @@
 
 如果您正在 GitHub 上评估 **Gemini CLI 技能**，这个仓库是一个强大的广泛起点：可安装的技能、广泛的覆盖面，以及首日使用的清晰入门指南。
 
-Antigravity Awesome Skills 通过 `.gemini/skills/` 路径支持 Gemini CLI，并结合了通用工程剧本与针对 AI 系统、集成、基础设施、测试、产品和增长的专业技能。
+Agentic Awesome Skills 通过 `.gemini/skills/` 路径支持 Gemini CLI，并结合了通用工程剧本与针对 AI 系统、集成、基础设施、测试、产品和增长的专业技能。
 
-## 如何在 Gemini CLI 中使用 Antigravity Awesome Skills
+## 如何在 Gemini CLI 中使用 Agentic Awesome Skills
 
 安装到 Gemini 技能路径，然后要求 Gemini 一次将一个技能应用于特定任务。当您保持活跃集较小并为面前的工作选择清晰的工作流导向技能时，效果最佳。
 
@@ -12,13 +12,13 @@ Antigravity Awesome Skills 通过 `.gemini/skills/` 路径支持 Gemini CLI，�
 
 - 它直接安装到预期的 Gemini 技能路径中。
 - 它既包括核心软件工程技能，也包括更深入的代理/LLM 导向技能。
-- 它通过捆绑包和工作流帮助新用户入门，而不是强迫从 1,436+ 个文件中冷启动。
+- 它通过捆绑包和工作流帮助新用户入门，而不是强迫从 1,936+ 个文件中冷启动。
 - 无论您想要一个广泛的内部技能库，还是想要一个快速测试许多工作流的单一仓库，它都很有用。
 
 ## 安装 Gemini CLI 技能
 
 ```bash
-npx antigravity-awesome-skills --gemini
+npx agentic-awesome-skills --gemini
 ```
 
 ### 验证安装

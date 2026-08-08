@@ -26,9 +26,9 @@
 
 脚本的作用：
 
-- 将仓库 `skills/` 树同步到 `~/.gemini/antigravity/skills_library`
+- 将仓库 `skills/` 树同步到 `~/.agents/skills_library`
 - 在后备存储中保留您的完整库
-- 仅将请求的包或技能 ID 激活到 `~/.gemini/antigravity/skills`
+- 仅将请求的包或技能 ID 激活到 `~/.agents/skills`
 - `--clear` 首先归档当前活动目录，然后恢复选定的集合
 
 可选的环境覆盖：

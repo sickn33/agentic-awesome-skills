@@ -1,79 +1,191 @@
 #!/usr/bin/env node
 
+const fs = require("fs");
 const { spawnSync } = require("child_process");
+const crypto = require("crypto");
 const path = require("path");
 
 const NETWORK_TEST_ENV = "ENABLE_NETWORK_TESTS";
 const ENABLED_VALUES = new Set(["1", "true", "yes", "on"]);
 const TOOL_SCRIPTS = path.join("tools", "scripts");
 const TOOL_TESTS = path.join(TOOL_SCRIPTS, "tests");
-const LOCAL_TEST_COMMANDS = [
-    [path.join(TOOL_TESTS, "activate_skills_shell.test.js")],
-    [path.join(TOOL_TESTS, "activate_skills_batch_smoke.test.js")],
-    [path.join(TOOL_TESTS, "activate_skills_batch_security.test.js")],
-    [path.join(TOOL_TESTS, "automation_workflows.test.js")],
-    [path.join(TOOL_TESTS, "apply_skill_optimization_security.test.js")],
-    [path.join(TOOL_TESTS, "build_catalog_bundles.test.js")],
-    [path.join(TOOL_TESTS, "claude_plugin_marketplace.test.js")],
-    [path.join(TOOL_TESTS, "codex_plugin_marketplace.test.js")],
-    [path.join(TOOL_TESTS, "plugin_directories.test.js")],
-    [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_editorial_bundles.py")],
-    [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_plugin_compatibility.py")],
-    [path.join(TOOL_TESTS, "installer_antigravity_guidance.test.js")],
-    [path.join(TOOL_TESTS, "installer_filters.test.js")],
-    [path.join(TOOL_TESTS, "installer_update_sync.test.js")],
-    [path.join(TOOL_TESTS, "jetski_gemini_loader.test.cjs")],
-    [path.join(TOOL_TESTS, "merge_batch.test.js")],
-    [path.join(TOOL_TESTS, "npm_package_contents.test.js")],
-    [path.join(TOOL_TESTS, "repo_hygiene_security.test.js")],
-    [path.join(TOOL_TESTS, "copy_security.test.js")],
-    [path.join(TOOL_TESTS, "setup_web_sync.test.js")],
-    [path.join(TOOL_TESTS, "skill_filter.test.js")],
-    [path.join(TOOL_TESTS, "validate_skills_headings.test.js")],
-    [path.join(TOOL_TESTS, "validate_skills_metadata.test.js")],
-  [path.join(TOOL_TESTS, "workflow_contracts.test.js")],
-  [path.join(TOOL_TESTS, "docs_security_content.test.js")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_bundle_activation_security.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_audit_skills.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_audit_consistency.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_cleanup_synthetic_skill_sections.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_fix_missing_skill_metadata.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_fix_missing_skill_sections.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_fix_truncated_descriptions.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_generate_index_categories.py")],
-    [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_repair_description_usage_summaries.py")],
-    [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_readme_credits.py")],
-    [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_sync_microsoft_skills_security.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_sync_repo_metadata.py")],
-    [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_sync_contributors.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_sync_risk_labels.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_skill_source_metadata.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_validation_warning_budget.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_whatsapp_config_logging_security.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_maintainer_audit.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_validate_skills_headings.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_validate_skills_strict.py")],
-];
-const NETWORK_TEST_COMMANDS = [
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "inspect_microsoft_repo.py")],
-  [path.join(TOOL_SCRIPTS, "run-python.js"), path.join(TOOL_TESTS, "test_comprehensive_coverage.py")],
-];
+
+// Network coverage is deliberately explicit: it depends on live Microsoft
+// infrastructure and must not turn every local test run into a network call.
+const NETWORK_TEST_FILES = new Set([
+  path.join(TOOL_TESTS, "inspect_microsoft_repo.py"),
+  path.join(TOOL_TESTS, "test_comprehensive_coverage.py"),
+]);
+
+function isTestFile(relativePath) {
+  const basename = path.basename(relativePath);
+  return (
+    /^test_.*\.py$/.test(basename) ||
+    /\.test\.(?:js|cjs|mjs)$/.test(basename)
+  );
+}
+
+function listFiles(directory) {
+  const entries = fs.readdirSync(directory, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const filePath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...listFiles(filePath));
+    } else if (entry.isFile()) {
+      files.push(filePath);
+    }
+  }
+
+  return files.sort();
+}
+
+function commandForTest(testPath) {
+  return testPath.endsWith(".py")
+    ? [path.join(TOOL_SCRIPTS, "run-python.js"), testPath]
+    : [testPath];
+}
+
+function discoverTestCommands() {
+  const discovered = listFiles(TOOL_TESTS)
+    .filter((testPath) => isTestFile(path.relative(TOOL_TESTS, testPath)))
+    .map(commandForTest);
+
+  const network = [...NETWORK_TEST_FILES]
+    .map(commandForTest)
+    .sort((left, right) => left.at(-1).localeCompare(right.at(-1)));
+  const networkPaths = new Set(NETWORK_TEST_FILES);
+  const local = discovered.filter((command) => !networkPaths.has(command.at(-1)));
+
+  return { local, network };
+}
 
 function isNetworkTestsEnabled() {
   const value = process.env[NETWORK_TEST_ENV];
-  if (!value) {
-    return false;
+  return value
+    ? ENABLED_VALUES.has(String(value).trim().toLowerCase())
+    : false;
+}
+
+function parsePositiveInteger(value, flag) {
+  if (!/^\d+$/.test(value)) {
+    throw new Error(`${flag} must be an integer`);
   }
-  return ENABLED_VALUES.has(String(value).trim().toLowerCase());
+
+  const parsed = Number(value);
+  if (!Number.isSafeInteger(parsed)) {
+    throw new Error(`${flag} is outside the supported integer range`);
+  }
+  return parsed;
+}
+
+function readOptionValue(args, index, flag) {
+  const argument = args[index];
+  const prefix = `${flag}=`;
+  if (argument.startsWith(prefix)) {
+    return { value: argument.slice(prefix.length), consumed: 1 };
+  }
+  if (argument === flag) {
+    if (index + 1 >= args.length || args[index + 1].startsWith("--")) {
+      throw new Error(`${flag} requires a value`);
+    }
+    return { value: args[index + 1], consumed: 2 };
+  }
+  return null;
+}
+
+function parseArgs(args) {
+  let mode = null;
+  let shardIndex = null;
+  let shardCount = null;
+
+  for (let index = 0; index < args.length;) {
+    const argument = args[index];
+    if (argument === "--local" || argument === "--network") {
+      if (mode) {
+        throw new Error(`Test mode specified more than once: ${argument}`);
+      }
+      mode = argument;
+      index += 1;
+      continue;
+    }
+
+    const indexOption = readOptionValue(args, index, "--shard-index");
+    if (indexOption) {
+      if (shardIndex !== null) {
+        throw new Error("--shard-index specified more than once");
+      }
+      shardIndex = parsePositiveInteger(indexOption.value, "--shard-index");
+      index += indexOption.consumed;
+      continue;
+    }
+
+    const countOption = readOptionValue(args, index, "--shard-count");
+    if (countOption) {
+      if (shardCount !== null) {
+        throw new Error("--shard-count specified more than once");
+      }
+      shardCount = parsePositiveInteger(countOption.value, "--shard-count");
+      index += countOption.consumed;
+      continue;
+    }
+
+    throw new Error(`Unknown test option: ${argument}`);
+  }
+
+  const hasShardOption = shardIndex !== null || shardCount !== null;
+  if (hasShardOption && (shardIndex === null || shardCount === null)) {
+    throw new Error("--shard-index and --shard-count must be supplied together");
+  }
+  if (hasShardOption && mode !== "--local") {
+    throw new Error("Test sharding is supported only with explicit --local mode");
+  }
+  if (hasShardOption && shardCount < 1) {
+    throw new Error("--shard-count must be at least 1");
+  }
+  if (hasShardOption && shardIndex >= shardCount) {
+    throw new Error("--shard-index is zero-based and must be less than --shard-count");
+  }
+
+  return { mode, shardIndex, shardCount };
+}
+
+function stableShardIndex(testPath, shardCount) {
+  const digest = crypto.createHash("sha256").update(testPath).digest();
+  return digest.readUInt32BE(0) % shardCount;
+}
+
+function shardCommands(commands, shardIndex, shardCount) {
+  if (shardIndex === null || shardCount === null) {
+    return commands;
+  }
+  return commands.filter(
+    (commandArgs) => stableShardIndex(commandArgs.at(-1), shardCount) === shardIndex,
+  );
+}
+
+function emitTiming(record) {
+  console.log(`[tests:timing] ${JSON.stringify(record)}`);
 }
 
 function runNodeCommand(args) {
+  const startedAt = process.hrtime.bigint();
   const result = spawnSync(process.execPath, args, {
     env: {
       ...process.env,
       PYTHONDONTWRITEBYTECODE: process.env.PYTHONDONTWRITEBYTECODE || "1",
     },
     stdio: "inherit",
+  });
+
+  const elapsedMs = Number(process.hrtime.bigint() - startedAt) / 1_000_000;
+
+  emitTiming({
+    type: "test",
+    path: args.at(-1),
+    elapsed_ms: Math.round(elapsedMs),
+    status: result.error || result.signal || result.status !== 0 ? "failed" : "passed",
   });
 
   if (result.error) {
@@ -93,26 +205,39 @@ function runNodeCommand(args) {
   }
 }
 
-function runCommandSet(commands) {
+function runCommandSet(commands, metadata = {}) {
+  const startedAt = process.hrtime.bigint();
   for (const commandArgs of commands) {
     runNodeCommand(commandArgs);
   }
+
+  const elapsedMs = Number(process.hrtime.bigint() - startedAt) / 1_000_000;
+  emitTiming({
+    type: "summary",
+    mode: metadata.mode || "default",
+    shard_index: metadata.shardIndex,
+    shard_count: metadata.shardCount,
+    test_count: commands.length,
+    elapsed_ms: Math.round(elapsedMs),
+  });
 }
 
 function main() {
-  const mode = process.argv[2];
+  const { mode, shardIndex, shardCount } = parseArgs(process.argv.slice(2));
+  const { local, network } = discoverTestCommands();
 
   if (mode === "--local") {
-    runCommandSet(LOCAL_TEST_COMMANDS);
+    const selected = shardCommands(local, shardIndex, shardCount);
+    runCommandSet(selected, { mode: "local", shardIndex, shardCount });
     return;
   }
 
   if (mode === "--network") {
-    runCommandSet(NETWORK_TEST_COMMANDS);
+    runCommandSet(network, { mode: "network", shardIndex: null, shardCount: null });
     return;
   }
 
-  runCommandSet(LOCAL_TEST_COMMANDS);
+  runCommandSet(local, { mode: "local", shardIndex: null, shardCount: null });
 
   if (!isNetworkTestsEnabled()) {
     console.log(
@@ -122,7 +247,20 @@ function main() {
   }
 
   console.log(`[tests] ${NETWORK_TEST_ENV} enabled; running network integration tests.`);
-  runCommandSet(NETWORK_TEST_COMMANDS);
+  runCommandSet(network, { mode: "network", shardIndex: null, shardCount: null });
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  NETWORK_TEST_FILES,
+  commandForTest,
+  discoverTestCommands,
+  isTestFile,
+  listFiles,
+  parseArgs,
+  shardCommands,
+  stableShardIndex,
+};

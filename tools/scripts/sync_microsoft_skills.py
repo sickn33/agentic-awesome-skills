@@ -12,10 +12,12 @@ import tempfile
 import json
 from pathlib import Path, PurePosixPath
 
+from _project_paths import find_repo_root
+
 MS_REPO = "https://github.com/microsoft/skills.git"
-REPO_ROOT = Path(__file__).parent.parent
+REPO_ROOT = find_repo_root(__file__)
 TARGET_DIR = REPO_ROOT / "skills"
-DOCS_DIR = REPO_ROOT / "docs"
+DOCS_DIR = REPO_ROOT / "docs" / "sources"
 ATTRIBUTION_FILE = DOCS_DIR / "microsoft-skills-attribution.json"
 
 
@@ -179,6 +181,9 @@ def find_skills_in_directory(source_dir: Path):
             actual_dir = item
 
         if skill_md is None:
+            continue
+
+        if not is_safe_regular_file(skill_md, source_root):
             continue
 
         try:
@@ -424,8 +429,9 @@ def save_attribution(metadata: list):
 def copy_license(source_dir: Path):
     """Copy the Microsoft LICENSE to docs/."""
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    if (source_dir / "LICENSE").exists():
-        shutil.copy2(source_dir / "LICENSE", DOCS_DIR / "LICENSE-MICROSOFT")
+    license_file = source_dir / "LICENSE"
+    if is_safe_regular_file(license_file, source_dir):
+        shutil.copy2(license_file.resolve(), DOCS_DIR / "LICENSE-MICROSOFT")
 
 
 def main():
