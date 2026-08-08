@@ -108,6 +108,175 @@ class EditorialBundlesTests(unittest.TestCase):
         sample_skill_dir = essentials_plugin / "concise-planning"
         self.assertTrue((sample_skill_dir / "SKILL.md").is_file())
 
+    def test_agent_plugin_manifest_is_closed_and_schema_pinned(self):
+        metadata = editorial_bundles.load_metadata(str(REPO_ROOT))
+        essentials = next(
+            bundle for bundle in self.manifest_bundles if bundle["id"] == "essentials"
+        )
+        manifest = editorial_bundles._bundle_agent_plugin_manifest(metadata, essentials)
+
+        self.assertEqual(manifest["$schema"], editorial_bundles.AGENT_PLUGIN_SCHEMA_URL)
+        self.assertEqual(manifest["name"], "agentic-bundle-essentials")
+        self.assertNotIn("skills", manifest)
+        self.assertNotIn("interface", manifest)
+
+        with self.assertRaisesRegex(ValueError, "unsupported field: skills"):
+            editorial_bundles._validate_agent_plugin_manifest(
+                {**manifest, "skills": "./skills/"}
+            )
+
+        with self.assertRaisesRegex(ValueError, "Invalid Agent Plugins manifest name"):
+            editorial_bundles._validate_agent_plugin_manifest(
+                {**manifest, "name": "invalid--name"}
+            )
+
+    def test_flagship_codex_manifest_has_public_listing_metadata_and_assets(self):
+        metadata = editorial_bundles.load_metadata(str(REPO_ROOT))
+        flagship = next(
+            bundle
+            for bundle in self.manifest_bundles
+            if bundle["id"] == editorial_bundles.FLAGSHIP_BUNDLE_ID
+        )
+        manifest = editorial_bundles._bundle_codex_plugin_manifest(metadata, flagship)
+        interface = manifest["interface"]
+
+        self.assertEqual(interface["websiteURL"], editorial_bundles.CATALOG_URL)
+        self.assertEqual(
+            interface["privacyPolicyURL"],
+            editorial_bundles.PRIVACY_POLICY_URL,
+        )
+        self.assertEqual(
+            interface["termsOfServiceURL"],
+            editorial_bundles.TERMS_OF_SERVICE_URL,
+        )
+        self.assertEqual(interface["logo"], "./assets/logo.png")
+        self.assertEqual(interface["composerIcon"], "./assets/composer-icon.png")
+
+        plugin_root = REPO_ROOT / "plugins" / "agentic-bundle-aas-agent-mcp-builder"
+        for relative_path, source_path in editorial_bundles._bundle_asset_sources(
+            REPO_ROOT,
+            flagship,
+        ).items():
+            self.assertEqual(
+                (plugin_root / relative_path).read_bytes(),
+                source_path.read_bytes(),
+            )
+
+    def test_portable_skill_export_preserves_body_and_moves_aas_metadata(self):
+        source = """---
+name: sample-skill
+description: Use this skill for a sample task.
+risk: safe
+source: community
+tags: [sample, portable]
+---
+
+# Sample Skill
+
+Keep this body byte-for-byte.
+"""
+        exported = editorial_bundles._portable_skill_markdown(source)
+        frontmatter = editorial_bundles.parse_frontmatter(exported)
+
+        self.assertEqual(
+            set(frontmatter),
+            {"name", "description", "metadata"},
+        )
+        self.assertEqual(frontmatter["metadata"]["aas-risk"], "safe")
+        self.assertEqual(frontmatter["metadata"]["aas-source"], "community")
+        self.assertEqual(
+            frontmatter["metadata"]["aas-tags"],
+            '["sample","portable"]',
+        )
+        self.assertTrue(
+            exported.endswith("# Sample Skill\n\nKeep this body byte-for-byte.\n")
+        )
+
+    def test_generated_agent_plugin_skills_use_standard_frontmatter(self):
+        allowed_fields = editorial_bundles.AGENT_SKILL_ALLOWED_FIELDS
+        for plugin_root in sorted((REPO_ROOT / "plugins").glob("agentic-bundle-*")):
+            for skill_root in sorted((plugin_root / "skills").iterdir()):
+                if not skill_root.is_dir():
+                    continue
+                frontmatter = editorial_bundles.parse_frontmatter(
+                    (skill_root / "SKILL.md").read_text(encoding="utf-8")
+                )
+                self.assertFalse(
+                    set(frontmatter) - allowed_fields,
+                    f"non-standard frontmatter in {skill_root}",
+                )
+                self.assertEqual(frontmatter["name"], skill_root.name)
+                self.assertLessEqual(len(frontmatter["name"]), 64)
+                self.assertTrue(frontmatter["description"])
+                self.assertLessEqual(len(frontmatter["description"]), 1024)
+                self.assertTrue(
+                    all(
+                        isinstance(key, str) and isinstance(value, str)
+                        for key, value in frontmatter.get("metadata", {}).items()
+                    ),
+                    f"metadata must contain only string pairs in {skill_root}",
+                )
+
+    def test_agent_plugin_eligibility_flattens_unambiguous_qualified_skills(self):
+        essentials = next(
+            bundle for bundle in self.manifest_bundles if bundle["id"] == "essentials"
+        )
+        essentials_status = editorial_bundles._bundle_target_status(
+            essentials,
+            self.compatibility_by_id,
+        )
+        self.assertTrue(essentials_status["agent_plugins"])
+
+        indie_game = next(
+            bundle for bundle in self.manifest_bundles if bundle["id"] == "indie-game-dev"
+        )
+        indie_game_status = editorial_bundles._bundle_target_status(
+            indie_game,
+            self.compatibility_by_id,
+        )
+        self.assertTrue(indie_game_status["codex"])
+        self.assertTrue(indie_game_status["claude"])
+        self.assertTrue(indie_game_status["agent_plugins"])
+        self.assertTrue(editorial_bundles._bundle_has_flat_skill_layout(indie_game))
+
+        ambiguous_bundle = {
+            "skills": [
+                {"id": "first/game-design"},
+                {"id": "second/game-design"},
+            ]
+        }
+        self.assertFalse(
+            editorial_bundles._bundle_has_flat_skill_layout(ambiguous_bundle)
+        )
+
+        ambiguous_compatibility = {
+            "first/game-design": {
+                "targets": {"codex": "supported", "claude": "supported"},
+                "setup": {"type": "none"},
+            },
+            "second/game-design": {
+                "targets": {"codex": "supported", "claude": "supported"},
+                "setup": {"type": "none"},
+            },
+        }
+        ambiguous_status = editorial_bundles._bundle_target_status(
+            ambiguous_bundle,
+            ambiguous_compatibility,
+        )
+        self.assertTrue(ambiguous_status["codex"])
+        self.assertTrue(ambiguous_status["claude"])
+        self.assertFalse(ambiguous_status["agent_plugins"])
+
+    def test_agent_plugin_pilot_manifests_are_generated(self):
+        for bundle_id in ("essentials", "skill-author", "aas-agent-mcp-builder"):
+            manifest_path = (
+                REPO_ROOT
+                / "plugins"
+                / f"agentic-bundle-{bundle_id}"
+                / "plugin.json"
+            )
+            self.assertTrue(manifest_path.is_file(), f"missing {manifest_path}")
+
     def test_generated_plugins_cover_manifest_during_source_only_prs(self):
         generated_plugins = {
             path.name
@@ -160,6 +329,14 @@ class EditorialBundlesTests(unittest.TestCase):
             self.assertEqual(manifest["name"], plugin_name)
             if bundle.get("defaultPrompts"):
                 self.assertEqual(manifest["interface"]["defaultPrompt"], bundle["defaultPrompts"])
+            else:
+                self.assertEqual(len(manifest["interface"]["defaultPrompt"]), 2)
+                self.assertTrue(
+                    all(
+                        len(prompt) <= 128
+                        for prompt in manifest["interface"]["defaultPrompt"]
+                    )
+                )
             if bundle.get("positioning"):
                 self.assertEqual(manifest["interface"]["shortDescription"], bundle["positioning"])
             self.assertLessEqual(

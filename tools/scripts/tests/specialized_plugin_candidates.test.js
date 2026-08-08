@@ -57,6 +57,10 @@ for (const candidate of candidates) {
     `candidate ${candidate.id} should have a Claude plugin manifest`,
   );
   assert.ok(
+    fs.existsSync(path.join(pluginRoot, "plugin.json")),
+    `candidate ${candidate.id} should have an Agent Plugins manifest`,
+  );
+  assert.ok(
     codexPluginNames.has(`aasb-${candidate.id}`),
     `candidate ${candidate.id} should be listed in the Codex marketplace`,
   );

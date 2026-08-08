@@ -1,12 +1,12 @@
 ---
 name: pdf-conversion-router
 description: Use when converting a PDF into another format such as Markdown, HTML, text, JSON, DOCX, or structured notes and the agent must choose the best extraction route, settings, and cleanup strategy for maximum fidelity and readability.
-risk: safe
-source: community
-date_added: "2026-05-23"
 metadata:
   category: technique
   triggers: pdf conversion, convert pdf, pdf to markdown, pdf to html, pdf to text, pdf to json, pdf to docx, OCR pdf, slide deck pdf, medical pdf, scanned pdf
+  aas-risk: safe
+  aas-source: community
+  aas-date-added: '2026-05-23'
 ---
 
 # PDF Conversion Router

@@ -1,11 +1,11 @@
 ---
 name: content-strategy
-description: "Plan a content strategy, topic clusters, editorial roadmap, and content mix for traffic, authority, and lead generation. Use when deciding what to publish, what topics to prioritize, or how to structure a content program."
-risk: critical
-source: "https://github.com/coreyhaines31/marketingskills"
-date_added: "2026-03-21"
+description: Plan a content strategy, topic clusters, editorial roadmap, and content mix for traffic, authority, and lead generation. Use when deciding what to publish, what topics to prioritize, or how to structure a content program.
 metadata:
   version: 1.1.0
+  aas-risk: critical
+  aas-source: https://github.com/coreyhaines31/marketingskills
+  aas-date-added: '2026-03-21'
 ---
 
 # Content Strategy

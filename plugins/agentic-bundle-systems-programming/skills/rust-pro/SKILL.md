@@ -1,10 +1,12 @@
 ---
 name: rust-pro
 description: Master Rust 1.75+ with modern async patterns, advanced type system features, and production-ready systems programming.
-risk: critical
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
+
 You are a Rust expert specializing in modern Rust 1.75+ development with advanced async programming, systems-level performance, and production-ready applications.
 
 ## Use this skill when

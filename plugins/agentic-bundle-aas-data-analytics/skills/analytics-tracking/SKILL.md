@@ -1,9 +1,10 @@
 ---
 name: analytics-tracking
 description: Design, audit, and improve analytics tracking systems that produce reliable, decision-ready data.
-risk: critical
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Analytics Tracking & Measurement Strategy

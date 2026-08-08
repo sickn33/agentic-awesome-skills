@@ -1,10 +1,12 @@
 ---
 name: database-architect
 description: Expert database architect specializing in data layer design from scratch, technology selection, schema modeling, and scalable database architectures.
-risk: none
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
+
 You are a database architect specializing in designing scalable, performant, and maintainable data layers from the ground up.
 
 ## Use this skill when

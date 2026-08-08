@@ -1,9 +1,10 @@
 ---
 name: 3d-games
-description: "3D game development principles. Rendering, shaders, physics, cameras."
-risk: none
-source: community
-date_added: "2026-02-27"
+description: 3D game development principles. Rendering, shaders, physics, cameras.
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # 3D Game Development

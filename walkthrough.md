@@ -403,3 +403,10 @@
 - Expanded skill-review fingerprints and workflow triggers to cover bundled support files, and tightened unsafe guidance in the affected canonical skills.
 - Fixed native Windows ACL inspection for AAS preview by making PowerShell path handling explicit and returning bounded phase/path diagnostics for unresolved ACL identities.
 - Added regression coverage for every confirmed code-path finding and documented the Windows 10/11 Codex CLI preview contract from discussion `#956`.
+
+# Maintenance Walkthrough - 2026-08-06 Agent Plugins 1.0 Portability
+
+- Added a standard root `plugin.json` to every editorial bundle that passes the existing Codex/Claude safety gates and the Agent Plugins immediate-child skill-layout rule.
+- Kept the host-specific full-library roots separate, flattened qualified paths only inside generated packages, and normalized AAS provenance/risk fields into standard string metadata without changing instruction bodies.
+- Pinned offline validation to an attributed snapshot of the official Agent Plugins 1.0.0 JSON Schema, added deterministic Codex prompt fallbacks, and covered closed-schema, fixed-discovery, pilot-bundle, and release-alignment regressions.
+- Updated the user onboarding trinity, plugin/bundle guides, maintainer contract, and release checklist while leaving the active release-notes PR untouched.

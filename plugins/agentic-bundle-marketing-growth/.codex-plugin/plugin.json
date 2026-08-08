@@ -1,6 +1,6 @@
 {
   "name": "aasb-marketing-growth",
-  "version": "15.9.0",
+  "version": "15.11.0",
   "description": "Install the \"Marketing & Growth\" editorial skill bundle from Agentic Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
@@ -27,7 +27,13 @@
       "Interactive",
       "Write"
     ],
-    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
-    "brandColor": "#111827"
+    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the \"Marketing & Growth\" skills to help me complete this task.",
+      "Review this project with the \"Marketing & Growth\" workflow."
+    ]
   }
 }

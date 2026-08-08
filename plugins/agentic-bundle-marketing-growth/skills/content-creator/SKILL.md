@@ -1,10 +1,11 @@
 ---
 name: content-creator
-description: "Professional-grade brand voice analysis, SEO optimization, and platform-specific content frameworks."
-category: marketing
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Professional-grade brand voice analysis, SEO optimization, and platform-specific content frameworks.
+metadata:
+  aas-category: marketing
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Content Creator

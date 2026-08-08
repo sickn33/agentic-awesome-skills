@@ -1,12 +1,10 @@
 ---
 name: twilio-communications
-description: "Build communication features with Twilio: SMS messaging, voice
-  calls, WhatsApp Business API, and user verification (2FA). Covers the full
-  spectrum from simple notifications to complex IVR systems and multi-channel
-  authentication."
-risk: critical
-source: vibeship-spawner-skills (Apache 2.0)
-date_added: 2026-02-27
+description: 'Build communication features with Twilio: SMS messaging, voice calls, WhatsApp Business API, and user verification (2FA). Covers the full spectrum from simple notifications to complex IVR systems and multi-channel authentication.'
+metadata:
+  aas-risk: critical
+  aas-source: vibeship-spawner-skills (Apache 2.0)
+  aas-date-added: '2026-02-27'
 ---
 
 # Twilio Communications

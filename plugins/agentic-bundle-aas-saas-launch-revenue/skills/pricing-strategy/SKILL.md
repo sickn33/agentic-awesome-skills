@@ -1,9 +1,10 @@
 ---
 name: pricing-strategy
-description: "Design pricing, packaging, and monetization strategies based on value, customer willingness to pay, and growth objectives."
-risk: none
-source: community
-date_added: "2026-02-27"
+description: Design pricing, packaging, and monetization strategies based on value, customer willingness to pay, and growth objectives.
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Pricing Strategy

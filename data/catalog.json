@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-04T18:38:39.000Z",
-  "total": 2004,
+  "generatedAt": "2026-08-07T08:29:26.000Z",
+  "total": 2005,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -55439,6 +55439,41 @@
         "mp4"
       ],
       "path": "skills/video-content-extractor/SKILL.md"
+    },
+    {
+      "id": "video-router",
+      "canonical_id": "video-router",
+      "name": "video-router",
+      "description": "Route a video-production brief to generation, deterministic composition, supplied-footage editing, or an automatic cross-modal plan before production begins.",
+      "category": "media",
+      "risk": "none",
+      "source": "https://github.com/Orkas-AI/Orkas-VideoStudio/tree/dd4a0f40b2bc6c6b0fe6f2e732c9540ffffefe08/packages/skills/video-router",
+      "source_type": "official",
+      "source_repo": "Orkas-AI/Orkas-VideoStudio",
+      "license": "MIT",
+      "license_source": "https://github.com/Orkas-AI/Orkas-VideoStudio/blob/dd4a0f40b2bc6c6b0fe6f2e732c9540ffffefe08/LICENSE",
+      "tags": [
+        "video",
+        "routing",
+        "editing",
+        "composition",
+        "generation"
+      ],
+      "triggers": [
+        "video",
+        "routing",
+        "editing",
+        "composition",
+        "generation",
+        "router",
+        "route",
+        "brief",
+        "deterministic",
+        "supplied",
+        "footage",
+        "automatic"
+      ],
+      "path": "skills/video-router/SKILL.md"
     },
     {
       "id": "videodb",

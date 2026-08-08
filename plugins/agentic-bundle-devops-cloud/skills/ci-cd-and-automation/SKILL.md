@@ -1,13 +1,14 @@
 ---
 name: ci-cd-and-automation
 description: Automates CI/CD pipeline setup. Use when setting up or modifying build and deployment pipelines. Use when you need to automate quality gates, configure test runners in CI, or establish deployment strategies.
-risk: critical
-source: https://github.com/addyosmani/agent-skills/tree/main/skills/ci-cd-and-automation
-source_repo: addyosmani/agent-skills
-source_type: community
-date_added: 2026-07-01
 license: MIT
-license_source: https://github.com/addyosmani/agent-skills/blob/main/LICENSE
+metadata:
+  aas-risk: critical
+  aas-source: https://github.com/addyosmani/agent-skills/tree/main/skills/ci-cd-and-automation
+  aas-source-repo: addyosmani/agent-skills
+  aas-source-type: community
+  aas-date-added: '2026-07-01'
+  aas-license-source: https://github.com/addyosmani/agent-skills/blob/main/LICENSE
 ---
 
 # CI/CD and Automation

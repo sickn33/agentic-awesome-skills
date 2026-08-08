@@ -1,10 +1,11 @@
 ---
 name: burp-suite-testing
-description: "Execute comprehensive web application security testing using Burp Suite's integrated toolset, including HTTP traffic interception and modification, request analysis and replay, automated vulnerability scanning, and manual testing workflows."
-risk: offensive
-source: community
-author: zebbern
-date_added: "2026-02-27"
+description: Execute comprehensive web application security testing using Burp Suite's integrated toolset, including HTTP traffic interception and modification, request analysis and replay, automated vulnerability scanning, and manual testing workflows.
+metadata:
+  aas-risk: offensive
+  aas-source: community
+  aas-author: zebbern
+  aas-date-added: '2026-02-27'
 ---
 
 > **⚠️ AUTHORIZED USE ONLY**

@@ -1,9 +1,10 @@
 ---
 name: nodejs-best-practices
-description: "Node.js development principles and decision-making. Framework selection, async patterns, security, and architecture. Teaches thinking, not copying."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Node.js development principles and decision-making. Framework selection, async patterns, security, and architecture. Teaches thinking, not copying.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Node.js Best Practices

@@ -1,22 +1,13 @@
 ---
 name: analytics-product
-description: "Analytics de produto — PostHog, Mixpanel, eventos, funnels, cohorts, retencao, north star metric, OKRs e dashboards de produto."
-risk: none
-source: community
-date_added: '2026-03-06'
-author: renat
-tags:
-- analytics
-- product
-- metrics
-- posthog
-- mixpanel
-tools:
-- claude-code
-- antigravity
-- cursor
-- gemini-cli
-- codex-cli
+description: Analytics de produto — PostHog, Mixpanel, eventos, funnels, cohorts, retencao, north star metric, OKRs e dashboards de produto.
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-03-06'
+  aas-author: renat
+  aas-tags: '["analytics","product","metrics","posthog","mixpanel"]'
+  aas-tools: '["claude-code","antigravity","cursor","gemini-cli","codex-cli"]'
 ---
 
 # ANALYTICS-PRODUCT — Decida com Dados

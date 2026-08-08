@@ -1,8 +1,9 @@
 ---
 name: odoo-orm-expert
-description: "Master Odoo ORM patterns: search, browse, create, write, domain filters, computed fields, and performance-safe query techniques."
-risk: safe
-source: "self"
+description: 'Master Odoo ORM patterns: search, browse, create, write, domain filters, computed fields, and performance-safe query techniques.'
+metadata:
+  aas-risk: safe
+  aas-source: self
 ---
 
 # Odoo ORM Expert

@@ -1,11 +1,10 @@
 ---
 name: ai-wrapper-product
-description: Expert in building products that wrap AI APIs (OpenAI, Anthropic,
-  etc. ) into focused tools people will pay for. Not just "ChatGPT but
-  different" - products that solve specific problems with AI.
-risk: critical
-source: vibeship-spawner-skills (Apache 2.0)
-date_added: 2026-02-27
+description: Expert in building products that wrap AI APIs (OpenAI, Anthropic, etc. ) into focused tools people will pay for. Not just "ChatGPT but different" - products that solve specific problems with AI.
+metadata:
+  aas-risk: critical
+  aas-source: vibeship-spawner-skills (Apache 2.0)
+  aas-date-added: '2026-02-27'
 ---
 
 # AI Wrapper Product

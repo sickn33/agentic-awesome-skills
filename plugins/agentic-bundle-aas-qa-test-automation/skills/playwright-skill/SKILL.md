@@ -1,14 +1,11 @@
 ---
 name: playwright-skill
-description: "IMPORTANT - Path Resolution: This skill can be installed in different locations (plugin system, manual installation, global, or project-specific). Before executing any commands, determine the skill directory based on where you loaded this SKILL.md file, and use that path in all commands below."
-risk: critical
-source: community
-date_added: "2026-02-27"
-plugin:
-  setup:
-    type: manual
-    summary: "Run `npm run setup` in the skill directory before first use to install Playwright and Chromium."
-    docs: "SKILL.md"
+description: 'IMPORTANT - Path Resolution: This skill can be installed in different locations (plugin system, manual installation, global, or project-specific). Before executing any commands, determine the skill directory based on where you loaded this SKILL.md file, and use that path in all commands below.'
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
+  aas-plugin: '{"setup":{"docs":"SKILL.md","summary":"Run `npm run setup` in the skill directory before first use to install Playwright and Chromium.","type":"manual"}}'
 ---
 
 **IMPORTANT - Path Resolution:**

@@ -1,9 +1,10 @@
 ---
 name: lint-and-validate
-description: "MANDATORY: Run appropriate validation tools after EVERY code change. Do not finish a task until the code is error-free."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: 'MANDATORY: Run appropriate validation tools after EVERY code change. Do not finish a task until the code is error-free.'
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Lint and Validate Skill

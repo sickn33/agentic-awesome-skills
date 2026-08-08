@@ -1,9 +1,10 @@
 ---
 name: hig-platforms
 description: Apple Human Interface Guidelines for platform-specific design.
-risk: safe
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: safe
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Apple HIG: Platform Design

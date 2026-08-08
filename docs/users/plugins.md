@@ -1,6 +1,6 @@
-# Plugins for Claude Code and Codex
+# Plugins for compatible agent clients
 
-Release `9.0.0` adds first-class plugin distributions for both **Claude Code** and **Codex**.
+AAS ships first-class plugin distributions for **Claude Code** and **Codex**, plus portable [Agent Plugins 1.0](https://agent-plugins.org/specification) manifests for compatible specialized bundles.
 
 This page explains how plugins fit beneath **AAS Core**, the orchestration layer for Codex and Claude Code. Plugins and direct installs deliver skill payloads; Core exposes the complete catalog and validates, records, and plans the exact stack chosen by the agent.
 
@@ -44,10 +44,11 @@ Choose the full library when you want:
 
 ### Plugin install
 
-Use the plugin marketplace or repo-local plugin metadata when you want a curated, installable distribution:
+Use the plugin marketplace, repo-local metadata, or portable package when you want a curated, installable distribution:
 
 - **Claude Code** uses `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json`
 - **Codex** uses `.agents/plugins/marketplace.json` and `plugins/agentic-awesome-skills/.codex-plugin/plugin.json`
+- **Agent Plugins clients** load a specialized bundle's root `plugin.json` and discover its skills from the fixed `skills/` directory
 
 Choose the plugin route when you want:
 
@@ -102,6 +103,28 @@ Use a specialized plugin when you want:
 - a team-specific plugin install
 - a curated subset instead of the broad root plugin
 - a plugin with a clear promise, such as building web apps, auditing security, maintaining OSS repos, automating documents, or creating growth content
+
+## Portable Agent Plugins surface
+
+The [Agent Plugins specification](https://agent-plugins.org/specification) defines a shared package floor for Agent Skills and MCP server configuration. A portable AAS bundle has this shape:
+
+```text
+plugins/agentic-bundle-<bundle-id>/
+├── plugin.json
+└── skills/
+    └── <skill-id>/
+        └── SKILL.md
+```
+
+The root `plugin.json` targets the canonical `1.0.0` schema. It deliberately does not copy the host-specific `skills` or `interface` fields used by Codex: Agent Plugins discovers components from fixed locations and its manifest schema is closed.
+
+AAS generates this portable manifest only when every skill in the bundle is plugin-safe for both existing host targets and can be represented as a unique immediate child of `skills/`. Canonical qualified paths are flattened in the generated package without changing their instruction bodies; a basename collision fails the packaging gate. AAS-specific frontmatter such as provenance and risk is preserved as string values under the standard `metadata` field instead of leaking non-standard top-level keys. If any condition fails, the generator omits `plugin.json` instead of making a false portability claim. The per-bundle status in [Bundles](bundles.md) shows that result.
+
+These packages are currently **skills-only**. They do not bundle AAS Core's MCP server, credentials, hooks, or a portable `mcp.json`. Installation and enablement remain client-owned parts of the ecosystem, so use the instructions for your [compatible client](https://agent-plugins.org/compatible-clients) and point it at the desired `plugins/agentic-bundle-*` directory.
+
+`AAS Agent & MCP Builder` is the first public-directory flagship. Its version-controlled [submission dossier](../plugin-submissions/aas-agent-mcp-builder/) contains listing copy, public policy and support URLs, starter prompts, and reviewer-reproducible positive and negative evaluations. The dossier being ready does not mean the plugin is already public: OpenAI Platform review and the verified publisher's final publish action remain separate steps.
+
+The broad Codex and Claude root plugins remain host-specific because their filtered skill sets are not identical. They intentionally do not have a root Agent Plugins manifest. Choose a portable specialized bundle when cross-client packaging matters.
 
 ## Claude Code plugin surface
 
@@ -161,6 +184,7 @@ Choose a **specialized plugin** if:
 - you are onboarding a team around one domain
 - you want plugin convenience without the breadth of the root plugin
 - you want the plugin itself to communicate a clear job, audience, and workflow
+- you want one package directory that compatible Agent Plugins clients can load without host-specific manifest fields
 
 The hosted [specialized plugin landing page](https://sickn33.github.io/agentic-awesome-skills/plugins) is the quickest way to compare the current AAS plugin packs.
 
@@ -174,3 +198,4 @@ The hosted [specialized plugin landing page](https://sickn33.github.io/agentic-a
 - [Bundles](bundles.md)
 - [Specialized Plugin Roadmap](specialized-plugin-roadmap.md)
 - [Usage](usage.md)
+- [AAS Agent & MCP Builder submission dossier](../plugin-submissions/aas-agent-mcp-builder/)

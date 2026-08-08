@@ -62,7 +62,7 @@ This command:
 - runs the full release suite
 - explicitly proves `plugin-compat:check` and `bundles:check` after regeneration
 - refreshes release metadata in `README.md`
-- regenerates canonical registries, tracked web assets, both plugin marketplaces, every Codex/Claude mirror and editorial bundle, and every release-owned plugin manifest
+- regenerates canonical registries, tracked web assets, both plugin marketplaces, every Codex/Claude mirror and editorial bundle, every eligible Agent Plugins bundle manifest, and every release-owned plugin manifest
 - stages canonical release files
 - creates and pushes `release/vX.Y.Z`
 - opens a release PR containing the scripted canonical release state
@@ -96,7 +96,7 @@ The workflow reruns `sync:release-state`, installs Python dependencies from `too
 A stable or prerelease version is not complete when only its tag, GitHub Release, or npm package exists. After publication:
 
 - rerun `npm run sync:release-state`, `npm run plugin-compat:check`, and `npm run bundles:check`, then require an idempotent second pass and a clean tree;
-- verify every release-owned Codex/Claude plugin manifest and Claude marketplace entry equals `X.Y.Z`, without treating nested third-party skill manifests as AAS release manifests;
+- verify every release-owned Codex/Claude plugin manifest, eligible Agent Plugins bundle manifest, and Claude marketplace entry equals `X.Y.Z`, without treating nested third-party skill manifests as AAS release manifests;
 - bind local and remote `main`, the tag, GitHub Release, npm version and intended dist-tag, required CI, CodeQL, and the explicitly dispatched release-only Pages deployment to the exact released commit;
 - dispatch Pages only from the exact immutable `vX.Y.Z` release tag, never from `main` or another branch, and require the tag, package version, and published GitHub Release to identify the same commit before build work begins;
 - read back live `llms.txt`, `skills.json`, catalog/plugin routes, and the legacy redirect bridge;

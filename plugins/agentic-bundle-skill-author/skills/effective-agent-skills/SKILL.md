@@ -1,17 +1,18 @@
 ---
 name: effective-agent-skills
-description: "Author and review high-quality agent skills with triggers, progressive disclosure, and safety notes."
-category: development
-risk: safe
-source: community
-source_repo: davidondrej/skills
-source_type: community
-date_added: "2026-07-07"
-author: davidondrej
-tags: [skills, authoring, quality]
-tools: [claude, codex]
-license: "MIT"
-license_source: "https://github.com/davidondrej/skills/blob/main/LICENSE"
+description: Author and review high-quality agent skills with triggers, progressive disclosure, and safety notes.
+license: MIT
+metadata:
+  aas-category: development
+  aas-risk: safe
+  aas-source: community
+  aas-source-repo: davidondrej/skills
+  aas-source-type: community
+  aas-date-added: '2026-07-07'
+  aas-author: davidondrej
+  aas-tags: '["skills","authoring","quality"]'
+  aas-tools: '["claude","codex"]'
+  aas-license-source: https://github.com/davidondrej/skills/blob/main/LICENSE
 ---
 
 # Agent Skills: A Complete Guide

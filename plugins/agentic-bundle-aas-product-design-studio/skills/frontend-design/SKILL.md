@@ -1,9 +1,10 @@
 ---
 name: frontend-design
-description: "You are a frontend designer-engineer, not a layout generator."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: You are a frontend designer-engineer, not a layout generator.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Frontend Design (Distinctive, Production-Grade)

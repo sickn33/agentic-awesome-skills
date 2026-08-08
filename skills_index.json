@@ -46630,6 +46630,39 @@
     ]
   },
   {
+    "id": "video-router",
+    "path": "skills/video-router",
+    "category": "media",
+    "name": "video-router",
+    "description": "Route a video-production brief to generation, deterministic composition, supplied-footage editing, or an automatic cross-modal plan before production begins.",
+    "risk": "none",
+    "source": "https://github.com/Orkas-AI/Orkas-VideoStudio/tree/dd4a0f40b2bc6c6b0fe6f2e732c9540ffffefe08/packages/skills/video-router",
+    "date_added": "2026-08-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Orkas-AI/Orkas-VideoStudio",
+    "license": "MIT",
+    "license_source": "https://github.com/Orkas-AI/Orkas-VideoStudio/blob/dd4a0f40b2bc6c6b0fe6f2e732c9540ffffefe08/LICENSE",
+    "tags": [
+      "video",
+      "routing",
+      "editing",
+      "composition",
+      "generation"
+    ]
+  },
+  {
     "id": "videodb",
     "path": "skills/videodb",
     "category": "media",

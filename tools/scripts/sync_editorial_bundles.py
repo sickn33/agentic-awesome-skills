@@ -13,9 +13,12 @@ import uuid
 from pathlib import Path
 from typing import Any, Callable
 
+import yaml
+
 from _project_paths import find_repo_root
 from plugin_compatibility import build_report as build_plugin_compatibility_report
 from plugin_compatibility import compatibility_by_skill_id, sync_plugin_compatibility
+from plugin_compatibility import parse_frontmatter
 from update_readme import configure_utf8_output, load_metadata
 
 
@@ -23,7 +26,43 @@ SAFE_SKILL_ID_RE = re.compile(
     r"^(?!.*(?:^|/)\.{1,2}(?:/|$))[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
 )
 SAFE_BUNDLE_ID_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?$")
+AGENT_PLUGIN_NAME_RE = re.compile(
+    r"^(?!.*(?:--|\.\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$"
+)
+AGENT_PLUGIN_SCHEMA_URL = "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
+AGENT_PLUGIN_ALLOWED_FIELDS = {
+    "$schema",
+    "name",
+    "version",
+    "description",
+    "author",
+    "homepage",
+    "repository",
+    "license",
+    "keywords",
+    "extensions",
+}
+AGENT_SKILL_ALLOWED_FIELDS = {
+    "name",
+    "description",
+    "license",
+    "compatibility",
+    "metadata",
+    "allowed-tools",
+}
+FRONTMATTER_BLOCK_RE = re.compile(
+    r"\A---[ \t]*\r?\n.*?\r?\n---[ \t]*(?:\r?\n|\Z)",
+    re.DOTALL,
+)
 REPO_URL = "https://github.com/sickn33/agentic-awesome-skills"
+CATALOG_URL = "https://sickn33.github.io/agentic-awesome-skills/"
+PRIVACY_POLICY_URL = f"{REPO_URL}/blob/main/PRIVACY.md"
+TERMS_OF_SERVICE_URL = f"{REPO_URL}/blob/main/TERMS.md"
+FLAGSHIP_BUNDLE_ID = "aas-agent-mcp-builder"
+FLAGSHIP_ASSET_SOURCES = {
+    "assets/logo.png": Path("apps") / "web-app" / "public" / "web-app-manifest-512x512.png",
+    "assets/composer-icon.png": Path("apps") / "web-app" / "public" / "favicon-96x96.png",
+}
 AUTHOR = {
     "name": "sickn33 and contributors",
     "url": REPO_URL,
@@ -149,6 +188,174 @@ def _bundle_plugin_name(bundle_id: str) -> str:
 
 def _bundle_codex_plugin_name(bundle_id: str) -> str:
     return f"aasb-{bundle_id}"
+
+
+def _bundle_skill_destination_id(skill_id: str) -> str:
+    return skill_id.rsplit("/", 1)[-1]
+
+
+def _bundle_has_flat_skill_layout(bundle: dict[str, Any]) -> bool:
+    destination_ids = [
+        _bundle_skill_destination_id(skill["id"])
+        for skill in bundle["skills"]
+    ]
+    return len(destination_ids) == len(set(destination_ids))
+
+
+def _agent_skill_metadata_value(value: Any) -> str:
+    if isinstance(value, str):
+        return value
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if value is None:
+        return "null"
+    if isinstance(value, (int, float)):
+        return str(value)
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def _portable_skill_markdown(content: str) -> str:
+    frontmatter_match = FRONTMATTER_BLOCK_RE.match(content)
+    if not frontmatter_match:
+        raise ValueError("Portable skill export requires a YAML frontmatter block.")
+
+    original = parse_frontmatter(content)
+    if not original:
+        raise ValueError("Portable skill export could not parse YAML frontmatter.")
+
+    portable: dict[str, Any] = {}
+    for required_field in ("name", "description"):
+        value = original.get(required_field)
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(
+                f"Portable skill export requires a non-empty '{required_field}' string."
+            )
+        portable[required_field] = value
+
+    for optional_string_field in ("license", "compatibility"):
+        value = original.get(optional_string_field)
+        if value is not None:
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(
+                    f"Portable skill export field '{optional_string_field}' must be a string."
+                )
+            portable[optional_string_field] = value
+
+    metadata: dict[str, str] = {}
+    original_metadata = original.get("metadata")
+    if original_metadata is not None:
+        if not isinstance(original_metadata, dict):
+            raise ValueError("Portable skill export metadata must be an object.")
+        metadata.update(
+            {
+                str(key): _agent_skill_metadata_value(value)
+                for key, value in original_metadata.items()
+            }
+        )
+
+    for key, value in original.items():
+        if key in AGENT_SKILL_ALLOWED_FIELDS:
+            continue
+        metadata_key = f"aas-{key.replace('_', '-')}"
+        if metadata_key in metadata:
+            raise ValueError(
+                f"Portable skill export metadata collision for '{metadata_key}'."
+            )
+        metadata[metadata_key] = _agent_skill_metadata_value(value)
+
+    if metadata:
+        portable["metadata"] = metadata
+
+    allowed_tools = original.get("allowed-tools")
+    if allowed_tools is not None:
+        if isinstance(allowed_tools, list):
+            allowed_tools = " ".join(str(tool).strip() for tool in allowed_tools if str(tool).strip())
+        if not isinstance(allowed_tools, str) or not allowed_tools.strip():
+            raise ValueError("Portable skill export allowed-tools must be a non-empty string.")
+        portable["allowed-tools"] = allowed_tools
+
+    dumped_frontmatter = yaml.safe_dump(
+        portable,
+        allow_unicode=True,
+        default_flow_style=False,
+        sort_keys=False,
+        width=4096,
+    )
+    body = content[frontmatter_match.end():].lstrip("\r\n")
+    return f"---\n{dumped_frontmatter}---\n\n{body}"
+
+
+def _validate_agent_plugin_manifest(manifest: dict[str, Any]) -> None:
+    unknown_fields = set(manifest) - AGENT_PLUGIN_ALLOWED_FIELDS
+    if unknown_fields:
+        raise ValueError(
+            f"Agent Plugins manifest contains unsupported field: {sorted(unknown_fields)[0]}"
+        )
+
+    if manifest.get("$schema") != AGENT_PLUGIN_SCHEMA_URL:
+        raise ValueError("Agent Plugins manifest must use the canonical 1.0.0 schema URL.")
+
+    name = manifest.get("name")
+    if not isinstance(name, str) or not AGENT_PLUGIN_NAME_RE.fullmatch(name) or len(name) > 64:
+        raise ValueError(f"Invalid Agent Plugins manifest name: {name!r}")
+
+    string_fields = ("version", "description", "homepage", "repository", "license")
+    for field in string_fields:
+        if field in manifest and not isinstance(manifest[field], str):
+            raise ValueError(f"Agent Plugins manifest field '{field}' must be a string.")
+
+    author = manifest.get("author")
+    if author is not None:
+        if not isinstance(author, dict):
+            raise ValueError("Agent Plugins manifest author must be an object.")
+        unknown_author_fields = set(author) - {"name", "email", "url"}
+        if unknown_author_fields:
+            raise ValueError(
+                "Agent Plugins manifest author contains unsupported field: "
+                f"{sorted(unknown_author_fields)[0]}"
+            )
+        if any(not isinstance(value, str) for value in author.values()):
+            raise ValueError("Agent Plugins manifest author fields must be strings.")
+
+    keywords = manifest.get("keywords")
+    if keywords is not None and (
+        not isinstance(keywords, list) or any(not isinstance(keyword, str) for keyword in keywords)
+    ):
+        raise ValueError("Agent Plugins manifest keywords must be an array of strings.")
+
+    extensions = manifest.get("extensions")
+    if extensions is not None and (
+        not isinstance(extensions, dict)
+        or any(not isinstance(value, dict) for value in extensions.values())
+    ):
+        raise ValueError("Agent Plugins manifest extensions must map namespaces to objects.")
+
+
+def _bundle_agent_plugin_manifest(
+    metadata: dict[str, Any],
+    bundle: dict[str, Any],
+) -> dict[str, Any]:
+    manifest = {
+        "$schema": AGENT_PLUGIN_SCHEMA_URL,
+        "name": _bundle_plugin_name(bundle["id"]),
+        "version": metadata["version"],
+        "description": (
+            f'Portable skills-only "{bundle["name"]}" plugin from Agentic Awesome Skills.'
+        ),
+        "author": AUTHOR,
+        "homepage": REPO_URL,
+        "repository": REPO_URL,
+        "license": "MIT",
+        "keywords": [
+            "agent-plugins",
+            "agent-skills",
+            "bundle",
+            bundle["id"],
+            "agentic-awesome-skills",
+        ],
+    }
+    _validate_agent_plugin_manifest(manifest)
+    return manifest
 
 
 def _humanize_skill_label(skill_id: str) -> str:
@@ -290,9 +497,18 @@ def _validate_editorial_bundles(root: Path, payload: dict[str, Any]) -> list[dic
 
 def _bundle_target_status(bundle: dict[str, Any], compatibility: dict[str, dict[str, Any]]) -> dict[str, Any]:
     bundle_skills = [compatibility[skill["id"]] for skill in bundle["skills"] if skill["id"] in compatibility]
+    complete_compatibility = len(bundle_skills) == len(bundle["skills"])
+    flat_skill_layout = _bundle_has_flat_skill_layout(bundle)
+    codex_supported = complete_compatibility and all(
+        skill["targets"]["codex"] == "supported" for skill in bundle_skills
+    )
+    claude_supported = complete_compatibility and all(
+        skill["targets"]["claude"] == "supported" for skill in bundle_skills
+    )
     return {
-        "codex": bool(bundle_skills) and all(skill["targets"]["codex"] == "supported" for skill in bundle_skills),
-        "claude": bool(bundle_skills) and all(skill["targets"]["claude"] == "supported" for skill in bundle_skills),
+        "codex": codex_supported,
+        "claude": claude_supported,
+        "agent_plugins": codex_supported and claude_supported and flat_skill_layout,
         "manual_setup": any(skill["setup"]["type"] == "manual" for skill in bundle_skills),
     }
 
@@ -301,6 +517,10 @@ def _render_bundle_plugin_status(bundle_status: dict[str, Any]) -> str:
     codex_status = "Codex plugin-safe" if bundle_status["codex"] else "Codex pending hardening"
     claude_status = "Claude plugin-safe" if bundle_status["claude"] else "Claude pending hardening"
     parts = [codex_status, claude_status]
+    if bundle_status["agent_plugins"]:
+        parts.append("Agent Plugins 1.0 portable")
+    elif bundle_status["codex"] and bundle_status["claude"]:
+        parts.append("Agent Plugins pending flat skill layout")
     if bundle_status["manual_setup"]:
         parts.append("Requires manual setup")
     return " · ".join(parts)
@@ -369,19 +589,32 @@ def _copy_file_contents(src: Path, dest: Path, allowed_root: Path) -> None:
     shutil.copy2(resolved_src, dest)
 
 
-def _copy_skill_directory(root: Path, skill_id: str, destination_root: Path) -> None:
+def _copy_skill_directory(
+    root: Path,
+    skill_id: str,
+    destination_root: Path,
+    destination_id: str | None = None,
+    portable_frontmatter: bool = False,
+) -> None:
     skills_root = root / "skills"
     source = (skills_root / skill_id).resolve(strict=True)
     source.relative_to(skills_root.resolve())
     if not source.is_dir():
         raise ValueError(f"Editorial bundle skill '{skill_id}' is not a directory.")
 
-    skill_dest = destination_root / skill_id
+    skill_dest = destination_root / (destination_id or skill_id)
     if skill_dest.exists():
         shutil.rmtree(skill_dest)
 
     for child in source.iterdir():
         _copy_file_contents(child, skill_dest / child.name, skills_root)
+
+    if portable_frontmatter:
+        skill_markdown = skill_dest / "SKILL.md"
+        _write_text(
+            skill_markdown,
+            _portable_skill_markdown(skill_markdown.read_text(encoding="utf-8")),
+        )
 
     if not (skill_dest / "SKILL.md").is_file():
         raise ValueError(f"Copied bundle skill '{skill_id}' is missing SKILL.md in {skill_dest}")
@@ -441,7 +674,9 @@ def _root_codex_plugin_manifest(metadata: dict[str, Any], supported_skill_count:
             "developerName": AUTHOR["name"],
             "category": "Productivity",
             "capabilities": ["Interactive", "Write"],
-            "websiteURL": REPO_URL,
+            "websiteURL": CATALOG_URL,
+            "privacyPolicyURL": PRIVACY_POLICY_URL,
+            "termsOfServiceURL": TERMS_OF_SERVICE_URL,
             "defaultPrompt": [
                 "Use @brainstorming to plan a new feature.",
                 "Use @test-driven-development to fix a bug safely.",
@@ -490,12 +725,23 @@ def _bundle_codex_plugin_manifest(metadata: dict[str, Any], bundle: dict[str, An
         "developerName": AUTHOR["name"],
         "category": category,
         "capabilities": ["Interactive", "Write"],
-        "websiteURL": REPO_URL,
+        "websiteURL": CATALOG_URL,
+        "privacyPolicyURL": PRIVACY_POLICY_URL,
+        "termsOfServiceURL": TERMS_OF_SERVICE_URL,
         "brandColor": "#111827",
     }
-    default_prompts = _string_list(bundle.get("defaultPrompts"))
-    if default_prompts:
-        interface["defaultPrompt"] = default_prompts
+    if bundle["id"] == FLAGSHIP_BUNDLE_ID:
+        interface.update(
+            {
+                "composerIcon": "./assets/composer-icon.png",
+                "logo": "./assets/logo.png",
+            }
+        )
+    default_prompts = _string_list(bundle.get("defaultPrompts")) or [
+        f'Use the "{bundle["name"]}" skills to help me complete this task.',
+        f'Review this project with the "{bundle["name"]}" workflow.',
+    ]
+    interface["defaultPrompt"] = default_prompts
 
     return {
         "name": plugin_name,
@@ -655,7 +901,11 @@ def _materialize_plugin_skills(root: Path, destination_root: Path, skill_ids: li
         _copy_skill_directory(root, skill_id, destination_root)
 
 
-def _skill_tree_files(root: Path, skill_ids: list[str]) -> dict[str, Path]:
+def _skill_tree_files(
+    root: Path,
+    skill_ids: list[str],
+    destination_ids: dict[str, str] | None = None,
+) -> dict[str, Path]:
     files: dict[str, Path] = {}
     skills_root = root / "skills"
     resolved_skills_root = skills_root.resolve()
@@ -673,8 +923,9 @@ def _skill_tree_files(root: Path, skill_ids: list[str]) -> dict[str, Path]:
         source_root = skills_root / skill_id
         if not source_root.is_dir():
             raise ValueError(f"Expected canonical skill directory is missing: {skill_id}")
+        destination_id = destination_ids.get(skill_id, skill_id) if destination_ids else skill_id
         for child in source_root.iterdir():
-            collect(child, Path(skill_id) / child.name)
+            collect(child, Path(destination_id) / child.name)
 
     return files
 
@@ -684,13 +935,15 @@ def _assert_skill_mirror_matches(
     destination_root: Path,
     skill_ids: list[str],
     label: str,
+    destination_ids: dict[str, str] | None = None,
+    portable_frontmatter: bool = False,
 ) -> None:
     if destination_root.is_symlink():
         raise ValueError(f"{label} skills directory must not be a symlink: {destination_root}")
     if not destination_root.is_dir():
         raise ValueError(f"{label} skills directory is missing: {destination_root}")
 
-    expected_files = _skill_tree_files(root, skill_ids)
+    expected_files = _skill_tree_files(root, skill_ids, destination_ids)
     actual_files = {
         path.relative_to(destination_root).as_posix(): path
         for path in destination_root.rglob("*")
@@ -715,7 +968,12 @@ def _assert_skill_mirror_matches(
         raise ValueError(f"{label} contains unexpected mirrored file: {unexpected[0]}")
 
     for relative_path in sorted(expected_paths):
-        if expected_files[relative_path].read_bytes() != actual_files[relative_path].read_bytes():
+        expected_content = expected_files[relative_path].read_bytes()
+        if portable_frontmatter and relative_path.endswith("/SKILL.md"):
+            expected_content = _portable_skill_markdown(
+                expected_files[relative_path].read_text(encoding="utf-8")
+            ).encode("utf-8")
+        if expected_content != actual_files[relative_path].read_bytes():
             raise ValueError(f"{label} contains stale mirrored file: {relative_path}")
 
 
@@ -764,6 +1022,30 @@ def _assert_plugin_metadata_layout(
         unexpected = sorted(actual_relative_paths - expected_relative_paths)
         detail = f"missing {missing[0]}" if missing else f"unexpected {unexpected[0]}"
         raise ValueError(f"{label} metadata layout is out of sync: {detail}")
+
+
+def _bundle_asset_sources(root: Path, bundle: dict[str, Any]) -> dict[str, Path]:
+    if bundle["id"] != FLAGSHIP_BUNDLE_ID:
+        return {}
+    return {
+        relative_path: root / source_path
+        for relative_path, source_path in FLAGSHIP_ASSET_SOURCES.items()
+    }
+
+
+def _assert_bundle_assets(
+    plugin_root: Path,
+    asset_sources: dict[str, Path],
+    label: str,
+) -> None:
+    for relative_path, source_path in asset_sources.items():
+        destination_path = plugin_root / relative_path
+        if not source_path.is_file():
+            raise ValueError(f"{label} source asset is missing: {source_path}")
+        if destination_path.is_symlink() or not destination_path.is_file():
+            raise ValueError(f"{label} asset is missing or unsafe: {relative_path}")
+        if destination_path.read_bytes() != source_path.read_bytes():
+            raise ValueError(f"{label} asset is out of sync: {relative_path}")
 
 
 def check_editorial_bundle_plugins(
@@ -847,14 +1129,29 @@ def check_editorial_bundle_plugins(
             continue
         plugin_root = root / "plugins" / _bundle_plugin_name(bundle["id"])
         skill_ids = [skill["id"] for skill in bundle["skills"]]
+        destination_ids = (
+            {
+                skill_id: _bundle_skill_destination_id(skill_id)
+                for skill_id in skill_ids
+            }
+            if support["agent_plugins"]
+            else None
+        )
         _assert_skill_mirror_matches(
             root,
             plugin_root / "skills",
             skill_ids,
             f'bundle plugin {bundle["id"]}',
+            destination_ids,
+            support["agent_plugins"],
         )
 
         manifest_specs = (
+            (
+                "agent_plugins",
+                plugin_root / "plugin.json",
+                _bundle_agent_plugin_manifest(metadata, bundle),
+            ),
             (
                 "codex",
                 plugin_root / ".codex-plugin" / "plugin.json",
@@ -880,6 +1177,13 @@ def check_editorial_bundle_plugins(
                 raise ValueError(
                     f'Bundle {bundle["id"]} contains an unsupported {target} manifest: {manifest_path}'
                 )
+        asset_sources = _bundle_asset_sources(root, bundle)
+        expected_manifest_paths.update(asset_sources)
+        _assert_bundle_assets(
+            plugin_root,
+            asset_sources,
+            f'bundle plugin {bundle["id"]}',
+        )
         _assert_plugin_metadata_layout(
             plugin_root,
             expected_manifest_paths,
@@ -990,7 +1294,23 @@ def _sync_bundle_plugin_directory(
         bundle_skills_root.mkdir(parents=True, exist_ok=True)
 
         for skill in bundle["skills"]:
-            _copy_skill_directory(root, skill["id"], bundle_skills_root)
+            _copy_skill_directory(
+                root,
+                skill["id"],
+                bundle_skills_root,
+                (
+                    _bundle_skill_destination_id(skill["id"])
+                    if support["agent_plugins"]
+                    else None
+                ),
+                support["agent_plugins"],
+            )
+
+        if support["agent_plugins"]:
+            _write_json(
+                staging_root / "plugin.json",
+                _bundle_agent_plugin_manifest(metadata, bundle),
+            )
 
         if support["claude"]:
             _write_json(
@@ -1002,6 +1322,13 @@ def _sync_bundle_plugin_directory(
                 staging_root / ".codex-plugin" / "plugin.json",
                 _bundle_codex_plugin_manifest(metadata, bundle),
             )
+
+        for relative_path, source_path in _bundle_asset_sources(root, bundle).items():
+            if not source_path.is_file():
+                raise ValueError(f"Flagship plugin source asset is missing: {source_path}")
+            destination_path = staging_root / relative_path
+            destination_path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source_path, destination_path)
 
     _replace_directory_atomically(plugin_root, populate_bundle_plugin)
 

@@ -1,9 +1,10 @@
 ---
 name: test-driven-development
-description: "Use when implementing any feature or bugfix, before writing implementation code"
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Use when implementing any feature or bugfix, before writing implementation code
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Test-Driven Development (TDD)

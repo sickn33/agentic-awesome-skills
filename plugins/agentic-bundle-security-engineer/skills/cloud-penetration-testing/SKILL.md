@@ -1,10 +1,11 @@
 ---
 name: cloud-penetration-testing
-description: "Conduct comprehensive security assessments of cloud infrastructure across Microsoft Azure, Amazon Web Services (AWS), and Google Cloud Platform (GCP)."
-risk: offensive
-source: community
-author: zebbern
-date_added: "2026-02-27"
+description: Conduct comprehensive security assessments of cloud infrastructure across Microsoft Azure, Amazon Web Services (AWS), and Google Cloud Platform (GCP).
+metadata:
+  aas-risk: offensive
+  aas-source: community
+  aas-author: zebbern
+  aas-date-added: '2026-02-27'
 ---
 
 > **⚠️ AUTHORIZED USE ONLY**
