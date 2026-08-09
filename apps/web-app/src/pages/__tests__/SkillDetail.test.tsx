@@ -327,4 +327,83 @@ describe('SkillDetail', () => {
       });
     });
   });
+
+  describe('Similar skills recommendations', () => {
+    it('suggests skills that share a category or tags, excluding the current skill', async () => {
+      const current = createMockSkill({
+        id: 'react-patterns',
+        name: 'react-patterns',
+        category: 'frontend',
+        tags: ['react', 'ui'],
+      });
+      const similar = createMockSkill({
+        id: 'react-hooks',
+        name: 'react-hooks',
+        category: 'frontend',
+        tags: ['react'],
+      });
+      const unrelated = createMockSkill({
+        id: 'terraform',
+        name: 'terraform',
+        category: 'infra',
+        tags: ['iac'],
+      });
+
+      (useSkills as Mock).mockReturnValue({
+        skills: [current, similar, unrelated],
+        stars: {},
+        loading: false,
+      });
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        text: async () => '# content',
+      });
+
+      renderWithRouter(<SkillDetail />, {
+        route: '/skill/react-patterns',
+        path: '/skill/:id',
+        useProvider: false,
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText(/Similar skills to consider/i)).toBeInTheDocument();
+      });
+
+      expect(screen.getByText('@react-hooks')).toBeInTheDocument();
+      expect(screen.queryByText('@terraform')).not.toBeInTheDocument();
+    });
+
+    it('does not render recommendations when no other skill shares category or tags', async () => {
+      const current = createMockSkill({
+        id: 'solo-skill',
+        name: 'solo-skill',
+        category: 'frontend',
+        tags: ['react'],
+      });
+
+      (useSkills as Mock).mockReturnValue({
+        skills: [current],
+        stars: {},
+        loading: false,
+      });
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        text: async () => '# Solo content',
+      });
+
+      renderWithRouter(<SkillDetail />, {
+        route: '/skill/solo-skill',
+        path: '/skill/:id',
+        useProvider: false,
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('@solo-skill')).toBeInTheDocument();
+      });
+
+      expect(screen.queryByText(/Similar skills to consider/i)).not.toBeInTheDocument();
+    });
+  });
 });
