@@ -3,9 +3,18 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 const STORAGE_KEY = 'aas_skill_shortlist';
 const CHANGE_EVENT = 'aas-skill-shortlist-change';
 
+function readStoredValue(): string | null | undefined {
+  try {
+    return localStorage.getItem(STORAGE_KEY);
+  } catch {
+    // Some private or restricted browsing contexts reject storage reads.
+    return undefined;
+  }
+}
+
 function readShortlist(): string[] {
   try {
-    const value: unknown = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const value: unknown = JSON.parse(readStoredValue() || '[]');
     return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
   } catch {
     return [];
@@ -48,7 +57,8 @@ export function useSkillShortlist() {
     persistedRef.current = next;
     // Only actually write when the stored value differs, so storage-synced
     // updates don't get re-broadcast (or dispatch a spurious change event).
-    if (localStorage.getItem(STORAGE_KEY) !== next) writeShortlist(ids);
+    const stored = readStoredValue();
+    if (stored !== undefined && stored !== next) writeShortlist(ids);
   }, [ids]);
 
   const toggle = useCallback((skillId: string) => {

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useSkillShortlist } from '../useSkillShortlist';
 
@@ -8,6 +8,10 @@ describe('useSkillShortlist', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   describe('Initialization', () => {
@@ -32,6 +36,14 @@ describe('useSkillShortlist', () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(['skill-1', 42, null, 'skill-2']));
       const { result } = renderHook(() => useSkillShortlist());
       expect(result.current.ids).toEqual(['skill-1', 'skill-2']);
+    });
+
+    it('stays usable when the browser rejects storage reads', () => {
+      vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+        throw new DOMException('Storage access denied', 'SecurityError');
+      });
+
+      expect(() => renderHook(() => useSkillShortlist())).not.toThrow();
     });
   });
 
