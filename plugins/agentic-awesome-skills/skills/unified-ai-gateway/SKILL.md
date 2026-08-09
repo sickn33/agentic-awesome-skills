@@ -24,6 +24,15 @@ guidance; it does not install the server or change Codex configuration by
 itself. The official Codex plugin bundles the MCP definition, while skill-only
 installations require the manual setup below.
 
+## Version Note
+
+The current public project release is `v0.4.3`. The inspection procedure below
+intentionally pins the reviewed, immutable `v0.4.0` image and its recorded
+digests; those values are a historical security baseline and must not be
+silently replaced with a mutable tag. For a normal provider-free demo, use the
+current `v0.4.3` command in the [project README](https://github.com/happy520ai/unified-ai-system#try-it-in-60-seconds).
+A new content review is required before changing this pinned procedure.
+
 ## Prerequisites And Setup
 
 1. Confirm that Codex CLI and Docker are installed and Docker is running.
