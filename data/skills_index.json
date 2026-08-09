@@ -12118,7 +12118,7 @@
     "category": "ai-ml",
     "name": "context-agent",
     "description": "Agente de contexto para continuidade entre sessoes. Salva resumos, decisoes, tarefas pendentes e carrega briefing automatico na sessao seguinte.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -12260,7 +12260,7 @@
     "category": "ai-ml",
     "name": "context-guardian",
     "description": "Guardiao de contexto que preserva dados criticos antes da compactacao automatica. Snapshots, verificacao de integridade e zero perda de informacao.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
