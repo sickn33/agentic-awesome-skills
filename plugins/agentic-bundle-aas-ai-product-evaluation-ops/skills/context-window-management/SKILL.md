@@ -46,6 +46,7 @@ Different strategies based on context size
 
 **When to use**: Building any multi-turn conversation system
 
+```typescript
 interface ContextTier {
     maxTokens: number;
     strategy: 'full' | 'summarize' | 'rag';
@@ -86,6 +87,7 @@ async function prepareContext(messages: Message[]): PreparedContext {
             return { messages: [...relevant, ...recentMessages(messages)], model: tier.model };
     }
 }
+```
 
 ### Serial Position Optimization
 
@@ -93,6 +95,7 @@ Place important content at start and end
 
 **When to use**: Constructing prompts with significant context
 
+```typescript
 // LLMs weight beginning and end more heavily
 // Structure prompts to leverage this
 
@@ -131,6 +134,7 @@ function buildOptimalPrompt(components: {
 
     return parts.join('\n\n');
 }
+```
 
 ### Intelligent Summarization
 
@@ -138,6 +142,7 @@ Summarize by importance, not just recency
 
 **When to use**: Context exceeds optimal size
 
+```typescript
 interface MessageWithMetadata extends Message {
     importance: number;  // 0-1 score
     hasCriticalInfo: boolean;  // User preferences, decisions
@@ -186,6 +191,7 @@ async function smartSummarize(
     // Restore original order
     return keep.sort((a, b) => a.timestamp - b.timestamp);
 }
+```
 
 ### Token Budget Allocation
 
@@ -193,6 +199,7 @@ Allocate token budget across context components
 
 **When to use**: Need predictable context management
 
+```typescript
 interface TokenBudget {
     system: number;      // System prompt
     criticalContext: number;  // User prefs, key info
@@ -241,6 +248,7 @@ async function buildWithBudget(
 
     return prepared;
 }
+```
 
 ## Validation Checks
 
