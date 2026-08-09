@@ -9,6 +9,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.12.0] - 2026-08-09 - "Catalog Discovery and Safer Context Skills"
+
+> Upgraded the public catalog into a practical discovery dashboard, added two focused research and planning skills, and repaired unsafe or malformed context-management guidance.
+
+This release gives Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants a more usable 2,007-skill catalog. Users can now share precise catalog searches, keep a browser-local shortlist, inspect related skills, and start from clearer catalog-health signals while the underlying skill library gains bounded people research, source-aware travel planning, and stronger warnings around destructive context-agent workflows.
+
+Start here:
+
+- Direct skill distribution: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added [`people-data`](skills/people-data/) for authorized LinkedIn professional-profile and public business-contact research plus YouTube channel business-email discovery through the Agent Body MCP server, with an exact bundled tool contract and read-only boundaries.
+- Added [`travel-planner`](skills/travel-planner/) for budget-first itinerary planning with destination constraints, dated factual sources, explicit alternatives for out-of-scope routes, and a rule self-check table in every plan.
+- Added shareable fuzzy search and filters, keyboard-focused discovery, a browser-local shortlist with cross-tab synchronization and exact-ID export, catalog-health signals, and related-skill discovery to the hosted catalog.
+
+### Changed
+
+- Updated [`unified-ai-gateway`](skills/unified-ai-gateway/) to distinguish the current public `v0.4.3` release from the immutable `v0.4.0` security-review baseline without changing its reviewed activation or inspection boundaries.
+- Updated `react-virtuoso` to 4.18.11 in the web app and `express-rate-limit` to 8.6.0 in the bundled Loki example.
+- Regenerated the canonical catalog, offline AAS Core data, marketplaces, bundles, Agent Plugins exports, and Codex/Claude plugin distributions for 2,007 skills.
+
+### Security
+
+- Corrected `context-agent` and `context-guardian` to `risk: critical`, translated remaining guidance, and made their destructive local-write behavior and prerequisites explicit.
+- Repaired malformed executable TypeScript examples in `conversation-memory` and `context-window-management`, and removed a dangling playbook reference from `context-driven-development`.
+- Made catalog shortlist reads fail safely when browser storage is unavailable or throws, while keeping shortlist data local to the browser.
+
+### Who should care
+
+- Users who need to search, compare, shortlist, and share exact catalog views instead of browsing more than two thousand skills manually.
+- Researchers using public professional or business-contact data who need explicit authorization, read-only scope, and an exact MCP tool contract.
+- Travelers who want budget-confirmed, source-aware itineraries with visible constraint checks.
+- Maintainers and agents relying on context-management skills where destructive filesystem behavior must be unmistakable.
+
+### Validation
+
+- Passed all 109 repository test groups, 173 web-app tests, web-app lint and production build, repository validation, reference validation, documentation security checks, warning-budget enforcement, and exact-head PR evidence gates.
+- Confirmed root and web-app dependency audits report zero vulnerabilities, protected `main` CI and CodeQL are green, and canonical regeneration is idempotent.
+- Verified web-app coverage at 85.04% statements, 72.95% branches, 86.37% functions, and 89.17% lines.
+
+### Credits
+
+- **[@Jess-yaozu](https://github.com/Jess-yaozu)** and **[agentbody/skills](https://github.com/agentbody/skills)** for `people-data` in [PR #1103](https://github.com/sickn33/agentic-awesome-skills/pull/1103).
+- **[@saudademjj](https://github.com/saudademjj)** and **[saudademjj/luopan](https://github.com/saudademjj/luopan)** for `travel-planner` in [PR #1107](https://github.com/sickn33/agentic-awesome-skills/pull/1107).
+- **[@happy520ai](https://github.com/happy520ai)** for the `unified-ai-gateway` release-note refresh in [PR #1115](https://github.com/sickn33/agentic-awesome-skills/pull/1115).
+- **[@zinzied](https://github.com/zinzied)** for the original catalog-dashboard contribution in [PR #1111](https://github.com/sickn33/agentic-awesome-skills/pull/1111), repaired and integrated through [PR #1118](https://github.com/sickn33/agentic-awesome-skills/pull/1118).
+
 ## [15.11.0] - 2026-08-07 - "Agent Plugin Directory Readiness"
 
 > Prepared the flagship AAS Agent & MCP Builder for the OpenAI Plugins Directory with production metadata, public policies, and a reproducible evaluation dossier.
