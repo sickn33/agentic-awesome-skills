@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.2.8",
-    "@fontsource/outfit": "^5.2.8",
+    "@fontsource/outfit": "^5.3.0",
     "@phosphor-icons/react": "^2.1.10",
     "@supabase/supabase-js": "^2.111.0",
     "github-markdown-css": "^5.9.0",
