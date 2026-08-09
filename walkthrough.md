@@ -1,3 +1,22 @@
+# Maintenance Walkthrough - 2026-08-09
+
+- Resolved the dangling `resources/implementation-playbook.md` instruction in
+  `context-driven-development` by pointing readers to the complete workflow and
+  validation material already bundled in the skill.
+- Restored Markdown rendering for every reported TypeScript example in
+  `conversation-memory` and `context-window-management` with balanced,
+  language-labelled code fences.
+- Made the intended Brazilian Portuguese operating language explicit and
+  internally consistent in `context-agent` and `context-guardian`, while
+  retaining the English discovery and limitations headings required by catalog
+  validation.
+- Corrected both context skills from `safe` to `critical` because their bundled
+  commands write local state and can archive or remove old context artifacts;
+  added exact approval, backup, path, and platform limitations without changing
+  the bundled runtime scripts.
+- Kept the repair source-only. Generated catalogs and plugin mirrors remain
+  owned by the protected canonical synchronization lane.
+
 # Secur0 coordinated remediation - 2026-07-30
 
 - Re-evaluated all 35 Secur0 reports against current protected `main`: 22 were
