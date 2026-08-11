@@ -26300,6 +26300,25 @@
       "runtime_files": []
     },
     {
+      "id": "people-data",
+      "path": "skills/people-data",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "performance-engineer",
       "path": "skills/performance-engineer",
       "targets": {
@@ -35179,6 +35198,25 @@
       "runtime_files": []
     },
     {
+      "id": "travel-planner",
+      "path": "skills/travel-planner",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "tree-ring-memory",
       "path": "skills/tree-ring-memory",
       "targets": {
@@ -38546,10 +38584,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2005,
+    "total_skills": 2007,
     "supported": {
-      "codex": 1927,
-      "claude": 1948
+      "codex": 1929,
+      "claude": 1950
     },
     "blocked": {
       "codex": 78,

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07T08:29:26.000Z",
+  "generatedAt": "2026-08-09T06:51:55.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -836,6 +836,7 @@
         "odoo-edi-connector",
         "odoo-inventory-optimizer",
         "pci-compliance",
+        "people-data",
         "php-pro",
         "polars",
         "postgres-best-practices",

@@ -4,6 +4,7 @@ import { SkillStarButton } from '../components/SkillStarButton';
 import { Icon } from '../components/ui/Icon';
 import { useSkills } from '../context/SkillContext';
 import { usePageMeta } from '../hooks/usePageMeta';
+import { useSkillShortlist } from '../hooks/useSkillShortlist';
 import { buildSkillFallbackMeta, buildSkillMeta, selectTopSkills, toIndexableRoutePath } from '../utils/seo';
 import { getSkillMarkdownCandidateUrls } from '../utils/publicAssetUrls';
 import { getRelatedSeoLandingPagesForSkill } from '../data/seoLandingPages';
@@ -99,6 +100,7 @@ export function SkillDetail(): React.ReactElement {
   const [customContext, setCustomContext] = useState('');
   const [retryToken, setRetryToken] = useState(0);
   const skill = useMemo(() => skills.find(s => s.id === id), [skills, id]);
+  const { ids: shortlistIds, toggle: toggleShortlist } = useSkillShortlist();
 
   const topPrioritySkills = useMemo(() => selectTopSkills(skills), [skills]);
   const topPrioritySkillSet = useMemo(() => new Set(topPrioritySkills.map(topSkill => topSkill.id)), [topPrioritySkills]);
@@ -141,6 +143,21 @@ export function SkillDetail(): React.ReactElement {
     () => skill ? getRelatedSeoLandingPagesForSkill(skill) : [],
     [skill],
   );
+  const recommendedSkills = useMemo(() => {
+    if (!skill) return [];
+    const tags = new Set(skill.tags || []);
+    return skills
+      .filter((candidate) => candidate.id !== skill.id)
+      .map((candidate) => ({
+        skill: candidate,
+        score: (candidate.category === skill.category ? 2 : 0)
+          + (candidate.tags || []).filter((tag) => tags.has(tag)).length,
+      }))
+      .filter((candidate) => candidate.score > 0)
+      .sort((a, b) => b.score - a.score || a.skill.name.localeCompare(b.skill.name))
+      .slice(0, 3)
+      .map((candidate) => candidate.skill);
+  }, [skill, skills]);
 
   useEffect(() => {
     if (contextLoading || !skill) return;
@@ -303,6 +320,15 @@ export function SkillDetail(): React.ReactElement {
 
           <div className="flex flex-col gap-2 sm:flex-row">
             <button
+              type="button"
+              onClick={() => skill && toggleShortlist(skill.id)}
+              aria-pressed={Boolean(skill && shortlistIds.includes(skill.id))}
+              className="flex min-w-[148px] items-center justify-center space-x-2 rounded-full border border-teal-700 px-4 py-2.5 font-medium text-teal-800 transition-colors hover:bg-teal-50 dark:border-teal-400 dark:text-teal-200 dark:hover:bg-teal-950/40"
+            >
+              <Icon name="check" size={16} />
+              <span>{skill && shortlistIds.includes(skill.id) ? 'In Shortlist' : 'Add to Shortlist'}</span>
+            </button>
+            <button
               onClick={copyToClipboard}
               className="flex min-w-[148px] items-center justify-center space-x-2 rounded-full border border-slate-300 bg-white px-4 py-2.5 font-medium text-slate-900 transition-colors hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-500 dark:hover:bg-slate-800"
             >
@@ -398,6 +424,23 @@ export function SkillDetail(): React.ReactElement {
                 <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
                   {page.primaryIntent}
                 </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {recommendedSkills.length > 0 && (
+        <section className="skill-detail__related" aria-labelledby="related-skills-title">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Suggested next</p>
+          <h2 id="related-skills-title" className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Similar skills to consider</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">Suggestions are based on shared catalog category and tags, not a claim that one skill replaces another.</p>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            {recommendedSkills.map((recommended) => (
+              <Link key={recommended.id} to={toIndexableRoutePath(`/skill/${recommended.id}`)} className="rounded-xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 transition-colors hover:border-slate-400 dark:border-slate-800 dark:from-slate-950 dark:to-slate-900 dark:hover:border-slate-600">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700 dark:text-teal-300">{recommended.category}</p>
+                <h3 className="mt-2 text-base font-semibold text-slate-900 dark:text-slate-100">@{recommended.name}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{recommended.description}</p>
               </Link>
             ))}
           </div>

@@ -163,14 +163,38 @@ class EditorialBundlesTests(unittest.TestCase):
             )
 
     def test_flagship_asset_sources_reject_symlinks(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
+        with (
+            tempfile.TemporaryDirectory() as temp_dir,
+            tempfile.TemporaryDirectory() as external_dir,
+        ):
             root = pathlib.Path(temp_dir)
             source_path = root / next(iter(editorial_bundles.FLAGSHIP_ASSET_SOURCES.values()))
             source_path.parent.mkdir(parents=True)
-            external_asset = root / "build-host-secret.png"
+            external_asset = pathlib.Path(external_dir) / "build-host-secret.png"
             external_asset.write_bytes(b"sensitive build-host content")
             source_path.symlink_to(external_asset)
-            self.addCleanup(external_asset.unlink, missing_ok=True)
+
+            with self.assertRaisesRegex(ValueError, "must not contain a symlink"):
+                editorial_bundles._bundle_asset_sources(
+                    root,
+                    {"id": editorial_bundles.FLAGSHIP_BUNDLE_ID},
+                )
+
+    def test_flagship_asset_sources_reject_symlinked_parent(self):
+        with (
+            tempfile.TemporaryDirectory() as temp_dir,
+            tempfile.TemporaryDirectory() as external_dir,
+        ):
+            root = pathlib.Path(temp_dir)
+            configured_source = next(iter(editorial_bundles.FLAGSHIP_ASSET_SOURCES.values()))
+            external_root = pathlib.Path(external_dir)
+            external_asset = external_root.joinpath(*configured_source.parts[1:])
+            external_asset.parent.mkdir(parents=True)
+            external_asset.write_bytes(b"sensitive build-host content")
+            (root / configured_source.parts[0]).symlink_to(
+                external_root,
+                target_is_directory=True,
+            )
 
             with self.assertRaisesRegex(ValueError, "must not contain a symlink"):
                 editorial_bundles._bundle_asset_sources(

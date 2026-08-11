@@ -399,6 +399,26 @@ textarea {
   z-index: 2;
 }
 
+.skill-row__shortlist {
+  min-height: 32px;
+  margin-bottom: 8px;
+  padding: 0 9px;
+  border: 1px solid var(--stroke-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  background: var(--surface-card);
+  cursor: pointer;
+  font-size: 0.68rem;
+  font-weight: 650;
+}
+
+.skill-row__shortlist:hover,
+.skill-row__shortlist.is-active {
+  border-color: var(--accent-solid);
+  color: var(--accent-solid);
+  background: var(--accent-soft);
+}
+
 .catalog-layout {
   display: grid;
   grid-template-columns: 278px minmax(0, 1fr);
@@ -569,6 +589,7 @@ textarea {
 .catalog-toolbar > div {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .catalog-toolbar select {
@@ -598,6 +619,117 @@ textarea {
   justify-content: space-between;
   gap: 24px;
   padding: 0 0 16px;
+}
+
+.catalog-shortlist,
+.catalog-health {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin-top: 46px;
+  padding: 26px 0;
+  border-top: 1px solid var(--stroke-subtle);
+  border-bottom: 1px solid var(--stroke-subtle);
+}
+
+.catalog-shortlist > div:first-child > p,
+.catalog-health > div > p {
+  margin: 0 0 7px;
+  color: var(--accent-solid);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.catalog-shortlist h2,
+.catalog-health h2,
+.catalog-shortlist p,
+.catalog-shortlist span,
+.catalog-health > p {
+  margin: 0;
+}
+
+.catalog-shortlist h2,
+.catalog-health h2 {
+  max-width: 30rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.025em;
+}
+
+.catalog-shortlist span,
+.catalog-shortlist > p,
+.catalog-health > p {
+  display: block;
+  margin-top: 8px;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.catalog-shortlist__actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 9px;
+}
+
+.catalog-shortlist__actions button {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--stroke-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  background: var(--surface-card);
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.catalog-shortlist__actions button:first-child {
+  border-color: var(--text-primary);
+  color: var(--surface-card);
+  background: var(--text-primary);
+}
+
+.catalog-health {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.catalog-health dl {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(108px, 1fr));
+  margin: 0;
+  border-left: 1px solid var(--stroke-subtle);
+}
+
+.catalog-health dl > div {
+  min-width: 0;
+  padding: 0 16px;
+  border-right: 1px solid var(--stroke-subtle);
+}
+
+.catalog-health dt {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.59rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.catalog-health dd {
+  margin: 8px 0 0;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.catalog-health > p {
+  grid-column: 1 / -1;
+  margin-top: 18px;
 }
 
 .catalog-results h2 {
@@ -1865,6 +1997,26 @@ textarea {
     right: 10px;
   }
 
+  .skill-row__shortlist {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    min-height: 38px;
+    margin-bottom: 6px;
+    padding: 0;
+    overflow: hidden;
+    font-size: 0;
+  }
+
+  .skill-row__shortlist::before {
+    content: '+';
+    font-size: 1.1rem;
+  }
+
+  .skill-row__shortlist.is-active::before {
+    content: '✓';
+  }
+
   .skill-row__save > div > span {
     display: none;
   }
@@ -1964,6 +2116,38 @@ textarea {
   .catalog-toolbar select {
     width: 100%;
     min-width: 0;
+  }
+
+  .catalog-shortlist,
+  .catalog-health {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 34px;
+    padding: 22px 0;
+  }
+
+  .catalog-shortlist__actions {
+    width: 100%;
+  }
+
+  .catalog-shortlist__actions button {
+    flex: 1;
+  }
+
+  .catalog-health {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .catalog-health dl {
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .catalog-health dl > div {
+    padding: 12px;
+    border-bottom: 1px solid var(--stroke-subtle);
   }
 
   .catalog-toolbar > a {
