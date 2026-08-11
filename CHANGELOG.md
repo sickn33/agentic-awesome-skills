@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- Bound default and `--release` installer clones to the immutable `gitHead`
+  recorded by the exact npm package version, failing closed if a GitHub release
+  tag is moved or npm identity metadata cannot be verified. Explicit `--tag`
+  installs remain available with a mutable-ref warning.
 - Reject symlinked flagship bundle asset sources before validating or copying
   them into distributable plugin packages.
 - Removed mutable upstream demo guidance from `unified-ai-gateway`; all demos

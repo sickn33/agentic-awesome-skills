@@ -304,6 +304,10 @@ To manage a reproducible exact set and inspect every install, update, or removal
 npx agentic-awesome-skills@14.3.0 --path .agents/skills --release 14.3.0 --skills frontend-design,backend-dev-guidelines --dry-run
 ```
 
+Default and `--release` installs fail closed unless the cloned Git commit matches
+the immutable `gitHead` recorded for that exact npm version. `--tag` intentionally
+accepts mutable Git refs and prints a warning because it skips that identity check.
+
 Remove `--dry-run` only after reviewing the plan.
 
 To review a Core stack manifest or immutable plan visually, use the hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench). It imports the JSON in browser memory and checks the supported artifact structure; it does not assemble a stack, generate install commands, access the filesystem, or install skills.

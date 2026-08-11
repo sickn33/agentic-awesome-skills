@@ -10,9 +10,12 @@ const { listSkillIdsRecursive, readSkill } = require("../lib/skill-utils");
 const packageMetadata = require("../../package.json");
 
 const REPO = "https://github.com/sickn33/agentic-awesome-skills.git";
+const NPM_REGISTRY = "https://registry.npmjs.org";
 const HOME = process.env.HOME || process.env.USERPROFILE || "";
 const INSTALL_MANIFEST_FILE = ".antigravity-install-manifest.json";
 const DEFAULT_RELEASE_REF = packageMetadata.version ? `v${packageMetadata.version}` : null;
+const FULL_GIT_SHA_PATTERN = /^[0-9a-f]{40}$/;
+const EXACT_VERSION_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
 
 function resolveDir(p) {
   if (!p) return null;
@@ -204,8 +207,8 @@ Options:
   --all            Explicitly select the complete catalog, including offensive/unknown skills
   --dry-run        Preview installs/updates/removals for every target without writing
   --version        Print the installer version
-  --release <ver>  Clone tag v<ver> (e.g. 4.6.0 -> v4.6.0)
-  --tag <tag>      Clone this tag or branch (e.g. v4.6.0, main)
+  --release <ver>  Install an exact npm release and verify its published Git commit
+  --tag <tag>      Clone an explicitly unverified mutable Git tag or branch
 
 Examples:
   npx agentic-awesome-skills --skills brainstorming --dry-run
@@ -842,7 +845,7 @@ function isSafeGitRef(ref) {
     typeof ref === "string" &&
     ref.length > 0 &&
     ref.length <= 128 &&
-    /^[A-Za-z0-9._/-]+$/.test(ref) &&
+    /^[A-Za-z0-9._/+\-]+$/.test(ref) &&
     !ref.startsWith("-") &&
     !ref.startsWith("/") &&
     !ref.endsWith("/") &&
@@ -858,6 +861,87 @@ function isSafeGitRef(ref) {
 function assertSafeGitRef(ref) {
   if (!isSafeGitRef(ref)) {
     throw new Error(`Unsafe git ref: ${ref}`);
+  }
+}
+
+function normalizeExactReleaseVersion(version) {
+  const normalized = typeof version === "string" && version.startsWith("v")
+    ? version.slice(1)
+    : version;
+  if (typeof normalized !== "string" || !EXACT_VERSION_PATTERN.test(normalized)) {
+    throw new Error(`Invalid exact release version: ${version}`);
+  }
+  return normalized;
+}
+
+function resolveInstallVersion(opts) {
+  if (opts.tagArg) {
+    return null;
+  }
+  return normalizeExactReleaseVersion(opts.versionArg || packageMetadata.version);
+}
+
+function resolvePublishedGitHead(version, spawn = spawnSync) {
+  const exactVersion = normalizeExactReleaseVersion(version);
+  const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+  const result = spawn(
+    npmCommand,
+    [
+      "view",
+      `${packageMetadata.name}@${exactVersion}`,
+      "gitHead",
+      "--json",
+      "--registry",
+      NPM_REGISTRY,
+      "--ignore-scripts",
+      "--prefer-online",
+      "--loglevel=error",
+    ],
+    { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+  );
+  if (result.error || result.status !== 0) {
+    const detail = String(result.stderr || result.error?.message || "npm metadata lookup failed").trim();
+    throw new Error(`Unable to resolve npm release identity for ${exactVersion}: ${detail}`);
+  }
+
+  let gitHead;
+  try {
+    gitHead = JSON.parse(result.stdout);
+  } catch {
+    throw new Error(`Unable to resolve npm release identity for ${exactVersion}: invalid registry response`);
+  }
+  if (typeof gitHead !== "string" || !FULL_GIT_SHA_PATTERN.test(gitHead)) {
+    throw new Error(`Unable to resolve npm release identity for ${exactVersion}: gitHead is missing or invalid`);
+  }
+  return gitHead;
+}
+
+function resolveClonedGitHead(repoDir, spawn = spawnSync) {
+  const result = spawn("git", ["-C", repoDir, "rev-parse", "HEAD"], {
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  if (result.error || result.status !== 0) {
+    const detail = String(result.stderr || result.error?.message || "git rev-parse failed").trim();
+    throw new Error(`Unable to verify cloned release identity: ${detail}`);
+  }
+  const gitHead = String(result.stdout || "").trim();
+  if (!FULL_GIT_SHA_PATTERN.test(gitHead)) {
+    throw new Error("Unable to verify cloned release identity: invalid Git commit");
+  }
+  return gitHead;
+}
+
+function assertClonedReleaseIdentity(actualGitHead, expectedGitHead, ref) {
+  if (!FULL_GIT_SHA_PATTERN.test(String(actualGitHead || ""))
+    || !FULL_GIT_SHA_PATTERN.test(String(expectedGitHead || ""))) {
+    throw new Error("Unable to verify cloned release identity: invalid Git commit");
+  }
+  if (actualGitHead !== expectedGitHead) {
+    throw new Error(
+      `Release identity mismatch for ${ref}: cloned ${actualGitHead}, npm published ${expectedGitHead}. `
+      + "The Git ref may have been moved; refusing to install unreviewed content.",
+    );
   }
 }
 
@@ -880,10 +964,8 @@ function resolveInstallRef(opts) {
   if (opts.tagArg) {
     return opts.tagArg;
   }
-  if (opts.versionArg) {
-    return opts.versionArg.startsWith("v") ? opts.versionArg : `v${opts.versionArg}`;
-  }
-  return DEFAULT_RELEASE_REF;
+  const version = resolveInstallVersion(opts);
+  return version ? `v${version}` : DEFAULT_RELEASE_REF;
 }
 
 function installForTarget(
@@ -1079,7 +1161,16 @@ function main() {
     process.exitCode = 1;
     return;
   }
-  const ref = resolveInstallRef(opts);
+  let ref;
+  let releaseVersion;
+  try {
+    ref = resolveInstallRef(opts);
+    releaseVersion = resolveInstallVersion(opts);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exitCode = 1;
+    return;
+  }
 
   if (opts.help) {
     printHelp();
@@ -1115,6 +1206,23 @@ function main() {
     return;
   }
 
+  let expectedGitHead = null;
+  if (releaseVersion) {
+    try {
+      console.log(`Resolving npm release identity for ${releaseVersion}…`);
+      expectedGitHead = resolvePublishedGitHead(releaseVersion);
+    } catch (error) {
+      console.error(`Error: ${error.message}`);
+      process.exitCode = 1;
+      return;
+    }
+  } else {
+    console.warn(
+      "WARNING: --tag selects a mutable Git ref and skips npm release-identity verification. "
+      + "Prefer --release <version> for a fail-closed install.",
+    );
+  }
+
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ag-skills-"));
 
   try {
@@ -1123,6 +1231,17 @@ function main() {
       console.log(`Cloning repository at ${ref}…`);
     }
     run("git", buildCloneArgs(REPO, tempDir, ref));
+    if (expectedGitHead) {
+      try {
+        const clonedGitHead = resolveClonedGitHead(tempDir);
+        assertClonedReleaseIdentity(clonedGitHead, expectedGitHead, ref);
+        console.log(`Verified release commit ${clonedGitHead}.`);
+      } catch (error) {
+        console.error(`Error: ${error.message}`);
+        process.exitCode = 1;
+        return;
+      }
+    }
 
     // Resolve the exact set once before touching any target. This keeps an
     // unknown/ambiguous --skills value or an empty filter intersection atomic
@@ -1225,7 +1344,12 @@ module.exports = {
   printAuditReport,
   pruneRemovedEntries,
   readInstallManifest,
+  resolveClonedGitHead,
   resolveExactSkillSelections,
   resolveInstallRef,
+  resolveInstallVersion,
+  resolvePublishedGitHead,
+  assertClonedReleaseIdentity,
+  normalizeExactReleaseVersion,
   writeInstallManifest,
 };

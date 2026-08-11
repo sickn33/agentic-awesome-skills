@@ -125,7 +125,7 @@ npx agentic-awesome-skills --antigravity --skills brainstorming,systematic-debug
 npx agentic-awesome-skills --agy
 ```
 
-The npm installer uses a shallow, release-pinned clone by default so first-run installs stay lighter than a full repository history checkout while matching the published npm package version. Use `--tag main` only when you intentionally want the current repository tip.
+The npm installer uses a shallow, release-pinned clone by default and verifies the cloned commit against the immutable `gitHead` recorded for that exact npm package version. If the GitHub tag moved or npm identity metadata is unavailable, installation stops before copying content. Use `--tag main` only when you intentionally accept a mutable, explicitly unverified repository ref.
 
 Antigravity watches `~/.agents/skills` and may load enough installed instructions
 to exhaust its context, slow startup, trigger truncation errors, or enter a crash
