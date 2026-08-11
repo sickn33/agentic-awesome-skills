@@ -1,3 +1,16 @@
+# Contribution Walkthrough - 2026-08-12 InternalCoT
+
+- Added [`skills/internalcot/SKILL.md`](skills/internalcot/SKILL.md), adapted
+  from the MIT-licensed
+  [`morluto/internalcot`](https://github.com/morluto/internalcot) source at
+  commit `b574015d8921a88f01c2ddbe3bf9b00dc8e7d872`.
+- Preserved the opt-in, conversation-persistent working-notes workflow while
+  pinning execution to the reviewed `internalcot@0.2.3` npm release.
+- Kept setup and agent-configuration changes outside the skill's authority;
+  activation permits only the visible note calls described by the skill.
+- Added the required community source credit and kept generated registries and
+  plugin mirrors outside this contributor change.
+
 # Maintenance Walkthrough - 2026-08-09
 
 - Resolved the dangling `resources/implementation-playbook.md` instruction in
