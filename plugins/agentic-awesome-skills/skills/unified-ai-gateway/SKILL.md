@@ -28,10 +28,9 @@ installations require the manual setup below.
 
 The current public project release and latest reviewed immutable MCP image are
 both `v0.4.9`. The inspection procedure below pins its recorded digests; those
-values must not be silently replaced with a mutable tag. For a normal
-provider-free demo, use the current `v0.4.9` command in the
-[project README](https://github.com/happy520ai/unified-ai-system#try-it-in-60-seconds).
-A new content review is required before changing this pinned procedure.
+values must not be silently replaced with a mutable tag. Use only the reviewed,
+digest-pinned procedure below, including for a provider-free demo. A new content
+review is required before changing this pinned procedure.
 
 ## Prerequisites And Setup
 
