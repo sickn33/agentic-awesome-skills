@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- Removed mutable upstream demo guidance from `unified-ai-gateway`; all demos
+  now remain inside its reviewed, digest-pinned image procedure.
+
 ## [15.12.0] - 2026-08-09 - "Catalog Discovery and Safer Context Skills"
 
 > Upgraded the public catalog into a practical discovery dashboard, added two focused research and planning skills, and repaired unsafe or malformed context-management guidance.
