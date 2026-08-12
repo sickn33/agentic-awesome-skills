@@ -22,7 +22,7 @@
     "@supabase/supabase-js": "^2.111.0",
     "github-markdown-css": "^5.9.0",
     "highlight.js": "^11.11.1",
-    "react": "^19.2.7",
+    "react": "^19.2.8",
     "react-dom": "^19.2.7",
     "react-markdown": "^10.1.0",
     "react-router": "^8.3.0",
