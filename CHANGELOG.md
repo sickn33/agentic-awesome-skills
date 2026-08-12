@@ -20,26 +20,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed mutable upstream demo guidance from `unified-ai-gateway`; all demos
   now remain inside its reviewed, digest-pinned image procedure.
 
-## [15.13.0] - 2026-08-12 - "Installer Integrity and Expanded Data Skills"
+## [15.13.0] - 2026-08-12 - "Release Integrity, Governed Media, and Property Data"
 
-> Hardened release and installation boundaries, expanded the catalog with media and property-data workflows, and refreshed dependency and bundle safety surfaces.
+> Added two focused external-service workflows and tightened the boundaries around exact-release installation, flagship bundle publication, and provider-free demos. The published catalog contains 2,009 skills.
+
+Start here:
+
+- [`atlas-cloud-media`](skills/atlas-cloud-media/) for Atlas Cloud image and video generation.
+- [`us-property-data`](skills/us-property-data/) for read-only U.S. residential property lookups.
+- [AAS Core setup](docs/users/aas-core.md) for installing and pinning the exact published runtime.
 
 ### Added
 
-- Added [`atlas-cloud-media`](skills/atlas-cloud-media/) for schema-first Atlas Cloud image and video generation with explicit cost approval, bounded polling, and safe output handling.
-- Added [`us-property-data`](skills/us-property-data/) for read-only U.S. property-data lookup through the Zillapi API, with explicit API-key, privacy, freshness, and third-party-estimate boundaries.
+- Added [`atlas-cloud-media`](skills/atlas-cloud-media/) for Atlas Cloud's asynchronous image and video API: schema-first model discovery, explicit approval before paid requests, bounded polling, credential-safe output download, and media validation. It documents operating instructions only; it does not bundle an SDK, worker, queue, or runtime.
+- Added [`us-property-data`](skills/us-property-data/) for read-only U.S. residential property data through `https://api.zillapi.com`, including valuation, listing, tax-history, school, and price-history lookups. It uses `ZILLAPI_KEY` as a bearer token, treats missing data as missing rather than zero, and keeps property identifiers and third-party estimates within explicit privacy and freshness limits.
 
 ### Changed
 
-- Regenerated the canonical catalog, offline AAS Core data, bundles, marketplaces, and Codex/Claude plugin distributions for 2,009 skills.
-- Updated `unified-ai-gateway` guidance to keep demos on the reviewed image procedure and align the documented public release baseline.
-- Refreshed the web-app dependency set and Snyk security upgrades for React, React DOM, and bundled font packages.
+- Bound default and `--release` installer clones to the `gitHead` published with the exact npm package version. The installer now verifies the npm identity and cloned Git HEAD before reading or copying skill content; explicit `--tag` installs remain a mutable-ref escape hatch and warn accordingly ([#1132](https://github.com/sickn33/agentic-awesome-skills/pull/1132)).
+- Updated the provider-free [`unified-ai-gateway`](skills/unified-ai-gateway/) demo path to use the reviewed, digest-pinned image inspection and activation procedure instead of a mutable upstream README command ([#1130](https://github.com/sickn33/agentic-awesome-skills/pull/1130)).
+- Refreshed the web-app runtime dependencies to `react`/`react-dom` `19.2.8` and `@fontsource/jetbrains-mono`/`@fontsource/outfit` `5.3.0`.
+- Regenerated the canonical catalog, offline AAS Core data, web assets, marketplaces, editorial bundles, and Codex/Claude plugin distributions for the 2,009-skill release.
 
 ### Security
 
-- Bound default and `--release` installer clones to the immutable `gitHead` recorded by the exact npm package version, failing closed if a GitHub release tag is moved or npm identity metadata cannot be verified. Explicit `--tag` installs remain available with a mutable-ref warning.
-- Reject symlinked flagship bundle asset sources before validating or copying them into distributable plugin packages.
-- Kept external API keys out of prompts and logs, required explicit approval for billable media generation, and bounded third-party polling and output handling in the new media and property-data skills.
+- Rejected symlinks in flagship bundle source paths, required resolved sources to remain under the repository root, and added regression coverage so unsafe sources cannot be copied into distributable plugin assets ([#1129](https://github.com/sickn33/agentic-awesome-skills/pull/1129)).
+- Kept `ATLASCLOUD_API_KEY` and `ZILLAPI_KEY` out of prompts, logs, and unrelated download requests; required informed approval before billable Atlas Cloud generation; and bounded external polling, output handling, and property-data requests.
+
+### Who should care
+
+- Users who need governed image or video generation with a visible paid-request boundary and a bounded asynchronous workflow.
+- Developers who need current U.S. property facts from a live API rather than values synthesized from model memory or retired Zillow ZWSID examples.
+- Maintainers and package consumers who need an exact npm release identity before installing content or publishing plugin bundles.
+
+### Validation
+
+- Passed the release preflight: repository validation, reference validation, documentation-security checks, the full repository test suite, plugin-compatibility and bundle checks, web-app install/build/prerender, and the npm package dry run.
+- Published `agentic-awesome-skills@15.13.0` with `gitHead` `b39fc724bcb981107fb73aedcdd190cd76df2016`; protected `main` CI, CodeQL, npm publication, and the release-only Pages deployment all passed.
+- Verified the live catalog, `llms.txt`, and legacy redirect bridge against the generated release output. Updated the existing Codex AAS host to the content-addressed `15.13.0` runtime with a backup, then verified a real MCP `initialize` and `tools/list` handshake.
+
+### Limitations
+
+- Atlas Cloud generation requires an account, `ATLASCLOUD_API_KEY`, available credits, and explicit approval for each paid submission; this contribution does not provide an SDK or guarantee provider pricing, quotas, or API stability.
+- U.S. property lookups require a Zillapi account and available credits; its pricing, quota, service availability, and API schema can change independently of this repository. Property addresses and Zillow URLs may be sensitive.
+
+### Credits
+
+- **[@binyangzhu000-sudo](https://github.com/binyangzhu000-sudo)** for [`atlas-cloud-media`](skills/atlas-cloud-media/) in [PR #1144](https://github.com/sickn33/agentic-awesome-skills/pull/1144). The skill declares `source: self`.
+- **[@zillapi](https://github.com/zillapi)** for [`us-property-data`](skills/us-property-data/) in [PR #1142](https://github.com/sickn33/agentic-awesome-skills/pull/1142), adapted from **[ZeroPointRepo/zillow-skills](https://github.com/ZeroPointRepo/zillow-skills)** under the declared MIT-0 provenance.
 
 ## [15.12.0] - 2026-08-09 - "Catalog Discovery and Safer Context Skills"
 
