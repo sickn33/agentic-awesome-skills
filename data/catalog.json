@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-09T06:51:55.000Z",
-  "total": 2007,
+  "total": 2008,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -54501,6 +54501,40 @@
         "without"
       ],
       "path": "skills/upstash-qstash/SKILL.md"
+    },
+    {
+      "id": "us-property-data",
+      "canonical_id": "us-property-data",
+      "name": "us-property-data",
+      "description": "Use when a task needs real U.S. residential property data: valuation, listings, price or tax history, schools, or a zillow.com URL.",
+      "category": "api-integration",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "ZeroPointRepo/zillow-skills",
+      "license": "MIT-0",
+      "license_source": "https://github.com/ZeroPointRepo/zillow-skills/blob/main/LICENSE",
+      "tags": [
+        "property-data",
+        "real-estate",
+        "api",
+        "zillow"
+      ],
+      "triggers": [
+        "property-data",
+        "real-estate",
+        "api",
+        "zillow",
+        "us",
+        "property",
+        "data",
+        "task",
+        "real",
+        "residential",
+        "valuation",
+        "listings"
+      ],
+      "path": "skills/us-property-data/SKILL.md"
     },
     {
       "id": "usage-based-pricing",

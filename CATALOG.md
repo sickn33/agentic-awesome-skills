@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-09T06:51:55.000Z
 
-Total skills: 2007
+Total skills: 2008
 
 ## agent-behavior (5)
 
@@ -231,7 +231,7 @@ Total skills: 2007
 | `10-andruia-skill-smith` | Ingeniero de Sistemas de Andru.ia. Diseña, redacta y despliega nuevas habilidades (skills) dentro del repositorio siguiendo el Estándar de Diamante. | safe | personal | 10, andruia, skill, smith | 10, andruia, skill, smith, ingeniero, de, sistemas, andru, ia, dise, redacta, despliega |
 | `20-andruia-niche-intelligence` | Estratega de Inteligencia de Dominio de Andru.ia. Analiza el nicho específico de un proyecto para inyectar conocimientos, regulaciones y estándares únicos de... | safe | personal | 20, andruia, niche, intelligence | 20, andruia, niche, intelligence, estratega, de, inteligencia, dominio, andru, ia, analiza, el |
 
-## api-integration (28)
+## api-integration (29)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -261,6 +261,7 @@ Total skills: 2007
 | `telegram-bot-builder` | Expert in building Telegram bots that solve real problems - from simple automation to complex AI-powered bots. Covers bot architecture, the Telegram Bot API,... | critical | vibeship-spawner-skills (Apache 2.0) | telegram, bot, builder | telegram, bot, builder, building, bots, solve, real, problems, simple, automation, complex, ai |
 | `twilio-communications` | Build communication features with Twilio: SMS messaging, voice calls, WhatsApp Business API, and user verification (2FA). Covers the full spectrum from simpl... | critical | vibeship-spawner-skills (Apache 2.0) | twilio, communications | twilio, communications, communication, features, sms, messaging, voice, calls, whatsapp, business, api, user |
 | `unsplash-integration` | Integration skill for searching and fetching high-quality, free-to-use professional photography from Unsplash. | safe | community | unsplash, integration | unsplash, integration, skill, searching, fetching, high, quality, free, professional, photography |
+| `us-property-data` | Use when a task needs real U.S. residential property data: valuation, listings, price or tax history, schools, or a zillow.com URL. | safe | ZeroPointRepo/zillow-skills | property-data, real-estate, api, zillow | property-data, real-estate, api, zillow, us, property, data, task, real, residential, valuation, listings |
 | `whatsapp-automation` | Automate WhatsApp Business tasks via Rube MCP (Composio): send messages, manage templates, upload media, and handle contacts. Always search tools first for c... | critical | community | whatsapp | whatsapp, automation, automate, business, tasks, via, rube, mcp, composio, send, messages, upload |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | safe | ZeroPointRepo/youtube-skills | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
 
