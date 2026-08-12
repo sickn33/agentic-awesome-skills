@@ -36154,6 +36154,25 @@
       "runtime_files": []
     },
     {
+      "id": "us-property-data",
+      "path": "skills/us-property-data",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "usage-based-pricing",
       "path": "skills/usage-based-pricing",
       "targets": {
@@ -38584,10 +38603,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2007,
+    "total_skills": 2008,
     "supported": {
-      "codex": 1929,
-      "claude": 1950
+      "codex": 1930,
+      "claude": 1951
     },
     "blocked": {
       "codex": 78,

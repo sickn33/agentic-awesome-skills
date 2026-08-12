@@ -45808,6 +45808,38 @@
     }
   },
   {
+    "id": "us-property-data",
+    "path": "skills/us-property-data",
+    "category": "api-integration",
+    "name": "us-property-data",
+    "description": "Use when a task needs real U.S. residential property data: valuation, listings, price or tax history, schools, or a zillow.com URL.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-08-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "ZeroPointRepo/zillow-skills",
+    "license": "MIT-0",
+    "license_source": "https://github.com/ZeroPointRepo/zillow-skills/blob/main/LICENSE",
+    "tags": [
+      "property-data",
+      "real-estate",
+      "api",
+      "zillow"
+    ]
+  },
+  {
     "id": "usage-based-pricing",
     "path": "skills/usage-based-pricing",
     "category": "business",
