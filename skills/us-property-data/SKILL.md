@@ -81,6 +81,24 @@ An MCP server is available at `https://api.zillapi.com/mcp` for agent contexts t
 
 Ask for one real address end to end before trusting generated code. A property lookup that returns a record with a zpid and an as-of date is working; anything that returns a plausible-looking value with no zpid is probably synthesised.
 
+## Example
+
+For a user who pastes a Zillow URL and asks for its valuation:
+
+```text
+1. Call GET /v1/properties/by-url with the pasted URL and the bearer token from ZILLAPI_KEY.
+2. Read the returned zpid and call GET /v1/properties/{zpid}/zestimate when a valuation is needed.
+3. Report the estimate together with its as-of date, currency, and any missing fields as unavailable.
+```
+
+## Limitations
+
+- A Zillapi account and available credits are required; the service, pricing, quota, and API schema can change independently of this repository.
+- Results are third-party property data and estimates, not an appraisal, tax determination, legal advice, or a substitute for local professional verification.
+- Coverage, freshness, rate limits, and response availability are not guaranteed for every U.S. property or listing.
+- Property addresses and Zillow URLs can be sensitive. Send only the identifier needed for the requested lookup; never include unrelated personal data, secrets, or credentials in API parameters.
+- This skill documents read-only property and listing lookups. Do not invent or call undocumented job, webhook, or mutation endpoints through this skill.
+
 ## Reference
 
 OpenAPI specification (canonical, machine-readable): https://zillapi.com/openapi.json
