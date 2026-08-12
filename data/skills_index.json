@@ -3827,6 +3827,35 @@
     }
   },
   {
+    "id": "atlas-cloud-media",
+    "path": "skills/atlas-cloud-media",
+    "category": "media",
+    "name": "atlas-cloud-media",
+    "description": "Generate Atlas Cloud images and videos through its asynchronous media API with schema-first model selection and credential-safe polling.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-08-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "atlas-cloud",
+      "image-generation",
+      "video-generation",
+      "media-api"
+    ]
+  },
+  {
     "id": "atlas-contract",
     "path": "skills/atlas-contract",
     "category": "backend",

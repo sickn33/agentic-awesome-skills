@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-09T06:51:55.000Z",
-  "total": 2008,
+  "total": 2009,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -4636,6 +4636,37 @@
         "high"
       ],
       "path": "skills/async-python-patterns/SKILL.md"
+    },
+    {
+      "id": "atlas-cloud-media",
+      "canonical_id": "atlas-cloud-media",
+      "name": "atlas-cloud-media",
+      "description": "Generate Atlas Cloud images and videos through its asynchronous media API with schema-first model selection and credential-safe polling.",
+      "category": "media",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "atlas-cloud",
+        "image-generation",
+        "video-generation",
+        "media-api"
+      ],
+      "triggers": [
+        "atlas-cloud",
+        "image-generation",
+        "video-generation",
+        "media-api",
+        "atlas",
+        "cloud",
+        "media",
+        "generate",
+        "images",
+        "videos",
+        "through",
+        "asynchronous"
+      ],
+      "path": "skills/atlas-cloud-media/SKILL.md"
     },
     {
       "id": "atlas-contract",

@@ -3083,6 +3083,25 @@
       "runtime_files": []
     },
     {
+      "id": "atlas-cloud-media",
+      "path": "skills/atlas-cloud-media",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "atlas-contract",
       "path": "skills/atlas-contract",
       "targets": {
@@ -38603,10 +38622,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2008,
+    "total_skills": 2009,
     "supported": {
-      "codex": 1930,
-      "claude": 1951
+      "codex": 1931,
+      "claude": 1952
     },
     "blocked": {
       "codex": 78,
