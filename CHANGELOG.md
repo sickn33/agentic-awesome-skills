@@ -20,6 +20,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed mutable upstream demo guidance from `unified-ai-gateway`; all demos
   now remain inside its reviewed, digest-pinned image procedure.
 
+## [15.13.0] - 2026-08-12 - "Installer Integrity and Expanded Data Skills"
+
+> Hardened release and installation boundaries, expanded the catalog with media and property-data workflows, and refreshed dependency and bundle safety surfaces.
+
+### Added
+
+- Added [`atlas-cloud-media`](skills/atlas-cloud-media/) for schema-first Atlas Cloud image and video generation with explicit cost approval, bounded polling, and safe output handling.
+- Added [`us-property-data`](skills/us-property-data/) for read-only U.S. property-data lookup through the Zillapi API, with explicit API-key, privacy, freshness, and third-party-estimate boundaries.
+
+### Changed
+
+- Regenerated the canonical catalog, offline AAS Core data, bundles, marketplaces, and Codex/Claude plugin distributions for 2,009 skills.
+- Updated `unified-ai-gateway` guidance to keep demos on the reviewed image procedure and align the documented public release baseline.
+- Refreshed the web-app dependency set and Snyk security upgrades for React, React DOM, and bundled font packages.
+
+### Security
+
+- Bound default and `--release` installer clones to the immutable `gitHead` recorded by the exact npm package version, failing closed if a GitHub release tag is moved or npm identity metadata cannot be verified. Explicit `--tag` installs remain available with a mutable-ref warning.
+- Reject symlinked flagship bundle asset sources before validating or copying them into distributable plugin packages.
+- Kept external API keys out of prompts and logs, required explicit approval for billable media generation, and bounded third-party polling and output handling in the new media and property-data skills.
+
 ## [15.12.0] - 2026-08-09 - "Catalog Discovery and Safer Context Skills"
 
 > Upgraded the public catalog into a practical discovery dashboard, added two focused research and planning skills, and repaired unsafe or malformed context-management guidance.
