@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- Updated the web app's transitive `nanoid` dependency from `3.3.17` to
+  `3.3.18`, resolving the zero-length custom-generator denial-of-service
+  advisory without changing the direct dependency set.
 - Bound default and `--release` installer clones to the immutable `gitHead`
   recorded by the exact npm package version, failing closed if a GitHub release
   tag is moved or npm identity metadata cannot be verified. Explicit `--tag`
