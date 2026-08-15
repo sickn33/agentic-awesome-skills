@@ -96,6 +96,14 @@ Maintain a serializable manifest with these top-level fields:
 - Report configured parameters separately from measured values; do not imply that pixel attribution is an exact shader contribution.
 - Use `partial`, `visual-unverified`, or `blocked` when a required capability or native check is unavailable.
 
+## Limitations and capability states
+
+- WebGL is optional. The starter switches to a CSS spectral fallback when a WebGL context cannot be created; fallback rendering is parameterized but is not pixel-identical to the shader.
+- Native image inspection and browser screenshot capture are runtime capabilities, not guaranteed by this skill. If either is unavailable, keep the result visual-unverified and report the missing capability explicitly.
+- The deterministic measurement helper requires the optional Python packages listed in scripts/requirements.txt. Without them it exits with an unavailable-capability message instead of producing a misleading report.
+- Manifests may contain 3 to 12 colors. The renderer uploads every configured entry up to that validated limit, while the shader ignores only unused capacity slots.
+- Configured values, fallback values, and measured pixel attribution describe different things; do not treat measured per-color coverage as an exact decomposition of shader energy.
+
 ## Anti-pattern guardrails
 
 - Do not rename the two modes into a vague “reusable UI material” abstraction.

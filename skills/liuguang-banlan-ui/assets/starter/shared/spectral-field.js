@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  const MAX_COLORS = 12;
+
   const VERTEX_SHADER = `
     attribute vec2 aPosition;
     void main() {
@@ -22,10 +24,11 @@
     uniform float uDither;
     uniform float uLuminanceCap;
     uniform vec3 uBase;
-    uniform vec3 uColors[6];
-    uniform float uStrengths[6];
-    uniform float uFieldScales[6];
-    uniform vec2 uPhases[6];
+    uniform vec3 uColors[12];
+    uniform float uStrengths[12];
+    uniform float uFieldScales[12];
+    uniform vec2 uPhases[12];
+    uniform float uColorCount;
 
     float hash21(vec2 p) {
       p = fract(p * vec2(123.34, 456.21));
@@ -101,7 +104,7 @@
         + dot(warped, vec2(0.72, -0.49))
         + uSeed * 0.000017
       );
-      for (int i = 0; i < 6; i++) {
+      for (int i = 0; i < 12; i++) {
         float field = colorField(
           warped + q * (0.21 + float(i) * 0.025),
           uPhases[i],
@@ -109,15 +112,16 @@
           uFieldScales[i]
         );
         float softBand = smoothstep(0.22, 0.78, field);
-        float hueStop = float(i) / 6.0;
+        float active = step(float(i) + 0.5, uColorCount);
+        float hueStop = float(i) / max(uColorCount, 1.0);
         float hueDistance = abs(spectralFlow - hueStop);
         hueDistance = min(hueDistance, 1.0 - hueDistance);
         float hueBand = 1.0 - smoothstep(0.035, 0.205, hueDistance);
         float shapedBand = pow(hueBand, 2.2) * (0.64 + softBand * 0.36);
-        float weight = shapedBand * sqrt(max(uStrengths[i], 0.0));
+        float weight = shapedBand * sqrt(max(uStrengths[i], 0.0)) * active;
         colorSum += uColors[i] * weight;
         weightSum += weight;
-        energySum += shapedBand * uStrengths[i];
+        energySum += shapedBand * uStrengths[i] * active;
         strongestBand = max(strongestBand, shapedBand);
       }
 
@@ -166,6 +170,46 @@
     ];
   }
 
+  function clamp01(value) {
+    const number = Number(value);
+    return Number.isFinite(number) ? Math.min(1, Math.max(0, number)) : 0;
+  }
+
+  function hexToRgba(hex, alpha) {
+    const normalized = String(hex || "").replace("#", "");
+    if (!/^[0-9a-f]{6}$/i.test(normalized)) {
+      return "rgba(128, 128, 128, " + alpha.toFixed(3) + ")";
+    }
+    const red = parseInt(normalized.slice(0, 2), 16);
+    const green = parseInt(normalized.slice(2, 4), 16);
+    const blue = parseInt(normalized.slice(4, 6), 16);
+    return "rgba(" + [red, green, blue, alpha.toFixed(3)].join(", ") + ")";
+  }
+
+  function fallbackBackground(config) {
+    const colors = Array.isArray(config.colors) ? config.colors.slice(0, MAX_COLORS) : [];
+    const overall = clamp01(config.overallColorIntensity);
+    const seed = Number(config.seed) || 0;
+    const layers = [];
+
+    colors.forEach((entry, index) => {
+      const strength = clamp01(entry.intensity) * clamp01(entry.peakOpacity) * overall;
+      if (strength <= 0) return;
+      const angle = ((index * 137.5) + (seed * 0.11)) * Math.PI / 180;
+      const x = Math.round(50 + Math.cos(angle) * 38);
+      const y = Math.round(50 + Math.sin(angle) * 34);
+      const size = Math.round(38 + (index % 3) * 7);
+      const alpha = Math.min(0.82, strength * 0.95);
+      layers.push(
+        "radial-gradient(ellipse at " + x + "% " + y + "%, " +
+        hexToRgba(entry.srgbFallback, alpha) + " 0%, transparent " + size + "%)"
+      );
+    });
+
+    layers.push("var(--app-canvas)");
+    return layers.join(", ");
+  }
+
   function compileShader(gl, type, source) {
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
@@ -197,6 +241,7 @@
     constructor(canvas, config) {
       this.canvas = canvas;
       this.config = config;
+      this.applyFallbackConfig(config);
       this.motionEnabled = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       this.visible = !document.hidden;
       this.startTime = performance.now();
@@ -237,6 +282,7 @@
         seed: uniform(this.gl, this.program, "uSeed"),
         mode: uniform(this.gl, this.program, "uMode"),
         overall: uniform(this.gl, this.program, "uOverall"),
+        colorCount: uniform(this.gl, this.program, "uColorCount"),
         scale: uniform(this.gl, this.program, "uScale"),
         octaves: uniform(this.gl, this.program, "uOctaves"),
         warp: uniform(this.gl, this.program, "uWarp"),
@@ -273,12 +319,24 @@
       }
     }
 
+    applyFallbackConfig(config) {
+      document.documentElement.style.setProperty("--field-fallback-background", fallbackBackground(config));
+    }
+
     uploadConfig() {
       if (!this.available) return;
       const gl = this.gl;
       const config = this.config;
-      const colors = config.colors.slice(0, 6);
-      while (colors.length < 6) colors.push(colors[colors.length - 1]);
+      const sourceColors = Array.isArray(config.colors) ? config.colors.slice(0, MAX_COLORS) : [];
+      const fallbackColor = sourceColors[0] || {
+        oklch: config.base.oklch,
+        intensity: 0,
+        peakOpacity: 0,
+        fieldScale: config.field.scale,
+        phase: [0, 0]
+      };
+      const colors = sourceColors.slice();
+      while (colors.length < MAX_COLORS) colors.push(fallbackColor);
       const colorValues = colors.flatMap((entry) => oklchToLinearRgb(entry.oklch));
       const strengthValues = colors.map((entry) => entry.intensity * entry.peakOpacity * 3.0);
       const fieldScaleValues = colors.map((entry) => entry.fieldScale);
@@ -287,6 +345,7 @@
       gl.uniform1f(this.locations.seed, config.seed);
       gl.uniform1f(this.locations.mode, config.mode === "obsidian" ? 1 : 0);
       gl.uniform1f(this.locations.overall, config.overallColorIntensity);
+      gl.uniform1f(this.locations.colorCount, sourceColors.length);
       gl.uniform1f(this.locations.scale, config.field.scale);
       gl.uniform1f(this.locations.octaves, config.field.octaves);
       gl.uniform1f(this.locations.warp, config.field.warpStrength);
@@ -301,6 +360,7 @@
 
     updateConfig(config) {
       this.config = config;
+      this.applyFallbackConfig(config);
       this.uploadConfig();
       this.render(performance.now(), true);
     }

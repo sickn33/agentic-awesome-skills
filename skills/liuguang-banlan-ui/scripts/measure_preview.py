@@ -7,9 +7,26 @@ import argparse
 import json
 import pathlib
 import subprocess
+import sys
 
-import numpy as np
-from PIL import Image
+try:
+    import numpy as np
+    from PIL import Image
+except ModuleNotFoundError as exc:
+    package = {"PIL": "Pillow"}.get(exc.name, exc.name)
+    requirements = pathlib.Path(__file__).with_name("requirements.txt")
+    print(
+        json.dumps(
+            {
+                "status": "unavailable",
+                "reason": f"Optional measurement dependency is missing: {package}",
+                "install": f"python -m pip install -r {requirements}",
+            },
+            ensure_ascii=False,
+        ),
+        file=sys.stderr,
+    )
+    raise SystemExit(2)
 
 
 def load_config(path: pathlib.Path) -> dict:

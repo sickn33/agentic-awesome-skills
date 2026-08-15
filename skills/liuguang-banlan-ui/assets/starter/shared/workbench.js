@@ -129,10 +129,13 @@
   function setPanel(open) {
     panel.dataset.open = String(open);
     panel.setAttribute("aria-hidden", String(!open));
+    panel.toggleAttribute("inert", !open);
+    panel.inert = !open;
     panelToggle.setAttribute("aria-expanded", String(open));
     if (open) panelClose.focus();
   }
 
+  setPanel(panel.dataset.open === "true");
   panelToggle.addEventListener("click", () => setPanel(panel.dataset.open !== "true"));
   panelClose.addEventListener("click", () => {
     setPanel(false);
