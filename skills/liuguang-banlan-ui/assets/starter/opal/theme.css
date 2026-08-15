@@ -1,0 +1,56 @@
+:root {
+  --app-canvas: oklch(98.2% 0.004 94);
+  --app-wash: oklch(99% 0.003 92 / 0.18);
+  --topbar-surface: oklch(99.2% 0.004 92 / 0.76);
+  --sidebar-surface: oklch(98.8% 0.005 92 / 0.70);
+  --band-surface: oklch(99.1% 0.006 92 / 0.68);
+  --workbench-surface: oklch(99.2% 0.004 94 / 0.70);
+  --pane-surface: oklch(99.5% 0.003 94 / 0.66);
+  --panel-surface: oklch(98.8% 0.007 95 / 0.92);
+  --button-surface: oklch(100% 0 0 / 0.46);
+  --ink-primary: oklch(24% 0.018 248);
+  --ink-secondary: oklch(40% 0.018 245);
+  --ink-tertiary: oklch(53% 0.014 246);
+  --ink-muted: oklch(63% 0.012 246);
+  --line-subtle: oklch(30% 0.02 246 / 0.075);
+  --line-default: oklch(30% 0.02 246 / 0.115);
+  --line-strong: oklch(26% 0.025 246 / 0.20);
+  --state-hover: oklch(100% 0 0 / 0.48);
+  --state-selected: oklch(91% 0.024 222 / 0.48);
+  --brand-mark: radial-gradient(circle at 35% 30%, oklch(100% 0 0), oklch(88% 0.055 201) 42%, oklch(86% 0.05 318));
+  --brand-mark-detail: oklch(40% 0.04 236 / 0.46);
+  --account-orb: linear-gradient(135deg, oklch(87% 0.05 198), oklch(91% 0.04 315));
+  --status-good: oklch(58% 0.11 158);
+  --status-good-wash: oklch(58% 0.11 158 / 0.13);
+  --active-rule: oklch(54% 0.08 216);
+  --focus-ring: oklch(55% 0.11 222);
+  --selection: oklch(78% 0.06 213 / 0.42);
+  --control-accent: oklch(57% 0.10 215);
+  --primary-surface: oklch(32% 0.025 240);
+  --primary-hover: oklch(27% 0.025 240);
+  --primary-border: oklch(25% 0.025 240 / 0.70);
+  --primary-ink: oklch(98% 0.004 95);
+  --scroll-thumb: oklch(35% 0.02 240 / 0.22);
+  --observation-ribbon: linear-gradient(90deg, oklch(72% 0.08 22 / 0.68), oklch(73% 0.07 193 / 0.72), oklch(72% 0.07 302 / 0.66), oklch(76% 0.07 75 / 0.62));
+  --workbench-shadow: 0 1px 2px oklch(20% 0.02 240 / 0.035), 0 8px 24px oklch(35% 0.03 240 / 0.035);
+  --panel-shadow: -12px 0 40px oklch(30% 0.03 240 / 0.10);
+  --mini-map: oklch(95% 0.014 204 / 0.62);
+  --marker-cyan: oklch(69% 0.09 196);
+  --marker-rose: oklch(72% 0.09 18);
+  --marker-lilac: oklch(68% 0.08 307);
+  --marker-gold: oklch(72% 0.08 81);
+}
+
+.field-fallback body {
+  background:
+    radial-gradient(ellipse at 12% 18%, oklch(91% 0.045 199 / 0.72), transparent 46%),
+    radial-gradient(ellipse at 78% 22%, oklch(93% 0.045 22 / 0.68), transparent 48%),
+    radial-gradient(ellipse at 44% 82%, oklch(91% 0.042 310 / 0.58), transparent 54%),
+    var(--app-canvas);
+}
+
+@media (color-gamut: p3) {
+  :root {
+    --observation-ribbon: linear-gradient(90deg, oklch(72% 0.095 22 / 0.68), oklch(73% 0.085 193 / 0.72), oklch(72% 0.085 302 / 0.66), oklch(76% 0.082 75 / 0.62));
+  }
+}
