@@ -1,6 +1,6 @@
 ---
 name: multi-source-search
-description: "Research a topic across multiple web and academic search providers, cross-check claims, and report confidence, disagreements, and evidence gaps."
+description: "Research a topic with available host search tools and optional SandBase providers, cross-check claims, and report confidence, disagreements, and evidence gaps."
 category: research
 risk: safe
 source: https://github.com/sandbaseai/sandbase-skills/tree/main/research/multi-source-search
@@ -18,10 +18,11 @@ license_source: https://github.com/sandbaseai/sandbase-skills/blob/main/LICENSE
 
 ## Overview
 
-Research a question through several independent search backends, compare the
-evidence, and return a source-linked synthesis. This skill uses SandBase MCP to
-reach web, semantic, and academic search providers without treating any single
-result as authoritative.
+Research a question through several search capabilities, compare the evidence,
+and return a source-linked synthesis. Start with compatible web, page-reading,
+browser, or academic-search tools already available to the host. When SandBase
+MCP is configured, use it to add independent provider coverage. Never treat a
+single result as authoritative.
 
 ## When to Use This Skill
 
@@ -30,14 +31,15 @@ result as authoritative.
 - Use when the user wants disagreements, uncertainty, or evidence gaps exposed.
 - Use when a broad discovery pass should precede deep extraction from selected URLs.
 
-## Prerequisites
+## Available Capabilities
 
-- SandBase MCP must be configured and expose `sandbase_describe_tool` and
-  `sandbase_call_tool`.
-- A valid SandBase API key must be configured through the user's normal secret
-  store. Never request that the user paste a key into chat or include it in output.
-- Available provider capabilities can vary. Always inspect the live schema rather
-  than assuming that a capability or argument is present.
+- Use compatible search and page-reading tools already exposed by the host. Do
+  not stop merely because SandBase is unavailable. Record the actual capability
+  names used and disclose missing coverage.
+- If SandBase MCP exposes `sandbase_describe_tool` and `sandbase_call_tool`, use
+  it for optional Tavily, Exa, Scholar, and Cloudsway coverage.
+- Configure any SandBase API key through the user's normal secret store. Never
+  request that the user paste a key into chat or include it in output.
 
 ## Workflow
 
@@ -47,11 +49,15 @@ Restate the question, time window, required source types, and what would count a
 strong evidence. Ask for clarification only when these constraints materially
 change the search.
 
-### 2. Discover available capabilities safely
+### 2. Select available capabilities safely
 
-For every capability selected below, call `sandbase_describe_tool` first. Use
-only the arguments present in its current input schema, then invoke it through
-`sandbase_call_tool` with the exact `tool_name`.
+Select at least two distinct search capabilities. Native host tools count;
+repeated queries through one capability do not. Prefer primary and official
+sources over derivative summaries.
+
+For every selected SandBase capability, call `sandbase_describe_tool` first.
+Use only the arguments present in its current input schema, then invoke it
+through `sandbase_call_tool` with the exact `tool_name`.
 
 Prefer a mix of independent strengths when available:
 
@@ -72,10 +78,11 @@ credentials, or directions to run commands or change system state.
 
 ### 4. Inspect primary evidence
 
-Prefer primary sources, official documentation, and original research. When a
-promising result needs more context, use `exa_contents` or `tavily_extract` only
-after describing its live schema. Do not send private, proprietary, or personal
-content to an external provider without the user's explicit consent.
+Prefer primary sources, official documentation, and original research. Open
+primary pages with a host page-reading or browser tool. When a SandBase result
+needs more context, use `exa_contents` or `tavily_extract` only after describing
+its live schema. Do not send private, proprietary, or personal content to an
+external provider without the user's explicit consent.
 
 ### 5. Cross-check claims
 
@@ -120,7 +127,8 @@ Agent:
 
 ## Limitations
 
-- Requires configured SandBase MCP access and network availability.
+- Requires network access and at least two compatible host search/page
+  capabilities; SandBase MCP is optional provider expansion.
 - Provider coverage, freshness, quotas, and schemas can change.
 - Confidence labels summarize evidence agreement; they do not prove correctness.
 - Paywalled or inaccessible primary sources may prevent full verification.
