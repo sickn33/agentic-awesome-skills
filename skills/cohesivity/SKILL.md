@@ -1,6 +1,6 @@
 ---
 name: cohesivity
-description: "Provision backend infra through Cohesivity (cohesivity.ai): Postgres, hosting, auth, storage, and AI model APIs over one HTTP API. Use when a .cohesivity file exists or a project needs a backend."
+description: "Headless backend and services purpose-built for AI agents: hosting, databases, storage, LLMs, and third-party APIs with agentic signup. Free tier: 10 projects and 10 GB live object storage."
 category: backend
 risk: critical
 source: https://github.com/cohesivity-org/cohesivity-skill

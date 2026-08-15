@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Refreshed the `cohesivity` skill description to emphasize its headless,
+  agent-oriented backend surface and current claimed Free-tier project and
+  object-storage allowances.
+
 ### Security
 
 - Updated the web app's transitive `nanoid` dependency from `3.3.17` to
