@@ -11789,6 +11789,39 @@
     "license_source": "https://github.com/jonathimer/devmarketing-skills/blob/main/LICENSE"
   },
   {
+    "id": "compile-knowledge",
+    "path": "skills/compile-knowledge",
+    "category": "productivity",
+    "name": "compile-knowledge",
+    "description": "Compile durable, non-obvious findings into an interlinked markdown knowledge store \u2014 atomic files, [[wiki-links]], a maintained index \u2014 so an agent gets smarter across sessions instead of relearning the same facts.",
+    "risk": "safe",
+    "source": "https://github.com/5dive-ai/skills/tree/main/compile-knowledge",
+    "date_added": "2026-08-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "5dive-ai/skills",
+    "license": "MIT",
+    "license_source": "https://github.com/5dive-ai/skills/blob/main/LICENSE",
+    "tags": [
+      "knowledge-management",
+      "memory",
+      "documentation",
+      "wiki",
+      "notes"
+    ]
+  },
+  {
     "id": "complexity-cuts",
     "path": "skills/complexity-cuts",
     "category": "uncategorized",

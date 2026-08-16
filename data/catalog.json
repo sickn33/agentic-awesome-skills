@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-12T14:15:39.000Z",
-  "total": 2012,
+  "total": 2013,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -13995,6 +13995,41 @@
         "sentiment"
       ],
       "path": "skills/competitor-tracking/SKILL.md"
+    },
+    {
+      "id": "compile-knowledge",
+      "canonical_id": "compile-knowledge",
+      "name": "compile-knowledge",
+      "description": "Compile durable, non-obvious findings into an interlinked markdown knowledge store — atomic files, [[wiki-links]], a maintained index — so an agent gets smarter across sessions instead of relearning the same facts.",
+      "category": "productivity",
+      "risk": "safe",
+      "source": "https://github.com/5dive-ai/skills/tree/main/compile-knowledge",
+      "source_type": "community",
+      "source_repo": "5dive-ai/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/5dive-ai/skills/blob/main/LICENSE",
+      "tags": [
+        "knowledge-management",
+        "memory",
+        "documentation",
+        "wiki",
+        "notes"
+      ],
+      "triggers": [
+        "knowledge-management",
+        "memory",
+        "documentation",
+        "wiki",
+        "notes",
+        "compile",
+        "knowledge",
+        "durable",
+        "non",
+        "obvious",
+        "findings",
+        "interlinked"
+      ],
+      "path": "skills/compile-knowledge/SKILL.md"
     },
     {
       "id": "complexity-cuts",
