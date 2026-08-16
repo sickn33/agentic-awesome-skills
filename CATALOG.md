@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-12T14:15:39.000Z
 
-Total skills: 2009
+Total skills: 2012
 
 ## agent-behavior (5)
 
@@ -391,7 +391,7 @@ Total skills: 2009
 | `backend-dev-guidelines` | You are a senior backend engineer operating production-grade services under strict architectural and reliability constraints. Use when routes, controllers, s... | critical | community | backend, dev, guidelines | backend, dev, guidelines, senior, engineer, operating, grade, under, strict, architectural, reliability, constraints |
 | `backend-development-feature-development` | Orchestrate end-to-end backend feature development from requirements to deployment. Use when coordinating multi-phase feature delivery across teams and servi... | critical | community | backend | backend, development, feature, orchestrate, requirements, deployment, coordinating, multi, phase, delivery, teams |
 | `backend-security-coder` | Expert in secure backend coding practices specializing in input validation, authentication, and API security. Use PROACTIVELY for backend security implementa... | critical | community | backend, security, coder | backend, security, coder, secure, coding, specializing, input, validation, authentication, api, proactively, implementations |
-| `cohesivity` | Provision backend infra through Cohesivity (cohesivity.ai): Postgres, hosting, auth, storage, and AI model APIs over one HTTP API. Use when a .cohesivity fil... | critical | cohesivity-org/cohesivity-skill | backend, infrastructure, database, hosting, auth | backend, infrastructure, database, hosting, auth, cohesivity, provision, infra, through, ai, postgres, storage |
+| `cohesivity` | Provision headless backend services for AI agents through Cohesivity: hosting, databases, storage, LLMs, and third-party APIs over one HTTP API. Use when a t... | critical | cohesivity-org/cohesivity-skill | backend, infrastructure, database, hosting, auth | backend, infrastructure, database, hosting, auth, cohesivity, provision, headless, ai, agents, through, databases |
 | `comfyui-gateway` | REST API gateway for ComfyUI servers. Workflow management, job queuing, webhooks, caching, auth, rate limiting, and image delivery (URL + base64). | safe | community | comfyui, api-gateway, image-generation, typescript | comfyui, api-gateway, image-generation, typescript, gateway, rest, api, servers, job, queuing, webhooks, caching |
 | `copilot-sdk` | Build applications that programmatically interact with GitHub Copilot. The SDK wraps the Copilot CLI via JSON-RPC, providing session management, custom tools... | critical | community | copilot, sdk | copilot, sdk, applications, programmatically, interact, github, wraps, cli, via, json, rpc, providing |
 | `django-access-review` | django-access-review | critical | community | django, access | django, access, review |
@@ -2003,11 +2003,14 @@ Total skills: 2009
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | critical | community | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | critical | community | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
 
-## testing (27)
+## testing (30)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `ab-testing` | When the user wants to plan, design, or implement an A/B test or experiment, or build a growth experimentation program. Also use when the user mentions "A/B ... | critical | coreyhaines31/marketingskills | ab | ab, testing, user, wants, plan, test, experiment, growth, experimentation, program, mentions, split |
+| `agent-qa-authoring` | Create, edit, validate, and run Agent QA tests, suites, and hooks through MCP or CLI while preserving canonical IDs and schema contracts. | critical | vostride/agent-qa | testing, qa, mcp, web-testing, mobile-testing | testing, qa, mcp, web-testing, mobile-testing, agent, authoring, edit, validate, run, tests, suites |
+| `agent-qa-debug-fix` | Debug, patch, and verify failed Agent QA runs from MCP evidence, artifacts, logs, and local code without hiding product or infrastructure defects. | critical | vostride/agent-qa | testing, qa, debugging, mcp, self-healing | testing, qa, debugging, mcp, self-healing, agent, debug, fix, patch, verify, failed, runs |
+| `agent-qa-result-triage` | Triage failed Agent QA runs with MCP evidence, artifacts, logs, fixed failure categories, confidence, and actionable next steps. | safe | vostride/agent-qa | testing, qa, triage, mcp, debugging | testing, qa, triage, mcp, debugging, agent, result, failed, runs, evidence, artifacts, logs |
 | `android-ui-journey-testing` | XML-specified Android UI journey testing, interactive step execution, assertion verification, and JSON outcome reporting. | critical | self | android, journey-testing, ui-verification, testing, adb, automation | android, journey-testing, ui-verification, testing, adb, automation, ui, journey, xml, specified, interactive, step |
 | `bats-testing-patterns` | Master Bash Automated Testing System (Bats) for comprehensive shell script testing. Use when writing tests for shell scripts, CI/CD pipelines, or requiring t... | critical | community | bats | bats, testing, bash, automated, shell, script, writing, tests, scripts, ci, cd, pipelines |
 | `brooks-test` | Test quality review drawing on twelve classic engineering books — with primary focus on xUnit Test Patterns, The Art of Unit Testing, How Google Tests Softwa... | safe | hyhmrright/brooks-lint | brooks | brooks, test, quality, review, drawing, twelve, classic, engineering, books, primary, xunit, art |
