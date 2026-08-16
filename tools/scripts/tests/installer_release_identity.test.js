@@ -64,6 +64,26 @@ assert.throws(
   "a release without a valid gitHead must fail closed",
 );
 
+assert.strictEqual(
+  installer.resolvePublishedGitHead("15.12.0", () => npmResult({ stdout: `[\n  "${publishedHead}"\n]\n` })),
+  publishedHead,
+  "npm >= 12 wraps single-field --json output in an array and must still resolve",
+);
+
+assert.throws(
+  () => installer.resolvePublishedGitHead("15.12.0", () => npmResult({ stdout: "[]\n" })),
+  /gitHead is missing or invalid/i,
+  "an empty array response must fail closed",
+);
+
+assert.throws(
+  () => installer.resolvePublishedGitHead("15.12.0", () => npmResult({
+    stdout: `["${publishedHead}", "${movedTagHead}"]\n`,
+  })),
+  /gitHead is missing or invalid/i,
+  "an ambiguous multi-entry response must fail closed",
+);
+
 assert.strictEqual(installer.resolveInstallVersion({}), require("../../../package.json").version);
 assert.strictEqual(installer.resolveInstallVersion({ versionArg: "v1.2.3" }), "1.2.3");
 assert.strictEqual(
