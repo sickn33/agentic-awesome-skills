@@ -1,6 +1,6 @@
 ---
 name: cohesivity
-description: "Headless backend and services purpose-built for AI agents: hosting, databases, storage, LLMs, and third-party APIs with agentic signup. Free tier: 10 projects and 10 GB live object storage."
+description: "Provision headless backend services for AI agents through Cohesivity: hosting, databases, storage, LLMs, and third-party APIs over one HTTP API. Use when a trusted .cohesivity file exists or the user approves a new backend."
 category: backend
 risk: critical
 source: https://github.com/cohesivity-org/cohesivity-skill
