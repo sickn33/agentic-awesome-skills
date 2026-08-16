@@ -450,6 +450,7 @@ Key source families include:
 
 ### Official Sources
 
+- **[vostride/agent-qa](https://github.com/vostride/agent-qa)**: Official Agent QA skills for authoring natural-language web and mobile tests, evidence-backed run triage, and scoped debug/fix workflows (FSL-1.1-ALv2, Apache-2.0 after two years).
 - **[aislon/uizze-mcp](https://github.com/aislon/uizze-mcp)**: Official source for the `uizze-ui-research` skill and UIZZE MCP-assisted UI research workflows.
 - **[anthropics/skills](https://github.com/anthropics/skills)**: Official Anthropic skills repository - Document manipulation (DOCX, PDF, PPTX, XLSX), Brand Guidelines, Internal Communications.
 - **[anthropics/claude-cookbooks](https://github.com/anthropics/claude-cookbooks)**: Official notebooks and recipes for building with Claude.
