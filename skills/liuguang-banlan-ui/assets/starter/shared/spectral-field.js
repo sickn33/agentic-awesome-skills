@@ -242,69 +242,75 @@
       this.canvas = canvas;
       this.config = config;
       this.applyFallbackConfig(config);
+      this.available = false;
+      this.error = null;
       this.motionEnabled = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       this.visible = !document.hidden;
       this.startTime = performance.now();
       this.lastFrame = 0;
       this.frameHandle = 0;
-      this.gl = canvas.getContext("webgl", {
-        alpha: false,
-        antialias: false,
-        depth: false,
-        stencil: false,
-        powerPreference: "low-power",
-        preserveDrawingBuffer: true
-      });
+      try {
+        this.gl = canvas.getContext("webgl", {
+          alpha: false,
+          antialias: false,
+          depth: false,
+          stencil: false,
+          powerPreference: "low-power",
+          preserveDrawingBuffer: true
+        });
+        if (!this.gl) throw new Error("WebGL context unavailable");
 
-      if (!this.gl) {
-        document.documentElement.classList.add("field-fallback");
+        this.program = createProgram(this.gl);
+        this.gl.useProgram(this.program);
+        const buffer = this.gl.createBuffer();
+        if (!buffer) throw new Error("WebGL buffer creation failed");
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
+        this.gl.bufferData(
+          this.gl.ARRAY_BUFFER,
+          new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+          this.gl.STATIC_DRAW
+        );
+        const position = this.gl.getAttribLocation(this.program, "aPosition");
+        if (position < 0) throw new Error("WebGL position attribute unavailable");
+        this.gl.enableVertexAttribArray(position);
+        this.gl.vertexAttribPointer(position, 2, this.gl.FLOAT, false, 0, 0);
+
+        this.locations = {
+          resolution: uniform(this.gl, this.program, "uResolution"),
+          time: uniform(this.gl, this.program, "uTime"),
+          seed: uniform(this.gl, this.program, "uSeed"),
+          mode: uniform(this.gl, this.program, "uMode"),
+          overall: uniform(this.gl, this.program, "uOverall"),
+          colorCount: uniform(this.gl, this.program, "uColorCount"),
+          scale: uniform(this.gl, this.program, "uScale"),
+          octaves: uniform(this.gl, this.program, "uOctaves"),
+          warp: uniform(this.gl, this.program, "uWarp"),
+          dither: uniform(this.gl, this.program, "uDither"),
+          luminanceCap: uniform(this.gl, this.program, "uLuminanceCap"),
+          base: uniform(this.gl, this.program, "uBase"),
+          colors: uniform(this.gl, this.program, "uColors[0]"),
+          strengths: uniform(this.gl, this.program, "uStrengths[0]"),
+          fieldScales: uniform(this.gl, this.program, "uFieldScales[0]"),
+          phases: uniform(this.gl, this.program, "uPhases[0]")
+        };
+
+        this.onResize = () => this.resize();
+        this.onVisibility = () => {
+          this.visible = !document.hidden;
+          if (this.visible) this.schedule();
+        };
+        window.addEventListener("resize", this.onResize, { passive: true });
+        document.addEventListener("visibilitychange", this.onVisibility);
+        this.available = true;
+        this.resize();
+        this.uploadConfig();
+        this.schedule();
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : String(error);
         this.available = false;
-        return;
+        this.gl = null;
+        document.documentElement.classList.add("field-fallback");
       }
-
-      this.available = true;
-      this.program = createProgram(this.gl);
-      this.gl.useProgram(this.program);
-      const buffer = this.gl.createBuffer();
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
-      this.gl.bufferData(
-        this.gl.ARRAY_BUFFER,
-        new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
-        this.gl.STATIC_DRAW
-      );
-      const position = this.gl.getAttribLocation(this.program, "aPosition");
-      this.gl.enableVertexAttribArray(position);
-      this.gl.vertexAttribPointer(position, 2, this.gl.FLOAT, false, 0, 0);
-
-      this.locations = {
-        resolution: uniform(this.gl, this.program, "uResolution"),
-        time: uniform(this.gl, this.program, "uTime"),
-        seed: uniform(this.gl, this.program, "uSeed"),
-        mode: uniform(this.gl, this.program, "uMode"),
-        overall: uniform(this.gl, this.program, "uOverall"),
-        colorCount: uniform(this.gl, this.program, "uColorCount"),
-        scale: uniform(this.gl, this.program, "uScale"),
-        octaves: uniform(this.gl, this.program, "uOctaves"),
-        warp: uniform(this.gl, this.program, "uWarp"),
-        dither: uniform(this.gl, this.program, "uDither"),
-        luminanceCap: uniform(this.gl, this.program, "uLuminanceCap"),
-        base: uniform(this.gl, this.program, "uBase"),
-        colors: uniform(this.gl, this.program, "uColors[0]"),
-        strengths: uniform(this.gl, this.program, "uStrengths[0]"),
-        fieldScales: uniform(this.gl, this.program, "uFieldScales[0]"),
-        phases: uniform(this.gl, this.program, "uPhases[0]")
-      };
-
-      this.onResize = () => this.resize();
-      this.onVisibility = () => {
-        this.visible = !document.hidden;
-        if (this.visible) this.schedule();
-      };
-      window.addEventListener("resize", this.onResize, { passive: true });
-      document.addEventListener("visibilitychange", this.onVisibility);
-      this.resize();
-      this.uploadConfig();
-      this.schedule();
     }
 
     resize() {

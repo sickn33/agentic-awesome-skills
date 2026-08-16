@@ -98,7 +98,7 @@ Maintain a serializable manifest with these top-level fields:
 
 ## Limitations and capability states
 
-- WebGL is optional. The starter switches to a CSS spectral fallback when a WebGL context cannot be created; fallback rendering is parameterized but is not pixel-identical to the shader.
+- WebGL is optional. The starter switches to a CSS spectral fallback when a WebGL context cannot be created or shader/program setup fails; fallback rendering is parameterized but is not pixel-identical to the shader.
 - Native image inspection and browser screenshot capture are runtime capabilities, not guaranteed by this skill. If either is unavailable, keep the result visual-unverified and report the missing capability explicitly.
 - The deterministic measurement helper requires the optional Python packages listed in scripts/requirements.txt. Without them it exits with an unavailable-capability message instead of producing a misleading report.
 - Manifests may contain 3 to 12 colors. The renderer uploads every configured entry up to that validated limit, while the shader ignores only unused capacity slots.

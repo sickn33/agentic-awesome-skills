@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import pathlib
 import subprocess
 import sys
@@ -30,6 +31,10 @@ def require(condition: bool, message: str, errors: list[str]) -> None:
         errors.append(message)
 
 
+def is_finite_number(value: object) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
 def validate(config: dict) -> list[str]:
     errors: list[str] = []
     required = ("schemaVersion", "mode", "label", "preset", "seed", "overallColorIntensity", "base", "colors", "field", "output")
@@ -46,10 +51,16 @@ def validate(config: dict) -> list[str]:
     require(0 <= base.get("h", -1) < 360, "base OKLCH hue must be in [0, 360)", errors)
 
     colors = config["colors"]
+    if not isinstance(colors, list):
+        errors.append("colors must be an array of objects")
+        return errors
     require(3 <= len(colors) <= 12, "colors must contain 3 to 12 entries", errors)
     ids: set[str] = set()
     for index, color in enumerate(colors):
         prefix = f"colors[{index}]"
+        if not isinstance(color, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
         for key in ("id", "label", "oklch", "srgbFallback", "intensity", "peakOpacity", "fieldScale", "phase"):
             require(key in color, f"{prefix} missing {key}", errors)
         if "id" in color:
@@ -62,13 +73,21 @@ def validate(config: dict) -> list[str]:
         require(0 <= color.get("intensity", -1) <= 1, f"{prefix}.intensity must be in [0, 1]", errors)
         require(0 <= color.get("peakOpacity", -1) <= 1, f"{prefix}.peakOpacity must be in [0, 1]", errors)
         require(color.get("fieldScale", 0) > 0, f"{prefix}.fieldScale must be positive", errors)
-        require(len(color.get("phase", [])) == 2, f"{prefix}.phase must contain two values", errors)
+        phase = color.get("phase", [])
+        require(isinstance(phase, list) and len(phase) == 2, f"{prefix}.phase must contain two values", errors)
+        if isinstance(phase, list) and len(phase) == 2:
+            require(all(is_finite_number(value) for value in phase), f"{prefix}.phase must contain finite numbers", errors)
 
     field = config["field"]
     for key in ("scale", "octaves", "warpStrength", "motionSpeed", "staticTime", "ditherStrength", "luminanceCap"):
         require(key in field, f"field missing {key}", errors)
     require(field.get("scale", 0) > 0, "field.scale must be positive", errors)
-    require(field.get("octaves", 0) >= 1, "field.octaves must be at least 1", errors)
+    octaves = field.get("octaves", 0)
+    require(
+        isinstance(octaves, int) and not isinstance(octaves, bool) and 1 <= octaves <= 5,
+        "field.octaves must be an integer in [1, 5]",
+        errors,
+    )
     require(0 <= field.get("warpStrength", -1) <= 1, "field.warpStrength must be in [0, 1]", errors)
     require(0 <= field.get("ditherStrength", -1) <= 1, "field.ditherStrength must be in [0, 1]", errors)
     require(0 < field.get("luminanceCap", 0) <= 1, "field.luminanceCap must be in (0, 1]", errors)

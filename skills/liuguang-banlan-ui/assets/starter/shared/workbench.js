@@ -144,6 +144,21 @@
   exportButton.addEventListener("click", downloadParameters);
   copyButton.addEventListener("click", copyParameters);
 
+  const isMobileViewport = () => window.matchMedia("(max-width: 760px)").matches;
+  let sidebarOpen = sidebar.dataset.open === "true";
+  function setSidebar(open) {
+    sidebarOpen = Boolean(open);
+    const mobile = isMobileViewport();
+    const visible = !mobile || sidebarOpen;
+    sidebar.dataset.open = String(visible);
+    sidebar.setAttribute("aria-hidden", String(!visible));
+    sidebar.toggleAttribute("inert", !visible);
+    sidebar.inert = !visible;
+    menuButton.setAttribute("aria-expanded", String(mobile && sidebarOpen));
+  }
+  setSidebar(sidebarOpen);
+  window.addEventListener("resize", () => setSidebar(sidebarOpen), { passive: true });
+
   let motionEnabled = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function setMotion(enabled) {
     motionEnabled = enabled;
@@ -156,9 +171,7 @@
   setMotion(motionEnabled);
 
   menuButton.addEventListener("click", () => {
-    const open = sidebar.dataset.open !== "true";
-    sidebar.dataset.open = String(open);
-    menuButton.setAttribute("aria-expanded", String(open));
+    setSidebar(!sidebarOpen);
   });
 
   document.querySelectorAll(".nav-item").forEach((button) => {
@@ -166,7 +179,7 @@
       document.querySelectorAll(".nav-item").forEach((item) => item.removeAttribute("aria-current"));
       button.setAttribute("aria-current", "page");
       document.querySelector("#page-location").textContent = button.dataset.location;
-      if (window.innerWidth < 760) sidebar.dataset.open = "false";
+      if (isMobileViewport()) setSidebar(false);
     });
   });
 
