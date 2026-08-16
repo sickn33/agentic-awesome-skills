@@ -1,9 +1,3 @@
-# Maintenance Walkthrough - 2026-08-16 Agent QA Skills
-
-- Imported the three canonical [Agent QA skills](https://github.com/vostride/agent-qa/tree/main/skills) for definition authoring, evidence-backed result triage, and scoped debug/fix verification.
-- Preserved Agent QA's exact ID and triage contracts while adding catalog-native triggers, provenance, license metadata, examples, limitations, privacy handling, and mutation approval boundaries.
-- Credited the official upstream source in `README.md`; generated catalogs, indexes, data, and plugin mirrors remain outside this source-only contribution.
-
 # Maintenance Walkthrough - 2026-08-09
 
 - Resolved the dangling `resources/implementation-playbook.md` instruction in
