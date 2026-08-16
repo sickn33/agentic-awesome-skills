@@ -9256,6 +9256,25 @@
       "runtime_files": []
     },
     {
+      "id": "compile-knowledge",
+      "path": "skills/compile-knowledge",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "complexity-cuts",
       "path": "skills/complexity-cuts",
       "targets": {
@@ -38679,10 +38698,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2012,
+    "total_skills": 2013,
     "supported": {
-      "codex": 1934,
-      "claude": 1955
+      "codex": 1935,
+      "claude": 1956
     },
     "blocked": {
       "codex": 78,
