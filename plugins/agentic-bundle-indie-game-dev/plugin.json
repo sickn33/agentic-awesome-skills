@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "agentic-bundle-indie-game-dev",
-  "version": "15.13.0",
+  "version": "15.14.0",
   "description": "Portable skills-only \"Indie Game Dev\" plugin from Agentic Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",

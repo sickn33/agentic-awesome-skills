@@ -1,6 +1,6 @@
 {
   "name": "agentic-awesome-skills",
-  "version": "15.13.0",
+  "version": "15.14.0",
   "aasCore": {
     "includedFromMajor": 15,
     "status": "agent-first-preview"
