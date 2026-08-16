@@ -75,9 +75,9 @@ marker, not an error.
 
 ### Step 5: Add exactly one index line
 
-`- [Title](<slug.md>) — hook`, under ~200 characters. Detail lives in the file; an index line
-that restates the file defeats the point of having an index. Create the index if it is
-missing, or the store is undiscoverable.
+Use one line in the form `- Title → slug.md — hook`, under ~200 characters. Detail lives in
+the file; an index line that restates the file defeats the point of having an index. Create
+the index if it is missing, or the store is undiscoverable.
 
 ### Step 6: Age the fact instead of letting it rot
 
@@ -114,7 +114,7 @@ Related: [[reference_gh_api_ref_serves_default_branch]].
 Then one line in the index:
 
 ```markdown
-- [Search API counts PRs as issues](<reference_search_api_counts_prs_as_issues.md>) — a zero is a real absence, a non-zero is ambiguous
+- Search API counts PRs as issues → reference_search_api_counts_prs_as_issues.md — a zero is a real absence, a non-zero is ambiguous
 ```
 
 ### Example 2: Nothing durable came out of the task
