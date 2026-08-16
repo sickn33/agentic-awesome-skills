@@ -7,8 +7,6 @@ source: community
 source_repo: riffkit/skill
 source_type: community
 date_added: "2026-07-01"
-upstream_version: "1.3.1"
-upstream_checked: "2026-08-15"
 author: riffkit
 tags: [video, short-form, tiktok, ai-video, marketing, ads, ecommerce, api-integration]
 tools: [claude, cursor, gemini, codex, antigravity]
