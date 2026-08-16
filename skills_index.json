@@ -37233,7 +37233,7 @@
     "path": "skills/riffkit",
     "category": "api-integration",
     "name": "riffkit",
-    "description": "Riff a winning TikTok into your own short video \u2014 study a proven video's emotion formula and regenerate it with your product, character, and language (EN/ES). Also makes UGC ad creative.",
+    "description": "Riff a winning TikTok into your own short video \u2014 study a proven video's emotion formula and regenerate it with your product, character, and language (9 supported). Also makes UGC ad creative.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-07-01",
