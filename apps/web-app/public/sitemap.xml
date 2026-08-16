@@ -43,6 +43,24 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/agent-qa-authoring/</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/agent-qa-debug-fix/</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/agent-qa-result-triage/</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://sickn33.github.io/agentic-awesome-skills/skill/atlas-cloud-media/</loc>
     <lastmod>2026-08-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -1100,24 +1118,6 @@
   </url>
   <url>
     <loc>https://sickn33.github.io/agentic-awesome-skills/skill/design-ux/</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/dev-to-hashnode/</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/developer-advocacy/</loc>
-    <lastmod>2026-08-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/developer-audience-context/</loc>
     <lastmod>2026-08-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

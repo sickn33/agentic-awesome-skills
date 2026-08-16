@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-12T14:15:39.000Z
 
-Total skills: 2009
+Total skills: 2012
 
 ## agent-behavior (5)
 
@@ -2003,11 +2003,14 @@ Total skills: 2009
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | critical | community | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | critical | community | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
 
-## testing (27)
+## testing (30)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `ab-testing` | When the user wants to plan, design, or implement an A/B test or experiment, or build a growth experimentation program. Also use when the user mentions "A/B ... | critical | coreyhaines31/marketingskills | ab | ab, testing, user, wants, plan, test, experiment, growth, experimentation, program, mentions, split |
+| `agent-qa-authoring` | Create, edit, validate, and run Agent QA tests, suites, and hooks through MCP or CLI while preserving canonical IDs and schema contracts. | critical | vostride/agent-qa | testing, qa, mcp, web-testing, mobile-testing | testing, qa, mcp, web-testing, mobile-testing, agent, authoring, edit, validate, run, tests, suites |
+| `agent-qa-debug-fix` | Debug, patch, and verify failed Agent QA runs from MCP evidence, artifacts, logs, and local code without hiding product or infrastructure defects. | critical | vostride/agent-qa | testing, qa, debugging, mcp, self-healing | testing, qa, debugging, mcp, self-healing, agent, debug, fix, patch, verify, failed, runs |
+| `agent-qa-result-triage` | Triage failed Agent QA runs with MCP evidence, artifacts, logs, fixed failure categories, confidence, and actionable next steps. | safe | vostride/agent-qa | testing, qa, triage, mcp, debugging | testing, qa, triage, mcp, debugging, agent, result, failed, runs, evidence, artifacts, logs |
 | `android-ui-journey-testing` | XML-specified Android UI journey testing, interactive step execution, assertion verification, and JSON outcome reporting. | critical | self | android, journey-testing, ui-verification, testing, adb, automation | android, journey-testing, ui-verification, testing, adb, automation, ui, journey, xml, specified, interactive, step |
 | `bats-testing-patterns` | Master Bash Automated Testing System (Bats) for comprehensive shell script testing. Use when writing tests for shell scripts, CI/CD pipelines, or requiring t... | critical | community | bats | bats, testing, bash, automated, shell, script, writing, tests, scripts, ci, cd, pipelines |
 | `brooks-test` | Test quality review drawing on twelve classic engineering books — with primary focus on xUnit Test Patterns, The Art of Unit Testing, How Google Tests Softwa... | safe | hyhmrright/brooks-lint | brooks | brooks, test, quality, review, drawing, twelve, classic, engineering, books, primary, xunit, art |

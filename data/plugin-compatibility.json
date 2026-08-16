@@ -716,6 +716,63 @@
       "runtime_files": []
     },
     {
+      "id": "agent-qa-authoring",
+      "path": "skills/agent-qa-authoring",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-qa-debug-fix",
+      "path": "skills/agent-qa-debug-fix",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-qa-result-triage",
+      "path": "skills/agent-qa-result-triage",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "agent-self-scheduling",
       "path": "skills/agent-self-scheduling",
       "targets": {
@@ -38622,10 +38679,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2009,
+    "total_skills": 2012,
     "supported": {
-      "codex": 1931,
-      "claude": 1952
+      "codex": 1934,
+      "claude": 1955
     },
     "blocked": {
       "codex": 78,

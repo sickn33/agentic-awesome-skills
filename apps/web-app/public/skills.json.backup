@@ -958,6 +958,105 @@
     ]
   },
   {
+    "id": "agent-qa-authoring",
+    "path": "skills/agent-qa-authoring",
+    "category": "testing",
+    "name": "agent-qa-authoring",
+    "description": "Create, edit, validate, and run Agent QA tests, suites, and hooks through MCP or CLI while preserving canonical IDs and schema contracts.",
+    "risk": "critical",
+    "source": "https://github.com/vostride/agent-qa/tree/main/skills/agent-qa-authoring",
+    "date_added": "2026-08-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "vostride/agent-qa",
+    "license": "FSL-1.1-ALv2",
+    "license_source": "https://github.com/vostride/agent-qa/blob/main/LICENSE.md",
+    "tags": [
+      "testing",
+      "qa",
+      "mcp",
+      "web-testing",
+      "mobile-testing"
+    ]
+  },
+  {
+    "id": "agent-qa-debug-fix",
+    "path": "skills/agent-qa-debug-fix",
+    "category": "testing",
+    "name": "agent-qa-debug-fix",
+    "description": "Debug, patch, and verify failed Agent QA runs from MCP evidence, artifacts, logs, and local code without hiding product or infrastructure defects.",
+    "risk": "critical",
+    "source": "https://github.com/vostride/agent-qa/tree/main/skills/agent-qa-debug-fix",
+    "date_added": "2026-08-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "vostride/agent-qa",
+    "license": "FSL-1.1-ALv2",
+    "license_source": "https://github.com/vostride/agent-qa/blob/main/LICENSE.md",
+    "tags": [
+      "testing",
+      "qa",
+      "debugging",
+      "mcp",
+      "self-healing"
+    ]
+  },
+  {
+    "id": "agent-qa-result-triage",
+    "path": "skills/agent-qa-result-triage",
+    "category": "testing",
+    "name": "agent-qa-result-triage",
+    "description": "Triage failed Agent QA runs with MCP evidence, artifacts, logs, fixed failure categories, confidence, and actionable next steps.",
+    "risk": "safe",
+    "source": "https://github.com/vostride/agent-qa/tree/main/skills/agent-qa-result-triage",
+    "date_added": "2026-08-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "vostride/agent-qa",
+    "license": "FSL-1.1-ALv2",
+    "license_source": "https://github.com/vostride/agent-qa/blob/main/LICENSE.md",
+    "tags": [
+      "testing",
+      "qa",
+      "triage",
+      "mcp",
+      "debugging"
+    ]
+  },
+  {
     "id": "agent-self-scheduling",
     "path": "skills/agent-self-scheduling",
     "category": "agent-orchestration",
