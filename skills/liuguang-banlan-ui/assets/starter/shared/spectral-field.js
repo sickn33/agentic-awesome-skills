@@ -247,6 +247,7 @@
       this.motionEnabled = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       this.visible = !document.hidden;
       this.startTime = performance.now();
+      this.phaseTime = null;
       this.lastFrame = 0;
       this.frameHandle = 0;
       try {
@@ -364,20 +365,40 @@
       gl.uniform2fv(this.locations.phases, new Float32Array(phaseValues));
     }
 
+    capturePhase(now) {
+      if (this.motionEnabled) {
+        this.phaseTime = ((now - this.startTime) / 1000) * this.config.field.motionSpeed;
+      } else if (this.phaseTime === null) {
+        this.phaseTime = this.config.field.staticTime;
+      }
+      return this.phaseTime;
+    }
+
     updateConfig(config) {
+      const now = performance.now();
+      this.capturePhase(now);
       this.config = config;
       this.applyFallbackConfig(config);
       this.uploadConfig();
-      this.render(performance.now(), true);
+      this.render(now, true);
     }
 
     setMotion(enabled) {
+      if (enabled === this.motionEnabled) {
+        const now = performance.now();
+        if (!enabled) this.capturePhase(now);
+        this.render(now, true);
+        return;
+      }
+      const now = performance.now();
+      const phase = this.capturePhase(now);
       this.motionEnabled = enabled;
       if (enabled) {
-        this.startTime = performance.now();
+        const speed = this.config.field.motionSpeed;
+        this.startTime = speed > 0 ? now - (phase / speed) * 1000 : now;
         this.schedule();
       } else {
-        this.render(performance.now(), true);
+        this.render(now, true);
       }
     }
 
@@ -398,9 +419,7 @@
       }
       this.lastFrame = now;
       this.resize();
-      const elapsed = this.motionEnabled
-        ? ((now - this.startTime) / 1000) * this.config.field.motionSpeed
-        : this.config.field.staticTime;
+      const elapsed = this.capturePhase(now);
       this.gl.uniform2f(this.locations.resolution, this.canvas.width, this.canvas.height);
       this.gl.uniform1f(this.locations.time, elapsed);
       this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
