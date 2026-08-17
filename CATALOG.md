@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-16T10:07:40.000Z
 
-Total skills: 2013
+Total skills: 2016
 
 ## agent-behavior (5)
 
@@ -810,11 +810,12 @@ Total skills: 2013
 | --- | --- | --- | --- | --- | --- |
 | `vscode-extension-guide-en` | Guide for VS Code extension development from scaffolding to Marketplace publication | safe | lewiswigmore/agent-skills | vscode, extension, ide, typescript, marketplace | vscode, extension, ide, typescript, marketplace, en, vs, code, development, scaffolding, publication |
 
-## creative (2)
+## creative (3)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `article-illustrations` | Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors. | safe | vipin-si/article-illustrations | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch, article, illustrations, generate, hand, drawn, 16, grav |
+| `liuguang-banlan-ui` | Builds two parameterized UI modes—流光溢彩白 (iridescent white) and 五彩斑斓黑 (colorful black)—with OKLCH, WebGL/CSS fallback, vision gating, screenshot QA, and total... | critical | self | ui, frontend, oklch, webgl, accessibility | ui, frontend, oklch, webgl, accessibility, liuguang, banlan, two, parameterized, modes, iridescent, white |
 | `modellix` | Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download). | critical | Modellix/modellix-plugin | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api, integrate, async, ai |
 
 ## data (24)
@@ -1015,7 +1016,7 @@ Total skills: 2013
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (173)
+## development (174)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1188,6 +1189,7 @@ Total skills: 2013
 | `turborepo-caching` | Configure Turborepo for efficient monorepo builds with local and remote caching. Use when setting up Turborepo, optimizing build pipelines, or implementing d... | critical | community | turborepo, caching | turborepo, caching, configure, efficient, monorepo, local, remote, setting, up, optimizing, pipelines, implementing |
 | `unship` | Compare AI agent-made UI variants locally in a real app, then keep one and clean up unused temporary code. | critical | mbenhard/unship | ui-variants, frontend, local-first, coding-agents | ui-variants, frontend, local-first, coding-agents, unship, compare, ai, agent, made, ui, variants, locally |
 | `using-git-worktrees` | Git worktrees create isolated workspaces sharing the same repository, allowing work on multiple branches simultaneously without switching. | critical | community | using, git, worktrees | using, git, worktrees, isolated, workspaces, sharing, same, repository, allowing, work, multiple, branches |
+| `using-lwc` | Use when project decisions, code structure, research, incidents, or verified context must survive future coding-agent sessions through LWC memory and graph i... | critical | JanYork/using-lwc | memory, knowledge-graph, code-intelligence, wiki, context-engineering | memory, knowledge-graph, code-intelligence, wiki, context-engineering, lwc, decisions, code, structure, research, incidents, verified |
 | `uv-package-manager` | Comprehensive guide to using uv, an extremely fast Python package installer and resolver written in Rust, for modern Python project management and dependency... | safe | community | uv, package, manager | uv, package, manager, extremely, fast, python, installer, resolver, written, rust, dependency |
 | `vexor` | Vector-powered CLI for semantic file search with a Claude/Codex skill | safe | https://github.com/scarletkc/vexor | vexor | vexor, vector, powered, cli, semantic, file, search, claude, codex, skill |
 | `vexor-cli` | Semantic file discovery via `vexor`. Use whenever locating where something is implemented/loaded/defined in a medium or large repo, or when the file location... | critical | community | vexor, cli | vexor, cli, semantic, file, discovery, via, whenever, locating, where, something, implemented, loaded |
@@ -1316,10 +1318,11 @@ Total skills: 2013
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | critical | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | critical | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (31)
+## frontend (32)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `anti-ui-slop` | Stop coding agents from shipping generic UI with UIZZE's 800,000+ real web and iOS screens, product-specific contracts, required states, and a hard finish gate. | safe | uizze/uizze | ui, ux, frontend, design, anti-ui-slop | ui, ux, frontend, design, anti-ui-slop, anti, slop, stop, coding, agents, shipping, generic |
 | `astro` | Build content-focused websites with Astro — zero JS by default, islands architecture, multi-framework components, and Markdown/MDX support. | safe | community | astro, ssg, ssr, islands, content, markdown, mdx, performance | astro, ssg, ssr, islands, content, markdown, mdx, performance, websites, zero, js, default |
 | `design-it` | Routes frontend design tasks to 48 specific UI styles. Triggers for websites, app screens, or UI components requesting a specific aesthetic. | safe | self | design, ui, frontend | design, ui, frontend, routes, tasks, 48, specific, styles, triggers, websites, app, screens |
 | `design-taste-frontend` | Use when building high-agency frontend interfaces with strict design taste, calibrated color, responsive layout, and motion rules. | safe | Leonxlnx/taste-skill | frontend, design, ui, react | frontend, design, ui, react, taste, building, high, agency, interfaces, strict, calibrated, color |

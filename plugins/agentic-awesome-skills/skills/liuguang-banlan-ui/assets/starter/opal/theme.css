@@ -1,0 +1,107 @@
+@supports not (color: oklch(0% 0 0)) {
+  :root {
+    --app-canvas: #f7f7f4;
+    --app-wash: rgba(247, 247, 244, 0.18);
+    --topbar-surface: rgba(252, 252, 249, 0.76);
+    --sidebar-surface: rgba(250, 250, 247, 0.70);
+    --band-surface: rgba(251, 251, 248, 0.68);
+    --workbench-surface: rgba(252, 252, 249, 0.70);
+    --pane-surface: rgba(253, 253, 251, 0.66);
+    --panel-surface: rgba(250, 250, 247, 0.92);
+    --button-surface: rgba(255, 255, 255, 0.46);
+    --ink-primary: #293341;
+    --ink-secondary: #59616d;
+    --ink-tertiary: #808792;
+    --ink-muted: #9ba1aa;
+    --line-subtle: rgba(47, 55, 68, 0.075);
+    --line-default: rgba(47, 55, 68, 0.115);
+    --line-strong: rgba(43, 52, 66, 0.20);
+    --state-hover: rgba(255, 255, 255, 0.48);
+    --state-selected: rgba(213, 229, 238, 0.48);
+    --brand-mark: radial-gradient(circle at 35% 30%, #ffffff, #cfe5eb 42%, #e7d8ee);
+    --brand-mark-detail: rgba(58, 72, 84, 0.46);
+    --account-orb: linear-gradient(135deg, #cfe7e2, #e4d9ee);
+    --status-good: #328f70;
+    --status-good-wash: rgba(50, 143, 112, 0.13);
+    --active-rule: #477f91;
+    --focus-ring: #397d94;
+    --selection: rgba(131, 174, 194, 0.42);
+    --control-accent: #397b91;
+    --primary-surface: #29313e;
+    --primary-hover: #222936;
+    --primary-border: rgba(33, 40, 52, 0.70);
+    --primary-ink: #f7f7f4;
+    --scroll-thumb: rgba(42, 50, 64, 0.22);
+    --observation-ribbon: linear-gradient(90deg, rgba(221, 167, 174, 0.68), rgba(169, 216, 211, 0.72), rgba(204, 180, 220, 0.66), rgba(231, 207, 155, 0.62));
+    --workbench-shadow: 0 1px 2px rgba(35, 44, 58, 0.035), 0 8px 24px rgba(52, 62, 77, 0.035);
+    --panel-shadow: -12px 0 40px rgba(48, 56, 69, 0.10);
+    --mini-map: rgba(223, 236, 241, 0.62);
+    --marker-cyan: #6aaeb4;
+    --marker-rose: #d5969e;
+    --marker-lilac: #b997c5;
+    --marker-gold: #d9bb7c;
+  }
+}
+
+@supports (color: oklch(0% 0 0)) {
+:root {
+  --app-canvas: oklch(98.2% 0.004 94);
+  --app-wash: oklch(99% 0.003 92 / 0.18);
+  --topbar-surface: oklch(99.2% 0.004 92 / 0.76);
+  --sidebar-surface: oklch(98.8% 0.005 92 / 0.70);
+  --band-surface: oklch(99.1% 0.006 92 / 0.68);
+  --workbench-surface: oklch(99.2% 0.004 94 / 0.70);
+  --pane-surface: oklch(99.5% 0.003 94 / 0.66);
+  --panel-surface: oklch(98.8% 0.007 95 / 0.92);
+  --button-surface: oklch(100% 0 0 / 0.46);
+  --ink-primary: oklch(24% 0.018 248);
+  --ink-secondary: oklch(40% 0.018 245);
+  --ink-tertiary: oklch(53% 0.014 246);
+  --ink-muted: oklch(63% 0.012 246);
+  --line-subtle: oklch(30% 0.02 246 / 0.075);
+  --line-default: oklch(30% 0.02 246 / 0.115);
+  --line-strong: oklch(26% 0.025 246 / 0.20);
+  --state-hover: oklch(100% 0 0 / 0.48);
+  --state-selected: oklch(91% 0.024 222 / 0.48);
+  --brand-mark: radial-gradient(circle at 35% 30%, oklch(100% 0 0), oklch(88% 0.055 201) 42%, oklch(86% 0.05 318));
+  --brand-mark-detail: oklch(40% 0.04 236 / 0.46);
+  --account-orb: linear-gradient(135deg, oklch(87% 0.05 198), oklch(91% 0.04 315));
+  --status-good: oklch(58% 0.11 158);
+  --status-good-wash: oklch(58% 0.11 158 / 0.13);
+  --active-rule: oklch(54% 0.08 216);
+  --focus-ring: oklch(55% 0.11 222);
+  --selection: oklch(78% 0.06 213 / 0.42);
+  --control-accent: oklch(57% 0.10 215);
+  --primary-surface: oklch(32% 0.025 240);
+  --primary-hover: oklch(27% 0.025 240);
+  --primary-border: oklch(25% 0.025 240 / 0.70);
+  --primary-ink: oklch(98% 0.004 95);
+  --scroll-thumb: oklch(35% 0.02 240 / 0.22);
+  --observation-ribbon: linear-gradient(90deg, oklch(72% 0.08 22 / 0.68), oklch(73% 0.07 193 / 0.72), oklch(72% 0.07 302 / 0.66), oklch(76% 0.07 75 / 0.62));
+  --workbench-shadow: 0 1px 2px oklch(20% 0.02 240 / 0.035), 0 8px 24px oklch(35% 0.03 240 / 0.035);
+  --panel-shadow: -12px 0 40px oklch(30% 0.03 240 / 0.10);
+  --mini-map: oklch(95% 0.014 204 / 0.62);
+  --marker-cyan: oklch(69% 0.09 196);
+  --marker-rose: oklch(72% 0.09 18);
+  --marker-lilac: oklch(68% 0.08 307);
+  --marker-gold: oklch(72% 0.08 81);
+}
+}
+
+.field-fallback body {
+  background: var(
+    --field-fallback-background,
+    radial-gradient(ellipse at 12% 18%, rgba(207, 229, 235, 0.72), transparent 46%),
+    radial-gradient(ellipse at 78% 22%, rgba(239, 205, 210, 0.68), transparent 48%),
+    radial-gradient(ellipse at 44% 82%, rgba(225, 210, 238, 0.58), transparent 54%),
+    var(--app-canvas)
+  );
+}
+
+@supports (color: oklch(0% 0 0)) {
+@media (color-gamut: p3) {
+  :root {
+    --observation-ribbon: linear-gradient(90deg, oklch(72% 0.095 22 / 0.68), oklch(73% 0.085 193 / 0.72), oklch(72% 0.085 302 / 0.66), oklch(76% 0.082 75 / 0.62));
+  }
+}
+}

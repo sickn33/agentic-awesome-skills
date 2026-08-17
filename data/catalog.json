@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-16T10:07:40.000Z",
-  "total": 2013,
+  "total": 2016,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -2993,6 +2993,41 @@
         "skill"
       ],
       "path": "skills/anti-sycophancy/SKILL.md"
+    },
+    {
+      "id": "anti-ui-slop",
+      "canonical_id": "anti-ui-slop",
+      "name": "anti-ui-slop",
+      "description": "Stop coding agents from shipping generic UI with UIZZE's 800,000+ real web and iOS screens, product-specific contracts, required states, and a hard finish gate.",
+      "category": "frontend",
+      "risk": "safe",
+      "source": "https://github.com/uizze/uizze/tree/main/skills/anti-ui-slop",
+      "source_type": "official",
+      "source_repo": "uizze/uizze",
+      "license": "MIT",
+      "license_source": "https://github.com/uizze/uizze/blob/main/LICENSE",
+      "tags": [
+        "ui",
+        "ux",
+        "frontend",
+        "design",
+        "anti-ui-slop"
+      ],
+      "triggers": [
+        "ui",
+        "ux",
+        "frontend",
+        "design",
+        "anti-ui-slop",
+        "anti",
+        "slop",
+        "stop",
+        "coding",
+        "agents",
+        "shipping",
+        "generic"
+      ],
+      "path": "skills/anti-ui-slop/SKILL.md"
     },
     {
       "id": "antigravity-agent-manager",
@@ -32156,6 +32191,38 @@
       "path": "skills/linux-troubleshooting/SKILL.md"
     },
     {
+      "id": "liuguang-banlan-ui",
+      "canonical_id": "liuguang-banlan-ui",
+      "name": "liuguang-banlan-ui",
+      "description": "Builds two parameterized UI modes—流光溢彩白 (iridescent white) and 五彩斑斓黑 (colorful black)—with OKLCH, WebGL/CSS fallback, vision gating, screenshot QA, and total/per-color intensity reports. Use when a UI request names either mode or needs measured color parameters.",
+      "category": "creative",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "ui",
+        "frontend",
+        "oklch",
+        "webgl",
+        "accessibility"
+      ],
+      "triggers": [
+        "ui",
+        "frontend",
+        "oklch",
+        "webgl",
+        "accessibility",
+        "liuguang",
+        "banlan",
+        "two",
+        "parameterized",
+        "modes",
+        "iridescent",
+        "white"
+      ],
+      "path": "skills/liuguang-banlan-ui/SKILL.md"
+    },
+    {
       "id": "llm-app-patterns",
       "canonical_id": "llm-app-patterns",
       "name": "llm-app-patterns",
@@ -54832,6 +54899,41 @@
         "branches"
       ],
       "path": "skills/using-git-worktrees/SKILL.md"
+    },
+    {
+      "id": "using-lwc",
+      "canonical_id": "using-lwc",
+      "name": "using-lwc",
+      "description": "Use when project decisions, code structure, research, incidents, or verified context must survive future coding-agent sessions through LWC memory and graph indexes.",
+      "category": "development",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "JanYork/using-lwc",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/JanYork/using-lwc/blob/7bd8052e6fa012786e50eee09f46df06b0cda1b8/LICENSE",
+      "tags": [
+        "memory",
+        "knowledge-graph",
+        "code-intelligence",
+        "wiki",
+        "context-engineering"
+      ],
+      "triggers": [
+        "memory",
+        "knowledge-graph",
+        "code-intelligence",
+        "wiki",
+        "context-engineering",
+        "lwc",
+        "decisions",
+        "code",
+        "structure",
+        "research",
+        "incidents",
+        "verified"
+      ],
+      "path": "skills/using-lwc/SKILL.md"
     },
     {
       "id": "using-n8n-mcp-skills",

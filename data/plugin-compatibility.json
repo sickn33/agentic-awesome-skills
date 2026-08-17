@@ -1994,6 +1994,25 @@
       "runtime_files": []
     },
     {
+      "id": "anti-ui-slop",
+      "path": "skills/anti-ui-slop",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "antigravity-agent-manager",
       "path": "skills/antigravity-agent-manager",
       "targets": {
@@ -21315,6 +21334,25 @@
       "runtime_files": []
     },
     {
+      "id": "liuguang-banlan-ui",
+      "path": "skills/liuguang-banlan-ui",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "llm-app-patterns",
       "path": "skills/llm-app-patterns",
       "targets": {
@@ -36350,6 +36388,25 @@
       "runtime_files": []
     },
     {
+      "id": "using-lwc",
+      "path": "skills/using-lwc",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "using-n8n-mcp-skills",
       "path": "skills/using-n8n-mcp-skills",
       "targets": {
@@ -38698,10 +38755,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2013,
+    "total_skills": 2016,
     "supported": {
-      "codex": 1935,
-      "claude": 1956
+      "codex": 1938,
+      "claude": 1959
     },
     "blocked": {
       "codex": 78,
