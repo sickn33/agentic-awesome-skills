@@ -3,11 +3,11 @@ name: uizze-ui-research
 description: "Use when building or reviewing web and iOS UI and you need real references from the free UIZZE public catalog, a structured design contract, a consent-gated rendered HTML/CSS preview, or a hard pre-ship finish gate."
 category: design
 risk: safe
-source: https://github.com/aislon/uizze-mcp/tree/main/skills/uizze-ui-research
-source_repo: aislon/uizze-mcp
+source: https://github.com/uizze/uizze/tree/main/skills/anti-ui-slop
+source_repo: uizze/uizze
 source_type: official
 license: MIT
-license_source: https://github.com/aislon/uizze-mcp/blob/main/LICENSE
+license_source: https://github.com/uizze/uizze/blob/main/LICENSE
 date_added: "2026-07-12"
 author: UIZZE
 tags: [ui-design, ui-research, mcp, design-contracts, agent-workflows]
