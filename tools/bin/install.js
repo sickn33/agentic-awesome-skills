@@ -910,6 +910,10 @@ function resolvePublishedGitHead(version, spawn = spawnSync) {
   } catch {
     throw new Error(`Unable to resolve npm release identity for ${exactVersion}: invalid registry response`);
   }
+  // npm >= 12 wraps single-field `npm view --json` output in an array.
+  if (Array.isArray(gitHead) && gitHead.length === 1) {
+    gitHead = gitHead[0];
+  }
   if (typeof gitHead !== "string" || !FULL_GIT_SHA_PATTERN.test(gitHead)) {
     throw new Error(`Unable to resolve npm release identity for ${exactVersion}: gitHead is missing or invalid`);
   }
