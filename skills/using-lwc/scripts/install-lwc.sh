@@ -2,6 +2,8 @@
 set -eu
 
 repository="JanYork/llm-wiki-cli"
+version="0.14.7"
+tag="v${version}"
 
 die() {
   printf 'lwc installer: %s\n' "$*" >&2
@@ -52,19 +54,32 @@ case "$(uname -m)" in
 esac
 
 target="${architecture}-${platform}"
-latest_url="https://github.com/${repository}/releases/latest"
-effective_url="$(curl -fsSLI -o /dev/null -w '%{url_effective}' "$latest_url")" ||
-  die "Could not resolve the latest release"
-tag="${effective_url%/}"
-tag="${tag##*/}"
-
-printf '%s\n' "$tag" |
-  grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$' ||
-  die "Latest release has an unsupported tag: $tag"
-
-version="${tag#v}"
 archive="lwc-${version}-${target}.${archive_extension}"
 release_url="https://github.com/${repository}/releases/download/${tag}"
+
+case "$archive" in
+  lwc-0.14.7-aarch64-apple-darwin.tar.gz)
+    expected_checksum="2bd22aed6246bfc7f25e73532928b0da40c08b827ba975afe05bd767053ad6fa"
+    ;;
+  lwc-0.14.7-x86_64-apple-darwin.tar.gz)
+    expected_checksum="50d9ebf3c4f4d895043b0db4fbcee6d8d62f40d67a00e288515d5b42044df21b"
+    ;;
+  lwc-0.14.7-aarch64-unknown-linux-gnu.tar.gz)
+    expected_checksum="6bed79a54293c8aa33006cfb2cc3ac233b82522c082d72d504a4daf37eeac18f"
+    ;;
+  lwc-0.14.7-x86_64-unknown-linux-gnu.tar.gz)
+    expected_checksum="ef66a515fa62958e53fb87b8a79bea59912c987fbadb732d028be29252822568"
+    ;;
+  lwc-0.14.7-aarch64-pc-windows-msvc.zip)
+    expected_checksum="cb69ca0752daeacaef52ae544f2b11425392b00002d6975db7f6804b1915707c"
+    ;;
+  lwc-0.14.7-x86_64-pc-windows-msvc.zip)
+    expected_checksum="d973eeb84e018b19e0d41379f3afb60132b39a36fb29f0691ed99d9fd737fdfb"
+    ;;
+  *)
+    die "No reviewed checksum is pinned for $archive"
+    ;;
+esac
 
 if [ -n "${LWC_INSTALL_DIR:-}" ]; then
   install_dir="$LWC_INSTALL_DIR"
@@ -110,13 +125,6 @@ trap 'exit 1' HUP INT TERM
 
 curl -fsSL "$release_url/$archive" -o "$work_dir/$archive" ||
   die "Could not download $archive"
-curl -fsSL "$release_url/SHA256SUMS" -o "$work_dir/SHA256SUMS" ||
-  die "Could not download SHA256SUMS"
-
-expected_checksum="$(
-  awk -v archive="$archive" '$2 == archive { print $1; exit }' "$work_dir/SHA256SUMS"
-)"
-[ -n "$expected_checksum" ] || die "No checksum found for $archive"
 
 if command -v sha256sum >/dev/null 2>&1; then
   actual_checksum="$(sha256sum "$work_dir/$archive" | awk '{ print $1 }')"

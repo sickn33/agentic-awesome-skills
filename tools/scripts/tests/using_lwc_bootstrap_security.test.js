@@ -11,6 +11,10 @@ const skill = fs.readFileSync(
   path.join(root, "skills/using-lwc/SKILL.md"),
   "utf8",
 );
+const installer = fs.readFileSync(
+  path.join(root, "skills/using-lwc/scripts/install-lwc.sh"),
+  "utf8",
+);
 
 assert.match(
   bootstrap,
@@ -36,6 +40,13 @@ assert.match(
   skill,
   /Skill activation is not consent/,
   "the public skill contract must preserve the consent boundary",
+);
+assert.match(installer, /version="0\.14\.7"/, "the installer must pin one reviewed release");
+assert.doesNotMatch(installer, /releases\/latest/, "the installer must not resolve a moving latest release");
+assert.match(
+  installer,
+  /50d9ebf3c4f4d895043b0db4fbcee6d8d62f40d67a00e288515d5b42044df21b/,
+  "the pinned release must carry reviewed platform checksums",
 );
 
 console.log("using-lwc bootstrap consent contracts passed");

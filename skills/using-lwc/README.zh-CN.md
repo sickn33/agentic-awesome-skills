@@ -256,7 +256,7 @@ cargo install --locked lwc
 ```bash
 installer="$(mktemp)"
 curl --proto '=https' --tlsv1.2 -fsSL \
-  https://github.com/JanYork/llm-wiki-cli/releases/latest/download/install.sh \
+  https://github.com/JanYork/llm-wiki-cli/releases/download/v0.14.7/install.sh \
   -o "$installer"
 less "$installer" # 执行前先检查脚本
 sh "$installer"
@@ -270,7 +270,7 @@ Release 文件的 SHA-256 后安装或更新 `lwc`。默认安装到 `~/.local/b
 ```bash
 installer="$(mktemp)"
 curl --proto '=https' --tlsv1.2 -fsSL \
-  https://github.com/JanYork/llm-wiki-cli/releases/latest/download/install.sh \
+  https://github.com/JanYork/llm-wiki-cli/releases/download/v0.14.7/install.sh \
   -o "$installer"
 less "$installer" # 执行前先检查脚本
 LWC_INSTALL_DIR="$HOME/bin" sh "$installer"
@@ -329,9 +329,9 @@ Skill 默认从当前目录发现活动项目，并直接调用全局安装的 `
 导出的前缀。
 
 默认不自动安装 CLI。取得明确授权后，只在一次 bootstrap 命令中设置
-`LWC_AUTO_INSTALL=1`。Skill 随附、经过审查的本地安装器以当前仓库与 GitHub
-Release 发布权限为信任边界，并使用 `SHA256SUMS` 验证下载归档完整性；该校验不是
-发布者代码签名。全局记忆初始化同样只在明确授权后，以一次性
+`LWC_AUTO_INSTALL=1`。Skill 随附、经过审查的本地安装器固定使用 LWC
+`v0.14.7`，并以脚本中经过审查的各平台 SHA-256 验证下载归档；该校验不是发布者
+代码签名，升级必须重新审查并更新固定版本。全局记忆初始化同样只在明确授权后，以一次性
 `LWC_GLOBAL_INIT=1` 重试启用。Release 二进制覆盖
 x86_64/aarch64 的 macOS、glibc Linux，以及 Windows Git Bash。`SKILL.md` 遵循
 Agent Skills 的资源目录形式，`agents/openai.yaml` 提供 OpenAI/Codex 元数据。

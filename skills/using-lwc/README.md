@@ -283,7 +283,7 @@ Install from GitHub:
 ```bash
 installer="$(mktemp)"
 curl --proto '=https' --tlsv1.2 -fsSL \
-  https://github.com/JanYork/llm-wiki-cli/releases/latest/download/install.sh \
+  https://github.com/JanYork/llm-wiki-cli/releases/download/v0.14.7/install.sh \
   -o "$installer"
 less "$installer" # inspect before execution
 sh "$installer"
@@ -297,7 +297,7 @@ It uses `~/.local/bin` by default, or updates an existing copy in
 ```bash
 installer="$(mktemp)"
 curl --proto '=https' --tlsv1.2 -fsSL \
-  https://github.com/JanYork/llm-wiki-cli/releases/latest/download/install.sh \
+  https://github.com/JanYork/llm-wiki-cli/releases/download/v0.14.7/install.sh \
   -o "$installer"
 less "$installer" # inspect before execution
 LWC_INSTALL_DIR="$HOME/bin" sh "$installer"
@@ -362,10 +362,11 @@ for routine commands in the project you are already working in.
 
 Automatic CLI installation is disabled by default. After explicit approval,
 set `LWC_AUTO_INSTALL=1` for one bootstrap command. The reviewed installer
-bundled in the Skill trusts this repository and its GitHub Release publishing
-boundary and verifies the downloaded archive against `SHA256SUMS`; the checksum
-is integrity protection, not publisher code signing. Global initialization is
-likewise opt-in through a one-command `LWC_GLOBAL_INIT=1` retry. Release binaries
+bundled in the Skill pins LWC `v0.14.7` and verifies the downloaded archive
+against a platform-specific SHA-256 reviewed into the script; the checksum is
+integrity protection, not publisher code signing. Upgrades require a new review
+and pin. Global initialization is likewise opt-in through a one-command
+`LWC_GLOBAL_INIT=1` retry. Release binaries
 cover x86_64/aarch64 macOS, glibc Linux, and Windows through Git Bash. `SKILL.md` follows the Agent Skills
 resource layout, while
 `agents/openai.yaml` supplies OpenAI/Codex metadata. The CLI itself is
