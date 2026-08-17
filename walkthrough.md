@@ -1,3 +1,15 @@
+# Community skill import - 2026-08-14
+
+- Imported the Apache-2.0-licensed `using-lwc` skill from
+  [JanYork/using-lwc](https://github.com/JanYork/using-lwc) at immutable upstream
+  commit `7bd8052e6fa012786e50eee09f46df06b0cda1b8`.
+- Preserved the complete 22-file bundle while adding catalog metadata, explicit
+  triggers, limitations, critical-risk classification, consent gates for CLI
+  and global-memory initialization, and source credit required by this
+  repository.
+- Kept the contribution source-only; generated registries and plugin mirrors
+  remain owned by protected canonical synchronization.
+
 # Maintenance Walkthrough - 2026-08-09
 
 - Resolved the dangling `resources/implementation-playbook.md` instruction in

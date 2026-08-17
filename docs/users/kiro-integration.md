@@ -18,7 +18,7 @@ Kiro is AWS's agentic AI IDE that combines:
 
 Kiro's agentic capabilities are enhanced by skills that provide:
 
-- **Domain expertise** across 2,009+ specialized areas
+- **Domain expertise** across 2,016+ specialized areas
 - **Best practices** from Anthropic, OpenAI, Google, Microsoft, and AWS
 - **Workflow automation** for common development tasks
 - **AWS-specific patterns** for serverless, infrastructure, and cloud architecture

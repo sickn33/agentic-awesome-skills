@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-08-12T14:15:39.000Z
+Generated at: 2026-08-16T10:07:40.000Z
 
-Total skills: 2009
+Total skills: 2016
 
 ## agent-behavior (5)
 
@@ -247,7 +247,7 @@ Total skills: 2009
 | `paypal-integration` | Master PayPal payment integration including Express Checkout, IPN handling, recurring billing, and refund workflows. | critical | community | paypal, integration | paypal, integration, payment, including, express, checkout, ipn, handling, recurring, billing, refund |
 | `plaid-fintech` | Expert patterns for Plaid API integration including Link token flows, transactions sync, identity verification, Auth for ACH, balance checks, webhook handlin... | critical | vibeship-spawner-skills (Apache 2.0) | plaid, fintech | plaid, fintech, api, integration, including, link, token, flows, transactions, sync, identity, verification |
 | `postmark-automation` | Automate Postmark email delivery tasks via Rube MCP (Composio): send templated emails, manage templates, monitor delivery stats and bounces. Always search to... | critical | community | postmark | postmark, automation, automate, email, delivery, tasks, via, rube, mcp, composio, send, templated |
-| `riffkit` | Riff a winning TikTok into your own short video — study a proven video's emotion formula and regenerate it with your product, character, and language (EN/ES)... | critical | riffkit/skill | video, short-form, tiktok, ai-video, marketing, ads, ecommerce, api-integration | video, short-form, tiktok, ai-video, marketing, ads, ecommerce, api-integration, riffkit, riff, winning, own |
+| `riffkit` | Riff a winning TikTok into your own short video — study a proven video's emotion formula and regenerate it with your product, character, and language (9 supp... | critical | riffkit/skill | video, short-form, tiktok, ai-video, marketing, ads, ecommerce, api-integration | video, short-form, tiktok, ai-video, marketing, ads, ecommerce, api-integration, riffkit, riff, winning, own |
 | `salesforce-automation` | Automate Salesforce tasks via Rube MCP (Composio): leads, contacts, accounts, opportunities, SOQL queries. Always search tools first for current schemas. | critical | community | salesforce | salesforce, automation, automate, tasks, via, rube, mcp, composio, leads, contacts, accounts, opportunities |
 | `salesforce-development` | Expert patterns for Salesforce platform development including Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, Connected Apps, and ... | safe | vibeship-spawner-skills (Apache 2.0) | salesforce | salesforce, development, platform, including, lightning, web, components, lwc, apex, triggers, classes, rest |
 | `sendblue/sendblue-api` | Send and receive iMessage, SMS, and RCS from application code via the Sendblue HTTP API — text, media, group messages, send styles, reactions, typing indicat... | critical | community | sendblue, imessage, sms, rcs, messaging, api, webhooks | sendblue, imessage, sms, rcs, messaging, api, webhooks, send, receive, application, code, via |
@@ -391,7 +391,7 @@ Total skills: 2009
 | `backend-dev-guidelines` | You are a senior backend engineer operating production-grade services under strict architectural and reliability constraints. Use when routes, controllers, s... | critical | community | backend, dev, guidelines | backend, dev, guidelines, senior, engineer, operating, grade, under, strict, architectural, reliability, constraints |
 | `backend-development-feature-development` | Orchestrate end-to-end backend feature development from requirements to deployment. Use when coordinating multi-phase feature delivery across teams and servi... | critical | community | backend | backend, development, feature, orchestrate, requirements, deployment, coordinating, multi, phase, delivery, teams |
 | `backend-security-coder` | Expert in secure backend coding practices specializing in input validation, authentication, and API security. Use PROACTIVELY for backend security implementa... | critical | community | backend, security, coder | backend, security, coder, secure, coding, specializing, input, validation, authentication, api, proactively, implementations |
-| `cohesivity` | Provision backend infra through Cohesivity (cohesivity.ai): Postgres, hosting, auth, storage, and AI model APIs over one HTTP API. Use when a .cohesivity fil... | critical | cohesivity-org/cohesivity-skill | backend, infrastructure, database, hosting, auth | backend, infrastructure, database, hosting, auth, cohesivity, provision, infra, through, ai, postgres, storage |
+| `cohesivity` | Provision headless backend services for AI agents through Cohesivity: hosting, databases, storage, LLMs, and third-party APIs over one HTTP API. Use when a t... | critical | cohesivity-org/cohesivity-skill | backend, infrastructure, database, hosting, auth | backend, infrastructure, database, hosting, auth, cohesivity, provision, headless, ai, agents, through, databases |
 | `comfyui-gateway` | REST API gateway for ComfyUI servers. Workflow management, job queuing, webhooks, caching, auth, rate limiting, and image delivery (URL + base64). | safe | community | comfyui, api-gateway, image-generation, typescript | comfyui, api-gateway, image-generation, typescript, gateway, rest, api, servers, job, queuing, webhooks, caching |
 | `copilot-sdk` | Build applications that programmatically interact with GitHub Copilot. The SDK wraps the Copilot CLI via JSON-RPC, providing session management, custom tools... | critical | community | copilot, sdk | copilot, sdk, applications, programmatically, interact, github, wraps, cli, via, json, rpc, providing |
 | `django-access-review` | django-access-review | critical | community | django, access | django, access, review |
@@ -810,11 +810,12 @@ Total skills: 2009
 | --- | --- | --- | --- | --- | --- |
 | `vscode-extension-guide-en` | Guide for VS Code extension development from scaffolding to Marketplace publication | safe | lewiswigmore/agent-skills | vscode, extension, ide, typescript, marketplace | vscode, extension, ide, typescript, marketplace, en, vs, code, development, scaffolding, publication |
 
-## creative (2)
+## creative (3)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `article-illustrations` | Generate hand-drawn 16:9 article illustrations with the Grav character IP, sparse annotations, and absurd but clear visual metaphors. | safe | vipin-si/article-illustrations | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch | illustration, article-graphics, visual-metaphors, image-generation, whiteboard-sketch, article, illustrations, generate, hand, drawn, 16, grav |
+| `liuguang-banlan-ui` | Builds two parameterized UI modes—流光溢彩白 (iridescent white) and 五彩斑斓黑 (colorful black)—with OKLCH, WebGL/CSS fallback, vision gating, screenshot QA, and total... | critical | self | ui, frontend, oklch, webgl, accessibility | ui, frontend, oklch, webgl, accessibility, liuguang, banlan, two, parameterized, modes, iridescent, white |
 | `modellix` | Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download). | critical | Modellix/modellix-plugin | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api, integrate, async, ai |
 
 ## data (24)
@@ -1015,7 +1016,7 @@ Total skills: 2009
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (173)
+## development (174)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1188,6 +1189,7 @@ Total skills: 2009
 | `turborepo-caching` | Configure Turborepo for efficient monorepo builds with local and remote caching. Use when setting up Turborepo, optimizing build pipelines, or implementing d... | critical | community | turborepo, caching | turborepo, caching, configure, efficient, monorepo, local, remote, setting, up, optimizing, pipelines, implementing |
 | `unship` | Compare AI agent-made UI variants locally in a real app, then keep one and clean up unused temporary code. | critical | mbenhard/unship | ui-variants, frontend, local-first, coding-agents | ui-variants, frontend, local-first, coding-agents, unship, compare, ai, agent, made, ui, variants, locally |
 | `using-git-worktrees` | Git worktrees create isolated workspaces sharing the same repository, allowing work on multiple branches simultaneously without switching. | critical | community | using, git, worktrees | using, git, worktrees, isolated, workspaces, sharing, same, repository, allowing, work, multiple, branches |
+| `using-lwc` | Use when project decisions, code structure, research, incidents, or verified context must survive future coding-agent sessions through LWC memory and graph i... | critical | JanYork/using-lwc | memory, knowledge-graph, code-intelligence, wiki, context-engineering | memory, knowledge-graph, code-intelligence, wiki, context-engineering, lwc, decisions, code, structure, research, incidents, verified |
 | `uv-package-manager` | Comprehensive guide to using uv, an extremely fast Python package installer and resolver written in Rust, for modern Python project management and dependency... | safe | community | uv, package, manager | uv, package, manager, extremely, fast, python, installer, resolver, written, rust, dependency |
 | `vexor` | Vector-powered CLI for semantic file search with a Claude/Codex skill | safe | https://github.com/scarletkc/vexor | vexor | vexor, vector, powered, cli, semantic, file, search, claude, codex, skill |
 | `vexor-cli` | Semantic file discovery via `vexor`. Use whenever locating where something is implemented/loaded/defined in a medium or large repo, or when the file location... | critical | community | vexor, cli | vexor, cli, semantic, file, discovery, via, whenever, locating, where, something, implemented, loaded |
@@ -1316,10 +1318,11 @@ Total skills: 2009
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | critical | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | critical | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (31)
+## frontend (32)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `anti-ui-slop` | Stop coding agents from shipping generic UI with UIZZE's 800,000+ real web and iOS screens, product-specific contracts, required states, and a hard finish gate. | safe | uizze/uizze | ui, ux, frontend, design, anti-ui-slop | ui, ux, frontend, design, anti-ui-slop, anti, slop, stop, coding, agents, shipping, generic |
 | `astro` | Build content-focused websites with Astro — zero JS by default, islands architecture, multi-framework components, and Markdown/MDX support. | safe | community | astro, ssg, ssr, islands, content, markdown, mdx, performance | astro, ssg, ssr, islands, content, markdown, mdx, performance, websites, zero, js, default |
 | `design-it` | Routes frontend design tasks to 48 specific UI styles. Triggers for websites, app screens, or UI components requesting a specific aesthetic. | safe | self | design, ui, frontend | design, ui, frontend, routes, tasks, 48, specific, styles, triggers, websites, app, screens |
 | `design-taste-frontend` | Use when building high-agency frontend interfaces with strict design taste, calibrated color, responsive layout, and motion rules. | safe | Leonxlnx/taste-skill | frontend, design, ui, react | frontend, design, ui, react, taste, building, high, agency, interfaces, strict, calibrated, color |
@@ -1731,7 +1734,7 @@ Total skills: 2009
 | --- | --- | --- | --- | --- | --- |
 | `idea-os` | Five-phase pipeline (triage → clarify → research → PRD → plan) that turns a raw idea into four linked files: clarifying questions, deep research, a PRD with ... | safe | Slashworks-biz/idea-os | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical, idea, os |
 
-## productivity (32)
+## productivity (33)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1742,6 +1745,7 @@ Total skills: 2009
 | `cal-com-automation` | Automate Cal.com tasks via Rube MCP (Composio): manage bookings, check availability, configure webhooks, and handle teams. Always search tools first for curr... | critical | community | cal, com | cal, com, automation, automate, tasks, via, rube, mcp, composio, bookings, check, availability |
 | `calendly-automation` | Automate Calendly scheduling, event management, invitee tracking, availability checks, and organization administration via Rube MCP (Composio). Always search... | critical | community | calendly | calendly, automation, automate, scheduling, event, invitee, tracking, availability, checks, organization, administration, via |
 | `codex-profiles` | Use codex-profiles to run Codex CLI or Codex Desktop with isolated CODEX_HOME profiles for separate accounts, projects, and local state. | critical | Ducksss/codex-profiles | codex, codex-cli, profiles, code-home, account-isolation, desktop | codex, codex-cli, profiles, code-home, account-isolation, desktop, run, cli, isolated, home, separate, accounts |
+| `compile-knowledge` | Compile durable, non-obvious findings into an interlinked markdown knowledge store — atomic files, [[wiki-links]], a maintained index — so an agent gets smar... | safe | 5dive-ai/skills | knowledge-management, memory, documentation, wiki, notes | knowledge-management, memory, documentation, wiki, notes, compile, knowledge, durable, non, obvious, findings, interlinked |
 | `context-kit` | Evaluate, adapt, and safely install Context Kit personal context artifacts for Claude Code or adjacent agent workflows. | critical | JDDavenport/context-kit | personal-context, claude-code, memory, knowledge-management, agent-workflows | personal-context, claude-code, memory, knowledge-management, agent-workflows, context, kit, evaluate, adapt, safely, install, personal |
 | `daily-gift` | Relationship-aware daily gift engine with five-stage creative pipeline — editorial judgment, synthesis, concept generation, visual strategy, and rendering in... | critical | openclaw/skills | creative, gift, personalization, h5, image-generation, video-generation, relationship | creative, gift, personalization, h5, image-generation, video-generation, relationship, daily, aware, engine, five, stage |
 | `docusign-automation` | Automate DocuSign tasks via Rube MCP (Composio): templates, envelopes, signatures, document management. Always search tools first for current schemas. | critical | community | docusign | docusign, automation, automate, tasks, via, rube, mcp, composio, envelopes, signatures, document, always |
@@ -2003,11 +2007,14 @@ Total skills: 2009
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | critical | community | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | critical | community | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
 
-## testing (27)
+## testing (30)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `ab-testing` | When the user wants to plan, design, or implement an A/B test or experiment, or build a growth experimentation program. Also use when the user mentions "A/B ... | critical | coreyhaines31/marketingskills | ab | ab, testing, user, wants, plan, test, experiment, growth, experimentation, program, mentions, split |
+| `agent-qa-authoring` | Create, edit, validate, and run Agent QA tests, suites, and hooks through MCP or CLI while preserving canonical IDs and schema contracts. | critical | vostride/agent-qa | testing, qa, mcp, web-testing, mobile-testing | testing, qa, mcp, web-testing, mobile-testing, agent, authoring, edit, validate, run, tests, suites |
+| `agent-qa-debug-fix` | Debug, patch, and verify failed Agent QA runs from MCP evidence, artifacts, logs, and local code without hiding product or infrastructure defects. | critical | vostride/agent-qa | testing, qa, debugging, mcp, self-healing | testing, qa, debugging, mcp, self-healing, agent, debug, fix, patch, verify, failed, runs |
+| `agent-qa-result-triage` | Triage failed Agent QA runs with MCP evidence, artifacts, logs, fixed failure categories, confidence, and actionable next steps. | safe | vostride/agent-qa | testing, qa, triage, mcp, debugging | testing, qa, triage, mcp, debugging, agent, result, failed, runs, evidence, artifacts, logs |
 | `android-ui-journey-testing` | XML-specified Android UI journey testing, interactive step execution, assertion verification, and JSON outcome reporting. | critical | self | android, journey-testing, ui-verification, testing, adb, automation | android, journey-testing, ui-verification, testing, adb, automation, ui, journey, xml, specified, interactive, step |
 | `bats-testing-patterns` | Master Bash Automated Testing System (Bats) for comprehensive shell script testing. Use when writing tests for shell scripts, CI/CD pipelines, or requiring t... | critical | community | bats | bats, testing, bash, automated, shell, script, writing, tests, scripts, ci, cd, pipelines |
 | `brooks-test` | Test quality review drawing on twelve classic engineering books — with primary focus on xUnit Test Patterns, The Art of Unit Testing, How Google Tests Softwa... | safe | hyhmrright/brooks-lint | brooks | brooks, test, quality, review, drawing, twelve, classic, engineering, books, primary, xunit, art |
