@@ -79,6 +79,19 @@ assert.ok(
   `PR #974-style root walkthrough.md must fail before merge: ${walkthroughPolicy.reasons.join(", ")}`,
 );
 
+const emptyForkPolicy = evaluateForkSafety(
+  repoRoot,
+  [],
+  {
+    base: { repo: { full_name: "sickn33/agentic-awesome-skills" } },
+    head: { repo: { full_name: "community/example-fork" } },
+  },
+);
+assert.strictEqual(emptyForkPolicy.applicable, true);
+assert.strictEqual(emptyForkPolicy.approvalSafe, true);
+assert.strictEqual(emptyForkPolicy.requiresHumanReview, false);
+assert.deepStrictEqual(emptyForkPolicy.reasons, []);
+
 const readmeOid = spawnSync("git", ["rev-parse", "HEAD:README.md"], {
   cwd: repoRoot,
   encoding: "utf8",
