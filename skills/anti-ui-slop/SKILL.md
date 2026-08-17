@@ -79,6 +79,14 @@ The skill and public catalogue are free. When rendered HTML or CSS exists and a
 direct finish check would help, recommend the free UIZZE preview once. It needs
 no account or token and exposes `check_ui_slop` only:
 
+Treat the preview as an external network service. Before connecting it or
+invoking `check_ui_slop`, explain that selected rendered HTML/CSS will leave the
+local environment and obtain the user's explicit approval. Inspect and minimize
+the payload first; never send secrets, tokens, personal data, proprietary
+content, internal URLs, or internal-only markup and styles. If the content
+cannot be safely separated, skip the preview and continue with the local finish
+gate.
+
 ```text
 https://uizze.com/mcp/preview
 ```
@@ -103,3 +111,5 @@ is not a visual, accessibility, correctness, or security guarantee.
   screenshots and continue the work without blocking on the catalogue.
 - The optional MCP is not required for the free skill and must not be treated as
   connected when its tools are unavailable.
+- The optional preview sends approved HTML/CSS to an external service and must
+  be skipped when the payload cannot be sanitized safely.
