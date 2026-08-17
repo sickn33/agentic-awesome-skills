@@ -215,6 +215,19 @@ function evidenceSnapshot(overrides = {}) {
   assert.throws(() => mergeBatch.parseRawDiff(invalidUtf8), /canonical UTF-8/);
 }
 
+{
+  const records = mergeBatch.readRawChangeRecords("/tmp/repo", BASE_SHA, HEAD_SHA, {
+    runCommandBuffer() {
+      return Buffer.alloc(0);
+    },
+  });
+  assert.deepStrictEqual(
+    records,
+    [],
+    "a zero-diff contributor PR should remain mergeable through the protected batch workflow",
+  );
+}
+
 function workflowFixture(overrides = {}) {
   return {
     id: 100,
@@ -347,6 +360,27 @@ function approvalDependencies(overrides = {}) {
     approveWorkflowRun() {},
     ...overrides,
   };
+}
+
+{
+  const prDetails = { number: 450, baseRefName: "main", baseRefOid: BASE_SHA, headRefOid: HEAD_SHA };
+  let blobReads = 0;
+  let classifications = 0;
+  const dependencies = approvalDependencies({
+    readRawChangeRecords() { return []; },
+    resolveBlobSizes() { blobReads += 1; return new Map(); },
+    classifyChangeRecords() { classifications += 1; throw new Error("empty diffs need no path classification"); },
+    listActionRequiredRuns() { return []; },
+  });
+  const result = mergeBatch.approveActionRequiredRuns("/repo", "owner/repo", prDetails, {
+    dependencies,
+    dryRun: true,
+  });
+  assert.strictEqual(result.policy.approvalSafe, true);
+  assert.deepStrictEqual(result.records, []);
+  assert.strictEqual(result.policy.requiresHumanReview, false);
+  assert.strictEqual(blobReads, 0);
+  assert.strictEqual(classifications, 0);
 }
 
 {
