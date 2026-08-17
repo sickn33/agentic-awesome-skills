@@ -215,6 +215,19 @@ function evidenceSnapshot(overrides = {}) {
   assert.throws(() => mergeBatch.parseRawDiff(invalidUtf8), /canonical UTF-8/);
 }
 
+{
+  const records = mergeBatch.readRawChangeRecords("/tmp/repo", BASE_SHA, HEAD_SHA, {
+    runCommandBuffer() {
+      return Buffer.alloc(0);
+    },
+  });
+  assert.deepStrictEqual(
+    records,
+    [],
+    "a zero-diff contributor PR should remain mergeable through the protected batch workflow",
+  );
+}
+
 function workflowFixture(overrides = {}) {
   return {
     id: 100,

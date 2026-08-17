@@ -408,7 +408,7 @@ function readRawChangeRecords(projectRoot, baseOid, headOid, dependencies = {}) 
     ["diff", "--raw", "--no-abbrev", "-z", "-M", "--find-copies-harder", baseOid, headOid, "--"],
     projectRoot,
   );
-  return parseRawDiff(raw);
+  return parseRawDiff(raw, { allowEmpty: true });
 }
 
 function runGhJson(projectRoot, args, options = {}) {
