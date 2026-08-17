@@ -411,6 +411,19 @@ function readRawChangeRecords(projectRoot, baseOid, headOid, dependencies = {}) 
   return parseRawDiff(raw, { allowEmpty: true });
 }
 
+function emptyChangePolicy() {
+  return {
+    safe: true,
+    sensitive: false,
+    approvalSafe: true,
+    reasons: [],
+    paths: [],
+    requiresHumanReview: false,
+    canonicalSkillChanges: [],
+    skillContentChanges: [],
+  };
+}
+
 function runGhJson(projectRoot, args, options = {}) {
   const stdout = runCommand(
     "gh",
@@ -1031,15 +1044,17 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
   const ownerAuthorizedSensitiveChange = sameRepository
     && String(prDetails?.author?.login || "").toLowerCase() === repositoryOwner
     && reviewedHeads.has(headOid);
-  const preliminaryPolicy = classifyRecords(records, { requireBlobSizes: false });
+  const preliminaryPolicy = records.length === 0
+    ? emptyChangePolicy()
+    : classifyRecords(records, { requireBlobSizes: false });
   if (!preliminaryPolicy?.approvalSafe && !ownerAuthorizedSensitiveChange) {
     const reasons = Array.isArray(preliminaryPolicy?.reasons) && preliminaryPolicy.reasons.length
       ? preliminaryPolicy.reasons.slice(0, 12).join(", ")
       : "unclassified local diff";
     throw new Error(`PR #${prNumber} local base-to-head diff is not fork-approval-safe: ${reasons}.`);
   }
-  const blobSizes = getSizes(projectRoot, records, dependencies);
-  const policy = classifyRecords(records, { blobSizes });
+  const blobSizes = records.length === 0 ? new Map() : getSizes(projectRoot, records, dependencies);
+  const policy = records.length === 0 ? emptyChangePolicy() : classifyRecords(records, { blobSizes });
   if (!policy?.approvalSafe && !ownerAuthorizedSensitiveChange) {
     const reasons = Array.isArray(policy?.reasons) && policy.reasons.length
       ? policy.reasons.slice(0, 12).join(", ")

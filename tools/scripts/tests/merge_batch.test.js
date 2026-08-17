@@ -364,6 +364,27 @@ function approvalDependencies(overrides = {}) {
 
 {
   const prDetails = { number: 450, baseRefName: "main", baseRefOid: BASE_SHA, headRefOid: HEAD_SHA };
+  let blobReads = 0;
+  let classifications = 0;
+  const dependencies = approvalDependencies({
+    readRawChangeRecords() { return []; },
+    resolveBlobSizes() { blobReads += 1; return new Map(); },
+    classifyChangeRecords() { classifications += 1; throw new Error("empty diffs need no path classification"); },
+    listActionRequiredRuns() { return []; },
+  });
+  const result = mergeBatch.approveActionRequiredRuns("/repo", "owner/repo", prDetails, {
+    dependencies,
+    dryRun: true,
+  });
+  assert.strictEqual(result.policy.approvalSafe, true);
+  assert.deepStrictEqual(result.records, []);
+  assert.strictEqual(result.policy.requiresHumanReview, false);
+  assert.strictEqual(blobReads, 0);
+  assert.strictEqual(classifications, 0);
+}
+
+{
+  const prDetails = { number: 450, baseRefName: "main", baseRefOid: BASE_SHA, headRefOid: HEAD_SHA };
   const supportRecord = {
     status: "M",
     old_path: "skills/example/references/guide.md",
