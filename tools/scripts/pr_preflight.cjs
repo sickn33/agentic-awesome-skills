@@ -199,6 +199,19 @@ function evaluateForkSafety(projectRoot, changeRecords, pullRequest) {
   if (headRepository === baseRepository) {
     return { applicable: false, approvalSafe: true, reasons: [], requiresHumanReview: false };
   }
+  if (Array.isArray(changeRecords) && changeRecords.length === 0) {
+    return {
+      applicable: true,
+      safe: true,
+      sensitive: false,
+      approvalSafe: true,
+      reasons: [],
+      paths: [],
+      requiresHumanReview: false,
+      canonicalSkillChanges: [],
+      skillContentChanges: [],
+    };
+  }
 
   const preliminary = classifyChangeRecords(changeRecords, { requireBlobSizes: false });
   if (!preliminary.approvalSafe) {
