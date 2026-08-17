@@ -1994,6 +1994,25 @@
       "runtime_files": []
     },
     {
+      "id": "anti-ui-slop",
+      "path": "skills/anti-ui-slop",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "antigravity-agent-manager",
       "path": "skills/antigravity-agent-manager",
       "targets": {
@@ -38698,10 +38717,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2013,
+    "total_skills": 2014,
     "supported": {
-      "codex": 1935,
-      "claude": 1956
+      "codex": 1936,
+      "claude": 1957
     },
     "blocked": {
       "codex": 78,

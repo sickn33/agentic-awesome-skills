@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-16T10:07:40.000Z
 
-Total skills: 2013
+Total skills: 2014
 
 ## agent-behavior (5)
 
@@ -1316,10 +1316,11 @@ Total skills: 2013
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | critical | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | critical | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (31)
+## frontend (32)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `anti-ui-slop` | Stop coding agents from shipping generic UI with UIZZE's 800,000+ real web and iOS screens, product-specific contracts, required states, and a hard finish gate. | safe | uizze/uizze | ui, ux, frontend, design, anti-ui-slop | ui, ux, frontend, design, anti-ui-slop, anti, slop, stop, coding, agents, shipping, generic |
 | `astro` | Build content-focused websites with Astro — zero JS by default, islands architecture, multi-framework components, and Markdown/MDX support. | safe | community | astro, ssg, ssr, islands, content, markdown, mdx, performance | astro, ssg, ssr, islands, content, markdown, mdx, performance, websites, zero, js, default |
 | `design-it` | Routes frontend design tasks to 48 specific UI styles. Triggers for websites, app screens, or UI components requesting a specific aesthetic. | safe | self | design, ui, frontend | design, ui, frontend, routes, tasks, 48, specific, styles, triggers, websites, app, screens |
 | `design-taste-frontend` | Use when building high-agency frontend interfaces with strict design taste, calibrated color, responsive layout, and motion rules. | safe | Leonxlnx/taste-skill | frontend, design, ui, react | frontend, design, ui, react, taste, building, high, agency, interfaces, strict, calibrated, color |

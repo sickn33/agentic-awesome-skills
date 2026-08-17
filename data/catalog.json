@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-16T10:07:40.000Z",
-  "total": 2013,
+  "total": 2014,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -2993,6 +2993,41 @@
         "skill"
       ],
       "path": "skills/anti-sycophancy/SKILL.md"
+    },
+    {
+      "id": "anti-ui-slop",
+      "canonical_id": "anti-ui-slop",
+      "name": "anti-ui-slop",
+      "description": "Stop coding agents from shipping generic UI with UIZZE's 800,000+ real web and iOS screens, product-specific contracts, required states, and a hard finish gate.",
+      "category": "frontend",
+      "risk": "safe",
+      "source": "https://github.com/uizze/uizze/tree/main/skills/anti-ui-slop",
+      "source_type": "official",
+      "source_repo": "uizze/uizze",
+      "license": "MIT",
+      "license_source": "https://github.com/uizze/uizze/blob/main/LICENSE",
+      "tags": [
+        "ui",
+        "ux",
+        "frontend",
+        "design",
+        "anti-ui-slop"
+      ],
+      "triggers": [
+        "ui",
+        "ux",
+        "frontend",
+        "design",
+        "anti-ui-slop",
+        "anti",
+        "slop",
+        "stop",
+        "coding",
+        "agents",
+        "shipping",
+        "generic"
+      ],
+      "path": "skills/anti-ui-slop/SKILL.md"
     },
     {
       "id": "antigravity-agent-manager",
