@@ -1,0 +1,4 @@
+interface:
+  display_name: "LWC Memory"
+  short_description: "Durable memory and project code intelligence"
+  default_prompt: "Use $using-lwc to recall verified context, inspect current code structurally, complete the task, and preserve reusable knowledge."

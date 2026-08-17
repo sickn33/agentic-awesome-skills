@@ -26564,6 +26564,36 @@
     }
   },
   {
+    "id": "liuguang-banlan-ui",
+    "path": "skills/liuguang-banlan-ui",
+    "category": "creative",
+    "name": "liuguang-banlan-ui",
+    "description": "Builds two parameterized UI modes\u2014\u6d41\u5149\u6ea2\u5f69\u767d (iridescent white) and \u4e94\u5f69\u6591\u6593\u9ed1 (colorful black)\u2014with OKLCH, WebGL/CSS fallback, vision gating, screenshot QA, and total/per-color intensity reports. Use when a UI request names either mode or needs measured color parameters.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-08-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "ui",
+      "frontend",
+      "oklch",
+      "webgl",
+      "accessibility"
+    ]
+  },
+  {
     "id": "llm-app-patterns",
     "path": "skills/llm-app-patterns",
     "category": "data-ai",
@@ -46139,6 +46169,39 @@
         "absolute_host_path"
       ]
     }
+  },
+  {
+    "id": "using-lwc",
+    "path": "skills/using-lwc",
+    "category": "development",
+    "name": "using-lwc",
+    "description": "Use when project decisions, code structure, research, incidents, or verified context must survive future coding-agent sessions through LWC memory and graph indexes.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-08-14",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "JanYork/using-lwc",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/JanYork/using-lwc/blob/7bd8052e6fa012786e50eee09f46df06b0cda1b8/LICENSE",
+    "tags": [
+      "memory",
+      "knowledge-graph",
+      "code-intelligence",
+      "wiki",
+      "context-engineering"
+    ]
   },
   {
     "id": "using-n8n-mcp-skills",
