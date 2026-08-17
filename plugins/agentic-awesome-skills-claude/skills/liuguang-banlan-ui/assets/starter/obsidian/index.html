@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="参数化五彩斑斓黑完整 UI 模板">
+  <meta name="theme-color" content="#0b0e11">
+  <title>Fieldnote · 五彩斑斓黑</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="./theme.css">
+</head>
+<body>
+  <canvas id="spectral-field" aria-hidden="true"></canvas>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Fieldnote 首页">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span><strong>Fieldnote</strong><small>Research workspace</small></span>
+      </div>
+      <div class="location">
+        <button id="menu-toggle" class="icon-button menu-toggle" type="button" aria-label="打开导航" aria-controls="sidebar" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <span>北岸观察组</span><span class="location-separator">/</span><span id="page-location">今日概览</span>
+      </div>
+      <div class="top-actions">
+        <button id="motion-toggle" class="button" type="button" aria-pressed="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 5v14M16 5v14"/></svg><span>暂停环境</span>
+        </button>
+        <button id="parameter-toggle" class="button button-primary" type="button" aria-controls="parameter-panel" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h10M18 7h2M4 17h2M10 17h10M14 4v6M6 14v6"/></svg><span>参数</span>
+        </button>
+      </div>
+    </header>
+
+    <aside id="sidebar" class="sidebar" data-open="false" aria-hidden="true" inert aria-label="主导航">
+      <div class="sidebar-primary">
+        <p class="nav-label">Workspace</p>
+        <nav>
+          <button class="nav-item" type="button" data-location="今日概览" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 13h6V4H4v9Zm10 7h6V11h-6v9ZM4 20h6v-3H4v3Zm10-13h6V4h-6v3Z"/></svg>今日概览
+          </button>
+          <button class="nav-item" type="button" data-location="观察记录">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg>观察记录
+          </button>
+          <button class="nav-item" type="button" data-location="样本集合">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m12 3 8 4-8 4-8-4 8-4Zm-8 9 8 4 8-4M4 17l8 4 8-4"/></svg>样本集合
+          </button>
+          <button class="nav-item" type="button" data-location="观测位置">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>观测位置
+          </button>
+          <button class="nav-item" type="button" data-location="归档">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h16v13H4zM3 4h18v3H3zM9 11h6"/></svg>归档
+          </button>
+        </nav>
+        <p class="nav-label">Saved views</p>
+        <nav>
+          <button class="nav-item" type="button" data-location="待复核">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg>待复核 <span class="pane-count">06</span>
+          </button>
+          <button class="nav-item" type="button" data-location="本周标记">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m12 3 2.6 5.3 5.9.9-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.9L12 3Z"/></svg>本周标记
+          </button>
+        </nav>
+      </div>
+      <div class="sidebar-footer">
+        <div class="account"><span class="account-orb" aria-hidden="true"></span><span><strong>林屿</strong><span>Field researcher</span></span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="main-inner">
+        <section class="page-head" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow"><span data-theme-name>五彩斑斓黑</span> · 现场资料工作台</p>
+            <h1 id="page-title">潮间带观测 · 第 18 批</h1>
+            <p class="page-summary">整理今日采样、复核异常记录，并在归档前保持时间、位置与样本关系完整。</p>
+          </div>
+          <div class="status-cluster" role="status">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span class="status-copy"><strong>同步完成</strong><span>21:36 · 18 项变更</span></span>
+          </div>
+        </section>
+
+        <section class="observation-band" aria-label="观测摘要">
+          <div class="band-title"><span>观测带</span><strong>北岸 · N37.22</strong></div>
+          <div class="metric"><span>有效记录</span><strong>128</strong></div>
+          <div class="metric"><span>待复核</span><strong>06</strong></div>
+          <div class="metric"><span>样本覆盖</span><strong>84.6%</strong></div>
+          <div class="metric"><span>窗口余量</span><strong>01:42</strong></div>
+        </section>
+
+        <section class="workbench" aria-label="观测工作区">
+          <section class="pane records-pane" aria-labelledby="records-title">
+            <div class="pane-head"><h2 id="records-title">记录队列</h2><span class="pane-count">12 / 128</span></div>
+            <div class="records" role="listbox" aria-label="观察记录">
+              <button class="record-row" type="button" role="option" aria-selected="true" data-title="潮池边缘 · 样本 042" data-time="19:42">
+                <span class="record-marker" style="--marker:var(--marker-cyan)"></span><span class="record-copy"><strong>潮池边缘 · 样本 042</strong><span>盐度偏移 · 已标记</span></span><span class="record-time">19:42</span>
+              </button>
+              <button class="record-row" type="button" role="option" data-title="岩缝剖面 · 样本 039" data-time="19:18">
+                <span class="record-marker" style="--marker:var(--marker-lilac)"></span><span class="record-copy"><strong>岩缝剖面 · 样本 039</strong><span>图像完整 · 待复核</span></span><span class="record-time">19:18</span>
+              </button>
+              <button class="record-row" type="button" role="option" data-title="浅滩网格 · 样本 036" data-time="18:53">
+                <span class="record-marker" style="--marker:var(--marker-gold)"></span><span class="record-copy"><strong>浅滩网格 · 样本 036</strong><span>位置已校正</span></span><span class="record-time">18:53</span>
+              </button>
+              <button class="record-row" type="button" role="option" data-title="背风侧 · 样本 031" data-time="18:21">
+                <span class="record-marker" style="--marker:var(--marker-rose)"></span><span class="record-copy"><strong>背风侧 · 样本 031</strong><span>缺少环境照片</span></span><span class="record-time">18:21</span>
+              </button>
+              <button class="record-row" type="button" role="option" data-title="南端标尺 · 样本 027" data-time="17:46">
+                <span class="record-marker" style="--marker:var(--marker-cyan)"></span><span class="record-copy"><strong>南端标尺 · 样本 027</strong><span>数据完整</span></span><span class="record-time">17:46</span>
+              </button>
+            </div>
+          </section>
+
+          <article class="pane detail-pane" aria-labelledby="record-title">
+            <div class="pane-head">
+              <div class="tab-list" role="tablist" aria-label="记录视图">
+                <button class="tab" type="button" role="tab" aria-selected="true" aria-controls="detail-copy" data-copy="水线后退约 1.8 米，潮池外缘出现连续盐度跃迁。样本表面保持湿润，未观察到明显扰动。建议与 18:53 的浅滩网格记录并列复核。">记录</button>
+                <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="detail-copy" data-copy="关联了 4 张现场照片、2 个水质读数与 1 条位置修正。附件校验通过，原始文件已进入只读归档队列。">附件</button>
+                <button class="tab" type="button" role="tab" aria-selected="false" aria-controls="detail-copy" data-copy="19:47 完成盐度标签修正；20:12 补充观察者备注；21:03 进入批次复核队列。所有变更均保留原始记录。">变更</button>
+              </div>
+            </div>
+            <div class="detail-title">
+              <h2 id="record-title">潮池边缘 · 样本 042</h2>
+              <div class="detail-meta"><span>记录时间 <strong id="record-time">19:42</strong></span><span>观察者 LY-04</span><span>定位误差 ±1.2 m</span></div>
+            </div>
+            <div class="detail-body">
+              <div class="field-notes">
+            <p id="detail-copy" role="tabpanel">水线后退约 1.8 米，潮池外缘出现连续盐度跃迁。样本表面保持湿润，未观察到明显扰动。建议与 18:53 的浅滩网格记录并列复核。</p>
+                <dl>
+                  <div class="note-rule"><dt>表面温度</dt><dd>18.6 °C · 稳定</dd></div>
+                  <div class="note-rule"><dt>盐度</dt><dd>31.8 PSU · 高于同批中位值 1.4</dd></div>
+                  <div class="note-rule"><dt>基质</dt><dd>细砂与贝壳碎屑，局部附着藻膜</dd></div>
+                  <div class="note-rule"><dt>复核建议</dt><dd>保留；与相邻网格交叉比对后归档</dd></div>
+                </dl>
+              </div>
+              <figure class="mini-map" aria-label="样本位置示意图">
+                <svg viewBox="0 0 180 220" fill="none" stroke="currentColor">
+                  <path d="M-10 52c35-24 62-5 92-18 25-11 45-38 108-16M-10 92c42-24 71 2 103-13 34-16 58-32 97-19M-10 138c38-18 68 6 98-6 36-14 54-37 102-20M-10 181c35-16 68 4 101-7 30-10 61-27 99-16" opacity=".35"/>
+                  <path d="M118 43c-9 19-25 36-23 59 2 27 30 37 24 65-4 17-19 27-28 43" stroke-width="2"/>
+                  <circle cx="104" cy="119" r="5" fill="currentColor"/><circle cx="104" cy="119" r="12" opacity=".25"/>
+                </svg>
+              </figure>
+            </div>
+          </article>
+
+          <aside class="pane metadata-pane" aria-labelledby="metadata-title">
+            <div class="pane-head"><h2 id="metadata-title">记录属性</h2><span class="pane-count">verified</span></div>
+            <div class="metadata">
+              <section class="metadata-group"><h3>位置</h3><dl><div><dt>网格</dt><dd>N-18 / C4</dd></div><div><dt>纬度</dt><dd>37.2216</dd></div><div><dt>经度</dt><dd>121.0482</dd></div></dl></section>
+              <section class="metadata-group"><h3>采集</h3><dl><div><dt>批次</dt><dd>B-2026-0814</dd></div><div><dt>方法</dt><dd>surface</dd></div><div><dt>容器</dt><dd>V-042</dd></div></dl></section>
+              <section class="metadata-group"><h3>完整性</h3><dl><div><dt>字段</dt><dd>18 / 18</dd></div><div><dt>附件</dt><dd>04</dd></div><div><dt>校验</dt><dd>passed</dd></div></dl></section>
+            </div>
+          </aside>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <aside id="parameter-panel" class="parameter-panel" data-open="false" aria-hidden="true" inert aria-labelledby="parameter-title">
+    <div class="parameter-panel-head">
+      <div><p class="eyebrow">Parameter manifest</p><h2 id="parameter-title"><span data-theme-name>五彩斑斓黑</span>参数</h2><p><span id="preset-value"></span> · seed <span id="seed-value"></span> · <span id="renderer-value"></span></p></div>
+      <button id="parameter-close" class="icon-button" type="button" aria-label="关闭参数面板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div id="parameter-controls" class="parameter-scroll"></div>
+    <div class="parameter-footer">
+      <button id="export-parameters" class="button button-primary" type="button">导出参数 JSON</button>
+      <button id="copy-parameters" class="button" type="button">复制 JSON</button>
+      <button id="reset-parameters" class="button" type="button">恢复预设</button>
+    </div>
+  </aside>
+  <div id="live-status" class="sr-only" role="status" aria-live="polite"></div>
+
+  <script src="./theme-config.js"></script>
+  <script src="../shared/spectral-field.js"></script>
+  <script src="../shared/workbench.js"></script>
+</body>
+</html>

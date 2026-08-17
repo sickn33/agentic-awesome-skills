@@ -9,19 +9,113 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.14.0] - 2026-08-16 - "Agent QA and Durable Knowledge"
+
+> Added an evidence-first Agent QA workflow and a durable knowledge-compilation skill, while refreshing multilingual video guidance and the catalog's dependency baseline. The published catalog contains 2,013 skills.
+
+This installable library update gives Claude Code, Cursor, Codex CLI, Gemini CLI,
+Antigravity, and related AI coding assistants clearer paths for authoring tests,
+triaging failures, making scoped repairs, and preserving hard-won findings
+across sessions.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added [`agent-qa-authoring`](skills/agent-qa-authoring/) for creating,
+  validating, and running schema-safe Agent QA tests, suites, and hooks while
+  preserving canonical IDs and explicit approval boundaries.
+- Added [`agent-qa-result-triage`](skills/agent-qa-result-triage/) for classifying
+  failed Agent QA runs from recorded steps, artifacts, and logs with a fixed
+  category, confidence, likely ownership, and an evidence-backed next action.
+- Added [`agent-qa-debug-fix`](skills/agent-qa-debug-fix/) for making the smallest
+  justified repair after triage and verifying it narrowly without rewriting a
+  test merely to hide a product or infrastructure defect.
+- Added [`compile-knowledge`](skills/compile-knowledge/) for preserving durable,
+  non-obvious findings as atomic, interlinked Markdown notes with a maintained
+  index instead of accumulating routine or duplicate memory.
+
+### Changed
+
+- Expanded [`riffkit`](skills/riffkit/) guidance from English and Spanish to all
+  nine currently supported native output languages: English, Spanish,
+  Portuguese, Indonesian, German, French, Italian, Japanese, and Simplified
+  Chinese ([#1155](https://github.com/sickn33/agentic-awesome-skills/pull/1155)).
+- Refreshed the [`cohesivity`](skills/cohesivity/) description to present its
+  headless hosting, database, storage, model, and third-party API surface more
+  clearly while preserving its existing consent and safety boundaries
+  ([#1157](https://github.com/sickn33/agentic-awesome-skills/pull/1157)).
+- Regenerated the canonical catalog, offline AAS Core data, web assets,
+  marketplaces, editorial bundles, and Codex/Claude plugin distributions for
+  2,013 skills.
+
 ### Security
 
 - Updated the web app's transitive `nanoid` dependency from `3.3.17` to
   `3.3.18`, resolving the zero-length custom-generator denial-of-service
-  advisory without changing the direct dependency set.
-- Bound default and `--release` installer clones to the immutable `gitHead`
-  recorded by the exact npm package version, failing closed if a GitHub release
-  tag is moved or npm identity metadata cannot be verified. Explicit `--tag`
-  installs remain available with a mutable-ref warning.
-- Reject symlinked flagship bundle asset sources before validating or copying
-  them into distributable plugin packages.
-- Removed mutable upstream demo guidance from `unified-ai-gateway`; all demos
-  now remain inside its reviewed, digest-pinned image procedure.
+  advisory without changing the direct dependency set
+  ([#1150](https://github.com/sickn33/agentic-awesome-skills/pull/1150)).
+- Kept Agent QA authoring and repair operations behind explicit workspace,
+  scope, side-effect, and production-action approval boundaries; triage remains
+  evidence-first and read-only until a separate repair step is chosen.
+- Kept durable knowledge stores free of secrets and personal identifiers, and
+  confined writes and deletions to the user-approved store.
+
+### Who should care
+
+- QA and product teams using Agent QA with Claude Code, Cursor, Codex CLI, or
+  Gemini CLI who need a reviewable path from test definition to failure triage
+  and minimal repair.
+- Researchers and agents that repeatedly rediscover the same project facts and
+  need a deliberately selective, interlinked memory store.
+- Riffkit users producing native-language short-form video beyond English and
+  Spanish.
+- Maintainers and web-catalog users who need the patched `nanoid` dependency and
+  a version-aligned 2,013-skill distribution.
+
+### Validation
+
+- Passed repository validation, reference validation, documentation-security
+  checks, warning-budget enforcement, the complete 110-group repository test
+  suite, plugin-compatibility and bundle checks, web-app install/build/prerender,
+  and the npm package dry run on the protected release base.
+- Reviewed the Agent QA schemas, bundled references, fixed triage categories,
+  mutation approvals, provenance, risk labels, and license declarations; also
+  reviewed `compile-knowledge` store boundaries, provenance, and limitations.
+
+### Limitations
+
+- The Agent QA skills document Agent QA's MCP and CLI contracts; they do not
+  bundle the Agent QA service, credentials, a configured workspace, or a test
+  environment. Mutating or production-facing runs still require explicit user
+  approval.
+- `compile-knowledge` requires a user-approved Markdown store and disciplined
+  curation; it intentionally skips routine, derivable, secret, personal, and
+  conversation-only facts.
+- Riffkit remains a hosted, metered service that requires an account session and
+  explicit approval before billable rendering.
+
+### Credits
+
+- **[@pranshuchittora](https://github.com/pranshuchittora)** and the official
+  **[vostride/agent-qa](https://github.com/vostride/agent-qa)** source for the
+  three Agent QA skills in [PR #1158](https://github.com/sickn33/agentic-awesome-skills/pull/1158).
+- **[@lodar](https://github.com/lodar)** and
+  **[5dive-ai/skills](https://github.com/5dive-ai/skills)** for
+  [`compile-knowledge`](skills/compile-knowledge/) in
+  [PR #1159](https://github.com/sickn33/agentic-awesome-skills/pull/1159).
+- **[@owengu-ai](https://github.com/owengu-ai)** for the nine-language
+  [`riffkit`](skills/riffkit/) refresh in
+  [PR #1155](https://github.com/sickn33/agentic-awesome-skills/pull/1155).
+- **[@shouryamaanjain](https://github.com/shouryamaanjain)** for the
+  [`cohesivity`](skills/cohesivity/) description refresh in
+  [PR #1157](https://github.com/sickn33/agentic-awesome-skills/pull/1157).
 
 ## [15.13.0] - 2026-08-12 - "Release Integrity, Governed Media, and Property Data"
 
