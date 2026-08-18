@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-16T10:07:40.000Z",
-  "total": 2016,
+  "total": 2018,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -861,6 +861,38 @@
         "metrics"
       ],
       "path": "skills/agent-evaluation/SKILL.md"
+    },
+    {
+      "id": "agent-evaluation-reporting",
+      "canonical_id": "agent-evaluation-reporting",
+      "name": "agent-evaluation-reporting",
+      "description": "Use when summarizing agent evaluations where autonomous, assisted, failed, timed-out, or invalid outcomes must remain distinct and comparable.",
+      "category": "agent-evaluation",
+      "risk": "none",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "agent-evaluation",
+        "metrics",
+        "reporting",
+        "reliability",
+        "benchmarking"
+      ],
+      "triggers": [
+        "agent-evaluation",
+        "metrics",
+        "reporting",
+        "reliability",
+        "benchmarking",
+        "agent",
+        "evaluation",
+        "summarizing",
+        "evaluations",
+        "where",
+        "autonomous",
+        "assisted"
+      ],
+      "path": "skills/agent-evaluation-reporting/SKILL.md"
     },
     {
       "id": "agent-framework-azure-ai-py",
@@ -20778,6 +20810,41 @@
         "rube"
       ],
       "path": "skills/dropbox-automation/SKILL.md"
+    },
+    {
+      "id": "dsh-deepread",
+      "canonical_id": "dsh-deepread",
+      "name": "dsh-deepread",
+      "description": "Use for evidence-first reading of articles, books, PDFs, web pages, or document sets, with knowledge maps and Feynman checks.",
+      "category": "research",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "xiehuan123/dsh-deepread",
+      "license": "MIT",
+      "license_source": "https://github.com/xiehuan123/dsh-deepread/blob/main/LICENSE",
+      "tags": [
+        "deep-reading",
+        "evidence",
+        "knowledge-map",
+        "feynman",
+        "document-analysis"
+      ],
+      "triggers": [
+        "deep-reading",
+        "evidence",
+        "knowledge-map",
+        "feynman",
+        "document-analysis",
+        "dsh",
+        "deepread",
+        "first",
+        "reading",
+        "articles",
+        "books",
+        "pdfs"
+      ],
+      "path": "skills/dsh-deepread/SKILL.md"
     },
     {
       "id": "dwarf-expert",

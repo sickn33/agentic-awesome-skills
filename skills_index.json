@@ -772,6 +772,36 @@
     }
   },
   {
+    "id": "agent-evaluation-reporting",
+    "path": "skills/agent-evaluation-reporting",
+    "category": "agent-evaluation",
+    "name": "agent-evaluation-reporting",
+    "description": "Use when summarizing agent evaluations where autonomous, assisted, failed, timed-out, or invalid outcomes must remain distinct and comparable.",
+    "risk": "none",
+    "source": "self",
+    "date_added": "2026-08-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "agent-evaluation",
+      "metrics",
+      "reporting",
+      "reliability",
+      "benchmarking"
+    ]
+  },
+  {
     "id": "agent-framework-azure-ai-py",
     "path": "skills/agent-framework-azure-ai-py",
     "category": "ai-ml",
@@ -16688,6 +16718,39 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "dsh-deepread",
+    "path": "skills/dsh-deepread",
+    "category": "research",
+    "name": "dsh-deepread",
+    "description": "Use for evidence-first reading of articles, books, PDFs, web pages, or document sets, with knowledge maps and Feynman checks.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-08-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "xiehuan123/dsh-deepread",
+    "license": "MIT",
+    "license_source": "https://github.com/xiehuan123/dsh-deepread/blob/main/LICENSE",
+    "tags": [
+      "deep-reading",
+      "evidence",
+      "knowledge-map",
+      "feynman",
+      "document-analysis"
+    ]
   },
   {
     "id": "duotone-design",

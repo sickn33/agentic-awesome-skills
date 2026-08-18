@@ -564,6 +564,25 @@
       "runtime_files": []
     },
     {
+      "id": "agent-evaluation-reporting",
+      "path": "skills/agent-evaluation-reporting",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "agent-framework-azure-ai-py",
       "path": "skills/agent-framework-azure-ai-py",
       "targets": {
@@ -13777,6 +13796,25 @@
     {
       "id": "dropbox-automation",
       "path": "skills/dropbox-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "dsh-deepread",
+      "path": "skills/dsh-deepread",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -38755,10 +38793,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2016,
+    "total_skills": 2018,
     "supported": {
-      "codex": 1938,
-      "claude": 1959
+      "codex": 1940,
+      "claude": 1961
     },
     "blocked": {
       "codex": 78,
