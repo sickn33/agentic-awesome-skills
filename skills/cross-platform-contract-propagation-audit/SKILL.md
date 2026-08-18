@@ -2,7 +2,7 @@
 name: cross-platform-contract-propagation-audit
 description: "Use when auditing whether a field, enum, flag, or API contract propagates consistently across storage, services, clients, analytics, and tests."
 category: development
-risk: none
+risk: safe
 source: self
 source_type: self
 date_added: "2026-08-18"
@@ -94,7 +94,7 @@ For each cell, record the expected result, evidence, and status. A unit test at 
 
 ### Step 6: Decide against explicit release gates
 
-Derive gates from the stated contract, not from intuition. A release is blocked when a required edge is `missing` or `conflict`, a compatibility invariant is unproven, or a rollback control cannot contain the new behavior. Use `inconclusive` when the contract or evidence is insufficient to decide.
+Derive gates from the stated contract, not from intuition. A release is blocked when an edge or compatibility invariant that the contract explicitly requires is `missing`, `conflict`, or `unknown`, or when rollback cannot contain the new behavior. Use `inconclusive` only when the release contract itself is absent or ambiguous, so the audit cannot determine which edges or invariants are required. Do not downgrade a known required but unproven gate from `blocked` to `inconclusive`.
 
 Return the smallest verification or repair set that would change the verdict. Keep implementation suggestions separate from proven findings.
 
