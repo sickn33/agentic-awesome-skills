@@ -44,22 +44,27 @@ Classify every scheduled attempt exactly once:
 | `timeout` | The run exhausted its declared time or step budget. |
 | `invalid` | The agent never received a valid evaluation because the harness, environment, or input failed. |
 
-Preserve run ID, task ID or seed, configuration label, outcome, intervention count, duration, cost, evaluator evidence, and invalid reason when available. Never silently drop invalid or retried runs.
+Preserve attempt ID, task ID or seed, retry index, parent attempt ID, configuration label, outcome, intervention count, duration, cost, evaluator evidence, and invalid reason when available. Never silently drop invalid or retried runs.
+
+Also build a unique-task rollup. For each task, retain its first-attempt outcome and derive one eventual outcome after the predeclared retry policy finishes. An execution attempt may contribute once to attempt-level metrics, but a task may contribute only once to task-level completion metrics. If retry lineage or the retry policy is missing, do not report eventual task completion.
 
 ### Step 3: Lock each metric to a denominator
 
-Let `N_all` be all scheduled attempts and `N_eval = N_all - N_invalid` be evaluable attempts. Report counts beside every rate.
+Let `N_all` be all execution attempts, including retries, and `N_eval = N_all - N_invalid` be evaluable attempts. Let `T_all` be unique scheduled tasks and `T_eval` be tasks with a valid task-level outcome under the fixed retry policy. Report counts beside every rate.
 
 ```text
-autonomous success rate = N_autonomous / N_eval
-assisted success rate   = N_assisted / N_eval
-workflow completion     = (N_autonomous + N_assisted) / N_eval
-non-completion rate     = (N_failure + N_timeout) / N_eval
-invalid-run rate        = N_invalid / N_all
-operational delivery    = (N_autonomous + N_assisted) / N_all
+autonomous attempt success = N_autonomous / N_eval
+assisted attempt success   = N_assisted / N_eval
+attempt non-completion     = (N_failure + N_timeout) / N_eval
+invalid-attempt rate       = N_invalid / N_all
+first-attempt completion   = T_first_attempt_completed / T_all
+eventual task completion   = T_eventual_completed / T_eval
+operational task delivery  = T_eventual_completed / T_all
 ```
 
-Use capability rates over `N_eval` and operational delivery over `N_all`. Label both explicitly. Check that evaluable outcome counts sum to `N_eval` and all outcome counts sum to `N_all`.
+Label attempt-level and unique-task metrics explicitly; never call an attempt-level rate workflow completion. Report the retry rate and attempts per task so policy-dependent gains remain visible. Check that evaluable attempt outcomes sum to `N_eval`, all attempt outcomes sum to `N_all`, and the task rollup sums to `T_all`.
+
+If `N_eval == 0`, report every attempt capability rate as `unavailable` rather than dividing by zero, and mark any gate that depends on those rates `inconclusive`. Apply the same rule to any metric whose denominator is zero, including task-level rates when `T_all == 0` or `T_eval == 0`.
 
 ### Step 4: Keep latency and cost populations honest
 
@@ -79,15 +84,16 @@ Do not infer production readiness from a success rate alone. When no thresholds 
 
 ## Example
 
-For 120 scheduled attempts with 12 infrastructure-invalid runs, 48 autonomous successes, 24 assisted successes, 20 failures, and 16 timeouts:
+For 120 unique tasks with one attempt each, including 12 infrastructure-invalid runs, 48 autonomous successes, 24 assisted successes, 20 failures, and 16 timeouts:
 
 ```text
 Evaluable attempts:       108 / 120
 Autonomous success:        48 / 108 = 44.4%
 Assisted success:          24 / 108 = 22.2%
-Workflow completion:       72 / 108 = 66.7%
-Non-completion:            36 / 108 = 33.3%
-Operational delivery:      72 / 120 = 60.0%
+Attempt non-completion:     36 / 108 = 33.3%
+First-attempt completion:   72 / 120 = 60.0%
+Eventual task completion:   72 / 108 = 66.7% (no retries)
+Operational task delivery: 72 / 120 = 60.0%
 Infrastructure-invalid:    12 / 120 = 10.0%
 Overall latency P50:       unavailable from subgroup aggregates
 Readiness:                 inconclusive until gates are declared
