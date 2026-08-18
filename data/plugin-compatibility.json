@@ -13794,6 +13794,25 @@
       "runtime_files": []
     },
     {
+      "id": "dsh-deepread",
+      "path": "skills/dsh-deepread",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "dwarf-expert",
       "path": "skills/dwarf-expert",
       "targets": {
@@ -38755,10 +38774,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2016,
+    "total_skills": 2017,
     "supported": {
-      "codex": 1938,
-      "claude": 1959
+      "codex": 1939,
+      "claude": 1960
     },
     "blocked": {
       "codex": 78,

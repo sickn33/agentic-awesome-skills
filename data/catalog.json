@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-16T10:07:40.000Z",
-  "total": 2016,
+  "total": 2017,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -20778,6 +20778,41 @@
         "rube"
       ],
       "path": "skills/dropbox-automation/SKILL.md"
+    },
+    {
+      "id": "dsh-deepread",
+      "canonical_id": "dsh-deepread",
+      "name": "dsh-deepread",
+      "description": "Use for evidence-first reading of articles, books, PDFs, web pages, or document sets, with knowledge maps and Feynman checks.",
+      "category": "research",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "xiehuan123/dsh-deepread",
+      "license": "MIT",
+      "license_source": "https://github.com/xiehuan123/dsh-deepread/blob/main/LICENSE",
+      "tags": [
+        "deep-reading",
+        "evidence",
+        "knowledge-map",
+        "feynman",
+        "document-analysis"
+      ],
+      "triggers": [
+        "deep-reading",
+        "evidence",
+        "knowledge-map",
+        "feynman",
+        "document-analysis",
+        "dsh",
+        "deepread",
+        "first",
+        "reading",
+        "articles",
+        "books",
+        "pdfs"
+      ],
+      "path": "skills/dsh-deepread/SKILL.md"
     },
     {
       "id": "dwarf-expert",
