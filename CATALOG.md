@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-16T10:07:40.000Z
 
-Total skills: 2018
+Total skills: 2019
 
 ## agent-behavior (5)
 
@@ -1017,7 +1017,7 @@ Total skills: 2018
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (174)
+## development (175)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1056,6 +1056,7 @@ Total skills: 2018
 | `codebase-cleanup-deps-audit` | You are a dependency security expert specializing in vulnerability scanning, license compliance, and supply chain security. Analyze project dependencies for ... | critical | community | codebase, cleanup, deps, audit | codebase, cleanup, deps, audit, dependency, security, specializing, vulnerability, scanning, license, compliance, supply |
 | `codebase-cleanup-refactor-clean` | You are a code refactoring expert specializing in clean code principles, SOLID design patterns, and modern software engineering best practices. Analyze and r... | safe | community | codebase, cleanup, refactor, clean | codebase, cleanup, refactor, clean, code, refactoring, specializing, principles, solid, software, engineering, analyze |
 | `codebase-to-wordpress-converter` | Expert skill for converting any codebase (React/HTML/Next.js) into a pixel-perfect, SEO-optimized, and dynamic WordPress theme. | safe | community | codebase, to, wordpress, converter | codebase, to, wordpress, converter, skill, converting, any, react, html, next, js, pixel |
+| `cross-platform-contract-propagation-audit` | Use when auditing whether a field, enum, flag, or API contract propagates consistently across storage, services, clients, analytics, and tests. | safe | self | contract-audit, cross-platform, api, schema, feature-flags | contract-audit, cross-platform, api, schema, feature-flags, cross, platform, contract, propagation, audit, auditing, whether |
 | `dbos-golang` | Guide for building reliable, fault-tolerant Go applications with DBOS durable workflows. Use when adding DBOS to existing Go code, creating workflows and ste... | safe | https://docs.dbos.dev/ | dbos, golang | dbos, golang, building, reliable, fault, tolerant, go, applications, durable, adding, existing, code |
 | `dbos-python` | Guide for building reliable, fault-tolerant Python applications with DBOS durable workflows. Use when adding DBOS to existing Python code, creating workflows... | safe | https://docs.dbos.dev/ | dbos, python | dbos, python, building, reliable, fault, tolerant, applications, durable, adding, existing, code, creating |
 | `dbos-typescript` | Guide for building reliable, fault-tolerant TypeScript applications with DBOS durable workflows. Use when adding DBOS to existing TypeScript code, creating w... | safe | https://docs.dbos.dev/ | dbos, typescript | dbos, typescript, building, reliable, fault, tolerant, applications, durable, adding, existing, code, creating |

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-16T10:07:40.000Z",
-  "total": 2018,
+  "total": 2019,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -15536,6 +15536,38 @@
         "before"
       ],
       "path": "skills/cron-doctor/SKILL.md"
+    },
+    {
+      "id": "cross-platform-contract-propagation-audit",
+      "canonical_id": "cross-platform-contract-propagation-audit",
+      "name": "cross-platform-contract-propagation-audit",
+      "description": "Use when auditing whether a field, enum, flag, or API contract propagates consistently across storage, services, clients, analytics, and tests.",
+      "category": "development",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "contract-audit",
+        "cross-platform",
+        "api",
+        "schema",
+        "feature-flags"
+      ],
+      "triggers": [
+        "contract-audit",
+        "cross-platform",
+        "api",
+        "schema",
+        "feature-flags",
+        "cross",
+        "platform",
+        "contract",
+        "propagation",
+        "audit",
+        "auditing",
+        "whether"
+      ],
+      "path": "skills/cross-platform-contract-propagation-audit/SKILL.md"
     },
     {
       "id": "crossframe",

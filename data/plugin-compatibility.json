@@ -10330,6 +10330,25 @@
       "runtime_files": []
     },
     {
+      "id": "cross-platform-contract-propagation-audit",
+      "path": "skills/cross-platform-contract-propagation-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "crossframe",
       "path": "skills/crossframe",
       "targets": {
@@ -38793,10 +38812,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2018,
+    "total_skills": 2019,
     "supported": {
-      "codex": 1940,
-      "claude": 1961
+      "codex": 1941,
+      "claude": 1962
     },
     "blocked": {
       "codex": 78,

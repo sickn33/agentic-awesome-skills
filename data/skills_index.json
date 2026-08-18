@@ -13142,6 +13142,36 @@
     ]
   },
   {
+    "id": "cross-platform-contract-propagation-audit",
+    "path": "skills/cross-platform-contract-propagation-audit",
+    "category": "development",
+    "name": "cross-platform-contract-propagation-audit",
+    "description": "Use when auditing whether a field, enum, flag, or API contract propagates consistently across storage, services, clients, analytics, and tests.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-08-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "contract-audit",
+      "cross-platform",
+      "api",
+      "schema",
+      "feature-flags"
+    ]
+  },
+  {
     "id": "crossframe",
     "path": "skills/crossframe",
     "category": "workflow",
