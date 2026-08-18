@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-16T10:07:40.000Z
 
-Total skills: 2017
+Total skills: 2018
 
 ## agent-behavior (5)
 
@@ -14,10 +14,11 @@ Total skills: 2017
 | `fable-safe-prompt` | Rewrite allowed prompts to reduce false-positive safety triggers without bypassing policy or changing intent. | safe | davidondrej/skills | prompting, safety, guardrails | prompting, safety, guardrails, fable, safe, prompt, rewrite, allowed, prompts, reduce, false, positive |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | safe | community | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## agent-evaluation (1)
+## agent-evaluation (2)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `agent-evaluation-reporting` | Use when summarizing agent evaluations where autonomous, assisted, failed, timed-out, or invalid outcomes must remain distinct and comparable. | none | self | agent-evaluation, metrics, reporting, reliability, benchmarking | agent-evaluation, metrics, reporting, reliability, benchmarking, agent, evaluation, summarizing, evaluations, where, autonomous, assisted |
 | `run-deep-swe` | Run reproducible DeepSWE coding-agent benchmark evaluations through OpenRouter and mini-swe-agent. | critical | davidondrej/skills | benchmark, deepswe, openrouter, evaluation | benchmark, deepswe, openrouter, evaluation, run, deep, swe, reproducible, coding, agent, evaluations, through |
 
 ## agent-orchestration (7)

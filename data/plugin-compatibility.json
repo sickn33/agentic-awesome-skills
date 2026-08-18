@@ -564,6 +564,25 @@
       "runtime_files": []
     },
     {
+      "id": "agent-evaluation-reporting",
+      "path": "skills/agent-evaluation-reporting",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "agent-framework-azure-ai-py",
       "path": "skills/agent-framework-azure-ai-py",
       "targets": {
@@ -38774,10 +38793,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2017,
+    "total_skills": 2018,
     "supported": {
-      "codex": 1939,
-      "claude": 1960
+      "codex": 1940,
+      "claude": 1961
     },
     "blocked": {
       "codex": 78,
