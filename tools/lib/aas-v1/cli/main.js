@@ -58,6 +58,7 @@ const COMMAND_OPTIONS = Object.freeze({
   "mcp backups cleanup": new Set(["config", "backup-dir", "keep", "approve", "help"]),
   "stack init": new Set(["goal", "catalog-digest", "cache-root", "host", "scope", "name", "out", "preview-windows-output", "help"]),
   "stack create": new Set(["selection", "evidence", "artifact-dir", "require-evidence", "catalog-digest", "cache-root", "out", "preview-windows-output", "help"]),
+  "stack audit": new Set(["manifest", "evidence", "plan", "cache-root", "help"]),
   "stack validate": new Set(["manifest", "help"]),
   "stack plan": new Set(["manifest", "target", "target-root", "cache-root", "runtime-version", "runtime-integrity", "out", "override-managed-drift", "preview-windows-output", "help"]),
   "stack apply": new Set(["plan", "target-root", "cache-root", "approve", "experimental-apply", "help"]),
@@ -456,6 +457,60 @@ async function stackPlan(options, dependencies = {}) {
   };
 }
 
+async function stackAudit(options) {
+  const manifest = readJsonFile(requireOption(options, "manifest"));
+  const manifestValidation = core.stack.validateManifest(manifest);
+  if (!manifestValidation.ok) {
+    throw cliError(manifestValidation.code, manifestValidation.category, manifestValidation.details);
+  }
+  const catalog = await catalogFor(options, manifest.catalog.integrity);
+  if (manifest.catalog.package !== catalog.package
+    || manifest.catalog.version !== catalog.version
+    || manifest.catalog.integrity !== catalog.digest) {
+    throw cliError("AAS_AUDIT_CATALOG_NOT_VERIFIED", "integrity", {});
+  }
+  for (const skill of manifest.skills) core.getSkill(catalog, skill.id);
+
+  const evidence = readJsonFile(requireOption(options, "evidence"));
+  const evidenceValidation = core.validateSelectionEvidence(evidence);
+  const plan = readJsonFile(requireOption(options, "plan"));
+  core.stack.validatePlanEnvelope(plan);
+
+  const manifestCatalog = manifest.catalog;
+  const manifestSkills = manifest.skills.map((skill) => skill.id).sort();
+  const manifestTargets = new Set(manifest.targets.map(targetKey));
+  const checks = {
+    evidenceManifest: evidence.payload.manifestDigest === manifestValidation.manifestDigest ? "match" : "mismatch",
+    planManifest: plan.payload.manifestDigest === manifestValidation.manifestDigest ? "match" : "mismatch",
+    catalog: core.canonicalJson(evidence.payload.catalog) === core.canonicalJson(manifestCatalog)
+      && core.canonicalJson(plan.payload.catalog) === core.canonicalJson(manifestCatalog) ? "match" : "mismatch",
+    target: manifestTargets.has(targetKey(plan.payload.target)) ? "match" : "mismatch",
+    skills: core.canonicalJson([...evidence.payload.selectedSkillIds].sort()) === core.canonicalJson(manifestSkills)
+      && core.canonicalJson([...plan.payload.desiredSkills].sort()) === core.canonicalJson(manifestSkills) ? "match" : "mismatch",
+  };
+  const reasonCodeByCheck = {
+    evidenceManifest: "AAS_AUDIT_EVIDENCE_MANIFEST_MISMATCH",
+    planManifest: "AAS_AUDIT_PLAN_MANIFEST_MISMATCH",
+    catalog: "AAS_AUDIT_CATALOG_MISMATCH",
+    target: "AAS_AUDIT_TARGET_MISMATCH",
+    skills: "AAS_AUDIT_SKILLS_MISMATCH",
+  };
+  const reasonCodes = Object.entries(checks)
+    .filter(([, status]) => status === "mismatch")
+    .map(([check]) => reasonCodeByCheck[check]);
+  return {
+    ok: true,
+    status: reasonCodes.length === 0 ? "consistent" : "inconsistent",
+    reasonCodes,
+    unknown: [],
+    details: {},
+    manifestDigest: manifestValidation.manifestDigest,
+    evidenceDigest: evidenceValidation.evidenceDigest,
+    planDigest: plan.digest,
+    checks,
+  };
+}
+
 function help() {
   return {
     ok: true,
@@ -468,6 +523,7 @@ function help() {
       "stack init --goal <goal> [--catalog-digest <sha256> --cache-root <absolute>] [--preview-windows-output]",
       "stack create --selection <json> --out <aas-stack.json> [--catalog-digest <sha256> --cache-root <absolute>]",
       "stack create --selection <json> --evidence <json> --artifact-dir <new-dir> --require-evidence [--catalog-digest <sha256> --cache-root <absolute>]",
+      "stack audit --manifest <aas-stack.json> --evidence <aas-selection-evidence.json> --plan <plan.json> [--cache-root <absolute>]",
       "stack validate --manifest <aas-stack.json>",
       "stack plan --manifest <file> --target <host:scope> --target-root <dir> --cache-root <absolute> --runtime-integrity <npm-sri> --out <file> [--preview-windows-output]",
       "stack apply --experimental-apply --plan <file> --target-root <dir> --cache-root <absolute> --approve <plan-digest> (EXPERIMENTAL; NOT CERTIFIED)",
@@ -634,6 +690,7 @@ async function execute(argv, dependencies = {}) {
   if (root !== "stack") throw cliError("AAS_CLI_COMMAND_UNKNOWN", "invalidInput", { command: root });
   if (command === "init") return stackInit(options);
   if (command === "create") return stackCreate(options);
+  if (command === "audit") return stackAudit(options);
   if (command === "validate") {
     const validation = core.stack.validateManifest(readJsonFile(requireOption(options, "manifest")));
     if (!validation.ok) throw cliError(validation.code, validation.category, validation.details);
@@ -739,6 +796,7 @@ module.exports = {
   mcpConfigure,
   parseOptions,
   readJsonFile,
+  stackAudit,
   stackPlan,
   windowsOutputDurabilityDetails,
   writeNewJson,
