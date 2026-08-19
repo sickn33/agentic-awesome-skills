@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Harness Fault Injection"
+  short_description: "Validate deterministic agent recovery behavior"
+  default_prompt: "Design a deterministic, sandboxed fault-injection run for this agent workflow and produce an evidence-backed recovery verdict."
