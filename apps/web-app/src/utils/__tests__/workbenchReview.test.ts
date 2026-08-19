@@ -3,8 +3,10 @@ import {
   WORKBENCH_MAX_IMPORT_BYTES,
   WORKBENCH_MAX_JSON_DEPTH,
   WorkbenchImportError,
+  type WorkbenchPairPlan,
   parseWorkbenchArtifact,
   readWorkbenchFile,
+  reviewWorkbenchPair,
 } from '../workbenchReview';
 
 const D = `sha256-${'a'.repeat(64)}`;
@@ -27,6 +29,38 @@ function validStack(): Record<string, unknown> {
 }
 
 describe('workbenchReview', () => {
+  it('compares manifest digest, catalog, desired skills, and target across a stack-plan pair', async () => {
+    const stack = parseWorkbenchArtifact(JSON.stringify(validStack()), 'stack');
+    expect(stack.kind).toBe('stack');
+    if (stack.kind !== 'stack') throw new Error('expected stack');
+    const stackDigest = `sha256-${'b'.repeat(64)}`;
+    const matchingPlan: WorkbenchPairPlan = {
+      payload: {
+        manifestDigest: stackDigest,
+        catalog: stack.value.catalog,
+        desiredSkills: ['react-best-practices'],
+        target: { host: 'codex', scope: 'project' },
+      },
+    };
+
+    expect(reviewWorkbenchPair(stack.value, matchingPlan, stackDigest)).toEqual({
+      status: 'consistent',
+      checks: [
+        { id: 'manifestDigest', label: 'Manifest digest', status: 'match' },
+        { id: 'catalog', label: 'Catalog identity', status: 'match' },
+        { id: 'skills', label: 'Selected skills', status: 'match' },
+        { id: 'target', label: 'Plan target', status: 'match' },
+      ],
+    });
+
+    const mismatchedPlan = structuredClone(matchingPlan);
+    mismatchedPlan.payload.desiredSkills = ['other-skill'];
+    mismatchedPlan.payload.target = { host: 'claude', scope: 'user' };
+    const mismatch = reviewWorkbenchPair(stack.value, mismatchedPlan, stackDigest);
+    expect(mismatch.status).toBe('inconsistent');
+    expect(mismatch.checks.filter((check) => check.status === 'mismatch').map((check) => check.id)).toEqual(['skills', 'target']);
+  });
+
   it('accepts the public stack shape and rejects duplicate skill IDs', () => {
     expect(parseWorkbenchArtifact(JSON.stringify(validStack()), 'stack').kind).toBe('stack');
     const withoutProjectType = validStack();
