@@ -1,0 +1,58 @@
+{
+  "flowchart": {
+    "category": "workflow",
+    "difficulty": "easy",
+    "node_count": "3-10",
+    "recommended_engine": "dagre",
+    "reference_file": "references/diagram-types.md"
+  },
+  "decision_tree": {
+    "category": "logic",
+    "difficulty": "easy",
+    "node_count": "5-15",
+    "recommended_engine": "dagre",
+    "reference_file": "references/diagram-types.md"
+  },
+  "sequence_diagram": {
+    "category": "interaction",
+    "difficulty": "medium",
+    "node_count": "4-12",
+    "recommended_engine": "dagre",
+    "reference_file": "references/diagram-types.md"
+  },
+  "microservices_architecture": {
+    "category": "system_architecture",
+    "difficulty": "hard",
+    "node_count": "15-50",
+    "recommended_engine": "elk",
+    "reference_file": "references/examples.md"
+  },
+  "database_erd": {
+    "category": "data_modeling",
+    "difficulty": "medium",
+    "node_count": "5-25",
+    "recommended_engine": "dagre",
+    "reference_file": "references/examples.md"
+  },
+  "cicd_pipeline": {
+    "category": "devops",
+    "difficulty": "medium",
+    "node_count": "6-20",
+    "recommended_engine": "dagre",
+    "reference_file": "references/diagram-types.md"
+  },
+  "event_driven_pipeline": {
+    "category": "data_engineering",
+    "difficulty": "hard",
+    "node_count": "10-35",
+    "recommended_engine": "elk",
+    "reference_file": "references/examples.md"
+  },
+  "cloud_network_topology": {
+    "category": "infrastructure",
+    "difficulty": "hard",
+    "node_count": "15-40",
+    "recommended_engine": "elk",
+    "reference_file": "references/syntax-guide.md"
+  }
+}
