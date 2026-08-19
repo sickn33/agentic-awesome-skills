@@ -36,4 +36,3 @@ asio::awaitable<void> tls_client(asio::io_context& io) {
 ```
 
 **Critical:** SSL streams require strand-based synchronization for all async operations — no concurrent reads/writes without a strand.
-
