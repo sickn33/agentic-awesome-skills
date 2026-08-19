@@ -75,7 +75,7 @@ if (ec) { /* handle error, no exception */ }
 ```cpp
 boost::system::error_code ec;
 std::size_t n = co_await socket.async_read_some(
-    asio::buffer(data), asio::redirect_error(ec));
+    asio::buffer(data), asio::redirect_error(asio::use_awaitable, ec));
 ```
 
 ## Strands (Thread Safety)
@@ -366,9 +366,13 @@ For binary protocols, read the fixed-size header fully, then the body fully — 
 ```cpp
 // Frame: [4-byte big-endian length N][N-byte body]
 asio::awaitable<std::string> read_frame(tcp::socket& sock) {
+    constexpr uint32_t max_frame_size = 16 * 1024 * 1024;
     uint32_t len_be = 0;
     co_await async_read(sock, asio::buffer(&len_be, sizeof len_be));  // exactly 4 bytes
     uint32_t n = ntohl(len_be);                    // <arpa/inet.h>; or hand-roll endian swap
+    if (n > max_frame_size) {
+        throw std::length_error("frame exceeds 16 MiB limit");  // <stdexcept>
+    }
     std::string body(n, '\0');
     co_await async_read(sock, asio::buffer(body));  // exactly n bytes
     co_return body;
@@ -409,4 +413,3 @@ For coroutine-style shutdown, `co_await signals.async_wait()` in a dedicated cor
 | Wait timer | `co_await timer.async_wait()` |
 | TLS handshake | `co_await stream.async_handshake(type)` |
 | Get executor | `co_await asio::this_coro::executor` |
-
