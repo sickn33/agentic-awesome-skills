@@ -7,13 +7,14 @@ Performs lexical and structural validation of D2 files:
 - Verifies quote termination and escape sequences.
 - Balances and checks container and block braces with line/column precision.
 - Strips comments outside string literals.
-- If the official `d2` compiler binary is present in PATH, performs authoritative dry-run compilation.
+- If the official `d2` compiler binary is present in PATH, compiles to a temporary SVG for full compiler verification.
 """
 
 import sys
 import os
 import re
 import shutil
+import tempfile
 import subprocess
 from typing import List, Tuple, Optional
 
@@ -34,8 +35,8 @@ class D2Parser:
 
     def validate(self) -> List[D2ValidationError]:
         self.errors.clear()
-        brace_stack: List[Tuple[int, int, str]] = []  # (line, col, container_name)
-        
+        brace_stack: List[Tuple[int, int, str]] = []
+
         in_block_string = False
         block_string_start: Optional[Tuple[int, int]] = None
 
@@ -48,7 +49,7 @@ class D2Parser:
             col = 0
             n = len(line)
 
-            # If we are inside a multi-line block string (e.g. |md ... |)
+            # If inside a multi-line block string (|md ... |, |code ... |, | ... |)
             if in_block_string:
                 close_match = re.search(r'\|\s*$', line)
                 if close_match:
@@ -59,11 +60,11 @@ class D2Parser:
             while col < n:
                 ch = line[col]
 
-                # Check for single-line comment (outside quotes)
+                # Single-line comment outside quotes
                 if not in_quote and ch == '#':
-                    break  # rest of line is comment
+                    break
 
-                # Check for block string start (|md, |code, |tex, |sql, or plain |)
+                # Block string start (|md, |code, |tex, |sql, or plain |)
                 if not in_quote and ch == '|':
                     rest = line[col+1:]
                     same_line_close = re.search(r'^(?:[a-zA-Z0-9_-]*\s+)?(.*?)\|\s*(?:;|\}|\n|$)', rest)
@@ -72,9 +73,9 @@ class D2Parser:
                     else:
                         in_block_string = True
                         block_string_start = (line_idx, col + 1)
-                        break  # rest of line is part of multi-line block
+                        break
 
-                # Handle quotes (" or ')
+                # Quotes (" or ')
                 elif ch in ('"', "'"):
                     if not in_quote:
                         in_quote = True
@@ -91,7 +92,7 @@ class D2Parser:
                             in_quote = False
                             quote_start = None
 
-                # Handle braces (outside quotes and block strings)
+                # Braces outside quotes and block strings
                 elif not in_quote:
                     if ch == '{':
                         context_name = line[:col].strip().split(':')[-1].strip()
@@ -132,15 +133,16 @@ class D2Parser:
         return self.errors
 
 def validate_d2_file(filepath: str) -> Tuple[bool, List[str]]:
-    """Validate a D2 file using AST/lexical checks and D2 CLI compiler if present."""
+    """Validate a D2 file using AST/lexical checks and official D2 CLI compiler if present."""
     messages = []
-    
+
     if not os.path.exists(filepath):
         return False, [f"File not found: {filepath}"]
 
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
 
+    # Step 1: Lexical and Structure Validation
     parser = D2Parser(content)
     errors = parser.validate()
 
@@ -149,15 +151,20 @@ def validate_d2_file(filepath: str) -> Tuple[bool, List[str]]:
             messages.append(str(err))
         return False, messages
 
+    # Step 2: D2 CLI Compiler validation (compatible with D2 v0.6.8+)
     d2_bin = shutil.which("d2")
     if d2_bin:
+        temp_out = None
         try:
+            with tempfile.NamedTemporaryFile(suffix=".svg", delete=False) as tmp:
+                temp_out = tmp.name
+
             res = subprocess.run(
-                [d2_bin, "--dry-run", filepath],
+                [d2_bin, filepath, temp_out],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
-                timeout=10
+                timeout=15
             )
             if res.returncode != 0:
                 err_msg = res.stderr.strip() or res.stdout.strip()
@@ -167,6 +174,12 @@ def validate_d2_file(filepath: str) -> Tuple[bool, List[str]]:
                 messages.append(f"Passed official D2 CLI compiler check ({d2_bin}).")
         except Exception as e:
             messages.append(f"D2 CLI check skipped: {e}")
+        finally:
+            if temp_out and os.path.exists(temp_out):
+                try:
+                    os.remove(temp_out)
+                except OSError:
+                    pass
 
     messages.append("Syntax and structure checks passed successfully.")
     return True, messages
@@ -178,7 +191,7 @@ def main():
 
     target_file = sys.argv[1]
     valid, msgs = validate_d2_file(target_file)
-    
+
     if valid:
         print(f"SUCCESS: {target_file}")
         for m in msgs:

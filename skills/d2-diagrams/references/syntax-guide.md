@@ -110,7 +110,7 @@ client -> aws.vpc.public_subnet.alb: Port 443
 
 ### Sequence Diagrams
 
-Use `shape: sequence_diagram` on a container to turn child connections into a chronological sequence timeline.
+Use `shape: sequence_diagram` on a container to turn child connections into a chronological sequence timeline. Quote connection labels containing `$` to prevent accidental variable substitution.
 
 ```d2
 checkout_flow: {
@@ -122,7 +122,7 @@ checkout_flow: {
   bank: Card Issuer
 
   buyer -> web: 1. Click Checkout
-  web -> pay: 2. Process Charge ($50)
+  web -> pay: 2. Process Charge (USD 50)
   pay -> bank: 3. Authorize Transaction
   bank -> pay: 4. Approved (Auth Code)
   pay -> web: 5. Payment Confirmed

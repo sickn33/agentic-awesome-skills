@@ -27,32 +27,53 @@
     "recommended_engine": "elk",
     "reference_file": "references/examples.md"
   },
+  "ai_rag_pipeline": {
+    "category": "artificial_intelligence",
+    "difficulty": "hard",
+    "node_count": "10-25",
+    "recommended_engine": "elk",
+    "reference_file": "references/diagram-types.md"
+  },
+  "multi_agent_system": {
+    "category": "artificial_intelligence",
+    "difficulty": "hard",
+    "node_count": "12-30",
+    "recommended_engine": "elk",
+    "reference_file": "references/examples.md"
+  },
+  "kubernetes_cluster": {
+    "category": "infrastructure",
+    "difficulty": "hard",
+    "node_count": "15-40",
+    "recommended_engine": "elk",
+    "reference_file": "references/diagram-types.md"
+  },
+  "cqrs_event_sourcing": {
+    "category": "data_architecture",
+    "difficulty": "medium",
+    "node_count": "8-20",
+    "recommended_engine": "dagre",
+    "reference_file": "references/diagram-types.md"
+  },
+  "multi_board_failover": {
+    "category": "resilience",
+    "difficulty": "medium",
+    "node_count": "10-20",
+    "recommended_engine": "dagre",
+    "reference_file": "references/examples.md"
+  },
   "database_erd": {
     "category": "data_modeling",
     "difficulty": "medium",
     "node_count": "5-25",
     "recommended_engine": "dagre",
-    "reference_file": "references/examples.md"
+    "reference_file": "references/diagram-types.md"
   },
   "cicd_pipeline": {
     "category": "devops",
     "difficulty": "medium",
     "node_count": "6-20",
     "recommended_engine": "dagre",
-    "reference_file": "references/diagram-types.md"
-  },
-  "event_driven_pipeline": {
-    "category": "data_engineering",
-    "difficulty": "hard",
-    "node_count": "10-35",
-    "recommended_engine": "elk",
     "reference_file": "references/examples.md"
-  },
-  "cloud_network_topology": {
-    "category": "infrastructure",
-    "difficulty": "hard",
-    "node_count": "15-40",
-    "recommended_engine": "elk",
-    "reference_file": "references/syntax-guide.md"
   }
 }

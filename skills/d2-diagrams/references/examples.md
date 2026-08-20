@@ -1,190 +1,127 @@
-# Production D2 Diagram Examples
+# Production D2 Diagram Examples (v2.0)
 
-Tested, real-world examples demonstrating D2 patterns across multiple technical domains.
+Tested, real-world examples demonstrating D2 patterns across cutting-edge technical domains.
 
-## Example 1: E-Commerce Microservices Architecture
+## Example 1: Enterprise Multi-Agent RAG Architecture
 
 ```d2
 direction: right
 
 classes: {
-  service: {
-    style: {
-      fill: "#e8f0fe"
-      stroke: "#1a73e8"
-      border-radius: 6
-    }
+  agent: {
+    shape: hexagon
+    style: { fill: "#f3e8fd"; stroke: "#8430ce"; border-radius: 8 }
   }
-  database: {
+  storage: {
     shape: cylinder
-    style: {
-      fill: "#e6f4ea"
-      stroke: "#137333"
-    }
+    style: { fill: "#e6f4ea"; stroke: "#137333" }
   }
   queue: {
     shape: queue
-    style: {
-      fill: "#fef7e0"
-      stroke: "#b06000"
-    }
+    style: { fill: "#fef7e0"; stroke: "#b06000" }
   }
 }
 
-users: End Users {
-  shape: person
+user: Human Operator { shape: person }
+
+orchestration: Multi-Agent Supervisor {
+  supervisor: Orchestrator Agent { class: agent }
+  planner: Task Planner { class: agent }
+  critic: Validator / Critic { class: agent }
 }
 
-edge: Edge Layer {
-  cloudflare: Cloudflare CDN & WAF { shape: cloud }
-  kong: API Gateway { shape: hexagon }
+tools_and_retrievers: Retrieval & Tools Layer {
+  rag_engine: Hybrid Search RAG Engine
+  code_exec: Sandboxed Code Runner { shape: step }
+  web_search: Live Web Search API { shape: cloud }
 }
 
-services: Microservices Mesh {
-  auth: Auth Service { class: service }
-  orders: Order Service { class: service }
-  payments: Payment Service { class: service }
-  inventory: Inventory Service { class: service }
+memory_layer: Shared Agent Memory {
+  short_term: Working Context Store { class: storage }
+  long_term: Vector Memory (Qdrant) { class: storage }
+  audit_log: Execution Trace Logs { class: storage }
 }
 
-async_layer: Event Backbone {
-  event_bus: Kafka Cluster { class: queue }
-}
+user -> orchestration.supervisor: Submit Complex Objective
+orchestration.supervisor -> orchestration.planner: Generate Plan Steps
+orchestration.planner -> memory_layer.short_term: Store Execution Plan
 
-data_tier: Persistent Data {
-  order_db: Orders DB (Postgres) { class: database }
-  inventory_db: Inventory DB (Postgres) { class: database }
-  redis_cache: Session Cache (Redis) { class: database }
-}
+orchestration.supervisor -> tools_and_retrievers.rag_engine: Query Domain Docs
+tools_and_retrievers.rag_engine -> memory_layer.long_term: Vector Search
+memory_layer.long_term -> tools_and_retrievers.rag_engine: Relevant Passages
 
-users -> edge.cloudflare: HTTPS Traffic
-edge.cloudflare -> edge.kong: Forward Verified Requests
-edge.kong -> services.auth: Validate JWT
-edge.kong -> services.orders: POST /orders
-edge.kong -> services.inventory: GET /stock
-
-services.auth -> data_tier.redis_cache: Token Lookup
-services.orders -> data_tier.order_db: Save Order (PENDING)
-services.orders -> services.payments: Call /charge (Sync)
-services.orders -> async_layer.event_bus: Publish OrderPlaced
-async_layer.event_bus -> services.inventory: Consume OrderPlaced
-services.inventory -> data_tier.inventory_db: Decrement Stock
+orchestration.supervisor -> tools_and_retrievers.code_exec: Execute Computations
+tools_and_retrievers.code_exec -> orchestration.critic: Submit Results
+orchestration.critic -> orchestration.supervisor: Validated / Refined Response
+orchestration.supervisor -> memory_layer.audit_log: Record Completed Trace
+orchestration.supervisor -> user: Final Deliverable
 ```
 
-## Example 2: Real-Time Event-Driven Analytics Pipeline
+## Example 2: Kubernetes GitOps CI/CD Delivery Pipeline
 
 ```d2
 direction: right
 
-sources: Event Sources {
-  iot: IoT Sensors { shape: rectangle }
-  web_events: Clickstream Tracker { shape: page }
-  mobile_sdk: Mobile App Telemetry { shape: page }
+dev: Engineer { shape: person }
+git: GitHub Monorepo { shape: cloud }
+
+ci_cd: Automated Pipeline {
+  github_actions: GitHub Actions CI { shape: step }
+  security_scanner: Trivy Vulnerability Scan { shape: step }
+  image_registry: Harbor Registry { shape: package }
+  argocd: ArgoCD GitOps Controller { shape: hexagon }
 }
 
-ingest: Ingestion Gateway {
-  nlb: Network Load Balancer { shape: hexagon }
-  kafka_in: Kafka Ingress Topic { shape: queue }
+k8s: Production Cluster {
+  api_server: K8s Control Plane
+  app_deploy: Deployment: Core API (3 Replicas) {
+    pod_a: Pod A
+    pod_b: Pod B
+    pod_c: Pod C
+  }
 }
 
-processing: Stream Processing Engine {
-  flink: Apache Flink Jobs { shape: step }
-  dead_letter: DLQ Error Topic { shape: queue; style.fill: "#fce8e6" }
-}
+dev -> git: git push origin main
+git -> ci_cd.github_actions: Trigger Webhook
+ci_cd.github_actions -> ci_cd.security_scanner: Scan Code & Containers
+ci_cd.security_scanner -> ci_cd.image_registry: Push Signed Container Image
+ci_cd.github_actions -> git: Update K8s Manifest Image Tag
 
-storage: Analytical Warehouses {
-  clickhouse: ClickHouse Realtime DB { shape: cylinder }
-  s3_lake: S3 Parquet Lake { shape: cylinder }
-}
-
-dashboard: Analytics UI {
-  superset: Apache Superset { shape: rectangle }
-}
-
-sources.iot -> ingest.nlb
-sources.web_events -> ingest.nlb
-sources.mobile_sdk -> ingest.nlb
-
-ingest.nlb -> ingest.kafka_in: Stream
-ingest.kafka_in -> processing.flink: Consume Partitions
-processing.flink -> processing.dead_letter: On Validation Error
-processing.flink -> storage.clickhouse: Hot Aggregations (1s window)
-processing.flink -> storage.s3_lake: Cold Raw Storage (Parquet)
-
-dashboard.superset -> storage.clickhouse: Live SQL Queries
+ci_cd.argocd -> git: Poll Git State (Desired State)
+ci_cd.argocd -> k8s.api_server: Reconcile Diff
+k8s.api_server -> k8s.app_deploy: Rolling Update
 ```
 
-## Example 3: User Authentication & Token Refresh Flow (Sequence)
+## Example 3: Multi-Board Disaster Recovery Failover
 
 ```d2
-auth_sequence: {
-  shape: sequence_diagram
+direction: right
 
-  user: Client App (SPA)
-  api_gw: API Gateway
-  auth_svc: Auth Service
-  redis: Session Store
-
-  user -> api_gw: 1. POST /login (User, Pass)
-  api_gw -> auth_svc: 2. Authenticate Request
-  auth_svc -> redis: 3. Verify User Hash & Create Session
-  redis -> auth_svc: 4. Session Stored OK
-  auth_svc -> api_gw: 5. Return Access Token (15m) + Refresh Token (7d)
-  api_gw -> user: 6. 200 OK + Set-Cookie HTTPOnly
-
-  user -> api_gw: 7. GET /api/v1/resource (Bearer Token)
-  api_gw -> user: 8. 401 Unauthorized (Token Expired)
-
-  user -> api_gw: 9. POST /refresh (Refresh Cookie)
-  api_gw -> auth_svc: 10. Validate Refresh Token
-  auth_svc -> redis: 11. Check Blacklist / Expiry
-  redis -> auth_svc: 12. Token Active
-  auth_svc -> api_gw: 13. Issue New Access Token
-  api_gw -> user: 14. 200 OK (New Bearer Token)
-}
-```
-
-## Example 4: SaaS Multi-Tenant Billing Database Schema (ERD)
-
-```d2
-tenants: {
-  shape: sql_table
-  id: uuid { constraint: primary_key }
-  name: varchar(100)
-  slug: varchar(50) { constraint: unique }
-  created_at: timestamp
+primary_dc: Primary Region (us-east-1) {
+  lb: Route 53 DNS (Primary) { shape: hexagon }
+  app: Web Cluster
+  db: Aurora Primary { shape: cylinder; style.fill: "#e6f4ea" }
+  lb -> app -> db
 }
 
-users: {
-  shape: sql_table
-  id: uuid { constraint: primary_key }
-  tenant_id: uuid { constraint: foreign_key }
-  email: varchar(255) { constraint: unique }
-  role: varchar(30)
-  status: varchar(20)
+standby_dc: Secondary Region (us-west-2) {
+  lb_standby: Route 53 DNS (Standby) { shape: hexagon }
+  app_standby: Scaled Down Web Cluster
+  db_replica: Aurora Cross-Region Replica { shape: cylinder; style.fill: "#e8f0fe" }
+  lb_standby -> app_standby -> db_replica
 }
 
-subscriptions: {
-  shape: sql_table
-  id: uuid { constraint: primary_key }
-  tenant_id: uuid { constraint: foreign_key }
-  stripe_customer_id: varchar(100)
-  plan_tier: varchar(30)
-  seat_count: int
-  current_period_end: timestamp
+primary_dc.db -> standby_dc.db_replica: Asynchronous Cross-Region Sync {
+  style.stroke-dash: 5
 }
 
-invoices: {
-  shape: sql_table
-  id: uuid { constraint: primary_key }
-  subscription_id: uuid { constraint: foreign_key }
-  amount_cents: int
-  status: varchar(30)
-  invoice_pdf_url: text
-  issued_at: timestamp
+scenarios: {
+  datacenter_failover: {
+    primary_dc.style.opacity: 0.4
+    primary_dc.db.style.fill: "#fce8e6"
+    standby_dc.db_replica.style.fill: "#e6f4ea"
+    standby_dc.db_replica: Aurora Promoted Primary
+    standby_dc.lb_standby.style.stroke: "#1a73e8"
+  }
 }
-
-users.tenant_id -> tenants.id: belongs to
-subscriptions.tenant_id -> tenants.id: billing for
-invoices.subscription_id -> subscriptions.id: generated for
 ```

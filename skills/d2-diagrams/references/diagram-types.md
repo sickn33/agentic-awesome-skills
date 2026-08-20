@@ -1,15 +1,15 @@
-# D2 Diagram Types and Patterns
+# D2 Diagram Types and Use Cases
 
-Standard patterns and templates for common technical, architectural, and process diagrams in D2.
+Practical templates and architectural patterns for major diagram formats in D2 (compatible with D2 v0.6.8+).
 
-## 1. Flowcharts and Decision Trees
+## 1. System Architecture & Flowcharts
 
-Used for business logic, error handling, algorithm workflows, and branching processes.
+Used for microservices, user request routing, and conditional business logic.
 
 ### Key Rules
-- Use `diamond` shapes for conditions.
-- Label both branches clearly (`yes` / `no`, `success` / `failure`).
-- Use `oval` or `circle` for start/end terminals.
+- Group components by logical tier (edge, services, data).
+- Use `diamond` for decision gates.
+- Explicitly label branch decisions (`Yes`, `No`, `Success`, `Error`).
 
 ### Template
 
@@ -29,14 +29,14 @@ process -> finish: Success
 error_handler -> finish: Handled
 ```
 
-## 2. Microservices and System Architecture
+## 2. Cloud Infrastructure and Microservices
 
-Used for multi-tier applications, cloud topologies, and service interactions.
+Used for VPC layouts, Kubernetes pods, and distributed services.
 
 ### Key Rules
-- Group by architectural layers (Client, Gateway, Services, Data Stores).
-- Use `cylinder` for databases, `queue` for message buses, and `hexagon` for gateways.
-- Keep data store calls distinct from inter-service RPC calls.
+- Use containers for boundary isolation (VPCs, namespaces, security zones).
+- Use standard semantic shapes (`hexagon` for gateways, `cylinder` for databases, `queue` for message brokers).
+- Always use dotted paths (`tier.service`) when connecting nodes across containers.
 
 ### Template
 
@@ -78,11 +78,12 @@ services.inventory -> storage.inv_db: Update Stock
 
 ## 3. Sequence Diagrams
 
-Used for temporal interaction, protocol handshakes, and API communication flows.
+Used for API handshakes, authentication protocols, and distributed transactions.
 
 ### Key Rules
-- Declare `shape: sequence_diagram` at container level.
-- Order of connection definitions determines vertical sequence timeline.
+- Set `shape: sequence_diagram` on the enclosing container.
+- Declare actors/participants at the top of the container.
+- Connection sequence in the code defines the timeline from top to bottom.
 
 ### Template
 
@@ -107,14 +108,14 @@ oauth_flow: {
 }
 ```
 
-## 4. Entity-Relationship Diagrams (ERD)
+## 4. Entity-Relationship Diagrams (ERDs)
 
-Used for database schema design and data modeling.
+Used for relational databases, schema migrations, and domain models.
 
 ### Key Rules
-- Use `shape: sql_table`.
-- Specify column types and key constraints (`primary_key`, `foreign_key`, `unique`).
-- Connect foreign key fields directly to referenced primary key fields.
+- Set `shape: sql_table` on entity containers.
+- List column names followed by types.
+- Annotate keys with `{ constraint: primary_key }` or `{ constraint: foreign_key }`.
 
 ### Template
 
@@ -148,14 +149,13 @@ subscriptions.customer_id -> customers.id: belongs to
 invoices.subscription_id -> subscriptions.id: generated for
 ```
 
-## 5. CI/CD and DevOps Pipelines
+## 5. CI/CD and Deployment Pipelines
 
-Used for build, test, scan, and deployment pipelines.
+Used for GitHub Actions workflows, build artifact flows, and deployment stages.
 
 ### Key Rules
-- Use `direction: right` for sequential workflows.
-- Use `step` shape for build stages.
-- Distinguish manual vs automated deployment gates.
+- Use `direction: right` for left-to-right flow.
+- Use `step` for pipeline tasks, `package` for artifacts, and `rectangle` for target clusters.
 
 ### Template
 
@@ -192,6 +192,7 @@ Used for entity states, order statuses, and protocol lifecycles.
 
 ### Key Rules
 - Use `circle` or `oval` for states.
+- Quote special labels like `"[*]"` to avoid conflicting with array syntax.
 - Explicitly mark initial and terminal states.
 - Label every transition with the triggering event or condition.
 
@@ -200,7 +201,7 @@ Used for entity states, order statuses, and protocol lifecycles.
 ```d2
 direction: down
 
-initial: [*] { shape: circle }
+initial: "[*]" { shape: circle }
 pending: Pending Payment { shape: oval }
 processing: Processing Order { shape: oval }
 shipped: Shipped { shape: oval }
