@@ -1,0 +1,168 @@
+#!/usr/bin/env python3
+"""Validate a multi-source research report without network access."""
+
+import json
+import sys
+from pathlib import Path
+
+
+SOURCE_TYPES = {"primary", "secondary", "aggregator"}
+CLAIM_KINDS = {"sourced", "inference"}
+CONFIDENCE_MINIMUMS = {"low": 1, "medium": 2, "high": 3}
+
+
+def nonempty(value):
+    return isinstance(value, str) and bool(value.strip())
+
+
+def valid_url(value):
+    if not nonempty(value) or not value.startswith(("https://", "http://")):
+        return False
+    authority = value.split("://", 1)[1].split("/", 1)[0]
+    return bool(authority) and "." in authority and not any(
+        character.isspace() for character in authority
+    )
+
+
+def validate(report):
+    errors = []
+    if not isinstance(report, dict):
+        return ["report must be a JSON object"]
+
+    for field in ("question", "searched_at"):
+        if not nonempty(report.get(field)):
+            errors.append(f"{field} must be a non-empty string")
+
+    providers = report.get("providers")
+    if not isinstance(providers, list) or not all(nonempty(item) for item in providers):
+        errors.append("providers must be an array of non-empty strings")
+        providers = []
+    if len(set(providers)) < 2:
+        errors.append("providers must contain at least two unique capabilities")
+    if len(set(providers)) != len(providers):
+        errors.append("providers must not contain duplicates")
+
+    unavailable = report.get("unavailable_providers")
+    if not isinstance(unavailable, list) or not all(nonempty(item) for item in unavailable):
+        errors.append("unavailable_providers must be an array of non-empty strings")
+
+    sources = report.get("sources")
+    if not isinstance(sources, list) or not sources:
+        errors.append("sources must be a non-empty array")
+        sources = []
+
+    source_ids = set()
+    source_urls = set()
+    for index, source in enumerate(sources):
+        label = f"sources[{index}]"
+        if not isinstance(source, dict):
+            errors.append(f"{label} must be an object")
+            continue
+        source_id = source.get("id")
+        url = source.get("url")
+        if not nonempty(source_id):
+            errors.append(f"{label}.id must be a non-empty string")
+        elif source_id in source_ids:
+            errors.append(f"duplicate source id: {source_id}")
+        else:
+            source_ids.add(source_id)
+        if not valid_url(url):
+            errors.append(f"{label}.url must be an HTTP(S) URL")
+        elif url in source_urls:
+            errors.append(f"duplicate source URL: {url}")
+        else:
+            source_urls.add(url)
+        if not nonempty(source.get("publisher")):
+            errors.append(f"{label}.publisher must be a non-empty string")
+        if source.get("source_type") not in SOURCE_TYPES:
+            errors.append(f"{label}.source_type must be primary, secondary, or aggregator")
+
+    claims = report.get("claims")
+    if not isinstance(claims, list) or not claims:
+        errors.append("claims must be a non-empty array")
+        claims = []
+
+    claim_ids = set()
+    used_sources = set()
+    for index, claim in enumerate(claims):
+        label = f"claims[{index}]"
+        if not isinstance(claim, dict):
+            errors.append(f"{label} must be an object")
+            continue
+        claim_id = claim.get("id")
+        if not nonempty(claim_id):
+            errors.append(f"{label}.id must be a non-empty string")
+        elif claim_id in claim_ids:
+            errors.append(f"duplicate claim id: {claim_id}")
+        else:
+            claim_ids.add(claim_id)
+        if not nonempty(claim.get("text")):
+            errors.append(f"{label}.text must be a non-empty string")
+        if claim.get("kind") not in CLAIM_KINDS:
+            errors.append(f"{label}.kind must be sourced or inference")
+
+        confidence = claim.get("confidence")
+        if confidence not in CONFIDENCE_MINIMUMS:
+            errors.append(f"{label}.confidence must be low, medium, or high")
+        refs = claim.get("source_ids")
+        if not isinstance(refs, list) or not refs or not all(nonempty(item) for item in refs):
+            errors.append(f"{label}.source_ids must be a non-empty string array")
+            refs = []
+        if len(set(refs)) != len(refs):
+            errors.append(f"{label}.source_ids must not contain duplicates")
+        for source_id in refs:
+            if source_id not in source_ids:
+                errors.append(f"{label} references unknown source id: {source_id}")
+            else:
+                used_sources.add(source_id)
+
+        count = claim.get("independent_source_count")
+        if not isinstance(count, int) or isinstance(count, bool) or count < 0:
+            errors.append(f"{label}.independent_source_count must be a non-negative integer")
+        else:
+            if count > len(set(refs)):
+                errors.append(f"{label} independent source count exceeds its source references")
+            minimum = CONFIDENCE_MINIMUMS.get(confidence)
+            if minimum is not None and count < minimum:
+                errors.append(
+                    f"{label} confidence {confidence} requires at least {minimum} independent sources"
+                )
+        if not isinstance(claim.get("conflict"), bool):
+            errors.append(f"{label}.conflict must be true or false")
+        elif claim.get("conflict") and confidence == "high":
+            errors.append(f"{label} cannot be high confidence while conflict is true")
+
+    for source_id in sorted(source_ids - used_sources):
+        errors.append(f"source is not referenced by any claim: {source_id}")
+
+    gaps = report.get("gaps")
+    if not isinstance(gaps, list) or not all(nonempty(item) for item in gaps):
+        errors.append("gaps must be an array of non-empty strings")
+    return errors
+
+
+def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if len(argv) != 1:
+        print("usage: validate_report.py REPORT.json", file=sys.stderr)
+        return 2
+    try:
+        report = json.loads(Path(argv[0]).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        print(f"INVALID: {error}", file=sys.stderr)
+        return 1
+    errors = validate(report)
+    if errors:
+        for error in errors:
+            print(f"ERROR: {error}", file=sys.stderr)
+        print(f"INVALID: {len(errors)} error(s)", file=sys.stderr)
+        return 1
+    print(
+        f"VALID: {len(report['sources'])} source(s), "
+        f"{len(report['claims'])} claim(s), {len(set(report['providers']))} provider(s)"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
