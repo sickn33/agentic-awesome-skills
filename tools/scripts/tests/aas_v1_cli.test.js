@@ -34,6 +34,53 @@ function fixture() {
   return { root, runtime, dependencies };
 }
 
+function selectionEvidenceFor(catalog, manifest) {
+  const manifestDigest = core.stack.validateManifest(manifest).manifestDigest;
+  const fileDigest = core.sha256("package fixture");
+  const skillId = manifest.skills[0].id;
+  const capabilityId = "runtime-design";
+  return core.createSelectionEvidence({
+    catalog,
+    manifest,
+    project: {
+      schemaVersion: 1,
+      files: [{ path: "package.json", size: 15, sha256: fileDigest }],
+    },
+    dimensions: core.evidence.DIMENSION_IDS.map((id) => ({
+      id,
+      status: id === "architecture-runtime" ? "applicable" : "not-applicable",
+      capabilityIds: id === "architecture-runtime" ? [capabilityId] : [],
+    })),
+    capabilities: [{
+      id: capabilityId,
+      dimensionId: "architecture-runtime",
+      status: "covered",
+      evidence: [{ path: "package.json", sha256: fileDigest }],
+      selectedSkillIds: [skillId],
+    }],
+    processTrace: {
+      schemaVersion: 1,
+      calls: [{
+        sequence: 1,
+        tool: "compose_stack",
+        attempt: 1,
+        input: { skillIds: [skillId] },
+        output: { ok: true, manifestDigest, selectedSkillIds: [skillId] },
+        canonicalInputBytes: 25,
+        canonicalOutputBytes: 140,
+      }, {
+        sequence: 2,
+        tool: "inspect_stack",
+        attempt: 1,
+        input: { manifestDigest },
+        output: { ok: true, status: "valid", manifestDigest, selectedSkillIds: [skillId] },
+        canonicalInputBytes: 96,
+        canonicalOutputBytes: 160,
+      }],
+    },
+  });
+}
+
 test("Windows output reports certified durability without marking the preview fallback", () => {
   assert.deepEqual(
     windowsOutputDurabilityDetails({ outputDurability: "directorySynced", certificationStatus: "certifiable" }, "win32"),
@@ -120,6 +167,80 @@ test("CLI stack lifecycle persists an explicit agent selection, plans it, applie
     "--approve", plan.digest,
   ], item.dependencies);
   assert.equal(again.status, "alreadyApplied");
+});
+
+test("CLI stack audit verifies a bound manifest, selection evidence, and immutable plan without writes", async (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const catalog = core.loadBundledCatalog({ root: ROOT });
+  const selectionPath = path.join(item.root, "selection.json");
+  const manifestPath = path.join(item.root, "aas-stack.json");
+  const evidencePath = path.join(item.root, "aas-selection-evidence.json");
+  const planPath = path.join(item.root, "plan.json");
+  fs.writeFileSync(selectionPath, `${core.canonicalJson({
+    name: "audited-stack",
+    targets: [{ host: "codex", scope: "project" }],
+    profile: { goals: ["audit agent artifacts"], languages: ["javascript"], frameworks: [], constraints: ["local-only"] },
+    skillIds: ["ai-agents-architect"],
+  })}\n`);
+  await execute(["stack", "create", "--selection", selectionPath, "--out", manifestPath]);
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  fs.writeFileSync(evidencePath, `${core.canonicalJson(selectionEvidenceFor(catalog, manifest))}\n`);
+  await execute([
+    "stack", "plan", "--manifest", manifestPath, "--target", "codex:project",
+    "--target-root", item.root, "--out", planPath,
+  ], item.dependencies);
+  const before = fs.readdirSync(item.root).sort();
+
+  const result = await execute([
+    "stack", "audit", "--manifest", manifestPath, "--evidence", evidencePath, "--plan", planPath,
+  ]);
+
+  assert.equal(result.status, "consistent");
+  assert.deepEqual(result.reasonCodes, []);
+  assert.equal(result.manifestDigest, core.stack.validateManifest(manifest).manifestDigest);
+  assert.equal(result.evidenceDigest, JSON.parse(fs.readFileSync(evidencePath, "utf8")).digest);
+  assert.equal(result.planDigest, JSON.parse(fs.readFileSync(planPath, "utf8")).digest);
+  assert.deepEqual(fs.readdirSync(item.root).sort(), before, "audit must not write files");
+});
+
+test("CLI stack audit reports a valid plan bound to another manifest with stable reason codes", async (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const catalog = core.loadBundledCatalog({ root: ROOT });
+  const composed = core.composeStack(catalog, {
+    name: "audited-stack",
+    targets: [{ host: "codex", scope: "project" }],
+    profile: { goals: ["audit agent artifacts"], languages: [], frameworks: [], constraints: [] },
+    skillIds: ["ai-agents-architect"],
+  });
+  const manifestPath = path.join(item.root, "aas-stack.json");
+  const evidencePath = path.join(item.root, "aas-selection-evidence.json");
+  const planPath = path.join(item.root, "plan.json");
+  fs.writeFileSync(manifestPath, `${core.canonicalJson(composed.manifest)}\n`);
+  fs.writeFileSync(evidencePath, `${core.canonicalJson(selectionEvidenceFor(catalog, composed.manifest))}\n`);
+  await execute([
+    "stack", "plan", "--manifest", manifestPath, "--target", "codex:project",
+    "--target-root", item.root, "--out", planPath,
+  ], item.dependencies);
+  const plan = JSON.parse(fs.readFileSync(planPath, "utf8"));
+  plan.payload.manifestDigest = `sha256-${"f".repeat(64)}`;
+  plan.digest = core.sha256(core.canonicalJson(plan.payload));
+  fs.writeFileSync(planPath, `${core.canonicalJson(plan)}\n`);
+
+  const result = await execute([
+    "stack", "audit", "--manifest", manifestPath, "--evidence", evidencePath, "--plan", planPath,
+  ]);
+
+  assert.equal(result.status, "inconsistent");
+  assert.deepEqual(result.reasonCodes, ["AAS_AUDIT_PLAN_MANIFEST_MISMATCH"]);
+  assert.deepEqual(result.checks, {
+    evidenceManifest: "match",
+    planManifest: "mismatch",
+    catalog: "match",
+    target: "match",
+    skills: "match",
+  });
 });
 
 test("CLI exits stably on missing approval and never prints a stack trace", async () => {

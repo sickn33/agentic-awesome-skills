@@ -90,6 +90,20 @@ export type ParsedWorkbenchArtifact =
   | { kind: 'stack'; value: StackManifestReview }
   | { kind: 'plan'; value: PlanReview };
 
+export type PairCheckId = 'manifestDigest' | 'catalog' | 'skills' | 'target';
+export interface WorkbenchPairReview {
+  status: 'consistent' | 'inconsistent';
+  checks: Array<{ id: PairCheckId; label: string; status: 'match' | 'mismatch' }>;
+}
+export interface WorkbenchPairPlan {
+  payload: {
+    manifestDigest: string;
+    catalog: CatalogIdentity;
+    desiredSkills: string[];
+    target: Target;
+  };
+}
+
 export class WorkbenchImportError extends Error {
   constructor(message: string) {
     super(message);
@@ -385,6 +399,55 @@ function canonicalize(value: unknown): unknown {
 
 export function canonicalWorkbenchJson(value: unknown): string {
   return JSON.stringify(canonicalize(value));
+}
+
+function targetKey(target: Target): string {
+  return `${target.host}:${target.scope}`;
+}
+
+function sortedIds(ids: string[]): string[] {
+  return [...ids].sort((left, right) => left.localeCompare(right));
+}
+
+export function reviewWorkbenchPair(
+  stack: StackManifestReview,
+  plan: WorkbenchPairPlan,
+  stackManifestDigest: string,
+): WorkbenchPairReview {
+  const checks: WorkbenchPairReview['checks'] = [
+    {
+      id: 'manifestDigest',
+      label: 'Manifest digest',
+      status: plan.payload.manifestDigest === stackManifestDigest ? 'match' : 'mismatch',
+    },
+    {
+      id: 'catalog',
+      label: 'Catalog identity',
+      status: canonicalWorkbenchJson(stack.catalog) === canonicalWorkbenchJson(plan.payload.catalog) ? 'match' : 'mismatch',
+    },
+    {
+      id: 'skills',
+      label: 'Selected skills',
+      status: canonicalWorkbenchJson(sortedIds(stack.skills.map((skill) => skill.id)))
+        === canonicalWorkbenchJson(sortedIds(plan.payload.desiredSkills)) ? 'match' : 'mismatch',
+    },
+    {
+      id: 'target',
+      label: 'Plan target',
+      status: stack.targets.some((target) => targetKey(target) === targetKey(plan.payload.target)) ? 'match' : 'mismatch',
+    },
+  ];
+  return {
+    status: checks.every((check) => check.status === 'match') ? 'consistent' : 'inconsistent',
+    checks,
+  };
+}
+
+export async function sha256WorkbenchDigest(value: unknown): Promise<string> {
+  if (!globalThis.crypto?.subtle) fail('This browser cannot verify artifact digests.');
+  const bytes = new TextEncoder().encode(canonicalWorkbenchJson(value));
+  const digestBytes = new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256', bytes));
+  return `sha256-${Array.from(digestBytes, (byte) => byte.toString(16).padStart(2, '0')).join('')}`;
 }
 
 export async function verifyPlanDigest(plan: PlanReview): Promise<boolean> {

@@ -1,4 +1,4 @@
-import { useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { usePageMeta } from '../hooks/usePageMeta';
 import {
   WORKBENCH_MAX_IMPORT_BYTES,
@@ -6,6 +6,8 @@ import {
   WorkbenchImportError,
   parseWorkbenchArtifact,
   readWorkbenchFile,
+  reviewWorkbenchPair,
+  sha256WorkbenchDigest,
   verifyPlanDigest,
   type PlanReview,
   type StackManifestReview,
@@ -207,6 +209,50 @@ function PlanReviewView({ plan }: { plan: PlanReview }): React.ReactElement {
   );
 }
 
+function PairReview({ stack, plan }: { stack: StackManifestReview; plan: PlanReview }): React.ReactElement {
+  const [review, setReview] = useState<ReturnType<typeof reviewWorkbenchPair> | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void sha256WorkbenchDigest(stack).then((manifestDigest) => {
+      if (active) {
+        setReview(reviewWorkbenchPair(stack, plan, manifestDigest));
+        setError(null);
+      }
+    }).catch((reason: unknown) => {
+      if (active) setError(displayError(reason));
+    });
+    return () => { active = false; };
+  }, [stack, plan]);
+
+  if (error) {
+    return <section className="workbench-pair-review workbench-pair-review--error" aria-live="polite"><h2>Artifact consistency</h2><p role="alert">{error}</p></section>;
+  }
+  if (!review) return <section className="workbench-pair-review" aria-live="polite"><h2>Artifact consistency</h2><p>Checking bindings…</p></section>;
+  const consistent = review.status === 'consistent';
+  return (
+    <section className={`workbench-pair-review ${consistent ? 'workbench-pair-review--consistent' : 'workbench-pair-review--inconsistent'}`} aria-labelledby="pair-review-title">
+      <header>
+        <div>
+          <p>{consistent ? 'All bindings match' : 'Bindings need attention'}</p>
+          <h2 id="pair-review-title">Artifact consistency</h2>
+        </div>
+        <span>{consistent ? 'Ready to compare' : `${review.checks.filter((check) => check.status === 'mismatch').length} mismatches`}</span>
+      </header>
+      <ul aria-label="Artifact consistency checks">
+        {review.checks.map((check) => (
+          <li key={check.id}>
+            <span>{check.label}</span>
+            <strong>{check.status === 'match' ? 'Match' : 'Mismatch'}</strong>
+          </li>
+        ))}
+      </ul>
+      <p className="workbench-pair-review__note">This comparison uses only the two imported artifacts and stays in page memory.</p>
+    </section>
+  );
+}
+
 function ArtifactImporter<T>({
   kind,
   title,
@@ -354,6 +400,7 @@ export function Workbench(): React.ReactElement {
       </div>
 
       <section className="workbench-review-area" aria-label="Imported artifact review">
+        {stack.value && plan.value ? <PairReview stack={stack.value} plan={plan.value} /> : null}
         {stack.value ? <StackReview stack={stack.value} /> : null}
         {plan.value ? <PlanReviewView plan={plan.value} /> : null}
         {!stack.value && !plan.value ? (

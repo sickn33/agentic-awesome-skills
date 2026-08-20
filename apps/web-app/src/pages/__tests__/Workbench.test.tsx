@@ -76,6 +76,16 @@ function planFixture(reasonCode = 'AAS_MANAGED_DRIFT_APPROVED'): Record<string, 
   return plan;
 }
 
+async function boundPlanFixture(): Promise<Record<string, unknown>> {
+  const stack = stackFixture();
+  const manifestDigest = `sha256-${createHash('sha256').update(canonicalWorkbenchJson(stack)).digest('hex')}`;
+  const plan = planFixture() as { digest: string; payload: Record<string, unknown> };
+  plan.payload.manifestDigest = manifestDigest;
+  plan.payload.desiredSkills = ['react-best-practices', 'playwright-skill'];
+  plan.digest = `sha256-${createHash('sha256').update(canonicalWorkbenchJson(plan.payload)).digest('hex')}`;
+  return plan;
+}
+
 function paste(label: 'Paste JSON', value: unknown, index = 0): void {
   const inputs = screen.getAllByLabelText(label);
   fireEvent.change(inputs[index], { target: { value: JSON.stringify(value) } });
@@ -112,6 +122,34 @@ describe('Workbench review UI', () => {
     expect(screen.getAllByText('AAS_MANAGED_DRIFT_APPROVED', { exact: false })).toHaveLength(2);
     expect(screen.getByText('1 overrides')).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 3, name: 'Bound project profile' })).toBeInTheDocument();
+  });
+
+  it('shows a paired consistency gate after a bound stack and plan are both loaded', async () => {
+    renderWithRouter(<Workbench />, { route: '/workbench', path: '/workbench', useProvider: false });
+    paste('Paste JSON', stackFixture());
+    fireEvent.click(screen.getByRole('button', { name: 'Review pasted stack' }));
+    paste('Paste JSON', await boundPlanFixture(), 1);
+    fireEvent.click(screen.getByRole('button', { name: 'Review pasted plan' }));
+
+    expect(await screen.findByText('All bindings match')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'Artifact consistency' })).toBeInTheDocument();
+    for (const label of ['Manifest digest', 'Catalog identity', 'Selected skills', 'Plan target']) {
+      expect(screen.getAllByText(label).length).toBeGreaterThan(0);
+    }
+    expect(screen.getAllByText('Match')).toHaveLength(4);
+  });
+
+  it('surfaces a selected-skill mismatch without hiding either valid artifact', async () => {
+    renderWithRouter(<Workbench />, { route: '/workbench', path: '/workbench', useProvider: false });
+    paste('Paste JSON', stackFixture());
+    fireEvent.click(screen.getByRole('button', { name: 'Review pasted stack' }));
+    paste('Paste JSON', planFixture(), 1);
+    fireEvent.click(screen.getByRole('button', { name: 'Review pasted plan' }));
+
+    expect(await screen.findByText('Bindings need attention')).toBeInTheDocument();
+    expect(screen.getAllByText('Mismatch').length).toBeGreaterThan(0);
+    expect(screen.getByRole('heading', { level: 2, name: 'reviewed-web-stack' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'Single-target change review' })).toBeInTheDocument();
   });
 
   it('fails closed on schema drift and clears the previous review', () => {

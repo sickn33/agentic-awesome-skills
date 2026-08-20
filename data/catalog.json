@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-18T07:23:09.000Z",
-  "total": 2019,
+  "total": 2025,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -923,6 +923,39 @@
         "sdk"
       ],
       "path": "skills/agent-framework-azure-ai-py/SKILL.md"
+    },
+    {
+      "id": "agent-harness-fault-injection",
+      "canonical_id": "agent-harness-fault-injection",
+      "name": "agent-harness-fault-injection",
+      "description": "Use when an agent workflow needs deterministic recovery evidence for sandbox, MCP/tool, worker, checkpoint, memory, or orchestration failures.",
+      "category": "development",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "agent-harness",
+        "fault-injection",
+        "recovery",
+        "state-machine",
+        "mcp",
+        "multi-agent"
+      ],
+      "triggers": [
+        "agent-harness",
+        "fault-injection",
+        "recovery",
+        "state-machine",
+        "mcp",
+        "multi-agent",
+        "agent",
+        "harness",
+        "fault",
+        "injection",
+        "deterministic",
+        "evidence"
+      ],
+      "path": "skills/agent-harness-fault-injection/SKILL.md"
     },
     {
       "id": "agent-manager-skill",
@@ -4963,6 +4996,36 @@
         "intelligent"
       ],
       "path": "skills/audio-transcriber/SKILL.md"
+    },
+    {
+      "id": "audit-agent-run-evidence",
+      "canonical_id": "audit-agent-run-evidence",
+      "name": "audit-agent-run-evidence",
+      "description": "Use when an agent, harness, gateway, MCP workflow, or multi-step automation claims completion and the available traces, checkpoints, approvals, tool calls, or deployment records must be judged without trusting self-reported success.",
+      "category": "uncategorized",
+      "risk": "safe",
+      "source": "self",
+      "tags": [
+        "audit",
+        "agent",
+        "run",
+        "evidence"
+      ],
+      "triggers": [
+        "audit",
+        "agent",
+        "run",
+        "evidence",
+        "harness",
+        "gateway",
+        "mcp",
+        "multi",
+        "step",
+        "automation",
+        "claims",
+        "completion"
+      ],
+      "path": "skills/audit-agent-run-evidence/SKILL.md"
     },
     {
       "id": "audit-context-building",
@@ -10120,6 +10183,42 @@
         "execute"
       ],
       "path": "skills/blueprint/SKILL.md"
+    },
+    {
+      "id": "boost-asio-pro",
+      "canonical_id": "boost-asio-pro",
+      "name": "boost-asio-pro",
+      "description": "Use when writing asynchronous C++ networking code with Boost.Asio or standalone Asio — TCP/UDP servers and clients, SSL/TLS, timers, strands, composed async ops. Covers io_context, co_spawn, awaitable, async_read/async_write, asio::spawn, yield_context, and pre-C++20 callback styles.",
+      "category": "development",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "alexprivalov/boost-asio-skill",
+      "license": "MIT",
+      "license_source": "https://github.com/alexprivalov/boost-asio-skill/blob/main/LICENSE",
+      "tags": [
+        "cpp",
+        "boost",
+        "asio",
+        "async",
+        "networking",
+        "coroutines"
+      ],
+      "triggers": [
+        "cpp",
+        "boost",
+        "asio",
+        "async",
+        "networking",
+        "coroutines",
+        "pro",
+        "writing",
+        "asynchronous",
+        "code",
+        "standalone",
+        "tcp"
+      ],
+      "path": "skills/boost-asio-pro/SKILL.md"
     },
     {
       "id": "box-automation",
@@ -36622,6 +36721,41 @@
       "path": "skills/multi-platform-apps-multi-platform/SKILL.md"
     },
     {
+      "id": "multi-source-search",
+      "canonical_id": "multi-source-search",
+      "name": "multi-source-search",
+      "description": "Cross-validate web research and produce an offline-checkable evidence ledger with explicit source diversity, confidence, conflicts, and gaps.",
+      "category": "research",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "sandbaseai/sandbase-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/sandbaseai/sandbase-skills/blob/fc25b2ed4548b1bb91621661e82d07d4bbd285a1/LICENSE",
+      "tags": [
+        "research",
+        "fact-checking",
+        "citations",
+        "evidence",
+        "verification"
+      ],
+      "triggers": [
+        "research",
+        "fact-checking",
+        "citations",
+        "evidence",
+        "verification",
+        "multi",
+        "source",
+        "search",
+        "cross",
+        "validate",
+        "web",
+        "produce"
+      ],
+      "path": "skills/multi-source-search/SKILL.md"
+    },
+    {
       "id": "n8n-agents",
       "canonical_id": "n8n-agents",
       "name": "n8n-agents",
@@ -44466,6 +44600,34 @@
         "performance"
       ],
       "path": "skills/review-animations/SKILL.md"
+    },
+    {
+      "id": "review-multi-agent-orchestration",
+      "canonical_id": "review-multi-agent-orchestration",
+      "name": "review-multi-agent-orchestration",
+      "description": "Use when a supervisor, swarm, graph, planner-worker system, or parallel agent workflow needs review for task boundaries, shared state, branch joins, retries, cancellation, context handoffs, budgets, deadlocks, or human escalation before implementation or production rollout.",
+      "category": "uncategorized",
+      "risk": "safe",
+      "source": "self",
+      "tags": [
+        "multi",
+        "agent"
+      ],
+      "triggers": [
+        "multi",
+        "agent",
+        "review",
+        "orchestration",
+        "supervisor",
+        "swarm",
+        "graph",
+        "planner",
+        "worker",
+        "parallel",
+        "task",
+        "boundaries"
+      ],
+      "path": "skills/review-multi-agent-orchestration/SKILL.md"
     },
     {
       "id": "review-swarm",
@@ -54146,6 +54308,41 @@
         "cli"
       ],
       "path": "skills/ui-skills-root/SKILL.md"
+    },
+    {
+      "id": "ui-slop-score",
+      "canonical_id": "ui-slop-score",
+      "name": "ui-slop-score",
+      "description": "Score a rendered web or iOS screen for generic UI risk before it ships. Use when a user asks whether a UI looks generic or needs an honest pre-merge visual review.",
+      "category": "frontend",
+      "risk": "safe",
+      "source": "https://github.com/uizze/uizze/tree/main/skills/ui-slop-score",
+      "source_type": "official",
+      "source_repo": "uizze/uizze",
+      "license": "MIT",
+      "license_source": "https://github.com/uizze/uizze/blob/main/LICENSE",
+      "tags": [
+        "ui",
+        "ux",
+        "frontend",
+        "design",
+        "ui-slop-score"
+      ],
+      "triggers": [
+        "ui",
+        "ux",
+        "frontend",
+        "design",
+        "ui-slop-score",
+        "slop",
+        "score",
+        "rendered",
+        "web",
+        "ios",
+        "screen",
+        "generic"
+      ],
+      "path": "skills/ui-slop-score/SKILL.md"
     },
     {
       "id": "ui-tokens",
