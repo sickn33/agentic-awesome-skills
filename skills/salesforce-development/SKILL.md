@@ -1,8 +1,7 @@
 ---
 name: salesforce-development
 description: Expert patterns for Salesforce platform development including
-  Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs,
-  Connected Apps, and Salesforce DX with scratch orgs and 2nd generation
+  Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, External Client Apps, and Salesforce DX with scratch orgs and 2nd generation
   packages (2GP).
 risk: safe
 source: vibeship-spawner-skills (Apache 2.0)
@@ -12,8 +11,75 @@ date_added: 2026-02-27
 # Salesforce Development
 
 Expert patterns for Salesforce platform development including Lightning Web
-Components (LWC), Apex triggers and classes, REST/Bulk APIs, Connected Apps,
-and Salesforce DX with scratch orgs and 2nd generation packages (2GP).
+Components (LWC), Apex triggers and classes, REST/Bulk APIs, External Client Apps, and Salesforce DX with scratch orgs and 2nd generation packages (2GP).
+
+## Modern Architecture Guidance
+
+### Security and User Mode
+
+For current Apex development, make the intended data-access mode explicit.
+
+- Prefer `WITH USER_MODE` for SOQL/SOSL that should enforce the running user's object permissions, FLS, sharing, and other supported security controls.
+- Use user-mode DML or `Database` methods when the operation should enforce user permissions.
+- Use system mode only when elevated access is intentional and justified.
+- `WITH SECURITY_ENFORCED` is legacy guidance and should not be used for new API 67.0+ code.
+- API 67.0 changes the platform defaults for database operations and class sharing, so do not assume older API-version behavior applies to newer code.
+
+### Integration Pattern Selection
+
+Choose an integration pattern based on latency, volume, ownership, and reliability requirements:
+
+| Requirement | Preferred pattern |
+| --- | --- |
+| Synchronous request/response | REST or Composite API |
+| Large asynchronous data movement | Bulk API 2.0 |
+| Publish business events | Platform Events |
+| Detect Salesforce record changes | Change Data Capture |
+| High-scale event consumption | Pub/Sub API |
+| Salesforce outbound authentication | Named Credentials / External Credential |
+| New OAuth client configuration | External Client App |
+
+Do not select an API only because a record-count threshold is crossed. Evaluate data volume, latency, transaction boundaries, retry behavior, error handling, and monitoring.
+
+### Event-Driven Integration
+
+Prefer events over continuous polling when the platform and integration support it.
+
+Bulk API 2.0 supports event-driven job status and result notifications through Pub/Sub API, including partial query results. Use polling only when event-driven processing is unavailable or unnecessary.
+
+For asynchronous external calls, design for idempotency. A timeout does not prove that the remote operation failed; retrying a non-idempotent request can create duplicates.
+
+Use a stable idempotency key when the receiving system supports it.
+
+### Authentication
+
+For new Salesforce API integrations, prefer External Client Apps. Existing Connected Apps can continue to operate, but new Connected App creation is restricted from Spring '26.
+
+Prefer OAuth-based authentication over username/password SOAP `login()`. Salesforce has announced retirement of SOAP `login()` for API versions 31.0 through 64.0 in Summer '27.
+
+Never place private keys, client secrets, passwords, or long-lived access tokens in source code.
+
+### API Versioning
+
+Do not copy a hard-coded API version from an old example into a new integration.
+
+Use the API version appropriate for the target org and integration, and update it deliberately as platform versions change. Examples should use `{apiVersion}` when the exact version is not material.
+
+### Production Deployment
+
+For production metadata deployments, validate first:
+
+```bash
+sf project deploy validate --target-org my-prod --source-dir force-app --test-level RunLocalTests
+```
+
+If validation succeeds, use the returned job ID for:
+
+```bash
+sf project deploy quick --target-org my-prod --job-id <validation-job-id>
+```
+
+Quick deploy reuses the successful validation and therefore skips rerunning Apex tests. Do not use `project deploy quick` for sandboxes; use `project deploy start` or a dry run as appropriate.
 
 ## Patterns
 
@@ -87,7 +153,7 @@ public with sharing class MyController {
       SELECT Id, Name, Email, Phone
       FROM Contact
       WHERE AccountId = :accountId
-      WITH SECURITY_ENFORCED
+      WITH USER_MODE
       LIMIT 100
     ];
   }
@@ -247,7 +313,7 @@ public class IndustryChangeQueueable implements Queueable, Database.AllowsCallou
         SELECT Id, Name, Industry, OwnerId
         FROM Account
         WHERE Id IN :accountIds
-        WITH SECURITY_ENFORCED
+        WITH USER_MODE
       ];
 
       // Process and make callout
@@ -287,7 +353,7 @@ public class IndustryChangeQueueable implements Queueable, Database.AllowsCallou
       SELECT Id, Industry__c, AccountId
       FROM Opportunity
       WHERE AccountId IN :accIds
-      WITH SECURITY_ENFORCED
+      WITH USER_MODE
     ];
 
     Map<Id, Account> accountMap = new Map<Id, Account>([
@@ -307,7 +373,9 @@ public class IndustryChangeQueueable implements Queueable, Database.AllowsCallou
     // Log error
     System.debug(LoggingLevel.ERROR, 'Queueable failed: ' + e.getMessage());
 
-    // Retry with exponential backoff (max 3 retries)
+    // Retry only when the operation is idempotent. This example does not implement
+    // delayed exponential backoff; production integrations should use a durable,
+    // observable retry mechanism.
     if (retryCount < 3) {
       // Chain new job for retry
       System.enqueueJob(new IndustryChangeQueueable(accountIds, retryCount + 1));
@@ -329,11 +397,11 @@ public class IndustryChangeQueueable implements Queueable, Database.AllowsCallou
 - long-running operations
 - callouts from triggers
 
-### REST API Integration with Connected App
+### REST API Integration with External Client App
 
-External integrations use Connected Apps with OAuth 2.0. JWT Bearer flow
-for server-to-server, Web Server flow for user-facing apps. Always use
-Named Credentials for secure callout configuration.
+New integrations should use External Client Apps (ECA) with OAuth 2.0. Existing
+Connected Apps continue to work, but creation of new Connected Apps is restricted
+from Spring '26. Use Named Credentials for Salesforce outbound callouts.
 
 // Node.js - JWT Bearer Flow (server-to-server)
 import jwt from 'jsonwebtoken';
@@ -394,7 +462,7 @@ class SalesforceClient {
     await this.authenticate();
 
     const response = await fetch(
-      `${this.instanceUrl}/services/data/v59.0/query?q=${encodeURIComponent(soql)}`,
+      `${this.instanceUrl}/services/data/{apiVersion}/query?q=${encodeURIComponent(soql)}`,
       {
         headers: {
           'Authorization': `Bearer ${this.accessToken}`,
@@ -414,7 +482,7 @@ class SalesforceClient {
     await this.authenticate();
 
     const response = await fetch(
-      `${this.instanceUrl}/services/data/v59.0/sobjects/${sobject}`,
+      `${this.instanceUrl}/services/data/{apiVersion}/sobjects/${sobject}`,
       {
         method: 'POST',
         headers: {
@@ -460,7 +528,7 @@ const accounts = await sf.query(
 
 - external integration
 - REST API access
-- connected apps
+- external client apps and connected apps
 
 ### Bulk API 2.0 for Large Data Operations
 
@@ -496,7 +564,7 @@ class SalesforceBulkClient extends SalesforceClient {
 
   private async createBulkJob(sobject: string, operation: string): Promise<any> {
     const response = await fetch(
-      `${this.instanceUrl}/services/data/v59.0/jobs/ingest`,
+      `${this.instanceUrl}/services/data/{apiVersion}/jobs/ingest`,
       {
         method: 'POST',
         headers: {
@@ -520,7 +588,7 @@ class SalesforceBulkClient extends SalesforceClient {
     const csv = this.recordsToCSV(records);
 
     await fetch(
-      `${this.instanceUrl}/services/data/v59.0/jobs/ingest/${jobId}/batches`,
+      `${this.instanceUrl}/services/data/{apiVersion}/jobs/ingest/${jobId}/batches`,
       {
         method: 'PUT',
         headers: {
@@ -534,7 +602,7 @@ class SalesforceBulkClient extends SalesforceClient {
 
   private async closeJob(jobId: string): Promise<void> {
     await fetch(
-      `${this.instanceUrl}/services/data/v59.0/jobs/ingest/${jobId}`,
+      `${this.instanceUrl}/services/data/{apiVersion}/jobs/ingest/${jobId}`,
       {
         method: 'PATCH',
         headers: {
@@ -548,12 +616,12 @@ class SalesforceBulkClient extends SalesforceClient {
 
   private async waitForJobCompletion(jobId: string): Promise<any> {
     const maxWaitTime = 10 * 60 * 1000;  // 10 minutes
-    const pollInterval = 5000;  // 5 seconds
+    const pollInterval = 5000;  // fallback polling interval; prefer event-driven completion when available
     const startTime = Date.now();
 
     while (Date.now() - startTime < maxWaitTime) {
       const response = await fetch(
-        `${this.instanceUrl}/services/data/v59.0/jobs/ingest/${jobId}`,
+        `${this.instanceUrl}/services/data/{apiVersion}/jobs/ingest/${jobId}`,
         {
           headers: { 'Authorization': `Bearer ${this.accessToken}` }
         }
@@ -584,7 +652,7 @@ class SalesforceBulkClient extends SalesforceClient {
 
   private async getFailedResults(jobId: string): Promise<any[]> {
     const response = await fetch(
-      `${this.instanceUrl}/services/data/v59.0/jobs/ingest/${jobId}/failedResults`,
+      `${this.instanceUrl}/services/data/{apiVersion}/jobs/ingest/${jobId}/failedResults`,
       {
         headers: { 'Authorization': `Bearer ${this.accessToken}` }
       }
@@ -665,7 +733,7 @@ the day, unlike sandbox refresh limits.
   ],
   "namespace": "myns",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "59.0"
+  "sourceApiVersion": "67.0"
 }
 
 # Development workflow commands
@@ -872,13 +940,12 @@ Dynamic SOQL with string concatenation is vulnerable
 
 Message: Dynamic SOQL with concatenation. Use bind variables or String.escapeSingleQuotes().
 
-### Missing WITH SECURITY_ENFORCED
+### Missing Explicit Data Access Mode
 
 Severity: WARNING
 
-SOQL should enforce FLS/CRUD permissions
-
-Message: SOQL without security enforcement. Add WITH SECURITY_ENFORCED.
+Review Apex data access to ensure the intended user/system security model is explicit.
+Prefer `WITH USER_MODE` for user-context SOQL/SOSL and user-mode DML where appropriate.
 
 ### Hardcoded Salesforce ID
 
@@ -896,21 +963,21 @@ Credentials must use Named Credentials or Custom Metadata
 
 Message: Hardcoded credentials. Use Named Credentials or Custom Metadata.
 
-### Direct DOM Manipulation in LWC
+### Unnecessary DOM Manipulation in LWC
 
 Severity: WARNING
 
-LWC uses shadow DOM, direct manipulation breaks encapsulation
+Prefer declarative template rendering and component state. When DOM access is
+actually required, scope it to elements owned by the component; prefer `lwc:ref`
+and `this.refs` where appropriate.
 
-Message: Direct DOM access in LWC. Use this.template.querySelector() or data binding.
-
-### Reactive Property Without @track
+### Unnecessary @track Usage
 
 Severity: INFO
 
-Complex object properties need @track for reactivity
-
-Message: Object assignment may need @track for reactivity (post-Spring '20 objects are auto-tracked).
+LWC fields are reactive by default. Use `@track` only when you need deep
+tracking of mutations to properties of plain objects or elements of arrays.
+Prefer assigning a new object or array instead of mutating state in place.
 
 ### Wire Without Refresh After DML
 
@@ -945,6 +1012,7 @@ Message: DML after @wire without refreshApex. Data may be stale.
 - User mentions or implies: connected app
 
 ## Limitations
+- Salesforce platform behavior and API versions change frequently; verify current official documentation before implementing version-sensitive features.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
