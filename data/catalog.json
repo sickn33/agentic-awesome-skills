@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-18T07:23:09.000Z",
-  "total": 2024,
+  "total": 2025,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -36719,6 +36719,41 @@
         "api"
       ],
       "path": "skills/multi-platform-apps-multi-platform/SKILL.md"
+    },
+    {
+      "id": "multi-source-search",
+      "canonical_id": "multi-source-search",
+      "name": "multi-source-search",
+      "description": "Cross-validate web research and produce an offline-checkable evidence ledger with explicit source diversity, confidence, conflicts, and gaps.",
+      "category": "research",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "sandbaseai/sandbase-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/sandbaseai/sandbase-skills/blob/fc25b2ed4548b1bb91621661e82d07d4bbd285a1/LICENSE",
+      "tags": [
+        "research",
+        "fact-checking",
+        "citations",
+        "evidence",
+        "verification"
+      ],
+      "triggers": [
+        "research",
+        "fact-checking",
+        "citations",
+        "evidence",
+        "verification",
+        "multi",
+        "source",
+        "search",
+        "cross",
+        "validate",
+        "web",
+        "produce"
+      ],
+      "path": "skills/multi-source-search/SKILL.md"
     },
     {
       "id": "n8n-agents",
