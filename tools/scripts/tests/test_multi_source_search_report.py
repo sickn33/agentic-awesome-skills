@@ -31,6 +31,8 @@ def report():
             "kind": "sourced",
             "confidence": "high",
             "source_ids": ["s1", "s2", "s3"],
+            "supporting_source_ids": ["s1", "s2", "s3"],
+            "contradicting_source_ids": [],
             "independent_source_count": 3,
             "conflict": False,
         }],
@@ -65,6 +67,7 @@ class MultiSourceReportTests(unittest.TestCase):
     def test_rejects_unknown_and_unused_sources(self):
         payload = copy.deepcopy(report())
         payload["claims"][0]["source_ids"][2] = "missing"
+        payload["claims"][0]["supporting_source_ids"][2] = "missing"
         result = self.run_report(payload)
         self.assertIn("unknown source id: missing", result.stderr)
         self.assertIn("source is not referenced by any claim: s3", result.stderr)
@@ -75,11 +78,34 @@ class MultiSourceReportTests(unittest.TestCase):
         result = self.run_report(payload)
         self.assertIn("duplicate source URL", result.stderr)
 
+    def test_rejects_urls_that_only_differ_by_fragment_host_case_or_default_port(self):
+        payload = copy.deepcopy(report())
+        payload["sources"][0]["url"] = "https://EXAMPLE.org:443/a#first"
+        payload["sources"][2]["url"] = "https://example.org/a#second"
+        result = self.run_report(payload)
+        self.assertIn("duplicate source URL after normalization", result.stderr)
+
     def test_rejects_high_confidence_conflict(self):
         payload = report()
         payload["claims"][0]["conflict"] = True
+        payload["claims"][0]["supporting_source_ids"] = ["s1", "s2"]
+        payload["claims"][0]["contradicting_source_ids"] = ["s3"]
         result = self.run_report(payload)
         self.assertIn("cannot be high confidence", result.stderr)
+
+    def test_rejects_conflict_without_a_contradicting_source(self):
+        payload = report()
+        payload["claims"][0]["conflict"] = True
+        result = self.run_report(payload)
+        self.assertIn("conflict true requires a contradicting source", result.stderr)
+
+    def test_rejects_ambiguous_or_overlapping_evidence_stance(self):
+        payload = report()
+        payload["claims"][0]["supporting_source_ids"] = ["s1", "s2"]
+        payload["claims"][0]["contradicting_source_ids"] = ["s2"]
+        result = self.run_report(payload)
+        self.assertIn("cannot classify the same source", result.stderr)
+        self.assertIn("must equal the union", result.stderr)
 
     def test_rejects_non_date_search_metadata(self):
         payload = report()

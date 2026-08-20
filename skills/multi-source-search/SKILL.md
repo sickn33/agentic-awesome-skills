@@ -64,7 +64,7 @@ separately.
 
 For every material claim:
 
-1. Link it to the source IDs that support or contradict it.
+1. Link it to every relevant source ID and classify each as supporting or contradicting.
 2. Mark it as `sourced` or `inference`.
 3. Count genuinely independent sources, not duplicated syndication.
 4. Assign `low`, `medium`, or `high` confidence.
