@@ -9,6 +9,157 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.16.0] - 2026-08-20 - "Agent Reliability, Evidence Integrity, and Stack Audits"
+
+> Added six focused skills for asynchronous C++ networking, controlled agent
+> fault injection, run-evidence auditing, orchestration review, measurable UI
+> quality, and multi-source research, while adding cross-artifact stack checks
+> and modernizing YouTube transcript extraction. The published catalog contains
+> 2,025 skills.
+
+This release helps Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and
+related AI coding assistants test agent harnesses safely, distinguish run claims
+from inspectable evidence, review multi-agent control flow, score recurring UI
+failure modes, and keep research conclusions honest when sources disagree.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- [`agent-harness-fault-injection`](skills/agent-harness-fault-injection/) for
+  bounded resilience testing with explicit cleanup and recovery gates.
+- [`audit-agent-run-evidence`](skills/audit-agent-run-evidence/) for tracing
+  agent-run claims back to logs, traces, artifacts, and reproducible checks.
+- [`multi-source-search`](skills/multi-source-search/) for provider-optional
+  research backed by an offline, schema-validated evidence ledger.
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+
+### Added
+
+- Added [`boost-asio-pro`](skills/boost-asio-pro/) for production-oriented
+  asynchronous C++ networking with Boost.Asio, including composed operations,
+  cancellation, coroutine lifetimes, strands, backpressure, and testable error
+  paths ([#1186](https://github.com/sickn33/agentic-awesome-skills/pull/1186)).
+- Added
+  [`agent-harness-fault-injection`](skills/agent-harness-fault-injection/) for
+  controlled timeouts, malformed outputs, partial failures, and recovery checks
+  with explicit blast-radius, consent, rollback, and evidence requirements
+  ([#1189](https://github.com/sickn33/agentic-awesome-skills/pull/1189)).
+- Added [`audit-agent-run-evidence`](skills/audit-agent-run-evidence/) for
+  read-only auditing of agent-run claims against recorded events, artifacts,
+  timestamps, identifiers, and reproducible verification steps
+  ([#1192](https://github.com/sickn33/agentic-awesome-skills/pull/1192)).
+- Added
+  [`review-multi-agent-orchestration`](skills/review-multi-agent-orchestration/)
+  for reviewing delegation boundaries, shared-state hazards, handoff contracts,
+  retry behavior, convergence, and evidence quality in multi-agent systems
+  ([#1193](https://github.com/sickn33/agentic-awesome-skills/pull/1193)).
+- Added [`ui-slop-score`](skills/ui-slop-score/) for scoring recurring generic
+  interface patterns against a concrete product brief, reference evidence,
+  accessibility constraints, and a transparent weighted rubric
+  ([#1196](https://github.com/sickn33/agentic-awesome-skills/pull/1196)).
+- Added [`multi-source-search`](skills/multi-source-search/) for bounded research
+  across optional providers with claim-level citations, source polarity,
+  conflict tracking, URL canonicalization, and an offline validation script
+  ([#1202](https://github.com/sickn33/agentic-awesome-skills/pull/1202),
+  [#1205](https://github.com/sickn33/agentic-awesome-skills/pull/1205)).
+
+### Changed
+
+- Added a read-only `aas stack audit` flow and paired browser-local Workbench
+  comparison for detecting digest, catalog, target, and exact skill-set drift
+  between stack artifacts without applying either stack
+  ([#1199](https://github.com/sickn33/agentic-awesome-skills/pull/1199)).
+- Updated the YouTube transcript extractor for both legacy 0.6.x and modern 1.x
+  `youtube-transcript-api` interfaces, common YouTube URL forms, and UTF-8 output
+  on legacy Windows consoles, with isolated network-free regression tests
+  ([#1198](https://github.com/sickn33/agentic-awesome-skills/pull/1198)).
+- Hardened multi-source evidence validation so every source is classified as
+  supporting or contradicting, conflicts agree with that classification, and
+  superficial URL variants cannot inflate source diversity
+  ([#1205](https://github.com/sickn33/agentic-awesome-skills/pull/1205)).
+- Regenerated the canonical catalog, offline AAS Core data, web assets,
+  marketplaces, editorial bundles, compatibility reports, and Codex/Claude
+  plugin distributions for 2,025 skills.
+
+### Security
+
+- Kept fault injection opt-in, bounded to an approved environment, and gated by
+  explicit preconditions, abort thresholds, rollback, recovery verification,
+  and evidence capture before any resilience claim is accepted.
+- Kept run-evidence and orchestration review read-only by default: neither skill
+  treats missing telemetry as success or authorizes repairs, retries, or
+  production actions without a separate user-approved step.
+- Kept multi-source provider access optional and explicit, with credentials out
+  of report artifacts and an offline validator that fails closed on missing
+  evidence, inconsistent conflict state, or duplicate canonical sources.
+- Kept stack comparison local and non-applying; artifact mismatches are reported
+  before any installation or workspace mutation can be considered.
+
+### Who should care
+
+- C++ teams building asynchronous network services that need explicit lifetime,
+  cancellation, serialization, backpressure, and shutdown contracts.
+- Agent-platform teams testing failure recovery or auditing whether reported run
+  outcomes are actually supported by durable evidence.
+- Multi-agent system owners reviewing delegation, shared-state, retry, and
+  convergence risks before expanding autonomy.
+- Product and design teams that want a repeatable anti-generic UI score tied to
+  a real brief rather than subjective aesthetic claims.
+- Researchers and maintainers who need conflict-aware multi-source reports and
+  exact stack-artifact drift detection.
+
+### Validation
+
+- Passed repository validation, reference validation, documentation-security
+  checks, warning-budget enforcement, the complete repository test suite,
+  plugin-compatibility and bundle checks, web-app install/build/prerender, and
+  the npm package dry run on the protected release base.
+- Reviewed all six added skills and their bundled files for semantics, safety,
+  provenance, declared risk, limitations, consent boundaries, and relevant
+  regression coverage; also reviewed the YouTube compatibility and stack-audit
+  changes against their isolated tests.
+
+### Limitations
+
+- Fault injection can demonstrate behavior only in the tested environment and
+  scenario; it does not prove resilience to untested failures or authorize
+  experiments against production systems.
+- Evidence audits and orchestration reviews expose unsupported claims and
+  control-flow risks but do not reconstruct missing telemetry or implement the
+  fixes they recommend.
+- `ui-slop-score` is a transparent heuristic tied to supplied references and
+  constraints, not an objective guarantee of visual quality or user success.
+- Multi-source research still depends on source availability and provider
+  access; source count cannot replace source quality, and unresolved conflicts
+  remain unresolved in the final report.
+- Stack audit detects artifact drift but intentionally does not choose a winner
+  or mutate an installation.
+
+### Credits
+
+- **[@alexprivalov](https://github.com/alexprivalov)** for
+  [`boost-asio-pro`](skills/boost-asio-pro/) in
+  [PR #1186](https://github.com/sickn33/agentic-awesome-skills/pull/1186).
+- **[@Whxuan0701](https://github.com/Whxuan0701)** for
+  [`agent-harness-fault-injection`](skills/agent-harness-fault-injection/),
+  [`audit-agent-run-evidence`](skills/audit-agent-run-evidence/),
+  [`review-multi-agent-orchestration`](skills/review-multi-agent-orchestration/),
+  and the paired stack-audit source contributions in
+  [PRs #1189, #1192, #1193, and #1199](https://github.com/sickn33/agentic-awesome-skills/pull/1199).
+- **[@FrancoStino](https://github.com/FrancoStino)** and the official
+  **[uizze/uizze](https://github.com/uizze/uizze)** source for
+  [`ui-slop-score`](skills/ui-slop-score/) in
+  [PR #1196](https://github.com/sickn33/agentic-awesome-skills/pull/1196).
+- **[@Kormix760](https://github.com/Kormix760)** for the modern YouTube
+  transcript API compatibility repair ported in
+  [PR #1198](https://github.com/sickn33/agentic-awesome-skills/pull/1198).
+- **[@liyangbing](https://github.com/liyangbing)** and
+  **[@denial123789](https://github.com/denial123789)** for
+  [`multi-source-search`](skills/multi-source-search/) and its evidence-integrity
+  follow-up in [PR #1202](https://github.com/sickn33/agentic-awesome-skills/pull/1202)
+  and [PR #1205](https://github.com/sickn33/agentic-awesome-skills/pull/1205).
+
 ## [15.15.0] - 2026-08-18 - "Evidence, Durable Context, and UI Contracts"
 
 > Added six focused skills for deep reading, durable agent context, measurable
