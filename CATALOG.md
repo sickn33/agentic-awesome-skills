@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-18T07:23:09.000Z
 
-Total skills: 2024
+Total skills: 2025
 
 ## agent-behavior (5)
 
@@ -1835,7 +1835,7 @@ Total skills: 2024
 | `slo-implementation` | Framework for defining and implementing Service Level Indicators (SLIs), Service Level Objectives (SLOs), and error budgets. | critical | community | slo | slo, framework, defining, implementing, level, indicators, slis, objectives, slos, error, budgets |
 | `tool-use-guardian` | FREE — Intelligent tool-call reliability wrapper. Monitors, retries, fixes, and learns from tool failures. Auto-recovers from truncated JSON, timeouts, rate ... | safe | community | reliability, tool-use, error-handling, retries, recovery, agent-infrastructure | reliability, tool-use, error-handling, retries, recovery, agent-infrastructure, guardian, free, intelligent, call, wrapper, monitors |
 
-## research (12)
+## research (13)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1844,6 +1844,7 @@ Total skills: 2024
 | `fact-check-x-complete` | Compare claims from one or more AI answers, verify their citations against public primary sources, and produce an evidence-linked fact-check report without i... | critical | ASI2030/Fact-Check-X | fact-checking, research, evidence, source-verification | fact-checking, research, evidence, source-verification, fact, check, complete, compare, claims, one, ai, answers |
 | `gemini-deep-research` | Run autonomous multi-step research with Google's Gemini Deep Research Agent: kick off a query, poll progress, and collect a cited report for market analysis ... | critical | sanjay3290/ai-skills | research, gemini, google, reports | research, gemini, google, reports, deep, run, autonomous, multi, step, agent, kick, off |
 | `ii-commons` | Deterministic search across arXiv, PubMed/PMC, and US policy corpora with daily freshness cutoffs. | safe | Intelligent-Internet/II-Commons-Skills | research, arxiv, pubmed, pmc, policy, retrieval, cli, codex | research, arxiv, pubmed, pmc, policy, retrieval, cli, codex, ii, commons, deterministic, search |
+| `multi-source-search` | Cross-validate web research and produce an offline-checkable evidence ledger with explicit source diversity, confidence, conflicts, and gaps. | safe | sandbaseai/sandbase-skills | research, fact-checking, citations, evidence, verification | research, fact-checking, citations, evidence, verification, multi, source, search, cross, validate, web, produce |
 | `news-sentiment-engine` | Multi-source RSS news aggregation with Claude-powered sentiment analysis and structured briefing output | critical | tellmefrankie/news-engine | news, rss, sentiment-analysis, briefing, research | news, rss, sentiment-analysis, briefing, research, sentiment, engine, multi, source, aggregation, claude, powered |
 | `papers-skill` | Skill for academic research workflows: search Semantic Scholar (200M+ papers), inspect citations, download arXiv PDFs, and extract PDF text. Bundles a self-c... | safe | xwmxcz/papers-skill | research, academic, papers, citations, arxiv, semantic-scholar, pdf | research, academic, papers, citations, arxiv, semantic-scholar, pdf, skill, search, semantic, scholar, 200m |
 | `people-data` | Research LinkedIn professional profiles and public business-contact data, including email/phone lookup, people search, and YouTube channel business-email dis... | safe | agentbody/skills | linkedin, youtube, people-search, business-contacts, research | linkedin, youtube, people-search, business-contacts, research, people, data, professional, profiles, public, business, contact |

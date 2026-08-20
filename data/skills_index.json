@@ -30534,6 +30534,39 @@
     }
   },
   {
+    "id": "multi-source-search",
+    "path": "skills/multi-source-search",
+    "category": "research",
+    "name": "multi-source-search",
+    "description": "Cross-validate web research and produce an offline-checkable evidence ledger with explicit source diversity, confidence, conflicts, and gaps.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-08-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sandbaseai/sandbase-skills",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/sandbaseai/sandbase-skills/blob/fc25b2ed4548b1bb91621661e82d07d4bbd285a1/LICENSE",
+    "tags": [
+      "research",
+      "fact-checking",
+      "citations",
+      "evidence",
+      "verification"
+    ]
+  },
+  {
     "id": "multiplayer",
     "path": "skills/game-development/multiplayer",
     "category": "game-development",
