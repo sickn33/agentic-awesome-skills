@@ -9,6 +9,17 @@
 - Preserved the contributor's CLI and web regression coverage and kept all
   generated catalog state outside the source PR.
 
+# YouTube transcript compatibility repair - 2026-08-20
+
+- Ported the canonical-source portion of community PR #1194 while leaving both
+  plugin mirrors to protected canonical synchronization.
+- Updated the bundled extractor and documented examples for both the legacy
+  class API and the current instance API in `youtube-transcript-api`, including
+  URL parsing and UTF-8 console output.
+- Added isolated regression coverage for common YouTube URL forms, invalid
+  URLs, legacy transcript retrieval, and modern raw-data retrieval without
+  making network requests.
+
 # Community skill import - 2026-08-14
 
 - Imported the Apache-2.0-licensed `using-lwc` skill from
