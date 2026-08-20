@@ -7,7 +7,7 @@ date_added: "2026-08-19"
 ---
 # D2 Diagrams
 
-Generate clear, maintainable, and production-quality D2 diagrams for any system, process, or visual model.
+Generate clear, maintainable, and production-quality D2 diagrams for any system, process, or visual model. Compatible with official D2 compiler **v0.6.8+**.
 
 ## When to Use
 
@@ -20,6 +20,13 @@ Use this skill when the user asks to:
 - Visualize DevOps pipelines (CI/CD), ETL data flows, or event streams.
 - Design UML class, package, or component structures.
 - Map out organizational hierarchies, state machines, or conceptual frameworks.
+
+## Primary Documentation Sources
+
+- **Official D2 Intro & Tour**: [https://d2lang.com/tour/intro](https://d2lang.com/tour/intro)
+- **Container Scoping Specification**: [https://d2lang.com/tour/containers/](https://d2lang.com/tour/containers/)
+- **D2 Language Cheat Sheet**: [https://d2lang.com/tour/cheat-sheet](https://d2lang.com/tour/cheat-sheet)
+- **Official D2 Compiler Releases**: [https://github.com/terrastruct/d2/releases](https://github.com/terrastruct/d2/releases) (Target: `v0.6.8+`)
 
 ## Universal Scope
 
@@ -57,64 +64,35 @@ Follow these six steps for every diagram:
 
 - Define shared classes for consistent styling (`classes: { ... }`).
 - Group components inside clear container blocks (`container_name: { ... }`).
-- Define inter-service connections with unambiguous descriptions.
+- Scope connections between containers using fully-qualified dotted identifiers (`container_a.node -> container_b.node`).
 - Use Markdown labels (`|md ... |`) or code snippets (`|code ... |`) when detailed notes are needed.
 
 ### 5. Refine and Format
 
-- Apply appropriate themes (`theme: 0` for default, `theme: 300` for terminal dark, or clean neutral palettes).
-- Maintain proper indentation (2 spaces per nesting level).
-- Avoid overlapping connection paths by grouping endpoints logically.
+- Set overall layout flow (`direction: right` or `direction: down`).
+- Apply semantic colors (blue for services, green for data, orange/yellow for queues, red for alerts).
+- Keep connection labels concise (2-4 words).
 
-### 6. Present and Explain
+### 6. Validate Output
 
-- Provide the complete, copy-paste ready `.d2` snippet in a code block.
-- Briefly summarize the architectural layout, key components, and data flow.
-- Offer actionable options to customize, adjust layout engines, or export (SVG, PNG, PDF).
+- Ensure braces `{}` and quotes `""` are balanced.
+- Ensure all multi-line block strings (`|md`, `|code`) have closing delimiters `|`.
+- Verify cross-container connections target existing node paths rather than declaring accidental top-level duplicates.
 
-## D2 Core Principles
+## Layout Selection Guide
 
-- **Declarative Representation**: Describe structural connections and relationships rather than hardcoded pixel positions.
-- **Visual Hierarchy**: Use nested containers to represent subsystems, clusters, or boundaries.
-- **Semantic Precision**: Match shapes and arrowheads to the underlying system component types.
-- **Maintainability**: Define reusable styles in `classes` blocks and leverage variables for common attributes.
+| Diagram Type | Recommended Engine | Direction | Notes |
+| :--- | :--- | :--- | :--- |
+| **Microservices / Architecture** | ELK / Dagre | `direction: right` | Group by tier or boundary |
+| **Process Flow / Flowchart** | Dagre | `direction: down` | Use `diamond` for decisions |
+| **Sequence Diagram** | Native (`shape: sequence_diagram`) | Top-to-bottom | Order dictates timeline |
+| **Database Schema (ERD)** | ELK / Dagre | `direction: right` | Use `shape: sql_table` |
+| **State Machine** | Dagre | `direction: down` | Use `circle`/`oval` for states |
+| **CI/CD Pipeline** | Dagre | `direction: right` | Use `shape: step` |
 
-## Syntax Primer
+## Styling Guidelines
 
-### Basic Nodes and Connections
-
-```d2
-user: User {
-  shape: person
-}
-
-gateway: API Gateway {
-  shape: hexagon
-}
-
-db: Main Database {
-  shape: cylinder
-}
-
-user -> gateway: HTTPS Request
-gateway -> db: Query / Read
-```
-
-### Containers and Nesting
-
-```d2
-cloud: Cloud Environment {
-  style.fill: "#f8f9fa"
-
-  vpc: Private VPC {
-    api: Backend API
-    worker: Background Worker
-    api -> worker: Task dispatch
-  }
-}
-```
-
-### Classes and Styling
+Use reusable classes under the `classes` block for clean, consistent styling:
 
 ```d2
 classes: {
@@ -131,19 +109,27 @@ auth_service.class: service
 user_service.class: service
 ```
 
+## Limitations
+
+- **Compiler Binary Dependency**: Generating raster images (PNG) or rendered vector files (SVG/PDF) requires the official D2 CLI compiler (`d2` v0.6.8+) installed in the execution environment.
+- **Layout Engine Licensing**: The default Dagre layout engine is open source and built-in; ELK is supported via plugin; TALA layout engine is proprietary and requires an official Terrastruct license.
+- **Declarative Text Output**: D2 outputs declarative specification code (`.d2`), not direct pixel manipulation or manual drag-and-drop coordinates.
+- **Sequence Diagram Lifelines**: D2 `shape: sequence_diagram` enforces linear actor lifelines and does not support arbitrary non-linear sub-container nestings inside active lifelines.
+- **Static Linter Scope**: The bundled Python linter performs static structural and lexical checks (block strings, quote balancing, brace nesting); final visual rendering is governed by the D2 compiler engine.
+
 ## Reference Files
 
 Consult bundled reference documents for deep implementation patterns:
 
-- `references/syntax-guide.md`: Full syntax reference for shapes, arrows, tables, and variables.
+- `references/syntax-guide.md`: Full syntax reference for shapes, arrows, tables, container scoping, and variables.
 - `references/diagram-types.md`: Templates for microservices, sequence, ERD, and pipelines.
 - `references/styling-guide.md`: Theme catalogs, custom palettes, and visual hierarchy.
 - `references/best-practices.md`: Layout tuning, scalability, and modularization patterns.
-- `references/examples.md`: Complete production-ready D2 templates.
+- `references/examples.md`: Complete production-ready D2 templates tested against D2 v0.6.8+.
 
 ## Gotchas
 
-- **Nesting References**: To connect nested nodes across containers, use dotted paths (e.g., `vpc.api -> db_cluster.primary`).
-- **Reserved Words**: If an identifier clashes with keywords, wrap the key in quotes or use custom labels (e.g., `style: "My Style"` or `"class": Custom Class`).
-- **Sequence Diagram Constraints**: Inside `shape: sequence_diagram`, connection order dictates the top-to-bottom timeline. Do not nest arbitrary sub-containers inside sequence lifelines.
+- **Container Scoping**: Always use dotted qualified identifiers (e.g., `vpc.public_subnet.alb -> vpc.private_subnet.app`) when connecting nodes across containers. Writing `alb -> app` inside an outer block creates unintended duplicate nodes.
+- **Reserved Words**: If an identifier clashes with keywords, wrap the key in quotes (e.g., `"class": Custom Class` or `"style": { ... }`).
+- **Sequence Diagram Constraints**: Inside `shape: sequence_diagram`, connection order dictates the top-to-bottom timeline.
 - **Layout Direction**: Control flow direction with `direction: right` or `direction: down` at top-level or within containers.

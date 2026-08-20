@@ -1,6 +1,6 @@
 # D2 Syntax Reference Guide
 
-A comprehensive reference for D2 syntax elements, shapes, connections, containers, and data formats.
+A comprehensive reference for D2 syntax elements, shapes, connections, containers, scoping rules, and data formats (tested against D2 v0.6.8+).
 
 ## 1. Shapes and Objects
 
@@ -68,11 +68,14 @@ server -> backup: Async Sync {
 }
 ```
 
-## 3. Containers and Hierarchies
+## 3. Containers and Scoping Rules
 
 Containers group related elements inside clear visual boundaries.
 
-### Nested Containers
+### Nested Containers and Identifier Scoping
+
+> [!IMPORTANT]
+> **Container Scoping Rule:** In D2, when connecting nodes in different sibling sub-containers, you must use qualified identifiers (e.g. `public_subnet.alb -> private_subnet.app_1`). Unqualified identifiers (`alb -> app_1`) in an outer block will declare new duplicate nodes at that outer level rather than referencing existing nodes inside sub-containers.
 
 ```d2
 aws: Amazon Web Services {
@@ -91,19 +94,15 @@ aws: Amazon Web Services {
       redis: Cache Cluster { shape: cylinder }
     }
 
-    alb -> app_1: Route
-    alb -> app_2: Route
-    app_1 -> redis: Read/Write
+    # Connect across sibling subnets within the vpc container using qualified identifiers
+    public_subnet.alb -> private_subnet.app_1: Route
+    public_subnet.alb -> private_subnet.app_2: Route
+    private_subnet.app_1 -> private_subnet.redis: Read/Write
   }
 }
-```
 
-### Cross-Container Connections
-
-Connect elements across boundaries using dotted paths:
-
-```d2
-client: Client Browser
+# Connect from external root context into nested container targets
+client: Client Device
 client -> aws.vpc.public_subnet.alb: Port 443
 ```
 
@@ -111,15 +110,15 @@ client -> aws.vpc.public_subnet.alb: Port 443
 
 ### Sequence Diagrams
 
-Declare `shape: sequence_diagram` on a container to turn children into sequence lifelines.
+Use `shape: sequence_diagram` on a container to turn child connections into a chronological sequence timeline.
 
 ```d2
 checkout_flow: {
   shape: sequence_diagram
 
   buyer: Customer
-  web: Web Store
-  pay: Payment Gateway
+  web: Web Storefront
+  pay: Payment Processor
   bank: Card Issuer
 
   buyer -> web: 1. Click Checkout
@@ -131,15 +130,16 @@ checkout_flow: {
 }
 ```
 
-### SQL Tables / ERDs
+### SQL Tables (ERD)
 
-Declare `shape: sql_table` to model relational schemas with typed columns and constraints.
+Use `shape: sql_table` on a container or node to declare structured schemas with typed fields and constraints.
 
 ```d2
 users: {
   shape: sql_table
   id: int { constraint: primary_key }
   email: varchar(255) { constraint: unique }
+  password_hash: varchar(255)
   created_at: timestamp
 }
 
@@ -154,32 +154,19 @@ orders: {
 orders.user_id -> users.id: references
 ```
 
-### UML Classes
+## 5. Rich Text and Block Strings
 
-Declare `shape: class` for object-oriented design and domain models.
-
-```d2
-OrderProcessor: {
-  shape: class
-  +orderId: UUID
-  -status: OrderStatus
-  +processOrder(): Boolean
-  -validateInventory(): Boolean
-}
-```
-
-## 5. Rich Text and Code Blocks
+D2 supports Markdown and formatted code blocks using pipe delimiters (`|md ... |` and `|code ... |`). Always ensure blocks are properly terminated with closing `|`.
 
 ### Markdown Labels
 
 ```d2
-summary_card: {
+readme_node: {
   shape: document
-  description: |md
-    # Architecture Highlights
-    - High availability across 3 AZs
-    - Low-latency cache with Redis
-    - Asynchronous message worker pool
+  content: |md
+    # Architecture Overview
+    - **Service Mesh**: Istio
+    - **Observability**: Prometheus + Grafana
   |
 }
 ```
