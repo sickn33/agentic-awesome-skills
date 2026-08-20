@@ -1,3 +1,13 @@
+# Multi-source evidence integrity repair - 2026-08-20
+
+- Ported the executable follow-up from community PR #1204 onto the protected
+  maintainer lane, preserving contributor credit while keeping fork code out of
+  the direct source-merge path.
+- Made every claim classify cited evidence as supporting or contradicting, and
+  made conflict state fail closed against that classification.
+- Canonicalized URL identity for fragment, host-case, and default-port variants
+  before duplicate-source checks, with focused offline regression coverage.
+
 # Multi-source research ledger import - 2026-08-20
 
 - Ported community PR #1200 from the Apache-2.0 SandBase source at immutable
