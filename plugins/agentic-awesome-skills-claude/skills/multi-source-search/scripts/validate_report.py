@@ -5,6 +5,7 @@ import json
 import sys
 from datetime import date
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
 
 SOURCE_TYPES = {"primary", "secondary", "aggregator"}
@@ -16,13 +17,31 @@ def nonempty(value):
     return isinstance(value, str) and bool(value.strip())
 
 
-def valid_url(value):
-    if not nonempty(value) or not value.startswith(("https://", "http://")):
-        return False
-    authority = value.split("://", 1)[1].split("/", 1)[0]
-    return bool(authority) and "." in authority and not any(
-        character.isspace() for character in authority
+def canonical_url(value):
+    """Return a conservative identity for an HTTP(S) URL, or None if invalid."""
+    if not nonempty(value):
+        return None
+    try:
+        parsed = urlsplit(value)
+        hostname = parsed.hostname
+        port = parsed.port
+    except ValueError:
+        return None
+    if parsed.scheme.lower() not in {"http", "https"} or not hostname or "." not in hostname:
+        return None
+    if any(character.isspace() for character in parsed.netloc):
+        return None
+    if parsed.username is not None or parsed.password is not None:
+        return None
+    normalized_host = hostname.lower()
+    if ":" in normalized_host:
+        normalized_host = f"[{normalized_host}]"
+    default_port = (parsed.scheme.lower() == "http" and port == 80) or (
+        parsed.scheme.lower() == "https" and port == 443
     )
+    netloc = normalized_host if port is None or default_port else f"{normalized_host}:{port}"
+    path = parsed.path or "/"
+    return urlunsplit((parsed.scheme.lower(), netloc, path, parsed.query, ""))
 
 
 def validate(report):
@@ -70,12 +89,13 @@ def validate(report):
             errors.append(f"duplicate source id: {source_id}")
         else:
             source_ids.add(source_id)
-        if not valid_url(url):
+        normalized_url = canonical_url(url)
+        if normalized_url is None:
             errors.append(f"{label}.url must be an HTTP(S) URL")
-        elif url in source_urls:
-            errors.append(f"duplicate source URL: {url}")
+        elif normalized_url in source_urls:
+            errors.append(f"duplicate source URL after normalization: {url}")
         else:
-            source_urls.add(url)
+            source_urls.add(normalized_url)
         if not nonempty(source.get("publisher")):
             errors.append(f"{label}.publisher must be a non-empty string")
         if source.get("source_type") not in SOURCE_TYPES:
@@ -114,6 +134,30 @@ def validate(report):
             refs = []
         if len(set(refs)) != len(refs):
             errors.append(f"{label}.source_ids must not contain duplicates")
+
+        supporting_refs = claim.get("supporting_source_ids")
+        if not isinstance(supporting_refs, list) or not supporting_refs or not all(
+            nonempty(item) for item in supporting_refs
+        ):
+            errors.append(f"{label}.supporting_source_ids must be a non-empty string array")
+            supporting_refs = []
+        contradicting_refs = claim.get("contradicting_source_ids")
+        if not isinstance(contradicting_refs, list) or not all(
+            nonempty(item) for item in contradicting_refs
+        ):
+            errors.append(f"{label}.contradicting_source_ids must be a string array")
+            contradicting_refs = []
+        if len(set(supporting_refs)) != len(supporting_refs):
+            errors.append(f"{label}.supporting_source_ids must not contain duplicates")
+        if len(set(contradicting_refs)) != len(contradicting_refs):
+            errors.append(f"{label}.contradicting_source_ids must not contain duplicates")
+        overlap = set(supporting_refs) & set(contradicting_refs)
+        if overlap:
+            errors.append(f"{label} cannot classify the same source as supporting and contradicting")
+        if set(refs) != set(supporting_refs) | set(contradicting_refs):
+            errors.append(
+                f"{label}.source_ids must equal the union of supporting_source_ids and contradicting_source_ids"
+            )
         for source_id in refs:
             if source_id not in source_ids:
                 errors.append(f"{label} references unknown source id: {source_id}")
@@ -133,8 +177,13 @@ def validate(report):
                 )
         if not isinstance(claim.get("conflict"), bool):
             errors.append(f"{label}.conflict must be true or false")
-        elif claim.get("conflict") and confidence == "high":
-            errors.append(f"{label} cannot be high confidence while conflict is true")
+        elif claim.get("conflict"):
+            if confidence == "high":
+                errors.append(f"{label} cannot be high confidence while conflict is true")
+            if not contradicting_refs:
+                errors.append(f"{label} conflict true requires a contradicting source")
+        elif contradicting_refs:
+            errors.append(f"{label} conflict false cannot include contradicting sources")
 
     for source_id in sorted(source_ids - used_sources):
         errors.append(f"source is not referenced by any claim: {source_id}")
