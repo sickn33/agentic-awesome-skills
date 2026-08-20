@@ -2,7 +2,7 @@
 name: mandateguard
 description: "Deterministic, auditable payment policy for autonomous AI agents. Enforces budgets, allowlists, denylists, rate limits, and signed mandates before any money-moving tool executes - no LLM in the decision path."
 category: security
-risk: safe
+risk: critical
 source: community
 source_repo: ezequiellich44-cmd/MandateGuard
 source_type: community
@@ -18,9 +18,9 @@ license_source: "https://github.com/ezequiellich44-cmd/MandateGuard/blob/main/LI
 
 ## Overview
 
-MandateGuard is a pre-action enforcement layer that sits between an AI agent
-and its tools or wallet. Every tool call that moves money is evaluated by a
-pure, deterministic engine - budgets, allowlists, denylists, rate limits, and
+MandateGuard is a pre-action enforcement layer that wraps an AI agent's
+payment tools. Every tool call that moves money is evaluated by a pure,
+deterministic engine - budgets, allowlists, denylists, rate limits, and
 signed mandates - before anything executes. No LLM is ever in the decision
 path, so every verdict is reproducible and every ledger entry is verifiable.
 
@@ -34,7 +34,7 @@ Coinbase x402, and ERC-8004.
 - Use when an agent has access to a wallet, payment tool, or any tool that
   moves value, and you want to constrain it.
 - Use when you want deterministic, replayable authorization decisions
-  (same inputs, same verdict) instead of LLM-judged approval.
+  (same inputs + same policy state = same verdict) instead of LLM-judged approval.
 - Use when you need an audit trail for every money-moving tool call.
 - Use when you need signed, short-lived, nonce-bound mandates so an agent
   cannot widen its own scope.
@@ -73,16 +73,23 @@ print(decision.status)   # DecisionStatus.APPROVED
 ```
 
 Denied calls are blocked with structured reasons. State (spend/rate) commits
-only on approval, so replays stay deterministic.
+only on approval, so replays of the same intent under the same policy state
+are deterministic.
 
-### Step 3: Mount as an MCP Guardrail
+### Step 3: Mount as an MCP Guardrail (Wraps Payment Tools)
+
+MandateGuard wraps/proxies the agent's payment tools. The agent calls the
+guarded `pay` tool, which evaluates policy before any money-moving tool executes.
 
 ```bash
-python -m pip install -e ".[mcp]"
-mandateguard-mcp            # stdio server, ready for Claude/Cursor/harness
+# Install the package from the published source
+python -m pip install -e "git+https://github.com/ezequiellich44-cmd/MandateGuard.git#egg=mandateguard[mcp]"
+
+# Run the MCP server (stdio)
+mandateguard-mcp
 ```
 
-For Claude Code:
+For Claude Code, add the MCP server:
 
 ```bash
 claude mcp add mandateguard -- mandateguard-mcp
@@ -90,7 +97,7 @@ claude mcp add mandateguard -- mandateguard-mcp
 
 MandateGuard is published on the official MCP Registry
 (`io.github.ezequiellich44-cmd/mandateguard`), so MCP-aware clients can
-install it without any Python step.
+install it directly without any Python step.
 
 ## Examples
 
@@ -103,16 +110,25 @@ denied = engine.authorize(
 assert denied.status == DecisionStatus.DENIED  # denylist hit
 ```
 
-### Example 2: Issue a Signed Mandate
+### Example 2: Issue a Signed Mandate (Short-Lived)
 
 ```python
 from mandateguard import Mandate, MandateSigner, verify_mandate
+from datetime import datetime, timedelta, timezone
 
 issuer = MandateSigner()
-m = Mandate(actor="wallet-agent", max_amount=500, currency="usd",
-            tools=("pay",), destinations=("0xGOOD",),
-            not_before="2026-01-01T00:00:00+00:00",
-            not_after="2099-01-01T00:00:00+00:00", nonce="abc", issuer="you")
+now = datetime.now(timezone.utc)
+m = Mandate(
+    actor="wallet-agent",
+    max_amount=500,
+    currency="usd",
+    tools=("pay",),
+    destinations=("0xGOOD",),
+    not_before=now,
+    not_after=now + timedelta(hours=1),  # short-lived: 1 hour
+    nonce="abc",
+    issuer="you"
+)
 sig = issuer.sign(m)
 verify_mandate(issuer.public_key_bytes, m, sig)   # True
 ```
@@ -137,6 +153,9 @@ verify_mandate(issuer.public_key_bytes, m, sig)   # True
   tool-level destination validation and human review for high-value calls.
 - The core rules use the stdlib only; `cryptography` is required only for
   signed mandate issuance and verification.
+- Replay determinism holds only when the same intent is evaluated against the
+  same policy state (budgets, rate windows, ledger). If policy state changes
+  (budgets consumed, rate windows shifted), the same intent may yield a different decision.
 
 ## Security & Safety Notes
 
@@ -153,9 +172,9 @@ verify_mandate(issuer.public_key_bytes, m, sig)   # True
 - **Problem:** Agent widens its own budget by editing the policy at runtime.
   **Solution:** Gate policy mutation behind operator-only MCP tools and use
   signed, nonce-bound mandates so the agent cannot escalate its own scope.
-- **Problem:** Replay of a failed call produces a different decision.
+- **Problem:** Replay of a call produces a different decision after policy state changes.
   **Solution:** State commits only on approval; keep `authorize` calls
-  idempotent by policy so replays are deterministic.
+  idempotent by policy so replays are deterministic under the same state.
 - **Problem:** Believing the agent cannot misdescribe intent.
   **Solution:** Treat MandateGuard as an enforcement backstop, not a
   substitute for tool-level validation and human approval on high-value calls.
