@@ -8,11 +8,13 @@ Identify:
 
 - repository and target branch;
 - owner-requested cleanup boundary;
-- current `AGENTS.md` rules;
+- candidate paths and every applicable `AGENTS.md` from the repository root through each path's parent;
 - compact vs scaled canonical-state mode;
 - whether deletion is explicitly authorized or only recommendations are allowed.
 
 Do not expand into unrelated feature work.
+
+Before inspecting, writing, moving, or deleting a candidate path, resolve its full `AGENTS.md` chain. Apply deeper rules only to their governed subtree, and do not let a repository-level cleanup instruction override a more specific local constraint.
 
 ## 2. Inventory candidate state documents
 

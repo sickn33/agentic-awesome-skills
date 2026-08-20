@@ -34,12 +34,14 @@ Use the smallest structure that remains easy to load and reason about.
 
 ## Current Tasks
 ### [Task ID or name]
-- Status: PROPOSED | ACTIVE | BLOCKED | DEFERRED
+- Status: PROPOSED | ACTIVE | BLOCKED | DEFERRED | DONE | CANCELLED
 - Goal: ...
 - Task DoD: ...
 - Parent: ...
 - Evidence: ... [only when useful]
 - Confidence: CONFIRMED | INFERRED | UNKNOWN [only when useful]
+
+Keep terminal task records long enough to preserve the verified lifecycle transition. During consolidation, compress old `DONE` or `CANCELLED` tasks into decision-relevant milestone history when their detailed record no longer affects future work.
 
 ## Active Research / Experiments
 ### [Hypothesis or candidate ID]
