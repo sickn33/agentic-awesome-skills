@@ -1,3 +1,15 @@
+# Multi-source research ledger import - 2026-08-20
+
+- Ported community PR #1200 from the Apache-2.0 SandBase source at immutable
+  upstream commit `fc25b2ed4548b1bb91621661e82d07d4bbd285a1` because the fork could
+  not merge executable Python under the repository's approval policy.
+- Preserved the bounded, provider-optional research workflow and offline
+  evidence ledger while pinning its licence reference and distinguishing it
+  from post-run evidence auditing.
+- Adapted the upstream validator tests into the repository suite and added an
+  ISO-date check for time-sensitive search metadata. Generated registries and
+  plugin mirrors remain owned by protected canonical synchronization.
+
 # Stack artifact cross-audit - 2026-08-20
 
 - Ported the maintainer-only portions of community PRs #1187 and #1188 into one
