@@ -3,6 +3,7 @@
   "aliases": {
     "20-andruia-intelligence": "20-andruia-niche-intelligence",
     "accessibility-compliance-audit": "accessibility-compliance-accessibility-audit",
+    "agent-harness-injection": "agent-harness-fault-injection",
     "agent-orchestration-improve": "agent-orchestration-improve-agent",
     "agent-orchestration-optimize": "agent-orchestration-multi-agent-optimize",
     "alex": "agent-squad/alex",
@@ -192,6 +193,7 @@
     "polis-protocol-agents": "polis-protocol-a-self-optimizing-city-of-agents",
     "python-development-scaffold": "python-development-python-scaffold",
     "recursive-context-budgeting": "recursive-context-pruning-token-budgeting",
+    "review-multi-orchestration": "review-multi-agent-orchestration",
     "sankhya-dashboard-pratices": "sankhya-dashboard-html-jsp-custom-best-pratices",
     "security-compliance-check": "security-compliance-compliance-check",
     "security-scanning-dependencies": "security-scanning-security-dependencies",
