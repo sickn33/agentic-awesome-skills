@@ -1,3 +1,14 @@
+# Stack artifact cross-audit - 2026-08-20
+
+- Ported the maintainer-only portions of community PRs #1187 and #1188 into one
+  coherent review path: `aas stack audit` for local CLI checks and paired
+  stack/plan comparison in the browser-local Workbench.
+- Kept both surfaces read-only. They compare manifest digests, catalog
+  identities, target bindings, and exact selected skill sets without applying
+  a stack or reading project files in the browser.
+- Preserved the contributor's CLI and web regression coverage and kept all
+  generated catalog state outside the source PR.
+
 # Community skill import - 2026-08-14
 
 - Imported the Apache-2.0-licensed `using-lwc` skill from
