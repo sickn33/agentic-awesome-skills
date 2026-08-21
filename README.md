@@ -494,6 +494,7 @@ Key source families include:
 
 ### Community Contributors
 
+- **[Ghost011118/project-state-governor](https://github.com/Ghost011118/project-state-governor)**: Source for the `project-state-governor` skill - evidence-backed canonical project state across sessions, branches, reviews, and research cycles (Apache-2.0).
 - **[sandbaseai/sandbase-skills](https://github.com/sandbaseai/sandbase-skills)**: Source for the `multi-source-search` skill - cross-validated research with explicit source diversity, confidence, conflicts, gaps, and an offline-checkable evidence ledger (Apache-2.0).
 - **[alexprivalov/boost-asio-skill](https://github.com/alexprivalov/boost-asio-skill)**: Source for the `boost-asio-pro` skill - version-aware async C++ networking with Boost.Asio and standalone Asio across coroutine, callback, and classic `io_service` styles (MIT).
 - **[xiehuan123/dsh-deepread](https://github.com/xiehuan123/dsh-deepread)**: Source for the `dsh-deepread` skill - evidence-first analysis of articles, books, PDFs, and document sets with claim tracing, knowledge maps, and Feynman checks (MIT).

@@ -61,18 +61,23 @@ Do not use this skill as a substitute for implementation, domain research, produ
 
 ## 1. Authority hierarchy
 
-When sources conflict, apply this default order:
+Before ranking conflicting sources, enforce a hard boundary: no owner or product
+decision may override applicable law, an actual authorization boundary,
+non-waivable security or safety constraints, or objective facts. Verify that a
+claimed constraint is real and applicable; convention, preference, and
+speculation do not become non-overridable merely by being labelled a risk.
+
+Within the owner's legitimate decision authority, apply this default order:
 
 1. current explicit owner decision;
 2. current approved requirements and acceptance criteria;
-3. formal contracts, schemas, APIs, protocols, authorization rules, and risk constraints;
-4. proven domain invariants and objective facts;
-5. tests traceable to authoritative requirements;
-6. current verified implementation behavior;
-7. current canonical project-state records;
-8. historical documentation;
-9. historical review reports;
-10. historical AI conversations, summaries, suggestions, or speculation.
+3. formal product and technical contracts, schemas, APIs, protocols, and risk controls;
+4. tests traceable to authoritative requirements;
+5. current verified implementation behavior;
+6. current canonical project-state records;
+7. historical documentation;
+8. historical review reports;
+9. historical AI conversations, summaries, suggestions, or speculation.
 
 Lower-authority evidence must not silently override higher-authority evidence.
 

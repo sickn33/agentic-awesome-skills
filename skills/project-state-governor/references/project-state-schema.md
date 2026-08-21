@@ -18,11 +18,16 @@ Use the smallest structure that remains easy to load and reason about.
 
 ## Active Workstreams
 ### [Workstream ID or name]
-- Status: PLANNED | ACTIVE | BLOCKED | PAUSED
+- Status: PLANNED | ACTIVE | BLOCKED | PAUSED | COMPLETED | CANCELLED
 - Goal: ...
 - DoD / exit condition: ...
 - Current state: ...
 - Next: ...
+
+Keep terminal workstream records long enough to preserve verified `COMPLETED`
+or `CANCELLED` transitions. During consolidation, compress old terminal
+workstreams into decision-relevant milestone or project history only when their
+detailed record no longer affects future work.
 
 ## Milestones
 ### [Milestone ID or name]
