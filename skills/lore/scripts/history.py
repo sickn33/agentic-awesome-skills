@@ -530,38 +530,112 @@ def main():
         chain = ([entry] if not follow_superseded
                  else walk_supersede_chain(entries_by_id, entry["id"]))
 
-        # Render the requested entry's history first (unchanged behavior),
-        # then optionally prepend a chain summary.
-        since = since_override or extract_added_date(entry.get("tags", {}))
-        if since is None:
-            print("warning: entry has no #added tag; using full history",
-                  file=sys.stderr)
-            since = "1970-01-01"
-        since = normalize_since(since)
-        code_file = resolve_code_file(entry)
-        try:
-            commits = run_git_log(project_root, since, code_file)
-        except RuntimeError as exc:
-            die(ERR_GIT_FAIL, str(exc))
-        _enrich_commits_with_body_and_refs(project_root, commits)
-        since_source = "user_arg" if since_override else "entry_added"
-        meta = _build_meta_entry(entry, code_file, since, since_source)
-        if follow_superseded:
-            meta["chain"] = [
+        if not follow_superseded:
+            since = since_override or extract_added_date(entry.get("tags", {}))
+            if since is None:
+                print("warning: entry has no #added tag; using full history",
+                      file=sys.stderr)
+                since = "1970-01-01"
+            since = normalize_since(since)
+            code_file = resolve_code_file(entry)
+            try:
+                commits = run_git_log(project_root, since, code_file)
+            except RuntimeError as exc:
+                die(ERR_GIT_FAIL, str(exc))
+            _enrich_commits_with_body_and_refs(project_root, commits)
+            since_source = "user_arg" if since_override else "entry_added"
+            meta = _build_meta_entry(entry, code_file, since, since_source)
+            meta["chain"] = None
+            meta["_chain_entries"] = None
+            out = render_json(meta, commits) if json_mode else render_markdown(meta, commits)
+            print(out)
+            return
+
+        # --follow-superseded: iterate over the entire chain and collect
+        # per-entry logs. Each successor may point at a different file/date.
+        per_entry = []
+        for idx, e in enumerate(chain):
+            if idx == 0 and since_override is not None:
+                e_since_raw = since_override
+                e_since_source = "user_arg"
+            else:
+                e_since_raw = extract_added_date(e.get("tags", {}))
+                if e_since_raw is None:
+                    print(f"warning: entry {e['id']} has no #added tag; using full history",
+                          file=sys.stderr)
+                    e_since_raw = "1970-01-01"
+                e_since_source = "entry_added"
+            e_since = normalize_since(e_since_raw)
+            e_code_file = resolve_code_file(e)
+            try:
+                e_commits = run_git_log(project_root, e_since, e_code_file)
+            except RuntimeError as exc:
+                die(ERR_GIT_FAIL, str(exc))
+            _enrich_commits_with_body_and_refs(project_root, e_commits)
+            per_entry.append((e, e_since, e_code_file, e_since_source, e_commits))
+
+        if json_mode:
+            chain_meta = [
                 {
                     "entry_id": e["id"],
                     "lore_file": e["file"],
-                    "code_file": resolve_code_file(e),
-                    "since": extract_added_date(e.get("tags", {})) or "1970-01-01",
+                    "code_file": cf,
+                    "since": s,
                 }
-                for e in chain
+                for (e, s, cf, _, _) in per_entry
             ]
-            meta["_chain_entries"] = chain
-        else:
-            meta["chain"] = None
+            results = [
+                {
+                    "entry_id": e["id"],
+                    "lore_file": e["file"],
+                    "code_file": cf,
+                    "since": s,
+                    "since_source": ss,
+                    "commits": commits,
+                }
+                for (e, s, cf, ss, commits) in per_entry
+            ]
+            # Top-level keeps first entry's fields for backward compat
+            first_e, first_since, first_cf, first_ss, first_commits = per_entry[0]
+            payload = {
+                "entry_id": first_e["id"],
+                "lore_file": first_e["file"],
+                "code_file": first_cf,
+                "since": first_since,
+                "since_source": first_ss,
+                "chain": chain_meta,
+                "commits": first_commits,
+                "results": results,
+            }
+            # Preserve _chain_entries style for any downstream that expects it
+            payload["_chain_entries"] = None
+            print(_json.dumps(payload, indent=2, ensure_ascii=False))
+            return
+
+        # Markdown: Chain section then per-entry blocks
+        out_lines = []
+        out_lines.append(f"# history: [{chain[0]['id']}] --follow-superseded")
+        out_lines.append("")
+        out_lines.append("## Chain")
+        for idx, (e, _, _, _, _) in enumerate(per_entry, start=1):
+            next_link = (
+                f"\n   -> superseded-by -> {e.get('replaced_by')}"
+                if e.get("replaced_by") else "\n   -> no successor"
+            )
+            out_lines.append(
+                f"{idx}. [{e['id']}] ({e['file']}) - {e['text']}{next_link}"
+            )
+        out_lines.append("")
+        for (e, e_since, e_code_file, e_since_source, e_commits) in per_entry:
+            meta = _build_meta_entry(e, e_code_file, e_since, e_since_source)
             meta["_chain_entries"] = None
-        out = render_json(meta, commits) if json_mode else render_markdown(meta, commits)
-        print(out)
+            # Render each entry's block without re-adding the Chain header
+            block = render_markdown(meta, e_commits)
+            # render_markdown starts with "# history: [id]" — keep it, but
+            # the top already has the --follow-superseded title.
+            out_lines.append(block.rstrip())
+            out_lines.append("")
+        print("\n".join(out_lines).rstrip() + "\n")
         return
 
     if parsed["form"] == "file":
