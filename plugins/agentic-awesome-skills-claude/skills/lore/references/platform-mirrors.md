@@ -26,50 +26,22 @@ When the skill needs to know which platform files to generate (during `init`, `m
 ```
 resolve_mirror_targets(config, repo_root):
 
-    # 1. If config has mirror_targets set, auto-detect is skipped, but validation is not
+    # 1. If config has mirror_targets set, use it verbatim (auto-detect skipped)
     if "mirror_targets" in config:
-        return validate_mirror_targets(config["mirror_targets"], repo_root)
+        return list(config["mirror_targets"])
 
     # 2. Scan repo root for existing platform files (see Scan candidates)
     detected = scan_existing_platform_files(repo_root)
     if detected:
-        return validate_mirror_targets(detected, repo_root)
+        return detected
 
     # 3. Nothing detected → ask user via multi-select, persist to config, return
     selected = ask_user_multi_select(AGENT_CHOICES)
     write_mirror_targets_to_config(selected)
-    return validate_mirror_targets(selected, repo_root)
+    return selected
 ```
 
 This is the core resolution used by all three commands. `init` extends it with classification and per-file takeover steps — see "Init-time behavior (full procedure)" below.
-
-### Mandatory target validation
-
-Validation is fail-closed and atomic. Validate the complete target list **before reading,
-creating, classifying, archiving, or writing any target**. If one entry fails, report it and
-abort the mirror operation without touching any target.
-
-For each target:
-
-1. Require a non-empty string containing no NUL byte. Reject absolute paths on every
-   platform (POSIX `/...`, Windows drive paths such as `C:\\...`, and UNC paths).
-2. Parse path components without interpreting the value as a shell pattern. Reject any `..`
-   component; normalize `.` and repeated separators only after that rejection.
-3. Require the normalized relative path to match this allowlist exactly:
-   `CLAUDE.md`, `.claude/CLAUDE.md`, `.cursorrules`, `.clinerules`, `AGENTS.md`,
-   `CONVENTIONS.md`, `.windsurfrules`, `.github/copilot-instructions.md`, or
-   `.continue/rules/lore.md`; or match `.cursor/rules/<name>.mdc`, where `<name>` is one
-   non-empty filename segment (no nested directory).
-4. Resolve `repo_root` to its canonical path. Walk every existing component of the target
-   with symlinks resolved and require it to remain inside that canonical root. For a missing
-   target, resolve its nearest existing parent the same way. Reject a target whose file or
-   parent symlink escapes the root. Perform this check again immediately before every read or
-   write to reduce check/use races.
-
-Examples: accept `CLAUDE.md`, `.github/copilot-instructions.md`, and
-`.cursor/rules/lore.mdc`. Reject `/tmp/CLAUDE.md`, `../CLAUDE.md`,
-`.cursor/rules/nested/lore.mdc`, `notes.md`, and an allowlisted-looking path whose existing
-parent or file is a symlink outside the project.
 
 ### Scan candidates
 
@@ -121,6 +93,7 @@ Both paths use the same function. Once `init` has run, `mirror_targets` is set, 
 Every mirror file is split into two sections by a `---` separator. The top section is Skill-managed and rewritten on mirror regeneration. The bottom section is user-editable and preserved verbatim.
 
 ```markdown
+<!-- LORE:START -->
 ## Lore (auto-managed)
 
 # .lore SUMMARY (synced 2026-07-09)
@@ -131,6 +104,7 @@ Every mirror file is split into two sections by a `---` separator. The top secti
 ## Global
 - Monorepo with pnpm workspaces + Turborepo — [_global/ARCHITECTURE.md#ARCH-2026-01-15-d7a3]
 ...
+<!-- LORE:END -->
 
 ---
 
@@ -141,7 +115,7 @@ Every mirror file is split into two sections by a `---` separator. The top secti
 - Prefer English
 ```
 
-The `---` separator is a literal Markdown horizontal rule. Both sections are plain Markdown so any agent or editor can render them normally.
+The `<!-- LORE:START -->` and `<!-- LORE:END -->` HTML comments are the canonical boundary markers for new mirrors (see rule 5a). The `---` separator is a literal Markdown horizontal rule. Both sections are plain Markdown so any agent or editor can render them normally.
 
 ### Section detection rules
 
@@ -151,6 +125,30 @@ When syncing a mirror file:
 2. If the file contains a `## My notes` header, the My notes section starts at that header and goes to EOF.
 3. If neither marker is present, the entire file is treated as the Lore section (i.e. no My notes section). Subsequent sync appends a separator + empty My notes section.
 4. If the file is missing the `## Lore` header but has `## My notes`, the entire file is treated as user notes. Skill does not write to it. User is asked to confirm before sync restructures the file.
+5. **Section boundary markers (canonical form is HTML comments)**:
+
+   a) **New mirrors (post-v1 skill release)**: the canonical boundary is
+      `<!-- LORE:START -->` and `<!-- LORE:END -->` HTML comments. The
+      skill emits these on every regeneration. The `## Lore (auto-managed)`
+      header inside the start marker and the `---` separator after the
+      end marker are still required for human readers and as secondary
+      signals, but the HTML comments are the **authoritative** boundary
+      the skill uses for detection. New mirrors **must** include the HTML
+      comment markers.
+
+   b) **Existing pre-v1 mirrors (legacy form)**: the `---` line and
+      `## My notes (free edit)` header form continues to be detected
+      and preserved by rules 1–4. The skill does **not** restructure
+      an existing mirror that lacks HTML comments. The first
+      `lore mirror` run on such a file asks the user once:
+      "Add HTML markers (recommended)" or "Keep legacy form". The user
+      can upgrade a legacy mirror later by running `lore mirror` and
+      accepting the prompt, or by manually adding the HTML comments.
+
+   c) **Detection priority when both forms are present**: HTML comments
+      win. The skill uses them as the authoritative boundary; the `---`
+      and `## My notes` are not consulted for boundary detection but are
+      still respected for content placement.
 
 ## Sync-time behavior
 
@@ -162,15 +160,12 @@ If a project needs the old behavior (mirror updates on every `sync`), set `sync_
 
 This is the actual write step for platform mirrors.
 
-1. Validate the complete configured target list using "Mandatory target validation" above.
-   Abort without reading or writing any target if validation fails.
-2. Read the current state of `.lore/SUMMARY.md` and the scope-tagged index.
-3. For each validated mirror target, recheck canonical containment immediately before access,
-   then read the existing file and detect the section boundary.
-4. Compute the new Lore section content.
-5. **Content-based dedup**: if the new Lore section content is byte-identical to the existing one, skip writing. Report "No changes needed: `<file>`".
-6. If different, replace the Lore section (full rewrite, no merge with previous content). Preserve the My notes section verbatim.
-7. Recheck canonical containment, then write the file back. Report "Mirror updated: `<file>`".
+1. Read the current state of `.lore/SUMMARY.md` and the scope-tagged index.
+2. For each configured mirror target, read the existing file and detect the section boundary.
+3. Compute the new Lore section content.
+4. **Content-based dedup**: if the new Lore section content is byte-identical to the existing one, skip writing. Report "No changes needed: `<file>`".
+5. If different, replace the Lore section (full rewrite, no merge with previous content). Preserve the My notes section verbatim.
+6. Write the file back. Report "Mirror updated: `<file>`".
 
 The content-based dedup step (4) is the key reason `mirror` can be run frequently without polluting `git log` — most invocations will be no-ops once the mirror is in sync.
 
@@ -196,7 +191,7 @@ The `init` command extends the resolution algorithm above with classification an
 
    Class (a) files are auto-included in `mirror_targets`.
 
-4. **Multi-select question.** "Which agents do you use in this project?" Default pre-selection: every agent corresponding to a class (a) file. Empty selection is allowed — but class (a) files still get included via Step 5.
+4. **Multi-select question.** "Which agents do you use in this project?" Default pre-selection: every agent corresponding to a class (a) file. Empty selection is allowed — but class (a) files still get included via Step 5. Unlike `mirror` / `compress` (which follow the resolution algorithm's silent return-on-detect), `init` always asks — this is how the user adds agents whose files don't exist yet.
 
 5. **Compute final `mirror_targets`** by combining three sources and deduplicating:
    - All class (a) files from Step 3 (always included, regardless of Step 4 selection).
@@ -208,7 +203,7 @@ The `init` command extends the resolution algorithm above with classification an
 6. **Write `.lore/.config.json`** with `mirror_targets` populated.
 
 7. **Generate initial mirror files** for each target:
-   - File absent → full template (`## Lore` + `---` + empty `## My notes`).
+   - File absent → full template (`<!-- LORE:START -->` + `## Lore` + content + `<!-- LORE:END -->` + `---` + empty `## My notes`).
    - File present with `## Lore` → refresh Lore section, preserve My notes verbatim.
    - File present and "take over" chosen → old content becomes My notes, new `## Lore` above.
    - File present and "preserve" chosen → no write.
@@ -216,9 +211,11 @@ The `init` command extends the resolution algorithm above with classification an
 For each generated mirror file, the section template is:
 
 ```
+<!-- LORE:START -->
 ## Lore (auto-managed)
 
 <initial or refreshed Lore content>
+<!-- LORE:END -->
 
 ---
 
@@ -229,16 +226,17 @@ For each generated mirror file, the section template is:
 
 ## What gets mirrored
 
-The mirror's Lore section is an **index** into `.lore/` — not a copy of its content. This keeps per-session token cost flat (~500 B regardless of project size) and aligns with how platform instruction files (`CLAUDE.md`, `.cursorrules`, etc.) are designed to be used: as small pointers that tell the agent where to find detail on demand.
+The mirror's Lore section is an **index** into `.lore/` — not a copy of its content. This keeps per-session token cost flat (~600 B worst case, regardless of project size) and aligns with how platform instruction files (`CLAUDE.md`, `.cursorrules`, etc.) are designed to be used: as small pointers that tell the agent where to find detail on demand.
 
 The agent generating the mirror walks `.lore/` and emits the structure below. Sections appear only when their content exists (adaptive rendering).
 
 ### Index template
 
 ```
+<!-- LORE:START -->
 ## Lore (auto-managed)
 
-Project memory. Read deeper on demand.
+Project memory at `.lore/`. Before project-specific questions, read `.lore/SUMMARY.md` as the digest, then open the referenced entries (`.lore/_global/`, `.lore/scopes/`) for the full text before answering or deciding; cite entry IDs (e.g. `_global/ARCHITECTURE.md#ARCH-2026-01-15-d7a3`) when using memory.
 
 **Structure**:
 - Digest: `.lore/SUMMARY.md` (top-level overview)
@@ -249,13 +247,14 @@ Project memory. Read deeper on demand.
   ...
 
 **Query**: `lore query <term>` or `lore query <scope>:<term>`
-**Update**: see the `lore` skill (init / sync / query / audit / compress / mirror)
+**Update**: see the `lore` skill (init / sync / query / audit / compress / mirror / history)
+<!-- LORE:END -->
 
 ---
 ## My notes (free edit)
 ```
 
-The `## Lore (auto-managed)` opener, `---` separator, and `## My notes (free edit)` closer are **always present** — only the `**Structure**:` body varies with adaptive rendering. Agent preserves the My notes section verbatim across regenerations.
+The `<!-- LORE:START -->` / `<!-- LORE:END -->` markers, `## Lore (auto-managed)` opener, `---` separator, and `## My notes (free edit)` closer are **always present** in new mirrors — only the `**Structure**:` body varies with adaptive rendering. Agent preserves the My notes section verbatim across regenerations.
 
 ### Field sources
 
@@ -276,20 +275,24 @@ The index does **not** track the project's source-directory mapping for each sco
 
 ### Adaptive renderings
 
-Only the `**Structure**:` body varies. The `## Lore (auto-managed)` opener, `---` separator, and `## My notes (free edit)` closer are always present and unchanged.
+Only the `**Structure**:` body varies. The `<!-- LORE:START -->` / `<!-- LORE:END -->` markers, `## Lore (auto-managed)` opener, the **first-line instruction** (see below), `---` separator, and `## My notes (free edit)` closer are always present and unchanged in new mirrors.
+
+**First-line instruction.** The opening sentence after `## Lore (auto-managed)` is the agent-facing imperative that triggers memory lookup (e.g. "Before project-specific questions, read `.lore/SUMMARY.md` as the digest, then open the referenced entries for the full text before answering or deciding."). It is constant across all renderings (empty / single-scope / multi-scope) because the agent's responsibility is the same regardless of project shape. Editing this sentence is a template-body change (non-breaking per `references/compatibility.md`); content-based dedup means existing mirrors keep their old opening until regenerated.
 
 **Empty project** (just initialized, no entries yet):
 
 ```
+<!-- LORE:START -->
 ## Lore (auto-managed)
 
-Project memory. Read deeper on demand.
+Project memory at `.lore/`. Before project-specific questions, read `.lore/SUMMARY.md` as the digest, then open the referenced entries (`.lore/_global/`, `.lore/scopes/`) for the full text before answering or deciding; cite entry IDs (e.g. `_global/ARCHITECTURE.md#ARCH-2026-01-15-d7a3`) when using memory.
 
 **Structure**:
 - Digest: `.lore/SUMMARY.md` (top-level overview)
 
 **Query**: `lore query <term>`
 **Update**: see the `lore` skill
+<!-- LORE:END -->
 
 ---
 ## My notes (free edit)
@@ -359,12 +362,7 @@ Index content changes require regeneration when:
 
 ## Manual operations
 
-| Command | Effect |
-|---|---|
-| `lore mirror` | Force-regenerate all configured platform mirrors from current `.lore/*` state. Content-based dedup: skips targets whose new Lore section matches the existing one. |
-| `lore mirror reset <file>` | Archive current My notes content to `.lore/.archive/<file>-<date>.md`, then write a clean mirror with only the Lore section. User must confirm. |
-| `lore mirror show <file>` | Print the file with the two sections clearly delimited in the output. Pure read. |
-| `lore mirror check` | For each configured target, verify it has a `---` separator and a `## My notes` section. Report any structural problems. Read-only. |
+Regeneration is not a blind rewrite: each target's two-section structure is validated first, and anomalies are reported to the user instead of overwritten (see "Section detection rules" above). My notes is preserved verbatim across regenerations; if the user asks to wipe a target's My notes, archive the old content to `.lore/.archive/<file>-<date>.md` first, then write a clean mirror.
 
 ## Trigger rules
 
@@ -373,5 +371,5 @@ Index content changes require regeneration when:
 | `init` confirms draft | Auto-generate mirrors for all configured targets using the init-time rules above. |
 | `sync` proposal accepted | Writes to `.lore/*.md` only. Does **not** touch mirrors. User runs `lore mirror` separately to publish. (Override: set `sync_updates_mirror: true` in config to restore old behavior.) |
 | `compress` completes | If `auto_mirror: true`, regenerate mirrors (with content-based dedup). Otherwise ask per target. |
-| `lore mirror` | Force-regenerate all configured targets with content-based dedup. |
+| `lore mirror` | Regenerate all configured targets with content-based dedup. |
 | `query` / `audit` | Never touches mirrors. |
