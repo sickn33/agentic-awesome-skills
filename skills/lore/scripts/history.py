@@ -14,11 +14,40 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+import os as _os
 import json as _json  # standard library; aliased to avoid clashing with future vars
 
 
 # Entry ID pattern: LAYER-YYYY-MM-DD-xxxx (4 hex chars)
 ENTRY_ID_RE = re.compile(r"^[A-Z]+-\d{4}-\d{2}-\d{2}-[a-f0-9]{4}$")
+
+
+# Date-only ISO pattern (YYYY-MM-DD). Used to detect inputs that need
+# normalization before being passed to `git log --since=` (see below).
+_DATE_ONLY_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def normalize_since(value):
+    """Normalize a `--since` value to a precise timestamp before git log.
+
+    `git log --since=YYYY-MM-DD` interpretation is version-dependent:
+    older git versions parse it as the user's local-timezone midnight,
+    newer versions as UTC midnight. A commit made early in the day in
+    any timezone can therefore be silently dropped when filtering by a
+    same-day `#added` tag.
+
+    Defense: when the input is date-only (no time component), append
+    `T00:00:00` so git's date parser treats it as a precise timestamp.
+    Strings that already contain a time component (T or space) are
+    passed through unchanged. None passes through unchanged.
+
+    Refs: https://git-scm.com/docs/git-log#_date_formats
+    """
+    if value is None or not isinstance(value, str):
+        return value
+    if not _DATE_ONLY_RE.match(value):
+        return value
+    return value + "T00:00:00"
 
 
 def parse_arg(arg: str):
@@ -257,6 +286,7 @@ def render_json(meta, commits):
         "code_file": meta["code_file"],
         "since": meta["since"],
         "since_source": meta["since_source"],
+        "chain": meta.get("chain"),
         "commits": commits,
     }
     return _json.dumps(payload, indent=2, ensure_ascii=False)
@@ -267,15 +297,32 @@ def render_markdown(meta, commits):
 
     Args:
         meta: dict with keys entry_id, lore_file, code_file, since,
-              since_source.
+              since_source, and optionally _chain_entries (raw entry dicts).
         commits: list of commit dicts (see parse_commit_line + extract_refs).
 
     Returns:
         Markdown string ready for stdout.
     """
     lines = []
-    lines.append(f"# history: [{meta['entry_id']}]")
+    title_suffix = ""
+    if meta.get("_chain_entries"):
+        title_suffix = " --follow-superseded"
+    lines.append(f"# history: [{meta['entry_id']}]{title_suffix}")
     lines.append("")
+
+    chain_entries = meta.get("_chain_entries")
+    if chain_entries:
+        lines.append("## Chain")
+        for idx, e in enumerate(chain_entries, start=1):
+            next_link = (
+                f"\n   -> superseded-by -> {e.get('replaced_by')}"
+                if e.get("replaced_by") else "\n   -> no successor"
+            )
+            lines.append(
+                f"{idx}. [{e['id']}] ({e['file']}) - {e['text']}{next_link}"
+            )
+        lines.append("")
+
     lines.append(f"> Entry: {meta['lore_file']}")
     since_suffix = " (entry #added date)" if meta.get("since_source") == "entry_added" else ""
     lines.append(f"> Since: {meta['since']}{since_suffix}")
@@ -401,23 +448,67 @@ def _enrich_commits_with_body_and_refs(project_root, commits):
             c["refs"] = extract_refs(msg)
 
 
+def walk_supersede_chain(entries_by_id, start_id, max_depth=20):
+    """Follow #superseded-by links forward from start_id.
+
+    Returns a list of entry dicts [start, successor1, successor2, ...].
+    Stops when an entry has no replaced_by tag, the target is missing,
+    or max_depth is reached (cycle protection).
+
+    `entries_by_id` is a dict {id: entry_dict} from list_entries.py --json.
+    """
+    chain = []
+    seen = set()
+    current_id = start_id
+    for _ in range(max_depth):
+        if current_id in seen:
+            break  # cycle; don't loop forever
+        seen.add(current_id)
+        entry = entries_by_id.get(current_id)
+        if entry is None:
+            break
+        chain.append(entry)
+        next_id = entry.get("replaced_by")
+        if not next_id:
+            break
+        current_id = next_id
+    return chain
+
+
 def main():
     args = sys.argv[1:]
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except AttributeError:  # Python < 3.7
+        pass
     json_mode = "--json" in args
+    follow_superseded = "--follow-superseded" in args
     since_override = None
     for a in args:
         if a.startswith("--since="):
             since_override = a.split("=", 1)[1]
 
-    positional = [a for a in args if a != "--json" and not a.startswith("--since=")]
+    positional = [
+        a for a in args
+        if a != "--json"
+        and a != "--follow-superseded"
+        and not a.startswith("--since=")
+    ]
     if not positional:
-        print("usage: lore history <entry-id|file-path|--scope=NAME>",
-              file=sys.stderr)
+        print(
+            "usage: lore history <entry-id|file-path|--scope=NAME> "
+            "[--follow-superseded] [--since=YYYY-MM-DD] [--json]",
+            file=sys.stderr,
+        )
         die(ERR_USAGE, "missing argument")
 
     parsed = parse_arg(positional[0])
     if parsed is None:
         die(ERR_USAGE, f"unrecognized argument: {positional[0]}")
+
+    if follow_superseded and parsed["form"] != "entry":
+        print("[WARN] --follow-superseded only applies to the entry form; ignored.",
+              file=sys.stderr)
 
     project_root = _find_lore_root_or_die()
 
@@ -428,30 +519,54 @@ def main():
 
     if parsed["form"] == "entry":
         entries = _load_entries_via_subprocess()
+        entries_by_id = {e["id"]: e for e in entries}
         entry = find_entry(entries, parsed["value"])
         if entry is None:
             ids = ", ".join(e["id"] for e in entries[:20])
             more = "" if len(entries) <= 20 else f" (and {len(entries)-20} more)"
             die(ERR_NO_ENTRY,
                 f"Entry {parsed['value']} not found. Available: {ids}{more}")
+
+        chain = ([entry] if not follow_superseded
+                 else walk_supersede_chain(entries_by_id, entry["id"]))
+
+        # Render the requested entry's history first (unchanged behavior),
+        # then optionally prepend a chain summary.
         since = since_override or extract_added_date(entry.get("tags", {}))
         if since is None:
             print("warning: entry has no #added tag; using full history",
                   file=sys.stderr)
             since = "1970-01-01"
+        since = normalize_since(since)
         code_file = resolve_code_file(entry)
         try:
             commits = run_git_log(project_root, since, code_file)
         except RuntimeError as exc:
             die(ERR_GIT_FAIL, str(exc))
         _enrich_commits_with_body_and_refs(project_root, commits)
-        meta = _build_meta_entry(entry, code_file, since, "entry_added")
+        since_source = "user_arg" if since_override else "entry_added"
+        meta = _build_meta_entry(entry, code_file, since, since_source)
+        if follow_superseded:
+            meta["chain"] = [
+                {
+                    "entry_id": e["id"],
+                    "lore_file": e["file"],
+                    "code_file": resolve_code_file(e),
+                    "since": extract_added_date(e.get("tags", {})) or "1970-01-01",
+                }
+                for e in chain
+            ]
+            meta["_chain_entries"] = chain
+        else:
+            meta["chain"] = None
+            meta["_chain_entries"] = None
         out = render_json(meta, commits) if json_mode else render_markdown(meta, commits)
         print(out)
         return
 
     if parsed["form"] == "file":
         since = since_override or "1970-01-01"
+        since = normalize_since(since)
         code_file = parsed["value"]
         try:
             commits = run_git_log(project_root, since, code_file)
@@ -472,13 +587,16 @@ def main():
     if parsed["form"] == "scope":
         layer_files = _resolve_scope_to_md_files(project_root, parsed["value"])
         scope_payloads = []  # only used when json_mode is True
+        scope_since = normalize_since("1970-01-01")
         for layer_name, md_path in layer_files:
             # For scope form we treat each .md file as a "code file" stand-in:
             # we git log the md file's project-relative path to find commits
             # that touched that lore file. (Useful for tracking lore edits.)
-            rel = str(md_path.relative_to(project_root))
+            rel = str(md_path.relative_to(project_root)).replace(
+                _os.sep, "/"
+            )
             try:
-                commits = run_git_log(project_root, "1970-01-01", rel)
+                commits = run_git_log(project_root, scope_since, rel)
             except RuntimeError as exc:
                 die(ERR_GIT_FAIL, str(exc))
             _enrich_commits_with_body_and_refs(project_root, commits)
@@ -487,7 +605,7 @@ def main():
                     "entry_id": f"<scope:{parsed['value']}/{layer_name}>",
                     "lore_file": rel,
                     "code_file": rel,
-                    "since": "1970-01-01",
+                    "since": scope_since,
                     "since_source": "scope_form",
                 }
                 scope_payloads.append({
