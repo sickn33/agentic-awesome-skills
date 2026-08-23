@@ -22,7 +22,7 @@ Use Famulor through the hosted Streamable HTTP MCP server:
 https://app.famulor.io/mcp
 ```
 
-This plugin configures that endpoint automatically. Let the MCP client run its OAuth flow. A workspace API key can also authenticate trusted server-to-server clients, but never ask a user to paste a key into chat or place one in files, commands, logs, or source control.
+This skills-only package does not install or configure the MCP connection. Add the endpoint as a remote Streamable HTTP server in the user's MCP client, then let that client run its OAuth flow. A workspace API key can also authenticate trusted server-to-server clients, but never ask a user to paste a key into chat or place one in files, commands, logs, or source control.
 
 If the Famulor MCP server is unavailable in the current client, help the user connect it and stop before claiming to have read or changed their account. Do not substitute an undocumented REST endpoint.
 
