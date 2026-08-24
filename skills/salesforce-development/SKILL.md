@@ -408,14 +408,15 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs';
 
 class SalesforceClient {
-  private accessToken: string | null = null;
-  private instanceUrl: string | null = null;
+  protected accessToken: string | null = null;
+  protected instanceUrl: string | null = null;
   private tokenExpiry: number = 0;
 
   constructor(
     private clientId: string,
     private username: string,
     private privateKeyPath: string,
+    protected apiVersion: string,
     private loginUrl: string = 'https://login.salesforce.com'
   ) {}
 
@@ -462,7 +463,7 @@ class SalesforceClient {
     await this.authenticate();
 
     const response = await fetch(
-      `${this.instanceUrl}/services/data/{apiVersion}/query?q=${encodeURIComponent(soql)}`,
+      `${this.instanceUrl}/services/data/${this.apiVersion}/query?q=${encodeURIComponent(soql)}`,
       {
         headers: {
           'Authorization': `Bearer ${this.accessToken}`,
@@ -482,7 +483,7 @@ class SalesforceClient {
     await this.authenticate();
 
     const response = await fetch(
-      `${this.instanceUrl}/services/data/{apiVersion}/sobjects/${sobject}`,
+      `${this.instanceUrl}/services/data/${this.apiVersion}/sobjects/${sobject}`,
       {
         method: 'POST',
         headers: {
@@ -517,7 +518,8 @@ class SalesforceClient {
 const sf = new SalesforceClient(
   process.env.SF_CLIENT_ID!,
   process.env.SF_USERNAME!,
-  './certificates/server.key'
+  './certificates/server.key',
+  process.env.SF_API_VERSION!
 );
 
 const accounts = await sf.query(
@@ -564,7 +566,7 @@ class SalesforceBulkClient extends SalesforceClient {
 
   private async createBulkJob(sobject: string, operation: string): Promise<any> {
     const response = await fetch(
-      `${this.instanceUrl}/services/data/{apiVersion}/jobs/ingest`,
+      `${this.instanceUrl}/services/data/${this.apiVersion}/jobs/ingest`,
       {
         method: 'POST',
         headers: {
@@ -588,7 +590,7 @@ class SalesforceBulkClient extends SalesforceClient {
     const csv = this.recordsToCSV(records);
 
     await fetch(
-      `${this.instanceUrl}/services/data/{apiVersion}/jobs/ingest/${jobId}/batches`,
+      `${this.instanceUrl}/services/data/${this.apiVersion}/jobs/ingest/${jobId}/batches`,
       {
         method: 'PUT',
         headers: {
@@ -602,7 +604,7 @@ class SalesforceBulkClient extends SalesforceClient {
 
   private async closeJob(jobId: string): Promise<void> {
     await fetch(
-      `${this.instanceUrl}/services/data/{apiVersion}/jobs/ingest/${jobId}`,
+      `${this.instanceUrl}/services/data/${this.apiVersion}/jobs/ingest/${jobId}`,
       {
         method: 'PATCH',
         headers: {
@@ -621,7 +623,7 @@ class SalesforceBulkClient extends SalesforceClient {
 
     while (Date.now() - startTime < maxWaitTime) {
       const response = await fetch(
-        `${this.instanceUrl}/services/data/{apiVersion}/jobs/ingest/${jobId}`,
+        `${this.instanceUrl}/services/data/${this.apiVersion}/jobs/ingest/${jobId}`,
         {
           headers: { 'Authorization': `Bearer ${this.accessToken}` }
         }
@@ -652,7 +654,7 @@ class SalesforceBulkClient extends SalesforceClient {
 
   private async getFailedResults(jobId: string): Promise<any[]> {
     const response = await fetch(
-      `${this.instanceUrl}/services/data/{apiVersion}/jobs/ingest/${jobId}/failedResults`,
+      `${this.instanceUrl}/services/data/${this.apiVersion}/jobs/ingest/${jobId}/failedResults`,
       {
         headers: { 'Authorization': `Bearer ${this.accessToken}` }
       }
