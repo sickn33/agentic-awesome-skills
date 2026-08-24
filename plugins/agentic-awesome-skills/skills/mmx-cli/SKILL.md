@@ -32,6 +32,33 @@ mmx text chat --api-key sk-xxxxx --message "Hello"
 
 Region is auto-detected. Override with `--region global` or `--region cn`.
 
+## Current text model reference
+
+The CLI's current text models and their capabilities are:
+
+| Model | Context window | Input modalities | Thinking | Price (USD per million tokens) |
+|---|---:|---|---|---|
+| `MiniMax-M3` | 1,000,000 tokens | text, image, video | adaptive, disabled | input $0.60; output $2.40; cache read $0.12 |
+| `MiniMax-M2.7` | 204,800 tokens | text | always on | input $0.30; output $1.20; cache read $0.06; cache write $0.375 |
+
+Use the model-specific values above when estimating context or cost; do not apply
+the M3 limits or prices to M2.7 requests.
+
+## Regional endpoints
+
+The global English and China Chinese regions expose equivalent API families with
+separate base URLs. The CLI selects the region automatically, or it can be
+selected explicitly with `--region global` or `--region cn`.
+
+| Region | OpenAI-compatible base URL | Anthropic-compatible base URL |
+|---|---|---|
+| global English | `https://api.minimax.io/v1` | `https://api.minimax.io/anthropic` |
+| China Chinese | `https://api.minimaxi.com/v1` | `https://api.minimaxi.com/anthropic` |
+
+See the [global API overview](https://platform.minimax.io/docs/api-reference/api-overview)
+or [China API overview](https://platform.minimaxi.com/docs/api-reference/api-overview)
+for request and authentication details.
+
 ---
 
 ## Agent Flags
