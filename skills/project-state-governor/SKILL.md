@@ -59,6 +59,32 @@ Do not use this skill as a substitute for implementation, domain research, produ
 - It does not replace engineering, security, or domain-specific verification workflows.
 - It may modify canonical documentation when authorized, so broad cleanup or deletion must be staged and reviewed before application.
 
+## Worked Example
+
+A feature branch claims that `export-redesign` is complete. The canonical
+`PROJECT_STATE.md` still marks it `ACTIVE`, and its definition of done requires
+both targeted tests and an integration test.
+
+1. Resolve every applicable `AGENTS.md` for the canonical state file and the
+   evidence paths before reading or changing them.
+2. Verify that the branch was merged and that targeted tests passed.
+3. Record that the required integration test has not run; classify this as an
+   evidence gap rather than inferring success from the merge.
+4. Preserve `export-redesign: ACTIVE`, record the missing integration evidence,
+   and identify running that test as the next authoritative step.
+
+The durable result is a minimal state delta, not a rewritten history:
+
+```text
+Status: ACTIVE (unchanged)
+Verified: implementation merged; targeted tests passed
+Missing evidence: required integration test
+Next step: run and evaluate the integration test
+```
+
+Only after that test satisfies the approved definition of done may the task
+transition to `DONE`.
+
 ## 1. Authority hierarchy
 
 Before ranking conflicting sources, enforce a hard boundary: no owner or product
