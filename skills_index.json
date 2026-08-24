@@ -35474,6 +35474,40 @@
     }
   },
   {
+    "id": "project-state-governor",
+    "path": "skills/project-state-governor",
+    "category": "project-management",
+    "name": "project-state-governor",
+    "description": "Govern evidence-backed canonical project state across sessions, branches, reviews, and research cycles without inventing product intent.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-08-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "Ghost011118/project-state-governor",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/Ghost011118/project-state-governor/blob/main/LICENSE",
+    "tags": [
+      "project-state",
+      "project-memory",
+      "documentation",
+      "governance",
+      "context-engineering",
+      "multi-agent"
+    ]
+  },
+  {
     "id": "projection-patterns",
     "path": "skills/projection-patterns",
     "category": "architecture",

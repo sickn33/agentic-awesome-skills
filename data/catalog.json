@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-20T06:53:06.000Z",
-  "total": 2025,
+  "total": 2026,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -42442,6 +42442,42 @@
         "update"
       ],
       "path": "skills/project-skill-audit/SKILL.md"
+    },
+    {
+      "id": "project-state-governor",
+      "canonical_id": "project-state-governor",
+      "name": "project-state-governor",
+      "description": "Govern evidence-backed canonical project state across sessions, branches, reviews, and research cycles without inventing product intent.",
+      "category": "project-management",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Ghost011118/project-state-governor",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/Ghost011118/project-state-governor/blob/main/LICENSE",
+      "tags": [
+        "project-state",
+        "project-memory",
+        "documentation",
+        "governance",
+        "context-engineering",
+        "multi-agent"
+      ],
+      "triggers": [
+        "project-state",
+        "project-memory",
+        "documentation",
+        "governance",
+        "context-engineering",
+        "multi-agent",
+        "state",
+        "governor",
+        "govern",
+        "evidence",
+        "backed",
+        "canonical"
+      ],
+      "path": "skills/project-state-governor/SKILL.md"
     },
     {
       "id": "projection-patterns",

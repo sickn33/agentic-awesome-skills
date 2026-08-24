@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-20T06:53:06.000Z
 
-Total skills: 2025
+Total skills: 2026
 
 ## agent-behavior (5)
 
@@ -1777,7 +1777,7 @@ Total skills: 2025
 | `trading-ledger` | A trading journal that captures the decision, not just the fill: thesis, plan, and emotion at the moment of entry, written to the user's own Notion database;... | critical | cruisekkk/trading-ledger | trading-journal, notion, journaling, market-wizards, decision-making | trading-journal, notion, journaling, market-wizards, decision-making, trading, ledger, journal, captures, decision, just, fill |
 | `workorai` | WorkorAI talent-marketplace skill: candidates search jobs and manage applications; employers run the job lifecycle and get ranked candidate matches with whit... | critical | work0r-ai/agent-kit | job-search, hiring, recruiting, talent-marketplace, mcp | job-search, hiring, recruiting, talent-marketplace, mcp, workorai, talent, marketplace, skill, candidates, search, jobs |
 
-## project-management (21)
+## project-management (22)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1793,6 +1793,7 @@ Total skills: 2025
 | `miro-automation` | Automate Miro tasks via Rube MCP (Composio): boards, items, sticky notes, frames, sharing, connectors. Always search tools first for current schemas. | critical | community | miro | miro, automation, automate, tasks, via, rube, mcp, composio, boards, items, sticky, notes |
 | `monday-automation` | Automate Monday.com work management including boards, items, columns, groups, subitems, and updates via Rube MCP (Composio). Always search tools first for cu... | critical | community | monday | monday, automation, automate, com, work, including, boards, items, columns, groups, subitems, updates |
 | `progressive-estimation` | Estimate AI-assisted and hybrid human+agent development work with research-backed PERT statistics and calibration feedback loops | safe | community | estimation, project-management, pert, sprint-planning, ai-agents | estimation, project-management, pert, sprint-planning, ai-agents, progressive, estimate, ai, assisted, hybrid, human, agent |
+| `project-state-governor` | Govern evidence-backed canonical project state across sessions, branches, reviews, and research cycles without inventing product intent. | critical | Ghost011118/project-state-governor | project-state, project-memory, documentation, governance, context-engineering, multi-agent | project-state, project-memory, documentation, governance, context-engineering, multi-agent, state, governor, govern, evidence, backed, canonical |
 | `sred-project-organizer` | Take a list of projects and their related documentation, and organize them into the SRED format for submission. | critical | community | sred, organizer | sred, organizer, take, list, related, documentation, organize, them, format, submission |
 | `sred-work-summary` | Go back through the previous year of work and create a Notion doc that groups relevant links into projects that can then be documented as SRED projects. | critical | community | sred, work, summary | sred, work, summary, go, back, through, previous, year, notion, doc, groups, relevant |
 | `team-collaboration-issue` | You are a GitHub issue resolution expert specializing in systematic bug investigation, feature implementation, and collaborative development workflows. Your ... | safe | community | team, collaboration, issue | team, collaboration, issue, github, resolution, specializing, systematic, bug, investigation, feature, collaborative, development |
