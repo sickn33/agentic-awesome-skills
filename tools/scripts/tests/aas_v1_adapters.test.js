@@ -159,7 +159,10 @@ test("Windows ACL runner passes paths out of the command and reports bounded dia
       return true;
     },
   );
-  assert.deepEqual(invocation[1], ["-NoProfile", "-NonInteractive", "-Command", "$p=$env:AAS_WINDOWS_ACL_PATH"]);
+  assert.deepEqual(invocation[1].slice(0, 3), ["-NoProfile", "-NonInteractive", "-Command"]);
+  assert.match(invocation[1][3], /Microsoft\.PowerShell\.Security/);
+  assert.match(invocation[1][3], /Import-Module/);
+  assert.match(invocation[1][3], /\$p=\$env:AAS_WINDOWS_ACL_PATH$/);
   assert.equal(invocation[2].env.AAS_WINDOWS_ACL_PATH, inspectedPath);
   assert.ok(!invocation[1].includes(inspectedPath));
 });
