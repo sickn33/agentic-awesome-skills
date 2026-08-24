@@ -9,14 +9,143 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [16.0.0] - 2026-08-24 - "Durable Project State and Runtime Reliability"
+
+> Added durable project-state governance and a complete Famulor MCP operating
+> guide, modernized Salesforce and X/Twitter integration guidance, and repaired
+> two native Windows setup failures. The published catalog contains 2,026
+> skills.
+
+This release helps Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and
+related AI coding assistants preserve verified project state across sessions,
+operate the Famulor platform with explicit tool and consent boundaries, and use
+current Salesforce and X/Twitter integration patterns without weakening safety
+or evidence requirements.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- [`project-state-governor`](skills/project-state-governor/) for reconstructing,
+  validating, and maintaining durable project state from authoritative evidence.
+- [`famulor-skill`](skills/famulor-skill/) for selecting and operating Famulor
+  MCP tools across assistants, calls, campaigns, automations, and related areas.
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+
+### Added
+
+- Added [`project-state-governor`](skills/project-state-governor/) for durable
+  project-state reconstruction and maintenance with authority ordering, compact
+  and scaled schemas, lifecycle rules, negative evidence, and independently
+  verified completion transitions
+  ([#1214](https://github.com/sickn33/agentic-awesome-skills/pull/1214)).
+- Added [`famulor-skill`](skills/famulor-skill/) with a 282-tool snapshot,
+  task-oriented toolset maps, assistant-design guidance, consent boundaries,
+  and live-schema verification requirements
+  ([#1224](https://github.com/sickn33/agentic-awesome-skills/pull/1224)).
+
+### Changed
+
+- Modernized [`salesforce-development`](skills/salesforce-development/) around
+  current API-version configuration, External Client Apps, OAuth security,
+  integration patterns, deployment, and testing guidance
+  ([#1213](https://github.com/sickn33/agentic-awesome-skills/pull/1213)).
+- Refreshed [`x-twitter-scraper`](skills/x-twitter-scraper/) for its current SDK
+  and tightened consent, credential, rate-limit, privacy, and automation
+  boundaries ([#1220](https://github.com/sickn33/agentic-awesome-skills/pull/1220)).
+- Upgraded `express-rate-limit` from 8.6.0 to 8.6.1
+  ([#1216](https://github.com/sickn33/agentic-awesome-skills/pull/1216)).
+- Corrected eight frontmatter delimiters whose trailing spaces caused the
+  external skills CLI to skip otherwise valid skills
+  ([#1218](https://github.com/sickn33/agentic-awesome-skills/pull/1218)).
+- Retired the unavailable `uizze-ui-research` source listing and synchronized
+  its stale bundle memberships while keeping the maintained `anti-ui-slop`
+  workflow ([#1225](https://github.com/sickn33/agentic-awesome-skills/pull/1225),
+  [#1228](https://github.com/sickn33/agentic-awesome-skills/pull/1228)).
+- Regenerated the canonical catalog, offline AAS Core data, web assets,
+  marketplaces, editorial bundles, compatibility reports, and Codex/Claude
+  plugin distributions for 2,026 skills.
+
 ### Fixed
 
 - Restored native Windows MCP configuration by loading the built-in PowerShell
-  security module explicitly before ACL inspection and hardening.
+  security module explicitly before ACL inspection and hardening
+  ([#1221](https://github.com/sickn33/agentic-awesome-skills/issues/1221),
+  [#1227](https://github.com/sickn33/agentic-awesome-skills/pull/1227)).
 - Made npm release-identity verification compatible with npm 12 on Windows by
-  invoking the npm CLI through Node instead of spawning `npm.cmd` directly.
+  invoking the npm CLI through Node instead of spawning `npm.cmd` directly
+  ([#1222](https://github.com/sickn33/agentic-awesome-skills/issues/1222),
+  [#1227](https://github.com/sickn33/agentic-awesome-skills/pull/1227)).
 - Removed stale `uizze-ui-research` bundle memberships after the retired skill
   was removed from the canonical catalog.
+
+### Security
+
+- Kept project-state reconstruction evidence-first: incomplete verification
+  preserves the current lifecycle state, records the evidence gap separately,
+  and never promotes child completion to a project-level claim.
+- Kept Famulor operations scoped to the selected toolset, required live schema
+  inspection for authoritative parameters, and made consequential external
+  actions subject to explicit user confirmation and platform permissions.
+- Kept Salesforce credentials environment-backed and X/Twitter collection
+  bounded by user consent, platform rules, rate limits, and privacy constraints.
+- Kept Windows ACL hardening fail-closed while loading only the built-in
+  PowerShell security module, and preserved immutable npm release-identity
+  verification under the npm 12 invocation path.
+
+### Who should care
+
+- Teams running long-lived agent projects that need a compact, auditable state
+  model which survives context loss without turning unverified claims into fact.
+- Famulor operators who need task-based discovery across a large MCP surface
+  while preserving schema, scope, consent, and side-effect boundaries.
+- Salesforce and X/Twitter integrators maintaining authentication, API-version,
+  automation, privacy, and rate-limit guidance.
+- Windows users configuring the local AAS MCP host or installing from npm 12.
+
+### Validation
+
+- Passed repository validation, reference validation, documentation-security
+  checks, warning-budget enforcement, the complete repository test suite,
+  plugin-compatibility and editorial-bundle checks, canonical artifact preview,
+  and protected canonical synchronization.
+- Reviewed both added skill trees and all bundled reference files for semantics,
+  safety, provenance, declared risk, limitations, consent boundaries, and exact
+  head evidence before protected merge.
+- Added targeted regression coverage for PowerShell security-module loading and
+  npm-managed Windows release-identity invocation.
+
+### Limitations
+
+- Durable project state improves continuity and exposes missing evidence; it
+  does not create evidence, replace domain verification, or authorize cleanup
+  beyond the user's stated boundary.
+- The Famulor tool inventory is a static snapshot and may lag the live MCP
+  server; workspace permissions, plan entitlements, and consent still govern
+  which operations are available.
+- Salesforce and X/Twitter platform behavior can change independently of this
+  release, so live schemas and official platform constraints remain authoritative.
+- The Windows fixes are covered by isolated regression tests and protected CI;
+  they do not substitute for every possible enterprise PowerShell policy or npm
+  installation layout.
+
+### Credits
+
+- **[@Ghost011118](https://github.com/Ghost011118)** for
+  [`project-state-governor`](skills/project-state-governor/) in
+  [PR #1214](https://github.com/sickn33/agentic-awesome-skills/pull/1214).
+- **[@bekservice](https://github.com/bekservice)** and the official
+  **[Famulor Skill](https://github.com/bekservice/Famulor-Skill)** source for
+  [`famulor-skill`](skills/famulor-skill/) in
+  [PR #1224](https://github.com/sickn33/agentic-awesome-skills/pull/1224).
+- **[@SfImran](https://github.com/SfImran)** for the Salesforce
+  guidance update in
+  [PR #1213](https://github.com/sickn33/agentic-awesome-skills/pull/1213).
+- **[@kriptoburak](https://github.com/kriptoburak)** for the X/Twitter scraper
+  refresh in [PR #1220](https://github.com/sickn33/agentic-awesome-skills/pull/1220).
+- **[@cj-ant](https://github.com/cj-ant)** for identifying and fixing
+  the eight frontmatter delimiters in
+  [PR #1218](https://github.com/sickn33/agentic-awesome-skills/pull/1218).
 
 ## [15.16.0] - 2026-08-20 - "Agent Reliability, Evidence Integrity, and Stack Audits"
 
