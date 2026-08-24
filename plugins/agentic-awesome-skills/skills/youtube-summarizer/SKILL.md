@@ -157,11 +157,18 @@ echo "[████████░░░░░░░░░░░░] 40% - Step 
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound
 import sys
 
+# youtube-transcript-api 1.0 replaced the get_transcript/list_transcripts class
+# methods with an instance API. Support both versions.
+_legacy = hasattr(YouTubeTranscriptApi, 'get_transcript')
+
 video_id = sys.argv[1]
 
 try:
     # Get list of available transcripts
-    transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+    if _legacy:
+        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+    else:
+        transcript_list = YouTubeTranscriptApi().list(video_id)
     
     print(f"✅ Video accessible: {video_id}")
     print("📝 Available transcripts:")
@@ -207,22 +214,29 @@ echo "[████████████░░░░░░░░] 60% - Step 
 ```python
 from youtube_transcript_api import YouTubeTranscriptApi
 
+# youtube-transcript-api 1.0 replaced the get_transcript/list_transcripts class
+# methods with an instance API. Support both versions.
+_legacy = hasattr(YouTubeTranscriptApi, 'get_transcript')
+
 video_id = "VIDEO_ID"
 
 try:
     # Try to get transcript in user's preferred language first
     # Fall back to English if not available
-    transcript = YouTubeTranscriptApi.get_transcript(
-        video_id, 
-        languages=['pt', 'en']  # Prefer Portuguese, fallback to English
-    )
+    languages = ['pt', 'en']  # Prefer Portuguese, fallback to English
+    if _legacy:
+        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=languages)
+    else:
+        transcript = YouTubeTranscriptApi().fetch(video_id, languages=languages).to_raw_data()
     
     # Combine transcript segments into full text
     full_text = " ".join([entry['text'] for entry in transcript])
     
     # Get video metadata
-    from youtube_transcript_api import YouTubeTranscriptApi
-    transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+    if _legacy:
+        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+    else:
+        transcript_list = YouTubeTranscriptApi().list(video_id)
     
     print("✅ Transcript extracted successfully")
     print(f"📊 Transcript length: {len(full_text)} characters")

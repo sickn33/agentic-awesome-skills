@@ -1,4 +1,4 @@
---- 
+---
 name: unsplash-integration
 description: Integration skill for searching and fetching high-quality, free-to-use professional photography from Unsplash.
 risk: safe

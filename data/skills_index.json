@@ -772,6 +772,36 @@
     }
   },
   {
+    "id": "agent-evaluation-reporting",
+    "path": "skills/agent-evaluation-reporting",
+    "category": "agent-evaluation",
+    "name": "agent-evaluation-reporting",
+    "description": "Use when summarizing agent evaluations where autonomous, assisted, failed, timed-out, or invalid outcomes must remain distinct and comparable.",
+    "risk": "none",
+    "source": "self",
+    "date_added": "2026-08-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "agent-evaluation",
+      "metrics",
+      "reporting",
+      "reliability",
+      "benchmarking"
+    ]
+  },
+  {
     "id": "agent-framework-azure-ai-py",
     "path": "skills/agent-framework-azure-ai-py",
     "category": "ai-ml",
@@ -792,6 +822,37 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "agent-harness-fault-injection",
+    "path": "skills/agent-harness-fault-injection",
+    "category": "development",
+    "name": "agent-harness-fault-injection",
+    "description": "Use when an agent workflow needs deterministic recovery evidence for sandbox, MCP/tool, worker, checkpoint, memory, or orchestration failures.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-08-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "agent-harness",
+      "fault-injection",
+      "recovery",
+      "state-machine",
+      "mcp",
+      "multi-agent"
+    ]
   },
   {
     "id": "agent-manager-skill",
@@ -4093,6 +4154,28 @@
       "meeting-minutes",
       "speech-to-text]"
     ]
+  },
+  {
+    "id": "audit-agent-run-evidence",
+    "path": "skills/audit-agent-run-evidence",
+    "category": "uncategorized",
+    "name": "audit-agent-run-evidence",
+    "description": "Use when an agent, harness, gateway, MCP workflow, or multi-step automation claims completion and the available traces, checkpoints, approvals, tool calls, or deployment records must be judged without trusting self-reported success.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-08-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
   },
   {
     "id": "audit-context-building",
@@ -8346,6 +8429,40 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "boost-asio-pro",
+    "path": "skills/boost-asio-pro",
+    "category": "development",
+    "name": "boost-asio-pro",
+    "description": "Use when writing asynchronous C++ networking code with Boost.Asio or standalone Asio \u2014 TCP/UDP servers and clients, SSL/TLS, timers, strands, composed async ops. Covers io_context, co_spawn, awaitable, async_read/async_write, asio::spawn, yield_context, and pre-C++20 callback styles.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-08-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "alexprivalov/boost-asio-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/alexprivalov/boost-asio-skill/blob/main/LICENSE",
+    "tags": [
+      "cpp",
+      "boost",
+      "asio",
+      "async",
+      "networking",
+      "coroutines"
+    ]
   },
   {
     "id": "box-automation",
@@ -13112,6 +13229,36 @@
     ]
   },
   {
+    "id": "cross-platform-contract-propagation-audit",
+    "path": "skills/cross-platform-contract-propagation-audit",
+    "category": "development",
+    "name": "cross-platform-contract-propagation-audit",
+    "description": "Use when auditing whether a field, enum, flag, or API contract propagates consistently across storage, services, clients, analytics, and tests.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-08-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "contract-audit",
+      "cross-platform",
+      "api",
+      "schema",
+      "feature-flags"
+    ]
+  },
+  {
     "id": "crossframe",
     "path": "skills/crossframe",
     "category": "workflow",
@@ -16688,6 +16835,39 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "dsh-deepread",
+    "path": "skills/dsh-deepread",
+    "category": "research",
+    "name": "dsh-deepread",
+    "description": "Use for evidence-first reading of articles, books, PDFs, web pages, or document sets, with knowledge maps and Feynman checks.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-08-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "xiehuan123/dsh-deepread",
+    "license": "MIT",
+    "license_source": "https://github.com/xiehuan123/dsh-deepread/blob/main/LICENSE",
+    "tags": [
+      "deep-reading",
+      "evidence",
+      "knowledge-map",
+      "feynman",
+      "document-analysis"
+    ]
   },
   {
     "id": "duotone-design",
@@ -30354,6 +30534,39 @@
     }
   },
   {
+    "id": "multi-source-search",
+    "path": "skills/multi-source-search",
+    "category": "research",
+    "name": "multi-source-search",
+    "description": "Cross-validate web research and produce an offline-checkable evidence ledger with explicit source diversity, confidence, conflicts, and gaps.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-08-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sandbaseai/sandbase-skills",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/sandbaseai/sandbase-skills/blob/fc25b2ed4548b1bb91621661e82d07d4bbd285a1/LICENSE",
+    "tags": [
+      "research",
+      "fact-checking",
+      "citations",
+      "evidence",
+      "verification"
+    ]
+  },
+  {
     "id": "multiplayer",
     "path": "skills/game-development/multiplayer",
     "category": "game-development",
@@ -37190,6 +37403,28 @@
       "review",
       "accessibility"
     ]
+  },
+  {
+    "id": "review-multi-agent-orchestration",
+    "path": "skills/review-multi-agent-orchestration",
+    "category": "uncategorized",
+    "name": "review-multi-agent-orchestration",
+    "description": "Use when a supervisor, swarm, graph, planner-worker system, or parallel agent workflow needs review for task boundaries, shared state, branch joins, retries, cancellation, context handoffs, budgets, deadlocks, or human escalation before implementation or production rollout.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-08-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    }
   },
   {
     "id": "review-swarm",
@@ -45431,6 +45666,39 @@
     "source_repo": "ibelick/ui-skills",
     "license": "MIT",
     "license_source": "https://github.com/ibelick/ui-skills/blob/main/LICENSE"
+  },
+  {
+    "id": "ui-slop-score",
+    "path": "skills/ui-slop-score",
+    "category": "frontend",
+    "name": "ui-slop-score",
+    "description": "Score a rendered web or iOS screen for generic UI risk before it ships. Use when a user asks whether a UI looks generic or needs an honest pre-merge visual review.",
+    "risk": "safe",
+    "source": "https://github.com/uizze/uizze/tree/main/skills/ui-slop-score",
+    "date_added": "2026-08-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "uizze/uizze",
+    "license": "MIT",
+    "license_source": "https://github.com/uizze/uizze/blob/main/LICENSE",
+    "tags": [
+      "ui",
+      "ux",
+      "frontend",
+      "design",
+      "ui-slop-score"
+    ]
   },
   {
     "id": "ui-tokens",

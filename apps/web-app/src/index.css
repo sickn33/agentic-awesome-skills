@@ -1334,6 +1334,87 @@ textarea {
   margin: 26px auto 0;
 }
 
+.workbench-pair-review {
+  border: 1px solid var(--stroke-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--surface-card);
+}
+
+.workbench-pair-review > header,
+.workbench-pair-review > ul,
+.workbench-pair-review > p {
+  margin: 0;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--stroke-subtle);
+}
+
+.workbench-pair-review > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.workbench-pair-review > header p {
+  margin: 0 0 4px;
+  color: var(--accent-solid);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.workbench-pair-review--inconsistent > header p,
+.workbench-pair-review--inconsistent li strong {
+  color: var(--status-danger, #c02c3f);
+}
+
+.workbench-pair-review h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.workbench-pair-review > header span {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.workbench-pair-review ul {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0 20px;
+  list-style: none;
+}
+
+.workbench-pair-review li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--stroke-subtle);
+  font-size: 0.74rem;
+}
+
+.workbench-pair-review li span {
+  color: var(--text-secondary);
+}
+
+.workbench-pair-review li strong {
+  color: var(--accent-solid);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.workbench-pair-review > :last-child {
+  border-bottom: 0;
+}
+
+.workbench-pair-review__note {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
 .workbench-review-empty {
   padding: 72px 24px;
   border: 1px dashed var(--stroke-strong);
@@ -2373,6 +2454,15 @@ textarea {
   }
 
   .workbench-review__operation-list .workbench-review__facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .workbench-pair-review > header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .workbench-pair-review > ul {
     grid-template-columns: minmax(0, 1fr);
   }
 

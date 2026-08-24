@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-08-16T10:07:40.000Z
+Generated at: 2026-08-20T06:53:06.000Z
 
-Total skills: 2016
+Total skills: 2025
 
 ## agent-behavior (5)
 
@@ -14,10 +14,11 @@ Total skills: 2016
 | `fable-safe-prompt` | Rewrite allowed prompts to reduce false-positive safety triggers without bypassing policy or changing intent. | safe | davidondrej/skills | prompting, safety, guardrails | prompting, safety, guardrails, fable, safe, prompt, rewrite, allowed, prompts, reduce, false, positive |
 | `zipai-optimizer` | Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads. | safe | community | zipai, optimizer | zipai, optimizer, ultra, dense, token, skill, prompt, caching, log, pruning, ast, inspection |
 
-## agent-evaluation (1)
+## agent-evaluation (2)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `agent-evaluation-reporting` | Use when summarizing agent evaluations where autonomous, assisted, failed, timed-out, or invalid outcomes must remain distinct and comparable. | none | self | agent-evaluation, metrics, reporting, reliability, benchmarking | agent-evaluation, metrics, reporting, reliability, benchmarking, agent, evaluation, summarizing, evaluations, where, autonomous, assisted |
 | `run-deep-swe` | Run reproducible DeepSWE coding-agent benchmark evaluations through OpenRouter and mini-swe-agent. | critical | davidondrej/skills | benchmark, deepswe, openrouter, evaluation | benchmark, deepswe, openrouter, evaluation, run, deep, swe, reproducible, coding, agent, evaluations, through |
 
 ## agent-orchestration (7)
@@ -1016,10 +1017,11 @@ Total skills: 2016
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (174)
+## development (177)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `agent-harness-fault-injection` | Use when an agent workflow needs deterministic recovery evidence for sandbox, MCP/tool, worker, checkpoint, memory, or orchestration failures. | safe | self | agent-harness, fault-injection, recovery, state-machine, mcp, multi-agent | agent-harness, fault-injection, recovery, state-machine, mcp, multi-agent, agent, harness, fault, injection, deterministic, evidence |
 | `agenttrace-session-audit` | Audit local AI coding-agent sessions with agenttrace for cost, tool failures, latency, anomalies, health, diffs, and CI gates. | safe | luoyuctl/agenttrace | ai-coding, observability, cost-tracking, session-analysis | ai-coding, observability, cost-tracking, session-analysis, agenttrace, session, audit, local, ai, coding, agent, sessions |
 | `api-endpoint-builder` | Builds production-ready REST API endpoints with validation, error handling, authentication, and documentation. Follows best practices for security and scalab... | safe | community | api, endpoint, builder | api, endpoint, builder, rest, endpoints, validation, error, handling, authentication, documentation, follows, security |
 | `arm-cortex-expert` | Senior embedded software engineer specializing in firmware and driver development for ARM Cortex-M microcontrollers (Teensy, STM32, nRF52, SAMD). | critical | community | arm, cortex | arm, cortex, senior, embedded, software, engineer, specializing, firmware, driver, development, microcontrollers, teensy |
@@ -1033,6 +1035,7 @@ Total skills: 2016
 | `bash-linux` | Bash/Linux terminal patterns. Critical commands, piping, error handling, scripting. Use when working on macOS or Linux systems. | critical | community | bash, linux | bash, linux, terminal, critical, commands, piping, error, handling, scripting, working, macos |
 | `bash-pro` | Master of defensive Bash scripting for production automation, CI/CD pipelines, and system utilities. Expert in safe, portable, and testable shell scripts. | critical | community | bash | bash, pro, defensive, scripting, automation, ci, cd, pipelines, utilities, safe, portable, testable |
 | `bazel-build-optimization` | Optimize Bazel builds for large-scale monorepos. Use when configuring Bazel, implementing remote execution, or optimizing build performance for enterprise co... | critical | community | bazel, build, optimization | bazel, build, optimization, optimize, large, scale, monorepos, configuring, implementing, remote, execution, optimizing |
+| `boost-asio-pro` | Use when writing asynchronous C++ networking code with Boost.Asio or standalone Asio — TCP/UDP servers and clients, SSL/TLS, timers, strands, composed async ... | safe | alexprivalov/boost-asio-skill | cpp, boost, asio, async, networking, coroutines | cpp, boost, asio, async, networking, coroutines, pro, writing, asynchronous, code, standalone, tcp |
 | `brooks-lint` | AI code reviewer grounded in classic software engineering books for catching design smells, coupling issues, and architectural risks. | safe | hyhmrright/brooks-lint | code-review, architecture, software-design, refactoring, claude-code | code-review, architecture, software-design, refactoring, claude-code, brooks, lint, ai, code, reviewer, grounded, classic |
 | `busybox-on-windows` | How to use a Win32 build of BusyBox to run many of the standard UNIX command line tools on Windows. | safe | community | busybox, on, windows | busybox, on, windows, how, win32, run, many, standard, unix, command, line |
 | `cmux` | Control cmux workspaces, panes, surfaces, and agent sessions safely from macOS terminal workflows. | critical | davidondrej/skills | cmux, terminal, agents, macos | cmux, terminal, agents, macos, control, workspaces, panes, surfaces, agent, sessions, safely |
@@ -1055,6 +1058,7 @@ Total skills: 2016
 | `codebase-cleanup-deps-audit` | You are a dependency security expert specializing in vulnerability scanning, license compliance, and supply chain security. Analyze project dependencies for ... | critical | community | codebase, cleanup, deps, audit | codebase, cleanup, deps, audit, dependency, security, specializing, vulnerability, scanning, license, compliance, supply |
 | `codebase-cleanup-refactor-clean` | You are a code refactoring expert specializing in clean code principles, SOLID design patterns, and modern software engineering best practices. Analyze and r... | safe | community | codebase, cleanup, refactor, clean | codebase, cleanup, refactor, clean, code, refactoring, specializing, principles, solid, software, engineering, analyze |
 | `codebase-to-wordpress-converter` | Expert skill for converting any codebase (React/HTML/Next.js) into a pixel-perfect, SEO-optimized, and dynamic WordPress theme. | safe | community | codebase, to, wordpress, converter | codebase, to, wordpress, converter, skill, converting, any, react, html, next, js, pixel |
+| `cross-platform-contract-propagation-audit` | Use when auditing whether a field, enum, flag, or API contract propagates consistently across storage, services, clients, analytics, and tests. | safe | self | contract-audit, cross-platform, api, schema, feature-flags | contract-audit, cross-platform, api, schema, feature-flags, cross, platform, contract, propagation, audit, auditing, whether |
 | `dbos-golang` | Guide for building reliable, fault-tolerant Go applications with DBOS durable workflows. Use when adding DBOS to existing Go code, creating workflows and ste... | safe | https://docs.dbos.dev/ | dbos, golang | dbos, golang, building, reliable, fault, tolerant, go, applications, durable, adding, existing, code |
 | `dbos-python` | Guide for building reliable, fault-tolerant Python applications with DBOS durable workflows. Use when adding DBOS to existing Python code, creating workflows... | safe | https://docs.dbos.dev/ | dbos, python | dbos, python, building, reliable, fault, tolerant, applications, durable, adding, existing, code, creating |
 | `dbos-typescript` | Guide for building reliable, fault-tolerant TypeScript applications with DBOS durable workflows. Use when adding DBOS to existing TypeScript code, creating w... | safe | https://docs.dbos.dev/ | dbos, typescript | dbos, typescript, building, reliable, fault, tolerant, applications, durable, adding, existing, code, creating |
@@ -1318,7 +1322,7 @@ Total skills: 2016
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | critical | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | critical | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (32)
+## frontend (33)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1353,6 +1357,7 @@ Total skills: 2016
 | `stitch-design-taste` | Use when generating Google Stitch DESIGN.md systems for premium typography, color, layout, motion intent, and anti-generic UI rules. | safe | Leonxlnx/taste-skill | stitch, design-system, frontend, ui | stitch, design-system, frontend, ui, taste, generating, google, md, premium, typography, color, layout |
 | `sveltekit` | Build full-stack web applications with SvelteKit — file-based routing, SSR, SSG, API routes, and form actions in one framework. | safe | community | svelte, sveltekit, fullstack, ssr, ssg, typescript | svelte, sveltekit, fullstack, ssr, ssg, typescript, full, stack, web, applications, file, routing |
 | `tailwind-patterns` | Tailwind CSS v4 principles. CSS-first configuration, container queries, modern patterns, design token architecture. | none | community | tailwind | tailwind, css, v4, principles, first, configuration, container, queries, token, architecture |
+| `ui-slop-score` | Score a rendered web or iOS screen for generic UI risk before it ships. Use when a user asks whether a UI looks generic or needs an honest pre-merge visual r... | safe | uizze/uizze | ui, ux, frontend, design, ui-slop-score | ui, ux, frontend, design, ui-slop-score, slop, score, rendered, web, ios, screen, generic |
 | `zustand-store-ts` | Create Zustand stores following established patterns with proper TypeScript types and middleware. | critical | community | zustand, store, ts | zustand, store, ts, stores, following, established, proper, typescript, types, middleware |
 
 ## fullstack (1)
@@ -1830,14 +1835,16 @@ Total skills: 2016
 | `slo-implementation` | Framework for defining and implementing Service Level Indicators (SLIs), Service Level Objectives (SLOs), and error budgets. | critical | community | slo | slo, framework, defining, implementing, level, indicators, slis, objectives, slos, error, budgets |
 | `tool-use-guardian` | FREE — Intelligent tool-call reliability wrapper. Monitors, retries, fixes, and learns from tool failures. Auto-recovers from truncated JSON, timeouts, rate ... | safe | community | reliability, tool-use, error-handling, retries, recovery, agent-infrastructure | reliability, tool-use, error-handling, retries, recovery, agent-infrastructure, guardian, free, intelligent, call, wrapper, monitors |
 
-## research (11)
+## research (13)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `deepapi` | Use DeepAPI for supported scraping, research, and email workflows with explicit credentials and approval. | critical | davidondrej/skills | deepapi, scraping, email, api | deepapi, scraping, email, api, supported, research, explicit, credentials, approval |
+| `dsh-deepread` | Use for evidence-first reading of articles, books, PDFs, web pages, or document sets, with knowledge maps and Feynman checks. | safe | xiehuan123/dsh-deepread | deep-reading, evidence, knowledge-map, feynman, document-analysis | deep-reading, evidence, knowledge-map, feynman, document-analysis, dsh, deepread, first, reading, articles, books, pdfs |
 | `fact-check-x-complete` | Compare claims from one or more AI answers, verify their citations against public primary sources, and produce an evidence-linked fact-check report without i... | critical | ASI2030/Fact-Check-X | fact-checking, research, evidence, source-verification | fact-checking, research, evidence, source-verification, fact, check, complete, compare, claims, one, ai, answers |
 | `gemini-deep-research` | Run autonomous multi-step research with Google's Gemini Deep Research Agent: kick off a query, poll progress, and collect a cited report for market analysis ... | critical | sanjay3290/ai-skills | research, gemini, google, reports | research, gemini, google, reports, deep, run, autonomous, multi, step, agent, kick, off |
 | `ii-commons` | Deterministic search across arXiv, PubMed/PMC, and US policy corpora with daily freshness cutoffs. | safe | Intelligent-Internet/II-Commons-Skills | research, arxiv, pubmed, pmc, policy, retrieval, cli, codex | research, arxiv, pubmed, pmc, policy, retrieval, cli, codex, ii, commons, deterministic, search |
+| `multi-source-search` | Cross-validate web research and produce an offline-checkable evidence ledger with explicit source diversity, confidence, conflicts, and gaps. | safe | sandbaseai/sandbase-skills | research, fact-checking, citations, evidence, verification | research, fact-checking, citations, evidence, verification, multi, source, search, cross, validate, web, produce |
 | `news-sentiment-engine` | Multi-source RSS news aggregation with Claude-powered sentiment analysis and structured briefing output | critical | tellmefrankie/news-engine | news, rss, sentiment-analysis, briefing, research | news, rss, sentiment-analysis, briefing, research, sentiment, engine, multi, source, aggregation, claude, powered |
 | `papers-skill` | Skill for academic research workflows: search Semantic Scholar (200M+ papers), inspect citations, download arXiv PDFs, and extract PDF text. Bundles a self-c... | safe | xwmxcz/papers-skill | research, academic, papers, citations, arxiv, semantic-scholar, pdf | research, academic, papers, citations, arxiv, semantic-scholar, pdf, skill, search, semantic, scholar, 200m |
 | `people-data` | Research LinkedIn professional profiles and public business-contact data, including email/phone lookup, people search, and YouTube channel business-email dis... | safe | agentbody/skills | linkedin, youtube, people-search, business-contacts, research | linkedin, youtube, people-search, business-contacts, research, people, data, professional, profiles, public, business, contact |
@@ -2060,7 +2067,7 @@ Total skills: 2016
 | --- | --- | --- | --- | --- | --- |
 | `travel-planner` | 旅行/行程规划需求时使用:规划去某地旅行、X天X城、带老人孩子、自驾、假期安排等。产出逐日行程表、预算估算(经济/舒适/奢华三档)、交通住宿建议、景点美食清单。必须先问预算,预算未确认只输出问题清单;事实数据带来源和查询日期。 | safe | saudademjj/luopan | travel, itinerary, planning, trip, chinese | travel, itinerary, planning, trip, chinese, planner |
 
-## uncategorized (286)
+## uncategorized (288)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2082,6 +2089,7 @@ Total skills: 2016
 | `app-store-changelog` | Generate user-facing App Store release notes from git history since the last tag. | safe | Dimillian/Skills (MIT) | app, store, changelog | app, store, changelog, generate, user, facing, release, notes, git, history, since, last |
 | `apple-notes-search` | Semantic + keyword search and connection-discovery across the user's own Apple Notes via the apple-notes MCP server. Use when the user wants to find, recall,... | critical | connerkward/mcp-apple-notes | apple-notes, search, mcp, macos, semantic-search, knowledge | apple-notes, search, mcp, macos, semantic-search, knowledge, apple, notes, semantic, keyword, connection, discovery |
 | `atlas-ledger` | Companion to atlas-contract. Auto-invoked by its Final Audit on caught drift; also use after Post Reviews or user requests to record a mistake. Distills drif... | critical | wede-wx/atlas | atlas, ledger | atlas, ledger, companion, contract, auto, invoked, final, audit, caught, drift, after, post |
+| `audit-agent-run-evidence` | Use when an agent, harness, gateway, MCP workflow, or multi-step automation claims completion and the available traces, checkpoints, approvals, tool calls, o... | safe | self | audit, agent, run, evidence | audit, agent, run, evidence, harness, gateway, mcp, multi, step, automation, claims, completion |
 | `automated-triage` | Triage Monte Carlo alerts interactively or build an automated workflow. Fetch, score, and troubleshoot alerts using MCP tools now, or design a reusable workf... | critical | monte-carlo-data/mc-agent-toolkit | automated, triage | automated, triage, monte, carlo, alerts, interactively, fetch, score, troubleshoot, mcp, now, reusable |
 | `awareness-stage-mapper` | One sentence - what this skill does and when to invoke it | safe | community | awareness, stage, mapper | awareness, stage, mapper, one, sentence, what, skill, does, invoke |
 | `axiom` | First-principles assumption auditor. Classifies each hidden assumption (fact / convention / belief / interest-driven), ranks by fragility × impact, and rebui... | safe | community | axiom | axiom, first, principles, assumption, auditor, classifies, each, hidden, fact, convention, belief, interest |
@@ -2270,6 +2278,7 @@ Total skills: 2016
 | `repo-maintainer` | Audit and repair repository hygiene across artifacts, dependencies, CI, docs, Git state, and code-quality signals. Use for repository maintenance, cleanup, h... | critical | Wolfe-Jam/faf-skills | repo, maintainer | repo, maintainer, audit, repair, repository, hygiene, artifacts, dependencies, ci, docs, git, state |
 | `resolving-merge-conflicts` | Use when you need to resolve an in-progress git merge/rebase conflict. | critical | mattpocock/skills | resolving, merge, conflicts | resolving, merge, conflicts, resolve, progress, git, rebase, conflict |
 | `review-and-simplify-changes` | Review a git diff or explicit file scope for reuse, code quality, efficiency, clarity, and standards issues, then optionally apply safe Codex-driven fixes. U... | critical | Dimillian/Skills | and, simplify, changes | and, simplify, changes, review, git, diff, explicit, file, scope, reuse, code, quality |
+| `review-multi-agent-orchestration` | Use when a supervisor, swarm, graph, planner-worker system, or parallel agent workflow needs review for task boundaries, shared state, branch joins, retries,... | safe | self | multi, agent | multi, agent, review, orchestration, supervisor, swarm, graph, planner, worker, parallel, task, boundaries |
 | `review-swarm` | Parallel read-only multi-agent review of a current git diff or explicit file scope to find behavioral regressions, security or privacy risks, performance or ... | safe | Dimillian/Skills | swarm | swarm, review, parallel, read, multi, agent, current, git, diff, explicit, file, scope |
 | `robot-framework-skill` | Generates Robot Framework tests in keyword-driven syntax with Python. Supports SeleniumLibrary, RequestsLibrary, and custom keywords. Use when user mentions ... | critical | LambdaTest/agent-skills | robot, framework, skill | robot, framework, skill, generates, tests, keyword, driven, syntax, python, supports, seleniumlibrary, requestslibrary |
 | `sales-enablement` | Create sales collateral such as decks, one-pagers, objection docs, demo scripts, playbooks, and proposal templates. Use when a sales team needs assets that h... | safe | https://github.com/coreyhaines31/marketingskills | sales, enablement | sales, enablement, collateral, such, decks, one, pagers, objection, docs, demo, scripts, playbooks |

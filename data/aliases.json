@@ -1,8 +1,9 @@
 {
-  "generatedAt": "2026-08-16T10:07:40.000Z",
+  "generatedAt": "2026-08-20T06:53:06.000Z",
   "aliases": {
     "20-andruia-intelligence": "20-andruia-niche-intelligence",
     "accessibility-compliance-audit": "accessibility-compliance-accessibility-audit",
+    "agent-harness-injection": "agent-harness-fault-injection",
     "agent-orchestration-improve": "agent-orchestration-improve-agent",
     "agent-orchestration-optimize": "agent-orchestration-multi-agent-optimize",
     "alex": "agent-squad/alex",
@@ -60,6 +61,7 @@
     "comprehensive-review-enhance": "comprehensive-review-pr-enhance",
     "context-management-restore": "context-management-context-restore",
     "context-management-save": "context-management-context-save",
+    "cross-platform-audit": "cross-platform-contract-propagation-audit",
     "data-engineering-feature": "data-engineering-data-driven-feature",
     "data-engineering-pipeline": "data-engineering-data-pipeline",
     "database-cloud-optimize": "database-cloud-optimization-cost-optimize",
@@ -191,6 +193,7 @@
     "polis-protocol-agents": "polis-protocol-a-self-optimizing-city-of-agents",
     "python-development-scaffold": "python-development-python-scaffold",
     "recursive-context-budgeting": "recursive-context-pruning-token-budgeting",
+    "review-multi-orchestration": "review-multi-agent-orchestration",
     "sankhya-dashboard-pratices": "sankhya-dashboard-html-jsp-custom-best-pratices",
     "security-compliance-check": "security-compliance-compliance-check",
     "security-scanning-dependencies": "security-scanning-security-dependencies",

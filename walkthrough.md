@@ -1,3 +1,47 @@
+# Multi-source evidence integrity repair - 2026-08-20
+
+- Ported the executable follow-up from community PR #1204 onto the protected
+  maintainer lane, preserving contributor credit while keeping fork code out of
+  the direct source-merge path.
+- Made every claim classify cited evidence as supporting or contradicting, and
+  made conflict state fail closed against that classification.
+- Canonicalized URL identity for fragment, host-case, and default-port variants
+  before duplicate-source checks, with focused offline regression coverage.
+
+# Multi-source research ledger import - 2026-08-20
+
+- Ported community PR #1200 from the Apache-2.0 SandBase source at immutable
+  upstream commit `fc25b2ed4548b1bb91621661e82d07d4bbd285a1` because the fork could
+  not merge executable Python under the repository's approval policy.
+- Preserved the bounded, provider-optional research workflow and offline
+  evidence ledger while pinning its licence reference and distinguishing it
+  from post-run evidence auditing.
+- Adapted the upstream validator tests into the repository suite and added an
+  ISO-date check for time-sensitive search metadata. Generated registries and
+  plugin mirrors remain owned by protected canonical synchronization.
+
+# Stack artifact cross-audit - 2026-08-20
+
+- Ported the maintainer-only portions of community PRs #1187 and #1188 into one
+  coherent review path: `aas stack audit` for local CLI checks and paired
+  stack/plan comparison in the browser-local Workbench.
+- Kept both surfaces read-only. They compare manifest digests, catalog
+  identities, target bindings, and exact selected skill sets without applying
+  a stack or reading project files in the browser.
+- Preserved the contributor's CLI and web regression coverage and kept all
+  generated catalog state outside the source PR.
+
+# YouTube transcript compatibility repair - 2026-08-20
+
+- Ported the canonical-source portion of community PR #1194 while leaving both
+  plugin mirrors to protected canonical synchronization.
+- Updated the bundled extractor and documented examples for both the legacy
+  class API and the current instance API in `youtube-transcript-api`, including
+  URL parsing and UTF-8 console output.
+- Added isolated regression coverage for common YouTube URL forms, invalid
+  URLs, legacy transcript retrieval, and modern raw-data retrieval without
+  making network requests.
+
 # Community skill import - 2026-08-14
 
 - Imported the Apache-2.0-licensed `using-lwc` skill from

@@ -18,6 +18,7 @@ your project
   -> you review the artifacts
   -> aas stack validate
   -> aas stack plan (preview; no skill changes)
+  -> aas stack audit (optional cross-artifact consistency check)
 ```
 
 AAS MCP does not scan the repository and does not decide which skills are best. Codex or Claude uses its own project understanding and judgment. Every current catalog skill remains individually searchable, readable, and available for agent selection; missing or incomplete metadata never makes a skill ineligible. Core has no semantic policy that favors a small stack, while every stack manifest has an explicit technical maximum of 128 skills.
@@ -30,7 +31,7 @@ AAS MCP does not scan the repository and does not decide which skills are best. 
 > **Release boundary:** AAS Core landed after release 14.6.0. Use an exact Core-capable release rather than an unreviewed moving tag.
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@15.14.0 -- aas mcp configure \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@15.16.0 -- aas mcp configure \
   --host codex \
   --scope user \
   --config /absolute/path/to/codex/config.toml \
@@ -170,9 +171,16 @@ aas stack plan \
   --cache-root /absolute/path/to/aas-cache \
   --runtime-integrity '<npm-sri>' \
   --out /absolute/path/to/plan.json
+
+aas stack audit \
+  --manifest /absolute/path/to/aas-stack.json \
+  --evidence /absolute/path/to/aas-selection-evidence.json \
+  --plan /absolute/path/to/plan.json
 ```
 
 `stack validate` is read-only. `stack plan` writes only the requested plan artifact and does not materialize skills or AAS managed state in the target. The immutable plan binds the manifest, runtime, catalog, target identity, current managed state, and exact logical operations.
+
+`stack audit` is also read-only. It validates all three artifacts independently, resolves the manifest's pinned verified catalog, and reports whether their manifest digests, catalog identities, target, and selected skill IDs remain consistent. A structurally invalid or unverifiable artifact fails closed; a valid but differently bound artifact returns `status: "inconsistent"` with stable reason codes.
 
 Stop after reviewing the plan unless you are deliberately participating in controlled preview development. `stack apply` and `stack recover` remain experimental and require explicit opt-in.
 

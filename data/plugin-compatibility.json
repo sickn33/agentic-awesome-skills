@@ -564,8 +564,46 @@
       "runtime_files": []
     },
     {
+      "id": "agent-evaluation-reporting",
+      "path": "skills/agent-evaluation-reporting",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "agent-framework-azure-ai-py",
       "path": "skills/agent-framework-azure-ai-py",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-harness-fault-injection",
+      "path": "skills/agent-harness-fault-injection",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -3249,6 +3287,25 @@
     {
       "id": "audio-transcriber",
       "path": "skills/audio-transcriber",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "audit-agent-run-evidence",
+      "path": "skills/audit-agent-run-evidence",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -6655,6 +6712,25 @@
     {
       "id": "blueprint",
       "path": "skills/blueprint",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "boost-asio-pro",
+      "path": "skills/boost-asio-pro",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -10311,6 +10387,25 @@
       "runtime_files": []
     },
     {
+      "id": "cross-platform-contract-propagation-audit",
+      "path": "skills/cross-platform-contract-propagation-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "crossframe",
       "path": "skills/crossframe",
       "targets": {
@@ -13777,6 +13872,25 @@
     {
       "id": "dropbox-automation",
       "path": "skills/dropbox-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "dsh-deepread",
+      "path": "skills/dsh-deepread",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -24133,6 +24247,25 @@
       "runtime_files": []
     },
     {
+      "id": "multi-source-search",
+      "path": "skills/multi-source-search",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "n8n-agents",
       "path": "skills/n8n-agents",
       "targets": {
@@ -29286,6 +29419,25 @@
     {
       "id": "review-animations",
       "path": "skills/review-animations",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "review-multi-agent-orchestration",
+      "path": "skills/review-multi-agent-orchestration",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -35844,6 +35996,25 @@
       "runtime_files": []
     },
     {
+      "id": "ui-slop-score",
+      "path": "skills/ui-slop-score",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ui-tokens",
       "path": "skills/ui-tokens",
       "targets": {
@@ -38755,10 +38926,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2016,
+    "total_skills": 2025,
     "supported": {
-      "codex": 1938,
-      "claude": 1959
+      "codex": 1947,
+      "claude": 1968
     },
     "blocked": {
       "codex": 78,
