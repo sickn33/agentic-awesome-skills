@@ -104,7 +104,7 @@ Keep it short. It is the routing index, not a summary dump.
 # Project Memory Manifest
 
 ## Read First
-- STATE.md — mission, phase, active workstreams, active tasks, blockers, next actions
+- STATE.md — mission, phase, current workstreams and tasks, recent terminal transitions, blockers, next actions
 
 ## Read When Relevant
 - DECISIONS.md — durable owner/project decisions
@@ -115,7 +115,14 @@ Keep it short. It is the routing index, not a summary dump.
 ```
 
 ### `.project/STATE.md`
-Contain mission, success criteria, phase, active workstreams, milestones, active tasks, blockers, and next direction. Keep it sufficient for a fast cold start.
+Contain mission, success criteria, phase, current workstreams, milestones,
+current tasks, recent terminal transitions, blockers, and next direction. Keep
+it sufficient for a fast cold start.
+
+Apply the compact-mode terminal retention rules in scaled mode too. Keep
+verified `COMPLETED` or `CANCELLED` workstreams and `DONE` or `CANCELLED`
+tasks until consolidation can compress them into decision-relevant milestone
+or project history without losing information that still affects future work.
 
 ### `DECISIONS.md`
 Store only durable decisions that materially constrain future work.

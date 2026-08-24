@@ -8,7 +8,7 @@ Identify:
 
 - repository and target branch;
 - owner-requested cleanup boundary;
-- candidate paths and every applicable `AGENTS.md` from the repository root through each path's parent;
+- candidate paths and their complete instruction scope: include the candidate itself when it is an existing directory, otherwise stop at its parent; for recursive directory operations, discover every nested `AGENTS.md` in the affected subtree before inspecting or mutating it;
 - compact vs scaled canonical-state mode;
 - whether deletion is explicitly authorized or only recommendations are allowed.
 

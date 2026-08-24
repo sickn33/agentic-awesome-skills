@@ -354,7 +354,10 @@ Before accepting a completion claim:
 5. ensure no child-only completion is being promoted to a parent-level claim;
 6. record only the resulting durable state transition.
 
-If verification is incomplete, keep the item `ACTIVE` or `BLOCKED`.
+If verification is incomplete, do not change lifecycle status based on the
+completion claim. Preserve the item's existing status and record the missing
+evidence or blocker separately; transition status only when independent
+evidence supports that change.
 
 ## 12. Documentation, branch, and evidence hygiene
 

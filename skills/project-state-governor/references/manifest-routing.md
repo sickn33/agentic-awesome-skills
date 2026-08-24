@@ -31,7 +31,7 @@ AGENTS.md
 
 ## Routing rules
 
-- Put global mission, current phase, active workstreams, blockers, and next steps in `STATE.md`.
+- Put global mission, current phase, current workstreams and tasks, recent terminal transitions, blockers, and next steps in `STATE.md`.
 - Put durable choices in `DECISIONS.md`.
 - Put non-negotiable rules in `CONSTRAINTS.md`.
 - Put expensive failures and repeated pitfalls in `NEGATIVE_EVIDENCE.md`.
