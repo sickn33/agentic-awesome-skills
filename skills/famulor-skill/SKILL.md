@@ -32,6 +32,13 @@ If the Famulor MCP server is unavailable in the current client, help the user co
 - Use when configuring or operating assistants, communication history, campaigns, knowledge, automations, telephony, billing, or workspace settings.
 - Do not use for generic voice-agent advice that does not require Famulor.
 
+## Limitations
+
+- Static tool tables are a dated routing snapshot; the authenticated server's live `tools/list` schema is authoritative.
+- Available tools, fields, scopes, plan features, prices, limits, and provider behavior can differ by workspace and change over time.
+- This skill cannot grant missing consent, roles, scopes, plan entitlements, provider approvals, or regulatory authorization.
+- External calls, messages, purchases, migrations, and integrations may have costs or effects outside Famulor; verify their returned status instead of assuming completion or rollback.
+
 ## Route to the smallest toolset
 
 Use only the group or groups needed for the request. A narrower URL keeps discovery and model context manageable:
