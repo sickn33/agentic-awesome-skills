@@ -10,7 +10,7 @@ date_added: "2026-08-20"
 author: Ghost011118
 tags: [project-state, project-memory, documentation, governance, context-engineering, multi-agent]
 tools: [claude, cursor, gemini, codex, copilot, opencode]
-license: "Apache-2.0 OR CC-BY-4.0"
+license: "Apache-2.0"
 license_source: "https://github.com/Ghost011118/project-state-governor/blob/main/LICENSE"
 ---
 
@@ -356,156 +356,19 @@ Before accepting a completion claim:
 
 If verification is incomplete, keep the item `ACTIVE` or `BLOCKED`.
 
-## 12. Documentation hygiene
+## 12. Documentation, branch, and evidence hygiene
 
-Classify project-status documents as:
+- Follow `references/reconstruction-workflow.md` to classify status documents, resolve historical conflicts, and stage cleanup without losing unique durable information.
+- Keep branch-local implementation state branch-local until it is merged or accepted under project rules; never blend divergent branches silently.
+- Preserve only decision-relevant negative evidence and recurring lessons. Git remains the detailed historical archive.
+- Consolidate duplicate and obsolete state when it impairs retrieval, but stage any deletion whose significance is uncertain.
+- Never persist secrets, authentication material, or unnecessary sensitive personal data in canonical project state.
 
-- `AUTHORITATIVE`
-- `CURRENT_SUPPORTING`
-- `HISTORICAL`
-- `DUPLICATE`
-- `STALE`
-- `CONTRADICTORY`
-- `GENERATED_TEMPORARY`
-- `UNKNOWN`
+## 13. Coordination with other governors
 
-Do not delete based on filename alone.
-Before removing a document, determine whether it contains unique durable information.
+Engineering governors own technical defect classification, fixes, verification, and release risk. Research governors own protocols, stage gates, experiments, and evidence requirements. Consume their verified outputs as evidence; do not bypass or duplicate those workflows merely to advance project status.
 
-Do not concatenate old documents into one giant archive. Reconstruct current state.
-
-Avoid creating ad hoc status files such as `review-final-v2.md`, `todo-new.md`, `implementation-summary.md`, `current-progress.md`, `gpt-review.md`, `fix-report.md`, or `next-steps.md` unless a distinct external deliverable is explicitly required.
-
-## 13. Branch awareness
-
-Different branches may legitimately represent different implementation states.
-
-Before reconciling branch conflicts:
-
-- identify current branch and relevant ancestry;
-- determine whether changes were merged;
-- determine which branch is authoritative for the task;
-- distinguish abandoned branch state from current branch state;
-- keep branch-local completion branch-local until merged or accepted under project rules.
-
-Mission and durable owner decisions may be global while implementation progress remains branch-specific.
-
-Never silently blend incompatible branch state.
-
-## 14. Historical conflict categories
-
-Classify conflicts before editing canonical state.
-
-### OBSOLETE_HISTORY
-A statement was once valid but later superseded. Keep current state; Git retains history.
-
-### IMPLEMENTATION_DRIFT
-Documentation and implementation differ. Determine which violates higher-authority evidence.
-
-### UNRESOLVED_BUSINESS_CONFLICT
-Multiple legitimate intended behaviors remain. Escalate the smallest owner decision.
-
-### FALSE_OR_UNSUPPORTED_HISTORY
-A historical review or AI-generated claim was never established. Do not preserve it as truth.
-
-### BRANCH_DIVERGENCE
-Branches represent different states. Keep them distinct until merge/authority is resolved.
-
-## 15. Negative evidence and lessons
-
-Preserve failures or lessons when they are expensive to reproduce, strategically important, likely to be retried, necessary for research integrity, or necessary to prevent repeated agent mistakes.
-
-Keep records concise:
-
-- what failed or was corrected;
-- why;
-- supporting evidence;
-- whether the result is permanent or conditional.
-
-Do not preserve every failed debug attempt.
-
-## 16. Consolidation and forgetting
-
-Canonical state must not become an append-only diary.
-
-Periodically consolidate when one or more are true:
-
-- active sections contain completed/cancelled items;
-- duplicate facts appear;
-- old milestones no longer affect decisions;
-- negative evidence can be compressed without losing its warning value;
-- area files overlap;
-- state loading repeatedly pulls irrelevant content;
-- the canonical system has grown enough to impair fast comprehension.
-
-During consolidation:
-
-- deduplicate facts;
-- remove obsolete low-value state;
-- compress completed history into only decision-relevant milestones;
-- preserve critical decisions, constraints, negative evidence, and lessons;
-- migrate to scaled mode only when it improves retrieval;
-- never remove information whose significance is materially uncertain without review.
-
-Git remains the low-level historical archive.
-
-## 17. Security and sensitive-state hygiene
-
-Do not persist secrets, tokens, passwords, private keys, session cookies, raw credentials, or other authentication material in canonical project state.
-
-Do not persist sensitive personal data merely because it appeared in conversation or logs.
-When a useful durable fact can be recorded without sensitive detail, store the minimum necessary abstraction.
-
-Do not copy secrets from code/config into state documents while documenting a finding.
-
-## 18. Coordination with engineering governors
-
-When `engineering-decision-governor` or equivalent exists:
-
-Project State Governor owns:
-
-- state reconstruction;
-- goal hierarchy;
-- persistent status;
-- documentation hygiene;
-- durable state transitions;
-- cross-session continuity.
-
-Engineering Governor owns:
-
-- engineering task boundary;
-- technical defect classification;
-- deterministic fixes;
-- engineering verification;
-- scope-creep prevention;
-- release-risk classification.
-
-Consume verified engineering outputs as evidence.
-Do not repeat engineering work unless evidence is missing or contradictory.
-
-## 19. Coordination with research governors
-
-When a domain research governor exists, it owns:
-
-- research protocol and stage authorization;
-- experiment execution;
-- contamination/OOS rules;
-- candidate acceptance/rejection;
-- research evidence requirements.
-
-Project State Governor owns:
-
-- how research fits the mission;
-- which workstream is active;
-- persistent high-level research state;
-- durable negative evidence;
-- current next direction.
-
-Never bypass research stage gates.
-Never turn invalid/rejected research into project success.
-Never reinterpret evidence merely to make project status appear advanced.
-
-## 20. Owner authority boundary
+## 14. Owner authority boundary
 
 Autonomously:
 
@@ -529,13 +392,13 @@ Do not autonomously:
 
 Escalate only the smallest unresolved owner decision.
 
-## 21. Repository reconstruction mode
+## 15. Repository reconstruction mode
 
 When asked to clean, repair, consolidate, or reconstruct a repository with fragmented history, enter `REPOSITORY_STATE_RECONSTRUCTION` and follow `references/reconstruction-workflow.md`.
 
 Do not use reconstruction as justification for unrelated feature work.
 
-## 22. State update equation
+## 16. State update equation
 
 Before applying canonical state, compute:
 
@@ -549,7 +412,7 @@ OLD_STATE
 For material updates, make the proposed semantic delta explicit before applying it.
 Distinguish `CONFIRMED`, `INFERRED`, and `UNKNOWN` where reliability matters.
 
-## 23. Final reporting
+## 17. Final reporting
 
 After meaningful governance work, report only:
 
@@ -570,7 +433,7 @@ Only provenance or confidence caveats that materially affect trust.
 
 If no durable state changed, say so briefly and do not manufacture an update.
 
-## 24. Anti-patterns
+## 18. Anti-patterns
 
 Never:
 
