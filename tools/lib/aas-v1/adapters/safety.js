@@ -24,7 +24,9 @@ function windowsAclDiagnostic(value) {
 
 function runWindowsAcl(script, filePath, options = {}) {
   const runner = options.runner || spawnSync;
-  const result = runner("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", script], {
+  const securityModule = "$securityModule=Join-Path $PSHOME 'Modules\\Microsoft.PowerShell.Security\\Microsoft.PowerShell.Security.psd1';if(Test-Path -LiteralPath $securityModule){Import-Module -Name $securityModule -ErrorAction Stop}else{Import-Module Microsoft.PowerShell.Security -ErrorAction Stop}";
+  const command = `${securityModule};${script}`;
+  const result = runner("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", command], {
     encoding: "utf8",
     windowsHide: true,
     timeout: 15000,
