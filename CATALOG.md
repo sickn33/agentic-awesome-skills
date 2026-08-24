@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-20T06:53:06.000Z
 
-Total skills: 2024
+Total skills: 2025
 
 ## agent-behavior (5)
 
@@ -232,13 +232,14 @@ Total skills: 2024
 | `10-andruia-skill-smith` | Ingeniero de Sistemas de Andru.ia. Diseña, redacta y despliega nuevas habilidades (skills) dentro del repositorio siguiendo el Estándar de Diamante. | safe | personal | 10, andruia, skill, smith | 10, andruia, skill, smith, ingeniero, de, sistemas, andru, ia, dise, redacta, despliega |
 | `20-andruia-niche-intelligence` | Estratega de Inteligencia de Dominio de Andru.ia. Analiza el nicho específico de un proyecto para inyectar conocimientos, regulaciones y estándares únicos de... | safe | personal | 20, andruia, niche, intelligence | 20, andruia, niche, intelligence, estratega, de, inteligencia, dominio, andru, ia, analiza, el |
 
-## api-integration (29)
+## api-integration (30)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `2slides-ppt-generator` | AI-powered presentation generation via the 2slides API — create slides from text, match a reference image style, summarize documents into decks, add AI voice... | safe | 2slides/slides-generation-2slides-skills | presentations, slides, powerpoint, ai, api-integration, pdf, narration, document-summarization | presentations, slides, powerpoint, ai, api-integration, pdf, narration, document-summarization, 2slides, ppt, generator, powered |
 | `algolia-search` | Expert patterns for Algolia search implementation, indexing strategies, React InstantSearch, and relevance tuning | critical | vibeship-spawner-skills (Apache 2.0) | algolia, search | algolia, search, indexing, react, instantsearch, relevance, tuning |
 | `discord-automation` | Automate Discord tasks via Rube MCP (Composio): messages, channels, roles, webhooks, reactions. Always search tools first for current schemas. | critical | community | discord | discord, automation, automate, tasks, via, rube, mcp, composio, messages, channels, roles, webhooks |
+| `famulor-skill` | Operate Famulor assistants, communication history, campaigns, knowledge, automations, telephony, and workspace administration through its hosted MCP server. | critical | bekservice/Famulor-Skill | famulor, mcp, voice-ai, communication, automation | famulor, mcp, voice-ai, communication, automation, skill, operate, assistants, history, campaigns, knowledge, automations |
 | `hubspot-integration` | Expert patterns for HubSpot CRM integration including OAuth authentication, CRM objects, associations, batch operations, webhooks, and custom objects. Covers... | critical | vibeship-spawner-skills (Apache 2.0) | hubspot, integration | hubspot, integration, crm, including, oauth, authentication, objects, associations, batch, operations, webhooks, custom |
 | `microsoft-teams-automation` | Automate Microsoft Teams tasks via Rube MCP (Composio): send messages, manage channels, create meetings, handle chats, and search messages. Always search too... | critical | community | microsoft, teams | microsoft, teams, automation, automate, tasks, via, rube, mcp, composio, send, messages, channels |
 | `moodle-external-api-development` | This skill guides you through creating custom external web service APIs for Moodle LMS, following Moodle's external API framework and coding standards. | critical | community | moodle, external, api | moodle, external, api, development, skill, guides, through, creating, custom, web, apis, lms |

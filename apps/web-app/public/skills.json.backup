@@ -18604,6 +18604,39 @@
     }
   },
   {
+    "id": "famulor-skill",
+    "path": "skills/famulor-skill",
+    "category": "api-integration",
+    "name": "famulor-skill",
+    "description": "Operate Famulor assistants, communication history, campaigns, knowledge, automations, telephony, and workspace administration through its hosted MCP server.",
+    "risk": "critical",
+    "source": "https://github.com/bekservice/Famulor-Skill",
+    "date_added": "2026-08-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "bekservice/Famulor-Skill",
+    "license": "MIT",
+    "license_source": "https://github.com/bekservice/Famulor-Skill/blob/main/LICENSE",
+    "tags": [
+      "famulor",
+      "mcp",
+      "voice-ai",
+      "communication",
+      "automation"
+    ]
+  },
+  {
     "id": "fastapi-pro",
     "path": "skills/fastapi-pro",
     "category": "framework",

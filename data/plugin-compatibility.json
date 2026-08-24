@@ -15206,6 +15206,25 @@
       "runtime_files": []
     },
     {
+      "id": "famulor-skill",
+      "path": "skills/famulor-skill",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "fastapi-pro",
       "path": "skills/fastapi-pro",
       "targets": {
@@ -38907,10 +38926,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2024,
+    "total_skills": 2025,
     "supported": {
-      "codex": 1946,
-      "claude": 1967
+      "codex": 1947,
+      "claude": 1968
     },
     "blocked": {
       "codex": 78,

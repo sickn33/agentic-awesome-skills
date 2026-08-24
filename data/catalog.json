@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-20T06:53:06.000Z",
-  "total": 2024,
+  "total": 2025,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -22894,6 +22894,41 @@
         "analyzer"
       ],
       "path": "skills/family-health-analyzer/SKILL.md"
+    },
+    {
+      "id": "famulor-skill",
+      "canonical_id": "famulor-skill",
+      "name": "famulor-skill",
+      "description": "Operate Famulor assistants, communication history, campaigns, knowledge, automations, telephony, and workspace administration through its hosted MCP server.",
+      "category": "api-integration",
+      "risk": "critical",
+      "source": "https://github.com/bekservice/Famulor-Skill",
+      "source_type": "official",
+      "source_repo": "bekservice/Famulor-Skill",
+      "license": "MIT",
+      "license_source": "https://github.com/bekservice/Famulor-Skill/blob/main/LICENSE",
+      "tags": [
+        "famulor",
+        "mcp",
+        "voice-ai",
+        "communication",
+        "automation"
+      ],
+      "triggers": [
+        "famulor",
+        "mcp",
+        "voice-ai",
+        "communication",
+        "automation",
+        "skill",
+        "operate",
+        "assistants",
+        "history",
+        "campaigns",
+        "knowledge",
+        "automations"
+      ],
+      "path": "skills/famulor-skill/SKILL.md"
     },
     {
       "id": "fastapi-pro",
