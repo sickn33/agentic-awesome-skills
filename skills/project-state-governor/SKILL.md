@@ -199,7 +199,7 @@ When repository access exists and project-level conclusions are required:
 
 1. read the repository-root `AGENTS.md` when present;
 2. identify candidate paths that may be inspected, written, moved, or deleted;
-3. before acting on each candidate path, discover and read every applicable `AGENTS.md` from the repository root through that path's parent; deeper rules govern only their subtree;
+3. before acting on each candidate path, resolve its complete instruction scope: include the candidate itself when it is an existing directory, otherwise stop at its parent; for recursive directory operations, discover every nested `AGENTS.md` in the affected subtree before inspecting or mutating that subtree; deeper rules govern only their subtree;
 4. detect compact or scaled canonical-state mode;
 5. in scaled mode, read `.project/MANIFEST.md` first;
 6. read current state/brief before historical material;
