@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Restored native Windows MCP configuration by loading the built-in PowerShell
+  security module explicitly before ACL inspection and hardening.
+- Made npm release-identity verification compatible with npm 12 on Windows by
+  invoking the npm CLI through Node instead of spawning `npm.cmd` directly.
+- Removed stale `uizze-ui-research` bundle memberships after the retired skill
+  was removed from the canonical catalog.
+
 ## [15.16.0] - 2026-08-20 - "Agent Reliability, Evidence Integrity, and Stack Audits"
 
 > Added six focused skills for asynchronous C++ networking, controlled agent

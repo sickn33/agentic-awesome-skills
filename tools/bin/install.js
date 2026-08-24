@@ -881,22 +881,40 @@ function resolveInstallVersion(opts) {
   return normalizeExactReleaseVersion(opts.versionArg || packageMetadata.version);
 }
 
-function resolvePublishedGitHead(version, spawn = spawnSync) {
+function resolveNpmInvocation(args, runtime = {}) {
+  const platform = runtime.platform || process.platform;
+  if (platform !== "win32") return { command: "npm", args };
+
+  const environment = runtime.env || process.env;
+  const nodeExecutable = runtime.execPath || process.execPath;
+  const npmExecPath = environment.npm_execpath;
+  if (
+    typeof npmExecPath === "string"
+    && path.win32.isAbsolute(npmExecPath)
+    && /^npm-cli\.(?:c?js|mjs)$/i.test(path.win32.basename(npmExecPath))
+  ) {
+    return { command: nodeExecutable, args: [npmExecPath, ...args] };
+  }
+  return { command: "npm.cmd", args };
+}
+
+function resolvePublishedGitHead(version, spawn = spawnSync, runtime = {}) {
   const exactVersion = normalizeExactReleaseVersion(version);
-  const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+  const npmArgs = [
+    "view",
+    `${packageMetadata.name}@${exactVersion}`,
+    "gitHead",
+    "--json",
+    "--registry",
+    NPM_REGISTRY,
+    "--ignore-scripts",
+    "--prefer-online",
+    "--loglevel=error",
+  ];
+  const invocation = resolveNpmInvocation(npmArgs, runtime);
   const result = spawn(
-    npmCommand,
-    [
-      "view",
-      `${packageMetadata.name}@${exactVersion}`,
-      "gitHead",
-      "--json",
-      "--registry",
-      NPM_REGISTRY,
-      "--ignore-scripts",
-      "--prefer-online",
-      "--loglevel=error",
-    ],
+    invocation.command,
+    invocation.args,
     { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
   );
   if (result.error || result.status !== 0) {
@@ -1352,6 +1370,7 @@ module.exports = {
   resolveExactSkillSelections,
   resolveInstallRef,
   resolveInstallVersion,
+  resolveNpmInvocation,
   resolvePublishedGitHead,
   assertClonedReleaseIdentity,
   normalizeExactReleaseVersion,
