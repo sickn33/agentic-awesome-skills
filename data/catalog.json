@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-20T06:53:06.000Z",
-  "total": 2025,
+  "generatedAt": "2026-08-24T05:22:46.000Z",
+  "total": 2026,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -3063,7 +3063,7 @@
       "id": "anti-ui-slop",
       "canonical_id": "anti-ui-slop",
       "name": "anti-ui-slop",
-      "description": "Stop coding agents from shipping generic UI with UIZZE's 800,000+ real web and iOS screens, product-specific contracts, required states, and a hard finish gate.",
+      "description": "Stop coding agents from shipping generic UI. Extend the product's design system, use UIZZE evidence only when useful, cover required states, and inspect the rendered result.",
       "category": "frontend",
       "risk": "safe",
       "source": "https://github.com/uizze/uizze/tree/main/skills/anti-ui-slop",
@@ -22896,6 +22896,41 @@
       "path": "skills/family-health-analyzer/SKILL.md"
     },
     {
+      "id": "famulor-skill",
+      "canonical_id": "famulor-skill",
+      "name": "famulor-skill",
+      "description": "Operate Famulor assistants, communication history, campaigns, knowledge, automations, telephony, and workspace administration through its hosted MCP server.",
+      "category": "api-integration",
+      "risk": "critical",
+      "source": "https://github.com/bekservice/Famulor-Skill",
+      "source_type": "official",
+      "source_repo": "bekservice/Famulor-Skill",
+      "license": "MIT",
+      "license_source": "https://github.com/bekservice/Famulor-Skill/blob/main/LICENSE",
+      "tags": [
+        "famulor",
+        "mcp",
+        "voice-ai",
+        "communication",
+        "automation"
+      ],
+      "triggers": [
+        "famulor",
+        "mcp",
+        "voice-ai",
+        "communication",
+        "automation",
+        "skill",
+        "operate",
+        "assistants",
+        "history",
+        "campaigns",
+        "knowledge",
+        "automations"
+      ],
+      "path": "skills/famulor-skill/SKILL.md"
+    },
+    {
       "id": "fastapi-pro",
       "canonical_id": "fastapi-pro",
       "name": "fastapi-pro",
@@ -42409,6 +42444,42 @@
       "path": "skills/project-skill-audit/SKILL.md"
     },
     {
+      "id": "project-state-governor",
+      "canonical_id": "project-state-governor",
+      "name": "project-state-governor",
+      "description": "Govern evidence-backed canonical project state across sessions, branches, reviews, and research cycles without inventing product intent.",
+      "category": "project-management",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Ghost011118/project-state-governor",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/Ghost011118/project-state-governor/blob/main/LICENSE",
+      "tags": [
+        "project-state",
+        "project-memory",
+        "documentation",
+        "governance",
+        "context-engineering",
+        "multi-agent"
+      ],
+      "triggers": [
+        "project-state",
+        "project-memory",
+        "documentation",
+        "governance",
+        "context-engineering",
+        "multi-agent",
+        "state",
+        "governor",
+        "govern",
+        "evidence",
+        "backed",
+        "canonical"
+      ],
+      "path": "skills/project-state-governor/SKILL.md"
+    },
+    {
       "id": "projection-patterns",
       "canonical_id": "projection-patterns",
       "name": "projection-patterns",
@@ -45381,7 +45452,7 @@
       "id": "salesforce-development",
       "canonical_id": "salesforce-development",
       "name": "salesforce-development",
-      "description": "Expert patterns for Salesforce platform development including Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, Connected Apps, and Salesforce DX with scratch orgs and 2nd generation packages (2GP).",
+      "description": "Expert patterns for Salesforce platform development including Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, External Client Apps, and Salesforce DX with scratch orgs and 2nd generation packages (2GP).",
       "category": "api-integration",
       "risk": "safe",
       "source": "vibeship-spawner-skills (Apache 2.0)",
@@ -54482,41 +54553,6 @@
         "verification"
       ],
       "path": "skills/ui-visual-validator/SKILL.md"
-    },
-    {
-      "id": "uizze-ui-research",
-      "canonical_id": "uizze-ui-research",
-      "name": "uizze-ui-research",
-      "description": "Use when building or reviewing web and iOS UI and you need real references from the free UIZZE public catalog, a structured design contract, a consent-gated rendered HTML/CSS preview, or a hard pre-ship finish gate.",
-      "category": "design",
-      "risk": "safe",
-      "source": "https://github.com/aislon/uizze-mcp/tree/main/skills/uizze-ui-research",
-      "source_type": "official",
-      "source_repo": "aislon/uizze-mcp",
-      "license": "MIT",
-      "license_source": "https://github.com/aislon/uizze-mcp/blob/main/LICENSE",
-      "tags": [
-        "ui-design",
-        "ui-research",
-        "mcp",
-        "design-contracts",
-        "agent-workflows"
-      ],
-      "triggers": [
-        "ui-design",
-        "ui-research",
-        "mcp",
-        "design-contracts",
-        "agent-workflows",
-        "uizze",
-        "ui",
-        "research",
-        "building",
-        "reviewing",
-        "web",
-        "ios"
-      ],
-      "path": "skills/uizze-ui-research/SKILL.md"
     },
     {
       "id": "uncle-bob-craft",

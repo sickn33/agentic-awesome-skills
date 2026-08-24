@@ -41,6 +41,25 @@ assert.deepStrictEqual(capturedNpmCall.options, {
   stdio: ["ignore", "pipe", "pipe"],
 });
 
+assert.deepStrictEqual(
+  installer.resolveNpmInvocation(["view", "example"], {
+    platform: "win32",
+    env: { npm_execpath: String.raw`C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js` },
+    execPath: String.raw`C:\Program Files\nodejs\node.exe`,
+  }),
+  {
+    command: String.raw`C:\Program Files\nodejs\node.exe`,
+    args: [String.raw`C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js`, "view", "example"],
+  },
+  "Windows should execute npm's JavaScript entry point with Node instead of spawning npm.cmd",
+);
+
+assert.deepStrictEqual(
+  installer.resolveNpmInvocation(["view", "example"], { platform: "win32", env: {}, execPath: "node.exe" }),
+  { command: "npm.cmd", args: ["view", "example"] },
+  "Windows should retain the legacy command fallback outside an npm-managed process",
+);
+
 assert.doesNotThrow(
   () => installer.assertClonedReleaseIdentity(publishedHead, publishedHead, "v15.12.0"),
   "the installer should accept a clone that matches the npm release identity",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-20T06:53:06.000Z",
+  "generatedAt": "2026-08-24T05:22:46.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -442,7 +442,6 @@
         "ui-page",
         "ui-slop-score",
         "ui-ux-pro-max",
-        "uizze-ui-research",
         "uniprot-database",
         "unship",
         "unslop-file",
@@ -1138,6 +1137,7 @@
         "expo-examples",
         "faf-wizard",
         "fal-workflow",
+        "famulor-skill",
         "figma-automation",
         "flowhunt-skill",
         "freshdesk-automation",
@@ -1554,7 +1554,6 @@
         "android-jetpack-compose-expert",
         "android-ui-journey-testing",
         "android_ui_verification",
-        "anti-ui-slop",
         "app-store-optimization",
         "appium-skill",
         "audit-skills",
@@ -1605,7 +1604,6 @@
         "ui-page",
         "ui-slop-score",
         "ui-ux-pro-max",
-        "uizze-ui-research",
         "update-swiftui-apis",
         "upgrading-expo",
         "use-dom",

@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-08-20T06:53:06.000Z
+Generated at: 2026-08-24T05:22:46.000Z
 
-Total skills: 2025
+Total skills: 2026
 
 ## agent-behavior (5)
 
@@ -232,13 +232,14 @@ Total skills: 2025
 | `10-andruia-skill-smith` | Ingeniero de Sistemas de Andru.ia. Diseña, redacta y despliega nuevas habilidades (skills) dentro del repositorio siguiendo el Estándar de Diamante. | safe | personal | 10, andruia, skill, smith | 10, andruia, skill, smith, ingeniero, de, sistemas, andru, ia, dise, redacta, despliega |
 | `20-andruia-niche-intelligence` | Estratega de Inteligencia de Dominio de Andru.ia. Analiza el nicho específico de un proyecto para inyectar conocimientos, regulaciones y estándares únicos de... | safe | personal | 20, andruia, niche, intelligence | 20, andruia, niche, intelligence, estratega, de, inteligencia, dominio, andru, ia, analiza, el |
 
-## api-integration (29)
+## api-integration (30)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `2slides-ppt-generator` | AI-powered presentation generation via the 2slides API — create slides from text, match a reference image style, summarize documents into decks, add AI voice... | safe | 2slides/slides-generation-2slides-skills | presentations, slides, powerpoint, ai, api-integration, pdf, narration, document-summarization | presentations, slides, powerpoint, ai, api-integration, pdf, narration, document-summarization, 2slides, ppt, generator, powered |
 | `algolia-search` | Expert patterns for Algolia search implementation, indexing strategies, React InstantSearch, and relevance tuning | critical | vibeship-spawner-skills (Apache 2.0) | algolia, search | algolia, search, indexing, react, instantsearch, relevance, tuning |
 | `discord-automation` | Automate Discord tasks via Rube MCP (Composio): messages, channels, roles, webhooks, reactions. Always search tools first for current schemas. | critical | community | discord | discord, automation, automate, tasks, via, rube, mcp, composio, messages, channels, roles, webhooks |
+| `famulor-skill` | Operate Famulor assistants, communication history, campaigns, knowledge, automations, telephony, and workspace administration through its hosted MCP server. | critical | bekservice/Famulor-Skill | famulor, mcp, voice-ai, communication, automation | famulor, mcp, voice-ai, communication, automation, skill, operate, assistants, history, campaigns, knowledge, automations |
 | `hubspot-integration` | Expert patterns for HubSpot CRM integration including OAuth authentication, CRM objects, associations, batch operations, webhooks, and custom objects. Covers... | critical | vibeship-spawner-skills (Apache 2.0) | hubspot, integration | hubspot, integration, crm, including, oauth, authentication, objects, associations, batch, operations, webhooks, custom |
 | `microsoft-teams-automation` | Automate Microsoft Teams tasks via Rube MCP (Composio): send messages, manage channels, create meetings, handle chats, and search messages. Always search too... | critical | community | microsoft, teams | microsoft, teams, automation, automate, tasks, via, rube, mcp, composio, send, messages, channels |
 | `moodle-external-api-development` | This skill guides you through creating custom external web service APIs for Moodle LMS, following Moodle's external API framework and coding standards. | critical | community | moodle, external, api | moodle, external, api, development, skill, guides, through, creating, custom, web, apis, lms |
@@ -250,7 +251,7 @@ Total skills: 2025
 | `postmark-automation` | Automate Postmark email delivery tasks via Rube MCP (Composio): send templated emails, manage templates, monitor delivery stats and bounces. Always search to... | critical | community | postmark | postmark, automation, automate, email, delivery, tasks, via, rube, mcp, composio, send, templated |
 | `riffkit` | Riff a winning TikTok into your own short video — study a proven video's emotion formula and regenerate it with your product, character, and language (9 supp... | critical | riffkit/skill | video, short-form, tiktok, ai-video, marketing, ads, ecommerce, api-integration | video, short-form, tiktok, ai-video, marketing, ads, ecommerce, api-integration, riffkit, riff, winning, own |
 | `salesforce-automation` | Automate Salesforce tasks via Rube MCP (Composio): leads, contacts, accounts, opportunities, SOQL queries. Always search tools first for current schemas. | critical | community | salesforce | salesforce, automation, automate, tasks, via, rube, mcp, composio, leads, contacts, accounts, opportunities |
-| `salesforce-development` | Expert patterns for Salesforce platform development including Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, Connected Apps, and ... | safe | vibeship-spawner-skills (Apache 2.0) | salesforce | salesforce, development, platform, including, lightning, web, components, lwc, apex, triggers, classes, rest |
+| `salesforce-development` | Expert patterns for Salesforce platform development including Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, External Client Apps... | safe | vibeship-spawner-skills (Apache 2.0) | salesforce | salesforce, development, platform, including, lightning, web, components, lwc, apex, triggers, classes, rest |
 | `sendblue/sendblue-api` | Send and receive iMessage, SMS, and RCS from application code via the Sendblue HTTP API — text, media, group messages, send styles, reactions, typing indicat... | critical | community | sendblue, imessage, sms, rcs, messaging, api, webhooks | sendblue, imessage, sms, rcs, messaging, api, webhooks, send, receive, application, code, via |
 | `sendblue/sendblue-cli` | Send iMessage and SMS from the shell via the @sendblue/cli npm package — outbound sends, contact management, and account setup with no API client or webhook ... | critical | sendblue-api/sendblue-cli | sendblue, imessage, sms, cli, messaging, notifications | sendblue, imessage, sms, cli, messaging, notifications, send, shell, via, npm, package, outbound |
 | `shopify-apps` | Expert patterns for Shopify app development including Remix/React Router apps, embedded apps with App Bridge, webhook handling, GraphQL Admin API, Polaris co... | safe | vibeship-spawner-skills (Apache 2.0) | shopify, apps | shopify, apps, app, development, including, remix, react, router, embedded, bridge, webhook, handling |
@@ -931,7 +932,7 @@ Total skills: 2025
 | --- | --- | --- | --- | --- | --- |
 | `diagnose-android-overheating` | Use when diagnosing Android overheating, idle heat, thermal throttling, charging or radio heat, or abnormal battery drain with read-only ADB evidence and app... | critical | self | android, adb, overheating, thermal, battery, diagnostics | android, adb, overheating, thermal, battery, diagnostics, diagnose, diagnosing, idle, heat, throttling, charging |
 
-## design (18)
+## design (17)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -947,7 +948,6 @@ Total skills: 2025
 | `stitch-ui-design` | Expert guidance for crafting effective prompts in Google Stitch, the AI-powered UI design tool by Google Labs. This skill helps create precise, actionable pr... | safe | self | stitch, ui | stitch, ui, guidance, crafting, effective, prompts, google, ai, powered, labs, skill, helps |
 | `theme-factory` | This skill provides a curated collection of professional font and color themes themes, each with carefully selected color palettes and font pairings. Once a ... | critical | community | theme, factory | theme, factory, skill, provides, curated, collection, professional, font, color, themes, each, carefully |
 | `ui-visual-validator` | Rigorous visual validation expert specializing in UI testing, design system compliance, and accessibility verification. | safe | community | ui, visual, validator | ui, visual, validator, rigorous, validation, specializing, testing, compliance, accessibility, verification |
-| `uizze-ui-research` | Use when building or reviewing web and iOS UI and you need real references from the free UIZZE public catalog, a structured design contract, a consent-gated ... | safe | aislon/uizze-mcp | ui-design, ui-research, mcp, design-contracts, agent-workflows | ui-design, ui-research, mcp, design-contracts, agent-workflows, uizze, ui, research, building, reviewing, web, ios |
 | `uxui-principles` | Evaluate interfaces against 168 research-backed UX/UI principles, detect antipatterns, and inject UX context into AI coding sessions. | safe | community | ux, ui, design, evaluation, principles, antipatterns, accessibility | ux, ui, design, evaluation, principles, antipatterns, accessibility, uxui, evaluate, interfaces, against, 168 |
 | `vizcom` | AI-powered product design tool for transforming sketches into full-fidelity 3D renders. | safe | community | vizcom | vizcom, ai, powered, product, transforming, sketches, full, fidelity, 3d, renders |
 | `wcag-audit-patterns` | Comprehensive guide to auditing web content against WCAG 2.2 guidelines with actionable remediation strategies. | safe | community | wcag, audit | wcag, audit, auditing, web, content, against, guidelines, actionable, remediation |
@@ -1326,7 +1326,7 @@ Total skills: 2025
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
-| `anti-ui-slop` | Stop coding agents from shipping generic UI with UIZZE's 800,000+ real web and iOS screens, product-specific contracts, required states, and a hard finish gate. | safe | uizze/uizze | ui, ux, frontend, design, anti-ui-slop | ui, ux, frontend, design, anti-ui-slop, anti, slop, stop, coding, agents, shipping, generic |
+| `anti-ui-slop` | Stop coding agents from shipping generic UI. Extend the product's design system, use UIZZE evidence only when useful, cover required states, and inspect the ... | safe | uizze/uizze | ui, ux, frontend, design, anti-ui-slop | ui, ux, frontend, design, anti-ui-slop, anti, slop, stop, coding, agents, shipping, generic |
 | `astro` | Build content-focused websites with Astro — zero JS by default, islands architecture, multi-framework components, and Markdown/MDX support. | safe | community | astro, ssg, ssr, islands, content, markdown, mdx, performance | astro, ssg, ssr, islands, content, markdown, mdx, performance, websites, zero, js, default |
 | `design-it` | Routes frontend design tasks to 48 specific UI styles. Triggers for websites, app screens, or UI components requesting a specific aesthetic. | safe | self | design, ui, frontend | design, ui, frontend, routes, tasks, 48, specific, styles, triggers, websites, app, screens |
 | `design-taste-frontend` | Use when building high-agency frontend interfaces with strict design taste, calibrated color, responsive layout, and motion rules. | safe | Leonxlnx/taste-skill | frontend, design, ui, react | frontend, design, ui, react, taste, building, high, agency, interfaces, strict, calibrated, color |
@@ -1777,7 +1777,7 @@ Total skills: 2025
 | `trading-ledger` | A trading journal that captures the decision, not just the fill: thesis, plan, and emotion at the moment of entry, written to the user's own Notion database;... | critical | cruisekkk/trading-ledger | trading-journal, notion, journaling, market-wizards, decision-making | trading-journal, notion, journaling, market-wizards, decision-making, trading, ledger, journal, captures, decision, just, fill |
 | `workorai` | WorkorAI talent-marketplace skill: candidates search jobs and manage applications; employers run the job lifecycle and get ranked candidate matches with whit... | critical | work0r-ai/agent-kit | job-search, hiring, recruiting, talent-marketplace, mcp | job-search, hiring, recruiting, talent-marketplace, mcp, workorai, talent, marketplace, skill, candidates, search, jobs |
 
-## project-management (21)
+## project-management (22)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1793,6 +1793,7 @@ Total skills: 2025
 | `miro-automation` | Automate Miro tasks via Rube MCP (Composio): boards, items, sticky notes, frames, sharing, connectors. Always search tools first for current schemas. | critical | community | miro | miro, automation, automate, tasks, via, rube, mcp, composio, boards, items, sticky, notes |
 | `monday-automation` | Automate Monday.com work management including boards, items, columns, groups, subitems, and updates via Rube MCP (Composio). Always search tools first for cu... | critical | community | monday | monday, automation, automate, com, work, including, boards, items, columns, groups, subitems, updates |
 | `progressive-estimation` | Estimate AI-assisted and hybrid human+agent development work with research-backed PERT statistics and calibration feedback loops | safe | community | estimation, project-management, pert, sprint-planning, ai-agents | estimation, project-management, pert, sprint-planning, ai-agents, progressive, estimate, ai, assisted, hybrid, human, agent |
+| `project-state-governor` | Govern evidence-backed canonical project state across sessions, branches, reviews, and research cycles without inventing product intent. | critical | Ghost011118/project-state-governor | project-state, project-memory, documentation, governance, context-engineering, multi-agent | project-state, project-memory, documentation, governance, context-engineering, multi-agent, state, governor, govern, evidence, backed, canonical |
 | `sred-project-organizer` | Take a list of projects and their related documentation, and organize them into the SRED format for submission. | critical | community | sred, organizer | sred, organizer, take, list, related, documentation, organize, them, format, submission |
 | `sred-work-summary` | Go back through the previous year of work and create a Notion doc that groups relevant links into projects that can then be documented as SRED projects. | critical | community | sred, work, summary | sred, work, summary, go, back, through, previous, year, notion, doc, groups, relevant |
 | `team-collaboration-issue` | You are a GitHub issue resolution expert specializing in systematic bug investigation, feature implementation, and collaborative development workflows. Your ... | safe | community | team, collaboration, issue | team, collaboration, issue, github, resolution, specializing, systematic, bug, investigation, feature, collaborative, development |
