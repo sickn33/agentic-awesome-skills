@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-20T06:53:06.000Z
 
-Total skills: 2025
+Total skills: 2024
 
 ## agent-behavior (5)
 
@@ -250,7 +250,7 @@ Total skills: 2025
 | `postmark-automation` | Automate Postmark email delivery tasks via Rube MCP (Composio): send templated emails, manage templates, monitor delivery stats and bounces. Always search to... | critical | community | postmark | postmark, automation, automate, email, delivery, tasks, via, rube, mcp, composio, send, templated |
 | `riffkit` | Riff a winning TikTok into your own short video — study a proven video's emotion formula and regenerate it with your product, character, and language (9 supp... | critical | riffkit/skill | video, short-form, tiktok, ai-video, marketing, ads, ecommerce, api-integration | video, short-form, tiktok, ai-video, marketing, ads, ecommerce, api-integration, riffkit, riff, winning, own |
 | `salesforce-automation` | Automate Salesforce tasks via Rube MCP (Composio): leads, contacts, accounts, opportunities, SOQL queries. Always search tools first for current schemas. | critical | community | salesforce | salesforce, automation, automate, tasks, via, rube, mcp, composio, leads, contacts, accounts, opportunities |
-| `salesforce-development` | Expert patterns for Salesforce platform development including Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, Connected Apps, and ... | safe | vibeship-spawner-skills (Apache 2.0) | salesforce | salesforce, development, platform, including, lightning, web, components, lwc, apex, triggers, classes, rest |
+| `salesforce-development` | Expert patterns for Salesforce platform development including Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, External Client Apps... | safe | vibeship-spawner-skills (Apache 2.0) | salesforce | salesforce, development, platform, including, lightning, web, components, lwc, apex, triggers, classes, rest |
 | `sendblue/sendblue-api` | Send and receive iMessage, SMS, and RCS from application code via the Sendblue HTTP API — text, media, group messages, send styles, reactions, typing indicat... | critical | community | sendblue, imessage, sms, rcs, messaging, api, webhooks | sendblue, imessage, sms, rcs, messaging, api, webhooks, send, receive, application, code, via |
 | `sendblue/sendblue-cli` | Send iMessage and SMS from the shell via the @sendblue/cli npm package — outbound sends, contact management, and account setup with no API client or webhook ... | critical | sendblue-api/sendblue-cli | sendblue, imessage, sms, cli, messaging, notifications | sendblue, imessage, sms, cli, messaging, notifications, send, shell, via, npm, package, outbound |
 | `shopify-apps` | Expert patterns for Shopify app development including Remix/React Router apps, embedded apps with App Bridge, webhook handling, GraphQL Admin API, Polaris co... | safe | vibeship-spawner-skills (Apache 2.0) | shopify, apps | shopify, apps, app, development, including, remix, react, router, embedded, bridge, webhook, handling |
@@ -931,7 +931,7 @@ Total skills: 2025
 | --- | --- | --- | --- | --- | --- |
 | `diagnose-android-overheating` | Use when diagnosing Android overheating, idle heat, thermal throttling, charging or radio heat, or abnormal battery drain with read-only ADB evidence and app... | critical | self | android, adb, overheating, thermal, battery, diagnostics | android, adb, overheating, thermal, battery, diagnostics, diagnose, diagnosing, idle, heat, throttling, charging |
 
-## design (18)
+## design (17)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -947,7 +947,6 @@ Total skills: 2025
 | `stitch-ui-design` | Expert guidance for crafting effective prompts in Google Stitch, the AI-powered UI design tool by Google Labs. This skill helps create precise, actionable pr... | safe | self | stitch, ui | stitch, ui, guidance, crafting, effective, prompts, google, ai, powered, labs, skill, helps |
 | `theme-factory` | This skill provides a curated collection of professional font and color themes themes, each with carefully selected color palettes and font pairings. Once a ... | critical | community | theme, factory | theme, factory, skill, provides, curated, collection, professional, font, color, themes, each, carefully |
 | `ui-visual-validator` | Rigorous visual validation expert specializing in UI testing, design system compliance, and accessibility verification. | safe | community | ui, visual, validator | ui, visual, validator, rigorous, validation, specializing, testing, compliance, accessibility, verification |
-| `uizze-ui-research` | Use when building or reviewing web and iOS UI and you need real references from the free UIZZE public catalog, a structured design contract, a consent-gated ... | safe | aislon/uizze-mcp | ui-design, ui-research, mcp, design-contracts, agent-workflows | ui-design, ui-research, mcp, design-contracts, agent-workflows, uizze, ui, research, building, reviewing, web, ios |
 | `uxui-principles` | Evaluate interfaces against 168 research-backed UX/UI principles, detect antipatterns, and inject UX context into AI coding sessions. | safe | community | ux, ui, design, evaluation, principles, antipatterns, accessibility | ux, ui, design, evaluation, principles, antipatterns, accessibility, uxui, evaluate, interfaces, against, 168 |
 | `vizcom` | AI-powered product design tool for transforming sketches into full-fidelity 3D renders. | safe | community | vizcom | vizcom, ai, powered, product, transforming, sketches, full, fidelity, 3d, renders |
 | `wcag-audit-patterns` | Comprehensive guide to auditing web content against WCAG 2.2 guidelines with actionable remediation strategies. | safe | community | wcag, audit | wcag, audit, auditing, web, content, against, guidelines, actionable, remediation |
@@ -1326,7 +1325,7 @@ Total skills: 2025
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
-| `anti-ui-slop` | Stop coding agents from shipping generic UI with UIZZE's 800,000+ real web and iOS screens, product-specific contracts, required states, and a hard finish gate. | safe | uizze/uizze | ui, ux, frontend, design, anti-ui-slop | ui, ux, frontend, design, anti-ui-slop, anti, slop, stop, coding, agents, shipping, generic |
+| `anti-ui-slop` | Stop coding agents from shipping generic UI. Extend the product's design system, use UIZZE evidence only when useful, cover required states, and inspect the ... | safe | uizze/uizze | ui, ux, frontend, design, anti-ui-slop | ui, ux, frontend, design, anti-ui-slop, anti, slop, stop, coding, agents, shipping, generic |
 | `astro` | Build content-focused websites with Astro — zero JS by default, islands architecture, multi-framework components, and Markdown/MDX support. | safe | community | astro, ssg, ssr, islands, content, markdown, mdx, performance | astro, ssg, ssr, islands, content, markdown, mdx, performance, websites, zero, js, default |
 | `design-it` | Routes frontend design tasks to 48 specific UI styles. Triggers for websites, app screens, or UI components requesting a specific aesthetic. | safe | self | design, ui, frontend | design, ui, frontend, routes, tasks, 48, specific, styles, triggers, websites, app, screens |
 | `design-taste-frontend` | Use when building high-agency frontend interfaces with strict design taste, calibrated color, responsive layout, and motion rules. | safe | Leonxlnx/taste-skill | frontend, design, ui, react | frontend, design, ui, react, taste, building, high, agency, interfaces, strict, calibrated, color |

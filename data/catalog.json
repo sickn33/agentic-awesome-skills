@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-20T06:53:06.000Z",
-  "total": 2025,
+  "total": 2024,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -3063,7 +3063,7 @@
       "id": "anti-ui-slop",
       "canonical_id": "anti-ui-slop",
       "name": "anti-ui-slop",
-      "description": "Stop coding agents from shipping generic UI with UIZZE's 800,000+ real web and iOS screens, product-specific contracts, required states, and a hard finish gate.",
+      "description": "Stop coding agents from shipping generic UI. Extend the product's design system, use UIZZE evidence only when useful, cover required states, and inspect the rendered result.",
       "category": "frontend",
       "risk": "safe",
       "source": "https://github.com/uizze/uizze/tree/main/skills/anti-ui-slop",
@@ -45381,7 +45381,7 @@
       "id": "salesforce-development",
       "canonical_id": "salesforce-development",
       "name": "salesforce-development",
-      "description": "Expert patterns for Salesforce platform development including Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, Connected Apps, and Salesforce DX with scratch orgs and 2nd generation packages (2GP).",
+      "description": "Expert patterns for Salesforce platform development including Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, External Client Apps, and Salesforce DX with scratch orgs and 2nd generation packages (2GP).",
       "category": "api-integration",
       "risk": "safe",
       "source": "vibeship-spawner-skills (Apache 2.0)",
@@ -54482,41 +54482,6 @@
         "verification"
       ],
       "path": "skills/ui-visual-validator/SKILL.md"
-    },
-    {
-      "id": "uizze-ui-research",
-      "canonical_id": "uizze-ui-research",
-      "name": "uizze-ui-research",
-      "description": "Use when building or reviewing web and iOS UI and you need real references from the free UIZZE public catalog, a structured design contract, a consent-gated rendered HTML/CSS preview, or a hard pre-ship finish gate.",
-      "category": "design",
-      "risk": "safe",
-      "source": "https://github.com/aislon/uizze-mcp/tree/main/skills/uizze-ui-research",
-      "source_type": "official",
-      "source_repo": "aislon/uizze-mcp",
-      "license": "MIT",
-      "license_source": "https://github.com/aislon/uizze-mcp/blob/main/LICENSE",
-      "tags": [
-        "ui-design",
-        "ui-research",
-        "mcp",
-        "design-contracts",
-        "agent-workflows"
-      ],
-      "triggers": [
-        "ui-design",
-        "ui-research",
-        "mcp",
-        "design-contracts",
-        "agent-workflows",
-        "uizze",
-        "ui",
-        "research",
-        "building",
-        "reviewing",
-        "web",
-        "ios"
-      ],
-      "path": "skills/uizze-ui-research/SKILL.md"
     },
     {
       "id": "uncle-bob-craft",
