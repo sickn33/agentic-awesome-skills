@@ -19,13 +19,15 @@ entry with these fields:
     text            entry body, with tags stripped
     tags            dict of tag name -> value, e.g. {"added": "2026-07-09", "verified": "2026-07-15"}
     last_verified   value of #verified tag, or None
+    replaced_by     value of #superseded-by tag (replacement entry ID), or None
 
 Used by:
-    - query / audit / compress workflows (pre-step enumeration)
+    - query / audit / compress / history workflows (pre-step enumeration)
     - find_duplicates.py
     - find_stale.py
 """
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -91,10 +93,40 @@ def parse_entry(line: str):
     layer, date, h, rest = m.group(1), m.group(2), m.group(3), m.group(4)
     eid = f"{layer}-{date}-{h}"
 
-    # Extract #tag:value pairs
-    tag_re = re.compile(r"#(added|verified|stale|archived):(\S+)")
-    tags = {name: val for name, val in tag_re.findall(rest)}
+    # Extract #tag:value pairs.
+    # #superseded-by:<id> is special: its value is an entry ID, not a date,
+    # so we keep it on a separate `replaced_by` field rather than in `tags`.
+    ENTRY_ID = r"[A-Z]+-\d{4}-\d{2}-\d{2}-[a-f0-9]{4}"
+    tag_re = re.compile(
+        r"#(added|verified|stale):(\S+)"
+        r"|#superseded-by:(" + ENTRY_ID + r")"
+    )
+    tags = {}
+    replaced_by = None
+    for m in tag_re.finditer(rest):
+        if m.group(1):
+            tags[m.group(1)] = m.group(2)
+        elif m.group(3):
+            if replaced_by is None:
+                replaced_by = m.group(3)
+            else:
+                print(
+                    f"[WARN] entry {eid} carries multiple #superseded-by "
+                    "tags; keeping the first only.",
+                    file=sys.stderr,
+                )
     text = tag_re.sub("", rest).strip()
+    # Any #superseded-by still present after the valid-tag strip is
+    # malformed (value is not LAYER-YYYY-MM-DD-xxxx). Warn instead of
+    # dropping it silently: the entry stays intact in the file, but the
+    # chain cannot be resolved and replaced_by stays None.
+    for m in re.finditer(r"#superseded-by:(\S+)", text):
+        print(
+            f"[WARN] entry {eid} has a malformed #superseded-by value "
+            f"'{m.group(1)}' (expected LAYER-YYYY-MM-DD-xxxx); chain not "
+            "resolved.",
+            file=sys.stderr,
+        )
 
     return {
         "id": eid,
@@ -105,6 +137,7 @@ def parse_entry(line: str):
         "text": text,
         "tags": tags,
         "last_verified": tags.get("verified"),
+        "replaced_by": replaced_by,
     }
 
 
@@ -123,14 +156,43 @@ def collect_entries(root: Path):
             layer_file = md_file.stem
             try:
                 with open(md_file, encoding="utf-8") as f:
-                    for line in f:
-                        e = parse_entry(line)
-                        if e is None:
-                            continue
-                        e["scope"] = scope
-                        e["layer_file"] = layer_file
-                        e["file"] = str(md_file.relative_to(root))
-                        entries.append(e)
+                    lines = f.readlines()
+                if lines:
+                    # Strip a UTF-8 BOM (Windows editors / PowerShell
+                    # Set-Content add one); otherwise the first entry of
+                    # the file would fail to parse and be silently skipped.
+                    lines[0] = lines[0].lstrip("\ufeff")
+                i = 0
+                while i < len(lines):
+                    # Join wrapped continuation lines into one logical
+                    # bullet before parsing. A continuation is a non-blank
+                    # line starting with 2+ spaces (or a tab) that is not
+                    # itself a new entry bullet. This matches the documented
+                    # "2 lines or fewer" bullet format without silently
+                    # truncating the entry text.
+                    joined = lines[i].rstrip("\n")
+                    j = i + 1
+                    while j < len(lines):
+                        nxt = lines[j].rstrip("\n")
+                        if nxt.strip() == "":
+                            break
+                        if not re.match(r"^\s{2,}", nxt):
+                            break
+                        if re.match(r"^\s*-\s*\[", nxt):
+                            break
+                        joined += " " + nxt.strip()
+                        j += 1
+                    e = parse_entry(joined)
+                    if e is None:
+                        i += 1
+                        continue
+                    e["scope"] = scope
+                    e["layer_file"] = layer_file
+                    e["file"] = str(md_file.relative_to(root)).replace(
+                        os.sep, "/"
+                    )
+                    entries.append(e)
+                    i = j
             except OSError as exc:
                 print(f"warning: cannot read {md_file}: {exc}", file=sys.stderr)
     return entries
@@ -138,6 +200,10 @@ def collect_entries(root: Path):
 
 def main():
     args = sys.argv[1:]
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except AttributeError:  # Python < 3.7
+        pass
 
     scope_filter = None
     layer_filter = None
@@ -176,7 +242,10 @@ def main():
             f" [verified:{e['last_verified']}]" if e["last_verified"] else ""
         )
         stale = " [STALE]" if "stale" in e["tags"] else ""
-        print(f"[{e['file']}] {e['id']} {e['text']}{verified}{stale}")
+        chain = (
+            f" -> {e['replaced_by']}" if e.get("replaced_by") else ""
+        )
+        print(f"[{e['file']}] {e['id']} {e['text']}{verified}{stale}{chain}")
 
 
 if __name__ == "__main__":
