@@ -9,14 +9,144 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [16.1.0] - 2026-08-25 - "Specification-First Delivery and Mistake-Proofing"
+
+> Added specification-first delivery and software mistake-proofing workflows,
+> aligned durable project-state lifecycle semantics, refreshed Lore's complete
+> operating surface, and hardened the protected skill-review path. The
+> published catalog contains 2,028 skills.
+
+This release helps Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and
+related AI coding assistants freeze requirements before implementation, design
+controls that prevent predictable mistakes, preserve consistent project-state
+transitions, and query durable repository knowledge without weakening approval,
+provenance, or path-safety boundaries.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- [`spec-driven-loop`](skills/spec-driven-loop/) for a specification-first
+  workflow with frozen artifacts, non-overlapping agent ownership, and an
+  independent delivery judgment.
+- [`poka-yoke`](skills/poka-yoke/) for replacing reminders with controls,
+  warnings, and bounded detection that make software mistakes impossible or
+  immediately visible.
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+
+### Added
+
+- Added [`spec-driven-loop`](skills/spec-driven-loop/) with PRD, technical
+  design, acceptance-criteria, ownership, and completion artifacts; explicit
+  approval before implementation; bounded rework; and independent lead-agent
+  judgment backed by diffs, tests, and evidence
+  ([#1242](https://github.com/sickn33/agentic-awesome-skills/pull/1242)).
+- Added [`poka-yoke`](skills/poka-yoke/) for identifying software error traps
+  and selecting the strongest practical device on a control, warning,
+  detection, or instruction ladder
+  ([#1240](https://github.com/sickn33/agentic-awesome-skills/pull/1240)).
+
 ### Changed
 
-- Upgrade the catalog web app from `@supabase/supabase-js` 2.111.0 to 2.112.0.
+- Aligned [`project-state-governor`](skills/project-state-governor/)
+  workstream completion with `COMPLETED` and retained `CANCELLED` in the
+  canonical milestone lifecycle vocabulary
+  ([#1241](https://github.com/sickn33/agentic-awesome-skills/pull/1241)).
+- Synchronized [`lore`](skills/lore/) to its reviewed upstream layout, moved
+  workflow guidance into the supported reference tree, refreshed its scripts
+  and compatibility documentation, and preserved the repository's stricter
+  mirror-target containment rules
+  ([#1244](https://github.com/sickn33/agentic-awesome-skills/pull/1244)).
+- Upgraded the catalog web app from `@supabase/supabase-js` 2.111.0 to 2.112.0,
+  including upstream authentication, PostgREST, storage, retry, and opt-in
+  tracing fixes ([#1244](https://github.com/sickn33/agentic-awesome-skills/pull/1244)).
+- Bounded the external semantic skill-review attempt to ten minutes and routed
+  timeouts to the truthful `manual-review-required` path instead of allowing an
+  indefinitely running review job
+  ([#1244](https://github.com/sickn33/agentic-awesome-skills/pull/1244)).
+- Regenerated the canonical catalog, offline AAS Core data, tracked web assets,
+  marketplaces, editorial bundles, compatibility reports, and Codex/Claude
+  plugin distributions for 2,028 skills.
 
 ### Fixed
 
-- Align `project-state-governor` workstream completion with `COMPLETED` and retain the `CANCELLED` milestone lifecycle state in the canonical schema.
-- Sync `lore` to its reviewed upstream layout and make full-history queries omit Git's epoch cutoff so existing commits are returned reliably.
+- Fixed Lore full-history queries so the absence of a `since` value no longer
+  injects Git's epoch cutoff and silently omits existing commits.
+- Kept multi-entry successor-history results bound to each entry's own code
+  path and time boundary while retaining fail-closed path validation.
+
+### Security
+
+- Kept `spec-driven-loop` implementation behind explicit specification
+  approval, separated agent ownership, and evidence-based completion instead
+  of treating generated artifacts or self-reported status as proof.
+- Kept `poka-yoke` read-only and analysis-first: consequential code or process
+  changes still require proposal, authorization, and validation, and detection
+  is not presented as equivalent to a preventive control.
+- Preserved Lore's canonical path-containment hardening, rejected unsafe mirror
+  targets, and pinned license provenance to the reviewed upstream commit.
+- Made a timed-out or unavailable external semantic review fail into an exact
+  head maintainer-review requirement; it is never reported as an automated
+  semantic pass.
+
+### Who should care
+
+- Teams coordinating multi-agent implementation that need requirements,
+  ownership, acceptance evidence, and final judgment to stay independently
+  inspectable.
+- Maintainers and reviewers who want software error traps converted into
+  concrete preventive or self-announcing controls.
+- Long-running projects using durable state or Lore histories across sessions,
+  repositories, mirrors, and successor entries.
+- Catalog web-app users relying on current Supabase authentication, storage,
+  PostgREST, retry, and tracing behavior.
+
+### Validation
+
+- Passed repository and reference validation, documentation-security checks,
+  warning-budget enforcement, the complete 113-group repository test suite,
+  web-app tests and production build, npm package dry-run, plugin compatibility,
+  bundle checks, and protected canonical synchronization.
+- Reviewed the complete tracked trees for both added skills and the full Lore
+  refresh for semantics, safety, provenance, declared risk, limitations,
+  references, scripts, and exact-head evidence before protected merge.
+- Added regression coverage for bounded skill-review execution and retained
+  upstream Lore test coverage for history, containment, and mirror behavior.
+
+### Limitations
+
+- `spec-driven-loop` structures planning and evidence; it does not prove domain
+  correctness, replace stakeholder approval, or authorize implementation
+  outside the approved scope.
+- `poka-yoke` helps select stronger controls, but compatibility and system
+  constraints may leave only warning or detection fallbacks; those weaker
+  rungs must remain explicit.
+- Lore can only query repository and entry history that still exists locally;
+  it cannot reconstruct missing commits or validate external systems by itself.
+- Supabase remains an independently evolving upstream dependency, so its live
+  documentation and service behavior remain authoritative.
+
+### Credits
+
+- **[@Linji-x](https://github.com/Linji-x)** and the MIT-licensed
+  **[spec-driven-loop](https://github.com/Linji-x/spec-driven-loop)** source for
+  [`spec-driven-loop`](skills/spec-driven-loop/) in
+  [PR #1242](https://github.com/sickn33/agentic-awesome-skills/pull/1242).
+- **[@rainmanjam](https://github.com/rainmanjam)** for
+  [`poka-yoke`](skills/poka-yoke/) in
+  [PR #1240](https://github.com/sickn33/agentic-awesome-skills/pull/1240).
+- **[@Ghost011118](https://github.com/Ghost011118)** for the project-state
+  lifecycle correction in
+  [PR #1241](https://github.com/sickn33/agentic-awesome-skills/pull/1241).
+- **[@TheaDust](https://github.com/TheaDust)** for the reviewed Lore upstream
+  synchronization proposed in
+  [PR #1237](https://github.com/sickn33/agentic-awesome-skills/pull/1237) and
+  integrated through
+  [PR #1244](https://github.com/sickn33/agentic-awesome-skills/pull/1244).
+- **[Snyk](https://snyk.io/)** for the Supabase dependency update proposed in
+  [PR #1239](https://github.com/sickn33/agentic-awesome-skills/pull/1239) and
+  integrated through
+  [PR #1244](https://github.com/sickn33/agentic-awesome-skills/pull/1244).
 
 ## [16.0.0] - 2026-08-24 - "Durable Project State and Runtime Reliability"
 
