@@ -216,7 +216,7 @@ Example:
 session DONE != task DONE
 task DONE != milestone DONE
 milestone DONE != workstream DONE
-workstream DONE != mission success
+workstream COMPLETED != mission success
 ```
 
 ## 5. Session bootstrap and recall
