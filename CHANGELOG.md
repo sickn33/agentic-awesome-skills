@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Align `project-state-governor` workstream completion with `COMPLETED` and retain the `CANCELLED` milestone lifecycle state in the canonical schema.
+
 ## [16.0.0] - 2026-08-24 - "Durable Project State and Runtime Reliability"
 
 > Added durable project-state governance and a complete Famulor MCP operating
