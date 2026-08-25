@@ -1,6 +1,6 @@
 ---
 name: spec-driven-loop
-description: Freeze product, technical, and acceptance contracts before medium-to-large Codex implementation; coordinate agents with explicit ownership and have the lead agent independently judge delivery from diffs, tests, and evidence.
+description: Freeze PRD, technical design, and acceptance criteria before medium-to-large Codex work; coordinate agents with explicit ownership, then judge delivery from diffs, tests, and evidence.
 category: development
 risk: safe
 source: self
@@ -27,6 +27,18 @@ Turn an uncertain software request into an approved specification, a controlled 
 ## When to Use
 
 Use this skill for new products, medium-to-large features, cross-module changes, or requests that need PRD/technical design, active clarification, multi-agent execution, or a main-agent judge. Do not use it for a small single-file change, a tiny bug fix, code explanation, review-only or diagnostic work, pure research, or a simple task whose specification is already complete.
+
+## Quick Example
+
+```text
+$spec-driven-loop Build a multi-tenant job dashboard with role-based access and evidence-backed acceptance.
+```
+
+## Limitations
+
+- Not intended for small isolated edits, review-only work, diagnosis, or pure research.
+- Does not replace environment-specific testing or grant authorization for unrelated changes or external actions.
+- Production implementation cannot start until the user explicitly approves the frozen specification and acceptance contract.
 
 Follow repository instructions and authorization boundaries throughout. Match generated project documents to the user's language or the repository's existing documentation language; keep identifiers such as `FR-001` and `AC-001` stable.
 
