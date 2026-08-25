@@ -141,3 +141,16 @@ the constraint without mistaking the explanation itself for the device.
 The exception is when someone has explicitly asked you to write new code: mistake-proofing
 *is* the code they asked for, so build it, then narrate which hazards
 you designed out and why.
+
+## Limitations
+
+- Poka-yoke reduces predictable misuse; it cannot prove that a design is correct or cover
+  hazards the analysis never identifies.
+- The strongest control may be unavailable in the current language, platform or compatibility
+  envelope. When that happens, state the tradeoff and retain appropriate tests, monitoring and
+  recovery paths instead of presenting a warning as complete prevention.
+- A guard can itself be wrong, overbroad or operationally expensive. Validate proposed devices
+  against real callers and failure modes, especially for destructive, financial, authentication
+  and authorization flows.
+- This method complements, but does not replace, domain review, security review, testing,
+  observability or incident response.
