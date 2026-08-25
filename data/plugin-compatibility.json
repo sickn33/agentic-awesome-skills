@@ -27081,6 +27081,25 @@
       "runtime_files": []
     },
     {
+      "id": "poka-yoke",
+      "path": "skills/poka-yoke",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "polars",
       "path": "skills/polars",
       "targets": {
@@ -38964,10 +38983,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2027,
+    "total_skills": 2028,
     "supported": {
-      "codex": 1949,
-      "claude": 1970
+      "codex": 1950,
+      "claude": 1971
     },
     "blocked": {
       "codex": 78,

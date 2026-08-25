@@ -34242,6 +34242,39 @@
     }
   },
   {
+    "id": "poka-yoke",
+    "path": "skills/poka-yoke",
+    "category": "development",
+    "name": "poka-yoke",
+    "description": "Mistake-proof code, config and process: make the wrong action impossible or self-announcing rather than documented.",
+    "risk": "safe",
+    "source": "rainmanjam/poka-yoke",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "rainmanjam/poka-yoke",
+    "license": "MIT",
+    "license_source": "https://github.com/rainmanjam/poka-yoke/blob/v0.1.2/LICENSE",
+    "tags": [
+      "mistake-proofing",
+      "code-review",
+      "api-design",
+      "guardrails",
+      "reliability"
+    ]
+  },
+  {
     "id": "polars",
     "path": "skills/polars",
     "category": "data-science",

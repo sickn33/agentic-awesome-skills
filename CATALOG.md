@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-24T05:22:46.000Z
 
-Total skills: 2027
+Total skills: 2028
 
 ## agent-behavior (5)
 
@@ -1017,7 +1017,7 @@ Total skills: 2027
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (178)
+## development (179)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1161,6 +1161,7 @@ Total skills: 2027
 | `performance-profiling` | Performance profiling principles. Measurement, analysis, and optimization techniques. | critical | community | performance, profiling | performance, profiling, principles, measurement, analysis, optimization, techniques |
 | `performance-testing-review-ai-review` | You are an expert AI-powered code review specialist combining automated static analysis, intelligent pattern recognition, and modern DevOps practices. Levera... | critical | community | performance, ai | performance, ai, testing, review, powered, code, combining, automated, static, analysis, intelligent, recognition |
 | `performance-testing-review-multi-agent-review` | Use when working with performance testing review multi agent review | critical | community | performance, multi, agent | performance, multi, agent, testing, review, working |
+| `poka-yoke` | Mistake-proof code, config and process: make the wrong action impossible or self-announcing rather than documented. | safe | rainmanjam/poka-yoke | mistake-proofing, code-review, api-design, guardrails, reliability | mistake-proofing, code-review, api-design, guardrails, reliability, poka, yoke, mistake, proof, code, config, process |
 | `prototype` | Build a throwaway prototype to flesh out a design — a runnable terminal app for state/business-logic questions, or several radically different UI variations ... | safe | mattpocock/skills | engineering, workflow, coding-agents | engineering, workflow, coding-agents, prototype, throwaway, flesh, runnable, terminal, app, state, business, logic |
 | `push-skill-to-github` | Commit and push skill changes to the configured skills repository after review and validation. | critical | davidondrej/skills | skills, git, publishing | skills, git, publishing, push, skill, github, commit, changes, configured, repository, after, review |
 | `pydantic-models-py` | Create Pydantic models following the multi-model pattern for clean API contracts. | critical | community | pydantic, models, py | pydantic, models, py, following, multi, model, clean, api, contracts |

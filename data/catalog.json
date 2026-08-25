@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-24T05:22:46.000Z",
-  "total": 2027,
+  "total": 2028,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -41021,6 +41021,41 @@
         "api"
       ],
       "path": "skills/podcast-generation/SKILL.md"
+    },
+    {
+      "id": "poka-yoke",
+      "canonical_id": "poka-yoke",
+      "name": "poka-yoke",
+      "description": "Mistake-proof code, config and process: make the wrong action impossible or self-announcing rather than documented.",
+      "category": "development",
+      "risk": "safe",
+      "source": "rainmanjam/poka-yoke",
+      "source_type": "community",
+      "source_repo": "rainmanjam/poka-yoke",
+      "license": "MIT",
+      "license_source": "https://github.com/rainmanjam/poka-yoke/blob/v0.1.2/LICENSE",
+      "tags": [
+        "mistake-proofing",
+        "code-review",
+        "api-design",
+        "guardrails",
+        "reliability"
+      ],
+      "triggers": [
+        "mistake-proofing",
+        "code-review",
+        "api-design",
+        "guardrails",
+        "reliability",
+        "poka",
+        "yoke",
+        "mistake",
+        "proof",
+        "code",
+        "config",
+        "process"
+      ],
+      "path": "skills/poka-yoke/SKILL.md"
     },
     {
       "id": "polars",
