@@ -130,6 +130,22 @@ findings about the code's affordances, never about who wrote it.
 reads "added a runtime assertion (warning), control would need a newtype, which touches 40
 call sites" gives the reader a real decision. One that reads "added validation" does not.
 
+## Example
+
+Suppose a destructive API accepts `deleteAccount(accountId: string, tenantId: string)`.
+The two identifiers can be swapped, and the call can target an account outside the caller's
+tenant.
+
+1. **Contact lens:** two plain strings have the same shape, so the wrong value fits.
+2. **Motion-step lens:** deletion can run before tenant ownership is established.
+3. **Control device:** replace the strings with distinct validated ID types and expose a
+   deletion operation that accepts only an account loaded through the authenticated tenant.
+4. **Warning fallback:** if compatibility prevents that interface change, reject ownership
+   mismatches at the boundary and require a confirmation that names the exact account. State
+   explicitly that this is weaker than making the invalid call unrepresentable.
+5. **Detection:** retain audit logging and reconciliation for failures the control does not
+   cover; do not present those after-the-fact checks as the poka-yoke itself.
+
 ## Applying changes
 
 Propose before you edit. Show the hazard, the proposed device, and the rung it reaches, then
