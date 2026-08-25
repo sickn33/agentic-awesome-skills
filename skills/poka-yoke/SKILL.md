@@ -11,7 +11,7 @@ author: rainmanjam
 tags: [mistake-proofing, code-review, api-design, guardrails, reliability]
 tools: [claude, cursor, codex]
 license: "MIT"
-license_source: "https://github.com/rainmanjam/poka-yoke/blob/main/LICENSE"
+license_source: "https://github.com/rainmanjam/poka-yoke/blob/v0.1.2/LICENSE"
 ---
 
 # Poka-Yoke: Mistake-Proofing for Software
@@ -89,16 +89,8 @@ is good; a schema that makes the bad migration unwritable is better and costs le
 
 ## How to use this skill
 
-You have been asked to apply the method. There are two ways to do that, and picking the
-wrong one wastes the request.
-
-**If a specialist mode clearly fits the subject, load it**: the table below maps them. Those
-files carry the domain detail this one does not: what a tenant-scoping device looks like, what
-expand/contract means, which lint rules catch silent failure.
-
-**If none clearly fits, apply the method here.** This file is self-contained enough to do
-that, and refusing to act because the subject is not on a list would be its own failure. A
-Terraform module, a support runbook, a spreadsheet everyone edits, a release checklist, a
+Apply the method directly to the subject in front of you. A Terraform module, a support
+runbook, a spreadsheet everyone edits, a release checklist, a
 prompt template, an onboarding process, a physical workflow: the method works on any of them,
 because Shingo developed it on an assembly line, for people fitting springs into switches, and
 not for software at all.
@@ -125,53 +117,6 @@ front of you: the current diff, the file under discussion, the thing the convers
 about. Say what you picked in one line before starting, so it is cheap to redirect you. If
 there is genuinely no subject, ask what they want mistake-proofed rather than guessing.
 
-## Choosing a mode
-
-These are specialist modes, each carrying the full working method for its domain. Load one
-when it clearly fits. When two apply, do them in the order listed. When none does, apply the
-method directly as described above: the table is a shortcut, not a gate.
-
-| If they are… | Use | Typical asks |
-|---|---|---|
-| Looking at code that already exists and asking what could go wrong | **`audit`** | "poka-yoke this repo" · "what's easy to misuse here" · "find the footguns" · "review this PR for ways to screw it up" |
-| About to write an API, module, schema, or data model | **`design`** | "design this so it can't be misused" · "make invalid states unrepresentable" · "what should this signature be" |
-| Wanting mechanical enforcement in the pipeline | **`guardrails`** | "add pre-commit hooks" · "gate this in CI" · "enforce it so it can't be merged" · "lint rule for this" |
-| Dealing with something that already broke | **`retro`** | "this happened again" · "postmortem" · "make sure this never recurs" · "why did this get through" |
-| Building or reviewing a user interface | **`ux`** | "users keep deleting the wrong thing" · "make this form harder to get wrong" · "add a confirmation" · "this flow is error-prone" |
-| Deploying, migrating, or changing infrastructure | **`ops`** | "deploy this safely" · "what's the blast radius" · "this migration is scary" · "add a kill switch" · "prevent accidental deletion" |
-| Working on pipelines, warehouses, or metrics | **`data`** | "the numbers are wrong" · "add data quality checks" · "safe backfill" · "upstream changed the schema" |
-| Working on multi-tenant, permissions, or endpoints | **`authz`** | "can users see each other's data" · "IDOR" · "tenant isolation" · "we forgot to filter by org_id" |
-| Shipping an AI feature to users | **`llm`** | "the model returns bad JSON" · "it hallucinates" · "prompt injection" · "add evals" |
-| Worried about what an AI agent will do to the repo | **`agent-guardrails`** | "stop Claude from touching prod" · "hooks so the agent can't break X" · "make this repo safe for agents" |
-
-Two of these are easy to confuse. **`llm`** is for AI features *you ship to users*;
-**`agent-guardrails`** is for constraining an agent that *works on your repo*.
-
-Modes compose, and real requests often need two. An incident involving a bad migration is
-`retro` for the analysis and `ops` for the device. A cross-tenant leak is
-`retro` plus `authz`. Read both; the retro decides *what* to install and
-the domain skill decides *which device*.
-
-If the request is a general question ("what is poka-yoke", "how does this apply to software")
-answer from this file directly: the two axes above are the substance.
-
-## The hazard catalog and language specifics
-
-The recurring ergonomic hazards: the signatures and shapes that reliably produce mistakes, live in `../../references/hazard-catalog.md`, each with the lens that finds
-it and the device that fixes it. Read it when you are auditing or designing; it is the
-working vocabulary for both.
-
-Language-specific devices (what the type system will and won't let you express, which
-constructs are idiomatic, what the linters can enforce) live in:
-
-- `../../references/lang-typescript.md`
-- `../../references/lang-python.md`
-- `../../references/lang-rust-go.md`
-
-Read only the file for the language in front of you. If the language isn't covered, the two
-axes still apply, work out which construct in that language gives you contact, fixed-value,
-and motion-step checking, and say which rung you landed on.
-
 ## How to talk about this
 
 Two habits keep the analysis honest and keep people from getting defensive:
@@ -190,9 +135,9 @@ call sites" gives the reader a real decision. One that reads "added validation" 
 Propose before you edit. Show the hazard, the proposed device, and the rung it reaches, then
 wait for a go-ahead before changing files: the whole point of this method is that it changes
 the shape of an interface, and that is precisely the kind of change people want to see first.
-Once approved, apply it and leave a marker comment saying what mistake it prevents (see the
-recording section in `audit`).
+Once approved, apply it and record the prevented mistake where future maintainers can verify
+the constraint without mistaking the explanation itself for the device.
 
-The exception is when someone has explicitly asked you to write new code, in `design`
-mode, mistake-proofing *is* the code they asked for, so build it, then narrate which hazards
+The exception is when someone has explicitly asked you to write new code: mistake-proofing
+*is* the code they asked for, so build it, then narrate which hazards
 you designed out and why.
