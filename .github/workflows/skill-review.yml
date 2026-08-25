@@ -75,7 +75,7 @@ jobs:
         if: ${{ steps.plan.outputs.has-skills == 'true' && steps.plan.outputs.requires-manual != 'true' && steps.review-cache.outputs.cache-hit != 'true' }}
         run: |
           set +e
-          node trusted-base/tools/scripts/review_changed_skills.cjs
+          timeout --signal=TERM --kill-after=30s 10m node trusted-base/tools/scripts/review_changed_skills.cjs
           status=$?
           set -e
 

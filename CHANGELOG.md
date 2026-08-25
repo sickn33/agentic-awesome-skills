@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade the catalog web app from `@supabase/supabase-js` 2.111.0 to 2.112.0.
+
+### Fixed
+
+- Align `project-state-governor` workstream completion with `COMPLETED` and retain the `CANCELLED` milestone lifecycle state in the canonical schema.
+- Sync `lore` to its reviewed upstream layout and make full-history queries omit Git's epoch cutoff so existing commits are returned reliably.
+
 ## [16.0.0] - 2026-08-24 - "Durable Project State and Runtime Reliability"
 
 > Added durable project-state governance and a complete Famulor MCP operating

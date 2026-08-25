@@ -41782,6 +41782,39 @@
     "license_source": "https://github.com/addyosmani/agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "spec-driven-loop",
+    "path": "skills/spec-driven-loop",
+    "category": "development",
+    "name": "spec-driven-loop",
+    "description": "Freeze PRD, technical design, and acceptance criteria before medium-to-large Codex work; coordinate agents with explicit ownership, then judge delivery from diffs, tests, and evidence.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "Linji-x/spec-driven-loop",
+    "license": "MIT",
+    "license_source": "https://github.com/Linji-x/spec-driven-loop/blob/v1.0.0/LICENSE",
+    "tags": [
+      "codex",
+      "spec-driven-development",
+      "multi-agent",
+      "agent-orchestration",
+      "acceptance-testing"
+    ]
+  },
+  {
     "id": "spec-to-code-compliance",
     "path": "skills/spec-to-code-compliance",
     "category": "code-quality",

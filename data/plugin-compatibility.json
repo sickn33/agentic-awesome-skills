@@ -32810,6 +32810,25 @@
       "runtime_files": []
     },
     {
+      "id": "spec-driven-loop",
+      "path": "skills/spec-driven-loop",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "spec-to-code-compliance",
       "path": "skills/spec-to-code-compliance",
       "targets": {
@@ -38945,10 +38964,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2026,
+    "total_skills": 2027,
     "supported": {
-      "codex": 1948,
-      "claude": 1969
+      "codex": 1949,
+      "claude": 1970
     },
     "blocked": {
       "codex": 78,

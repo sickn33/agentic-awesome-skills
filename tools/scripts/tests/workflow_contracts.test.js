@@ -345,6 +345,11 @@ assert.match(skillReviewWorkflow, /result=manual/);
 assert.match(skillReviewWorkflow, /needs\.review-state\.outputs\.configured != 'true'/);
 assert.match(skillReviewWorkflow, /ref: \$\{\{ github\.event\.pull_request\.base\.sha \}\}/);
 assert.match(skillReviewWorkflow, /review_changed_skills\.cjs --plan/);
+assert.match(
+  skillReviewWorkflow,
+  /timeout --signal=TERM --kill-after=30s 10m node trusted-base\/tools\/scripts\/review_changed_skills\.cjs/,
+  "Tessl review must time out into the exact-head manual-review path instead of blocking indefinitely",
+);
 assert.match(skillReviewWorkflow, /actions\/cache\/restore@[0-9a-f]{40}/);
 assert.match(skillReviewWorkflow, /actions\/cache\/save@[0-9a-f]{40}/);
 assert.match(skillReviewWorkflow, /tessl-review-v2-\$\{\{ steps\.plan\.outputs\.fingerprint \}\}/);

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-24T05:22:46.000Z",
-  "total": 2026,
+  "total": 2027,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -49668,6 +49668,41 @@
         "change"
       ],
       "path": "skills/spec-driven-development/SKILL.md"
+    },
+    {
+      "id": "spec-driven-loop",
+      "canonical_id": "spec-driven-loop",
+      "name": "spec-driven-loop",
+      "description": "Freeze PRD, technical design, and acceptance criteria before medium-to-large Codex work; coordinate agents with explicit ownership, then judge delivery from diffs, tests, and evidence.",
+      "category": "development",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Linji-x/spec-driven-loop",
+      "license": "MIT",
+      "license_source": "https://github.com/Linji-x/spec-driven-loop/blob/v1.0.0/LICENSE",
+      "tags": [
+        "codex",
+        "spec-driven-development",
+        "multi-agent",
+        "agent-orchestration",
+        "acceptance-testing"
+      ],
+      "triggers": [
+        "codex",
+        "spec-driven-development",
+        "multi-agent",
+        "agent-orchestration",
+        "acceptance-testing",
+        "spec",
+        "driven",
+        "loop",
+        "freeze",
+        "prd",
+        "technical",
+        "acceptance"
+      ],
+      "path": "skills/spec-driven-loop/SKILL.md"
     },
     {
       "id": "spec-to-code-compliance",
