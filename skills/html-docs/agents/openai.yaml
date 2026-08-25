@@ -1,0 +1,7 @@
+interface:
+  display_name: "HTML Docs"
+  short_description: "Create HTML, video, and adaptive learning courses"
+  default_prompt: "Use $html-docs to turn this source into a polished private course with an observable learner finish line, evidence-state mastery, rich lesson pages, cue-synced explanatory videos, diagnostic practice, captions, and feedback."
+
+policy:
+  allow_implicit_invocation: true
