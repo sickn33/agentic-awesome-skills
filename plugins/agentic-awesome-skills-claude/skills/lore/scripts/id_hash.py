@@ -7,10 +7,13 @@ Usage:
 Output:
     The 4-char lowercase hex hash that goes into an entry's ID, e.g. `a3f2`.
 
-The hash is `sha256(text).hexdigest()[:4]`. This is the same algorithm
-described in `references/entry-format.md` (ID generation section), so
-running this script always produces the ID component a lore agent
-would assign.
+The hash is `sha256(text).hexdigest()[:4]`. This matches the algorithm
+in `references/entry-format.md` and what `list_entries.py` uses when
+re-reading an entry from disk (it strips `#tag:value` pairs before
+hashing). To stay consistent, **pass the entry body WITHOUT the inline
+tags** — i.e. the text that goes between the `[ID]` and the first `#`.
+Including tags in the input here will produce a different hash than the
+file's stored ID, breaking round-trip verification.
 
 Cross-platform: works on Windows / Linux / macOS with Python 3.6+.
 """

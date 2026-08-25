@@ -9,6 +9,7 @@
 
 > Last compressed: <YYYY-MM-DD>
 > Total entries: <N> across <M> scopes
+> This digest highlights key entries — open the referenced files under `_global/` and `scopes/` for the full text.
 
 ## Global (`_global/`)
 
@@ -41,6 +42,7 @@
 
 For each (scope, layer) tuple, pick entries by this priority:
 
+0. **Skip entries with `#superseded-by:<id>`.** These are historical entries replaced by a newer one; the SUMMARY should reflect current state, not chain history.
 1. Most recent `#verified` date wins
 2. Tiebreaker: most recent `#added` date
 3. Tiebreaker: entries that contain "primary" / "main" / "core" / "use <X>" — these are typically the anchor facts
@@ -56,6 +58,7 @@ If a (scope, layer) is empty, omit the subsection entirely.
 
 > Last compressed: 2026-07-09
 > Total entries: 247 across 3 scopes
+> This digest highlights key entries — open the referenced files under `_global/` and `scopes/` for the full text.
 
 ## Global (`_global/`)
 
@@ -92,6 +95,10 @@ If a (scope, layer) is empty, omit the subsection entirely.
 ### Conventions
 - All DB queries go through repository pattern — [scopes/backend/CONVENTIONS.md#CONV-2026-03-01-b1d2]
 ```
+
+## Staleness note
+
+Between a `sync` and the next `compress`, `SUMMARY.md` may lag behind `.lore/*`. Treat entry files as source of truth; SUMMARY is a locating index only (see `references/workflows.md#query`).
 
 ## Idempotency
 
