@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-25T17:54:41.000Z",
-  "total": 2028,
+  "total": 2029,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -3668,6 +3668,41 @@
         "versioning"
       ],
       "path": "skills/api-patterns/SKILL.md"
+    },
+    {
+      "id": "api-rate-limit-handler",
+      "canonical_id": "api-rate-limit-handler",
+      "name": "api-rate-limit-handler",
+      "description": "Implement bounded, idempotency-aware API throttling, backoff, and retry handling for 429 and transient 5xx responses.",
+      "category": "development",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "license": "MIT",
+      "tags": [
+        "rate-limiting",
+        "retry",
+        "backoff",
+        "api",
+        "resilience",
+        "throttle",
+        "429"
+      ],
+      "triggers": [
+        "rate-limiting",
+        "retry",
+        "backoff",
+        "api",
+        "resilience",
+        "throttle",
+        "429",
+        "rate",
+        "limit",
+        "handler",
+        "bounded",
+        "idempotency"
+      ],
+      "path": "skills/api-rate-limit-handler/SKILL.md"
     },
     {
       "id": "api-sdk-generator",

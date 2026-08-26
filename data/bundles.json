@@ -32,6 +32,7 @@
         "api-integration",
         "api-onboarding",
         "api-patterns",
+        "api-rate-limit-handler",
         "api-sdk-generator",
         "api-security-best-practices",
         "api-security-testing",
