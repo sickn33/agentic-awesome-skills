@@ -2,7 +2,7 @@
 name: tree-ring-memory
 description: "Use Tree Ring Memory for local-first AI-agent memory lifecycle work: recall, evidence, audit, forgetting, and consolidation without transcript dumping."
 category: development
-risk: safe
+risk: critical
 source: community
 source_repo: TerminallyLazy/Tree-Ring-Memory
 source_type: community
@@ -75,7 +75,7 @@ inspect it, then run it. The pinned source is
 
 ```bash
 cd <project-root>
-sh <verified-installer-path> --project --init --release latest --no-animation
+sh <verified-installer-path> --project --init --release v0.15.0 --no-animation
 ```
 
 Do not pipe a network response directly to a shell. After verification and
