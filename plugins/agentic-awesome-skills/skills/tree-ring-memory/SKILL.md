@@ -2,7 +2,7 @@
 name: tree-ring-memory
 description: "Use Tree Ring Memory for local-first AI-agent memory lifecycle work: recall, evidence, audit, forgetting, and consolidation without transcript dumping."
 category: development
-risk: safe
+risk: critical
 source: community
 source_repo: TerminallyLazy/Tree-Ring-Memory
 source_type: community
@@ -10,7 +10,7 @@ date_added: "2026-07-08"
 author: TerminallyLazy
 tags: [agent-memory, local-first, recall, privacy, codex, sqlite, cli]
 tools: [claude, codex, cursor, gemini, antigravity, opencode]
-license: "Apache-2.0"
+license: "MIT"
 license_source: "https://github.com/TerminallyLazy/Tree-Ring-Memory/blob/main/LICENSE"
 ---
 
@@ -65,18 +65,38 @@ tree-ring audit --help
 tree-ring forget --help
 ```
 
-If Tree Ring is not installed, do not run remote installer commands
-automatically. Point the user to the project repository or install docs and ask
-whether they want installation help.
+If Tree Ring is not installed, resolve the actual project root and explain the
+exact project-local download before obtaining explicit approval to fetch it.
+Download the official, version-pinned `v0.15.0/install.sh` to a temporary file,
+verify its SHA-256 is
+`ef0d5eb8f09cbe2e4c3abe80ee9a98a56759c89ad4ddd103d6c68314cd653ade`,
+inspect it, then run it. The pinned source is
+`https://raw.githubusercontent.com/TerminallyLazy/Tree-Ring-Memory/v0.15.0/install.sh`.
+
+```bash
+cd <project-root>
+sh <verified-installer-path> --project --init --release v0.15.0 --no-animation
+```
+
+Do not pipe a network response directly to a shell. After verification and
+inspection, show the exact installer command and obtain explicit approval again
+before executing it. For an installed global CLI, initialize from the project root with
+`tree-ring --root .tree-ring init`; for a project-local CLI, use
+`.tree-ring/bin/tree-ring --root .tree-ring init`.
+
+Check for a newer release without changing files using
+`tree-ring update --check`. Run `tree-ring update` only with user authorization,
+then rerun `init` in each project root to refresh managed guidance while
+preserving custom content.
 
 ## Step 2: Recall Before Risky Work
 
 Use narrow, project-scoped recall first:
 
 ```bash
-tree-ring recall "release behavior" --scope project
-tree-ring recall "sqlite migration" --scope project
-tree-ring recall "user preference" --scope global
+tree-ring recall "release behavior" --project example-service
+tree-ring recall "sqlite migration" --project example-service
+tree-ring recall "user preference"
 ```
 
 Use recalled memory as context, not authority. Verify it against current source
@@ -112,8 +132,8 @@ evaluated outcomes:
 
 ```bash
 tree-ring evidence \
+  "Installer smoke test passed in an isolated HOME." \
   --outcome observed \
-  --summary "Installer smoke test passed in an isolated HOME." \
   --evidence-ref "ci/install-smoke/2026-07-08"
 ```
 

@@ -3109,6 +3109,32 @@
     "license_source": "https://github.com/LambdaTest/agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "api-security",
+    "path": "skills/api-security",
+    "category": "backend",
+    "name": "api-security",
+    "description": "Authorized security assessment of REST, GraphQL, WebSocket, and SOAP APIs: discovery, authentication and authorization flaws (BOLA/IDOR, JWT/OAuth), rate-limit testing, and a structured multi-phase methodology.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "api-security-best-practices",
     "path": "skills/api-security-best-practices",
     "category": "backend",
@@ -3439,6 +3465,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "apk-reverse",
+    "path": "skills/apk-reverse",
+    "category": "uncategorized",
+    "name": "apk-reverse",
+    "description": "Android APK reverse engineering: unpacking, Java decompilation, smali modification, repacking and signing, Frida dynamic hooking, and native .so analysis with jadx, apktool, adb, and related tools.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "app-builder",
@@ -4136,6 +4188,32 @@
     "source_repo": "wede-wx/atlas",
     "license": "MIT",
     "license_source": "https://github.com/wede-wx/atlas/blob/main/LICENSE"
+  },
+  {
+    "id": "attack-chain",
+    "path": "skills/attack-chain",
+    "category": "uncategorized",
+    "name": "attack-chain",
+    "description": "Authorized multi-stage attack-path planning and orchestration spanning reconnaissance, initial access, privilege escalation, lateral movement, and reporting. Entry point for full engagements and cross-phase operations.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "attack-tree-construction",
@@ -8329,6 +8407,32 @@
     }
   },
   {
+    "id": "binary-diff",
+    "path": "skills/binary-diff",
+    "category": "uncategorized",
+    "name": "binary-diff",
+    "description": "Cross-version binary symbol migration: diff updated binaries, recover function names without PDBs, and propagate annotations after software updates using BinDiff-style tooling.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "biopython",
     "path": "skills/biopython",
     "category": "science",
@@ -9026,6 +9130,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "browser-extension-reverse",
+    "path": "skills/browser-extension-reverse",
+    "category": "web-development",
+    "name": "browser-extension-reverse",
+    "description": "Authorized reverse engineering of Chrome/Firefox extensions: manifest analysis, background workers, content scripts, and extension-based credential or data-exposure research.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "browser-harness",
@@ -9793,6 +9923,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "case-review",
+    "path": "skills/case-review",
+    "category": "uncategorized",
+    "name": "case-review",
+    "description": "Quality-gate review of a reverse-engineering or assessment case package: scope readiness, Evidence-to-Finding-to-Path traceability, work-item coverage, timeline consistency, and artifact hashes.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "cc-skill-backend-patterns",
@@ -10799,6 +10955,32 @@
     }
   },
   {
+    "id": "cloud-k8s",
+    "path": "skills/cloud-k8s",
+    "category": "uncategorized",
+    "name": "cloud-k8s",
+    "description": "Authorized cloud, container, and Kubernetes security assessment: metadata SSRF, IAM misconfiguration, container escape paths, and cluster RBAC review.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "cloud-penetration-testing",
     "path": "skills/cloud-penetration-testing",
     "category": "cloud",
@@ -10967,6 +11149,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "code-audit",
+    "path": "skills/code-audit",
+    "category": "development",
+    "name": "code-audit",
+    "description": "Authorized source-code security review and SAST workflows: Semgrep and CodeQL pattern hunting, dangerous API identification, and fix verification.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "code-documentation-code-explain",
@@ -14536,6 +14744,32 @@
     }
   },
   {
+    "id": "database-security",
+    "path": "skills/database-security",
+    "category": "database",
+    "name": "database-security",
+    "description": "Authorized database security assessment across PostgreSQL, MySQL, MSSQL, MongoDB, and Redis: exposure, authorization gaps, UDF/command execution paths, and misconfiguration review.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "datadog-automation",
     "path": "skills/datadog-automation",
     "category": "reliability",
@@ -15984,6 +16218,32 @@
     ]
   },
   {
+    "id": "diagram-generator",
+    "path": "skills/diagram-generator",
+    "category": "uncategorized",
+    "name": "diagram-generator",
+    "description": "Generate, refine, validate, and render diagrams from natural language, notes, code, schemas, or existing diagram sources: flowcharts, swimlanes, attack-path graphs, data-flow diagrams, architecture, and state machines.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "diary",
     "path": "skills/diary",
     "category": "meta",
@@ -16028,6 +16288,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "digital-forensics",
+    "path": "skills/digital-forensics",
+    "category": "uncategorized",
+    "name": "digital-forensics",
+    "description": "Authorized digital forensics: memory dumps, disk timelines, PCAP investigation, artifact triage, and incident-response evidence preservation.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "discord-automation",
@@ -16423,6 +16709,32 @@
     "license_source": "https://github.com/jonathimer/devmarketing-skills/blob/main/LICENSE"
   },
   {
+    "id": "docs-generator",
+    "path": "skills/docs-generator",
+    "category": "uncategorized",
+    "name": "docs-generator",
+    "description": "Generate technical deliverables from completed analysis: reverse-engineering reports, penetration-test reports, CTF write-ups, and signature-analysis documentation with evidence-backed structure.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "docs-guard",
     "path": "skills/docs-guard",
     "category": "uncategorized",
@@ -16743,6 +17055,32 @@
     }
   },
   {
+    "id": "dotnet-reverse",
+    "path": "skills/dotnet-reverse",
+    "category": "uncategorized",
+    "name": "dotnet-reverse",
+    "description": ".NET/C# binary reverse engineering: managed PE analysis, dnSpyEx debugging, de4dot deobfuscation (ConfuserEx/SmartAssembly/Babel), IL patching, NativeAOT targets, and analysis of red-team Sharp* tooling.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "doubt-driven-development",
     "path": "skills/doubt-driven-development",
     "category": "uncategorized",
@@ -16901,6 +17239,32 @@
       "feynman",
       "document-analysis"
     ]
+  },
+  {
+    "id": "dsl-vm-reverse",
+    "path": "skills/reverse-engineering/dsl-vm-reverse",
+    "category": "reverse-engineering",
+    "name": "dsl-vm-reverse",
+    "description": "Reverse JavaScript-based custom DSL/VM interpreters and risk-control engines: identify IIFE/switch-based opcode dispatch, extract opcode tables, and capture runtime semantics.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "duotone-design",
@@ -17125,6 +17489,32 @@
     "source_type": "self"
   },
   {
+    "id": "edr-bypass-re",
+    "path": "skills/edr-bypass-re",
+    "category": "uncategorized",
+    "name": "edr-bypass-re",
+    "description": "Reverse engineer EDR internals (user-mode hook tables, ETW, AMSI) and study bypass techniques such as direct syscalls, Hell's Gate, and call-stack spoofing. Lab-only red-team research.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "effective-agent-skills",
     "path": "skills/effective-agent-skills",
     "category": "development",
@@ -17298,6 +17688,32 @@
       "innovation",
       "strategy"
     ]
+  },
+  {
+    "id": "email-security",
+    "path": "skills/email-security",
+    "category": "security",
+    "name": "email-security",
+    "description": "Authorized email security review: phishing analysis, SPF/DKIM/DMARC header authentication, BEC pattern investigation, and mailbox token abuse research.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "email-sequence",
@@ -19162,6 +19578,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "firmware-pentest",
+    "path": "skills/firmware-pentest",
+    "category": "uncategorized",
+    "name": "firmware-pentest",
+    "description": "Firmware penetration testing following the OWASP FSTM nine-stage flow: extraction, EMBA automation, Firmadyne/QEMU emulation, AFL++ fuzzing, and hands-on exploitation in authorized labs.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "fitness-analyzer",
@@ -21201,6 +21643,32 @@
     }
   },
   {
+    "id": "ghidra-reverse",
+    "path": "skills/ghidra-reverse",
+    "category": "uncategorized",
+    "name": "ghidra-reverse",
+    "description": "Free/open reverse engineering with Ghidra (headless or GUI): decompilation, cross-references, scripting, and optional Ghidra MCP workflows when IDA is unavailable.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "git-advanced-workflows",
     "path": "skills/git-advanced-workflows",
     "category": "workflow",
@@ -21823,6 +22291,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "go-rust-reverse",
+    "path": "skills/go-rust-reverse",
+    "category": "development",
+    "name": "go-rust-reverse",
+    "description": "Reverse engineer stripped Go and Rust binaries: runtime recognition, pclntab/module metadata recovery, panic-string analysis, and idiomatic decompilation strategies.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "goal-analyzer",
@@ -22453,6 +22947,32 @@
       "workflow",
       "coding-agents"
     ]
+  },
+  {
+    "id": "hardware-security",
+    "path": "skills/hardware-security",
+    "category": "uncategorized",
+    "name": "hardware-security",
+    "description": "Authorized hardware and embedded interface security research: UART/JTAG discovery, debug-pad triage, secure-boot overview, and offline firmware analysis.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "hasdata",
@@ -23980,6 +24500,32 @@
     }
   },
   {
+    "id": "ida-reverse",
+    "path": "skills/ida-reverse",
+    "category": "uncategorized",
+    "name": "ida-reverse",
+    "description": "Reverse engineer binaries with IDA Pro: decompilation, disassembly, data-flow tracking, cross-references, and IDA MCP automation for deep static analysis of PE/ELF/Mach-O targets.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "idea-autopsy",
     "path": "skills/idea-autopsy",
     "category": "product",
@@ -24097,6 +24643,32 @@
     "source_repo": "addyosmani/agent-skills",
     "license": "MIT",
     "license_source": "https://github.com/addyosmani/agent-skills/blob/main/LICENSE"
+  },
+  {
+    "id": "identity-federation",
+    "path": "skills/identity-federation",
+    "category": "uncategorized",
+    "name": "identity-federation",
+    "description": "Authorized assessment of federated identity systems: SAML, OIDC, OAuth2 flows, SSO misconfiguration, and token-confusion issues.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "identity-mirror",
@@ -24682,6 +25254,38 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "instructree",
+    "path": "skills/instructree",
+    "category": "development",
+    "name": "instructree",
+    "description": "Map, explain, and lint repository-scoped coding-agent instructions before changing code.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-08-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "kotobuki09/instructree",
+    "license": "MIT",
+    "license_source": "https://github.com/kotobuki09/instructree/blob/v0.7.0/LICENSE",
+    "tags": [
+      "agent-instructions",
+      "agents-md",
+      "codex",
+      "static-analysis"
+    ]
   },
   {
     "id": "interactive-portfolio",
@@ -25363,6 +25967,32 @@
       "data-transformation",
       "bash"
     ]
+  },
+  {
+    "id": "js-reverse",
+    "path": "skills/js-reverse",
+    "category": "uncategorized",
+    "name": "js-reverse",
+    "description": "Front-end JavaScript reverse engineering: locate signature chains, analyze encrypted request parameters, sample runtime behavior, and reproduce logic locally in Node for evidence-based output.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "json-canvas",
@@ -27032,6 +27662,32 @@
     }
   },
   {
+    "id": "llm-security",
+    "path": "skills/llm-security",
+    "category": "ai-ml",
+    "name": "llm-security",
+    "description": "Authorized security assessment of LLM applications and AI agents: prompt injection, tool abuse, RAG exposure, memory poisoning, system-prompt extraction, and agent-compliance engineering per OWASP LLM/ASI Top 10.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "llm-structured-output",
     "path": "skills/llm-structured-output",
     "category": "ai-ml",
@@ -27767,6 +28423,32 @@
     }
   },
   {
+    "id": "macos-reverse",
+    "path": "skills/macos-reverse",
+    "category": "uncategorized",
+    "name": "macos-reverse",
+    "description": "Authorized macOS and Mach-O reverse engineering: codesign inspection, Objective-C/Swift recovery, endpoint-security surfaces, and Apple-platform malware analysis.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "macos-screen-recorder",
     "path": "skills/macos-screen-recorder",
     "category": "uncategorized",
@@ -28317,6 +28999,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "malware-analysis",
+    "path": "skills/malware-analysis",
+    "category": "uncategorized",
+    "name": "malware-analysis",
+    "description": "Analyze suspected malware through static, dynamic, and behavioral techniques: IOC extraction, YARA/Sigma rule authoring, sandbox orchestration, and anti-analysis detection.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "malware-analyst",
@@ -29793,6 +30501,32 @@
     }
   },
   {
+    "id": "mobile-reverse",
+    "path": "skills/mobile-reverse",
+    "category": "mobile",
+    "name": "mobile-reverse",
+    "description": "Authorized Android/iOS application reverse engineering and security testing: APK/IPA analysis, runtime instrumentation (Frida/Objection), SSL-pinning and jailbreak/root-detection bypass, per OWASP MASTG.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "mobile-security-coder",
     "path": "skills/mobile-security-coder",
     "category": "mobile",
@@ -30420,6 +31154,35 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "muapi-media",
+    "path": "skills/muapi-media",
+    "category": "media",
+    "name": "muapi-media",
+    "description": "Generate images and videos with MuAPI's schema-driven asynchronous media API while protecting keys, polling, and output downloads.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-08-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "muapi",
+      "image-generation",
+      "video-generation",
+      "media-api"
+    ]
   },
   {
     "id": "multi-advisor",
@@ -33135,6 +33898,32 @@
     ]
   },
   {
+    "id": "ot-ics",
+    "path": "skills/ot-ics",
+    "category": "uncategorized",
+    "name": "ot-ics",
+    "description": "Authorized OT/ICS security assessment: Purdue-model zoning review, PLC/SCADA exposure, industrial protocol discovery, and passive-first evaluation discipline.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "outlook-automation",
     "path": "skills/outlook-automation",
     "category": "automation",
@@ -33388,6 +34177,32 @@
     }
   },
   {
+    "id": "patch-diff-exploit",
+    "path": "skills/patch-diff-exploit",
+    "category": "uncategorized",
+    "name": "patch-diff-exploit",
+    "description": "Locate vulnerability fixes in vendor patches, diff binaries across versions, and build N-day PoCs. Attack-side complement to binary-diff for authorized research.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "patterns",
     "path": "skills/monopoly/patterns",
     "category": "monopoly",
@@ -33606,6 +34421,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "pentest-tools",
+    "path": "skills/pentest-tools",
+    "category": "uncategorized",
+    "name": "pentest-tools",
+    "description": "Operate 20+ penetration-testing tools (Nmap, Nuclei, SQLMap, FFUF, Hashcat, and more) through structured workflows with consistent output handling.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "people-data",
@@ -35758,6 +36599,32 @@
     "source_repo": "scopeblind/scopeblind-gateway"
   },
   {
+    "id": "protocol-reverse",
+    "path": "skills/protocol-reverse",
+    "category": "uncategorized",
+    "name": "protocol-reverse",
+    "description": "Authorized reverse engineering of custom binary protocols, Protobuf/gRPC schemas, WebSocket frames, and PCAP-driven protocol recovery.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "protocol-reverse-engineering",
     "path": "skills/protocol-reverse-engineering",
     "category": "security",
@@ -35946,6 +36813,32 @@
       "activity-planning",
       "event"
     ]
+  },
+  {
+    "id": "pwn-chain",
+    "path": "skills/pwn-chain",
+    "category": "uncategorized",
+    "name": "pwn-chain",
+    "description": "Go from reverse engineering to a working exploit: stack/heap/kernel pwn workflows with pwntools, libc-database, ROP, and stabilization from CTF to authorized remote targets.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "pydantic-ai",
@@ -36401,6 +37294,58 @@
       "wellbeing",
       "coaching"
     ]
+  },
+  {
+    "id": "radare2",
+    "path": "skills/radare2",
+    "category": "uncategorized",
+    "name": "radare2",
+    "description": "Drive the radare2 CLI for binary reconnaissance, disassembly, analysis, function locating, export, and lightweight patching (r2/rabin2/rasm2/radiff2) without a GUI.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
+    "id": "radio-sdr",
+    "path": "skills/radio-sdr",
+    "category": "uncategorized",
+    "name": "radio-sdr",
+    "description": "Authorized RF/SDR security research: signal identification, replay-feasibility study in shielded labs, and wireless protocol analysis outside regulated bands.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "radix-ui-design-system",
@@ -37457,6 +38402,32 @@
     }
   },
   {
+    "id": "reverse-browser-automation",
+    "path": "skills/reverse-browser-automation",
+    "category": "uncategorized",
+    "name": "reverse-browser-automation",
+    "description": "Automate browsers (Playwright) and Windows desktop applications (UI automation) for reverse-engineering evidence collection, UI-driven workflows, and network observation during analysis.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "reverse-engineer",
     "path": "skills/reverse-engineer",
     "category": "security",
@@ -37477,6 +38448,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "reverse-engineering",
+    "path": "skills/reverse-engineering",
+    "category": "uncategorized",
+    "name": "reverse-engineering",
+    "description": "General reverse-engineering methodology for compiled, obfuscated, packed, or virtualized targets: GDB, Frida, angr, Unicorn, and Qiling workflows across languages and platforms, with anti-analysis countermeasures.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "review-and-simplify-changes",
@@ -42155,6 +43152,32 @@
     ]
   },
   {
+    "id": "src-hunter",
+    "path": "skills/pentest-tools/src-hunter",
+    "category": "pentest-tools",
+    "name": "src-hunter",
+    "description": "Bug-bounty/SRC vulnerability-hunting workflow: five-phase methodology (intake, recon, enumeration, hunt, report) with attack playbooks for SQLi, XSS, RCE, SSRF, IDOR, CSRF, path traversal, and file upload.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "sred-project-organizer",
     "path": "skills/sred-project-organizer",
     "category": "project-management",
@@ -42846,6 +43869,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "supply-chain-security",
+    "path": "skills/supply-chain-security",
+    "category": "security",
+    "name": "supply-chain-security",
+    "description": "Software supply-chain security assessment: SBOM generation, SCA scanning, CI/CD pipeline review, container image audit, build integrity, dependency provenance, and vulnerability reachability verification.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "survey-generator",
@@ -44346,6 +45395,84 @@
     }
   },
   {
+    "id": "thick-client",
+    "path": "skills/thick-client",
+    "category": "uncategorized",
+    "name": "thick-client",
+    "description": "Authorized security testing of desktop thick clients: local storage, update channels, IPC, traffic interception, and client-side trust-boundary review.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
+    "id": "threat-hunting",
+    "path": "skills/threat-hunting",
+    "category": "uncategorized",
+    "name": "threat-hunting",
+    "description": "Blue-team threat hunting: detection engineering with Sigma/YARA, SIEM query design, and validation of incident detections against known technique patterns.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
+    "id": "threat-intelligence",
+    "path": "skills/threat-intelligence",
+    "category": "uncategorized",
+    "name": "threat-intelligence",
+    "description": "Authorized OSINT and cyber threat intelligence: enriching IOCs, campaigns, impersonation, scams, and threat-actor profiles from public sources with defined boundaries.",
+    "risk": "safe",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "threat-mitigation-mapping",
     "path": "skills/threat-mitigation-mapping",
     "category": "security",
@@ -45143,7 +46270,7 @@
     "category": "development",
     "name": "tree-ring-memory",
     "description": "Use Tree Ring Memory for local-first AI-agent memory lifecycle work: recall, evidence, audit, forgetting, and consolidation without transcript dumping.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-07-08",
     "plugin": {
@@ -45160,7 +46287,7 @@
     },
     "source_type": "community",
     "source_repo": "TerminallyLazy/Tree-Ring-Memory",
-    "license": "Apache-2.0",
+    "license": "MIT",
     "license_source": "https://github.com/TerminallyLazy/Tree-Ring-Memory/blob/main/LICENSE",
     "tags": [
       "agent-memory",
@@ -48372,6 +49499,32 @@
     "source_type": "self"
   },
   {
+    "id": "wifi-wireless",
+    "path": "skills/wifi-wireless",
+    "category": "uncategorized",
+    "name": "wifi-wireless",
+    "description": "Authorized wireless security assessment: Wi-Fi capture, WPA handshake analysis, rogue AP detection research, and lab-only deauthentication testing.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
     "id": "wiki-architect",
     "path": "skills/wiki-architect",
     "category": "content",
@@ -48555,6 +49708,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "windows-ad",
+    "path": "skills/windows-ad",
+    "category": "uncategorized",
+    "name": "windows-ad",
+    "description": "Authorized Active Directory and Windows identity attacks: Kerberos abuse, AD CS escalation, BloodHound path analysis, NTLM relay, and domain privilege-escalation research.",
+    "risk": "offensive",
+    "source": "https://github.com/zhaoxuya520/reverse-skill",
+    "date_added": "2026-08-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhaoxuya520/reverse-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
     "id": "windows-privilege-escalation",

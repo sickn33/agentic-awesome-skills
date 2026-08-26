@@ -2462,6 +2462,25 @@
       "runtime_files": []
     },
     {
+      "id": "api-security",
+      "path": "skills/api-security",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "api-security-best-practices",
       "path": "skills/api-security-best-practices",
       "targets": {
@@ -2734,6 +2753,25 @@
     {
       "id": "apify-ultimate-scraper",
       "path": "skills/apify-ultimate-scraper",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "apk-reverse",
+      "path": "skills/apk-reverse",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -3281,6 +3319,25 @@
         "claude": [
           "explicit_target_restriction"
         ]
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "attack-chain",
+      "path": "skills/attack-chain",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
       },
       "runtime_files": []
     },
@@ -6628,6 +6685,25 @@
       "runtime_files": []
     },
     {
+      "id": "binary-diff",
+      "path": "skills/binary-diff",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "biopython",
       "path": "skills/biopython",
       "targets": {
@@ -7166,6 +7242,25 @@
       "runtime_files": []
     },
     {
+      "id": "browser-extension-reverse",
+      "path": "skills/browser-extension-reverse",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "browser-harness",
       "path": "skills/browser-harness",
       "targets": {
@@ -7662,6 +7757,25 @@
     {
       "id": "carrier-relationship-management",
       "path": "skills/carrier-relationship-management",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "case-review",
+      "path": "skills/case-review",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -8499,6 +8613,25 @@
       "runtime_files": []
     },
     {
+      "id": "cloud-k8s",
+      "path": "skills/cloud-k8s",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "cloud-penetration-testing",
       "path": "skills/cloud-penetration-testing",
       "targets": {
@@ -8615,6 +8748,25 @@
     {
       "id": "coda-automation",
       "path": "skills/coda-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "code-audit",
+      "path": "skills/code-audit",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -11204,6 +11356,25 @@
       "runtime_files": []
     },
     {
+      "id": "database-security",
+      "path": "skills/database-security",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "datadog-automation",
       "path": "skills/datadog-automation",
       "targets": {
@@ -13215,6 +13386,25 @@
       "runtime_files": []
     },
     {
+      "id": "diagram-generator",
+      "path": "skills/diagram-generator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "diary",
       "path": "skills/diary",
       "targets": {
@@ -13244,6 +13434,25 @@
     {
       "id": "differential-review",
       "path": "skills/differential-review",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "digital-forensics",
+      "path": "skills/digital-forensics",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -13575,6 +13784,25 @@
       "runtime_files": []
     },
     {
+      "id": "docs-generator",
+      "path": "skills/docs-generator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "docs-guard",
       "path": "skills/docs-guard",
       "targets": {
@@ -13828,6 +14056,25 @@
       "runtime_files": []
     },
     {
+      "id": "dotnet-reverse",
+      "path": "skills/dotnet-reverse",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "doubt-driven-development",
       "path": "skills/doubt-driven-development",
       "targets": {
@@ -14060,6 +14307,25 @@
       "runtime_files": []
     },
     {
+      "id": "edr-bypass-re",
+      "path": "skills/edr-bypass-re",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "effective-agent-skills",
       "path": "skills/effective-agent-skills",
       "targets": {
@@ -14163,6 +14429,25 @@
     {
       "id": "elon-musk",
       "path": "skills/elon-musk",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "email-security",
+      "path": "skills/email-security",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -15626,6 +15911,25 @@
     {
       "id": "firmware-analyst",
       "path": "skills/firmware-analyst",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "firmware-pentest",
+      "path": "skills/firmware-pentest",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -17227,6 +17531,25 @@
       "runtime_files": []
     },
     {
+      "id": "ghidra-reverse",
+      "path": "skills/ghidra-reverse",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "git-advanced-workflows",
       "path": "skills/git-advanced-workflows",
       "targets": {
@@ -17702,6 +18025,25 @@
       "runtime_files": []
     },
     {
+      "id": "go-rust-reverse",
+      "path": "skills/go-rust-reverse",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "goal-analyzer",
       "path": "skills/goal-analyzer",
       "targets": {
@@ -18141,6 +18483,25 @@
     {
       "id": "handoff",
       "path": "skills/handoff",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "hardware-security",
+      "path": "skills/hardware-security",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -19327,6 +19688,25 @@
       "runtime_files": []
     },
     {
+      "id": "ida-reverse",
+      "path": "skills/ida-reverse",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "idea-autopsy",
       "path": "skills/idea-autopsy",
       "targets": {
@@ -19386,6 +19766,25 @@
     {
       "id": "idea-refine",
       "path": "skills/idea-refine",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "identity-federation",
+      "path": "skills/identity-federation",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -19804,6 +20203,25 @@
     {
       "id": "instagram-automation",
       "path": "skills/instagram-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "instructree",
+      "path": "skills/instructree",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -20317,6 +20735,25 @@
     {
       "id": "jq",
       "path": "skills/jq",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "js-reverse",
+      "path": "skills/js-reverse",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -21657,6 +22094,25 @@
       "runtime_files": []
     },
     {
+      "id": "llm-security",
+      "path": "skills/llm-security",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "llm-structured-output",
       "path": "skills/llm-structured-output",
       "targets": {
@@ -22180,6 +22636,25 @@
       "runtime_files": []
     },
     {
+      "id": "macos-reverse",
+      "path": "skills/macos-reverse",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "macos-screen-recorder",
       "path": "skills/macos-screen-recorder",
       "targets": {
@@ -22625,6 +23100,25 @@
     {
       "id": "makepad-widgets",
       "path": "skills/makepad-widgets",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "malware-analysis",
+      "path": "skills/malware-analysis",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -23627,6 +24121,25 @@
       "runtime_files": []
     },
     {
+      "id": "mobile-reverse",
+      "path": "skills/mobile-reverse",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "mobile-security-coder",
       "path": "skills/mobile-security-coder",
       "targets": {
@@ -24135,6 +24648,25 @@
     {
       "id": "mtls-configuration",
       "path": "skills/mtls-configuration",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "muapi-media",
+      "path": "skills/muapi-media",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -26262,6 +26794,25 @@
       "runtime_files": []
     },
     {
+      "id": "ot-ics",
+      "path": "skills/ot-ics",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "outlook-automation",
       "path": "skills/outlook-automation",
       "targets": {
@@ -26452,6 +27003,25 @@
       "runtime_files": []
     },
     {
+      "id": "patch-diff-exploit",
+      "path": "skills/patch-diff-exploit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "payment-integration",
       "path": "skills/payment-integration",
       "targets": {
@@ -26587,6 +27157,44 @@
     {
       "id": "pentest-commands",
       "path": "skills/pentest-commands",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "pentest-tools",
+      "path": "skills/pentest-tools",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "pentest-tools/src-hunter",
+      "path": "skills/pentest-tools/src-hunter",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -28220,6 +28828,25 @@
       "runtime_files": []
     },
     {
+      "id": "protocol-reverse",
+      "path": "skills/protocol-reverse",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "protocol-reverse-engineering",
       "path": "skills/protocol-reverse-engineering",
       "targets": {
@@ -28336,6 +28963,25 @@
     {
       "id": "puzzle-activity-planner",
       "path": "skills/puzzle-activity-planner",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "pwn-chain",
+      "path": "skills/pwn-chain",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -28659,6 +29305,44 @@
     {
       "id": "quit-sponsor",
       "path": "skills/quit-sponsor",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "radare2",
+      "path": "skills/radare2",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "radio-sdr",
+      "path": "skills/radio-sdr",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -29455,8 +30139,65 @@
       "runtime_files": []
     },
     {
+      "id": "reverse-browser-automation",
+      "path": "skills/reverse-browser-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "reverse-engineer",
       "path": "skills/reverse-engineer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "reverse-engineering",
+      "path": "skills/reverse-engineering",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "reverse-engineering/dsl-vm-reverse",
+      "path": "skills/reverse-engineering/dsl-vm-reverse",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -33947,6 +34688,25 @@
       "runtime_files": []
     },
     {
+      "id": "supply-chain-security",
+      "path": "skills/supply-chain-security",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "survey-generator",
       "path": "skills/survey-generator",
       "targets": {
@@ -34998,6 +35758,63 @@
     {
       "id": "theme-factory",
       "path": "skills/theme-factory",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "thick-client",
+      "path": "skills/thick-client",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "threat-hunting",
+      "path": "skills/threat-hunting",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "threat-intelligence",
+      "path": "skills/threat-intelligence",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -37893,6 +38710,25 @@
       "runtime_files": []
     },
     {
+      "id": "wifi-wireless",
+      "path": "skills/wifi-wireless",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "wiki-architect",
       "path": "skills/wiki-architect",
       "targets": {
@@ -38028,6 +38864,25 @@
     {
       "id": "wiki-vitepress",
       "path": "skills/wiki-vitepress",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "windows-ad",
+      "path": "skills/windows-ad",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -39002,10 +39857,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2029,
+    "total_skills": 2074,
     "supported": {
-      "codex": 1951,
-      "claude": 1972
+      "codex": 1996,
+      "claude": 2017
     },
     "blocked": {
       "codex": 78,
