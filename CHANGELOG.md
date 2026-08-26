@@ -9,6 +9,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [16.2.0] - 2026-08-26 - "Security Operations Expansion and Safer Integrations"
+
+> Added a reviewed 43-skill security and reverse-engineering collection,
+> introduced API rate-limit, media-generation, and repository-instruction
+> workflows, corrected install guidance, and refreshed dependency safety. The
+> published catalog contains 2,074 skills.
+
+This release expands defensive security, authorized assessment, reverse
+engineering, incident-response, and threat-intelligence coverage while keeping
+high-impact operations behind explicit scope, authorization, evidence, and
+environment-safety gates.
+
+### Added
+
+- Added 43 security skills adapted from the MIT-licensed
+  [`zhaoxuya520/reverse-skill`](https://github.com/zhaoxuya520/reverse-skill)
+  collection, spanning reverse engineering, malware analysis, forensics,
+  threat hunting, API and identity security, firmware, wireless, cloud,
+  supply-chain, and authorized assessment workflows
+  ([#1247](https://github.com/sickn33/agentic-awesome-skills/pull/1247)).
+- Added [`instructree`](skills/instructree/) for generating and validating
+  scoped repository instruction trees without walking outside the selected
+  project root
+  ([#1251](https://github.com/sickn33/agentic-awesome-skills/pull/1251)).
+- Added [`muapi-media`](skills/muapi-media/) for authenticated MuAPI image,
+  video, and music generation with explicit cost, credential, and output
+  handling
+  ([#1257](https://github.com/sickn33/agentic-awesome-skills/pull/1257)).
+- Added [`api-rate-limit-handler`](skills/api-rate-limit-handler/) for
+  retry-aware API clients with bounded backoff, jitter, idempotency guidance,
+  and billable-request safeguards
+  ([#1258](https://github.com/sickn33/agentic-awesome-skills/pull/1258)).
+
+### Changed
+
+- Updated `express-rate-limit` from 8.6.1 to 8.6.2 in the generated Loki Mode
+  example dependency set
+  ([#1256](https://github.com/sickn33/agentic-awesome-skills/pull/1256)).
+- Regenerated the canonical catalog, offline AAS Core data, tracked web assets,
+  marketplaces, editorial bundles, compatibility reports, and Codex/Claude
+  plugin distributions for 2,074 skills.
+
+### Fixed
+
+- Corrected [`tree-ring-memory`](skills/tree-ring-memory/) installation
+  guidance to target the reviewed `v0.15.0` release and aligned its declared
+  risk with its install and update mutations
+  ([#1253](https://github.com/sickn33/agentic-awesome-skills/pull/1253)).
+- Sanitized embedded NUL bytes from imported Markdown in the security pack so
+  the complete canonical skill subtrees remain text-safe and reviewable.
+- Kept API retry guidance bounded and prevented automatic retries from silently
+  multiplying non-idempotent or billable operations.
+
+### Security
+
+- Excluded upstream runtime bootstrap scripts and the GPLv3 sidecar from the
+  imported security collection; only reviewed Markdown skill content and
+  references are distributed.
+- Preserved explicit authorization, target-scope, lab-isolation, evidence, and
+  stop-condition gates across offensive and dual-use security workflows.
+- Classified credentialed media generation and repository-mutating install
+  guidance as critical risk, with secrets supplied through environment or
+  secure input rather than command-line arguments.
+
 ## [16.1.0] - 2026-08-25 - "Specification-First Delivery and Mistake-Proofing"
 
 > Added specification-first delivery and software mistake-proofing workflows,
