@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-25T17:54:41.000Z
 
-Total skills: 2028
+Total skills: 2029
 
 ## agent-behavior (5)
 
@@ -1017,13 +1017,14 @@ Total skills: 2028
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (179)
+## development (180)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `agent-harness-fault-injection` | Use when an agent workflow needs deterministic recovery evidence for sandbox, MCP/tool, worker, checkpoint, memory, or orchestration failures. | safe | self | agent-harness, fault-injection, recovery, state-machine, mcp, multi-agent | agent-harness, fault-injection, recovery, state-machine, mcp, multi-agent, agent, harness, fault, injection, deterministic, evidence |
 | `agenttrace-session-audit` | Audit local AI coding-agent sessions with agenttrace for cost, tool failures, latency, anomalies, health, diffs, and CI gates. | safe | luoyuctl/agenttrace | ai-coding, observability, cost-tracking, session-analysis | ai-coding, observability, cost-tracking, session-analysis, agenttrace, session, audit, local, ai, coding, agent, sessions |
 | `api-endpoint-builder` | Builds production-ready REST API endpoints with validation, error handling, authentication, and documentation. Follows best practices for security and scalab... | safe | community | api, endpoint, builder | api, endpoint, builder, rest, endpoints, validation, error, handling, authentication, documentation, follows, security |
+| `api-rate-limit-handler` | Implement bounded, idempotency-aware API throttling, backoff, and retry handling for 429 and transient 5xx responses. | safe | self | rate-limiting, retry, backoff, api, resilience, throttle, 429 | rate-limiting, retry, backoff, api, resilience, throttle, 429, rate, limit, handler, bounded, idempotency |
 | `arm-cortex-expert` | Senior embedded software engineer specializing in firmware and driver development for ARM Cortex-M microcontrollers (Teensy, STM32, nRF52, SAMD). | critical | community | arm, cortex | arm, cortex, senior, embedded, software, engineer, specializing, firmware, driver, development, microcontrollers, teensy |
 | `ask-copilot` | Use GitHub Copilot CLI in non-interactive mode to ask questions, review code, or generate snippets without manual interaction. | critical | cshara1/antigravity-awesome-skills | copilot, github, cli, review, prompt | copilot, github, cli, review, prompt, ask, non, interactive, mode, questions, code, generate |
 | `async-python-patterns` | Comprehensive guidance for implementing asynchronous Python applications using asyncio, concurrent programming patterns, and async/await for building high-pe... | safe | community | async, python | async, python, guidance, implementing, asynchronous, applications, asyncio, concurrent, programming, await, building, high |
