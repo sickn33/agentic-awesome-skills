@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "agentic-bundle-mobile-developer",
-  "version": "16.2.0",
+  "version": "16.3.0",
   "description": "Portable skills-only \"Mobile Developer\" plugin from Agentic Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
