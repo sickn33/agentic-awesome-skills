@@ -18291,6 +18291,25 @@
       "runtime_files": []
     },
     {
+      "id": "graceful-shutdown",
+      "path": "skills/graceful-shutdown",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "grafana-dashboards",
       "path": "skills/grafana-dashboards",
       "targets": {
@@ -39857,10 +39876,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2074,
+    "total_skills": 2075,
     "supported": {
-      "codex": 1996,
-      "claude": 2017
+      "codex": 1997,
+      "claude": 2018
     },
     "blocked": {
       "codex": 78,

@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-26T18:31:49.000Z
 
-Total skills: 2074
+Total skills: 2075
 
 ## agent-behavior (5)
 
@@ -1020,7 +1020,7 @@ Total skills: 2074
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (183)
+## development (184)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1115,6 +1115,7 @@ Total skills: 2074
 | `go-in-depth` | Go in depth harness — fan-out web searches, fetch sources, adversarially verify claims, synthesize a cited report. | safe | self | go, in, depth | go, in, depth, harness, fan, web, searches, fetch, sources, adversarially, verify, claims |
 | `go-rod-master` | Comprehensive guide for browser automation and web scraping with go-rod (Chrome DevTools Protocol) including stealth anti-bot-detection patterns. | safe | https://github.com/go-rod/rod | go, rod, master | go, rod, master, browser, automation, web, scraping, chrome, devtools, protocol, including, stealth |
 | `go-rust-reverse` | Reverse engineer stripped Go and Rust binaries: runtime recognition, pclntab/module metadata recovery, panic-string analysis, and idiomatic decompilation str... | safe | zhaoxuya520/reverse-skill | go, rust, reverse | go, rust, reverse, engineer, stripped, binaries, runtime, recognition, pclntab, module, metadata, recovery |
+| `graceful-shutdown` | Implement graceful shutdown for servers and workers: drain connections, finish in-flight work, release resources, and exit cleanly on SIGTERM/SIGINT. | safe | self | graceful-shutdown, signals, sigterm, sigint, drain, health-check, kubernetes, docker, production, resilience | graceful-shutdown, signals, sigterm, sigint, drain, health-check, kubernetes, docker, production, resilience, graceful, shutdown |
 | `grpc-golang` | Build production-ready gRPC services in Go with mTLS, streaming, and observability. Use when designing Protobuf contracts with Buf or implementing secure ser... | safe | self | grpc, golang | grpc, golang, go, mtls, streaming, observability, designing, protobuf, contracts, buf, implementing, secure |
 | `hig-components-content` | Apple Human Interface Guidelines for content display components. | safe | community | hig, components, content | hig, components, content, apple, human, interface, guidelines, display |
 | `hig-components-controls` | Check for .claude/apple-design-context.md before asking questions. Use existing context and only ask for information not already covered. | none | community | hig, components, controls | hig, components, controls, check, claude, apple, context, md, before, asking, questions, existing |

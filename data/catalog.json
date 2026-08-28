@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-26T18:31:49.000Z",
-  "total": 2074,
+  "total": 2075,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -27667,6 +27667,44 @@
         "aida"
       ],
       "path": "skills/gpt-taste/SKILL.md"
+    },
+    {
+      "id": "graceful-shutdown",
+      "canonical_id": "graceful-shutdown",
+      "name": "graceful-shutdown",
+      "description": "Implement graceful shutdown for servers and workers: drain connections, finish in-flight work, release resources, and exit cleanly on SIGTERM/SIGINT.",
+      "category": "development",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "license": "MIT",
+      "tags": [
+        "graceful-shutdown",
+        "signals",
+        "sigterm",
+        "sigint",
+        "drain",
+        "health-check",
+        "kubernetes",
+        "docker",
+        "production",
+        "resilience"
+      ],
+      "triggers": [
+        "graceful-shutdown",
+        "signals",
+        "sigterm",
+        "sigint",
+        "drain",
+        "health-check",
+        "kubernetes",
+        "docker",
+        "production",
+        "resilience",
+        "graceful",
+        "shutdown"
+      ],
+      "path": "skills/graceful-shutdown/SKILL.md"
     },
     {
       "id": "grafana-dashboards",

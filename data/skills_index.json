@@ -22627,6 +22627,42 @@
     ]
   },
   {
+    "id": "graceful-shutdown",
+    "path": "skills/graceful-shutdown",
+    "category": "development",
+    "name": "graceful-shutdown",
+    "description": "Implement graceful shutdown for servers and workers: drain connections, finish in-flight work, release resources, and exit cleanly on SIGTERM/SIGINT.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-08-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "tags": [
+      "graceful-shutdown",
+      "signals",
+      "SIGTERM",
+      "SIGINT",
+      "drain",
+      "health-check",
+      "kubernetes",
+      "docker",
+      "production",
+      "resilience"
+    ]
+  },
+  {
     "id": "gradient-design",
     "path": "skills/design-it/gradient-design",
     "category": "design-it",
