@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-26T18:31:49.000Z",
-  "total": 2075,
+  "total": 2098,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1815,6 +1815,38 @@
       "path": "skills/agenttrace-session-audit/SKILL.md"
     },
     {
+      "id": "agy-delegate",
+      "canonical_id": "agy-delegate",
+      "name": "agy-delegate",
+      "description": "Delegate coding tasks to the Google Antigravity CLI (`agy`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "agy",
+        "delegate"
+      ],
+      "triggers": [
+        "agy",
+        "delegate",
+        "coding",
+        "tasks",
+        "google",
+        "antigravity",
+        "cli",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator"
+      ],
+      "path": "skills/agy-delegate/SKILL.md"
+    },
+    {
       "id": "ai-agent-development",
       "canonical_id": "ai-agent-development",
       "name": "ai-agent-development",
@@ -2211,6 +2243,38 @@
         "pay"
       ],
       "path": "skills/ai-wrapper-product/SKILL.md"
+    },
+    {
+      "id": "aider-delegate",
+      "canonical_id": "aider-delegate",
+      "name": "aider-delegate",
+      "description": "Delegate coding tasks to Aider (`aider`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "aider",
+        "delegate"
+      ],
+      "triggers": [
+        "aider",
+        "delegate",
+        "coding",
+        "tasks",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator",
+        "retains",
+        "review",
+        "landing"
+      ],
+      "path": "skills/aider-delegate/SKILL.md"
     },
     {
       "id": "airflow-dag-patterns",
@@ -9451,6 +9515,38 @@
       "path": "skills/azure-web-pubsub-ts/SKILL.md"
     },
     {
+      "id": "babysit-pr",
+      "canonical_id": "babysit-pr",
+      "name": "babysit-pr",
+      "description": "Babysit a pull request through its bot review rounds: verify, fix, reply, resolve. Use for any babysit or watch-the-PR ask.",
+      "category": "code-quality",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/review-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/review-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/review-skills/blob/master/LICENSE",
+      "tags": [
+        "babysit",
+        "pr"
+      ],
+      "triggers": [
+        "babysit",
+        "pr",
+        "pull",
+        "request",
+        "through",
+        "bot",
+        "review",
+        "rounds",
+        "verify",
+        "fix",
+        "reply",
+        "resolve"
+      ],
+      "path": "skills/babysit-pr/SKILL.md"
+    },
+    {
       "id": "backend-architect",
       "canonical_id": "backend-architect",
       "name": "backend-architect",
@@ -12644,6 +12740,38 @@
       "path": "skills/claude-d3js-skill/SKILL.md"
     },
     {
+      "id": "claude-delegate",
+      "canonical_id": "claude-delegate",
+      "name": "claude-delegate",
+      "description": "Delegate coding tasks to a separate Claude Code CLI process or Claude session only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "claude",
+        "delegate"
+      ],
+      "triggers": [
+        "claude",
+        "delegate",
+        "coding",
+        "tasks",
+        "separate",
+        "code",
+        "cli",
+        "process",
+        "session",
+        "user",
+        "explicitly",
+        "requests"
+      ],
+      "path": "skills/claude-delegate/SKILL.md"
+    },
+    {
       "id": "claude-in-chrome-troubleshooting",
       "canonical_id": "claude-in-chrome-troubleshooting",
       "name": "claude-in-chrome-troubleshooting",
@@ -12916,6 +13044,38 @@
         "via"
       ],
       "path": "skills/clickup-automation/SKILL.md"
+    },
+    {
+      "id": "cline-delegate",
+      "canonical_id": "cline-delegate",
+      "name": "cline-delegate",
+      "description": "Delegate coding tasks to the Cline CLI (`cline`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "cline",
+        "delegate"
+      ],
+      "triggers": [
+        "cline",
+        "delegate",
+        "coding",
+        "tasks",
+        "cli",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator",
+        "retains",
+        "review"
+      ],
+      "path": "skills/cline-delegate/SKILL.md"
     },
     {
       "id": "close-automation",
@@ -13982,6 +14142,38 @@
       "path": "skills/codebase-to-wordpress-converter/SKILL.md"
     },
     {
+      "id": "codex-delegate",
+      "canonical_id": "codex-delegate",
+      "name": "codex-delegate",
+      "description": "Delegate coding tasks to the OpenAI Codex CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "codex",
+        "delegate"
+      ],
+      "triggers": [
+        "codex",
+        "delegate",
+        "coding",
+        "tasks",
+        "openai",
+        "cli",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator",
+        "retains"
+      ],
+      "path": "skills/codex-delegate/SKILL.md"
+    },
+    {
       "id": "codex-fable5",
       "canonical_id": "codex-fable5",
       "name": "codex-fable5",
@@ -14204,6 +14396,38 @@
         "caching"
       ],
       "path": "skills/comfyui-gateway/SKILL.md"
+    },
+    {
+      "id": "commandcode-delegate",
+      "canonical_id": "commandcode-delegate",
+      "name": "commandcode-delegate",
+      "description": "Delegate coding tasks to the Command Code CLI (`cmd`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "commandcode",
+        "delegate"
+      ],
+      "triggers": [
+        "commandcode",
+        "delegate",
+        "coding",
+        "tasks",
+        "command",
+        "code",
+        "cli",
+        "cmd",
+        "user",
+        "explicitly",
+        "requests",
+        "while"
+      ],
+      "path": "skills/commandcode-delegate/SKILL.md"
     },
     {
       "id": "commit",
@@ -15475,6 +15699,38 @@
       "path": "skills/convex/SKILL.md"
     },
     {
+      "id": "copilot-delegate",
+      "canonical_id": "copilot-delegate",
+      "name": "copilot-delegate",
+      "description": "Delegate coding tasks to the GitHub Copilot CLI (`copilot`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "copilot",
+        "delegate"
+      ],
+      "triggers": [
+        "copilot",
+        "delegate",
+        "coding",
+        "tasks",
+        "github",
+        "cli",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator",
+        "retains"
+      ],
+      "path": "skills/copilot-delegate/SKILL.md"
+    },
+    {
       "id": "copilot-sdk",
       "canonical_id": "copilot-sdk",
       "name": "copilot-sdk",
@@ -16466,6 +16722,38 @@
         "javascript"
       ],
       "path": "skills/cucumber-skill/SKILL.md"
+    },
+    {
+      "id": "cursor-delegate",
+      "canonical_id": "cursor-delegate",
+      "name": "cursor-delegate",
+      "description": "Delegate coding tasks to the Cursor Agent CLI (`cursor-agent`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "cursor",
+        "delegate"
+      ],
+      "triggers": [
+        "cursor",
+        "delegate",
+        "coding",
+        "tasks",
+        "agent",
+        "cli",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator",
+        "retains"
+      ],
+      "path": "skills/cursor-delegate/SKILL.md"
     },
     {
       "id": "customer-psychographic-profiler",
@@ -17469,6 +17757,37 @@
       "path": "skills/ddd-tactical-patterns/SKILL.md"
     },
     {
+      "id": "debate-review",
+      "canonical_id": "debate-review",
+      "name": "debate-review",
+      "description": "Two-model debate review of a GitHub PR, GitLab MR, Azure DevOps PR, or local working tree, posted as inline comments or printed. Use for any PR/MR review request, or a local review before a PR exists.",
+      "category": "code-quality",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/review-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/review-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/review-skills/blob/master/LICENSE",
+      "tags": [
+        "debate"
+      ],
+      "triggers": [
+        "debate",
+        "review",
+        "two",
+        "model",
+        "github",
+        "pr",
+        "gitlab",
+        "mr",
+        "azure",
+        "devops",
+        "local",
+        "working"
+      ],
+      "path": "skills/debate-review/SKILL.md"
+    },
+    {
       "id": "debug-buttercup",
       "canonical_id": "debug-buttercup",
       "name": "debug-buttercup",
@@ -17799,6 +18118,38 @@
         "save"
       ],
       "path": "skills/defuddle/SKILL.md"
+    },
+    {
+      "id": "delegate-setup",
+      "canonical_id": "delegate-setup",
+      "name": "delegate-setup",
+      "description": "Configure approved delegation lanes across installed implementer CLIs, including optional model and effort choices, then write global or project config only after explicit user approval.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "delegate",
+        "setup"
+      ],
+      "triggers": [
+        "delegate",
+        "setup",
+        "configure",
+        "approved",
+        "delegation",
+        "lanes",
+        "installed",
+        "implementer",
+        "clis",
+        "including",
+        "optional",
+        "model"
+      ],
+      "path": "skills/delegate-setup/SKILL.md"
     },
     {
       "id": "delegating-to-agents",
@@ -23392,6 +23743,42 @@
       "path": "skills/fal-workflow/SKILL.md"
     },
     {
+      "id": "falsify",
+      "canonical_id": "falsify",
+      "name": "falsify",
+      "description": "The scientific thinking protocol for AI agents. Use when facing complex, ambiguous, or high-stakes questions where guessing is costly: hypothesis → attempt to break it → evidence → calibrated conclusion.",
+      "category": "reasoning",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "263311487-ux/falsify",
+      "license": "MIT",
+      "license_source": "https://github.com/263311487-ux/falsify/blob/main/LICENSE",
+      "tags": [
+        "reasoning",
+        "falsification",
+        "science",
+        "thinking",
+        "verification",
+        "epistemology"
+      ],
+      "triggers": [
+        "reasoning",
+        "falsification",
+        "science",
+        "thinking",
+        "verification",
+        "epistemology",
+        "falsify",
+        "scientific",
+        "protocol",
+        "ai",
+        "agents",
+        "facing"
+      ],
+      "path": "skills/falsify/SKILL.md"
+    },
+    {
       "id": "family-health-analyzer",
       "canonical_id": "family-health-analyzer",
       "name": "family-health-analyzer",
@@ -27942,6 +28329,38 @@
       "path": "skills/grok-build/SKILL.md"
     },
     {
+      "id": "grok-delegate",
+      "canonical_id": "grok-delegate",
+      "name": "grok-delegate",
+      "description": "Delegate coding tasks to the Grok Build CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "grok",
+        "delegate"
+      ],
+      "triggers": [
+        "grok",
+        "delegate",
+        "coding",
+        "tasks",
+        "cli",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator",
+        "retains",
+        "review"
+      ],
+      "path": "skills/grok-delegate/SKILL.md"
+    },
+    {
       "id": "growth-engine",
       "canonical_id": "growth-engine",
       "name": "growth-engine",
@@ -31748,6 +32167,38 @@
         "wants"
       ],
       "path": "skills/keyword-extractor/SKILL.md"
+    },
+    {
+      "id": "kimi-delegate",
+      "canonical_id": "kimi-delegate",
+      "name": "kimi-delegate",
+      "description": "Delegate coding tasks to the Kimi Code CLI (`kimi`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "kimi",
+        "delegate"
+      ],
+      "triggers": [
+        "kimi",
+        "delegate",
+        "coding",
+        "tasks",
+        "code",
+        "cli",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator",
+        "retains"
+      ],
+      "path": "skills/kimi-delegate/SKILL.md"
     },
     {
       "id": "klaviyo-automation",
@@ -40142,6 +40593,38 @@
       "path": "skills/office-productivity/SKILL.md"
     },
     {
+      "id": "omp-delegate",
+      "canonical_id": "omp-delegate",
+      "name": "omp-delegate",
+      "description": "Delegate coding tasks to Oh My Pi (`omp`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "omp",
+        "delegate"
+      ],
+      "triggers": [
+        "omp",
+        "delegate",
+        "coding",
+        "tasks",
+        "oh",
+        "my",
+        "pi",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator"
+      ],
+      "path": "skills/omp-delegate/SKILL.md"
+    },
+    {
       "id": "on-call-handoff-patterns",
       "canonical_id": "on-call-handoff-patterns",
       "name": "on-call-handoff-patterns",
@@ -40482,6 +40965,38 @@
         "repo"
       ],
       "path": "skills/openclaw-github-repo-commander/SKILL.md"
+    },
+    {
+      "id": "opencode-delegate",
+      "canonical_id": "opencode-delegate",
+      "name": "opencode-delegate",
+      "description": "Delegate coding tasks to the OpenCode CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "opencode",
+        "delegate"
+      ],
+      "triggers": [
+        "opencode",
+        "delegate",
+        "coding",
+        "tasks",
+        "cli",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator",
+        "retains",
+        "review"
+      ],
+      "path": "skills/opencode-delegate/SKILL.md"
     },
     {
       "id": "optim-agent",
@@ -41736,6 +42251,38 @@
         "variants"
       ],
       "path": "skills/pi-custom-model/SKILL.md"
+    },
+    {
+      "id": "pi-delegate",
+      "canonical_id": "pi-delegate",
+      "name": "pi-delegate",
+      "description": "Delegate coding tasks to the Pi coding agent CLI (`pi`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "pi",
+        "delegate"
+      ],
+      "triggers": [
+        "pi",
+        "delegate",
+        "coding",
+        "tasks",
+        "agent",
+        "cli",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator",
+        "retains"
+      ],
+      "path": "skills/pi-delegate/SKILL.md"
     },
     {
       "id": "pi-web-search",
@@ -44509,6 +45056,38 @@
       "path": "skills/qiskit/SKILL.md"
     },
     {
+      "id": "qoder-delegate",
+      "canonical_id": "qoder-delegate",
+      "name": "qoder-delegate",
+      "description": "Delegate coding tasks to the Qoder CLI (`qodercli`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "qoder",
+        "delegate"
+      ],
+      "triggers": [
+        "qoder",
+        "delegate",
+        "coding",
+        "tasks",
+        "cli",
+        "qodercli",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator",
+        "retains"
+      ],
+      "path": "skills/qoder-delegate/SKILL.md"
+    },
+    {
       "id": "quality-nonconformance",
       "canonical_id": "quality-nonconformance",
       "name": "quality-nonconformance",
@@ -46864,6 +47443,41 @@
         "da"
       ],
       "path": "skills/sam-altman/SKILL.md"
+    },
+    {
+      "id": "sandbase-mcp",
+      "canonical_id": "sandbase-mcp",
+      "name": "sandbase-mcp",
+      "description": "Discover, inspect, and invoke 2,000+ AI models and APIs through SandBase's local MCP bridge with explicit schema and cost checks.",
+      "category": "ai-ml",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "sandbaseai/cli",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/sandbaseai/cli/blob/main/LICENSE",
+      "tags": [
+        "mcp",
+        "ai-models",
+        "api-gateway",
+        "inference",
+        "media-generation"
+      ],
+      "triggers": [
+        "mcp",
+        "ai-models",
+        "api-gateway",
+        "inference",
+        "media-generation",
+        "sandbase",
+        "discover",
+        "inspect",
+        "invoke",
+        "000",
+        "ai",
+        "models"
+      ],
+      "path": "skills/sandbase-mcp/SKILL.md"
     },
     {
       "id": "sankhya-dashboard-html-jsp-custom-best-pratices",
@@ -56481,6 +57095,43 @@
       "path": "skills/unslop-review/SKILL.md"
     },
     {
+      "id": "unsloth-finetuning",
+      "canonical_id": "unsloth-finetuning",
+      "name": "unsloth-finetuning",
+      "description": "Fine-tune and post-train LLMs with Unsloth Core on a single consumer GPU: VRAM sizing, LoRA/QLoRA, GRPO/DPO, chat-template correctness, and GGUF export.",
+      "category": "ai-ml",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "unslothai/unsloth",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/unslothai/unsloth/blob/main/LICENSE",
+      "tags": [
+        "unsloth",
+        "fine-tuning",
+        "lora",
+        "qlora",
+        "grpo",
+        "gguf",
+        "vram"
+      ],
+      "triggers": [
+        "unsloth",
+        "fine-tuning",
+        "lora",
+        "qlora",
+        "grpo",
+        "gguf",
+        "vram",
+        "finetuning",
+        "fine",
+        "tune",
+        "post",
+        "train"
+      ],
+      "path": "skills/unsloth-finetuning/SKILL.md"
+    },
+    {
       "id": "unsplash-integration",
       "canonical_id": "unsplash-integration",
       "name": "unsplash-integration",
@@ -57533,6 +58184,38 @@
       "path": "skills/vibe-code-cleanup/SKILL.md"
     },
     {
+      "id": "vibe-delegate",
+      "canonical_id": "vibe-delegate",
+      "name": "vibe-delegate",
+      "description": "Delegate coding tasks to the Mistral Vibe CLI (`vibe`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "vibe",
+        "delegate"
+      ],
+      "triggers": [
+        "vibe",
+        "delegate",
+        "coding",
+        "tasks",
+        "mistral",
+        "cli",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator",
+        "retains"
+      ],
+      "path": "skills/vibe-delegate/SKILL.md"
+    },
+    {
       "id": "vibecode-production-qa-validator",
       "canonical_id": "vibecode-production-qa-validator",
       "name": "vibecode-production-qa-validator",
@@ -58086,6 +58769,38 @@
         "scope"
       ],
       "path": "skills/warehouse/SKILL.md"
+    },
+    {
+      "id": "warp-delegate",
+      "canonical_id": "warp-delegate",
+      "name": "warp-delegate",
+      "description": "Delegate coding tasks to the Warp Agent CLI (`oz`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "warp",
+        "delegate"
+      ],
+      "triggers": [
+        "warp",
+        "delegate",
+        "coding",
+        "tasks",
+        "agent",
+        "cli",
+        "oz",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator"
+      ],
+      "path": "skills/warp-delegate/SKILL.md"
     },
     {
       "id": "warren-buffett",
@@ -60253,6 +60968,38 @@
         "developers"
       ],
       "path": "skills/zapier-make-patterns/SKILL.md"
+    },
+    {
+      "id": "zcode-delegate",
+      "canonical_id": "zcode-delegate",
+      "name": "zcode-delegate",
+      "description": "Delegate coding tasks to the Z.AI ZCode CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "https://github.com/amElnagdy/delegate-skills",
+      "source_type": "community",
+      "source_repo": "amElnagdy/delegate-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE",
+      "tags": [
+        "zcode",
+        "delegate"
+      ],
+      "triggers": [
+        "zcode",
+        "delegate",
+        "coding",
+        "tasks",
+        "ai",
+        "cli",
+        "user",
+        "explicitly",
+        "requests",
+        "while",
+        "orchestrator",
+        "retains"
+      ],
+      "path": "skills/zcode-delegate/SKILL.md"
     },
     {
       "id": "zendesk-automation",

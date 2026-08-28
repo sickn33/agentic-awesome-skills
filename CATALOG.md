@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-26T18:31:49.000Z
 
-Total skills: 2075
+Total skills: 2098
 
 ## agent-behavior (5)
 
@@ -21,17 +21,35 @@ Total skills: 2075
 | `agent-evaluation-reporting` | Use when summarizing agent evaluations where autonomous, assisted, failed, timed-out, or invalid outcomes must remain distinct and comparable. | none | self | agent-evaluation, metrics, reporting, reliability, benchmarking | agent-evaluation, metrics, reporting, reliability, benchmarking, agent, evaluation, summarizing, evaluations, where, autonomous, assisted |
 | `run-deep-swe` | Run reproducible DeepSWE coding-agent benchmark evaluations through OpenRouter and mini-swe-agent. | critical | davidondrej/skills | benchmark, deepswe, openrouter, evaluation | benchmark, deepswe, openrouter, evaluation, run, deep, swe, reproducible, coding, agent, evaluations, through |
 
-## agent-orchestration (7)
+## agent-orchestration (25)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `agent-self-scheduling` | Schedule AI agent runs with cron, loops, or external clocks while avoiding unsafe tight autonomous timers. | critical | davidondrej/skills | agents, scheduling, automation, cron | agents, scheduling, automation, cron, agent, self, schedule, ai, runs, loops, external, clocks |
+| `agy-delegate` | Delegate coding tasks to the Google Antigravity CLI (`agy`) only when the user explicitly requests it, while the orchestrator retains review and landing resp... | safe | amElnagdy/delegate-skills | agy, delegate | agy, delegate, coding, tasks, google, antigravity, cli, user, explicitly, requests, while, orchestrator |
+| `aider-delegate` | Delegate coding tasks to Aider (`aider`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | safe | amElnagdy/delegate-skills | aider, delegate | aider, delegate, coding, tasks, user, explicitly, requests, while, orchestrator, retains, review, landing |
+| `claude-delegate` | Delegate coding tasks to a separate Claude Code CLI process or Claude session only when the user explicitly requests it, while the orchestrator retains revie... | safe | amElnagdy/delegate-skills | claude, delegate | claude, delegate, coding, tasks, separate, code, cli, process, session, user, explicitly, requests |
+| `cline-delegate` | Delegate coding tasks to the Cline CLI (`cline`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | safe | amElnagdy/delegate-skills | cline, delegate | cline, delegate, coding, tasks, cli, user, explicitly, requests, while, orchestrator, retains, review |
+| `codex-delegate` | Delegate coding tasks to the OpenAI Codex CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | safe | amElnagdy/delegate-skills | codex, delegate | codex, delegate, coding, tasks, openai, cli, user, explicitly, requests, while, orchestrator, retains |
 | `codex-subagent` | Launch Codex CLI as an isolated subagent for bounded coding, review, or verification tasks. | critical | davidondrej/skills | codex, subagents, delegation | codex, subagents, delegation, subagent, launch, cli, isolated, bounded, coding, review, verification, tasks |
+| `commandcode-delegate` | Delegate coding tasks to the Command Code CLI (`cmd`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibi... | safe | amElnagdy/delegate-skills | commandcode, delegate | commandcode, delegate, coding, tasks, command, code, cli, cmd, user, explicitly, requests, while |
+| `copilot-delegate` | Delegate coding tasks to the GitHub Copilot CLI (`copilot`) only when the user explicitly requests it, while the orchestrator retains review and landing resp... | safe | amElnagdy/delegate-skills | copilot, delegate | copilot, delegate, coding, tasks, github, cli, user, explicitly, requests, while, orchestrator, retains |
+| `cursor-delegate` | Delegate coding tasks to the Cursor Agent CLI (`cursor-agent`) only when the user explicitly requests it, while the orchestrator retains review and landing r... | safe | amElnagdy/delegate-skills | cursor, delegate | cursor, delegate, coding, tasks, agent, cli, user, explicitly, requests, while, orchestrator, retains |
+| `delegate-setup` | Configure approved delegation lanes across installed implementer CLIs, including optional model and effort choices, then write global or project config only ... | safe | amElnagdy/delegate-skills | delegate, setup | delegate, setup, configure, approved, delegation, lanes, installed, implementer, clis, including, optional, model |
 | `delegating-to-agents` | Delegate bounded work to other AI agents while preserving context, ownership, and progress checks. | critical | davidondrej/skills | agents, delegation, orchestration | agents, delegation, orchestration, delegating, delegate, bounded, work, other, ai, while, preserving, context |
 | `goal-loop` | Draft and explain persistent goal-loop prompts for long-running agent work with clear stop conditions. | safe | davidondrej/skills | goals, autonomy, planning | goals, autonomy, planning, goal, loop, draft, explain, persistent, prompts, long, running, agent |
 | `grok-build` | Delegate well-specified implementation tasks to xAI's Grok Build CLI running headlessly while the orchestrating agent plans, writes task specs, reviews every... | critical | sanjay3290/ai-skills | grok, delegation, code-generation, xai | grok, delegation, code-generation, xai, delegate, well, specified, tasks, cli, running, headlessly, while |
+| `grok-delegate` | Delegate coding tasks to the Grok Build CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | safe | amElnagdy/delegate-skills | grok, delegate | grok, delegate, coding, tasks, cli, user, explicitly, requests, while, orchestrator, retains, review |
+| `kimi-delegate` | Delegate coding tasks to the Kimi Code CLI (`kimi`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | safe | amElnagdy/delegate-skills | kimi, delegate | kimi, delegate, coding, tasks, code, cli, user, explicitly, requests, while, orchestrator, retains |
 | `multi-agent-task-orchestrator` | Route tasks to specialized AI agents with anti-duplication, quality gates, and 30-minute heartbeat monitoring | safe | milkomida77/guardian-agent-prompts | multi-agent, orchestration, task-routing, quality-gates, anti-duplication | multi-agent, orchestration, task-routing, quality-gates, anti-duplication, multi, agent, task, orchestrator, route, tasks, specialized |
+| `omp-delegate` | Delegate coding tasks to Oh My Pi (`omp`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | safe | amElnagdy/delegate-skills | omp, delegate | omp, delegate, coding, tasks, oh, my, pi, user, explicitly, requests, while, orchestrator |
+| `opencode-delegate` | Delegate coding tasks to the OpenCode CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | safe | amElnagdy/delegate-skills | opencode, delegate | opencode, delegate, coding, tasks, cli, user, explicitly, requests, while, orchestrator, retains, review |
 | `orchestrate` | Coordinate focused subagents on substantial work, keep their ownership non-overlapping, and integrate verified results. Use for large-scope Codex tasks; keep... | safe | provencher/codex-skills | codex, orchestration, multi-agent, delegation, subagents | codex, orchestration, multi-agent, delegation, subagents, orchestrate, coordinate, substantial, work, keep, ownership, non |
+| `pi-delegate` | Delegate coding tasks to the Pi coding agent CLI (`pi`) only when the user explicitly requests it, while the orchestrator retains review and landing responsi... | safe | amElnagdy/delegate-skills | pi, delegate | pi, delegate, coding, tasks, agent, cli, user, explicitly, requests, while, orchestrator, retains |
+| `qoder-delegate` | Delegate coding tasks to the Qoder CLI (`qodercli`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | safe | amElnagdy/delegate-skills | qoder, delegate | qoder, delegate, coding, tasks, cli, qodercli, user, explicitly, requests, while, orchestrator, retains |
+| `vibe-delegate` | Delegate coding tasks to the Mistral Vibe CLI (`vibe`) only when the user explicitly requests it, while the orchestrator retains review and landing responsib... | safe | amElnagdy/delegate-skills | vibe, delegate | vibe, delegate, coding, tasks, mistral, cli, user, explicitly, requests, while, orchestrator, retains |
+| `warp-delegate` | Delegate coding tasks to the Warp Agent CLI (`oz`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | safe | amElnagdy/delegate-skills | warp, delegate | warp, delegate, coding, tasks, agent, cli, oz, user, explicitly, requests, while, orchestrator |
+| `zcode-delegate` | Delegate coding tasks to the Z.AI ZCode CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | safe | amElnagdy/delegate-skills | zcode, delegate | zcode, delegate, coding, tasks, ai, cli, user, explicitly, requests, while, orchestrator, retains |
 
 ## agent-squad (8)
 
@@ -77,7 +95,7 @@ Total skills: 2075
 | `pilot-protocol` | Give an AI agent a permanent network address, encrypted P2P messaging, and an installable app store via Pilot Protocol | critical | pilot-protocol/pilotprotocol | agent-networking, p2p, nat-traversal, overlay-network, agent-apps | agent-networking, p2p, nat-traversal, overlay-network, agent-apps, pilot, protocol, give, ai, agent, permanent, network |
 | `pydantic-ai` | Build production-ready AI agents with PydanticAI — type-safe tool use, structured outputs, dependency injection, and multi-model support. | safe | community | pydantic-ai, ai-agents, llm, openai, anthropic, gemini, tool-use, structured-output, python | pydantic-ai, ai-agents, llm, openai, anthropic, gemini, tool-use, structured-output, python, pydantic, ai, agents |
 
-## ai-ml (131)
+## ai-ml (133)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -198,6 +216,7 @@ Total skills: 2075
 | `routerbase-model-gateway` | Integrate RouterBase as an OpenAI-compatible model gateway for routing GPT, Claude, Gemini, media, audio, and embedding requests. | safe | zenlee123/routerbase-agent-skills | routerbase, llm-routing, openai-compatible, model-gateway | routerbase, llm-routing, openai-compatible, model-gateway, model, gateway, integrate, openai, compatible, routing, gpt, claude |
 | `runaway-guard` | Cost-safety discipline for paid AI / inference APIs: treat $-cost as a third complexity dimension alongside time and space. Forces a written per-run $-cap, p... | safe | morsechimwai/lemmaly | cost-safety, finops, ai-apis, agents, retries, concurrency, wallet-invariant, gateway | cost-safety, finops, ai-apis, agents, retries, concurrency, wallet-invariant, gateway, runaway, guard, cost, safety |
 | `sam-altman` | Agente que simula Sam Altman — CEO da OpenAI, ex-presidente da Y Combinator, arquiteto da era AGI. | safe | community | persona, startups, agi, yc, fundraising | persona, startups, agi, yc, fundraising, sam, altman, agente, que, simula, ceo, da |
+| `sandbase-mcp` | Discover, inspect, and invoke 2,000+ AI models and APIs through SandBase's local MCP bridge with explicit schema and cost checks. | critical | sandbaseai/cli | mcp, ai-models, api-gateway, inference, media-generation | mcp, ai-models, api-gateway, inference, media-generation, sandbase, discover, inspect, invoke, 000, ai, models |
 | `scikit-learn` | Machine learning in Python with scikit-learn. Use for classification, regression, clustering, model evaluation, and ML pipelines. | critical | community | scikit, learn | scikit, learn, machine, learning, python, classification, regression, clustering, model, evaluation, ml, pipelines |
 | `tool-design` | Build tools that agents can use effectively, including architectural reduction patterns. Use when creating new tools for agent systems, debugging tool-relate... | safe | https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/tree/main/skills/tool-design |  | agents, effectively, including, architectural, reduction, creating, new, agent, debugging, related, failures, misuse |
 | `train-sentence-transformers` | Train or fine-tune sentence-transformers models across `SentenceTransformer` (bi-encoder; dense or static embedding model; for retrieval, similarity, cluster... | critical | huggingface/skills | train, sentence, transformers | train, sentence, transformers, fine, tune, models, sentencetransformer, bi, encoder, dense, static, embedding |
@@ -206,6 +225,7 @@ Total skills: 2075
 | `unified-ai-gateway` | Operate and evaluate Unified AI System through nine governed MCP tools, including provider-free prompt enhancement, while preserving fake-provider, authoriza... | critical | happy520ai/unified-ai-system | ai-gateway, codex, mcp, self-hosted, governance | ai-gateway, codex, mcp, self-hosted, governance, unified, ai, gateway, operate, evaluate, through, nine |
 | `unslop-commit` | Rewrites commit messages so they sound like a careful human engineer wrote them. Strips AI/marketing slop ("comprehensive solution", "robust implementation",... | critical | MohamedAbdallah-14/unslop | unslop, commit | unslop, commit, rewrites, messages, so, sound, like, careful, human, engineer, wrote, them |
 | `unslop-file` | Humanize natural-language memory files (CLAUDE.md, todos, preferences, docs) by removing AI-isms and adding burstiness while preserving every code block, URL... | critical | MohamedAbdallah-14/unslop | unslop, file | unslop, file, humanize, natural, language, memory, files, claude, md, todos, preferences, docs |
+| `unsloth-finetuning` | Fine-tune and post-train LLMs with Unsloth Core on a single consumer GPU: VRAM sizing, LoRA/QLoRA, GRPO/DPO, chat-template correctness, and GGUF export. | critical | unslothai/unsloth | unsloth, fine-tuning, lora, qlora, grpo, gguf, vram | unsloth, fine-tuning, lora, qlora, grpo, gguf, vram, finetuning, fine, tune, post, train |
 | `voice-agents` | Voice agents represent the frontier of AI interaction - humans speaking naturally with AI systems. | safe | vibeship-spawner-skills (Apache 2.0) | voice, agents | voice, agents, represent, frontier, ai, interaction, humans, speaking, naturally |
 | `voice-ai-engine-development` | Build real-time conversational AI voice engines using async worker pipelines, streaming transcription, LLM agents, and TTS synthesis with interrupt handling ... | critical | community | voice, ai, engine | voice, ai, engine, development, real, time, conversational, engines, async, worker, pipelines, streaming |
 | `yann-lecun` | Agente que simula Yann LeCun — inventor das Convolutional Neural Networks, Chief AI Scientist da Meta, Prêmio Turing 2018. | safe | community | persona, cnn, meta, ai-safety-critic, open-source | persona, cnn, meta, ai-safety-critic, open-source, yann, lecun, agente, que, simula, inventor, das |
@@ -693,10 +713,11 @@ Total skills: 2075
 | `typescript-pro` | Master TypeScript with advanced types, generics, and strict type safety. Handles complex type systems, decorators, and enterprise-grade patterns. | safe | community | typescript | typescript, pro, types, generics, strict, type, safety, complex, decorators, enterprise, grade |
 | `unreal-engine-cpp-pro` | Expert guide for Unreal Engine 5.x C++ development, covering UObject hygiene, performance patterns, and best practices. | safe | self | unreal, engine, cpp | unreal, engine, cpp, pro, development, covering, uobject, hygiene, performance |
 
-## code-quality (15)
+## code-quality (17)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `babysit-pr` | Babysit a pull request through its bot review rounds: verify, fix, reply, resolve. Use for any babysit or watch-the-PR ask. | safe | amElnagdy/review-skills | babysit, pr | babysit, pr, pull, request, through, bot, review, rounds, verify, fix, reply, resolve |
 | `clean-code` | This skill embodies the principles of "Clean Code" by Robert C. Martin (Uncle Bob). Use it to transform "code that works" into "code that is clean." | safe | ClawForge (https://github.com/jackjin1997/ClawForge) | clean, code | clean, code, skill, embodies, principles, robert, martin, uncle, bob, transform, works |
 | `code-refactoring-refactor-clean` | You are a code refactoring expert specializing in clean code principles, SOLID design patterns, and modern software engineering best practices. Analyze and r... | critical | community | code, refactoring, refactor, clean | code, refactoring, refactor, clean, specializing, principles, solid, software, engineering, analyze, provided, improve |
 | `code-review-checklist` | Comprehensive checklist for conducting thorough code reviews covering functionality, security, performance, and maintainability | critical | community | code, checklist | code, checklist, review, conducting, thorough, reviews, covering, functionality, security, performance, maintainability |
@@ -704,6 +725,7 @@ Total skills: 2075
 | `codex-review` | Professional code review with auto CHANGELOG generation, integrated with Codex AI. Use when you want professional code review before commits, you need automa... | critical | community | codex | codex, review, professional, code, auto, changelog, generation, integrated, ai, want, before, commits |
 | `comprehensive-review-full-review` | Use when working with comprehensive review full review | critical | community | comprehensive, full | comprehensive, full, review, working |
 | `comprehensive-review-pr-enhance` | Generate structured PR descriptions from diffs, add review checklists, risk assessments, and test coverage summaries. Use when the user says "write a PR desc... | critical | community | comprehensive, pr, enhance | comprehensive, pr, enhance, review, generate, structured, descriptions, diffs, add, checklists, risk, assessments |
+| `debate-review` | Two-model debate review of a GitHub PR, GitLab MR, Azure DevOps PR, or local working tree, posted as inline comments or printed. Use for any PR/MR review req... | safe | amElnagdy/review-skills | debate | debate, review, two, model, github, pr, gitlab, mr, azure, devops, local, working |
 | `find-bugs` | Find bugs, security vulnerabilities, and code quality issues in local branch changes. Use when asked to review changes, find bugs, security review, or audit ... | critical | community | find, bugs | find, bugs, security, vulnerabilities, code, quality, issues, local, branch, changes, asked, review |
 | `fix-review` | Verify fix commits address audit findings without new bugs | safe | https://github.com/trailofbits/skills/tree/main/plugins/fix-review | fix | fix, review, verify, commits, address, audit, findings, without, new, bugs |
 | `kaizen` | Guide for continuous improvement, error proofing, and standardization. Use this skill when the user wants to improve code quality, refactor, or discuss proce... | critical | community | kaizen | kaizen, continuous, improvement, error, proofing, standardization, skill, user, wants, improve, code, quality |
@@ -1834,6 +1856,12 @@ Total skills: 2075
 | --- | --- | --- | --- | --- | --- |
 | `dos-verify-done-claims` | Before accepting an agent's 'done / shipped / fixed' claim, verify it against ground truth (git ancestry + the commit's own diff) using the DOS kernel's `dos... | critical | anthony-chaudhary/dos-kernel | verification, git, ai-agents, trust, quality-gate | verification, git, ai-agents, trust, quality-gate, dos, verify, done, claims, before, accepting, agent |
 | `pre-ship-gate` | A ship gate that runs before any production deploy: checks the silent failure modes that make a deploy 'succeed' while prod stays broken, then verifies the l... | safe | Sharrmavishal/operating-kit | deployment, quality-gate, verification, ci-cd, production | deployment, quality-gate, verification, ci-cd, production, pre, ship, gate, runs, before, any, deploy |
+
+## reasoning (1)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `falsify` | The scientific thinking protocol for AI agents. Use when facing complex, ambiguous, or high-stakes questions where guessing is costly: hypothesis → attempt t... | safe | 263311487-ux/falsify | reasoning, falsification, science, thinking, verification, epistemology | reasoning, falsification, science, thinking, verification, epistemology, falsify, scientific, protocol, ai, agents, facing |
 
 ## reliability (14)
 
