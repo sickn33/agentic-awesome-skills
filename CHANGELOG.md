@@ -9,6 +9,156 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [16.3.0] - 2026-08-28 - "Delegation Workflows and Reliable Operations"
+
+> Added 24 reviewed skills for multi-agent delegation, pull-request review,
+> scientific reasoning, model fine-tuning, MCP operation, and graceful service
+> shutdown. The published catalog contains 2,098 skills.
+
+This release helps Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and
+related AI coding assistants delegate bounded implementation work, review and
+monitor pull requests, challenge scientific claims, fine-tune models on limited
+hardware, operate SandBase safely, and shut down production services without
+dropping in-flight work.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- [`delegate-setup`](skills/delegate-setup/) for configuring the external
+  delegation runtime before selecting an implementer relay.
+- [`babysit-pr`](skills/babysit-pr/) and
+  [`debate-review`](skills/debate-review/) for iterative review and
+  two-perspective code-review workflows.
+- [`graceful-shutdown`](skills/graceful-shutdown/) for bounded draining,
+  readiness transitions, and shutdown deadlines.
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+
+### Added
+
+- Added [`delegate-setup`](skills/delegate-setup/) and 17 docs-only implementer
+  relays for Agy, Aider, Claude, Cline, Codex, CommandCode, Copilot, Cursor,
+  Grok, Kimi, OMP, OpenCode, Pi, Qoder, Vibe, Warp, and ZCode. Each relay ships
+  its complete dispatch, queue, review, and brief-writing references while
+  keeping review and landing with the orchestrator
+  ([#1283](https://github.com/sickn33/agentic-awesome-skills/pull/1283)).
+- Added [`babysit-pr`](skills/babysit-pr/) for bounded review-round monitoring
+  and [`debate-review`](skills/debate-review/) for structured two-model review,
+  including their prompt, schema, and comment-format assets
+  ([#1282](https://github.com/sickn33/agentic-awesome-skills/pull/1282)).
+- Added [`falsify`](skills/falsify/) for explicit hypotheses, adversarial
+  checks, evidence grading, calibrated conclusions, and a durable thinking
+  ledger ([#1281](https://github.com/sickn33/agentic-awesome-skills/pull/1281)).
+- Added [`sandbase-mcp`](skills/sandbase-mcp/) with immutable release pinning,
+  checksum and archive verification, and explicit credential, privacy, cost,
+  and mutation approval gates
+  ([#1279](https://github.com/sickn33/agentic-awesome-skills/pull/1279)).
+- Added [`unsloth-finetuning`](skills/unsloth-finetuning/) for single-GPU VRAM
+  planning, LoRA and QLoRA, GRPO and DPO, template and loss-mask correctness,
+  and GGUF or merged-model export
+  ([#1278](https://github.com/sickn33/agentic-awesome-skills/pull/1278)).
+- Added [`graceful-shutdown`](skills/graceful-shutdown/) for SIGTERM and SIGINT
+  handling, connection draining, probe transitions, shutdown deadlines, and
+  Kubernetes-aware Node.js, Python, and worker patterns
+  ([#1276](https://github.com/sickn33/agentic-awesome-skills/pull/1276)).
+
+### Changed
+
+- Upgraded the catalog web app from `@supabase/supabase-js` 2.112.0 to 2.112.2,
+  including fixes for duplicate Realtime bindings, stale sign-out payloads,
+  preserved authentication 5xx messages, and token refresh behavior
+  ([#1273](https://github.com/sickn33/agentic-awesome-skills/pull/1273)).
+- Regenerated the canonical catalog, offline AAS Core data, tracked web assets,
+  marketplaces, editorial bundles, compatibility reports, and Codex/Claude
+  plugin distributions for 2,098 skills.
+
+### Fixed
+
+- Removed retired UIZZE score-endpoint guidance while keeping the skill's
+  source-only scoring workflow intact
+  ([#1274](https://github.com/sickn33/agentic-awesome-skills/pull/1274)).
+- Restored every companion reference, prompt, schema, and template required by
+  the imported review, delegation, and scientific-reasoning skills instead of
+  publishing incomplete entrypoints.
+- Replaced 18 truncated delegation descriptions with complete trigger and
+  operating-boundary summaries.
+
+### Security
+
+- Kept the delegation and review integrations docs-only: their external
+  runtimes are not bundled, relays never land changes, and unsandboxed,
+  all-tools, or `danger-full-access` execution requires separate human
+  authorization.
+- Pinned SandBase to the reviewed `v0.1.17` release and SHA-256
+  `1ad535b2899ca460b57b3c268aef278fee28fd28e649a89b92951514fd71fffa`,
+  with archive inspection before installation and two approval boundaries
+  before credentialed or mutating work.
+- Kept Unsloth training and export guidance bounded by hardware checks,
+  explicit dataset and template validation, checkpointing, and output review.
+- Kept graceful shutdown bounded by deadlines and forced-exit fallbacks so
+  draining cannot hang a deployment indefinitely.
+
+### Who should care
+
+- Teams orchestrating multiple coding agents that need explicit task briefs,
+  bounded permissions, polling, independent review, and controlled landing.
+- Maintainers who need repeatable pull-request review rounds without confusing
+  an external runtime with bundled repository functionality.
+- Researchers and ML practitioners who need falsification discipline or
+  practical single-GPU fine-tuning guidance.
+- Platform engineers operating MCP services, Kubernetes workloads, workers,
+  and long-lived production connections.
+
+### Validation
+
+- Passed repository and reference validation, documentation-security checks,
+  warning-budget enforcement, the complete 113-group repository test suite,
+  176 web-app tests, the production web build, npm audits, plugin compatibility,
+  bundle and marketplace checks, and protected canonical synchronization.
+- Reviewed every changed canonical skill subtree and bundled asset for
+  semantics, safety, provenance, declared risk, limitations, permission
+  escalation, and review or landing boundaries before protected merge.
+- Verified final source and canonical CI plus CodeQL on the exact protected
+  `main` commit with no open pull requests, issues, or generated-state drift.
+
+### Limitations
+
+- The delegation and review skills document external runtimes; installing AAS
+  alone does not install or authenticate those tools.
+- Delegation can distribute implementation work, but it does not replace
+  orchestrator review, test evidence, repository policy, or human approval for
+  elevated execution.
+- Falsification structures reasoning but cannot guarantee scientific truth or
+  replace domain expertise, replication, or higher-quality evidence.
+- Unsloth memory estimates and export paths remain model-, dataset-, hardware-,
+  and version-dependent; validate against the current upstream project.
+- SandBase operations may incur external service costs and expose supplied
+  data to its service; review current upstream terms and privacy behavior.
+
+### Credits
+
+- **[@FrancoStino](https://github.com/FrancoStino)** and the MIT-licensed
+  **[amElnagdy/delegate-skills](https://github.com/amElnagdy/delegate-skills)**
+  and **[amElnagdy/review-skills](https://github.com/amElnagdy/review-skills)**
+  sources for the delegation and review collections proposed in
+  [#1265](https://github.com/sickn33/agentic-awesome-skills/pull/1265) and
+  [#1264](https://github.com/sickn33/agentic-awesome-skills/pull/1264).
+- **[@263311487-ux](https://github.com/263311487-ux)** for `falsify`, proposed
+  in [#1266](https://github.com/sickn33/agentic-awesome-skills/pull/1266).
+- **[@A-ryanVAT-S](https://github.com/A-ryanVAT-S)** for
+  `unsloth-finetuning`, proposed in
+  [#1267](https://github.com/sickn33/agentic-awesome-skills/pull/1267).
+- **[@denial123789](https://github.com/denial123789)** for `sandbase-mcp`,
+  proposed in [#1269](https://github.com/sickn33/agentic-awesome-skills/pull/1269).
+- **[@Prajeeth-12](https://github.com/Prajeeth-12)** for
+  `graceful-shutdown`, proposed in
+  [#1272](https://github.com/sickn33/agentic-awesome-skills/pull/1272).
+- **[@samuelbushi](https://github.com/samuelbushi)** for the UIZZE documentation
+  correction proposed in
+  [#1271](https://github.com/sickn33/agentic-awesome-skills/pull/1271).
+- **[Snyk](https://snyk.io/)** for the Supabase dependency update in
+  [#1273](https://github.com/sickn33/agentic-awesome-skills/pull/1273).
+
 ## [16.2.0] - 2026-08-26 - "Security Operations Expansion and Safer Integrations"
 
 > Added a reviewed 43-skill security and reverse-engineering collection,
