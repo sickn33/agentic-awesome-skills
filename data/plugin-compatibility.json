@@ -37294,25 +37294,6 @@
       "runtime_files": []
     },
     {
-      "id": "ui-slop-score",
-      "path": "skills/ui-slop-score",
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": [],
-      "blocked_reasons": {
-        "codex": [],
-        "claude": []
-      },
-      "runtime_files": []
-    },
-    {
       "id": "ui-tokens",
       "path": "skills/ui-tokens",
       "targets": {
@@ -40319,10 +40300,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2098,
+    "total_skills": 2097,
     "supported": {
-      "codex": 2019,
-      "claude": 2040
+      "codex": 2018,
+      "claude": 2039
     },
     "blocked": {
       "codex": 79,

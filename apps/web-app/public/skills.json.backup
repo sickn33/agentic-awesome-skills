@@ -47508,39 +47508,6 @@
     "license_source": "https://github.com/ibelick/ui-skills/blob/main/LICENSE"
   },
   {
-    "id": "ui-slop-score",
-    "path": "skills/ui-slop-score",
-    "category": "frontend",
-    "name": "ui-slop-score",
-    "description": "Score a rendered web or iOS screen for generic UI risk before it ships. Use when a user asks whether a UI looks generic or needs an honest pre-merge visual review.",
-    "risk": "safe",
-    "source": "https://github.com/uizze/uizze/tree/main/skills/ui-slop-score",
-    "date_added": "2026-08-19",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    },
-    "source_type": "official",
-    "source_repo": "uizze/uizze",
-    "license": "MIT",
-    "license_source": "https://github.com/uizze/uizze/blob/main/LICENSE",
-    "tags": [
-      "ui",
-      "ux",
-      "frontend",
-      "design",
-      "ui-slop-score"
-    ]
-  },
-  {
     "id": "ui-tokens",
     "path": "skills/ui-tokens",
     "category": "uncategorized",

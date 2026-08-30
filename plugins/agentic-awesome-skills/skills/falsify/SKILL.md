@@ -35,6 +35,20 @@ NO VERDICT WITHOUT A FALSIFIABLE HYPOTHESIS.
 If you cannot write down what would prove you wrong, you are not allowed to conclude. A confident answer with no falsification path is not an answer — it is a guess wearing a lab coat. There is no exception for "obvious" or "well-known" or "everyone knows" — those are exactly the claims that need falsifying most.
 </EXTREMELY-IMPORTANT>
 
+## MODE SELECTION — route BEFORE answering (mandatory)
+
+First decide which mode this question is, then act accordingly. **Do not run the five stages unless you picked Depth.** The wrong mode is itself a protocol failure.
+
+| If the ask is... | Mode | Do |
+|---|---|---|
+| Live incident / production down / outage / "act now" / degrading | **Incident (OODA)** | **ACT first** at ~70% confidence with a known rollback and a time box. Do NOT run the five stages. Stabilize, then falsify the effect. Never demand certainty before a reversible action under time pressure. |
+| Trivial / one-lookup fact / small talk / zero consequence | **Simple** | Answer briefly and directly. No protocol, no follow-up questions, no stage labels. |
+| Rough estimate / ballpark / "about how much" / "大概" (low-stakes, reversible) | **Nudge** | Give the helpful estimate with its main assumption stated, then 2–3 targeted questions. No five-stage ledger. If being wrong costs time/money/trust, escalate to Depth. |
+| Under-specified / unfalsifiable / missing key inputs | **Question** | Ask the whole open frontier in ONE round (numbered, with a recommended default each). Do not conclude, do not fabricate a default justification. |
+| High-stakes / correctness gate / "why" about a failing system / will be acted on | **Depth** | Run the five stages below. |
+
+In an incident, the Iron Law means "act reversibly, then falsify the effect" — never "analyze first, act later".
+
 ## When to Use This Skill
 
 
@@ -44,6 +58,9 @@ If you cannot write down what would prove you wrong, you are not allowed to conc
 - Recommendations that will be acted on (a library, a fix, a strategy)
 - Claims about what a user, market, or system "will" do
 - Anything where being wrong costs time, money, or trust
+
+
+**Default to Nudge (not depth) when the ask is a rough ballpark** — "rough estimate", "ballpark", "about how much", "大概", "粗略": give the helpful estimate directly with its main assumption stated, then 2–3 questions. A rough number is not a correctness gate; forcing a five-stage ledger onto it is protocol theater. **Exception — high-stakes ballparks go to Depth:** if the estimate will be acted on and an error costs time, money, or trust (a rough medication dose, security capacity, production sizing), do NOT nudge: gather the key inputs, state the uncertainty, and falsify before giving the number. The shortcut only pays when the error is cheap.
 
 **Do NOT activate (answer simply)** for:
 - Factual recall you can verify in one lookup
@@ -181,7 +198,7 @@ For each detected bias, state the direction (pushes the estimate up or down) and
 ## The Nudge
 
 
-When the question does not warrant full depth but the answer will still be acted on, do not run the five stages — append **at most 2–3 short questions**, once per conversation, each tied to something specific in the answer just given:
+When the question does not warrant full depth but the answer will still be acted on, do not run the five stages — append **at most 2–3 short questions**, once per conversation, each tied to something specific in the answer just given. **High-stakes ballparks are NOT nudge territory:** a rough medication dose, security capacity, or production sizing estimate is Depth — being wrong there costs more than the shortcut saves.
 
 1. **Check a fact** — "which claim here would be worth verifying, and against what?"
 2. **Probe a step** — "where did the reasoning take a jump you might want justified?"

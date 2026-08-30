@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-28T08:40:20.000Z",
-  "total": 2098,
+  "total": 2097,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -56516,41 +56516,6 @@
         "cli"
       ],
       "path": "skills/ui-skills-root/SKILL.md"
-    },
-    {
-      "id": "ui-slop-score",
-      "canonical_id": "ui-slop-score",
-      "name": "ui-slop-score",
-      "description": "Score a rendered web or iOS screen for generic UI risk before it ships. Use when a user asks whether a UI looks generic or needs an honest pre-merge visual review.",
-      "category": "frontend",
-      "risk": "safe",
-      "source": "https://github.com/uizze/uizze/tree/main/skills/ui-slop-score",
-      "source_type": "official",
-      "source_repo": "uizze/uizze",
-      "license": "MIT",
-      "license_source": "https://github.com/uizze/uizze/blob/main/LICENSE",
-      "tags": [
-        "ui",
-        "ux",
-        "frontend",
-        "design",
-        "ui-slop-score"
-      ],
-      "triggers": [
-        "ui",
-        "ux",
-        "frontend",
-        "design",
-        "ui-slop-score",
-        "slop",
-        "score",
-        "rendered",
-        "web",
-        "ios",
-        "screen",
-        "generic"
-      ],
-      "path": "skills/ui-slop-score/SKILL.md"
     },
     {
       "id": "ui-tokens",

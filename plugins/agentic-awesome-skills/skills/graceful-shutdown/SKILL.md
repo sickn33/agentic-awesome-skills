@@ -97,20 +97,21 @@ async function drainAndExit(): Promise<void> {
 
 ### Step 4: Implement readiness and liveness probes
 
-Orchestrators use these to decide whether to route traffic and whether to restart the container.
+Orchestrators use these to decide whether to route traffic and whether to restart the container. Liveness proves the process is alive; readiness controls whether traffic is routed. While the listener is still available during a drain, keep liveness healthy and return 503 only from readiness. After the listener closes, new probes cannot connect, so do not promise that HTTP liveness remains reachable for the entire termination window.
 
 ```typescript
 import { createServer, IncomingMessage, ServerResponse } from "node:http";
 
 function handleHealthCheck(req: IncomingMessage, res: ServerResponse): void {
   if (req.url === "/healthz") {
-    // Liveness: is the process alive and not deadlocked?
+    // Keep liveness distinct from readiness while the listener is available.
+    // Drain-rejection middleware must not turn this endpoint into a 503.
     res.writeHead(200).end("ok");
     return;
   }
 
   if (req.url === "/readyz") {
-    // Readiness: should traffic be routed here?
+    // Readiness: 503 during shutdown so the load balancer stops routing.
     if (isShuttingDown) {
       res.writeHead(503).end("shutting down");
     } else {
@@ -123,21 +124,25 @@ function handleHealthCheck(req: IncomingMessage, res: ServerResponse): void {
 
 ### Step 5: Track active connections
 
-Maintain a count of in-flight requests so you know when draining is complete.
+Maintain a count of in-flight requests so you know when draining is complete. Use a once guard covering both `finish` and `close` events so that client disconnects (aborted requests) correctly decrement the counter.
 
 ```typescript
 let activeConnections = 0;
 let drainResolve: (() => void) | null = null;
 
-function onRequestStart(): void {
+function trackRequest(res: ServerResponse): void {
   activeConnections++;
-}
-
-function onRequestEnd(): void {
-  activeConnections--;
-  if (isShuttingDown && activeConnections === 0 && drainResolve) {
-    drainResolve();
+  let counted = true;
+  function release(): void {
+    if (!counted) return;
+    counted = false;
+    activeConnections--;
+    if (isShuttingDown && activeConnections === 0 && drainResolve) {
+      drainResolve();
+    }
   }
+  res.on("finish", release);
+  res.on("close", release);
 }
 
 function waitForActiveConnections(): Promise<void> {
@@ -160,23 +165,39 @@ const app = express();
 const server = createServer(app);
 let isShuttingDown = false;
 let activeRequests = 0;
+let drainResolve: (() => void) | null = null;
 
-// Track in-flight requests
+// Health endpoints — registered BEFORE the drain-rejection middleware so it
+// cannot turn liveness into a 503 while the listener is still available.
+app.get("/healthz", (_, res) => res.send("ok"));
+app.get("/readyz", (_, res) => {
+  res.status(isShuttingDown ? 503 : 200).send(isShuttingDown ? "draining" : "ready");
+});
+
+// Track in-flight requests and reject new application work during drain.
 app.use((req, res, next) => {
   if (isShuttingDown) {
     res.setHeader("Connection", "close");
     res.status(503).json({ error: "Server is shutting down" });
     return;
   }
-  activeRequests++;
-  res.on("finish", () => activeRequests--);
-  next();
-});
 
-// Health endpoints
-app.get("/healthz", (_, res) => res.send("ok"));
-app.get("/readyz", (_, res) => {
-  res.status(isShuttingDown ? 503 : 200).send(isShuttingDown ? "draining" : "ready");
+  activeRequests++;
+  let counted = true;
+  function release(): void {
+    if (!counted) return;
+    counted = false;
+    activeRequests--;
+    if (isShuttingDown && activeRequests === 0 && drainResolve) {
+      drainResolve();
+    }
+  }
+  // Listen for both finish (normal) and close (client abort) so the
+  // counter always decrements. The once guard prevents double-decrement
+  // when both events fire.
+  res.on("finish", release);
+  res.on("close", release);
+  next();
 });
 
 // Application routes
@@ -199,13 +220,15 @@ function shutdown(signal: string): void {
   }, 25_000);
   forceExit.unref();
 
-  const poll = setInterval(() => {
-    if (activeRequests === 0) {
-      clearInterval(poll);
-      console.log("All requests drained — exiting cleanly");
-      process.exit(0);
-    }
-  }, 100);
+  if (activeRequests === 0) {
+    console.log("No active requests — exiting cleanly");
+    process.exit(0);
+  }
+
+  drainResolve = () => {
+    console.log("All requests drained — exiting cleanly");
+    process.exit(0);
+  };
 }
 
 process.on("SIGTERM", () => shutdown("SIGTERM"));
@@ -214,58 +237,26 @@ process.on("SIGINT", () => shutdown("SIGINT"));
 server.listen(3000, () => console.log("Server ready on :3000"));
 ```
 
-### Example 2: Python FastAPI with graceful shutdown
+### Example 2: Python FastAPI under Uvicorn
+
+Uvicorn owns SIGTERM handling and request draining. It stops accepting new connections, asks existing connections to shut down, waits for connections and tasks up to `--timeout-graceful-shutdown`, and only then sends the ASGI lifespan shutdown event. Do not replace its signal handler or wait for requests again inside `lifespan`; use that hook to release application resources after Uvicorn's drain.
 
 ```python
-import asyncio
-import signal
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request, Response
-
-active_requests = 0
-is_shutting_down = False
-shutdown_event = asyncio.Event()
+from fastapi import FastAPI
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
-    loop = asyncio.get_event_loop()
-    loop.add_signal_handler(signal.SIGTERM, begin_shutdown)
-    yield
-    # Shutdown — wait for in-flight requests
-    if active_requests > 0:
-        try:
-            await asyncio.wait_for(shutdown_event.wait(), timeout=25.0)
-        except asyncio.TimeoutError:
-            print(f"Drain timeout — {active_requests} requests abandoned")
-    print("Shutdown complete")
+    app.state.db_pool = await open_database_pool()
+    try:
+        yield
+    finally:
+        # Uvicorn has already completed or timed out its request drain.
+        await app.state.db_pool.close()
 
 
 app = FastAPI(lifespan=lifespan)
-
-
-def begin_shutdown():
-    global is_shutting_down
-    is_shutting_down = True
-    print(f"SIGTERM received — draining {active_requests} requests")
-    if active_requests == 0:
-        shutdown_event.set()
-
-
-@app.middleware("http")
-async def track_requests(request: Request, call_next):
-    global active_requests
-    if is_shutting_down:
-        return Response("Service shutting down", status_code=503)
-    active_requests += 1
-    try:
-        response = await call_next(request)
-        return response
-    finally:
-        active_requests -= 1
-        if is_shutting_down and active_requests == 0:
-            shutdown_event.set()
 
 
 @app.get("/healthz")
@@ -275,10 +266,16 @@ async def healthz():
 
 @app.get("/readyz")
 async def readyz():
-    if is_shutting_down:
-        return Response("draining", status_code=503)
     return {"status": "ready"}
 ```
+
+Run Uvicorn with a deadline shorter than the orchestrator's kill timeout:
+
+```bash
+uvicorn app:app --timeout-graceful-shutdown 25
+```
+
+If readiness must turn 503 before SIGTERM, coordinate a separately secured and tested pre-stop drain signal plus a propagation delay. FastAPI's lifespan shutdown hook is too late for that transition because Uvicorn invokes it after request draining.
 
 ### Example 3: Background worker with checkpoint
 
@@ -324,6 +321,15 @@ async function processJobs(queue: JobQueue): Promise<void> {
 - Test shutdown behavior explicitly — simulate SIGTERM in integration tests and verify no requests are dropped
 
 ## Common Pitfalls
+
+- **Problem:** Drain-rejection middleware turns both readiness and liveness into 503 while the HTTP listener is still available.
+  **Solution:** Register health routes before that middleware and flip only readiness. Once the listener closes, new probes may no longer connect; the shutdown deadline, not a promise of HTTP liveness, bounds termination.
+
+- **Problem:** Drain hangs until the force-exit timeout even though all clients have disconnected.
+  **Solution:** Track request completion with both `finish` and `close` events (Node.js) or equivalent. If a client aborts the connection, `finish` may never fire — `close` will. Use a once guard to prevent double-decrementing the counter.
+
+- **Problem:** A FastAPI application replaces Uvicorn's SIGTERM handler or waits for in-flight requests inside lifespan shutdown.
+  **Solution:** Let Uvicorn own signal handling, connection/task draining, and `--timeout-graceful-shutdown`. Use lifespan shutdown for resource cleanup; it runs after Uvicorn's request-drain phase.
 
 - **Problem:** Kubernetes kills the pod before connections drain because `terminationGracePeriodSeconds` is too short.
   **Solution:** Set it to at least drain timeout + 5s buffer. If your longest request takes 60s, use `terminationGracePeriodSeconds: 70` and drain timeout of 65s.

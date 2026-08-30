@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-28T08:40:20.000Z
 
-Total skills: 2098
+Total skills: 2097
 
 ## agent-behavior (5)
 
@@ -1354,7 +1354,7 @@ Total skills: 2098
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | critical | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | critical | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (33)
+## frontend (32)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1389,7 +1389,6 @@ Total skills: 2098
 | `stitch-design-taste` | Use when generating Google Stitch DESIGN.md systems for premium typography, color, layout, motion intent, and anti-generic UI rules. | safe | Leonxlnx/taste-skill | stitch, design-system, frontend, ui | stitch, design-system, frontend, ui, taste, generating, google, md, premium, typography, color, layout |
 | `sveltekit` | Build full-stack web applications with SvelteKit — file-based routing, SSR, SSG, API routes, and form actions in one framework. | safe | community | svelte, sveltekit, fullstack, ssr, ssg, typescript | svelte, sveltekit, fullstack, ssr, ssg, typescript, full, stack, web, applications, file, routing |
 | `tailwind-patterns` | Tailwind CSS v4 principles. CSS-first configuration, container queries, modern patterns, design token architecture. | none | community | tailwind | tailwind, css, v4, principles, first, configuration, container, queries, token, architecture |
-| `ui-slop-score` | Score a rendered web or iOS screen for generic UI risk before it ships. Use when a user asks whether a UI looks generic or needs an honest pre-merge visual r... | safe | uizze/uizze | ui, ux, frontend, design, ui-slop-score | ui, ux, frontend, design, ui-slop-score, slop, score, rendered, web, ios, screen, generic |
 | `zustand-store-ts` | Create Zustand stores following established patterns with proper TypeScript types and middleware. | critical | community | zustand, store, ts | zustand, store, ts, stores, following, established, proper, typescript, types, middleware |
 
 ## fullstack (1)
