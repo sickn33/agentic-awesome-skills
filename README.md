@@ -40,6 +40,7 @@ This is an independent community project. It is not affiliated with, sponsored b
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray?style=for-the-badge)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-AI%20IDE-red?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills)
 
+- [memory-shield](https://github.com/vnbochkarev-netizen/memory-shield) - Defend agent memory against prompt-injection poisoning: snapshots before compaction, poisoned-content quarantine, masked secrets, diff audit (MIT, zero deps)
 ## AAS Core: Agent-First Preview
 
 > **The agent composes. You control. AAS keeps the stack reproducible.**
