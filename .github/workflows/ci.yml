@@ -488,13 +488,13 @@ jobs:
           test -f README.md
           test -f CONTRIBUTING.md
 
-      - name: Validate references
-        run: npm run validate:references
-
       - name: Run repo-state sync
         env:
           GH_TOKEN: ${{ github.token }}
         run: npm run sync:repo-state
+
+      - name: Validate references
+        run: npm run validate:references
 
       - name: Audit npm dependencies
         run: npm audit --audit-level=high

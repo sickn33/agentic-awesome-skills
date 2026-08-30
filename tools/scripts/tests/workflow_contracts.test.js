@@ -251,6 +251,17 @@ assert.doesNotMatch(
   "PR and push CI must not depend on mutable upstream network clones",
 );
 assert.match(ciWorkflow, /^permissions:\n  contents: read$/m);
+const mainValidationJobStart = ciWorkflow.indexOf("  main-validation-and-sync:");
+assert.ok(mainValidationJobStart >= 0, "main-validation-and-sync job must exist");
+const mainValidationJob = ciWorkflow.slice(mainValidationJobStart);
+const mainSyncIndex = mainValidationJob.indexOf("- name: Run repo-state sync");
+const mainReferenceValidationIndex = mainValidationJob.indexOf("- name: Validate references");
+assert.ok(
+  mainSyncIndex >= 0 &&
+    mainReferenceValidationIndex >= 0 &&
+    mainSyncIndex < mainReferenceValidationIndex,
+  "main canonical sync must regenerate source-derived bundle data before validating cross-references",
+);
 assert.match(
   ciWorkflow,
   /source-validation:[\s\S]*?- name: Refresh ephemeral derived sources for tests\n\s+if: env\.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'\n\s+run: npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-catalog && npm run sync:web-assets\n[\s\S]*?- name: Run tests\n\s+if: env\.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'\n\s+run: npm run test/,
