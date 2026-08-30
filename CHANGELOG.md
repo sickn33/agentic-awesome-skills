@@ -9,6 +9,109 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [16.4.0] - 2026-08-30 - "Sharper Reasoning and Safer Service Draining"
+
+> Refined falsification routing and graceful-shutdown guidance, retired a
+> discontinued UIZZE skill, and hardened canonical reference validation. The
+> published catalog contains 2,097 skills.
+
+This release helps Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and
+related AI coding assistants choose the right reasoning depth, drain production
+services without fighting their process manager, and avoid stale catalog
+references after a canonical skill is removed.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- [`falsify`](skills/falsify/) for explicit mode selection, calibrated
+  falsification, and lightweight estimate routing.
+- [`graceful-shutdown`](skills/graceful-shutdown/) for bounded draining,
+  readiness transitions, and shutdown deadlines.
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Changed
+
+- Updated [`falsify`](skills/falsify/) with a mandatory mode-selection gate so
+  incidents, simple requests, rough estimates, questions, and deep analysis do
+  not all enter the same heavyweight reasoning protocol
+  ([#1287](https://github.com/sickn33/agentic-awesome-skills/pull/1287)).
+- Refined [`graceful-shutdown`](skills/graceful-shutdown/) so liveness probes
+  remain available during draining, aborted HTTP requests release their active
+  counters, and FastAPI shutdown guidance preserves Uvicorn's signal ownership
+  ([#1289](https://github.com/sickn33/agentic-awesome-skills/pull/1289)).
+
+### Removed
+
+- Removed the retired `ui-slop-score` skill after the canonical UIZZE project
+  stopped publishing it; the maintained `anti-ui-slop`, `ui-design`, and
+  `ui-radar` skills remain available
+  ([#1288](https://github.com/sickn33/agentic-awesome-skills/pull/1288)).
+
+### Fixed
+
+- Reordered protected-main validation so canonical repository state is
+  regenerated before cross-reference validation. Source-only skill deletions
+  can now remove stale bundle and web references before the reference gate runs
+  ([#1291](https://github.com/sickn33/agentic-awesome-skills/pull/1291)).
+- Regenerated the canonical catalog, offline AAS Core data, tracked web assets,
+  marketplaces, editorial bundles, compatibility reports, and Codex/Claude
+  plugin distributions for 2,097 skills
+  ([#1292](https://github.com/sickn33/agentic-awesome-skills/pull/1292)).
+
+### Security and Reliability
+
+- Kept the updated skills documentation-only: they do not bundle or execute a
+  server runtime, install dependencies, or take ownership of production
+  signals.
+- Preserved explicit shutdown deadlines and forced-exit fallbacks so draining
+  cannot wait forever, while keeping readiness and liveness semantics separate.
+- Bound canonical-reference checks to freshly regenerated trusted state and
+  locked the workflow ordering with regression tests.
+
+### Who should care
+
+- Engineers using agent reasoning protocols who need fast incident handling and
+  direct, useful rough estimates without unnecessary ceremony.
+- Platform teams operating Node.js, FastAPI, Kubernetes, workers, and long-lived
+  connections that need predictable termination behavior.
+- Maintainers removing retired skills from a source-only catalog without
+  leaving stale generated references behind.
+
+### Validation
+
+- Passed repository and reference validation, documentation-security checks,
+  warning-budget enforcement, the complete 113-group repository test suite,
+  176 web-app tests, the production web build, npm audits, plugin compatibility,
+  bundle and marketplace checks, and protected canonical synchronization.
+- Verified final source and canonical CI plus CodeQL on the exact protected
+  `main` commit, with zero open pull requests, issues, security alerts, or
+  generated-state drift before release preparation.
+
+### Limitations
+
+- `falsify` structures routing and evidence checks but cannot guarantee truth or
+  replace domain expertise and higher-quality evidence.
+- Graceful shutdown remains runtime- and infrastructure-dependent; align probe,
+  load-balancer, process-manager, and orchestrator deadlines in the deployed
+  environment.
+- Removing `ui-slop-score` does not remove the maintained UIZZE design-analysis
+  skills or affect projects that independently pinned the retired upstream
+  package.
+
+### Credits
+
+- **[@263311487-ux](https://github.com/263311487-ux)** for the `falsify`
+  routing update in
+  [#1287](https://github.com/sickn33/agentic-awesome-skills/pull/1287).
+- **[@Prajeeth-12](https://github.com/Prajeeth-12)** for the revised
+  `graceful-shutdown` guidance in
+  [#1289](https://github.com/sickn33/agentic-awesome-skills/pull/1289).
+- **[@samuelbushi](https://github.com/samuelbushi)** for identifying the
+  retired UIZZE skill in
+  [#1288](https://github.com/sickn33/agentic-awesome-skills/pull/1288).
+
 ## [16.3.0] - 2026-08-28 - "Delegation Workflows and Reliable Operations"
 
 > Added 24 reviewed skills for multi-agent delegation, pull-request review,
