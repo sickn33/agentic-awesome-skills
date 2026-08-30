@@ -198,13 +198,13 @@ jobs:
         if: github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: npm run check:readme-credits -- --base "origin/${{ github.base_ref }}" --head HEAD
 
-      - name: Validate references
-        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true' && needs.pr-policy.outputs.requires_references == 'true'
-        run: npm run validate:references
-
       - name: Refresh ephemeral derived sources for tests
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-catalog && npm run sync:web-assets
+
+      - name: Validate references
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true' && needs.pr-policy.outputs.requires_references == 'true'
+        run: npm run validate:references
 
       - name: Run tests
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'

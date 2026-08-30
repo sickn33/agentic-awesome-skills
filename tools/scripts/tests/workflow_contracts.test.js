@@ -300,6 +300,14 @@ assert.match(
 const sourceValidationJob = ciWorkflow.match(/^  source-validation:\n([\s\S]*?)(?=^  pr-evidence:)/m)?.[0] || "";
 assert.match(sourceValidationJob, /needs: pr-policy/, "source validation should not wait for independent PR evidence");
 assert.doesNotMatch(sourceValidationJob, /needs:.*pr-evidence/);
+const sourceRefreshIndex = sourceValidationJob.indexOf("- name: Refresh ephemeral derived sources for tests");
+const sourceReferenceValidationIndex = sourceValidationJob.indexOf("- name: Validate references");
+assert.ok(
+  sourceRefreshIndex >= 0 &&
+    sourceReferenceValidationIndex >= 0 &&
+    sourceRefreshIndex < sourceReferenceValidationIndex,
+  "source validation must refresh source-derived bundle data before validating cross-references",
+);
 assert.match(
   sourceValidationJob,
   /actions\/checkout@[0-9a-f]{40}[\s\S]*?ref: \$\{\{ github\.event\.pull_request\.head\.sha \}\}/,
