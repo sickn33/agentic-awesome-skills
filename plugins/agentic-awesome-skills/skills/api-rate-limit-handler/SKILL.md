@@ -258,7 +258,7 @@ def fetch_with_retry(url: str, max_retries: int = 3, **kwargs) -> httpx.Response
 ## Limitations
 
 - This skill does not replace environment-specific validation, testing, or expert review.
-- Token bucket is approximate for distributed systems — use Redis-backed rate limiting for multi-instance deployments.
+- Token bucket is approximate for distributed systems — use Redis-backed rate limiting for multi-instance deployments (for example the `upstash-ratelimit` skill, or any shared-store limiter).
 - Some APIs use non-standard rate limit headers; check provider documentation.
 - The elapsed-time cap shown here bounds retry waits, not a single hung network call; combine it with an `AbortSignal` or client timeout.
 

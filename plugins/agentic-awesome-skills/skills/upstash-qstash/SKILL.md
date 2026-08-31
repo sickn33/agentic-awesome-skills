@@ -931,7 +931,7 @@ Workflow:
 
 ## Related Skills
 
-Works well with: `vercel-deployment`, `nextjs-app-router`, `redis-specialist`, `email-systems`, `supabase-backend`, `cloudflare-workers`
+Works well with: `upstash-redis`, `upstash-ratelimit`, `vercel-deployment`, `nextjs-app-router`, `redis-specialist`, `email-systems`, `supabase-backend`, `cloudflare-workers`
 
 ## When to Use
 - User mentions or implies: qstash

@@ -38,6 +38,7 @@ execution with excellent developer experience and TypeScript-first design.
 ## Scope
 
 - redis-queues -> bullmq-specialist
+- serverless-queues -> upstash-qstash
 - pure-event-driven -> inngest
 - workflow-orchestration -> temporal-craftsman
 - infrastructure -> infra-architect
@@ -891,6 +892,7 @@ Fix action: Batch items and use fewer waits, or split into subtasks
 ### Delegation Triggers
 
 - redis|bullmq|traditional queue -> bullmq-specialist (Need Redis-backed queues instead of managed service)
+- serverless queue|http queue|no workers -> upstash-qstash (Need HTTP-delivered queues and schedules without a worker runtime)
 - vercel|deployment|serverless -> vercel-deployment (Trigger.dev needs deployment config)
 - database|postgres|supabase -> supabase-backend (Tasks need database access)
 - openai|anthropic|ai model|llm -> llm-architect (Tasks need AI model integration)

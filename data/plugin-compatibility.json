@@ -37760,6 +37760,44 @@
       "runtime_files": []
     },
     {
+      "id": "upstash-ratelimit",
+      "path": "skills/upstash-ratelimit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "upstash-redis",
+      "path": "skills/upstash-redis",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "us-property-data",
       "path": "skills/us-property-data",
       "targets": {
@@ -40323,10 +40361,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2098,
+    "total_skills": 2100,
     "supported": {
-      "codex": 2018,
-      "claude": 2040
+      "codex": 2020,
+      "claude": 2042
     },
     "blocked": {
       "codex": 80,

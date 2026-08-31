@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-30T10:02:50.000Z
 
-Total skills: 2098
+Total skills: 2100
 
 ## agent-behavior (5)
 
@@ -391,7 +391,7 @@ Total skills: 2098
 | `zendesk-automation` | Automate Zendesk tasks via Rube MCP (Composio): tickets, users, organizations, replies. Always search tools first for current schemas. | critical | community | zendesk | zendesk, automation, automate, tasks, via, rube, mcp, composio, tickets, users, organizations, replies |
 | `zoom-automation` | Automate Zoom meeting creation, management, recordings, webinars, and participant tracking via Rube MCP (Composio). Always search tools first for current sch... | critical | community | zoom | zoom, automation, automate, meeting, creation, recordings, webinars, participant, tracking, via, rube, mcp |
 
-## backend (41)
+## backend (43)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -434,6 +434,8 @@ Total skills: 2098
 | `pubmed-database` | Direct REST API access to PubMed. Advanced Boolean/MeSH queries, E-utilities API, batch processing, citation management. For Python workflows, prefer biopyth... | critical | community | pubmed, database | pubmed, database, direct, rest, api, access, boolean, mesh, queries, utilities, batch, processing |
 | `telegram` | Integracao completa com Telegram Bot API. Setup com BotFather, mensagens, webhooks, inline keyboards, grupos, canais. Boilerplates Node.js e Python. | critical | community | messaging, telegram, bots, webhooks | messaging, telegram, bots, webhooks, integracao, completa, com, bot, api, setup, botfather, mensagens |
 | `uniprot-database` | Direct REST API access to UniProt. Protein searches, FASTA retrieval, ID mapping, Swiss-Prot/TrEMBL. For Python workflows with multiple databases, prefer bio... | safe | community | uniprot, database | uniprot, database, direct, rest, api, access, protein, searches, fasta, retrieval, id, mapping |
+| `upstash-ratelimit` | Add rate limiting to API routes, middleware, and edge functions with @upstash/ratelimit: sliding window, fixed window, and token bucket backed by Upstash Redis. | critical | self | upstash, rate-limiting, redis, serverless, edge, middleware, 429 | upstash, rate-limiting, redis, serverless, edge, middleware, 429, ratelimit, add, rate, limiting, api |
+| `upstash-redis` | Use the @upstash/redis HTTP client for caching, sessions, counters, and Redis data structures from serverless and edge runtimes without connection pooling. | critical | self | upstash, redis, cache, serverless, edge, key-value | upstash, redis, cache, serverless, edge, key-value, http, client, caching, sessions, counters, data |
 | `whatsapp-cloud-api` | Integracao com WhatsApp Business Cloud API (Meta). Mensagens, templates, webhooks HMAC-SHA256, automacao de atendimento. Boilerplates Node.js e Python. | critical | community | messaging, whatsapp, meta, webhooks | messaging, whatsapp, meta, webhooks, cloud, api, integracao, com, business, mensagens, hmac, sha256 |
 | `x402-express-wrapper` | Wrapper oficial de M2MCent (Node.js) para inyectar muros de pago x402 en APIs o servidores Model Context Protocol (MCP). Usar al construir nuevos servicios q... | critical | community | x402, defi, monetization, express, mcp | x402, defi, monetization, express, mcp, wrapper, oficial, de, m2mcent, node, js, para |
 

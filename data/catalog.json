@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-30T10:02:50.000Z",
-  "total": 2098,
+  "total": 2100,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -57249,6 +57249,73 @@
         "without"
       ],
       "path": "skills/upstash-qstash/SKILL.md"
+    },
+    {
+      "id": "upstash-ratelimit",
+      "canonical_id": "upstash-ratelimit",
+      "name": "upstash-ratelimit",
+      "description": "Add rate limiting to API routes, middleware, and edge functions with @upstash/ratelimit: sliding window, fixed window, and token bucket backed by Upstash Redis.",
+      "category": "backend",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "upstash",
+        "rate-limiting",
+        "redis",
+        "serverless",
+        "edge",
+        "middleware",
+        "429"
+      ],
+      "triggers": [
+        "upstash",
+        "rate-limiting",
+        "redis",
+        "serverless",
+        "edge",
+        "middleware",
+        "429",
+        "ratelimit",
+        "add",
+        "rate",
+        "limiting",
+        "api"
+      ],
+      "path": "skills/upstash-ratelimit/SKILL.md"
+    },
+    {
+      "id": "upstash-redis",
+      "canonical_id": "upstash-redis",
+      "name": "upstash-redis",
+      "description": "Use the @upstash/redis HTTP client for caching, sessions, counters, and Redis data structures from serverless and edge runtimes without connection pooling.",
+      "category": "backend",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "upstash",
+        "redis",
+        "cache",
+        "serverless",
+        "edge",
+        "key-value"
+      ],
+      "triggers": [
+        "upstash",
+        "redis",
+        "cache",
+        "serverless",
+        "edge",
+        "key-value",
+        "http",
+        "client",
+        "caching",
+        "sessions",
+        "counters",
+        "data"
+      ],
+      "path": "skills/upstash-redis/SKILL.md"
     },
     {
       "id": "us-property-data",

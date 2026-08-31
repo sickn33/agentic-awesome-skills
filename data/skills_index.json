@@ -48148,6 +48148,69 @@
     }
   },
   {
+    "id": "upstash-ratelimit",
+    "path": "skills/upstash-ratelimit",
+    "category": "backend",
+    "name": "upstash-ratelimit",
+    "description": "Add rate limiting to API routes, middleware, and edge functions with @upstash/ratelimit: sliding window, fixed window, and token bucket backed by Upstash Redis.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-08-31",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "upstash",
+      "rate-limiting",
+      "redis",
+      "serverless",
+      "edge",
+      "middleware",
+      "429"
+    ]
+  },
+  {
+    "id": "upstash-redis",
+    "path": "skills/upstash-redis",
+    "category": "backend",
+    "name": "upstash-redis",
+    "description": "Use the @upstash/redis HTTP client for caching, sessions, counters, and Redis data structures from serverless and edge runtimes without connection pooling.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-08-31",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "upstash",
+      "redis",
+      "cache",
+      "serverless",
+      "edge",
+      "key-value"
+    ]
+  },
+  {
     "id": "us-property-data",
     "path": "skills/us-property-data",
     "category": "api-integration",
