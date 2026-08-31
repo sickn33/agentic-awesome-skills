@@ -77,8 +77,8 @@ shadcn components via the `asChild` prop.
 6. Environment & Git (Areas 9 & 12) — security sweep
 7. SEO / deploy (Area 11) — usually a no-op; confirm and move on
 8. Unused deps (Area 13) — safe to defer until after ship if on a deadline
-9. Favicon / CDN cache (Area 15) — do ASAP after assets are swapped; the icon
-   survives deletion and needs cache-aware handling
+9. Favicon / CDN cache (Area 15) — do ASAP after assets are swapped; browser
+   or CDN caching can keep the old icon visible, so verify the live response
 
 ---
 
@@ -357,7 +357,8 @@ Agent:
 - ✅ **Do:** Run dep removal (Areas 2 & 7) before touching source files
 - ✅ **Do:** Skim Lovable-generated docs before deleting — may contain useful arch notes
 - ✅ **Do:** Verify `npm run build` passes after every batch of changes
-- ✅ **Do:** Overwrite favicons in place (Area 15) — deleting them leaves stale CDN copies
+- ✅ **Do:** Replace favicons at the existing paths (Area 15), then verify the
+  live response and purge only the confirmed project if it remains stale
 - ✅ **Do:** Deploy replacement favicon content and cache headers in the same commit
 - ✅ **Do:** Replace OG image before launch — it directly affects social sharing previews
 - ❌ **Don't:** Remove `@radix-ui/react-slot` — it's an indirect dep of most shadcn components

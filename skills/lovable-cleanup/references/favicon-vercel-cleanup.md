@@ -37,8 +37,8 @@ fs.writeFileSync("public/favicon.ico", b);
 
 ## 2 · Link all icon flavours in `index.html`
 
-Browsers always request `/favicon.ico` even without a link, so the path must
-exist and the modern/Apple entry points should too:
+Browsers may request `/favicon.ico` even without a link, so keep that path and
+the modern/Apple entry points available:
 
 ```html
 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
