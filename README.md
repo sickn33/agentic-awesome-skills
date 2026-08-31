@@ -450,6 +450,7 @@ Key source families include:
 
 ### Official Sources
 
+- **[beatra-ai/beatra-skills](https://github.com/beatra-ai/beatra-skills)**: Official Beatra source for the `beatra`, `beatra-ai-image-studio`, `beatra-ai-video-studio`, `beatra-ai-music-creator`, and `beatra-ai-voice-studio` skills - hosted AI image, video, music, and voice generation plus public social data lookup, installed from digest-verified immutable release archives (MIT-0).
 - **[sandbaseai/cli](https://github.com/sandbaseai/cli)**: Official source for the `sandbase-mcp` skill - discover, inspect, and invoke 2,000+ AI models and APIs through a local MCP bridge with explicit schema and cost checks (Apache-2.0).
 - **[vostride/agent-qa](https://github.com/vostride/agent-qa)**: Official Agent QA skills for authoring natural-language web and mobile tests, evidence-backed run triage, and scoped debug/fix workflows (FSL-1.1-ALv2, Apache-2.0 after two years).
 - **[uizze/uizze](https://github.com/uizze/uizze)**: Official UIZZE source for the free `anti-ui-slop` skill—product-specific UI references, design contracts, required states, and a hard finish gate grounded in 800,000+ real web and iOS screens (MIT).
