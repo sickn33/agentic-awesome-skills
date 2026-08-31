@@ -42,7 +42,9 @@ Author Agent QA tests, suites, and hooks without inventing schema fields or iden
 4. Generate every new ID with Agent QA tooling:
    - MCP: `agent_qa_generate_id`
    - CLI fallback: `agent-qa ids generate <test|suite|hook|run|observation>`
-   - Package fallback: `npx --yes agent-qa ids generate <type>`
+   - If neither surface is already installed, stop and ask the user to approve
+     an exact Agent QA installation. Do not fetch and execute the package at
+     runtime through `npx` or another moving package reference.
 5. Never hand-write IDs. Validate existing IDs with `agent_qa_validate_id` or `agent-qa ids validate <type> <id> --json`.
 6. Validate definitions before saving:
    - Tests: `agent_qa_validate_test` or `agent_qa_validate_definition` with `kind: "test"`

@@ -12,27 +12,15 @@ production URL then keeps returning a valid icon while the new bytes establish
 a new content identity; browsers that request `/favicon.ico` implicitly do not
 fall back to an old cached asset merely because the HTML link changed.
 
-If no real brand icon is ready, write a valid transparent 1×1 ICO:
+If no real brand icon is ready, use the bundled helper to write a valid
+transparent 1×1 ICO. It resolves the physical project root, rejects a symlinked
+`public/` directory or favicon target, writes an exclusive same-directory
+temporary file with no-follow semantics where available, then atomically
+renames it into place.
 
 <!-- security-allowlist: writes a 70-byte ICO into the project's public/, local only -->
 ```bash
-node -e '
-const fs = require("fs");
-const b = Buffer.alloc(6 + 16 + 40 + 8);   // header + dir entry + DIB + pixels
-b.writeUInt16LE(1, 2);   b.writeUInt16LE(1, 4);   // type, count
-b.writeUInt8(1, 6);      b.writeUInt8(1, 7);      // width, height
-b.writeUInt16LE(1, 10);  b.writeUInt16LE(32, 12); // planes, bpp
-b.writeUInt32LE(40 + 8, 14);                     // image size
-b.writeUInt32LE(22, 18);                         // offset to DIB
-b.writeUInt32LE(40, 22);   // biSize
-b.writeInt32LE(1, 26);     // width
-b.writeInt32LE(2, 30);     // height (xor + and mask)
-b.writeUInt16LE(1, 34);    // planes
-b.writeUInt16LE(32, 36);   // bpp
-b.writeUInt32LE(0, 38);    // compression
-b.writeUInt32LE(8, 42);    // sizeImage (xor 4 + and 4)
-fs.writeFileSync("public/favicon.ico", b);
-'
+node "<skill-dir>/scripts/write-transparent-favicon.js" "$PWD"
 ```
 
 ## 2 · Link all icon flavours in `index.html`

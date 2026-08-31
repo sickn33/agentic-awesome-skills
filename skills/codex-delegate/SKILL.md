@@ -2,7 +2,7 @@
 name: codex-delegate
 description: Delegate coding tasks to the OpenAI Codex CLI only when the user explicitly
   requests it, while the orchestrator retains review and landing responsibility.
-risk: safe
+risk: critical
 category: agent-orchestration
 source: https://github.com/amElnagdy/delegate-skills
 source_repo: amElnagdy/delegate-skills

@@ -8,23 +8,9 @@ import json
 import math
 import pathlib
 import re
-import subprocess
 import sys
 
-
-def load_manifest(path: pathlib.Path) -> dict:
-    program = (
-        "global.window={};require(require('path').resolve(process.argv[1]));"
-        "process.stdout.write(JSON.stringify(window.SPECTRAL_THEME));"
-    )
-    result = subprocess.run(
-        ["node", "-e", program, str(path)],
-        check=True,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-    )
-    return json.loads(result.stdout)
+from manifest_parser import ManifestSyntaxError, load_manifest
 
 
 def require(condition: bool, message: str, errors: list[str]) -> None:
@@ -161,7 +147,17 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("config", type=pathlib.Path)
     args = parser.parse_args()
-    config = load_manifest(args.config.resolve())
+    try:
+        config = load_manifest(args.config.resolve())
+    except (ManifestSyntaxError, OSError) as error:
+        print(
+            json.dumps(
+                {"status": "invalid", "errors": [str(error)]},
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        raise SystemExit(1) from error
     errors = validate(config)
     if errors:
         print(json.dumps({"status": "invalid", "errors": errors}, ensure_ascii=False, indent=2))

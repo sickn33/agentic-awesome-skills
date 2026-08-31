@@ -112,13 +112,20 @@ void arm_timeout() {
 // members, NOT locals — they must survive until the handler runs
 uint32_t len_be_;
 std::string body_;
+static constexpr std::uint32_t max_frame_size = 1U << 20; // protocol limit: 1 MiB
 
 void read_frame() {
     auto self = shared_from_this();
     asio::async_read(socket_, asio::buffer(&len_be_, sizeof len_be_),
         asio::bind_executor(strand_, [this, self](boost::system::error_code ec, std::size_t) {
             if (ec) return;
-            body_.assign(ntohl(len_be_), '\0');
+            const std::uint32_t frame_length = ntohl(len_be_);
+            if (frame_length > max_frame_size) {
+                boost::system::error_code ignored;
+                socket_.close(ignored);                         // reject before allocation
+                return;
+            }
+            body_.assign(static_cast<std::size_t>(frame_length), '\0');
             asio::async_read(socket_, asio::buffer(body_),     // read exactly N bytes
                 asio::bind_executor(strand_, [this, self](boost::system::error_code ec2, std::size_t) {
                     if (ec2) return;

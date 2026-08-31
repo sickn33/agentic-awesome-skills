@@ -72,10 +72,20 @@ libraries at import time; importing them first silently disables the optimizatio
 
 ```python
 import unsloth  # must be first
+import os
+import re
 from unsloth import FastLanguageModel
 
+def reviewed_revision(variable):
+    revision = os.environ.get(variable, "")
+    if re.fullmatch(r"[0-9a-fA-F]{40}", revision) is None:
+        raise RuntimeError(f"{variable} must be a reviewed full 40-character Hub commit SHA")
+    return revision.lower()
+
+model_revision = reviewed_revision("UNSLOTH_MODEL_REVISION")
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = "unsloth/Qwen3-8B",
+    revision = model_revision,
     max_seq_length = 2048,
     load_in_4bit = True,
     dtype = None,  # auto-detects bf16 where supported
@@ -87,6 +97,9 @@ Pick the loader that matches the modality: `FastLanguageModel` for text-only cau
 
 The `unsloth/` Hub namespace holds pre-quantized copies that download faster and skip a local
 quantization pass. Upstream repos such as `Qwen/` or `meta-llama/` work identically.
+Before setting `UNSLOTH_MODEL_REVISION`, inspect that exact Hub commit and obtain approval for the
+download. Record the repository and full revision with the run; never substitute a branch, tag,
+range, or moving default.
 
 ### Step 3: Fix the chat template before training
 
@@ -194,20 +207,35 @@ cannot be cleanly re-quantized afterwards.
 
 ```python
 import unsloth
+import os
+import re
 from unsloth import FastLanguageModel
 from unsloth.chat_templates import get_chat_template, train_on_responses_only
 from datasets import load_dataset
 from trl import SFTTrainer, SFTConfig
 
+def reviewed_revision(variable):
+    revision = os.environ.get(variable, "")
+    if re.fullmatch(r"[0-9a-fA-F]{40}", revision) is None:
+        raise RuntimeError(f"{variable} must be a reviewed full 40-character Hub commit SHA")
+    return revision.lower()
+
+model_revision = reviewed_revision("UNSLOTH_MODEL_REVISION")
+dataset_revision = reviewed_revision("UNSLOTH_DATASET_REVISION")
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = "unsloth/Qwen3-8B",
+    revision = model_revision,
     max_seq_length = 2048,
     load_in_4bit = True,
 )
 model = FastLanguageModel.get_peft_model(model, r = 16, lora_alpha = 16)
 
 tokenizer = get_chat_template(tokenizer, chat_template = "qwen3")
-dataset = load_dataset("mlabonne/FineTome-100k", split = "train[:5000]")
+dataset = load_dataset(
+    "mlabonne/FineTome-100k",
+    revision = dataset_revision,
+    split = "train[:5000]",
+)
 
 trainer = SFTTrainer(
     model = model,
@@ -239,11 +267,21 @@ Load with `fast_inference=True` to route sampling through vLLM in the same proce
 
 ```python
 import unsloth
+import os
+import re
 from unsloth import FastLanguageModel
 from trl import GRPOTrainer, GRPOConfig
 
+def reviewed_revision(variable):
+    revision = os.environ.get(variable, "")
+    if re.fullmatch(r"[0-9a-fA-F]{40}", revision) is None:
+        raise RuntimeError(f"{variable} must be a reviewed full 40-character Hub commit SHA")
+    return revision.lower()
+
+model_revision = reviewed_revision("UNSLOTH_MODEL_REVISION")
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = "unsloth/Qwen3-4B",
+    revision = model_revision,
     max_seq_length = 1024,
     load_in_4bit = True,
     fast_inference = True,       # vLLM sampling backend
@@ -307,8 +345,13 @@ GRPO learning rates sit roughly two orders of magnitude below SFT. Reward functi
   committed token grants write access to every model the account owns.
 - Fine-tuning reproduces the training data's content and biases in the weights. Confirm the
   dataset is licensed for training and free of secrets before starting.
+- Pin every Hub model and dataset to a reviewed full commit SHA, obtain approval before changing
+  either revision, and record both values with the training artifact. Prefer the verified local
+  cache for repeat runs instead of re-resolving network defaults.
 - GGUF export builds llama.cpp from source on first use, compiling third-party code and
-  requiring network access. Expect it to be slow and to need a working toolchain.
+  requiring network access. Before the first export, identify and review the exact llama.cpp
+  revision that will be built; do not permit an unattended moving-revision fetch. Prefer a
+  user-approved, full-commit-pinned local toolchain and cache.
 - Unsloth is dual-licensed: the core package is Apache-2.0, while optional components such as
   the Studio UI are AGPL-3.0. Check a component's license before redistributing it.
 

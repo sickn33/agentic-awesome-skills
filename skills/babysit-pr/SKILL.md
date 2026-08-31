@@ -2,7 +2,7 @@
 name: babysit-pr
 description: 'Babysit a pull request through its bot review rounds: verify, fix, reply,
   resolve. Use for any babysit or watch-the-PR ask.'
-risk: safe
+risk: critical
 category: code-quality
 source: https://github.com/amElnagdy/review-skills
 source_repo: amElnagdy/review-skills

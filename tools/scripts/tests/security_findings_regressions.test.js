@@ -4,6 +4,7 @@ const os = require("node:os");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
 const test = require("node:test");
+const { createSymlinkOrSkip } = require("./symlink-test-utils");
 
 const repoRoot = path.resolve(__dirname, "../../..");
 const telegramScript = path.join(
@@ -12,6 +13,13 @@ const telegramScript = path.join(
   "telegram-bot-messaging",
   "scripts",
   "telegram.sh",
+);
+const faviconScript = path.join(
+  repoRoot,
+  "skills",
+  "lovable-cleanup",
+  "scripts",
+  "write-transparent-favicon.js",
 );
 
 function read(relativePath) {
@@ -215,4 +223,124 @@ test("BrowserAct never delegates its operating policy to mutable provider guides
   assert.doesNotMatch(skill, /^browser-act get-skills\b/m);
   assert.match(skill, /checked-in Skill remains the complete operating policy/);
   assert.match(skill, /browser-act <subcommand> --help/);
+});
+
+test("Agent QA authoring never fetches a moving npm package at runtime", () => {
+  const skill = read("skills/agent-qa-authoring/SKILL.md");
+  assert.doesNotMatch(skill, /npx\s+--yes\s+agent-qa/);
+  assert.match(skill, /already installed/);
+  assert.match(skill, /Do not fetch and execute the package at\s+runtime/);
+});
+
+test("write-capable PR, cloud, and delegate skills are classified critical", () => {
+  const skills = [
+    "babysit-pr",
+    "atlas-cloud-media",
+    "aider-delegate",
+    "agy-delegate",
+    "claude-delegate",
+    "cline-delegate",
+    "codex-delegate",
+    "commandcode-delegate",
+    "copilot-delegate",
+    "cursor-delegate",
+    "grok-delegate",
+    "kimi-delegate",
+    "omp-delegate",
+    "opencode-delegate",
+    "pi-delegate",
+    "qoder-delegate",
+    "vibe-delegate",
+    "warp-delegate",
+    "zcode-delegate",
+  ];
+  for (const skill of skills) {
+    assert.match(read(`skills/${skill}/SKILL.md`), /^risk: critical$/m, skill);
+  }
+});
+
+test("pentest agent reference never pipes a mutable installer to a shell", () => {
+  const reference = read("skills/pentest-tools/references/pentest-ai-agents-matrix.md");
+  assert.doesNotMatch(reference, /curl[^\n]*install\.sh[^\n]*\|\s*(?:bash|sh|zsh)/i);
+  assert.match(reference, /40 位 commit\s+SHA/);
+  assert.match(reference, /私有审查目录/);
+  assert.match(reference, /获得单独批准/);
+});
+
+test("Atlas examples keep sensitive intermediates private and refuse output clobber", () => {
+  const skill = read("skills/atlas-cloud-media/SKILL.md");
+  assert.match(skill, /umask 077/);
+  assert.match(skill, /mktemp -d/);
+  assert.match(skill, /chmod 700/);
+  assert.match(skill, /trap .*atlas_tmp_dir.* EXIT/);
+  assert.doesNotMatch(skill, /\/tmp\/atlas-[A-Za-z0-9_-]+\.json/);
+  assert.match(skill, /pwd -P/);
+  assert.match(skill, /mktemp "\$atlas_output_dir\/\.atlas-output/);
+  assert.match(skill, /ln -- "\$atlas_publish_tmp" "\$atlas_output_path"/);
+  assert.doesNotMatch(skill, /mv -n --/);
+});
+
+test("favicon helper writes atomically but rejects symlink targets and parents", (t) => {
+  const normalRoot = fs.mkdtempSync(path.join(os.tmpdir(), "favicon-normal-"));
+  fs.mkdirSync(path.join(normalRoot, "public"));
+  const normal = spawnSync(process.execPath, [faviconScript, normalRoot], { encoding: "utf8" });
+  assert.equal(normal.status, 0, normal.stderr);
+  assert.equal(fs.readFileSync(path.join(normalRoot, "public", "favicon.ico")).length, 70);
+
+  const targetRoot = fs.mkdtempSync(path.join(os.tmpdir(), "favicon-target-link-"));
+  fs.mkdirSync(path.join(targetRoot, "public"));
+  const outside = path.join(targetRoot, "outside.txt");
+  fs.writeFileSync(outside, "unchanged");
+  if (!createSymlinkOrSkip(outside, path.join(targetRoot, "public", "favicon.ico"))) {
+    t.skip("symlink creation unavailable");
+    return;
+  }
+  const targetResult = spawnSync(process.execPath, [faviconScript, targetRoot], { encoding: "utf8" });
+  assert.notEqual(targetResult.status, 0);
+  assert.match(targetResult.stderr, /symbolic link/);
+  assert.equal(fs.readFileSync(outside, "utf8"), "unchanged");
+
+  const parentRoot = fs.mkdtempSync(path.join(os.tmpdir(), "favicon-parent-link-"));
+  const outsideDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "favicon-outside-"));
+  if (!createSymlinkOrSkip(outsideDirectory, path.join(parentRoot, "public"), "dir")) {
+    t.skip("directory symlink creation unavailable");
+    return;
+  }
+  const parentResult = spawnSync(process.execPath, [faviconScript, parentRoot], { encoding: "utf8" });
+  assert.notEqual(parentResult.status, 0);
+  assert.match(parentResult.stderr, /real directory/);
+  assert.equal(fs.existsSync(path.join(outsideDirectory, "favicon.ico")), false);
+});
+
+test("pre-C++20 framing checks the cap before allocating the body", () => {
+  const reference = read("skills/boost-asio-pro/references/pre-cpp20.md");
+  const decode = reference.indexOf("const std::uint32_t frame_length = ntohl(len_be_)");
+  const cap = reference.indexOf("frame_length > max_frame_size", decode);
+  const allocate = reference.indexOf("body_.assign", decode);
+  assert.ok(decode >= 0 && cap > decode && allocate > cap);
+  assert.match(reference.slice(cap, allocate), /socket_\.close/);
+});
+
+test("graceful shutdown already releases aborted and finished requests exactly once", () => {
+  const skill = read("skills/graceful-shutdown/SKILL.md");
+  assert.match(skill, /let counted = true;[\s\S]*if \(!counted\) return;[\s\S]*counted = false;/);
+  assert.match(skill, /res\.on\("finish", release\);/);
+  assert.match(skill, /res\.on\("close", release\);/);
+});
+
+test("Unsloth examples require full immutable model and dataset revisions", () => {
+  const skill = read("skills/unsloth-finetuning/SKILL.md");
+  const modelCalls = [...skill.matchAll(/FastLanguageModel\.from_pretrained\(([\s\S]*?)\n\)/g)];
+  assert.equal(modelCalls.length, (skill.match(/FastLanguageModel\.from_pretrained\(/g) || []).length);
+  assert.ok(modelCalls.length >= 3);
+  for (const call of modelCalls) assert.match(call[1], /\brevision\s*=\s*model_revision/);
+
+  const datasetCalls = [...skill.matchAll(/load_dataset\(([\s\S]*?)\n\)/g)];
+  assert.equal(datasetCalls.length, (skill.match(/load_dataset\(/g) || []).length);
+  assert.ok(datasetCalls.length >= 1);
+  for (const call of datasetCalls) assert.match(call[1], /\brevision\s*=\s*dataset_revision/);
+
+  assert.match(skill, /\[0-9a-fA-F\]\{40\}/);
+  assert.match(skill, /obtain approval before changing[\s\S]*revision/);
+  assert.match(skill, /full-commit-pinned local toolchain/);
 });

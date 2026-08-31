@@ -2,7 +2,7 @@
 name: atlas-cloud-media
 description: "Generate Atlas Cloud images and videos through its asynchronous media API with schema-first model selection and credential-safe polling."
 category: media
-risk: safe
+risk: critical
 source: self
 source_type: self
 date_added: "2026-08-12"
@@ -64,6 +64,19 @@ Do not guess parameters from another model, because names such as `size`,
 
 ## Workflow
 
+### 0. Create a Private Per-Run Workspace
+
+Run the remaining shell snippets in the same shell session. Create a private
+directory before writing prompts, responses, prediction IDs, or signed URLs;
+the parameter expansion in later steps fails closed when this setup was skipped.
+
+```bash
+umask 077
+atlas_tmp_dir=$(mktemp -d "${TMPDIR:-/tmp}/atlas-cloud-media.XXXXXXXX") || exit 1
+chmod 700 -- "$atlas_tmp_dir"
+trap 'rm -rf -- "$atlas_tmp_dir"' EXIT
+```
+
 ### 1. Discover and Validate a Model
 
 Fetch the catalog, filter by `type` (`Image` or `Video`), and match the user's
@@ -76,10 +89,10 @@ Example discovery request:
 ```bash
 curl --fail --silent --show-error \
   "https://api.atlascloud.ai/api/v1/models" \
-  --output /tmp/atlas-models.json
+  --output "${atlas_tmp_dir:?run private workspace setup first}/models.json"
 
 jq -r '.data[] | select(.type == "Image") | [.model, .displayName, .schema] | @tsv' \
-  /tmp/atlas-models.json
+  "$atlas_tmp_dir/models.json"
 ```
 
 ### 2. Submit One Generation Task
@@ -94,15 +107,15 @@ jq -n \
   --arg model "qwen-image-3.0/text-to-image" \
   --arg prompt "A paper-cut city map in blue and white, clean editorial style" \
   '{model: $model, prompt: $prompt, size: "1024*1024", n: 1}' \
-  > /tmp/atlas-image-request.json
+  > "${atlas_tmp_dir:?run private workspace setup first}/request.json"
 
 curl --fail --silent --show-error \
   --request POST \
   "https://api.atlascloud.ai/api/v1/model/generateImage" \
   --header "Authorization: Bearer $ATLASCLOUD_API_KEY" \
   --header "Content-Type: application/json" \
-  --data @/tmp/atlas-image-request.json \
-  --output /tmp/atlas-submit.json
+  --data @"$atlas_tmp_dir/request.json" \
+  --output "$atlas_tmp_dir/submit.json"
 ```
 
 Video example using a catalog-confirmed model:
@@ -119,15 +132,15 @@ jq -n \
     ratio: "16:9",
     generate_audio: false,
     watermark: false
-  }' > /tmp/atlas-video-request.json
+  }' > "${atlas_tmp_dir:?run private workspace setup first}/request.json"
 
 curl --fail --silent --show-error \
   --request POST \
   "https://api.atlascloud.ai/api/v1/model/generateVideo" \
   --header "Authorization: Bearer $ATLASCLOUD_API_KEY" \
   --header "Content-Type: application/json" \
-  --data @/tmp/atlas-video-request.json \
-  --output /tmp/atlas-submit.json
+  --data @"$atlas_tmp_dir/request.json" \
+  --output "$atlas_tmp_dir/submit.json"
 ```
 
 Check that `.data.id` is a non-empty string before polling. Treat a non-2xx
@@ -142,21 +155,21 @@ for diagnostics, but never log request headers or the API key.
 
 ```bash
 prediction_id=$(jq -er '.data.id | select(type == "string" and length > 0)' \
-  /tmp/atlas-submit.json)
+  "${atlas_tmp_dir:?run private workspace setup first}/submit.json")
 
 for attempt in $(seq 1 200); do
   sleep 3
   curl --fail --silent --show-error \
     "https://api.atlascloud.ai/api/v1/model/prediction/$prediction_id" \
     --header "Authorization: Bearer $ATLASCLOUD_API_KEY" \
-    --output /tmp/atlas-prediction.json
+    --output "$atlas_tmp_dir/prediction.json"
 
-  status=$(jq -r '.data.status // "unknown"' /tmp/atlas-prediction.json)
+  status=$(jq -r '.data.status // "unknown"' "$atlas_tmp_dir/prediction.json")
   case "$status" in
     completed|succeeded) break ;;
     failed|timeout)
       jq -r '.data.error // "Atlas Cloud generation failed"' \
-        /tmp/atlas-prediction.json >&2
+        "$atlas_tmp_dir/prediction.json" >&2
       exit 1
       ;;
   esac
@@ -174,14 +187,33 @@ file's content type and size before treating it as a valid deliverable.
 
 ```bash
 output_url=$(jq -er '.data.outputs[0] | select(startswith("https://"))' \
-  /tmp/atlas-prediction.json)
+  "${atlas_tmp_dir:?run private workspace setup first}/prediction.json")
 
 curl --fail --silent --show-error --location \
   "$output_url" \
-  --output ./atlas-output.bin
+  --output "$atlas_tmp_dir/output.bin"
 
-test -s ./atlas-output.bin
-file ./atlas-output.bin
+test -s "$atlas_tmp_dir/output.bin"
+file "$atlas_tmp_dir/output.bin"
+
+# ATLAS_OUTPUT_DIR must be the user-approved destination. Resolve it to a
+# physical directory, copy into an exclusive same-directory temporary file,
+# then create the final name with one atomic hard-link operation. `ln` fails if
+# any target already exists, including a dangling symlink.
+atlas_output_dir=$(cd -- "${ATLAS_OUTPUT_DIR:?set the approved output directory}" && pwd -P) || exit 1
+atlas_output_path="$atlas_output_dir/atlas-output.bin"
+if ! (
+  set -eu
+  umask 077
+  atlas_publish_tmp=$(mktemp "$atlas_output_dir/.atlas-output.XXXXXXXX")
+  trap 'rm -f -- "$atlas_publish_tmp"' EXIT
+  cp -- "$atlas_tmp_dir/output.bin" "$atlas_publish_tmp"
+  chmod 644 -- "$atlas_publish_tmp"
+  ln -- "$atlas_publish_tmp" "$atlas_output_path"
+); then
+  printf '%s\n' "Refusing to overwrite or redirect $atlas_output_path" >&2
+  exit 1
+fi
 ```
 
 Rename the file only after its detected type is known. Report the local path,
@@ -205,6 +237,8 @@ or decode validation.
 ## Best Practices
 
 - Use the public catalog and per-model schema immediately before generation.
+- Keep request and response artifacts in one private per-run directory and let
+  the exit trap remove them, especially prediction payloads with signed URLs.
 - Submit one task at a time unless the user explicitly approves a batch and its
   cost.
 - Keep prompts, reference-media rights, and provider content policies visible

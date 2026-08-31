@@ -21,6 +21,11 @@ def canonical_url(value):
     """Return a conservative identity for an HTTP(S) URL, or None if invalid."""
     if not nonempty(value):
         return None
+    if any(
+        character.isspace() or ord(character) < 0x20 or ord(character) == 0x7F
+        for character in value
+    ):
+        return None
     try:
         parsed = urlsplit(value)
         hostname = parsed.hostname

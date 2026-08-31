@@ -1,3 +1,19 @@
+# Codex security findings remediation - 2026-08-31
+
+- Re-evaluated all 14 exported Codex Security records against the current
+  protected `main`: 13 remained actionable and the graceful-shutdown counter
+  fix was already present and byte-identical in both plugin mirrors.
+- Replaced executable theme-manifest validation with a bounded static parser;
+  removed moving package and pipe-to-shell fallbacks; confined Atlas artifacts;
+  made favicon replacement symlink-safe and atomic; capped network frames before
+  allocation; rejected raw URL controls; and pinned model/dataset inputs by full
+  reviewed Hub revisions.
+- Corrected the risk metadata for Atlas, autonomous PR babysitting, and all 17
+  write-capable delegate skills, with focused regression coverage for each
+  affected trust boundary.
+- Kept the repair source-only. Generated registries, catalog metadata, and both
+  plugin distributions remain owned by protected canonical synchronization.
+
 # FLOSS/fund sustainability application - 2026-08-31
 
 - Added a public `funding.json` manifest using the current v1.1.0 schema for a

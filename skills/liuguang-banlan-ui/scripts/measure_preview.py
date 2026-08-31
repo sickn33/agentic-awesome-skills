@@ -6,8 +6,9 @@ from __future__ import annotations
 import argparse
 import json
 import pathlib
-import subprocess
 import sys
+
+from manifest_parser import ManifestSyntaxError, load_manifest
 
 try:
     import numpy as np
@@ -27,21 +28,6 @@ except ModuleNotFoundError as exc:
         file=sys.stderr,
     )
     raise SystemExit(2)
-
-
-def load_config(path: pathlib.Path) -> dict:
-    source = (
-        "global.window={};require(require('path').resolve(process.argv[1]));"
-        "process.stdout.write(JSON.stringify(window.SPECTRAL_THEME));"
-    )
-    result = subprocess.run(
-        ["node", "-e", source, str(path)],
-        check=True,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-    )
-    return json.loads(result.stdout)
 
 
 def srgb_to_oklab(rgb: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -129,7 +115,18 @@ def main() -> None:
     parser.add_argument("--image", required=True, type=pathlib.Path)
     parser.add_argument("--config", required=True, type=pathlib.Path)
     args = parser.parse_args()
-    config = load_config(args.config.resolve())
+    try:
+        config = load_manifest(args.config.resolve())
+    except (ManifestSyntaxError, OSError) as error:
+        print(
+            json.dumps(
+                {"status": "invalid", "errors": [str(error)]},
+                ensure_ascii=False,
+                indent=2,
+            ),
+            file=sys.stderr,
+        )
+        raise SystemExit(1) from error
     payload = {
         "schemaVersion": "1.0",
         "theme": config["label"],

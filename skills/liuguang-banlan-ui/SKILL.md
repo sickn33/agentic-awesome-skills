@@ -90,9 +90,10 @@ Maintain a serializable manifest with these top-level fields:
 ### 7. Validate and report
 
 - Scaffold a clean starter with `scripts/scaffold_template.py` when a neutral implementation is needed.
-- Treat JavaScript manifests as executable code: inspect them first and run the
-  bundled helpers only on reviewed, locally authored configuration. Never pass
-  an untrusted or freshly downloaded manifest to either Python helper.
+- The bundled helpers parse only the restricted data-literal assignment used by
+  the starter. They reject expressions, function calls, duplicate keys,
+  unsupported syntax, trailing statements, and oversized manifests without
+  executing JavaScript. Keep runtime theme configs data-only as well.
 - Run `scripts/validate_manifest.py` on each theme config before rendering.
 - Capture desktop and mobile screenshots with a real browser. Inspect them directly if visual capability is available.
 - Run `scripts/measure_preview.py` on the pure field screenshot and retain measured chromatic ratio, luminance statistics, per-color coverage, and effective share.
@@ -122,7 +123,8 @@ Use the bundled starter under `assets/starter/` as a neutral base. Copy only the
 ### scripts/
 
 - `scaffold_template.py`: copy the neutral starter for `opal`, `obsidian`, or both.
-- `validate_manifest.py`: parse a JavaScript manifest through Node and validate required fields and ranges.
+- `manifest_parser.py`: statically parse the restricted data-only manifest grammar without executing JavaScript.
+- `validate_manifest.py`: validate required manifest fields and ranges.
 - `measure_preview.py`: measure a rendered pure-field PNG against the configured OKLCH palette.
 
 ### references/

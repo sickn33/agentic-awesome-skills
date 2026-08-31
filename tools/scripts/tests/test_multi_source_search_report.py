@@ -85,6 +85,15 @@ class MultiSourceReportTests(unittest.TestCase):
         result = self.run_report(payload)
         self.assertIn("duplicate source URL after normalization", result.stderr)
 
+    def test_rejects_raw_whitespace_and_control_characters_before_url_parsing(self):
+        for character in ("\n", "\r", "\t", "\x00", "\x1f", "\x7f", " "):
+            with self.subTest(character=repr(character)):
+                payload = copy.deepcopy(report())
+                payload["sources"][0]["url"] = f"https://example.org{character}.evil.test/a"
+                result = self.run_report(payload)
+                self.assertEqual(result.returncode, 1)
+                self.assertIn("must be an HTTP(S) URL", result.stderr)
+
     def test_rejects_high_confidence_conflict(self):
         payload = report()
         payload["claims"][0]["conflict"] = True
