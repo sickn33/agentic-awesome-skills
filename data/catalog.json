@@ -34658,7 +34658,7 @@
       "id": "lovable-cleanup",
       "canonical_id": "lovable-cleanup",
       "name": "lovable-cleanup",
-      "description": "Audits and strips Lovable scaffolding from Vite + React projects — removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, and cleans generated docs so the codebase ships as yours.",
+      "description": "Audits and strips Lovable scaffolding from Vite + React projects — removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, cleans generated docs, and neutralizes stale favicon/CDN caching so the codebase ships as yours.",
       "category": "uncategorized",
       "risk": "safe",
       "source": "community",
@@ -34670,7 +34670,9 @@
         "vite",
         "react",
         "shadcn",
-        "devtools"
+        "devtools",
+        "vercel",
+        "favicon"
       ],
       "triggers": [
         "lovable",
@@ -34679,12 +34681,12 @@
         "react",
         "shadcn",
         "devtools",
+        "vercel",
+        "favicon",
         "audits",
         "strips",
         "scaffolding",
-        "removes",
-        "tagger",
-        "swaps"
+        "removes"
       ],
       "path": "skills/lovable-cleanup/SKILL.md"
     },

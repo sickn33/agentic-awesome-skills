@@ -1,13 +1,15 @@
 ---
 name: lovable-cleanup
-description: "Audits and strips Lovable scaffolding from Vite + React projects — removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, and cleans generated docs so the codebase ships as yours."
+description: "Audits and strips Lovable scaffolding from Vite + React projects — removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, cleans generated docs, and neutralizes stale favicon/CDN caching so the codebase ships as yours."
 risk: safe
 source: community
 source_repo: whoisabhishekadhikari/lovable-cleanup
 source_type: community
 author: whoisabhishekadhikari
 date_added: "2026-06-13"
-tags: [lovable, cleanup, vite, react, shadcn, devtools]
+date_updated: "2026-08-31"
+version: "2.0.0"
+tags: [lovable, cleanup, vite, react, shadcn, devtools, vercel, favicon]
 tools: [claude, cursor, codex, antigravity, gemini-cli]
 ---
 
@@ -23,7 +25,7 @@ tools: [claude, cursor, codex, antigravity, gemini-cli]
 Lovable (lovable.dev) bootstraps Vite + React + shadcn/ui projects with its own tagger
 dependency, branding, placeholder assets, and generated markdown docs baked in. Most
 developers export from Lovable and want a clean, ownable codebase before shipping or
-open-sourcing. This skill covers all 14 areas where Lovable leaves fingerprints.
+open-sourcing. This skill covers all 15 areas where Lovable leaves fingerprints.
 
 ---
 
@@ -75,6 +77,8 @@ shadcn components via the `asChild` prop.
 6. Environment & Git (Areas 9 & 12) — security sweep
 7. SEO / deploy (Area 11) — usually a no-op; confirm and move on
 8. Unused deps (Area 13) — safe to defer until after ship if on a deadline
+9. Favicon / CDN cache (Area 15) — do ASAP after assets are swapped; browser
+   or CDN caching can keep the old icon visible, so verify the live response
 
 ---
 
@@ -137,7 +141,7 @@ Replace these files (keep filenames, swap content):
 
 | File | Action |
 |---|---|
-| `favicon.ico` | Replace with real icon |
+| `favicon.ico` | Overwrite with real icon — do NOT just delete, see Area 15 |
 | `favicon.png` | Replace with real icon |
 | `og-image.png` / `logo.png` | Replace with real brand assets |
 | `placeholder.svg` | Usually unused — safe to delete |
@@ -292,6 +296,17 @@ grep -in "lovable" components.json eslint.config.js
 
 ---
 
+### Area 15 · Favicon removal & stale CDN caches (Vercel)
+
+Lovable ships a default `favicon.ico` that browsers auto-request from site root
+and that can remain visible after cleanup through browser or CDN caching. Handle
+the four steps — replace the path, link all icon flavours, keep unversioned icon
+URLs revalidatable, and verify after deploy — then purge the confirmed Vercel
+project cache only if the live response stays stale. Full commands/JSON live in
+[references/favicon-vercel-cleanup.md](references/favicon-vercel-cleanup.md).
+
+---
+
 ## Master Scan Command
 
 <!-- security-allowlist: recursive grep across project directory, read-only, no network -->
@@ -342,6 +357,9 @@ Agent:
 - ✅ **Do:** Run dep removal (Areas 2 & 7) before touching source files
 - ✅ **Do:** Skim Lovable-generated docs before deleting — may contain useful arch notes
 - ✅ **Do:** Verify `npm run build` passes after every batch of changes
+- ✅ **Do:** Replace favicons at the existing paths (Area 15), then verify the
+  live response and purge only the confirmed project if it remains stale
+- ✅ **Do:** Deploy replacement favicon content and cache headers in the same commit
 - ✅ **Do:** Replace OG image before launch — it directly affects social sharing previews
 - ❌ **Don't:** Remove `@radix-ui/react-slot` — it's an indirect dep of most shadcn components
 - ❌ **Don't:** Leave empty env vars like `LOVABLE_PROJECT_ID=` — delete the whole line
@@ -350,8 +368,8 @@ Agent:
 
 ## Limitations
 
-- This skill does not create or source brand assets (favicons, OG images) — it only flags
-  what needs replacing. The user must supply real assets.
+- This skill does not create or source real brand assets (favicons, OG images). Area 15
+  generates a transparent placeholder ICO only — the user must supply genuine artwork.
 - Dep pruning (Area 13) is safe but not foolproof — some Radix packages are indirect deps
   not caught by a direct `grep`. Always verify with `npm run build`.
 - The skill does not modify `components.json` aliases automatically — it only scans and
@@ -379,6 +397,14 @@ the `from '@radix-ui/...'` import to find which component depends on it.
 **Symptoms:** Browser tab shows "Lovable" or "Vite App" despite edits  
 **Solution:** Check for a `<Helmet>` or `<Head>` component in `src/App.tsx` or a layout
 wrapper — React-level title tags override `index.html` at runtime.
+
+### Problem: Old favicon still serving after deletion (Vercel)
+
+**Symptoms:** `curl -sI https://<domain>/favicon.ico` returns the old ETag with
+`x-vercel-cache: HIT` after the replacement deployment.
+**Solution:** Overwrite `public/favicon.ico` with replacement content (a transparent
+1×1 ICO if no real asset yet), verify the custom domain, then use the explicit
+Vercel CDN purge only if the response remains stale — see Area 15.
 
 ---
 
