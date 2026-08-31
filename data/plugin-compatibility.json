@@ -8078,6 +8078,25 @@
       "runtime_files": []
     },
     {
+      "id": "check-identity-pack",
+      "path": "skills/check-identity-pack",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "chrome-extension-developer",
       "path": "skills/chrome-extension-developer",
       "targets": {
@@ -13259,6 +13278,25 @@
       "runtime_files": []
     },
     {
+      "id": "detect-ai-text",
+      "path": "skills/detect-ai-text",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "deterministic-design",
       "path": "skills/deterministic-design",
       "targets": {
@@ -15478,6 +15516,25 @@
       "runtime_files": []
     },
     {
+      "id": "extract-document-data",
+      "path": "skills/extract-document-data",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "fable-safe-prompt",
       "path": "skills/fable-safe-prompt",
       "targets": {
@@ -16069,6 +16126,25 @@
     {
       "id": "find-complementary-founders",
       "path": "skills/find-complementary-founders",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "find-matching-tenders",
+      "path": "skills/find-matching-tenders",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -31380,6 +31456,25 @@
       "runtime_files": []
     },
     {
+      "id": "screen-adverse-media",
+      "path": "skills/screen-adverse-media",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "screen-reader-testing",
       "path": "skills/screen-reader-testing",
       "targets": {
@@ -38340,6 +38435,44 @@
       "runtime_files": []
     },
     {
+      "id": "verify-citations",
+      "path": "skills/verify-citations",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "verify-document",
+      "path": "skills/verify-document",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "vexor",
       "path": "skills/vexor",
       "targets": {
@@ -40361,10 +40494,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2100,
+    "total_skills": 2107,
     "supported": {
-      "codex": 2020,
-      "claude": 2042
+      "codex": 2027,
+      "claude": 2049
     },
     "blocked": {
       "codex": 80,

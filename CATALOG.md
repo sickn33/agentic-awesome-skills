@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-30T10:02:50.000Z
 
-Total skills: 2100
+Total skills: 2107
 
 ## agent-behavior (5)
 
@@ -1296,6 +1296,18 @@ Total skills: 2100
 | `docx-official` | A user may ask you to create, edit, or analyze the contents of a .docx file. A .docx file is essentially a ZIP archive containing XML files and other resourc... | critical | community | docx, official | docx, official, user, may, ask, edit, analyze, contents, file, essentially, zip, archive |
 | `libreoffice/writer` | Document creation, format conversion (ODT/DOCX/PDF), mail merge, and automation with LibreOffice Writer. | safe | personal | libreoffice/writer | libreoffice/writer, writer, document, creation, format, conversion, odt, docx, pdf, mail, merge, automation |
 | `pdf-official` | This guide covers essential PDF processing operations using Python libraries and command-line tools. For advanced features, JavaScript libraries, and detaile... | critical | community | pdf, official | pdf, official, covers, essential, processing, operations, python, libraries, command, line, features, javascript |
+
+## document-verification (7)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `check-identity-pack` | Run an AFP 100-point or AUSTRAC safe-harbour identity check over a set of documents, and report exactly what's missing. Use when the user asks to check ident... | critical | Sketchjar/stipple-agent-skills | document-verification, fact-checking, stipple, authenticity | document-verification, fact-checking, stipple, authenticity, check, identity, pack, run, afp, 100, point, austrac |
+| `detect-ai-text` | Estimate whether a document's prose was written by AI, with the linguistic tells and honest abstention on non-prose. Use when the user asks whether an essay,... | critical | Sketchjar/stipple-agent-skills | document-verification, fact-checking, stipple, authenticity | document-verification, fact-checking, stipple, authenticity, detect, ai, text, estimate, whether, document, prose, was |
+| `extract-document-data` | Extract structured, grounded fields from documents — values cite their page, missing values abstain instead of hallucinating. Use for parsing invoices, paysl... | critical | Sketchjar/stipple-agent-skills | document-verification, fact-checking, stipple, authenticity | document-verification, fact-checking, stipple, authenticity, extract, document, data, structured, grounded, fields, documents, values |
+| `find-matching-tenders` | Find open AU/NZ government tenders matching what a company does, ranked by fit with why and gap analysis. Use when the user asks to find tenders, bid opportu... | critical | Sketchjar/stipple-agent-skills | document-verification, fact-checking, stipple, authenticity | document-verification, fact-checking, stipple, authenticity, find, matching, tenders, open, au, nz, government, what |
+| `screen-adverse-media` | Screen a person or organisation for adverse media coverage, PEP status, and sanctions exposure — corroboration-gated, returns "review" never "guilty". Use wh... | critical | Sketchjar/stipple-agent-skills | document-verification, fact-checking, stipple, authenticity | document-verification, fact-checking, stipple, authenticity, screen, adverse, media, person, organisation, coverage, pep, status |
+| `verify-citations` | Verify citations and references in a document, report, or article against real sources. Use when the user asks to fact-check, verify references, check citati... | critical | Sketchjar/stipple-agent-skills | document-verification, fact-checking, stipple, authenticity | document-verification, fact-checking, stipple, authenticity, verify, citations, references, document, report, article, against, real |
+| `verify-document` | Check whether a document (PDF or image) shows signs of tampering or forgery before you rely on it. Use when the user asks to verify a payslip, invoice, bank ... | critical | Sketchjar/stipple-agent-skills | document-verification, fact-checking, stipple, authenticity | document-verification, fact-checking, stipple, authenticity, verify, document, check, whether, pdf, image, shows, signs |
 
 ## ecommerce (1)
 

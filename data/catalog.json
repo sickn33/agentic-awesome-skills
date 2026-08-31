@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-30T10:02:50.000Z",
-  "total": 2100,
+  "total": 2107,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -12272,6 +12272,40 @@
       "path": "skills/chat-widget/SKILL.md"
     },
     {
+      "id": "check-identity-pack",
+      "canonical_id": "check-identity-pack",
+      "name": "check-identity-pack",
+      "description": "Run an AFP 100-point or AUSTRAC safe-harbour identity check over a set of documents, and report exactly what's missing. Use when the user asks to check identity documents, verify someone's ID for onboarding, or assess whether a document pack satisfies Australian identity requirements.",
+      "category": "document-verification",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Sketchjar/stipple-agent-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE",
+      "tags": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity"
+      ],
+      "triggers": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity",
+        "check",
+        "identity",
+        "pack",
+        "run",
+        "afp",
+        "100",
+        "point",
+        "austrac"
+      ],
+      "path": "skills/check-identity-pack/SKILL.md"
+    },
+    {
       "id": "chrome-extension-developer",
       "canonical_id": "chrome-extension-developer",
       "name": "chrome-extension-developer",
@@ -20058,6 +20092,40 @@
       "path": "skills/design-ux/SKILL.md"
     },
     {
+      "id": "detect-ai-text",
+      "canonical_id": "detect-ai-text",
+      "name": "detect-ai-text",
+      "description": "Estimate whether a document's prose was written by AI, with the linguistic tells and honest abstention on non-prose. Use when the user asks whether an essay, report, CV, submission, or article was AI-generated — for triage, not proof.",
+      "category": "document-verification",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Sketchjar/stipple-agent-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE",
+      "tags": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity"
+      ],
+      "triggers": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity",
+        "detect",
+        "ai",
+        "text",
+        "estimate",
+        "whether",
+        "document",
+        "prose",
+        "was"
+      ],
+      "path": "skills/detect-ai-text/SKILL.md"
+    },
+    {
       "id": "deterministic-design",
       "canonical_id": "deterministic-design",
       "name": "deterministic-design",
@@ -23408,6 +23476,40 @@
       "path": "skills/expo-ui-swift-ui/SKILL.md"
     },
     {
+      "id": "extract-document-data",
+      "canonical_id": "extract-document-data",
+      "name": "extract-document-data",
+      "description": "Extract structured, grounded fields from documents — values cite their page, missing values abstain instead of hallucinating. Use for parsing invoices, payslips, statements, contracts.",
+      "category": "document-verification",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Sketchjar/stipple-agent-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE",
+      "tags": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity"
+      ],
+      "triggers": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity",
+        "extract",
+        "document",
+        "data",
+        "structured",
+        "grounded",
+        "fields",
+        "documents",
+        "values"
+      ],
+      "path": "skills/extract-document-data/SKILL.md"
+    },
+    {
       "id": "fable-safe-prompt",
       "canonical_id": "fable-safe-prompt",
       "name": "fable-safe-prompt",
@@ -24315,6 +24417,40 @@
         "partner"
       ],
       "path": "skills/find-complementary-founders/SKILL.md"
+    },
+    {
+      "id": "find-matching-tenders",
+      "canonical_id": "find-matching-tenders",
+      "name": "find-matching-tenders",
+      "description": "Find open AU/NZ government tenders matching what a company does, ranked by fit with why and gap analysis. Use when the user asks to find tenders, bid opportunities, government contracts, or RFPs for their business (or a client's).",
+      "category": "document-verification",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Sketchjar/stipple-agent-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE",
+      "tags": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity"
+      ],
+      "triggers": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity",
+        "find",
+        "matching",
+        "tenders",
+        "open",
+        "au",
+        "nz",
+        "government",
+        "what"
+      ],
+      "path": "skills/find-matching-tenders/SKILL.md"
     },
     {
       "id": "finishing-a-development-branch",
@@ -47806,6 +47942,40 @@
       "path": "skills/scikit-learn/SKILL.md"
     },
     {
+      "id": "screen-adverse-media",
+      "canonical_id": "screen-adverse-media",
+      "name": "screen-adverse-media",
+      "description": "Screen a person or organisation for adverse media coverage, PEP status, and sanctions exposure — corroboration-gated, returns \"review\" never \"guilty\". Use when the user asks to screen someone before onboarding, partnership, or investment; for AML/CTF flows; or for ongoing counterparty monitoring.",
+      "category": "document-verification",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Sketchjar/stipple-agent-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE",
+      "tags": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity"
+      ],
+      "triggers": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity",
+        "screen",
+        "adverse",
+        "media",
+        "person",
+        "organisation",
+        "coverage",
+        "pep",
+        "status"
+      ],
+      "path": "skills/screen-adverse-media/SKILL.md"
+    },
+    {
       "id": "screen-reader-testing",
       "canonical_id": "screen-reader-testing",
       "name": "screen-reader-testing",
@@ -58137,6 +58307,74 @@
         "success"
       ],
       "path": "skills/verification-before-completion/SKILL.md"
+    },
+    {
+      "id": "verify-citations",
+      "canonical_id": "verify-citations",
+      "name": "verify-citations",
+      "description": "Verify citations and references in a document, report, or article against real sources. Use when the user asks to fact-check, verify references, check citations, or validate evidence in research reports, tender responses, whitepapers, or academic writing.",
+      "category": "document-verification",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Sketchjar/stipple-agent-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE",
+      "tags": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity"
+      ],
+      "triggers": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity",
+        "verify",
+        "citations",
+        "references",
+        "document",
+        "report",
+        "article",
+        "against",
+        "real"
+      ],
+      "path": "skills/verify-citations/SKILL.md"
+    },
+    {
+      "id": "verify-document",
+      "canonical_id": "verify-document",
+      "name": "verify-document",
+      "description": "Check whether a document (PDF or image) shows signs of tampering or forgery before you rely on it. Use when the user asks to verify a payslip, invoice, bank statement, ID document, contract, or any document where authenticity matters.",
+      "category": "document-verification",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Sketchjar/stipple-agent-skills",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE",
+      "tags": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity"
+      ],
+      "triggers": [
+        "document-verification",
+        "fact-checking",
+        "stipple",
+        "authenticity",
+        "verify",
+        "document",
+        "check",
+        "whether",
+        "pdf",
+        "image",
+        "shows",
+        "signs"
+      ],
+      "path": "skills/verify-document/SKILL.md"
     },
     {
       "id": "vexor",
