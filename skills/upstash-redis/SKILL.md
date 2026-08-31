@@ -96,7 +96,7 @@ const [hsetResult, signups, zaddResult] = await pipeline.exec();
 ```
 
 `pipeline()` batches independent commands into one round trip. It is not
-atomic; use `redis.multi()` for MULTI/EXEC or `redis.eval()` for a Lua script
+atomic; use `redis.multi()` for MULTI/EXEC or a reviewed server-side Lua script
 when commands must run as one unit.
 
 ## Best Practices
