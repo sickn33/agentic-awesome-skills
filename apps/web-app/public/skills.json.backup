@@ -42912,6 +42912,43 @@
     }
   },
   {
+    "id": "slideops",
+    "path": "skills/slideops",
+    "category": "content",
+    "name": "slideops",
+    "description": "Turn a repository into a cited HTML slide deck and detect the day it drifts from the code. Citations record file, lines, and hash; a stdlib check reports CURRENT, MOVED, or CHANGED.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-08-31",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    },
+    "source_type": "community",
+    "source_repo": "glukicov/slideops",
+    "license": "MIT",
+    "license_source": "https://github.com/glukicov/slideops/blob/main/LICENSE",
+    "tags": [
+      "slides",
+      "presentations",
+      "documentation",
+      "docs-as-code",
+      "drift-detection",
+      "citations",
+      "html"
+    ]
+  },
+  {
     "id": "slo-implementation",
     "path": "skills/slo-implementation",
     "category": "reliability",

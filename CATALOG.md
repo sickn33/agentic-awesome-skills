@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-30T10:02:50.000Z
 
-Total skills: 2097
+Total skills: 2098
 
 ## agent-behavior (5)
 
@@ -753,7 +753,7 @@ Total skills: 2097
 | --- | --- | --- | --- | --- | --- |
 | `web-project-brainstorming` | Masterclass framework for brainstorming web development projects and page designs. Outlines structural phases for concept, UX flow, styling aesthetics, techn... | safe | self | brainstorming, project-planning, web-development, product-scoping, design-system, architecture | brainstorming, project-planning, web-development, product-scoping, design-system, architecture, web, masterclass, framework, development, page, designs |
 
-## content (66)
+## content (67)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -812,6 +812,7 @@ Total skills: 2097
 | `seo-plan` | Strategic SEO planning for new or existing websites. Industry-specific templates, competitive analysis, content strategy, and implementation roadmap. Use whe... | critical | https://github.com/AgriciDaniel/claude-seo | seo, plan | seo, plan, strategic, planning, new, existing, websites, industry, specific, competitive, analysis, content |
 | `seo-snippet-hunter` | Formats content to be eligible for featured snippets and SERP features. Creates snippet-optimized content blocks based on best practices. Use PROACTIVELY for... | none | community | seo, snippet, hunter | seo, snippet, hunter, formats, content, eligible, featured, snippets, serp, features, creates, optimized |
 | `seo-structure-architect` | Analyzes and optimizes content structure including header hierarchy, suggests schema markup, and internal linking opportunities. Creates search-friendly cont... | safe | community | seo, structure | seo, structure, architect, analyzes, optimizes, content, including, header, hierarchy, suggests, schema, markup |
+| `slideops` | Turn a repository into a cited HTML slide deck and detect the day it drifts from the code. Citations record file, lines, and hash; a stdlib check reports CUR... | critical | glukicov/slideops | slides, presentations, documentation, docs-as-code, drift-detection, citations, html | slides, presentations, documentation, docs-as-code, drift-detection, citations, html, slideops, turn, repository, cited, slide |
 | `tutorial-engineer` | Creates step-by-step tutorials and educational content from code. Transforms complex concepts into progressive learning experiences with hands-on examples. | safe | community | tutorial | tutorial, engineer, creates, step, tutorials, educational, content, code, transforms, complex, concepts, progressive |
 | `wiki-architect` | You are a documentation architect that produces structured wiki catalogues and onboarding guides from codebases. | critical | community | wiki | wiki, architect, documentation, produces, structured, catalogues, onboarding, guides, codebases |
 | `wiki-changelog` | Generate structured changelogs from git history. Use when user asks "what changed recently", "generate a changelog", "summarize commits" or user wants to und... | safe | community | wiki, changelog | wiki, changelog, generate, structured, changelogs, git, history, user, asks, what, changed, recently |

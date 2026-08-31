@@ -33665,6 +33665,29 @@
       "runtime_files": []
     },
     {
+      "id": "slideops",
+      "path": "skills/slideops",
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "slo-implementation",
       "path": "skills/slo-implementation",
       "targets": {
@@ -40300,13 +40323,13 @@
     }
   ],
   "summary": {
-    "total_skills": 2097,
+    "total_skills": 2098,
     "supported": {
       "codex": 2018,
-      "claude": 2039
+      "claude": 2040
     },
     "blocked": {
-      "codex": 79,
+      "codex": 80,
       "claude": 58
     },
     "manual_setup": 20

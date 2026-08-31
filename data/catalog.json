@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-30T10:02:50.000Z",
-  "total": 2097,
+  "total": 2098,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -51164,6 +51164,43 @@
         "analyzer"
       ],
       "path": "skills/sleep-analyzer/SKILL.md"
+    },
+    {
+      "id": "slideops",
+      "canonical_id": "slideops",
+      "name": "slideops",
+      "description": "Turn a repository into a cited HTML slide deck and detect the day it drifts from the code. Citations record file, lines, and hash; a stdlib check reports CURRENT, MOVED, or CHANGED.",
+      "category": "content",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "glukicov/slideops",
+      "license": "MIT",
+      "license_source": "https://github.com/glukicov/slideops/blob/main/LICENSE",
+      "tags": [
+        "slides",
+        "presentations",
+        "documentation",
+        "docs-as-code",
+        "drift-detection",
+        "citations",
+        "html"
+      ],
+      "triggers": [
+        "slides",
+        "presentations",
+        "documentation",
+        "docs-as-code",
+        "drift-detection",
+        "citations",
+        "html",
+        "slideops",
+        "turn",
+        "repository",
+        "cited",
+        "slide"
+      ],
+      "path": "skills/slideops/SKILL.md"
     },
     {
       "id": "slo-implementation",
