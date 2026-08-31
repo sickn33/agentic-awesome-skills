@@ -2,7 +2,7 @@
 name: obsidian-learning-harness
 description: Connects active learning tutor workflows with Obsidian notes, formatting live Markdown logs, rendering LaTeX math, and generating verified SVG visual assets via sub-agents.
 category: workflow
-risk: safe
+risk: critical
 source: community
 date_added: "2026-08-31"
 tags: [obsidian, active-learning, latex, svg, sub-agents, markdown-log, visual-assets]
@@ -54,13 +54,23 @@ flowchart LR
 
 ---
 
+## Vault Mutation Safety Gates
+
+Because writing to an Obsidian vault modifies user files on disk, agents executing this skill must adhere to the following safety invariants:
+
+1. **Explicit Target Path Verification:** Confirm the active vault directory with the user before performing the initial write. Never assume paths or write outside the designated vault root.
+2. **Collision Detection:** Check if the destination file (`.md` or `.svg`) already exists. If a file exists, request confirmation before overwriting or append to an explicit new section.
+3. **Write Preview & Approval:** Present a concise preview of the content block or file path before executing file modifications or creating new assets.
+
+---
+
 ## Technical Harness Components
 
 ### 1. Real-Time Session Logging (.md / MD Log)
 
 All active learning interactions should be appended sequentially into a clean, well-structured Obsidian note:
 
-```markdown
+````markdown
 ---
 title: "Session: Differential Forms and Co-vectors"
 date: 2026-08-31
@@ -88,7 +98,7 @@ graph TD
 
 > [!QUESTION] Checkpoint Mini-Quiz
 > [Active diagnostic question with calibrated options]
-```
+````
 
 ---
 
