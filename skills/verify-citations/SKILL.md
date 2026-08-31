@@ -2,7 +2,7 @@
 name: verify-citations
 description: Verify citations and references in a document, report, or article against real sources. Use when the user asks to fact-check, verify references, check citations, or validate evidence in research reports, tender responses, whitepapers, or academic writing.
 category: document-verification
-risk: safe
+risk: critical
 source: community
 source_repo: Sketchjar/stipple-agent-skills
 source_type: community
@@ -10,6 +10,8 @@ date_added: "2026-08-31"
 author: Sketchjar
 tags: [document-verification, fact-checking, stipple, authenticity]
 tools: [claude, cursor, gemini, codex]
+license: "Apache-2.0"
+license_source: "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE"
 ---
 
 # Citation Verification
@@ -66,6 +68,17 @@ Arithmetic: 12/13 recompute correctly
 Unsupported claims: 2
   [!] "industry-leading accuracy" — no source in document
 ```
+
+## Limitations and Safety
+
+- Uploading a report or manuscript sends its contents to a hosted third party; deep
+  mode also retrieves external sources. Obtain approval before transmission, remove
+  confidential or personal material, and verify current retention and deletion terms.
+- Resolution and textual support do not establish that a source is authoritative or
+  that a claim is true. Inspect consequential citations in the primary source and
+  preserve page, edition, date, and access context.
+- Treat unresolved or unsupported claims as review items, not proof of fabrication,
+  and keep a human reviewer responsible for publication or academic decisions.
 
 ## Notes
 

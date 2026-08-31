@@ -2,7 +2,7 @@
 name: extract-document-data
 description: Extract structured, grounded fields from documents — values cite their page, missing values abstain instead of hallucinating. Use for parsing invoices, payslips, statements, contracts.
 category: document-verification
-risk: safe
+risk: critical
 source: community
 source_repo: Sketchjar/stipple-agent-skills
 source_type: community
@@ -10,6 +10,8 @@ date_added: "2026-08-31"
 author: Sketchjar
 tags: [document-verification, fact-checking, stipple, authenticity]
 tools: [claude, cursor, gemini, codex]
+license: "Apache-2.0"
+license_source: "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE"
 ---
 
 # Extract Document Data
@@ -74,6 +76,19 @@ Payslip fields (grounded, not guessed):
 not_found: ytd_tax
 (absences are reported, never hallucinated)
 ```
+
+## Limitations and Safety
+
+- Invoices, statements, payslips, and contracts often contain sensitive personal,
+  financial, or commercial data. Obtain explicit approval before uploading them to
+  a hosted third party, minimize the submitted content, and confirm current
+  retention, residency, access, and deletion terms.
+- Confidence and page grounding do not prove that an extracted value is correct or
+  that the source document is authentic. Reconcile consequential values against the
+  original document and authoritative systems before payment, lending, accounting,
+  compliance, or legal action.
+- Keep the original file and extraction response so a human reviewer can reproduce
+  and correct disputed fields.
 
 ## Notes
 

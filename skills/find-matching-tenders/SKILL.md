@@ -2,7 +2,7 @@
 name: find-matching-tenders
 description: Find open AU/NZ government tenders matching what a company does, ranked by fit with why and gap analysis. Use when the user asks to find tenders, bid opportunities, government contracts, or RFPs for their business (or a client's).
 category: document-verification
-risk: safe
+risk: critical
 source: community
 source_repo: Sketchjar/stipple-agent-skills
 source_type: community
@@ -10,6 +10,8 @@ date_added: "2026-08-31"
 author: Sketchjar
 tags: [document-verification, fact-checking, stipple, authenticity]
 tools: [claude, cursor, gemini, codex]
+license: "Apache-2.0"
+license_source: "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE"
 ---
 
 # Find Matching Tenders
@@ -78,6 +80,17 @@ Found 403 open tenders matching "construction" (AU/NZ)
 
 #2 [NZ] ...
 ```
+
+## Limitations and Safety
+
+- The hosted service receives the search terms and, for matching, the supplied
+  company URL or description. Obtain approval before sending private capability or
+  client information and do not include secrets or non-public bid strategy.
+- Feed coverage and freshness can be incomplete. Confirm eligibility, scope,
+  amendments, deadlines, and submission instructions on the issuing authority's
+  primary tender page before investing time or submitting a bid.
+- Match scores and gap analysis are triage signals, not procurement advice, an
+  eligibility ruling, or a probability of winning.
 
 ## Notes
 

@@ -2,7 +2,7 @@
 name: check-identity-pack
 description: Run an AFP 100-point or AUSTRAC safe-harbour identity check over a set of documents, and report exactly what's missing. Use when the user asks to check identity documents, verify someone's ID for onboarding, or assess whether a document pack satisfies Australian identity requirements.
 category: document-verification
-risk: safe
+risk: critical
 source: community
 source_repo: Sketchjar/stipple-agent-skills
 source_type: community
@@ -10,6 +10,8 @@ date_added: "2026-08-31"
 author: Sketchjar
 tags: [document-verification, fact-checking, stipple, authenticity]
 tools: [claude, cursor, gemini, codex]
+license: "Apache-2.0"
+license_source: "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE"
 ---
 
 # Check Identity Pack
@@ -64,6 +66,19 @@ AFP 100-point check: incomplete
   exactly what is missing:
     -> evidence of current residential address within last 3 months
 ```
+
+## Limitations and Safety
+
+- This workflow uploads identity and address documents to a hosted third-party
+  service. Obtain the user's explicit approval before transmission, minimize the
+  files and fields sent, and confirm the provider's current retention, residency,
+  access, and deletion terms for the intended jurisdiction.
+- A points result is an aid to review, not a legal KYC/AML determination. Verify
+  scheme rules against current AFP, AUSTRAC, and organizational requirements and
+  keep a qualified human reviewer responsible for the onboarding decision.
+- Never treat a passing score as proof that a document is genuine or that the
+  named person controls it; run independent authenticity and liveness checks where
+  the decision warrants them.
 
 ## Notes
 

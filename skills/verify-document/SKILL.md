@@ -2,7 +2,7 @@
 name: verify-document
 description: Check whether a document (PDF or image) shows signs of tampering or forgery before you rely on it. Use when the user asks to verify a payslip, invoice, bank statement, ID document, contract, or any document where authenticity matters.
 category: document-verification
-risk: safe
+risk: critical
 source: community
 source_repo: Sketchjar/stipple-agent-skills
 source_type: community
@@ -10,6 +10,8 @@ date_added: "2026-08-31"
 author: Sketchjar
 tags: [document-verification, fact-checking, stipple, authenticity]
 tools: [claude, cursor, gemini, codex]
+license: "Apache-2.0"
+license_source: "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE"
 ---
 
 # Document Verification
@@ -71,6 +73,18 @@ evidence (signals):
   [pass] Font discontinuity in value: Numeric values share the font of surrounding text.
   [skip] Identifier checksum: No checksummable identifier (ABN/ACN/TFN) present.
 ```
+
+## Limitations and Safety
+
+- This workflow uploads documents to a hosted third party. Obtain explicit approval,
+  minimize personal, financial, identity, and confidential data, and confirm the
+  provider's current retention, residency, access, and deletion terms first.
+- Forensic signals can miss sophisticated tampering or flag benign editing, scanning,
+  compression, and template artifacts. A low-risk result is not proof of authenticity,
+  and a high-risk result is not proof of fraud.
+- Preserve the original bytes and use authoritative issuer verification plus a
+  qualified human reviewer before payment, onboarding, lending, employment,
+  disciplinary, compliance, or legal action.
 
 ## Notes
 

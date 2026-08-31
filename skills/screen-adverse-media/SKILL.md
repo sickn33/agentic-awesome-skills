@@ -2,7 +2,7 @@
 name: screen-adverse-media
 description: Screen a person or organisation for adverse media coverage, PEP status, and sanctions exposure — corroboration-gated, returns "review" never "guilty". Use when the user asks to screen someone before onboarding, partnership, or investment; for AML/CTF flows; or for ongoing counterparty monitoring.
 category: document-verification
-risk: safe
+risk: critical
 source: community
 source_repo: Sketchjar/stipple-agent-skills
 source_type: community
@@ -10,6 +10,8 @@ date_added: "2026-08-31"
 author: Sketchjar
 tags: [document-verification, fact-checking, stipple, authenticity]
 tools: [claude, cursor, gemini, codex]
+license: "Apache-2.0"
+license_source: "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE"
 ---
 
 # Screen Adverse Media
@@ -76,6 +78,19 @@ sanctions list signals: 0
 
 This screen returns "review", never "guilty" — every hit is corroboration-gated.
 ```
+
+## Limitations and Safety
+
+- Screening processes personal data and potentially damaging allegations through a
+  hosted third party. Confirm a lawful purpose, obtain any required approval, send
+  only the minimum identifiers needed, and verify current retention, residency,
+  access, and deletion terms before transmission.
+- Name matches, PEP signals, sanctions hits, and media reports can be incomplete,
+  stale, misattributed, or false. Corroborate every consequential result with the
+  original source and authoritative registers; never publish an allegation as fact.
+- This is not a legal AML/CTF determination. A qualified human reviewer must resolve
+  identity ambiguity, document the reasoning, and provide an appropriate correction
+  or appeal path before rejecting or restricting a person or organization.
 
 ## Notes
 

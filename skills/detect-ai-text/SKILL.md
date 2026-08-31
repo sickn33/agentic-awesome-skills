@@ -2,7 +2,7 @@
 name: detect-ai-text
 description: Estimate whether a document's prose was written by AI, with the linguistic tells and honest abstention on non-prose. Use when the user asks whether an essay, report, CV, submission, or article was AI-generated — for triage, not proof.
 category: document-verification
-risk: safe
+risk: critical
 source: community
 source_repo: Sketchjar/stipple-agent-skills
 source_type: community
@@ -10,6 +10,8 @@ date_added: "2026-08-31"
 author: Sketchjar
 tags: [document-verification, fact-checking, stipple, authenticity]
 tools: [claude, cursor, gemini, codex]
+license: "Apache-2.0"
+license_source: "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LICENSE"
 ---
 
 # AI-Text Detection
@@ -69,6 +71,18 @@ linguistic tells:
 reasoning: The text relies entirely on formulaic transition clichés...
 limitations: The probability is the model's CONFIDENCE, not a calibrated truth.
 ```
+
+## Limitations and Safety
+
+- AI-text detection is probabilistic and can disproportionately flag templated,
+  coached, translated, accessibility-assisted, or non-native-English writing. Do
+  not use it as proof of misconduct or as the sole basis for employment, academic,
+  publishing, or disciplinary action.
+- Uploading a document sends its contents to a hosted third party. Obtain explicit
+  approval first, remove unnecessary personal or confidential material, and verify
+  the provider's current retention and deletion terms.
+- Preserve the original work and give the affected person a meaningful human review
+  and appeal path before any consequential decision.
 
 ## Notes
 
