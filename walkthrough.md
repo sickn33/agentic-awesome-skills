@@ -1,3 +1,14 @@
+# FLOSS/fund sustainability application - 2026-08-31
+
+- Added a public `funding.json` manifest using the current v1.1.0 schema for a
+  one-time USD 25,000 AAS sustainability request.
+- Tied the request to a concrete 12-month allocation covering maintainer and
+  reviewer time, security and provenance work, CI and catalog infrastructure,
+  and documentation and community support.
+- Kept bank details and funding history out of the public manifest; payment and
+  tax documentation remain private follow-up items if the application is
+  selected.
+
 # Multi-source evidence integrity repair - 2026-08-20
 
 - Ported the executable follow-up from community PR #1204 onto the protected
