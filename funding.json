@@ -1,0 +1,66 @@
+{
+  "$schema": "https://fundingjson.org/schema/v1.1.0.json",
+  "version": "v1.1.0",
+  "entity": {
+    "type": "individual",
+    "role": "maintainer",
+    "name": "Nick (sickn33)",
+    "email": "niccolo.lucioli@hotmail.com",
+    "description": "Independent maintainer of Agentic Awesome Skills (AAS), an open-source, local-first catalog and toolchain for discovering, selecting, validating, and installing reusable agent skills across AI coding assistants. I coordinate releases, security and provenance review, contributor support, and the public catalog.",
+    "webpageUrl": {
+      "url": "https://github.com/sickn33"
+    }
+  },
+  "projects": [
+    {
+      "guid": "agentic-awesome-skills",
+      "name": "Agentic Awesome Skills",
+      "description": "Agentic Awesome Skills is an MIT-licensed open-source toolchain and CC BY 4.0 knowledge library that helps developers discover, evaluate, and install reusable skills for Codex, Claude Code, Cursor, Gemini CLI, and related assistants. It provides an npm CLI, local MCP server, browser-local Workbench, plugin bundles, validation and security tooling, and a public catalog of more than 2,097 skills. Created in January 2026, it had 45,719 GitHub stars, 6,687 forks, and 15,900 npm downloads during the measured period from 31 July to 29 August 2026. The project is independently maintained and accepts community contributions.",
+      "webpageUrl": {
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "repositoryUrl": {
+        "url": "https://github.com/sickn33/agentic-awesome-skills"
+      },
+      "licenses": [
+        "spdx:MIT",
+        "spdx:CC-BY-4.0"
+      ],
+      "tags": [
+        "artificial-intelligence",
+        "developer-tools",
+        "development",
+        "documentation",
+        "knowledge",
+        "productivity",
+        "programming",
+        "security",
+        "software-engineering",
+        "devops"
+      ]
+    }
+  ],
+  "funding": {
+    "channels": [
+      {
+        "guid": "bank-transfer",
+        "type": "bank",
+        "description": "Bank transfer details will be supplied privately after selection and due diligence."
+      }
+    ],
+    "plans": [
+      {
+        "guid": "aas-sustainability-2026",
+        "status": "active",
+        "name": "AAS 12-month sustainability programme",
+        "description": "Support one year of AAS maintenance: triage and review community contributions; maintain releases, the public catalog, and npm, MCP, and plugin distribution; strengthen provenance and security checks; improve documentation; and cover CI, hosting, and testing. Allocation: USD 10,000 maintainer/reviewer time; USD 7,500 security/provenance; USD 5,000 CI/catalog infrastructure; USD 2,500 documentation/community support. Progress and significant outputs will be reported publicly.",
+        "amount": 25000,
+        "currency": "USD",
+        "frequency": "one-time",
+        "channels": [
+          "bank-transfer"
+        ]
+      }
+    ]
+  }
+}
