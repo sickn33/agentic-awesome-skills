@@ -5,6 +5,8 @@
 - Tied the request to a concrete 12-month allocation covering maintainer and
   reviewer time, security and provenance work, CI and catalog infrastructure,
   and documentation and community support.
+- Kept the plan description within the directory's 500-character validation
+  limit while retaining the complete allocation.
 - Kept bank details and funding history out of the public manifest; payment and
   tax documentation remain private follow-up items if the application is
   selected.
