@@ -299,9 +299,10 @@ grep -in "lovable" components.json eslint.config.js
 ### Area 15 · Favicon removal & stale CDN caches (Vercel)
 
 Lovable ships a default `favicon.ico` that browsers auto-request from site root
-and that routinely survives cleanup as a stale Vercel edge cache entry. Handle
-the four steps — overwrite in place, link all icon flavours, set revalidatable
-cache headers, verify after deploy — and the full commands/JSON live in
+and that can remain visible after cleanup through browser or CDN caching. Handle
+the four steps — replace the path, link all icon flavours, keep unversioned icon
+URLs revalidatable, and verify after deploy — then purge the confirmed Vercel
+project cache only if the live response stays stale. Full commands/JSON live in
 [references/favicon-vercel-cleanup.md](references/favicon-vercel-cleanup.md).
 
 ---
@@ -399,10 +400,10 @@ wrapper — React-level title tags override `index.html` at runtime.
 ### Problem: Old favicon still serving after deletion (Vercel)
 
 **Symptoms:** `curl -sI https://<domain>/favicon.ico` returns the old ETag with
-`x-vercel-cache: HIT`; dashboard purges don't clear it  
+`x-vercel-cache: HIT` after the replacement deployment.
 **Solution:** Overwrite `public/favicon.ico` with replacement content (a transparent
-1×1 ICO if no real asset yet) so the ETag changes — see Area 15. Never rely on an
-empty-deploy "redeploy" commit alone.
+1×1 ICO if no real asset yet), verify the custom domain, then use the explicit
+Vercel CDN purge only if the response remains stale — see Area 15.
 
 ---
 

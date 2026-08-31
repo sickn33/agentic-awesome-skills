@@ -1,17 +1,16 @@
 # Favicon removal & stale CDN caches (Vercel)
 
 Lovable ships a default `favicon.ico`, and browsers auto-request it from site
-root even when `index.html` links a different icon. On Vercel this one file
-routinely survives cleanup — `200 OK` with `x-vercel-cache: HIT` and a stale
-ETag under `Cache-Control: public, max-age=0, must-revalidate` — for hours after
-the file is deleted and even after dashboard purges. Treat favicon removal as a
-cache problem, not a file problem.
+root even when `index.html` links a different icon. Browser and CDN layers can
+therefore keep showing the old icon after a replacement deployment. Treat the
+cleanup as both a file-path and cache-verification problem.
 
 ## 1 · Overwrite in place, don't delete
 
-Deleting a static file from `public/` does not reliably evict Vercel's edge
-copy. Overwriting the same path with replacement content forces a new ETag, so
-clients revalidate and the stale icon stops serving — no purge required.
+Prefer replacing the same path in the deployment instead of deleting it. The
+production URL then keeps returning a valid icon while the new bytes establish
+a new content identity; browsers that request `/favicon.ico` implicitly do not
+fall back to an old cached asset merely because the HTML link changed.
 
 If no real brand icon is ready, write a valid transparent 1×1 ICO:
 
@@ -50,53 +49,70 @@ exist and the modern/Apple entry points should too:
 `apple-touch-icon.png` must be a real PNG (recommended 180×180). A solid brand-
 colour square is an acceptable placeholder; flag it for later replacement.
 
-## 3 · Add cache headers (`vercel.json`)
+## 3 · Keep unversioned icon URLs revalidatable (`vercel.json`)
 
-Vercel's default `public, max-age=0, must-revalidate` for static files makes
-every page load revalidate the favicon. Cache what is final and keep what may
-still be replaced revalidatable:
+Vercel documents `public, max-age=0, must-revalidate` as its default response
+policy and recommends long-lived `immutable` caching for content-hashed assets.
+The standard favicon entry points below are not content-hashed, so keep them
+revalidatable unless the HTML points at a versioned filename:
 
-- `/favicon.svg`, `/apple-touch-icon.png` — final brand assets →
-  `public, max-age=31536000, immutable`
-- `/favicon.ico` — an old-format fallback that may later be swapped for real art
-  → `public, max-age=86400` (no `immutable`)
+- `/favicon.ico`, `/favicon.svg`, `/apple-touch-icon.png` →
+  `public, max-age=0, must-revalidate`
+- A content-hashed asset such as `/favicon-a1b2c3.svg` may use
+  `public, max-age=31536000, immutable`.
 
 ```json
 {
   "headers": [
     {
       "source": "/favicon.ico",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
     },
     {
       "source": "/favicon.svg",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
     },
     {
       "source": "/apple-touch-icon.png",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
     }
   ]
 }
 ```
 
-✅ Never mark an unversioned URL `immutable` while a placeholder may still be
-swapped — `immutable` tells browsers not to revalidate for the max-age lifetime,
-so a later replacement won't propagate for up to a year. Use `immutable` only on
-versioned URLs (e.g. `/favicon-<hash>.svg`) or once content is final.
+Never mark an unversioned icon URL `immutable`: it tells browsers not to
+revalidate for the max-age lifetime, so a replacement may not propagate for up
+to a year. Use `immutable` only on content-hashed URLs.
 
 ## 4 · Verify after deploy
 
 <!-- security-allowlist: remote curl header check of own domain, read-only -->
 ```bash
 curl -sI https://YOUR-DOMAIN/favicon.ico \
-  | grep -i "cache-control\|etag"
+  | grep -i "cache-control\|etag\|x-vercel-cache"
 ```
 
-Expect a new ETag (and, for `/favicon.svg`, `Cache-Control: public,
-max-age=31536000, immutable`). `/favicon.ico` should stay revalidatable
-(`public, max-age=86400`).
+Expect the replacement ETag and `Cache-Control: public, max-age=0,
+must-revalidate` on the unversioned icon URLs.
+
+If the confirmed production domain still serves the old edge response, verify
+the linked Vercel project and team first, ask for explicit approval, then purge
+that project's CDN cache:
+
+<!-- security-allowlist: explicit remote cache purge for the confirmed Vercel project; requires user approval -->
+```bash
+vercel cache purge --type cdn
+```
+
+Re-run the header check after the purge. Do not purge a project inferred only
+from the current directory or a preview URL.
 
 **Gotcha — the staging URL:** a `*.vercel.app` preview may be SSO-protected
 (`_vercel_sso_nonce` 302) and wrap deploys in a provider frame that injects
 platform branding. Always verify icons on the real custom domain.
+
+## Official references
+
+- [Vercel Cache-Control headers](https://vercel.com/docs/caching/cache-control-headers)
+- [Vercel CDN cache](https://vercel.com/docs/caching/cdn-cache)
+- [Vercel cache purge CLI](https://vercel.com/docs/cli/cache)
