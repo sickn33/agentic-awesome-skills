@@ -9,6 +9,148 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [16.5.0] - 2026-08-31 - "Document Trust and Safer Automation"
+
+> Added ten reviewed skills for document trust, repository-backed slide decks,
+> serverless Redis, and distributed rate limiting; resolved the complete
+> exported security-findings batch. The published catalog contains 2,107
+> skills.
+
+This release helps Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and
+related AI coding assistants inspect documents with explicit human-review
+boundaries, keep code-derived presentations tied to their source, and use
+Upstash Redis and rate limiting without hiding production mutation or
+fail-open behavior.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- [`verify-document`](skills/verify-document/) and
+  [`verify-citations`](skills/verify-citations/) for evidence-labeled document
+  and source checks.
+- [`slideops`](skills/slideops/) for cited HTML decks with later drift
+  detection.
+- [`upstash-redis`](skills/upstash-redis/) and
+  [`upstash-ratelimit`](skills/upstash-ratelimit/) for serverless data and
+  traffic controls.
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+
+### Added
+
+- Added seven Stipple-backed document-trust skills for document forensics,
+  citation verification, grounded extraction, Australian identity-pack gap
+  checks, adverse-media review, AU/NZ tender matching, and AI-text triage. Each
+  declares hosted-data transmission, consequential-decision, false-positive,
+  and qualified-human-review boundaries
+  ([#1305](https://github.com/sickn33/agentic-awesome-skills/pull/1305)).
+- Added [`slideops`](skills/slideops/) for repository-derived HTML decks whose
+  code excerpts carry file, line, hash, and build-commit citations. The
+  catalog copy pins upstream v1.0.0 and requires approval before installation,
+  home-directory symlinks, optional downloads, or deck writes
+  ([#1306](https://github.com/sickn33/agentic-awesome-skills/pull/1306)).
+- Added [`upstash-redis`](skills/upstash-redis/) and
+  [`upstash-ratelimit`](skills/upstash-ratelimit/) with explicit transaction,
+  latency, algorithm, timeout, and edge-runtime limits; connected five
+  existing queue, workflow, caching, and retry skills to the new routes
+  ([#1307](https://github.com/sickn33/agentic-awesome-skills/pull/1307)).
+- Added a public FLOSS funding manifest with dated repository and npm evidence,
+  a bounded sustainability plan, and a documented public/private boundary;
+  then aligned its description with the live directory validator's
+  500-character constraint
+  ([#1299](https://github.com/sickn33/agentic-awesome-skills/pull/1299),
+  [#1301](https://github.com/sickn33/agentic-awesome-skills/pull/1301)).
+
+### Changed
+
+- Expanded [`lovable-cleanup`](skills/lovable-cleanup/) with Vercel favicon and
+  CDN-cache recovery: overwrite-in-place semantics, complete icon linkage,
+  cache-header guidance, and post-deployment verification
+  ([#1296](https://github.com/sickn33/agentic-awesome-skills/pull/1296)).
+- Regenerated the canonical catalog, offline AAS Core data, tracked web assets,
+  marketplaces, editorial bundles, compatibility reports, and Codex/Claude
+  plugin distributions for 2,107 skills.
+
+### Fixed
+
+- Replaced executable JavaScript parsing in Liuguang Banlan manifest helpers
+  with a strict size-bounded parser, removed a mutable Agent QA `npx` fallback,
+  and corrected mutation-risk metadata across Atlas, babysitting, and delegation
+  skills
+  ([#1303](https://github.com/sickn33/agentic-awesome-skills/pull/1303)).
+- Hardened pentest bootstrap instructions against mutable pipe-to-shell use;
+  made Atlas temporary and final output handling symlink- and overwrite-aware;
+  added a symlink-safe favicon writer; enforced Boost.Asio frame caps before
+  allocation; rejected raw control characters before URL parsing; and pinned
+  Unsloth model and dataset revisions with approval and provenance gates
+  ([#1303](https://github.com/sickn33/agentic-awesome-skills/pull/1303)).
+- Removed a documentation-security false positive by describing atomic Upstash
+  Lua scripting without presenting a dynamic evaluation call
+  ([#1307](https://github.com/sickn33/agentic-awesome-skills/pull/1307)).
+
+### Security and Reliability
+
+- Classified all hosted document, identity, screening, database, rate-limit,
+  and installer-backed workflows as critical where they transmit sensitive
+  data, mutate remote state, deny traffic, install links, or write output.
+- Required explicit approval and data minimization before third-party document
+  uploads, and kept authenticity, misconduct, sanctions, tender, identity, and
+  citation results as bounded review signals rather than final verdicts.
+- Locked the exported security fixes with focused regression tests and kept
+  generated catalogs and mirrors in the protected canonical-sync lane.
+
+### Who should care
+
+- Compliance, finance, procurement, education, and operations teams that need
+  document triage without turning probabilistic API output into an automatic
+  consequential decision.
+- Platform engineers using serverless Redis, distributed rate limits, queues,
+  caching, or edge runtimes that need honest fail-open and mutation semantics.
+- Engineering teams publishing code-derived decks that must show when cited
+  snippets move or change.
+- Maintainers who need security-export findings resolved in source and then
+  propagated through protected canonical mirrors.
+
+### Validation
+
+- Passed repository and reference validation, documentation-security checks,
+  warning-budget enforcement, focused security regressions, the complete
+  repository test suite, web-app coverage, npm audits, and protected canonical
+  synchronization for the accepted source batch.
+- Verified exact-head maintainer review and PR evidence for every changed
+  canonical skill, with the redundant `ai-code-reviewer` proposal closed rather
+  than adding a third overlapping AI-code audit workflow.
+- Release publication additionally verifies clean final `main`, version and tag
+  parity, npm metadata, CI, CodeQL, release-only Pages, live catalog and legacy
+  bridge surfaces, and every already-configured local AAS MCP host.
+
+### Limitations
+
+- The Stipple skills depend on a hosted third-party service; users must evaluate
+  current retention, residency, deletion, legal, and organizational requirements
+  before transmitting sensitive documents or personal data.
+- Upstash behavior remains service-, plan-, region-, and SDK-version-dependent;
+  examples do not replace production load, timeout, consistency, or failure-mode
+  testing.
+- SlideOps verifies cited snippets against repository state but cannot prove that
+  uncited prose is correct or that a deck remains appropriate for its audience.
+- Focused hardening reduces known failure paths but is not an independent audit of
+  every bundled skill or upstream service.
+
+### Credits
+
+- **[@Sketchjar](https://github.com/Sketchjar)** for the seven document-trust
+  skills in
+  [#1305](https://github.com/sickn33/agentic-awesome-skills/pull/1305).
+- **[@glukicov](https://github.com/glukicov)** for `slideops` in
+  [#1306](https://github.com/sickn33/agentic-awesome-skills/pull/1306).
+- **[@CahidArda](https://github.com/CahidArda)** for the Upstash Redis and rate
+  limiting skills and routing updates in
+  [#1307](https://github.com/sickn33/agentic-awesome-skills/pull/1307).
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for the
+  Vercel favicon-cache recovery guidance in
+  [#1296](https://github.com/sickn33/agentic-awesome-skills/pull/1296).
+
 ## [16.4.0] - 2026-08-30 - "Sharper Reasoning and Safer Service Draining"
 
 > Refined falsification routing and graceful-shutdown guidance, retired a
