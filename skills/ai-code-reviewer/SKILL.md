@@ -35,9 +35,9 @@ Adapted from the free sample of the same name in [Hahaknight/claude-skills-pro](
 
 Find the user's actual request (the prompt, the issue, the spec). The review target is *that*, nothing more. AI code is graded against the request, not against general quality.
 
-### Step 2: Run it before reading it
+### Step 2: Run it before reading it — sandboxed
 
-Execute the code — tests, a real input, the actual command. Many hallucinations die instantly at runtime, which is far cheaper than discovering them by reading. Reading is for what execution can't catch.
+Execute the code — tests, a real input, the actual command — but only in a sandbox or throwaway checkout, with no credentials, secrets, or production data attached. Untrusted generated code can mutate files or touch the network at import time, before any human reads it; containment is the reviewer's responsibility. Inside that containment, execution is evidence: many hallucinations die instantly at runtime, which is far cheaper than discovering them by reading. Reading is for what execution can't catch.
 
 ### Step 3: Apply the defect taxonomy, file by file
 
@@ -69,10 +69,10 @@ Summary must state: what was requested vs what was delivered; hallucinations fou
 ### Example 1: Hallucinated API
 
 ```python
-# AI wrote — plausible, idiomatic, wrong:
-from datetime import UTC  # Python 3.11+: this name does NOT exist until 3.13
-datetime.now(tz=UTC)
-# Real surface: datetime.timezone.utc (all 3.x). One wrong symbol → audit every import in the diff.
+# AI wrote — plausible, idiomatic, wrong on the target runtime:
+from datetime import UTC  # datetime.UTC was added in Python 3.11; this project runs 3.10
+datetime.now(tz=UTC)      # → ImportError on 3.10, at first call
+# Real surface: datetime.timezone.utc (all of 3.x). One wrong symbol → audit every import in the diff.
 ```
 
 ### Example 2: Invented requirement
