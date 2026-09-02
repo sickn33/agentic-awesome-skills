@@ -215,4 +215,3 @@ cleaner.
 - `@folder-specific-claude-and-agents-md` - deeper guidance for scoped
   Claude/AGENTS instruction layouts.
 - [agents.md](https://agents.md/) - public format and scope guidance.
-- [Repo Agent Kit checker](https://repoagentkit.com/audit?utm_source=agentic-awesome-skills&utm_medium=skill&utm_campaign=agents-md) - optional browser-local second opinion for a finished, non-sensitive file. It does not replace repository evidence or local validation.
