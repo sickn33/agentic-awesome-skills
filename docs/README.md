@@ -19,6 +19,7 @@
 - [`users/kiro-integration.md`](users/kiro-integration.md)
 - [`users/visual-guide.md`](users/visual-guide.md)
 - [`users/local-config.md`](users/local-config.md)
+- [`users/skills-library-overview.md`](users/skills-library-overview.md)
 
 ## Contributors
 
