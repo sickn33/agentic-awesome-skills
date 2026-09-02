@@ -19,7 +19,7 @@
     "@fontsource/jetbrains-mono": "^5.3.0",
     "@fontsource/outfit": "^5.3.0",
     "@phosphor-icons/react": "^2.1.10",
-    "@supabase/supabase-js": "^2.112.2",
+    "@supabase/supabase-js": "^2.112.3",
     "github-markdown-css": "^5.9.0",
     "highlight.js": "^11.11.2",
     "react": "^19.2.8",
