@@ -1341,12 +1341,12 @@
   {
     "id": "agents-md",
     "path": "skills/agents-md",
-    "category": "ai-ml",
+    "category": "development",
     "name": "agents-md",
-    "description": "This skill should be used when the user asks to \"create AGENTS.md\", \"update AGENTS.md\", \"maintain agent docs\", \"set up CLAUDE.md\", or needs to keep agent instructions concise. Enforces research-backed best practices for minimal, high-signal agent documentation.",
+    "description": "Create, revise, or audit AGENTS.md files from repository evidence, verified commands, and correctly scoped instructions without overwriting maintainer intent.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-03-06",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -18039,6 +18039,35 @@
       "first-principles",
       "innovation",
       "strategy"
+    ]
+  },
+  {
+    "id": "email-issue-fixer",
+    "path": "skills/email-issue-fixer",
+    "category": "writing",
+    "name": "email-issue-fixer",
+    "description": "Fix small email mistakes without touching the writer's voice, and strip tracking parameters from links on request. Always returns the corrected draft plus a change list.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-01",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "email",
+      "proofreading",
+      "grammar",
+      "links"
     ]
   },
   {

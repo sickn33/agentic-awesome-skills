@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-31T17:01:39.000Z",
-  "total": 2107,
+  "total": 2108,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1727,8 +1727,8 @@
       "id": "agents-md",
       "canonical_id": "agents-md",
       "name": "agents-md",
-      "description": "This skill should be used when the user asks to \"create AGENTS.md\", \"update AGENTS.md\", \"maintain agent docs\", \"set up CLAUDE.md\", or needs to keep agent instructions concise. Enforces research-backed best practices for minimal, high-signal agent documentation.",
-      "category": "ai-ml",
+      "description": "Create, revise, or audit AGENTS.md files from repository evidence, verified commands, and correctly scoped instructions without overwriting maintainer intent.",
+      "category": "development",
       "risk": "critical",
       "source": "community",
       "tags": [
@@ -1738,16 +1738,16 @@
       "triggers": [
         "agents",
         "md",
-        "skill",
-        "should",
-        "used",
-        "user",
-        "asks",
-        "update",
-        "maintain",
-        "agent",
-        "docs",
-        "set"
+        "revise",
+        "audit",
+        "files",
+        "repository",
+        "evidence",
+        "verified",
+        "commands",
+        "correctly",
+        "scoped",
+        "instructions"
       ],
       "path": "skills/agents-md/SKILL.md"
     },
@@ -22265,6 +22265,37 @@
         "psicologica"
       ],
       "path": "skills/elon-musk/SKILL.md"
+    },
+    {
+      "id": "email-issue-fixer",
+      "canonical_id": "email-issue-fixer",
+      "name": "email-issue-fixer",
+      "description": "Fix small email mistakes without touching the writer's voice, and strip tracking parameters from links on request. Always returns the corrected draft plus a change list.",
+      "category": "writing",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "email",
+        "proofreading",
+        "grammar",
+        "links"
+      ],
+      "triggers": [
+        "email",
+        "proofreading",
+        "grammar",
+        "links",
+        "issue",
+        "fixer",
+        "fix",
+        "small",
+        "mistakes",
+        "without",
+        "touching",
+        "writer"
+      ],
+      "path": "skills/email-issue-fixer/SKILL.md"
     },
     {
       "id": "email-security",

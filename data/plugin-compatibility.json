@@ -14699,6 +14699,25 @@
       "runtime_files": []
     },
     {
+      "id": "email-issue-fixer",
+      "path": "skills/email-issue-fixer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "email-security",
       "path": "skills/email-security",
       "targets": {
@@ -40494,10 +40513,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2107,
+    "total_skills": 2108,
     "supported": {
-      "codex": 2027,
-      "claude": 2049
+      "codex": 2028,
+      "claude": 2050
     },
     "blocked": {
       "codex": 80,
