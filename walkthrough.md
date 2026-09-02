@@ -514,3 +514,11 @@
 - Kept the host-specific full-library roots separate, flattened qualified paths only inside generated packages, and normalized AAS provenance/risk fields into standard string metadata without changing instruction bodies.
 - Pinned offline validation to an attributed snapshot of the official Agent Plugins 1.0.0 JSON Schema, added deterministic Codex prompt fallbacks, and covered closed-schema, fixed-discovery, pilot-bundle, and release-alignment regressions.
 - Updated the user onboarding trinity, plugin/bundle guides, maintainer contract, and release checklist while leaving the active release-notes PR untouched.
+
+# Maintenance Walkthrough - 2026-09-02 Source and Dependency Sweep
+
+- Merged the documentation overview and the safe `email-issue-fixer` skill after exact-head policy, evidence, source-validation, artifact-preview, and semantic-review gates passed.
+- Updated the Supabase and Highlight.js dependency lines through their contributor pull requests.
+- Repaired the `agents-md` contribution before merge so its evidence-first guidance remains source-only and contains no promotional link or unrelated walkthrough change.
+- Updated the web app lockfile from vulnerable `browserslist` `4.28.4` to `4.28.8`, including its lockfile-resolved browser-data dependencies; `npm audit` then reported zero known vulnerabilities for the web app.
+- Kept generated registries and contributor credits in the protected canonical-sync lane. No release was requested or published during this sweep.
