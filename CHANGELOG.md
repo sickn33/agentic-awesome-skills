@@ -9,6 +9,111 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [16.6.0] - 2026-09-02 - "Evidence-First Instructions and Safer Dependencies"
+
+> Added focused email cleanup, made AGENTS.md maintenance evidence-first, and
+> removed the web catalog's known Browserslist advisories. The published
+> catalog contains 2,108 skills.
+
+This release helps Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and
+related AI coding assistants maintain repository instructions without erasing
+project policy, polish email drafts without sending them, and use a catalog
+whose current npm dependency audit is clean.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- [`email-issue-fixer`](skills/email-issue-fixer/) for proofreading and optional
+  tracking-parameter cleanup without changing the sender's voice.
+- [`agents-md`](skills/agents-md/) for repository-evidence-first agent
+  instructions and scoped monorepo guidance.
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added [`email-issue-fixer`](skills/email-issue-fixer/) for typo, grammar,
+  clarity, and optional link-tracking cleanup while preserving intent, voice,
+  placeholders, and the boundary that the skill never sends the message
+  ([#1318](https://github.com/sickn33/agentic-awesome-skills/pull/1318)).
+- Added a curated full-library overview that maps capability areas, risk
+  labels, discovery paths, and distribution surfaces across the catalog
+  ([#1319](https://github.com/sickn33/agentic-awesome-skills/pull/1319)).
+
+### Changed
+
+- Reworked [`agents-md`](skills/agents-md/) around bounded repository evidence,
+  preservation of maintainer intent, nested scope, exact commands, and
+  proportionate validation instead of universal symlink, attribution, section,
+  or line-count mandates
+  ([#1315](https://github.com/sickn33/agentic-awesome-skills/pull/1315)).
+- Updated `@supabase/supabase-js` from 2.112.2 to 2.112.3 and `highlight.js`
+  from 11.11.1 to 11.11.2
+  ([#1316](https://github.com/sickn33/agentic-awesome-skills/pull/1316),
+  [#1317](https://github.com/sickn33/agentic-awesome-skills/pull/1317)).
+- Regenerated the canonical catalog, offline AAS Core data, tracked web assets,
+  marketplaces, editorial bundles, compatibility reports, and Codex/Claude
+  plugin distributions for 2,108 skills.
+
+### Fixed
+
+- Updated the web app lockfile from `browserslist` 4.28.4 to 4.28.8, resolving
+  the known unbounded-memory-growth and malformed-custom-stats crash/prototype
+  write advisories while keeping the dependency change lockfile-scoped
+  ([#1322](https://github.com/sickn33/agentic-awesome-skills/pull/1322)).
+
+### Security and Reliability
+
+- Kept `agents-md` repository edits behind diff review and preserved existing
+  approval gates, secrets boundaries, and tool-specific instruction files.
+- Required `email-issue-fixer` to redact token values, preserve placeholders,
+  avoid external transmission, and return edited text without sending it.
+- Verified zero known npm vulnerabilities in both the root package and web app
+  after the dependency updates.
+
+### Who should care
+
+- Maintainers who need AGENTS.md guidance grounded in the actual checkout rather
+  than generic conventions that can overwrite repository policy.
+- Teams using Claude Code, Cursor, Codex CLI, Gemini CLI, or Antigravity that
+  want a clearer entry point into the complete skill library.
+- Users who want conservative email proofreading and privacy-aware link cleanup
+  without handing over message delivery.
+- Catalog users who depend on the web application and its syntax-highlighting
+  and browser-compatibility dependency chain.
+
+### Validation
+
+- Passed validation for 2,108 canonical skills, reference validation,
+  documentation-security checks, warning-budget enforcement, plugin and bundle
+  convergence, 114 repository test groups, 176 web-app tests, lint, production
+  web build, npm audits, and protected exact-head merge gates.
+- Release publication additionally verifies clean final `main`, tag and npm
+  parity, CI, CodeQL, release-only Pages, current and legacy public surfaces,
+  and every already-configured local AAS MCP host.
+
+### Limitations
+
+- `email-issue-fixer` improves text and links but cannot verify a sender,
+  recipient, claim, attachment, or delivery outcome.
+- `agents-md` can only be as accurate as the repository evidence available in
+  the current checkout; contradictory policy still requires maintainer judgment.
+- Dependency audits cover known advisories in the resolved package graph and do
+  not constitute an independent security audit of every skill or upstream
+  package.
+
+### Credits
+
+- **[@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI)** for
+  `email-issue-fixer` and the full skill-library overview in
+  [#1318](https://github.com/sickn33/agentic-awesome-skills/pull/1318) and
+  [#1319](https://github.com/sickn33/agentic-awesome-skills/pull/1319).
+- **[@sunxiayi](https://github.com/sunxiayi)** for the evidence-first
+  `agents-md` revision in
+  [#1315](https://github.com/sickn33/agentic-awesome-skills/pull/1315).
+
 ## [16.5.0] - 2026-08-31 - "Document Trust and Safer Automation"
 
 > Added ten reviewed skills for document trust, repository-backed slide decks,
