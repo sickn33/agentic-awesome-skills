@@ -2,7 +2,7 @@
 
 Generated at: 2026-08-31T17:01:39.000Z
 
-Total skills: 2107
+Total skills: 2108
 
 ## agent-behavior (5)
 
@@ -95,7 +95,7 @@ Total skills: 2107
 | `pilot-protocol` | Give an AI agent a permanent network address, encrypted P2P messaging, and an installable app store via Pilot Protocol | critical | pilot-protocol/pilotprotocol | agent-networking, p2p, nat-traversal, overlay-network, agent-apps | agent-networking, p2p, nat-traversal, overlay-network, agent-apps, pilot, protocol, give, ai, agent, permanent, network |
 | `pydantic-ai` | Build production-ready AI agents with PydanticAI — type-safe tool use, structured outputs, dependency injection, and multi-model support. | safe | community | pydantic-ai, ai-agents, llm, openai, anthropic, gemini, tool-use, structured-output, python | pydantic-ai, ai-agents, llm, openai, anthropic, gemini, tool-use, structured-output, python, pydantic, ai, agents |
 
-## ai-ml (133)
+## ai-ml (132)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -113,7 +113,6 @@ Total skills: 2107
 | `agentic-actions-auditor` | Audits GitHub Actions workflows for security vulnerabilities in AI agent integrations  including Claude Code Action,  Gemini CLI, OpenAI Codex, and GitHub AI... | safe | community | agentic, actions, auditor | agentic, actions, auditor, audits, github, security, vulnerabilities, ai, agent, integrations, including, claude |
 | `agentmail` | Email infrastructure for AI agents. Create accounts, send/receive emails, manage webhooks, and check karma balance via the AgentMail API. | safe | community | agentmail | agentmail, email, infrastructure, ai, agents, accounts, send, receive, emails, webhooks, check, karma |
 | `agentphone` | Build AI phone agents with AgentPhone API. Use when the user wants to make phone calls, send/receive SMS, manage phone numbers, create voice agents, set up w... | critical | community | agentphone | agentphone, ai, phone, agents, api, user, wants, calls, send, receive, sms, numbers |
-| `agents-md` | This skill should be used when the user asks to "create AGENTS.md", "update AGENTS.md", "maintain agent docs", "set up CLAUDE.md", or needs to keep agent ins... | critical | community | agents, md | agents, md, skill, should, used, user, asks, update, maintain, agent, docs, set |
 | `agents-v2-py` | Build container-based Foundry Agents with Azure AI Projects SDK (ImageBasedHostedAgentDefinition). Use when creating hosted agents with custom container imag... | critical | community | agents, v2, py | agents, v2, py, container, foundry, azure, ai, sdk, imagebasedhostedagentdefinition, creating, hosted, custom |
 | `ai-analyzer` | AI驱动的综合健康分析系统，整合多维度健康数据、识别异常模式、预测健康风险、提供个性化建议。支持智能问答和AI健康报告生成。 | critical | community | ai, analyzer | ai, analyzer |
 | `ai-engineer` | Build production-ready LLM applications, advanced RAG systems, and intelligent agents. Implements vector search, multimodal AI, agent orchestration, and ente... | critical | community | ai | ai, engineer, llm, applications, rag, intelligent, agents, implements, vector, search, multimodal, agent |
@@ -1045,11 +1044,12 @@ Total skills: 2107
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (184)
+## development (185)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `agent-harness-fault-injection` | Use when an agent workflow needs deterministic recovery evidence for sandbox, MCP/tool, worker, checkpoint, memory, or orchestration failures. | safe | self | agent-harness, fault-injection, recovery, state-machine, mcp, multi-agent | agent-harness, fault-injection, recovery, state-machine, mcp, multi-agent, agent, harness, fault, injection, deterministic, evidence |
+| `agents-md` | Create, revise, or audit AGENTS.md files from repository evidence, verified commands, and correctly scoped instructions without overwriting maintainer intent. | critical | community | agents, md | agents, md, revise, audit, files, repository, evidence, verified, commands, correctly, scoped, instructions |
 | `agenttrace-session-audit` | Audit local AI coding-agent sessions with agenttrace for cost, tool failures, latency, anomalies, health, diffs, and CI gates. | safe | luoyuctl/agenttrace | ai-coding, observability, cost-tracking, session-analysis | ai-coding, observability, cost-tracking, session-analysis, agenttrace, session, audit, local, ai, coding, agent, sessions |
 | `api-endpoint-builder` | Builds production-ready REST API endpoints with validation, error handling, authentication, and documentation. Follows best practices for security and scalab... | safe | community | api, endpoint, builder | api, endpoint, builder, rest, endpoints, validation, error, handling, authentication, documentation, follows, security |
 | `api-rate-limit-handler` | Implement bounded, idempotency-aware API throttling, backoff, and retry handling for 429 and transient 5xx responses. | safe | self | rate-limiting, retry, backoff, api, resilience, throttle, 429 | rate-limiting, retry, backoff, api, resilience, throttle, 429, rate, limit, handler, bounded, idempotency |
@@ -2628,10 +2628,11 @@ Total skills: 2107
 | `testing-qa` | Comprehensive testing and QA workflow covering unit testing, integration testing, E2E testing, browser automation, and quality assurance. | safe | personal | qa | qa, testing, covering, unit, integration, e2e, browser, automation, quality, assurance |
 | `wordpress` | Complete WordPress development workflow covering theme development, plugin creation, WooCommerce integration, performance optimization, and security hardenin... | safe | personal | wordpress | wordpress, complete, development, covering, theme, plugin, creation, woocommerce, integration, performance, optimization, security |
 
-## writing (3)
+## writing (4)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `bulletmind` | Convert input into clean, structured, hierarchical bullet points for summarization, note-taking, and structured thinking. | safe | community | writing, summarization, note-taking, formatting, structured-output | writing, summarization, note-taking, formatting, structured-output, bulletmind, convert, input, clean, structured, hierarchical, bullet |
+| `email-issue-fixer` | Fix small email mistakes without touching the writer's voice, and strip tracking parameters from links on request. Always returns the corrected draft plus a ... | safe | self | email, proofreading, grammar, links | email, proofreading, grammar, links, issue, fixer, fix, small, mistakes, without, touching, writer |
 | `short` | Rewrite the previous response more briefly while preserving the substance. | safe | davidondrej/skills | writing, editing, concise | writing, editing, concise, short, rewrite, previous, response, briefly, while, preserving, substance |
 | `unslop` | Post-process AI-generated text through the unslop CLI to strip AI writing patterns before publishing | safe | MohamedAbdallah-14/unslop | writing, content-quality, ai-writing, text-processing, cli, publishing | writing, content-quality, ai-writing, text-processing, cli, publishing, unslop, post, process, ai, generated, text |
