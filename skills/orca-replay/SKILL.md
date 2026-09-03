@@ -82,9 +82,13 @@ on an inferred edge.
 could not be reproduced — divergences, and requests the recording could not serve. It is free and
 repeatable, so there is no reason to skip it before committing to an explanation.
 
-Pass `worktree: true` to replay into a scratch copy when the user is actively working in the tree.
-Without it the replay restores the recorded filesystem over the working tree and puts it back
-afterwards, which is fine unattended and startling if someone is watching their editor.
+**Pass `worktree: true`.** It replays into a scratch copy and leaves the working tree alone.
+
+Without it, replay is destructive for as long as it runs: it restores the recorded filesystem over
+the working tree and puts the tree back when the replay ends. Uncommitted work is absent in the
+meantime, and stays absent if the replay is interrupted before it can restore. Run an in-place
+replay only when the user has been told that and has agreed to it. "They do not appear to be
+typing" is not consent.
 
 A replay reporting `reused=3/5` on an interactive recording is not a partial failure. Harnesses make
 calls for themselves — a quota probe, a session-naming request — and a replay does not repeat them.
@@ -102,10 +106,12 @@ about a question the user did not ask.
 
 ## If there is no recording yet
 
-Say so plainly rather than falling back to guessing, and offer to start one:
+Say so plainly rather than falling back to guessing, and offer to start one. If `orca` is missing,
+ask before installing it and install a pinned version rather than whatever `latest` points at
+today — a global install is a change to the user's machine, not a detail of your task:
 
 ```console
-npm i -g orcareplay          # if orca is not installed
+npm i -g orcareplay@0.1.2    # ask first; pinned, not `latest`
 orca record claude           # or codex, opencode, openclaw, grok
 ```
 
