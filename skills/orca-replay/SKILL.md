@@ -1,6 +1,6 @@
 ---
 name: orca-replay
-description: Answer questions about a past agent run from its recording instead of from memory, and re-run or fork that run. Use when someone asks why an earlier run did something, wants a failure reproduced, or asks whether another model would have got it right.
+description: Answers questions about a past agent run from its recording rather than from memory, and replays or forks that run. Use when asked why an earlier run did something, or to reproduce a failure.
 category: development
 risk: critical
 source: community
@@ -8,8 +8,18 @@ source_repo: Continuum-AI-Corp/OrcaReplay
 source_type: community
 date_added: "2026-09-03"
 author: xizhuomengcontin
-tags: [debugging, replay, trace, root-cause, agent-runs, mcp]
-tools: [claude-code, codex-cli, cursor, gemini-cli]
+tags:
+  - debugging
+  - replay
+  - trace
+  - root-cause
+  - agent-runs
+  - mcp
+tools:
+  - claude-code
+  - codex-cli
+  - cursor
+  - gemini-cli
 license: "Apache-2.0"
 license_source: "https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/LICENSE"
 ---
@@ -79,8 +89,19 @@ on an inferred edge.
 ### 4. Confirm it is deterministic before explaining it
 
 `orca_replay` re-runs the recording with the network blocked and no tokens spent, then reports what
-could not be reproduced — divergences, and requests the recording could not serve. It is free and
-repeatable, so there is no reason to skip it before committing to an explanation.
+could not be reproduced — divergences, and requests the recording could not serve.
+
+**Replay re-executes the agent, not just its model traffic.** The recorded model responses are
+served from the trace, but the agent process runs again for real — so every shell command it issued
+runs again too. `worktree: true` isolates repository files and nothing else. Anything the run
+touched outside the tree — `/tmp`, Docker, a local database, a package manager, another host — is
+mutated a second time.
+
+**So check before the first replay of a run, not after.** Read its shell commands with
+`orca_show_run` and tell the user what will re-execute. If any of it reached outside the working
+tree, get approval for that specifically or replay inside a container; do not treat the earlier
+`worktree` answer as covering it. A run that only read files and edited the repository is free and
+repeatable, and worth replaying before committing to any explanation.
 
 **Pass `worktree: true`.** It replays into a scratch copy and leaves the working tree alone.
 
