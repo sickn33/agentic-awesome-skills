@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-02T10:41:06.000Z
 
-Total skills: 2108
+Total skills: 2109
 
 ## agent-behavior (5)
 
@@ -1044,7 +1044,7 @@ Total skills: 2108
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (185)
+## development (186)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1163,6 +1163,7 @@ Total skills: 2108
 | `javascript-testing-patterns` | Comprehensive guide for implementing robust testing strategies in JavaScript/TypeScript applications using modern testing frameworks and best practices. | safe | community | javascript | javascript, testing, implementing, robust, typescript, applications, frameworks |
 | `jq` | Expert jq usage for JSON querying, filtering, transformation, and pipeline integration. Practical patterns for real shell workflows. | safe | community | jq, json, shell, cli, data-transformation, bash | jq, json, shell, cli, data-transformation, bash, usage, querying, filtering, transformation, pipeline, integration |
 | `kotlin-coroutines-expert` | Expert patterns for Kotlin Coroutines and Flow, covering structured concurrency, error handling, and testing. | safe | community | kotlin, coroutines | kotlin, coroutines, flow, covering, structured, concurrency, error, handling, testing |
+| `laravel-development-workflow` | Build and fix existing Laravel applications through root-cause diagnosis, repository-native implementation, regression coverage, and risk-based verification. | critical | Junaid-PK/laravel-development-workflow | laravel, php, debugging, testing, development | laravel, php, debugging, testing, development, fix, existing, applications, through, root, cause, diagnosis |
 | `legacy-modernizer` | Refactor legacy codebases, migrate outdated frameworks, and implement gradual modernization. Handles technical debt, dependency updates, and backward compati... | safe | community | legacy, modernizer | legacy, modernizer, refactor, codebases, migrate, outdated, frameworks, gradual, modernization, technical, debt, dependency |
 | `linux-shell-scripting` | Provide production-ready shell script templates for common Linux system administration tasks including backups, monitoring, user management, log analysis, an... | critical | community | linux, shell, scripting | linux, shell, scripting, provide, script, common, administration, tasks, including, backups, monitoring, user |
 | `logic-lens` | AI-powered Claude Code skill that performs deep code review using formal logic and reasoning frameworks to detect bugs, anti-patterns, and security risks bey... | safe | hyhmrright/logic-lens | code-review, logic-analysis, debugging, security-review, claude-code | code-review, logic-analysis, debugging, security-review, claude-code, logic, lens, ai, powered, claude, code, skill |

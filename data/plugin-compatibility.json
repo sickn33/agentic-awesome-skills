@@ -21575,6 +21575,25 @@
       "runtime_files": []
     },
     {
+      "id": "laravel-development-workflow",
+      "path": "skills/laravel-development-workflow",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "laravel-expert",
       "path": "skills/laravel-expert",
       "targets": {
@@ -40513,10 +40532,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2108,
+    "total_skills": 2109,
     "supported": {
-      "codex": 2028,
-      "claude": 2050
+      "codex": 2029,
+      "claude": 2051
     },
     "blocked": {
       "codex": 80,

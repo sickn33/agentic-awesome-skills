@@ -27143,6 +27143,39 @@
     }
   },
   {
+    "id": "laravel-development-workflow",
+    "path": "skills/laravel-development-workflow",
+    "category": "development",
+    "name": "laravel-development-workflow",
+    "description": "Build and fix existing Laravel applications through root-cause diagnosis, repository-native implementation, regression coverage, and risk-based verification.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "Junaid-PK/laravel-development-workflow",
+    "license": "MIT",
+    "license_source": "https://github.com/Junaid-PK/laravel-development-workflow/blob/main/LICENSE",
+    "tags": [
+      "laravel",
+      "php",
+      "debugging",
+      "testing",
+      "development"
+    ]
+  },
+  {
     "id": "laravel-expert",
     "path": "skills/laravel-expert",
     "category": "framework",

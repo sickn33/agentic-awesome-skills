@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-02T10:41:06.000Z",
-  "total": 2108,
+  "total": 2109,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -32756,6 +32756,41 @@
         "construction"
       ],
       "path": "skills/langgraph/SKILL.md"
+    },
+    {
+      "id": "laravel-development-workflow",
+      "canonical_id": "laravel-development-workflow",
+      "name": "laravel-development-workflow",
+      "description": "Build and fix existing Laravel applications through root-cause diagnosis, repository-native implementation, regression coverage, and risk-based verification.",
+      "category": "development",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Junaid-PK/laravel-development-workflow",
+      "license": "MIT",
+      "license_source": "https://github.com/Junaid-PK/laravel-development-workflow/blob/main/LICENSE",
+      "tags": [
+        "laravel",
+        "php",
+        "debugging",
+        "testing",
+        "development"
+      ],
+      "triggers": [
+        "laravel",
+        "php",
+        "debugging",
+        "testing",
+        "development",
+        "fix",
+        "existing",
+        "applications",
+        "through",
+        "root",
+        "cause",
+        "diagnosis"
+      ],
+      "path": "skills/laravel-development-workflow/SKILL.md"
     },
     {
       "id": "laravel-expert",
