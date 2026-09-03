@@ -1,3 +1,13 @@
+# Dependency advisory remediation - 2026-09-03
+
+- Raised the bundled `fast-uri` runtime floor to 3.1.6 to resolve the current
+  host-confusion and SSRF advisories in the published package dependency tree.
+- Raised the Loki example backend's `qs` override floor to 6.16.0 so fresh
+  installs and its committed lockfile avoid the bracket-key and `isBuffer`
+  denial-of-service advisories.
+- Kept the canonical skill bundle as the source of truth; protected canonical
+  synchronization owns the corresponding Claude plugin mirror update.
+
 # Codex security findings remediation - 2026-08-31
 
 - Re-evaluated all 14 exported Codex Security records against the current
