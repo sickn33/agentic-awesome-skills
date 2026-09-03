@@ -100,9 +100,16 @@ conversation prefix, so the model is the only variable. Grade with `verify` — 
 exit code is the verdict, e.g. `"npm test"` or `"npx tsc --noEmit"`. Pick the fork point with
 `orca_checkpoints` and pass it as `from`.
 
-**`orca_compare` spends real money.** Every model named is actually called. Ask before running it,
-say roughly how many models and forks that means, and do not use it to satisfy your own curiosity
-about a question the user did not ask.
+**`orca_compare` uploads the recording to other people's models, and spends real money doing it.**
+Each model named receives the same files and conversation prefix the original run had — so whatever
+that run touched (source, prompts, configuration, anything a credential was pasted into) is sent to
+every provider behind those model ids.
+
+Before calling it, tell the user *what* will be sent and *to whom*, not only how many models and
+roughly what it costs. Approving a bill is not approving a disclosure, and the two need separate
+answers when the recording is from a private codebase. `orca scrub` exists for the cases where the
+comparison is worth running but the trace is not safe to send as-is. Never run it to satisfy
+curiosity the user did not express.
 
 ## If there is no recording yet
 
@@ -128,6 +135,27 @@ papering over it.
 
 `orca export last -o run.html` writes one self-contained file. `orca scrub` removes anything
 sensitive first. Traces hold whatever the run held, so scrub before sending a recording anywhere.
+
+## Limitations
+
+- **It only sees what was recorded.** Runs started without `orca record` leave no trace, and
+  nothing here recovers them. The answer to "why did it do that" in an unrecorded session is
+  honestly "there is no recording", not a reconstruction.
+- **A typed session replays approximately, not exactly.** Prompts entered at a terminal were never
+  on the wire; orca recovers them from the harness's own transcript. Only a run started with the
+  prompt in argv (`orca record claude -- -p "…"`) replays byte-for-byte.
+- **Some turns are not repeated.** A harness makes calls for itself — a quota probe, a
+  session-naming request — and a replay steps over them. Tools that need a person
+  (`AskUserQuestion`, plan mode) are absent when the same agent runs without one, which can make a
+  replayed request differ from the recorded one by enough to halt.
+- **`inferred` edges are not evidence.** They are derived from a named rule at query time. Treat
+  them as a reading of the trace, never as something the recorder witnessed.
+- **Not every harness is recordable.** Agents that read no base-URL variable and pin their own
+  origin need `--tls-intercept`, and some cannot be reached at all. A recording that came back
+  empty means the harness was not captured, not that nothing happened.
+- **Replay is not a time machine for the world.** It reproduces the agent's side of the run.
+  External state the run depended on — a database row, a remote branch, the clock — is whatever it
+  is now.
 
 ## Tools
 
