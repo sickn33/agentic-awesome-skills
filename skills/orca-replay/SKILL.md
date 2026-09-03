@@ -134,14 +134,28 @@ curiosity the user did not express.
 
 ## If there is no recording yet
 
-Say so plainly rather than falling back to guessing, and offer to start one. If `orca` is missing,
-ask before installing it and install a pinned version rather than whatever `latest` points at
-today — a global install is a change to the user's machine, not a detail of your task:
+Say so plainly rather than falling back to guessing, and offer to start one.
+
+If `orca` is already installed:
 
 ```console
-npm i -g orcareplay@0.1.2    # ask first; pinned, not `latest`
 orca record claude           # or codex, opencode, openclaw, grok
 ```
+
+If it is not, **do not download and install in one step.** `npm install -g` runs whatever
+`preinstall` / `install` / `postinstall` scripts the package tree declares, with the user's
+privileges, and pinning a version fixes *which* code runs, not *whether* it was reviewed. Downloading
+and activating need separate answers:
+
+1. **Ask before downloading.** Then fetch the pinned tarball without installing it:
+   `npm pack orcareplay@0.1.2` — this writes a `.tgz` and runs nothing from it.
+2. **Report what is inside before going further:** lifecycle scripts, bundled binaries, and what it
+   would put on `PATH`. Check, do not assume — `npm view orcareplay@0.1.2 scripts` is the one-liner.
+   At 0.1.2 that field is empty, and so is it for the ten `@orcareplay/*` packages it pulls in; the
+   only third-party code in the tree is `ajv` and `ajv-formats`. The bins are `orca` and
+   `orcareplay`.
+3. **Ask again before installing**, then `npm i -g orcareplay@0.1.2`. Or avoid the global install
+   altogether and run it per-invocation: `npx orcareplay@0.1.2 record claude`.
 
 `orca record <agent>` runs the agent unmodified behind a local proxy. Nothing about the agent
 changes; two environment variables get set. Recording a session now is what makes the next "why did
