@@ -161,36 +161,45 @@ orca record claude           # or codex, opencode, openclaw, grok
 ```
 
 If it is not, **do not download and install in one step.** `npm install -g` runs whatever
-`preinstall` / `install` / `postinstall` scripts the package tree declares, with the user's
-privileges, and pinning a version fixes *which* code runs, not *whether* it was reviewed. Downloading
-and activating need separate answers:
+`preinstall` / `install` / `postinstall` scripts the resolved tree declares, with the user's
+privileges. Pinning the top-level version fixes *which* release of `orcareplay` you get, not what
+its dependencies resolve to, and not whether any of it was reviewed.
 
-1. **Ask before downloading.** Then resolve the whole tree into a scratch directory with
-   lifecycle scripts disabled, so nothing from it executes:
+1. **Ask before downloading.** Then resolve the tree into a directory of its own with lifecycle
+   scripts disabled, so nothing from it executes:
 
    ```console
-   REVIEW=$(mktemp -d)
+   REVIEW=~/.cache/orca-review
    npm install orcareplay@0.1.2 --prefix "$REVIEW" --ignore-scripts
    ```
 
-2. **Inspect what actually landed, and report it.** Not the registry metadata — the resolved tree,
-   because dependency ranges mean the version installed today can differ from the one someone
-   looked at last week:
+   Keep this directory. It is not a throwaway — it is the thing you are going to activate.
+
+2. **Inspect every manifest, not the top level.** npm hoists, so scoped packages sit one level
+   deeper and duplicated versions sit deeper still. A `*/package.json` glob silently skips both:
 
    ```console
-   ls "$REVIEW/node_modules"                              # everything that came with it
-   grep -l 'preinstall\|postinstall\|"install"' \
-     "$REVIEW"/node_modules/*/package.json                # install-time hooks, if any
-   ls "$REVIEW/node_modules/.bin"                         # what would reach PATH
+   find "$REVIEW/node_modules" -name package.json | wc -l    # how many there really are
+   find "$REVIEW/node_modules" -name package.json \
+     -exec grep -l 'preinstall\|postinstall\|"install"' {} +   # install-time hooks, if any
+   ls "$REVIEW/node_modules/.bin"                            # what would reach PATH
    ```
 
-   Report hooks, binaries, symlinks, and anything doing network, credential or privileged work.
-   Report what you found, not what you expected to find.
+   Report what you find — hooks, binaries, symlinks, anything doing network, credential or
+   privileged work — and report the count. Do not carry numbers over from a previous run or from
+   this file; ranges mean the tree differs between installs.
 
-3. **Ask again before installing**, then `npm i -g orcareplay@0.1.2`.
+3. **Ask again, then activate the tree you just reviewed.** It is already a working install:
 
-Running it per-invocation instead of installing globally is fine, but pin it there too —
-`npx orcareplay@0.1.2 record claude`. A bare `npx orcareplay` resolves `latest` at call time.
+   ```console
+   "$REVIEW/node_modules/.bin/orca" record claude
+   ```
+
+   `npm i -g orcareplay@0.1.2` and `npx orcareplay@0.1.2` both **re-resolve** the dependency tree at
+   that moment, so either can pull a transitive version that was not in the tree you inspected — and
+   a global install runs its hooks. `$REVIEW/package-lock.json` records the exact tree that was
+   reviewed; if a global install is genuinely wanted, review it again against that lock rather than
+   treating this approval as covering it.
 
 `orca record <agent>` runs the agent unmodified behind a local proxy. Nothing about the agent
 changes; two environment variables get set. Recording a session now is what makes the next "why did
