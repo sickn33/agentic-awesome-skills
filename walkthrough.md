@@ -1,16 +1,3 @@
-# Laravel development workflow community import - 2026-09-02
-
-- Added the MIT-licensed `laravel-development-workflow` skill from
-  [Junaid-PK/laravel-development-workflow](https://github.com/Junaid-PK/laravel-development-workflow).
-- Kept it distinct from the broad `laravel-expert` prompt by centering the
-  workflow on root-cause diagnosis, regression coverage, repository-native
-  implementation, and proportionate verification.
-- Declared critical risk because the workflow directs code changes, while
-  retaining explicit boundaries around destructive database work, production
-  changes, deployments, credentials, and external accounts.
-- Kept the contribution source-only; generated registries and plugin mirrors
-  remain owned by protected canonical synchronization.
-
 # Codex security findings remediation - 2026-08-31
 
 - Re-evaluated all 14 exported Codex Security records against the current
