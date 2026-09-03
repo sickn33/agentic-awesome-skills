@@ -144,11 +144,25 @@ Each model named receives the same files and conversation prefix the original ru
 that run touched (source, prompts, configuration, anything a credential was pasted into) is sent to
 every provider behind those model ids.
 
-Before calling it, tell the user *what* will be sent and *to whom*, not only how many models and
-roughly what it costs. Approving a bill is not approving a disclosure, and the two need separate
-answers when the recording is from a private codebase. `orca scrub` exists for the cases where the
-comparison is worth running but the trace is not safe to send as-is. Never run it to satisfy
-curiosity the user did not express.
+**And each fork is a live agent, not a replay.** From the fork point onward the model is really
+being asked, and whatever it decides to do, it does — its shell commands execute for real, and so
+does the `verify` command you pass. Each fork gets its own worktree, so repository files are
+isolated per model; nothing outside the tree is. A fork can also take actions the original run never
+took, because it is a different model making fresh decisions.
+
+So the approval has three parts, and they are not the same question:
+
+1. **Disclosure** — what context is uploaded, and to which providers. Approving a bill is not
+   approving a disclosure, and the two need separate answers when the recording is from a private
+   codebase. `orca scrub` is for when the comparison is worth running but the trace is not safe to
+   send as-is.
+2. **Side effects** — what the recorded run did outside its worktree, since each fork may repeat it
+   and may go further. Same check as step 4, `orca_show_run`, and the same answer if it reached
+   Docker, a database, a deployment or another host: get approval for that specifically, or run the
+   comparison in an isolated environment.
+3. **Cost** — how many models times how many forks.
+
+Never run it to satisfy curiosity the user did not express.
 
 ## If there is no recording yet
 
@@ -179,15 +193,25 @@ its dependencies resolve to, and not whether any of it was reviewed.
    deeper and duplicated versions sit deeper still. A `*/package.json` glob silently skips both:
 
    ```console
-   find "$REVIEW/node_modules" -name package.json | wc -l    # how many there really are
-   find "$REVIEW/node_modules" -name package.json \
-     -exec grep -l 'preinstall\|postinstall\|"install"' {} +   # install-time hooks, if any
-   ls "$REVIEW/node_modules/.bin"                            # what would reach PATH
+   cd "$REVIEW/node_modules"
+   find . -name package.json | wc -l                       # manifests actually present
+   find . -name package.json -exec grep -l \
+     'preinstall\|postinstall\|"install"' {} +              # install-time hooks
+   ls -l .bin                                              # what reaches PATH
+   head -5 .bin/orca                                       # follow one: symlink or shim
+   grep -rl 'child_process\|execSync\|spawnSync' --include=*.js --include=*.mjs --include=*.cjs .
+   grep -rl "node:https\|node:net\|node:tls\|require('https')" --include=*.js --include=*.mjs .
+   grep -rlE 'process\.env\.[A-Z_]*(KEY|TOKEN|SECRET|PASSWORD)' --include=*.js --include=*.mjs .
    ```
 
-   Report what you find — hooks, binaries, symlinks, anything doing network, credential or
-   privileged work — and report the count. Do not carry numbers over from a previous run or from
-   this file; ranges mean the tree differs between installs.
+   Report the counts and the package names each scan returns, from this run — not from a previous
+   one and not from this file, because dependency ranges make the tree differ between installs.
+
+   **Say what this is.** It is a surface scan of roughly a thousand files: manifests, hooks, what
+   lands on `PATH`, and which packages touch subprocesses, the network, or credential-shaped
+   environment variables. It is not a source audit, and it will not catch obfuscated or
+   dynamically-constructed behaviour. Report it as what it is. If the threat model needs more than
+   that, say so and let the user decide, rather than implying the tree has been read.
 
 3. **Ask again, then activate the tree you just reviewed.** It is already a working install:
 
