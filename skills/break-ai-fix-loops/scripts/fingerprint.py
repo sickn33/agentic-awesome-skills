@@ -30,13 +30,7 @@ class RecordError(ValueError):
 
 def _normalize_text(value: str) -> str:
     """Normalize transport-only differences without deleting meaningful values."""
-    value = value.replace("\r\n", "\n").replace("\r", "\n")
-    lines = value.split("\n")
-    while lines and not lines[0]:
-        lines.pop(0)
-    while lines and not lines[-1]:
-        lines.pop()
-    return "\n".join(lines)
+    return value.replace("\r\n", "\n").replace("\r", "\n")
 
 
 def canonicalize(record: Mapping[str, Any]) -> dict[str, Any]:

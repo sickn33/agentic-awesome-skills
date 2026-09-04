@@ -35,8 +35,14 @@ class FingerprintTests(unittest.TestCase):
     def test_key_order_and_transport_newlines_do_not_change_fingerprint(self) -> None:
         first = record()
         second = dict(reversed(list(first.items())))
-        second["stable_excerpt"] = "\r\nexpected enabled\r\nobserved disabled\r\n"
+        second["stable_excerpt"] = "expected enabled\r\nobserved disabled"
         self.assertEqual(MODULE.fingerprint(first), MODULE.fingerprint(second))
+
+    def test_meaningful_boundary_blank_lines_change_fingerprint(self) -> None:
+        first = record()
+        second = record()
+        second["stable_excerpt"] = "\nexpected enabled\nobserved disabled\n"
+        self.assertNotEqual(MODULE.fingerprint(first), MODULE.fingerprint(second))
 
     def test_meaningful_trailing_whitespace_changes_fingerprint(self) -> None:
         first = record()
