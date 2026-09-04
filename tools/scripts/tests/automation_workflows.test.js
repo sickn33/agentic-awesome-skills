@@ -11,6 +11,7 @@ function readText(relativePath) {
 const packageJson = JSON.parse(readText("package.json"));
 const generatedFiles = JSON.parse(readText("tools/config/generated-files.json"));
 const ciWorkflow = readText(".github/workflows/ci.yml");
+const previewWorkflow = readText(".github/workflows/aas-agent-first-preview.yml");
 const hygieneWorkflowForPages = readText(".github/workflows/repo-hygiene.yml");
 const offlineCatalogBuilder = readText("tools/scripts/build-aas-v1-offline-catalog.js");
 const canonicalMergeScript = readText("tools/scripts/merge_canonical_sync_pr.cjs");
@@ -192,8 +193,35 @@ assert.match(
 );
 assert.match(
   ciWorkflow,
-  /- name: Audit npm dependencies[\s\S]*?run: npm audit --audit-level=high/,
-  "CI should run npm audit at high severity",
+  /main-validation-and-sync:[\s\S]*?- name: Install npm dependencies\n\s+run: npm ci --audit=false[\s\S]*?- name: Audit npm dependencies[\s\S]*?for attempt in 1 2 3; do[\s\S]*?npm audit --audit-level=high --fetch-timeout=60000 --fetch-retries=0[\s\S]*?if \[ "\$attempt" -eq 3 \]; then\n\s+exit 1/,
+  "main CI should avoid a redundant install-time audit and keep three bounded explicit audit attempts fail-closed",
+);
+const ciInstallCommands = ciWorkflow.match(/npm ci[^\n]*/g) || [];
+assert.ok(ciInstallCommands.length >= 6, "main CI should retain its expected deterministic install boundaries");
+assert.ok(
+  ciInstallCommands.every((command) => command.includes("--audit=false")),
+  "CI installs should never duplicate the explicit protected npm audit request",
+);
+for (const workflow of [ciWorkflow, previewWorkflow]) {
+  assert.doesNotMatch(
+    workflow,
+    /actions\/(?:upload|download)-artifact@(?:ea165f8d65b6e75b540449e92b4886f43607fa02|d3f86a106a0bac45b974a628896c90dbdf5c8093)/,
+    "artifact workflows should not regress to the Node 20 action pins",
+  );
+}
+assert.match(ciWorkflow, /actions\/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7\.0\.1/);
+assert.match(ciWorkflow, /actions\/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8\.0\.1/);
+assert.match(previewWorkflow, /actions\/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7\.0\.1/);
+assert.match(previewWorkflow, /actions\/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8\.0\.1/);
+assert.match(
+  previewWorkflow,
+  /candidate:[\s\S]*?run: npm ci --ignore-scripts --audit=false[\s\S]*?workbench:[\s\S]*?npm ci --ignore-scripts --audit=false[\s\S]*?npm run app:install -- --audit=false/,
+  "preview installs should avoid redundant registry audit requests covered by the protected fail-closed audit gate",
+);
+assert.match(
+  previewWorkflow,
+  /workbench:[\s\S]*?npm run plugin-compat:sync[\s\S]*?npm run index[\s\S]*?npm run bundles:sync[\s\S]*?npm run sync:metadata[\s\S]*?npm run catalog[\s\S]*?npm run build:aas-v1-catalog[\s\S]*?npm run sync:web-assets[\s\S]*?npm run app:install[\s\S]*?npm run app:test[\s\S]*?npm run app:build/,
+  "Workbench preview should regenerate source-only canonical data before testing and building the review UI",
 );
 assert.match(
   ciWorkflow,
@@ -251,11 +279,6 @@ assert.match(
   ciWorkflow,
   /source-validation:[\s\S]*?- name: Fetch base branch[\s\S]*?- name: Install npm dependencies[\s\S]*?- name: Verify README source credits for changed skills/,
   "source-validation should fetch the base branch before running the changed-skill README credit check",
-);
-assert.match(
-  ciWorkflow,
-  /main-validation-and-sync:[\s\S]*?- name: Audit npm dependencies[\s\S]*?run: npm audit --audit-level=high/,
-  "main validation should enforce npm audit before syncing canonical state",
 );
 assert.doesNotMatch(
   ciWorkflow,

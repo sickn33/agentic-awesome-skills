@@ -41,7 +41,7 @@ jobs:
           cache: npm
 
       - name: Install without lifecycle scripts
-        run: npm ci --ignore-scripts
+        run: npm ci --ignore-scripts --audit=false
 
       - name: Verify deterministic catalog and preview contracts
         run: |
@@ -59,7 +59,7 @@ jobs:
         run: npm pack --ignore-scripts
 
       - name: Upload the exact candidate tarball
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: aas-preview-candidate
           path: agentic-awesome-skills-*.tgz
@@ -90,7 +90,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Download the exact candidate
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: aas-preview-candidate
           path: ${{ runner.temp }}/aas-preview-candidate
@@ -99,7 +99,7 @@ jobs:
         run: node verification/aas-preview/run-installed-candidate.mjs --artifact-root "${{ runner.temp }}/aas-preview-candidate" --install-root "${{ runner.temp }}/aas-preview-install" --work-root "${{ runner.temp }}/aas-preview-work" --job-id "${{ matrix.job-id }}" --out "${{ runner.temp }}/aas-preview-${{ matrix.job-id }}.json"
 
       - name: Upload the functional receipt
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: aas-preview-${{ matrix.job-id }}
           path: ${{ runner.temp }}/aas-preview-${{ matrix.job-id }}.json
@@ -125,14 +125,21 @@ jobs:
 
       - name: Test and build the local review UI
         run: |
-          npm ci --ignore-scripts
-          npm run app:install
+          npm ci --ignore-scripts --audit=false
+          npm run plugin-compat:sync
+          npm run index
+          npm run bundles:sync
+          npm run sync:metadata
+          npm run catalog
+          npm run build:aas-v1-catalog
+          npm run sync:web-assets
+          npm run app:install -- --audit=false
           npm run app:test
           npm run app:build
           node verification/aas-preview/write-workbench-receipt.mjs "$RUNNER_TEMP/aas-preview-workbench.json"
 
       - name: Upload the Workbench receipt
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: aas-preview-workbench
           path: ${{ runner.temp }}/aas-preview-workbench.json
@@ -156,7 +163,7 @@ jobs:
           node-version: 22.23.1
 
       - name: Download all preview receipts
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: aas-preview-*
           path: ${{ runner.temp }}/aas-preview-receipts
@@ -173,7 +180,7 @@ jobs:
             --out "$RUNNER_TEMP/aas-agent-first-preview.json"
 
       - name: Upload the aggregate preview receipt
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: aas-agent-first-preview-receipt
           path: ${{ runner.temp }}/aas-agent-first-preview.json

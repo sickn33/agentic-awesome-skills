@@ -57,7 +57,7 @@ jobs:
         run: |
           trusted_root="$RUNNER_TEMP/pr-policy-main"
           git worktree add --detach "$trusted_root" "${{ github.event.pull_request.base.sha }}"
-          npm ci --ignore-scripts --prefix "$trusted_root"
+          npm ci --ignore-scripts --prefix "$trusted_root" --audit=false
           NODE_PATH="$trusted_root/node_modules" node "$trusted_root/tools/scripts/pr_preflight.cjs" \
             --repo "$GITHUB_WORKSPACE" \
             --base "${{ github.event.pull_request.base.sha }}" \
@@ -100,7 +100,7 @@ jobs:
           git worktree add --detach "$trusted_root" origin/main
           cd "$trusted_root"
           pip install -r tools/requirements.txt
-          npm ci --ignore-scripts
+          npm ci --ignore-scripts --audit=false
           npm run sync:repo-state
 
           mapfile -t managed_files < <(node tools/scripts/generated_files.js --include-mixed)
@@ -174,7 +174,7 @@ jobs:
 
       - name: Install npm dependencies
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
-        run: npm ci
+        run: npm ci --audit=false
 
       - name: Verify directory structure
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
@@ -249,7 +249,7 @@ jobs:
 
       - name: Upload exact-head artifact preview manifest
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: source-preview-${{ github.run_id }}-${{ github.run_attempt }}
           path: .tmp/artifact-preview/manifest.json
@@ -287,7 +287,7 @@ jobs:
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         run: |
           pip install -r tools/requirements.txt
-          npm ci --ignore-scripts
+          npm ci --ignore-scripts --audit=false
 
       - name: Fetch base branch
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
@@ -341,7 +341,7 @@ jobs:
 
       - name: Upload advisory evidence
         if: always() && github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pr-evidence-${{ github.event.pull_request.number }}
           path: .tmp/pr-evidence/
@@ -387,11 +387,11 @@ jobs:
 
       - name: Install npm dependencies
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
-        run: npm ci
+        run: npm ci --audit=false
 
       - name: Download exact-head artifact preview manifest
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: source-preview-${{ github.run_id }}-${{ github.run_attempt }}
           path: .tmp/artifact-preview
@@ -477,7 +477,7 @@ jobs:
           node-version: "lts/*"
 
       - name: Install npm dependencies
-        run: npm ci
+        run: npm ci --audit=false
 
       - name: Verify directory structure
         run: |
@@ -497,7 +497,18 @@ jobs:
         run: npm run validate:references
 
       - name: Audit npm dependencies
-        run: npm audit --audit-level=high
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if npm audit --audit-level=high --fetch-timeout=60000 --fetch-retries=0; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+            echo "npm audit attempt $attempt failed; retrying after a bounded delay."
+            sleep "$((attempt * 10))"
+          done
 
       - name: Run tests
         run: npm run test

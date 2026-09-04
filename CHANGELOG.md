@@ -9,6 +9,135 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [16.7.0] - 2026-09-04 - "Replayable Agents and Grounded Engineering Knowledge"
+
+> Added agent-run forensics, an embodied-AI knowledge compiler, and a focused
+> Laravel repair workflow; resolved the current fast-uri and qs advisories.
+> The published catalog contains 2,111 skills.
+
+This release helps Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and
+related AI coding assistants investigate recorded agent behavior, compile
+evidence-backed embodied-AI knowledge, and repair Laravel applications with
+explicit safety and verification boundaries.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills`
+- [`orca-replay`](skills/orca-replay/) for reading model, shell, file-change,
+  and MCP traces before explaining or replaying a past agent run.
+- [`entropy-box`](skills/entropy-box/) for querying and compiling a live
+  embodied-AI knowledge graph with provenance and confidence preserved.
+- [`laravel-development-workflow`](skills/laravel-development-workflow/) for
+  root-cause-oriented Laravel maintenance and regression testing.
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
+### Added
+
+- Added [`orca-replay`](skills/orca-replay/) for evidence-first diagnosis of
+  recorded coding-agent runs, including model traffic, shell results,
+  per-turn filesystem changes, MCP calls, replay, and bounded multi-model
+  comparison ([#1330](https://github.com/sickn33/agentic-awesome-skills/pull/1330)).
+- Added [`entropy-box`](skills/entropy-box/) for searching and consulting a
+  hosted embodied-AI knowledge graph, preserving source identity, confidence,
+  temporal scope, and the distinction between retrieved evidence and optional
+  LLM synthesis ([#1331](https://github.com/sickn33/agentic-awesome-skills/pull/1331)).
+- Added [`laravel-development-workflow`](skills/laravel-development-workflow/)
+  for diagnosing Laravel and PHP defects at the root cause, matching the
+  existing application architecture, adding regression coverage, and running
+  proportionate verification
+  ([#1327](https://github.com/sickn33/agentic-awesome-skills/pull/1327)).
+
+### Changed
+
+- Updated the web catalog from `highlight.js` 11.11.2 to 11.12.0
+  ([#1332](https://github.com/sickn33/agentic-awesome-skills/pull/1332)).
+- Updated artifact upload and download steps to the Node 24-based v7 and v8
+  GitHub Actions, removing the runner deprecation warnings from protected
+  validation and failing downloads closed on digest mismatch.
+- Kept the protected npm advisory gate fail-closed while disabling its
+  redundant install-time request and adding three bounded attempts for
+  transient registry timeouts and 503 responses.
+- Regenerated ephemeral canonical data in the Workbench preview before its
+  tests and build so source-only pull requests are evaluated against their
+  exact skill catalog rather than the previous canonical snapshot.
+- Disabled redundant install-time advisory requests in pull-request validation
+  and preview jobs; dependency review and the protected fail-closed npm audit
+  remain mandatory.
+- Regenerated the canonical catalog, offline AAS Core data, tracked web assets,
+  marketplaces, editorial bundles, compatibility reports, and Codex/Claude
+  plugin distributions for 2,111 skills.
+
+### Fixed
+
+- Raised the root `fast-uri` floor and refreshed its lockfile to resolve the
+  host-confusion and repeated-hostname-decoding SSRF advisories
+  ([#1328](https://github.com/sickn33/agentic-awesome-skills/pull/1328)).
+- Raised the Loki example backend's `qs` override to 6.16.0 and synchronized
+  its lockfiles, resolving the bracket-key comma parsing array-limit advisory
+  in both canonical and mirrored package trees
+  ([#1328](https://github.com/sickn33/agentic-awesome-skills/pull/1328)).
+
+### Security and Reliability
+
+- Treats OrcaReplay trace content as untrusted evidence rather than agent
+  instructions, requires approval before worktree mutation, and makes the
+  network and token cost of multi-model comparison explicit.
+- Treats Entropy Box responses as untrusted hosted data, preserves citations
+  and confidence markers, and distinguishes the default non-synthesizing
+  consult response from the optional integrated LLM path.
+- Keeps Laravel diagnosis bounded to the repository's real architecture and
+  existing approval, secret, data-mutation, and deployment policies.
+- Verified zero known npm vulnerabilities in the root package, web app, and
+  repaired Loki example backend after the dependency updates.
+
+### Who should care
+
+- Teams debugging why an agent changed a file, invoked a tool, or produced a
+  particular answer during a recorded run.
+- Robotics and embodied-AI researchers who need a cited knowledge map rather
+  than uncited synthesis presented as established fact.
+- Laravel maintainers who want a disciplined repair loop that preserves local
+  conventions and proves the regression is covered.
+- Catalog users who depend on the web application and its dependency chain.
+
+### Validation
+
+- Passed validation for 2,111 canonical skills, reference validation,
+  documentation-security checks, warning-budget enforcement, strict catalog
+  audit and security scan, plugin and bundle convergence, repository tests,
+  web-app tests and coverage, production build, npm audits, and protected
+  exact-head merge gates.
+- Release publication additionally verifies clean final `main`, tag and npm
+  parity, CI, CodeQL, release-only Pages, current and legacy public surfaces,
+  and every already-configured local AAS MCP host.
+
+### Limitations
+
+- OrcaReplay can only explain events present in a captured trace; replay and
+  multi-model comparison can mutate a worktree, reach external services, and
+  incur cost when explicitly enabled.
+- Entropy Box coverage and freshness depend on its hosted graph and declared
+  sources; low-confidence and proposed capabilities still require primary
+  source verification.
+- The Laravel workflow cannot infer undocumented business requirements or
+  replace framework-specific tests, production review, and deployment gates.
+- Dependency audits cover known advisories in resolved package graphs and are
+  not an independent security audit of every skill or upstream service.
+
+### Credits
+
+- **[@xizhuomengcontin](https://github.com/xizhuomengcontin)** for
+  `orca-replay` in
+  [#1330](https://github.com/sickn33/agentic-awesome-skills/pull/1330).
+- **[@chenli-yy](https://github.com/chenli-yy)** for `entropy-box` in
+  [#1331](https://github.com/sickn33/agentic-awesome-skills/pull/1331).
+- **[@Junaid-PK](https://github.com/Junaid-PK)** for
+  `laravel-development-workflow` in
+  [#1327](https://github.com/sickn33/agentic-awesome-skills/pull/1327).
+
 ## [16.6.0] - 2026-09-02 - "Evidence-First Instructions and Safer Dependencies"
 
 > Added focused email cleanup, made AGENTS.md maintenance evidence-first, and
