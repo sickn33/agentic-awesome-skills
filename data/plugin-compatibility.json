@@ -14927,6 +14927,25 @@
       "runtime_files": []
     },
     {
+      "id": "entropy-box",
+      "path": "skills/entropy-box",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "environment-setup-guide",
       "path": "skills/environment-setup-guide",
       "targets": {
@@ -27125,6 +27144,25 @@
     {
       "id": "oral-health-analyzer",
       "path": "skills/oral-health-analyzer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "orca-replay",
+      "path": "skills/orca-replay",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -40532,10 +40570,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2109,
+    "total_skills": 2111,
     "supported": {
-      "codex": 2029,
-      "claude": 2051
+      "codex": 2031,
+      "claude": 2053
     },
     "blocked": {
       "codex": 80,

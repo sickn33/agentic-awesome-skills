@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-02T10:41:06.000Z",
-  "total": 2109,
+  "total": 2111,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -22602,6 +22602,41 @@
       "path": "skills/enhance-prompt/SKILL.md"
     },
     {
+      "id": "entropy-box",
+      "canonical_id": "entropy-box",
+      "name": "entropy-box",
+      "description": "Entropy Box knowledge-compiler for embodied-AI: turns bounded requirements into grounded workflows via Solution Consult, Search, Lookup, and Evidence. Do not use it to control physical robots.",
+      "category": "research",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "chenli-yy/entropy-box-public",
+      "license": "CC-BY-4.0",
+      "license_source": "https://github.com/sickn33/agentic-awesome-skills/blob/main/LICENSE-CONTENT",
+      "tags": [
+        "robotics",
+        "embodied-ai",
+        "knowledge-graph",
+        "knowledge-compiler",
+        "research"
+      ],
+      "triggers": [
+        "robotics",
+        "embodied-ai",
+        "knowledge-graph",
+        "knowledge-compiler",
+        "research",
+        "entropy",
+        "box",
+        "knowledge",
+        "compiler",
+        "embodied",
+        "ai",
+        "turns"
+      ],
+      "path": "skills/entropy-box/SKILL.md"
+    },
+    {
       "id": "environment-setup-guide",
       "canonical_id": "environment-setup-guide",
       "name": "environment-setup-guide",
@@ -41287,6 +41322,42 @@
         "analyzer"
       ],
       "path": "skills/oral-health-analyzer/SKILL.md"
+    },
+    {
+      "id": "orca-replay",
+      "canonical_id": "orca-replay",
+      "name": "orca-replay",
+      "description": "Answers questions about a past agent run from its recording rather than from memory, and replays or forks that run. Use when asked why an earlier run did something, or to reproduce a failure.",
+      "category": "development",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Continuum-AI-Corp/OrcaReplay",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/LICENSE",
+      "tags": [
+        "debugging",
+        "replay",
+        "trace",
+        "root-cause",
+        "agent-runs",
+        "mcp"
+      ],
+      "triggers": [
+        "debugging",
+        "replay",
+        "trace",
+        "root-cause",
+        "agent-runs",
+        "mcp",
+        "orca",
+        "answers",
+        "questions",
+        "about",
+        "past",
+        "agent"
+      ],
+      "path": "skills/orca-replay/SKILL.md"
     },
     {
       "id": "orchestrate",

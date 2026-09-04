@@ -18350,6 +18350,39 @@
     }
   },
   {
+    "id": "entropy-box",
+    "path": "skills/entropy-box",
+    "category": "research",
+    "name": "entropy-box",
+    "description": "Entropy Box knowledge-compiler for embodied-AI: turns bounded requirements into grounded workflows via Solution Consult, Search, Lookup, and Evidence. Do not use it to control physical robots.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "chenli-yy/entropy-box-public",
+    "license": "CC-BY-4.0",
+    "license_source": "https://github.com/sickn33/agentic-awesome-skills/blob/main/LICENSE-CONTENT",
+    "tags": [
+      "robotics",
+      "embodied-ai",
+      "knowledge-graph",
+      "knowledge-compiler",
+      "research"
+    ]
+  },
+  {
     "id": "environment-setup-guide",
     "path": "skills/environment-setup-guide",
     "category": "development",
@@ -34422,6 +34455,40 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "orca-replay",
+    "path": "skills/orca-replay",
+    "category": "development",
+    "name": "orca-replay",
+    "description": "Answers questions about a past agent run from its recording rather than from memory, and replays or forks that run. Use when asked why an earlier run did something, or to reproduce a failure.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-03",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "Continuum-AI-Corp/OrcaReplay",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/LICENSE",
+    "tags": [
+      "debugging",
+      "replay",
+      "trace",
+      "root-cause",
+      "agent-runs",
+      "mcp"
+    ]
   },
   {
     "id": "orchestrate",
