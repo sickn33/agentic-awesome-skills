@@ -1,5 +1,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { usePageMeta } from '../hooks/usePageMeta';
+import { Link } from 'react-router';
+import { releaseFileUrl } from '../utils/catalogRelease';
 import {
   WORKBENCH_MAX_IMPORT_BYTES,
   WORKBENCH_MAX_JSON_DEPTH,
@@ -375,6 +377,16 @@ export function Workbench(): React.ReactElement {
           </dl>
         </div>
       </header>
+
+      <section className="workbench-boundary" aria-labelledby="workbench-start-title">
+        <h2 id="workbench-start-title">Need a stack to review?</h2>
+        <ol>
+          <li><Link to="/">Compare skills in the catalog</Link> and copy an agent brief with your goal and target.</li>
+          <li>Give the brief to your coding agent with AAS MCP configured. Let it inspect your project and select exact IDs; review its choices before saving <code>aas-stack.json</code>.</li>
+          <li>Validate the manifest and generate a preview plan with the CLI, then import both files below.</li>
+        </ol>
+        <a href={releaseFileUrl('docs/users/aas-core.md')}>Configuration and preview commands</a>
+      </section>
 
       <section className="workbench-boundary" aria-labelledby="workbench-boundary-title">
         <h2 id="workbench-boundary-title">Review surface, not an installer</h2>

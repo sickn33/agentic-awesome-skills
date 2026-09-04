@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { VirtuosoGrid } from 'react-virtuoso';
 import { SkillCard } from '../components/SkillCard';
+import { ShortlistReview } from '../components/ShortlistReview';
 import { Icon } from '../components/ui/Icon';
 import { useSkills } from '../context/SkillContext';
 import { seoLandingPages } from '../data/seoLandingPages';
@@ -228,7 +229,6 @@ export function Home(): React.ReactElement {
   }, [skills]);
 
   const shortlistSkills = useMemo(() => skills.filter((skill) => shortlistIds.includes(skill.id)), [shortlistIds, skills]);
-  const shortlistRisks = useMemo(() => new Set(shortlistSkills.map((skill) => skill.risk || 'unknown')), [shortlistSkills]);
 
   const clearFilters = () => {
     setSearch('');
@@ -237,12 +237,6 @@ export function Home(): React.ReactElement {
     setSourceFilter('all');
     setScopeFilter('all');
     setSortBy('default');
-  };
-
-  const copyShortlist = async () => {
-    await navigator.clipboard.writeText(shortlistSkills.map((skill) => skill.id).join('\n'));
-    setSyncMsg({ type: 'success', text: 'Canonical skill IDs copied to your clipboard.' });
-    window.setTimeout(() => setSyncMsg(null), 5000);
   };
 
   const handleSync = async () => {
@@ -377,6 +371,8 @@ export function Home(): React.ReactElement {
           </div>
         </section>
 
+        <ShortlistReview skills={shortlistSkills} onRemove={toggleShortlist} onClear={clearShortlist} />
+
         <section className="catalog-results" aria-labelledby="catalog-results-title">
           <header>
             <div>
@@ -427,20 +423,6 @@ export function Home(): React.ReactElement {
           )}
         </section>
 
-        <section className="catalog-shortlist" aria-labelledby="shortlist-title">
-          <div>
-            <p>Browser-local shortlist</p>
-            <h2 id="shortlist-title">Build a stack before you ask your agent to act.</h2>
-            <span>{shortlistSkills.length} selected · {shortlistRisks.size || 0} risk levels</span>
-          </div>
-          {shortlistSkills.length > 0 ? (
-            <div className="catalog-shortlist__actions">
-              <button type="button" onClick={() => void copyShortlist()}>Copy exact IDs</button>
-              <button type="button" onClick={clearShortlist}>Clear shortlist</button>
-            </div>
-          ) : <p>Add skills from the catalog to compare and export their exact IDs. Nothing leaves this browser.</p>}
-        </section>
-
         <section className="catalog-health" aria-labelledby="catalog-health-title">
           <div><p>Catalog health</p><h2 id="catalog-health-title">A quick view of the library you are choosing from.</h2></div>
           <dl>
@@ -449,7 +431,7 @@ export function Home(): React.ReactElement {
             <div><dt>Tagged for discovery</dt><dd>{skills.length ? Math.round((catalogHealth.documented / skills.length) * 100) : 0}%</dd></div>
             <div><dt>Latest addition</dt><dd>{catalogHealth.latest || 'Not recorded'}</dd></div>
           </dl>
-          <p>Discovery interactions stay in this browser. Connect a consent-based analytics provider later if you want aggregate search-gap reporting.</p>
+          <p>Search and shortlist stay in this browser. Check each skill's setup, source, and instructions before using it.</p>
         </section>
 
         <section className="catalog-support" aria-label="Catalog guides">

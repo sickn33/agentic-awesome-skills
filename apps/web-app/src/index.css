@@ -699,6 +699,39 @@ textarea {
   align-items: start;
 }
 
+.shortlist-review { margin-top: 28px; min-width: 0; }
+.shortlist-review .catalog-shortlist { margin-top: 0; padding: 20px 0; }
+.shortlist-review__details { border-bottom: 1px solid var(--stroke-subtle); }
+.shortlist-review summary { padding: 14px 0; cursor: pointer; font-size: 0.85rem; font-weight: 650; }
+.shortlist-review__table { max-width: 100%; overflow-x: auto; }
+.shortlist-review table { width: 100%; min-width: 650px; border-collapse: collapse; text-align: left; font-size: 0.8rem; }
+.shortlist-review th, .shortlist-review td { padding: 14px; border: 1px solid var(--stroke-subtle); vertical-align: top; }
+.shortlist-review thead th { background: var(--surface-card); font-size: 0.72rem; }
+.shortlist-review tbody th { width: 23%; overflow-wrap: anywhere; }
+.shortlist-review td:nth-child(2) { width: 35%; line-height: 1.6; }
+.shortlist-review a, .skill-requirements a, .skill-requirements-panel > a { color: var(--accent-solid); text-decoration: underline; text-underline-offset: 3px; }
+.shortlist-review tbody th button { display: block; margin-top: 12px; font-size: 0.72rem; font-weight: 400; cursor: pointer; text-decoration: underline; }
+.shortlist-review__brief { display: grid; gap: 16px; padding: 12px 0 20px; }
+.shortlist-review__brief label { display: grid; gap: 6px; font-size: 0.82rem; font-weight: 650; }
+.shortlist-review textarea, .shortlist-review select { width: 100%; border: 1px solid var(--stroke-subtle); border-radius: var(--radius-sm); background: var(--surface-card); color: var(--text-primary); padding: 10px 12px; font: inherit; }
+.shortlist-review textarea { resize: vertical; }
+.shortlist-review select { max-width: 320px; min-height: 44px; }
+.shortlist-review__brief > p, .shortlist-review__note, .shortlist-review__status { font-size: 0.78rem; line-height: 1.6; color: var(--text-muted); margin: 10px 0; }
+.shortlist-review .catalog-shortlist__actions { flex-wrap: wrap; align-items: center; }
+.shortlist-review .catalog-shortlist__actions a { font-size: 0.8rem; }
+.shortlist-review button:disabled { opacity: 0.5; cursor: not-allowed; }
+.skill-requirements { margin: 0; display: grid; gap: 8px; font-size: 0.78rem; line-height: 1.5; }
+.skill-requirements dt { color: var(--text-muted); font-size: 0.7rem; }
+.skill-requirements dd { margin: 0; overflow-wrap: anywhere; }
+.skill-requirements-panel { margin-top: 24px; border-top: 1px solid var(--stroke-subtle); padding-top: 18px; }
+.skill-requirements-panel h2 { margin: 0 0 14px; font-size: 1rem; font-weight: 650; }
+.skill-requirements-panel .skill-requirements { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+.skill-requirements-panel > a { display: inline-block; margin-top: 16px; font-size: 0.85rem; }
+.skill-requirements-panel > p { margin-top: 8px; font-size: 0.78rem; line-height: 1.6; color: var(--text-muted); }
+.markdown-body :is(h1, h2, h3, h4, h5, h6) { scroll-margin-top: 96px; }
+.workbench-boundary ol { padding-left: 22px; list-style: decimal; font-size: 0.88rem; line-height: 1.7; }
+.workbench-boundary a { color: var(--accent-solid); text-decoration: underline; text-underline-offset: 3px; }
+
 .catalog-health dl {
   display: grid;
   grid-template-columns: repeat(4, minmax(108px, 1fr));

@@ -29,7 +29,9 @@
     "react-virtuoso": "^4.18.11",
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1",
-    "sanitize-filename": "^1.6.4"
+    "remark-parse": "^11.0.0",
+    "sanitize-filename": "^1.6.4",
+    "unified": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

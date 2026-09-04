@@ -15,8 +15,8 @@ If bundles are your toolbox, workflows are your execution playbook.
 
 ## How to Use Workflows
 
-1. Install the repository once (`npx agentic-awesome-skills`).
-2. Pick a workflow matching your immediate goal.
+1. Pick a workflow matching your immediate goal and review the listed skills and their setup instructions.
+2. Install only your selected skills. For example, preview a Codex install with `npx agentic-awesome-skills --codex --skills concise-planning,verification-before-completion --dry-run`, review the destination and file list, then repeat without `--dry-run` to install. Replace the example IDs with your selection; a bare install requires an explicit selection.
 3. Execute steps in order and invoke the listed skills in each step.
 4. Keep output artifacts at each step (plan, decisions, tests, validation evidence).
 

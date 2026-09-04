@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Catalog shortlist comparison with declared risk, setup, plugin packaging, source, and license metadata; a previewable agent brief carries the selected IDs, catalog version, project goal, and target into agent-owned stack selection.
+- Skill bundle links pinned to the catalog release and a Workbench guide from catalog selection to manifest and plan review.
+
+### Fixed
+
+- Skill documentation links resolve bundled files against the same repository release; fragment links stay on the current skill page under the GitHub Pages base path. Outline and rendered heading IDs now agree for inline markup, duplicate headings, and non-English text.
+- Workflow installation guidance uses explicit skill selection and a dry run; the shortlist appears before catalog results and handles clipboard failures with a selectable brief.
+- Updated the web app's transitive `qs` dependency to its patched release.
+
 ## [16.7.0] - 2026-09-04 - "Replayable Agents and Grounded Engineering Knowledge"
 
 > Added agent-run forensics, an embodied-AI knowledge compiler, and a focused

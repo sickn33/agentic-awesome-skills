@@ -45,6 +45,7 @@ export const SkillCard = React.memo(({ skill, starCount, shortlisted = false, on
             type="button"
             className={`skill-row__shortlist ${shortlisted ? 'is-active' : ''}`}
             aria-pressed={shortlisted}
+            aria-label={shortlisted ? 'In shortlist' : 'Add to shortlist'}
             onClick={() => onToggleShortlist(skill.id)}
           >
             {shortlisted ? 'In shortlist' : 'Add to shortlist'}

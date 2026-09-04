@@ -209,7 +209,7 @@ describe('Home', () => {
 
       fireEvent.click(screen.getByRole('button', { name: /Add to shortlist/i }));
       expect(screen.getByRole('button', { name: /In shortlist/i })).toBeInTheDocument();
-      expect(screen.getByText(/1 selected/i)).toBeInTheDocument();
+      expect(screen.getByText(/^1 selected · catalog/)).toBeInTheDocument();
     });
   });
 
