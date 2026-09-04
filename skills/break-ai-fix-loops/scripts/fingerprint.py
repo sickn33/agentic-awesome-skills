@@ -28,6 +28,16 @@ class RecordError(ValueError):
     """Raised when a record cannot produce a trustworthy fingerprint."""
 
 
+def _reject_duplicate_fields(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    """Build a JSON object while rejecting ambiguous duplicate field names."""
+    value: dict[str, Any] = {}
+    for field, field_value in pairs:
+        if field in value:
+            raise RecordError(f"duplicate field: {field}")
+        value[field] = field_value
+    return value
+
+
 def _normalize_text(value: str) -> str:
     """Normalize transport-only differences without deleting meaningful values."""
     return value.replace("\r\n", "\n").replace("\r", "\n")
@@ -82,11 +92,11 @@ def fingerprint(record: Mapping[str, Any]) -> str:
 def load_record(path: str) -> Mapping[str, Any]:
     try:
         if path == "-":
-            value = json.load(sys.stdin)
+            value = json.load(sys.stdin, object_pairs_hook=_reject_duplicate_fields)
         else:
             with Path(path).open("r", encoding="utf-8") as handle:
-                value = json.load(handle)
-    except (OSError, json.JSONDecodeError) as error:
+                value = json.load(handle, object_pairs_hook=_reject_duplicate_fields)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
         raise RecordError(str(error)) from error
     if not isinstance(value, dict):
         raise RecordError("record must be a JSON object")

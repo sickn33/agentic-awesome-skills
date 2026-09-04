@@ -74,6 +74,40 @@ class FingerprintTests(unittest.TestCase):
         with self.assertRaisesRegex(MODULE.RecordError, "schema_version must be 1"):
             MODULE.fingerprint(value)
 
+    def test_cli_rejects_duplicate_fields_with_exit_two(self) -> None:
+        duplicate_record = (
+            '{"schema_version":1,"command":"pytest","input_digest":"sha256:abc",'
+            '"exit_code":1,"failure_class":"assertion-mismatch",'
+            '"stable_excerpt":"first","stable_excerpt":"second",'
+            '"real_path_state":"disabled"}'
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory, "duplicate.json")
+            path.write_text(duplicate_record, encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT), str(path)],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("duplicate field: stable_excerpt", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+
+    def test_cli_rejects_invalid_utf8_with_exit_two(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory, "invalid-utf8.json")
+            path.write_bytes(b"\xff")
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT), str(path)],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("invalid start byte", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+
     def test_cli_rejects_invalid_record_with_exit_two(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory, "invalid.json")
