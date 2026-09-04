@@ -31,7 +31,7 @@ class RecordError(ValueError):
 def _normalize_text(value: str) -> str:
     """Normalize transport-only differences without deleting meaningful values."""
     value = value.replace("\r\n", "\n").replace("\r", "\n")
-    lines = [line.rstrip() for line in value.split("\n")]
+    lines = value.split("\n")
     while lines and not lines[0]:
         lines.pop(0)
     while lines and not lines[-1]:
@@ -47,7 +47,11 @@ def canonicalize(record: Mapping[str, Any]) -> dict[str, Any]:
     if unknown:
         raise RecordError(f"unknown field(s): {', '.join(unknown)}")
 
-    if record["schema_version"] != 1:
+    if (
+        isinstance(record["schema_version"], bool)
+        or not isinstance(record["schema_version"], int)
+        or record["schema_version"] != 1
+    ):
         raise RecordError("schema_version must be 1")
     if isinstance(record["exit_code"], bool) or not isinstance(record["exit_code"], int):
         raise RecordError("exit_code must be an integer")

@@ -32,11 +32,17 @@ def record() -> dict[str, object]:
 
 
 class FingerprintTests(unittest.TestCase):
-    def test_key_order_and_transport_whitespace_do_not_change_fingerprint(self) -> None:
+    def test_key_order_and_transport_newlines_do_not_change_fingerprint(self) -> None:
         first = record()
         second = dict(reversed(list(first.items())))
-        second["stable_excerpt"] = "\r\nexpected enabled  \r\nobserved disabled\r\n"
+        second["stable_excerpt"] = "\r\nexpected enabled\r\nobserved disabled\r\n"
         self.assertEqual(MODULE.fingerprint(first), MODULE.fingerprint(second))
+
+    def test_meaningful_trailing_whitespace_changes_fingerprint(self) -> None:
+        first = record()
+        second = record()
+        second["stable_excerpt"] = "expected enabled  \nobserved disabled"
+        self.assertNotEqual(MODULE.fingerprint(first), MODULE.fingerprint(second))
 
     def test_observable_state_change_changes_fingerprint(self) -> None:
         first = record()
@@ -54,6 +60,12 @@ class FingerprintTests(unittest.TestCase):
         value = record()
         del value["input_digest"]
         with self.assertRaisesRegex(MODULE.RecordError, "missing field"):
+            MODULE.fingerprint(value)
+
+    def test_boolean_schema_version_fails_closed(self) -> None:
+        value = record()
+        value["schema_version"] = True
+        with self.assertRaisesRegex(MODULE.RecordError, "schema_version must be 1"):
             MODULE.fingerprint(value)
 
     def test_cli_rejects_invalid_record_with_exit_two(self) -> None:
