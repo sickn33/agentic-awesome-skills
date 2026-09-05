@@ -24,6 +24,7 @@ The earlier deterministic recommendation design and goal documents are retained 
 1. The coding agent owns semantic selection. It may inspect the project with its normal local capabilities, search broadly, read full skill content when useful, compare alternatives, and choose exact IDs.
 2. AAS Core does not rank, recommend, promote, demote, exclude, or abstain on skills.
 3. Catalog metadata is informational only. Missing, incomplete, cautionary, or manually reviewed metadata must never make a canonical skill unsearchable or unavailable for agent selection.
+   Caller-supplied category/tag filters and required search terms narrow retrieval only when explicitly requested. They do not define eligibility, recommendations, or a composition gate; every ID remains available without filters. Verify both broad/default and all-term modes, stable pagination, normalized category aliases, and evidence export/inspection with the exact search options preserved.
 4. `compose_stack` validates catalog identity, target shape, goals, exact IDs, and structural limits, then returns the pinned stack shape. It does not substitute a different selection.
 5. `aas-stack.json` has no Core selection policy. User constraints can guide the agent's reasoning, but they are not an MCP eligibility filter or manifest gate.
 
@@ -32,7 +33,7 @@ The earlier deterministic recommendation design and goal documents are retained 
 The packed-product smoke path must prove:
 
 1. **Catalog completeness** — packaged catalog count and IDs equal the canonical registry; exact-ID search, `get_skill`, and content reads work for every canonical skill.
-2. **MCP contract** — the five supported read-only tools and resource template work over real stdio framing without repository scanning or state writes.
+2. **MCP contract** — the nine supported read-only tools and resource template work over real stdio framing without repository scanning or state writes.
 3. **Agent-owned composition** — `compose_stack` preserves the exact ordered ID selection supplied by the agent and returns a structurally valid manifest without a policy field.
 4. **No metadata gating** — skills with unknown, critical, manual, blocked, incomplete, or absent informational metadata remain searchable, selectable, composable, and plannable.
 5. **Stack lifecycle** — compose, inspect, validate, plan, and doctor succeed in isolated roots without materializing target skills or managed state.

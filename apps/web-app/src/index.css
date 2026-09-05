@@ -576,6 +576,41 @@ textarea {
   display: none;
 }
 
+.catalog-search-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.catalog-search-options label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  flex: 1 1 180px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.catalog-search-options input,
+.catalog-search-options select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--stroke-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  background: var(--surface-card);
+}
+
+.skill-row__content .skill-row__match {
+  margin-top: 8px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
 .catalog-toolbar {
   display: flex;
   align-items: center;

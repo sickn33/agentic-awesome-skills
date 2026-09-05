@@ -116,6 +116,36 @@ Search results use a stable catalog order and contain no relevance score, recomm
 
 MCP calls do not install or remove skills, update catalogs, edit host configuration, persist a stack, or apply it. Full skill text is returned only when requested and remains marked as untrusted content.
 
+### Narrow a search explicitly
+
+`search_skills` retains its broad, backward-compatible default, `matchMode: "any"`:
+any query token or an exact ID prefix can match. Use `matchMode: "all"` to require
+every whitespace-separated query term, for example:
+
+```json
+{"query":"postgres migration","matchMode":"all","requiredTerms":["postgres"],"categories":["database"],"limit":20}
+```
+
+`requiredTerms` always uses AND; `categories` matches any supplied category;
+`tags` requires every supplied tag. Each optional list accepts up to 16 strings
+of at most 64 characters. Required terms cannot contain whitespace. Terms and
+tags use the catalog's token aliases. Category facets join `front-end` with
+`frontend`, `back-end` with `backend`, and `databases` with `database`, preserving
+the original metadata and all skill IDs. Filters apply only when supplied by the
+caller; empty query and empty filters still reach the complete catalog through
+pagination.
+
+Results expose `matchedTokens`, `matchedRequiredTerms`, `matchReason`, and the
+normalized `categoryFacet`. These explain retrieval, not suitability. Explicit
+search options are retained in the exported factual session trace.
+
+The web catalog defaults to **All words**, offers **Any word** and explicit
+**Approximate** matching, and supports additional required words. Mode, query,
+required words, and category travel in the URL. Approximate matching is a browser
+convenience and is not part of MCP. Both surfaces retain catalog order unless a
+web user explicitly chooses another sort. The web searches displayed catalog
+fields; Core also has indexed trigger metadata, so result sets can differ.
+
 ### Read the complete bundle
 
 After `get_skill`, follow its relative references with `list_skill_files`, for
@@ -171,7 +201,7 @@ The manifest pins catalog identity, targets, the project profile, and exact agen
 
 `aas-selection-evidence.json` makes the selection process auditable without moving semantic judgment into Core. It binds a path-safe project fingerprint, catalog identity, manifest digest, the agent-declared ten-dimension capability ledger, capability-to-skill mappings, and the actual `search_skills`, `get_skill`, `compose_stack`, and `inspect_stack` facts recorded by that MCP server session. `export_selection_evidence` takes the ledger but obtains the trace from server-owned session state; the caller cannot supply a replacement historical trace. `inspect_selection_evidence` performs structural and factual validation only.
 
-The trace records effective search query/cursor/limit values and returned IDs, opened skill IDs, exact compose IDs, inspect outcomes, safe error codes, deterministic retry attempts, and canonical input/output byte counts. Monotonic call durations are recorded separately outside the evidence digest. Client name and version come from MCP initialization when valid and available; model identity is omitted unless a trusted protocol surface supplies it.
+The trace records effective search query/cursor/limit values, explicitly supplied match modes and filters, and returned IDs, opened skill IDs, exact compose IDs, inspect outcomes, safe error codes, deterministic retry attempts, and canonical input/output byte counts. Monotonic call durations are recorded separately outside the evidence digest. Client name and version come from MCP initialization when valid and available; model identity is omitted unless a trusted protocol surface supplies it.
 
 The sidecar does not prove that a capability is correctly interpreted, that a selected skill is best, or that semantic coverage is sufficient. Repository evidence references are relative and contain no file contents or absolute paths. Search queries are recorded verbatim as factual trace data, so do not put secrets, credentials, private source text, or personal data in `search_skills` queries. Runtime observations that are not deterministic are not part of the canonical evidence digest.
 

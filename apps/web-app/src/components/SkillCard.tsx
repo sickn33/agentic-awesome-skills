@@ -8,11 +8,12 @@ import { toIndexableRoutePath } from '../utils/seo';
 interface SkillCardProps {
   skill: Skill;
   starCount: number;
+  matchExplanation?: string;
   shortlisted?: boolean;
   onToggleShortlist?: (skillId: string) => void;
 }
 
-export const SkillCard = React.memo(({ skill, starCount, shortlisted = false, onToggleShortlist }: SkillCardProps) => {
+export const SkillCard = React.memo(({ skill, starCount, matchExplanation, shortlisted = false, onToggleShortlist }: SkillCardProps) => {
   return (
     <article className="skill-row group">
       <Link
@@ -29,6 +30,7 @@ export const SkillCard = React.memo(({ skill, starCount, shortlisted = false, on
             <span>{skill.category || 'Uncategorized'}</span>
           </div>
           <p>{skill.description}</p>
+          {matchExplanation && <p className="skill-row__match">{matchExplanation}</p>}
           <div className="skill-row__meta">
             <span>Risk: <strong>{skill.risk || 'unknown'}</strong></span>
             {skill.date_added && <span>Added {skill.date_added}</span>}

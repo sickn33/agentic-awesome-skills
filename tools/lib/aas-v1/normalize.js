@@ -12,7 +12,12 @@ function normalizeToken(value) {
     .toLowerCase()
     .replace(/[^a-z0-9+#./-]+/g, "-")
     .replace(/^-+|-+$/g, "");
-  return ontology.aliases[token] || token;
+  return Object.hasOwn(ontology.aliases, token) ? ontology.aliases[token] : token;
+}
+
+function normalizeCategory(value) {
+  const category = String(value || "uncategorized").normalize("NFKC").trim().toLowerCase().replace(/[\s_]+/g, "-");
+  return Object.hasOwn(ontology.categoryAliases, category) ? ontology.categoryAliases[category] : category;
 }
 
 function tokenize(value) {
@@ -36,6 +41,7 @@ function sortedUnique(values) {
 
 module.exports = {
   normalizeToken,
+  normalizeCategory,
   compareStrings,
   tokenize,
   sortedUnique,

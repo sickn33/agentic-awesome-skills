@@ -274,6 +274,7 @@ describe('Home', () => {
 
       renderWithRouter(<Home />, { useProvider: false });
 
+      fireEvent.change(screen.getByLabelText('Search matching'), { target: { value: 'fuzzy' } });
       const searchInput = screen.getByLabelText(/Search skills/i);
       fireEvent.change(searchInput, { target: { value: 'reactj' } });
 
@@ -354,6 +355,28 @@ describe('Home', () => {
       await waitFor(() => {
         expect(screen.getByTestId('location')).toHaveTextContent('q=front');
       });
+    });
+
+    it('restores search modes, required terms, and category aliases through navigation', async () => {
+      const skills = [
+        createMockSkill({ id: 'migration', name: 'Migration', description: 'Database migration', category: 'databases' }),
+        createMockSkill({ id: 'postgres', name: 'Postgres', description: 'Postgres migration', category: 'database' }),
+      ];
+      renderCatalog(['/?q=postgres+migration&match=any&category=databases', '/?q=postgres+migration&required=postgres&category=database'], 0, skills);
+      await waitFor(() => expect(screen.getByText('@Migration')).toBeInTheDocument());
+      expect(screen.getByLabelText('Filter by category')).toHaveValue('database');
+      expect(screen.getByLabelText('Search matching')).toHaveValue('any');
+      expect(screen.getByRole('option', { name: 'Database (2)' })).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'go forward' }));
+      await waitFor(() => expect(screen.queryByText('@Migration')).not.toBeInTheDocument());
+      expect(screen.getByText('@Postgres')).toBeInTheDocument();
+      expect(screen.getByLabelText('Search matching')).toHaveValue('all');
+      expect(screen.getByLabelText('Required search terms')).toHaveValue('postgres');
+      expect(screen.getByText('Matched terms: postgres, migration · Required: postgres')).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'go back' }));
+      await waitFor(() => expect(screen.getByText('@Migration')).toBeInTheDocument());
+      expect(screen.getByLabelText('Search matching')).toHaveValue('any');
+      expect(screen.getByLabelText('Required search terms')).toHaveValue('');
     });
 
     it('restores filters after forward and back navigation', async () => {

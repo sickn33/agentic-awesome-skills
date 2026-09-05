@@ -6,6 +6,7 @@ const core = require("..");
 const { validateManifest } = require("../stack");
 const { sanitizeValidationDetails } = require("../schema-validator");
 const { listSkillFiles, readSkillFile } = require("../skill-files");
+const { normalizeSearchInput } = require("../search");
 
 const TOOL_NAMES = Object.freeze([
   "search_skills",
@@ -221,7 +222,7 @@ const AGENT_SELECTION_CONTRACT = [
 const TOOL_DEFINITIONS = Object.freeze([
   {
     name: "search_skills",
-    description: "Retrieve matching skills from the verified local AAS catalog in stable catalog order, without relevance scores, ranking, recommendations, or local-state changes. Search one project capability at a time and paginate or refine until plausible candidates are found; do not stop after the first page or first few matches.",
+    description: "Retrieve matching skills from the verified local AAS catalog in stable catalog order, without relevance scores, ranking, recommendations, or local-state changes. Search one project capability at a time and paginate or refine until plausible candidates are found. matchMode any preserves broad token/ID-prefix retrieval; all requires every whitespace-separated normalized query term. requiredTerms always requires each supplied token. Caller-supplied categories match any normalized category; tags require every tag. Omit filters and query to reach the complete catalog. Results explain matched terms without choosing skills.",
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
       type: "object",
@@ -230,6 +231,10 @@ const TOOL_DEFINITIONS = Object.freeze([
         query: { type: "string", maxLength: 256 },
         cursor: { type: "integer", minimum: 0 },
         limit: { type: "integer", minimum: 1, maximum: 50 },
+        matchMode: { type: "string", enum: ["any", "all"], default: "any" },
+        requiredTerms: { type: "array", maxItems: 16, items: { type: "string", minLength: 1, maxLength: 64 } },
+        categories: { type: "array", maxItems: 16, items: { type: "string", minLength: 1, maxLength: 64 } },
+        tags: { type: "array", maxItems: 16, items: { type: "string", minLength: 1, maxLength: 64 } },
       },
     },
   },
@@ -528,6 +533,8 @@ function safeClientInfo(value) {
 function traceInputFor(name, args) {
   if (!isPlainObject(args)) return { inputValid: false };
   if (name === "search_skills") {
+    try { normalizeSearchInput(args); }
+    catch { return { inputValid: false }; }
     if ((args.query !== undefined && typeof args.query !== "string")
       || (typeof args.query === "string" && [...args.query].length > 256)
       || (args.cursor !== undefined && (!Number.isInteger(args.cursor) || args.cursor < 0))
@@ -538,6 +545,8 @@ function traceInputFor(name, args) {
       query: args.query || "",
       cursor: args.cursor ?? 0,
       limit: args.limit ?? 20,
+      ...Object.fromEntries(["matchMode", "requiredTerms", "categories", "tags"]
+        .filter((key) => args[key] !== undefined).map((key) => [key, args[key]])),
     };
   }
   if (name === "get_skill") {
@@ -737,7 +746,7 @@ class McpServer {
       }
       let payload;
       if (name === "search_skills") {
-        assertExactKeys(args, ["query", "cursor", "limit"]);
+        assertExactKeys(args, ["query", "cursor", "limit", "matchMode", "requiredTerms", "categories", "tags"]);
         if (typeof args.query === "string" && [...args.query].length > 256) inputError("AAS_INPUT_QUERY_INVALID");
         payload = {
           ok: true,

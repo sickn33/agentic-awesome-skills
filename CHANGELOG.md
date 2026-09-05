@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Explicit all-term matching, required terms, normalized category facets and tag filters in Core search, with match explanations and factual evidence traces. The web catalog offers literal and explicit approximate modes, shareable search controls, and matching explanations while preserving catalog order.
 - Local MCP bundle inspection through `list_skill_files` and `read_skill_file`, with catalog-bound paths and digests, bounded inert text reads, and explicit handling of links, binary files, missing payloads and older catalogs.
 - Catalog shortlist comparison with declared risk, setup, plugin packaging, source, and license metadata; a previewable agent brief carries the selected IDs, catalog version, project goal, and target into agent-owned stack selection.
 - Skill bundle links pinned to the catalog release and a Workbench guide from catalog selection to manifest and plan review.

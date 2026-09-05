@@ -1,7 +1,7 @@
 "use strict";
 
 const { canonicalJson } = require("./canonical-json");
-const { sortedUnique, tokenize } = require("./normalize");
+const { sortedUnique, tokenize, normalizeToken, normalizeCategory } = require("./normalize");
 
 const FORBIDDEN_QUERY_SYNTAX = /[\u0000-\u001f\u007f\\^$*?()[\]{}|]/u;
 
@@ -15,7 +15,13 @@ function validateLimit(value, fallback = 20, maximum = 50) {
   return limit;
 }
 
-function searchSkills(catalog, input = {}) {
+function searchInputError(code) {
+  const error = new Error(code);
+  error.code = code;
+  throw error;
+}
+
+function normalizeSearchInput(input = {}) {
   const query = input.query === undefined ? "" : input.query;
   if (typeof query !== "string" || [...query].length > 256
     || Buffer.byteLength(query, "utf8") > 1024 || FORBIDDEN_QUERY_SYNTAX.test(query)) {
@@ -23,30 +29,59 @@ function searchSkills(catalog, input = {}) {
     error.code = "AAS_INPUT_QUERY_INVALID";
     throw error;
   }
-  const limit = validateLimit(input.limit);
+  const matchMode = input.matchMode === undefined ? "any" : input.matchMode;
+  if (!["any", "all"].includes(matchMode)) searchInputError("AAS_INPUT_MATCH_MODE_INVALID");
+  const list = (key, normalize, singleToken = false) => {
+    const values = input[key] === undefined ? [] : input[key];
+    if (!Array.isArray(values) || values.length > 16 || values.some((value) => typeof value !== "string"
+      || value.length < 1 || value.length > 64 || FORBIDDEN_QUERY_SYNTAX.test(value)
+      || (singleToken && /\s/u.test(value)) || !normalize(value))) searchInputError("AAS_INPUT_SEARCH_FILTER_INVALID");
+    return sortedUnique(values.map(normalize));
+  };
+  return {
+    query,
+    matchMode,
+    queryTokens: matchMode === "all"
+      ? sortedUnique(query.trim().split(/\s+/u).map(normalizeToken))
+      : sortedUnique(tokenize(query)),
+    requiredTerms: list("requiredTerms", normalizeToken, true),
+    categories: list("categories", normalizeCategory),
+    tags: list("tags", normalizeToken),
+    limit: validateLimit(input.limit),
+  };
+}
+
+function searchSkills(catalog, input = {}) {
+  const { query, matchMode, queryTokens, requiredTerms, categories, tags, limit } = normalizeSearchInput(input);
   const cursor = input.cursor === undefined ? 0 : input.cursor;
   if (!Number.isInteger(cursor) || cursor < 0 || cursor > catalog.skills.length) {
     const error = new Error("cursor must be a valid catalog offset");
     error.code = "AAS_INPUT_CURSOR_INVALID";
     throw error;
   }
-  const queryTokens = sortedUnique(tokenize(query));
   const normalizedQuery = query.trim().toLowerCase();
   const matches = catalog.skills.map((skill) => {
     const document = new Set(skill.searchTokens || []);
     const matchedTokens = queryTokens.filter((token) => document.has(token));
-    const matchesQuery = !normalizedQuery
-      || skill.id.startsWith(normalizedQuery)
-      || matchedTokens.length > 0;
-    return { skill, matchedTokens, matchesQuery };
+    const prefixMatch = matchMode === "any" && skill.id.startsWith(normalizedQuery);
+    const matchesQuery = (!normalizedQuery || (matchMode === "all"
+      ? queryTokens.length > 0 && matchedTokens.length === queryTokens.length
+      : prefixMatch || matchedTokens.length > 0))
+      && requiredTerms.every((token) => document.has(token))
+      && (categories.length === 0 || categories.includes(normalizeCategory(skill.category)))
+      && tags.every((tag) => (skill.tags || []).some((value) => normalizeToken(value) === tag));
+    return { skill, matchedTokens, matchesQuery, prefixMatch };
   }).filter((entry) => entry.matchesQuery);
   const results = matches.slice(cursor, cursor + limit)
-    .map(({ skill, matchedTokens }) => {
+    .map(({ skill, matchedTokens, prefixMatch }) => {
       const result = {
         id: skill.id,
         name: skill.name,
         category: skill.category,
         matchedTokens,
+        matchedRequiredTerms: requiredTerms,
+        matchReason: normalizedQuery ? (prefixMatch ? "id-prefix" : "tokens") : "filters-or-all",
+        categoryFacet: normalizeCategory(skill.category),
         description: skill.description,
         tags: skill.tags,
         triggers: skill.triggers,
@@ -54,7 +89,7 @@ function searchSkills(catalog, input = {}) {
       return result;
     });
   const nextCursor = cursor + results.length < matches.length ? cursor + results.length : null;
-  return { queryTokens, totalMatches: matches.length, cursor, nextCursor, resultCount: results.length, results };
+  return { queryTokens, matchMode, requiredTerms, filters: { categories, tags }, totalMatches: matches.length, cursor, nextCursor, resultCount: results.length, results };
 }
 
 function getSkill(catalog, id) {
@@ -93,4 +128,4 @@ function diffCatalogs(left, right) {
   };
 }
 
-module.exports = { FORBIDDEN_QUERY_SYNTAX, validateLimit, searchSkills, getSkill, diffCatalogs };
+module.exports = { FORBIDDEN_QUERY_SYNTAX, validateLimit, normalizeSearchInput, searchSkills, getSkill, diffCatalogs };
