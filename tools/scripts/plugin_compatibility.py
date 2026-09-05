@@ -114,7 +114,16 @@ def _runtime_dependency_files(skill_dir: Path) -> list[str]:
     )
 
 
-def _local_link_reasons(content: str, skill_dir: Path) -> set[str]:
+def _markdown_bundle_documents(skill_dir: Path) -> list[tuple[Path, str]]:
+    documents: list[tuple[Path, str]] = []
+    for path in (skill_dir / "SKILL.md", skill_dir / "references" / "detailed-guide.md"):
+        if path.is_symlink() or not path.is_file():
+            continue
+        documents.append((path, path.read_text(encoding="utf-8")))
+    return documents
+
+
+def _local_link_reasons(content: str, document_dir: Path, skill_dir: Path) -> set[str]:
     reasons: set[str] = set()
     resolved_skill_dir = skill_dir.resolve()
 
@@ -127,7 +136,7 @@ def _local_link_reasons(content: str, skill_dir: Path) -> set[str]:
         if os.path.isabs(link_clean):
             continue
 
-        target_path = (skill_dir / link_clean).resolve(strict=False)
+        target_path = (document_dir / link_clean).resolve(strict=False)
         try:
             target_path.relative_to(resolved_skill_dir)
         except ValueError:
@@ -218,22 +227,24 @@ def _initial_target_reasons() -> dict[str, set[str]]:
 
 def analyze_skill(skill_dir: Path, skills_root: Path) -> dict[str, Any]:
     content = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+    documents = _markdown_bundle_documents(skill_dir)
+    bundle_content = "\n".join(document_content for _, document_content in documents)
     metadata = parse_frontmatter(content)
     setup = _setup_from_metadata(metadata)
     restrictions = _explicit_target_restrictions(metadata)
     target_reasons = _initial_target_reasons()
 
-    if ABSOLUTE_HOST_PATH_RE.search(content):
+    if ABSOLUTE_HOST_PATH_RE.search(bundle_content):
         for target in SUPPORTED_TARGETS:
             target_reasons[target].add("absolute_host_path")
 
-    local_link_reasons = _local_link_reasons(content, skill_dir)
-    for reason in local_link_reasons:
-        for target in SUPPORTED_TARGETS:
-            target_reasons[target].add(reason)
+    for document_path, document_content in documents:
+        for reason in _local_link_reasons(document_content, document_path.parent, skill_dir):
+            for target in SUPPORTED_TARGETS:
+                target_reasons[target].add(reason)
 
     for agent_name, pattern in AGENT_HOME_PATTERNS.items():
-        if not pattern.search(content):
+        if not pattern.search(bundle_content):
             continue
 
         if agent_name == "claude":

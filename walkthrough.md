@@ -1,3 +1,11 @@
+# Long skill modularization - 2026-09-05
+
+- Reduced all 211 oversized `SKILL.md` entrypoints below the 500-line quality threshold.
+- Moved their detailed procedures and reference material into local `references/detailed-guide.md` files without deleting source content.
+- Kept activation rules, examples, limitations, prerequisites, and dedicated safety or security sections in the root skill; each root now directs agents to load the detailed guide before execution.
+- Rewrote relative Markdown links for their new document location and preserved cross-links between root and detailed sections.
+- Reduced the strict objective audit to 0 warnings and 0 errors across all 2,111 skills.
+
 # Actionable skill examples - 2026-09-05
 
 - Added a concise, task-specific user request to every canonical skill that lacked a real example.

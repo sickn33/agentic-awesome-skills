@@ -1,12 +1,12 @@
 {
-  "maxWarnings": 211,
-  "maxWarningOnlySkills": 211,
+  "maxWarnings": 0,
+  "maxWarningOnlySkills": 0,
   "maxTopFindingCodes": {
     "description_truncated": 0,
     "missing_examples": 0,
-    "skill_too_long": 211
+    "skill_too_long": 0
   },
   "owner": "repository maintainers",
   "lastReviewed": "2026-09-05",
-  "rationale": "Current objective audit warnings are tracked as explicit backlog debt after removing truncated descriptions, recognizing existing examples, and adding actionable examples where none existed. Strict mode fails on errors, any reintroduced truncation or missing examples, or regressions above this measured baseline."
+  "rationale": "The objective skill audit is clean after repairing truncated descriptions, adding or recognizing examples, and modularizing oversized entrypoints. Strict mode now fails on any error or warning regression."
 }

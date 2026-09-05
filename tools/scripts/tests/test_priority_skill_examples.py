@@ -23,7 +23,11 @@ ROOT = Path(__file__).resolve().parents[3]
 
 
 def load_nodes(relative, names, namespace=None, fenced=False):
-    source = (ROOT / relative).read_text()
+    source_path = ROOT / relative
+    source = source_path.read_text()
+    detailed_guide = source_path.parent / 'references' / 'detailed-guide.md'
+    if source_path.name == 'SKILL.md' and detailed_guide.is_file():
+        source += '\n' + detailed_guide.read_text()
     if fenced:
         source = '\n'.join(re.findall(r'```python\n(.*?)\n```', source, re.S))
     parsed = ast.parse(source)
