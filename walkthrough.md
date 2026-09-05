@@ -1,3 +1,10 @@
+# Actionable skill examples - 2026-09-05
+
+- Added a concise, task-specific user request to every canonical skill that lacked a real example.
+- Normalized the existing `Code_example` headings in `algolia-search` and `clerk-auth` so the examples are recognized consistently.
+- Reduced the strict skill-audit baseline from 507 warnings across 491 skills to 211 warnings across 211 skills; `missing_examples` is now zero.
+- Kept the remaining `skill_too_long` findings visible for the next modularization batch.
+
 # Real skill example recognition - 2026-09-05
 
 - Updated the structural audit to recognize example headings nested below level

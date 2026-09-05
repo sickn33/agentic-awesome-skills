@@ -34,6 +34,12 @@ Original BusyBox: https://busybox.net/
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Use @busybox-on-windows for this task: How to use a Win32 build of BusyBox to run many of the standard UNIX command line tools on Windows.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

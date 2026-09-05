@@ -848,6 +848,12 @@ Message: Tracking without consent check. Implement consent management for GDPR.
 - User mentions or implies: identify track page
 - User mentions or implies: data routing
 
+## Example
+
+**User request:**
+
+> Use @segment-cdp for this task: Expert patterns for Segment Customer Data Platform including Analytics.js, server-side tracking, tracking plans with Protocols, identity resolution, destinations configuration, and data governance best practices.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

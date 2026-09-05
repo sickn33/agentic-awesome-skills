@@ -137,6 +137,12 @@ Orchestrate full-stack feature development across backend, frontend, and infrast
 
 Feature to implement: $ARGUMENTS
 
+## Example
+
+**User request:**
+
+> Implement this feature across backend, frontend, and data layers, then verify the end-to-end behavior.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

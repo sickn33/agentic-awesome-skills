@@ -369,6 +369,12 @@ Use social listening tools to set up searches for:
 - **seo-for-devtools** - SEO optimization for technical content
 - **landing-pages** - Conversion optimization for comparison pages
 
+## Example
+
+**User request:**
+
+> Create "[Competitor] alternative" and comparison pages for developer tools.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

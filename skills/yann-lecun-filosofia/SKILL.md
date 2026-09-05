@@ -413,6 +413,12 @@ Quando este skill é carregado junto com yann-lecun principal:
 - `yann-lecun-debate` - Complementary skill for enhanced analysis
 - `yann-lecun-tecnico` - Complementary skill for enhanced analysis
 
+## Example
+
+**User request:**
+
+> Use @yann-lecun-filosofia for this task: Sub-skill filosófica e pedagógica de Yann LeCun.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

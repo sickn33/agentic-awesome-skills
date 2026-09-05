@@ -531,6 +531,12 @@ name: oral-health-analyzer
 **最后更新**: 2025-01-06
 **维护者**: WellAlly Tech
 
+## Example
+
+**User request:**
+
+> 分析这些口腔健康记录，识别龋齿或牙周风险趋势，并指出需要专业评估的信号。
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

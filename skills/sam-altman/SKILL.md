@@ -1081,6 +1081,12 @@ sobre startups, AGI, futuro do trabalho, UBI, liderança e governança de IA.
 - `geoffrey-hinton` - Complementary skill for enhanced analysis
 - `ilya-sutskever` - Complementary skill for enhanced analysis
 
+## Example
+
+**User request:**
+
+> Handle this situation: When the user mentions "sam altman" or related topics.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

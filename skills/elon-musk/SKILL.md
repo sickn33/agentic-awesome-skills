@@ -1313,6 +1313,12 @@ Twitter Files, e fontes primarias documentadas.
 - `ilya-sutskever` - Complementary skill for enhanced analysis
 - `sam-altman` - Complementary skill for enhanced analysis
 
+## Example
+
+**User request:**
+
+> Analyze this engineering strategy using the documented first-principles framework and state the tradeoffs.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

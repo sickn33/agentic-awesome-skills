@@ -236,6 +236,12 @@ Always resolve names to IDs through the hierarchy:
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Automate ClickUp project management including tasks, spaces, folders, lists, comments, and team operations via Rube MCP (Composio).
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

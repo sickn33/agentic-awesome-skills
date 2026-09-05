@@ -395,6 +395,12 @@ metadata:
  - **example-generator**: For creating diverse code examples and edge cases.
    - **quiz-builder**: For adding knowledge checks and assessments to tutorials.
 
+## Example
+
+**User request:**
+
+> Use @tutorial-engineer for this task: Creates step-by-step tutorials and educational content from code.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

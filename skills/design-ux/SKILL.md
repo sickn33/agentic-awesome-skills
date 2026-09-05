@@ -68,6 +68,12 @@ A scored table — `Heuristic | Finding (located) | Severity | Fix` — then a p
 - **design-thinking** owns the UX *principles* (goals/tasks, IA, feedback, accessibility, progressive disclosure); this skill turns them into a *scored audit + fix loop*.
 - Run a usability audit **before** declaring an interactive UI "done" — alongside the visual critique, not instead of it.
 
+## Example
+
+**User request:**
+
+> Review this interface with @design-ux, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

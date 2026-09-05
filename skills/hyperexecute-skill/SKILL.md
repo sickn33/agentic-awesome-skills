@@ -58,6 +58,12 @@ Use this skill when you need operates HyperExecute end-to-end for TestMu AI/Lamb
 - Security rules: [reference/security.md](https://github.com/LambdaTest/agent-skills/tree/main/hyperexecute-skill/reference/security.md)
 - Troubleshooting: [reference/troubleshooting.md](https://github.com/LambdaTest/agent-skills/tree/main/hyperexecute-skill/reference/troubleshooting.md)
 
+## Example
+
+**User request:**
+
+> Use @hyperexecute-skill for this task: Operates HyperExecute end-to-end for TestMu AI/LambdaTest cloud test execution: analyze projects, create YAML, validate locally, run CLI jobs, debug failures, and wire CI.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

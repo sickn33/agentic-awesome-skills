@@ -163,6 +163,12 @@ To use a style, you MUST read its file at `<style-folder>/SKILL.md` relative to 
 - **Web (React/Vue/HTML)**: Use CSS variables natively. Prioritize CSS grid/flexbox for layout. Use CSS transitions for hover states.
 - **App (React Native/Flutter/SwiftUI)**: Map the palettes to the framework's theme engine. Use platform-specific shadows (elevation) and animations instead of CSS transitions. Maintain the core visual principles while adapting to mobile constraints.
 
+## Example
+
+**User request:**
+
+> Review this interface with @design-it, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 
 - This skill does not replace environment-specific validation, testing, or expert review.

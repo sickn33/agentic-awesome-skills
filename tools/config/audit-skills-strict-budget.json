@@ -1,12 +1,12 @@
 {
-  "maxWarnings": 507,
-  "maxWarningOnlySkills": 491,
+  "maxWarnings": 211,
+  "maxWarningOnlySkills": 211,
   "maxTopFindingCodes": {
     "description_truncated": 0,
-    "missing_examples": 296,
+    "missing_examples": 0,
     "skill_too_long": 211
   },
   "owner": "repository maintainers",
   "lastReviewed": "2026-09-05",
-  "rationale": "Current objective audit warnings are tracked as explicit backlog debt after removing truncated descriptions and recognizing real nested or bundled examples. Strict mode fails on errors, any reintroduced truncation, or regressions above this measured baseline."
+  "rationale": "Current objective audit warnings are tracked as explicit backlog debt after removing truncated descriptions, recognizing existing examples, and adding actionable examples where none existed. Strict mode fails on errors, any reintroduced truncation or missing examples, or regressions above this measured baseline."
 }

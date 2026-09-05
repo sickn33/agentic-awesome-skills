@@ -233,6 +233,12 @@ Some command examples:
 - Authenticate with `HF_TOKEN` env var (recommended) or with `--token`
 - Update the CLI with `hf update` (uses the correct command for the detected install method)
 
+## Example
+
+**User request:**
+
+> Use @hugging-face-cli for this task: Hugging Face Hub CLI (`hf`) for downloading, uploading, and managing models, datasets, spaces, buckets, repos, papers, jobs, and more on the Hugging Face Hub.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream product or API scope.

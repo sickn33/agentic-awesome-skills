@@ -110,6 +110,12 @@ When reporting status, always include:
 
 Do not report "done" unless status is `accepted`.
 
+## Example
+
+**User request:**
+
+> Take this issue and its acceptance criteria through implementation, validation, review, and a final evidence-backed verdict.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

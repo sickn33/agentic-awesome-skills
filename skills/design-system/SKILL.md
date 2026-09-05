@@ -133,6 +133,12 @@ Avoiding the generic/trend look (Inter, purple-on-white, the same dark-glass car
 
 Atmosphere over flat fills — but matched to the chosen aesthetic, not a default. The reflexive gradient-mesh / noise / grain "premium" treatment is itself the designer-trend mean (design-spatial §2); reach for it only when the direction genuinely calls for it, never as decoration for its own sake.
 
+## Example
+
+**User request:**
+
+> Review this interface with @design-system, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

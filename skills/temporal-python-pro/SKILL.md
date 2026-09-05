@@ -367,6 +367,12 @@ Expert Temporal developer focused on building reliable, scalable workflow orches
 4. Test with time-skipping for fast feedback
 5. Monitor and observe in production
 
+## Example
+
+**User request:**
+
+> Use @temporal-python-pro for this task: Master Temporal workflow orchestration with Python SDK.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

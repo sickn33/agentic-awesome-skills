@@ -118,6 +118,12 @@ which writes a grounded answer with inline `[n]` citations back to source notes.
   notes stay on-device) or real OpenAI (funded `OPENAI_API_KEY`, defaults to `gpt-4o-mini`).
   Everything else — embeddings, search, BM25, clustering, bridges, entities — is on-device.
 
+## Example
+
+**User request:**
+
+> Use @apple-notes-search for this task: Semantic + keyword search and connection-discovery across the user's own Apple Notes via the apple-notes MCP server.
+
 ## Limitations
 
 - macOS and Apple Notes only; it does not search Obsidian, Notion, Google Docs, or other note stores.

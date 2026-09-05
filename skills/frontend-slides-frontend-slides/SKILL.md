@@ -390,6 +390,12 @@ This captures each slide as a screenshot and combines them into a PDF. Perfect f
 | [scripts/deploy.sh](https://github.com/zarazhangrui/frontend-slides/tree/main/plugins/frontend-slides/skills/frontend-slides/scripts/deploy.sh)             | Deploy slides to Vercel for instant sharing                          | Phase 6 (sharing)         |
 | [scripts/export-pdf.sh](https://github.com/zarazhangrui/frontend-slides/tree/main/plugins/frontend-slides/skills/frontend-slides/scripts/export-pdf.sh)     | Export slides to PDF                                                 | Phase 6 (sharing)         |
 
+## Example
+
+**User request:**
+
+> Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

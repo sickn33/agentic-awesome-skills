@@ -52,6 +52,12 @@ For each issue, provide:
 
 Focus on fixing the underlying issue, not just symptoms.
 
+## Example
+
+**User request:**
+
+> Investigate this failure with @debugger, prove the root cause, implement the smallest safe fix, and verify it.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

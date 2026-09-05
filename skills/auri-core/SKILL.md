@@ -597,6 +597,12 @@ Se a API da Anthropic estiver indisponivel, o sistema retorna respostas pre-conf
 - Applying recommendations without understanding your specific context
 - Not providing enough project context for accurate analysis
 
+## Example
+
+**User request:**
+
+> Review this product request with the Auri workflow and return the documented product deliverable.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

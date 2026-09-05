@@ -257,6 +257,12 @@ Criterios:
 - Applying recommendations without understanding your specific context
 - Not providing enough project context for accurate analysis
 
+## Example
+
+**User request:**
+
+> Use @llm-ops for this task: LLM Operations -- RAG, embeddings, vector databases, fine-tuning, prompt engineering avancado, custos de LLM, evals de qualidade e arquiteturas de IA para producao.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
