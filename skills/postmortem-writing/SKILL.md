@@ -167,7 +167,7 @@ The deployment completed at 14:23, but the first alert didn't fire until 14:31 (
 ### Customer Impact
 - 12,000 unique customers affected
 - Average impact duration: 35 minutes
-- 847 support tickets (23% of affected users)
+- 847 support tickets (about 7.1% of the affected-user count; not necessarily unique users)
 - Customer satisfaction score dropped 12 points
 
 ### Business Impact

@@ -630,3 +630,10 @@
 - Replaced the stale 14-entry web list with the canonical editorial definitions, exposed all included skills and starter briefs, and bound links to the catalog release.
 - Removed fixed 15-plugin counts from prerendering and live verification; added source parity and stale-count regressions.
 - Scope and composition rationale: [Specialized Plugins](docs/users/specialized-plugin-roadmap.md). No release or deployment.
+
+## Specialized plugin support-file completion
+
+- Supplied every previously reported missing support file and checked all selected entrypoints for prose-declared resource paths.
+- Removed imaginary OAuth/script clients, routed template references to actual inline procedures, and repaired the hardening checklist.
+- Added resource/mirror parity and executable chunking/KPI/SLO regressions; corrected unsafe or misleading examples encountered during the content review.
+- Updated the [plugin review](docs/users/specialized-plugin-roadmap.md) with resolved findings and explicit verification scope. No release or deployment.

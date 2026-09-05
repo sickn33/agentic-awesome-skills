@@ -88,7 +88,10 @@ logger.warn({
 ```typescript
 // Express: child logger per request, ID propagated downstream
 app.use((req, res, next) => {
-  req.id = req.headers['x-request-id'] ?? crypto.randomUUID();
+  const suppliedId = req.headers['x-request-id'];
+  req.id = typeof suppliedId === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(suppliedId)
+    ? suppliedId
+    : crypto.randomUUID();
   req.log = logger.child({ requestId: req.id });
   res.setHeader('x-request-id', req.id);
   next();

@@ -70,9 +70,9 @@ Review scope, actual checks and omissions in the result. Browser checks do not p
 
 Run skill validation, reference validation, docs security, the specialized-plugin source/packaging regression, bundle generation/checks, and the web tests/build. Verify complete web membership, expanded skill links, scope/brief visibility, filtering and release-bound links. Reject stale counts in the live-verifier fixture and inspect the built `/plugins/` title and JSON-LD before any separately approved deployment.
 
-## Remaining skill-content findings
+## Resolved skill-content findings — follow-up
 
-A scan of explicit local `references/` and `resources/` links in the selected skill entrypoints found 30 distinct missing targets across 23 skills. These are existing content defects, not missing files introduced by bundle generation. Packaging and structural validation passing does not resolve them. This scan is not a complete semantic or runtime review; nested resources and other path forms may require further checks.
+A scan of explicit local `references/` and `resources/` links in the selected skill entrypoints found 30 distinct missing targets across 23 skills. These were existing content defects, not missing files introduced by bundle generation. The follow-up supplies all 30 targets and the formerly selected hardening checklist. It also replaces unsupported template/script promises with actual inline procedures or available-integration workflows. The regression now checks prose-declared resources, references, assets and scripts across every selected entrypoint and verifies resource bytes in specialized distributions. Fenced application paths are excluded because they may belong to the target project; this is not a claim that every example has been run against live services.
 
 | Skill | Missing targets |
 | --- | --- |
@@ -99,3 +99,14 @@ A scan of explicit local `references/` and `resources/` links in the selected sk
 | `seo-content-writer` | `resources/implementation-playbook.md` |
 | `slo-implementation` | `references/slo-definitions.md`, `resources/implementation-playbook.md`, `references/error-budget.md` |
 | `vector-database-engineer` | `resources/implementation-playbook.md` |
+
+### Follow-up verification scope
+
+Expanding the same scan to prose-declared assets and scripts found 51 missing targets across 28 skill entrypoints, including the original 30. All are now supplied or replaced with an actual inline/available-tool workflow. Added companion documents are locally authored procedures, not claimed recoveries of upstream files.
+
+- Added 21 task-specific implementation playbooks, ten checklists/reference guides and executable normalized KPI query examples.
+- Replaced non-existent Google Docs/Sheets/Slides clients and OAuth claims with workflows using actual available integrations and read-back checks.
+- Corrected nonterminating/oversized chunking, implicit embedding-prefix failure, cohort denominators, acquisition-spend multiplication and missing SLO recording rules; covered pure behavior with offline regression tests.
+- Reworked secret handling and payment-control guidance to remove secret logging and unsupported compliance/utility claims. Updated tracing and CI patterns to avoid obsolete or imaginary runnable setup.
+- Repaired the previously removed hardening skill's checklist without changing the curated plugin composition again.
+- No release, live service operation, account configuration or deployment is part of this repair.
