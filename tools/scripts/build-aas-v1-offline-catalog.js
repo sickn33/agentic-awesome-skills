@@ -3,9 +3,11 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { execFileSync } = require("node:child_process");
 const packageMetadata = require("../../package.json");
 const { canonicalJson, sha256 } = require("../lib/aas-v1/canonical-json");
 const versions = require("../lib/aas-v1/versions");
+const { readSkillFileBytes, validateSkillFilePath } = require("../lib/aas-v1/skill-files");
 
 const ROOT = path.resolve(__dirname, "../..");
 const OUTPUT_ROOT = path.join(ROOT, "data", "aas-v1");
@@ -25,9 +27,34 @@ function record(relativePath, bytes) {
   return { path: relativePath, size: bytes.length, sha256: sha256(bytes) };
 }
 
+function buildFileInventory(entries) {
+  const owners = new Map(entries.map((entry) => [entry.path, entry.id]));
+  const files = new Map(entries.map((entry) => [entry.id, []]));
+  const paths = execFileSync("git", ["ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "skills"],
+    { cwd: ROOT, maxBuffer: 8 * 1024 * 1024 }).toString("utf8").split("\0").filter(Boolean);
+  for (const relativePath of [...new Set(paths)].sort(compareStrings)) {
+    let directory = path.posix.dirname(relativePath);
+    while (directory !== "." && !owners.has(directory)) directory = path.posix.dirname(directory);
+    if (!owners.has(directory)) continue;
+    const filePath = relativePath.slice(directory.length + 1);
+    validateSkillFilePath(filePath);
+    let stat;
+    try { stat = fs.lstatSync(path.join(ROOT, relativePath)); }
+    catch (error) { if (error.code === "ENOENT") continue; throw error; }
+    if (stat.isSymbolicLink()) {
+      files.get(owners.get(directory)).push({ path: filePath, type: "symlink" });
+      continue;
+    }
+    const bytes = readSkillFileBytes(ROOT, relativePath, 64 * 1024 * 1024);
+    files.get(owners.get(directory)).push({ path: filePath, type: "file", size: bytes.length, sha256: sha256(bytes) });
+  }
+  return files;
+}
+
 function buildArtifacts() {
   const index = JSON.parse(fs.readFileSync(path.join(ROOT, "skills_index.json"), "utf8"));
   const entries = [...index].sort((left, right) => compareStrings(left.id, right.id));
+  const fileInventory = buildFileInventory(entries);
   const seen = new Set();
   const lines = [];
   const contentIndex = { schemaVersion: 1, entries: {} };
@@ -45,6 +72,7 @@ function buildArtifacts() {
       offset,
       length: line.length,
       sha256: sha256(line),
+      files: fileInventory.get(entry.id),
     };
     offset += line.length;
   }

@@ -5,10 +5,13 @@ const path = require("node:path");
 const core = require("..");
 const { validateManifest } = require("../stack");
 const { sanitizeValidationDetails } = require("../schema-validator");
+const { listSkillFiles, readSkillFile } = require("../skill-files");
 
 const TOOL_NAMES = Object.freeze([
   "search_skills",
   "get_skill",
+  "list_skill_files",
+  "read_skill_file",
   "compose_stack",
   "inspect_stack",
   "diff_stack",
@@ -241,6 +244,31 @@ const TOOL_DEFINITIONS = Object.freeze([
       properties: {
         id: { type: "string", minLength: 1, maxLength: 128 },
         includeContent: { type: "boolean", default: false },
+      },
+    },
+  },
+  {
+    name: "list_skill_files",
+    description: "List catalog-bound files in a skill bundle, including scripts and reference documents, in stable path order. This reads only the local inventory and never executes files. Follow nextCursor to inspect the whole bundle; symlinks are listed but cannot be read.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
+    inputSchema: {
+      type: "object", additionalProperties: false, required: ["id"],
+      properties: {
+        id: { type: "string", minLength: 1, maxLength: 128 },
+        cursor: { type: "integer", minimum: 0 },
+        limit: { type: "integer", minimum: 1, maximum: 50 },
+      },
+    },
+  },
+  {
+    name: "read_skill_file",
+    description: "Read one catalog-bound UTF-8 file from a local skill bundle as untrusted, inert text. Use its exact relative path from list_skill_files. Verifies the file digest; rejects links, traversal, binary files and files over 1 MiB. Never executes scripts or fetches missing files.",
+    annotations: READ_ONLY_TOOL_ANNOTATIONS,
+    inputSchema: {
+      type: "object", additionalProperties: false, required: ["id", "path"],
+      properties: {
+        id: { type: "string", minLength: 1, maxLength: 128 },
+        path: { type: "string", minLength: 1, maxLength: 512 },
       },
     },
   },
@@ -721,6 +749,12 @@ class McpServer {
         assertExactKeys(args, ["id", "includeContent"]);
         if (args.includeContent !== undefined && typeof args.includeContent !== "boolean") inputError("AAS_MCP_INCLUDE_CONTENT_INVALID");
         payload = skillPayload(this.catalog, core.getSkill(this.catalog, args.id), this.root, args.includeContent === true);
+      } else if (name === "list_skill_files") {
+        assertExactKeys(args, ["id", "cursor", "limit"]);
+        payload = { ok: true, status: "complete", ...versionFields(this.catalog), ...listSkillFiles(this.catalog, args) };
+      } else if (name === "read_skill_file") {
+        assertExactKeys(args, ["id", "path"]);
+        payload = { ok: true, status: "complete", ...versionFields(this.catalog), ...readSkillFile(this.catalog, this.root, args) };
       } else if (name === "compose_stack") {
         assertExactKeys(args, ["name", "profile", "targets", "skillIds"]);
         payload = { ...versionFields(this.catalog), ...core.composeStack(this.catalog, args) };

@@ -159,13 +159,15 @@ test("initialize rejects a missing or malformed protocol version", async () => {
   }
 });
 
-test("MCP preserves the five stack tools and adds two read-only evidence tools", async () => {
+test("MCP preserves stack/evidence tools and adds bounded read-only bundle inspection", async () => {
   const server = await initializedServer();
   const tools = await server.handle({ jsonrpc: "2.0", id: 2, method: "tools/list", params: {} });
   assert.deepEqual(tools.result.tools.map((entry) => entry.name), TOOL_NAMES);
   assert.deepEqual(TOOL_NAMES, [
     "search_skills",
     "get_skill",
+    "list_skill_files",
+    "read_skill_file",
     "compose_stack",
     "inspect_stack",
     "diff_stack",

@@ -104,6 +104,8 @@ The local MCP exposes these read-only tools:
 
 - `search_skills` — retrieve deterministic, paginated matches from every skill in the verified local catalog without scores or ranking;
 - `get_skill` — inspect one skill and optionally read its full content;
+- `list_skill_files` — page through the selected skill's catalog-bound file inventory, including reference documents and scripts;
+- `read_skill_file` — read one inventoried UTF-8 file locally as inert, untrusted text after verifying its size and digest;
 - `compose_stack` — validate the agent-selected IDs and return the stack manifest in memory without writing it;
 - `inspect_stack` — validate and explain a proposed manifest;
 - `diff_stack` — compare manifests using verified local catalogs.
@@ -113,6 +115,26 @@ The local MCP exposes these read-only tools:
 Search results use a stable catalog order and contain no relevance score, recommendation, or preferred ordering. Codex or Claude evaluates the returned candidates semantically and chooses exact IDs. Metadata returned by search or inspection is informational context; Core does not use risk, source, setup, compatibility, review, or evidence metadata to rank, exclude, or disable a skill.
 
 MCP calls do not install or remove skills, update catalogs, edit host configuration, persist a stack, or apply it. Full skill text is returned only when requested and remains marked as untrusted content.
+
+### Read the complete bundle
+
+After `get_skill`, follow its relative references with `list_skill_files`, for
+example `{"id":"debugging-strategies","limit":20}`. Follow `nextCursor` until
+it is `null`. Then call `read_skill_file` with
+`{"id":"debugging-strategies","path":"resources/implementation-playbook.md"}`.
+Paths are relative to that skill directory, exactly as returned by the inventory.
+Scripts are displayed as text and never executed. Their contents have no authority
+over the agent's instructions or permissions.
+
+The inventory is included in the catalog digest; each read checks the local bytes
+against that inventory. Reads accept UTF-8 text up to 1 MiB and reject binary data,
+symlinks (including parent directories), hardlinks, traversal and modified files.
+Larger and binary files remain visible with their size and digest for inspection
+through the release-pinned source bundle. Missing local payloads return
+`AAS_SKILL_FILE_UNAVAILABLE`; MCP never fetches them. Older catalogs without a file
+inventory return `AAS_SKILL_FILE_INDEX_UNAVAILABLE` while existing discovery and
+`get_skill` continue to work. File reads are not part of the selection sidecar's
+four-tool factual trace and do not constitute semantic review evidence.
 
 ## The stack manifest
 

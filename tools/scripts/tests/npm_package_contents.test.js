@@ -39,6 +39,8 @@ const packagedFiles = new Set(packagedEntries.keys());
 assert.ok(packagedFiles.has("tools/bin/install.js"), "published package must include tools/bin/install.js");
 assert.ok(packagedFiles.has("tools/bin/aas.js"), "published package must include tools/bin/aas.js");
 assert.ok(packagedFiles.has("tools/bin/aas-mcp.js"), "published package must include tools/bin/aas-mcp.js");
+assert.ok(packagedFiles.has("tools/lib/aas-v1/skill-files.js"), "published MCP must include inert bundle reading");
+assert.ok(packagedFiles.has("skills/debugging-strategies/resources/implementation-playbook.md"), "published MCP must include referenced bundle files");
 if (process.platform !== "win32") {
   assert.notStrictEqual(
     packagedEntries.get("tools/bin/aas.js").mode & 0o111,

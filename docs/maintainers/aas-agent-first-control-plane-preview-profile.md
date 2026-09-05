@@ -14,7 +14,7 @@ The earlier deterministic recommendation design and goal documents are retained 
 ## Supported surfaces
 
 - A complete, integrity-verified local catalog in which every canonical skill is searchable, readable, and available for agent selection.
-- Local stdio MCP tools `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, and `diff_stack`, plus `aas://skills/{id}`.
+- Local stdio MCP tools `search_skills`, `get_skill`, `list_skill_files`, `read_skill_file`, `compose_stack`, `inspect_stack`, and `diff_stack`, plus evidence export/inspection and `aas://skills/{id}`. Bundle inventory records bind file bytes into the catalog identity without duplicating the payload. Text reads are bounded, inert, and reject unsafe paths and changed bytes; old catalogs explicitly report inventory unavailability.
 - Minimal, schema-validated `aas-stack.json` with pinned catalog identity, targets, goals, and exact agent-selected skill IDs.
 - CLI manifest validation, immutable plan preview, and read-only diagnosis.
 - Workbench import and review of the agent-owned stack and immutable plan.

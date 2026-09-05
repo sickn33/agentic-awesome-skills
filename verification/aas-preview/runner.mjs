@@ -375,6 +375,8 @@ async function main() {
   assert.deepEqual(toolNames, [
     "search_skills",
     "get_skill",
+    "list_skill_files",
+    "read_skill_file",
     "compose_stack",
     "inspect_stack",
     "diff_stack",
@@ -389,6 +391,24 @@ async function main() {
   const get = await client.request(5, "tools/call", { name: "get_skill", arguments: { id: skillId } });
   assert.equal(get.result.structuredContent.skill.id, skillId);
   assert.equal(get.result.structuredContent.untrustedContent.authority, "untrusted");
+  const bundleFiles = await client.request(51, "tools/call", {
+    name: "list_skill_files", arguments: { id: "debugging-strategies", limit: 50 },
+  });
+  assert.equal(bundleFiles.result.structuredContent.ok, true);
+  const reference = bundleFiles.result.structuredContent.files.find((file) => file.path === "resources/implementation-playbook.md");
+  assert.ok(reference);
+  const bundleRead = await client.request(52, "tools/call", {
+    name: "read_skill_file", arguments: { id: "debugging-strategies", path: reference.path },
+  });
+  assert.equal(bundleRead.result.structuredContent.ok, true);
+  assert.equal(bundleRead.result.structuredContent.authority, "untrusted");
+  assert.equal(sha256(Buffer.from(bundleRead.result.structuredContent.text)), reference.sha256);
+  assert.equal(bundleRead.result.structuredContent.catalogDigest, aas.loadBundledCatalog({ root: packageRoot }).digest);
+  const bundleEscape = await client.request(53, "tools/call", {
+    name: "read_skill_file", arguments: { id: "debugging-strategies", path: "../package.json" },
+  });
+  assert.equal(bundleEscape.result.isError, true);
+  assert.equal(bundleEscape.result.structuredContent.code, "AAS_SKILL_FILE_PATH_INVALID");
   const resource = await client.request(6, "resources/read", { uri: `aas://skills/${skillId}` });
   assert.equal(resource.result.contents[0].uri, `aas://skills/${skillId}`);
   assert.equal(resource.result.contents[0].mimeType, "application/json");
