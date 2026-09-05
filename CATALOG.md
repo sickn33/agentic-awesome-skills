@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-04T09:06:54.000Z
 
-Total skills: 2111
+Total skills: 2113
 
 ## agent-behavior (5)
 
@@ -1587,12 +1587,13 @@ Total skills: 2111
 | `xiaohongshu-content-strategist` | Create viral Xiaohongshu (小红书) content with platform-native strategy, save-rate optimization, trending formats, and search SEO for China's #1 lifestyle platf... | safe | demo112/yunqu-ai-skills | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书 | xiaohongshu, chinese-market, content-strategy, social-media, marketing, 红书, 小红书, content, strategist, viral, platform, native |
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | critical | community | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 
-## mcp (2)
+## mcp (3)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `ai-dev-jobs-mcp` | Search 8,400+ AI and ML jobs across 489 companies, inspect listings and employers, match roles, and view salary and market stats via AI Dev Jobs MCP | safe | https://aidevboard.com | mcp, jobs, ai-jobs, ml-jobs, recruiting, job-search, career | mcp, jobs, ai-jobs, ml-jobs, recruiting, job-search, career, ai, dev, search, 400, ml |
 | `not-human-search-mcp` | Search AI-ready websites, inspect indexed site details, verify MCP endpoints, and discover tools and APIs using the Not Human Search MCP server | safe | https://nothumansearch.ai | mcp, search, ai-discovery, api-discovery, mcp-verification, agent-tools | mcp, search, ai-discovery, api-discovery, mcp-verification, agent-tools, human, ai, websites, inspect, indexed, site |
+| `parallel-search-mcp` | Search the public web and verify sources with Parallel's free Search MCP. Use when the user chooses Parallel or its connected tools for current information a... | safe | self | mcp, web-search, research, citations | mcp, web-search, research, citations, parallel, search, public, web, verify, sources, free, user |
 
 ## media (10)
 
@@ -1927,7 +1928,7 @@ Total skills: 2111
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | safe | community | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
 | `sympy` | SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations. | safe | https://github.com/sympy/sympy | sympy | sympy, python, library, symbolic, mathematics, enables, exact, computation, mathematical, symbols, rather, than |
 
-## security (82)
+## security (83)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1996,6 +1997,7 @@ Total skills: 2111
 | `semgrep-rule-variant-creator` | Creates language variants of existing Semgrep rules. Use when porting a Semgrep rule to specified target languages. Takes an existing rule and target languag... | critical | community | semgrep, rule, variant, creator | semgrep, rule, variant, creator, creates, language, variants, existing, rules, porting, specified, target |
 | `shodan-reconnaissance` | Provide systematic methodologies for leveraging Shodan as a reconnaissance tool during penetration testing engagements. | offensive | community | shodan, reconnaissance | shodan, reconnaissance, provide, systematic, methodologies, leveraging, during, penetration, testing, engagements |
 | `skill-audit` | Pre-install security scanner for AI agent skills. 7.5% of 14,706 skills are malicious. Audit before you trust. | safe | aptratcn/skill-audit | security, audit, pre-install, malicious-detection, supply-chain | security, audit, pre-install, malicious-detection, supply-chain, skill, pre, install, scanner, ai, agent, skills |
+| `skill-security-audit` | Audit an Agent Skill, MCP server, connector, or desktop extension before installation by tracing code, dependencies, permissions, credentials, data flow, and... | safe | sandbaseai/awesome-workbuddy | security, audit, agent-skills, mcp, supply-chain | security, audit, agent-skills, mcp, supply-chain, skill, agent, server, connector, desktop, extension, before |
 | `smtp-penetration-testing` | Conduct comprehensive security assessments of SMTP (Simple Mail Transfer Protocol) servers to identify vulnerabilities including open relays, user enumeratio... | offensive | community | smtp, penetration | smtp, penetration, testing, conduct, security, assessments, simple, mail, transfer, protocol, servers, identify |
 | `solidity-security` | Master smart contract security best practices, vulnerability prevention, and secure Solidity development patterns. | safe | community | solidity, security | solidity, security, smart, contract, vulnerability, prevention, secure, development |
 | `sql-injection-testing` | Execute comprehensive SQL injection vulnerability assessments on web applications to identify database security flaws, demonstrate exploitation techniques, a... | offensive | community | sql, injection | sql, injection, testing, execute, vulnerability, assessments, web, applications, identify, database, security, flaws |

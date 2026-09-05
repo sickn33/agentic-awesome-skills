@@ -27484,6 +27484,25 @@
       "runtime_files": []
     },
     {
+      "id": "parallel-search-mcp",
+      "path": "skills/parallel-search-mcp",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "patch-diff-exploit",
       "path": "skills/patch-diff-exploit",
       "targets": {
@@ -33633,6 +33652,25 @@
         "codex": [
           "target_specific_home_path"
         ],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "skill-security-audit",
+      "path": "skills/skill-security-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
         "claude": []
       },
       "runtime_files": []
@@ -40570,10 +40608,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2111,
+    "total_skills": 2113,
     "supported": {
-      "codex": 2031,
-      "claude": 2053
+      "codex": 2033,
+      "claude": 2055
     },
     "blocked": {
       "codex": 80,

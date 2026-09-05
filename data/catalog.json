@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-04T09:06:54.000Z",
-  "total": 2111,
+  "total": 2113,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -41821,6 +41821,37 @@
       "path": "skills/parallel-agents/SKILL.md"
     },
     {
+      "id": "parallel-search-mcp",
+      "canonical_id": "parallel-search-mcp",
+      "name": "parallel-search-mcp",
+      "description": "Search the public web and verify sources with Parallel's free Search MCP. Use when the user chooses Parallel or its connected tools for current information and URL extraction.",
+      "category": "mcp",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "mcp",
+        "web-search",
+        "research",
+        "citations"
+      ],
+      "triggers": [
+        "mcp",
+        "web-search",
+        "research",
+        "citations",
+        "parallel",
+        "search",
+        "public",
+        "web",
+        "verify",
+        "sources",
+        "free",
+        "user"
+      ],
+      "path": "skills/parallel-search-mcp/SKILL.md"
+    },
+    {
       "id": "patch-diff-exploit",
       "canonical_id": "patch-diff-exploit",
       "name": "patch-diff-exploit",
@@ -51157,6 +51188,41 @@
         "injection"
       ],
       "path": "skills/skill-scanner/SKILL.md"
+    },
+    {
+      "id": "skill-security-audit",
+      "canonical_id": "skill-security-audit",
+      "name": "skill-security-audit",
+      "description": "Audit an Agent Skill, MCP server, connector, or desktop extension before installation by tracing code, dependencies, permissions, credentials, data flow, and irreversible actions.",
+      "category": "security",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "sandbaseai/awesome-workbuddy",
+      "license": "CC0-1.0",
+      "license_source": "https://github.com/sandbaseai/awesome-workbuddy/blob/main/LICENSE",
+      "tags": [
+        "security",
+        "audit",
+        "agent-skills",
+        "mcp",
+        "supply-chain"
+      ],
+      "triggers": [
+        "security",
+        "audit",
+        "agent-skills",
+        "mcp",
+        "supply-chain",
+        "skill",
+        "agent",
+        "server",
+        "connector",
+        "desktop",
+        "extension",
+        "before"
+      ],
+      "path": "skills/skill-security-audit/SKILL.md"
     },
     {
       "id": "skill-seekers",

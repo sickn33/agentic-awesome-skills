@@ -34898,6 +34898,35 @@
     }
   },
   {
+    "id": "parallel-search-mcp",
+    "path": "skills/parallel-search-mcp",
+    "category": "mcp",
+    "name": "parallel-search-mcp",
+    "description": "Search the public web and verify sources with Parallel's free Search MCP. Use when the user chooses Parallel or its connected tools for current information and URL extraction.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "mcp",
+      "web-search",
+      "research",
+      "citations"
+    ]
+  },
+  {
     "id": "patch-diff-exploit",
     "path": "skills/patch-diff-exploit",
     "category": "uncategorized",
@@ -42955,6 +42984,39 @@
         "target_specific_home_path"
       ]
     }
+  },
+  {
+    "id": "skill-security-audit",
+    "path": "skills/skill-security-audit",
+    "category": "security",
+    "name": "skill-security-audit",
+    "description": "Audit an Agent Skill, MCP server, connector, or desktop extension before installation by tracing code, dependencies, permissions, credentials, data flow, and irreversible actions.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sandbaseai/awesome-workbuddy",
+    "license": "CC0-1.0",
+    "license_source": "https://github.com/sandbaseai/awesome-workbuddy/blob/main/LICENSE",
+    "tags": [
+      "security",
+      "audit",
+      "agent-skills",
+      "mcp",
+      "supply-chain"
+    ]
   },
   {
     "id": "skill-seekers",
