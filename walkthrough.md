@@ -1,3 +1,10 @@
+# Web test toolchain migration - 2026-09-05
+
+- Upgraded Vitest and its V8 coverage provider to 5, jsdom to 30, jest-dom to 7, and ESLint globals to 17.
+- Aligned Node type definitions with the Node 22 CI runtime and declared the web development toolchain's supported Node versions in its private package.
+- Preserved all test cases, assertions, isolation settings, and coverage thresholds. After a clean install, all 201 web tests pass on Node 22.23.1 and Node 26 with unchanged coverage (86.89% statements, 91.34% lines); the production build and lint also pass.
+- Kept the TypeScript compiler migration separate from the test-environment upgrade.
+
 # Long skill modularization - 2026-09-05
 
 - Reduced all 211 oversized `SKILL.md` entrypoints below the 500-line quality threshold.
