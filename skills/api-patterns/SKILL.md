@@ -8,7 +8,7 @@ date_added: "2026-02-27"
 
 # API Patterns
 
-> API design principles and decision-making for 2025.
+> API design decisions tied to the consumers and deployment constraints.
 > **Learn to THINK, not copy fixed patterns.**
 
 ## 🎯 Selective Reading Rule
@@ -38,9 +38,9 @@ date_added: "2026-02-27"
 
 | Need | Skill |
 |------|-------|
-| API implementation | `@[skills/backend-development]` |
+| API implementation | `@[skills/backend-architect]` |
 | Data structure | `@[skills/database-design]` |
-| Security details | `@[skills/security-hardening]` |
+| Security details | `@[skills/api-security-best-practices]` |
 
 ---
 
@@ -79,12 +79,23 @@ Before designing an API:
 
 | Script | Purpose | Command |
 |--------|---------|---------|
-| `scripts/api_validator.py` | API endpoint validation | `python scripts/api_validator.py <project_path>` |
+| `scripts/api_validator.py` | Local heuristic source scan (not schema validation) | `python3 skills/api-patterns/scripts/api_validator.py <project_path>` |
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+
+Use when defining a new endpoint contract, selecting REST/GraphQL/tRPC for known consumers, or changing pagination, errors, authentication or compatibility behavior. For a bug inside an existing contract, preserve that contract unless the task authorizes a change.
+
+## Inputs and procedure
+
+Record consumers and deployed versions, expected payload size, access rules, compatibility obligations and one concrete operation. Read the relevant files in the map, compare the realistic choices, then specify request/response examples and rejection cases. Types shared at build time do not ensure that independently deployed clients remain compatible.
+
+## Worked example
+
+Input: a public order list changes while clients page through it. Choose a bounded page size and cursor over a stable `(created_at, id)` order. Define the next-cursor format, authorization filter and behavior for a removed record or invalid cursor. Test two equal timestamps and an insertion between pages. Expected: no duplicate IDs within the promised snapshot semantics; document whether newly inserted rows can appear.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- The Python helper scans at most 15 matching files using regular expressions and shallow JSON/YAML checks. Its output is a triage hint, not OpenAPI validation, an authorization audit or deployment approval.
+- GraphQL query shape, tRPC inference and HTTP method names do not enforce resource authorization or backwards compatibility.
+- Rate limiting cannot alone prevent all resource exhaustion; size, concurrency, time and provider-cost bounds depend on the operation.
+- Perform security checks only against authorized local/test targets with isolated accounts and a defined scope.

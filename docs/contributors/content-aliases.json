@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "scope": "Editorial compatibility mapping; not selection policy or a reliability ranking. IDs remain callable.",
+  "groups": [
+    {
+      "primary": "hosted-agents-v2-py",
+      "ids": [
+        "agents-v2-py",
+        "hosted-agents-v2-py"
+      ],
+      "disposition": "retained-compatible-aliases",
+      "reason": "Both IDs describe the same Azure hosted-agent workflow; retain the descriptive hosted-agent path."
+    },
+    {
+      "primary": "brand-guidelines-anthropic",
+      "ids": [
+        "brand-guidelines-anthropic",
+        "brand-guidelines-community"
+      ],
+      "disposition": "retained-compatible-aliases",
+      "reason": "Both bodies contain Anthropic-specific styling, not a generic community brand system."
+    },
+    {
+      "primary": "documentation-generation-doc-generate",
+      "ids": [
+        "code-documentation-doc-generate",
+        "documentation-generation-doc-generate"
+      ],
+      "disposition": "retained-compatible-aliases",
+      "reason": "Both cover generation of source-grounded documentation and share the same playbook."
+    },
+    {
+      "primary": "context-management-context-restore",
+      "ids": [
+        "code-refactoring-context-restore",
+        "context-management-context-restore"
+      ],
+      "disposition": "retained-compatible-aliases",
+      "reason": "Both describe resuming project context; no separate refactoring engine exists."
+    },
+    {
+      "primary": "code-refactoring-tech-debt",
+      "ids": [
+        "code-refactoring-tech-debt",
+        "codebase-cleanup-tech-debt"
+      ],
+      "disposition": "retained-compatible-aliases",
+      "reason": "Both describe the same debt inventory and prioritization workflow."
+    },
+    {
+      "primary": "error-diagnostics-error-analysis",
+      "ids": [
+        "error-debugging-error-analysis",
+        "error-diagnostics-error-analysis"
+      ],
+      "disposition": "retained-compatible-aliases",
+      "reason": "Both share the same incident-analysis instructions and playbook."
+    },
+    {
+      "primary": "error-debugging-multi-agent-review",
+      "ids": [
+        "error-debugging-multi-agent-review",
+        "performance-testing-review-multi-agent-review"
+      ],
+      "disposition": "retained-compatible-aliases",
+      "reason": "The performance-prefixed ID contains a general multi-perspective review workflow, not a distinct performance test."
+    },
+    {
+      "primary": "internal-comms",
+      "ids": [
+        "internal-comms",
+        "internal-comms-anthropic",
+        "internal-comms-community"
+      ],
+      "disposition": "retained-compatible-aliases",
+      "reason": "All three bodies reference the same four communication examples; complete the missing community bundle."
+    }
+  ]
+}

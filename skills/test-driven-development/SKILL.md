@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: "Use when implementing any feature or bugfix, before writing implementation code"
+description: "Use a failing behavioral test to guide a feature or bug fix, then implement and refactor with relevant regression checks."
 risk: critical
 source: community
 date_added: "2026-02-27"
@@ -17,34 +17,12 @@ Write the test first. Watch it fail. Write minimal code to pass.
 **Violating the letter of the rules is violating the spirit of the rules.**
 
 ## When to Use
-**Always:**
-- New features
-- Bug fixes
-- Refactoring
-- Behavior changes
 
-**Exceptions (ask your human partner):**
-- Throwaway prototypes
-- Generated code
-- Configuration files
+Use for behavior changes where a repeatable test can demonstrate the requirement or reproduce the bug. Inspect the repository’s test runner and existing coverage first. For copy, generated outputs or low-impact configuration, use the appropriate focused validation rather than manufacturing a unit test.
 
-Thinking "skip TDD just this once"? Stop. That's rationalization.
+## Preserve existing work
 
-## The Iron Law
-
-```
-NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
-```
-
-Write code before the test? Delete it. Start over.
-
-**No exceptions:**
-- Don't keep it as "reference"
-- Don't "adapt" it while writing tests
-- Don't look at it
-- Delete means delete
-
-Implement fresh from tests. Period.
+Write the failing regression before the repair when feasible, and verify that it fails for the expected reason. If implementation already exists, preserve it and add characterization/regression tests. Do not delete user work, reset a branch or rewrite working code to reconstruct an ideal test-first history. State honestly whether the test preceded the fix.
 
 ## Red-Green-Refactor
 
@@ -76,9 +54,9 @@ Write one minimal test showing what should happen.
 
 <Good>
 ```typescript
-test('retries failed operations 3 times', async () => {
+test('succeeds on the third attempt', async () => {
   let attempts = 0;
-  const operation = () => {
+  const operation = async () => {
     attempts++;
     if (attempts < 3) throw new Error('fail');
     return 'success';
@@ -125,7 +103,7 @@ Confirm:
 - Failure message is expected
 - Fails because feature missing (not typos)
 
-**Test passes?** You're testing existing behavior. Fix test.
+**Test passes?** Determine whether it already characterizes the required behavior. For a regression, prove it detects the defect using the prior revision or an isolated controlled change; do not alter a correct assertion just to force red.
 
 **Test errors?** Fix error, re-run until it fails correctly.
 
@@ -205,89 +183,11 @@ Next failing test for next feature.
 | **Clear** | Name describes behavior | `test('test1')` |
 | **Shows intent** | Demonstrates desired API | Obscures what code should do |
 
-## Why Order Matters
+## Why order matters
 
-**"I'll write tests after to verify it works"**
+A failing test can expose a misunderstood requirement before implementation. A test written after a fix can still be valuable, but its sensitivity to the original defect needs evidence. Neither timing nor coverage percentage proves the assertion is meaningful.
 
-Tests written after code pass immediately. Passing immediately proves nothing:
-- Might test wrong thing
-- Might test implementation, not behavior
-- Might miss edge cases you forgot
-- You never saw it catch the bug
-
-Test-first forces you to see the test fail, proving it actually tests something.
-
-**"I already manually tested all the edge cases"**
-
-Manual testing is ad-hoc. You think you tested everything but:
-- No record of what you tested
-- Can't re-run when code changes
-- Easy to forget cases under pressure
-- "It worked when I tried it" ≠ comprehensive
-
-Automated tests are systematic. They run the same way every time.
-
-**"Deleting X hours of work is wasteful"**
-
-Sunk cost fallacy. The time is already gone. Your choice now:
-- Delete and rewrite with TDD (X more hours, high confidence)
-- Keep it and add tests after (30 min, low confidence, likely bugs)
-
-The "waste" is keeping code you can't trust. Working code without real tests is technical debt.
-
-**"TDD is dogmatic, being pragmatic means adapting"**
-
-TDD IS pragmatic:
-- Finds bugs before commit (faster than debugging after)
-- Prevents regressions (tests catch breaks immediately)
-- Documents behavior (tests show how to use code)
-- Enables refactoring (change freely, tests catch breaks)
-
-"Pragmatic" shortcuts = debugging in production = slower.
-
-**"Tests after achieve the same goals - it's spirit not ritual"**
-
-No. Tests-after answer "What does this do?" Tests-first answer "What should this do?"
-
-Tests-after are biased by your implementation. You test what you built, not what's required. You verify remembered edge cases, not discovered ones.
-
-Tests-first force edge case discovery before implementing. Tests-after verify you remembered everything (you didn't).
-
-30 minutes of tests after ≠ TDD. You get coverage, lose proof tests work.
-
-## Common Rationalizations
-
-| Excuse | Reality |
-|--------|---------|
-| "Too simple to test" | Simple code breaks. Test takes 30 seconds. |
-| "I'll test after" | Tests passing immediately prove nothing. |
-| "Tests after achieve same goals" | Tests-after = "what does this do?" Tests-first = "what should this do?" |
-| "Already manually tested" | Ad-hoc ≠ systematic. No record, can't re-run. |
-| "Deleting X hours is wasteful" | Sunk cost fallacy. Keeping unverified code is technical debt. |
-| "Keep as reference, write tests first" | You'll adapt it. That's testing after. Delete means delete. |
-| "Need to explore first" | Fine. Throw away exploration, start with TDD. |
-| "Test hard = design unclear" | Listen to test. Hard to test = hard to use. |
-| "TDD will slow me down" | TDD faster than debugging. Pragmatic = test-first. |
-| "Manual test faster" | Manual doesn't prove edge cases. You'll re-test every change. |
-| "Existing code has no tests" | You're improving it. Add tests for existing code. |
-
-## Red Flags - STOP and Start Over
-
-- Code before test
-- Test after implementation
-- Test passes immediately
-- Can't explain why test failed
-- Tests added "later"
-- Rationalizing "just this once"
-- "I already manually tested it"
-- "Tests after achieve the same purpose"
-- "It's about spirit not ritual"
-- "Keep as reference" or "adapt existing code"
-- "Already spent X hours, deleting is wasteful"
-- "TDD is dogmatic, I'm being pragmatic"
-- "This is different because..."
-
-**All of these mean: Delete code. Start over with TDD.**
+If a failure is caused by a missing import, unavailable service or bad fixture, repair that setup before interpreting the result. Use real boundaries where practical; a mock is useful when it isolates an external dependency while preserving the contract under test.
 
 ## Example: Bug Fix
 
@@ -330,8 +230,8 @@ Extract validation for multiple fields if needed.
 
 Before marking work complete:
 
-- [ ] Every new function/method has a test
-- [ ] Watched each test fail before implementing
+- [ ] Changed behavior and consequential failure paths have appropriate tests
+- [ ] Regression sensitivity is demonstrated; timing of the test is reported honestly
 - [ ] Each test failed for expected reason (feature missing, not typo)
 - [ ] Wrote minimal code to pass each test
 - [ ] All tests pass
@@ -339,7 +239,7 @@ Before marking work complete:
 - [ ] Tests use real code (mocks only if unavoidable)
 - [ ] Edge cases and errors covered
 
-Can't check all boxes? You skipped TDD. Start over.
+Record any unmet check and its consequence. Do not erase work or claim an unobserved failure to complete a checklist.
 
 ## When Stuck
 
@@ -354,7 +254,7 @@ Can't check all boxes? You skipped TDD. Start over.
 
 Bug found? Write failing test reproducing it. Follow TDD cycle. Test proves fix and prevents regression.
 
-Never fix bugs without a test.
+Prefer a reproducible regression for a bug fix; use another explicit verifier when a test cannot reasonably exercise the failure.
 
 ## Testing Anti-Patterns
 
@@ -363,16 +263,13 @@ When adding mocks or test utilities, read @testing-anti-patterns.md to avoid com
 - Adding test-only methods to production classes
 - Mocking without understanding dependencies
 
-## Final Rule
+## Inputs and expected result
 
-```
-Production code → test exists and failed first
-Otherwise → not TDD
-```
-
-No exceptions without your human partner's permission.
+You need the user-visible requirement, the current implementation, a known runner and a controlled fixture. In the empty-email example, the failure must be “missing validation”, not a network outage. Expected: the regression fails on the defective behavior and passes after the smallest repair, while existing valid submissions still work.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- A passing unit test does not prove browser, packaged-runtime or provider integration behavior.
+- Retry examples assume retry-safe operations; production retries need explicit idempotency, cancellation and retryable-error policy.
+- Test-first order does not prevent incorrect requirements or over-mocking. Inspect assertions and real boundaries.
+- Preserve unrelated changes and use the project’s existing test commands rather than assuming every `npm test` accepts the same arguments.

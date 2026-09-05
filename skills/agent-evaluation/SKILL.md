@@ -1,8 +1,6 @@
 ---
 name: agent-evaluation
-description: Testing and benchmarking LLM agents including behavioral testing,
-  capability assessment, reliability metrics, and production monitoring—where
-  even top agents achieve less than 50% on real-world benchmarks
+description: Evaluate agent behavior with versioned cases, repeat runs, explicit verifiers, uncertainty and retained failures.
 risk: safe
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
@@ -10,7 +8,7 @@ date_added: 2026-02-27
 
 # Agent Evaluation
 
-Testing and benchmarking LLM agents including behavioral testing, capability assessment, reliability metrics, and production monitoring—where even top agents achieve less than 50% on real-world benchmarks
+Evaluate observable agent behavior against task-specific cases. Modified by AAS maintainers on 2026-09-05 to remove unsupported benchmark claims and correct uncertainty/error reporting. The examples below are architecture sketches with project-specific types/adapters, not a bundled evaluation framework.
 
 ## Capabilities
 
@@ -47,7 +45,7 @@ Testing and benchmarking LLM agents including behavioral testing, capability ass
 
 ### Deprecated
 
-- Manual testing only
+- Unrecorded manual checks alone; retain structured human review for semantic judgments
 
 ## Patterns
 
@@ -120,13 +118,9 @@ class StatisticalEvaluator {
         const passes = results.filter(r => r.passed);
         const passRate = passes.length / results.length;
 
-        // Calculate confidence interval for pass rate
-        const z = 1.96;  // 95% confidence
-        const se = Math.sqrt((passRate * (1 - passRate)) / results.length);
-        const confidence95: [number, number] = [
-            Math.max(0, passRate - z * se),
-            Math.min(1, passRate + z * se)
-        ];
+        if (results.length === 0) throw new Error('No evaluation runs');
+        // Wilson interval avoids a zero-width certainty claim at 0/n or n/n.
+        const confidence95 = wilson95(passes.length, results.length);
 
         const scores = results.map(r => r.score);
         const latencies = results.map(r => r.latencyMs);
@@ -156,7 +150,7 @@ class StatisticalEvaluator {
                     [...behaviorSets[i]].filter(x => behaviorSets[j].has(x))
                 );
                 const union = new Set([...behaviorSets[i], ...behaviorSets[j]]);
-                consistencySum += intersection.size / union.size;
+                consistencySum += union.size === 0 ? 1 : intersection.size / union.size;
                 comparisons++;
             }
         }
@@ -350,7 +344,7 @@ class BehavioralContractTester {
             contract: contract.name,
             totalTests: testInputs.length,
             violations,
-            passed: violations.filter(v => v.severity === 'critical').length === 0
+            passed: violations.length === 0
         };
     }
 }
@@ -489,8 +483,9 @@ class AdversarialTester {
                 results.push({
                     test: test.name,
                     category: test.category,
-                    passed: true,  // Error is acceptable for adversarial tests
-                    error: error.message
+                    passed: false,  // Unexpected infrastructure/agent errors are not safety passes
+                    evaluationError: true,
+                    errorType: error instanceof Error ? error.name : 'UnknownError'
                 });
             }
         }
@@ -562,7 +557,7 @@ class AgentRegressionTester {
             summary: this.summarize(regressions),
             recommendation: regressions.length > 0
                 ? 'DO NOT DEPLOY: Regressions detected'
-                : 'OK to deploy'
+                : 'No detected regression in this sample; deployment review remains separate'
         };
     }
 
@@ -815,7 +810,7 @@ class FlakyTestHandler {
             failedTests: results.filter(r => !r.passed).map(t => t.testId),
             recommendation: overallPassRate < 0.9
                 ? `${Math.ceil(testSuite.length * 0.9 - results.filter(r => r.passed).length)} more tests must pass`
-                : 'OK to merge'
+                : 'Sample threshold met; required safety and repository checks still apply'
         };
     }
 }
@@ -867,9 +862,9 @@ class MultiDimensionalEvaluator {
                 evaluator: this.evaluateEfficiency.bind(this)
             },
             {
-                name: 'user_preference',
+                name: 'llm_judge_proxy',
                 weight: 0.1,
-                evaluator: this.evaluateUserPreference.bind(this)
+                evaluator: this.evaluateJudgeProxy.bind(this)
             }
         ];
 
@@ -891,7 +886,7 @@ class MultiDimensionalEvaluator {
         return {
             dimensions: results,
             overallScore: results.reduce((sum, r) => sum + r.weightedScore, 0),
-            gamingDetected: gaming.detected,
+            unevenDimensions: gaming.detected,
             gamingDetails: gaming.details,
             recommendation: this.generateRecommendation(results, gaming)
         };
@@ -902,7 +897,7 @@ class MultiDimensionalEvaluator {
         const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
         const variance = scores.reduce((sum, s) => sum + Math.pow(s - mean, 2), 0) / scores.length;
 
-        // High variance suggests gaming one metric
+        // Uneven dimensions flag a review need; variance cannot prove metric gaming
         if (variance > 0.15) {
             const highScorer = results.find(r => r.score > mean + 0.2);
             const lowScorers = results.filter(r => r.score < mean - 0.1);
@@ -916,16 +911,16 @@ class MultiDimensionalEvaluator {
         return { detected: false };
     }
 
-    // Human evaluation for dimensions that can be gamed
-    private async evaluateUserPreference(
+    // LLM-judge proxy; this is not human preference measurement
+    private async evaluateJudgeProxy(
         agent: Agent,
         testCases: TestCase[]
     ): Promise<number> {
         // Sample for human evaluation
         const sample = this.sampleForHumanEval(testCases, 20);
 
-        // In real implementation, this would involve actual human raters
-        // Here we simulate with a separate LLM acting as evaluator
+        // Report these as model judgments and calibrate against actual human ratings.
+        // Do not describe simulated ratings as user feedback.
         const evaluatorLLM = new EvaluatorLLM();
 
         const ratings: number[] = [];
@@ -968,7 +963,7 @@ class LeakageDetector {
     ): Promise<LeakageReport> {
         const leaks: Leak[] = [];
 
-        // 1. Check for exact matches in training data
+        // 1. Check for near matches in the supplied, observable training data
         for (const test of testSuite) {
             const exactMatch = trainingData.find(
                 t => this.similarity(t.input, test.input) > 0.95
@@ -1010,8 +1005,8 @@ class LeakageDetector {
             leaks,
             affectedTests: [...new Set(leaks.map(l => l.testId))],
             recommendation: leaks.length > 0
-                ? 'CRITICAL: Remove leaked tests and create new ones'
-                : 'No leakage detected'
+                ? 'Investigate flagged overlaps against the declared evaluation contract'
+                : 'No overlap flagged in the inspected inputs; unseen training data remains unknown'
         };
     }
 
@@ -1034,7 +1029,7 @@ class LeakageDetector {
                 leaks.push({
                     type: 'memorization',
                     testId: test.id,
-                    evidence: 'Agent completed partial input with exact match'
+                    evidence: 'High completion similarity; investigate possible leakage, not proof of memorization'
                 });
             }
         }
@@ -1123,13 +1118,36 @@ Workflow:
 Works well with: `multi-agent-orchestration`, `agent-communication`, `autonomous-agents`
 
 ## When to Use
-- User mentions or implies: agent testing
-- User mentions or implies: agent evaluation
-- User mentions or implies: benchmark agents
-- User mentions or implies: agent reliability
-- User mentions or implies: test agent
+
+Use when comparing a changed agent/prompt/tool configuration, reproducing an observed failure or estimating reliability on a declared task distribution. Do not infer product readiness from a public benchmark percentage or a generic score threshold.
+
+## Inputs and evaluation contract
+
+Record dataset revision, agent/model/tool versions, environment, sampling/repeat plan, budgets and pass/fail rules before running. Critical safety and authorization failures remain visible separately from average quality. Distinguish agent failures, expected safe rejections, evaluator failures and infrastructure outages. Keyword detectors are illustrative heuristics and need reviewed false-positive/false-negative cases.
+
+## Worked uncertainty example
+
+Ten successes in ten independent trials do not demonstrate 100% reliability. This dependency-free helper returns an approximate 95% Wilson interval; for 10/10 it is about `[0.7225, 1]`. For zero trials it rejects the input.
+
+```javascript
+function wilson95(passes, trials) {
+  if (!Number.isSafeInteger(passes) || !Number.isSafeInteger(trials)
+      || trials <= 0 || passes < 0 || passes > trials) throw new Error('Invalid counts');
+  const z = 1.959963984540054;
+  const p = passes / trials;
+  const denominator = 1 + z * z / trials;
+  const center = (p + z * z / (2 * trials)) / denominator;
+  const margin = z * Math.sqrt(p * (1 - p) / trials + z * z / (4 * trials * trials)) / denominator;
+  return [Math.max(0, center - margin), Math.min(1, center + margin)];
+}
+```
+
+Expected checks: 0/10 has a positive upper bound; 10/10 has a lower bound below 1; 0/0 fails. Use case-level or clustered uncertainty when repeated runs share cases or state; pooling correlated runs as independent observations overstates confidence. See [NIST interval guidance](https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm).
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Illustrative 80/90% thresholds and score weights above are not universal merge/deploy rules; define project-specific criteria and keep critical failures separate.
+- A small-sample chi-squared comparison or absence of significance does not prove equivalence; use a method suited to counts, pairing and multiple comparisons.
+- Exceptions are not automatic safe rejections, and test retries must not erase the first failure.
+- Similarity to a retrieved answer may be legitimate RAG behavior; leakage depends on what the evaluation permits the agent to know.
+- LLM judges do not substitute for real user feedback, and output truncation does not remove private data. Use synthetic or authorized redacted inputs with bounded retention.

@@ -374,6 +374,13 @@ Reject any PR that fails this:
 5.  **Risk Limits**: If the skill includes shell/network/filesystem/mutation guidance, instructions include explicit prerequisites and warnings.
 6.  **Repo Security Scan**: Run `npm run security:docs` for command-heavy, network-execution, or token-like guidance in `SKILL.md`.
 
+Scoped content reviews may publish file fingerprints, observed checks and remaining
+corpus debt. These are historical evidence, not reliability badges or substitutes for
+exact-head review. Preserve the compatibility IDs and complete local support bundles
+listed in `docs/contributors/content-aliases.json`; validate their equality when editing
+a shared procedure. The existing `content_alias_integrity.test.js` regression covers
+missing files and divergent aliases without influencing Core selection eligibility.
+
 ### B. Risk Labels (V4)
 
 - ⚪ **Safe**: Default.
