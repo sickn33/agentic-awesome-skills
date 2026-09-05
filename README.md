@@ -127,8 +127,8 @@ Use direct installation when your host does not yet have a native AAS Core adapt
 For example, after reviewing `brainstorming` and `systematic-debugging` for a Codex project, run from that project directory:
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@16.7.0 -- \
-  agentic-awesome-skills --release 16.7.0 --path .agents/skills \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@16.8.0 -- \
+  agentic-awesome-skills --release 16.8.0 --path .agents/skills \
   --skills brainstorming,systematic-debugging --dry-run
 ```
 

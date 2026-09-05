@@ -67,6 +67,8 @@ During preview, AAS checks the ownership of the configuration parent directory (
 
 Use **Explore skills by outcome** in the catalog or Workbench to describe a task or choose a starting example. The browser suggests candidates from the public catalog and explains which terms match. Names and tags weigh more than descriptions; distinctive terms weigh more than common terms. This is descriptive relevance, not a quality score, semantic assessment, or effectiveness benchmark. Inspect the complete instructions and constraints before selecting anything. Core/MCP retrieval remains neutral and every canonical ID remains available.
 
+Use `without Supabase` or `senza Supabase` for an explicit single-term exclusion; repeat the phrase for additional terms. The interpreted exclusions are displayed. Other natural-language constraints still need agent review. Explicit compatibility aliases share one result card, with individually selectable matching alternative IDs.
+
 Each candidate exposes provenance, license, declared risk and setup information, including missing fields. These are author-supplied metadata, not reliability badges. Add candidates explicitly to the shared shortlist, compare them, and choose **Use discovery goal in brief** to carry the goal into the existing agent handoff. Nothing is selected automatically.
 
 Workbench downloads the public catalog only after you open discovery. Artifact review does not need that download and never sends imported artifacts or goals. The goal remains in page memory; only explicitly shortlisted IDs use the existing browser-local shortlist. There is no usage measurement, installation diary, or centralized collection.
@@ -261,20 +263,21 @@ aas stack audit \
 Use an existing target directory. On `main`, missing paths, wrong file/directory
 types and denied access return bounded `AAS_CLI_*` filesystem errors; correct the
 path or its permissions and retry. Native exception messages and private paths are
-not copied into the result. This error-handling refinement is unreleased.
+not copied into the result. This error-handling refinement is available from 16.8.0.
 
 On `main`, `--target` is inferred only when the validated manifest has one target;
 otherwise supply, for example, `--target codex:project`. The runtime version comes
 from the manifest, and its verified catalog must match the manifest's catalog.
 The npm SRI is the `runtime.integrity` returned by the approved MCP configuration;
-cache location and target directory remain explicit. These refinements are unreleased:
-the published 16.7.0 CLI still requires the explicit `--target` shown above.
+cache location and target directory remain explicit. These refinements are available from 16.8.0. Older clients still require the explicit `--target` shown above.
 
 `stack audit` is also read-only. It validates all three artifacts independently, resolves the manifest's pinned verified catalog, and reports whether their manifest digests, catalog identities, target, and selected skill IDs remain consistent. A structurally invalid or unverifiable artifact fails closed; a valid but differently bound artifact returns `status: "inconsistent"` with stable reason codes.
 
 Stop after reviewing the plan unless you are deliberately participating in controlled preview development. `stack apply` and `stack recover` remain experimental and require explicit opt-in.
 
 ## Use the reviewed selection
+
+**Prepare installation preview** in shortlist comparison or Workbench generates a copyable direct-installer command. Enter the actual skill directory and choose bash/zsh or PowerShell. The command preserves the selected IDs and exact catalog release and always includes `--dry-run`. It stays in page memory and is never executed by the browser. Workbench hides preparation while supplied artifacts are invalid or inconsistent; browser checks still do not prove semantic suitability or catalog integrity.
 
 For supported installation, use the direct installer with the same exact IDs,
 release version and intended skill directory. Follow [From selection to use](../../README.md#from-selection-to-use):

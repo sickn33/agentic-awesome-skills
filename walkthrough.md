@@ -1,3 +1,10 @@
+# Discovery and installation handoff follow-up - 2026-09-05
+
+- Fixed explicit English/Italian exclusions and grouped declared compatibility aliases while preserving explicit ID selection.
+- Added a text-only, exact-version direct-installer preview to shortlist comparison and Workbench, with shell quoting, an explicit destination, and invalid/inconsistent-artifact guards.
+- Corrected stale release-status guidance after verifying GitHub and npm 16.8.0 publication.
+- Reviewed and repaired the complete `lint-and-validate` and `sql-optimization-patterns` bundles. Added six runnable regression cases; see the scoped content review for evidence and limits.
+
 # Outcome discovery and clearer selection evidence - 2026-09-05
 
 - Added optional goal-based candidate discovery to catalog and Workbench, with explained term relevance and full-catalog access.

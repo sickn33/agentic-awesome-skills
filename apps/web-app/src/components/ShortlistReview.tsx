@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { InstallationHandoff } from './InstallationHandoff';
 import { Link } from 'react-router';
 import type { Skill } from '../types';
 import { SkillRequirements } from './SkillRequirements';
@@ -66,6 +67,7 @@ export function ShortlistReview({ skills, onRemove, onClear, suggestedGoal }: Pr
             </table>
           </div>
           <p className="shortlist-review__note">Metadata describes the catalog record. Plugin packaging does not determine whether an agent can select a skill; inspect its full instructions before use.</p>
+          <InstallationHandoff ids={ids} version={catalogVersion} />
           <div className="shortlist-review__brief">
             <label htmlFor="shortlist-goal">What do you want to accomplish?
               <textarea id="shortlist-goal" rows={3} value={goal} placeholder="Describe the outcome and constraints for your project" onChange={(event) => { setGoal(event.target.value); setMessage(''); }} />

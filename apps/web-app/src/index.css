@@ -2832,3 +2832,10 @@ samp {
   .outcome-heading { flex-direction: column; align-items: flex-start; }
   .outcome-results { grid-template-columns: 1fr; }
 }
+
+.installation-handoff { margin: 1rem 0; padding: 1rem; border: 1px solid var(--stroke-subtle); border-radius: var(--radius-sm); }
+.installation-handoff p { margin: .75rem 0; line-height: 1.6; }
+.installation-handoff label { display: grid; gap: .4rem; margin: .75rem 0; }
+.installation-handoff input, .installation-handoff select, .installation-handoff textarea { width: 100%; padding: .65rem; border: 1px solid var(--stroke-strong); border-radius: var(--radius-sm); background: var(--surface-canvas); color: var(--text-primary); }
+.installation-handoff textarea { font-family: var(--font-mono); font-size: .85rem; }
+.installation-handoff button { padding: .65rem .9rem; border: 1px solid var(--stroke-strong); border-radius: var(--radius-sm); background: var(--surface-elevated); color: var(--text-primary); }

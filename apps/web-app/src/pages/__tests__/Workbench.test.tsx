@@ -132,7 +132,7 @@ describe('Workbench review UI', () => {
   });
   beforeEach(() => vi.clearAllMocks());
 
-  it('reviews a valid stack without offering install, apply, or share actions', () => {
+  it('reviews a valid stack with text-only installation preparation and no execution actions', () => {
     renderWithRouter(<Workbench />, { route: '/workbench', path: '/workbench', useProvider: false });
 
     expect(screen.getByRole('heading', { level: 1, name: 'Review what your agent selected.' })).toBeInTheDocument();
@@ -147,7 +147,7 @@ describe('Workbench review UI', () => {
     expect(screen.getByText('react-best-practices')).toBeInTheDocument();
     expect(screen.getByText('playwright-skill')).toBeInTheDocument();
     expect(screen.getByText('Declared identity only.', { exact: false })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /install|apply|share/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^(install|apply|share)( |$)/i })).not.toBeInTheDocument();
     expect(window.location.search).toBe('');
   });
 
@@ -273,4 +273,18 @@ describe('Workbench review UI', () => {
     expect(screen.queryByText('reviewed-web-stack')).not.toBeInTheDocument();
     expect(screen.getByText('No artifact loaded')).toBeInTheDocument();
   });
+});
+
+it('hides installation preparation when imported artifacts disagree or fail validation', async () => {
+  renderWithRouter(<Workbench />, { useProvider: false });
+  paste('Paste JSON', stackFixture());
+  fireEvent.click(screen.getByRole('button', { name: 'Review pasted stack' }));
+  expect(screen.getByText('Prepare installation preview')).toBeInTheDocument();
+  paste('Paste JSON', planFixture(), 1);
+  fireEvent.click(screen.getByRole('button', { name: 'Review pasted plan' }));
+  await screen.findByText('Bindings need attention');
+  expect(screen.queryByText('Prepare installation preview')).not.toBeInTheDocument();
+  paste('Paste JSON', { invalid: true }, 1);
+  fireEvent.click(screen.getByRole('button', { name: 'Review pasted plan' }));
+  expect(screen.queryByText('Prepare installation preview')).not.toBeInTheDocument();
 });

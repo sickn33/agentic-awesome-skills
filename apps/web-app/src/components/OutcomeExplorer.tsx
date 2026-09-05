@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import type { Skill } from '../types';
 import { useSkillShortlist } from '../hooks/useSkillShortlist';
-import { evidenceSignals, isDiscoveryCatalog, OUTCOME_PRESETS, rankForOutcome } from '../utils/outcomeDiscovery';
+import { evidenceSignals, groupOutcomeMatches, isDiscoveryCatalog, OUTCOME_PRESETS, parseOutcomeGoal, rankForOutcome } from '../utils/outcomeDiscovery';
 import { getSkillsIndexCandidateUrls } from '../utils/publicAssetUrls';
 import { ShortlistReview } from './ShortlistReview';
 
@@ -18,7 +18,8 @@ function DiscoverySession({ catalog, onGoalChange }: Props): React.ReactElement 
   const [limit, setLimit] = useState(6);
   const { ids, toggle, clear } = useSkillShortlist();
   const skills = catalog || loaded;
-  const results = useMemo(() => rankForOutcome(skills, query), [skills, query]);
+  const results = useMemo(() => groupOutcomeMatches(rankForOutcome(skills, query)), [skills, query]);
+  const excluded = parseOutcomeGoal(query).excluded;
 
   useEffect(() => {
     if (catalog) return;
@@ -59,10 +60,13 @@ function DiscoverySession({ catalog, onGoalChange }: Props): React.ReactElement 
           <label htmlFor="outcome-goal">Describe your goal<textarea id="outcome-goal" value={goal} onChange={(event) => setGoal(event.target.value)} maxLength={1000} rows={3} placeholder="For example: debug a React authentication error and add regression tests" /></label>
           <button type="submit" disabled={!goal.trim()}>Find relevant skills</button>
         </form>
-        {query ? <div aria-live="polite"><h3>{results.length ? `Showing ${Math.min(limit, results.length)} of ${results.length} matching skills` : 'No clear matches for this goal'}</h3><p>Start with these candidates, then read their instructions to check they fit your task.</p><details className="outcome-method"><summary>How suggestions work</summary><p>Matches in skill names and tags weigh more than descriptions; distinctive terms weigh more than common ones. Suggestions match words, not complex constraints or proven effectiveness.</p></details>{!results.length ? <p>Try a specific tool, task or technique, or browse the full catalog below.</p> : null}</div> : <p>Choose an example or describe your goal. Nothing is selected automatically.</p>}
-        <div className="outcome-results">{results.slice(0, limit).map(({ skill, matched, totalTerms }, index) => <article className="outcome-card" key={skill.id}>
+        {query ? <div aria-live="polite"><h3>{results.length ? `Showing ${Math.min(limit, results.length)} of ${results.length} matching procedures` : 'No clear matches for this goal'}</h3><p>Start with these candidates, then read their instructions to check they fit your task.</p><details className="outcome-method"><summary>How suggestions work</summary><p>Matches in skill names and tags weigh more than descriptions; distinctive terms weigh more than common ones. Suggestions match words, not complex constraints or proven effectiveness.</p></details>{!results.length ? <p>Try a specific tool, task or technique, or browse the full catalog below.</p> : null}</div> : <p>Choose an example or describe your goal. Nothing is selected automatically.</p>}
+        <p className="outcome-note">Exclude a term with “without Supabase” or “senza Supabase”. Repeat for additional terms; complex constraints still need review.</p>
+        {excluded.length ? <p role="status">Excluded terms: {excluded.join(", ")}</p> : null}
+        <div className="outcome-results">{results.slice(0, limit).map(({ skill, matched, totalTerms, alternatives }, index) => <article className="outcome-card" key={skill.id}>
           <p className="outcome-eyebrow">Candidate {index + 1} · matches {matched.length} of {totalTerms} goal terms</p><h3><Link to={`/skill/${encodeURIComponent(skill.id)}/`}>{skill.name}</Link></h3><p>{skill.description}</p>
           <p className="outcome-reason"><strong>Why it appears:</strong> {matched.join(', ')}</p>
+          {alternatives.length ? <details><summary>Same procedure · {alternatives.length} alternative {alternatives.length === 1 ? 'ID' : 'IDs'}</summary><p>These IDs share the procedure. Choose the ID you need; none is selected automatically.</p><ul>{alternatives.map((alias) => <li key={alias.id}><Link to={`/skill/${encodeURIComponent(alias.id)}/`}>{alias.id}</Link> <button type="button" aria-pressed={ids.includes(alias.id)} onClick={() => toggle(alias.id)}>{ids.includes(alias.id) ? 'Remove' : 'Select'} {alias.id}</button></li>)}</ul></details> : null}
           <details><summary>Evidence and gaps</summary><dl>{evidenceSignals(skill).map((signal) => <div key={signal.label}><dt>{signal.label}</dt><dd>{signal.value}</dd></div>)}</dl><p>These fields describe the author’s claims and setup requirements. They do not certify effectiveness. Read the complete skill before choosing it.</p></details>
           <button type="button" aria-label={`${ids.includes(skill.id) ? 'Remove from shortlist' : 'Add to shortlist'} ${skill.name}`} aria-pressed={ids.includes(skill.id)} onClick={() => toggle(skill.id)}>{ids.includes(skill.id) ? 'Remove from shortlist' : 'Add to shortlist'}</button>
         </article>)}</div>

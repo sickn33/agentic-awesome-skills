@@ -1,6 +1,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { SelectionFeedback } from '../components/SelectionFeedback';
+import { InstallationHandoff } from '../components/InstallationHandoff';
 import OutcomeExplorer from '../components/OutcomeExplorer';
 import { Link } from 'react-router';
 import { releaseFileUrl } from '../utils/catalogRelease';
@@ -219,7 +220,7 @@ function PlanReviewView({ plan }: { plan: PlanReview }): React.ReactElement {
   );
 }
 
-function PairReview({ stack, plan, evidence }: { stack: StackManifestReview; plan: PlanReview | null; evidence: SelectionEvidenceReview | null }): React.ReactElement {
+function PairReview({ stack, plan, evidence, allowInstallation }: { allowInstallation: boolean; stack: StackManifestReview; plan: PlanReview | null; evidence: SelectionEvidenceReview | null }): React.ReactElement {
   const [checked, setChecked] = useState<{ stack: StackManifestReview; plan: PlanReview | null; evidence: SelectionEvidenceReview | null; review?: ReturnType<typeof reviewWorkbenchPair>; error?: string } | null>(null);
   useEffect(() => {
     let active = true;
@@ -247,6 +248,7 @@ function PairReview({ stack, plan, evidence }: { stack: StackManifestReview; pla
         </div>
         <span>{consistent ? 'Ready to compare' : `${review.checks.filter((check) => check.status === 'mismatch').length} mismatches`}</span>
       </header>
+      {consistent && allowInstallation ? <InstallationHandoff key={JSON.stringify(stack)} ids={stack.skills.map((skill) => skill.id)} version={stack.catalog.version} packageName={stack.catalog.package} /> : null}
       <ul aria-label="Artifact consistency checks">
         {review.checks.map((check) => (
           <li key={check.id}>
@@ -482,7 +484,8 @@ export function Workbench(): React.ReactElement {
       </div>}
 
       <section className="workbench-review-area" aria-label="Imported artifact review">
-        {stack.value && (plan.value || evidence.value) ? <PairReview stack={stack.value} plan={plan.value} evidence={evidence.value} /> : null}
+        {stack.value && (plan.value || evidence.value) ? <PairReview allowInstallation={!plan.error && !evidence.error} stack={stack.value} plan={plan.value} evidence={evidence.value} /> : null}
+        {stack.value && !plan.value && !plan.error && !evidence.value && !evidence.error ? <InstallationHandoff key={JSON.stringify(stack.value)} ids={stack.value.skills.map((skill) => skill.id)} version={stack.value.catalog.version} packageName={stack.value.catalog.package} /> : null}
         {stack.value ? <StackReview stack={stack.value} /> : null}
         {plan.value ? <PlanReviewView plan={plan.value} /> : null}
         {evidence.value ? <EvidenceReview evidence={evidence.value} /> : null}

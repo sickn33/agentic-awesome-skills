@@ -1,4 +1,5 @@
 import type { Skill } from '../types';
+import compatibilityAliases from '../../../../docs/contributors/content-aliases.json';
 
 export const OUTCOME_PRESETS = [
   { label: 'Fix a bug', goal: 'Systematic debugging and regression testing' },
@@ -27,11 +28,36 @@ export function outcomeTerms(text: string): string[] {
     .map((word) => Object.prototype.hasOwnProperty.call(ALIASES, word) ? ALIASES[word] : word))].slice(0, 32);
 }
 
+/** Recognize explicit single-term exclusions; show them so the caller can inspect interpretation. */
+export function parseOutcomeGoal(goal: string): { positive: string; excluded: string[] } {
+  const excluded: string[] = [];
+  const positive = goal.slice(0, 1000).replace(/\b(?:without|senza|excluding)\s+([\p{L}\p{N}+#._-]+)/giu, (_, term: string) => {
+    excluded.push(...outcomeTerms(term));
+    return ' ';
+  });
+  return { positive, excluded: [...new Set(excluded)] };
+}
+
+export function outcomeAliases(id: string): string[] {
+  return compatibilityAliases.groups.find((group) => group.ids.includes(id))?.ids.filter((alias) => alias !== id) || [];
+}
+
+export function groupOutcomeMatches(matches: OutcomeMatch[]): Array<OutcomeMatch & { alternatives: Skill[] }> {
+  const seen = new Set<string>();
+  return matches.flatMap((match) => {
+    if (seen.has(match.skill.id)) return [];
+    const aliases = outcomeAliases(match.skill.id);
+    [match.skill.id, ...aliases].forEach((id) => seen.add(id));
+    return [{ ...match, alternatives: matches.map((item) => item.skill).filter((skill) => aliases.includes(skill.id)) }];
+  });
+}
+
 export interface OutcomeMatch { skill: Skill; score: number; matched: string[]; totalTerms: number }
 
 /** Browser-only discovery: descriptive relevance, never quality or Core eligibility. */
 export function rankForOutcome(skills: Skill[], goal: string): OutcomeMatch[] {
-  const terms = outcomeTerms(goal);
+  const { positive, excluded } = parseOutcomeGoal(goal);
+  const terms = outcomeTerms(positive);
   if (!terms.length) return [];
   const indexed = skills.map((skill) => {
     const identity = new Set(outcomeTerms(`${skill.id} ${skill.name} ${(skill.tags || []).join(' ')}`));
@@ -39,8 +65,9 @@ export function rankForOutcome(skills: Skill[], goal: string): OutcomeMatch[] {
     const category = new Set(outcomeTerms(skill.category));
     return { skill, identity, description, category };
   });
+  const eligible = indexed.filter(({ identity, description, category }) => !excluded.some((term) => identity.has(term) || description.has(term) || category.has(term)));
   const frequency = new Map(terms.map((term) => [term, indexed.filter(({ identity, description, category }) => identity.has(term) || description.has(term) || category.has(term)).length]));
-  return indexed.map(({ skill, identity, description, category }) => {
+  return eligible.map(({ skill, identity, description, category }) => {
     const matched = terms.filter((term) => identity.has(term) || description.has(term) || category.has(term));
     const score = matched.reduce((sum, term) => sum + (identity.has(term) ? 3 : description.has(term) ? 2 : 1) * Math.log(1 + skills.length / (1 + (frequency.get(term) || 0))), 0);
     return { skill, score, matched, totalTerms: terms.length };
