@@ -11,13 +11,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [16.8.0] - 2026-09-05 - "Discover, Inspect, and Review Your Skills"
 
-> Discover skills from a concrete goal, inspect complete local bundles, and carry an explicit shortlist into agent-owned selection and Workbench review.
+> Added public-web research and read-only skill auditing, goal-based catalog
+> discovery, and complete local bundle inspection. The published catalog
+> contains 2,113 skills.
 
-This release helps Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants find relevant procedures, inspect their requirements, and review selection artifacts before use. Metadata and artifact checks remain evidence about their stated scope, not guarantees of skill effectiveness.
+This release helps Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity,
+and related AI coding assistants find relevant procedures, inspect their
+requirements, and review selection artifacts before use. Metadata and artifact
+checks remain evidence about their stated scope, not guarantees of skill
+effectiveness.
 
 Start here:
 
 - Install: `npx agentic-awesome-skills@16.8.0`
+- [`parallel-search-mcp`](skills/parallel-search-mcp/) for public-web research
+  through an existing, user-selected Parallel connection.
+- [`skill-security-audit`](skills/skill-security-audit/) for reviewing third-party
+  agent extensions before installation.
 - [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
 - [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
 - [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
@@ -25,45 +35,156 @@ Start here:
 
 ### Added
 
-- Optional outcome discovery in the catalog and Workbench: six task examples, explained word matches, explicit shortlist selection, and visible evidence gaps. Goals and imported artifacts stay in the browser.
-- [Parallel Search MCP](skills/parallel-search-mcp/) for user-selected public web research through an existing Parallel connection, with anonymous-access limits and data-sharing boundaries.
-- [Skill Security Audit](skills/skill-security-audit/) for read-only review of third-party skills, MCP servers, connectors, and extensions before installation.
+- Added [`parallel-search-mcp`](skills/parallel-search-mcp/) for public-web
+  research through an existing Parallel connection, with explicit provider
+  choice, anonymous-access limits, and data-sharing boundaries
+  ([#1339](https://github.com/sickn33/agentic-awesome-skills/pull/1339)).
+- Added [`skill-security-audit`](skills/skill-security-audit/) for read-only
+  review of third-party skills, MCP servers, connectors, and extensions before
+  installation, distinguishing confirmed findings from unknowns
+  ([#1353](https://github.com/sickn33/agentic-awesome-skills/pull/1353)).
+- Added optional outcome discovery in the catalog and Workbench: six task
+  examples, explained word matches, explicit shortlist selection, and visible
+  evidence gaps. Goals and imported artifacts stay in the browser.
 
-- Two further reproducible worked cases for Workbench import QA and bundle-read security, with exact source inputs, native MCP selections, observed checks and historical CLI plans. Standalone workflow installations now include self-contained procedure cards and a validation-retry handoff.
+### Changed
 
-- A consistent selection-to-use path linking local discovery, exact reviewed IDs, Core artifact review and supported direct installation, with a public distribution measurement.
-- A scoped, content-fingerprint-bound review of 20 editorially prominent skills, with explicit compatibility mappings for eight duplicate groups and complete offline support files for their 17 existing IDs.
-
-- Workbench import of selection evidence, a recorded MCP selection and CLI plan example, and optional local feedback preview/export. Imported data remains in page memory; artifact consistency does not certify skill suitability.
-- Explicit all-term matching, required terms, normalized category facets and tag filters in Core search, with match explanations and factual evidence traces. The web catalog offers literal and explicit approximate modes, shareable search controls, and matching explanations while preserving catalog order.
-- Local MCP bundle inspection through `list_skill_files` and `read_skill_file`, with catalog-bound paths and digests, bounded inert text reads, and explicit handling of links, binary files, missing payloads and older catalogs.
-- Catalog shortlist comparison with declared risk, setup, plugin packaging, source, and license metadata; a previewable agent brief carries the selected IDs, catalog version, project goal, and target into agent-owned stack selection.
-- Skill bundle links pinned to the catalog release and a Workbench guide from catalog selection to manifest and plan review.
+- Two further reproducible worked cases for Workbench import QA and
+  bundle-read security, with exact source inputs, native MCP selections,
+  observed checks and historical CLI plans. Standalone workflow installations
+  now include self-contained procedure cards and a validation-retry handoff.
+- A consistent selection-to-use path linking local discovery, exact reviewed
+  IDs, Core artifact review and supported direct installation, with a public
+  distribution measurement.
+- A scoped, content-fingerprint-bound review of 20 editorially prominent
+  skills, with explicit compatibility mappings for eight duplicate groups and
+  complete offline support files for their 17 existing IDs.
+- Workbench import of selection evidence, a recorded MCP selection and CLI
+  plan example, and optional local feedback preview/export. Imported data
+  remains in page memory; artifact consistency does not certify skill
+  suitability.
+- Explicit all-term matching, required terms, normalized category facets and
+  tag filters in Core search, with match explanations and factual evidence
+  traces. The web catalog offers literal and explicit approximate modes,
+  shareable search controls, and matching explanations while preserving
+  catalog order.
+- Local MCP bundle inspection through `list_skill_files` and
+  `read_skill_file`, with catalog-bound paths and digests, bounded inert text
+  reads, and explicit handling of links, binary files, missing payloads and
+  older catalogs.
+- Catalog shortlist comparison with declared risk, setup, plugin packaging,
+  source, and license metadata; a previewable agent brief carries the selected
+  IDs, catalog version, project goal, and target into agent-owned stack
+  selection.
+- Skill bundle links pinned to the catalog release and a Workbench guide from
+  catalog selection to manifest and plan review.
+- Completed missing date metadata, replaced truncated descriptions, added
+  actionable examples, and split oversized procedures into bundled references
+  while preserving canonical skill IDs.
+- Refreshed web dependencies and migrated the web test toolchain and TypeScript
+  checks.
+- Regenerated canonical registries, offline Core data, tracked web assets,
+  compatibility reports, marketplaces, editorial bundles, and Codex/Claude
+  plugin distributions for 2,113 skills.
 
 ### Fixed
 
-- npm skill packages exclude generated Python bytecode and cache directories left by local tests, with a real pack-list regression and preserved source/support files.
-- CLI native filesystem failures now return a bounded AAS error envelope instead of failing error-schema validation and exposing a stack trace.
-
-- Installer retrieval now uses a release-verified partial/sparse checkout of complete canonical skills, reducing temporary worktree bytes by 70.9% in the recorded same-release comparison. Failed retrieval cleans its temporary source and leaves targets unchanged.
-- Plan preview infers a sole manifest target and rejects a runtime with a different catalog identity. Source-only PR classification no longer treats an unchanged Git copy origin as a mutation; generated destinations and renames remain blocked.
-- Replaced two empty session procedures with bounded optional helpers; corrected priority skill examples for authentication, MCP evaluation, analytics, refunds, caching, replanning and text diagnostics. Removed unsupported quality/marketing assurances and clarified version, permission and integration limits.
-
-- MCP artifact requests can exceed the ordinary 4 KiB limit within the existing 256 KiB frame ceiling. Safely parsed size errors retain a bounded request ID, avoiding an uncorrelated error and client timeout; ordinary queries and unrelated metadata remain constrained.
-- Workbench compares the project profile as well as manifest, catalog, target and selected IDs; changing an artifact clears stale consistency results while new digests are checked.
-- Skill documentation links resolve bundled files against the same repository release; fragment links stay on the current skill page under the GitHub Pages base path. Outline and rendered heading IDs now agree for inline markup, duplicate headings, and non-English text.
-- Workflow installation guidance uses explicit skill selection and a dry run; the shortlist appears before catalog results and handles clipboard failures with a selectable brief.
+- npm skill packages exclude generated Python bytecode and cache directories
+  left by local tests, with a real pack-list regression and preserved
+  source/support files.
+- CLI native filesystem failures now return a bounded AAS error envelope
+  instead of failing error-schema validation and exposing a stack trace.
+- Installer retrieval now uses a release-verified partial/sparse checkout of
+  complete canonical skills, reducing temporary worktree bytes by 70.9% in the
+  recorded same-release comparison. Failed retrieval cleans its temporary
+  source and leaves targets unchanged.
+- Plan preview infers a sole manifest target and rejects a runtime with a
+  different catalog identity. Source-only PR classification no longer treats
+  an unchanged Git copy origin as a mutation; generated destinations and
+  renames remain blocked.
+- Replaced two empty session procedures with bounded optional helpers;
+  corrected priority skill examples for authentication, MCP evaluation,
+  analytics, refunds, caching, replanning and text diagnostics. Removed
+  unsupported quality/marketing assurances and clarified version, permission
+  and integration limits.
+- MCP artifact requests can exceed the ordinary 4 KiB limit within the
+  existing 256 KiB frame ceiling. Safely parsed size errors retain a bounded
+  request ID, avoiding an uncorrelated error and client timeout; ordinary
+  queries and unrelated metadata remain constrained.
+- Workbench compares the project profile as well as manifest, catalog, target
+  and selected IDs; changing an artifact clears stale consistency results
+  while new digests are checked.
+- Skill documentation links resolve bundled files against the same repository
+  release; fragment links stay on the current skill page under the GitHub
+  Pages base path. Outline and rendered heading IDs now agree for inline
+  markup, duplicate headings, and non-English text.
+- Workflow installation guidance uses explicit skill selection and a dry run;
+  the shortlist appears before catalog results and handles clipboard failures
+  with a selectable brief.
 - Updated the web app's transitive `qs` dependency to its patched release.
 
-### Maintenance
+### Security and Reliability
 
-- Completed missing date metadata, replaced truncated descriptions, added actionable examples, and split oversized procedures into bundled references while preserving canonical skill IDs.
-- Refreshed web dependencies and migrated the web test toolchain and TypeScript checks.
+- Parallel research requires an existing connection and explicit provider
+  choice; queries and fetched URLs are shared with the selected service, and
+  retrieved content remains untrusted evidence.
+- Skill Security Audit inspects extension content without executing it or
+  installing dependencies, and separates observed findings from unverified
+  runtime behavior.
+- Local MCP bundle reads stay catalog-bound, bounded, and inert. Selection
+  evidence and artifact consistency do not certify a skill's suitability.
+- Root and web dependency audits reported no known vulnerabilities during
+  release verification; failed installer retrieval leaves targets unchanged.
+
+### Who should care
+
+- Claude Code, Cursor, Codex CLI, and Gemini CLI users who want to discover
+  skills for a concrete goal and inspect their complete support files.
+- Teams comparing a shortlist and reviewing an agent-selected stack before
+  installing the explicitly chosen skills.
+- Researchers using Parallel for public-web search with clear data-sharing
+  and anonymous-access limits.
+- Maintainers reviewing third-party agent extensions before installation.
+
+### Validation
+
+- Passed validation for 2,113 canonical skills, reference checks,
+  documentation-security checks, warning-budget enforcement, repository tests,
+  plugin and bundle checks, web tests and coverage, production build, and
+  release preflight including npm package inspection.
+- Verified the published tag and npm package against the released commit,
+  successful CI and CodeQL, the exact-tag Pages deployment, live catalog data,
+  and all 2,120 legacy/current redirect pairs.
+- The two new skills received maintainer semantic review bound to their exact
+  pull-request heads. The review gate reported `manual-review-required`; Tessl did not
+  run a passing automated review.
+
+### Limitations
+
+- Outcome discovery explains text matches; it does not establish which skills
+  will work best for a project. Selection remains with the user and agent.
+- Workbench checks artifact consistency. It does not execute the selected
+  workflow or prove its effectiveness, and imported data remains in page memory.
+- Bundle inspection does not execute scripts or fetch missing payloads;
+  binary files, links, oversized files, and older catalogs have explicit read
+  limits.
+- Parallel availability, anonymous quotas, and search coverage depend on the
+  external service. Static skill auditing cannot prove runtime safety or
+  replace an independent security review.
+- The measured 70.9% installer worktree reduction describes the recorded
+  same-release comparison, not a universal performance guarantee.
+- Existing MCP clients must reconnect or restart to load an updated runtime;
+  changing their configuration does not update an already-running session.
 
 ### Credits
 
-- **@georgeatparallel** for `parallel-search-mcp`.
-- **@liyangbing** and **sandbaseai/awesome-workbuddy** for the CC0-derived `skill-security-audit`.
+- **[@georgeatparallel](https://github.com/georgeatparallel)** for
+  `parallel-search-mcp` in
+  [#1339](https://github.com/sickn33/agentic-awesome-skills/pull/1339).
+- **[@liyangbing](https://github.com/liyangbing)** for `skill-security-audit` in
+  [#1353](https://github.com/sickn33/agentic-awesome-skills/pull/1353), adapted
+  from **[sandbaseai/awesome-workbuddy](https://github.com/sandbaseai/awesome-workbuddy)**
+  under CC0.
 
 ## [16.7.0] - 2026-09-04 - "Replayable Agents and Grounded Engineering Knowledge"
 
