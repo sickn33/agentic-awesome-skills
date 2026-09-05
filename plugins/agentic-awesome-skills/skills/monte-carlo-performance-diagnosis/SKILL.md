@@ -1,6 +1,6 @@
 ---
 name: monte-carlo-performance-diagnosis
-description: "Diagnoses pipeline performance issues -- slow jobs, expensive queries, latency trends -- using Monte Carlo's cross-platform observability. Uses a tiered investigation approach: discover problems, bridge to affected tables, then drill into root causes. Activates when a user asks about..."
+description: "Diagnoses pipeline performance issues -- slow jobs, expensive queries, latency trends -- using Monte Carlo's cross-platform observability. Uses a tiered investigation approach: discover problems, bridge to affected tables, then drill into root causes."
 risk: critical
 source: https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/performance-diagnosis
 source_repo: monte-carlo-data/mc-agent-toolkit
@@ -145,6 +145,12 @@ Structure your response as:
 - **Read vs write queries**: When the user asks about "reads" or "read queries", filter with `query_type="read"`. When they ask about "writes", use `query_type="write"`. Do NOT mix them.
 - **Never expose MCONs, UUIDs, or internal identifiers** to the user. Use human-readable names.
 - **Cross-platform**: This skill works across Airflow, dbt, and Databricks. Note which platform each finding comes from.
+
+## Example
+
+**User request:**
+
+> Diagnose why this pipeline became slow, identify the bottleneck from the available telemetry, and propose the smallest verified fix.
 
 ## Limitations
 

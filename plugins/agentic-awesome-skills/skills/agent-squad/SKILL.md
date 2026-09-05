@@ -3,6 +3,7 @@ name: agent-squad
 description: Main agent orchestrator that coordinates a specialized squad of agents
 risk: critical
 source: community
+date_added: "2026-09-04"
 role: Orchestrator / Agent Panel
 phase: all
 squad: agent-squad

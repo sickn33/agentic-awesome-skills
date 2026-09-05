@@ -25,6 +25,12 @@ Use when you need to resolve an in-progress git merge/rebase conflict.
 
 5. **Finish the merge/rebase.** Stage everything and commit. If rebasing, continue the rebase process until all commits are rebased.
 
+## Example
+
+**User request:**
+
+> Use @resolving-merge-conflicts for this task: Use when you need to resolve an in-progress git merge/rebase conflict.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

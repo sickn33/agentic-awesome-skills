@@ -50,6 +50,12 @@ Trigger this skill when:
 - **Staggering**: Leverage `anime.stagger()` extensively to add organic rhythm to multiple elements.
 - **Performance**: Monitor main thread usage; use `will-change: transform, opacity` where appropriate for GPU acceleration.
 
+## Example
+
+**User request:**
+
+> Create complex, multi-stage landing page orchestrations.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

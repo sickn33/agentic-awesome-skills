@@ -165,6 +165,12 @@ Use this data to inform your writing — not as a checklist to satisfy.
 - **product-marketing-context**: For establishing foundational positioning
 - **revops**: For lead scoring, routing, and pipeline management
 
+## Example
+
+**User request:**
+
+> Write outbound prospecting emails or cold follow-up sequences.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

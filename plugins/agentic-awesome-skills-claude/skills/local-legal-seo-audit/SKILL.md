@@ -346,6 +346,12 @@ Same format
 - **ai-seo**: For optimizing legal content for AI search experiences and featured snippets.
 - **page-cro**: For improving conversion rate on practice area pages and contact forms.
 
+## Example
+
+**User request:**
+
+> Audit or improve local SEO for a law firm, attorney, forensic expert, or similar legal/professional services website.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

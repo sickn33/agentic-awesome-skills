@@ -7,6 +7,7 @@ description: |
   makepad 字体, makepad 文字, makepad 排版, makepad 字形
 risk: safe
 source: community
+date_added: "2026-09-04"
 ---
 
 # Makepad Font Skill

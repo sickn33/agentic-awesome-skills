@@ -6,6 +6,7 @@ allowed-tools: Bash(rails *), Bash(bundle *), Bash(bin/*), Bash(npm *), Bash(yar
 context: fork
 risk: critical
 source: community
+date_added: "2026-09-04"
 metadata:
   author: Shpigford
   version: "1.0"
@@ -63,6 +64,12 @@ Set up the following tech stack:
 
 # Verify
 Verify the boilerplate is working by running `bin/rails server` and accessing the application at `http://localhost:3000` via playwright MCP.
+
+## Example
+
+**User request:**
+
+> Bootstrap a new Rails project with the opinionated stack defined here and verify that the generated application runs.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

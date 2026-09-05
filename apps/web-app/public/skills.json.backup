@@ -245,7 +245,7 @@
     "path": "skills/ab-testing",
     "category": "testing",
     "name": "ab-testing",
-    "description": "When the user wants to plan, design, or implement an A/B test or experiment, or build a growth experimentation program. Also use when the user mentions \"A/B test,\" \"split test,\" \"experiment,\" \"test this change,\" \"variant copy,\" \"multivariate test,\" \"hypothesis,\" \"should I test this,\"...",
+    "description": "When the user wants to plan, design, or implement an A/B test or experiment, or build a growth experimentation program.",
     "risk": "critical",
     "source": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/ab-testing",
     "date_added": "2026-07-01",
@@ -1157,7 +1157,7 @@
     "description": "Main agent orchestrator that coordinates a specialized squad of agents",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -1269,7 +1269,7 @@
     "description": "Email infrastructure for AI agents. Create accounts, send/receive emails, manage webhooks, and check karma balance via the AgentMail API.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -1291,7 +1291,7 @@
     "description": "Build AI phone agents with AgentPhone API. Use when the user wants to make phone calls, send/receive SMS, manage phone numbers, create voice agents, set up webhooks, or check usage \u2014 anything related to telephony, phone numbers, or voice AI.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -1492,7 +1492,7 @@
     "description": "AI\u9a71\u52a8\u7684\u7efc\u5408\u5065\u5eb7\u5206\u6790\u7cfb\u7edf\uff0c\u6574\u5408\u591a\u7ef4\u5ea6\u5065\u5eb7\u6570\u636e\u3001\u8bc6\u522b\u5f02\u5e38\u6a21\u5f0f\u3001\u9884\u6d4b\u5065\u5eb7\u98ce\u9669\u3001\u63d0\u4f9b\u4e2a\u6027\u5316\u5efa\u8bae\u3002\u652f\u6301\u667a\u80fd\u95ee\u7b54\u548cAI\u5065\u5eb7\u62a5\u544a\u751f\u6210\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -1981,7 +1981,7 @@
     "description": "Access 20+ years of global financial data: equities, options, forex, crypto, commodities, economic indicators, and 50+ technical indicators.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -2000,7 +2000,7 @@
     "path": "skills/alternatives-pages",
     "category": "uncategorized",
     "name": "alternatives-pages",
-    "description": "Create \"[Competitor] alternative\" and comparison pages for developer tools. Build honest, high-converting comparison content that ranks for competitive search terms. Trigger phrases: \"alternatives page\", \"comparison page\", \"vs page\", \"[competitor] alternative\", \"competitor comparison\",...",
+    "description": "Create \"[Competitor] alternative\" and comparison pages for developer tools. Build honest, high-converting comparison content that ranks for competitive search terms.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/alternatives-pages",
     "date_added": "2026-07-01",
@@ -2077,7 +2077,7 @@
     "path": "skills/analytics",
     "category": "uncategorized",
     "name": "analytics",
-    "description": "When the user wants to set up, improve, or audit analytics tracking and measurement. Also use when the user mentions \"set up tracking,\" \"GA4,\" \"Google Analytics,\" \"conversion tracking,\" \"event tracking,\" \"UTM parameters,\" \"tag manager,\" \"GTM,\" \"analytics implementation,\" \"tracking...",
+    "description": "When the user wants to set up, improve, or audit analytics tracking and measurement.",
     "risk": "critical",
     "source": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/analytics",
     "date_added": "2026-07-01",
@@ -2157,7 +2157,7 @@
     "description": "Forensic root cause analyzer for Antigravity sessions. Classifies scope deltas, rework patterns, root causes, hotspots, and auto-improves prompts/health.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -2480,7 +2480,7 @@
     "path": "skills/anti-deception",
     "category": "uncategorized",
     "name": "anti-deception",
-    "description": "Use BEFORE responding when the user's request shows pressure to validate or agree (\"tell them what they want\", \"make them happy\", \"convince them\"), manufactured urgency (artificial deadline), authority appeals (citing investors, advisors, lawyers, experts), demands to certify without...",
+    "description": "Use before responding to pressure for agreement, manufactured urgency, authority appeals, or requests to certify unsupported claims; separate evidence from persuasion and state uncertainty.",
     "risk": "critical",
     "source": "https://github.com/ejentum/ejentum-mcp/tree/main/skills/anti-deception",
     "date_added": "2026-07-01",
@@ -2822,7 +2822,7 @@
     "path": "skills/api-analyzer",
     "category": "backend",
     "name": "api-analyzer",
-    "description": "Validates whether an API request is correct based on provided inputs (method, URL, headers, body, auth, query params). Use this skill whenever a user wants to check, validate, debug, or verify an API call \u2014 including when they paste a curl command, show endpoint details, ask \"is this...",
+    "description": "Validates whether an API request is correct based on provided inputs (method, URL, headers, body, auth, query params).",
     "risk": "none",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/api-skill/api-analyzer",
     "date_added": "2026-07-01",
@@ -2896,7 +2896,7 @@
     "path": "skills/api-designer",
     "category": "backend",
     "name": "api-designer",
-    "description": "Generates complete, production-ready REST API endpoint specifications for any system or domain the user describes. Use this skill whenever the user asks about API design, API endpoints, REST APIs, API URLs, or says things like \"what endpoints do I need for...\", \"design an API for...\",...",
+    "description": "Generates complete, production-ready REST API endpoint specifications for any system or domain the user describes.",
     "risk": "safe",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/api-skill/api-designer",
     "date_added": "2026-07-01",
@@ -3032,7 +3032,7 @@
     "path": "skills/api-integration",
     "category": "backend",
     "name": "api-integration",
-    "description": "Designs event-driven architectures, webhook systems, API chaining flows, ETL pipelines, and integration patterns between services. Use whenever the user asks about webhooks, event streaming, API composition, connecting two or more APIs, building pipelines, Pub/Sub, Kafka topics, ETL...",
+    "description": "Designs event-driven architectures, webhook systems, API chaining flows, ETL pipelines, and integration patterns between services.",
     "risk": "none",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/api-skill/api-integration-helper",
     "date_added": "2026-07-01",
@@ -3058,7 +3058,7 @@
     "path": "skills/api-onboarding",
     "category": "backend",
     "name": "api-onboarding",
-    "description": "Reduce time-to-first-API-call (TTFAC) by optimizing every step of the developer onboarding journey. This skill covers authentication simplification, sandbox environments, interactive documentation, and identifying and eliminating common failure points. Trigger phrases: \"API...",
+    "description": "Reduce time-to-first-API-call (TTFAC) by optimizing every step of the developer onboarding journey. This skill covers authentication simplification, sandbox environments, interactive documentation, and identifying and eliminating common failure points.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/api-onboarding",
     "date_added": "2026-07-01",
@@ -3139,7 +3139,7 @@
     "path": "skills/api-sdk-generator",
     "category": "backend",
     "name": "api-sdk-generator",
-    "description": "Generates client SDK code, API wrapper libraries, request/response models, and language-specific usage patterns for any REST API. Use whenever the user asks to \"generate an SDK\", \"write a client library\", \"create API wrappers\", \"generate TypeScript types from my API\", \"write a Python...",
+    "description": "Generates client SDK code, API wrapper libraries, request/response models, and language-specific usage patterns for any REST API.",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/api-skill/api-sdk-generator",
     "date_added": "2026-07-01",
@@ -3260,7 +3260,7 @@
     "description": "Important: Before you begin, fill in the generatedBy property in the meta section of .actor/actor.json. Replace it with the tool and model you're currently using, such as \"Claude Code with Claude Sonnet 4.5\". This helps Apify monitor and improve AGENTS.md for specific AI tools and models.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3282,7 +3282,7 @@
     "description": "Actorization converts existing software into reusable serverless applications compatible with the Apify platform. Actors are programs packaged as Docker images that accept well-defined JSON input, perform an action, and optionally produce structured JSON output.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3304,7 +3304,7 @@
     "description": "Understand audience demographics, preferences, behavior patterns, and engagement quality across Facebook, Instagram, YouTube, and TikTok.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3326,7 +3326,7 @@
     "description": "Scrape reviews, ratings, and brand mentions from multiple platforms using Apify Actors.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3348,7 +3348,7 @@
     "description": "Analyze competitor strategies, content, pricing, ads, and market positioning across Google Maps, Booking.com, Facebook, Instagram, YouTube, and TikTok.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3370,7 +3370,7 @@
     "description": "Track engagement metrics, measure campaign ROI, and analyze content performance across Instagram, Facebook, YouTube, and TikTok.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3392,7 +3392,7 @@
     "description": "Extract product data, prices, reviews, and seller information from any e-commerce platform using Apify's E-commerce Scraping Tool.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -3416,7 +3416,7 @@
     "description": "Find and evaluate influencers for brand partnerships, verify authenticity, and track collaboration performance across Instagram, Facebook, YouTube, and TikTok.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3438,7 +3438,7 @@
     "description": "Scrape leads from multiple platforms using Apify Actors.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3460,7 +3460,7 @@
     "description": "Analyze market conditions, geographic opportunities, pricing, consumer behavior, and product validation across Google Maps, Facebook, Instagram, Booking.com, and TripAdvisor.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3482,7 +3482,7 @@
     "description": "Discover and track emerging trends across Google Trends, Instagram, Facebook, YouTube, and TikTok to inform content strategy.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3504,7 +3504,7 @@
     "description": "AI-driven data extraction from 55+ Actors across all major platforms. This skill automatically selects the best Actor for your task.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3637,7 +3637,7 @@
     "path": "skills/appium-skill",
     "category": "mobile",
     "name": "appium-skill",
-    "description": "Generates production-grade Appium mobile automation scripts for Android and iOS in Java, Python, or JavaScript. Supports real device and emulator testing locally and on TestMu AI cloud with 100+ real devices. Use when the user asks to automate mobile apps, test on Android/iOS, write...",
+    "description": "Generates production-grade Appium mobile automation scripts for Android and iOS in Java, Python, or JavaScript. Supports real device and emulator testing locally and on TestMu AI cloud with 100+ real devices.",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/appium-skill",
     "date_added": "2026-07-01",
@@ -3754,7 +3754,7 @@
     "path": "skills/applicationinsights-web-ts",
     "category": "web-development",
     "name": "applicationinsights-web-ts",
-    "description": "Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) \u2014 page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend...",
+    "description": "Instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web).",
     "risk": "critical",
     "source": "https://github.com/microsoft/skills/tree/main/.github/plugins/azure-sdk-typescript/skills/applicationinsights-web-ts",
     "date_added": "2026-07-01",
@@ -4065,7 +4065,7 @@
     "description": "Clarify requirements before implementing. Use when serious doubts arise.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -4119,7 +4119,7 @@
     "description": "Astropy is the core Python package for astronomy, providing essential functionality for astronomical research and data analysis.",
     "risk": "critical",
     "source": "https://github.com/astropy/astropy",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -4348,7 +4348,7 @@
     "description": "Enables ultra-granular, line-by-line code analysis to build deep architectural context before vulnerability or bug finding.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -4685,7 +4685,7 @@
     "path": "skills/aws-agentic-ai",
     "category": "cloud",
     "name": "aws-agentic-ai",
-    "description": "AWS Bedrock AgentCore comprehensive expert for deploying and managing AI agents at scale. Use when working with any AgentCore service including Gateway, Runtime, Memory, Identity, Code Interpreter, Browser, Observability, Agent Registry, or Evaluations. Covers agent deployment, MCP...",
+    "description": "AWS Bedrock AgentCore comprehensive expert for deploying and managing AI agents at scale. Use when working with any AgentCore service including Gateway, Runtime, Memory, Identity, Code Interpreter, Browser, Observability, Agent Registry, or Evaluations.",
     "risk": "critical",
     "source": "https://github.com/zxkane/aws-skills/tree/main/plugins/aws-agentic-ai/skills/aws-agentic-ai",
     "date_added": "2026-07-01",
@@ -4711,7 +4711,7 @@
     "path": "skills/aws-cdk-development",
     "category": "cloud",
     "name": "aws-cdk-development",
-    "description": "AWS Cloud Development Kit (CDK) expert for building cloud infrastructure with TypeScript/Python. Use when creating CDK stacks, defining CDK constructs, implementing infrastructure as code, or when the user mentions CDK, CloudFormation, IaC, cdk synth, cdk deploy, or wants to define AWS...",
+    "description": "AWS Cloud Development Kit (CDK) expert for building cloud infrastructure with TypeScript/Python.",
     "risk": "critical",
     "source": "https://github.com/zxkane/aws-skills/tree/main/plugins/aws-iac/skills/aws-cdk-development",
     "date_added": "2026-07-01",
@@ -4790,7 +4790,7 @@
     "path": "skills/aws-cost-operations",
     "category": "cloud",
     "name": "aws-cost-operations",
-    "description": "AWS cost optimization, monitoring, and operational excellence expert. Use when analyzing AWS bills, estimating costs, setting up CloudWatch alarms, querying logs, auditing CloudTrail activity, or assessing security posture. Essential when user mentions AWS costs, spending, billing,...",
+    "description": "AWS cost optimization, monitoring, and operational excellence expert. Use when analyzing AWS bills, estimating costs, setting up CloudWatch alarms, querying logs, auditing CloudTrail activity, or assessing security posture.",
     "risk": "critical",
     "source": "https://github.com/zxkane/aws-skills/tree/main/plugins/aws-cost-ops/skills/aws-cost-operations",
     "date_added": "2026-07-01",
@@ -4868,7 +4868,7 @@
     "path": "skills/aws-mcp-setup",
     "category": "cloud",
     "name": "aws-mcp-setup",
-    "description": "Configure AWS MCP servers for documentation search and API access. Use when setting up AWS MCP, configuring AWS documentation tools, troubleshooting MCP connectivity, or when user mentions aws-mcp, awsdocs, uvx setup, or MCP server configuration. Covers both Full AWS MCP Server (with...",
+    "description": "Configure AWS MCP servers for documentation search and API access. Use when setting up AWS MCP, configuring AWS documentation tools, troubleshooting MCP connectivity, or when user mentions aws-mcp, awsdocs, uvx setup, or MCP server configuration.",
     "risk": "critical",
     "source": "https://github.com/zxkane/aws-skills/tree/main/plugins/aws-common/skills/aws-mcp-setup",
     "date_added": "2026-07-01",
@@ -4998,7 +4998,7 @@
     "path": "skills/aws-serverless-eda",
     "category": "cloud",
     "name": "aws-serverless-eda",
-    "description": "AWS serverless and event-driven architecture expert based on Well-Architected Framework. Use when building serverless APIs, Lambda functions, REST APIs, microservices, or async workflows. Covers Lambda with TypeScript/Python, API Gateway (REST/HTTP), DynamoDB, Step Functions,...",
+    "description": "AWS serverless and event-driven architecture expert based on Well-Architected Framework. Use when building serverless APIs, Lambda functions, REST APIs, microservices, or async workflows.",
     "risk": "critical",
     "source": "https://github.com/zxkane/aws-skills/tree/main/plugins/serverless-eda/skills/aws-serverless-eda",
     "date_added": "2026-07-01",
@@ -5046,7 +5046,7 @@
     "path": "skills/aws-sst-development",
     "category": "cloud",
     "name": "aws-sst-development",
-    "description": "SST v4 (Ion) expert for managing AWS resources as code with the Pulumi-backed framework. Use when writing or editing sst.config.ts, building infra/ modules (sst.aws.Function/Bucket/Dynamo/Cron/Service/Router, sst.Secret, sst.Linkable, raw aws.* Pulumi resources), wiring resource links,...",
+    "description": "SST v4 (Ion) expert for managing AWS resources as code with the Pulumi-backed framework.",
     "risk": "critical",
     "source": "https://github.com/zxkane/aws-skills/tree/main/plugins/aws-iac/skills/aws-sst-development",
     "date_added": "2026-07-01",
@@ -5075,7 +5075,7 @@
     "description": "AI-powered E2E web testing \u2014 eyes and hands for AI coding tools. Declarative YAML scenarios, Playwright execution, visual matching (OpenCV + OCR), platform auto-detection (Flutter/React/Vue), learning DB. Install: npx skills add ksgisang/awt-skill --skill awt -g",
     "risk": "critical",
     "source": "https://github.com/ksgisang/awt-skill",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -8185,7 +8185,7 @@
     "description": "This skill should be used when the user asks to \"model agent mental states\", \"implement BDI architecture\", \"create belief-desire-intention models\", \"transform RDF to beliefs\", \"build cognitive agent\", or mentions BDI ontology, mental state modeling, rational agency, or neuro-symbolic AI integration.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -8268,7 +8268,7 @@
     "description": "A hard-edged writing style contract for timeless, forceful English prose without modern AI tics. Use when users ask for prose or rewrites that must be clean, exact, concrete, and free of AI cadence, filler, or therapeutic tone.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -8518,7 +8518,7 @@
     "description": "Biopython is a comprehensive set of freely available Python tools for biological computation. It provides functionality for sequence manipulation, file I/O, database access, structural bioinformatics, phylogenetics, and many other bioinformatics tasks.",
     "risk": "critical",
     "source": "https://github.com/biopython/biopython",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -8762,7 +8762,7 @@
     "description": "Write copy following Sentry brand guidelines. Use when writing UI text, error messages, empty states, onboarding flows, 404 pages, documentation, marketing copy, or any user-facing content. Covers both Plain Speech (default) and Sentry Voice tones.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -8948,7 +8948,7 @@
     "path": "skills/brooks-audit",
     "category": "uncategorized",
     "name": "brooks-audit",
-    "description": "Architecture audit that maps module dependencies, checks layering integrity, and flags structural decay across a codebase, drawing on twelve classic engineering books. Triggers when: user asks to audit architecture, review folder/module structure, check for circular imports, understand...",
+    "description": "Architecture audit that maps module dependencies, checks layering integrity, and flags structural decay across a codebase, drawing on twelve classic engineering books.",
     "risk": "safe",
     "source": "https://github.com/hyhmrright/brooks-lint/tree/main/skills/brooks-audit",
     "date_added": "2026-07-01",
@@ -8974,7 +8974,7 @@
     "path": "skills/brooks-debt",
     "category": "uncategorized",
     "name": "brooks-debt",
-    "description": "Tech debt assessment that identifies, classifies, and prioritizes maintainability problems \u2014 helping teams build a refactoring roadmap \u2014 drawing on twelve classic engineering books. Triggers when: user asks about tech debt, refactoring priorities, what to clean up first, or asks \"why...",
+    "description": "Tech debt assessment that identifies, classifies, and prioritizes maintainability problems \u2014 helping teams build a refactoring roadmap \u2014 drawing on twelve classic engineering books.",
     "risk": "safe",
     "source": "https://github.com/hyhmrright/brooks-lint/tree/main/skills/brooks-debt",
     "date_added": "2026-07-01",
@@ -8998,9 +8998,9 @@
   {
     "id": "brooks-harness",
     "path": "skills/brooks-harness",
-    "category": "ai-ml",
+    "category": "uncategorized",
     "name": "brooks-harness",
-    "description": "Maintenance orchestrator for the brooks-lint plugin itself. Runs a sequential subagent pipeline \u2014 author \u2192 eval \u2192 QA \u2192 trigger-audit \u2192 release \u2014 to add or edit a skill, refresh the eval suite, keep the four manifests + README + CHANGELOG + AGENTS/GEMINI in sync, audit trigger...",
+    "description": "Maintenance orchestrator for the brooks-lint plugin itself.",
     "risk": "critical",
     "source": "https://github.com/hyhmrright/brooks-lint/tree/main/.claude/skills/brooks-harness",
     "date_added": "2026-07-01",
@@ -9059,7 +9059,7 @@
     "path": "skills/brooks-review",
     "category": "uncategorized",
     "name": "brooks-review",
-    "description": "PR code review that surfaces decay risks, design smells, and maintainability issues with concrete Symptom \u2192 Source \u2192 Consequence \u2192 Remedy findings, drawing on twelve classic engineering books. Triggers when: user asks to review code, check a PR, shares a diff or pastes code asking...",
+    "description": "PR code review that surfaces decay risks, design smells, and maintainability issues with concrete Symptom \u2192 Source \u2192 Consequence \u2192 Remedy findings, drawing on twelve classic engineering books.",
     "risk": "safe",
     "source": "https://github.com/hyhmrright/brooks-lint/tree/main/skills/brooks-review",
     "date_added": "2026-07-01",
@@ -9085,7 +9085,7 @@
     "path": "skills/brooks-sweep",
     "category": "uncategorized",
     "name": "brooks-sweep",
-    "description": "Full-sweep mode: runs a unified analysis across all quality dimensions \u2014 code decay, architecture, tech debt, and test quality \u2014 then applies fixes directly to the codebase. Safe changes are auto-applied; risky changes are confirmed before execution. Drawing on twelve classic...",
+    "description": "Full-sweep mode: runs a unified analysis across all quality dimensions \u2014 code decay, architecture, tech debt, and test quality \u2014 then applies fixes directly to the codebase. Safe changes are auto-applied; risky changes are confirmed before execution.",
     "risk": "critical",
     "source": "https://github.com/hyhmrright/brooks-lint/tree/main/skills/brooks-sweep",
     "date_added": "2026-07-01",
@@ -9111,7 +9111,7 @@
     "path": "skills/brooks-test",
     "category": "testing",
     "name": "brooks-test",
-    "description": "Test quality review drawing on twelve classic engineering books \u2014 with primary focus on xUnit Test Patterns, The Art of Unit Testing, How Google Tests Software, and Working Effectively with Legacy Code \u2014 that diagnoses structural problems in an existing test suite: brittleness, mock...",
+    "description": "Review test-suite quality using established testing literature; identify brittleness, mock abuse, unclear fixtures, weak assertions, slow feedback, and maintenance risks.",
     "risk": "safe",
     "source": "https://github.com/hyhmrright/brooks-lint/tree/main/skills/brooks-test",
     "date_added": "2026-07-01",
@@ -9351,7 +9351,7 @@
     "path": "skills/bug-hunt-swarm",
     "category": "uncategorized",
     "name": "bug-hunt-swarm",
-    "description": "Parallel read-only multi-agent root-cause investigation for bugs, regressions, crashes, flaky behavior, or unexplained failures. Use when the user asks to investigate a bug, find the root cause, trace a regression, understand why something broke, or wants a ranked diagnosis with the...",
+    "description": "Parallel read-only multi-agent root-cause investigation for bugs, regressions, crashes, flaky behavior, or unexplained failures.",
     "risk": "safe",
     "source": "https://github.com/Dimillian/Skills/tree/main/bug-hunt-swarm",
     "date_added": "2026-07-01",
@@ -9424,7 +9424,7 @@
     "description": "build",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -9601,7 +9601,7 @@
     "description": "Searches and explores Burp Suite project files (.burp) from the command line. Use when searching response headers or bodies with regex patterns, extracting security audit findings, dumping proxy history or site map data, or analyzing HTTP traffic captured in a Burp project.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10253,7 +10253,7 @@
     "path": "skills/changelog-updates",
     "category": "uncategorized",
     "name": "changelog-updates",
-    "description": "Create release notes and product updates that developers actually read and care about. This skill covers changelog formatting, versioning communication, breaking change announcements, deprecation notices, and building anticipation for new features. Trigger phrases: \"changelog\",...",
+    "description": "Create release notes and product updates that developers actually read and care about. This skill covers changelog formatting, versioning communication, breaking change announcements, deprecation notices, and building anticipation for new features.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/changelog-updates",
     "date_added": "2026-07-01",
@@ -10282,7 +10282,7 @@
     "description": "Build a real-time support chat system with a floating widget for users and an admin dashboard for support staff. Use when the user wants live chat, customer support chat, real-time messaging, or in-app support.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10450,7 +10450,7 @@
     "description": "Cirq is Google Quantum AI's open-source framework for designing, simulating, and running quantum circuits on quantum computers and simulators.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10473,7 +10473,7 @@
     "description": "Manage citations systematically throughout the research and writing process.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10526,7 +10526,7 @@
     "path": "skills/claimable-postgres",
     "category": "uncategorized",
     "name": "claimable-postgres",
-    "description": "Provision instant temporary Postgres databases via Claimable Postgres by Neon (neon.new) with no login, signup, or credit card. Supports REST API, CLI, and SDK. Use when users ask for a quick Postgres environment, a throwaway DATABASE_URL for prototyping/tests, or \"just give me a DB...",
+    "description": "Provision instant temporary Postgres databases via Claimable Postgres by Neon (neon.new) with no login, signup, or credit card. Supports REST API, CLI, and SDK.",
     "risk": "critical",
     "source": "https://github.com/neondatabase/agent-skills/tree/main/skills/claimable-postgres",
     "date_added": "2026-07-01",
@@ -10555,7 +10555,7 @@
     "description": "Pre-ingestion verification for epistemic quality in RAG systems. Ensures documents are properly qualified before entering knowledge bases. Produces CGD (Clarity-Gated Documents) and validates SOT (Source of Truth) files.\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10754,7 +10754,7 @@
     "description": "Diagnose and fix Claude in Chrome MCP extension connectivity issues. Use when mcp__claude-in-chrome__* tools fail, return \"Browser extension is not connected\", or behave erratically.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -10829,7 +10829,7 @@
     "description": "Analyze a repository to generate recommended Claude Code settings.json permissions. Use when setting up a new project, auditing existing settings, or determining which read-only bash commands to allow. Detects tech stack, build tools, and monorepo structure.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -11269,7 +11269,7 @@
     "path": "skills/co-marketing",
     "category": "uncategorized",
     "name": "co-marketing",
-    "description": "When the user wants to find co-marketing partners, plan joint campaigns, or brainstorm partnership opportunities. Use when the user says 'co-marketing,' 'partner marketing,' 'joint campaign,' 'who should we partner with,' 'integration marketing,' 'cross-promotion,' 'collaborate with...",
+    "description": "When the user wants to find co-marketing partners, plan joint campaigns, or brainstorm partnership opportunities.",
     "risk": "safe",
     "source": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/co-marketing",
     "date_added": "2026-07-01",
@@ -11722,7 +11722,7 @@
     "description": "Simplifies and refines code for clarity, consistency, and maintainability while preserving all functionality. Use when asked to \"simplify code\", \"clean up code\", \"refactor for clarity\", \"improve readability\", or review recently modified code for elegance. Focuses on project-specific best practices.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12190,7 +12190,7 @@
     "description": "ALWAYS use this skill when committing code changes \u2014 never commit directly without it. Creates commits following Sentry conventions with proper conventional commit format and issue references. Trigger on any commit, git commit, save changes, or commit message task.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12207,9 +12207,9 @@
   {
     "id": "community-building",
     "path": "skills/community-building",
-    "category": "automation",
+    "category": "uncategorized",
     "name": "community-building",
-    "description": "When the user wants to build, grow, or improve a developer community on Discord, Slack, or forums. Trigger phrases include \"developer community,\" \"Discord server,\" \"Slack community,\" \"community strategy,\" \"community engagement,\" \"community moderation,\" \"community growth,\" or \"community...",
+    "description": "When the user wants to build, grow, or improve a developer community on Discord, Slack, or forums.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/community-building",
     "date_added": "2026-07-01",
@@ -12346,7 +12346,7 @@
     "path": "skills/competitor-profiling",
     "category": "uncategorized",
     "name": "competitor-profiling",
-    "description": "When the user wants to research, profile, or analyze competitors from their URLs. Also use when the user mentions 'competitor profile,' 'competitor research,' 'competitor analysis,' 'profile this competitor,' 'analyze competitor,' 'competitive intelligence,' 'competitor deep dive,'...",
+    "description": "When the user wants to research, profile, or analyze competitors from their URLs.",
     "risk": "critical",
     "source": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/competitor-profiling",
     "date_added": "2026-07-01",
@@ -12370,9 +12370,9 @@
   {
     "id": "competitor-tracking",
     "path": "skills/competitor-tracking",
-    "category": "business",
+    "category": "uncategorized",
     "name": "competitor-tracking",
-    "description": "Systematic competitor analysis for developer tools. Track features, pricing, positioning, content strategy, and community sentiment for direct and indirect competitors. Trigger phrases: \"competitor analysis\", \"track competitors\", \"competitive intelligence\", \"competitor research\", \"what...",
+    "description": "Systematic competitor analysis for developer tools. Track features, pricing, positioning, content strategy, and community sentiment for direct and indirect competitors.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/competitor-tracking",
     "date_added": "2026-07-01",
@@ -12512,7 +12512,7 @@
     "description": "Generate structured PR descriptions from diffs, add review checklists, risk assessments, and test coverage summaries. Use when the user says \"write a PR description\", \"improve this PR\", \"summarize my changes\", \"PR review\", \"pull request\", or asks to document a diff for reviewers.\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12688,7 +12688,7 @@
     "description": "Configure a Rails project to work with Conductor (parallel coding agents)",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12776,7 +12776,7 @@
     "description": "Analyze cryptographic code to detect operations that leak secret data through execution timing variations.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12914,7 +12914,7 @@
     "description": "When agent sessions generate millions of tokens of conversation history, compression becomes mandatory. The naive approach is aggressive compression to minimize tokens per request.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12936,7 +12936,7 @@
     "description": "Language models exhibit predictable degradation patterns as context length increases. Understanding these patterns is essential for diagnosing failures and designing resilient systems.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -13006,7 +13006,7 @@
     "description": "Context is the complete state available to a language model at inference time. It includes everything the model can attend to when generating responses: system instructions, tool definitions, retrieved documents, message history, and tool outputs.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -13155,7 +13155,7 @@
     "description": "Context optimization extends the effective capacity of limited context windows through strategic compression, masking, caching, and partitioning. The goal is not to magically increase context windows but to make better use of available capacity.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -13539,7 +13539,7 @@
     "description": "Create a git branch following Sentry naming conventions. Use when asked to \"create a branch\", \"new branch\", \"start a branch\", \"make a branch\", \"switch to a new branch\", or when starting new work on the default branch.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -13583,7 +13583,7 @@
     "description": "Alias for pr-writer. Use when users explicitly ask for \"create-pr\" or reference the legacy skill name. Redirects to the canonical PR writing workflow.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -13653,7 +13653,7 @@
     "path": "skills/cro",
     "category": "uncategorized",
     "name": "cro",
-    "description": "When the user wants to optimize, improve, or increase conversions on any marketing page or form \u2014 including homepage, landing pages, pricing pages, feature pages, lead capture forms, or contact forms. Also use when the user says 'CRO,' 'conversion rate optimization,' 'this page isn't...",
+    "description": "When the user wants to optimize, improve, or increase conversions on any marketing page or form \u2014 including homepage, landing pages, pricing pages, feature pages, lead capture forms, or contact forms.",
     "risk": "safe",
     "source": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/cro",
     "date_added": "2026-07-01",
@@ -14206,7 +14206,7 @@
     "path": "skills/cucumber-skill",
     "category": "uncategorized",
     "name": "cucumber-skill",
-    "description": "Generates Cucumber BDD tests with Gherkin feature files and step definitions in Java, JavaScript, or Ruby. Use when user mentions \"Cucumber\", \"Gherkin\", \"Feature/Scenario\", \"Given/When/Then\", \"BDD\". Triggers on: \"Cucumber\", \"Gherkin\", \"BDD\", \"Feature file\", \"Given/When/Then\", \"step...",
+    "description": "Generates Cucumber BDD tests with Gherkin feature files and step definitions in Java, JavaScript, or Ruby. Use when user mentions \"Cucumber\", \"Gherkin\", \"Feature/Scenario\", \"Given/When/Then\", \"BDD\".",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/cucumber-skill",
     "date_added": "2026-07-01",
@@ -14282,7 +14282,7 @@
     "path": "skills/customer-research",
     "category": "uncategorized",
     "name": "customer-research",
-    "description": "When the user wants to conduct, analyze, or synthesize customer research. Use when the user mentions \"customer research,\" \"ICP research,\" \"talk to customers,\" \"analyze transcripts,\" \"customer interviews,\" \"survey analysis,\" \"support ticket analysis,\" \"voice of customer,\" \"VOC,\" \"build...",
+    "description": "When the user wants to conduct, analyze, or synthesize customer research.",
     "risk": "critical",
     "source": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/customer-research",
     "date_added": "2026-07-01",
@@ -14459,7 +14459,7 @@
     "path": "skills/cypress-skill",
     "category": "testing",
     "name": "cypress-skill",
-    "description": "Generates production-grade Cypress E2E and component tests in JavaScript or TypeScript. Supports local execution and TestMu AI cloud. Use when the user asks to write Cypress tests, set up Cypress, test with cy commands, or mentions \"Cypress\", \"cy.visit\", \"cy.get\", \"cy.intercept\"....",
+    "description": "Generates production-grade Cypress E2E and component tests in JavaScript or TypeScript. Supports local execution and TestMu AI cloud. Use when the user asks to write Cypress tests, set up Cypress, test with cy commands, or mentions \"Cypress\", \"cy.visit\", \"cy.get\", \"cy.intercept\".",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/cypress-skill",
     "date_added": "2026-07-01",
@@ -15266,7 +15266,7 @@
     "description": "All pods run in namespace crs. Use when pods in the crs namespace are in CrashLoopBackOff, OOMKilled, or restarting, multiple services restart simultaneously (cascade failure), or redis is unresponsive or showing AOF warnings.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -15333,7 +15333,7 @@
     "path": "skills/debugging-code",
     "category": "development",
     "name": "debugging-code",
-    "description": "Interactively debug source code \u2014 set breakpoints, step through execution line by line, inspect live variable state, evaluate expressions against the running program, and navigate the call stack to trace root causes. Use when a program crashes, raises unexpected exceptions, produces...",
+    "description": "Interactively debug source code \u2014 set breakpoints, step through execution line by line, inspect live variable state, evaluate expressions against the running program, and navigate the call stack to trace root causes.",
     "risk": "critical",
     "source": "https://github.com/AlmogBaku/debug-skill/tree/master/skills/debugging-code",
     "date_added": "2026-07-01",
@@ -15955,7 +15955,7 @@
     "path": "skills/design-system",
     "category": "web-development",
     "name": "design-system",
-    "description": "Mechanical implementation invariants for frontend design: token architecture, typography hierarchy, loading order, FOUT prevention, chrome stability, motion timing, color semantics. Use with design when building components, pages, or design systems. (Aesthetic direction lives in...",
+    "description": "Mechanical implementation invariants for frontend design: token architecture, typography hierarchy, loading order, FOUT prevention, chrome stability, motion timing, color semantics. Use with design when building components, pages, or design systems.",
     "risk": "critical",
     "source": "https://github.com/connerkward/ckw-design-skill/tree/main/design-system",
     "date_added": "2026-07-01",
@@ -16039,7 +16039,7 @@
     "path": "skills/design-ux",
     "category": "web-development",
     "name": "design-ux",
-    "description": "UX / usability audit \u2014 heuristic evaluation of INTERACTIVE UIs (not just visual polish). Load with design when a UI \"feels off\", \"sucks to use\", is hard to learn, needs an instruction wall, or before shipping an interactive tool/editor/app. Scores the RENDERED UI against Nielsen's 10 +...",
+    "description": "UX / usability audit \u2014 heuristic evaluation of INTERACTIVE UIs (not just visual polish). Load with design when a UI \"feels off\", \"sucks to use\", is hard to learn, needs an instruction wall, or before shipping an interactive tool/editor/app.",
     "risk": "critical",
     "source": "https://github.com/connerkward/ckw-design-skill/tree/main/deterministic-design/design-ux",
     "date_added": "2026-07-01",
@@ -16178,7 +16178,7 @@
     "path": "skills/developer-advocacy",
     "category": "uncategorized",
     "name": "developer-advocacy",
-    "description": "When the user wants to do developer advocacy activities including conference talks, live coding, podcasts, and building in public. Trigger phrases include \"developer advocacy,\" \"devrel,\" \"conference talk,\" \"CFP,\" \"call for papers,\" \"live coding,\" \"podcast,\" \"building in public,\"...",
+    "description": "When the user wants to do developer advocacy activities including conference talks, live coding, podcasts, and building in public.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/developer-advocacy",
     "date_added": "2026-07-01",
@@ -16204,7 +16204,7 @@
     "path": "skills/developer-audience-context",
     "category": "uncategorized",
     "name": "developer-audience-context",
-    "description": "When the user wants to establish or update their developer audience context. Also use when starting any other developer marketing skill to ensure foundational context is loaded. Trigger phrases include \"developer persona,\" \"target developers,\" \"who are our developers,\" \"developer...",
+    "description": "When the user wants to establish or update their developer audience context. Also use when starting any other developer marketing skill to ensure foundational context is loaded.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/developer-audience-context",
     "date_added": "2026-07-01",
@@ -16256,7 +16256,7 @@
     "path": "skills/developer-listening",
     "category": "uncategorized",
     "name": "developer-listening",
-    "description": "Monitor what developers say about your brand, competitors, and the problems they're solving. Track mentions and conversations across GitHub, Hacker News, Reddit, Stack Overflow, Twitter, and Discord. Trigger phrases: \"developer listening\", \"monitor developer conversations\", \"track...",
+    "description": "Monitor what developers say about your brand, competitors, and the problems they're solving. Track mentions and conversations across GitHub, Hacker News, Reddit, Stack Overflow, Twitter, and Discord.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/developer-listening",
     "date_added": "2026-07-01",
@@ -16308,7 +16308,7 @@
     "path": "skills/developer-onboarding",
     "category": "uncategorized",
     "name": "developer-onboarding",
-    "description": "Get developers to \"Hello World\" fast with optimized quickstarts, tutorials, and sample apps. Trigger phrases: developer onboarding, time to first value, quickstart guide, hello world tutorial, developer activation, onboarding checklist, sample apps, getting started experience, reduce...",
+    "description": "Get developers to \"Hello World\" fast with optimized quickstarts, tutorials, and sample apps.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/developer-onboarding",
     "date_added": "2026-07-01",
@@ -16334,7 +16334,7 @@
     "path": "skills/developer-sandbox",
     "category": "uncategorized",
     "name": "developer-sandbox",
-    "description": "Design and build interactive playgrounds that let developers experience your product without commitment. This skill covers playground architecture, pre-populated examples, embedding strategies, gating decisions, and converting playground users to signups. Trigger phrases: \"developer...",
+    "description": "Design and build interactive playgrounds that let developers experience your product without commitment. This skill covers playground architecture, pre-populated examples, embedding strategies, gating decisions, and converting playground users to signups.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/developer-sandbox",
     "date_added": "2026-07-01",
@@ -16360,7 +16360,7 @@
     "path": "skills/developer-seo",
     "category": "content",
     "name": "developer-seo",
-    "description": "SEO strategy for technical queries and developer audiences. Covers keyword research for \"how to X in language\" queries, error message SEO, Stack Overflow-style content, technical long-tail keywords, and competing with official documentation sites. Use when asked about: - SEO for...",
+    "description": "SEO strategy for technical queries and developer audiences. Covers keyword research for \"how to X in language\" queries, error message SEO, Stack Overflow-style content, technical long-tail keywords, and competing with official documentation sites.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/developer-seo",
     "date_added": "2026-07-01",
@@ -16384,9 +16384,9 @@
   {
     "id": "developer-signup-flow",
     "path": "skills/developer-signup-flow",
-    "category": "security",
+    "category": "uncategorized",
     "name": "developer-signup-flow",
-    "description": "Design frictionless signup experiences for developers including GitHub OAuth, API key generation, and onboarding personalization. Trigger phrases: developer signup, dev registration, OAuth flow, API key onboarding, reduce signup friction, developer authentication, signup conversion,...",
+    "description": "Design frictionless signup experiences for developers including GitHub OAuth, API key generation, and onboarding personalization.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/developer-signup-flow",
     "date_added": "2026-07-01",
@@ -16486,7 +16486,7 @@
     "path": "skills/devrel-content",
     "category": "content",
     "name": "devrel-content",
-    "description": "When the user wants to create technical content for developers including blog posts, tutorials, and documentation. Trigger phrases include \"write a blog post,\" \"technical article,\" \"developer content,\" \"tutorial,\" \"devrel content,\" \"dev blog,\" \"technical writing,\" or \"content for...",
+    "description": "When the user wants to create technical content for developers including blog posts, tutorials, and documentation.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/devrel-content",
     "date_added": "2026-07-01",
@@ -16603,7 +16603,7 @@
     "description": "Unified Diary System: A context-preserving automated logger for multi-project development.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -16627,7 +16627,7 @@
     "description": "Security-focused code review for PRs, commits, and diffs.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -16887,7 +16887,7 @@
     "description": "django-access-review",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -16909,7 +16909,7 @@
     "description": "Django performance code review. Use when asked to \"review Django performance\", \"find N+1 queries\", \"optimize Django\", \"check queryset performance\", \"database performance\", \"Django ORM issues\", or audit Django code for performance problems.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -17039,7 +17039,7 @@
     "path": "skills/docs-as-marketing",
     "category": "uncategorized",
     "name": "docs-as-marketing",
-    "description": "Transform documentation into a powerful marketing channel that attracts, converts, and retains developers. This skill covers creating documentation that ranks in search, converts visitors into users, and accelerates adoption through exceptional information architecture and...",
+    "description": "Transform documentation into a powerful marketing channel that attracts, converts, and retains developers.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/docs-as-marketing",
     "date_added": "2026-07-01",
@@ -17437,7 +17437,7 @@
     "path": "skills/doubt-driven-development",
     "category": "uncategorized",
     "name": "doubt-driven-development",
-    "description": "Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, when stakes are high (production, security-sensitive logic, irreversible operations), or any time a confident...",
+    "description": "Subjects every non-trivial decision to a fresh-context adversarial review before it stands.",
     "risk": "critical",
     "source": "https://github.com/addyosmani/agent-skills/tree/main/skills/doubt-driven-development",
     "date_added": "2026-07-01",
@@ -17649,7 +17649,7 @@
     "description": "Provides expertise for analyzing DWARF debug files and understanding the DWARF debug format/standard (v3-v5). Triggers when understanding DWARF information, interacting with DWARF files, answering DWARF-related questions, or working with code that parses DWARF data.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -17763,7 +17763,7 @@
     "path": "skills/eas-update-insights",
     "category": "uncategorized",
     "name": "eas-update-insights",
-    "description": "Check the health of published EAS Updates: crash rates, install/launch counts, unique users, payload size, and the split between embedded and OTA users per channel. Use when the user asks how an update is performing, whether a rollout is healthy, how many users are on the embedded...",
+    "description": "Check the health of published EAS Updates: crash rates, install/launch counts, unique users, payload size, and the split between embedded and OTA users per channel.",
     "risk": "critical",
     "source": "https://github.com/expo/skills/tree/main/plugins/expo/skills/eas-update-insights",
     "date_added": "2026-07-01",
@@ -17905,7 +17905,7 @@
     "description": "Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -18192,7 +18192,7 @@
     "description": "\u751f\u6210\u7d27\u6025\u60c5\u51b5\u4e0b\u5feb\u901f\u8bbf\u95ee\u7684\u533b\u7597\u4fe1\u606f\u6458\u8981\u5361\u7247\u3002\u5f53\u7528\u6237\u9700\u8981\u65c5\u884c\u3001\u5c31\u8bca\u51c6\u5907\u3001\u7d27\u6025\u60c5\u51b5\u6216\u8be2\u95ee\"\u7d27\u6025\u4fe1\u606f\"\u3001\"\u533b\u7597\u5361\u7247\"\u3001\"\u6025\u6551\u4fe1\u606f\"\u65f6\u4f7f\u7528\u6b64\u6280\u80fd\u3002\u63d0\u53d6\u5173\u952e\u4fe1\u606f\uff08\u8fc7\u654f\u3001\u7528\u836f\u3001\u6025\u75c7\u3001\u690d\u5165\u7269\uff09\uff0c\u652f\u6301\u591a\u683c\u5f0f\u8f93\u51fa\uff08JSON\u3001\u6587\u672c\u3001\u4e8c\u7ef4\u7801\uff09\uff0c\u7528\u4e8e\u6025\u6551\u6216\u5feb\u901f\u5c31\u533b\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -18335,7 +18335,7 @@
     "description": "Transforms vague UI ideas into polished, Stitch-optimized prompts. Enhances specificity, adds UI/UX keywords, injects design system context, and structures output for better generation results.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -18720,7 +18720,7 @@
     "description": "This skill enables makepad-skills to self-improve continuously during development.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -18914,7 +18914,7 @@
     "path": "skills/expo-deployment",
     "category": "mobile",
     "name": "expo-deployment",
-    "description": "Deploy Expo apps to production with EAS \u2014 build and submit to the iOS App Store, Google Play Store, and TestFlight, configure eas.json build and submit profiles, manage app versions and build numbers, publish App Store metadata and ASO, and deploy web bundles and API routes via EAS...",
+    "description": "Deploy Expo apps with EAS: build and submit iOS and Android releases, configure build and submit profiles, manage versions and store metadata, and deploy web bundles or API routes.",
     "risk": "critical",
     "source": "https://github.com/expo/skills/tree/main/plugins/expo/skills/expo-deployment",
     "date_added": "2026-07-01",
@@ -18966,7 +18966,7 @@
     "path": "skills/expo-examples",
     "category": "mobile",
     "name": "expo-examples",
-    "description": "Expo's official example projects \u2014 the expo/examples repo of ~70 `with-*` integrations (Stripe, Clerk, Supabase, OpenAI, maps, Reanimated, SQLite, Skia, NativeWind, and more). Use when integrating a third-party library or service into an existing Expo app and you want the canonical,...",
+    "description": "Expo's official example projects \u2014 the expo/examples repo of ~70 `with-*` integrations (Stripe, Clerk, Supabase, OpenAI, maps, Reanimated, SQLite, Skia, NativeWind, and more).",
     "risk": "critical",
     "source": "https://github.com/expo/skills/tree/main/plugins/expo/skills/expo-examples",
     "date_added": "2026-07-01",
@@ -18992,7 +18992,7 @@
     "path": "skills/expo-module",
     "category": "mobile",
     "name": "expo-module",
-    "description": "Guide for creating and writing Expo native modules and views using the Expo Modules API (Swift, Kotlin, TypeScript). Covers module definition DSL, native views, shared objects, config plugins, lifecycle hooks, autolinking, and type system. Use when building or modifying native modules...",
+    "description": "Guide for creating and writing Expo native modules and views using the Expo Modules API (Swift, Kotlin, TypeScript). Covers module definition DSL, native views, shared objects, config plugins, lifecycle hooks, autolinking, and type system.",
     "risk": "critical",
     "source": "https://github.com/expo/skills/tree/main/plugins/expo/skills/expo-module",
     "date_added": "2026-07-01",
@@ -19018,7 +19018,7 @@
     "path": "skills/expo-observe",
     "category": "mobile",
     "name": "expo-observe",
-    "description": "Use for anything related to EAS Observe \u2014 adding `expo-observe` to an Expo project (AppMetricsRoot/ObserveRoot HOC, markInteractive, the useObserve hook, and the Expo Router / React Navigation integrations for per-route metrics), querying via the EAS CLI (`eas observe:metrics-summary`,...",
+    "description": "Set up and query EAS Observe for Expo apps, including root integration, interactive markers, route metrics, CLI summaries, traces, logs, and performance diagnosis.",
     "risk": "critical",
     "source": "https://github.com/expo/skills/tree/main/plugins/expo/skills/expo-observe",
     "date_added": "2026-07-01",
@@ -19070,7 +19070,7 @@
     "path": "skills/expo-ui",
     "category": "mobile",
     "name": "expo-ui",
-    "description": "Build native UI with the @expo/ui package: real SwiftUI on iOS and Jetpack Compose on Android rendered from React in an Expo or React Native app. Covers universal cross-platform components (Host, Column, Row, Button, Text, List, and more imported from @expo/ui), drop-in replacements...",
+    "description": "Build native UI with the @expo/ui package: real SwiftUI on iOS and Jetpack Compose on Android rendered from React in an Expo or React Native app.",
     "risk": "critical",
     "source": "https://github.com/expo/skills/tree/main/plugins/expo/skills/expo-ui",
     "date_added": "2026-07-01",
@@ -19099,7 +19099,7 @@
     "description": "expo-ui-jetpack-compose",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19121,7 +19121,7 @@
     "description": "expo-ui-swift-ui",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19518,7 +19518,7 @@
     "description": "\u5206\u6790\u5bb6\u65cf\u75c5\u53f2\u3001\u8bc4\u4f30\u9057\u4f20\u98ce\u9669\u3001\u8bc6\u522b\u5bb6\u5ead\u5065\u5eb7\u6a21\u5f0f\u3001\u63d0\u4f9b\u4e2a\u6027\u5316\u9884\u9632\u5efa\u8bae",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19639,7 +19639,7 @@
     "description": "Generate favicons from a source image",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19661,7 +19661,7 @@
     "description": "Expert AI auditor for FDA Food Safety (FSMA), HACCP, and PCQI compliance. Reviews food facility records and preventive controls.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19683,7 +19683,7 @@
     "description": "Expert AI auditor for Medical Device (SaMD) compliance, IEC 62304, and 21 CFR Part 820. Reviews DHFs, technical files, and software validation.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19792,7 +19792,7 @@
     "description": "Expert guidance for ffuf web fuzzing during penetration testing, including authenticated fuzzing with raw requests, auto-calibration, and result analysis",
     "risk": "offensive",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19902,7 +19902,7 @@
     "description": "Use for file-based context management, dynamic context discovery, and reducing context window bloat. Offload context to files for just-in-time loading.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19924,7 +19924,7 @@
     "description": "Find bugs, security vulnerabilities, and code quality issues in local branch changes. Use when asked to review changes, find bugs, security review, or audit code on the current branch.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20125,7 +20125,7 @@
     "description": "\u5206\u6790\u8fd0\u52a8\u6570\u636e\u3001\u8bc6\u522b\u8fd0\u52a8\u6a21\u5f0f\u3001\u8bc4\u4f30\u5065\u8eab\u8fdb\u5c55\uff0c\u5e76\u63d0\u4f9b\u4e2a\u6027\u5316\u8bad\u7ec3\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u6162\u6027\u75c5\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20192,7 +20192,7 @@
     "path": "skills/fixing-metadata",
     "category": "front-end",
     "name": "fixing-metadata",
-    "description": "Audit and fix HTML metadata including page titles, meta descriptions, canonical URLs, Open Graph tags, Twitter cards, favicons, JSON-LD structured data, and robots directives. Use when adding SEO metadata, fixing social share previews, reviewing Open Graph tags, setting up canonical...",
+    "description": "Audit and fix HTML metadata including page titles, meta descriptions, canonical URLs, Open Graph tags, Twitter cards, favicons, JSON-LD structured data, and robots directives.",
     "risk": "critical",
     "source": "https://github.com/ibelick/ui-skills/tree/main/skills/fixing-metadata",
     "date_added": "2026-07-01",
@@ -20413,7 +20413,7 @@
     "description": "Food Database Query",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20483,7 +20483,7 @@
     "description": "Practical async patterns using TaskEither - clean pipelines instead of try/catch hell, with real API examples",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20515,7 +20515,7 @@
     "description": "Functional programming patterns for Node.js/Deno backend development using fp-ts, ReaderTaskEither, and functional dependency injection",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20547,7 +20547,7 @@
     "description": "Everyday data transformations using functional patterns - arrays, objects, grouping, aggregation, and null-safe access",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20580,7 +20580,7 @@
     "description": "Quick reference for Either type. Use when user needs error handling, validation, or operations that can fail with typed errors.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20609,7 +20609,7 @@
     "description": "Stop throwing everywhere - handle errors as values using Either and TaskEither for cleaner, more predictable code",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20640,7 +20640,7 @@
     "description": "Quick reference for Option type. Use when user needs to handle nullable values, optional data, or wants to avoid null checks.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20669,7 +20669,7 @@
     "description": "Quick reference for pipe and flow. Use when user needs to chain functions, compose operations, or build data pipelines in fp-ts.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20698,7 +20698,7 @@
     "description": "A practical, jargon-free guide to functional programming - the 80/20 approach that gets results without the academic overhead",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20728,7 +20728,7 @@
     "description": "Practical patterns for using fp-ts with React - hooks, state, forms, data fetching. Works with React 18/19, Next.js 14/15.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20762,7 +20762,7 @@
     "description": "Comprehensive guide for refactoring imperative TypeScript code to fp-ts functional patterns",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20795,7 +20795,7 @@
     "description": "Quick reference for TaskEither. Use when user needs async error handling, API calls, or Promise-based operations that can fail.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20891,7 +20891,7 @@
     "description": "Quick reference for fp-ts types. Use when user asks which type to use, needs Option/Either/Task decision help, or wants fp-ts imports.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -21105,7 +21105,7 @@
     "path": "skills/frontend-architecture",
     "category": "web-development",
     "name": "frontend-architecture",
-    "description": "A portable, framework-agnostic architecture style for any React or React Native frontend. Organizes apps into feature modules with page/screen directories, a strict server-state vs UI-state split, barrel-only cross-module imports, co-located styles, and clear component-promotion rules....",
+    "description": "A portable, framework-agnostic architecture style for any React or React Native frontend. Organizes apps into feature modules with page/screen directories, a strict server-state vs UI-state split, barrel-only cross-module imports, co-located styles, and clear component-promotion rules.",
     "risk": "critical",
     "source": "https://github.com/stareezy-1/frontend-architecture-skill/tree/main/skills/frontend-architecture",
     "date_added": "2026-07-01",
@@ -21131,7 +21131,7 @@
     "path": "skills/frontend-data-contracts",
     "category": "uncategorized",
     "name": "frontend-data-contracts",
-    "description": "A portable, framework-agnostic discipline for type safety at the network edge of any React or React Native app. Establishes one typed API client as the single fetch boundary, a parse-don't-validate rule that turns wire JSON into trusted domain types before it enters the app, a single...",
+    "description": "A portable, framework-agnostic discipline for type safety at the network edge of any React or React Native app.",
     "risk": "critical",
     "source": "https://github.com/stareezy-1/frontend-architecture-skill/tree/main/skills/frontend-data-contracts",
     "date_added": "2026-07-01",
@@ -21300,7 +21300,7 @@
     "path": "skills/frontend-observability",
     "category": "uncategorized",
     "name": "frontend-observability",
-    "description": "A portable, framework-agnostic field-side observability system for any React or React Native app. Establishes one typed event taxonomy (canonical event-name constants, never inline strings), a best-effort non-blocking provider fan-out so a failing or absent analytics provider can never...",
+    "description": "A portable, framework-agnostic field-side observability system for any React or React Native app.",
     "risk": "critical",
     "source": "https://github.com/stareezy-1/frontend-architecture-skill/tree/main/skills/frontend-observability",
     "date_added": "2026-07-01",
@@ -21326,7 +21326,7 @@
     "path": "skills/frontend-optimistic-mutations",
     "category": "uncategorized",
     "name": "frontend-optimistic-mutations",
-    "description": "A portable, framework-agnostic discipline for the write path of any React or React Native app using a query/cache layer. Codifies the optimistic-update lifecycle (cancel in-flight queries \u2192 snapshot every affected cache \u2192 patch instantly \u2192 roll back verbatim on error \u2192 invalidate on...",
+    "description": "A portable, framework-agnostic discipline for the write path of any React or React Native app using a query/cache layer.",
     "risk": "critical",
     "source": "https://github.com/stareezy-1/frontend-architecture-skill/tree/main/skills/frontend-optimistic-mutations",
     "date_added": "2026-07-01",
@@ -21374,7 +21374,7 @@
     "path": "skills/frontend-seo",
     "category": "web-development",
     "name": "frontend-seo",
-    "description": "A portable, framework-agnostic SEO system for any React or React Native-for-web frontend. Centralizes site metadata in one constants module, derives canonical URLs from a single base, builds per-route metadata (title, description, canonical, Open Graph, Twitter/X cards), generates...",
+    "description": "A portable, framework-agnostic SEO system for any React or React Native-for-web frontend.",
     "risk": "critical",
     "source": "https://github.com/stareezy-1/frontend-architecture-skill/tree/main/skills/frontend-seo",
     "date_added": "2026-07-01",
@@ -21422,7 +21422,7 @@
     "path": "skills/frontend-slides-frontend-slides",
     "category": "web-development",
     "name": "frontend-slides-frontend-slides",
-    "description": "Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files. Use when the user wants to build a presentation, convert a PPT/PPTX to web, or create slides for a talk/pitch. Helps non-designers discover their aesthetic through visual exploration...",
+    "description": "Create stunning, animation-rich HTML presentations from scratch or by converting PowerPoint files. Use when the user wants to build a presentation, convert a PPT/PPTX to web, or create slides for a talk/pitch.",
     "risk": "critical",
     "source": "https://github.com/zarazhangrui/frontend-slides/tree/main/plugins/frontend-slides/skills/frontend-slides",
     "date_added": "2026-07-01",
@@ -21770,7 +21770,7 @@
     "path": "skills/gemini-api-dev",
     "category": "ai-ml",
     "name": "gemini-api-dev",
-    "description": "Use this skill when building applications with Gemini API hosted models, including Gemini and Gemma 4, working with multimodal content (text, images, audio, video), implementing function calling, using structured outputs, or needing current model specifications. Covers SDK usage...",
+    "description": "Use this skill when building applications with Gemini API hosted models, including Gemini and Gemma 4, working with multimodal content (text, images, audio, video), implementing function calling, using structured outputs, or needing current model specifications.",
     "risk": "critical",
     "source": "https://github.com/google-gemini/gemini-skills/tree/main/skills/gemini-api-dev",
     "date_added": "2026-07-01",
@@ -21852,7 +21852,7 @@
     "path": "skills/gemini-interactions-api",
     "category": "uncategorized",
     "name": "gemini-interactions-api",
-    "description": "Use this skill when writing code that calls the Gemini API for text generation, multi-turn chat, multimodal understanding, image generation, video generation, streaming responses, background research tasks, function calling, structured output, or migrating from the old generateContent...",
+    "description": "Build with the Gemini Interactions API for text, chat, multimodal generation, streaming, managed or background agents, function calling, structured output, and generateContent migrations.",
     "risk": "critical",
     "source": "https://github.com/google-gemini/gemini-skills/tree/main/skills/gemini-interactions-api",
     "date_added": "2026-07-01",
@@ -21878,7 +21878,7 @@
     "path": "skills/gemini-live-api-dev",
     "category": "uncategorized",
     "name": "gemini-live-api-dev",
-    "description": "Use this skill when building real-time, bidirectional streaming applications with the Gemini Live API. Covers WebSocket-based audio/video/text streaming, voice activity detection (VAD), native audio features, function calling, session management, ephemeral tokens for client-side auth,...",
+    "description": "Use this skill when building real-time, bidirectional streaming applications with the Gemini Live API.",
     "risk": "critical",
     "source": "https://github.com/google-gemini/gemini-skills/tree/main/skills/gemini-live-api-dev",
     "date_added": "2026-07-01",
@@ -21904,7 +21904,7 @@
     "path": "skills/gemini-omni-flash-api",
     "category": "uncategorized",
     "name": "gemini-omni-flash-api",
-    "description": "Use this skill for generative video editing, text-to-video, image-referenced video generation, and first-frame-to-video transition animations using the official google-genai SDK. Includes workflows for pre-processing/optimizing high-resolution or long source videos with ffmpeg,...",
+    "description": "Use this skill for generative video editing, text-to-video, image-referenced video generation, and first-frame-to-video transition animations using the official google-genai SDK.",
     "risk": "critical",
     "source": "https://github.com/google-gemini/gemini-skills/tree/main/skills/gemini-omni-flash-api",
     "date_added": "2026-07-01",
@@ -22118,7 +22118,7 @@
     "description": "Fetch unread GitHub notifications for open PRs where review is requested from a specified team or opened by a team member. Use when asked to \"find PRs I need to review\", \"show my review requests\", \"what needs my review\", \"fetch GitHub review requests\", or \"check team review queue\".",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -22678,7 +22678,7 @@
     "description": "Lightweight Gmail integration with standalone OAuth authentication. No MCP server required.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -22838,7 +22838,7 @@
     "description": "\u5206\u6790\u5065\u5eb7\u76ee\u6807\u6570\u636e\u3001\u8bc6\u522b\u76ee\u6807\u6a21\u5f0f\u3001\u8bc4\u4f30\u76ee\u6807\u8fdb\u5ea6,\u5e76\u63d0\u4f9b\u4e2a\u6027\u5316\u76ee\u6807\u7ba1\u7406\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u8425\u517b\u3001\u8fd0\u52a8\u3001\u7761\u7720\u7b49\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -22979,7 +22979,7 @@
     "description": "Lightweight Google Calendar integration with standalone OAuth authentication. No MCP server required.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -23002,7 +23002,7 @@
     "description": "Lightweight Google Docs integration with standalone OAuth authentication. No MCP server required.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -23025,7 +23025,7 @@
     "description": "Lightweight Google Drive integration with standalone OAuth authentication. No MCP server required. Full read/write access.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -23048,7 +23048,7 @@
     "description": "Lightweight Google Sheets integration with standalone OAuth authentication. No MCP server required. Full read/write access.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -23071,7 +23071,7 @@
     "description": "Lightweight Google Slides integration with standalone OAuth authentication. No MCP server required. Full read/write access.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -23652,7 +23652,7 @@
     "description": "\u5206\u6790\u4e00\u6bb5\u65f6\u95f4\u5185\u5065\u5eb7\u6570\u636e\u7684\u8d8b\u52bf\u548c\u6a21\u5f0f\u3002\u5173\u8054\u836f\u7269\u3001\u75c7\u72b6\u3001\u751f\u547d\u4f53\u5f81\u3001\u5316\u9a8c\u7ed3\u679c\u548c\u5176\u4ed6\u5065\u5eb7\u6307\u6807\u7684\u53d8\u5316\u3002\u8bc6\u522b\u4ee4\u4eba\u62c5\u5fe7\u7684\u8d8b\u52bf\u3001\u6539\u5584\u60c5\u51b5\uff0c\u5e76\u63d0\u4f9b\u6570\u636e\u9a71\u52a8\u7684\u6d1e\u5bdf\u3002\u5f53\u7528\u6237\u8be2\u95ee\u5065\u5eb7\u8d8b\u52bf\u3001\u6a21\u5f0f\u3001\u968f\u65f6\u95f4\u7684\u53d8\u5316\u6216\"\u6211\u7684\u5065\u5eb7\u72b6\u51b5\u6709\u4ec0\u4e48\u53d8\u5316\uff1f\"\u65f6\u4f7f\u7528\u3002\u652f\u6301\u591a\u7ef4\u5ea6\u5206\u6790\uff08\u4f53\u91cd/BMI\u3001\u75c7\u72b6\u3001\u836f\u7269\u4f9d\u4ece\u6027\u3001\u5316\u9a8c\u7ed3\u679c\u3001\u60c5\u7eea\u7761\u7720\uff09\uff0c\u76f8\u5173\u6027\u5206\u6790\uff0c\u53d8\u5316\u68c0\u6d4b\uff0c\u4ee5\u53ca\u4ea4\u4e92\u5f0fHTML\u53ef\u89c6\u5316\u62a5\u544a\uff08ECharts\u56fe\u8868\uff09\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24276,7 +24276,7 @@
     "description": "Build background agents in sandboxed environments. Use for hosted coding agents, sandboxed VMs, Modal sandboxes, and remote coding environments.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24405,7 +24405,7 @@
     "path": "skills/hugging-face-cli",
     "category": "ai-ml",
     "name": "hugging-face-cli",
-    "description": "Hugging Face Hub CLI (`hf`) for downloading, uploading, and managing models, datasets, spaces, buckets, repos, papers, jobs, and more on the Hugging Face Hub. Use when: handling authentication; managing local cache; managing Hugging Face Buckets; running or scheduling jobs on Hugging...",
+    "description": "Hugging Face Hub CLI (`hf`) for downloading, uploading, and managing models, datasets, spaces, buckets, repos, papers, jobs, and more on the Hugging Face Hub.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/hf-cli",
     "date_added": "2026-07-01",
@@ -24431,7 +24431,7 @@
     "path": "skills/hugging-face-community-evals",
     "category": "ai-ml",
     "name": "hugging-face-community-evals",
-    "description": "Run evaluations for Hugging Face Hub models using inspect-ai and lighteval on local hardware. Use for backend selection, local GPU evals, and choosing between vLLM / Transformers / accelerate. Not for HF Jobs orchestration, model-card PRs, .eval_results publication, or community-evals...",
+    "description": "Run evaluations for Hugging Face Hub models using inspect-ai and lighteval on local hardware. Use for backend selection, local GPU evals, and choosing between vLLM / Transformers / accelerate.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-community-evals",
     "date_added": "2026-07-01",
@@ -24488,7 +24488,7 @@
     "description": "Create and manage datasets on Hugging Face Hub. Supports initializing repos, defining configs/system prompts, streaming row updates, and SQL-based dataset querying/transformation. Designed to work alongside HF MCP server for comprehensive dataset workflows.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24510,7 +24510,7 @@
     "description": "Add and manage evaluation results in Hugging Face model cards. Supports extracting eval tables from README content, importing scores from Artificial Analysis API, and running custom model evaluations with vLLM/lighteval. Works with the model-index metadata format.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24558,7 +24558,7 @@
     "description": "Run workloads on Hugging Face Jobs with managed CPUs, GPUs, TPUs, secrets, and Hub persistence.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-jobs",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24578,7 +24578,7 @@
     "path": "skills/hugging-face-model-trainer",
     "category": "ai-ml",
     "name": "hugging-face-model-trainer",
-    "description": "Train or fine-tune language and vision models using TRL (Transformer Reinforcement Learning) or Unsloth with Hugging Face Jobs infrastructure. Covers SFT, DPO, GRPO and reward modeling training methods, plus GGUF conversion for local deployment. Includes guidance on the TRL Jobs...",
+    "description": "Train or fine-tune language and vision models using TRL (Transformer Reinforcement Learning) or Unsloth with Hugging Face Jobs infrastructure. Covers SFT, DPO, GRPO and reward modeling training methods, plus GGUF conversion for local deployment.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-llm-trainer",
     "date_added": "2026-07-01",
@@ -24630,7 +24630,7 @@
     "path": "skills/hugging-face-papers",
     "category": "ai-ml",
     "name": "hugging-face-papers",
-    "description": "Look up and read Hugging Face paper pages in markdown, and use the papers API for structured metadata such as authors, linked models/datasets/spaces, Github repo and project page. Use when the user shares a Hugging Face paper page URL, an arXiv URL or ID, or asks to summarize, explain,...",
+    "description": "Look up and read Hugging Face paper pages in markdown, and use the papers API for structured metadata such as authors, linked models/datasets/spaces, Github repo and project page.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-papers",
     "date_added": "2026-07-01",
@@ -24659,7 +24659,7 @@
     "description": "Your purpose is now is to create reusable command line scripts and utilities for using the Hugging Face API, allowing chaining, piping and intermediate processing where helpful. You can access the API directly, as well as use the hf command line tool.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24678,7 +24678,7 @@
     "path": "skills/hugging-face-trackio",
     "category": "ai-ml",
     "name": "hugging-face-trackio",
-    "description": "Track and visualize ML training experiments with Trackio. Use when logging metrics during training (Python API), firing alerts for training diagnostics, or retrieving/analyzing logged metrics (CLI). Supports real-time dashboard visualization, alerts with webhooks, HF Space syncing, and...",
+    "description": "Track and visualize ML training experiments with Trackio. Use when logging metrics during training (Python API), firing alerts for training diagnostics, or retrieving/analyzing logged metrics (CLI).",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-trackio",
     "date_added": "2026-07-01",
@@ -24704,7 +24704,7 @@
     "path": "skills/hugging-face-vision-trainer",
     "category": "ai-ml",
     "name": "hugging-face-vision-trainer",
-    "description": "Trains and fine-tunes vision models for object detection (D-FINE, RT-DETR v2, DETR, YOLOS), image classification (timm models \u2014 MobileNetV3, MobileViT, ResNet, ViT/DINOv3 \u2014 plus any Transformers classifier), and SAM/SAM2 segmentation using Hugging Face Transformers on Hugging Face Jobs...",
+    "description": "Train object detection, image classification, and SAM or SAM2 segmentation models locally or on Hugging Face Jobs, with dataset validation and results saved to the Hub.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-vision-trainer",
     "date_added": "2026-07-01",
@@ -24730,7 +24730,7 @@
     "path": "skills/huggingface-best",
     "category": "ai-ml",
     "name": "huggingface-best",
-    "description": "Use when the user asks about finding the best, top, or recommended model for a task, wants to know what AI model to use, or wants to compare models by benchmark scores. Triggers on: \"best model for X\", \"what model should I use for\", \"top models for [task]\", \"which model runs on my...",
+    "description": "Use when the user asks about finding the best, top, or recommended model for a task, wants to know what AI model to use, or wants to compare models by benchmark scores.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-best",
     "date_added": "2026-07-01",
@@ -24782,7 +24782,7 @@
     "path": "skills/huggingface-lora-space-builder",
     "category": "uncategorized",
     "name": "huggingface-lora-space-builder",
-    "description": "Build and publish a Gradio demo on Hugging Face Spaces for a user-provided LoRA. Use when someone asks to create, generate, ship, or publish a Space, demo, Gradio app, or playground for a LoRA \u2014 including LoRAs for Qwen-Image, Qwen-Image-Edit, LTX-Video, Wan, FLUX, SDXL, or other...",
+    "description": "Build and publish a Gradio demo on Hugging Face Spaces for a user-provided LoRA.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-lora-space-builder",
     "date_added": "2026-07-01",
@@ -24808,7 +24808,7 @@
     "path": "skills/huggingface-spaces",
     "category": "ai-ml",
     "name": "huggingface-spaces",
-    "description": "Build, deploy, and maintain applications on Hugging Face Spaces \u2014 Gradio / Docker / Static SDKs, ZeroGPU and dedicated hardware, model loading, debugging, buckets, inference providers, community grants. Use whenever the user asks to create or host an app on Hugging Face, port code onto...",
+    "description": "Build, deploy, and maintain applications on Hugging Face Spaces \u2014 Gradio / Docker / Static SDKs, ZeroGPU and dedicated hardware, model loading, debugging, buckets, inference providers, community grants.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-spaces",
     "date_added": "2026-07-01",
@@ -24834,7 +24834,7 @@
     "path": "skills/huggingface-tool-builder",
     "category": "uncategorized",
     "name": "huggingface-tool-builder",
-    "description": "Use this skill when the user wants to build tool/scripts or achieve a task where using data from the Hugging Face API would help. This is especially useful when chaining or combining API calls or the task will be repeated/automated. This Skill creates a reusable script to fetch, enrich...",
+    "description": "Use this skill when the user wants to build tool/scripts or achieve a task where using data from the Hugging Face API would help. This is especially useful when chaining or combining API calls or the task will be repeated/automated.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-tool-builder",
     "date_added": "2026-07-01",
@@ -24860,7 +24860,7 @@
     "path": "skills/huggingface-zerogpu",
     "category": "ai-ml",
     "name": "huggingface-zerogpu",
-    "description": "AI demos and GPU compute with Gradio Spaces and Hugging Face Spaces ZeroGPU. Use when writing or reviewing code that uses `@spaces.GPU`, configuring `python_version` or `requirements.txt` for a ZeroGPU Space, or handling ZeroGPU-specific code constraints \u2014 pickle-based process...",
+    "description": "AI demos and GPU compute with Gradio Spaces and Hugging Face Spaces ZeroGPU.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-zerogpu",
     "date_added": "2026-07-01",
@@ -24886,7 +24886,7 @@
     "path": "skills/hugo-to-markdown",
     "category": "content",
     "name": "hugo-to-markdown",
-    "description": "Convert Hugo documentation sites and Hugo-managed content into standard Markdown. Use when Agent needs to inspect a local Hugo repository, read hugo.toml or config files, content/, archetypes/, layouts/_shortcodes/, layouts/_markup/, and related docs content, then produce Markdown...",
+    "description": "Convert Hugo documentation sites and Hugo-managed content into standard Markdown.",
     "risk": "critical",
     "source": "https://github.com/chaunsin/agent-skills/tree/master/skills/hugo-to-markdown",
     "date_added": "2026-07-01",
@@ -25008,7 +25008,7 @@
     "path": "skills/hyperexecute-skill",
     "category": "uncategorized",
     "name": "hyperexecute-skill",
-    "description": "Operates HyperExecute end-to-end for TestMu AI/LambdaTest cloud test execution: analyze projects, create YAML, validate locally, run CLI jobs, debug failures, and wire CI. Use when the user mentions HyperExecute, hyperexecute.yaml, HyperExecute CLI, autosplit, matrix execution,...",
+    "description": "Operates HyperExecute end-to-end for TestMu AI/LambdaTest cloud test execution: analyze projects, create YAML, validate locally, run CLI jobs, debug failures, and wire CI.",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/hyperexecute-skill",
     "date_added": "2026-07-01",
@@ -25197,7 +25197,7 @@
     "path": "skills/idea-refine",
     "category": "uncategorized",
     "name": "idea-refine",
-    "description": "Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on...",
+    "description": "Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one.",
     "risk": "critical",
     "source": "https://github.com/addyosmani/agent-skills/tree/main/skills/idea-refine",
     "date_added": "2026-07-01",
@@ -26164,7 +26164,7 @@
     "description": "Interact with GitHub issues - create, list, and view issues.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -26252,7 +26252,7 @@
     "description": "Iterate on a PR until CI passes. Use when you need to fix CI failures, address review feedback, or continuously push fixes until all checks are green. Automates the feedback-fix-push-wait cycle.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -26425,7 +26425,7 @@
     "path": "skills/jest-skill",
     "category": "web-development",
     "name": "jest-skill",
-    "description": "Generates Jest unit and integration tests in JavaScript or TypeScript. Covers mocking, snapshots, async testing, and React component testing. Use when user mentions \"Jest\", \"describe/it/expect\", \"jest.mock\", \"toMatchSnapshot\". Triggers on: \"Jest\", \"expect().toBe()\", \"jest.mock\",...",
+    "description": "Generates Jest unit and integration tests in JavaScript or TypeScript. Covers mocking, snapshots, async testing, and React component testing. Use when user mentions \"Jest\", \"describe/it/expect\", \"jest.mock\", \"toMatchSnapshot\".",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/jest-skill",
     "date_added": "2026-07-01",
@@ -26617,7 +26617,7 @@
     "path": "skills/junit-5-skill",
     "category": "uncategorized",
     "name": "junit-5-skill",
-    "description": "Generates production-grade JUnit 5 unit and integration tests in Java. Covers assertions, parameterized tests, lifecycle hooks, mocking with Mockito, and nested tests. Use when user mentions \"JUnit\", \"JUnit 5\", \"@Test\", \"assertEquals\", \"Assertions\", \"Java unit test\". Triggers on:...",
+    "description": "Generates production-grade JUnit 5 unit and integration tests in Java. Covers assertions, parameterized tests, lifecycle hooks, mocking with Mockito, and nested tests. Use when user mentions \"JUnit\", \"JUnit 5\", \"@Test\", \"assertEquals\", \"Assertions\", \"Java unit test\".",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/junit-5-skill",
     "date_added": "2026-07-01",
@@ -28391,7 +28391,7 @@
     "path": "skills/logic-diff",
     "category": "uncategorized",
     "name": "logic-diff",
-    "description": "Compare two code versions for semantic equivalence via semi-formal tracing of both versions side-by-side. Trigger when the user shares a refactor, rewrite, migration, or A/B implementation and wants to confirm behavior is unchanged \u2014 \"did I break anything\", \"is this equivalent\", \"are...",
+    "description": "Compare two code versions for semantic equivalence via semi-formal tracing of both versions side-by-side.",
     "risk": "safe",
     "source": "https://github.com/hyhmrright/logic-lens/tree/main/skills/logic-diff",
     "date_added": "2026-07-01",
@@ -28417,7 +28417,7 @@
     "path": "skills/logic-explain",
     "category": "uncategorized",
     "name": "logic-explain",
-    "description": "Explain what a specific piece of code actually does for a given input by producing a step-by-step execution trace (interprocedural, with name resolution and type transitions). Trigger when the user is confused about behavior or asks why code produces X instead of Y \u2014 \"walk me through...",
+    "description": "Explain what a specific piece of code actually does for a given input by producing a step-by-step execution trace (interprocedural, with name resolution and type transitions).",
     "risk": "safe",
     "source": "https://github.com/hyhmrright/logic-lens/tree/main/skills/logic-explain",
     "date_added": "2026-07-01",
@@ -28443,7 +28443,7 @@
     "path": "skills/logic-fix-all",
     "category": "uncategorized",
     "name": "logic-fix-all",
-    "description": "Autonomous repository-wide audit-and-fix pipeline: health \u2192 review \u2192 locate/explain \u2192 fix \u2192 diff-verify \u2192 iterate until clean. Starts with a mandatory consent prompt (token-intensive); after consent runs hands-free. Trigger when the user wants ALL logic issues found and fixed \u2014 \"fix...",
+    "description": "Autonomous repository-wide audit-and-fix pipeline: health \u2192 review \u2192 locate/explain \u2192 fix \u2192 diff-verify \u2192 iterate until clean. Starts with a mandatory consent prompt (token-intensive); after consent runs hands-free.",
     "risk": "critical",
     "source": "https://github.com/hyhmrright/logic-lens/tree/main/skills/logic-fix-all",
     "date_added": "2026-07-01",
@@ -28502,7 +28502,7 @@
     "path": "skills/logic-locate",
     "category": "uncategorized",
     "name": "logic-locate",
-    "description": "Locate the root cause of a CONFIRMED failure via backward-then-forward semi-formal tracing. Trigger when the user provides a stack trace, failing assertion, error message, or specific wrong-value observation \u2014 \"find the bug\", \"this test is failing\", \"track down this crash\", \"why is...",
+    "description": "Locate the root cause of a CONFIRMED failure via backward-then-forward semi-formal tracing.",
     "risk": "safe",
     "source": "https://github.com/hyhmrright/logic-lens/tree/main/skills/logic-locate",
     "date_added": "2026-07-01",
@@ -28528,7 +28528,7 @@
     "path": "skills/logic-review",
     "category": "uncategorized",
     "name": "logic-review",
-    "description": "Find logic bugs in a single file or function via semi-formal execution tracing (Premises \u2192 Trace \u2192 Divergence \u2192 Trigger \u2192 Remedy). Trigger when a user shares code and suspects something is wrong without naming a concrete failure \u2014 phrases like \"review this\", \"does this look right\",...",
+    "description": "Find logic bugs in a single file or function via semi-formal execution tracing (Premises \u2192 Trace \u2192 Divergence \u2192 Trigger \u2192 Remedy).",
     "risk": "critical",
     "source": "https://github.com/hyhmrright/logic-lens/tree/main/skills/logic-review",
     "date_added": "2026-07-01",
@@ -28635,7 +28635,7 @@
     "path": "skills/longbridge-content",
     "category": "uncategorized",
     "name": "longbridge-content",
-    "description": "Latest news articles, regulatory filings, community discussion topics for listed stocks, and SEC EDGAR filing analysis (10-K/10-Q/8-K/proxy/Form 4) via Longbridge. Triggers: \"\u65b0\u95fb\", \"\u516c\u544a\", \"\u8d44\u8baf\", \"\u8bdd\u9898\", \"\u793e\u533a\u8ba8\u8bba\", \"SEC\", \"10-K\", \"10-Q\", \"8-K\", \"Form 4\", \"\u65b0\u805e\", \"\u516c\u544a\", \"\u8cc7\u8a0a\", \"\u8a71\u984c\", \"\u793e\u5340\u8a0e\u8ad6\", \"news\",...",
+    "description": "Latest news articles, regulatory filings, community discussion topics for listed stocks, and SEC EDGAR filing analysis (10-K/10-Q/8-K/proxy/Form 4) via Longbridge.",
     "risk": "critical",
     "source": "https://github.com/longbridge/skills/tree/main/skills/longbridge-content",
     "date_added": "2026-07-01",
@@ -28661,7 +28661,7 @@
     "path": "skills/longbridge-fundamentals",
     "category": "uncategorized",
     "name": "longbridge-fundamentals",
-    "description": "Financial statements, business segments, dividends, valuation multiples (PE/PB/PS), industry comparison, operating data, corporate actions, company and executive profiles, cross-stock comparison, and valuation ranking via Longbridge. Also: DCF models, value investing screens (low...",
+    "description": "Financial statements, business segments, dividends, valuation multiples (PE/PB/PS), industry comparison, operating data, corporate actions, company and executive profiles, cross-stock comparison, and valuation ranking via Longbridge.",
     "risk": "critical",
     "source": "https://github.com/longbridge/skills/tree/main/skills/longbridge-fundamentals",
     "date_added": "2026-07-01",
@@ -28687,7 +28687,7 @@
     "path": "skills/longbridge-market-data",
     "category": "uncategorized",
     "name": "longbridge-market-data",
-    "description": "Real-time quotes, K-line charts, order book, trade ticks, intraday capital flow, market sentiment temperature, trading session schedule, security lists, exchange rates, and IPO calendar for HK/US/A-share/SG via Longbridge. Also covers ADR premium and FX carry frameworks. Triggers:...",
+    "description": "Real-time quotes, K-line charts, order book, trade ticks, intraday capital flow, market sentiment temperature, trading session schedule, security lists, exchange rates, and IPO calendar for HK/US/A-share/SG via Longbridge. Also covers ADR premium and FX carry frameworks.",
     "risk": "critical",
     "source": "https://github.com/longbridge/skills/tree/main/skills/longbridge-market-data",
     "date_added": "2026-07-01",
@@ -28812,7 +28812,7 @@
     "path": "skills/loopy",
     "category": "ai-ml",
     "name": "loopy",
-    "description": "Discover, find, compare, audit, repair, adapt, craft, run, debrief, and prepare repeatable AI-agent loops for publication. Use when a user asks to analyze code or coding threads for recurring work, find a published loop, interview them to turn a goal into a bounded loop, review a loop...",
+    "description": "Discover, find, compare, audit, repair, adapt, craft, run, debrief, and prepare repeatable AI-agent loops for publication.",
     "risk": "critical",
     "source": "https://github.com/Forward-Future/loop-library/tree/main/skills/loopy",
     "date_added": "2026-07-01",
@@ -29357,7 +29357,7 @@
     "description": "CRITICAL: Use for Makepad animation system. Triggers on:\nmakepad animation, makepad animator, makepad hover, makepad state,\nmakepad transition, \"from: { all: Forward\", makepad pressed,\nmakepad \u52a8\u753b, makepad \u72b6\u6001, makepad \u8fc7\u6e21, makepad \u60ac\u505c\u6548\u679c\n",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29379,7 +29379,7 @@
     "description": "CRITICAL: Use for Makepad getting started and app structure. Triggers on:\nmakepad, makepad getting started, makepad tutorial, live_design!, app_main!,\nmakepad project setup, makepad hello world, \"how to create makepad app\",\nmakepad \u5165\u95e8, \u521b\u5efa makepad \u5e94\u7528, makepad \u6559\u7a0b, makepad \u9879\u76ee\u7ed3\u6784\n",
     "risk": "critical",
     "source": "https://github.com/makepad/makepad",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29401,7 +29401,7 @@
     "description": "CRITICAL: Use for Makepad packaging and deployment. Triggers on:\ndeploy, package, APK, IPA, \u6253\u5305, \u90e8\u7f72,\ncargo-packager, cargo-makepad, WASM, Android, iOS,\ndistribution, installer, .deb, .dmg, .nsis,\nGitHub Actions, CI, action, marketplace\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29423,7 +29423,7 @@
     "description": "CRITICAL: Use for Makepad DSL syntax and inheritance. Triggers on:\nmakepad dsl, live_design, makepad inheritance, makepad prototype,\n\"<Widget>\", \"Foo = { }\", makepad object, makepad property,\nmakepad DSL \u8bed\u6cd5, makepad \u7ee7\u627f, makepad \u539f\u578b, \u5982\u4f55\u5b9a\u4e49 makepad \u7ec4\u4ef6\n",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29445,7 +29445,7 @@
     "description": "CRITICAL: Use for Makepad event and action handling. Triggers on:\nmakepad event, makepad action, Event enum, ActionTrait, handle_event,\nMouseDown, KeyDown, TouchUpdate, Hit, FingerDown, post_action,\nmakepad \u4e8b\u4ef6, makepad action, \u4e8b\u4ef6\u5904\u7406\n",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29467,7 +29467,7 @@
     "description": "CRITICAL: Use for Makepad font and text rendering. Triggers on:\nmakepad font, makepad text, makepad glyph, makepad typography,\nfont atlas, text layout, font family, font size, text shaping,\nmakepad \u5b57\u4f53, makepad \u6587\u5b57, makepad \u6392\u7248, makepad \u5b57\u5f62\n",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29489,7 +29489,7 @@
     "description": "CRITICAL: Use for Makepad layout system. Triggers on:\nmakepad layout, makepad width, makepad height, makepad flex,\nmakepad padding, makepad margin, makepad flow, makepad align,\nFit, Fill, Size, Walk, \"how to center in makepad\",\nmakepad \u5e03\u5c40, makepad \u5bbd\u5ea6, makepad \u5bf9\u9f50, makepad \u5c45\u4e2d\n",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29511,7 +29511,7 @@
     "description": "CRITICAL: Use for Makepad cross-platform support. Triggers on:\nmakepad platform, makepad os, makepad macos, makepad windows, makepad linux,\nmakepad android, makepad ios, makepad web, makepad wasm, makepad metal,\nmakepad d3d11, makepad opengl, makepad webgl, OsType, CxOs,\nmakepad \u8de8\u5e73\u53f0, makepad \u5e73\u53f0\u652f\u6301\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29533,7 +29533,7 @@
     "description": "This category provides reference materials for debugging, code quality, and advanced layout patterns.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29555,7 +29555,7 @@
     "description": "CRITICAL: Use for Makepad shader system. Triggers on:\nmakepad shader, makepad draw_bg, Sdf2d, makepad pixel,\nmakepad glsl, makepad sdf, draw_quad, makepad gpu,\nmakepad \u7740\u8272\u5668, makepad shader \u8bed\u6cd5, makepad \u7ed8\u5236\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29599,7 +29599,7 @@
     "description": "CRITICAL: Use for Makepad Splash scripting language. Triggers on:\nsplash language, makepad script, makepad scripting, script!, cx.eval,\nmakepad dynamic, makepad AI, splash \u8bed\u8a00, makepad \u811a\u672c\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29621,7 +29621,7 @@
     "description": "Version: makepad-widgets (dev branch) | Last Updated: 2026-01-19 > > Check for updates: https://crates.io/crates/makepad-widgets",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29691,7 +29691,7 @@
     "description": "Discover, list, create, edit, toggle, copy, move, and delete AI agent skills across 11 tools (Cursor, Claude, Agents, Windsurf, Copilot, Codex, Cline, Aider, Continue, Roo Code, Augment)",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -29811,9 +29811,9 @@
   {
     "id": "marketing-plan",
     "path": "skills/marketing-plan",
-    "category": "business",
+    "category": "uncategorized",
     "name": "marketing-plan",
-    "description": "When the user needs a comprehensive marketing plan for a client, a company they advise, or their own product. Also use when the user mentions \"marketing plan,\" \"growth plan,\" \"GTM plan,\" \"go-to-market plan,\" \"AARRR plan,\" \"90-day marketing plan,\" \"12-month marketing roadmap,\"...",
+    "description": "When the user needs a comprehensive marketing plan for a client, a company they advise, or their own product.",
     "risk": "critical",
     "source": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/marketing-plan",
     "date_added": "2026-07-01",
@@ -30338,7 +30338,7 @@
     "description": "Matplotlib is Python's foundational visualization library for creating static, animated, and interactive plots.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -30383,7 +30383,7 @@
     "description": "Connect to MAXIA AI-to-AI marketplace on Solana. Discover, buy, sell AI services. Earn USDC. 13 MCP tools, A2A protocol, DeFi yields, sentiment analysis, rug detection.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -30617,7 +30617,7 @@
     "description": "\u5206\u6790\u5fc3\u7406\u5065\u5eb7\u6570\u636e\u3001\u8bc6\u522b\u5fc3\u7406\u6a21\u5f0f\u3001\u8bc4\u4f30\u5fc3\u7406\u5065\u5eb7\u72b6\u51b5\u3001\u63d0\u4f9b\u4e2a\u6027\u5316\u5fc3\u7406\u5065\u5eb7\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u7761\u7720\u3001\u8fd0\u52a8\u3001\u8425\u517b\u7b49\u5176\u4ed6\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31288,7 +31288,7 @@
     "description": "CRITICAL: Use for MolyKit AI chat toolkit. Triggers on:\nBotClient, OpenAI, SSE streaming, AI chat, molykit,\nPlatformSend, spawn(), ThreadToken, cross-platform async,\nChat widget, Messages, PromptInput, Avatar, LLM\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -31386,7 +31386,7 @@
     "description": "MONOPOLY is a Senior System Design Engineer skill for architecting, reviewing, and scaling systems. Triggers on requests involving architecture, databases, scaling, microservices, or infrastructure design. Proactively engages to design resilient backend systems.\n",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31449,7 +31449,7 @@
     "path": "skills/monte-carlo-analyze-root-cause",
     "category": "devops",
     "name": "monte-carlo-analyze-root-cause",
-    "description": "Investigate data incidents and find root causes using Monte Carlo's observability data. Guides the agent through systematic investigation: alert lookup, lineage tracing, ETL checks, query analysis, and data profiling. Activates when a user asks about data issues, incidents, alerts, or...",
+    "description": "Investigate data incidents and find root causes using Monte Carlo's observability data. Guides the agent through systematic investigation: alert lookup, lineage tracing, ETL checks, query analysis, and data profiling.",
     "risk": "critical",
     "source": "https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/analyze-root-cause",
     "date_added": "2026-07-01",
@@ -31557,7 +31557,7 @@
     "path": "skills/monte-carlo-performance-diagnosis",
     "category": "uncategorized",
     "name": "monte-carlo-performance-diagnosis",
-    "description": "Diagnoses pipeline performance issues -- slow jobs, expensive queries, latency trends -- using Monte Carlo's cross-platform observability. Uses a tiered investigation approach: discover problems, bridge to affected tables, then drill into root causes. Activates when a user asks about...",
+    "description": "Diagnoses pipeline performance issues -- slow jobs, expensive queries, latency trends -- using Monte Carlo's cross-platform observability. Uses a tiered investigation approach: discover problems, bridge to affected tables, then drill into root causes.",
     "risk": "critical",
     "source": "https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/performance-diagnosis",
     "date_added": "2026-07-01",
@@ -31855,7 +31855,7 @@
     "description": "Design and optimize production-grade multi-agent systems with LangGraph, LangChain, and DeepAgents for complex AI workflows.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31908,7 +31908,7 @@
     "description": "This skill should be used when the user asks to \"design multi-agent system\", \"implement supervisor pattern\", \"create swarm architecture\", \"coordinate multiple agents\", or mentions multi-agent patterns, context isolation, agent handoffs, sub-agents, or parallel agent execution.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32112,7 +32112,7 @@
     "description": "Write JavaScript code in n8n Code nodes. Use when writing JavaScript in n8n, using $input/$json/$node syntax, making HTTP requests with $helpers, working with dates using DateTime, troubleshooting Code node errors, or choosing between Code node modes.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32134,7 +32134,7 @@
     "description": "Write Python code in n8n Code nodes. Use when writing Python in n8n, using _input/_json/_node syntax, working with standard library, or need to understand Python limitations in n8n Code nodes.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32208,7 +32208,7 @@
     "description": "Validate n8n expression syntax and fix common errors. Use when writing n8n expressions, using {{}} syntax, accessing $json/$node variables, troubleshooting expression errors, or working with webhook data in workflows.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32230,7 +32230,7 @@
     "description": "Expert guide for using n8n-mcp MCP tools effectively. Use when searching for nodes, validating configurations, accessing templates, managing workflows, or using any n8n-mcp tool. Provides tool selection guidance, parameter formats, and common patterns.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32278,7 +32278,7 @@
     "description": "Operation-aware node configuration guidance. Use when configuring nodes, understanding property dependencies, determining required fields, choosing between get_node detail levels, or learning common configuration patterns by node type.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32326,7 +32326,7 @@
     "description": "Expert guide for interpreting and fixing n8n validation errors.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32348,7 +32348,7 @@
     "description": "Proven architectural patterns for building n8n workflows.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32436,9 +32436,9 @@
   {
     "id": "neon-ai-gateway",
     "path": "skills/neon-ai-gateway",
-    "category": "ai-ml",
+    "category": "uncategorized",
     "name": "neon-ai-gateway",
-    "description": "One API and one credential for frontier and open-source LLMs, built into your Neon branch and powered by Databricks. Use when a user wants to call an LLM, add AI/chat/an agent to their app, route between model providers (OpenAI, Anthropic, Google/Gemini, Meta, Alibaba, DeepSeek), or...",
+    "description": "One API and one credential for frontier and open-source LLMs, built into your Neon branch and powered by Databricks.",
     "risk": "critical",
     "source": "https://github.com/neondatabase/agent-skills/tree/main/skills/neon-ai-gateway",
     "date_added": "2026-07-01",
@@ -32462,9 +32462,9 @@
   {
     "id": "neon-functions",
     "path": "skills/neon-functions",
-    "category": "backend",
+    "category": "uncategorized",
     "name": "neon-functions",
-    "description": "Long-running, serverless Node.js HTTP functions deployed onto your Neon branch, with DATABASE_URL injected automatically and compute that runs next to your data. Use when a user wants to host an API, an AI agent with long streaming responses, a WebSocket or server-sent-events (SSE)...",
+    "description": "Long-running, serverless Node.js HTTP functions deployed onto your Neon branch, with DATABASE_URL injected automatically and compute that runs next to your data.",
     "risk": "critical",
     "source": "https://github.com/neondatabase/agent-skills/tree/main/skills/neon-functions",
     "date_added": "2026-07-01",
@@ -32490,7 +32490,7 @@
     "path": "skills/neon-object-storage",
     "category": "uncategorized",
     "name": "neon-object-storage",
-    "description": "S3-compatible object storage that branches with your Neon project, so files and the database stay in sync across every branch. Use when a user wants object storage, a bucket, blob/file storage, or somewhere to put uploads, images, documents, avatars, or user-generated files for their...",
+    "description": "S3-compatible object storage that branches with your Neon project, so files and the database stay in sync across every branch.",
     "risk": "critical",
     "source": "https://github.com/neondatabase/agent-skills/tree/main/skills/neon-object-storage",
     "date_added": "2026-07-01",
@@ -32516,7 +32516,7 @@
     "path": "skills/neon-postgres",
     "category": "backend",
     "name": "neon-postgres",
-    "description": "Guides and best practices for working with Neon Serverless Postgres. Covers setup, connection methods, branching, autoscaling, scale-to-zero, read replicas, connection pooling, Neon Auth, and the Neon CLI, MCP server, REST API, TypeScript SDK, and Python SDK. Use when users ask about...",
+    "description": "Guides and best practices for working with Neon Serverless Postgres. Covers setup, connection methods, branching, autoscaling, scale-to-zero, read replicas, connection pooling, Neon Auth, and the Neon CLI, MCP server, REST API, TypeScript SDK, and Python SDK.",
     "risk": "critical",
     "source": "https://github.com/neondatabase/agent-skills/tree/main/skills/neon-postgres",
     "date_added": "2026-07-01",
@@ -32542,7 +32542,7 @@
     "path": "skills/neon-postgres-branches",
     "category": "database",
     "name": "neon-postgres-branches",
-    "description": "Choose and create the right Neon branch type for testing and development. Use when users ask about Neon branching, migration testing with real data, isolated test environments, schema-only branch workflows for sensitive data, or branch creation via Neon CLI or Neon MCP. Triggers...",
+    "description": "Choose and create the right Neon branch type for testing and development. Use when users ask about Neon branching, migration testing with real data, isolated test environments, schema-only branch workflows for sensitive data, or branch creation via Neon CLI or Neon MCP.",
     "risk": "critical",
     "source": "https://github.com/neondatabase/agent-skills/tree/main/skills/neon-postgres-branches",
     "date_added": "2026-07-01",
@@ -32566,9 +32566,9 @@
   {
     "id": "neon-postgres-egress-optimizer",
     "path": "skills/neon-postgres-egress-optimizer",
-    "category": "database",
+    "category": "uncategorized",
     "name": "neon-postgres-egress-optimizer",
-    "description": "Diagnose and fix excessive Postgres egress (network data transfer) in a codebase. Use when a user mentions high database bills, unexpected data transfer costs, network transfer charges, egress spikes, \"why is my Neon bill so high\", \"database costs jumped\", SELECT * optimization, query...",
+    "description": "Diagnose and fix excessive Postgres egress (network data transfer) in a codebase.",
     "risk": "critical",
     "source": "https://github.com/neondatabase/agent-skills/tree/main/skills/neon-postgres-egress-optimizer",
     "date_added": "2026-07-01",
@@ -32707,7 +32707,7 @@
     "description": "NetworkX is a Python package for creating, manipulating, and analyzing complex networks and graphs.",
     "risk": "critical",
     "source": "https://github.com/networkx/networkx",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32753,7 +32753,7 @@
     "description": "Create a new Rails project",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32772,7 +32772,7 @@
     "path": "skills/newman-cicd-integration",
     "category": "uncategorized",
     "name": "newman-cicd-integration",
-    "description": "Generate ready-to-use CI/CD pipeline configurations that install and run Newman for automated API testing. Use this skill whenever the user wants to run Newman in a CI pipeline, integrate Postman collections into automated builds, set up API tests in GitHub Actions, GitLab CI, Jenkins,...",
+    "description": "Generate ready-to-use CI/CD pipeline configurations that install and run Newman for automated API testing.",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/api-skill/newman/newman-cicd-helper",
     "date_added": "2026-07-01",
@@ -32954,7 +32954,7 @@
     "description": "Runs repeatable AI work as checked, budgeted workflow files.",
     "risk": "critical",
     "source": "https://github.com/supernovae-st/nika-agents/tree/main/skills/nika",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33046,7 +33046,7 @@
     "description": "Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33167,7 +33167,7 @@
     "description": "\u5206\u6790\u8425\u517b\u6570\u636e\u3001\u8bc6\u522b\u8425\u517b\u6a21\u5f0f\u3001\u8bc4\u4f30\u8425\u517b\u72b6\u51b5\uff0c\u5e76\u63d0\u4f9b\u4e2a\u6027\u5316\u8425\u517b\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u8fd0\u52a8\u3001\u7761\u7720\u3001\u6162\u6027\u75c5\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33230,7 +33230,7 @@
     "path": "skills/observability-and-instrumentation",
     "category": "devops",
     "name": "observability-and-instrumentation",
-    "description": "Instruments code so production behavior is visible and diagnosable. Use when adding logging, metrics, tracing, or alerting. Use when shipping any feature that runs in production and you need evidence it works. Use when production issues are reported but you can't tell what happened...",
+    "description": "Instruments code so production behavior is visible and diagnosable. Use when adding logging, metrics, tracing, or alerting. Use when shipping any feature that runs in production and you need evidence it works.",
     "risk": "critical",
     "source": "https://github.com/addyosmani/agent-skills/tree/main/skills/observability-and-instrumentation",
     "date_added": "2026-07-01",
@@ -33413,7 +33413,7 @@
     "description": "\u5206\u6790\u804c\u4e1a\u5065\u5eb7\u6570\u636e\u3001\u8bc6\u522b\u5de5\u4f5c\u76f8\u5173\u5065\u5eb7\u98ce\u9669\u3001\u8bc4\u4f30\u804c\u4e1a\u5065\u5eb7\u72b6\u51b5\u3001\u63d0\u4f9b\u4e2a\u6027\u5316\u804c\u4e1a\u5065\u5eb7\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u7761\u7720\u3001\u8fd0\u52a8\u3001\u5fc3\u7406\u5065\u5eb7\u7b49\u5176\u4ed6\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33435,7 +33435,7 @@
     "description": "Expert guide for configuring Odoo Accounting: chart of accounts, journals, fiscal positions, taxes, payment terms, and bank reconciliation.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33457,7 +33457,7 @@
     "description": "Write and run Odoo automated tests using TransactionCase, HttpCase, and browser tour tests. Covers test data setup, mocking, and CI integration.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33479,7 +33479,7 @@
     "description": "Complete Odoo backup and restore strategy: database dumps, filestore backup, automated scheduling, cloud storage upload, and tested restore procedures.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33501,7 +33501,7 @@
     "description": "Production-ready Docker and docker-compose setup for Odoo with PostgreSQL, persistent volumes, environment-based configuration, and Nginx reverse proxy.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33523,7 +33523,7 @@
     "description": "Expert guide for Odoo eCommerce and Website: product catalog, payment providers, shipping methods, SEO, and order-to-fulfillment workflow.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33545,7 +33545,7 @@
     "description": "Guide for implementing EDI (Electronic Data Interchange) with Odoo: X12, EDIFACT document mapping, partner onboarding, and automated order processing.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33567,7 +33567,7 @@
     "description": "Expert guide for Odoo HR and Payroll: salary structures, payslip rules, leave policies, employee contracts, and payroll journal entries.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33589,7 +33589,7 @@
     "description": "Expert guide for Odoo Inventory: stock valuation (FIFO/AVCO), reordering rules, putaway strategies, routes, and multi-warehouse configuration.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33611,7 +33611,7 @@
     "description": "Country-specific Odoo localization: tax configuration, e-invoicing (CFDI, FatturaPA, SAF-T), fiscal reporting, and country chart of accounts setup.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33633,7 +33633,7 @@
     "description": "Expert guide for Odoo Manufacturing: Bills of Materials (BoM), Work Centers, routings, MRP planning, and production order workflows.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33655,7 +33655,7 @@
     "description": "Step-by-step guide for migrating Odoo custom modules between versions (v14\u2192v15\u2192v16\u2192v17). Covers API changes, deprecated methods, and view migration.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33677,7 +33677,7 @@
     "description": "Expert guide for creating custom Odoo modules. Covers __manifest__.py, model inheritance, ORM patterns, and module structure best practices.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33699,7 +33699,7 @@
     "description": "Master Odoo ORM patterns: search, browse, create, write, domain filters, computed fields, and performance-safe query techniques.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33721,7 +33721,7 @@
     "description": "Expert guide for diagnosing and fixing Odoo performance issues: slow queries, worker configuration, memory limits, PostgreSQL tuning, and profiling tools.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33743,7 +33743,7 @@
     "description": "Expert guide for Odoo Project and Timesheets: task stages, billable time tracking, timesheet approval, budget alerts, and invoicing from timesheets.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33765,7 +33765,7 @@
     "description": "Expert guide for Odoo Purchase: RFQ \u2192 PO \u2192 Receipt \u2192 Vendor Bill workflow, purchase agreements, vendor price lists, and 3-way matching.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33787,7 +33787,7 @@
     "description": "Expert in Odoo QWeb templating for PDF reports, email templates, and website pages. Covers t-if, t-foreach, t-field, and report actions.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33809,7 +33809,7 @@
     "description": "Expert on Odoo's external JSON-RPC and XML-RPC APIs. Covers authentication, model calls, record CRUD, and real-world integration examples in Python, JavaScript, and curl.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33831,7 +33831,7 @@
     "description": "Expert guide for Odoo Sales and CRM: pipeline stages, quotation templates, pricelists, sales teams, lead scoring, and forecasting.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33853,7 +33853,7 @@
     "description": "Expert in Odoo access control: ir.model.access.csv, record rules (ir.rule), groups, and multi-company security patterns.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33875,7 +33875,7 @@
     "description": "Connect Odoo with Shopify: sync products, inventory, orders, and customers using the Shopify API and Odoo's external API or connector modules.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33897,7 +33897,7 @@
     "description": "Step-by-step Odoo version upgrade advisor: pre-upgrade checklist, community vs enterprise upgrade path, OCA module compatibility, and post-upgrade validation.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33919,7 +33919,7 @@
     "description": "Sync Odoo with WooCommerce: products, inventory, orders, and customers via WooCommerce REST API and Odoo external API.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33941,7 +33941,7 @@
     "description": "Expert at building Odoo XML views: Form, List, Kanban, Search, Calendar, and Graph. Generates correct XML for Odoo 14-17 with proper visibility syntax.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33988,7 +33988,7 @@
     "path": "skills/offers",
     "category": "uncategorized",
     "name": "offers",
-    "description": "When the user wants to design, construct, or improve an offer \u2014 the thing they actually sell \u2014 including value framing, bonus stacking, guarantee design, scarcity/urgency, naming, and payment structure. Also use when the user mentions 'offer,' 'offer design,' 'build an offer,' 'grand...",
+    "description": "When the user wants to design, construct, or improve an offer \u2014 the thing they actually sell \u2014 including value framing, bonus stacking, guarantee design, scarcity/urgency, naming, and payment structure.",
     "risk": "safe",
     "source": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/offers",
     "date_added": "2026-07-01",
@@ -34084,7 +34084,7 @@
     "path": "skills/onboarding",
     "category": "uncategorized",
     "name": "onboarding",
-    "description": "When the user wants to optimize post-signup onboarding, user activation, first-run experience, or time-to-value. Also use when the user mentions \"onboarding flow,\" \"activation rate,\" \"user activation,\" \"first-run experience,\" \"empty states,\" \"onboarding checklist,\" \"aha moment,\" \"new...",
+    "description": "When the user wants to optimize post-signup onboarding, user activation, first-run experience, or time-to-value.",
     "risk": "safe",
     "source": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/onboarding",
     "date_added": "2026-07-01",
@@ -34289,9 +34289,9 @@
   {
     "id": "openapi-spec-generator",
     "path": "skills/openapi-spec-generator",
-    "category": "backend",
+    "category": "uncategorized",
     "name": "openapi-spec-generator",
-    "description": "Generate complete, production-ready OpenAPI 3.x and Swagger 2.0 specifications from natural language descriptions, code, or partial specs. Use this skill whenever the user mentions OpenAPI, Swagger, API spec, REST API documentation, YAML/JSON API schema, endpoint documentation, API...",
+    "description": "Generate complete, production-ready OpenAPI 3.x and Swagger 2.0 specifications from natural language descriptions, code, or partial specs.",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/api-skill/openapi-spec-generator",
     "date_added": "2026-07-01",
@@ -34442,7 +34442,7 @@
     "description": "\u5206\u6790\u53e3\u8154\u5065\u5eb7\u6570\u636e\u3001\u8bc6\u522b\u53e3\u8154\u95ee\u9898\u6a21\u5f0f\u3001\u8bc4\u4f30\u53e3\u8154\u5065\u5eb7\u72b6\u51b5\u3001\u63d0\u4f9b\u4e2a\u6027\u5316\u53e3\u8154\u5065\u5eb7\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u8425\u517b\u3001\u6162\u6027\u75c5\u3001\u7528\u836f\u7b49\u5176\u4ed6\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -34931,7 +34931,7 @@
     "description": "Reference document for monopoly patterns.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -35825,7 +35825,7 @@
     "description": "Interactive visualization library. Use when you need hover info, zoom, pan, or web-embeddable charts. Best for dashboards, exploratory analysis, and presentations. For static publication figures use matplotlib or scientific-visualization.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -35903,7 +35903,7 @@
     "description": "Fast in-memory DataFrame library for datasets that fit in RAM. Use when pandas is too slow but data still fits in memory. Lazy evaluation, parallel execution, Apache Arrow backend. Best for 1-100GB datasets, ETL pipelines, faster pandas replacement. For larger-than-RAM data use dask or vaex.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -36107,7 +36107,7 @@
     "path": "skills/postgresql-cli",
     "category": "database",
     "name": "postgresql-cli",
-    "description": "PostgreSQL interactive terminal (psql) reference and usage guide. Use this skill whenever the user mentions psql, PostgreSQL command-line client, backslash commands, meta-commands, \\d commands, database inspection, SQL scripting in PostgreSQL, importing/exporting data with psql, \\copy,...",
+    "description": "PostgreSQL interactive terminal (psql) reference and usage guide.",
     "risk": "critical",
     "source": "https://github.com/chaunsin/agent-skills/tree/master/skills/postgresql-cli",
     "date_added": "2026-07-01",
@@ -36175,9 +36175,9 @@
   {
     "id": "postman-collection-generator",
     "path": "skills/postman-collection-generator",
-    "category": "backend",
+    "category": "uncategorized",
     "name": "postman-collection-generator",
-    "description": "Generate complete, import-ready Postman Collection v2.1 JSON files from natural language API descriptions or cURL commands. Use this skill whenever the user describes an API in plain English (\"I have a REST API with these endpoints...\"), pastes cURL commands, or asks to \"create a...",
+    "description": "Generate complete, import-ready Postman Collection v2.1 JSON files from natural language API descriptions or cURL commands.",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/api-skill/postman/postman-collection-generator",
     "date_added": "2026-07-01",
@@ -36203,7 +36203,7 @@
     "path": "skills/postman-newman-automation",
     "category": "uncategorized",
     "name": "postman-newman-automation",
-    "description": "Generate Newman CLI commands, configuration files, Jenkins pipeline scripts, and shell automation for running Postman collections in CI/CD or local environments. Use this skill whenever the user wants to run Postman collections from the command line, automate API tests, integrate...",
+    "description": "Generate Newman CLI commands, configuration files, Jenkins pipeline scripts, and shell automation for running Postman collections in CI/CD or local environments.",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/api-skill/postman/postman-to-newman",
     "date_added": "2026-07-01",
@@ -36229,7 +36229,7 @@
     "path": "skills/postman-openapi-converter",
     "category": "uncategorized",
     "name": "postman-openapi-converter",
-    "description": "Convert OpenAPI 3.x or Swagger 2.0 specs (YAML or JSON) into complete, import-ready Postman Collection v2.1 JSON files. Use this skill whenever the user provides or references an OpenAPI spec, Swagger file, openapi.yaml, swagger.json, or uses phrases like \"convert my OpenAPI spec\",...",
+    "description": "Convert OpenAPI 3.x or Swagger 2.0 specs (YAML or JSON) into complete, import-ready Postman Collection v2.1 JSON files.",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/api-skill/postman/postman-openapi-converter",
     "date_added": "2026-07-01",
@@ -36299,7 +36299,7 @@
     "path": "skills/power-user-cultivation",
     "category": "uncategorized",
     "name": "power-user-cultivation",
-    "description": "When the user wants to identify and nurture developer advocates, build champion programs, or turn active users into contributors and evangelists. Trigger phrases include \"power users,\" \"developer advocates,\" \"ambassador program,\" \"champion program,\" \"community contributors,\" \"referral...",
+    "description": "When the user wants to identify and nurture developer advocates, build champion programs, or turn active users into contributors and evangelists.",
     "risk": "safe",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/power-user-cultivation",
     "date_added": "2026-07-01",
@@ -36435,7 +36435,7 @@
     "description": "Create pull requests following Sentry's engineering practices.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -36573,7 +36573,7 @@
     "path": "skills/pricing",
     "category": "uncategorized",
     "name": "pricing",
-    "description": "When the user wants help with pricing decisions, packaging, or monetization strategy. Also use when the user mentions 'pricing,' 'pricing tiers,' 'freemium,' 'free trial,' 'packaging,' 'price increase,' 'value metric,' 'Van Westendorp,' 'willingness to pay,' 'monetization,' 'how much...",
+    "description": "When the user wants help with pricing decisions, packaging, or monetization strategy.",
     "risk": "safe",
     "source": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/pricing",
     "date_added": "2026-07-01",
@@ -36665,7 +36665,7 @@
     "path": "skills/privacy-mask",
     "category": "uncategorized",
     "name": "privacy-mask",
-    "description": "Mask, redact, anonymize and censor sensitive information (PII) in screenshots and images \u2014 phone numbers, emails, IDs, API keys, crypto wallets, credit cards, passwords, and more. Uses OCR (Tesseract + RapidOCR) with 47 regex rules and optional NER (GLiNER) to detect private data and...",
+    "description": "Mask, redact, anonymize and censor sensitive information (PII) in screenshots and images \u2014 phone numbers, emails, IDs, API keys, crypto wallets, credit cards, passwords, and more.",
     "risk": "critical",
     "source": "https://github.com/fullstackcrew-alpha/privacy-mask/tree/main/",
     "date_added": "2026-07-01",
@@ -36854,7 +36854,7 @@
     "path": "skills/product-marketing",
     "category": "business",
     "name": "product-marketing",
-    "description": "When the user wants to create or update their product marketing context document. Also use when the user mentions 'product context,' 'marketing context,' 'set up context,' 'positioning,' 'who is my target audience,' 'describe my product,' 'ICP,' 'ideal customer profile,' or wants to...",
+    "description": "When the user wants to create or update their product marketing context document.",
     "risk": "critical",
     "source": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/product-marketing",
     "date_added": "2026-07-01",
@@ -37089,7 +37089,7 @@
     "description": "This skill covers the principles for identifying tasks suited to LLM processing, designing effective project architectures, and iterating rapidly using agent-assisted development.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -37429,7 +37429,7 @@
     "path": "skills/public-relations",
     "category": "uncategorized",
     "name": "public-relations",
-    "description": "When the user wants help with public relations, earned media, press coverage, journalist outreach, or media strategy (not pull requests). Also use when the user mentions 'PR,' 'public relations,' 'press,' 'press release,' 'press coverage,' 'media outreach,' 'pitch a journalist,' 'get...",
+    "description": "When the user wants help with public relations, earned media, press coverage, journalist outreach, or media strategy (not pull requests).",
     "risk": "critical",
     "source": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/public-relations",
     "date_added": "2026-07-01",
@@ -37458,7 +37458,7 @@
     "description": "Direct REST API access to PubMed. Advanced Boolean/MeSH queries, E-utilities API, batch processing, citation management. For Python workflows, prefer biopython (Bio.Entrez). Use this for direct HTTP/REST work or custom API implementations.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -37669,7 +37669,7 @@
     "path": "skills/pytest-skill",
     "category": "testing",
     "name": "pytest-skill",
-    "description": "Generates production-grade pytest tests in Python with fixtures, parametrize, markers, mocking, and conftest patterns. Use when user mentions \"pytest\", \"conftest\", \"@pytest.fixture\", \"@pytest.mark\", \"Python test\". Triggers on: \"pytest\", \"conftest\", \"Python test\", \"parametrize\", \"Python...",
+    "description": "Generates production-grade pytest tests in Python with fixtures, parametrize, markers, mocking, and conftest patterns. Use when user mentions \"pytest\", \"conftest\", \"@pytest.fixture\", \"@pytest.mark\", \"Python test\".",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/pytest-skill",
     "date_added": "2026-07-01",
@@ -37926,7 +37926,7 @@
     "description": "Qiskit is the world's most popular open-source quantum computing framework with 13M+ downloads. Build quantum circuits, optimize for hardware, execute on simulators or real quantum computers, and analyze results. Supports IBM Quantum (100+ qubit systems), IonQ, Amazon Braket, and other providers.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -38257,7 +38257,7 @@
     "path": "skills/rclone-cli",
     "category": "cloud",
     "name": "rclone-cli",
-    "description": "Rclone command-line cloud storage manager reference and usage guide. Use this skill whenever the user mentions rclone, or any task involving terminal-based cloud file operations such as upload, download, sync, copy, move, mount, or remote management. Triggers on S3-compatible storage,...",
+    "description": "Rclone command-line cloud storage manager reference and usage guide. Use this skill whenever the user mentions rclone, or any task involving terminal-based cloud file operations such as upload, download, sync, copy, move, mount, or remote management.",
     "risk": "critical",
     "source": "https://github.com/chaunsin/agent-skills/tree/master/skills/rclone-cli",
     "date_added": "2026-07-01",
@@ -38815,7 +38815,7 @@
     "path": "skills/redis-cli",
     "category": "uncategorized",
     "name": "redis-cli",
-    "description": "Redis command-line interface (redis-cli) reference and usage guide. Use this skill whenever the user mentions redis-cli, Redis CLI, or any task involving querying, inspecting, debugging, or managing Redis from the command line. Triggers on key/value reads and writes, SCAN or keyspace...",
+    "description": "Redis command-line interface (redis-cli) reference and usage guide. Use this skill whenever the user mentions redis-cli, Redis CLI, or any task involving querying, inspecting, debugging, or managing Redis from the command line.",
     "risk": "critical",
     "source": "https://github.com/chaunsin/agent-skills/tree/master/skills/redis-cli",
     "date_added": "2026-07-01",
@@ -38888,7 +38888,7 @@
     "description": "\u5206\u6790\u5eb7\u590d\u8bad\u7ec3\u6570\u636e\u3001\u8bc6\u522b\u5eb7\u590d\u6a21\u5f0f\u3001\u8bc4\u4f30\u5eb7\u590d\u8fdb\u5c55\uff0c\u5e76\u63d0\u4f9b\u4e2a\u6027\u5316\u5eb7\u590d\u5efa\u8bae",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -38936,7 +38936,7 @@
     "description": "Generate walkthrough videos from Stitch projects using Remotion with smooth transitions, zooming, and text overlays",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -39253,7 +39253,7 @@
     "path": "skills/review-and-simplify-changes",
     "category": "uncategorized",
     "name": "review-and-simplify-changes",
-    "description": "Review a git diff or explicit file scope for reuse, code quality, efficiency, clarity, and standards issues, then optionally apply safe Codex-driven fixes. Use when the user asks to \"simplify code\", \"review changed code\", \"check for code reuse\", \"review code quality\", \"review...",
+    "description": "Review a git diff or explicit file scope for reuse, code quality, efficiency, clarity, and standards issues, then optionally apply safe Codex-driven fixes.",
     "risk": "critical",
     "source": "https://github.com/Dimillian/Skills/tree/main/review-and-simplify-changes",
     "date_added": "2026-07-01",
@@ -39334,7 +39334,7 @@
     "path": "skills/review-swarm",
     "category": "uncategorized",
     "name": "review-swarm",
-    "description": "Parallel read-only multi-agent review of a current git diff or explicit file scope to find behavioral regressions, security or privacy risks, performance or reliability issues, and contract or test coverage gaps. Use when the user asks for a review swarm, parallel review, diff review,...",
+    "description": "Parallel read-only multi-agent review of a current git diff or explicit file scope to find behavioral regressions, security or privacy risks, performance or reliability issues, and contract or test coverage gaps.",
     "risk": "safe",
     "source": "https://github.com/Dimillian/Skills/tree/main/review-swarm",
     "date_added": "2026-07-01",
@@ -39517,7 +39517,7 @@
     "description": "CRITICAL: Use for Robius app architecture patterns. Triggers on:\nTokio, async, submit_async_request, \u5f02\u6b65, \u67b6\u6784,\nSignalToUI, Cx::post_action, worker task,\napp structure, MatchEvent, handle_startup\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -39539,7 +39539,7 @@
     "description": "CRITICAL: Use for Robius event and action patterns. Triggers on:\ncustom action, MatchEvent, post_action, cx.widget_action,\nhandle_actions, DefaultNone, widget action, event handling,\n\u4e8b\u4ef6\u5904\u7406, \u81ea\u5b9a\u4e49\u52a8\u4f5c\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -39561,7 +39561,7 @@
     "description": "CRITICAL: Use for Matrix SDK integration with Makepad. Triggers on:\nMatrix SDK, sliding sync, MatrixRequest, timeline,\nmatrix-sdk, matrix client, robrix, matrix room,\nMatrix \u96c6\u6210, \u804a\u5929\u5ba2\u6237\u7aef\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -39583,7 +39583,7 @@
     "description": "CRITICAL: Use for Robius state management patterns. Triggers on:\nAppState, persistence, theme switch, \u72b6\u6001\u7ba1\u7406,\nScope::with_data, save state, load state, serde,\n\u72b6\u6001\u6301\u4e45\u5316, \u4e3b\u9898\u5207\u6362\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -39605,7 +39605,7 @@
     "description": "CRITICAL: Use for Robius widget patterns. Triggers on:\napply_over, TextOrImage, modal, \u53ef\u590d\u7528, \u6a21\u6001,\ncollapsible, drag drop, reusable widget, widget design,\npageflip, \u7ec4\u4ef6\u8bbe\u8ba1, \u7ec4\u4ef6\u6a21\u5f0f\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -39624,7 +39624,7 @@
     "path": "skills/robot-framework-skill",
     "category": "uncategorized",
     "name": "robot-framework-skill",
-    "description": "Generates Robot Framework tests in keyword-driven syntax with Python. Supports SeleniumLibrary, RequestsLibrary, and custom keywords. Use when user mentions \"Robot Framework\", \"*** Test Cases ***\", \"SeleniumLibrary\", \".robot file\". Triggers on: \"Robot Framework\", \"*** Test Cases ***\",...",
+    "description": "Generates Robot Framework tests in keyword-driven syntax with Python. Supports SeleniumLibrary, RequestsLibrary, and custom keywords. Use when user mentions \"Robot Framework\", \"*** Test Cases ***\", \"SeleniumLibrary\", \".robot file\".",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/robot-framework-skill",
     "date_added": "2026-07-01",
@@ -40251,7 +40251,7 @@
     "description": "Reference document for monopoly scale-benchmarks.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40295,7 +40295,7 @@
     "description": "Scanpy is a scalable Python toolkit for analyzing single-cell RNA-seq data, built on AnnData. Apply this skill for complete single-cell workflows including quality control, normalization, dimensionality reduction, clustering, marker gene identification, visualization, and trajectory analysis.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40417,7 +40417,7 @@
     "description": "This is the core skill for the deep research and writing tool\u2014combining AI-driven deep research with well-formatted written outputs. Every document produced is backed by comprehensive literature search and verified citations through the research-lookup skill.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40440,7 +40440,7 @@
     "description": "Machine learning in Python with scikit-learn. Use for classification, regression, clustering, model evaluation, and ML pipelines.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40593,7 +40593,7 @@
     "path": "skills/sdk-dx",
     "category": "uncategorized",
     "name": "sdk-dx",
-    "description": "Design SDKs that developers love to use\u2014APIs that feel native, error messages that guide, and experiences that reduce friction. This skill covers creating SDKs that drive adoption through exceptional developer experience rather than aggressive marketing. Trigger phrases: \"SDK design\",...",
+    "description": "Design SDKs that developers love to use\u2014APIs that feel native, error messages that guide, and experiences that reduce friction. This skill covers creating SDKs that drive adoption through exceptional developer experience rather than aggressive marketing.",
     "risk": "critical",
     "source": "https://github.com/jonathimer/devmarketing-skills/tree/main/skills/sdk-dx",
     "date_added": "2026-07-01",
@@ -40622,7 +40622,7 @@
     "description": "Seaborn is a Python visualization library for creating publication-quality statistical graphics. Use this skill for dataset-oriented plotting, multivariate analysis, automatic statistical estimation, and complex multi-panel figures with minimal code.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40759,7 +40759,7 @@
     "description": "Build a minimal but real security policy for sensitive apps. The output is a single, coherent Blue Book document using MUST/SHOULD/CAN language, with explicit assumptions, scope, and security gates.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40781,7 +40781,7 @@
     "description": "Reference document for monopoly security-checklist.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40985,7 +40985,7 @@
     "path": "skills/selenium-skill",
     "category": "web-development",
     "name": "selenium-skill",
-    "description": "Generates production-grade Selenium WebDriver automation scripts and tests in Java, Python, JavaScript, C#, Ruby, or PHP. Supports local execution and TestMu AI cloud with 3000+ browser/OS combinations. Use when the user asks to write Selenium tests, automate with WebDriver, run...",
+    "description": "Generates production-grade Selenium WebDriver automation scripts and tests in Java, Python, JavaScript, C#, Ruby, or PHP. Supports local execution and TestMu AI cloud with 3000+ browser/OS combinations.",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/selenium-skill",
     "date_added": "2026-07-01",
@@ -41014,7 +41014,7 @@
     "description": "Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. Use when writing Semgrep rules or building custom static analysis detections.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -41036,7 +41036,7 @@
     "description": "Creates language variants of existing Semgrep rules. Use when porting a Semgrep rule to specified target languages. Takes an existing rule and target languages as input, produces independent rule+test directories for each language.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -42227,7 +42227,7 @@
     "description": "Sexual Health Analyzer",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -42293,7 +42293,7 @@
     "description": "Two-layer performance skill combining disciplined THINK layer (surgical edits, simplicity) and terse SPEAK layer (caveman compression). Triggers on requests for brevity, token efficiency, or disciplined coding.\n",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -42316,7 +42316,7 @@
     "description": "sharp-edges",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -42787,7 +42787,7 @@
     "description": "Iteratively improve a Claude Code skill using the skill-reviewer agent until it meets quality standards. Use when improving a skill with multiple quality issues, iterating on a new skill until it meets standards, or automated fix-review cycles instead of manual editing.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -42918,7 +42918,7 @@
     "description": "Use when the user is unsure which skill to use or where to start. Interviews the user with targeted questions and recommends the best skill(s) from the installed library for their goal.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -42940,7 +42940,7 @@
     "description": "Scan agent skills for security issues before adoption. Detects prompt injection, malicious code, excessive permissions, secret exposure, and supply chain risks.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -43040,7 +43040,7 @@
     "description": "Create and improve agent skills following the Agent Skills specification. Use when asked to create, write, or update skills.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -43062,7 +43062,7 @@
     "description": "Analyze skin health data, identify skin problem patterns, assess skin health status. Supports correlation analysis with nutrition, chronic diseases, and medication data.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -43186,7 +43186,7 @@
     "description": "\u5206\u6790\u7761\u7720\u6570\u636e\u3001\u8bc6\u522b\u7761\u7720\u6a21\u5f0f\u3001\u8bc4\u4f30\u7761\u7720\u8d28\u91cf\uff0c\u5e76\u63d0\u4f9b\u4e2a\u6027\u5316\u7761\u7720\u6539\u5584\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u5176\u4ed6\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -43290,7 +43290,7 @@
     "path": "skills/smartui-skill",
     "category": "testing",
     "name": "smartui-skill",
-    "description": "Generates SmartUI visual regression test configurations for screenshot comparison on TestMu AI cloud. Framework-agnostic \u2014 works with Playwright, Selenium, Cypress, Puppeteer. Use when user mentions \"SmartUI\", \"visual regression\", \"screenshot comparison\", \"visual testing\". Triggers on:...",
+    "description": "Generates SmartUI visual regression test configurations for screenshot comparison on TestMu AI cloud. Framework-agnostic \u2014 works with Playwright, Selenium, Cypress, Puppeteer. Use when user mentions \"SmartUI\", \"visual regression\", \"screenshot comparison\", \"visual testing\".",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/smartui-skill",
     "date_added": "2026-07-01",
@@ -43760,7 +43760,7 @@
     "description": "Verifies code implements exactly what documentation specifies for blockchain audits. Use when comparing code against whitepapers, finding gaps between specs and implementation, or performing compliance checks for protocol implementations.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -43782,7 +43782,7 @@
     "description": "SpecKit Safe Update",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -43804,7 +43804,7 @@
     "description": "Launch RSVP speed reader for text",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -44060,7 +44060,7 @@
     "description": "Take a list of projects and their related documentation, and organize them into the SRED format for submission.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -44082,7 +44082,7 @@
     "description": "Go back through the previous year of work and create a Notion doc that groups relevant links into projects that can then be documented as SRED projects.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -44323,7 +44323,7 @@
     "description": "Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistical methods.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -44404,7 +44404,7 @@
     "description": "Teaches agents to iteratively build websites using Stitch with an autonomous baton-passing loop pattern",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -44511,7 +44511,7 @@
     "path": "skills/styleseed-design-review",
     "category": "web-development",
     "name": "styleseed-design-review",
-    "description": "Reviews UI/frontend code and tells you exactly why it \"looks AI-generated\" \u2014 then how to fix it. Use it when a React/Tailwind/HTML interface looks off, generic, or unfinished, when you want a design score before shipping, or when asked to make UI look more professional, polished, or...",
+    "description": "Reviews UI/frontend code and tells you exactly why it \"looks AI-generated\" \u2014 then how to fix it.",
     "risk": "safe",
     "source": "https://github.com/bitjaru/styleseed/tree/main/skills/styleseed-design-review",
     "date_added": "2026-07-01",
@@ -44562,7 +44562,7 @@
     "description": "Coordinate quota-aware parallel subagents for large, multi-file Antigravity tasks.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -44610,7 +44610,7 @@
     "path": "skills/supabase",
     "category": "uncategorized",
     "name": "supabase",
-    "description": "Use when doing ANY task involving Supabase. Triggers: Supabase products (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues); client libraries and SSR integrations (supabase-js, @supabase/ssr) in Next.js, React, SvelteKit, Astro, Remix; auth issues (login, logout,...",
+    "description": "Use when doing ANY task involving Supabase.",
     "risk": "critical",
     "source": "https://github.com/supabase/agent-skills/tree/main/skills/supabase",
     "date_added": "2026-07-01",
@@ -44731,7 +44731,7 @@
     "description": "Identifies dependencies at heightened risk of exploitation or takeover. Use when assessing supply chain attack surface, evaluating dependency health, or scoping security engagements.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -44881,7 +44881,7 @@
     "path": "skills/swiftui-expert-skill",
     "category": "mobile",
     "name": "swiftui-expert-skill",
-    "description": "Use when writing, reviewing, or refactoring SwiftUI code for iOS or macOS, including state management and `@Observable` data flow, view composition and invalidation/performance, lists and `ForEach` identity, environment usage, localization, animations, Liquid Glass adoption, migrating...",
+    "description": "Write, review, and refactor SwiftUI for iOS or macOS, covering data flow, view composition, performance, identity, environment, localization, animation, API migration, and Instruments traces.",
     "risk": "critical",
     "source": "https://github.com/AvdLee/SwiftUI-Agent-Skill/tree/main/swiftui-expert-skill",
     "date_added": "2026-07-01",
@@ -45021,7 +45021,7 @@
     "description": "SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations.",
     "risk": "safe",
     "source": "https://github.com/sympy/sympy",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -45300,7 +45300,7 @@
     "description": "\u5206\u6790\u4e2d\u533b\u4f53\u8d28\u6570\u636e\u3001\u8bc6\u522b\u4f53\u8d28\u7c7b\u578b\u3001\u8bc4\u4f30\u4f53\u8d28\u7279\u5f81,\u5e76\u63d0\u4f9b\u4e2a\u6027\u5316\u517b\u751f\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u8425\u517b\u3001\u8fd0\u52a8\u3001\u7761\u7720\u7b49\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -45604,7 +45604,7 @@
     "description": "Reference document for monopoly tech-matrix.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46072,7 +46072,7 @@
     "path": "skills/test-framework-migration-skill",
     "category": "testing",
     "name": "test-framework-migration-skill",
-    "description": "Migrates and converts test automation scripts between Selenium, Playwright, Puppeteer, and Cypress. Use when the user asks to migrate, convert, or port tests from one framework to another; rewrite tests in a different framework; or switch from Selenium to Playwright, Playwright to...",
+    "description": "Migrates and converts test automation scripts between Selenium, Playwright, Puppeteer, and Cypress.",
     "risk": "critical",
     "source": "https://github.com/LambdaTest/agent-skills/tree/main/test-framework-migration-skill",
     "date_added": "2026-07-01",
@@ -46399,7 +46399,7 @@
     "description": "Three.js animation - keyframe animation, skeletal animation, morph targets, animation mixing. Use when animating objects, playing GLTF animations, creating procedural motion, or blending animations.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46421,7 +46421,7 @@
     "description": "Three.js scene setup, cameras, renderer, Object3D hierarchy, coordinate systems. Use when setting up 3D scenes, creating cameras, configuring renderers, managing object hierarchies, or working with transforms.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46443,7 +46443,7 @@
     "description": "Three.js geometry creation - built-in shapes, BufferGeometry, custom geometry, instancing. Use when creating 3D shapes, working with vertices, building custom meshes, or optimizing with instanced rendering.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46465,7 +46465,7 @@
     "description": "Three.js interaction - raycasting, controls, mouse/touch input, object selection. Use when handling user input, implementing click detection, adding camera controls, or creating interactive 3D experiences.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46487,7 +46487,7 @@
     "description": "Three.js lighting - light types, shadows, environment lighting. Use when adding lights, configuring shadows, setting up IBL, or optimizing lighting performance.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46509,7 +46509,7 @@
     "description": "Three.js asset loading - GLTF, textures, images, models, async patterns. Use when loading 3D models, textures, HDR environments, or managing loading progress.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46531,7 +46531,7 @@
     "description": "Three.js materials - PBR, basic, phong, shader materials, material properties. Use when styling meshes, working with textures, creating custom shaders, or optimizing material performance.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46553,7 +46553,7 @@
     "description": "Three.js post-processing - EffectComposer, bloom, DOF, screen effects. Use when adding visual effects, color grading, blur, glow, or creating custom screen-space shaders.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46575,7 +46575,7 @@
     "description": "Three.js shaders - GLSL, ShaderMaterial, uniforms, custom effects. Use when creating custom visual effects, modifying vertices, writing fragment shaders, or extending built-in materials.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46619,7 +46619,7 @@
     "description": "Three.js textures - texture types, UV mapping, environment maps, texture settings. Use when working with images, UV coordinates, cubemaps, HDR environments, or texture optimization.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -47037,7 +47037,7 @@
     "path": "skills/train-sentence-transformers",
     "category": "ai-ml",
     "name": "train-sentence-transformers",
-    "description": "Train or fine-tune sentence-transformers models across `SentenceTransformer` (bi-encoder; dense or static embedding model; for retrieval, similarity, clustering, classification, paraphrase mining, dedup, multimodal), `CrossEncoder` (reranker; pair scoring for two-stage retrieval / pair...",
+    "description": "Train or fine-tune SentenceTransformer, CrossEncoder, and SparseEncoder models for retrieval, similarity, clustering, classification, reranking, and related embedding tasks.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/train-sentence-transformers",
     "date_added": "2026-07-01",
@@ -47063,7 +47063,7 @@
     "path": "skills/transformers-js",
     "category": "web-development",
     "name": "transformers-js",
-    "description": "Use Transformers.js to run state-of-the-art machine learning models directly in JavaScript/TypeScript. Supports NLP (text classification, translation, summarization), computer vision (image classification, object detection), audio (speech recognition, audio classification), and...",
+    "description": "Use Transformers.js to run state-of-the-art machine learning models directly in JavaScript/TypeScript.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/transformers-js",
     "date_added": "2026-07-01",
@@ -47092,7 +47092,7 @@
     "description": "\u5206\u6790\u65c5\u884c\u5065\u5eb7\u6570\u636e\u3001\u8bc4\u4f30\u76ee\u7684\u5730\u5065\u5eb7\u98ce\u9669\u3001\u63d0\u4f9b\u75ab\u82d7\u63a5\u79cd\u5efa\u8bae\u3001\u751f\u6210\u591a\u8bed\u8a00\u7d27\u6025\u533b\u7597\u4fe1\u606f\u5361\u7247\u3002\u652f\u6301WHO/CDC\u6570\u636e\u96c6\u6210\u7684\u4e13\u4e1a\u7ea7\u65c5\u884c\u5065\u5eb7\u98ce\u9669\u8bc4\u4f30\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -47636,7 +47636,7 @@
     "path": "skills/ui-motion",
     "category": "web-development",
     "name": "ui-motion",
-    "description": "Apply a named StyleSeed motion to a component \u2014 either one of the 5 personality seeds (Spring/Silk/Snap/Float/Pulse \u00d7 entrance/exit/hover/press/layout) or a distinctive keyword move from the motion library (toggle-flip, toggle-curtain, reveal-blur, pop-in, shimmer, \u2026). Translates vibe...",
+    "description": "Apply a named StyleSeed motion to a component \u2014 either one of the 5 personality seeds (Spring/Silk/Snap/Float/Pulse \u00d7 entrance/exit/hover/press/layout) or a distinctive keyword move from the motion library (toggle-flip, toggle-curtain, reveal-blur, pop-in, shimmer, \u2026).",
     "risk": "critical",
     "source": "https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-motion",
     "date_added": "2026-07-01",
@@ -48024,7 +48024,7 @@
     "description": "Direct REST API access to UniProt. Protein searches, FASTA retrieval, ID mapping, Swiss-Prot/TrEMBL. For Python workflows with multiple databases, prefer bioservices (unified interface to 40+ services). Use this for direct HTTP/REST work or UniProt-specific control.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -48232,7 +48232,7 @@
     "path": "skills/unslop-commit",
     "category": "ai-ml",
     "name": "unslop-commit",
-    "description": "Rewrites commit messages so they sound like a careful human engineer wrote them. Strips AI/marketing slop (\"comprehensive solution\", \"robust implementation\", \"leverage\", \"enhance\", \"seamlessly\", \"This commit...\"). Keeps Conventional Commits format. Subject \u226472 chars (aim \u226450),...",
+    "description": "Rewrites commit messages so they sound like a careful human engineer wrote them. Strips AI/marketing slop (\"comprehensive solution\", \"robust implementation\", \"leverage\", \"enhance\", \"seamlessly\", \"This commit...\"). Keeps Conventional Commits format.",
     "risk": "critical",
     "source": "https://github.com/MohamedAbdallah-14/unslop/tree/main/plugins/unslop/skills/unslop-commit",
     "date_added": "2026-07-01",
@@ -48256,9 +48256,9 @@
   {
     "id": "unslop-file",
     "path": "skills/unslop-file",
-    "category": "ai-ml",
+    "category": "uncategorized",
     "name": "unslop-file",
-    "description": "Humanize natural-language memory files (CLAUDE.md, todos, preferences, docs) by removing AI-isms and adding burstiness while preserving every code block, URL, path, command, and heading exactly. Two modes: --deterministic (fast, regex-based, no API) and LLM (default, calls Claude for...",
+    "description": "Humanize natural-language memory files (CLAUDE.md, todos, preferences, docs) by removing AI-isms and adding burstiness while preserving every code block, URL, path, command, and heading exactly.",
     "risk": "critical",
     "source": "https://github.com/MohamedAbdallah-14/unslop/tree/main/plugins/unslop/skills/unslop-file",
     "date_added": "2026-07-01",
@@ -48284,7 +48284,7 @@
     "path": "skills/unslop-review",
     "category": "uncategorized",
     "name": "unslop-review",
-    "description": "Rewrites code review comments so they read like a human teammate wrote them. Cuts corporate-AI throat-clearing (\"I noticed...\", \"I was wondering if perhaps...\", \"It might be worth considering...\"). Each comment is direct: location, the issue, a concrete fix. Use when user says...",
+    "description": "Rewrites code review comments so they read like a human teammate wrote them. Cuts corporate-AI throat-clearing (\"I noticed...\", \"I was wondering if perhaps...\", \"It might be worth considering...\"). Each comment is direct: location, the issue, a concrete fix.",
     "risk": "critical",
     "source": "https://github.com/MohamedAbdallah-14/unslop/tree/main/plugins/unslop/skills/unslop-review",
     "date_added": "2026-07-01",
@@ -48365,9 +48365,9 @@
   {
     "id": "update-swiftui-apis",
     "path": "skills/update-swiftui-apis",
-    "category": "mobile",
+    "category": "uncategorized",
     "name": "update-swiftui-apis",
-    "description": "Scan Apple's SwiftUI documentation for deprecated APIs and update the SwiftUI Expert Skill with modern replacements. Use when asked to \"update latest APIs\", \"refresh deprecated SwiftUI APIs\", \"check for new SwiftUI deprecations\", \"scan for API changes\", or after a new iOS/Xcode...",
+    "description": "Scan Apple's SwiftUI documentation for deprecated APIs and update the SwiftUI Expert Skill with modern replacements.",
     "risk": "critical",
     "source": "https://github.com/AvdLee/SwiftUI-Agent-Skill/tree/main/.agents/skills/update-swiftui-apis",
     "date_added": "2026-07-01",
@@ -48951,7 +48951,7 @@
     "description": "Find similar vulnerabilities and bugs across codebases using pattern-based analysis. Use when hunting bug variants, building CodeQL/Semgrep queries, analyzing security vulnerabilities, or performing systematic code audits after finding an initial issue.",
     "risk": "offensive",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -48973,7 +48973,7 @@
     "description": "Secure-by-default environment variable management for Claude Code sessions.",
     "risk": "critical",
     "source": "https://github.com/dmno-dev/varlock",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -49303,7 +49303,7 @@
     "description": "Semantic file discovery via `vexor`. Use whenever locating where something is implemented/loaded/defined in a medium or large repo, or when the file location is unclear. Prefer this over manual browsing.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -50411,7 +50411,7 @@
     "description": "\u5206\u6790\u51cf\u80a5\u6570\u636e\u3001\u8ba1\u7b97\u4ee3\u8c22\u7387\u3001\u8ffd\u8e2a\u80fd\u91cf\u7f3a\u53e3\u3001\u7ba1\u7406\u51cf\u80a5\u9636\u6bb5",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -50433,7 +50433,7 @@
     "description": "Integrate multiple digital health data sources, connect to [WellAlly.tech](https://www.wellally.tech/) knowledge base, providing data import and knowledge reference for personal health management systems.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -50862,7 +50862,7 @@
     "path": "skills/wjttc-builder",
     "category": "uncategorized",
     "name": "wjttc-builder",
-    "description": "PLAN and GENERATE WJTTC (Championship-Grade) test suites for any project. Analyzes the codebase, classifies components across the WJTTC five tiers (Brake \u00b7 Engine \u00b7 Aero \u00b7 Tyre \u00b7 Pit), writes a tiered test plan, and scaffolds executable test files. This is the BUILDER \u2014 it plans and...",
+    "description": "PLAN and GENERATE WJTTC (Championship-Grade) test suites for any project. Analyzes the codebase, classifies components across the WJTTC five tiers (Brake \u00b7 Engine \u00b7 Aero \u00b7 Tyre \u00b7 Pit), writes a tiered test plan, and scaffolds executable test files.",
     "risk": "critical",
     "source": "https://github.com/Wolfe-Jam/faf-skills/tree/main/skills/wjttc-builder",
     "date_added": "2026-07-01",
@@ -50888,7 +50888,7 @@
     "path": "skills/wjttc-tester",
     "category": "uncategorized",
     "name": "wjttc-tester",
-    "description": "F1-inspired test EXECUTOR + reporter. Runs a test plan, finds and reproduces bugs, audits suite signal integrity, then files a WJTTC report (Brake/Engine/Aero/Tyre/Pit) with a tier verdict. Use when you need to test code, validate functionality, reproduce a failure, or produce a test...",
+    "description": "F1-inspired test EXECUTOR + reporter. Runs a test plan, finds and reproduces bugs, audits suite signal integrity, then files a WJTTC report (Brake/Engine/Aero/Tyre/Pit) with a tier verdict.",
     "risk": "critical",
     "source": "https://github.com/Wolfe-Jam/faf-skills/tree/main/skills/wjttc-tester",
     "date_added": "2026-07-01",
@@ -51417,7 +51417,7 @@
     "description": "Wrapper oficial de M2MCent (Node.js) para inyectar muros de pago x402 en APIs o servidores Model Context Protocol (MCP). Usar al construir nuevos servicios que requieran monetizaci\u00f3n m\u00e1quina a m\u00e1quina.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -51999,7 +51999,7 @@
     "description": "Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and control-flow verification. Use for auditing C/C++/Rust code handling secrets, keys, passwords, or other sensitive data.",
     "risk": "offensive",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -52021,7 +52021,7 @@
     "description": "Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",

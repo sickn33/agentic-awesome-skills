@@ -62,6 +62,12 @@ Expert in threat modeling methodologies, security architecture review, and risk 
 - Track mitigations to implementation
 - Review regularly, not just at design time
 
+## Example
+
+**User request:**
+
+> Design new systems or features.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -1,6 +1,6 @@
 ---
 name: supabase
-description: "Use when doing ANY task involving Supabase. Triggers: Supabase products (Database, Auth, Edge Functions, Realtime, Storage, Vectors, Cron, Queues); client libraries and SSR integrations (supabase-js, @supabase/ssr) in Next.js, React, SvelteKit, Astro, Remix; auth issues (login, logout,..."
+description: "Use when doing ANY task involving Supabase."
 risk: critical
 source: https://github.com/supabase/agent-skills/tree/main/skills/supabase
 source_repo: supabase/agent-skills

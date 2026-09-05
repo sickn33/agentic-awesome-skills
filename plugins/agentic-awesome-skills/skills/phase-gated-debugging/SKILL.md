@@ -68,6 +68,12 @@ If verification fails: root cause was wrong, go back to Phase 2.
 3. ALWAYS reproduce before investigating
 4. ALWAYS verify after fixing
 
+## Example
+
+**User request:**
+
+> a bug keeps getting "fixed" without resolving the underlying issue; diagnose it and return the concrete next action.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

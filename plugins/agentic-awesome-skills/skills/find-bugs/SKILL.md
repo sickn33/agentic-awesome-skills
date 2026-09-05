@@ -3,6 +3,7 @@ name: find-bugs
 description: Find bugs, security vulnerabilities, and code quality issues in local branch changes. Use when asked to review changes, find bugs, security review, or audit code on the current branch.
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Find Bugs
@@ -80,6 +81,12 @@ For each issue:
 If you find nothing significant, say so - don't invent issues.
 
 Do not make changes - just report findings. I'll decide what to address.
+
+## Example
+
+**User request:**
+
+> Review the current branch diff for real bugs, security issues, and regressions, citing exact files and lines.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

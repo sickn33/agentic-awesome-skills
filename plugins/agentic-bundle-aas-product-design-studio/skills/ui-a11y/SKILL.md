@@ -83,6 +83,12 @@ Target: **$ARGUMENTS**
 2. **Auto-fixes**: Apply fixes directly where possible
 3. **Manual review needed**: Flag items that need human judgment
 
+## Example
+
+**User request:**
+
+> Audit a component or page for accessibility issues and fix them.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

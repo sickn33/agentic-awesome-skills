@@ -317,6 +317,12 @@ When creating a lead magnet strategy, provide:
 - **paid-ads**: For paid promotion of lead magnets
 - **social-content**: For social media promotion
 
+## Example
+
+**User request:**
+
+> Plan downloadable offers or gated resources for email capture.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -116,6 +116,12 @@ Before finalizing output, the agent asks:
 - [ ] Did I use evidence, not empty reassurance?
 - [ ] Does the output preserve autonomy?
 
+## Example
+
+**User request:**
+
+> Identify the recurring objections blocking this offer and revise the pitch to address them with evidence.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

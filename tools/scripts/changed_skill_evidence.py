@@ -144,7 +144,13 @@ def skill_pairs(
             affected.add(old_id)
         if new_id:
             affected.add(new_id)
-        if record.status in {"R", "C"} and old_id and new_id and old_id != new_id:
+        if (
+            record.status in {"R", "C"}
+            and old_id
+            and new_id
+            and old_id != new_id
+            and new_id not in old_roots
+        ):
             rename_pairs[(old_id, new_id)].append(record)
 
     result: list[tuple[str | None, str | None, list[ChangeRecord]]] = []

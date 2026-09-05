@@ -4,6 +4,7 @@ description: 'Expert in Odoo access control: ir.model.access.csv, record rules (
 metadata:
   aas-risk: safe
   aas-source: self
+  aas-date-added: '2026-09-04'
 ---
 
 # Odoo Security Rules

@@ -19,6 +19,12 @@ tools: [claude, cursor, codex, antigravity]
 - Use when GSAP, pinned scroll, scrubbing, card stacking, horizontal motion, or other advanced animation is appropriate.
 - Use when the output must avoid narrow six-line hero headings, cheap meta labels, empty bento cells, and generic left-right sections.
 
+## Example
+
+**User request:**
+
+> Create an award-level landing page, marketing page, or creative frontend with cinematic motion.
+
 ## Limitations
 
 - This skill assumes a frontend project can support GSAP or equivalent animation libraries; check dependencies and performance budgets before implementation.

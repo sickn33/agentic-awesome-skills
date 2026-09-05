@@ -3,6 +3,7 @@ name: odoo-xml-views-builder
 description: "Expert at building Odoo XML views: Form, List, Kanban, Search, Calendar, and Graph. Generates correct XML for Odoo 14-17 with proper visibility syntax."
 risk: safe
 source: "self"
+date_added: "2026-09-04"
 ---
 
 # Odoo XML Views Builder

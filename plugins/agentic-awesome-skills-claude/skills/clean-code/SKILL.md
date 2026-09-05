@@ -93,6 +93,12 @@ Use this skill when:
 - [ ] Am I passing too many arguments?
 - [ ] Is there a failing test for this change?
 
+## Example
+
+**User request:**
+
+> Refactor this working code for clearer names, smaller units, explicit errors, and preserved behavior; verify it with focused tests.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

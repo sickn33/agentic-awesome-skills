@@ -113,6 +113,12 @@ Before finalizing output, the agent asks:
 - [ ] Did I attach a stable cue to the behavior?
 - [ ] Does the flow feel supportive rather than coercive?
 
+## Example
+
+**User request:**
+
+> Redesign this onboarding flow to reduce uncertainty, friction, and early abandonment.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

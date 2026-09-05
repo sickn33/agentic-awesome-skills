@@ -232,6 +232,12 @@ Several Dropbox operations run asynchronously:
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Automate Dropbox file management, sharing, search, uploads, downloads, and folder operations via Rube MCP (Composio).
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

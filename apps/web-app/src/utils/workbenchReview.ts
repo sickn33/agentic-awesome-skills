@@ -439,7 +439,8 @@ export async function verifySelectionEvidence(evidence: SelectionEvidenceReview)
   const fileMap = new Map<string, string>();
   for (const file of files) {
     if (file.path !== file.path.normalize('NFC') || /^[A-Za-z]:/.test(file.path)
-      || /[\\%\u0000-\u001f\u007f]/.test(file.path)
+      || /[\\%]/.test(file.path)
+      || [...file.path].some((character) => character.charCodeAt(0) <= 0x1f || character.charCodeAt(0) === 0x7f)
       || file.path.split('/').some((part) => !part || part === '.' || part === '..')) fail('Evidence contains an unsafe repository-relative path.');
     if (fileMap.has(file.path) || !Number.isSafeInteger(file.size)) fail('Evidence project files contain duplicate paths or an unsafe size.');
     fileMap.set(file.path, file.sha256);

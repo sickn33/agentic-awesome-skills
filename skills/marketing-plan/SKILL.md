@@ -1,6 +1,6 @@
 ---
 name: marketing-plan
-description: When the user needs a comprehensive marketing plan for a client, a company they advise, or their own product. Also use when the user mentions "marketing plan," "growth plan," "GTM plan," "go-to-market plan," "AARRR plan," "90-day marketing plan," "12-month marketing roadmap,"...
+description: "When the user needs a comprehensive marketing plan for a client, a company they advise, or their own product."
 risk: critical
 source: https://github.com/coreyhaines31/marketingskills/tree/main/skills/marketing-plan
 source_repo: coreyhaines31/marketingskills

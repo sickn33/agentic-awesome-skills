@@ -248,6 +248,12 @@ rewrite it until it feels obvious.
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Write rigorous, conversion-focused marketing copy for landing pages and emails.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

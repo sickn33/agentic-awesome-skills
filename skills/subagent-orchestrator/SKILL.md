@@ -2,6 +2,7 @@
 name: subagent-orchestrator
 risk: safe
 source: community
+date_added: "2026-09-04"
 description: Coordinate quota-aware parallel subagents for large, multi-file Antigravity tasks.
 version: 1.0.0
 author: community

@@ -28,6 +28,12 @@ Routing sugar over the two MCP verbs — no logic lives here.
 5. Surface each resolution's `commitment` id and cited `[ids]`; drain the queue fully
    before taking new work — checkpointed frames are work headless runs saved for you.
 
+## Example
+
+**User request:**
+
+> Use @accint-frames for this task: Drain acc's deliberation queue — open/waiting brain_frames checkpointed by headless runs — via acc_act(runtime="continue").
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

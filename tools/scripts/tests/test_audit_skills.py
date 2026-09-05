@@ -108,6 +108,58 @@ echo "hello"
             self.assertEqual(report["summary"]["errors"], 0)
             self.assertEqual(report["skills"][0]["status"], "ok")
 
+    def test_examples_heading_at_nested_level_counts_as_real_example(self):
+        content = "# Skill\n\n### Worked Example\n\nA concrete input and expected output.\n"
+
+        self.assertTrue(audit_skills.has_examples(content))
+
+    def test_nonempty_bundled_example_counts_without_following_symlinks(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skill_root = Path(temp_dir) / "skill"
+            examples_dir = skill_root / "examples"
+            examples_dir.mkdir(parents=True)
+            (examples_dir / "request.md").write_text("# Example request\n", encoding="utf-8")
+
+            self.assertTrue(audit_skills.has_examples("# Skill\n", skill_root))
+
+            (examples_dir / "request.md").unlink()
+            outside = Path(temp_dir) / "outside.md"
+            outside.write_text("# Outside\n", encoding="utf-8")
+            try:
+                (examples_dir / "linked.md").symlink_to(outside)
+            except (OSError, NotImplementedError):
+                self.skipTest("Symlinks are unavailable on this platform")
+
+            self.assertFalse(audit_skills.has_examples("# Skill\n", skill_root))
+
+    def test_example_in_bundled_support_document_counts(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skill_root = Path(temp_dir) / "skill"
+            resources_dir = skill_root / "resources"
+            resources_dir.mkdir(parents=True)
+            support_path = resources_dir / "guide.md"
+            support_path.write_text(
+                "# Guide\n\n## Worked Example\n\nA concrete input and expected output.\n",
+                encoding="utf-8",
+            )
+
+            self.assertTrue(audit_skills.has_examples("# Skill\n", skill_root))
+
+            support_path.write_text("# Guide\n\nConceptual background only.\n", encoding="utf-8")
+            self.assertFalse(audit_skills.has_examples("# Skill\n", skill_root))
+
+    def test_nested_skill_examples_do_not_satisfy_parent(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skill_root = Path(temp_dir) / "parent"
+            child_root = skill_root / "child"
+            child_root.mkdir(parents=True)
+            (child_root / "SKILL.md").write_text(
+                "# Child\n\n## Examples\n\nA child-only example.\n",
+                encoding="utf-8",
+            )
+
+            self.assertFalse(audit_skills.has_examples("# Parent\n", skill_root))
+
     def test_audit_flags_truncated_description_and_missing_sections(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

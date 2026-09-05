@@ -115,6 +115,12 @@ Before finalizing output, the agent asks:
 - [ ] Would the content actually satisfy the promise?
 - [ ] Does it preserve trust?
 
+## Example
+
+**User request:**
+
+> Rewrite these headlines for stronger stopping power, curiosity, and relevance without resorting to vague clickbait.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -104,6 +104,12 @@ Give friendly message to user in the end.
 
 ---
 
+## Example
+
+**User request:**
+
+> Proofread this text for grammar, clarity, consistency, and readability while preserving my voice.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

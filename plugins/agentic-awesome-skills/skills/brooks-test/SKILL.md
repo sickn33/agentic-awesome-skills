@@ -1,6 +1,6 @@
 ---
 name: brooks-test
-description: "Test quality review drawing on twelve classic engineering books — with primary focus on xUnit Test Patterns, The Art of Unit Testing, How Google Tests Software, and Working Effectively with Legacy Code — that diagnoses structural problems in an existing test suite: brittleness, mock..."
+description: "Review test-suite quality using established testing literature; identify brittleness, mock abuse, unclear fixtures, weak assertions, slow feedback, and maintenance risks."
 risk: safe
 source: https://github.com/hyhmrright/brooks-lint/tree/main/skills/brooks-test
 source_repo: hyhmrright/brooks-lint

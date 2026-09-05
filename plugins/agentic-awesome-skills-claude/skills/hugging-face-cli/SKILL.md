@@ -1,6 +1,6 @@
 ---
 name: hugging-face-cli
-description: "Hugging Face Hub CLI (`hf`) for downloading, uploading, and managing models, datasets, spaces, buckets, repos, papers, jobs, and more on the Hugging Face Hub. Use when: handling authentication; managing local cache; managing Hugging Face Buckets; running or scheduling jobs on Hugging..."
+description: "Hugging Face Hub CLI (`hf`) for downloading, uploading, and managing models, datasets, spaces, buckets, repos, papers, jobs, and more on the Hugging Face Hub."
 risk: critical
 source: https://github.com/huggingface/skills/tree/main/skills/hf-cli
 source_repo: huggingface/skills
@@ -232,6 +232,12 @@ Some command examples:
 - Use `hf <command> --help` for full options, descriptions, usage, and real-world examples
 - Authenticate with `HF_TOKEN` env var (recommended) or with `--token`
 - Update the CLI with `hf update` (uses the correct command for the detected install method)
+
+## Example
+
+**User request:**
+
+> Use @hugging-face-cli for this task: Hugging Face Hub CLI (`hf`) for downloading, uploading, and managing models, datasets, spaces, buckets, repos, papers, jobs, and more on the Hugging Face Hub.
 
 ## Limitations
 

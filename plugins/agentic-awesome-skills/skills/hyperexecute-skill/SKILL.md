@@ -1,6 +1,6 @@
 ---
 name: hyperexecute-skill
-description: "Operates HyperExecute end-to-end for TestMu AI/LambdaTest cloud test execution: analyze projects, create YAML, validate locally, run CLI jobs, debug failures, and wire CI. Use when the user mentions HyperExecute, hyperexecute.yaml, HyperExecute CLI, autosplit, matrix execution,..."
+description: "Operates HyperExecute end-to-end for TestMu AI/LambdaTest cloud test execution: analyze projects, create YAML, validate locally, run CLI jobs, debug failures, and wire CI."
 risk: critical
 source: https://github.com/LambdaTest/agent-skills/tree/main/hyperexecute-skill
 source_repo: LambdaTest/agent-skills
@@ -57,6 +57,12 @@ Use this skill when you need operates HyperExecute end-to-end for TestMu AI/Lamb
 - CI/CD integration: [reference/ci-cd.md](https://github.com/LambdaTest/agent-skills/tree/main/hyperexecute-skill/reference/ci-cd.md)
 - Security rules: [reference/security.md](https://github.com/LambdaTest/agent-skills/tree/main/hyperexecute-skill/reference/security.md)
 - Troubleshooting: [reference/troubleshooting.md](https://github.com/LambdaTest/agent-skills/tree/main/hyperexecute-skill/reference/troubleshooting.md)
+
+## Example
+
+**User request:**
+
+> Use @hyperexecute-skill for this task: Operates HyperExecute end-to-end for TestMu AI/LambdaTest cloud test execution: analyze projects, create YAML, validate locally, run CLI jobs, debug failures, and wire CI.
 
 ## Limitations
 

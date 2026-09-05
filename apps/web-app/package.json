@@ -9,11 +9,12 @@
     "prerender:seo": "node scripts/prerender-routes.js",
     "prebuild": "npm run generate:sitemap",
     "verify:seo": "node scripts/verify-seo-assets.js --require-hosted-url",
-    "build": "tsc && vite build && npm run prerender:seo",
+    "build": "npm run typecheck && vite build && npm run prerender:seo",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.node.json --noEmit"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.3.0",
@@ -37,28 +38,31 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@tailwindcss/postcss": "^4.2.0",
-    "@testing-library/jest-dom": "^6.4.0",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.0.0",
-    "@types/node": "^20.14.0",
+    "@types/node": "^22.20.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
-    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/coverage-v8": "^5.0.0",
     "autoprefixer": "^10.4.24",
     "eslint": "^10.8.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "express-rate-limit": "^8.5.2",
-    "globals": "^16.5.0",
-    "jsdom": "^24.0.0",
+    "globals": "^17.12.0",
+    "jsdom": "^30.0.1",
     "postcss": "8.5.25",
     "tailwindcss": "^4.2.0",
-    "typescript": "^5.4.0",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.65.0",
     "vite": "^8.0.16",
-    "vitest": "^4.1.8"
+    "vitest": "^5.0.0"
   },
   "overrides": {
     "flatted": "^3.4.0"
+  },
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
   }
 }

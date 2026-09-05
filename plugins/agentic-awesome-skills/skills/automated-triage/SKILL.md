@@ -182,6 +182,12 @@ After the workflow completes:
 
    Adapt the options to context — if the run had many LOW-scoring alerts with no troubleshooting, lean towards refinement; if results looked solid, lean towards scheduling.
 
+## Example
+
+**User request:**
+
+> Triage the latest Monte Carlo alerts, group related incidents, and identify the most likely root cause and owner.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

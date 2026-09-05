@@ -4,6 +4,7 @@ import { VirtuosoGrid } from 'react-virtuoso';
 import { categoryFacet, matchCatalogSkill, searchMode, type SearchMode } from '../utils/catalogSearch';
 import { SkillCard } from '../components/SkillCard';
 import { ShortlistReview } from '../components/ShortlistReview';
+import OutcomeExplorer from '../components/OutcomeExplorer';
 import { Icon } from '../components/ui/Icon';
 import { useSkills } from '../context/SkillContext';
 import { seoLandingPages } from '../data/seoLandingPages';
@@ -71,6 +72,7 @@ export function Home(): React.ReactElement {
   const [sourceFilter, setSourceFilter] = useState(() => getInitialFilter(searchParams, 'source', 'all'));
   const [scopeFilter, setScopeFilter] = useState(() => getInitialFilter(searchParams, 'scope', 'all'));
   const [sortBy, setSortBy] = useState(() => getInitialFilter(searchParams, 'sort', 'default'));
+  const [discoveryGoal, setDiscoveryGoal] = useState('');
   const [syncing, setSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState<SyncMessage | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -338,7 +340,8 @@ export function Home(): React.ReactElement {
           </div>
         </section>
 
-        <ShortlistReview skills={shortlistSkills} onRemove={toggleShortlist} onClear={clearShortlist} />
+        <OutcomeExplorer catalog={skills} onGoalChange={setDiscoveryGoal} />
+        <ShortlistReview suggestedGoal={discoveryGoal} skills={shortlistSkills} onRemove={toggleShortlist} onClear={clearShortlist} />
 
         <section className="catalog-results" aria-labelledby="catalog-results-title">
           <header>

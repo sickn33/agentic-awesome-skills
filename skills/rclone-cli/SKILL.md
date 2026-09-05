@@ -1,6 +1,6 @@
 ---
 name: rclone-cli
-description: Rclone command-line cloud storage manager reference and usage guide. Use this skill whenever the user mentions rclone, or any task involving terminal-based cloud file operations such as upload, download, sync, copy, move, mount, or remote management. Triggers on S3-compatible storage,...
+description: "Rclone command-line cloud storage manager reference and usage guide. Use this skill whenever the user mentions rclone, or any task involving terminal-based cloud file operations such as upload, download, sync, copy, move, mount, or remote management."
 risk: critical
 source: https://github.com/chaunsin/agent-skills/tree/master/skills/rclone-cli
 source_repo: chaunsin/agent-skills

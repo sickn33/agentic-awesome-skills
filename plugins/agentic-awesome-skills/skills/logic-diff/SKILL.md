@@ -1,6 +1,6 @@
 ---
 name: logic-diff
-description: Compare two code versions for semantic equivalence via semi-formal tracing of both versions side-by-side. Trigger when the user shares a refactor, rewrite, migration, or A/B implementation and wants to confirm behavior is unchanged — "did I break anything", "is this equivalent", "are...
+description: "Compare two code versions for semantic equivalence via semi-formal tracing of both versions side-by-side."
 risk: safe
 source: https://github.com/hyhmrright/logic-lens/tree/main/skills/logic-diff
 source_repo: hyhmrright/logic-lens

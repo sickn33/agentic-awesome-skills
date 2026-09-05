@@ -3,6 +3,7 @@ name: skill-writer
 description: Create and improve agent skills following the Agent Skills specification. Use when asked to create, write, or update skills.
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Skill Writer

@@ -4,6 +4,7 @@ description: Launch RSVP speed reader for text
 trigger: command
 risk: critical
 source: community
+date_added: "2026-09-04"
 tools: Write, Bash, Read
 ---
 
@@ -40,6 +41,12 @@ Launch the RSVP speed reader to display text one word at a time with Spritz-styl
 
 ## Arguments
 $ARGUMENTS
+
+## Example
+
+**User request:**
+
+> Launch the RSVP speed reader for text in the current session.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

@@ -7,6 +7,7 @@ description: |
   Matrix 集成, 聊天客户端
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Robius Matrix SDK Integration Skill

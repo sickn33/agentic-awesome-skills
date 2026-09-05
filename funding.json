@@ -53,8 +53,8 @@
         "guid": "aas-sustainability-2026",
         "status": "active",
         "name": "AAS 12-month sustainability programme",
-        "description": "Support one year of AAS maintenance: triage and review community contributions; maintain releases, the public catalog, and npm, MCP, and plugin distribution; strengthen provenance and security checks; improve documentation; and cover CI, hosting, and testing. Allocation: USD 10,000 maintainer/reviewer time; USD 7,500 security/provenance; USD 5,000 CI/catalog infrastructure; USD 2,500 documentation/community support. Progress and significant outputs will be reported publicly.",
-        "amount": 25000,
+        "description": "Support one year of AAS maintenance: review contributions, maintain releases and distribution, strengthen security and provenance checks, and improve documentation. Proposed allocation: USD 6,000 maintainer/reviewer time; USD 2,500 security/provenance; USD 1,000 documentation/community support; USD 500 development and testing tools. Progress and significant outputs will be reported publicly.",
+        "amount": 10000,
         "currency": "USD",
         "frequency": "one-time",
         "channels": [

@@ -1,6 +1,6 @@
 ---
 name: brooks-review
-description: "PR code review that surfaces decay risks, design smells, and maintainability issues with concrete Symptom → Source → Consequence → Remedy findings, drawing on twelve classic engineering books. Triggers when: user asks to review code, check a PR, shares a diff or pastes code asking..."
+description: "PR code review that surfaces decay risks, design smells, and maintainability issues with concrete Symptom → Source → Consequence → Remedy findings, drawing on twelve classic engineering books."
 risk: safe
 source: https://github.com/hyhmrright/brooks-lint/tree/main/skills/brooks-review
 source_repo: hyhmrright/brooks-lint
@@ -34,6 +34,12 @@ from `../_shared/common.md` to determine the review scope before proceeding.
 4. Output using the Report Template from common.md
 
 **Mode line in report:** `PR Review`
+
+## Example
+
+**User request:**
+
+> Use @brooks-review for this task: PR code review that surfaces decay risks, design smells, and maintainability issues with concrete Symptom → Source → Consequence → Remedy findings, drawing on twelve classic engineering books.
 
 ## Limitations
 

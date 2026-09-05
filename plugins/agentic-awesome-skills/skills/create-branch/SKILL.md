@@ -4,6 +4,7 @@ description: Create a git branch following Sentry naming conventions. Use when a
 argument-hint: '[optional description of the work]'
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Create Branch

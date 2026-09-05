@@ -21,6 +21,12 @@ Generate structured changelogs from git history.
 3. Classify each commit: Features (🆕), Fixes (🐛), Refactoring (🔄), Docs (📝), Config (🔧), Dependencies (📦), Breaking (⚠️)
 4. Generate concise user-facing descriptions using project terminology
 
+## Example
+
+**User request:**
+
+> Generate a changelog from the recent git history, grouping user-visible changes and linking each claim to its commit.
+
 ## Constraints
 
 - Focus on user-facing changes

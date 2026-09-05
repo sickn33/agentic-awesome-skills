@@ -63,6 +63,12 @@ Expert in vector databases, embedding strategies, and semantic search implementa
 - Cache frequent queries
 - Test recall vs latency tradeoffs
 
+## Example
+
+**User request:**
+
+> Build RAG (Retrieval Augmented Generation) systems.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

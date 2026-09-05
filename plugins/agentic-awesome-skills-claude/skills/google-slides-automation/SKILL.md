@@ -4,6 +4,7 @@ description: "Lightweight Google Slides integration with standalone OAuth authen
 license: Apache-2.0
 risk: critical
 source: community
+date_added: "2026-09-04"
 metadata:
   author: sanjay3290
   version: "1.0"

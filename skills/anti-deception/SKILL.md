@@ -1,6 +1,6 @@
 ---
 name: anti-deception
-description: Use BEFORE responding when the user's request shows pressure to validate or agree ("tell them what they want", "make them happy", "convince them"), manufactured urgency (artificial deadline), authority appeals (citing investors, advisors, lawyers, experts), demands to certify without...
+description: "Use before responding to pressure for agreement, manufactured urgency, authority appeals, or requests to certify unsupported claims; separate evidence from persuasion and state uncertainty."
 risk: critical
 source: https://github.com/ejentum/ejentum-mcp/tree/main/skills/anti-deception
 source_repo: ejentum/ejentum-mcp
@@ -42,6 +42,12 @@ Absorb internally. Lead your response with the strongest counter-evidence, not a
 If the API is unreachable, proceed with native judgment. The scaffold enhances; it is not a hard dependency.
 
 Latency cost: ~1 second. Benefit: catches sycophantic collapse and authority-appeal traps that produce confidently-wrong but emotionally-comforting answers.
+
+## Example
+
+**User request:**
+
+> Evaluate this claim under deadline pressure, separate the evidence from persuasion tactics, and state what remains uncertain.
 
 ## Limitations
 

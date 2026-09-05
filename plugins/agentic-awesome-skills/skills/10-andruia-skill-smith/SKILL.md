@@ -43,6 +43,12 @@ Generar el código para los siguientes archivos:
 - **Prefijos Numéricos:** Asignar un número correlativo a la carpeta (ej. 11, 12, 13) para mantener el orden.
 - **Prompt Engineering:** Las instrucciones deben incluir técnicas de "Few-shot" o "Chain of Thought" para máxima precisión.
 
+## Example
+
+**User request:**
+
+> Diseña una nueva skill para este repositorio, siguiendo su plantilla, validaciones y convenciones de nombres.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

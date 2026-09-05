@@ -48,6 +48,12 @@ Works with Claude Code, Cursor, Windsurf, OpenAI Codex, Gemini CLI, GitHub Copil
 
 GitHub: https://github.com/Digidai/product-manager-skills
 
+## Example
+
+**User request:**
+
+> Prioritize these roadmap candidates with an explicit framework, assumptions, evidence, and a recommended next decision.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

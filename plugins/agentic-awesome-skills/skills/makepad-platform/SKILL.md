@@ -8,6 +8,7 @@ description: |
   makepad 跨平台, makepad 平台支持
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Makepad Platform Skill

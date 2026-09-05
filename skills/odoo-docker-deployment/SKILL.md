@@ -3,6 +3,7 @@ name: odoo-docker-deployment
 description: "Production-ready Docker and docker-compose setup for Odoo with PostgreSQL, persistent volumes, environment-based configuration, and Nginx reverse proxy."
 risk: safe
 source: "self"
+date_added: "2026-09-04"
 ---
 
 # Odoo Docker Deployment

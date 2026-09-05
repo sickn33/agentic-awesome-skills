@@ -65,6 +65,12 @@ During preview, AAS checks the ownership of the configuration parent directory (
 
 ### Start from a catalog shortlist
 
+Use **Explore skills by outcome** in the catalog or Workbench to describe a task or choose a starting example. The browser suggests candidates from the public catalog and explains which terms match. Names and tags weigh more than descriptions; distinctive terms weigh more than common terms. This is descriptive relevance, not a quality score, semantic assessment, or effectiveness benchmark. Inspect the complete instructions and constraints before selecting anything. Core/MCP retrieval remains neutral and every canonical ID remains available.
+
+Each candidate exposes provenance, license, declared risk and setup information, including missing fields. These are author-supplied metadata, not reliability badges. Add candidates explicitly to the shared shortlist, compare them, and choose **Use discovery goal in brief** to carry the goal into the existing agent handoff. Nothing is selected automatically.
+
+Workbench downloads the public catalog only after you open discovery. Artifact review does not need that download and never sends imported artifacts or goals. The goal remains in page memory; only explicitly shortlisted IDs use the existing browser-local shortlist. There is no usage measurement, installation diary, or centralized collection.
+
 In the [hosted catalog](https://sickn33.github.io/agentic-awesome-skills/), add candidate skills to your shortlist. Open the comparison above the search results to inspect descriptions, declared risk, manual setup, plugin packaging, source, and license metadata. Missing metadata is shown explicitly; it does not make a skill unavailable to Core.
 
 Enter the project outcome and select Codex or Claude as the project target, preview the brief, then copy it into your coding agent with the local AAS MCP configured. The brief includes exact candidate IDs and the catalog version. It asks the agent to inspect the complete catalog and explain its final selection, including any additions or omissions. A shortlist is input to that review, not an approved stack.

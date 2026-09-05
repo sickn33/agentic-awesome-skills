@@ -1,6 +1,6 @@
 ---
 name: api-designer
-description: Generates complete, production-ready REST API endpoint specifications for any system or domain the user describes. Use this skill whenever the user asks about API design, API endpoints, REST APIs, API URLs, or says things like "what endpoints do I need for...", "design an API for...",...
+description: "Generates complete, production-ready REST API endpoint specifications for any system or domain the user describes."
 risk: safe
 source: https://github.com/LambdaTest/agent-skills/tree/main/api-skill/api-designer
 source_repo: LambdaTest/agent-skills

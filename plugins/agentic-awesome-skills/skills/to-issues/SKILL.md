@@ -107,6 +107,11 @@ Or "None - can start immediately" if no blockers.
 
 Do NOT close or modify any parent issue.
 
+## Example
+
+**User request:**
+
+> Use @to-issues for this task: Break a plan, spec, or PRD into independently-grabbable issues on the project issue tracker using tracer-bullet vertical slices.
 
 ## Limitations
 

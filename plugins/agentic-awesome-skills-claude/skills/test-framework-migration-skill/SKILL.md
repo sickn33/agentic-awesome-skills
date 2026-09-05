@@ -1,6 +1,6 @@
 ---
 name: test-framework-migration-skill
-description: Migrates and converts test automation scripts between Selenium, Playwright, Puppeteer, and Cypress. Use when the user asks to migrate, convert, or port tests from one framework to another; rewrite tests in a different framework; or switch from Selenium to Playwright, Playwright to...
+description: "Migrates and converts test automation scripts between Selenium, Playwright, Puppeteer, and Cypress."
 risk: critical
 source: https://github.com/LambdaTest/agent-skills/tree/main/test-framework-migration-skill
 source_repo: LambdaTest/agent-skills
@@ -114,6 +114,12 @@ After generating migrated code:
 | [reference/overview.md](https://github.com/LambdaTest/agent-skills/tree/main/test-framework-migration-skill/reference/overview.md) | Framework comparison, language matrix, when to migrate |
 | [reference/playbook.md](https://github.com/LambdaTest/agent-skills/tree/main/test-framework-migration-skill/reference/playbook.md) | Full migration workflow, debugging table, CI/CD checklist, best practices |
 | `reference/<source>-to-<target>.md` | Before converting any script for that pair |
+
+## Example
+
+**User request:**
+
+> Use @test-framework-migration-skill for this task: Migrates and converts test automation scripts between Selenium, Playwright, Puppeteer, and Cypress.
 
 ## Limitations
 

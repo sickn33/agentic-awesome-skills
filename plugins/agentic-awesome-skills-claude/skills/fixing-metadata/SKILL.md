@@ -1,6 +1,6 @@
 ---
 name: fixing-metadata
-description: Audit and fix HTML metadata including page titles, meta descriptions, canonical URLs, Open Graph tags, Twitter cards, favicons, JSON-LD structured data, and robots directives. Use when adding SEO metadata, fixing social share previews, reviewing Open Graph tags, setting up canonical...
+description: "Audit and fix HTML metadata including page titles, meta descriptions, canonical URLs, Open Graph tags, Twitter cards, favicons, JSON-LD structured data, and robots directives."
 risk: critical
 source: https://github.com/ibelick/ui-skills/tree/main/skills/fixing-metadata
 source_repo: ibelick/ui-skills
@@ -116,6 +116,12 @@ Reference these guidelines when:
 - verify social cards on a real URL, not localhost
 - prefer stable, boring metadata over clever or dynamic
 - keep diffs minimal and scoped to metadata only
+
+## Example
+
+**User request:**
+
+> Audit and fix HTML metadata including page titles, meta descriptions, canonical URLs, Open Graph tags, Twitter cards, favicons, JSON-LD structured data, and robots directives.
 
 ## Limitations
 

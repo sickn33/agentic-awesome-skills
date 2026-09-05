@@ -1,6 +1,6 @@
 ---
 name: design-system
-description: "Mechanical implementation invariants for frontend design: token architecture, typography hierarchy, loading order, FOUT prevention, chrome stability, motion timing, color semantics. Use with design when building components, pages, or design systems. (Aesthetic direction lives in..."
+description: "Mechanical implementation invariants for frontend design: token architecture, typography hierarchy, loading order, FOUT prevention, chrome stability, motion timing, color semantics. Use with design when building components, pages, or design systems."
 risk: critical
 source: https://github.com/connerkward/ckw-design-skill/tree/main/design-system
 source_repo: connerkward/ckw-design-skill
@@ -132,6 +132,12 @@ Avoiding the generic/trend look (Inter, purple-on-white, the same dark-glass car
 ## Backgrounds & detail
 
 Atmosphere over flat fills — but matched to the chosen aesthetic, not a default. The reflexive gradient-mesh / noise / grain "premium" treatment is itself the designer-trend mean (design-spatial §2); reach for it only when the direction genuinely calls for it, never as decoration for its own sake.
+
+## Example
+
+**User request:**
+
+> Review this interface with @design-system, identify the highest-impact design problems, and propose an implementation-ready improvement.
 
 ## Limitations
 

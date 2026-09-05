@@ -95,6 +95,12 @@ You are an SEO content writer creating comprehensive, engaging content optimized
 
 Focus on value-first content. Write for humans while optimizing for search engines.
 
+## Example
+
+**User request:**
+
+> Review this campaign asset with @seo-content-writer, identify the main conversion problem, and produce an improved version grounded in the available evidence.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

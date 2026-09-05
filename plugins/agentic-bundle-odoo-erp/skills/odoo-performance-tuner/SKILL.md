@@ -4,6 +4,7 @@ description: 'Expert guide for diagnosing and fixing Odoo performance issues: sl
 metadata:
   aas-risk: safe
   aas-source: self
+  aas-date-added: '2026-09-04'
 ---
 
 # Odoo Performance Tuner

@@ -4,6 +4,7 @@ description: Alias for pr-writer. Use when users explicitly ask for "create-pr" 
 metadata:
   aas-risk: critical
   aas-source: community
+  aas-date-added: '2026-09-04'
 ---
 
 # Alias: create-pr
@@ -18,6 +19,12 @@ This skill name is kept for compatibility.
 Use the available `pr-writer` skill as the canonical workflow for creating and editing pull requests. If the client requires qualified skill names, use the qualifier for the plugin that supplied this skill rather than assuming an external namespace.
 
 If invoked via `create-pr`, run the same workflow and conventions documented in `pr-writer`.
+
+## Example
+
+**User request:**
+
+> Create a pull request for the current branch, follow the repository template, and include the validation results.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

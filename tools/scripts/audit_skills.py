@@ -29,7 +29,7 @@ from validate_skills import configure_utf8_output, has_when_to_use_section, pars
 ELLIPSIS_PATTERN = re.compile(r"(?:\.\.\.|…)\s*$")
 FENCED_CODE_BLOCK_PATTERN = re.compile(r"^```", re.MULTILINE)
 EXAMPLES_HEADING_PATTERNS = [
-    re.compile(r"^##\s+Example(s)?\b", re.MULTILINE | re.IGNORECASE),
+    re.compile(r"^#{2,4}\s+.*\bExample(s)?\b", re.MULTILINE | re.IGNORECASE),
     re.compile(r"^##\s+Usage\b", re.MULTILINE | re.IGNORECASE),
 ]
 LIMITATIONS_HEADING_PATTERNS = [
@@ -71,10 +71,49 @@ class Finding:
             "code": self.code,
             "message": self.message,
         }
-def has_examples(content: str) -> bool:
-    return bool(FENCED_CODE_BLOCK_PATTERN.search(content)) or any(
+def safe_bundled_files(directory: Path, *, skip_nested_skills: bool = False):
+    if directory.is_symlink() or not directory.is_dir():
+        return
+
+    for root, dirs, files in os.walk(directory, followlinks=False):
+        root_path = Path(root)
+        if skip_nested_skills and root_path != directory and (root_path / "SKILL.md").exists():
+            dirs[:] = []
+            continue
+        dirs[:] = [name for name in dirs if not (root_path / name).is_symlink()]
+        for filename in files:
+            path = root_path / filename
+            try:
+                if not path.is_symlink() and path.is_file() and path.stat().st_size > 0:
+                    yield path
+            except OSError:
+                continue
+
+
+def has_bundled_examples(skill_root: Path) -> bool:
+    examples_root = skill_root / "examples"
+    if next(safe_bundled_files(examples_root), None) is not None:
+        return True
+
+    for support_path in safe_bundled_files(skill_root, skip_nested_skills=True):
+        if support_path == skill_root / "SKILL.md":
+            continue
+        if support_path.suffix.lower() not in {".md", ".rst", ".txt"}:
+            continue
+        try:
+            support_content = support_path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        if has_examples(support_content):
+            return True
+    return False
+
+
+def has_examples(content: str, skill_root: Path | None = None) -> bool:
+    inline_examples = bool(FENCED_CODE_BLOCK_PATTERN.search(content)) or any(
         pattern.search(content) for pattern in EXAMPLES_HEADING_PATTERNS
     )
+    return inline_examples or (skill_root is not None and has_bundled_examples(skill_root))
 
 
 def has_limitations(content: str) -> bool:
@@ -222,7 +261,7 @@ def build_skill_report(
     if not has_when_to_use_section(content):
         findings.append(Finding("warning", "missing_when_to_use", "Missing a recognized 'When to Use' section."))
 
-    if not has_examples(content):
+    if not has_examples(content, skill_root):
         findings.append(Finding("warning", "missing_examples", "Missing an example section or fenced example block."))
 
     if not has_limitations(content):

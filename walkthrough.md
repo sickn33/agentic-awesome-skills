@@ -1,3 +1,61 @@
+# Outcome discovery and clearer selection evidence - 2026-09-05
+
+- Added optional goal-based candidate discovery to catalog and Workbench, with explained term relevance and full-catalog access.
+- Exposed provenance, license, author-declared risk and setup gaps without assigning reliability scores or hiding canonical skill IDs.
+- Connected candidates to the existing comparison and agent-brief workflow, including an explicit action to reuse the discovery goal.
+- Kept Workbench artifact review independent of catalog downloads; discovery downloads public data only when opened. Goals and imported artifacts are never sent.
+- Removed the unshipped usage-history experiment at the user's request. No installation/reuse measurement or collection was added.
+
+# TypeScript 6 migration and configuration checks - 2026-09-05
+
+- Upgraded the compiler to TypeScript 6.0.3, within typescript-eslint's supported range; TypeScript 7 remains outside that range.
+- Removed deprecated `baseUrl` and made the `@/` alias relative to the configuration file. Explicitly loaded Node types required by the existing tests and build configuration.
+- Added `npm run typecheck` to production builds so Vite and Vitest configuration are checked alongside application sources. Declared the JavaScript refresh plugin's default Vite plugin contract and kept incremental compiler state under ignored node_modules.
+- Preserved strict checks, test assertions, timeouts, and coverage thresholds.
+
+# Web test toolchain migration - 2026-09-05
+
+- Upgraded Vitest and its V8 coverage provider to 5, jsdom to 30, jest-dom to 7, and ESLint globals to 17.
+- Aligned Node type definitions with the Node 22 CI runtime and declared the web development toolchain's supported Node versions in its private package.
+- Preserved all test cases, assertions, isolation settings, and coverage thresholds. After a clean install, all 201 web tests pass on Node 22.23.1 and Node 26 with unchanged coverage (86.89% statements, 91.34% lines); the production build and lint also pass.
+- Kept the TypeScript compiler migration separate from the test-environment upgrade.
+
+# Long skill modularization - 2026-09-05
+
+- Reduced all 211 oversized `SKILL.md` entrypoints below the 500-line quality threshold.
+- Moved their detailed procedures and reference material into local `references/detailed-guide.md` files without deleting source content.
+- Kept activation rules, examples, limitations, prerequisites, and dedicated safety or security sections in the root skill; each root now directs agents to load the detailed guide before execution.
+- Rewrote relative Markdown links for their new document location and preserved cross-links between root and detailed sections.
+- Reduced the strict objective audit to 0 warnings and 0 errors across all 2,111 skills.
+
+# Actionable skill examples - 2026-09-05
+
+- Added a concise, task-specific user request to every canonical skill that lacked a real example.
+- Normalized the existing `Code_example` headings in `algolia-search` and `clerk-auth` so the examples are recognized consistently.
+- Reduced the strict skill-audit baseline from 507 warnings across 491 skills to 211 warnings across 211 skills; `missing_examples` is now zero.
+- Kept the remaining `skill_too_long` findings visible for the next modularization batch.
+
+# Real skill example recognition - 2026-09-05
+
+- Updated the structural audit to recognize example headings nested below level
+  two, non-empty files in a bundled `examples/` directory, and concrete examples
+  inside bundled Markdown, reStructuredText, or text support documents.
+- Kept symlinked and empty example files from satisfying the audit so external
+  paths and placeholder bundles cannot hide missing documentation.
+- Reclassified existing examples without changing canonical skill content.
+
+# Truncated skill description cleanup - 2026-09-05
+
+- Repaired all 134 catalog descriptions that ended in an ellipsis: 126 now
+  retain only their existing complete source sentences, while eight descriptions
+  were rewritten against their skill content where no complete sentence existed.
+- Updated the repair utility to prefer a complete frontmatter sentence over a
+  synthesized body fallback, with regression coverage for that behavior.
+- Lowered the strict audit budget from 805 observed warnings to 671 and added a
+  zero-tolerance budget for future truncated descriptions.
+- Kept the cleanup source-only; protected canonical synchronization owns
+  generated registries and plugin mirrors.
+
 # Dependency advisory remediation - 2026-09-03
 
 - Raised the bundled `fast-uri` runtime floor to 3.1.6 to resolve the current
@@ -532,3 +590,21 @@
 - Repaired the `agents-md` contribution before merge so its evidence-first guidance remains source-only and contains no promotional link or unrelated walkthrough change.
 - Updated the web app lockfile from vulnerable `browserslist` `4.28.4` to `4.28.8`, including its lockfile-resolved browser-data dependencies; `npm audit` then reported zero known vulnerabilities for the web app.
 - Kept generated registries and contributor credits in the protected canonical-sync lane. No release was requested or published during this sweep.
+
+# Maintenance Walkthrough - 2026-09-05 Funding Target
+
+- Reduced the one-time FLOSS/fund request from USD 25,000 to USD 10,000, the minimum published at https://floss.fund/faq, and revised the proposed allocation to total USD 10,000.
+- Set the README immediate community-support target to EUR 100 per month with an explicit recurring Buy Me a Coffee route. This monthly target is separate from the annual grant proposal.
+- Preserved the existing project identifiers, funding channel, and dated adoption evidence.
+
+## 2026-09-05 — Complete skill metadata dates
+
+- Added the historical Git introduction date to every canonical skill that lacked `date_added`.
+- Derived all 216 values from each file's first addition commit; every affected skill entered the repository on 2026-09-04.
+- Removed the remaining optional metadata advisories without changing skill behavior.
+
+## 2026-09-05 — Refresh compatible web dependencies
+
+- Updated the web app lockfile to the newest versions allowed by its existing dependency ranges; npm audit remains at zero vulnerabilities.
+- Rewrote the unsafe-path control-character check to satisfy the stricter linter while preserving rejection behavior, with a regression test for NUL-containing paths.
+- Made the Vitest Vite-config import explicit so the native config-loader compatibility warning is gone.

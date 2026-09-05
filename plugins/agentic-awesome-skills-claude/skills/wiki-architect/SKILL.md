@@ -49,6 +49,12 @@ Detect primary language from file extensions and build files, then select a comp
 - Python → JavaScript as comparison
 - Rust → C++ or Go as comparison
 
+## Example
+
+**User request:**
+
+> Create a structured wiki for this repository, grounded in the source tree and linked to the relevant files.
+
 ## Constraints
 
 - Max nesting depth: 4 levels

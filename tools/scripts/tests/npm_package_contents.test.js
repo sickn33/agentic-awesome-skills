@@ -7,12 +7,14 @@ const packageJson = require(path.resolve(__dirname, "..", "..", "..", "package.j
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
+const npmPackOutputLimit = 16 * 1024 * 1024;
 
 function runNpmPackDryRunJson(cwd = repoRoot) {
   const result = spawnSync(npmCommand, ["pack", "--dry-run", "--json"], {
     cwd,
     encoding: "utf8",
     shell: process.platform === "win32",
+    maxBuffer: npmPackOutputLimit,
     env: { ...process.env, npm_config_cache: path.join(os.tmpdir(), "aas-npm-pack-test-cache") },
   });
 

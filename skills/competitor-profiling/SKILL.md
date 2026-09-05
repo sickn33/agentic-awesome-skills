@@ -1,6 +1,6 @@
 ---
 name: competitor-profiling
-description: When the user wants to research, profile, or analyze competitors from their URLs. Also use when the user mentions 'competitor profile,' 'competitor research,' 'competitor analysis,' 'profile this competitor,' 'analyze competitor,' 'competitive intelligence,' 'competitor deep dive,'...
+description: "When the user wants to research, profile, or analyze competitors from their URLs."
 risk: critical
 source: https://github.com/coreyhaines31/marketingskills/tree/main/skills/competitor-profiling
 source_repo: coreyhaines31/marketingskills

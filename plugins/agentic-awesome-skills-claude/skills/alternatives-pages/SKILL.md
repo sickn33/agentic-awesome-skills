@@ -1,6 +1,6 @@
 ---
 name: alternatives-pages
-description: 'Create "[Competitor] alternative" and comparison pages for developer tools. Build honest, high-converting comparison content that ranks for competitive search terms. Trigger phrases: "alternatives page", "comparison page", "vs page", "[competitor] alternative", "competitor comparison",...'
+description: "Create \"[Competitor] alternative\" and comparison pages for developer tools. Build honest, high-converting comparison content that ranks for competitive search terms."
 risk: critical
 source: https://github.com/jonathimer/devmarketing-skills/tree/main/skills/alternatives-pages
 source_repo: jonathimer/devmarketing-skills
@@ -368,6 +368,12 @@ Use social listening tools to set up searches for:
 - **developer-listening** - Understanding developer sentiment
 - **seo-for-devtools** - SEO optimization for technical content
 - **landing-pages** - Conversion optimization for comparison pages
+
+## Example
+
+**User request:**
+
+> Create "[Competitor] alternative" and comparison pages for developer tools.
 
 ## Limitations
 

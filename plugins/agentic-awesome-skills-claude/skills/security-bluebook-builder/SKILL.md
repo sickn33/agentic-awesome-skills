@@ -3,6 +3,7 @@ name: security-bluebook-builder
 description: "Build a minimal but real security policy for sensitive apps. The output is a single, coherent Blue Book document using MUST/SHOULD/CAN language, with explicit assumptions, scope, and security gates."
 risk: safe
 source: community
+date_added: "2026-09-04"
 ---
 
 # Security Bluebook Builder
@@ -51,6 +52,12 @@ Confirm the Blue Book includes:
 
 ## Resources
 - `references/bluebook_template.md`
+
+## Example
+
+**User request:**
+
+> Create a concise, enforceable security policy for this sensitive application using explicit MUST, SHOULD, and CAN requirements.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

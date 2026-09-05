@@ -1,6 +1,6 @@
 ---
 name: huggingface-zerogpu
-description: AI demos and GPU compute with Gradio Spaces and Hugging Face Spaces ZeroGPU. Use when writing or reviewing code that uses `@spaces.GPU`, configuring `python_version` or `requirements.txt` for a ZeroGPU Space, or handling ZeroGPU-specific code constraints — pickle-based process...
+description: "AI demos and GPU compute with Gradio Spaces and Hugging Face Spaces ZeroGPU."
 risk: critical
 source: https://github.com/huggingface/skills/tree/main/skills/huggingface-zerogpu
 source_repo: huggingface/skills

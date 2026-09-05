@@ -149,6 +149,12 @@ Implement comprehensive security hardening with defense-in-depth strategy throug
 
 Security hardening target: $ARGUMENTS
 
+## Example
+
+**User request:**
+
+> Run a coordinated security hardening program.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

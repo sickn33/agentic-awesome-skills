@@ -182,6 +182,12 @@ Measure against all other pages in the programmatic set. Shared headers, footers
 | Thin content threshold exceeded | Trigger quality gate warning. Report the unique content percentage and flag pages below 40% uniqueness. Require user acknowledgment before proceeding. |
 | Quality gate violation | Halt analysis at the HARD STOP threshold (500+ pages without justification or <30% unique content). Present findings and require explicit user approval to continue. |
 
+## Example
+
+**User request:**
+
+> Plan and audit programmatic SEO pages generated at scale from structured data.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
