@@ -1,6 +1,6 @@
 # Specialized Plugins: scope and review
 
-The repository currently defines **21 specialized plugins**, each with 6–10 skills. These are curated instruction bundles for concrete jobs. They do not install service accounts, browsers, cloud infrastructure or authenticated connectors, and they do not require every included framework to be used on every task.
+The repository currently defines **21 specialized plugins**, each with 5–10 skills. These are curated instruction bundles for concrete jobs. They do not install service accounts, browsers, cloud infrastructure or authenticated connectors, and they do not require every included framework to be used on every task.
 
 ## Canonical definitions
 
@@ -37,14 +37,14 @@ This pass checked the 21 compositions against the current 2,113-entry catalog an
 | AAS SaaS Launch & Revenue | 10 | Connect MVP scope, pricing, payments and launch assets into a concrete launch-readiness review. |
 | AAS AI Product & Evaluation Ops | 10 | Define AI feature success criteria, representative evaluation cases and a decision-ready error analysis. |
 | AAS Data Engineering Platform | 10 | Build ingestion and transformation pipelines with data contracts, quality checks and recovery planning. |
-| AAS Privacy & Compliance Engineering | 6 | Map data flows to engineering controls and evidence gaps for a scoped privacy or compliance review. |
+| AAS Privacy & Compliance Engineering | 5 | Map data flows to engineering controls and evidence gaps for a scoped privacy or compliance review. |
 | AAS Localization & International Growth | 10 | Prepare locale-aware interfaces and content with language, routing and international SEO checks. |
 
 ## Composition changes
 
 - **Web App Builder:** replace `nextjs-best-practices` with `browser-automation`. React performance and App Router guidance remain; the bundle now includes verification of the implemented user journey.
 - **Data Analytics:** replace `database-architect` with `data-quality-frameworks`. Database platform architecture remains in Data Engineering Platform; analytical users get checks for data assumptions, contracts and transformations.
-- **Privacy & Compliance Engineering:** replace the broad `security-audit` testing workflow with `auth-implementation-patterns`, adding explicit identity and resource-access boundaries for protected data. Formal certification and legal advice remain outside its scope.
+- **Privacy & Compliance Engineering:** remove the broad `security-audit` testing workflow. The five remaining skills cover privacy-by-design, data handling, scoped compliance and defensive review. Formal certification and legal advice remain outside its scope.
 - **Secure App Builder:** remove `security-and-hardening` from this curated set because its two references to `references/security-checklist.md` have no bundled target. The remaining nine skills retain API, backend/frontend, auth, SAST, secrets and access-review coverage. The canonical skill remains available; repairing its missing reference is separate content debt.
 - All 21 plugin IDs stay stable. Removed bundle members remain canonical skills and can still be selected separately.
 

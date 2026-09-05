@@ -626,7 +626,7 @@
 ## 2026-09-05 — Specialized plugin review
 
 - Reviewed all 21 specialized compositions, refreshed output-oriented descriptions and starter briefs, and clarified neighboring scopes.
-- Added browser verification to Web App Builder and data-quality checks to Data Analytics; added identity and resource-access controls to Privacy & Compliance Engineering and removed an incomplete support-file dependency from Secure App Builder.
+- Added browser verification to Web App Builder and data-quality checks to Data Analytics; narrowed Privacy & Compliance Engineering to five relevant defensive workflows and removed an incomplete support-file dependency from Secure App Builder.
 - Replaced the stale 14-entry web list with the canonical editorial definitions, exposed all included skills and starter briefs, and bound links to the catalog release.
 - Removed fixed 15-plugin counts from prerendering and live verification; added source parity and stale-count regressions.
 - Scope and composition rationale: [Specialized Plugins](docs/users/specialized-plugin-roadmap.md). No release or deployment.

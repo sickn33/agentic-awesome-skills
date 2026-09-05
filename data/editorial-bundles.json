@@ -2674,10 +2674,6 @@
           "summary": "Check financial-services compliance requirements."
         },
         {
-          "id": "auth-implementation-patterns",
-          "summary": "Implement identity, session and resource-access boundaries for protected data."
-        },
-        {
           "id": "cc-skill-security-review",
           "summary": "Review features with a security checklist."
         }
