@@ -622,3 +622,11 @@
 - Added reproductions and regression tests; checked the syntax of all 877 tracked Python, shell and JavaScript skill scripts without executing them.
 - Full scope, evidence and limits: [deep input-boundary audit](docs/maintainers/deep-input-boundary-audit-2026-09-05.md).
 - Source maintenance only; no release or deployment.
+
+## 2026-09-05 — Specialized plugin review
+
+- Reviewed all 21 specialized compositions, refreshed output-oriented descriptions and starter briefs, and clarified neighboring scopes.
+- Added browser verification to Web App Builder and data-quality checks to Data Analytics; added identity and resource-access controls to Privacy & Compliance Engineering and removed an incomplete support-file dependency from Secure App Builder.
+- Replaced the stale 14-entry web list with the canonical editorial definitions, exposed all included skills and starter briefs, and bound links to the catalog release.
+- Removed fixed 15-plugin counts from prerendering and live verification; added source parity and stale-count regressions.
+- Scope and composition rationale: [Specialized Plugins](docs/users/specialized-plugin-roadmap.md). No release or deployment.

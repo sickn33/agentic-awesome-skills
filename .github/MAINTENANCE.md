@@ -143,6 +143,10 @@ Before ANY commit that adds/modifies skills, run the chain:
     > See [`docs/maintainers/ci-drift-fix.md`](../docs/maintainers/ci-drift-fix.md) for details.
     > Protected `main` never receives an automatic direct push. Canonical drift is published through the fixed `automation/canonical-repo-state` PR only when it stays inside the generated-files contract; unmanaged drift fails closed.
 
+### Specialized plugin updates
+
+Specialized membership comes from `data/specialized-plugin-candidates.json`; installable composition and product copy come from `data/editorial-bundles.json`. These are editorial source inputs. Validate selected IDs against canonical `skills_index.json`, derive the web list and prerender/live-check counts from the source inputs, and test stale-count rejection and complete skill-list access. Run bundle generation for validation, then exclude generated plugin folders, marketplaces and bundle docs from the source commit. The protected canonical-sync PR owns those outputs; no release or deployment is implied.
+
 ### B. When You Merge a PR (Step-by-Step)
 
 > **Agent instruction (when analyzing or handling PRs):** Always merge accepted PRs with the guarded `npm run merge:batch` command, which performs GitHub's protected squash merge. Never integrate locally and then close the PR. If a PR was historically closed after local integration, reopen and repair it before using the guarded command so it ends up **Merged**. Contributors must get credit.

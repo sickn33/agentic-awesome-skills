@@ -222,7 +222,7 @@ All specialized plugins are generated as Claude Code and Codex plugin bundles. B
 | AAS Web App Builder | 10 | Frontend and full-stack developers shipping modern web apps. |
 | AAS Product Design Studio | 10 | Product UI, brand, portfolio, accessibility, and richer visual work. |
 | AAS Security Engineer | 10 | Authorized security testing, audit, and hardening. |
-| AAS Secure App Builder | 10 | Developers who want security embedded while building features. |
+| AAS Secure App Builder | 9 | Developers who want security embedded while building features. |
 | AAS Documents & Presentations | 9 | Office files, document conversion, decks, and slide workflows. |
 | AAS Data Analytics | 10 | Product analytics, SQL, dashboards, and experiments. |
 | AAS Agent & MCP Builder | 10 | Agentic apps, MCP tools, RAG systems, and evaluation loops. |

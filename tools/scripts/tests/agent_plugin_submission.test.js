@@ -56,11 +56,11 @@ assert.strictEqual(
   codexManifest.interface.termsOfServiceURL,
   submission.listing.termsOfServiceURL,
 );
-assert.deepStrictEqual(codexManifest.interface.defaultPrompt, [
-  "Use this plugin to design an MCP server for this workflow, including tools, schemas, and test cases.",
-  "Use this plugin to create an eval plan for this agent and define reliability metrics.",
-  "Use this plugin to review this RAG or LangGraph architecture for tool, memory, prompt, and observability gaps.",
-]);
+const editorialBundle = readJson(path.join(projectRoot, "data", "editorial-bundles.json"))
+  .bundles.find((bundle) => bundle.id === "aas-agent-mcp-builder");
+assert.ok(editorialBundle, "submission bundle must exist in the canonical editorial source");
+assert.ok(editorialBundle.defaultPrompts.length >= 2);
+assert.deepStrictEqual(codexManifest.interface.defaultPrompt, editorialBundle.defaultPrompts);
 
 assert.strictEqual(evaluations.pluginId, submission.plugin.packageId);
 assert.ok(evaluations.positive.length >= 5, "submission requires at least five positive cases");

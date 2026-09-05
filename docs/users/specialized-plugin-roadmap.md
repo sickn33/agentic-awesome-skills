@@ -1,101 +1,101 @@
-# Specialized Plugin Roadmap
+# Specialized Plugins: scope and review
 
-This roadmap shifts Agentic Awesome Skills from "one giant plugin with every safe skill" toward a smaller set of focused, high-value Codex and Claude plugins.
+The repository currently defines **21 specialized plugins**, each with 6–10 skills. These are curated instruction bundles for concrete jobs. They do not install service accounts, browsers, cloud infrastructure or authenticated connectors, and they do not require every included framework to be used on every task.
 
-The full catalog remains useful as a repository and installer. The plugin product should be different: clear jobs, narrow install surfaces, strong names, and skill groups that users can trust without browsing 1,678 options.
+## Canonical definitions
 
-## Official Codex Basis
+- `data/specialized-plugin-candidates.json` selects specialized plugin membership and records the editorial shortlist.
+- `data/editorial-bundles.json` owns installable skill lists, descriptions, audience, limitations and starter prompts.
+- Canonical skill IDs and compatibility are checked against `skills_index.json`.
+- `npm run bundles:sync` generates plugin folders, both host marketplaces, portable manifests and bundle documentation. Generated changes belong to the protected canonical-sync PR.
+- The web page reads these source definitions. Its count, prerendered metadata and live verifier must agree; do not keep a separate handwritten web list.
 
-The current Codex manual draws a useful line between skills and plugins:
+The source definitions, generated plugin manifests and published release are separate states. Updating this shortlist does not publish a release or update installed copies. See the [plugin installation guide](plugins.md).
 
-- Skills are the reusable workflow authoring format.
-- Plugins are the installable distribution unit for reusable skills, apps, MCP servers, and stable workflows.
-- Codex uses progressive disclosure for skills, but the initial skills list has a context budget. Very large installed sets can have shortened descriptions or omitted skills.
-- Plugin authors should build a plugin when they want to share a workflow across teams, bundle app integrations or MCP configuration, package hooks, or publish a stable package.
+## Reviewed product scope — 2026-09-05
 
-That makes specialized plugins the better default product shape. A root plugin can exist for compatibility and advanced users, but it should not be the main recommendation.
+This pass checked the 21 compositions against the current 2,113-entry catalog and sharpened their descriptions, starter briefs and adjacent-product boundaries. It is an editorial and packaging review, not proof that every included procedure has been executed successfully in every environment. The internal tier labels are historical prioritization, not reliability grades.
 
-## Selection Method
+| Plugin | Skills | Intended result |
+| --- | ---: | --- |
+| AAS Web App Builder | 10 | Implement a React/Next.js user journey with responsive UI, accessibility checks and browser verification. |
+| AAS Product Design Studio | 10 | Turn a product brief into a coherent visual direction, responsive interface and actionable design review. |
+| AAS Security Engineer | 10 | Assess explicitly authorized targets and produce reproducible findings, remediation priorities and retest steps. |
+| AAS Secure App Builder | 9 | Implement authentication, access control and data protection with negative tests and a focused security review. |
+| AAS Documents & Presentations | 9 | Produce editable office files and PDFs, with content checks and rendered output review. |
+| AAS Data Analytics | 10 | Validate source data, write analytical queries and produce a dashboard or experiment readout with traceable definitions. |
+| AAS Agent & MCP Builder | 10 | Build a bounded agent or MCP tool with explicit interfaces, failure handling and behavioral evaluation. |
+| AAS QA & Test Automation | 10 | Reproduce failures, add meaningful regression coverage and stabilize browser or service tests. |
+| AAS DevOps & Cloud | 10 | Prepare infrastructure and delivery changes with validation, rollback steps and explicit deployment boundaries. |
+| AAS Marketing, SEO & Growth | 10 | Create an acquisition plan and channel assets grounded in the supplied audience, product and search evidence. |
+| AAS Automation Builder | 10 | Design an automation with explicit triggers, mappings, retries and a reviewable test run. |
+| AAS Observability IR | 10 | Connect logs, metrics and traces to incident diagnosis, recovery checks and a documented follow-up. |
+| AAS Python API Builder | 10 | Implement Python service endpoints with schema validation, async boundaries and automated tests. |
+| AAS Mobile App Builder | 10 | Implement a mobile feature in the chosen stack and prepare platform-specific build and release checks. |
+| AAS Accessibility & Inclusive UX | 8 | Find and fix accessibility barriers with keyboard, automated and screen-reader checks appropriate to the interface. |
+| AAS API Platform Builder | 10 | Define and implement API contracts, authorization, documentation and service verification across languages. |
+| AAS SaaS Launch & Revenue | 10 | Connect MVP scope, pricing, payments and launch assets into a concrete launch-readiness review. |
+| AAS AI Product & Evaluation Ops | 10 | Define AI feature success criteria, representative evaluation cases and a decision-ready error analysis. |
+| AAS Data Engineering Platform | 10 | Build ingestion and transformation pipelines with data contracts, quality checks and recovery planning. |
+| AAS Privacy & Compliance Engineering | 6 | Map data flows to engineering controls and evidence gaps for a scoped privacy or compliance review. |
+| AAS Localization & International Growth | 10 | Prepare locale-aware interfaces and content with language, routing and international SEO checks. |
 
-This snapshot pass evaluated the then-current local catalog. For current catalog checks, use the canonical root `skills_index.json` and treat `data/skills_index.json` only as the compatibility mirror:
+## Composition changes
 
-- Total skills evaluated in this snapshot: 1,678.
-- Broadest categories: development, cloud, AI/ML, security, business, workflow, content, marketing, automation, and web development.
-- Existing editorial bundles are all small and mostly plugin-compatible, which makes them a good starting point.
-- The stronger opportunity is to turn the best bundles into first-class product plugins with sharper names, richer descriptions, and optional app/MCP extensions.
+- **Web App Builder:** replace `nextjs-best-practices` with `browser-automation`. React performance and App Router guidance remain; the bundle now includes verification of the implemented user journey.
+- **Data Analytics:** replace `database-architect` with `data-quality-frameworks`. Database platform architecture remains in Data Engineering Platform; analytical users get checks for data assumptions, contracts and transformations.
+- **Privacy & Compliance Engineering:** replace the broad `security-audit` testing workflow with `auth-implementation-patterns`, adding explicit identity and resource-access boundaries for protected data. Formal certification and legal advice remain outside its scope.
+- **Secure App Builder:** remove `security-and-hardening` from this curated set because its two references to `references/security-checklist.md` have no bundled target. The remaining nine skills retain API, backend/frontend, auth, SAST, secrets and access-review coverage. The canonical skill remains available; repairing its missing reference is separate content debt.
+- All 21 plugin IDs stay stable. Removed bundle members remain canonical skills and can still be selected separately.
 
-Candidate details live in `data/specialized-plugin-candidates.json`. Each listed skill ID exists in the catalog and was checked as Codex-supported.
+## Choosing between related plugins
 
-The candidates are now enabled as editorial bundle plugins. Running `npm run bundles:sync` materializes them under `plugins/agentic-bundle-aas-*`, adds Codex marketplace entries in `.agents/plugins/marketplace.json`, adds Claude marketplace entries in `.claude-plugin/marketplace.json`, and refreshes `docs/users/bundles.md`.
+| Decision | Choose |
+| --- | --- |
+| Implement a web user journey / develop visual direction | Web App Builder / Product Design Studio |
+| Implement defensive controls / conduct an authorized security assessment | Secure App Builder / Security Engineer |
+| Interpret business data / build production ingestion and transformations | Data Analytics / Data Engineering Platform |
+| Build an agent or MCP tool / decide how to evaluate an AI feature | Agent & MCP Builder / AI Product & Evaluation Ops |
+| Implement a Python service / design framework-neutral API contracts | Python API Builder / API Platform Builder |
+| Prepare deployments / diagnose an operational incident | DevOps & Cloud / Observability IR |
+| Prepare pricing, payment and launch readiness / produce acquisition assets | SaaS Launch & Revenue / Marketing, SEO & Growth |
 
-## Tier 1 Plugins
+## Use and verification
 
-These should become the primary marketplace surface.
+Open the complete included-skill list before installation. The first starter prompt specifies an input and deliverable; adapt it to the actual project and available tools. For multi-framework plugins, use the existing project stack rather than installing all alternatives. For Google Workspace, Composio-backed automations, cloud tooling and model providers, configure the separately required access before live operations.
 
-| Plugin | Job | Why it deserves focus |
-| --- | --- | --- |
-| AAS Web App Builder | Build modern React/Next.js web apps. | High-demand, coherent path from UI design to implementation, forms, Tailwind, and SEO. |
-| AAS Product Design Studio | Create richer UI, brand, motion, 3D, and visual assets. | Stronger than a generic design bundle; it has a clear creative/product promise. |
-| AAS Security Engineer | Run authorized testing, audit, and hardening workflows. | Security is deep enough to justify a standalone plugin with explicit boundaries. |
-| AAS Secure App Builder | Build secure application features. | Keeps defensive implementation separate from offensive assessment. |
-| AAS Documents & Presentations | Create, edit, convert, and automate DOCX/XLSX/PPTX/PDF/Google files. | Concrete productivity plugin with obvious user value and room for app integrations. |
-| AAS Data Analytics | Track, query, visualize, dashboard, and experiment. | Data workflows need a repeatable toolchain, not one isolated skill. |
-| AAS Agent & MCP Builder | Build agentic apps, MCP tools, RAG, and eval loops. | Maps directly to plugin-based agent workflows because it can grow into MCP config. |
-| AAS QA & Test Automation | Write, debug, stabilize, and scale tests. | Testing is a workflow chain: TDD, browser automation, failure diagnosis, and regression prevention. |
-| AAS DevOps & Cloud | Ship infrastructure, deployment, and operational workflows. | Strong fit for scripts, deployment gates, incident practice, and cloud patterns. |
-| AAS Accessibility & Inclusive UX | Audit, test, and fix accessible product experiences. | Accessibility is a standalone product-quality workflow across audit, automated scans, screen readers, fixes, and QA. |
-| AAS API Platform Builder | Design language-agnostic API platforms. | Complements Python API Builder with OpenAPI, auth, security, documentation, load testing, and observability. |
-| AAS SaaS Launch & Revenue | Launch, price, monetize, measure, and grow SaaS products. | Turns startup, pricing, payments, analytics, lifecycle, referral, and SEO skills into one revenue workflow. |
-| AAS AI Product & Evaluation Ops | Define, evaluate, instrument, and improve AI product features. | Covers the PM/product side of AI: metrics, evals, tracing, experiments, model evaluation, and context constraints. |
+Review scope, actual checks and omissions in the result. Browser checks do not prove all accessibility requirements, an evaluation plan is not a completed evaluation, and a control checklist is not legal certification. Publishing, sending messages, active security testing and production changes need the authorization applicable to the task.
 
-## Tier 2 Plugins
+## Maintainer verification
 
-These are promising and should be hardened after Tier 1.
+Run skill validation, reference validation, docs security, the specialized-plugin source/packaging regression, bundle generation/checks, and the web tests/build. Verify complete web membership, expanded skill links, scope/brief visibility, filtering and release-bound links. Reject stale counts in the live-verifier fixture and inspect the built `/plugins/` title and JSON-LD before any separately approved deployment.
 
-| Plugin | Job | Why it is promising |
-| --- | --- | --- |
-| AAS Marketing, SEO & Growth | Plan, write, measure, and improve acquisition work. | Better as a growth workflow than many isolated copy/SEO skills. |
-| AAS Automation Builder | Design durable automations across tools. | Can become much stronger when paired with apps and MCP configuration. |
-| AAS Observability IR | Monitor systems, debug production, and write postmortems. | Operational work benefits from consistent proof gates. |
-| AAS Python API Builder | Build Python APIs and services with tests. | Language-specialized plugin with practical framework coverage. |
-| AAS Mobile App Builder | Ship Expo, React Native, Flutter, and iOS apps. | Covers architecture, release, CI, native platforms, and store optimization. |
-| AAS Data Engineering Platform | Build pipelines, transforms, warehouses, embeddings, and RAG-ready data foundations. | Connects analytics engineering, data pipelines, vector databases, and AI data foundations. |
-| AAS Privacy & Compliance Engineering | Engineer privacy and compliance controls. | Uses existing GDPR, PCI, privacy-by-design, compliance, spec, and security review skills without inventing new skills. |
-| AAS Localization & International Growth | Expand products across languages and markets. | Combines existing i18n, hreflang, SEO, content, copy, analytics, and market research skills. |
+## Remaining skill-content findings
 
-## Recommended Product Changes
+A scan of explicit local `references/` and `resources/` links in the selected skill entrypoints found 30 distinct missing targets across 23 skills. These are existing content defects, not missing files introduced by bundle generation. Packaging and structural validation passing does not resolve them. This scan is not a complete semantic or runtime review; nested resources and other path forms may require further checks.
 
-1. Keep the root plugin as an advanced "full plugin-safe library" path.
-2. Make specialized plugins the default recommendation in README, docs, and marketplace ordering.
-3. Rename or reframe bundle plugins as product plugins where the job is clear.
-4. Add richer `interface` metadata to the strongest plugin manifests: display name, short description, brand color, and default prompt.
-5. Add per-plugin quality gates:
-  - every skill exists in canonical `skills_index.json`;
-   - every skill is Codex-supported before Codex publication;
-   - every skill is Claude-supported before Claude publication;
-   - every plugin has a 5-10 skill target range unless it has a concrete reason to be larger;
-   - every plugin description says who it is for, what it helps do, and what it does not cover.
-6. Move social and launch messaging from daily individual skills to plugin stories:
-   - "Web App Builder: from design to tested Next.js app";
-   - "Documents & Presentations: DOCX/PPTX/XLSX/PDF without manual file surgery";
-   - "OSS Maintainer: PR review, changelog, release, and contributor handoff".
-
-## What Not To Do
-
-- Do not present the root plugin as the best default for new users.
-- Do not create plugin names that are just categories, such as "development" or "cloud".
-- Do not publish large plugins whose only promise is "more skills".
-- Do not mix offensive security, defensive app security, and general code review into one vague security plugin.
-- Do not treat a bundle as good enough merely because all included skills are compatible.
-
-## Implementation Status
-
-Implemented in the repository:
-
-- `data/editorial-bundles.json` includes all 22 specialized plugin candidates.
-- `data/specialized-plugin-candidates.json` remains the source-of-truth shortlist and rationale.
-- `plugins/agentic-bundle-aas-*` contains the generated plugin folders.
-- `.agents/plugins/marketplace.json` and `.claude-plugin/marketplace.json` expose the generated plugin entries.
-- `docs/users/bundles.md` renders the specialized plugin sections for users.
-
-Future improvements should focus on brand metadata, optional MCP/app integrations where a plugin naturally needs live tools, and keeping every plugin backed by existing canonical skills.
+| Skill | Missing targets |
+| --- | --- |
+| `backend-security-coder` | `resources/implementation-playbook.md` |
+| `business-analyst` | `resources/implementation-playbook.md` |
+| `devops-troubleshooter` | `resources/implementation-playbook.md` |
+| `distributed-tracing` | `references/jaeger-setup.md`, `resources/implementation-playbook.md`, `references/instrumentation.md` |
+| `django-pro` | `resources/implementation-playbook.md` |
+| `embedding-strategies` | `resources/implementation-playbook.md` |
+| `fastapi-pro` | `resources/implementation-playbook.md` |
+| `frontend-security-coder` | `resources/implementation-playbook.md` |
+| `github-actions-templates` | `references/common-workflows.md`, `resources/implementation-playbook.md` |
+| `grafana-dashboards` | `references/dashboard-design.md`, `resources/implementation-playbook.md` |
+| `incident-responder` | `resources/implementation-playbook.md` |
+| `ios-developer` | `resources/implementation-playbook.md` |
+| `kpi-dashboard-design` | `resources/implementation-playbook.md` |
+| `mobile-developer` | `resources/implementation-playbook.md` |
+| `multi-platform-apps-multi-platform` | `resources/implementation-playbook.md` |
+| `observability-and-instrumentation` | `references/observability-checklist.md` |
+| `pci-compliance` | `resources/implementation-playbook.md` |
+| `postmortem-writing` | `resources/implementation-playbook.md` |
+| `secrets-management` | `references/github-secrets.md`, `references/vault-setup.md` |
+| `seo-content-planner` | `resources/implementation-playbook.md` |
+| `seo-content-writer` | `resources/implementation-playbook.md` |
+| `slo-implementation` | `references/slo-definitions.md`, `resources/implementation-playbook.md`, `references/error-budget.md` |
+| `vector-database-engineer` | `resources/implementation-playbook.md` |

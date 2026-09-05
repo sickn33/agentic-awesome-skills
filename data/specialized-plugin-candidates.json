@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "source_catalog": "data/skills_index.json",
-  "evaluated_skill_count": 1948,
+  "source_catalog": "skills_index.json",
+  "evaluated_skill_count": 2113,
   "selection_rules": [
     "Prefer focused plugins with a clear user job over broad library replicas.",
-    "Include only skill IDs present in data/skills_index.json.",
+    "Include only skill IDs present in skills_index.json.",
     "Prefer skills marked supported for both Codex and Claude plugin targets, without branding the plugin names around either host.",
     "Keep each plugin small enough to remain easy to browse, install, and invoke."
   ],
@@ -19,13 +19,13 @@
       "name": "AAS Web App Builder",
       "priority": "tier-1",
       "audience": "Frontend and full-stack developers shipping modern web apps.",
-      "why": "High-demand workflow with a coherent path from UI design to React/Next.js implementation, forms, Tailwind, and SEO.",
+      "why": "Implement a React/Next.js user journey with responsive UI, accessibility checks and browser verification.",
       "skills": [
         "frontend-developer",
         "frontend-design",
         "react-best-practices",
         "nextjs-app-router-patterns",
-        "nextjs-best-practices",
+        "browser-automation",
         "tailwind-patterns",
         "shadcn",
         "form-cro",
@@ -38,7 +38,7 @@
       "name": "AAS Product Design Studio",
       "priority": "tier-1",
       "audience": "Builders who want richer UI, brand, portfolio, and visual product work.",
-      "why": "Turns design from a generic skill category into a strong plugin proposition with visual direction, responsive UI, motion, and asset creation.",
+      "why": "Turn a product brief into a coherent visual direction, responsive interface and actionable design review.",
       "skills": [
         "ui-ux-pro-max",
         "high-end-visual-design",
@@ -57,7 +57,7 @@
       "name": "AAS Security Engineer",
       "priority": "tier-1",
       "audience": "Authorized security testing, audit, and hardening teams.",
-      "why": "Security has enough depth in the catalog to deserve a standalone plugin with explicit authorized-use boundaries and testing workflows.",
+      "why": "Assess explicitly authorized targets and produce reproducible findings, remediation priorities and retest steps.",
       "skills": [
         "ethical-hacking-methodology",
         "burp-suite-testing",
@@ -76,7 +76,7 @@
       "name": "AAS Secure App Builder",
       "priority": "tier-1",
       "audience": "Application developers who want security embedded while building features.",
-      "why": "Separates defensive implementation from offensive assessment, making a safer and clearer plugin for product engineering teams.",
+      "why": "Implement authentication, access control and data protection with negative tests and a focused security review.",
       "skills": [
         "api-security-best-practices",
         "auth-implementation-patterns",
@@ -85,7 +85,6 @@
         "cc-skill-security-review",
         "pci-compliance",
         "sast-configuration",
-        "security-and-hardening",
         "secrets-management",
         "django-access-review"
       ]
@@ -95,7 +94,7 @@
       "name": "AAS Documents & Presentations",
       "priority": "tier-1",
       "audience": "Users creating, editing, converting, and automating office documents.",
-      "why": "Combines the strongest file-format skills into a concrete productivity plugin that can be extended with app integrations.",
+      "why": "Produce editable office files and PDFs, with content checks and rendered output review.",
       "skills": [
         "office-productivity",
         "docx-official",
@@ -113,13 +112,13 @@
       "name": "AAS Data Analytics",
       "priority": "tier-1",
       "audience": "Operators, analysts, and builders working with product analytics, SQL, dashboards, and experiments.",
-      "why": "Data work benefits from a repeatable toolchain: tracking, SQL, Postgres, dbt, dashboards, visualization, and experimentation.",
+      "why": "Validate source data, write analytical queries and produce a dashboard or experiment readout with traceable definitions.",
       "skills": [
         "analytics-tracking",
         "analytics-product",
         "sql-pro",
         "postgres-best-practices",
-        "database-architect",
+        "data-quality-frameworks",
         "dbt-transformation-patterns",
         "claude-d3js-skill",
         "kpi-dashboard-design",
@@ -132,7 +131,7 @@
       "name": "AAS Agent & MCP Builder",
       "priority": "tier-1",
       "audience": "Developers building agentic apps, MCP tools, RAG systems, and evaluation loops.",
-      "why": "Maps directly to plugin-based agent workflows because it can grow from skills into MCP server configuration and app/tool integrations.",
+      "why": "Build a bounded agent or MCP tool with explicit interfaces, failure handling and behavioral evaluation.",
       "skills": [
         "ai-agents-architect",
         "agent-evaluation",
@@ -151,7 +150,7 @@
       "name": "AAS QA & Test Automation",
       "priority": "tier-1",
       "audience": "Engineers and QA teams writing, debugging, and stabilizing test suites.",
-      "why": "Testing is a natural plugin because users need a workflow, not a single skill: plan tests, automate browsers, debug failures, and fix regressions.",
+      "why": "Reproduce failures, add meaningful regression coverage and stabilize browser or service tests.",
       "skills": [
         "test-driven-development",
         "systematic-debugging",
@@ -170,7 +169,7 @@
       "name": "AAS DevOps & Cloud",
       "priority": "tier-1",
       "audience": "Teams shipping infrastructure, deployments, and operational workflows.",
-      "why": "Strong plugin candidate because it combines deterministic scripts, cloud patterns, deployment safety, and incident workflows.",
+      "why": "Prepare infrastructure and delivery changes with validation, rollback steps and explicit deployment boundaries.",
       "skills": [
         "docker-expert",
         "aws-serverless",
@@ -189,7 +188,7 @@
       "name": "AAS Marketing, SEO & Growth",
       "priority": "tier-2",
       "audience": "Founders and growth teams creating content, SEO systems, experiments, and email campaigns.",
-      "why": "A clearer proposition than many separate marketing skills: plan, write, measure, test, and improve acquisition work.",
+      "why": "Create an acquisition plan and channel assets grounded in the supplied audience, product and search evidence.",
       "skills": [
         "content-creator",
         "seo-audit",
@@ -208,7 +207,7 @@
       "name": "AAS Automation Builder",
       "priority": "tier-2",
       "audience": "Teams designing reliable automations across tools, data stores, and communication platforms.",
-      "why": "Works best as a plugin because app connectors and MCP configuration can turn instructions into live workflows.",
+      "why": "Design an automation with explicit triggers, mappings, retries and a reviewable test run.",
       "skills": [
         "workflow-automation",
         "mcp-builder",
@@ -227,7 +226,7 @@
       "name": "AAS Observability IR",
       "priority": "tier-2",
       "audience": "Engineering teams monitoring systems, debugging production issues, and writing postmortems.",
-      "why": "Operational work needs consistent procedure and proof gates, making it more plugin-worthy than isolated observability prompts.",
+      "why": "Connect logs, metrics and traces to incident diagnosis, recovery checks and a documented follow-up.",
       "skills": [
         "observability-engineer",
         "observability-and-instrumentation",
@@ -246,7 +245,7 @@
       "name": "AAS Python API Builder",
       "priority": "tier-2",
       "audience": "Python developers building APIs, services, and tests.",
-      "why": "A language-specialized plugin is useful when it bundles framework guidance, async patterns, testing, and API design together.",
+      "why": "Implement Python service endpoints with schema validation, async boundaries and automated tests.",
       "skills": [
         "python-pro",
         "python-patterns",
@@ -265,7 +264,7 @@
       "name": "AAS Mobile App Builder",
       "priority": "tier-2",
       "audience": "Mobile teams shipping Expo, React Native, Flutter, and iOS apps.",
-      "why": "Mobile development has a full lifecycle in the catalog: architecture, Expo routes, distribution, CI, native platforms, and store optimization.",
+      "why": "Implement a mobile feature in the chosen stack and prepare platform-specific build and release checks.",
       "skills": [
         "mobile-developer",
         "react-native-architecture",
@@ -284,7 +283,7 @@
       "name": "AAS Accessibility & Inclusive UX",
       "priority": "tier-1",
       "audience": "Design, frontend, QA, and product teams improving accessible user experiences.",
-      "why": "Accessibility is a standalone product quality workflow spanning audit, automated scanning, screen-reader checks, high contrast, fixes, and regression testing.",
+      "why": "Find and fix accessibility barriers with keyboard, automated and screen-reader checks appropriate to the interface.",
       "skills": [
         "accesslint-audit",
         "accesslint-scan",
@@ -301,7 +300,7 @@
       "name": "AAS API Platform Builder",
       "priority": "tier-1",
       "audience": "Backend and platform teams designing APIs, contracts, auth, security, load tests, and observability.",
-      "why": "Complements Python API Builder with a language-agnostic API platform workflow from design and OpenAPI contracts to auth, security, documentation, load testing, and observability.",
+      "why": "Define and implement API contracts, authorization, documentation and service verification across languages.",
       "skills": [
         "api-design-principles",
         "api-patterns",
@@ -320,7 +319,7 @@
       "name": "AAS SaaS Launch & Revenue",
       "priority": "tier-1",
       "audience": "Founders and product teams launching, pricing, monetizing, measuring, and improving SaaS products.",
-      "why": "Turns scattered startup, pricing, payments, analytics, lifecycle, referral, and SEO skills into one launch-to-revenue workflow.",
+      "why": "Connect MVP scope, pricing, payments and launch assets into a concrete launch-readiness review.",
       "skills": [
         "saas-mvp-launcher",
         "micro-saas-launcher",
@@ -339,7 +338,7 @@
       "name": "AAS AI Product & Evaluation Ops",
       "priority": "tier-1",
       "audience": "PMs, founders, and AI product teams defining, measuring, and improving AI features.",
-      "why": "Covers the product side of AI work: wrapper strategy, evals, tracing, product metrics, experiments, model evaluation, and context constraints.",
+      "why": "Define AI feature success criteria, representative evaluation cases and a decision-ready error analysis.",
       "skills": [
         "ai-wrapper-product",
         "agent-evaluation",
@@ -358,7 +357,7 @@
       "name": "AAS Data Engineering Platform",
       "priority": "tier-2",
       "audience": "Data and AI platform teams building pipelines, warehouses, transforms, embeddings, and RAG-ready data foundations.",
-      "why": "Connects data pipelines, dbt, Postgres, vector databases, embeddings, RAG, SQL, and transformation practice into a modern data platform plugin.",
+      "why": "Build ingestion and transformation pipelines with data contracts, quality checks and recovery planning.",
       "skills": [
         "data-engineer",
         "airflow-dag-patterns",
@@ -377,13 +376,13 @@
       "name": "AAS Privacy & Compliance Engineering",
       "priority": "tier-2",
       "audience": "Teams building privacy-aware and compliance-sensitive SaaS, AI, finance, and cloud systems.",
-      "why": "Uses privacy, GDPR, PCI, compliance checks, control evidence, and security review skills to create a practical engineering compliance workflow.",
+      "why": "Map data flows to engineering controls and evidence gaps for a scoped privacy or compliance review.",
       "skills": [
         "privacy-by-design",
         "gdpr-data-handling",
         "pci-compliance",
         "fsi-compliance-checker",
-        "security-audit",
+        "auth-implementation-patterns",
         "cc-skill-security-review"
       ]
     },
@@ -392,7 +391,7 @@
       "name": "AAS Localization & International Growth",
       "priority": "tier-2",
       "audience": "Growth, content, and product teams expanding sites and products across languages and markets.",
-      "why": "Combines existing i18n, hreflang, SEO, content, copy, analytics, and market research skills into an international growth workflow.",
+      "why": "Prepare locale-aware interfaces and content with language, routing and international SEO checks.",
       "skills": [
         "i18n-localization",
         "seo-hreflang",

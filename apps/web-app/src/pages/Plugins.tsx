@@ -4,12 +4,12 @@ import { Icon } from '../components/ui/Icon';
 import { specializedPlugins, type SpecializedPlugin } from '../data/specializedPlugins';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { buildPluginsMeta, toIndexableRoutePath } from '../utils/seo';
+import { releaseFileUrl } from '../utils/catalogRelease';
 
-const repoBaseUrl = 'https://github.com/sickn33/agentic-awesome-skills';
-const pluginFolderUrl = (pluginId: string) => `${repoBaseUrl}/tree/main/plugins/agentic-bundle-${pluginId}`;
-const pluginDocUrl = () => `${repoBaseUrl}/blob/main/docs/users/plugins.md`;
-const bundleDocUrl = () => `${repoBaseUrl}/blob/main/docs/users/bundles.md`;
-const gettingStartedDocUrl = () => `${repoBaseUrl}/blob/main/docs/users/getting-started.md`;
+const pluginFolderUrl = (pluginId: string) => releaseFileUrl(`plugins/agentic-bundle-${pluginId}`).replace('/blob/', '/tree/');
+const pluginDocUrl = () => releaseFileUrl('docs/users/plugins.md');
+const bundleDocUrl = () => releaseFileUrl('docs/users/bundles.md');
+const gettingStartedDocUrl = () => releaseFileUrl('docs/users/getting-started.md');
 
 export function Plugins(): React.ReactElement {
   const [query, setQuery] = useState('');
@@ -18,18 +18,17 @@ export function Plugins(): React.ReactElement {
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return specializedPlugins;
-    return specializedPlugins.filter((plugin) => [plugin.name, plugin.audience, plugin.why, ...plugin.skills]
+    return specializedPlugins.filter((plugin) => [plugin.name, plugin.id, plugin.audience, plugin.why, ...plugin.skills, ...plugin.defaultPrompts]
       .some((value) => value.toLowerCase().includes(normalized)));
   }, [query]);
 
-  const tierOne = filtered.filter((plugin) => plugin.priority === 'tier-1');
-  const tierTwo = filtered.filter((plugin) => plugin.priority === 'tier-2');
 
   return (
     <div className="plugins-page">
       <header className="plugins-hero">
         <h1>Choose the focused AAS plugin for the job.</h1>
         <p>AAS specialized plugins are domain-specific distributions of the full skill library — smaller scope, clearer activation, faster starts.</p>
+        <p>These bundles contain skill instructions. External tools, service accounts and connectors must be configured separately. Choose the skills relevant to your project; a bundle is not a requirement to use every included tool.</p>
         <div>
           <a href={pluginDocUrl()} target="_blank" rel="noreferrer">Read plugin install guide <Icon name="arrowRight" size={16} /></a>
           <Link to="/">Browse full skill catalog <Icon name="arrowRight" size={16} /></Link>
@@ -48,15 +47,14 @@ export function Plugins(): React.ReactElement {
 
       <section className="plugin-catalog" aria-labelledby="plugin-catalog-title">
         <header>
-          <div><h2 id="plugin-catalog-title">Focused distributions</h2><p>{filtered.length} plugins</p></div>
+          <div><h2 id="plugin-catalog-title">Focused distributions</h2><p role="status">{filtered.length} {filtered.length === 1 ? 'plugin' : 'plugins'}</p></div>
           <label>
             <Icon name="search" size={18} />
             <span className="sr-only">Filter plugins</span>
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Filter plugins" aria-label="Filter plugins" />
           </label>
         </header>
-        <PluginSection title="Tier 1 plugins" plugins={tierOne} />
-        <PluginSection title="Tier 2 plugins" plugins={tierTwo} />
+        <PluginSection title="Specialized plugins" plugins={filtered} />
         {filtered.length === 0 && <p className="plugin-empty">No plugins match “{query}”.</p>}
       </section>
     </div>
@@ -72,7 +70,7 @@ function PluginSection({ title, plugins }: { title: string; plugins: Specialized
         <div className="plugin-table__head" role="row">
           <span role="columnheader">Plugin</span>
           <span role="columnheader">Audience</span>
-          <span role="columnheader">Why this plugin</span>
+          <span role="columnheader">Outcome and scope</span>
           <span role="columnheader">Included skills</span>
           <span role="columnheader">Actions</span>
         </div>
@@ -90,10 +88,22 @@ function PluginRow({ plugin }: { plugin: SpecializedPlugin }): React.ReactElemen
         <div><h3>{plugin.name}</h3><code>{plugin.id}</code></div>
       </div>
       <p role="cell">{plugin.audience}</p>
-      <p role="cell">{plugin.why}</p>
+      <div role="cell">
+        <p>{plugin.why}</p>
+        <details className="plugin-row__details">
+          <summary>Scope and starting prompt</summary>
+          <h4>Choose another option for</h4>
+          <ul>{plugin.notFor.map((limit) => <li key={limit}>{limit}</li>)}</ul>
+          <h4>Start with this brief</h4>
+          <p>{plugin.defaultPrompts[0]}</p>
+        </details>
+      </div>
       <div role="cell" className="plugin-row__skills">
         {plugin.skills.slice(0, 4).map((skillId) => <Link key={skillId} to={toIndexableRoutePath(`/skill/${encodeURIComponent(skillId)}`)}>@{skillId}</Link>)}
-        {plugin.skills.length > 4 && <span>+{plugin.skills.length - 4} more</span>}
+        {plugin.skills.length > 4 && <details className="plugin-row__details">
+          <summary>Show all {plugin.skills.length} skills</summary>
+          <div className="plugin-row__skills">{plugin.skills.slice(4).map((skillId) => <Link key={skillId} to={toIndexableRoutePath(`/skill/${encodeURIComponent(skillId)}`)}>@{skillId}</Link>)}</div>
+        </details>}
       </div>
       <div role="cell" className="plugin-row__actions">
         <a href={pluginFolderUrl(plugin.id)} target="_blank" rel="noreferrer">View plugin</a>

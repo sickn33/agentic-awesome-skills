@@ -17,6 +17,7 @@ function readExpectedState() {
   return {
     countLabel: `${skills.length.toLocaleString('en-US')}+`,
     releaseLabel: `V${pkg.version}`,
+    pluginCount: JSON.parse(fs.readFileSync(path.join(repoRoot, 'data/specialized-plugin-candidates.json'), 'utf8')).candidates.length,
   };
 }
 
@@ -76,7 +77,7 @@ function assertLiveSeoDocuments({ home, plugins, sitemap, llms, robots }, expect
   assertIncludes(home, expected.countLabel, 'home');
   assertNotIncludes(home, 'prompt templates', 'home');
 
-  assertIncludes(plugins, 'AAS Specialized Plugins | 15 AI coding workflow packs', 'plugins');
+  assertIncludes(plugins, `AAS Specialized Plugins | ${expected.pluginCount.toLocaleString('en-US')} AI coding workflow packs`, 'plugins');
   assertIncludes(plugins, 'specialized plugin packs', 'plugins');
   assertIncludes(plugins, 'numberOfItems', 'plugins JSON-LD');
 

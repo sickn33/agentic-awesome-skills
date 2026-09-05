@@ -1994,6 +1994,25 @@ textarea {
   color: var(--text-muted);
 }
 
+.plugin-row__details {
+  margin-top: 8px;
+  width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.plugin-row__details summary {
+  color: var(--accent-solid);
+  cursor: pointer;
+}
+
+.plugin-row__details h4 { margin: 12px 0 4px; }
+.plugin-row__details ul { margin: 4px 0; padding-left: 18px; }
+.plugin-row__details summary:focus-visible { outline: 2px solid var(--accent-solid); outline-offset: 3px; }
+
 .plugin-empty {
   padding: 42px 0;
   border-bottom: 1px solid var(--stroke-subtle);

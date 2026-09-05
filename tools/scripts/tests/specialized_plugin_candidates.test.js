@@ -6,7 +6,7 @@ const { findProjectRoot } = require("../../lib/project-root");
 const projectRoot = findProjectRoot(__dirname);
 const candidatesPath = path.join(projectRoot, "data", "specialized-plugin-candidates.json");
 const bundlesPath = path.join(projectRoot, "data", "editorial-bundles.json");
-const skillsIndexPath = path.join(projectRoot, "data", "skills_index.json");
+const skillsIndexPath = path.join(projectRoot, "skills_index.json");
 const codexMarketplacePath = path.join(projectRoot, ".agents", "plugins", "marketplace.json");
 const claudeMarketplacePath = path.join(projectRoot, ".claude-plugin", "marketplace.json");
 
