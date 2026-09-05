@@ -3,6 +3,7 @@ name: differential-review
 description: "Security-focused code review for PRs, commits, and diffs."
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Differential Security Review

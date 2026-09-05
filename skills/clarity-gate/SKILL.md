@@ -3,6 +3,7 @@
 name: clarity-gate
 risk: critical
 source: community
+date_added: "2026-09-04"
 version: 2.1.3
 description: >
   Pre-ingestion verification for epistemic quality in RAG systems.

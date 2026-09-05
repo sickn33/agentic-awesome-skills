@@ -4,6 +4,7 @@ description: 分析中医体质数据、识别体质类型、评估体质特征,
 allowed-tools: Read, Grep, Glob, Write
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # 中医体质辨识分析器技能

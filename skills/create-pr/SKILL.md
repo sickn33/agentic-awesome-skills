@@ -3,6 +3,7 @@ name: create-pr
 description: Alias for pr-writer. Use when users explicitly ask for "create-pr" or reference the legacy skill name. Redirects to the canonical PR writing workflow.
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Alias: create-pr

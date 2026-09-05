@@ -6,6 +6,7 @@ metadata:
     skill-author: K-Dense Inc.
 risk: safe
 source: "https://github.com/sympy/sympy"
+date_added: "2026-09-04"
 ---
 
 # SymPy - Symbolic Mathematics in Python

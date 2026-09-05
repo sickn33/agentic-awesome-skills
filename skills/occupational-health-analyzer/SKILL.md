@@ -4,6 +4,7 @@ description: 分析职业健康数据、识别工作相关健康风险、评估�
 allowed-tools: Read, Grep, Glob, Write, Edit
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # 职业健康分析技能

@@ -3,6 +3,7 @@ name: fp-pragmatic
 description: A practical, jargon-free guide to functional programming - the 80/20 approach that gets results without the academic overhead
 risk: critical
 source: community
+date_added: "2026-09-04"
 version: 1.0.0
 author: kadu
 tags:

@@ -4,6 +4,7 @@ description: Interact with GitHub issues - create, list, and view issues.
 allowed-tools: Bash(gh *)
 risk: critical
 source: community
+date_added: "2026-09-04"
 metadata:
   author: Shpigford
   version: "1.0"

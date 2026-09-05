@@ -7,6 +7,7 @@ description: |
   makepad 动画, makepad 状态, makepad 过渡, makepad 悬停效果
 risk: safe
 source: community
+date_added: "2026-09-04"
 ---
 
 # Makepad Animation Skill

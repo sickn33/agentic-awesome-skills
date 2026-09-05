@@ -4,6 +4,7 @@ description: 分析营养数据、识别营养模式、评估营养状况，并�
 allowed-tools: Read, Grep, Glob, Write
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # 营养分析器技能

@@ -6,6 +6,7 @@ description: "Ultra-dense token optimizer skill for prompt caching, log pruning,
 category: agent-behavior
 risk: safe
 source: community
+date_added: "2026-09-04"
 ---
 
 # ZipAI: Context & Token Optimizer

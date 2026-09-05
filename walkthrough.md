@@ -574,3 +574,9 @@
 - Reduced the one-time FLOSS/fund request from USD 25,000 to USD 10,000, the minimum published at https://floss.fund/faq, and revised the proposed allocation to total USD 10,000.
 - Set the README immediate community-support target to EUR 100 per month with an explicit recurring Buy Me a Coffee route. This monthly target is separate from the annual grant proposal.
 - Preserved the existing project identifiers, funding channel, and dated adoption evidence.
+
+## 2026-09-05 — Complete skill metadata dates
+
+- Added the historical Git introduction date to every canonical skill that lacked `date_added`.
+- Derived all 216 values from each file's first addition commit; every affected skill entered the repository on 2026-09-04.
+- Removed the remaining optional metadata advisories without changing skill behavior.
