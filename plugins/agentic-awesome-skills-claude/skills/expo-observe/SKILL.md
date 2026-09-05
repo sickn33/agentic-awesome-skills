@@ -1,6 +1,6 @@
 ---
 name: expo-observe
-description: Use for anything related to EAS Observe — adding `expo-observe` to an Expo project (AppMetricsRoot/ObserveRoot HOC, markInteractive, the useObserve hook, and the Expo Router / React Navigation integrations for per-route metrics), querying via the EAS CLI (`eas observe:metrics-summary`,...
+description: "Set up and query EAS Observe for Expo apps, including root integration, interactive markers, route metrics, CLI summaries, traces, logs, and performance diagnosis."
 risk: critical
 source: https://github.com/expo/skills/tree/main/plugins/expo/skills/expo-observe
 source_repo: expo/skills

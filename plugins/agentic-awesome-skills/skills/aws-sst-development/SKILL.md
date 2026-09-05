@@ -1,6 +1,6 @@
 ---
 name: aws-sst-development
-description: SST v4 (Ion) expert for managing AWS resources as code with the Pulumi-backed framework. Use when writing or editing sst.config.ts, building infra/ modules (sst.aws.Function/Bucket/Dynamo/Cron/Service/Router, sst.Secret, sst.Linkable, raw aws.* Pulumi resources), wiring resource links,...
+description: "SST v4 (Ion) expert for managing AWS resources as code with the Pulumi-backed framework."
 risk: critical
 source: https://github.com/zxkane/aws-skills/tree/main/plugins/aws-iac/skills/aws-sst-development
 source_repo: zxkane/aws-skills

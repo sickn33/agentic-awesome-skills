@@ -1,6 +1,6 @@
 ---
 name: devrel-content
-description: When the user wants to create technical content for developers including blog posts, tutorials, and documentation. Trigger phrases include "write a blog post," "technical article," "developer content," "tutorial," "devrel content," "dev blog," "technical writing," or "content for...
+description: "When the user wants to create technical content for developers including blog posts, tutorials, and documentation."
 risk: critical
 source: https://github.com/jonathimer/devmarketing-skills/tree/main/skills/devrel-content
 source_repo: jonathimer/devmarketing-skills

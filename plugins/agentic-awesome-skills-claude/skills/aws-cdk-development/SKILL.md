@@ -1,6 +1,6 @@
 ---
 name: aws-cdk-development
-description: AWS Cloud Development Kit (CDK) expert for building cloud infrastructure with TypeScript/Python. Use when creating CDK stacks, defining CDK constructs, implementing infrastructure as code, or when the user mentions CDK, CloudFormation, IaC, cdk synth, cdk deploy, or wants to define AWS...
+description: "AWS Cloud Development Kit (CDK) expert for building cloud infrastructure with TypeScript/Python."
 risk: critical
 source: https://github.com/zxkane/aws-skills/tree/main/plugins/aws-iac/skills/aws-cdk-development
 source_repo: zxkane/aws-skills

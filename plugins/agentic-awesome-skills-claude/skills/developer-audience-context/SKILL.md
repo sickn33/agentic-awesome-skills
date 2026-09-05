@@ -1,6 +1,6 @@
 ---
 name: developer-audience-context
-description: When the user wants to establish or update their developer audience context. Also use when starting any other developer marketing skill to ensure foundational context is loaded. Trigger phrases include "developer persona," "target developers," "who are our developers," "developer...
+description: "When the user wants to establish or update their developer audience context. Also use when starting any other developer marketing skill to ensure foundational context is loaded."
 risk: critical
 source: https://github.com/jonathimer/devmarketing-skills/tree/main/skills/developer-audience-context
 source_repo: jonathimer/devmarketing-skills

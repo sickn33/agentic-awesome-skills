@@ -1,6 +1,6 @@
 ---
 name: neon-functions
-description: Long-running, serverless Node.js HTTP functions deployed onto your Neon branch, with DATABASE_URL injected automatically and compute that runs next to your data. Use when a user wants to host an API, an AI agent with long streaming responses, a WebSocket or server-sent-events (SSE)...
+description: "Long-running, serverless Node.js HTTP functions deployed onto your Neon branch, with DATABASE_URL injected automatically and compute that runs next to your data."
 risk: critical
 source: https://github.com/neondatabase/agent-skills/tree/main/skills/neon-functions
 source_repo: neondatabase/agent-skills
