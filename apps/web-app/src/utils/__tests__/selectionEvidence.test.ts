@@ -19,6 +19,7 @@ describe('selection evidence import', () => {
     await expect(verifySelectionEvidence(changed)).rejects.toThrow('digest');
     for (const mutate of [
       (e: typeof changed) => { e.payload.project.files[0].path = '../private'; },
+      (e: typeof changed) => { e.payload.project.files[0].path = 'unsafe\u0000path'; },
       (e: typeof changed) => { e.payload.project.fingerprint = hash('other'); },
       (e: typeof changed) => { e.payload.capabilities[0].evidence[0].sha256 = hash('other'); },
       (e: typeof changed) => { e.payload.processTrace.calls.pop(); },

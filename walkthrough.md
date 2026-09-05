@@ -580,3 +580,9 @@
 - Added the historical Git introduction date to every canonical skill that lacked `date_added`.
 - Derived all 216 values from each file's first addition commit; every affected skill entered the repository on 2026-09-04.
 - Removed the remaining optional metadata advisories without changing skill behavior.
+
+## 2026-09-05 — Refresh compatible web dependencies
+
+- Updated the web app lockfile to the newest versions allowed by its existing dependency ranges; npm audit remains at zero vulnerabilities.
+- Rewrote the unsafe-path control-character check to satisfy the stricter linter while preserving rejection behavior, with a regression test for NUL-containing paths.
+- Made the Vitest Vite-config import explicit so the native config-loader compatibility warning is gone.
