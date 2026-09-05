@@ -11,6 +11,10 @@ All four open pull requests were inspected before mutation, including complete c
 - [#1353](https://github.com/sickn33/agentic-awesome-skills/pull/1353), reviewed head `c975c6ca49905fbfa1ce1b50eaadc599991ba785`: the one-file adaptation and README credit match the CC0 upstream. Static review remains read-only and distinguishes confirmed findings, unknowns and runtime limitations. Tessl did not run: `manual-review-required` is not an automated review pass.
 - [#1337](https://github.com/sickn33/agentic-awesome-skills/pull/1337), inspected head `4b2fbb80812717f553419c37d3c7e89817a9fdda`: all four skill files were read, including the ledger and both Python files; the pinned upstream MIT license resolves. The guarded dry run rejects `scripts/fingerprint.py` and `scripts/test_fingerprint.py` as `new_unapproved_path,new_unknown_extension`. This PR remains deliberately open and excluded from 16.8.0. No fork approval, script execution or policy exception was substituted for the blocked gate.
 
+## Protected merge results
+
+Strict main protection required refreshing the contributor branches before merging. The complete skill subtree bytes remained identical to the initial reviewed heads. The final exact-head attestations were `4d994736e56ce8789eba737ff04b5bfd172f9c96` for #1339 and `bdb82e92eb8264d1b6e502b84bafd24332c745f5` for #1353. Both merged through `npm run merge:batch` after the required checks passed; their protected squash commits are `7896e0bf7180558ee1832c544e2f986cb332beb0` and `3ecbc2377` respectively. Both used the manual-review fallback, not a claimed Tessl pass.
+
 ## Security and public-state observations
 
 The live GitHub API returned no open issues, Dependabot alerts, CodeQL alerts or secret-scanning alerts at intake. Both source and legacy repositories retain protected main branches, administrator enforcement, disabled force-push/deletion, required checks and default read-only workflow permissions. The legacy repository had no open PR.
