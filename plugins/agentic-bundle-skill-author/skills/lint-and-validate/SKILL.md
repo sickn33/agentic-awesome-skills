@@ -1,63 +1,35 @@
 ---
 name: lint-and-validate
-description: 'MANDATORY: Run appropriate validation tools after EVERY code change. Do not finish a task until the code is error-free.'
+description: Run configured lint and type checks, distinguish failures from checks that did not run, and report concrete validation results.
 metadata:
   aas-risk: critical
   aas-source: community
   aas-date-added: '2026-02-27'
 ---
 
-# Lint and Validate Skill
-
-> **MANDATORY:** Run appropriate validation tools after EVERY code change. Do not finish a task until the code is error-free.
-
-### Procedures by Ecosystem
-
-#### Node.js / TypeScript
-1. **Lint/Fix:** `npm run lint` or `npx eslint "path" --fix`
-2. **Types:** `npx tsc --noEmit`
-3. **Security:** `npm audit --audit-level=high`
-
-#### Python
-1. **Linter (Ruff):** `ruff check "path" --fix` (Fast & Modern)
-2. **Security (Bandit):** `bandit -r "path" -ll`
-3. **Types (MyPy):** `mypy "path"`
-
-## The Quality Loop
-1. **Write/Edit Code**
-2. **Run Audit** for the project's ecosystem:
-   - **Node.js / TypeScript:** `npm run lint && npx tsc --noEmit`
-   - **Python:** `ruff check . --fix && mypy . && bandit -r . -ll`
-3. **Analyze Report:** Check the "FINAL AUDIT REPORT" section.
-4. **Fix & Repeat:** Submitting code with "FINAL AUDIT" failures is NOT allowed.
-
-## Error Handling
-- If `lint` fails: Fix the style or syntax issues immediately.
-- If `tsc` fails: Correct type mismatches before proceeding.
-- If no tool is configured: Check the project root for `.eslintrc`, `tsconfig.json`, `pyproject.toml` and suggest creating one.
-
----
-**Strict Rule:** No code should be committed or reported as "done" without passing these checks.
-
----
-
-## Scripts
-
-| Script | Purpose | Command |
-|--------|---------|---------|
-| `scripts/lint_runner.py` | Unified lint check | `python scripts/lint_runner.py <project_path>` |
-| `scripts/type_coverage.py` | Type coverage analysis | `python scripts/type_coverage.py <project_path>` |
+# Lint and Validate
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+
+Use after behavior or configuration changes when a repository has relevant lint or type checks. Read the repository's instructions and package scripts first. Run focused checks during development and the required checks before completion.
+
+## Procedure
+
+1. Identify the changed languages, configured commands, and installed tools. Inspect package scripts before executing them: a script named `lint` can modify files or run arbitrary project code.
+2. Run the project's read-only lint/type-check commands. For Node projects, prefer declared scripts such as `npm run lint` and `npm run typecheck`. Do not use `npx` to silently fetch an absent checker.
+3. For Python, use configured, already installed tools such as `ruff check .` or `mypy .`. Do not assume every `pyproject.toml` configures both. Never add `--fix` without inspecting the proposed changes and the task's authorization.
+4. Fix relevant failures without deleting user work, weakening rules, or raising timeouts just to pass. If a required tool is unavailable, report the exact check that did not run.
+5. Report commands, exit results, scope and remaining limitations. Passing lint does not prove the absence of runtime or security defects.
 
 ## Example
 
-**User request:**
+After correcting a TypeScript behavior, inspect `package.json`, run the configured focused regression test, then `npm run lint` and `npm run typecheck` if those scripts exist. If TypeScript is declared but not installed, report the missing local checker; do not substitute a downloaded package or call the result a pass.
 
-> Use @lint-and-validate for this task: MANDATORY: Run appropriate validation tools after EVERY code change.
+## Bundled helpers
+
+- `python scripts/lint_runner.py /absolute/project`: runs a conservative set of candidate checks. Node fallback checkers must exist in local `node_modules/.bin`; Python candidates must be installed. Inspect the project scripts first. A missing command or failing check exits 1; no configured checks or invalid project metadata exits 2. Exit 0 means the invoked checks passed, not that every needed check was discovered. Python detection is heuristic and may suggest unconfigured Ruff/MyPy commands.
+- `python scripts/type_coverage.py /absolute/project`: read-only annotation inventory, despite its retained compatibility filename. Samples at most 30 files per language, skips links and build/dependency directories, and bounds file reads. Python uses AST nodes to avoid double-counting functions. TypeScript reports lexical `: any` occurrences, including possible comments and strings. No quality percentage or pass/fail threshold is inferred. Exit 2 means no applicable files; parse/read errors exit 1.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The runner executes trusted project commands, which may mutate files or access the network. It does not install dependencies, detect every monorepo configuration, or replace the project's CI contract. The inventory is a bounded source sample, not semantic type coverage; inferred types, generics, decorator behavior and correctness require the actual type checker. Do not label unrun checks as successful.
