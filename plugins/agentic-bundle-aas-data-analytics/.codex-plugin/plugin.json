@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "AAS Data Analytics",
-    "shortDescription": "Plan tracking, model product data, write SQL, build dashboards, and turn experiments into decisions.",
-    "longDescription": "Plan tracking, model product data, write SQL, build dashboards, and turn experiments into decisions. Data work benefits from a repeatable toolchain: tracking, SQL, Postgres, dbt, dashboards, visualization, and experimentation. Recommended for: Product analysts, Data-informed product teams, Founders measuring funnels. Not for: Document generation-only work, Production incident response. Covers Analytics Tracking, Analytics Product, and 8 more skills.",
+    "shortDescription": "Validate analytical data, define metrics, write SQL and produce dashboards or experiment readouts.",
+    "longDescription": "Validate analytical data, define metrics, write SQL and produce dashboards or experiment readouts. Validate source data, write analytical queries and produce a dashboard or experiment readout with traceable definitions. Recommended for: Product analysts, Data-informed product teams, Founders measuring funnels. Not for: Production ingestion and orchestration: use Data Engineering Platform, Creating evidence when source data or definitions are unavailable. Covers Analytics Tracking, Analytics Product, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins",
     "capabilities": [
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
-      "Use this plugin to build a measurement plan for this SaaS funnel, define events, and design the dashboard.",
+      "Inspect the supplied dataset and business question. Check missing values, duplicates, join cardinality and metric definitions before writing SQL or building a dashboard. Deliver the analysis, validation results and decision limits; propose tracking only if the task requires it.",
       "Use this plugin to review this SQL model and propose safer metrics and joins.",
       "Use this plugin to design an A/B test and the KPI dashboard needed to read it."
     ]

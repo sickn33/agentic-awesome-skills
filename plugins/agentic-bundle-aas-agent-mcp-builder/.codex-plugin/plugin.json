@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "AAS Agent & MCP Builder",
     "shortDescription": "Build agentic apps, MCP tools, RAG systems, eval loops, tracing, prompts, and context-aware workflows.",
-    "longDescription": "Build agentic apps, MCP tools, RAG systems, eval loops, tracing, prompts, and context-aware workflows. Maps directly to plugin-based agent workflows because it can grow from skills into MCP server configuration and app/tool integrations. Recommended for: Agent engineers, MCP tool builders, LLM app teams. Not for: Marketing-only content work, Manual office document tasks. Covers AI Agents Architect, Agent Evaluation, and 8 more skills.",
+    "longDescription": "Build agentic apps, MCP tools, RAG systems, eval loops, tracing, prompts, and context-aware workflows. Build a bounded agent or MCP tool with explicit interfaces, failure handling and behavioral evaluation. Recommended for: Agent engineers, MCP tool builders, LLM app teams. Not for: AI feature prioritization and product evaluation plans: use AI Product & Evaluation Ops, Preconfigured MCP servers or hosted model access included in this bundle. Covers AI Agents Architect, Agent Evaluation, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins",
     "capabilities": [
@@ -34,7 +34,7 @@
     "composerIcon": "./assets/composer-icon.png",
     "logo": "./assets/logo.png",
     "defaultPrompt": [
-      "Use this plugin to design an MCP server for this workflow, including tools, schemas, and test cases.",
+      "Inspect the existing agent or MCP project and implement the requested capability. Define tool inputs, permissions, error behavior and context limits; add representative behavioral checks. Choose RAG, LangGraph or tracing only when needed and identify any separate runtime or service setup.",
       "Use this plugin to create an eval plan for this agent and define reliability metrics.",
       "Use this plugin to review this RAG or LangGraph architecture for tool, memory, prompt, and observability gaps."
     ]

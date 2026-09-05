@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "AAS Automation Builder",
     "shortDescription": "Design reliable automations across apps, MCP tools, Make/Zapier, Airtable, Notion, Slack, Sheets, GitHub, and n8n.",
-    "longDescription": "Design reliable automations across apps, MCP tools, Make/Zapier, Airtable, Notion, Slack, Sheets, GitHub, and n8n. Works best as a plugin because app connectors and MCP configuration can turn instructions into live workflows. Recommended for: Ops teams, Automation builders, Teams connecting SaaS workflows. Not for: One-off copywriting tasks, Deep infrastructure provisioning. Covers Workflow Automation, MCP Builder, and 8 more skills.",
+    "longDescription": "Design reliable automations across apps, MCP tools, Make/Zapier, Airtable, Notion, Slack, Sheets, GitHub, and n8n. Design an automation with explicit triggers, mappings, retries and a reviewable test run. Recommended for: Ops teams, Automation builders, Teams connecting SaaS workflows. Not for: Accounts or connectors installed and authenticated by this skill bundle, Production infrastructure provisioning: use DevOps & Cloud. Covers Workflow Automation, MCP Builder, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins - Next Wave",
     "capabilities": [
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
-      "Use this plugin to map this manual workflow into a reliable automation with failure handling.",
+      "Map this process into triggers, actions, field mappings, deduplication and failure recovery. Inspect which connectors and accounts are actually available, then prepare a test using nonproduction data. Show the intended external writes before enabling the live workflow.",
       "Use this plugin to design an MCP-backed automation and the tool schemas it needs.",
       "Use this plugin to review this automation for idempotency, permissions, expressions, and observability gaps."
     ]

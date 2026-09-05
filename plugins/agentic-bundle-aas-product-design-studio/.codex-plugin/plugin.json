@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "AAS Product Design Studio",
     "shortDescription": "Shape product UI through design critique, visual direction, accessibility, responsive UX, motion, and asset generation.",
-    "longDescription": "Shape product UI through design critique, visual direction, accessibility, responsive UX, motion, and asset generation. Turns design from a generic skill category into a strong plugin proposition with visual direction, responsive UI, motion, and asset creation. Recommended for: Product designers, Frontend teams, Founders polishing a product surface. Not for: Backend-only services, Security audits. Covers UI UX Pro Max, High End Visual Design, and 8 more skills.",
+    "longDescription": "Shape product UI through design critique, visual direction, accessibility, responsive UX, motion, and asset generation. Turn a product brief into a coherent visual direction, responsive interface and actionable design review. Recommended for: Product designers, Frontend teams, Founders polishing a product surface. Not for: Complete application delivery and browser regression coverage: use Web App Builder, A dedicated accessibility audit: use Accessibility & Inclusive UX. Covers UI UX Pro Max, High End Visual Design, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins",
     "capabilities": [
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
-      "Use this plugin to critique this UI and propose a stronger visual direction.",
+      "Review this product brief and existing interface. Propose a visual direction, implement one representative responsive screen, and check typography, spacing, contrast and motion. Add 3D or custom artwork only if the brief calls for it.",
       "Use this plugin to design a responsive accessible product screen and handoff notes for implementation.",
       "Use this plugin to improve the visual polish, motion, and accessibility of this interface."
     ]

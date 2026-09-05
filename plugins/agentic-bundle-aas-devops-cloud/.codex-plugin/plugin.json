@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "AAS DevOps & Cloud",
     "shortDescription": "Ship infrastructure, deployments, CI, environments, rollback plans, troubleshooting, and incident-ready operations.",
-    "longDescription": "Ship infrastructure, deployments, CI, environments, rollback plans, troubleshooting, and incident-ready operations. Strong plugin candidate because it combines deterministic scripts, cloud patterns, deployment safety, and incident workflows. Recommended for: Platform teams, Startup engineers owning deployment, Cloud and DevOps maintainers. Not for: Frontend-only UI polish, Product analytics-only work. Covers Docker Expert, AWS Serverless, and 8 more skills.",
+    "longDescription": "Ship infrastructure, deployments, CI, environments, rollback plans, troubleshooting, and incident-ready operations. Prepare infrastructure and delivery changes with validation, rollback steps and explicit deployment boundaries. Recommended for: Platform teams, Startup engineers owning deployment, Cloud and DevOps maintainers. Not for: An active incident as the primary task: use Observability IR, Cloud accounts, credentials or managed infrastructure supplied by the plugin. Covers Docker Expert, AWS Serverless, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins",
     "capabilities": [
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
-      "Use this plugin to review this deployment for risk, rollback, environment, and CI gaps.",
+      "Inspect the deployment target, infrastructure and CI configuration. Prepare the requested change using the existing platform, validate it locally where possible, and provide rollout, rollback and post-deployment checks. Keep production changes for the authorized deployment step.",
       "Use this plugin to design a small-team cloud deployment plan with Terraform, CI, and runbook steps.",
       "Use this plugin to troubleshoot this failed deployment and prepare an incident response checklist."
     ]

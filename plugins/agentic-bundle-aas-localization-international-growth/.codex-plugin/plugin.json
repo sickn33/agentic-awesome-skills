@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "AAS Localization & International Growth",
     "shortDescription": "Grow internationally with i18n, hreflang, multilingual SEO, content, copy, schema, analytics, and market research.",
-    "longDescription": "Grow internationally with i18n, hreflang, multilingual SEO, content, copy, schema, analytics, and market research. Combines existing i18n, hreflang, SEO, content, copy, analytics, and market research skills into an international growth workflow. Recommended for: Growth teams, International SEO teams, Product teams localizing UI. Not for: Legal localization certification, Backend-only API services. Covers I18n Localization, SEO Hreflang, and 8 more skills.",
+    "longDescription": "Grow internationally with i18n, hreflang, multilingual SEO, content, copy, schema, analytics, and market research. Prepare locale-aware interfaces and content with language, routing and international SEO checks. Recommended for: Growth teams, International SEO teams, Product teams localizing UI. Not for: Certified legal translation, General acquisition planning without localization needs: use Marketing, SEO & Growth. Covers I18n Localization, SEO Hreflang, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins - Next Wave",
     "capabilities": [
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
-      "Use this plugin to plan international SEO and localization for this product, including hreflang and content priorities.",
+      "Review the supplied target markets, source content and locale implementation. Prepare the relevant translation structure, locale routing, hreflang and content changes; check language consistency and technical links. Flag cultural or linguistic judgments requiring a native reviewer and any separately configured research tools.",
       "Use this plugin to audit this site for i18n, localized content, schema, analytics, and market research gaps.",
       "Use this plugin to create a market-localized content plan with copy, SEO, and measurement."
     ]

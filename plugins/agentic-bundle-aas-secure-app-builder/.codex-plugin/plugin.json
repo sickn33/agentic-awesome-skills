@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "AAS Secure App Builder",
     "shortDescription": "Build application features with auth, access control, API security, PCI, SAST, and defensive review baked in.",
-    "longDescription": "Build application features with auth, access control, API security, PCI, SAST, and defensive review baked in. Separates defensive implementation from offensive assessment, making a safer and clearer plugin for product engineering teams. Recommended for: Application developers, Product engineering teams, Security-conscious backend and frontend builders. Not for: Offensive pentest engagements, Infrastructure-only reviews. Covers API Security Best Practices, Auth Implementation Patterns, and 8 more skills.",
+    "longDescription": "Build application features with auth, access control, API security, PCI, SAST, and defensive review baked in. Implement authentication, access control and data protection with negative tests and a focused security review. Recommended for: Application developers, Product engineering teams, Security-conscious backend and frontend builders. Not for: Offensive security assessment: use Security Engineer, Formal compliance certification or legal advice. Covers API Security Best Practices, Auth Implementation Patterns, and 7 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins",
     "capabilities": [
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
-      "Use this plugin to review this PR for auth, access control, data exposure, injection, and secrets risks.",
+      "Inspect this feature and trace untrusted input, authentication, authorization and sensitive data. Implement the requested defensive controls, add negative tests for bypasses, and report residual risks. Use PCI or Django guidance only when the project requires it.",
       "Use this plugin to design a secure API feature with validation, authorization, and auditability.",
       "Use this plugin to harden this payment, authentication, or user-data flow before release."
     ]

@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "AAS Data Engineering Platform",
     "shortDescription": "Build data platforms with pipelines, dbt, Postgres, vector databases, embeddings, RAG data, SQL, and transforms.",
-    "longDescription": "Build data platforms with pipelines, dbt, Postgres, vector databases, embeddings, RAG data, SQL, and transforms. Connects data pipelines, dbt, Postgres, vector databases, embeddings, RAG, SQL, and transformation practice into a modern data platform plugin. Recommended for: Data engineers, Analytics engineers, AI platform teams. Not for: Marketing campaign planning, Frontend UI-only work. Covers Data Engineer, Airflow DAG Patterns, and 8 more skills.",
+    "longDescription": "Build data platforms with pipelines, dbt, Postgres, vector databases, embeddings, RAG data, SQL, and transforms. Build ingestion and transformation pipelines with data contracts, quality checks and recovery planning. Recommended for: Data engineers, Analytics engineers, AI platform teams. Not for: Business analysis and dashboard interpretation as the main task: use Data Analytics, Using production data or changing pipelines without authorized access. Covers Data Engineer, Airflow DAG Patterns, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins - Next Wave",
     "capabilities": [
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
-      "Use this plugin to design a data platform from ingestion through dbt models, Postgres, and dashboard-ready marts.",
+      "Inspect these sources, destination models and existing pipeline. Prepare the required ingestion or transformation change with schema contracts, data-quality checks, backfill and failure recovery. Add embeddings or vector storage only when retrieval requirements justify them.",
       "Use this plugin to review this pipeline for reliability, transform quality, SQL modeling, and RAG readiness.",
       "Use this plugin to plan an embeddings and vector database layer for this product dataset."
     ]

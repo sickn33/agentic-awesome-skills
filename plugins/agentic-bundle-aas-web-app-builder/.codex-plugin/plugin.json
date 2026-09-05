@@ -19,8 +19,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "AAS Web App Builder",
-    "shortDescription": "Build modern React/Next.js apps from UI planning to implementation, accessibility, forms, SEO, and QA.",
-    "longDescription": "Build modern React/Next.js apps from UI planning to implementation, accessibility, forms, SEO, and QA. High-demand workflow with a coherent path from UI design to React/Next.js implementation, forms, Tailwind, and SEO. Recommended for: Frontend teams, Full-stack builders, Startup product engineers. Not for: Native mobile-only apps, Backend-only API services. Covers Frontend Developer, Frontend Design, and 8 more skills.",
+    "shortDescription": "Build React/Next.js user journeys with responsive UI, accessibility, forms, SEO and browser verification.",
+    "longDescription": "Build React/Next.js user journeys with responsive UI, accessibility, forms, SEO and browser verification. Implement a React/Next.js user journey with responsive UI, accessibility checks and browser verification. Recommended for: Frontend teams, Full-stack builders, Startup product engineers. Not for: Native mobile applications: use Mobile App Builder, Shared API contracts and backend platforms: use API Platform Builder. Covers Frontend Developer, Frontend Design, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins",
     "capabilities": [
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
-      "Use this plugin to audit this Next.js app and produce a prioritized implementation plan.",
+      "Inspect this React/Next.js project and implement the requested user journey using its existing design system. Verify loading, empty, error and keyboard states in the browser; report checks actually run and remaining gaps.",
       "Use this plugin to build a responsive landing page with forms, SEO, and accessibility checks.",
       "Use this plugin to review this React component for performance, UX, accessibility, and maintainability."
     ]

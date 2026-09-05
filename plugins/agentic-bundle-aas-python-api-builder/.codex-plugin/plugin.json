@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "AAS Python API Builder",
     "shortDescription": "Build Python APIs and services with FastAPI, Django, Pydantic, OpenAPI, async patterns, tests, and API design.",
-    "longDescription": "Build Python APIs and services with FastAPI, Django, Pydantic, OpenAPI, async patterns, tests, and API design. A language-specialized plugin is useful when it bundles framework guidance, async patterns, testing, and API design together. Recommended for: Python backend teams, FastAPI and Django builders, API maintainers. Not for: Language-agnostic API governance, Frontend-only implementation. Covers Python Pro, Python Patterns, and 8 more skills.",
+    "longDescription": "Build Python APIs and services with FastAPI, Django, Pydantic, OpenAPI, async patterns, tests, and API design. Implement Python service endpoints with schema validation, async boundaries and automated tests. Recommended for: Python backend teams, FastAPI and Django builders, API maintainers. Not for: Framework-neutral platform design: use API Platform Builder, Installing both FastAPI and Django for a single-framework project. Covers Python Pro, Python Patterns, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins - Next Wave",
     "capabilities": [
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
-      "Use this plugin to design a FastAPI service with routes, Pydantic models, validation, async boundaries, and tests.",
+      "Inspect this Python service and use its existing FastAPI or Django stack. Implement the requested endpoint with Pydantic or framework-native validation, authentication boundaries, error responses and tests. Update the API contract and report the checks actually run.",
       "Use this plugin to review this Django API for structure, performance, OpenAPI coverage, and test coverage.",
       "Use this plugin to refactor this Python service toward clearer API and async patterns."
     ]

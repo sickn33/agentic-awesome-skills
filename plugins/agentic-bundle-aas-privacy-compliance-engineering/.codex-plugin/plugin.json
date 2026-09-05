@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "AAS Privacy & Compliance Engineering",
     "shortDescription": "Engineer privacy and compliance controls with GDPR, PCI, control checks, evidence gaps, and security review.",
-    "longDescription": "Engineer privacy and compliance controls with GDPR, PCI, control checks, evidence gaps, and security review. Uses privacy, GDPR, PCI, compliance checks, control evidence, and security review skills to create a practical engineering compliance workflow. Recommended for: SaaS teams, AI app teams, Compliance-sensitive engineering teams. Not for: Legal advice as a substitute for counsel, Offensive security testing. Covers Privacy By Design, Gdpr Data Handling, and 4 more skills.",
+    "longDescription": "Engineer privacy and compliance controls with GDPR, PCI, control checks, evidence gaps, and security review. Map data flows to engineering controls and evidence gaps for a scoped privacy or compliance review. Recommended for: SaaS teams, AI app teams, Compliance-sensitive engineering teams. Not for: Legal advice or formal compliance certification, Offensive testing: use Security Engineer with explicit authorization. Covers Privacy By Design, Gdpr Data Handling, and 3 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins - Next Wave",
     "capabilities": [
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
-      "Use this plugin to review this feature for privacy-by-design, GDPR handling, PCI exposure, and security controls.",
+      "Review the supplied data flows, deployment context and applicable requirements. Map each engineering control to implementation evidence and gaps, then propose data-minimization, retention and access changes. Identify where legal or qualified assessor review is still required; do not claim certification.",
       "Use this plugin to map compliance-sensitive data flows and identify engineering changes before launch.",
       "Use this plugin to check whether this implementation satisfies the expected privacy and compliance controls."
     ]

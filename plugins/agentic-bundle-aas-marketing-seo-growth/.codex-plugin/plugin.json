@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "AAS Marketing, SEO & Growth",
     "shortDescription": "Plan, write, measure, test, and improve content, SEO, email, and acquisition workflows.",
-    "longDescription": "Plan, write, measure, test, and improve content, SEO, email, and acquisition workflows. A clearer proposition than many separate marketing skills: plan, write, measure, test, and improve acquisition work. Recommended for: Founders, Growth teams, Content and SEO operators. Not for: Backend API design, Security assessment. Covers Content Creator, SEO Audit, and 8 more skills.",
+    "longDescription": "Plan, write, measure, test, and improve content, SEO, email, and acquisition workflows. Create an acquisition plan and channel assets grounded in the supplied audience, product and search evidence. Recommended for: Founders, Growth teams, Content and SEO operators. Not for: Pricing and product activation strategy: use SaaS Launch & Revenue, Guaranteed rankings, traffic or conversion gains. Covers Content Creator, SEO Audit, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins - Next Wave",
     "capabilities": [
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
-      "Use this plugin to audit this site for SEO, content, analytics, and conversion opportunities.",
+      "Review the supplied audience, offer, site and available acquisition evidence. Identify the main bottleneck, prepare the relevant SEO, content or email deliverable, and explain how to validate it. Separate observed facts from assumptions and leave publication or sending to an explicitly authorized step.",
       "Use this plugin to create a growth experiment backlog with measurement and email follow-up.",
       "Use this plugin to plan a programmatic SEO cluster and the tracking needed to evaluate it."
     ]

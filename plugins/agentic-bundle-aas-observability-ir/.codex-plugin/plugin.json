@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "AAS Observability IR",
     "shortDescription": "Design observability, SLOs, traces, dashboards, monitoring, incident response, troubleshooting, and postmortem workflows.",
-    "longDescription": "Design observability, SLOs, traces, dashboards, monitoring, incident response, troubleshooting, and postmortem workflows. Operational work needs consistent procedure and proof gates, making it more plugin-worthy than isolated observability prompts. Recommended for: SRE teams, Backend teams owning production, Incident responders. Not for: Marketing campaign planning, Static document conversion. Covers Observability Engineer, Observability And Instrumentation, and 8 more skills.",
+    "longDescription": "Design observability, SLOs, traces, dashboards, monitoring, incident response, troubleshooting, and postmortem workflows. Connect logs, metrics and traces to incident diagnosis, recovery checks and a documented follow-up. Recommended for: SRE teams, Backend teams owning production, Incident responders. Not for: Initial infrastructure delivery: use DevOps & Cloud, Changing production without the required operational authorization. Covers Observability Engineer, Observability And Instrumentation, and 8 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins - Next Wave",
     "capabilities": [
@@ -32,7 +32,7 @@
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
     "brandColor": "#111827",
     "defaultPrompt": [
-      "Use this plugin to review this service for logging, tracing, SLO, monitoring, and dashboard gaps.",
+      "Review the supplied incident timeline, logs, metrics and recent changes. Separate evidence from hypotheses, propose the next diagnostic step and a reversible mitigation, then define recovery checks and postmortem actions. Use LLM-specific tracing only for an LLM system.",
       "Use this plugin to build an incident response plan and rollback checklist for this system.",
       "Use this plugin to draft a blameless postmortem from this timeline and identify action items."
     ]

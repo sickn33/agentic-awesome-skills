@@ -387,7 +387,7 @@ _Frontend and full-stack developers shipping modern web apps._
 - [`frontend-design`](../../skills/frontend-design/): Apply strong UI layout and visual design patterns.
 - [`react-best-practices`](../../skills/react-best-practices/): Optimize React performance and maintainability.
 - [`nextjs-app-router-patterns`](../../skills/nextjs-app-router-patterns/): Use Next.js App Router patterns safely.
-- [`nextjs-best-practices`](../../skills/nextjs-best-practices/): Ship high-quality Next.js applications.
+- [`browser-automation`](../../skills/browser-automation/): Verify user journeys through observed browser state and bounded checks.
 - [`tailwind-patterns`](../../skills/tailwind-patterns/): Style efficiently with Tailwind CSS patterns.
 - [`shadcn`](../../skills/shadcn/): Build polished interfaces with shadcn/ui.
 - [`form-cro`](../../skills/form-cro/): Improve form conversion and usability.
@@ -441,7 +441,6 @@ _Application developers who want security embedded while building features._
 - [`cc-skill-security-review`](../../skills/cc-skill-security-review/): Review features with a security checklist.
 - [`pci-compliance`](../../skills/pci-compliance/): Handle payment security and PCI expectations.
 - [`sast-configuration`](../../skills/sast-configuration/): Configure static application security testing.
-- [`security-and-hardening`](../../skills/security-and-hardening/): Harden applications against untrusted input, auth, data, and integration risks.
 - [`secrets-management`](../../skills/secrets-management/): Manage application and CI/CD secrets with least privilege and rotation.
 - [`django-access-review`](../../skills/django-access-review/): Review Django access control and authorization behavior.
 
@@ -471,7 +470,7 @@ _Operators, analysts, and builders working with product analytics, SQL, dashboar
 - [`analytics-product`](../../skills/analytics-product/): Model product analytics and product metrics.
 - [`sql-pro`](../../skills/sql-pro/): Query and model data with modern SQL.
 - [`postgres-best-practices`](../../skills/postgres-best-practices/): Optimize Postgres schemas and queries.
-- [`database-architect`](../../skills/database-architect/): Design robust database structures.
+- [`data-quality-frameworks`](../../skills/data-quality-frameworks/): Validate dataset assumptions, data contracts and analytical transformations.
 - [`dbt-transformation-patterns`](../../skills/dbt-transformation-patterns/): Build dbt transformation pipelines.
 - [`claude-d3js-skill`](../../skills/claude-d3js-skill/): Create custom D3 visualizations.
 - [`kpi-dashboard-design`](../../skills/kpi-dashboard-design/): Design dashboards for decision-making.
@@ -952,7 +951,6 @@ _Teams building privacy-aware and compliance-sensitive SaaS, AI, finance, and cl
 - [`gdpr-data-handling`](../../skills/gdpr-data-handling/): Handle GDPR-sensitive data safely.
 - [`pci-compliance`](../../skills/pci-compliance/): Handle payment security and PCI expectations.
 - [`fsi-compliance-checker`](../../skills/fsi-compliance-checker/): Check financial-services compliance requirements.
-- [`security-audit`](../../skills/security-audit/): Audit security posture and controls.
 - [`cc-skill-security-review`](../../skills/cc-skill-security-review/): Review features with a security checklist.
 
 ### 🌍 The "AAS Localization & International Growth" Plugin
