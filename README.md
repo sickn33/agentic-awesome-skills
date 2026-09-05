@@ -419,11 +419,13 @@ This keeps discovery stable (`id`, `path`, metadata) while ensuring hosts only l
 
 ## Support the Project
 
-Support is optional. The project stays free and open-source for everyone.
+The immediate goal is **€100 per month** to help cover the AI tools used to maintain AAS, review contributions, and keep releases moving. Small recurring contributions add up: 20 people giving €5 per month would cover that goal.
+
+[Support AAS on Buy Me a Coffee](https://buymeacoffee.com/sickn33) and select **Make this monthly** for recurring support. One-time contributions are welcome too. Support is optional; the project stays free and open-source for everyone.
 
 [![Buy me a coffee](assets/buy-me-a-coffee-banner.png)](https://buymeacoffee.com/sickn33)
 
-- [Buy me a book on Buy Me a Coffee](https://buymeacoffee.com/sickn33)
+- [Help maintain AAS on Buy Me a Coffee](https://buymeacoffee.com/sickn33)
 - Security tooling support: [Snyk](https://snyk.io/)
 - Star the repository
 - Open reproducible issues

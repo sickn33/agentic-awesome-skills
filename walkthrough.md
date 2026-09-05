@@ -560,3 +560,9 @@
 - Repaired the `agents-md` contribution before merge so its evidence-first guidance remains source-only and contains no promotional link or unrelated walkthrough change.
 - Updated the web app lockfile from vulnerable `browserslist` `4.28.4` to `4.28.8`, including its lockfile-resolved browser-data dependencies; `npm audit` then reported zero known vulnerabilities for the web app.
 - Kept generated registries and contributor credits in the protected canonical-sync lane. No release was requested or published during this sweep.
+
+# Maintenance Walkthrough - 2026-09-05 Funding Target
+
+- Reduced the one-time FLOSS/fund request from USD 25,000 to USD 10,000, the minimum published at https://floss.fund/faq, and revised the proposed allocation to total USD 10,000.
+- Set the README immediate community-support target to EUR 100 per month with an explicit recurring Buy Me a Coffee route. This monthly target is separate from the annual grant proposal.
+- Preserved the existing project identifiers, funding channel, and dated adoption evidence.
