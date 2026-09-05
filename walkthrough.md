@@ -1,3 +1,15 @@
+# Truncated skill description cleanup - 2026-09-05
+
+- Repaired all 134 catalog descriptions that ended in an ellipsis: 126 now
+  retain only their existing complete source sentences, while eight descriptions
+  were rewritten against their skill content where no complete sentence existed.
+- Updated the repair utility to prefer a complete frontmatter sentence over a
+  synthesized body fallback, with regression coverage for that behavior.
+- Lowered the strict audit budget from 805 observed warnings to 671 and added a
+  zero-tolerance budget for future truncated descriptions.
+- Kept the cleanup source-only; protected canonical synchronization owns
+  generated registries and plugin mirrors.
+
 # Dependency advisory remediation - 2026-09-03
 
 - Raised the bundled `fast-uri` runtime floor to 3.1.6 to resolve the current

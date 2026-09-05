@@ -1,6 +1,6 @@
 ---
 name: frontend-seo
-description: A portable, framework-agnostic SEO system for any React or React Native-for-web frontend. Centralizes site metadata in one constants module, derives canonical URLs from a single base, builds per-route metadata (title, description, canonical, Open Graph, Twitter/X cards), generates...
+description: "A portable, framework-agnostic SEO system for any React or React Native-for-web frontend."
 risk: critical
 source: https://github.com/stareezy-1/frontend-architecture-skill/tree/main/skills/frontend-seo
 source_repo: stareezy-1/frontend-architecture-skill

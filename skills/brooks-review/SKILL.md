@@ -1,6 +1,6 @@
 ---
 name: brooks-review
-description: "PR code review that surfaces decay risks, design smells, and maintainability issues with concrete Symptom → Source → Consequence → Remedy findings, drawing on twelve classic engineering books. Triggers when: user asks to review code, check a PR, shares a diff or pastes code asking..."
+description: "PR code review that surfaces decay risks, design smells, and maintainability issues with concrete Symptom → Source → Consequence → Remedy findings, drawing on twelve classic engineering books."
 risk: safe
 source: https://github.com/hyhmrright/brooks-lint/tree/main/skills/brooks-review
 source_repo: hyhmrright/brooks-lint

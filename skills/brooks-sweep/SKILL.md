@@ -1,6 +1,6 @@
 ---
 name: brooks-sweep
-description: "Full-sweep mode: runs a unified analysis across all quality dimensions — code decay, architecture, tech debt, and test quality — then applies fixes directly to the codebase. Safe changes are auto-applied; risky changes are confirmed before execution. Drawing on twelve classic..."
+description: "Full-sweep mode: runs a unified analysis across all quality dimensions — code decay, architecture, tech debt, and test quality — then applies fixes directly to the codebase. Safe changes are auto-applied; risky changes are confirmed before execution."
 risk: critical
 source: https://github.com/hyhmrright/brooks-lint/tree/main/skills/brooks-sweep
 source_repo: hyhmrright/brooks-lint

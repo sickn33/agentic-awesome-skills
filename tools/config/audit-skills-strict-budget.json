@@ -1,11 +1,12 @@
 {
-  "maxWarnings": 864,
-  "maxWarningOnlySkills": 755,
+  "maxWarnings": 671,
+  "maxWarningOnlySkills": 651,
   "maxTopFindingCodes": {
-    "missing_examples": 468,
-    "skill_too_long": 214
+    "description_truncated": 0,
+    "missing_examples": 460,
+    "skill_too_long": 211
   },
   "owner": "repository maintainers",
-  "lastReviewed": "2026-07-18",
-  "rationale": "Current objective audit warnings are tracked as explicit backlog debt after retiring inferred risk and heuristic score gates. Strict mode fails on errors or regressions above this measured baseline."
+  "lastReviewed": "2026-09-05",
+  "rationale": "Current objective audit warnings are tracked as explicit backlog debt after removing all truncated-description findings. Strict mode fails on errors, any reintroduced truncation, or regressions above this measured baseline."
 }

@@ -1,6 +1,6 @@
 ---
 name: logic-locate
-description: Locate the root cause of a CONFIRMED failure via backward-then-forward semi-formal tracing. Trigger when the user provides a stack trace, failing assertion, error message, or specific wrong-value observation — "find the bug", "this test is failing", "track down this crash", "why is...
+description: "Locate the root cause of a CONFIRMED failure via backward-then-forward semi-formal tracing."
 risk: safe
 source: https://github.com/hyhmrright/logic-lens/tree/main/skills/logic-locate
 source_repo: hyhmrright/logic-lens
