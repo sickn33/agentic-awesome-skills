@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "date": "2026-09-05",
-  "sourceBaseCommit": "251eefb9a58e36d41902dbc4a4fadc4eab72ab66",
+  "sourceBaseCommit": "7ed94980184e1349956d743f721374c16bfcccb8",
   "baselineCommit": "4af9759d52490b8346caf4debb0fceaac92c71e4",
   "reviewProcess": "Codex full-tree source review, stated primary-reference checks and recorded local probes. Official protected merge review is recorded separately by the PR workflow.",
   "selectionBasis": "Top 20 canonical skills by occurrences in checked-in workflows and focused editorial bundles, ties by ID; editorial prominence, not user telemetry.",
@@ -8723,13 +8723,13 @@
     {
       "id": "ab-test-setup",
       "scope": "priority-cohort",
-      "treeSha256": "4408d3f835f5d28cb4621f2564e09090bb1528b278fa6389ea8116ee58e0500c",
+      "treeSha256": "2baac95122765fa1848f804fe1286f58f995a2e7b132b3baae612c5fbc9280cd",
       "files": [
         {
           "path": "skills/ab-test-setup/SKILL.md",
-          "bytes": 7865,
+          "bytes": 8985,
           "mode": "100644",
-          "sha256": "d1e5d5de309b90375dee848f3636790b147618f5b35867f29beb6cc0eae70a3c"
+          "sha256": "f5376f3e111a5c244bb894d984068d78c40ce973c69d59d90cb01b5f07a67539"
         }
       ]
     },
@@ -9557,13 +9557,13 @@
     {
       "id": "antigravity-maintainer-batch-release",
       "scope": "maintainer-policy",
-      "treeSha256": "6ac0de83c23d885fa7a8142df331c80cbed5e3a9044af47993186e0fbfa8a321",
+      "treeSha256": "e32004dca74f779a40c1657146252cec341ad0bde5024003bd7cf5007b56e5f8",
       "files": [
         {
           "path": "skills/antigravity-maintainer-batch-release/SKILL.md",
-          "bytes": 21077,
+          "bytes": 21612,
           "mode": "100644",
-          "sha256": "29cd5691fa1939224bf32551a5bc4cc83de5ff78fa191a8a77eb5891c8002ce5"
+          "sha256": "284ad74d3af34d11fa53af2221131722872d8ec929951465b160941fd0cfd8ee"
         },
         {
           "path": "skills/antigravity-maintainer-batch-release/agents/openai.yaml",

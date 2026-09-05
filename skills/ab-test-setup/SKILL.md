@@ -1,6 +1,6 @@
 ---
 name: ab-test-setup
-description: "Structured guide for setting up A/B tests with mandatory gates for hypothesis, metrics, and execution readiness."
+description: "Use when designing an A/B or split test: define the hypothesis, control and variants, estimate sample size, verify tracking, and predeclare metrics and stopping rules."
 risk: critical
 source: community
 date_added: "2026-02-27"
@@ -236,17 +236,37 @@ Explain why and recommend next steps.
 
 ---
 
-## Final Reminder
-
-A/B testing is not about proving ideas right.
-It is about **learning the truth with confidence**.
-
-If you feel tempted to rush, simplify, or “just try it” —
-that is the signal to **slow down and re-check the design**.
-
 ## When to Use
 
 Use when a product change has enough eligible traffic for a randomized comparison and a measurable outcome. For low-volume launches or qualitative discovery, consider usability research or descriptive measurement instead of claiming causal lift.
+
+### Sample-size calculation example
+
+For an illustrative binary metric, estimate the per-variant sample for a change
+from 10% to 11% (one percentage point, 10% relative lift), 50/50 allocation,
+two-sided alpha 0.05 and power 0.80. This Python 3 large-sample approximation uses
+[Cohen's proportion effect size](https://www.statsmodels.org/stable/generated/statsmodels.stats.proportion.proportion_effectsize.html):
+
+```python
+from math import asin, ceil, sqrt
+from statistics import NormalDist
+
+baseline, variant = 0.10, 0.11  # illustrative assumptions, not measured data
+alpha, power = 0.05, 0.80
+h = abs(2 * asin(sqrt(variant)) - 2 * asin(sqrt(baseline)))
+z = NormalDist()
+per_variant = ceil(2 * (z.inv_cdf(1 - alpha / 2) + z.inv_cdf(power)) ** 2 / h ** 2)
+print(per_variant)
+```
+
+Expected output: `14745` observations per variant for these assumptions.
+
+This calculation assumes independent units, one binary outcome, a fixed horizon
+and no multiplicity adjustment. It is inappropriate for clustered or repeated
+observations, sequential decisions or continuous revenue metrics. Account for
+eligible traffic, attrition, outcome delay and the sampling unit before turning a
+sample estimate into calendar duration. Equal assumed rates have zero effect size
+and no finite sample for detecting that difference.
 
 ## Worked example
 

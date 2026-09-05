@@ -25,7 +25,7 @@ prominence, not downloads, community preference or usage.
 | auth-implementation-patterns | Explicit token claims and algorithm, session rotation, ownership checks and an atomic refresh-token contract. |
 | frontend-design | Preserve the user's brand; identify the scoring rubric as subjective and show a concrete small-screen flow. |
 | test-driven-development | Preserve existing work, characterize behavior and report the actual timing of a failing test. |
-| ab-test-setup | Predeclare decisions and use a statistical sample-ratio check; remove universal rollout rules. |
+| ab-test-setup | Predeclare decisions, show a reproducible binary sample-size approximation and a statistical sample-ratio check; remove universal rollout rules. |
 | agent-evaluation | Handle Wilson interval boundaries and report failures honestly; remove unsupported leaderboard claims. |
 | analytics-tracking | Distinguish observations from an unvalidated rubric; reconcile duplicate purchase events. |
 | browser-automation | Use observed readiness and bounded retries; remove default stealth, sandbox disabling and invented success rates. |
