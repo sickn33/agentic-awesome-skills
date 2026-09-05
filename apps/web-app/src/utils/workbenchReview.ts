@@ -1,3 +1,6 @@
+import Ajv2020 from 'ajv/dist/2020';
+import evidenceSchema from '../../../../schemas/aas-v1/selection-evidence.schema.json';
+
 export const WORKBENCH_MAX_IMPORT_BYTES = 256 * 1024;
 export const WORKBENCH_MAX_JSON_DEPTH = 24;
 
@@ -11,7 +14,29 @@ const SCOPES = new Set(['project', 'user']);
 const OPERATION_KINDS = new Set(['install', 'replaceManaged', 'removeManaged']);
 const FORBIDDEN_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
 
-export type WorkbenchArtifactKind = 'stack' | 'plan';
+export type WorkbenchArtifactKind = 'stack' | 'plan' | 'evidence';
+
+export interface SelectionEvidenceReview {
+  schemaVersion: 1;
+  kind: 'aas.selection-evidence';
+  digest: string;
+  payload: {
+    schemaVersion: 1;
+    kind: 'aas.selection-evidence.payload';
+    project: { schemaVersion: 1; fingerprint: string; commit?: string; files: Array<{ path: string; size: number; sha256: string }> };
+    catalog: CatalogIdentity;
+    manifestDigest: string;
+    dimensions: Array<{ id: string; status: 'applicable' | 'not-applicable'; capabilityIds: string[] }>;
+    capabilities: Array<{ id: string; dimensionId: string; status: 'covered' | 'catalog-gap' | 'not-applicable'; evidence: Array<{ path: string; sha256: string }>; selectedSkillIds: string[] }>;
+    selectedSkillIds: string[];
+    processTrace: { schemaVersion: 1; calls: Array<{ sequence: number; tool: string; attempt: number; input: Record<string, unknown>; output: Record<string, unknown>; canonicalInputBytes: number; canonicalOutputBytes: number; retryOf?: number }> };
+    client?: { name: string; version: string; model?: string };
+  };
+  runtimeObservations?: { schemaVersion: 1; digestScope: 'excluded-from-evidence-digest'; calls: Array<{ sequence: number; durationMicros: number }> };
+}
+
+// Compile only the repository-owned schema; imported artifacts cannot supply code or schemas.
+const validateEvidenceShape = new Ajv2020({ allErrors: false, strict: true, allowUnionTypes: true, validateFormats: false }).compile<SelectionEvidenceReview>(evidenceSchema);
 
 export interface StackManifestReview {
   schemaVersion: 2;
@@ -88,9 +113,10 @@ export interface PlanOverride {
 
 export type ParsedWorkbenchArtifact =
   | { kind: 'stack'; value: StackManifestReview }
-  | { kind: 'plan'; value: PlanReview };
+  | { kind: 'plan'; value: PlanReview }
+  | { kind: 'evidence'; value: SelectionEvidenceReview };
 
-export type PairCheckId = 'manifestDigest' | 'catalog' | 'skills' | 'target';
+export type PairCheckId = 'manifestDigest' | 'catalog' | 'skills' | 'target' | 'profile' | 'evidenceManifest' | 'evidenceCatalog' | 'evidenceSkills';
 export interface WorkbenchPairReview {
   status: 'consistent' | 'inconsistent';
   checks: Array<{ id: PairCheckId; label: string; status: 'match' | 'mismatch' }>;
@@ -101,6 +127,7 @@ export interface WorkbenchPairPlan {
     catalog: CatalogIdentity;
     desiredSkills: string[];
     target: Target;
+    profile?: ProjectProfile;
   };
 }
 
@@ -369,6 +396,10 @@ export function parseWorkbenchArtifact(input: string, expectedKind: WorkbenchArt
     fail('Artifact is not valid JSON.');
   }
   checkDepth(parsed);
+  if (expectedKind === 'evidence') {
+    if (!validateEvidenceShape(parsed)) fail('Evidence does not match the supported selection-evidence schema.');
+    return { kind: 'evidence', value: parsed };
+  }
   return expectedKind === 'stack'
     ? { kind: 'stack', value: parseStack(parsed) }
     : { kind: 'plan', value: parsePlan(parsed) };
@@ -399,6 +430,69 @@ function canonicalize(value: unknown): unknown {
 
 export function canonicalWorkbenchJson(value: unknown): string {
   return JSON.stringify(canonicalize(value));
+}
+
+export async function verifySelectionEvidence(evidence: SelectionEvidenceReview): Promise<void> {
+  const payload = evidence.payload;
+  if (await sha256WorkbenchDigest(payload) !== evidence.digest) fail('Evidence digest does not match its canonical payload.');
+  const files = payload.project.files;
+  const fileMap = new Map<string, string>();
+  for (const file of files) {
+    if (file.path !== file.path.normalize('NFC') || /^[A-Za-z]:/.test(file.path)
+      || /[\\%\u0000-\u001f\u007f]/.test(file.path)
+      || file.path.split('/').some((part) => !part || part === '.' || part === '..')) fail('Evidence contains an unsafe repository-relative path.');
+    if (fileMap.has(file.path) || !Number.isSafeInteger(file.size)) fail('Evidence project files contain duplicate paths or an unsafe size.');
+    fileMap.set(file.path, file.sha256);
+  }
+  const sortedFiles = [...files].sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
+  const descriptor = { schemaVersion: 1, ...(payload.project.commit ? { commit: payload.project.commit } : {}), files: sortedFiles };
+  if (canonicalWorkbenchJson(files) !== canonicalWorkbenchJson(sortedFiles)
+    || await sha256WorkbenchDigest(descriptor) !== payload.project.fingerprint) fail('Evidence project fingerprint does not match its file inventory.');
+  const dimensionIds = new Set(payload.dimensions.map((dimension) => dimension.id));
+  const canonicalDimensions = evidenceSchema.$defs.dimension.properties.id.enum;
+  if (dimensionIds.size !== 10 || payload.dimensions.some((dimension, index) => dimension.id !== canonicalDimensions[index])) fail('Evidence must declare each of the ten dimensions in canonical order.');
+  const capabilities = new Map(payload.capabilities.map((capability) => [capability.id, capability]));
+  if (capabilities.size !== payload.capabilities.length) fail('Evidence capability IDs must be unique.');
+  const declared = new Set<string>();
+  const mappedSkills = new Set<string>();
+  for (const dimension of payload.dimensions) {
+    if ((dimension.status === 'not-applicable') !== (dimension.capabilityIds.length === 0)) fail('Evidence dimension status disagrees with its capability list.');
+    for (const capabilityId of dimension.capabilityIds) {
+      if (capabilities.get(capabilityId)?.dimensionId !== dimension.id || declared.has(capabilityId)) fail('Evidence dimension references do not match its capabilities.');
+      declared.add(capabilityId);
+    }
+  }
+  for (const capability of capabilities.values()) {
+    if (!declared.has(capability.id)) fail('Evidence contains an undeclared capability.');
+    if (capability.status === 'covered') {
+      if (!capability.selectedSkillIds.length || !capability.evidence.length) fail('A covered capability needs skill IDs and project evidence.');
+      capability.selectedSkillIds.forEach((skillId) => mappedSkills.add(skillId));
+    } else if (capability.selectedSkillIds.length) fail('An uncovered capability cannot claim selected skills.');
+    if (capability.status === 'catalog-gap' && !capability.evidence.length) fail('A catalog gap needs project evidence.');
+    for (const reference of capability.evidence) {
+      if (fileMap.get(reference.path) !== reference.sha256) fail('A capability references an unknown or mismatched project file.');
+    }
+  }
+  if (canonicalWorkbenchJson([...mappedSkills].sort()) !== canonicalWorkbenchJson([...payload.selectedSkillIds].sort())) fail('Evidence skill mappings disagree with its selected IDs.');
+  const calls = payload.processTrace.calls;
+  if (calls.some((call, index) => index > 0 && call.sequence <= calls[index - 1].sequence)) fail('Evidence trace sequences must be increasing.');
+  const composed = calls.find((call) => call.tool === 'compose_stack' && call.output.ok === true
+    && call.output.manifestDigest === payload.manifestDigest
+    && canonicalWorkbenchJson(call.input.skillIds) === canonicalWorkbenchJson(payload.selectedSkillIds)
+    && canonicalWorkbenchJson(call.output.selectedSkillIds) === canonicalWorkbenchJson(payload.selectedSkillIds));
+  if (!composed || !calls.some((call) => call.sequence > composed.sequence && call.tool === 'inspect_stack'
+    && call.output.ok === true && call.output.status === 'valid'
+    && call.input.manifestDigest === payload.manifestDigest && call.output.manifestDigest === payload.manifestDigest
+    && canonicalWorkbenchJson(call.output.selectedSkillIds) === canonicalWorkbenchJson(payload.selectedSkillIds))) fail('Evidence lacks a matching composition followed by successful inspection.');
+}
+
+export function reviewWorkbenchEvidencePair(stack: StackManifestReview, evidence: SelectionEvidenceReview, manifestDigest: string): WorkbenchPairReview {
+  const checks: WorkbenchPairReview['checks'] = [
+    { id: 'evidenceManifest', label: 'Evidence manifest digest', status: evidence.payload.manifestDigest === manifestDigest ? 'match' : 'mismatch' },
+    { id: 'evidenceCatalog', label: 'Evidence catalog identity', status: canonicalWorkbenchJson(stack.catalog) === canonicalWorkbenchJson(evidence.payload.catalog) ? 'match' : 'mismatch' },
+    { id: 'evidenceSkills', label: 'Evidence selected skills', status: canonicalWorkbenchJson(stack.skills.map((skill) => skill.id)) === canonicalWorkbenchJson(evidence.payload.selectedSkillIds) ? 'match' : 'mismatch' },
+  ];
+  return { status: checks.every((check) => check.status === 'match') ? 'consistent' : 'inconsistent', checks };
 }
 
 function targetKey(target: Target): string {
@@ -435,6 +529,11 @@ export function reviewWorkbenchPair(
       id: 'target',
       label: 'Plan target',
       status: stack.targets.some((target) => targetKey(target) === targetKey(plan.payload.target)) ? 'match' : 'mismatch',
+    },
+    {
+      id: 'profile',
+      label: 'Project profile',
+      status: canonicalWorkbenchJson(stack.profile) === canonicalWorkbenchJson(plan.payload.profile) ? 'match' : 'mismatch',
     },
   ];
   return {

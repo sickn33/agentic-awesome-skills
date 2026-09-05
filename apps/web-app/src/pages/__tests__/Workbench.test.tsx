@@ -4,6 +4,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { renderWithRouter } from '../../utils/testUtils';
 import { Workbench } from '../Workbench';
 import { canonicalWorkbenchJson } from '../../utils/workbenchReview';
+import { selectionFixture } from '../../utils/__tests__/selectionEvidenceFixture';
 
 const D1 = `sha256-${'1'.repeat(64)}`;
 const D2 = `sha256-${'2'.repeat(64)}`;
@@ -92,6 +93,43 @@ function paste(label: 'Paste JSON', value: unknown, index = 0): void {
 }
 
 describe('Workbench review UI', () => {
+  it('loads the public recorded manifest and real CLI plan through the same import checks', async () => {
+    renderWithRouter(<Workbench />, { useProvider: false });
+    fireEvent.click(screen.getByRole('button', { name: 'Load recorded example' }));
+    expect(screen.getByRole('status')).toHaveTextContent('Checking example artifacts');
+    await screen.findByRole('heading', { name: 'AAS MCP contract review' });
+    await screen.findByText('All bindings match');
+    expect(screen.getByRole('heading', { name: 'Single-target change review' })).toBeInTheDocument();
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+  });
+  it('reviews evidence in memory and replaces stale consistency results when the manifest changes', async () => {
+    const { stack, evidence } = selectionFixture();
+    const fetchSpy = vi.mocked(globalThis.fetch);
+    renderWithRouter(<Workbench />, { useProvider: false });
+    paste('Paste JSON', stack, 0);
+    fireEvent.click(screen.getByRole('button', { name: 'Review pasted stack' }));
+    paste('Paste JSON', evidence, 2);
+    fireEvent.click(screen.getByRole('button', { name: 'Review pasted evidence' }));
+    expect(await screen.findByRole('heading', { name: 'Selection evidence' })).toBeInTheDocument();
+    await screen.findByText('All bindings match');
+    expect(screen.getAllByText('Match')).toHaveLength(3);
+    expect(screen.getByText(/do not authenticate its author/)).toBeInTheDocument();
+    paste('Paste JSON', { ...stack, name: 'a different stack' }, 0);
+    fireEvent.click(screen.getByRole('button', { name: 'Review pasted stack' }));
+    expect(screen.queryByText('All bindings match')).not.toBeInTheDocument();
+    await screen.findByText('Bindings need attention');
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('rejects changed evidence bytes before displaying its claims', async () => {
+    const { evidence } = selectionFixture();
+    evidence.payload.project.files[0].path = 'tampered.ts';
+    renderWithRouter(<Workbench />, { useProvider: false });
+    paste('Paste JSON', evidence, 2);
+    fireEvent.click(screen.getByRole('button', { name: 'Review pasted evidence' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Evidence digest does not match');
+    expect(screen.queryByRole('heading', { name: 'Selection evidence' })).not.toBeInTheDocument();
+  });
   beforeEach(() => vi.clearAllMocks());
 
   it('reviews a valid stack without offering install, apply, or share actions', () => {
@@ -136,10 +174,10 @@ describe('Workbench review UI', () => {
 
     expect(await screen.findByText('All bindings match')).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'Artifact consistency' })).toBeInTheDocument();
-    for (const label of ['Manifest digest', 'Catalog identity', 'Selected skills', 'Plan target']) {
+    for (const label of ['Manifest digest', 'Catalog identity', 'Selected skills', 'Plan target', 'Project profile']) {
       expect(screen.getAllByText(label).length).toBeGreaterThan(0);
     }
-    expect(screen.getAllByText('Match')).toHaveLength(4);
+    expect(screen.getAllByText('Match')).toHaveLength(5);
   });
 
   it('surfaces a selected-skill mismatch without hiding either valid artifact', async () => {

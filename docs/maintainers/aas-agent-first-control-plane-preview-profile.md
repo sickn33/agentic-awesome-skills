@@ -17,7 +17,7 @@ The earlier deterministic recommendation design and goal documents are retained 
 - Local stdio MCP tools `search_skills`, `get_skill`, `list_skill_files`, `read_skill_file`, `compose_stack`, `inspect_stack`, and `diff_stack`, plus evidence export/inspection and `aas://skills/{id}`. Bundle inventory records bind file bytes into the catalog identity without duplicating the payload. Text reads are bounded, inert, and reject unsafe paths and changed bytes; old catalogs explicitly report inventory unavailability.
 - Minimal, schema-validated `aas-stack.json` with pinned catalog identity, targets, goals, and exact agent-selected skill IDs.
 - CLI manifest validation, immutable plan preview, and read-only diagnosis.
-- Workbench import and review of the agent-owned stack and immutable plan.
+- Workbench import and review of the agent-owned stack, immutable plan and optional selection evidence. Browser checks bind digests, project references and artifact identities; the CLI/MCP inspector remains the full trace-contract verifier. Recorded examples and voluntary feedback exports must identify what was actually executed, with no ambient data collection.
 
 ## Selection contract
 
@@ -37,7 +37,8 @@ The packed-product smoke path must prove:
 3. **Agent-owned composition** — `compose_stack` preserves the exact ordered ID selection supplied by the agent and returns a structurally valid manifest without a policy field.
 4. **No metadata gating** — skills with unknown, critical, manual, blocked, incomplete, or absent informational metadata remain searchable, selectable, composable, and plannable.
 5. **Stack lifecycle** — compose, inspect, validate, plan, and doctor succeed in isolated roots without materializing target skills or managed state.
-6. **Workbench** — bounded text-only import/review tests and production build pass without ambient filesystem access.
+6. **Workbench** — bounded text-only import/review tests and production build pass without ambient filesystem access. Verify stale-result replacement, cross-artifact profile/catalog/manifest/selection checks, a recorded public example and mobile use. Feedback export contains only user-entered fields and performs no network or storage writes.
+   Artifact transport regressions must cross real stdio, including manifests and evidence requests above 4 KiB, the unchanged 256 KiB frame limit, unrelated metadata rejection, and request-ID correlation for safely parsed size errors. Direct calls to the in-process server do not exercise framing.
 
 ## Experimental writes
 

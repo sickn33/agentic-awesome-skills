@@ -1,7 +1,11 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { usePageMeta } from '../hooks/usePageMeta';
+import { SelectionFeedback } from '../components/SelectionFeedback';
 import { Link } from 'react-router';
 import { releaseFileUrl } from '../utils/catalogRelease';
+import exampleStack from '../../../../docs/examples/workflows/mcp-contract/aas-stack.json';
+import examplePlan from '../../../../docs/examples/workflows/mcp-contract/plan.json';
+import exampleEvidence from '../../../../docs/examples/workflows/mcp-contract/aas-selection-evidence.json';
 import {
   WORKBENCH_MAX_IMPORT_BYTES,
   WORKBENCH_MAX_JSON_DEPTH,
@@ -9,6 +13,9 @@ import {
   parseWorkbenchArtifact,
   readWorkbenchFile,
   reviewWorkbenchPair,
+  reviewWorkbenchEvidencePair,
+  verifySelectionEvidence,
+  type SelectionEvidenceReview,
   sha256WorkbenchDigest,
   verifyPlanDigest,
   type PlanReview,
@@ -19,7 +26,7 @@ import {
 interface ImportState<T> {
   value: T | null;
   error: string | null;
-  source: 'paste' | 'file' | null;
+  source: 'paste' | 'file' | 'example' | null;
 }
 
 const EMPTY_IMPORT_STATE = { value: null, error: null, source: null } as const;
@@ -211,27 +218,24 @@ function PlanReviewView({ plan }: { plan: PlanReview }): React.ReactElement {
   );
 }
 
-function PairReview({ stack, plan }: { stack: StackManifestReview; plan: PlanReview }): React.ReactElement {
-  const [review, setReview] = useState<ReturnType<typeof reviewWorkbenchPair> | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
+function PairReview({ stack, plan, evidence }: { stack: StackManifestReview; plan: PlanReview | null; evidence: SelectionEvidenceReview | null }): React.ReactElement {
+  const [checked, setChecked] = useState<{ stack: StackManifestReview; plan: PlanReview | null; evidence: SelectionEvidenceReview | null; review?: ReturnType<typeof reviewWorkbenchPair>; error?: string } | null>(null);
   useEffect(() => {
     let active = true;
     void sha256WorkbenchDigest(stack).then((manifestDigest) => {
-      if (active) {
-        setReview(reviewWorkbenchPair(stack, plan, manifestDigest));
-        setError(null);
-      }
+      const checks = [
+        ...(plan ? reviewWorkbenchPair(stack, plan, manifestDigest).checks : []),
+        ...(evidence ? reviewWorkbenchEvidencePair(stack, evidence, manifestDigest).checks : []),
+      ];
+      if (active) setChecked({ stack, plan, evidence, review: { status: checks.every((check) => check.status === 'match') ? 'consistent' : 'inconsistent', checks } });
     }).catch((reason: unknown) => {
-      if (active) setError(displayError(reason));
+      if (active) setChecked({ stack, plan, evidence, error: displayError(reason) });
     });
     return () => { active = false; };
-  }, [stack, plan]);
-
-  if (error) {
-    return <section className="workbench-pair-review workbench-pair-review--error" aria-live="polite"><h2>Artifact consistency</h2><p role="alert">{error}</p></section>;
-  }
-  if (!review) return <section className="workbench-pair-review" aria-live="polite"><h2>Artifact consistency</h2><p>Checking bindings…</p></section>;
+  }, [stack, plan, evidence]);
+  if (!checked || checked.stack !== stack || checked.plan !== plan || checked.evidence !== evidence) return <section className="workbench-pair-review" aria-live="polite"><h2>Artifact consistency</h2><p>Checking bindings…</p></section>;
+  if (checked.error) return <section className="workbench-pair-review workbench-pair-review--error"><h2>Artifact consistency</h2><p role="alert">{checked.error}</p></section>;
+  const review = checked.review!;
   const consistent = review.status === 'consistent';
   return (
     <section className={`workbench-pair-review ${consistent ? 'workbench-pair-review--consistent' : 'workbench-pair-review--inconsistent'}`} aria-labelledby="pair-review-title">
@@ -250,8 +254,32 @@ function PairReview({ stack, plan }: { stack: StackManifestReview; plan: PlanRev
           </li>
         ))}
       </ul>
-      <p className="workbench-pair-review__note">This comparison uses only the two imported artifacts and stays in page memory.</p>
+      <p className="workbench-pair-review__note">This comparison uses only the imported artifacts and stays in page memory.</p>
     </section>
+  );
+}
+
+function EvidenceReview({ evidence }: { evidence: SelectionEvidenceReview }): React.ReactElement {
+  const { payload } = evidence;
+  return (
+    <article className="workbench-review" aria-labelledby="evidence-review-title">
+      <header className="workbench-review__heading"><div><p>Schema, digests and references checked</p><h2 id="evidence-review-title">Selection evidence</h2></div></header>
+      <p className="workbench-review__note">The capability ledger is the agent's declaration. These checks do not authenticate its author, prove skill suitability, or certify project coverage. Use Core's inspect_selection_evidence for the full trace contract. Runtime timings are outside the evidence digest.</p>
+      <DefinitionList entries={[
+        ['Evidence digest', <code title={evidence.digest}>{shortDigest(evidence.digest)}</code>],
+        ['Project fingerprint', <code title={payload.project.fingerprint}>{shortDigest(payload.project.fingerprint)}</code>],
+        ['Project files', payload.project.files.length],
+        ['Client', payload.client ? `${payload.client.name} ${payload.client.version}` : 'Not recorded'],
+        ['Recorded calls', payload.processTrace.calls.length],
+      ]} />
+      <h3>Declared capabilities</h3>
+      <ul className="workbench-review__code-list">{payload.dimensions.map((dimension) => <li key={dimension.id}><strong>{dimension.id}</strong> · {dimension.status}<ul>{dimension.capabilityIds.map((id) => {
+        const capability = payload.capabilities.find((item) => item.id === id)!;
+        return <li key={id}><code>{id}</code> · {capability.status} · {capability.selectedSkillIds.join(', ') || 'No selected skills'}</li>;
+      })}</ul></li>)}</ul>
+      <details><summary>Inspect recorded search and selection calls</summary><ol className="workbench-review__code-list">{payload.processTrace.calls.map((call) => <li key={call.sequence}><strong>{call.sequence}. {call.tool}</strong> · {call.output.ok ? 'Succeeded' : 'Failed'}<pre>{JSON.stringify(call.input, null, 2)}</pre></li>)}</ol></details>
+      <details><summary>Inspect project file references</summary><ul className="workbench-review__code-list">{payload.project.files.map((file) => <li key={file.path}><code>{file.path}</code> · {file.size} bytes · <code>{file.sha256}</code></li>)}</ul></details>
+    </article>
   );
 }
 
@@ -272,6 +300,7 @@ function ArtifactImporter<T>({
   const fileId = useId();
   const [draft, setDraft] = useState('');
   const importAttempt = useRef(0);
+  useEffect(() => () => { importAttempt.current += 1; }, []);
 
   const validateText = async (input: string, source: 'paste' | 'file', attempt: number) => {
     try {
@@ -279,6 +308,7 @@ function ArtifactImporter<T>({
       if (artifact.kind === 'plan' && !await verifyPlanDigest(artifact.value)) {
         throw new WorkbenchImportError('Plan digest does not match its canonical payload.');
       }
+      if (artifact.kind === 'evidence') await verifySelectionEvidence(artifact.value);
       if (attempt !== importAttempt.current) return;
       onState({ value: artifact.value as T, error: null, source });
     } catch (error) {
@@ -311,7 +341,7 @@ function ArtifactImporter<T>({
   return (
     <section className="workbench-importer" aria-labelledby={`${textareaId}-title`}>
       <div>
-        <p>{kind === 'stack' ? '1' : '2'}</p>
+        <p>{kind === 'stack' ? '1' : kind === 'plan' ? '2' : '3'}</p>
         <div>
           <h2 id={`${textareaId}-title`}>{title}</h2>
           <p>{description}</p>
@@ -322,10 +352,12 @@ function ArtifactImporter<T>({
         id={textareaId}
         value={draft}
         onChange={(event) => setDraft(event.target.value)}
-        placeholder={kind === 'stack' ? '{ "schemaVersion": 2, "name": "…" }' : '{ "schemaVersion": 2, "kind": "aas.stack-plan", … }'}
+        placeholder={kind === 'stack' ? '{ "schemaVersion": 2, "name": "…" }' : kind === 'plan' ? '{ "schemaVersion": 2, "kind": "aas.stack-plan", … }' : '{ "schemaVersion": 1, "kind": "aas.selection-evidence", … }'}
         rows={8}
         spellCheck={false}
         autoComplete="off"
+        aria-invalid={Boolean(state.error)}
+        aria-describedby={state.error ? `${textareaId}-error` : undefined}
       />
       <div className="workbench-importer__actions">
         <button type="button" onClick={() => void importText(draft, 'paste')}>Review pasted {kind}</button>
@@ -345,7 +377,7 @@ function ArtifactImporter<T>({
         ) : null}
       </div>
       <div aria-live="polite" className="workbench-importer__status">
-        {state.error ? <p role="alert">{state.error}</p> : null}
+        {state.error ? <p id={`${textareaId}-error`} role="alert">{state.error}</p> : null}
         {state.value ? <p>Valid {kind} loaded from {state.source}. Held in this page only.</p> : null}
       </div>
     </section>
@@ -355,10 +387,37 @@ function ArtifactImporter<T>({
 export function Workbench(): React.ReactElement {
   const [stack, setStack] = useState<ImportState<StackManifestReview>>({ ...EMPTY_IMPORT_STATE });
   const [plan, setPlan] = useState<ImportState<PlanReview>>({ ...EMPTY_IMPORT_STATE });
+  const [evidence, setEvidence] = useState<ImportState<SelectionEvidenceReview>>({ ...EMPTY_IMPORT_STATE });
+  const [exampleLoading, setExampleLoading] = useState(false);
+  const [exampleError, setExampleError] = useState<string | null>(null);
+  const exampleAttempt = useRef(0);
+  useEffect(() => () => { exampleAttempt.current += 1; }, []);
+
+  const loadExample = async () => {
+    const attempt = ++exampleAttempt.current;
+    setExampleLoading(true); setExampleError(null);
+    setStack({ ...EMPTY_IMPORT_STATE }); setPlan({ ...EMPTY_IMPORT_STATE }); setEvidence({ ...EMPTY_IMPORT_STATE });
+    try {
+      const parsedStack = parseWorkbenchArtifact(JSON.stringify(exampleStack), 'stack');
+      const parsedPlan = parseWorkbenchArtifact(JSON.stringify(examplePlan), 'plan');
+      const parsedEvidence = parseWorkbenchArtifact(JSON.stringify(exampleEvidence), 'evidence');
+      if (parsedStack.kind !== 'stack' || parsedPlan.kind !== 'plan' || !await verifyPlanDigest(parsedPlan.value)) throw new WorkbenchImportError('The recorded example failed verification.');
+      if (parsedEvidence.kind !== 'evidence') throw new WorkbenchImportError('The recorded evidence failed verification.');
+      await verifySelectionEvidence(parsedEvidence.value);
+      if (attempt !== exampleAttempt.current) return;
+      setStack({ value: parsedStack.value, error: null, source: 'example' });
+      setPlan({ value: parsedPlan.value, error: null, source: 'example' });
+      setEvidence({ value: parsedEvidence.value, error: null, source: 'example' });
+    } catch (error) {
+      if (attempt === exampleAttempt.current) setExampleError(displayError(error));
+    } finally {
+      if (attempt === exampleAttempt.current) setExampleLoading(false);
+    }
+  };
 
   usePageMeta(useMemo(() => ({
     title: 'AAS Core Stack Review | Agentic Awesome Skills',
-    description: 'Review an AAS Core stack manifest and immutable preview plan locally in your browser. Imports stay in memory and cannot install or apply changes.',
+    description: 'Review an AAS Core stack, immutable preview plan and selection evidence locally in your browser. Imports stay in memory.',
     canonicalPath: '/workbench',
   }), []));
 
@@ -368,11 +427,11 @@ export function Workbench(): React.ReactElement {
         <div>
           <div>
             <h1>Review what your agent selected.</h1>
-            <p>Import the <code>aas-stack.json</code> saved from your agent's explicit catalog choices and the immutable preview plan produced by the <code>aas</code> CLI to inspect the project profile, exact skills, identities, targets, operations, and managed drift overrides.</p>
+            <p>Review the exact skills, project profile and proposed changes saved by your agent. Import <code>aas-stack.json</code>, an immutable CLI plan, and optional selection evidence, or explore the recorded example below.</p>
           </div>
           <dl>
             <div><dt>Privacy</dt><dd>In-memory only</dd></div>
-            <div><dt>Writes</dt><dd>None</dd></div>
+            <div><dt>Target changes</dt><dd>None</dd></div>
             <div><dt>Network</dt><dd>Not used</dd></div>
           </dl>
         </div>
@@ -383,18 +442,25 @@ export function Workbench(): React.ReactElement {
         <ol>
           <li><Link to="/">Compare skills in the catalog</Link> and copy an agent brief with your goal and target.</li>
           <li>Give the brief to your coding agent with AAS MCP configured. Let it inspect your project and select exact IDs; review its choices before saving <code>aas-stack.json</code>.</li>
-          <li>Validate the manifest and generate a preview plan with the CLI, then import both files below.</li>
+          <li>Validate the manifest and generate a preview plan with the CLI, then import both files and optional <code>aas-selection-evidence.json</code> below.</li>
         </ol>
         <a href={releaseFileUrl('docs/users/aas-core.md')}>Configuration and preview commands</a>
       </section>
 
+      <section className="workbench-boundary workbench-example" aria-labelledby="workbench-example-title">
+        <h2 id="workbench-example-title">Explore a recorded review</h2>
+        <p>A seven-skill MCP contract review, composed through Codex and planned with the published AAS 16.7.0 CLI. Loading it replaces the current review in page memory.</p>
+        <div><button type="button" disabled={exampleLoading} onClick={() => void loadExample()}>{exampleLoading ? 'Checking example…' : 'Load recorded example'}</button><a href={releaseFileUrl('docs/examples/workflows/mcp-contract/README.md')}>Inputs, commands and limits</a></div>
+        {exampleError ? <p role="alert">{exampleError}</p> : null}
+      </section>
+
       <section className="workbench-boundary" aria-labelledby="workbench-boundary-title">
         <h2 id="workbench-boundary-title">Review surface, not an installer</h2>
-        <p>This page cannot install, apply, share, or persist an imported artifact. Files are read only after you select them. Validation is structural; catalog identity is displayed as declared unless the plan binds it by digest.</p>
+        <p>This page cannot install, apply, share, or persist an imported artifact. Files are read only after you select them. Digests check artifact consistency, not author identity or skill suitability; catalog bytes are not downloaded.</p>
         <p>Limits: {WORKBENCH_MAX_IMPORT_BYTES.toLocaleString('en-US')} UTF-8 bytes per artifact · {WORKBENCH_MAX_JSON_DEPTH} JSON levels.</p>
       </section>
 
-      <div className="workbench-import-grid">
+      {exampleLoading ? <p role="status">Checking example artifacts…</p> : <div className="workbench-import-grid">
         <ArtifactImporter
           kind="stack"
           title="Import desired state"
@@ -409,13 +475,15 @@ export function Workbench(): React.ReactElement {
           state={plan}
           onState={setPlan}
         />
-      </div>
+        <ArtifactImporter kind="evidence" title="Import selection evidence" description="Optionally inspect the agent-declared capability ledger and recorded MCP calls in aas-selection-evidence.json." state={evidence} onState={setEvidence} />
+      </div>}
 
       <section className="workbench-review-area" aria-label="Imported artifact review">
-        {stack.value && plan.value ? <PairReview stack={stack.value} plan={plan.value} /> : null}
+        {stack.value && (plan.value || evidence.value) ? <PairReview stack={stack.value} plan={plan.value} evidence={evidence.value} /> : null}
         {stack.value ? <StackReview stack={stack.value} /> : null}
         {plan.value ? <PlanReviewView plan={plan.value} /> : null}
-        {!stack.value && !plan.value ? (
+        {evidence.value ? <EvidenceReview evidence={evidence.value} /> : null}
+        {!stack.value && !plan.value && !evidence.value ? (
           <div className="workbench-review-empty">
             <p>No artifact loaded</p>
             <h2>Your review appears here.</h2>
@@ -423,6 +491,7 @@ export function Workbench(): React.ReactElement {
           </div>
         ) : null}
       </section>
+      <SelectionFeedback />
     </div>
   );
 }

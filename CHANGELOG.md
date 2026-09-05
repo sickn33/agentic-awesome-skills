@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Workbench import of selection evidence, a recorded MCP selection and CLI plan example, and optional local feedback preview/export. Imported data remains in page memory; artifact consistency does not certify skill suitability.
 - Explicit all-term matching, required terms, normalized category facets and tag filters in Core search, with match explanations and factual evidence traces. The web catalog offers literal and explicit approximate modes, shareable search controls, and matching explanations while preserving catalog order.
 - Local MCP bundle inspection through `list_skill_files` and `read_skill_file`, with catalog-bound paths and digests, bounded inert text reads, and explicit handling of links, binary files, missing payloads and older catalogs.
 - Catalog shortlist comparison with declared risk, setup, plugin packaging, source, and license metadata; a previewable agent brief carries the selected IDs, catalog version, project goal, and target into agent-owned stack selection.
@@ -18,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- MCP artifact requests can exceed the ordinary 4 KiB limit within the existing 256 KiB frame ceiling. Safely parsed size errors retain a bounded request ID, avoiding an uncorrelated error and client timeout; ordinary queries and unrelated metadata remain constrained.
+- Workbench compares the project profile as well as manifest, catalog, target and selected IDs; changing an artifact clears stale consistency results while new digests are checked.
 - Skill documentation links resolve bundled files against the same repository release; fragment links stay on the current skill page under the GitHub Pages base path. Outline and rendered heading IDs now agree for inline markup, duplicate headings, and non-English text.
 - Workflow installation guidance uses explicit skill selection and a dry run; the shortlist appears before catalog results and handles clipboard failures with a selectable brief.
 - Updated the web app's transitive `qs` dependency to its patched release.

@@ -10,9 +10,20 @@ const {
 const MAX_PENDING_REQUESTS = 32;
 const MAX_JSON_FORMATTING_OVERHEAD_BYTES = 64;
 const CODEX_TURN_METADATA_KEY = "x-codex-turn-metadata";
+const ARTIFACT_TOOLS = new Set(["compose_stack", "inspect_stack", "diff_stack", "export_selection_evidence", "inspect_selection_evidence"]);
 
 function isPlainObject(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function requestLimitError(request) {
+  const error = new StrictJsonError("AAS_MCP_LINE_TOO_LARGE");
+  // Only attach an ID after strict JSON parsing, and never reflect unbounded data.
+  if (request.jsonrpc === "2.0" && typeof request.method === "string") {
+    if (Number.isSafeInteger(request.id) || (typeof request.id === "string" && request.id.length <= 128)) error.requestId = request.id;
+    if (!Object.hasOwn(request, "id")) error.notification = true;
+  }
+  return error;
 }
 
 function parseMcpRequestLine(bytes) {
@@ -20,24 +31,24 @@ function parseMcpRequestLine(bytes) {
   const request = parseStrictJsonLine(buffer, { maximumBytes: MAX_LINE_BYTES });
   if (buffer.length <= MAX_BASE_REQUEST_BYTES) return request;
 
-  if (
-    request.method !== "tools/call"
-    || !isPlainObject(request.params)
-    || !isPlainObject(request.params._meta)
-    || !isPlainObject(request.params._meta[CODEX_TURN_METADATA_KEY])
-  ) {
-    throw new StrictJsonError("AAS_MCP_LINE_TOO_LARGE");
+  if (request.method !== "tools/call" || !isPlainObject(request.params)) throw requestLimitError(request);
+  const params = { ...request.params };
+  const hasCodexMetadata = isPlainObject(params._meta) && isPlainObject(params._meta[CODEX_TURN_METADATA_KEY]);
+  const hasArtifact = ARTIFACT_TOOLS.has(params.name) && isPlainObject(params.arguments);
+  if (!hasCodexMetadata && !hasArtifact) throw requestLimitError(request);
+  if (hasCodexMetadata) {
+    params._meta = { ...params._meta };
+    delete params._meta[CODEX_TURN_METADATA_KEY];
   }
-  const metaWithoutCodexTurn = { ...request.params._meta };
-  delete metaWithoutCodexTurn[CODEX_TURN_METADATA_KEY];
-  const paramsWithoutCodexTurn = { ...request.params, _meta: metaWithoutCodexTurn };
-  const requestWithoutCodexTurn = { ...request, params: paramsWithoutCodexTurn };
-  if (Buffer.byteLength(JSON.stringify(requestWithoutCodexTurn), "utf8") > MAX_BASE_REQUEST_BYTES) {
-    throw new StrictJsonError("AAS_MCP_LINE_TOO_LARGE");
+  // Artifact arguments share the existing absolute frame limit. Their schemas
+  // still validate inside the server; arbitrary envelope/metadata stays at 4 KiB.
+  if (hasArtifact) params.arguments = {};
+  if (Buffer.byteLength(JSON.stringify({ ...request, params }), "utf8") > MAX_BASE_REQUEST_BYTES) {
+    throw requestLimitError(request);
   }
   const canonicalBytes = Buffer.byteLength(JSON.stringify(request), "utf8");
   if (buffer.length > canonicalBytes + MAX_JSON_FORMATTING_OVERHEAD_BYTES) {
-    throw new StrictJsonError("AAS_MCP_LINE_TOO_LARGE");
+    throw requestLimitError(request);
   }
   return request;
 }
@@ -79,6 +90,11 @@ function runStdio(server, options = {}) {
         request = parseMcpRequestLine(line);
       } catch (error) {
         const code = error instanceof StrictJsonError ? error.code : "AAS_MCP_PARSE_FAILED";
+        if (error.notification) return;
+        if (error.requestId !== undefined) {
+          writeJsonLine(output, { jsonrpc: "2.0", id: error.requestId, error: { code: -32602, message: "Request exceeds its byte limit", data: { code } } });
+          return;
+        }
         writeJsonLine(output, parseErrorResponse(code));
         return;
       }

@@ -40,6 +40,7 @@ describe('workbenchReview', () => {
         catalog: stack.value.catalog,
         desiredSkills: ['react-best-practices'],
         target: { host: 'codex', scope: 'project' },
+        profile: stack.value.profile,
       },
     };
 
@@ -50,15 +51,17 @@ describe('workbenchReview', () => {
         { id: 'catalog', label: 'Catalog identity', status: 'match' },
         { id: 'skills', label: 'Selected skills', status: 'match' },
         { id: 'target', label: 'Plan target', status: 'match' },
+        { id: 'profile', label: 'Project profile', status: 'match' },
       ],
     });
 
     const mismatchedPlan = structuredClone(matchingPlan);
     mismatchedPlan.payload.desiredSkills = ['other-skill'];
     mismatchedPlan.payload.target = { host: 'claude', scope: 'user' };
+    mismatchedPlan.payload.profile = { ...stack.value.profile, goals: ['different goal'] };
     const mismatch = reviewWorkbenchPair(stack.value, mismatchedPlan, stackDigest);
     expect(mismatch.status).toBe('inconsistent');
-    expect(mismatch.checks.filter((check) => check.status === 'mismatch').map((check) => check.id)).toEqual(['skills', 'target']);
+    expect(mismatch.checks.filter((check) => check.status === 'mismatch').map((check) => check.id)).toEqual(['skills', 'target', 'profile']);
   });
 
   it('accepts the public stack shape and rejects duplicate skill IDs', () => {

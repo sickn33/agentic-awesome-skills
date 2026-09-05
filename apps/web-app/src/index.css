@@ -1266,6 +1266,49 @@ textarea {
   margin: 26px auto 0;
 }
 
+.selection-feedback {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.selection-feedback-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+  max-width: 680px;
+}
+
+.selection-feedback-form label {
+  display: grid;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.selection-feedback-form input,
+.selection-feedback-form select,
+.selection-feedback-form textarea,
+.selection-feedback-form button {
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid var(--stroke-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  background: var(--surface-card);
+}
+
+.selection-feedback-form pre,
+.workbench-review pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+}
+
+.selection-feedback p:last-child {
+  white-space: normal;
+}
+
 .workbench-importer {
   min-width: 0;
   padding: 20px;
@@ -1342,6 +1385,7 @@ textarea {
 }
 
 .workbench-importer__actions button,
+.workbench-example button,
 .workbench-importer__actions label {
   min-height: 38px;
   padding: 9px 13px;
@@ -1359,6 +1403,11 @@ textarea {
   color: white;
   background: var(--accent-solid);
 }
+
+.workbench-example > div { display: flex; flex-direction: column; gap: 10px; }
+.workbench-example button { min-height: 44px; }
+.workbench-example button:disabled { cursor: wait; opacity: 0.65; }
+.workbench-example a { font-size: 0.78rem; }
 
 .workbench-importer__actions button:hover,
 .workbench-importer__actions label:hover {

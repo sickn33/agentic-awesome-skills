@@ -116,6 +116,16 @@ Search results use a stable catalog order and contain no relevance score, recomm
 
 MCP calls do not install or remove skills, update catalogs, edit host configuration, persist a stack, or apply it. Full skill text is returned only when requested and remains marked as untrusted content.
 
+The stdio transport bounds every complete JSON line, including its newline, to
+256 KiB. Ordinary requests and unrelated metadata retain the 4 KiB base limit.
+Arguments to `compose_stack`, `inspect_stack`, `diff_stack`, and the two evidence
+tools may use the larger frame because manifests and ledgers routinely exceed
+4 KiB; their schema limits still apply. Codex turn metadata shares the same total
+frame budget. Use compact JSON transport and the CLI inspector for sidecars that
+do not fit in a complete MCP request. Parsed request-limit errors preserve a
+bounded request ID so the client receives the failure instead of waiting for a
+response it cannot correlate; malformed or discarded frames retain a null ID.
+
 ### Narrow a search explicitly
 
 `search_skills` retains its broad, backward-compatible default, `matchMode: "any"`:
@@ -268,8 +278,8 @@ Direct installs, specialized plugins, bundles, workflows, and the legacy install
 | Catalog search and inspection | Supported preview; local and read-only |
 | Agent-owned composition | Supported preview; Core validates IDs and structure, not semantic suitability |
 | Stack validation and plan preview | Supported preview; no target skill changes |
-| Workbench | Browser-local review of stack and plan artifacts |
-| Selection evidence | Exported and inspected through MCP/CLI contracts; not yet reviewed in Workbench |
+| Workbench | Browser-local review of stack, plan and optional evidence, with a recorded example |
+| Selection evidence | MCP/CLI export and inspection; Workbench checks schema, digests, project references and cross-artifact bindings without semantic certification |
 | Apply and recovery | Experimental, explicit opt-in, outside the supported safety claim |
 | Semantic suitability certification | Not provided |
 

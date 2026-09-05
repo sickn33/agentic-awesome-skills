@@ -361,6 +361,15 @@ async function main() {
   assert.equal(fs.existsSync(path.join(projectRoot, ".agents")), false);
   assert.equal(fs.existsSync(path.join(projectRoot, ".aas")), false);
 
+  // Real fixture files make the evidence request exceed the old 4 KiB frame
+  // bottleneck. Create them before the read-only MCP snapshot.
+  const projectFiles = [{ path: "README.md", size: projectEvidenceBytes.length, sha256: sha256(projectEvidenceBytes) }];
+  for (let index = 0; index < 32; index += 1) {
+    const relative = `evidence-${String(index).padStart(2, "0")}.txt`;
+    const bytes = Buffer.from(`preview evidence file ${index}\n`);
+    fs.writeFileSync(path.join(projectRoot, relative), bytes, { flag: "wx", mode: 0o600 });
+    projectFiles.push({ path: relative, size: bytes.length, sha256: sha256(bytes) });
+  }
   const beforeMcp = { project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) };
   const client = new JsonLineClient(mcpBin, ["--cache-root", cacheRoot], projectRoot);
   const initialize = await client.request(1, "initialize", {
@@ -425,11 +434,6 @@ async function main() {
   assert.deepEqual(mcpComposition.result.structuredContent.manifest, manifest);
   const inspection = await client.request(8, "tools/call", { name: "inspect_stack", arguments: { manifest } });
   assert.equal(inspection.result.structuredContent.ok, true);
-  const projectFiles = [{
-    path: "README.md",
-    size: projectEvidenceBytes.length,
-    sha256: sha256(projectEvidenceBytes),
-  }];
   const project = {
     schemaVersion: 1,
     files: projectFiles,
@@ -447,7 +451,7 @@ async function main() {
     evidence: [{ path: "README.md", sha256: projectFiles[0].sha256 }],
     selectedSkillIds: selection.skillIds,
   }];
-  const exported = await client.request(9, "tools/call", {
+  const exportParams = {
     name: "export_selection_evidence",
     arguments: {
       manifestDigest: composed.manifestDigest,
@@ -455,7 +459,9 @@ async function main() {
       dimensions,
       capabilities,
     },
-  });
+  };
+  assert.ok(Buffer.byteLength(JSON.stringify(exportParams)) > 4096, "packed evidence probe must cross the old request limit");
+  const exported = await client.request(9, "tools/call", exportParams);
   assert.equal(exported.result.structuredContent.ok, true);
   assert.deepEqual(exported.result.structuredContent.evidence.payload.selectedSkillIds, selection.skillIds);
   const evidenceInspection = await client.request(10, "tools/call", {
