@@ -26,7 +26,7 @@ prominence, not downloads, community preference or usage.
 | frontend-design | Preserve the user's brand; identify the scoring rubric as subjective and show a concrete small-screen flow. |
 | test-driven-development | Preserve existing work, characterize behavior and report the actual timing of a failing test. |
 | ab-test-setup | Predeclare decisions, show a reproducible binary sample-size approximation and a statistical sample-ratio check; remove universal rollout rules. |
-| agent-evaluation | Handle Wilson interval boundaries and report failures honestly; remove unsupported leaderboard claims. |
+| agent-evaluation | Validate the harness, retain flaky failures and compare a frozen contract; show Wilson boundaries and separate optional architecture sketches. |
 | analytics-tracking | Distinguish observations from an unvalidated rubric; reconcile duplicate purchase events. |
 | browser-automation | Use observed readiness and bounded retries; remove default stealth, sandbox disabling and invented success rates. |
 | langfuse | Version-scoped SDK guidance, approved data export and explicit limits of masking. |
@@ -95,14 +95,14 @@ metadata and license notices remain; modified licensed instructions are identifi
 | Structural observation | Before | After |
 | --- | ---: | ---: |
 | Skills scanned | 2,111 | 2,111 |
-| Skills with warnings | 754 | 747 |
+| Skills with warnings | 754 | 746 |
 | Errors | 0 | 0 |
-| Warnings | 814 | 806 |
+| Warnings | 814 | 805 |
 | Missing examples | 466 | 460 |
-| Long top-level skill files | 214 | 212 |
+| Long top-level skill files | 214 | 211 |
 | Possibly truncated descriptions | 134 | 134 |
 
-No new structural findings were introduced. The 806 remaining warnings are listed
+No new structural findings were introduced. The 805 remaining warnings are listed
 individually in the JSON record, including warnings within the reviewed cohort.
 Their existence is not hidden by generic filler sections or a blanket "validated"
 label. These heuristics identify editorial work; they do not determine whether a

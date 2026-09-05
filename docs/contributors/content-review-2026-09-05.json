@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "date": "2026-09-05",
-  "sourceBaseCommit": "7ed94980184e1349956d743f721374c16bfcccb8",
+  "sourceBaseCommit": "ae7c76894ea7be35f90721950aaa9fedca3b69f8",
   "baselineCommit": "4af9759d52490b8346caf4debb0fceaac92c71e4",
   "reviewProcess": "Codex full-tree source review, stated primary-reference checks and recorded local probes. Official protected merge review is recorded separately by the PR workflow.",
   "selectionBasis": "Top 20 canonical skills by occurrences in checked-in workflows and focused editorial bundles, ties by ID; editorial prominence, not user telemetry.",
@@ -33,11 +33,11 @@
     },
     "after": {
       "skills_scanned": 2111,
-      "skills_ok": 1364,
+      "skills_ok": 1365,
       "skills_with_errors": 0,
-      "skills_with_warnings_only": 747,
+      "skills_with_warnings_only": 746,
       "errors": 0,
-      "warnings": 806,
+      "warnings": 805,
       "infos": 0,
       "top_finding_codes": [
         {
@@ -46,7 +46,7 @@
         },
         {
           "code": "skill_too_long",
-          "count": 212
+          "count": 211
         },
         {
           "code": "description_truncated",
@@ -196,17 +196,6 @@
             "severity": "warning",
             "code": "skill_too_long",
             "message": "SKILL.md is 1115 lines long; consider splitting into references/."
-          }
-        ]
-      },
-      {
-        "id": "agent-evaluation",
-        "path": "agent-evaluation/SKILL.md",
-        "findings": [
-          {
-            "severity": "warning",
-            "code": "skill_too_long",
-            "message": "SKILL.md is 1154 lines long; consider splitting into references/."
           }
         ]
       },
@@ -8736,13 +8725,19 @@
     {
       "id": "agent-evaluation",
       "scope": "priority-cohort",
-      "treeSha256": "03afb58167340518dc5e7d8f1f6883d5937b3bb452b22ec799afba5b886cefd7",
+      "treeSha256": "797f33e8f391a3b6d04e2e6ae8797e4bfa2148114a60ca33d8d4155856d7b625",
       "files": [
         {
           "path": "skills/agent-evaluation/SKILL.md",
-          "bytes": 39394,
+          "bytes": 7810,
           "mode": "100644",
-          "sha256": "2000093b4d72b4a8f5fc62b80163bf03db704ebf8c3e979bdfa1834d57bcd64d"
+          "sha256": "35a81463e739fbd8021e6e775c14440ed0b6d264f1ec83b6ea9ddd3909b86d3f"
+        },
+        {
+          "path": "skills/agent-evaluation/references/architecture-sketches.md",
+          "bytes": 36869,
+          "mode": "100644",
+          "sha256": "4b9345d964e0563d69d6a77858e357fd3cbae3be4b61dc15da70ce9ca3ef3ae3"
         }
       ]
     },
