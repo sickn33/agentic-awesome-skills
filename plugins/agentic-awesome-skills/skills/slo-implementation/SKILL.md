@@ -65,7 +65,7 @@ sum(rate(http_request_duration_seconds_bucket{le="0.5"}[28d]))
 sum(rate(http_request_duration_seconds_count[28d]))
 ```
 
-#### 3. Durability SLI
+#### 3. Write Success SLI
 ```
 # Successful writes / Total writes
 sum(storage_writes_successful_total)
@@ -78,6 +78,8 @@ sum(storage_writes_total)
 ## Setting SLO Targets
 
 ### Availability SLO Examples
+
+The downtime equivalents below assume a time-based SLI, a 30-day month and a 365-day year; do not convert request-based budgets to downtime without a traffic model.
 
 | SLO % | Downtime/Month | Downtime/Year |
 |-------|----------------|---------------|
@@ -106,7 +108,7 @@ slos:
       /
       sum(rate(http_requests_total[28d]))
 
-  - name: api_latency_p95
+  - name: api_latency_under_500ms
     target: 99
     window: 28d
     sli: |
@@ -194,6 +196,21 @@ groups:
           )) / (1 - 0.999)
 ```
 
+The exhaustion projection below assumes a constant recent burn rate. Zero burn has no finite exhaustion time; an exhausted budget must display as already exhausted. Missing telemetry is not healthy traffic.
+
+### Additional Burn-Rate Recording Rules
+
+Include these rules in the same recording-rule group before using the alert examples:
+
+```yaml
+- record: slo:http_availability:burn_rate_1h
+  expr: (sum(rate(http_requests_total{status=~"5.."}[1h])) / sum(rate(http_requests_total[1h]))) / (1 - 0.999)
+- record: slo:http_availability:burn_rate_6h
+  expr: (sum(rate(http_requests_total{status=~"5.."}[6h])) / sum(rate(http_requests_total[6h]))) / (1 - 0.999)
+- record: slo:http_availability:burn_rate_30m
+  expr: (sum(rate(http_requests_total{status=~"5.."}[30m])) / sum(rate(http_requests_total[30m]))) / (1 - 0.999)
+```
+
 ### SLO Alerting Rules
 
 ```yaml
@@ -202,7 +219,7 @@ groups:
     interval: 1m
     rules:
       # Fast burn: 14.4x rate, 1 hour window
-      # Consumes 2% error budget in 1 hour
+      # Approximately 2.14% of a 28-day budget in 1 hour at constant traffic
       - alert: SLOErrorBudgetBurnFast
         expr: |
           slo:http_availability:burn_rate_1h > 14.4
@@ -216,7 +233,7 @@ groups:
           description: "Error budget burning at {{ $value }}x rate"
 
       # Slow burn: 6x rate, 6 hour window
-      # Consumes 5% error budget in 6 hours
+      # Approximately 5.36% of a 28-day budget in 6 hours at constant traffic
       - alert: SLOErrorBudgetBurnSlow
         expr: |
           slo:http_availability:burn_rate_6h > 6
@@ -270,11 +287,9 @@ sli:http_availability:ratio * 100
 slo:http_availability:error_budget_remaining
 
 # Days until error budget exhausted (at current burn rate)
-(slo:http_availability:error_budget_remaining / 100)
-*
-28
+(slo:http_availability:error_budget_remaining / 100) * 28
 /
-(1 - sli:http_availability:ratio) * (1 - 0.999)
+slo:http_availability:burn_rate_5m
 ```
 
 ## Multi-Window Burn Rate Alerts
@@ -334,7 +349,7 @@ rules:
 
 ## Reference Files
 
-- `assets/slo-template.md` - SLO definition template
+- [inline example](#setting-slo-targets) - SLO definition template
 - `references/slo-definitions.md` - SLO definition patterns
 - `references/error-budget.md` - Error budget calculations
 

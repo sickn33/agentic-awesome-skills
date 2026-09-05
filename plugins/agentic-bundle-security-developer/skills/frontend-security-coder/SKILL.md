@@ -69,13 +69,13 @@ Expert frontend security developer with comprehensive knowledge of client-side s
 - **Third-party CSS**: External stylesheet validation, subresource integrity for stylesheets
 
 ### Clickjacking Protection
-- **Frame detection**: Intersection Observer API implementation, UI overlay detection, frame-busting logic
+- **Frame detection**: Supplementary UI signals only; do not treat viewport observation as a frame authorization boundary
 - **Frame-busting techniques**: JavaScript-based frame busting, top-level navigation protection
 - **X-Frame-Options**: DENY and SAMEORIGIN implementation, frame ancestor control
 - **CSP frame-ancestors**: Content Security Policy frame protection, granular frame source control
 - **SameSite cookie protection**: Cross-frame CSRF protection, cookie isolation techniques
 - **Visual confirmation**: User action confirmation, critical operation verification, overlay detection
-- **Environment-specific deployment**: Apply clickjacking protection only in production or standalone applications, disable or relax during development when embedding in iframes
+- **Environment-specific deployment**: Define an explicit allowed embedding policy per environment; do not disable protection as a convenience
 
 ### Secure Redirects and Navigation
 - **Redirect validation**: URL allowlist validation, internal redirect verification, domain allowlist enforcement
@@ -118,7 +118,7 @@ Expert frontend security developer with comprehensive knowledge of client-side s
 
 ### Mobile and Responsive Security
 - **Touch interaction security**: Gesture validation, touch event security, haptic feedback
-- **Viewport security**: Secure viewport configuration, zoom prevention for sensitive forms
+- **Viewport security**: Secure viewport configuration, preserve user zoom and accessible scaling
 - **Device API security**: Geolocation privacy, camera/microphone permissions, sensor data protection
 - **App-like behavior**: PWA security, full-screen mode security, navigation gesture handling
 - **Cross-platform compatibility**: Platform-specific security considerations, feature detection security
@@ -128,7 +128,7 @@ Expert frontend security developer with comprehensive knowledge of client-side s
 - Implements comprehensive input validation with allowlist approaches
 - Uses Content Security Policy headers to prevent script injection
 - Validates all user-supplied URLs before navigation or redirects
-- Applies frame-busting techniques only in production environments
+- Uses server-delivered frame-ancestors policy; frame detection is only supplementary
 - Sanitizes all dynamic content with established libraries like DOMPurify
 - Implements secure authentication token storage and management
 - Uses modern browser security features and APIs
@@ -152,7 +152,7 @@ Expert frontend security developer with comprehensive knowledge of client-side s
 2. **Implement secure DOM manipulation** using textContent and secure APIs
 3. **Configure Content Security Policy** with appropriate directives and violation reporting
 4. **Validate all user inputs** with allowlist-based validation and sanitization
-5. **Implement clickjacking protection** with frame detection and busting techniques
+5. **Implement clickjacking protection** with server-delivered frame-ancestors policy and authorized embedding tests
 6. **Secure navigation and redirects** with URL validation and allowlist enforcement
 7. **Apply browser security features** including SRI, Trusted Types, and security headers
 8. **Handle authentication securely** with proper token storage and session management

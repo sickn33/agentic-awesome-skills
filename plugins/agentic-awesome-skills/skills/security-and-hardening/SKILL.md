@@ -81,7 +81,7 @@ If you can't name the trust boundaries for a feature, you're not ready to secure
 
 ## OWASP Top 10 Prevention Patterns
 
-These are prevention patterns, not a ranking. For the 2021 ordering, see the quick-reference table in `references/security-checklist.md`.
+These are prevention patterns, not a ranking. For a task-focused review checklist, see `references/security-checklist.md`.
 
 ### Injection (SQL, NoSQL, OS Command)
 
@@ -114,7 +114,7 @@ app.use(session({
   cookie: {
     httpOnly: true,     // Not accessible via JavaScript
     secure: true,       // HTTPS only
-    sameSite: 'lax',    // CSRF protection
+    sameSite: 'lax',    // Defense in depth; add CSRF protection for cookie-authenticated writes
     maxAge: 24 * 60 * 60 * 1000,  // 24 hours
   },
 }));
@@ -142,14 +142,17 @@ app.patch('/api/tasks/:id', authenticate, async (req, res) => {
   const task = await taskService.findById(req.params.id);
 
   // Check that the authenticated user owns this resource
-  if (task.ownerId !== req.user.id) {
+  if (!task || task.ownerId !== req.user.id) {
     return res.status(403).json({
       error: { code: 'FORBIDDEN', message: 'Not authorized to modify this task' }
     });
   }
 
   // Proceed with update
-  const updated = await taskService.update(req.params.id, req.body);
+  const input = UpdateTaskSchema.safeParse(req.body); // Schema allowlists mutable fields only.
+  if (!input.success) return res.status(422).json({ error: 'Invalid input' });
+  // The service must atomically enforce ownerId in its update predicate.
+  const updated = await taskService.updateOwned(req.params.id, req.user.id, input.data);
   return res.json(updated);
 });
 ```
@@ -184,8 +187,7 @@ app.use(cors({
 ```typescript
 // Never return sensitive fields in API responses
 function sanitizeUser(user: UserRecord): PublicUser {
-  const { passwordHash, resetToken, ...publicFields } = user;
-  return publicFields;
+  return { id: user.id, displayName: user.displayName }; // Explicit public-field allowlist.
 }
 
 // Use environment variables for secrets
