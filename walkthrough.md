@@ -615,3 +615,10 @@
 - Updated the web app lockfile to the newest versions allowed by its existing dependency ranges; npm audit remains at zero vulnerabilities.
 - Rewrote the unsafe-path control-character check to satisfy the stricter linter while preserving rejection behavior, with a regression test for NUL-containing paths.
 - Made the Vitest Vite-config import explicit so the native config-loader compatibility warning is gone.
+
+## 2026-09-05 — Substantive input-boundary audit
+
+- Corrected archive entry accounting and normalized ancestor collision checks, installer manifest hardlink handling and replacement, duplicate Workbench JSON keys, stale skill navigation results, and premature clipboard success.
+- Added reproductions and regression tests; checked the syntax of all 877 tracked Python, shell and JavaScript skill scripts without executing them.
+- Full scope, evidence and limits: [deep input-boundary audit](docs/maintainers/deep-input-boundary-audit-2026-09-05.md).
+- Source maintenance only; no release or deployment.

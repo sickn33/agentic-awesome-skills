@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import { SkillDetail } from '../SkillDetail';
 import { renderWithRouter } from '../../utils/testUtils';
 import { createMockSkill } from '../../factories/skill';
@@ -237,6 +238,26 @@ describe('SkillDetail', () => {
     });
   });
 
+  it('ignores an older markdown request after navigating to another skill', async () => {
+    const first = createMockSkill({ id: 'delayed-first', name: 'delayed-first', path: 'delayed-first' });
+    const second = createMockSkill({ id: 'current-second', name: 'current-second', path: 'current-second' });
+    (useSkills as Mock).mockReturnValue({ skills: [first, second], stars: {}, loading: false });
+    let finishFirst!: (response: unknown) => void;
+    global.fetch = vi.fn().mockImplementation((url: string) => url.includes('delayed-first')
+      ? new Promise((resolve) => { finishFirst = resolve; })
+      : Promise.resolve({ ok: true, text: async () => '# Current second content' }));
+    const router = createMemoryRouter([{ path: '/skill/:id', element: <SkillDetail /> }],
+      { initialEntries: ['/skill/delayed-first'] });
+    render(<RouterProvider router={router} />);
+    await waitFor(() => expect(finishFirst).toBeDefined());
+    await act(() => router.navigate('/skill/current-second'));
+    await waitFor(() => expect(screen.getByTestId('markdown-content')).toHaveTextContent('Current second content'));
+    await act(async () => { finishFirst({ ok: true, text: async () => '# Stale first content' }); });
+    expect(screen.getByTestId('markdown-content')).toHaveTextContent('Current second content');
+    fireEvent.click(screen.getByRole('button', { name: /Copy Full Content/i }));
+    expect(navigator.clipboard.writeText).toHaveBeenLastCalledWith('# Current second content');
+  });
+
   describe('Copy functionality', () => {
     it('should copy skill name to clipboard when clicked', async () => {
       const mockSkill = createMockSkill({ id: 'click-test', name: 'click-test' });
@@ -266,6 +287,19 @@ describe('SkillDetail', () => {
       fireEvent.click(copyButton);
 
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith('Use @click-test');
+    });
+
+    it.each(['Copy @Skill', 'Copy Full Content'])('reports a failed %s without claiming success', async (button) => {
+      const skill = createMockSkill({ id: 'clipboard-failure', name: 'clipboard-failure' });
+      (useSkills as Mock).mockReturnValue({ skills: [skill], stars: {}, loading: false });
+      global.fetch = vi.fn().mockResolvedValue({ ok: true, text: async () => '# Copyable content' });
+      renderWithRouter(<SkillDetail />, { route: '/skill/clipboard-failure', path: '/skill/:id', useProvider: false });
+      const copy = await screen.findByRole('button', { name: button });
+      vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(new Error('clipboard permission denied'));
+      fireEvent.click(copy);
+      expect(await screen.findByRole('alert')).toHaveTextContent('Clipboard unavailable');
+      expect(copy).toHaveTextContent(button);
+      expect(copy).not.toHaveTextContent('Copied');
     });
 
     it('should link to Core artifact review without promising composition', async () => {

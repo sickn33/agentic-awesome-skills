@@ -91,6 +91,7 @@ export function SkillDetail(): React.ReactElement {
   const [contentLoading, setContentLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [copiedFull, setCopiedFull] = useState(false);
+  const [copyError, setCopyError] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [customContext, setCustomContext] = useState('');
   const [retryToken, setRetryToken] = useState(0);
@@ -149,6 +150,7 @@ export function SkillDetail(): React.ReactElement {
 
   useEffect(() => {
     if (contextLoading || !skill) return;
+    let active = true;
 
     const loadMarkdown = async () => {
       setContentLoading(true);
@@ -171,8 +173,10 @@ export function SkillDetail(): React.ReactElement {
         for (const url of candidateUrls) {
           try {
             markdown = await fetchMarkdownOnce(url, skill.id);
+            if (!active) return;
             break;
           } catch (err) {
+            if (!active) return;
             lastError = err instanceof Error ? err : new Error(String(err));
           }
         }
@@ -183,15 +187,29 @@ export function SkillDetail(): React.ReactElement {
 
         setContent(markdown);
       } catch (err) {
+        if (!active) return;
         console.error('Failed to load skill content', err);
         setError(err instanceof Error ? err.message : 'Could not load skill content.');
       } finally {
-        setContentLoading(false);
+        if (active) setContentLoading(false);
       }
     };
 
-    loadMarkdown();
+    void loadMarkdown();
+    return () => { active = false; };
   }, [skill, contextLoading, retryToken]);
+
+  const copyText = async (text: string, markCopied: (value: boolean) => void) => {
+    setCopyError('');
+    markCopied(false);
+    try {
+      await navigator.clipboard.writeText(text);
+      markCopied(true);
+      setTimeout(() => markCopied(false), 2000);
+    } catch {
+      setCopyError('Clipboard unavailable. Select and copy the text directly from this page.');
+    }
+  };
 
   const copyToClipboard = () => {
     if (!skill) return;
@@ -201,9 +219,7 @@ export function SkillDetail(): React.ReactElement {
       ? `${basePrompt}\n\nContext:\n${customContext}`
       : basePrompt;
 
-    navigator.clipboard.writeText(finalPrompt);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    void copyText(finalPrompt, setCopied);
   };
 
   const copyFullToClipboard = () => {
@@ -211,9 +227,7 @@ export function SkillDetail(): React.ReactElement {
       ? `${content}\n\nContext:\n${customContext}`
       : content;
 
-    navigator.clipboard.writeText(finalPrompt);
-    setCopiedFull(true);
-    setTimeout(() => setCopiedFull(false), 2000);
+    void copyText(finalPrompt, setCopiedFull);
   };
 
   if (!contextLoading && !skill) {
@@ -358,6 +372,7 @@ export function SkillDetail(): React.ReactElement {
             </div>
           </div>
 
+          {copyError ? <p role="alert">{copyError}</p> : null}
           <label htmlFor="context" className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
             Interactive Prompt Builder (Optional)
           </label>

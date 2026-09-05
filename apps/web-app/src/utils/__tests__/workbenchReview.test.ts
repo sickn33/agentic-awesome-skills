@@ -79,6 +79,19 @@ describe('workbenchReview', () => {
     expect(() => parseWorkbenchArtifact(JSON.stringify(stack), 'stack')).toThrow('duplicate IDs');
   });
 
+  it('rejects duplicate JSON properties before their overwritten values disappear', () => {
+    const input = JSON.stringify(validStack());
+    for (const ambiguous of [
+      input.replace('"schemaVersion":2', '"schemaVersion":1,"schemaVersion":2'),
+      input.replace('"version":"15.0.0"', '"version":"1.0.0","version":"15.0.0"'),
+      input.replace('"version":"15.0.0"', String.raw`"ver\u0073ion":"1.0.0","version":"15.0.0"`),
+    ]) expect(() => parseWorkbenchArtifact(ambiguous, 'stack')).toThrow('duplicate JSON property');
+    const stack = validStack();
+    (stack.profile as Record<string, unknown>).goals = ['braces {}, colon : and comma , in strings', 'escaped "quote"'];
+    stack.targets = [{ host: 'codex', scope: 'project' }, { host: 'claude', scope: 'user' }];
+    expect(parseWorkbenchArtifact(JSON.stringify(stack), 'stack').kind).toBe('stack');
+  });
+
   it('rejects the retired v1 policy shape', () => {
     const stack = validStack();
     stack.schemaVersion = 1;

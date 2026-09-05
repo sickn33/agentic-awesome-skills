@@ -13,6 +13,7 @@ const REPO = "https://github.com/sickn33/agentic-awesome-skills.git";
 const NPM_REGISTRY = "https://registry.npmjs.org";
 const HOME = process.env.HOME || process.env.USERPROFILE || "";
 const INSTALL_MANIFEST_FILE = ".antigravity-install-manifest.json";
+const MAX_INSTALL_MANIFEST_BYTES = 1024 * 1024;
 const DEFAULT_RELEASE_REF = packageMetadata.version ? `v${packageMetadata.version}` : null;
 const FULL_GIT_SHA_PATTERN = /^[0-9a-f]{40}$/;
 const EXACT_VERSION_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
@@ -737,6 +738,13 @@ function resolveManagedPath(targetPath, entry) {
 function resolveInstallManifestPath(targetPath) {
   const manifestPath = path.join(targetPath, INSTALL_MANIFEST_FILE);
   assertSafeDestinationPath(manifestPath, targetPath);
+  let stat;
+  try { stat = fs.lstatSync(manifestPath); } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  if (stat && (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1 || stat.size > MAX_INSTALL_MANIFEST_BYTES)) {
+    throw new Error(`Refusing unsafe install manifest: ${manifestPath}`);
+  }
   return manifestPath;
 }
 
@@ -747,8 +755,20 @@ function readInstallManifest(targetPath) {
   }
   let fd = null;
   try {
-    fd = fs.openSync(manifestPath, "r");
-    const parsed = JSON.parse(fs.readFileSync(fd, "utf8"));
+    fd = fs.openSync(manifestPath, fs.constants.O_RDONLY | (fs.constants.O_NOFOLLOW || 0));
+    const stat = fs.fstatSync(fd);
+    if (!stat.isFile() || stat.nlink !== 1 || stat.size > MAX_INSTALL_MANIFEST_BYTES) {
+      throw new Error("Unsafe manifest changed while opening");
+    }
+    const bytes = Buffer.alloc(MAX_INSTALL_MANIFEST_BYTES + 1);
+    let length = 0;
+    while (length < bytes.length) {
+      const read = fs.readSync(fd, bytes, length, bytes.length - length, null);
+      if (read === 0) break;
+      length += read;
+    }
+    if (length > MAX_INSTALL_MANIFEST_BYTES) throw new Error("Manifest exceeds the size limit");
+    const parsed = JSON.parse(bytes.subarray(0, length).toString("utf8"));
     if (!parsed || !Array.isArray(parsed.entries)) {
       return [];
     }
@@ -791,11 +811,14 @@ function writeInstallManifest(targetPath, installEntries) {
     null,
     2,
   ) + "\n";
-  const fd = fs.openSync(manifestPath, "w", 0o600);
+  const stageRoot = fs.mkdtempSync(path.join(targetPath, ".antigravity-manifest-"));
+  const stagedManifest = path.join(stageRoot, "manifest.json");
   try {
-    fs.writeFileSync(fd, manifest, "utf8");
+    fs.writeFileSync(stagedManifest, manifest, { encoding: "utf8", flag: "wx", mode: 0o600 });
+    resolveInstallManifestPath(targetPath);
+    fs.renameSync(stagedManifest, manifestPath);
   } finally {
-    fs.closeSync(fd);
+    fs.rmSync(stageRoot, { recursive: true, force: true });
   }
 }
 
