@@ -4,6 +4,7 @@ description: 分析睡眠数据、识别睡眠模式、评估睡眠质量，并�
 allowed-tools: Read, Grep, Glob, Write
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # 睡眠分析器技能

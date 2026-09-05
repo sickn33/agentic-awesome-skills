@@ -4,6 +4,7 @@ description: 'Version: makepad-widgets (dev branch) | Last Updated: 2026-01-19 >
 metadata:
   aas-risk: safe
   aas-source: community
+  aas-date-added: '2026-09-04'
 ---
 
 # Makepad Widgets Skill

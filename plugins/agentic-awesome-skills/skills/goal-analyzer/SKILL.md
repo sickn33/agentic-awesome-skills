@@ -4,6 +4,7 @@ description: 分析健康目标数据、识别目标模式、评估目标进度,
 allowed-tools: Read, Grep, Glob, Write
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # 健康目标分析器技能

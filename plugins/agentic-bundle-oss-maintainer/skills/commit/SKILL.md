@@ -4,6 +4,7 @@ description: ALWAYS use this skill when committing code changes — never commit
 metadata:
   aas-risk: critical
   aas-source: community
+  aas-date-added: '2026-09-04'
 ---
 
 # Sentry Commit Messages

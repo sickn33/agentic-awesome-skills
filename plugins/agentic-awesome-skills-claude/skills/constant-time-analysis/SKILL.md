@@ -3,6 +3,7 @@ name: constant-time-analysis
 description: "Analyze cryptographic code to detect operations that leak secret data through execution timing variations."
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Constant-Time Analysis

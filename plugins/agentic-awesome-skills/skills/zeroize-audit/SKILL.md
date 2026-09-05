@@ -15,6 +15,7 @@ allowed-tools:
   - mcp__serena__get_symbols_overview
 risk: offensive
 source: community
+date_added: "2026-09-04"
 ---
 
 > **⚠️ AUTHORIZED USE ONLY**

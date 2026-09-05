@@ -3,6 +3,7 @@ name: n8n-validation-expert
 description: "Expert guide for interpreting and fixing n8n validation errors."
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # n8n Validation Expert

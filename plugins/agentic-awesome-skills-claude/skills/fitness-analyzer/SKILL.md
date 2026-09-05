@@ -4,6 +4,7 @@ description: 分析运动数据、识别运动模式、评估健身进展，并�
 allowed-tools: Read, Grep, Glob, Write
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # 运动分析器技能

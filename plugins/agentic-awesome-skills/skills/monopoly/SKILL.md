@@ -4,6 +4,7 @@ description: >
   MONOPOLY is a Senior System Design Engineer skill for architecting, reviewing, and scaling systems. Triggers on requests involving architecture, databases, scaling, microservices, or infrastructure design. Proactively engages to design resilient backend systems.
 risk: none
 source: community
+date_added: "2026-09-04"
 ---
 
 # MONOPOLY — Senior System Design Engineer

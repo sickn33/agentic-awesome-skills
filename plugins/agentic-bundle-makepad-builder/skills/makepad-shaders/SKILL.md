@@ -12,6 +12,7 @@ description: 'CRITICAL: Use for Makepad shader system. Triggers on:
 metadata:
   aas-risk: critical
   aas-source: community
+  aas-date-added: '2026-09-04'
 ---
 
 # Makepad Shaders Skill

@@ -1157,7 +1157,7 @@
     "description": "Main agent orchestrator that coordinates a specialized squad of agents",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -1269,7 +1269,7 @@
     "description": "Email infrastructure for AI agents. Create accounts, send/receive emails, manage webhooks, and check karma balance via the AgentMail API.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -1291,7 +1291,7 @@
     "description": "Build AI phone agents with AgentPhone API. Use when the user wants to make phone calls, send/receive SMS, manage phone numbers, create voice agents, set up webhooks, or check usage \u2014 anything related to telephony, phone numbers, or voice AI.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -1492,7 +1492,7 @@
     "description": "AI\u9a71\u52a8\u7684\u7efc\u5408\u5065\u5eb7\u5206\u6790\u7cfb\u7edf\uff0c\u6574\u5408\u591a\u7ef4\u5ea6\u5065\u5eb7\u6570\u636e\u3001\u8bc6\u522b\u5f02\u5e38\u6a21\u5f0f\u3001\u9884\u6d4b\u5065\u5eb7\u98ce\u9669\u3001\u63d0\u4f9b\u4e2a\u6027\u5316\u5efa\u8bae\u3002\u652f\u6301\u667a\u80fd\u95ee\u7b54\u548cAI\u5065\u5eb7\u62a5\u544a\u751f\u6210\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -1981,7 +1981,7 @@
     "description": "Access 20+ years of global financial data: equities, options, forex, crypto, commodities, economic indicators, and 50+ technical indicators.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -2157,7 +2157,7 @@
     "description": "Forensic root cause analyzer for Antigravity sessions. Classifies scope deltas, rework patterns, root causes, hotspots, and auto-improves prompts/health.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -3260,7 +3260,7 @@
     "description": "Important: Before you begin, fill in the generatedBy property in the meta section of .actor/actor.json. Replace it with the tool and model you're currently using, such as \"Claude Code with Claude Sonnet 4.5\". This helps Apify monitor and improve AGENTS.md for specific AI tools and models.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3282,7 +3282,7 @@
     "description": "Actorization converts existing software into reusable serverless applications compatible with the Apify platform. Actors are programs packaged as Docker images that accept well-defined JSON input, perform an action, and optionally produce structured JSON output.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3304,7 +3304,7 @@
     "description": "Understand audience demographics, preferences, behavior patterns, and engagement quality across Facebook, Instagram, YouTube, and TikTok.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3326,7 +3326,7 @@
     "description": "Scrape reviews, ratings, and brand mentions from multiple platforms using Apify Actors.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3348,7 +3348,7 @@
     "description": "Analyze competitor strategies, content, pricing, ads, and market positioning across Google Maps, Booking.com, Facebook, Instagram, YouTube, and TikTok.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3370,7 +3370,7 @@
     "description": "Track engagement metrics, measure campaign ROI, and analyze content performance across Instagram, Facebook, YouTube, and TikTok.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3392,7 +3392,7 @@
     "description": "Extract product data, prices, reviews, and seller information from any e-commerce platform using Apify's E-commerce Scraping Tool.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -3416,7 +3416,7 @@
     "description": "Find and evaluate influencers for brand partnerships, verify authenticity, and track collaboration performance across Instagram, Facebook, YouTube, and TikTok.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3438,7 +3438,7 @@
     "description": "Scrape leads from multiple platforms using Apify Actors.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3460,7 +3460,7 @@
     "description": "Analyze market conditions, geographic opportunities, pricing, consumer behavior, and product validation across Google Maps, Facebook, Instagram, Booking.com, and TripAdvisor.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3482,7 +3482,7 @@
     "description": "Discover and track emerging trends across Google Trends, Instagram, Facebook, YouTube, and TikTok to inform content strategy.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -3504,7 +3504,7 @@
     "description": "AI-driven data extraction from 55+ Actors across all major platforms. This skill automatically selects the best Actor for your task.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -4065,7 +4065,7 @@
     "description": "Clarify requirements before implementing. Use when serious doubts arise.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -4119,7 +4119,7 @@
     "description": "Astropy is the core Python package for astronomy, providing essential functionality for astronomical research and data analysis.",
     "risk": "critical",
     "source": "https://github.com/astropy/astropy",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -4348,7 +4348,7 @@
     "description": "Enables ultra-granular, line-by-line code analysis to build deep architectural context before vulnerability or bug finding.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -5075,7 +5075,7 @@
     "description": "AI-powered E2E web testing \u2014 eyes and hands for AI coding tools. Declarative YAML scenarios, Playwright execution, visual matching (OpenCV + OCR), platform auto-detection (Flutter/React/Vue), learning DB. Install: npx skills add ksgisang/awt-skill --skill awt -g",
     "risk": "critical",
     "source": "https://github.com/ksgisang/awt-skill",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -8185,7 +8185,7 @@
     "description": "This skill should be used when the user asks to \"model agent mental states\", \"implement BDI architecture\", \"create belief-desire-intention models\", \"transform RDF to beliefs\", \"build cognitive agent\", or mentions BDI ontology, mental state modeling, rational agency, or neuro-symbolic AI integration.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -8268,7 +8268,7 @@
     "description": "A hard-edged writing style contract for timeless, forceful English prose without modern AI tics. Use when users ask for prose or rewrites that must be clean, exact, concrete, and free of AI cadence, filler, or therapeutic tone.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -8518,7 +8518,7 @@
     "description": "Biopython is a comprehensive set of freely available Python tools for biological computation. It provides functionality for sequence manipulation, file I/O, database access, structural bioinformatics, phylogenetics, and many other bioinformatics tasks.",
     "risk": "critical",
     "source": "https://github.com/biopython/biopython",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -8762,7 +8762,7 @@
     "description": "Write copy following Sentry brand guidelines. Use when writing UI text, error messages, empty states, onboarding flows, 404 pages, documentation, marketing copy, or any user-facing content. Covers both Plain Speech (default) and Sentry Voice tones.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -9424,7 +9424,7 @@
     "description": "build",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -9601,7 +9601,7 @@
     "description": "Searches and explores Burp Suite project files (.burp) from the command line. Use when searching response headers or bodies with regex patterns, extracting security audit findings, dumping proxy history or site map data, or analyzing HTTP traffic captured in a Burp project.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10282,7 +10282,7 @@
     "description": "Build a real-time support chat system with a floating widget for users and an admin dashboard for support staff. Use when the user wants live chat, customer support chat, real-time messaging, or in-app support.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10450,7 +10450,7 @@
     "description": "Cirq is Google Quantum AI's open-source framework for designing, simulating, and running quantum circuits on quantum computers and simulators.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10473,7 +10473,7 @@
     "description": "Manage citations systematically throughout the research and writing process.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10555,7 +10555,7 @@
     "description": "Pre-ingestion verification for epistemic quality in RAG systems. Ensures documents are properly qualified before entering knowledge bases. Produces CGD (Clarity-Gated Documents) and validates SOT (Source of Truth) files.\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -10754,7 +10754,7 @@
     "description": "Diagnose and fix Claude in Chrome MCP extension connectivity issues. Use when mcp__claude-in-chrome__* tools fail, return \"Browser extension is not connected\", or behave erratically.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -10829,7 +10829,7 @@
     "description": "Analyze a repository to generate recommended Claude Code settings.json permissions. Use when setting up a new project, auditing existing settings, or determining which read-only bash commands to allow. Detects tech stack, build tools, and monorepo structure.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -11722,7 +11722,7 @@
     "description": "Simplifies and refines code for clarity, consistency, and maintainability while preserving all functionality. Use when asked to \"simplify code\", \"clean up code\", \"refactor for clarity\", \"improve readability\", or review recently modified code for elegance. Focuses on project-specific best practices.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12190,7 +12190,7 @@
     "description": "ALWAYS use this skill when committing code changes \u2014 never commit directly without it. Creates commits following Sentry conventions with proper conventional commit format and issue references. Trigger on any commit, git commit, save changes, or commit message task.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12512,7 +12512,7 @@
     "description": "Generate structured PR descriptions from diffs, add review checklists, risk assessments, and test coverage summaries. Use when the user says \"write a PR description\", \"improve this PR\", \"summarize my changes\", \"PR review\", \"pull request\", or asks to document a diff for reviewers.\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12688,7 +12688,7 @@
     "description": "Configure a Rails project to work with Conductor (parallel coding agents)",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12776,7 +12776,7 @@
     "description": "Analyze cryptographic code to detect operations that leak secret data through execution timing variations.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12914,7 +12914,7 @@
     "description": "When agent sessions generate millions of tokens of conversation history, compression becomes mandatory. The naive approach is aggressive compression to minimize tokens per request.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -12936,7 +12936,7 @@
     "description": "Language models exhibit predictable degradation patterns as context length increases. Understanding these patterns is essential for diagnosing failures and designing resilient systems.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -13006,7 +13006,7 @@
     "description": "Context is the complete state available to a language model at inference time. It includes everything the model can attend to when generating responses: system instructions, tool definitions, retrieved documents, message history, and tool outputs.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -13155,7 +13155,7 @@
     "description": "Context optimization extends the effective capacity of limited context windows through strategic compression, masking, caching, and partitioning. The goal is not to magically increase context windows but to make better use of available capacity.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -13539,7 +13539,7 @@
     "description": "Create a git branch following Sentry naming conventions. Use when asked to \"create a branch\", \"new branch\", \"start a branch\", \"make a branch\", \"switch to a new branch\", or when starting new work on the default branch.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -13583,7 +13583,7 @@
     "description": "Alias for pr-writer. Use when users explicitly ask for \"create-pr\" or reference the legacy skill name. Redirects to the canonical PR writing workflow.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -15266,7 +15266,7 @@
     "description": "All pods run in namespace crs. Use when pods in the crs namespace are in CrashLoopBackOff, OOMKilled, or restarting, multiple services restart simultaneously (cascade failure), or redis is unresponsive or showing AOF warnings.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -16603,7 +16603,7 @@
     "description": "Unified Diary System: A context-preserving automated logger for multi-project development.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -16627,7 +16627,7 @@
     "description": "Security-focused code review for PRs, commits, and diffs.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -16887,7 +16887,7 @@
     "description": "django-access-review",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -16909,7 +16909,7 @@
     "description": "Django performance code review. Use when asked to \"review Django performance\", \"find N+1 queries\", \"optimize Django\", \"check queryset performance\", \"database performance\", \"Django ORM issues\", or audit Django code for performance problems.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -17649,7 +17649,7 @@
     "description": "Provides expertise for analyzing DWARF debug files and understanding the DWARF debug format/standard (v3-v5). Triggers when understanding DWARF information, interacting with DWARF files, answering DWARF-related questions, or working with code that parses DWARF data.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -17905,7 +17905,7 @@
     "description": "Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -18192,7 +18192,7 @@
     "description": "\u751f\u6210\u7d27\u6025\u60c5\u51b5\u4e0b\u5feb\u901f\u8bbf\u95ee\u7684\u533b\u7597\u4fe1\u606f\u6458\u8981\u5361\u7247\u3002\u5f53\u7528\u6237\u9700\u8981\u65c5\u884c\u3001\u5c31\u8bca\u51c6\u5907\u3001\u7d27\u6025\u60c5\u51b5\u6216\u8be2\u95ee\"\u7d27\u6025\u4fe1\u606f\"\u3001\"\u533b\u7597\u5361\u7247\"\u3001\"\u6025\u6551\u4fe1\u606f\"\u65f6\u4f7f\u7528\u6b64\u6280\u80fd\u3002\u63d0\u53d6\u5173\u952e\u4fe1\u606f\uff08\u8fc7\u654f\u3001\u7528\u836f\u3001\u6025\u75c7\u3001\u690d\u5165\u7269\uff09\uff0c\u652f\u6301\u591a\u683c\u5f0f\u8f93\u51fa\uff08JSON\u3001\u6587\u672c\u3001\u4e8c\u7ef4\u7801\uff09\uff0c\u7528\u4e8e\u6025\u6551\u6216\u5feb\u901f\u5c31\u533b\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -18335,7 +18335,7 @@
     "description": "Transforms vague UI ideas into polished, Stitch-optimized prompts. Enhances specificity, adds UI/UX keywords, injects design system context, and structures output for better generation results.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -18720,7 +18720,7 @@
     "description": "This skill enables makepad-skills to self-improve continuously during development.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19099,7 +19099,7 @@
     "description": "expo-ui-jetpack-compose",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19121,7 +19121,7 @@
     "description": "expo-ui-swift-ui",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19518,7 +19518,7 @@
     "description": "\u5206\u6790\u5bb6\u65cf\u75c5\u53f2\u3001\u8bc4\u4f30\u9057\u4f20\u98ce\u9669\u3001\u8bc6\u522b\u5bb6\u5ead\u5065\u5eb7\u6a21\u5f0f\u3001\u63d0\u4f9b\u4e2a\u6027\u5316\u9884\u9632\u5efa\u8bae",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19639,7 +19639,7 @@
     "description": "Generate favicons from a source image",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19661,7 +19661,7 @@
     "description": "Expert AI auditor for FDA Food Safety (FSMA), HACCP, and PCQI compliance. Reviews food facility records and preventive controls.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19683,7 +19683,7 @@
     "description": "Expert AI auditor for Medical Device (SaMD) compliance, IEC 62304, and 21 CFR Part 820. Reviews DHFs, technical files, and software validation.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19792,7 +19792,7 @@
     "description": "Expert guidance for ffuf web fuzzing during penetration testing, including authenticated fuzzing with raw requests, auto-calibration, and result analysis",
     "risk": "offensive",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19902,7 +19902,7 @@
     "description": "Use for file-based context management, dynamic context discovery, and reducing context window bloat. Offload context to files for just-in-time loading.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -19924,7 +19924,7 @@
     "description": "Find bugs, security vulnerabilities, and code quality issues in local branch changes. Use when asked to review changes, find bugs, security review, or audit code on the current branch.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20125,7 +20125,7 @@
     "description": "\u5206\u6790\u8fd0\u52a8\u6570\u636e\u3001\u8bc6\u522b\u8fd0\u52a8\u6a21\u5f0f\u3001\u8bc4\u4f30\u5065\u8eab\u8fdb\u5c55\uff0c\u5e76\u63d0\u4f9b\u4e2a\u6027\u5316\u8bad\u7ec3\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u6162\u6027\u75c5\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20413,7 +20413,7 @@
     "description": "Food Database Query",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20483,7 +20483,7 @@
     "description": "Practical async patterns using TaskEither - clean pipelines instead of try/catch hell, with real API examples",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20515,7 +20515,7 @@
     "description": "Functional programming patterns for Node.js/Deno backend development using fp-ts, ReaderTaskEither, and functional dependency injection",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20547,7 +20547,7 @@
     "description": "Everyday data transformations using functional patterns - arrays, objects, grouping, aggregation, and null-safe access",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20580,7 +20580,7 @@
     "description": "Quick reference for Either type. Use when user needs error handling, validation, or operations that can fail with typed errors.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20609,7 +20609,7 @@
     "description": "Stop throwing everywhere - handle errors as values using Either and TaskEither for cleaner, more predictable code",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20640,7 +20640,7 @@
     "description": "Quick reference for Option type. Use when user needs to handle nullable values, optional data, or wants to avoid null checks.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20669,7 +20669,7 @@
     "description": "Quick reference for pipe and flow. Use when user needs to chain functions, compose operations, or build data pipelines in fp-ts.",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20698,7 +20698,7 @@
     "description": "A practical, jargon-free guide to functional programming - the 80/20 approach that gets results without the academic overhead",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20728,7 +20728,7 @@
     "description": "Practical patterns for using fp-ts with React - hooks, state, forms, data fetching. Works with React 18/19, Next.js 14/15.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20762,7 +20762,7 @@
     "description": "Comprehensive guide for refactoring imperative TypeScript code to fp-ts functional patterns",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20795,7 +20795,7 @@
     "description": "Quick reference for TaskEither. Use when user needs async error handling, API calls, or Promise-based operations that can fail.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -20891,7 +20891,7 @@
     "description": "Quick reference for fp-ts types. Use when user asks which type to use, needs Option/Either/Task decision help, or wants fp-ts imports.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -22118,7 +22118,7 @@
     "description": "Fetch unread GitHub notifications for open PRs where review is requested from a specified team or opened by a team member. Use when asked to \"find PRs I need to review\", \"show my review requests\", \"what needs my review\", \"fetch GitHub review requests\", or \"check team review queue\".",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -22678,7 +22678,7 @@
     "description": "Lightweight Gmail integration with standalone OAuth authentication. No MCP server required.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -22838,7 +22838,7 @@
     "description": "\u5206\u6790\u5065\u5eb7\u76ee\u6807\u6570\u636e\u3001\u8bc6\u522b\u76ee\u6807\u6a21\u5f0f\u3001\u8bc4\u4f30\u76ee\u6807\u8fdb\u5ea6,\u5e76\u63d0\u4f9b\u4e2a\u6027\u5316\u76ee\u6807\u7ba1\u7406\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u8425\u517b\u3001\u8fd0\u52a8\u3001\u7761\u7720\u7b49\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -22979,7 +22979,7 @@
     "description": "Lightweight Google Calendar integration with standalone OAuth authentication. No MCP server required.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -23002,7 +23002,7 @@
     "description": "Lightweight Google Docs integration with standalone OAuth authentication. No MCP server required.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -23025,7 +23025,7 @@
     "description": "Lightweight Google Drive integration with standalone OAuth authentication. No MCP server required. Full read/write access.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -23048,7 +23048,7 @@
     "description": "Lightweight Google Sheets integration with standalone OAuth authentication. No MCP server required. Full read/write access.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -23071,7 +23071,7 @@
     "description": "Lightweight Google Slides integration with standalone OAuth authentication. No MCP server required. Full read/write access.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -23652,7 +23652,7 @@
     "description": "\u5206\u6790\u4e00\u6bb5\u65f6\u95f4\u5185\u5065\u5eb7\u6570\u636e\u7684\u8d8b\u52bf\u548c\u6a21\u5f0f\u3002\u5173\u8054\u836f\u7269\u3001\u75c7\u72b6\u3001\u751f\u547d\u4f53\u5f81\u3001\u5316\u9a8c\u7ed3\u679c\u548c\u5176\u4ed6\u5065\u5eb7\u6307\u6807\u7684\u53d8\u5316\u3002\u8bc6\u522b\u4ee4\u4eba\u62c5\u5fe7\u7684\u8d8b\u52bf\u3001\u6539\u5584\u60c5\u51b5\uff0c\u5e76\u63d0\u4f9b\u6570\u636e\u9a71\u52a8\u7684\u6d1e\u5bdf\u3002\u5f53\u7528\u6237\u8be2\u95ee\u5065\u5eb7\u8d8b\u52bf\u3001\u6a21\u5f0f\u3001\u968f\u65f6\u95f4\u7684\u53d8\u5316\u6216\"\u6211\u7684\u5065\u5eb7\u72b6\u51b5\u6709\u4ec0\u4e48\u53d8\u5316\uff1f\"\u65f6\u4f7f\u7528\u3002\u652f\u6301\u591a\u7ef4\u5ea6\u5206\u6790\uff08\u4f53\u91cd/BMI\u3001\u75c7\u72b6\u3001\u836f\u7269\u4f9d\u4ece\u6027\u3001\u5316\u9a8c\u7ed3\u679c\u3001\u60c5\u7eea\u7761\u7720\uff09\uff0c\u76f8\u5173\u6027\u5206\u6790\uff0c\u53d8\u5316\u68c0\u6d4b\uff0c\u4ee5\u53ca\u4ea4\u4e92\u5f0fHTML\u53ef\u89c6\u5316\u62a5\u544a\uff08ECharts\u56fe\u8868\uff09\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24276,7 +24276,7 @@
     "description": "Build background agents in sandboxed environments. Use for hosted coding agents, sandboxed VMs, Modal sandboxes, and remote coding environments.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24488,7 +24488,7 @@
     "description": "Create and manage datasets on Hugging Face Hub. Supports initializing repos, defining configs/system prompts, streaming row updates, and SQL-based dataset querying/transformation. Designed to work alongside HF MCP server for comprehensive dataset workflows.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24510,7 +24510,7 @@
     "description": "Add and manage evaluation results in Hugging Face model cards. Supports extracting eval tables from README content, importing scores from Artificial Analysis API, and running custom model evaluations with vLLM/lighteval. Works with the model-index metadata format.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24558,7 +24558,7 @@
     "description": "Run workloads on Hugging Face Jobs with managed CPUs, GPUs, TPUs, secrets, and Hub persistence.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-jobs",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -24659,7 +24659,7 @@
     "description": "Your purpose is now is to create reusable command line scripts and utilities for using the Hugging Face API, allowing chaining, piping and intermediate processing where helpful. You can access the API directly, as well as use the hf command line tool.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -26164,7 +26164,7 @@
     "description": "Interact with GitHub issues - create, list, and view issues.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -26252,7 +26252,7 @@
     "description": "Iterate on a PR until CI passes. Use when you need to fix CI failures, address review feedback, or continuously push fixes until all checks are green. Automates the feedback-fix-push-wait cycle.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29357,7 +29357,7 @@
     "description": "CRITICAL: Use for Makepad animation system. Triggers on:\nmakepad animation, makepad animator, makepad hover, makepad state,\nmakepad transition, \"from: { all: Forward\", makepad pressed,\nmakepad \u52a8\u753b, makepad \u72b6\u6001, makepad \u8fc7\u6e21, makepad \u60ac\u505c\u6548\u679c\n",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29379,7 +29379,7 @@
     "description": "CRITICAL: Use for Makepad getting started and app structure. Triggers on:\nmakepad, makepad getting started, makepad tutorial, live_design!, app_main!,\nmakepad project setup, makepad hello world, \"how to create makepad app\",\nmakepad \u5165\u95e8, \u521b\u5efa makepad \u5e94\u7528, makepad \u6559\u7a0b, makepad \u9879\u76ee\u7ed3\u6784\n",
     "risk": "critical",
     "source": "https://github.com/makepad/makepad",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29401,7 +29401,7 @@
     "description": "CRITICAL: Use for Makepad packaging and deployment. Triggers on:\ndeploy, package, APK, IPA, \u6253\u5305, \u90e8\u7f72,\ncargo-packager, cargo-makepad, WASM, Android, iOS,\ndistribution, installer, .deb, .dmg, .nsis,\nGitHub Actions, CI, action, marketplace\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29423,7 +29423,7 @@
     "description": "CRITICAL: Use for Makepad DSL syntax and inheritance. Triggers on:\nmakepad dsl, live_design, makepad inheritance, makepad prototype,\n\"<Widget>\", \"Foo = { }\", makepad object, makepad property,\nmakepad DSL \u8bed\u6cd5, makepad \u7ee7\u627f, makepad \u539f\u578b, \u5982\u4f55\u5b9a\u4e49 makepad \u7ec4\u4ef6\n",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29445,7 +29445,7 @@
     "description": "CRITICAL: Use for Makepad event and action handling. Triggers on:\nmakepad event, makepad action, Event enum, ActionTrait, handle_event,\nMouseDown, KeyDown, TouchUpdate, Hit, FingerDown, post_action,\nmakepad \u4e8b\u4ef6, makepad action, \u4e8b\u4ef6\u5904\u7406\n",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29467,7 +29467,7 @@
     "description": "CRITICAL: Use for Makepad font and text rendering. Triggers on:\nmakepad font, makepad text, makepad glyph, makepad typography,\nfont atlas, text layout, font family, font size, text shaping,\nmakepad \u5b57\u4f53, makepad \u6587\u5b57, makepad \u6392\u7248, makepad \u5b57\u5f62\n",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29489,7 +29489,7 @@
     "description": "CRITICAL: Use for Makepad layout system. Triggers on:\nmakepad layout, makepad width, makepad height, makepad flex,\nmakepad padding, makepad margin, makepad flow, makepad align,\nFit, Fill, Size, Walk, \"how to center in makepad\",\nmakepad \u5e03\u5c40, makepad \u5bbd\u5ea6, makepad \u5bf9\u9f50, makepad \u5c45\u4e2d\n",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29511,7 +29511,7 @@
     "description": "CRITICAL: Use for Makepad cross-platform support. Triggers on:\nmakepad platform, makepad os, makepad macos, makepad windows, makepad linux,\nmakepad android, makepad ios, makepad web, makepad wasm, makepad metal,\nmakepad d3d11, makepad opengl, makepad webgl, OsType, CxOs,\nmakepad \u8de8\u5e73\u53f0, makepad \u5e73\u53f0\u652f\u6301\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29533,7 +29533,7 @@
     "description": "This category provides reference materials for debugging, code quality, and advanced layout patterns.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29555,7 +29555,7 @@
     "description": "CRITICAL: Use for Makepad shader system. Triggers on:\nmakepad shader, makepad draw_bg, Sdf2d, makepad pixel,\nmakepad glsl, makepad sdf, draw_quad, makepad gpu,\nmakepad \u7740\u8272\u5668, makepad shader \u8bed\u6cd5, makepad \u7ed8\u5236\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29599,7 +29599,7 @@
     "description": "CRITICAL: Use for Makepad Splash scripting language. Triggers on:\nsplash language, makepad script, makepad scripting, script!, cx.eval,\nmakepad dynamic, makepad AI, splash \u8bed\u8a00, makepad \u811a\u672c\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29621,7 +29621,7 @@
     "description": "Version: makepad-widgets (dev branch) | Last Updated: 2026-01-19 > > Check for updates: https://crates.io/crates/makepad-widgets",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -29691,7 +29691,7 @@
     "description": "Discover, list, create, edit, toggle, copy, move, and delete AI agent skills across 11 tools (Cursor, Claude, Agents, Windsurf, Copilot, Codex, Cline, Aider, Continue, Roo Code, Augment)",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -30338,7 +30338,7 @@
     "description": "Matplotlib is Python's foundational visualization library for creating static, animated, and interactive plots.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -30383,7 +30383,7 @@
     "description": "Connect to MAXIA AI-to-AI marketplace on Solana. Discover, buy, sell AI services. Earn USDC. 13 MCP tools, A2A protocol, DeFi yields, sentiment analysis, rug detection.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -30617,7 +30617,7 @@
     "description": "\u5206\u6790\u5fc3\u7406\u5065\u5eb7\u6570\u636e\u3001\u8bc6\u522b\u5fc3\u7406\u6a21\u5f0f\u3001\u8bc4\u4f30\u5fc3\u7406\u5065\u5eb7\u72b6\u51b5\u3001\u63d0\u4f9b\u4e2a\u6027\u5316\u5fc3\u7406\u5065\u5eb7\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u7761\u7720\u3001\u8fd0\u52a8\u3001\u8425\u517b\u7b49\u5176\u4ed6\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31288,7 +31288,7 @@
     "description": "CRITICAL: Use for MolyKit AI chat toolkit. Triggers on:\nBotClient, OpenAI, SSE streaming, AI chat, molykit,\nPlatformSend, spawn(), ThreadToken, cross-platform async,\nChat widget, Messages, PromptInput, Avatar, LLM\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -31386,7 +31386,7 @@
     "description": "MONOPOLY is a Senior System Design Engineer skill for architecting, reviewing, and scaling systems. Triggers on requests involving architecture, databases, scaling, microservices, or infrastructure design. Proactively engages to design resilient backend systems.\n",
     "risk": "none",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31855,7 +31855,7 @@
     "description": "Design and optimize production-grade multi-agent systems with LangGraph, LangChain, and DeepAgents for complex AI workflows.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -31908,7 +31908,7 @@
     "description": "This skill should be used when the user asks to \"design multi-agent system\", \"implement supervisor pattern\", \"create swarm architecture\", \"coordinate multiple agents\", or mentions multi-agent patterns, context isolation, agent handoffs, sub-agents, or parallel agent execution.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32112,7 +32112,7 @@
     "description": "Write JavaScript code in n8n Code nodes. Use when writing JavaScript in n8n, using $input/$json/$node syntax, making HTTP requests with $helpers, working with dates using DateTime, troubleshooting Code node errors, or choosing between Code node modes.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32134,7 +32134,7 @@
     "description": "Write Python code in n8n Code nodes. Use when writing Python in n8n, using _input/_json/_node syntax, working with standard library, or need to understand Python limitations in n8n Code nodes.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32208,7 +32208,7 @@
     "description": "Validate n8n expression syntax and fix common errors. Use when writing n8n expressions, using {{}} syntax, accessing $json/$node variables, troubleshooting expression errors, or working with webhook data in workflows.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32230,7 +32230,7 @@
     "description": "Expert guide for using n8n-mcp MCP tools effectively. Use when searching for nodes, validating configurations, accessing templates, managing workflows, or using any n8n-mcp tool. Provides tool selection guidance, parameter formats, and common patterns.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32278,7 +32278,7 @@
     "description": "Operation-aware node configuration guidance. Use when configuring nodes, understanding property dependencies, determining required fields, choosing between get_node detail levels, or learning common configuration patterns by node type.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32326,7 +32326,7 @@
     "description": "Expert guide for interpreting and fixing n8n validation errors.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32348,7 +32348,7 @@
     "description": "Proven architectural patterns for building n8n workflows.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32707,7 +32707,7 @@
     "description": "NetworkX is a Python package for creating, manipulating, and analyzing complex networks and graphs.",
     "risk": "critical",
     "source": "https://github.com/networkx/networkx",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32753,7 +32753,7 @@
     "description": "Create a new Rails project",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -32954,7 +32954,7 @@
     "description": "Runs repeatable AI work as checked, budgeted workflow files.",
     "risk": "critical",
     "source": "https://github.com/supernovae-st/nika-agents/tree/main/skills/nika",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33046,7 +33046,7 @@
     "description": "Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33167,7 +33167,7 @@
     "description": "\u5206\u6790\u8425\u517b\u6570\u636e\u3001\u8bc6\u522b\u8425\u517b\u6a21\u5f0f\u3001\u8bc4\u4f30\u8425\u517b\u72b6\u51b5\uff0c\u5e76\u63d0\u4f9b\u4e2a\u6027\u5316\u8425\u517b\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u8fd0\u52a8\u3001\u7761\u7720\u3001\u6162\u6027\u75c5\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33413,7 +33413,7 @@
     "description": "\u5206\u6790\u804c\u4e1a\u5065\u5eb7\u6570\u636e\u3001\u8bc6\u522b\u5de5\u4f5c\u76f8\u5173\u5065\u5eb7\u98ce\u9669\u3001\u8bc4\u4f30\u804c\u4e1a\u5065\u5eb7\u72b6\u51b5\u3001\u63d0\u4f9b\u4e2a\u6027\u5316\u804c\u4e1a\u5065\u5eb7\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u7761\u7720\u3001\u8fd0\u52a8\u3001\u5fc3\u7406\u5065\u5eb7\u7b49\u5176\u4ed6\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33435,7 +33435,7 @@
     "description": "Expert guide for configuring Odoo Accounting: chart of accounts, journals, fiscal positions, taxes, payment terms, and bank reconciliation.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33457,7 +33457,7 @@
     "description": "Write and run Odoo automated tests using TransactionCase, HttpCase, and browser tour tests. Covers test data setup, mocking, and CI integration.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33479,7 +33479,7 @@
     "description": "Complete Odoo backup and restore strategy: database dumps, filestore backup, automated scheduling, cloud storage upload, and tested restore procedures.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33501,7 +33501,7 @@
     "description": "Production-ready Docker and docker-compose setup for Odoo with PostgreSQL, persistent volumes, environment-based configuration, and Nginx reverse proxy.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33523,7 +33523,7 @@
     "description": "Expert guide for Odoo eCommerce and Website: product catalog, payment providers, shipping methods, SEO, and order-to-fulfillment workflow.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33545,7 +33545,7 @@
     "description": "Guide for implementing EDI (Electronic Data Interchange) with Odoo: X12, EDIFACT document mapping, partner onboarding, and automated order processing.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33567,7 +33567,7 @@
     "description": "Expert guide for Odoo HR and Payroll: salary structures, payslip rules, leave policies, employee contracts, and payroll journal entries.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33589,7 +33589,7 @@
     "description": "Expert guide for Odoo Inventory: stock valuation (FIFO/AVCO), reordering rules, putaway strategies, routes, and multi-warehouse configuration.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33611,7 +33611,7 @@
     "description": "Country-specific Odoo localization: tax configuration, e-invoicing (CFDI, FatturaPA, SAF-T), fiscal reporting, and country chart of accounts setup.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33633,7 +33633,7 @@
     "description": "Expert guide for Odoo Manufacturing: Bills of Materials (BoM), Work Centers, routings, MRP planning, and production order workflows.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33655,7 +33655,7 @@
     "description": "Step-by-step guide for migrating Odoo custom modules between versions (v14\u2192v15\u2192v16\u2192v17). Covers API changes, deprecated methods, and view migration.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33677,7 +33677,7 @@
     "description": "Expert guide for creating custom Odoo modules. Covers __manifest__.py, model inheritance, ORM patterns, and module structure best practices.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33699,7 +33699,7 @@
     "description": "Master Odoo ORM patterns: search, browse, create, write, domain filters, computed fields, and performance-safe query techniques.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33721,7 +33721,7 @@
     "description": "Expert guide for diagnosing and fixing Odoo performance issues: slow queries, worker configuration, memory limits, PostgreSQL tuning, and profiling tools.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33743,7 +33743,7 @@
     "description": "Expert guide for Odoo Project and Timesheets: task stages, billable time tracking, timesheet approval, budget alerts, and invoicing from timesheets.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33765,7 +33765,7 @@
     "description": "Expert guide for Odoo Purchase: RFQ \u2192 PO \u2192 Receipt \u2192 Vendor Bill workflow, purchase agreements, vendor price lists, and 3-way matching.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33787,7 +33787,7 @@
     "description": "Expert in Odoo QWeb templating for PDF reports, email templates, and website pages. Covers t-if, t-foreach, t-field, and report actions.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33809,7 +33809,7 @@
     "description": "Expert on Odoo's external JSON-RPC and XML-RPC APIs. Covers authentication, model calls, record CRUD, and real-world integration examples in Python, JavaScript, and curl.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33831,7 +33831,7 @@
     "description": "Expert guide for Odoo Sales and CRM: pipeline stages, quotation templates, pricelists, sales teams, lead scoring, and forecasting.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33853,7 +33853,7 @@
     "description": "Expert in Odoo access control: ir.model.access.csv, record rules (ir.rule), groups, and multi-company security patterns.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33875,7 +33875,7 @@
     "description": "Connect Odoo with Shopify: sync products, inventory, orders, and customers using the Shopify API and Odoo's external API or connector modules.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33897,7 +33897,7 @@
     "description": "Step-by-step Odoo version upgrade advisor: pre-upgrade checklist, community vs enterprise upgrade path, OCA module compatibility, and post-upgrade validation.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33919,7 +33919,7 @@
     "description": "Sync Odoo with WooCommerce: products, inventory, orders, and customers via WooCommerce REST API and Odoo external API.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -33941,7 +33941,7 @@
     "description": "Expert at building Odoo XML views: Form, List, Kanban, Search, Calendar, and Graph. Generates correct XML for Odoo 14-17 with proper visibility syntax.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -34442,7 +34442,7 @@
     "description": "\u5206\u6790\u53e3\u8154\u5065\u5eb7\u6570\u636e\u3001\u8bc6\u522b\u53e3\u8154\u95ee\u9898\u6a21\u5f0f\u3001\u8bc4\u4f30\u53e3\u8154\u5065\u5eb7\u72b6\u51b5\u3001\u63d0\u4f9b\u4e2a\u6027\u5316\u53e3\u8154\u5065\u5eb7\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u8425\u517b\u3001\u6162\u6027\u75c5\u3001\u7528\u836f\u7b49\u5176\u4ed6\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -34931,7 +34931,7 @@
     "description": "Reference document for monopoly patterns.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -35825,7 +35825,7 @@
     "description": "Interactive visualization library. Use when you need hover info, zoom, pan, or web-embeddable charts. Best for dashboards, exploratory analysis, and presentations. For static publication figures use matplotlib or scientific-visualization.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -35903,7 +35903,7 @@
     "description": "Fast in-memory DataFrame library for datasets that fit in RAM. Use when pandas is too slow but data still fits in memory. Lazy evaluation, parallel execution, Apache Arrow backend. Best for 1-100GB datasets, ETL pipelines, faster pandas replacement. For larger-than-RAM data use dask or vaex.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -36435,7 +36435,7 @@
     "description": "Create pull requests following Sentry's engineering practices.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -37089,7 +37089,7 @@
     "description": "This skill covers the principles for identifying tasks suited to LLM processing, designing effective project architectures, and iterating rapidly using agent-assisted development.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -37458,7 +37458,7 @@
     "description": "Direct REST API access to PubMed. Advanced Boolean/MeSH queries, E-utilities API, batch processing, citation management. For Python workflows, prefer biopython (Bio.Entrez). Use this for direct HTTP/REST work or custom API implementations.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -37926,7 +37926,7 @@
     "description": "Qiskit is the world's most popular open-source quantum computing framework with 13M+ downloads. Build quantum circuits, optimize for hardware, execute on simulators or real quantum computers, and analyze results. Supports IBM Quantum (100+ qubit systems), IonQ, Amazon Braket, and other providers.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -38888,7 +38888,7 @@
     "description": "\u5206\u6790\u5eb7\u590d\u8bad\u7ec3\u6570\u636e\u3001\u8bc6\u522b\u5eb7\u590d\u6a21\u5f0f\u3001\u8bc4\u4f30\u5eb7\u590d\u8fdb\u5c55\uff0c\u5e76\u63d0\u4f9b\u4e2a\u6027\u5316\u5eb7\u590d\u5efa\u8bae",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -38936,7 +38936,7 @@
     "description": "Generate walkthrough videos from Stitch projects using Remotion with smooth transitions, zooming, and text overlays",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -39517,7 +39517,7 @@
     "description": "CRITICAL: Use for Robius app architecture patterns. Triggers on:\nTokio, async, submit_async_request, \u5f02\u6b65, \u67b6\u6784,\nSignalToUI, Cx::post_action, worker task,\napp structure, MatchEvent, handle_startup\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -39539,7 +39539,7 @@
     "description": "CRITICAL: Use for Robius event and action patterns. Triggers on:\ncustom action, MatchEvent, post_action, cx.widget_action,\nhandle_actions, DefaultNone, widget action, event handling,\n\u4e8b\u4ef6\u5904\u7406, \u81ea\u5b9a\u4e49\u52a8\u4f5c\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -39561,7 +39561,7 @@
     "description": "CRITICAL: Use for Matrix SDK integration with Makepad. Triggers on:\nMatrix SDK, sliding sync, MatrixRequest, timeline,\nmatrix-sdk, matrix client, robrix, matrix room,\nMatrix \u96c6\u6210, \u804a\u5929\u5ba2\u6237\u7aef\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -39583,7 +39583,7 @@
     "description": "CRITICAL: Use for Robius state management patterns. Triggers on:\nAppState, persistence, theme switch, \u72b6\u6001\u7ba1\u7406,\nScope::with_data, save state, load state, serde,\n\u72b6\u6001\u6301\u4e45\u5316, \u4e3b\u9898\u5207\u6362\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -39605,7 +39605,7 @@
     "description": "CRITICAL: Use for Robius widget patterns. Triggers on:\napply_over, TextOrImage, modal, \u53ef\u590d\u7528, \u6a21\u6001,\ncollapsible, drag drop, reusable widget, widget design,\npageflip, \u7ec4\u4ef6\u8bbe\u8ba1, \u7ec4\u4ef6\u6a21\u5f0f\n",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40251,7 +40251,7 @@
     "description": "Reference document for monopoly scale-benchmarks.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40295,7 +40295,7 @@
     "description": "Scanpy is a scalable Python toolkit for analyzing single-cell RNA-seq data, built on AnnData. Apply this skill for complete single-cell workflows including quality control, normalization, dimensionality reduction, clustering, marker gene identification, visualization, and trajectory analysis.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40417,7 +40417,7 @@
     "description": "This is the core skill for the deep research and writing tool\u2014combining AI-driven deep research with well-formatted written outputs. Every document produced is backed by comprehensive literature search and verified citations through the research-lookup skill.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40440,7 +40440,7 @@
     "description": "Machine learning in Python with scikit-learn. Use for classification, regression, clustering, model evaluation, and ML pipelines.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40622,7 +40622,7 @@
     "description": "Seaborn is a Python visualization library for creating publication-quality statistical graphics. Use this skill for dataset-oriented plotting, multivariate analysis, automatic statistical estimation, and complex multi-panel figures with minimal code.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40759,7 +40759,7 @@
     "description": "Build a minimal but real security policy for sensitive apps. The output is a single, coherent Blue Book document using MUST/SHOULD/CAN language, with explicit assumptions, scope, and security gates.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -40781,7 +40781,7 @@
     "description": "Reference document for monopoly security-checklist.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -41014,7 +41014,7 @@
     "description": "Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. Use when writing Semgrep rules or building custom static analysis detections.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -41036,7 +41036,7 @@
     "description": "Creates language variants of existing Semgrep rules. Use when porting a Semgrep rule to specified target languages. Takes an existing rule and target languages as input, produces independent rule+test directories for each language.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -42227,7 +42227,7 @@
     "description": "Sexual Health Analyzer",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -42293,7 +42293,7 @@
     "description": "Two-layer performance skill combining disciplined THINK layer (surgical edits, simplicity) and terse SPEAK layer (caveman compression). Triggers on requests for brevity, token efficiency, or disciplined coding.\n",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -42316,7 +42316,7 @@
     "description": "sharp-edges",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -42787,7 +42787,7 @@
     "description": "Iteratively improve a Claude Code skill using the skill-reviewer agent until it meets quality standards. Use when improving a skill with multiple quality issues, iterating on a new skill until it meets standards, or automated fix-review cycles instead of manual editing.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -42918,7 +42918,7 @@
     "description": "Use when the user is unsure which skill to use or where to start. Interviews the user with targeted questions and recommends the best skill(s) from the installed library for their goal.",
     "risk": "safe",
     "source": "self",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -42940,7 +42940,7 @@
     "description": "Scan agent skills for security issues before adoption. Detects prompt injection, malicious code, excessive permissions, secret exposure, and supply chain risks.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -43040,7 +43040,7 @@
     "description": "Create and improve agent skills following the Agent Skills specification. Use when asked to create, write, or update skills.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -43062,7 +43062,7 @@
     "description": "Analyze skin health data, identify skin problem patterns, assess skin health status. Supports correlation analysis with nutrition, chronic diseases, and medication data.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -43186,7 +43186,7 @@
     "description": "\u5206\u6790\u7761\u7720\u6570\u636e\u3001\u8bc6\u522b\u7761\u7720\u6a21\u5f0f\u3001\u8bc4\u4f30\u7761\u7720\u8d28\u91cf\uff0c\u5e76\u63d0\u4f9b\u4e2a\u6027\u5316\u7761\u7720\u6539\u5584\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u5176\u4ed6\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -43760,7 +43760,7 @@
     "description": "Verifies code implements exactly what documentation specifies for blockchain audits. Use when comparing code against whitepapers, finding gaps between specs and implementation, or performing compliance checks for protocol implementations.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -43782,7 +43782,7 @@
     "description": "SpecKit Safe Update",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -43804,7 +43804,7 @@
     "description": "Launch RSVP speed reader for text",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -44060,7 +44060,7 @@
     "description": "Take a list of projects and their related documentation, and organize them into the SRED format for submission.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -44082,7 +44082,7 @@
     "description": "Go back through the previous year of work and create a Notion doc that groups relevant links into projects that can then be documented as SRED projects.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -44323,7 +44323,7 @@
     "description": "Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistical methods.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -44404,7 +44404,7 @@
     "description": "Teaches agents to iteratively build websites using Stitch with an autonomous baton-passing loop pattern",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -44562,7 +44562,7 @@
     "description": "Coordinate quota-aware parallel subagents for large, multi-file Antigravity tasks.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -44731,7 +44731,7 @@
     "description": "Identifies dependencies at heightened risk of exploitation or takeover. Use when assessing supply chain attack surface, evaluating dependency health, or scoping security engagements.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -45021,7 +45021,7 @@
     "description": "SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations.",
     "risk": "safe",
     "source": "https://github.com/sympy/sympy",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -45300,7 +45300,7 @@
     "description": "\u5206\u6790\u4e2d\u533b\u4f53\u8d28\u6570\u636e\u3001\u8bc6\u522b\u4f53\u8d28\u7c7b\u578b\u3001\u8bc4\u4f30\u4f53\u8d28\u7279\u5f81,\u5e76\u63d0\u4f9b\u4e2a\u6027\u5316\u517b\u751f\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u8425\u517b\u3001\u8fd0\u52a8\u3001\u7761\u7720\u7b49\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -45604,7 +45604,7 @@
     "description": "Reference document for monopoly tech-matrix.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46399,7 +46399,7 @@
     "description": "Three.js animation - keyframe animation, skeletal animation, morph targets, animation mixing. Use when animating objects, playing GLTF animations, creating procedural motion, or blending animations.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46421,7 +46421,7 @@
     "description": "Three.js scene setup, cameras, renderer, Object3D hierarchy, coordinate systems. Use when setting up 3D scenes, creating cameras, configuring renderers, managing object hierarchies, or working with transforms.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46443,7 +46443,7 @@
     "description": "Three.js geometry creation - built-in shapes, BufferGeometry, custom geometry, instancing. Use when creating 3D shapes, working with vertices, building custom meshes, or optimizing with instanced rendering.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46465,7 +46465,7 @@
     "description": "Three.js interaction - raycasting, controls, mouse/touch input, object selection. Use when handling user input, implementing click detection, adding camera controls, or creating interactive 3D experiences.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46487,7 +46487,7 @@
     "description": "Three.js lighting - light types, shadows, environment lighting. Use when adding lights, configuring shadows, setting up IBL, or optimizing lighting performance.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46509,7 +46509,7 @@
     "description": "Three.js asset loading - GLTF, textures, images, models, async patterns. Use when loading 3D models, textures, HDR environments, or managing loading progress.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46531,7 +46531,7 @@
     "description": "Three.js materials - PBR, basic, phong, shader materials, material properties. Use when styling meshes, working with textures, creating custom shaders, or optimizing material performance.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46553,7 +46553,7 @@
     "description": "Three.js post-processing - EffectComposer, bloom, DOF, screen effects. Use when adding visual effects, color grading, blur, glow, or creating custom screen-space shaders.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46575,7 +46575,7 @@
     "description": "Three.js shaders - GLSL, ShaderMaterial, uniforms, custom effects. Use when creating custom visual effects, modifying vertices, writing fragment shaders, or extending built-in materials.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -46619,7 +46619,7 @@
     "description": "Three.js textures - texture types, UV mapping, environment maps, texture settings. Use when working with images, UV coordinates, cubemaps, HDR environments, or texture optimization.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -47092,7 +47092,7 @@
     "description": "\u5206\u6790\u65c5\u884c\u5065\u5eb7\u6570\u636e\u3001\u8bc4\u4f30\u76ee\u7684\u5730\u5065\u5eb7\u98ce\u9669\u3001\u63d0\u4f9b\u75ab\u82d7\u63a5\u79cd\u5efa\u8bae\u3001\u751f\u6210\u591a\u8bed\u8a00\u7d27\u6025\u533b\u7597\u4fe1\u606f\u5361\u7247\u3002\u652f\u6301WHO/CDC\u6570\u636e\u96c6\u6210\u7684\u4e13\u4e1a\u7ea7\u65c5\u884c\u5065\u5eb7\u98ce\u9669\u8bc4\u4f30\u3002",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -48024,7 +48024,7 @@
     "description": "Direct REST API access to UniProt. Protein searches, FASTA retrieval, ID mapping, Swiss-Prot/TrEMBL. For Python workflows with multiple databases, prefer bioservices (unified interface to 40+ services). Use this for direct HTTP/REST work or UniProt-specific control.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -48951,7 +48951,7 @@
     "description": "Find similar vulnerabilities and bugs across codebases using pattern-based analysis. Use when hunting bug variants, building CodeQL/Semgrep queries, analyzing security vulnerabilities, or performing systematic code audits after finding an initial issue.",
     "risk": "offensive",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -48973,7 +48973,7 @@
     "description": "Secure-by-default environment variable management for Claude Code sessions.",
     "risk": "critical",
     "source": "https://github.com/dmno-dev/varlock",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "blocked",
@@ -49303,7 +49303,7 @@
     "description": "Semantic file discovery via `vexor`. Use whenever locating where something is implemented/loaded/defined in a medium or large repo, or when the file location is unclear. Prefer this over manual browsing.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -50411,7 +50411,7 @@
     "description": "\u5206\u6790\u51cf\u80a5\u6570\u636e\u3001\u8ba1\u7b97\u4ee3\u8c22\u7387\u3001\u8ffd\u8e2a\u80fd\u91cf\u7f3a\u53e3\u3001\u7ba1\u7406\u51cf\u80a5\u9636\u6bb5",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -50433,7 +50433,7 @@
     "description": "Integrate multiple digital health data sources, connect to [WellAlly.tech](https://www.wellally.tech/) knowledge base, providing data import and knowledge reference for personal health management systems.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -51417,7 +51417,7 @@
     "description": "Wrapper oficial de M2MCent (Node.js) para inyectar muros de pago x402 en APIs o servidores Model Context Protocol (MCP). Usar al construir nuevos servicios que requieran monetizaci\u00f3n m\u00e1quina a m\u00e1quina.",
     "risk": "critical",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -51999,7 +51999,7 @@
     "description": "Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and control-flow verification. Use for auditing C/C++/Rust code handling secrets, keys, passwords, or other sensitive data.",
     "risk": "offensive",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -52021,7 +52021,7 @@
     "description": "Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads.",
     "risk": "safe",
     "source": "community",
-    "date_added": null,
+    "date_added": "2026-09-04",
     "plugin": {
       "targets": {
         "codex": "supported",

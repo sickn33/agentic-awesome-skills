@@ -14,6 +14,7 @@ description: 'CRITICAL: Use for Makepad packaging and deployment. Triggers on:
 metadata:
   aas-risk: critical
   aas-source: community
+  aas-date-added: '2026-09-04'
 ---
 
 # Makepad Packaging & Deployment

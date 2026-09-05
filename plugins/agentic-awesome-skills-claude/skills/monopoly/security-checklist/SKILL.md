@@ -2,6 +2,7 @@
 name: security-checklist
 description: Reference document for monopoly security-checklist.
 source: community
+date_added: "2026-09-04"
 risk: safe
 reports-to: monopoly
 ---

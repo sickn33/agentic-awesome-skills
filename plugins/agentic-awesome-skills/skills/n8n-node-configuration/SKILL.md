@@ -3,6 +3,7 @@ name: n8n-node-configuration
 description: Operation-aware node configuration guidance. Use when configuring nodes, understanding property dependencies, determining required fields, choosing between get_node detail levels, or learning common configuration patterns by node type.
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # n8n Node Configuration

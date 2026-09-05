@@ -3,6 +3,7 @@ name: hosted-agents
 description: Build background agents in sandboxed environments. Use for hosted coding agents, sandboxed VMs, Modal sandboxes, and remote coding environments.
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Hosted Agent Infrastructure
