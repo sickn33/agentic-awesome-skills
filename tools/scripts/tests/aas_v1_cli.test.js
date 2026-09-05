@@ -288,6 +288,35 @@ test("CLI exits stably on missing approval and never prints a stack trace", asyn
   assert.doesNotMatch(stderr, /\bat\s+\S+\.js:/);
 });
 
+test("CLI normalizes native file errors without throwing or exposing paths", async (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const leaf = path.join(item.root, "private-leaf");
+  fs.writeFileSync(leaf, "unchanged fixture");
+  for (const [manifestPath, expectedCode, expectedExit, expectedCategory] of [
+    [path.join(item.root, "private-missing.json"), "AAS_CLI_PATH_NOT_FOUND", 5, "filesystem"],
+    [path.join(leaf, "child.json"), "AAS_CLI_EXPECTED_DIRECTORY", 5, "filesystem"],
+    [item.root, "AAS_CLI_JSON_FILE_UNSAFE", 2, "invalidInput"],
+  ]) {
+    let stdout = "";
+    let stderr = "";
+    const code = await main(["stack", "validate", "--manifest", manifestPath], {
+      stdout: { write: (value) => { stdout += value; } },
+      stderr: { write: (value) => { stderr += value; } },
+    });
+    assert.equal(code, expectedExit);
+    assert.equal(stdout, "");
+    const result = JSON.parse(stderr);
+    assert.equal(result.code, expectedCode);
+    assert.equal(result.category, expectedCategory);
+    assert.deepEqual(result.details, {});
+    assert.equal(stderr.includes(item.root), false);
+    assert.doesNotMatch(stderr, /AAS_CLI_ERROR_SCHEMA_INVALID|ENOENT|EISDIR|\bat\s+\S+\.js:/);
+    assert.deepEqual(fs.readdirSync(item.root), ["private-leaf"]);
+    assert.equal(fs.readFileSync(leaf, "utf8"), "unchanged fixture");
+  }
+});
+
 test("CLI reports an invalid stack manifest as invalid input", async (context) => {
   const item = fixture();
   context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));

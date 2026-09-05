@@ -29,6 +29,9 @@ previews its own changes before an authorized installation.
 
 ## Recorded worked cases
 
+- [Workbench import QA](../examples/workflows/workbench-qa/README.md): real MCP selection, 23 component/parser checks, and a consistent CLI plan. Browser coverage limits are explicit.
+- [Bundle-read security review](../examples/workflows/bundle-security/README.md): scoped trust boundaries, seven executed containment/integrity checks, and real selection/plan evidence.
+
 - [MCP search contract review](../examples/workflows/mcp-contract/README.md): actual
   Codex MCP selection, seven-skill immutable plan, 36 recorded calls and five
   reproducible source checks. This develops the existing AI-agent-system workflow.

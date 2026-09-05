@@ -252,6 +252,11 @@ aas stack audit \
 
 `stack validate` is read-only. `stack plan` writes only the requested plan artifact and does not materialize skills or AAS managed state in the target. The immutable plan binds the manifest, runtime, catalog, target identity, current managed state, and exact logical operations.
 
+Use an existing target directory. On `main`, missing paths, wrong file/directory
+types and denied access return bounded `AAS_CLI_*` filesystem errors; correct the
+path or its permissions and retry. Native exception messages and private paths are
+not copied into the result. This error-handling refinement is unreleased.
+
 On `main`, `--target` is inferred only when the validated manifest has one target;
 otherwise supply, for example, `--target codex:project`. The runtime version comes
 from the manifest, and its verified catalog must match the manifest's catalog.

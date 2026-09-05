@@ -781,6 +781,18 @@ async function main(argv = process.argv.slice(2), io = {}) {
     stdout.write(`${core.canonicalJson(envelope)}\n`);
     return EXIT.success;
   } catch (error) {
+    // Native I/O errors are not AAS result codes and may contain private paths.
+    // Preserve structured domain failures; normalize unexpected errors at the boundary.
+    const structured = typeof error?.code === "string" && /^AAS_[A-Z0-9_]+$/.test(error.code);
+    const nativeCodes = {
+      ENOENT: "AAS_CLI_PATH_NOT_FOUND",
+      EISDIR: "AAS_CLI_EXPECTED_FILE",
+      ENOTDIR: "AAS_CLI_EXPECTED_DIRECTORY",
+      EACCES: "AAS_CLI_PATH_ACCESS_DENIED",
+      EPERM: "AAS_CLI_PATH_ACCESS_DENIED",
+    };
+    const nativeCode = typeof error?.code === "string" && Object.hasOwn(nativeCodes, error.code)
+      ? nativeCodes[error.code] : null;
     const payload = {
       schemaVersion: 1,
       ok: false,
@@ -788,9 +800,9 @@ async function main(argv = process.argv.slice(2), io = {}) {
       protocolVersion: core.protocolVersion,
       coreVersion: core.coreVersion,
       catalogSchemaVersion: core.catalogSchemaVersion,
-      code: error.code || "AAS_CLI_EXECUTION_FAILED",
-      category: error.category || "execution",
-      details: error.details || {},
+      code: structured ? error.code : (nativeCode || "AAS_CLI_EXECUTION_FAILED"),
+      category: structured ? (error.category || "execution") : (nativeCode ? "filesystem" : "execution"),
+      details: structured ? (error.details || {}) : {},
     };
     validateInstance("result-envelope.schema.json", payload, "AAS_CLI_ERROR_SCHEMA_INVALID", "internal");
     stderr.write(`${core.canonicalJson(payload)}\n`);

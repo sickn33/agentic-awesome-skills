@@ -1,6 +1,6 @@
 ---
 name: antigravity-workflows
-description: "Orchestrate multiple Antigravity skills through guided workflows for SaaS MVP delivery, security audits, AI agent builds, and browser QA."
+description: "Use when asked to ship a SaaS MVP, audit application security, build an AI agent, run browser QA, or design a domain model with multiple skills and verified checkpoints."
 risk: none
 source: self
 date_added: "2026-02-27"
@@ -27,6 +27,11 @@ Read workflows in this order:
 1. `docs/users/workflows.md` for human-readable playbooks and recorded cases.
 2. `data/workflows.json` for machine-readable workflow metadata.
 
+Those paths belong to the AAS repository, not necessarily the user's project.
+When they are absent from a standalone installation, use the bundled
+[workflow cards](references/workflow-cards.md). Do not invent missing files,
+fetch a moving replacement silently, or create AAS documentation in the project.
+
 ## How to Run This Skill
 
 1. Identify the user's concrete outcome.
@@ -36,10 +41,15 @@ Read workflows in this order:
    - Announce current step and expected artifact.
    - Invoke recommended skills for that step.
    - Verify completion criteria before moving to next step.
+   - If a check fails, retain the failure, fix the relevant input or implementation,
+     rerun that check, and continue only after it passes. If a prerequisite is
+     unavailable, report that exact blocked step and continue independent work.
    - Review the exact skill IDs and their support files before installation. Use the
      supported direct installer's `--dry-run` with the selected IDs and destination;
      install only within the user's authorization. Core composition and immutable
      plans remain review artifacts and do not install the skills.
+     If preview fails, correct the ID, release, prerequisite or destination and
+     preview again. A failed preview never authorizes installation.
 5. At the end, provide:
    - Completed artifacts
    - Validation evidence
@@ -52,6 +62,9 @@ Read workflows in this order:
 - Agent/LLM product request -> `build-ai-agent-system`
 - E2E/browser testing request -> `qa-browser-automation`
 - Domain-driven design request -> `design-ddd-core-domain`
+
+For a concrete selection and installer command, see the
+[reviewed-selection handoff](references/workflow-cards.md#reviewed-selection-handoff).
 
 ## Copy-Paste Prompts
 

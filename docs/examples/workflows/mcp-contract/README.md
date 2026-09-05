@@ -50,13 +50,13 @@ The [recorded sidecar](aas-selection-evidence.json) comes from the real `codex-m
 
 The first six-file export request was 4,452 argument bytes and hit the published runtime's 4 KiB request limit. A smaller three-file ledger retained all nine applicable capabilities and exported successfully. This real-client finding motivated a bounded artifact-frame regression fix in source. Do not treat the published runtime as already patched, or a successful in-process server test as proof of stdio compatibility.
 
-To validate all three recorded artifacts against their published catalog, run from a checkout containing this example:
+To validate all three recorded artifacts against their published catalog, run outside an AAS source checkout. npm may otherwise resolve the local package rather than the requested executable. Replace these paths with the example's absolute paths:
 
 ```bash
 npm exec --yes --ignore-scripts --package=agentic-awesome-skills@16.7.0 -- aas stack audit \
-  --manifest "$PWD/docs/examples/workflows/mcp-contract/aas-stack.json" \
-  --evidence "$PWD/docs/examples/workflows/mcp-contract/aas-selection-evidence.json" \
-  --plan "$PWD/docs/examples/workflows/mcp-contract/plan.json"
+  --manifest /absolute/path/to/mcp-contract/aas-stack.json \
+  --evidence /absolute/path/to/mcp-contract/aas-selection-evidence.json \
+  --plan /absolute/path/to/mcp-contract/plan.json
 ```
 
 Observed result from the published CLI: `status: "consistent"`, with matching evidence/plan manifest, catalog, target and skills. The command validates a historical example; it does not install the selected skills. Later catalogs have different identities and must not be silently substituted.

@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Two further reproducible worked cases for Workbench import QA and bundle-read security, with exact source inputs, native MCP selections, observed checks and historical CLI plans. Standalone workflow installations now include self-contained procedure cards and a validation-retry handoff.
+
 - A consistent selection-to-use path linking local discovery, exact reviewed IDs, Core artifact review and supported direct installation, with a public distribution measurement.
 
 - Workbench import of selection evidence, a recorded MCP selection and CLI plan example, and optional local feedback preview/export. Imported data remains in page memory; artifact consistency does not certify skill suitability.
@@ -20,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Skill bundle links pinned to the catalog release and a Workbench guide from catalog selection to manifest and plan review.
 
 ### Fixed
+
+- CLI native filesystem failures now return a bounded AAS error envelope instead of failing error-schema validation and exposing a stack trace.
 
 - Installer retrieval now uses a release-verified partial/sparse checkout of complete canonical skills, reducing temporary worktree bytes by 70.9% in the recorded same-release comparison. Failed retrieval cleans its temporary source and leaves targets unchanged.
 - Plan preview infers a sole manifest target and rejects a runtime with a different catalog identity. Source-only PR classification no longer treats an unchanged Git copy origin as a mutation; generated destinations and renames remain blocked.
