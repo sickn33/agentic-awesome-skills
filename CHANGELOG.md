@@ -9,7 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [16.8.0] - 2026-09-05 - "Discover, Inspect, and Review Your Skills"
+
+> Discover skills from a concrete goal, inspect complete local bundles, and carry an explicit shortlist into agent-owned selection and Workbench review.
+
+This release helps Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants find relevant procedures, inspect their requirements, and review selection artifacts before use. Metadata and artifact checks remain evidence about their stated scope, not guarantees of skill effectiveness.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills@16.8.0`
+- [Choose your tool](https://github.com/sickn33/agentic-awesome-skills#choose-your-tool)
+- [Best skills by tool](https://github.com/sickn33/agentic-awesome-skills#best-skills-by-tool)
+- [Bundles](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/bundles.md)
+- [Workflows](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/workflows.md)
+
 ### Added
+
+- Optional outcome discovery in the catalog and Workbench: six task examples, explained word matches, explicit shortlist selection, and visible evidence gaps. Goals and imported artifacts stay in the browser.
+- [Parallel Search MCP](skills/parallel-search-mcp/) for user-selected public web research through an existing Parallel connection, with anonymous-access limits and data-sharing boundaries.
+- [Skill Security Audit](skills/skill-security-audit/) for read-only review of third-party skills, MCP servers, connectors, and extensions before installation.
 
 - Two further reproducible worked cases for Workbench import QA and bundle-read security, with exact source inputs, native MCP selections, observed checks and historical CLI plans. Standalone workflow installations now include self-contained procedure cards and a validation-retry handoff.
 
@@ -36,6 +54,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Skill documentation links resolve bundled files against the same repository release; fragment links stay on the current skill page under the GitHub Pages base path. Outline and rendered heading IDs now agree for inline markup, duplicate headings, and non-English text.
 - Workflow installation guidance uses explicit skill selection and a dry run; the shortlist appears before catalog results and handles clipboard failures with a selectable brief.
 - Updated the web app's transitive `qs` dependency to its patched release.
+
+### Maintenance
+
+- Completed missing date metadata, replaced truncated descriptions, added actionable examples, and split oversized procedures into bundled references while preserving canonical skill IDs.
+- Refreshed web dependencies and migrated the web test toolchain and TypeScript checks.
+
+### Credits
+
+- **@georgeatparallel** for `parallel-search-mcp`.
+- **@liyangbing** and **sandbaseai/awesome-workbuddy** for the CC0-derived `skill-security-audit`.
 
 ## [16.7.0] - 2026-09-04 - "Replayable Agents and Grounded Engineering Knowledge"
 
