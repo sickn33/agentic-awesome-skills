@@ -689,6 +689,12 @@ Works well with: `nextjs-app-router`, `react-patterns`, `authentication-oauth`, 
 - User mentions or implies: security rules
 - User mentions or implies: firebase admin
 
+## Example
+
+**User request:**
+
+> Use @firebase for this task: Firebase gives you a complete backend in minutes - auth, database, storage, functions, hosting.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -146,6 +146,12 @@ Structure your response as:
 - **Never expose MCONs, UUIDs, or internal identifiers** to the user. Use human-readable names.
 - **Cross-platform**: This skill works across Airflow, dbt, and Databricks. Note which platform each finding comes from.
 
+## Example
+
+**User request:**
+
+> Diagnose why this pipeline became slow, identify the bottleneck from the available telemetry, and propose the smallest verified fix.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

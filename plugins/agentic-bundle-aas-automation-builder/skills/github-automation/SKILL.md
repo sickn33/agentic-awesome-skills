@@ -87,6 +87,12 @@ Do not approve fork workflow runs by raw run ID when the repository provides a g
 - Never bypass required checks, reviews, merge queues, maintainer commands, or server-side branch protection.
 - Do not claim a merge, workflow, deployment, or permission change succeeded without reading the resulting remote state.
 
+## Example
+
+**User request:**
+
+> Operate GitHub issues, pull requests, branches, checks, workflows, and permissions through Rube MCP.
+
 ## Limitations
 
 - Available Rube tool names and schemas can change; discover them at runtime.

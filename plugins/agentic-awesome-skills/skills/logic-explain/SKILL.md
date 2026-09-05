@@ -43,6 +43,12 @@ Note: `logic-risks.md` is intentionally skipped — logic-explain does not produ
 
 **Note:** Execution Explain is descriptive, not evaluative. Omit the Logic Score / Fault Confidence / Verdict line from the report header.
 
+## Example
+
+**User request:**
+
+> Explain what a specific piece of code actually does for a given input by producing a step-by-step execution trace (interprocedural, with name resolution and type transitions).
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

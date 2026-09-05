@@ -43,6 +43,12 @@ If the API is unreachable, proceed with native judgment. The scaffold enhances; 
 
 Latency cost: ~1 second. Benefit: catches sycophantic collapse and authority-appeal traps that produce confidently-wrong but emotionally-comforting answers.
 
+## Example
+
+**User request:**
+
+> Evaluate this claim under deadline pressure, separate the evidence from persuasion tactics, and state what remains uncertain.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

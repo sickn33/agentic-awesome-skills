@@ -205,6 +205,12 @@ Build and deploy the same feature consistently across web, mobile, and desktop p
 
 Initial feature specification: $ARGUMENTS
 
+## Example
+
+**User request:**
+
+> Build and deploy the same feature consistently across web, mobile, and desktop platforms using API-first architecture and parallel implementation strategies.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

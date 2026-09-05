@@ -69,6 +69,12 @@ Use this skill when the request needs context-window-aware triage, prompt cachin
 
 ---
 
+## Example
+
+**User request:**
+
+> Use @zipai-optimizer for this task: Ultra-dense token optimizer skill for prompt caching, log pruning, AST-based inspection, and minified JSON payloads.
+
 ## Limitations
 - **Brainstorming:** disable during creative/open-ended design phases.
 - **Grep Blindness:** key context may fall outside filter boundaries.

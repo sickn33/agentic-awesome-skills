@@ -66,6 +66,12 @@ Expert in event sourcing, CQRS, and event-driven architecture patterns. Masters 
 
 Works well with: `saga-orchestration`, `architecture-patterns`, `dbos-*`
 
+## Example
+
+**User request:**
+
+> Build systems requiring complete audit trails.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -34,6 +34,12 @@ Built with the help of AI coding tools — and designed to help AI coding tools 
 
 Actively developed by a solo developer at AILoopLab. Feedback welcome!
 
+## Example
+
+**User request:**
+
+> Create and run a declarative browser test for the checkout flow, including visual assertions and a clear failure report.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

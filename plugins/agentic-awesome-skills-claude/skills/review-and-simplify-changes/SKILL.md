@@ -195,6 +195,12 @@ Close with a brief result:
 
 If the code is already clean for this rubric, say that directly instead of manufacturing edits.
 
+## Example
+
+**User request:**
+
+> Review a git diff or explicit file scope for reuse, code quality, efficiency, clarity, and standards issues, then optionally apply safe Codex-driven fixes.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

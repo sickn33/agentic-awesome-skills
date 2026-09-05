@@ -112,6 +112,12 @@ Before finalizing output, the agent asks:
 - [ ] Is it short enough for the device context?
 - [ ] Does the email body satisfy the promise?
 
+## Example
+
+**User request:**
+
+> Rewrite these email subject lines for stronger open-rate psychology while preserving clarity and truthful claims.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

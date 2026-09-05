@@ -170,6 +170,12 @@ Orchestrate multi-agent incident response with modern SRE practices for rapid re
 
 Production incident requiring immediate response: $ARGUMENTS
 
+## Example
+
+**User request:**
+
+> Use @incident-response-incident-response for this task: Use when working with incident response incident response.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

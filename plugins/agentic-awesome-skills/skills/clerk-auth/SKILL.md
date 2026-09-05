@@ -25,7 +25,7 @@ Key components:
 - <SignIn />, <SignUp />: Pre-built auth forms
 - <UserButton />: User menu with session management
 
-### Code_example
+### Code Example
 
 # Environment variables (.env.local)
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
@@ -110,7 +110,7 @@ Best practices:
 - auth.protect() for explicit protection
 - Centralize all auth logic in middleware
 
-### Code_example
+### Code Example
 
 // middleware.ts
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
@@ -186,7 +186,7 @@ Key functions:
 - currentUser(): Returns full User object
 - Both require clerkMiddleware to be configured
 
-### Code_example
+### Code Example
 
 // app/dashboard/page.tsx (Server Component)
 import { auth, currentUser } from '@clerk/nextjs/server';
@@ -279,7 +279,7 @@ Key hooks:
 - useSession(): Session object
 - useOrganization(): Current organization
 
-### Code_example
+### Code Example
 
 // components/UserProfile.tsx
 'use client';
@@ -382,7 +382,7 @@ Features:
 - Organization-scoped data
 - Enterprise SSO per organization
 
-### Code_example
+### Code Example
 
 // Organization creation UI
 // app/create-org/page.tsx
@@ -491,7 +491,7 @@ Key webhooks:
 
 Uses svix for signature verification.
 
-### Code_example
+### Code Example
 
 // app/api/webhooks/clerk/route.ts
 import { Webhook } from 'svix';
@@ -611,7 +611,7 @@ Protect API routes using auth() from Clerk.
 Route Handlers in App Router use auth() for authentication.
 Middleware provides initial protection, auth() provides in-handler verification.
 
-### Code_example
+### Code Example
 
 // app/api/projects/route.ts
 import { auth } from '@clerk/nextjs/server';

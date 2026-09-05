@@ -182,6 +182,12 @@ When helpful, group actions into:
 
 Do not implement fixes as part of this skill. The output is a read-only diagnosis with a prioritized path forward.
 
+## Example
+
+**User request:**
+
+> Investigate this failure with @bug-hunt-swarm, prove the root cause, implement the smallest safe fix, and verify it.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

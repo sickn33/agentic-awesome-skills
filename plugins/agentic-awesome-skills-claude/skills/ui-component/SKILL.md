@@ -69,6 +69,12 @@ Description: $ARGUMENTS
    - Primitive/reusable → `src/components/ui/`
    - Composed pattern → `src/components/patterns/`
 
+## Example
+
+**User request:**
+
+> Generate a new UI component following the StyleSeed design conventions.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

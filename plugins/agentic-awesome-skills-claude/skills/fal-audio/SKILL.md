@@ -22,6 +22,12 @@ This skill provides guidance and patterns for text-to-speech and speech-to-text 
 
 For more information, see the [source repository](https://github.com/fal-ai-community/skills/blob/main/skills/claude.ai/fal-audio/SKILL.md).
 
+## Example
+
+**User request:**
+
+> Use @fal-audio for this task: Text-to-speech and speech-to-text using fal.ai audio models.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

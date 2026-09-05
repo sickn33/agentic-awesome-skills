@@ -51,6 +51,12 @@ metadata:
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Use @lint-and-validate for this task: MANDATORY: Run appropriate validation tools after EVERY code change.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

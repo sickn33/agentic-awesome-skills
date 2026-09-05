@@ -64,6 +64,12 @@ Set up the following tech stack:
 # Verify
 Verify the boilerplate is working by running `bin/rails server` and accessing the application at `http://localhost:3000` via playwright MCP.
 
+## Example
+
+**User request:**
+
+> Bootstrap a new Rails project with the opinionated stack defined here and verify that the generated application runs.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

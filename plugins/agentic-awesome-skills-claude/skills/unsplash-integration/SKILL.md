@@ -34,6 +34,12 @@ Trigger this skill when:
 - **No Placeholders**: Never use generic colored boxes when Unsplash can provide a relevant, beautiful asset.
 - **Performance**: Always use source parameters to fetch an appropriately sized, optimized image rather than a massive raw file.
 
+## Example
+
+**User request:**
+
+> Create hero sections, editorial layouts, or product galleries that demand stunning visual impact.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

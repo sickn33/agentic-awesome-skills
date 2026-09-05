@@ -102,6 +102,12 @@ When defining direction, choose which disciplines fit the product and apply 2–
 - **Product personality**: One clear character (friendly, serious, playful, premium); consistent across the UI.
 - **Simplify**: Remove until it breaks; "best part is no part" for UI clutter.
 
+## Example
+
+**User request:**
+
+> Review this interface with @design-thinking, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

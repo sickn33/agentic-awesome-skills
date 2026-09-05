@@ -63,6 +63,12 @@ design rather than by promise.
 - Wage/hour compliance: `https://tempguru.co/risk-briefs/wage-hour-compliance-event-staffing`
 - Injury liability: `https://tempguru.co/risk-briefs/event-worker-injury-liability`
 
+## Example
+
+**User request:**
+
+> Assess worker-classification and compliance risk for temporary event staffing in the US and Canada — W-2 vs 1099, misclassification penalties, joint-employer liability, COI, and wage/hour rules. Includes live state-by-state lookups via MCP.
+
 ## Limitations
 
 - This skill provides general staffing-compliance guidance, not legal advice

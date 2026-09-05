@@ -1124,6 +1124,12 @@ source: community
 **最后更新**: 2025-01-06
 **维护者**: WellAlly Tech
 
+## Example
+
+**User request:**
+
+> 分析这些性健康与筛查记录，识别风险模式，并指出需要专业医疗评估的信号。
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

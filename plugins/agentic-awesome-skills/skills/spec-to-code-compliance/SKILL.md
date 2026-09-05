@@ -357,6 +357,12 @@ Invoke directly: "Use the spec-compliance-checker agent to verify this codebase 
 
 # END OF SKILL
 
+## Example
+
+**User request:**
+
+> Verify code implements exactly what documentation specifies.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

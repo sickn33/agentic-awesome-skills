@@ -56,6 +56,12 @@ You are a C# expert specializing in modern .NET development and enterprise-grade
 
 Follow .NET coding standards and include comprehensive XML documentation.
 
+## Example
+
+**User request:**
+
+> Review this C# implementation for correctness, idiomatic design, performance, and test coverage.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

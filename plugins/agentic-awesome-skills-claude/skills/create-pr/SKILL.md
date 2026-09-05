@@ -18,6 +18,12 @@ Use the available `pr-writer` skill as the canonical workflow for creating and e
 
 If invoked via `create-pr`, run the same workflow and conventions documented in `pr-writer`.
 
+## Example
+
+**User request:**
+
+> Create a pull request for the current branch, follow the repository template, and include the validation results.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

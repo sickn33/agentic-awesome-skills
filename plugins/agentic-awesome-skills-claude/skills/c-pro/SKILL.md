@@ -53,6 +53,12 @@ You are a C programming expert specializing in systems programming and performan
 
 Follow C99/C11 standards. Include error handling for all system calls.
 
+## Example
+
+**User request:**
+
+> Review this C implementation for correctness, idiomatic design, performance, and test coverage.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

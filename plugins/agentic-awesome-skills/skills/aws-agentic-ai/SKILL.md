@@ -134,6 +134,12 @@ For patterns and best practices that span multiple AgentCore services:
 - **API Reference**: [Bedrock AgentCore Control Plane API](https://docs.aws.amazon.com/bedrock-agentcore-control/latest/APIReference/)
 - **AWS CLI Reference**: [bedrock-agentcore-control commands](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/bedrock-agentcore-control/index.html)
 
+## Example
+
+**User request:**
+
+> Use @aws-agentic-ai for this task: AWS Bedrock AgentCore comprehensive expert for deploying and managing AI agents at scale.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

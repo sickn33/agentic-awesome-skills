@@ -29,6 +29,12 @@ Do not skim. Read each ADR completely before summarizing.
 
 Read every single ADR file, for this project, in full.
 
+## Example
+
+**User request:**
+
+> Read every ADR in a project before summarizing architectural context or decisions.
+
 ## Limitations
 
 - Adapted from `davidondrej/skills`; verify local paths, tools, credentials, and agent features before acting.

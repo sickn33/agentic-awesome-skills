@@ -80,6 +80,12 @@ This skill provides guidance for quality focused software development and archit
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Use @software-architecture for this task: Guide for quality focused software architecture.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

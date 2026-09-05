@@ -174,6 +174,12 @@ Apply seed: **$0** · Context: **$1** · Target: **$ARGUMENTS**
 - Do not introduce a third-party animation lib (gsap, anime.js). StyleSeed targets framer-motion exclusively.
 - Do not add scroll-linked, parallax, or infinite animations (DESIGN-LANGUAGE.md Rule 59).
 
+## Example
+
+**User request:**
+
+> Review this interface with @ui-motion, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

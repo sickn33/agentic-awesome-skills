@@ -1080,6 +1080,12 @@ Works well with: `autonomous-agents`, `multi-agent-orchestration`, `llm-architec
 - User mentions or implies: memgpt
 - User mentions or implies: conversation history
 
+## Example
+
+**User request:**
+
+> Use @agent-memory-systems for this task: Memory is the cornerstone of intelligent agents.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

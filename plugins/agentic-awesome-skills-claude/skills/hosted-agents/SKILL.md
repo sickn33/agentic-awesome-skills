@@ -282,6 +282,12 @@ External resources:
 ### When to Use
 Use this skill when tackling tasks related to its primary domain or functionality as described above.
 
+## Example
+
+**User request:**
+
+> Build background coding agents that run independently of user devices.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

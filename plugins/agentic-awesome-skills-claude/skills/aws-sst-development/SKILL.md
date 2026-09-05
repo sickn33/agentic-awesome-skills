@@ -168,6 +168,12 @@ project-specific ones deliberately.
   flagged to the user with the account it targets, and migrations were planned
   as two PRs, not one.
 
+## Example
+
+**User request:**
+
+> Use @aws-sst-development for this task: SST v4 (Ion) expert for managing AWS resources as code with the Pulumi-backed framework.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

@@ -225,6 +225,12 @@ Use a monitoring tool that tracks developer platforms. Key capabilities to look 
 - **alternatives-pages** - Convert competitive insights into comparison content
 - **community-engagement** - Best practices for responding to developer conversations
 
+## Example
+
+**User request:**
+
+> Monitor what developers say about your brand, competitors, and the problems they're solving.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

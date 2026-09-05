@@ -1070,6 +1070,12 @@ Works well with: `backend`, `postgres-wizard`, `nextjs-app-router`, `react-patte
 - User mentions or implies: graphql query
 - User mentions or implies: graphql mutation
 
+## Example
+
+**User request:**
+
+> Use @graphql for this task: GraphQL gives clients exactly the data they need - no more, no less.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

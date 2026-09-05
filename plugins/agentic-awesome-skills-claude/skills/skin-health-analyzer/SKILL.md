@@ -709,6 +709,12 @@ source: community
 ## When to Use
 Use this skill when tackling tasks related to its primary domain or functionality as described above.
 
+## Example
+
+**User request:**
+
+> Analyze skin health data, identify skin problem patterns, assess skin health status.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

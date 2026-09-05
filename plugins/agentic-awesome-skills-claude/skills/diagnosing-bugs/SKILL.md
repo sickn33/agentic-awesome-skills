@@ -157,6 +157,11 @@ Required before declaring done:
 
 **Then ask: what would have prevented this bug?** If the answer involves architectural change (no good test seam, tangled callers, hidden coupling) hand off to the `/improve-codebase-architecture` skill with the specifics. Make the recommendation **after** the fix is in, not before — you have more information now than when you started.
 
+## Example
+
+**User request:**
+
+> Investigate this failure with @diagnosing-bugs, prove the root cause, implement the smallest safe fix, and verify it.
 
 ## Limitations
 

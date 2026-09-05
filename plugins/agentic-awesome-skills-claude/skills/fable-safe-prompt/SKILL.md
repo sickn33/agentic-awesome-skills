@@ -73,6 +73,12 @@ If no benign defensive equivalent exists for a sentence (it's purely offensive),
 
 **Hard truth:** you can't reliably stop Fable 5 guardrails. Robust API setups also treat `stop_reason: "refusal"` (HTTP 200, `stop_details.category` = `cyber`/`bio`) as a route to an Opus 4.8 fallback — mention only if the user controls the integration.
 
+## Example
+
+**User request:**
+
+> Rewrite this allowed prompt to reduce false-positive classifier triggers while preserving its intent and constraints.
+
 ## Limitations
 
 - Adapted from `davidondrej/skills`; verify local paths, tools, credentials, and agent features before acting.

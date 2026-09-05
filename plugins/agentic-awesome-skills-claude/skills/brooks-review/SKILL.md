@@ -35,6 +35,12 @@ from `../_shared/common.md` to determine the review scope before proceeding.
 
 **Mode line in report:** `PR Review`
 
+## Example
+
+**User request:**
+
+> Use @brooks-review for this task: PR code review that surfaces decay risks, design smells, and maintainability issues with concrete Symptom → Source → Consequence → Remedy findings, drawing on twelve classic engineering books.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

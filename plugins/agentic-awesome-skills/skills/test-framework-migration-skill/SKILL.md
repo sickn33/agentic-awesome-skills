@@ -115,6 +115,12 @@ After generating migrated code:
 | [reference/playbook.md](https://github.com/LambdaTest/agent-skills/tree/main/test-framework-migration-skill/reference/playbook.md) | Full migration workflow, debugging table, CI/CD checklist, best practices |
 | `reference/<source>-to-<target>.md` | Before converting any script for that pair |
 
+## Example
+
+**User request:**
+
+> Use @test-framework-migration-skill for this task: Migrates and converts test automation scripts between Selenium, Playwright, Puppeteer, and Cypress.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

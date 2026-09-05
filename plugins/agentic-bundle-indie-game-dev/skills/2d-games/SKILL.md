@@ -123,6 +123,12 @@ metadata:
 
 Use for canvas/Phaser/Kaplay/Pixi 2D systems, or guest viewports inside hybrid web apps.
 
+## Example
+
+**User request:**
+
+> Use @2d-games for this task: 2D game development principles.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches the scope described above.

@@ -37,6 +37,12 @@ Trigger this skill when:
 - **Strict Consistency**: Stick to ONE style (e.g., only "Two-tone") throughout a single project to maintain high-end polish.
 - **Sizing & Alignment**: Follow strict, standard grid sizes (24x24) to ensure absolute crispness on high-DPI displays.
 
+## Example
+
+**User request:**
+
+> Design or building highly crafted navigation menus, toolbars, and action buttons.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

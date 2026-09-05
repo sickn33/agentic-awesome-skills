@@ -68,6 +68,11 @@ reports-to: monopoly
 - [ ] HIPAA: if health data — encryption, audit logs, BAA with vendors
 - [ ] SOC 2 Type II: access control, availability, confidentiality evidence
 
+## Example
+
+**User request:**
+
+> Review this Monopoly implementation against its security checklist and report each failed control with evidence.
 
 ## Limitations
 - This is a reference document and may not cover all edge cases. Always verify architectures before production.

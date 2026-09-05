@@ -331,6 +331,12 @@ For complete documentation beyond this methodology overview:
 - **Detection Vectors:** See {baseDir}/references/foundations.md for the shared attacker-controlled input model, and individual vector files `{baseDir}/references/vector-{a..i}-*.md` for per-vector detection heuristics.
 - **Cross-File Resolution:** See {baseDir}/references/cross-file-resolution.md for `uses:` reference classification, composite action and reusable workflow resolution procedures, input mapping traces, and depth-1 limit.
 
+## Example
+
+**User request:**
+
+> Audit a repository's GitHub Actions workflows for AI agent security.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

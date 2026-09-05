@@ -35,6 +35,12 @@ Trigger this skill when:
 - **Purposeful Motion**: Every animation must feel deliberate and premium. Avoid chaotic or overly fast motion that distracts from the core UX.
 - **Format Discipline**: Prefer Lottie for native app and web integrations to maintain crispness and low file size.
 
+## Example
+
+**User request:**
+
+> Add life to a static logo or brand mark to make it memorable.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

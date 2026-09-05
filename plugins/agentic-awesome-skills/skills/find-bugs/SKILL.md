@@ -81,6 +81,12 @@ If you find nothing significant, say so - don't invent issues.
 
 Do not make changes - just report findings. I'll decide what to address.
 
+## Example
+
+**User request:**
+
+> Review the current branch diff for real bugs, security issues, and regressions, citing exact files and lines.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

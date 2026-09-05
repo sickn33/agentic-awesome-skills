@@ -855,6 +855,12 @@ Message: Transaction sync without cursor persistence. Store cursor for increment
 - User mentions or implies: fintech
 - User mentions or implies: identity verification banking
 
+## Example
+
+**User request:**
+
+> Use @plaid-fintech for this task: Expert patterns for Plaid API integration including Link token flows, transactions sync, identity verification, Auth for ACH, balance checks, webhook handling, and fintech compliance best practices.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

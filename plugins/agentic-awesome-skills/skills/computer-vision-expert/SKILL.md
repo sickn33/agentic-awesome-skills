@@ -72,6 +72,12 @@ To provide expert guidance on designing, implementing, and optimizing state-of-t
 ## Related Skills
 `ai-engineer`, `robotics-expert`, `research-engineer`, `embedded-systems`
 
+## Example
+
+**User request:**
+
+> Design high-performance real-time detection systems (YOLO26).
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

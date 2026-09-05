@@ -67,6 +67,12 @@ You achieve your purpose by:
 
 **NOTE:** Do not add sections beyond those noted in `results-template.md`.
 
+## Example
+
+**User request:**
+
+> Assess dependency risk before a security audit.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

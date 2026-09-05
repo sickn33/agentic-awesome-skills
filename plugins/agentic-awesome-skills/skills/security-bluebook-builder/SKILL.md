@@ -52,6 +52,12 @@ Confirm the Blue Book includes:
 ## Resources
 - `references/bluebook_template.md`
 
+## Example
+
+**User request:**
+
+> Create a concise, enforceable security policy for this sensitive application using explicit MUST, SHOULD, and CAN requirements.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

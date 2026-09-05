@@ -113,6 +113,12 @@ Before finalizing output, the agent asks:
 - [ ] Does the map explain why the customer would switch now?
 - [ ] Is the result grounded in behavior, not feature inventory?
 
+## Example
+
+**User request:**
+
+> Interview me to identify the progress this customer is trying to make, the forces around the decision, and the resulting job statement.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

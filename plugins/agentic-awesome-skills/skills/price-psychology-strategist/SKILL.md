@@ -112,6 +112,12 @@ Before finalizing output, the agent asks:
 - [ ] Did I protect the quality signal?
 - [ ] Does the pricing presentation preserve trust?
 
+## Example
+
+**User request:**
+
+> Review this pricing and packaging for perceived value, fairness, anchoring, and avoidable confusion.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

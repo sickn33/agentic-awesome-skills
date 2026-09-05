@@ -172,6 +172,12 @@ SEO fundamentals should be validated using **multiple signals**, not single metr
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Review this campaign asset with @seo-fundamentals, identify the main conversion problem, and produce an improved version grounded in the available evidence.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -1078,6 +1078,12 @@ Works well with: `agent-tool-builder`, `agent-memory-systems`, `multi-agent-orch
 - User mentions or implies: agentic ai
 - User mentions or implies: agent planning
 
+## Example
+
+**User request:**
+
+> Use @autonomous-agents for this task: Autonomous agents are AI systems that can independently decompose goals, plan actions, execute tools, and self-correct without constant human guidance.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -117,6 +117,12 @@ Reference these guidelines when:
 - prefer stable, boring metadata over clever or dynamic
 - keep diffs minimal and scoped to metadata only
 
+## Example
+
+**User request:**
+
+> Audit and fix HTML metadata including page titles, meta descriptions, canonical URLs, Open Graph tags, Twitter cards, favicons, JSON-LD structured data, and robots directives.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

@@ -22,6 +22,12 @@ This skill provides guidance and patterns for vector-powered cli for semantic fi
 
 For more information, see the [source repository](https://github.com/scarletkc/vexor).
 
+## Example
+
+**User request:**
+
+> Use @vexor for this task: Vector-powered CLI for semantic file search with a Claude/Codex skill.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

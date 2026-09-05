@@ -178,6 +178,12 @@ When helpful, group the path forward into:
 
 Do not implement fixes as part of this skill. The output is a read-only review plus a prioritized recommendation.
 
+## Example
+
+**User request:**
+
+> Use @review-swarm for this task: Parallel read-only multi-agent review of a current git diff or explicit file scope to find behavioral regressions, security or privacy risks, performance or reliability issues, and contract or test coverage gaps.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

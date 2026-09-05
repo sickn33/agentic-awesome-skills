@@ -41,6 +41,12 @@ Launch the RSVP speed reader to display text one word at a time with Spritz-styl
 ## Arguments
 $ARGUMENTS
 
+## Example
+
+**User request:**
+
+> Launch the RSVP speed reader for text in the current session.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

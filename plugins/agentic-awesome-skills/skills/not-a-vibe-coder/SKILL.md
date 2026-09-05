@@ -146,6 +146,12 @@ Only after this input is gathered do you write Design.md.
 - Any completed task → update Tracker.md immediately.
 - Mid-project pivot → update all affected files proactively, summarize changes.
 
+## Example
+
+**User request:**
+
+> Turn this new-product idea into the eight structured planning files required before implementation.
+
 ## Limitations
 - Only works for new projects. Will fail if run on existing codebases.
 - Relies heavily on accurate user input during the initial PRD generation.

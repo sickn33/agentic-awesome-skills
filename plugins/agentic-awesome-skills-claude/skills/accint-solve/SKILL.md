@@ -28,6 +28,12 @@ Routing sugar over the two MCP verbs — no logic lives here.
 5. Never leave a received frame unresolved; never solo-derive outside the loop.
 6. Close the commitment honestly later with `acc_act(runtime="outcome", ...)`.
 
+## Example
+
+**User request:**
+
+> Use @accint-solve for this task: Route a goal through acc's scored-memory loop via acc_act(runtime="solve"); deliberate any returned brain_frame and submit via continue.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

@@ -314,6 +314,12 @@ date_added: '2026-02-27'
 - [Awesome Bash](https://github.com/awesome-lists/awesome-bash) - Curated list of Bash resources and tools
 - [Pure Bash Bible](https://github.com/dylanaraps/pure-bash-bible) - Collection of pure bash alternatives to external commands
 
+## Example
+
+**User request:**
+
+> Write or reviewing Bash scripts for automation, CI/CD, or ops.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
