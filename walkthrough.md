@@ -1,3 +1,12 @@
+# Real skill example recognition - 2026-09-05
+
+- Updated the structural audit to recognize example headings nested below level
+  two, non-empty files in a bundled `examples/` directory, and concrete examples
+  inside bundled Markdown, reStructuredText, or text support documents.
+- Kept symlinked and empty example files from satisfying the audit so external
+  paths and placeholder bundles cannot hide missing documentation.
+- Reclassified existing examples without changing canonical skill content.
+
 # Truncated skill description cleanup - 2026-09-05
 
 - Repaired all 134 catalog descriptions that ended in an ellipsis: 126 now
