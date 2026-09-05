@@ -24,18 +24,22 @@ Use this skill when:
 ## Workflow Source of Truth
 
 Read workflows in this order:
-1. `docs/WORKFLOWS.md` for human-readable playbooks.
+1. `docs/users/workflows.md` for human-readable playbooks and recorded cases.
 2. `data/workflows.json` for machine-readable workflow metadata.
 
 ## How to Run This Skill
 
 1. Identify the user's concrete outcome.
 2. Propose the 1-2 best matching workflows.
-3. Ask the user to choose one.
+3. Follow an already specified workflow; ask only when the choice materially changes scope.
 4. Execute step-by-step:
    - Announce current step and expected artifact.
    - Invoke recommended skills for that step.
    - Verify completion criteria before moving to next step.
+   - Review the exact skill IDs and their support files before installation. Use the
+     supported direct installer's `--dry-run` with the selected IDs and destination;
+     install only within the user's authorization. Core composition and immutable
+     plans remain review artifacts and do not install the skills.
 5. At the end, provide:
    - Completed artifacts
    - Validation evidence

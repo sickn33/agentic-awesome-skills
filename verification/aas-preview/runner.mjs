@@ -328,9 +328,9 @@ async function main() {
 
   const planPath = path.join(workRoot, "plan.json");
   const planned = parseCliSuccess(runNode(aasBin, [
-    "stack", "plan", "--manifest", manifestPath, "--target", "codex:project",
+    "stack", "plan", "--manifest", manifestPath,
     "--target-root", projectRoot, "--cache-root", cacheRoot,
-    "--runtime-version", metadata.version, "--runtime-integrity", runtimeIntegrity,
+    "--runtime-integrity", runtimeIntegrity,
     "--out", planPath,
     ...previewOutputArgs,
   ], { cwd: projectRoot }), "PLAN");

@@ -59,7 +59,7 @@ During preview, AAS checks the ownership of the configuration parent directory (
 3. Let the agent search and inspect candidates, choose exact IDs, and call `compose_stack`; review the returned manifest before persisting it.
 4. Persist the selection as `aas-stack.json`, optionally with the separate evidence sidecar for an audit-enabled flow.
 5. Run `aas stack validate`, then `aas stack plan` with explicit absolute paths and integrity inputs.
-6. Review the immutable plan and stop. Apply and recovery remain experimental opt-in paths.
+6. Review the immutable plan. For actual skill use, follow the supported [direct distribution handoff](#use-the-reviewed-selection); Core apply and recovery remain experimental opt-in paths.
 
 ## Ask the agent to choose the stack
 
@@ -252,9 +252,30 @@ aas stack audit \
 
 `stack validate` is read-only. `stack plan` writes only the requested plan artifact and does not materialize skills or AAS managed state in the target. The immutable plan binds the manifest, runtime, catalog, target identity, current managed state, and exact logical operations.
 
+On `main`, `--target` is inferred only when the validated manifest has one target;
+otherwise supply, for example, `--target codex:project`. The runtime version comes
+from the manifest, and its verified catalog must match the manifest's catalog.
+The npm SRI is the `runtime.integrity` returned by the approved MCP configuration;
+cache location and target directory remain explicit. These refinements are unreleased:
+the published 16.7.0 CLI still requires the explicit `--target` shown above.
+
 `stack audit` is also read-only. It validates all three artifacts independently, resolves the manifest's pinned verified catalog, and reports whether their manifest digests, catalog identities, target, and selected skill IDs remain consistent. A structurally invalid or unverifiable artifact fails closed; a valid but differently bound artifact returns `status: "inconsistent"` with stable reason codes.
 
 Stop after reviewing the plan unless you are deliberately participating in controlled preview development. `stack apply` and `stack recover` remain experimental and require explicit opt-in.
+
+## Use the reviewed selection
+
+For supported installation, use the direct installer with the same exact IDs,
+release version and intended skill directory. Follow [From selection to use](../../README.md#from-selection-to-use):
+review its `--dry-run` output and repeat without that flag when installation is
+authorized. The direct installer has its own destination checks and ownership
+manifest; it does not consume the Core plan. Review any updated skill bytes or
+prerequisites before replacing an existing selection.
+
+Then invoke the selected skill on a real task and retain the observed check or
+artifact. The [worked cases](workflows.md#recorded-worked-cases) record inputs and
+results. Workbench's optional feedback export contains only the fields you enter;
+it does not upload project artifacts or send a report automatically.
 
 ## Privacy, trust, and limits
 

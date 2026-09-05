@@ -246,6 +246,12 @@ function targetKey(target) {
 }
 
 function selectTarget(manifest, value) {
+  if (value === undefined) {
+    if (manifest.targets.length === 1) return manifest.targets[0];
+    throw cliError("AAS_CLI_TARGET_REQUIRED", "invalidInput", {
+      targets: manifest.targets.map(targetKey), option: "target",
+    });
+  }
   const target = manifest.targets.find((candidate) => targetKey(candidate) === value);
   if (!target) throw cliError("AAS_CLI_TARGET_NOT_IN_MANIFEST", "invalidInput", { target: value });
   return target;
@@ -412,12 +418,19 @@ async function stackPlan(options, dependencies = {}) {
   if (manifest.catalog.package !== catalog.package || manifest.catalog.version !== catalog.version || manifest.catalog.integrity !== catalog.digest) {
     throw cliError("AAS_PLAN_CATALOG_MISMATCH", "integrity", {});
   }
-  const targetBase = selectTarget(manifest, requireOption(options, "target"));
+  const targetBase = selectTarget(manifest, options.target);
   if (options["runtime-version"] !== undefined && options["runtime-version"] !== manifest.catalog.version) {
     throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
   }
   const runtime = await verifiedRuntimeFor({ ...options, "runtime-version": manifest.catalog.version }, null, dependencies);
   if (runtime.identity.package !== manifest.catalog.package || runtime.identity.version !== manifest.catalog.version) {
+    throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
+  }
+  let runtimeCatalog;
+  try { runtimeCatalog = core.loadBundledCatalog({ root: runtime.sourceRoot }); }
+  catch { throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {}); }
+  if (runtimeCatalog.digest !== manifest.catalog.integrity
+    || runtimeCatalog.package !== manifest.catalog.package || runtimeCatalog.version !== manifest.catalog.version) {
     throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
   }
   const adapter = adapterFor(options, targetBase, runtime.sourceRoot);
@@ -525,7 +538,7 @@ function help() {
       "stack create --selection <json> --evidence <json> --artifact-dir <new-dir> --require-evidence [--catalog-digest <sha256> --cache-root <absolute>]",
       "stack audit --manifest <aas-stack.json> --evidence <aas-selection-evidence.json> --plan <plan.json> [--cache-root <absolute>]",
       "stack validate --manifest <aas-stack.json>",
-      "stack plan --manifest <file> --target <host:scope> --target-root <dir> --cache-root <absolute> --runtime-integrity <npm-sri> --out <file> [--preview-windows-output]",
+      "stack plan --manifest <file> --target-root <dir> --cache-root <absolute> --runtime-integrity <npm-sri> --out <file> [--target <host:scope>] [--preview-windows-output] (target inferred only when the manifest has one)",
       "stack apply --experimental-apply --plan <file> --target-root <dir> --cache-root <absolute> --approve <plan-digest> (EXPERIMENTAL; NOT CERTIFIED)",
       "stack doctor --plan <file> --target-root <dir> --cache-root <absolute>",
       "stack recover --experimental-recovery --plan <file> --target-root <dir> --cache-root <absolute> --id <id> --action rollback|cleanup [--approve <digest>] (EXPERIMENTAL; NOT CERTIFIED)",

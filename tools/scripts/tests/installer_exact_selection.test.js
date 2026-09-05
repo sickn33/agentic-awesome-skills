@@ -183,6 +183,9 @@ if (args[0] === "clone") {
   fs.cpSync(process.env.FAKE_GIT_SOURCE, destination, { recursive: true, force: true });
 } else if (args[0] === "-C" && args[2] === "rev-parse" && args[3] === "HEAD") {
   process.stdout.write(process.env.FAKE_GIT_HEAD + "\\n");
+} else if (args[0] === "-C" && args.slice(2).join(" ") === "sparse-checkout set --cone skills") {
+  fs.appendFileSync(process.env.FAKE_GIT_LOG, JSON.stringify(args) + "\\n");
+  if (process.env.FAKE_SPARSE_FAILURE === "1") process.exitCode = 2;
 } else {
   process.exitCode = 1;
 }
@@ -235,6 +238,19 @@ if (process.argv[2] !== "view" || !process.argv.includes("gitHead")) {
     ["clone", "--depth", "1", "--branch", pinnedRef],
     "the real CLI dry run must clone the explicitly pinned release",
   );
+  assert.ok(cloneArgs.includes("--filter=blob:none"));
+  assert.ok(cloneArgs.includes("--sparse"));
+  const sparseArgs = JSON.parse(fs.readFileSync(fakeGitLog, "utf8").trim().split("\n")[1]);
+  assert.deepStrictEqual(sparseArgs.slice(2), ["sparse-checkout", "set", "--cone", "skills"]);
+  const checkoutFailure = spawnSync(process.execPath, [installerPath, "--path", existingTarget, "--skills", "frontend-design"], {
+    encoding: "utf8", env: { ...cliEnv, FAKE_SPARSE_FAILURE: "1" },
+  });
+  assert.equal(checkoutFailure.status, 1);
+  assert.match(checkoutFailure.stderr, /failed/);
+  assert.deepStrictEqual(fs.readdirSync(existingTarget).sort(), beforeDryRunEntries);
+  assert.equal(fs.existsSync(sparseArgs[1]), false, "successful preview cleans its temporary source");
+  const lastInvocation = JSON.parse(fs.readFileSync(fakeGitLog, "utf8").trim().split("\n").at(-1));
+  assert.equal(fs.existsSync(lastInvocation[1]), false, "failed sparse checkout also cleans temporary source");
 
   const outsideSentinel = path.join(tmpRoot, "outside");
   fs.writeFileSync(outsideSentinel, "outside stays", "utf8");

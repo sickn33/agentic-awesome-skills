@@ -189,7 +189,8 @@ agentic-awesome-skills — installer
 
   npx agentic-awesome-skills [install] [options]
 
-  Shallow-clones the skills repo into your agent's skills directory.
+  Fetches a verified release into temporary storage, then copies selected skills.
+  Requires Git with partial clone and sparse-checkout support (Git 2.25+).
 
 Options:
   --cursor       Install to ~/.cursor/skills (Cursor)
@@ -313,7 +314,7 @@ function buildAntigravitySelectionMessage() {
     "Copyable agent prompt:",
     "  Inspect this project and use the AAS MCP to search the complete catalog and choose the exact relevant skill IDs. Replace the example IDs and run npx agentic-awesome-skills --antigravity --skills skill-id-1,skill-id-2 --dry-run. Show me the plan and do not install the complete catalog.",
     "",
-    "AAS MCP selects and validates IDs but does not install skills. After reviewing the dry run, repeat the generated command without --dry-run.",
+    "The agent chooses the IDs; AAS MCP validates them without installing. After reviewing the dry run, repeat the generated command without --dry-run.",
     "",
     "AAS Core setup: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md",
     "",
@@ -969,7 +970,9 @@ function assertClonedReleaseIdentity(actualGitHead, expectedGitHead, ref) {
 
 function run(cmd, args, opts = {}) {
   const r = spawnSync(cmd, args, { stdio: "inherit", ...opts });
-  if (r.status !== 0) process.exit(r.status == null ? 1 : r.status);
+  if (r.error || r.status !== 0) {
+    throw new Error(`${cmd} ${args[0]} failed (status ${r.status == null ? "unavailable" : r.status}). Check Git 2.25+ and network access.`);
+  }
 }
 
 function buildCloneArgs(repo, tempDir, ref = null) {
@@ -978,7 +981,7 @@ function buildCloneArgs(repo, tempDir, ref = null) {
     assertSafeGitRef(ref);
     args.push("--branch", ref);
   }
-  args.push(repo, tempDir);
+  args.push("--filter=blob:none", "--sparse", repo, tempDir);
   return args;
 }
 
@@ -1265,6 +1268,11 @@ function main() {
       }
     }
 
+    // Materialize the complete canonical tree only after verifying the release.
+    // Nested skills and ignored-by-npm support files remain available; plugin
+    // mirrors, docs and app assets need not be checked out for an installation.
+    run("git", ["-C", tempDir, "sparse-checkout", "set", "--cone", "skills"]);
+
     // Resolve the exact set once before touching any target. This keeps an
     // unknown/ambiguous --skills value or an empty filter intersection atomic
     // across multi-target installs.
@@ -1311,6 +1319,9 @@ function main() {
     for (const message of getPostInstallMessages(targets, selectors)) {
       console.log(`\n${message}`);
     }
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exitCode = 1;
   } finally {
     try {
       if (fs.existsSync(tempDir)) {

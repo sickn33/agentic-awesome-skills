@@ -1,13 +1,15 @@
 <!-- registry-sync: version=16.7.0; skills=2111; stars=45955; updated_at=2026-09-04T09:06:54+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
-> **Local, agent-owned skill stacks for coding agents—from complete catalog access to a reproducible, reviewable plan.**
+> **Find reusable instructions for your project, inspect their complete files, and keep an exact skill set you can review and reuse.**
 
 **Current release: V16.7.0.** This release includes AAS Core for complete local catalog search, agent-owned selection, manifest validation, planning, and diagnosis. Apply and recovery remain experimental and outside the supported preview path.
 
 Codex or Claude inspects your project and chooses exact skills from the complete local AAS catalog. AAS Core does not rank or recommend them: its read-only `compose_stack` tool validates the agent-owned selection in memory, and a client or the `aas` CLI can persist it as `aas-stack.json` and produce an immutable plan before any target change.
 
 **[Read the AAS Core preview guide →](https://github.com/sickn33/agentic-awesome-skills/blob/v16.7.0/docs/users/aas-core.md)**
+
+This README tracks `main`. Changes under [Unreleased](CHANGELOG.md#unreleased), including complete bundle inspection, Workbench evidence import and sparse installer retrieval, require a subsequent release; the linked versioned guide describes the published package.
 
 ```text
 Project
@@ -78,7 +80,7 @@ Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob
 - **Built for major agent workflows**: Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, Kiro, OpenCode, Copilot, and more.
 - **Broad coverage with real utility**: 2,111+ skills across development, testing, security, infrastructure, product, and marketing.
 - **Inspect before installing**: the hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) reviews agent-produced stack manifests and immutable plans without browser-side installation.
-- **Focused delivery remains available**: specialized plugins package proven sets for web, security, data, docs, DevOps, QA, OSS, or agent/MCP workflows.
+- **Focused delivery remains available**: specialized plugins package curated sets for web, security, data, docs, DevOps, QA, OSS, or agent/MCP workflows.
 - **Useful whether you want breadth or curation**: install the full catalog, choose a specialized plugin, start with bundles, or compare alternatives before installing.
 
 ### Why not just search the skills directory?
@@ -115,6 +117,23 @@ Use direct installation when your host does not yet have a native AAS Core adapt
 - **Full library install** when you want every skill available in a local skills directory.
 - **Bundles and workflows** when you want role-based recommendations or ordered execution playbooks.
 
+### From selection to use
+
+1. Describe the project outcome to Codex or Claude with the local AAS MCP configured.
+2. Have the agent compare candidates and read the selected instructions and support files. Preserve the exact IDs in `aas-stack.json` and review their prerequisites.
+3. Validate the manifest and review a CLI plan when you need an artifact-based check. Workbench can help inspect the artifacts.
+4. For actual use, preview the supported direct installer with those same IDs, an exact release and the intended host directory. Review its own changes, then repeat without `--dry-run` when installation is authorized. Invoke the skill in a real task and keep the resulting check or artifact for reuse.
+
+For example, after reviewing `brainstorming` and `systematic-debugging` for a Codex project, run from that project directory:
+
+```bash
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@16.7.0 -- \
+  agentic-awesome-skills --release 16.7.0 --path .agents/skills \
+  --skills brainstorming,systematic-debugging --dry-run
+```
+
+Replace the example IDs with the reviewed selection. The direct installer has its own preview and ownership format; it does not consume or apply a Core plan. Core apply/recovery remain experimental. [Worked cases](docs/users/workflows.md#recorded-worked-cases) show observed inputs and outputs without claiming guaranteed model performance.
+
 ### Direct skill install
 
 ```bash
@@ -125,7 +144,7 @@ npx agentic-awesome-skills --antigravity --skills brainstorming,systematic-debug
 npx agentic-awesome-skills --agy
 ```
 
-The npm installer uses a shallow, release-pinned clone by default and verifies the cloned commit against the immutable `gitHead` recorded for that exact npm package version. If the GitHub tag moved or npm identity metadata is unavailable, installation stops before copying content. Use `--tag main` only when you intentionally accept a mutable, explicitly unverified repository ref.
+On `main`, the npm installer uses a shallow partial clone and checks out the canonical `skills/` tree after verifying the cloned commit against the immutable `gitHead` recorded for that exact npm package version. Git 2.25+ is required. Plugin mirrors, documentation and app assets are excluded from that temporary checkout; every canonical skill and support file remains available. See the [measured distribution comparison](docs/maintainers/distribution-efficiency.md). If the GitHub tag moved or npm identity metadata is unavailable, installation stops before copying content. Use `--tag main` only when you intentionally accept a mutable, explicitly unverified repository ref.
 
 Antigravity watches `~/.agents/skills` and may load enough installed instructions
 to exhaust its context, slow startup, trigger truncation errors, or enter a crash
@@ -135,7 +154,7 @@ provide `--skills`, a metadata filter, or the explicit `--all` override. The bar
 
 The recommended flow is to ask Codex or Claude with the read-only AAS Core MCP
 configured to inspect the project, search the complete catalog, and choose exact
-skill IDs. AAS MCP selects and validates IDs but does not install them; the agent
+skill IDs. The agent selects the IDs; AAS MCP validates them without installing; the agent
 or user then previews the direct installation with the command above and repeats
 it without `--dry-run` after review.
 

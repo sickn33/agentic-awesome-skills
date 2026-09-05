@@ -13,7 +13,7 @@ project -> agent -> full local catalog -> agent selection -> compose_stack -> aa
         -> human review -> validate -> plan preview
 ```
 
-Start with the canonical [AAS Core guide](aas-core.md) to configure the MCP and run that flow. The direct installer, plugins, bundles, and manual skill invocation described below remain useful alternatives, especially for hosts without a native AAS MCP adapter.
+Start with the canonical [AAS Core guide](aas-core.md) to configure the MCP and run that flow. Then follow [From selection to use](../../README.md#from-selection-to-use) to preview direct installation of those exact IDs. A Core plan is a review artifact; the direct installer provides its own preview before it copies files. The direct installer, plugins, bundles, and manual skill invocation described below remain useful alternatives, especially for hosts without a native AAS MCP adapter.
 
 > **Need more examples after setup?** Continue with the [Complete Usage Guide](usage.md).
 
@@ -22,9 +22,9 @@ Start with the canonical [AAS Core guide](aas-core.md) to configure the MCP and 
 ## What Are "Skills"?
 
 AI Agents (like **Claude Code**, **Gemini**, **Cursor**) are smart, but they lack specific knowledge about your tools.
-**Skills** are specialized instruction manuals (markdown files) that teach your AI how to perform specific tasks perfectly, every time.
+**Skills** are reusable Markdown procedures with task-specific instructions, examples and limitations. The agent still needs to check that the procedure fits your project and verify its output.
 
-**Analogy:** Your AI is a brilliant intern. **Skills** are the SOPs (Standard Operating Procedures) that make them a Senior Engineer.
+A useful first result is one reviewed selection applied to a real task, with an observable check or artifact you can reuse.
 
 ---
 
@@ -51,7 +51,7 @@ the bare command and `--antigravity` now require `--skills`, a metadata filter,
 or the explicit `--all` override. Use `--cursor`, `--claude`, `--gemini`,
 `--codex`, `--kiro`, or `--agy` for other tool paths, or `--path <dir>` for a
 custom location. Run `npx agentic-awesome-skills --help` for details.
-The installer uses a shallow clone by default so you get the current library without paying for the full git history on first install.
+The installer on `main` requires Git 2.25+ and retrieves a shallow, sparse canonical skill tree after matching the release commit to npm metadata. Complete skill bundles remain available; plugin mirrors and app assets are omitted. This optimization is unreleased; the pinned 16.7.0 installer still uses its original full checkout.
 
 For Antigravity, ask a Codex or Claude agent with the read-only AAS Core MCP
 configured to inspect the project, search the complete catalog, and choose exact
@@ -74,14 +74,17 @@ You can also ask your agent to read the selected `SKILL.md` and every bundled
 file before installation. The static audit reports risky capabilities; it does
 not prove that a skill is safe. See [Security, trust, and antivirus alerts](security-and-antivirus.md).
 
-If you see a 404 error, use: `npx github:sickn33/agentic-awesome-skills`
+If npm returns 404, check the package name, exact version and registry access. Keep the reviewed release pin; do not replace it with a moving GitHub source as a shortcut.
 
 **Option B — git clone:**
 
 ```bash
-# Universal (works for most agents)
-git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
+# Review outside any active agent skill directory.
+git clone --depth 1 --branch v16.7.0 https://github.com/sickn33/agentic-awesome-skills.git ./aas-review-16.7.0
+git -C ./aas-review-16.7.0 rev-parse HEAD
 ```
+
+For this published release, the commit is `c91abcfb9c52ac8a7c1292cc0326f459106cde1d`. Inspect the selected trees before activation; use the direct installer for its destination and update checks.
 
 **Option C — one exact skill with GitHub CLI (preview):**
 

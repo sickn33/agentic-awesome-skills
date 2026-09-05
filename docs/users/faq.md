@@ -18,6 +18,12 @@ Core supports complete local catalog search and inspection, agent-owned selectio
 
 `stack apply` and `stack recover` are experimental, disabled by default, and are not supported preview safety claims. The recommended public flow stops after reviewing `stack validate` and `stack plan` output.
 
+### How do I use the skills after reviewing a plan?
+
+Use the supported direct installer with the same exact IDs, pinned release and intended directory. Review its `--dry-run` output, then repeat without that flag when installation is authorized. It uses its own ownership format and does not consume a Core plan. [From selection to use](../../README.md#from-selection-to-use) gives a complete example; [worked cases](workflows.md#recorded-worked-cases) show observed results and limits.
+
+On `main`, `stack plan` infers `--target` when the validated manifest has exactly one target; multiple targets require an explicit choice. Runtime version already comes from the manifest. Cache path, target directory and npm integrity remain explicit, and the runtime's catalog must match the manifest's catalog. No parameter omission enables writes to the target. These refinements are unreleased.
+
 ### Does AAS upload my repository or use another model?
 
 No. The agent inspects the project using its normal local capabilities. AAS MCP only exposes the complete bundled or verified local catalog and validates agent-selected IDs; it does not scan the repository, rank skills, or enforce selection policy. MCP is local stdio, read-only, offline-capable, and contains no model credentials or telemetry.
@@ -167,20 +173,21 @@ It depends on how you install:
 - **Using a manual clone or custom workspace path**:
   `.agent/skills/` is still a good universal workspace convention for Antigravity/custom setups.
 
-If you get a 404 from npm, use: `npx github:sickn33/agentic-awesome-skills`
+If npm returns 404, check the package name, exact release and registry access. Preserve the reviewed release pin rather than switching to a moving GitHub source.
 
 **Using git clone:**
 
 ```bash
-git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
+git clone --depth 1 --branch v16.7.0 https://github.com/sickn33/agentic-awesome-skills.git ./aas-review-16.7.0
+git -C ./aas-review-16.7.0 rev-parse HEAD
 ```
 
-For direct skill distribution, the installer CLI performs a lighter shallow clone of the current library. Manual `git clone` remains appropriate when you want the full repository history or plan to contribute from the same checkout. For Codex or Claude users who want project-specific agent selection with reproducible state, start with AAS Core instead of treating a full-library install as the primary product path.
+Keep the review checkout outside active skill directories; v16.7.0 resolves to `c91abcfb9c52ac8a7c1292cc0326f459106cde1d`. For direct skill distribution, the installer on `main` requires Git 2.25+ and uses a shallow partial clone plus sparse checkout of complete canonical skill trees, after release identity verification. This optimization is unreleased; 16.7.0 still uses a full temporary checkout. See the [storage comparison](../maintainers/distribution-efficiency.md). Manual `git clone` remains appropriate when you want the full repository history or plan to contribute from the same checkout. For Codex or Claude users who want project-specific agent selection with reproducible state, start with AAS Core instead of treating a full-library install as the primary product path.
 
 For Antigravity, ask a Codex or Claude agent with the read-only AAS Core MCP
 configured to inspect the project and choose exact IDs, then preview the selected
 set with `npx agentic-awesome-skills --antigravity --skills <ids> --dry-run`.
-AAS MCP selects and validates IDs but does not install them. The complete catalog
+The agent chooses the IDs; AAS MCP validates them without installing. The complete catalog
 requires the explicit `npx agentic-awesome-skills --antigravity --all` override
 because it can exhaust context or trigger a truncation crash loop.
 

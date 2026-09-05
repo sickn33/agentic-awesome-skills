@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A consistent selection-to-use path linking local discovery, exact reviewed IDs, Core artifact review and supported direct installation, with a public distribution measurement.
+
 - Workbench import of selection evidence, a recorded MCP selection and CLI plan example, and optional local feedback preview/export. Imported data remains in page memory; artifact consistency does not certify skill suitability.
 - Explicit all-term matching, required terms, normalized category facets and tag filters in Core search, with match explanations and factual evidence traces. The web catalog offers literal and explicit approximate modes, shareable search controls, and matching explanations while preserving catalog order.
 - Local MCP bundle inspection through `list_skill_files` and `read_skill_file`, with catalog-bound paths and digests, bounded inert text reads, and explicit handling of links, binary files, missing payloads and older catalogs.
@@ -18,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Skill bundle links pinned to the catalog release and a Workbench guide from catalog selection to manifest and plan review.
 
 ### Fixed
+
+- Installer retrieval now uses a release-verified partial/sparse checkout of complete canonical skills, reducing temporary worktree bytes by 70.9% in the recorded same-release comparison. Failed retrieval cleans its temporary source and leaves targets unchanged.
+- Plan preview infers a sole manifest target and rejects a runtime with a different catalog identity. Source-only PR classification no longer treats an unchanged Git copy origin as a mutation; generated destinations and renames remain blocked.
 
 - MCP artifact requests can exceed the ordinary 4 KiB limit within the existing 256 KiB frame ceiling. Safely parsed size errors retain a bounded request ID, avoiding an uncorrelated error and client timeout; ordinary queries and unrelated metadata remain constrained.
 - Workbench compares the project profile as well as manifest, catalog, target and selected IDs; changing an artifact clears stale consistency results while new digests are checked.

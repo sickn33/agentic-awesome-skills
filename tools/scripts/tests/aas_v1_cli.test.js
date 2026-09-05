@@ -96,6 +96,34 @@ test("Windows output reports certified durability without marking the preview fa
   );
 });
 
+test("planning infers a sole target, rejects ambiguity and binds the runtime catalog", async (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const catalog = core.loadBundledCatalog({ root: ROOT });
+  const { manifest } = core.composeStack(catalog, {
+    targets: [{ host: "codex", scope: "project" }],
+    profile: { goals: ["test planning"], languages: [], frameworks: [], constraints: [] },
+    skillIds: ["ai-agents-architect"],
+  });
+  const manifestPath = path.join(item.root, "manifest.json");
+  const out = path.join(item.root, "plan.json");
+  const argv = ["stack", "plan", "--manifest", manifestPath, "--target-root", item.root, "--out", out];
+  fs.writeFileSync(manifestPath, core.canonicalJson(manifest));
+  await execute(argv, item.dependencies);
+  assert.equal(JSON.parse(fs.readFileSync(out)).payload.target.host, "codex");
+  fs.unlinkSync(out);
+  const before = fs.readdirSync(item.root).sort();
+  manifest.targets.push({ host: "claude", scope: "project" });
+  fs.writeFileSync(manifestPath, core.canonicalJson(manifest));
+  await assert.rejects(execute(argv, item.dependencies), { code: "AAS_CLI_TARGET_REQUIRED" });
+  await assert.rejects(execute([...argv, "--target", "codex:user"], item.dependencies), { code: "AAS_CLI_TARGET_NOT_IN_MANIFEST" });
+  assert.deepEqual(fs.readdirSync(item.root).sort(), before);
+  await assert.rejects(execute([...argv, "--target", "codex:project"], {
+    resolveVerifiedRuntime: async () => ({ identity: item.runtime, sourceRoot: item.root }),
+  }), { code: "AAS_PLAN_RUNTIME_CATALOG_MISMATCH" });
+  assert.deepEqual(fs.readdirSync(item.root).sort(), before);
+});
+
 test("CLI stack lifecycle persists an explicit agent selection, plans it, applies it, and diagnoses it", async (context) => {
   const item = fixture();
   context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
@@ -574,15 +602,20 @@ test("production CLI resolves and re-verifies a content-addressed runtime cache"
     ["package/package.json", `${JSON.stringify(packageJson)}\n`],
     ["package/tools/bin/aas-mcp.js", "#!/usr/bin/env node\n"],
     ["package/tools/lib/aas-v1/index.js", "module.exports = {};\n"],
-    ["package/data/aas-v1/catalog-manifest.v1.json", "{}\n"],
-    ["package/data/catalog.json", '{"skills":[]}\n'],
     ["package/data/plugin-compatibility.json", '{"skills":[]}\n'],
     ["package/node_modules/ajv/package.json", '{"name":"ajv","version":"8.20.0"}\n'],
     ["package/node_modules/sanitize-filename/package.json", '{"name":"sanitize-filename","version":"1.6.4"}\n'],
     ["package/node_modules/yaml/package.json", '{"name":"yaml","version":"2.9.0"}\n'],
     ["package/skills_index.json", `${JSON.stringify([{ id: "ai-agents-architect", path: "skills/ai-agents-architect" }])}\n`],
-    ["package/skills/ai-agents-architect/SKILL.md", "# AI Agents Architect\n"],
+    ["package/skills/ai-agents-architect/SKILL.md", fs.readFileSync(path.join(ROOT, "skills/ai-agents-architect/SKILL.md"))],
   ].map(([entryPath, bytes]) => ({ path: entryPath, bytes: Buffer.from(bytes) }));
+  const offlineManifest = "data/aas-v1/catalog-manifest.v1.json";
+  const offline = JSON.parse(fs.readFileSync(path.join(ROOT, offlineManifest)));
+  for (const file of [offlineManifest, ...offline.assets.map(asset => asset.path)]) {
+    const entry = { path: `package/${file}`, bytes: fs.readFileSync(path.join(ROOT, file)) };
+    const existing = entries.findIndex(candidate => candidate.path === entry.path);
+    if (existing === -1) entries.push(entry); else entries[existing] = entry;
+  }
   const promoted = await core.cache.promoteRuntime({
     cacheRoot,
     release: {

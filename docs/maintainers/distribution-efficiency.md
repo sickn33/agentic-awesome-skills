@@ -1,0 +1,60 @@
+# Installer distribution measurements
+
+The installer on `main` retrieves a shallow partial clone, verifies the requested
+release against npm's exact `gitHead`, then materializes the complete canonical
+`skills/` tree with sparse checkout. It copies only the selected skill entries into
+the destination. Git 2.25+ is required. This is an unreleased source change; published
+16.7.0 still performs the previous full temporary checkout.
+
+## Observed storage on the same release
+
+On 2026-09-05, Git 2.50.1 on macOS cloned `v16.7.0` using each retrieval strategy.
+Both resolved to `c91abcfb9c52ac8a7c1292cc0326f459106cde1d`, the npm release's
+published `gitHead`. The [receipt](distribution-efficiency-2026-09-05.json) records
+commands, measurements and comparison scope.
+
+| Observation | Full shallow clone | Partial + sparse clone |
+| --- | ---: | ---: |
+| Materialized regular files | 22,100 | 7,005 |
+| Worktree logical bytes | 283,698,316 | 82,489,568 |
+| Git metadata and object bytes | 54,658,608 | 44,242,352 |
+| One observed elapsed time | 25.294 s | 20.962 s |
+
+Worktree bytes fell by 70.9%; Git storage fell by 19.1%. These are logical storage
+measurements, not wire-byte counts. The timings are a single sequential observation
+with uncontrolled network/cache effects, not a performance guarantee.
+
+All **6,993 canonical entries** were compared between the two checkouts: regular
+file bytes, executable modes and symbolic-link targets matched exactly. Nested
+skills and support files ignored by npm remain available to the installer's existing
+selection, audit and path-safety checks. The shallow root still materializes its
+root-level files under Git's cone-mode rules.
+
+A fresh `npm pack` / install of the candidate also ran a real preview and installation
+against that release, selecting `mcp-builder`, `systematic-debugging` and
+`game-development/2d-games`. The preview left its isolated target absent; all 22
+installed files matched the full checkout byte-for-byte and in file mode. This is
+an isolated distribution check, not a personal host update.
+
+## Preserved contracts and tradeoffs
+
+- The release identity is verified before canonical skill checkout and before any
+  destination mutation. A moved tag or unavailable npm identity still fails closed.
+- Sparse checkout failure stops installation, leaves targets untouched and cleans
+  the temporary source. It does not silently fall back to another release.
+- The full canonical catalog remains available for exact IDs and existing filters.
+  This optimization does not omit inconvenient files from selected skill bundles.
+- Installed skills remain local; subsequent use does not require Git or a network.
+  Initial retrieval, audit and installer preview still need registry/Git access.
+- Plugin distributions and their mirrors remain unchanged. They are independently
+  usable compatibility surfaces, so their committed duplication has not been removed.
+- npm payload size is not reduced by this change. Published 16.7.0 contains
+  7,851 files / 108,540,901 unpacked bytes. New bundle-inventory metadata increases
+  source-package size; do not describe the Git optimization as a smaller npm package.
+- Direct installation has its own ownership manifest and preview. It does not
+  apply an immutable Core plan or share experimental transaction ownership.
+
+Git documents [partial clone and sparse checkout options](https://git-scm.com/docs/git-clone)
+and [cone-mode directory selection](https://git-scm.com/docs/git-sparse-checkout).
+The installer uses the fixed upstream repository, shell-free arguments and the
+existing explicit release/selection controls.

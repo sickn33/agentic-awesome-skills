@@ -161,14 +161,14 @@ function getChangeRecords(projectRoot, baseRef, headRef) {
 }
 
 function getChangedFiles(projectRoot, baseRef, headRef) {
-  const records = getChangeRecords(projectRoot, baseRef, headRef);
-  return [...new Set(records.flatMap((record) => [record.old_path, record.new_path])
-    .filter(Boolean)
-    .map(normalizeRepoPath))];
+  return changedFilesFromRecords(getChangeRecords(projectRoot, baseRef, headRef));
 }
 
 function changedFilesFromRecords(records) {
-  return [...new Set(records.flatMap((record) => [record.old_path, record.new_path])
+  // A copy reads its origin without changing it. Renames still modify both
+  // paths, and the independent fork-safety classifier retains the raw records.
+  return [...new Set(records.flatMap((record) => record.status === "C"
+    ? [record.new_path] : [record.old_path, record.new_path])
     .filter(Boolean)
     .map(normalizeRepoPath))];
 }
