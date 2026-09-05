@@ -1,5 +1,8 @@
 # MCP Server Best Practices
 
+Modified in AAS on 2026-09-05. Protocol details here refer to the 2025-11-25 baseline;
+check negotiated revisions and installed SDK documentation for other clients.
+
 ## Quick Reference
 
 ### Server Naming
@@ -64,11 +67,11 @@ The name should be general, descriptive of the service being integrated, easy to
 
 ## Response Formats
 
-All tools that return data should support multiple formats:
+Choose the minimal formats the client actually needs; avoid a parameter when one format suffices:
 
 ### JSON Format (`response_format="json"`)
 - Machine-readable structured data
-- Include all available fields and metadata
+- Include only authorized fields needed by the task
 - Consistent field names and types
 - Use for programmatic processing
 
@@ -145,7 +148,7 @@ Example pagination response:
 | **Deployment** | Local | Remote |
 | **Clients** | Single | Multiple |
 | **Complexity** | Low | Medium |
-| **Real-time** | No | Yes |
+| **Notifications** | Supported | Supported |
 
 ---
 
@@ -154,7 +157,7 @@ Example pagination response:
 ### Authentication and Authorization
 
 **OAuth 2.1**:
-- Use secure OAuth 2.1 with certificates from recognized authorities
+- Follow the negotiated MCP authorization specification and provider flow; TLS certificates do not establish token audience or user permissions
 - Validate access tokens before processing requests
 - Only accept tokens specifically intended for your server
 
@@ -220,7 +223,7 @@ try {
     isError: true,
     content: [{
       type: "text",
-      text: `Error: ${error.message}. Try using filter='active_only' to reduce results.`
+      text: "Operation failed. Check the permitted inputs or retry according to the documented policy."
     }]
   };
 }

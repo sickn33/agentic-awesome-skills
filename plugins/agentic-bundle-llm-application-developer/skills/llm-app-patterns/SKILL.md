@@ -1,6 +1,6 @@
 ---
 name: llm-app-patterns
-description: Production-ready patterns for building LLM applications, inspired by [Dify](https://github.com/langgenius/dify) and industry best practices.
+description: Architecture and integration sketches for LLM applications, with explicit retrieval, tool, privacy and verification boundaries.
 metadata:
   aas-risk: critical
   aas-source: community
@@ -9,7 +9,7 @@ metadata:
 
 # 🤖 LLM Application Patterns
 
-> Production-ready patterns for building LLM applications, inspired by [Dify](https://github.com/langgenius/dify) and industry best practices.
+> Architecture and integration sketches for LLM applications, with explicit retrieval, tool, privacy and verification boundaries.
 
 ## When to Use This Skill
 
@@ -27,7 +27,7 @@ Use this skill when:
 
 ### Overview
 
-RAG (Retrieval-Augmented Generation) grounds LLM responses in your data.
+RAG supplies retrieved data to a model; it does not guarantee factual grounding. Enforce tenant/document authorization before retrieval and before returning citations, and treat document instructions as untrusted content.
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
@@ -59,7 +59,7 @@ class ChunkingStrategy:
     # Document-aware (respects structure)
     DOCUMENT_AWARE = "document_aware"  # Headers, lists, etc.
 
-# Recommended settings
+# Illustrative starting settings; measure against the corpus and tokenizer
 CHUNK_CONFIG = {
     "chunk_size": 512,       # tokens
     "chunk_overlap": 50,     # token overlap between chunks
@@ -94,24 +94,10 @@ VECTOR_DB_OPTIONS = {
     }
 }
 
-# Embedding model selection
-EMBEDDING_MODELS = {
-    "openai/text-embedding-3-small": {
-        "dimensions": 1536,
-        "cost": "$0.02/1M tokens",
-        "quality": "Good for most use cases"
-    },
-    "openai/text-embedding-3-large": {
-        "dimensions": 3072,
-        "cost": "$0.13/1M tokens",
-        "quality": "Best for complex queries"
-    },
-    "local/bge-large": {
-        "dimensions": 1024,
-        "cost": "Free (compute only)",
-        "quality": "Comparable to OpenAI small"
-    }
-}
+# Select an embedding model using the actual corpus, language, vector dimensions,
+# provider terms and current pricing. Store the model/revision with the index;
+# changing dimensions or embedding space requires compatible re-indexing.
+# No fixed model price or universal quality ranking is implied by this example.
 ```
 
 ### 1.3 Retrieval Strategies
@@ -137,7 +123,7 @@ def hybrid_search(query: str, top_k: int = 5, alpha: float = 0.5):
     keyword_results = bm25_search(query)
 
     # Reciprocal Rank Fusion
-    return rrf_merge(semantic_results, keyword_results, alpha)
+    return rrf_merge(semantic_results, keyword_results, alpha)[:top_k]
 
 # Multi-query retrieval
 def multi_query_retrieval(query: str):
@@ -197,13 +183,13 @@ def generate_with_rag(question: str):
 ### 2.1 ReAct Pattern (Reasoning + Acting)
 
 ```
-Thought: I need to search for information about X
+Decision: Search for information about X
 Action: search("X")
 Observation: [search results]
-Thought: Based on the results, I should...
+Decision: Perform the required calculation
 Action: calculate(...)
 Observation: [calculation result]
-Thought: I now have enough information
+Decision: Answer using the observed results
 Action: final_answer("The answer is...")
 ```
 
@@ -215,11 +201,11 @@ Available tools:
 {tools_description}
 
 Use this format:
-Thought: [your reasoning about what to do next]
+Decision: [brief action summary, not hidden reasoning]
 Action: [tool_name(arguments)]
 Observation: [tool result - this will be filled in]
-... (repeat Thought/Action/Observation as needed)
-Thought: I have enough information to answer
+... (repeat Decision/Action/Observation as needed)
+Decision: The available evidence supports a final response
 Final Answer: [your final response]
 
 Question: {question}
@@ -289,14 +275,20 @@ class FunctionCallingAgent:
     def run(self, question: str) -> str:
         messages = [{"role": "user", "content": question}]
 
-        while True:
+        remaining_tool_calls = 32
+        for _ in range(10):
             response = self.llm.chat(
                 messages=messages,
                 tools=TOOLS,
                 tool_choice="auto"
             )
 
+            # Provider adapter must preserve the assistant message and tool-call IDs.
+            messages.append(response.to_message())
             if response.tool_calls:
+                if len(response.tool_calls) > remaining_tool_calls:
+                    raise RuntimeError("Tool-call budget exhausted")
+                remaining_tool_calls -= len(response.tool_calls)
                 for tool_call in response.tool_calls:
                     result = self._execute_tool(
                         tool_call.name,
@@ -309,6 +301,7 @@ class FunctionCallingAgent:
                     })
             else:
                 return response.content
+        raise RuntimeError("Agent iteration budget exhausted")
 ```
 
 ### 2.3 Plan-and-Execute Pattern
@@ -327,19 +320,19 @@ class PlanAndExecuteAgent:
         # Returns: ["Step 1: ...", "Step 2: ...", ...]
 
         results = []
-        for step in plan:
-            # Execute each step
+        pending = list(plan)
+        for _ in range(20):
+            if not pending:
+                break
+            step = pending.pop(0)
             result = self.executor.execute(step, context=results)
             results.append(result)
-
-            # Check if replan needed
             if self._needs_replan(task, results):
-                new_plan = self.planner.replan(
-                    task,
-                    completed=results,
-                    remaining=plan[len(results):]
-                )
-                plan = new_plan
+                # Replace the actual remaining queue; rebinding a for-loop iterable
+                # would leave that loop executing the old plan.
+                pending = list(self.planner.replan(task, completed=results, remaining=pending))
+        if pending:
+            raise RuntimeError("Plan execution budget exhausted")
 
         # Synthesize final answer
         return self.synthesizer.summarize(task, results)
@@ -448,8 +441,15 @@ class PromptRegistry:
 
     def ab_test(self, name: str, user_id: str) -> str:
         """Return variant based on user bucket"""
-        variants = self.db.get_all_versions(name)
-        bucket = hash(user_id) % len(variants)
+        # The adapter returns the frozen, ordered variants for this experiment,
+        # not every prompt version ever created. Include an experiment salt.
+        import hashlib
+        experiment = self.db.get_active_experiment(name)
+        variants = experiment["variants"]
+        if not variants:
+            raise ValueError("Experiment has no variants")
+        key = f"{experiment['id']}:{user_id}".encode("utf-8")
+        bucket = int.from_bytes(hashlib.sha256(key).digest()[:8], "big") % len(variants)
         return variants[bucket]
 
     def record_outcome(self, prompt_id: str, outcome: dict):
@@ -466,6 +466,8 @@ class PromptChain:
     """
 
     def __init__(self, steps: list[dict]):
+        if not steps:
+            raise ValueError("Prompt chain requires at least one step")
         self.steps = steps
 
     def run(self, initial_input: str) -> dict:
@@ -478,7 +480,8 @@ class PromptChain:
 
             # Parse output if needed
             if step.get("parser"):
-                output = step"parser"
+                parse_output = step["parser"]
+                output = parse_output(output)
 
             context[step["output_key"]] = output
             results.append({
@@ -556,10 +559,10 @@ class LLMLogger:
             "request_id": request_id,
             "timestamp": datetime.now().isoformat(),
             "model": data["model"],
-            "prompt": data["prompt"][:500],  # Truncate for storage
+            # Raw prompt omitted: truncation is not redaction.
             "prompt_tokens": data["prompt_tokens"],
             "temperature": data.get("temperature", 1.0),
-            "user_id": data.get("user_id"),
+            # User identifiers require an explicit, scoped privacy policy.
         }
         logging.info(f"LLM_REQUEST: {json.dumps(log_entry)}")
 
@@ -644,31 +647,34 @@ class LLMEvaluator:
 
 ```python
 import hashlib
-from functools import lru_cache
+import json
 
 class LLMCache:
     def __init__(self, redis_client, ttl_seconds=3600):
         self.redis = redis_client
         self.ttl = ttl_seconds
 
-    def _cache_key(self, prompt: str, model: str, **kwargs) -> str:
+    def _cache_key(self, prompt: str, model: str, scope: dict, **kwargs) -> str:
         """Generate deterministic cache key"""
-        content = f"{model}:{prompt}:{json.dumps(kwargs, sort_keys=True)}"
+        content = json.dumps({"model": model, "prompt": prompt, "scope": scope, "parameters": kwargs}, sort_keys=True)
         return hashlib.sha256(content.encode()).hexdigest()
 
-    def get_or_generate(self, prompt: str, model: str, **kwargs) -> str:
-        key = self._cache_key(prompt, model, **kwargs)
+    def get_or_generate(self, prompt: str, model: str, scope: dict, cache_allowed=False, **kwargs) -> str:
+        # scope is server-derived tenant/authorization, corpus and prompt revision.
+        if not scope:
+            raise ValueError("Explicit cache scope is required")
+        key = self._cache_key(prompt, model, scope, **kwargs)
 
         # Check cache
-        cached = self.redis.get(key)
-        if cached:
+        cached = self.redis.get(key) if cache_allowed else None
+        if cached is not None:
             return cached.decode()
 
         # Generate
         response = llm.generate(prompt, model=model, **kwargs)
 
-        # Cache (only cache deterministic outputs)
-        if kwargs.get("temperature", 1.0) == 0:
+        # Temperature zero is not a determinism or authorization guarantee.
+        if cache_allowed:
             self.redis.setex(key, self.ttl, response)
 
         return response
@@ -678,16 +684,18 @@ class LLMCache:
 
 ```python
 import time
-from tenacity import retry, wait_exponential, stop_after_attempt
+from tenacity import retry, retry_if_exception, wait_exponential, stop_after_attempt
 
 class RateLimiter:
     def __init__(self, requests_per_minute: int):
+        if type(requests_per_minute) is not int or requests_per_minute < 1:
+            raise ValueError("Positive request limit required")
         self.rpm = requests_per_minute
         self.timestamps = []
 
     def acquire(self):
         """Wait if rate limit would be exceeded"""
-        now = time.time()
+        now = time.monotonic()
 
         # Remove old timestamps
         self.timestamps = [t for t in self.timestamps if now - t < 60]
@@ -696,12 +704,15 @@ class RateLimiter:
             sleep_time = 60 - (now - self.timestamps[0])
             time.sleep(sleep_time)
 
-        self.timestamps.append(time.time())
+        self.timestamps.append(time.monotonic())
 
 # Retry with exponential backoff
 @retry(
     wait=wait_exponential(multiplier=1, min=4, max=60),
-    stop=stop_after_attempt(5)
+    stop=stop_after_attempt(5),
+    retry=retry_if_exception(lambda error: isinstance(error, RateLimitError)
+        or (isinstance(error, APIError) and getattr(error, "status_code", 0) >= 500)),
+    reraise=True,
 )
 def call_llm_with_retry(prompt: str) -> str:
     try:
@@ -711,7 +722,7 @@ def call_llm_with_retry(prompt: str) -> str:
     except APIError as e:
         if e.status_code >= 500:
             raise  # Retry server errors
-        raise  # Don't retry client errors
+        raise  # The explicit retry predicate rejects non-retryable client errors
 ```
 
 ### 5.3 Fallback Strategy
@@ -729,15 +740,15 @@ class LLMWithFallback:
             try:
                 return llm.generate(prompt, model=model, **kwargs)
             except (RateLimitError, APIError) as e:
-                logging.warning(f"Model {model} failed: {e}")
+                logging.warning("Approved model failed: %s", type(e).__name__)
                 continue
 
         raise AllModelsFailedError("All models exhausted")
 
 # Usage
 llm_client = LLMWithFallback(
-    primary="gpt-4-turbo",
-    fallbacks=["gpt-3.5-turbo", "claude-3-sonnet"]
+    primary=config.primary_model,
+    fallbacks=config.approved_fallback_models
 )
 ```
 
@@ -756,6 +767,14 @@ llm_client = LLMWithFallback(
 
 ---
 
+## Inputs, worked example and verification
+
+Record provider/SDK versions, authorized data and tools, request/response schemas, latency/cost budgets and the expected task outcome. All code above is an integration sketch: `llm`, database, parser and provider-response adapters are project-owned and must be implemented explicitly. Never execute model-provided Python, expressions or fuzzy tool names; dispatch only exact registered tools after schema and authorization checks. Enforce per-call deadlines as well as loop limits.
+
+Example: a planner first queues steps A and B, then after A replaces the remaining work with C. The executor must run A then C, never stale B. A parser step must apply the parser to the actual prior output. Two tenants with the same prompt must produce different cache keys, and cache reads/writes require an explicit reuse policy. These are concrete regression assertions; successful mocks still do not prove live provider behavior.
+
+The limiter sketch is single-threaded and process-local. A distributed deployment needs a shared atomic limit and deadlines. Retry only retry-safe operations, honoring provider retry guidance; a timeout after a side effect is not evidence that nothing happened. See [Tenacity retry predicates](https://tenacity.readthedocs.io/en/latest/).
+
 ## Resources
 
 - [Dify Platform](https://github.com/langgenius/dify)
@@ -764,6 +783,9 @@ llm_client = LLMWithFallback(
 - [Anthropic Cookbook](https://github.com/anthropics/anthropic-cookbook)
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- A retrieved source list does not prove each answer claim is supported; verify claim-to-source evidence and abstention behavior.
+- Prompt text and JSON-shaped output are not authorization boundaries. Enforce permissions in the application.
+- Provider failover can change output quality, tool schemas, cost and data residency; only use pre-approved compatible fallbacks.
+- Caching must respect tenant access, data/prompt revisions and deletion policy; temperature zero does not make output deterministic.
+- Model/SDK examples are not a complete service, benchmark or production-readiness certificate.

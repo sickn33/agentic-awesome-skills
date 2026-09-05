@@ -1,10 +1,17 @@
 ---
 name: code-refactoring-tech-debt
-description: "You are a technical debt expert specializing in identifying, quantifying, and prioritizing technical debt in software projects. Analyze the codebase to uncover debt, assess its impact, and create acti"
+description: "Identify technical debt from actual code and change history, estimate its impact, and prioritize bounded improvements with explicit assumptions."
 risk: safe
 source: community
 date_added: "2026-02-27"
 ---
+
+## Compatibility and maintenance
+
+Primary editorial path for this compatibility group. The full instructions and support files remain local so existing installations
+continue to work offline. This is one shared procedure, not an additional capability.
+Preserve the callable ID when an existing manifest or client configuration uses it.
+Modified in AAS on 2026-09-05; original metadata and license notices are retained.
 
 # Technical Debt Analysis and Remediation
 
@@ -24,7 +31,11 @@ You are a technical debt expert specializing in identifying, quantifying, and pr
 The user needs a comprehensive technical debt analysis to understand what's slowing down development, increasing bugs, and creating maintenance challenges. Focus on practical, measurable improvements with clear ROI.
 
 ## Requirements
-$ARGUMENTS
+Inspect the current repository, hotspots and real change/incident history. The numbers,
+thresholds, staffing and timelines below are hypothetical planning examples, not
+measurements, promised returns or mandatory quality gates. Report missing cost/usage
+inputs as unknown; never fill them with fabricated telemetry. Review-only scope does
+not authorize broad refactors, policy changes or deployment.
 
 ## Instructions
 
@@ -171,7 +182,7 @@ debt_trends = {
     "2024_Q1": {"score": 750, "items": 125},
     "2024_Q2": {"score": 820, "items": 142},
     "2024_Q3": {"score": 890, "items": 156},
-    "growth_rate": "18% quarterly",
+    "growth_rate": "18.7% across Q1 to Q3 in this hypothetical series",
     "projection": "1200 by 2025_Q1 without intervention"
 }
 ```
@@ -186,17 +197,17 @@ Week 1-2:
 1. Extract duplicate validation logic to shared module
    Effort: 8 hours
    Savings: 20 hours/month
-   ROI: 250% in first month
+   Illustrative net time ROI: (20 - 8) / 8 = 150% in first month
 
 2. Add error monitoring to payment service
    Effort: 4 hours
    Savings: 15 hours/month debugging
-   ROI: 375% in first month
+   Illustrative net time ROI: (15 - 4) / 4 = 275% in first month
 
 3. Automate deployment script
    Effort: 12 hours
    Savings: 2 hours/deployment × 20 deploys/month
-   ROI: 333% in first month
+   Illustrative net time ROI: (40 - 12) / 12 = 233% in first month
 ```
 
 **Medium-Term Improvements (Month 1-3)**
@@ -214,7 +225,7 @@ Week 1-2:
    - Migrate to hooks
    - Fix breaking changes
    Effort: 80 hours  
-   Benefits: Performance +30%, Better DX
+   Benefits: measure compatibility and actual performance; no assumed uplift
    ROI: Positive after 3 months
 ```
 
@@ -225,7 +236,7 @@ Week 1-2:
    - Create domain models
    - Establish clear boundaries
    Effort: 200 hours
-   Benefits: 50% reduction in coupling
+   Benefits: assess actual coupling after a scoped change
    ROI: Positive after 6 months
 
 2. Comprehensive Test Suite
@@ -233,7 +244,7 @@ Week 1-2:
    - Integration: 60% coverage
    - E2E: Critical paths
    Effort: 300 hours
-   Benefits: 70% reduction in bugs
+   Benefits: measure escaped defects; no guaranteed reduction
    ROI: Positive after 4 months
 ```
 

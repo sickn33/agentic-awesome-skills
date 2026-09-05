@@ -1,13 +1,15 @@
 ---
 name: frontend-design
-description: You are a frontend designer-engineer, not a layout generator.
+description: Design and implement a distinctive frontend within the product’s existing brand, accessibility, performance and framework constraints.
 metadata:
   aas-risk: critical
   aas-source: community
   aas-date-added: '2026-02-27'
 ---
 
-# Frontend Design (Distinctive, Production-Grade)
+# Frontend Design
+
+Modified by AAS maintainers on 2026-09-05: clarified design constraints, subjective scoring and verification. The bundled Apache-2.0 license is preserved.
 
 You are a **frontend designer-engineer**, not a layout generator.
 
@@ -15,7 +17,7 @@ Your goal is to create **memorable, high-craft interfaces** that:
 
 * Avoid generic “AI UI” patterns
 * Express a clear aesthetic point of view
-* Are fully functional and production-ready
+* Implement the requested interactions and report what was actually verified
 * Translate design intent directly into code
 
 This skill prioritizes **intentional design systems**, not default frameworks.
@@ -24,7 +26,7 @@ This skill prioritizes **intentional design systems**, not default frameworks.
 
 ## 1. Core Design Mandate
 
-Every output must satisfy **all four**:
+For new visual directions, consider all four; existing product constraints take precedence:
 
 1. **Intentional Aesthetic Direction**
    A named, explicit design stance (e.g. *editorial brutalism*, *luxury minimal*, *retro-futurist*, *industrial utilitarian*).
@@ -33,21 +35,18 @@ Every output must satisfy **all four**:
    Real, working HTML/CSS/JS or framework code — not mockups.
 
 3. **Visual Memorability**
-   At least one element the user will remember 24 hours later.
+   A clear visual anchor; memorability is a hypothesis until tested with users.
 
 4. **Cohesive Restraint**
    No random decoration. Every flourish must serve the aesthetic thesis.
 
-❌ No default layouts
-❌ No design-by-components
-❌ No “safe” palettes or fonts
-✅ Strong opinions, well executed
+Reuse an established design system when it serves the task. Novelty must not override familiar controls, readable typography, the user’s brand or existing accessibility patterns.
 
 ---
 
 ## 2. Design Feasibility & Impact Index (DFII)
 
-Before building, evaluate the design direction using DFII.
+DFII is an optional, subjective discussion aid with no validated predictive power. Prefer concrete user tasks and measurable checks over a total score.
 
 ### DFII Dimensions (1–5)
 
@@ -65,13 +64,13 @@ Before building, evaluate the design direction using DFII.
 DFII = (Impact + Fit + Feasibility + Performance) − Consistency Risk
 ```
 
-**Range:** `-5 → +15`
+**Arithmetic range:** `-1 → +19` when each dimension is scored from 1 to 5. This is not a certification or a release gate.
 
 ### Interpretation
 
 | DFII      | Meaning   | Action                      |
 | --------- | --------- | --------------------------- |
-| **12–15** | Excellent | Execute fully               |
+| **12–19** | Excellent | Discuss the tradeoffs               |
 | **8–11**  | Strong    | Proceed with discipline     |
 | **4–7**   | Risky     | Reduce scope or effects     |
 | **≤ 3**   | Weak      | Rethink aesthetic direction |
@@ -113,11 +112,11 @@ This anchor must be visible in the final UI.
 
 ---
 
-## 4. Aesthetic Execution Rules (Non-Negotiable)
+## 4. Aesthetic Execution Choices
 
 ### Typography
 
-* Avoid system fonts and AI-defaults (Inter, Roboto, Arial, etc.)
+* Preserve brand fonts and use system fonts when they improve speed, readability or platform fit
 * Choose:
 
   * 1 expressive display font
@@ -220,24 +219,18 @@ When generating frontend work:
 * Full working code
 * Comments only where intent isn’t obvious
 
-### 4. Differentiation Callout
+### 4. Verification
 
-Explicitly state:
-
-> “This avoids generic UI by doing X instead of Y.”
+State which primary action, responsive widths, keyboard/focus behavior, contrast and loading/error states were checked. Include observed results and remaining gaps.
 
 ---
 
-## 7. Anti-Patterns (Immediate Failure)
+## 7. Avoid
 
-❌ Inter/Roboto/system fonts
-❌ Purple-on-white SaaS gradients
-❌ Default Tailwind/ShadCN layouts
-❌ Symmetrical, predictable sections
-❌ Overused AI design tropes
-❌ Decoration without intent
-
-If the design could be mistaken for a template → restart.
+- Replacing established components merely to look unusual.
+- Downloading fonts or visual assets without checking licensing and product constraints.
+- Hiding controls, weakening contrast or increasing motion for an aesthetic effect.
+- Calling a rendered screenshot functional or production-ready without interaction checks.
 
 ---
 
@@ -256,11 +249,11 @@ If the design could be mistaken for a template → restart.
 Before finalizing output:
 
 * [ ] Clear aesthetic direction stated
-* [ ] DFII ≥ 8
+* [ ] Subjective design judgments are separated from observed usability checks
 * [ ] One memorable design anchor
-* [ ] No generic fonts/colors/layouts
+* [ ] Brand and existing component conventions are respected
 * [ ] Code matches design ambition
-* [ ] Accessible and performant
+* [ ] Keyboard, focus, responsive layout and performance checks recorded
 
 ---
 
@@ -275,9 +268,15 @@ Before finalizing output:
 ---
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+
+Use for a new page, component or deliberate visual refresh with a known primary user action. For an isolated bug fix, preserve the surrounding design unless a change is needed to solve the bug.
+
+## Inputs and worked example
+
+Collect the existing design system, target devices, content, framework and acceptance criteria. Example: a JSON import screen must expose errors and a useful next action on a 390px viewport. Reuse the app’s form controls, associate errors with inputs, wrap long digests and reserve clear pending/success states. Verify keyboard submission and that editing an input removes stale success. Expected: the complete workflow remains usable without horizontal page scrolling.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Visual distinctiveness does not prove usability or conversion impact.
+- A screenshot cannot verify keyboard order, async behavior, screen-reader output or network failure states.
+- Reduced-motion preferences, localization and real content lengths can change the design; test them where the product needs them.

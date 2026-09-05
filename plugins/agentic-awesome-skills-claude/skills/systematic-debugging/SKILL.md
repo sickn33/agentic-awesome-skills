@@ -12,7 +12,7 @@ date_added: "2026-02-27"
 
 Random fixes waste time and create new bugs. Quick patches mask underlying issues.
 
-**Core principle:** ALWAYS find root cause before attempting fixes. Symptom fixes are failure.
+**Core principle:** Investigate before guessing and separate a verified repair from a temporary mitigation. During an incident, an authorized rollback or containment action may restore service while root-cause work continues.
 
 **Violating the letter of this process is violating the spirit of debugging.**
 
@@ -22,7 +22,7 @@ Random fixes waste time and create new bugs. Quick patches mask underlying issue
 NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 ```
 
-If you haven't completed Phase 1, you cannot propose fixes.
+Start with the observable failure and the smallest useful evidence check. Label any emergency mitigation explicitly and preserve evidence for the later root-cause investigation.
 
 ## When to Use
 Use for ANY technical issue:
@@ -78,8 +78,8 @@ You MUST complete each phase before proceeding to the next.
    **BEFORE proposing fixes, add diagnostic instrumentation:**
    ```
    For EACH component boundary:
-     - Log what data enters component
-     - Log what data exits component
+     - Record allowed field names, sizes, statuses and correlation IDs
+     - Redact secrets and private payloads before logging
      - Verify environment/config propagation
      - Check state at each layer
 
@@ -90,24 +90,18 @@ You MUST complete each phase before proceeding to the next.
 
    **Example (multi-layer system):**
    ```bash
-   # Layer 1: Workflow
-   echo "=== Secrets available in workflow: ==="
-   echo "IDENTITY: ${IDENTITY:+SET}${IDENTITY:-UNSET}"
+   # In each relevant process, report presence only; never dump secret values.
+   if [ -n "${IDENTITY:-}" ]; then
+     echo 'IDENTITY is set'
+   else
+     echo 'IDENTITY is absent or empty'
+   fi
 
-   # Layer 2: Build script
-   echo "=== Env vars in build script: ==="
-   env | grep IDENTITY || echo "IDENTITY not in environment"
-
-   # Layer 3: Signing script
-   echo "=== Keychain state: ==="
-   security list-keychains
-   security find-identity -v
-
-   # Layer 4: Actual signing
-   codesign --sign "$IDENTITY" --verbose=4 "$APP"
+   # Read-only validation of an already-built artifact, when available.
+   codesign --verify --verbose=2 "$APP"
    ```
 
-   **This reveals:** Which layer fails (secrets → workflow ✓, workflow → build ✗)
+   **Interpretation:** Compare presence checks at the actual workflow/build boundaries. Artifact verification does not itself prove that the correct signing identity propagated.
 
 5. **Trace Data Flow**
 
@@ -178,7 +172,7 @@ You MUST complete each phase before proceeding to the next.
    - Automated test if possible
    - One-off test script if no framework
    - MUST have before fixing
-   - Use the `superpowers:test-driven-development` skill for writing proper failing tests
+   - Use `test-driven-development` for a focused behavioral regression when appropriate
 
 2. **Implement Single Fix**
    - Address the root cause identified
@@ -212,7 +206,7 @@ You MUST complete each phase before proceeding to the next.
 
    **Discuss with your human partner before attempting more fixes**
 
-   This is NOT a failed hypothesis - this is a wrong architecture.
+   Repeated failures are evidence to reassess assumptions and coupling; they do not prove that the architecture is wrong.
 
 ## Red Flags - STOP and Follow Process
 
@@ -275,7 +269,7 @@ If systematic investigation reveals issue is truly environmental, timing-depende
 3. Implement appropriate handling (retry, timeout, error message)
 4. Add monitoring/logging for future investigation
 
-**But:** 95% of "no root cause" cases are incomplete investigation.
+State the remaining uncertainty and the evidence that would distinguish an environmental failure from an implementation defect.
 
 ## Supporting Techniques
 
@@ -286,18 +280,20 @@ These techniques are part of systematic debugging and available in this director
 - **`condition-based-waiting.md`** - Replace arbitrary timeouts with condition polling
 
 **Related skills:**
-- **superpowers:test-driven-development** - For creating failing test case (Phase 4, Step 1)
-- **superpowers:verification-before-completion** - Verify fix worked before claiming success
+- **test-driven-development** - Focused behavioral regression
+- Use the current repository’s verification commands before claiming success
 
-## Real-World Impact
+## Worked example and expected result
 
-From debugging sessions:
-- Systematic approach: 15-30 minutes to fix
-- Random fixes approach: 2-3 hours of thrashing
-- First-time fix rate: 95% vs 40%
-- New bugs introduced: Near zero vs common
+Input: a build succeeds locally but fails in CI because a required identity is absent in the build subprocess. Record only whether it is set at each boundary, inspect how environment variables are forwarded, and change that propagation once. Re-run the failing build and validate the artifact separately. Expected: the subprocess receives the required configuration and the original failure disappears; logs contain no credential value.
+
+## Inputs and prerequisites
+
+A reproducible command or observed failure, exact revision/runtime, recent changes and access to an authorized test environment. The bundled historical case notes illustrate the technique; their reported counts are not fresh measurements or guarantees for this project.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Temporary mitigation and root-cause repair are different outcomes; record both when an incident requires immediate containment.
+- Logging can expose secrets or personal paths. Use allowlisted summaries and inspect captured artifacts before sharing.
+- The polluter helper runs the project’s test command and can execute project code; use an isolated fixture/checkout and verify the runner accepts a file argument.
+- The waiting examples require domain adapters and cannot make every race impossible. Reproduce the actual timeout/error path.

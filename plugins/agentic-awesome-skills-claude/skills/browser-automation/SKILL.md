@@ -1,9 +1,6 @@
 ---
 name: browser-automation
-description: Browser automation powers web testing, scraping, and AI agent
-  interactions. The difference between a flaky script and a reliable system
-  comes down to understanding selectors, waiting strategies, and anti-detection
-  patterns.
+description: Build reliable browser checks using observed UI state, semantic locators, bounded waits, isolated test data and explicit outcome verification.
 risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
@@ -11,27 +8,18 @@ date_added: 2026-02-27
 
 # Browser Automation
 
-Browser automation powers web testing, scraping, and AI agent interactions.
-The difference between a flaky script and a reliable system comes down to
-understanding selectors, waiting strategies, and anti-detection patterns.
+Use the browser tool already selected by the user or installed in the project. Playwright, Puppeteer and Selenium have different integrations; choose from actual requirements rather than unsupported success-rate claims. Modified by AAS maintainers on 2026-09-05: removed unverified comparisons and bypass defaults, clarified waiting and evidence limits.
 
-This skill covers Playwright (recommended) and Puppeteer, with patterns for
-testing, scraping, and agentic browser control. Key insight: Playwright won
-the framework war. Unless you need Puppeteer's stealth ecosystem or are
-Chrome-only, Playwright is the better choice in 2025.
-
-Critical distinction: Testing automation (predictable apps you control) vs
-scraping/agent automation (unpredictable sites that fight back). Different
-problems, different solutions.
+Separate tests of applications you control from interaction with an existing authenticated browser. Do not replace the latter with a fresh unauthenticated session or extract credentials to make an automation test work.
 
 ## Principles
 
 - Use user-facing locators (getByRole, getByText) over CSS/XPath
-- Never add manual waits - Playwright's auto-wait handles it
-- Each test/task should be fully isolated with fresh context
+- Prefer observable assertions and bounded event waits; fixed delays do not establish readiness
+- Isolate automated test state; preserve the user-selected authenticated context for interactive tasks
 - Screenshots and traces are your debugging lifeline
 - Headless for CI, headed for debugging
-- Anti-detection is cat-and-mouse - stay current or get blocked
+- Treat access denials, CAPTCHAs and locked desktops as explicit boundaries; use an authorized API or user interaction when needed
 
 ## Capabilities
 
@@ -54,22 +42,9 @@ problems, different solutions.
 
 ## Tooling
 
-### Frameworks
+### Framework choice
 
-- Playwright - When: Default choice - cross-browser, auto-waiting, best DX Note: 96% success rate, 4.5s avg execution, Microsoft-backed
-- Puppeteer - When: Chrome-only, need stealth plugins, existing codebase Note: 75% success rate at scale, but best stealth ecosystem
-- Selenium - When: Legacy systems, specific language bindings Note: Slower, more verbose, but widest browser support
-
-### Stealth_tools
-
-- puppeteer-extra-plugin-stealth - When: Need to bypass bot detection with Puppeteer Note: Gold standard for anti-detection
-- playwright-extra - When: Stealth plugins for Playwright Note: Port of puppeteer-extra ecosystem
-- undetected-chromedriver - When: Selenium anti-detection Note: Dynamic bypass of detection
-
-### Cloud_browsers
-
-- Browserbase - When: Managed headless infrastructure Note: Built-in stealth mode, session management
-- BrowserStack - When: Cross-browser testing at scale Note: Real devices, CI integration
+Use the existing runner when it can exercise the required browser and environment. Compare supported browsers, fixtures, accessibility locators, diagnostics and deployment constraints. This skill provides no measured framework success-rate benchmark and does not require stealth plugins or disabled browser sandboxing.
 
 ## Patterns
 
@@ -108,6 +83,8 @@ test('user can remove item from cart', async ({ page }) => {
 """
 
 ## Shared Authentication Pattern
+
+Use a dedicated authorized test account. Storage-state files contain reusable credentials: keep them out of Git/public artifacts, restrict access and expire them. Shared authentication does not isolate backend mutations between tests.
 """
 // Save auth state once, reuse across tests
 // setup.ts
@@ -165,11 +142,11 @@ Priority order:
 // By role - THE BEST CHOICE
 await page.getByRole('button', { name: 'Submit' }).click();
 await page.getByRole('link', { name: 'Sign up' }).click();
-await page.getByRole('heading', { name: 'Dashboard' }).isVisible();
+await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 await page.getByRole('textbox', { name: 'Search' }).fill('query');
 
 // By text content
-await page.getByText('Welcome back').isVisible();
+await expect(page.getByText('Welcome back')).toBeVisible();
 await page.getByText(/Order #\d+/).click();  // Regex supported
 
 // By label (forms)
@@ -256,7 +233,7 @@ await expect(page.getByText('Success!')).toBeVisible();
 
 // Auto-waits for navigation to complete
 await page.goto('/dashboard');
-// Page is ready - no manual wait needed
+// Navigation finished; still assert the application state needed by the next action.
 """
 
 ## When You DO Need to Wait
@@ -280,100 +257,9 @@ await page.getByText('Export CSV').click();
 const download = await downloadPromise;
 """
 
-### Stealth Browser Pattern
+### Access and environment failures
 
-Avoid bot detection for scraping
-
-**When to use**: Scraping sites with anti-bot protection
-
-# STEALTH BROWSER PATTERN:
-
-"""
-Bot detection checks for:
-- navigator.webdriver property
-- Chrome DevTools protocol artifacts
-- Browser fingerprint inconsistencies
-- Behavioral patterns (perfect timing, no mouse movement)
-- Headless indicators
-"""
-
-## Puppeteer Stealth (Best Anti-Detection)
-"""
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-
-puppeteer.use(StealthPlugin());
-
-const browser = await puppeteer.launch({
-  headless: 'new',
-  args: [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-    '--disable-blink-features=AutomationControlled',
-  ],
-});
-
-const page = await browser.newPage();
-
-// Set realistic viewport
-await page.setViewport({ width: 1920, height: 1080 });
-
-// Realistic user agent
-await page.setUserAgent(
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
-  '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-);
-
-// Navigate with human-like behavior
-await page.goto('https://target-site.com', {
-  waitUntil: 'networkidle0',
-});
-"""
-
-## Playwright Stealth
-"""
-import { chromium } from 'playwright-extra';
-import stealth from 'puppeteer-extra-plugin-stealth';
-
-chromium.use(stealth());
-
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({
-  viewport: { width: 1920, height: 1080 },
-  userAgent: 'Mozilla/5.0 ...',
-  locale: 'en-US',
-  timezoneId: 'America/New_York',
-});
-"""
-
-## Human-Like Behavior
-"""
-// Random delays between actions
-const randomDelay = (min: number, max: number) =>
-  new Promise(r => setTimeout(r, Math.random() * (max - min) + min));
-
-await page.goto(url);
-await randomDelay(500, 1500);
-
-// Mouse movement before click
-const button = await page.$('button.submit');
-const box = await button.boundingBox();
-await page.mouse.move(
-  box.x + box.width / 2,
-  box.y + box.height / 2,
-  { steps: 10 }  // Move in steps like a human
-);
-await randomDelay(100, 300);
-await button.click();
-
-// Scroll naturally
-await page.evaluate(() => {
-  window.scrollBy({
-    top: 300 + Math.random() * 200,
-    behavior: 'smooth'
-  });
-});
-"""
+On a CAPTCHA, login challenge, locked device or explicit denial, record the exact condition and request the minimum user action when needed. Do not disable sandboxing, hide automation flags or rotate identities as an automatic recovery step. Continue independent checks whose prerequisites remain available.
 
 ### Error Recovery Pattern
 
@@ -414,16 +300,14 @@ async function scrapeProduct(page: Page, url: string) {
       fullPage: true
     });
 
-    const html = await page.content();
-    await fs.writeFile(`errors/${Date.now()}-page.html`, html);
+    // Capture full HTML only when specifically authorized; it can contain secrets.
 
     console.error({
-      url,
-      error: error.message,
-      currentUrl: page.url(),
+      pathname: new URL(url).pathname,
+      errorType: error instanceof Error ? error.name : 'UnknownError',
     });
 
-    return { success: false, error: error.message };
+    return { success: false, error: 'Product read failed' };
   }
 }
 """
@@ -435,7 +319,8 @@ async function withRetry<T>(
   maxRetries = 3,
   baseDelay = 1000
 ): Promise<T> {
-  let lastError: Error;
+  if (!Number.isInteger(maxRetries) || maxRetries < 1 || maxRetries > 10) throw new Error('Invalid attempt budget');
+  let lastError: unknown;
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
@@ -456,7 +341,11 @@ async function withRetry<T>(
 
 // Usage
 const result = await withRetry(
-  () => scrapeProduct(page, url),
+  async () => {
+    const result = await scrapeProduct(page, url);
+    if (!result.success) throw new Error('Read failed');
+    return result;
+  },
   3,
   2000
 );
@@ -586,17 +475,16 @@ const apiResponses: any[] = [];
 
 page.on('response', async (response) => {
   if (response.url().includes('/api/')) {
-    const data = await response.json().catch(() => null);
-    apiResponses.push({
-      url: response.url(),
+    // Do not accumulate unbounded response bodies or raw query strings.
+    if (apiResponses.length < 100) apiResponses.push({
+      pathname: new URL(response.url()).pathname,
       status: response.status(),
-      data,
     });
   }
 });
 
 await page.goto('/dashboard');
-// apiResponses now contains all API calls
+// This bounded observation is incomplete until the required application event is observed.
 """
 
 ## Sharp Edges
@@ -638,7 +526,7 @@ await page.waitForResponse(resp => resp.url().includes('/api/data'));
 # For animations, wait for element to be stable:
 await page.getByRole('button').click();  # Auto-waits for stable
 
-# NEVER use setTimeout or waitForTimeout in production code
+# Use timers for actual timer behavior/backoff; never use a sleep as evidence that UI state is ready.
 
 ### CSS Selectors Tied to Styling Classes
 
@@ -678,52 +566,6 @@ await page.getByTestId('submit-order').click();
 # 3. getByLabel - matches form labels
 # 4. getByTestId - explicit test contract
 # 5. CSS/XPath - last resort only
-
-### navigator.webdriver Exposes Automation
-
-Severity: HIGH
-
-Situation: Scraping sites with bot detection
-
-Symptoms:
-Immediate 403 errors. CAPTCHA challenges. Empty pages. "Access Denied"
-messages. Works for 1 request, then gets blocked.
-
-Why this breaks:
-By default, headless browsers set navigator.webdriver = true. This is
-the first thing bot detection checks. It's a bright red flag that
-says "I'm automated."
-
-Recommended fix:
-
-# Use stealth plugins:
-
-### Puppeteer Stealth (best option):
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-
-puppeteer.use(StealthPlugin());
-
-const browser = await puppeteer.launch({
-  headless: 'new',
-  args: ['--disable-blink-features=AutomationControlled'],
-});
-
-### Playwright Stealth:
-import { chromium } from 'playwright-extra';
-import stealth from 'puppeteer-extra-plugin-stealth';
-
-chromium.use(stealth());
-
-### Manual (partial):
-await page.evaluateOnNewDocument(() => {
-  Object.defineProperty(navigator, 'webdriver', {
-    get: () => undefined,
-  });
-});
-
-# Note: This is cat-and-mouse. Detection evolves.
-# For serious scraping, consider managed solutions like Browserbase.
 
 ### Tests Share State and Affect Each Other
 
@@ -793,25 +635,21 @@ Recommended fix:
 # Enable traces for failures:
 
 ### playwright.config.ts:
+```typescript
 export default defineConfig({
   use: {
-    trace: 'retain-on-failure',    # Keep trace on failure
-    screenshot: 'only-on-failure', # Screenshot on failure
-    video: 'retain-on-failure',    # Video on failure
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
   outputDir: './test-results',
 });
+```
 
-### View trace locally:
-npx playwright show-trace test-results/path/to/trace.zip
-
-### In CI, upload test-results as artifact:
-# GitHub Actions:
-- uses: actions/upload-artifact@v3
-  if: failure()
-  with:
-    name: playwright-traces
-    path: test-results/
+View a permitted local trace with `npx playwright show-trace test-results/path/to/trace.zip`.
+In CI, use the repository's existing artifact-upload action pinned to a reviewed commit.
+Traces may contain page data, requests and credentials: set access and retention before
+uploading, and use synthetic test data where possible.
 
 # Trace shows:
 # - Timeline of actions
@@ -858,7 +696,7 @@ export default defineConfig({
 npx playwright test --headed
 
 # 2. Slow down to watch
-npx playwright test --headed --slowmo 100
+npx playwright test --debug
 
 # 3. Use trace viewer for CI failures
 npx playwright show-trace trace.zip
@@ -893,33 +731,7 @@ for (const url of urls) {
   // ... scrape ...
 }
 
-# Use rotating proxies:
-const proxies = ['http://proxy1:8080', 'http://proxy2:8080'];
-let proxyIndex = 0;
-
-const getNextProxy = () => proxies[proxyIndex++ % proxies.length];
-
-const context = await browser.newContext({
-  proxy: { server: getNextProxy() },
-});
-
-# Limit concurrent requests:
-import pLimit from 'p-limit';
-const limit = pLimit(3);  // Max 3 concurrent
-
-await Promise.all(
-  urls.map(url => limit(() => scrapePage(url)))
-);
-
-# Rotate user agents:
-const userAgents = [
-  'Mozilla/5.0 (Windows...',
-  'Mozilla/5.0 (Macintosh...',
-];
-
-await page.setExtraHTTPHeaders({
-  'User-Agent': userAgents[Math.floor(Math.random() * userAgents.length)]
-});
+Respect the service’s documented limit and Retry-After guidance. Use bounded concurrency and a maximum retry budget; do not rotate proxies or identities to bypass a denial.
 
 ### New Windows/Popups Not Handled
 
@@ -1057,22 +869,6 @@ Framework-generated selectors are extremely fragile
 
 Message: Using auto-generated selector. These change on every build. Use data-testid instead.
 
-### Puppeteer Without Stealth Plugin
-
-Severity: INFO
-
-Scraping without stealth is easily detected
-
-Message: Using Puppeteer without stealth plugin. Consider puppeteer-extra-plugin-stealth for anti-detection.
-
-### navigator.webdriver Not Hidden
-
-Severity: INFO
-
-navigator.webdriver exposes automation
-
-Message: Launching browser without hiding automation flags. For scraping, add stealth measures.
-
 ### Scraping Loop Without Error Handling
 
 Severity: WARNING
@@ -1097,20 +893,19 @@ Message: Scraping loop without try/catch. One page failure will crash the entire
 Works well with: `agent-tool-builder`, `workflow-automation`, `computer-use-agents`, `test-architect`
 
 ## When to Use
-- User mentions or implies: playwright
-- User mentions or implies: puppeteer
-- User mentions or implies: browser automation
-- User mentions or implies: headless
-- User mentions or implies: web scraping
-- User mentions or implies: e2e test
-- User mentions or implies: end-to-end
-- User mentions or implies: selenium
-- User mentions or implies: chromium
-- User mentions or implies: browser test
-- User mentions or implies: page.click
-- User mentions or implies: locator
+
+Use to verify a real browser workflow, diagnose a UI timing failure or collect explicitly authorized page data. Inspect the current page and available tool APIs before selecting locators or actions.
+
+## Worked example and prerequisites
+
+Input: exporting a reviewed JSON file from a local web app. Have the app running, the intended browser available and a synthetic form value. Observe the export control, register the download event before clicking, inspect the downloaded JSON and confirm that editing the input invalidates the old preview. Expected: one file containing the reviewed value, with no hidden project data or network submission.
+
+Use explicit desktop/mobile viewports and inspect keyboard/focus behavior when the task includes usability. A locked desktop leaves interactive verification pending; unit tests and headless probes are separate evidence.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Auto-waiting checks actionability, not business correctness or successful backend writes.
+- Screenshots, HTML, traces and auth-state files may contain private information; capture only the authorized scope.
+- Retrying a read can be safe; retrying checkout, deletion or sending a message may duplicate a side effect. Verify state before repeating it.
+- Resource blocking and mocked responses change the environment and cannot establish unmodified production behavior.
+- Examples require the project’s imports, runner and fixture routes; no browser, service or account is installed by this skill.

@@ -1,6 +1,6 @@
 ---
 name: content-creator
-description: Professional-grade brand voice analysis, SEO optimization, and platform-specific content frameworks.
+description: Draft and review audience-specific content using supplied brand examples, local text diagnostics, and adaptable channel templates.
 metadata:
   aas-category: marketing
   aas-risk: critical
@@ -10,7 +10,7 @@ metadata:
 
 # Content Creator
 
-Professional-grade brand voice analysis, SEO optimization, and platform-specific content frameworks.
+Draft and review audience-specific content using supplied brand examples, local text diagnostics, and adaptable channel templates.
 
 ## When to Use
 Use this skill when writing blog posts, creating social media content, establishing brand voice, optimizing content for SEO, or planning content calendars.
@@ -18,10 +18,20 @@ Use this skill when writing blog posts, creating social media content, establish
 ## Keywords
 content creation, blog posts, SEO, brand voice, social media, content calendar, marketing content, content strategy, content marketing, brand consistency, content optimization, social media marketing, content planning, blog writing, content frameworks, brand guidelines, social media strategy
 
+## Inputs and boundaries
+
+Obtain the audience, purpose, approved claims and sources, brand examples, channel,
+and desired next action. Reuse supplied constraints; do not invent audience research.
+Python 3 is sufficient for the optional local scripts. Run the examples from this
+skill directory with a permitted UTF-8 input below the working directory (maximum
+1 MiB); paths elsewhere are rejected. The scripts read that file and print diagnostics,
+without calling an analytics service or editing it. Review any private text before
+sharing the output. Drafting does not authorize scheduling, sending or publication.
+
 ## Quick Start
 
 ### For Brand Voice Development
-1. Run `scripts/brand_voice_analyzer.py` on existing content to establish baseline
+1. Run `scripts/brand_voice_analyzer.py` on existing content to record rough lexical features
 2. Review `references/brand_guidelines.md` to select voice attributes
 3. Apply chosen voice consistently across all content
 
@@ -30,7 +40,7 @@ content creation, blog posts, SEO, brand voice, social media, content calendar, 
 2. Research keywords for topic
 3. Write content following template structure
 4. Run `scripts/seo_optimizer.py [file] [primary-keyword]` to optimize
-5. Apply recommendations before publishing
+5. Review suggestions against the audience and actual page before publishing
 
 ### For Social Media Content
 1. Review platform best practices in `references/social_media_optimization.md`
@@ -57,20 +67,20 @@ When creating content for a new brand or client:
 
 3. **Create Voice Sample**
    - Write 3 sample pieces in chosen voice
-   - Test consistency using analyzer
+   - Compare samples manually with approved examples; use the analyzer only for lexical clues
    - Refine based on results
 
 ### Creating SEO-Optimized Blog Posts
 
 1. **Keyword Research**
-   - Identify primary keyword (search volume 500-5000/month)
-   - Find 3-5 secondary keywords
-   - List 10-15 LSI keywords
+   - Identify the reader question and relevant search intent from actual research
+   - Record related questions that the piece needs to answer
+   - Do not invent search volumes or treat word frequency as semantic research
 
 2. **Content Structure**
    - Use blog template from `references/content_frameworks.md`
-   - Include keyword in title, first paragraph, and 2-3 H2s
-   - Aim for 1,500-2,500 words for comprehensive coverage
+   - Use a descriptive title and headings; use the reader's terminology naturally
+   - Use enough detail to answer the question; there is no universal SEO word count
 
 3. **Optimization Check**
    ```bash
@@ -78,7 +88,7 @@ When creating content for a new brand or client:
    ```
 
 4. **Apply SEO Recommendations**
-   - Adjust keyword density to 1-3%
+   - Remove repetition that hurts clarity; do not target a keyword-density percentage
    - Ensure proper heading structure
    - Add internal and external links
    - Optimize meta description
@@ -96,7 +106,7 @@ When creating content for a new brand or client:
 
 3. **Optimization Checklist**
    - Platform-appropriate length
-   - Optimal posting time
+   - Audience-informed posting time to test
    - Correct image dimensions
    - Platform-specific hashtags
    - Engagement elements (polls, questions)
@@ -109,9 +119,9 @@ When creating content for a new brand or client:
    - Identify key campaigns/themes
 
 2. **Weekly Distribution**
-   - Follow 40/25/25/10 content pillar ratio
+   - Choose a mix based on goals, production capacity and observed audience needs
    - Balance platforms throughout week
-   - Align with optimal posting times
+   - Label untested timing assumptions and compare results over a stated period
 
 3. **Batch Creation**
    - Create all weekly content in one session
@@ -121,7 +131,7 @@ When creating content for a new brand or client:
 ## Key Scripts
 
 ### brand_voice_analyzer.py
-Analyzes text content for voice characteristics, readability, and consistency.
+Counts a small English vocabulary and estimates sentence length/readability. It cannot establish authentic brand voice or validate factual claims.
 
 **Usage**: `python scripts/brand_voice_analyzer.py <file> [json|text]`
 
@@ -137,7 +147,7 @@ Analyzes content for SEO optimization and provides actionable recommendations.
 **Usage**: `python scripts/seo_optimizer.py <file> [primary_keyword] [secondary_keywords]`
 
 **Returns**:
-- SEO score (0-100)
+- Descriptive text diagnostics (no ranking or quality score)
 - Keyword density analysis
 - Structure assessment
 - Meta tag suggestions
@@ -162,7 +172,7 @@ Analyzes content for SEO optimization and provides actionable recommendations.
 **references/social_media_optimization.md**
 - Platform-specific optimization
 - Hashtag strategy development
-- Understanding algorithm factors
+- Planning platform-specific checks without assuming ranking algorithms
 - Setting up analytics tracking
 
 ## Best Practices
@@ -179,7 +189,7 @@ Analyzes content for SEO optimization and provides actionable recommendations.
 9. Schedule strategically
 
 ### Quality Indicators
-- SEO score above 75/100
+- Claims supported by sources and the reader's question answered
 - Readability appropriate for audience
 - Consistent brand voice throughout
 - Clear value proposition
@@ -239,14 +249,34 @@ python scripts/brand_voice_analyzer.py content.txt
 # Optimize for SEO
 python scripts/seo_optimizer.py article.md "main keyword"
 
-# Check content against brand guidelines
-grep -f references/brand_guidelines.md content.txt
+# Compare the draft manually with approved brand examples and prohibited claims
 
 # Create monthly calendar
 cp assets/content_calendar_template.md this_month_calendar.md
 ```
 
+## Worked example: one source, two drafts
+
+For an approved release note stating “CSV export is now available”, prepare a short
+help article explaining where export lives and a social draft linking to that article.
+Keep the exact supported formats and limitations from the source. Do not turn the
+claim into “save hours” without measured evidence. Run the local text diagnostics,
+then verify the instructions against the actual product and compare tone with two
+approved posts. Return both drafts, source links, unresolved facts and a proposed
+calendar slot. Expected result: reviewable copy; no posts have been sent.
+
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- The bundled analyzer uses small English word lists and approximate syllables;
+  ties or absent matches do not identify a brand personality. It is not a validated
+  reading assessment and does not support multilingual scoring reliably.
+- The SEO helper inspects simple Markdown patterns, not rendered pages, indexing,
+  search demand, accessibility, ranking, or causality. Character lengths and word
+  counts are observations, not quality thresholds.
+- Templates contain illustrative placeholders, not testimonials, benchmarks or
+  client facts. Confirm rights and approvals for quoted material and images.
+- Channel features change. Check the current native composer and official help for
+  the selected format; use account analytics to test timing instead of universal rules.
+
+Google's [people-first content guidance](https://developers.google.com/search/docs/fundamentals/creating-helpful-content)
+explains why satisfying reader needs matters more than filling a target word count.

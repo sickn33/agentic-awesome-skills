@@ -1,5 +1,8 @@
 # Content Calendar Template - [Month Year]
 
+Times and channel choices are illustrative. Record audience timezone and scheduling
+authorization; this worksheet does not schedule or publish anything.
+
 ## Monthly Goals
 - **Traffic Goal**: 
 - **Lead Generation Goal**: 
@@ -76,11 +79,11 @@
 ### Top Performing Content
 1. **Title/Topic**: 
    - **Metric**: 
-   - **Why it worked**: 
+   - **Observed result and possible explanation (not causal proof)**:
 
 2. **Title/Topic**: 
    - **Metric**: 
-   - **Why it worked**: 
+   - **Observed result and possible explanation (not causal proof)**:
 
 ### Lessons Learned
 - 

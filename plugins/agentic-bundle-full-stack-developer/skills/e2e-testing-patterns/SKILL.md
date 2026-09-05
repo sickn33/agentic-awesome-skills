@@ -32,7 +32,7 @@ Build reliable, fast, and maintainable end-to-end test suites that provide confi
 
 1. Identify critical user journeys and success criteria.
 2. Build stable selectors and test data strategies.
-3. Implement tests with retries, tracing, and isolation.
+3. Implement isolated tests with observable assertions and tracing; diagnose retries rather than counting a retry as an ordinary pass.
 4. Run in CI with parallelization and artifact capture.
 
 ## Safety
@@ -44,7 +44,17 @@ Build reliable, fast, and maintainable end-to-end test suites that provide confi
 
 - `resources/implementation-playbook.md` for detailed E2E patterns and templates.
 
+## Worked example
+
+Input: invalid login sometimes appears successful because the test reads the error before rendering finishes. Use a dedicated fixture account and assert `await expect(page.getByRole('alert')).toContainText('Invalid credentials')`. Run the test without retries and confirm the dashboard remains inaccessible. Expected: the failure state is observed reliably; a delayed error cannot silently pass.
+
+## Inputs and prerequisites
+
+An authorized test URL, isolated accounts/data, the installed browser runner and known success/failure states. The playbook uses project-specific routes and adapters; install only the dependencies your existing suite needs.
+
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- A mocked backend or payment provider proves only the mocked boundary; retain separate real integration checks.
+- Automated accessibility scans miss interaction and assistive-technology problems.
+- Retries, larger timeouts and updated snapshots can hide regressions; preserve first-failure evidence.
+- Browser tooling cannot validate a locked or unavailable interactive environment. Report that gap and continue independent tests.

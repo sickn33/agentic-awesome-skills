@@ -1,5 +1,10 @@
 # MCP Server Evaluation Guide
 
+Modified in AAS on 2026-09-05. This is a bounded fixture evaluation, not proof of
+production reliability. Review source and permissions when needed to establish a
+safe tool list. Tool hints alone do not authorize calls. Delegate only if the user
+has authorized agents; parallel tool reads do not require extra agents.
+
 ## Overview
 
 This document provides guidance on creating comprehensive evaluations for MCP servers. Evaluations test whether LLMs can effectively use your MCP server to answer realistic, complex questions using only the tools provided.
@@ -29,7 +34,7 @@ This document provides guidance on creating comprehensive evaluations for MCP se
 
 ## Purpose of Evaluations
 
-The measure of quality of an MCP server is NOT how well or comprehensively the server implements tools, but how well these implementations (input/output schemas, docstrings/descriptions, functionality) enable LLMs with no other context and access ONLY to the MCP servers to answer realistic and difficult questions.
+One measure of usefulness is how these implementations (input/output schemas, docstrings/descriptions, functionality) enable LLMs with no other context and access ONLY to the MCP servers to answer realistic and difficult questions.
 
 ## Evaluation Overview
 
@@ -58,7 +63,7 @@ Create 10 human-readable questions requiring ONLY READ-ONLY, INDEPENDENT, NON-DE
 
 4. **Questions must require deep exploration**
    - Consider multi-hop questions requiring multiple sub-questions and sequential tool calls
-   - Each step should benefit from information found in previous questions
+   - Each step may use earlier steps in the same question, without depending on other questions
 
 5. **Questions may require extensive paging**
    - May need paging through multiple pages of results
@@ -179,7 +184,7 @@ Read the documentation of the target API to understand:
 - Available endpoints and functionality
 - If ambiguity exists, fetch additional information from the web
 - Parallelize this step AS MUCH AS POSSIBLE
-- Ensure each subagent is ONLY examining documentation from the file system or on the web
+- If agents are authorized, restrict their exploration to the agreed data and permissions
 
 ### Step 2: Tool Inspection
 
@@ -194,7 +199,7 @@ Repeat steps 1 & 2 until you have a good understanding:
 - Iterate multiple times
 - Think about the kinds of tasks you want to create
 - Refine your understanding
-- At NO stage should you READ the code of the MCP server implementation itself
+- Keep answer-solving separate from implementation review, but inspect code when needed for safety and contract verification
 - Use your intuition and understanding to create reasonable, realistic, but VERY challenging tasks
 
 ### Step 4: Read-Only Content Inspection
@@ -203,9 +208,9 @@ After understanding the API and tools, USE the MCP server tools:
 - Inspect content using READ-ONLY and NON-DESTRUCTIVE operations ONLY
 - Goal: identify specific content (e.g., users, channels, messages, projects, tasks) for creating realistic questions
 - Should NOT call any tools that modify state
-- Will NOT read the code of the MCP server implementation itself
-- Parallelize this step with individual sub-agents pursuing independent explorations
-- Ensure each subagent is only performing READ-ONLY, NON-DESTRUCTIVE, and IDEMPOTENT operations
+- Review implementation separately when needed to verify permissions
+- Run independent explorations sequentially, or delegate only with user authorization
+- Keep every exploration within the explicitly reviewed read-only tool allowlist
 - BE CAREFUL: SOME TOOLS may return LOTS OF DATA which would cause you to run out of CONTEXT
 - Make INCREMENTAL, SMALL, AND TARGETED tool calls for exploration
 - In all tool call requests, use the `limit` parameter to limit results (<10)
@@ -259,7 +264,7 @@ This question is good because:
 - Needs to identify which had the most forks before archival
 - Requires examining repository details for the language
 - Answer is a simple, verifiable value
-- Based on historical (closed) data that won't change
+- Based on historical data pinned to a recorded snapshot
 
 **Example 2: Requires understanding context without keyword matching (Project Management MCP)**
 ```xml
@@ -275,7 +280,7 @@ This question is good because:
 - Needs to identify the project lead and their role
 - Requires understanding context from retrospective documents
 - Answer is human-readable and stable
-- Based on completed work (won't change)
+- Based on completed work whose source snapshot must still be pinned
 
 **Example 3: Complex aggregation requiring multiple steps (Issue Tracker MCP)**
 ```xml
@@ -375,228 +380,66 @@ Remember to parallelize solving tasks to avoid running out of context, then accu
 
 ---
 
-# Running Evaluations
+# Running evaluations with the bundled helper
 
-After creating your evaluation file, you can use the provided evaluation harness to test your MCP server.
+Requires Python 3.11+, an isolated environment with `scripts/requirements.txt`, an
+explicit Anthropic model available to the account, and authorization for API cost
+and sharing fixture data with that provider. Pin resolved dependency versions in the
+run receipt. The helper targets MCP Python SDK v1, not every future SDK major.
 
-## Setup
+The model receives the questions, selected tool schemas and returned content. Use
+synthetic or approved data; a read-only API can still disclose sensitive information.
+The report contains questions, answers and model-generated summaries. Review it before
+sharing. Keep credentials out of command-line arguments, tool schemas and fixtures;
+use the existing approved secret mechanism. Never invent or print a provider key.
 
-1. **Install Dependencies**
+First verify the executable or remote endpoint and its permissions. For stdio the
+helper starts the specified process; it is not a sandbox. For HTTP/SSE it connects
+to the given endpoint; use the intended authenticated test service. SSE is retained
+for existing servers, not a universal recommendation for new implementations.
 
-   ```bash
-   pip install -r scripts/requirements.txt
-   ```
-
-   Or install manually:
-   ```bash
-   pip install anthropic mcp
-   ```
-
-2. **Set API Key**
-
-   ```bash
-   export ANTHROPIC_API_KEY=your_api_key_here
-   ```
-
-## Evaluation File Format
-
-Evaluation files use XML format with `<qa_pair>` elements:
-
-```xml
-<evaluation>
-   <qa_pair>
-      <question>Find the project created in Q2 2024 with the highest number of completed tasks. What is the project name?</question>
-      <answer>Website Redesign</answer>
-   </qa_pair>
-   <qa_pair>
-      <question>Search for issues labeled as "bug" that were closed in March 2024. Which user closed the most issues? Provide their username.</question>
-      <answer>sarah_dev</answer>
-   </qa_pair>
-</evaluation>
-```
-
-## Running Evaluations
-
-The evaluation script (`scripts/evaluation.py`) supports three transport types:
-
-**Important:**
-- **stdio transport**: The evaluation script automatically launches and manages the MCP server process for you. Do not run the server manually.
-- **sse/http transports**: You must start the MCP server separately before running the evaluation. The script connects to the already-running server at the specified URL.
-
-### 1. Local STDIO Server
-
-For locally-run MCP servers (script launches the server automatically):
+From the skill directory, after dependencies and credentials are already configured:
 
 ```bash
-python scripts/evaluation.py \
-  -t stdio \
-  -c python \
-  -a my_mcp_server.py \
-  evaluation.xml
+python scripts/evaluation.py evaluation.xml \
+  --model YOUR_APPROVED_MODEL \
+  --allow-tool documents_search \
+  --allow-tool documents_read \
+  --transport stdio --command python --args /absolute/path/to/reviewed_server.py
 ```
 
-With environment variables:
-```bash
-python scripts/evaluation.py \
-  -t stdio \
-  -c python \
-  -a my_mcp_server.py \
-  -e API_KEY=abc123 \
-  -e DEBUG=true \
-  evaluation.xml
-```
+Replace the model, tool names and server path with actual reviewed values. Put the
+positional XML path before `--args`; that option consumes subsequent arguments.
+Use `--transport http --url https://your-authorized-host.example/mcp` for a reviewed
+remote fixture instead of stdio command options. `--output report.md` creates a new
+report and refuses to overwrite an existing file. `--help` lists all options.
 
-### 2. Server-Sent Events (SSE)
+## What the helper verifies
 
-For SSE-based MCP servers (you must start the server first):
+- Parses 1–100 nonempty question/answer pairs from at most 1 MiB of XML using defusedxml.
+- Enumerates paginated tools, rejecting repeated cursors and duplicate names, with
+  limits of 100 pages and 1,000 tools.
+- Exposes only explicitly selected names; checks the whole requested batch before
+  calls. The operator must verify those tools are appropriate read-only operations.
+- Handles every tool call in a response, serializes MCP content/structured content and
+  preserves `isError`. Tool exceptions return a safe error type without a traceback.
+- Bounds each task to 8 model rounds and 32 tool calls, each call to 60 seconds, inputs
+  to 16 KiB and serialized results to 64 KiB. Model requests have a 60-second timeout
+  and no SDK retries. Oversized results produce an explicit error, not partial JSON.
+- Compares the final tagged answer with the expected string. A tool/round limit,
+  missing inventory or malformed fixture fails the run; it is not a clean score.
 
-```bash
-python scripts/evaluation.py \
-  -t sse \
-  -u https://example.com/mcp \
-  -H "Authorization: Bearer token123" \
-  -H "X-Custom-Header: value" \
-  evaluation.xml
-```
+A slow or malicious MCP server can still allocate memory in its SDK before the helper
+checks a result, and remote cancellation is not guaranteed. Run only reviewed servers
+in an appropriate test environment. The helper does not provide a spending ceiling,
+full protocol conformance, sandboxing, model-quality confidence interval or production
+approval. Keep a separate real-client smoke test and negative authorization tests.
 
-### 3. HTTP (Streamable HTTP)
+## Interpreting results
 
-For HTTP-based MCP servers (you must start the server first):
-
-```bash
-python scripts/evaluation.py \
-  -t http \
-  -u https://example.com/mcp \
-  -H "Authorization: Bearer token123" \
-  evaluation.xml
-```
-
-## Command-Line Options
-
-```
-usage: evaluation.py [-h] [-t {stdio,sse,http}] [-m MODEL] [-c COMMAND]
-                     [-a ARGS [ARGS ...]] [-e ENV [ENV ...]] [-u URL]
-                     [-H HEADERS [HEADERS ...]] [-o OUTPUT]
-                     eval_file
-
-positional arguments:
-  eval_file             Path to evaluation XML file
-
-optional arguments:
-  -h, --help            Show help message
-  -t, --transport       Transport type: stdio, sse, or http (default: stdio)
-  -m, --model           Claude model to use (default: claude-3-7-sonnet-20250219)
-  -o, --output          Output file for report (default: print to stdout)
-
-stdio options:
-  -c, --command         Command to run MCP server (e.g., python, node)
-  -a, --args            Arguments for the command (e.g., server.py)
-  -e, --env             Environment variables in KEY=VALUE format
-
-sse/http options:
-  -u, --url             MCP server URL
-  -H, --header          HTTP headers in 'Key: Value' format
-```
-
-## Output
-
-The evaluation script generates a detailed report including:
-
-- **Summary Statistics**:
-  - Accuracy (correct/total)
-  - Average task duration
-  - Average tool calls per task
-  - Total tool calls
-
-- **Per-Task Results**:
-  - Prompt and expected response
-  - Actual response from the agent
-  - Whether the answer was correct (✅/❌)
-  - Duration and tool call details
-  - Agent's summary of its approach
-  - Agent's feedback on the tools
-
-### Save Report to File
-
-```bash
-python scripts/evaluation.py \
-  -t stdio \
-  -c python \
-  -a my_server.py \
-  -o evaluation_report.md \
-  evaluation.xml
-```
-
-## Complete Example Workflow
-
-Here's a complete example of creating and running an evaluation:
-
-1. **Create your evaluation file** (`my_evaluation.xml`):
-
-```xml
-<evaluation>
-   <qa_pair>
-      <question>Find the user who created the most issues in January 2024. What is their username?</question>
-      <answer>alice_developer</answer>
-   </qa_pair>
-   <qa_pair>
-      <question>Among all pull requests merged in Q1 2024, which repository had the highest number? Provide the repository name.</question>
-      <answer>backend-api</answer>
-   </qa_pair>
-   <qa_pair>
-      <question>Find the project that was completed in December 2023 and had the longest duration from start to finish. How many days did it take?</question>
-      <answer>127</answer>
-   </qa_pair>
-</evaluation>
-```
-
-2. **Install dependencies**:
-
-```bash
-pip install -r scripts/requirements.txt
-export ANTHROPIC_API_KEY=your_api_key
-```
-
-3. **Run evaluation**:
-
-```bash
-python scripts/evaluation.py \
-  -t stdio \
-  -c python \
-  -a github_mcp_server.py \
-  -e GITHUB_TOKEN=ghp_xxx \
-  -o github_eval_report.md \
-  my_evaluation.xml
-```
-
-4. **Review the report** in `github_eval_report.md` to:
-   - See which questions passed/failed
-   - Read the agent's feedback on your tools
-   - Identify areas for improvement
-   - Iterate on your MCP server design
-
-## Troubleshooting
-
-### Connection Errors
-
-If you get connection errors:
-- **STDIO**: Verify the command and arguments are correct
-- **SSE/HTTP**: Check the URL is accessible and headers are correct
-- Ensure any required API keys are set in environment variables or headers
-
-### Low Accuracy
-
-If many evaluations fail:
-- Review the agent's feedback for each task
-- Check if tool descriptions are clear and comprehensive
-- Verify input parameters are well-documented
-- Consider whether tools return too much or too little data
-- Ensure error messages are actionable
-
-### Timeout Issues
-
-If tasks are timing out:
-- Use a more capable model (e.g., `claude-3-7-sonnet-20250219`)
-- Check if tools are returning too much data
-- Verify pagination is working correctly
-- Consider simplifying complex questions
+Record exact model, SDK/runtime, server source revision, fixture checksum, selected
+tool names, commands, date and observed outcomes. The included math XML is a synthetic
+parser/arithmetic fixture; it does not exercise a particular external service.
+Match failures may reflect formatting, missing data, tool defects or reasoning errors;
+inspect each before changing answers. Never edit ground truth merely to improve a score.
+A 10-question success is a small observed sample, not proof of general effectiveness.

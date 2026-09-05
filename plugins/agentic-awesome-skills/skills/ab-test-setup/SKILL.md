@@ -1,6 +1,6 @@
 ---
 name: ab-test-setup
-description: "Structured guide for setting up A/B tests with mandatory gates for hypothesis, metrics, and execution readiness."
+description: "Use when designing an A/B or split test: define the hypothesis, control and variants, estimate sample size, verify tracking, and predeclare metrics and stopping rules."
 risk: critical
 source: community
 date_added: "2026-02-27"
@@ -10,11 +10,11 @@ date_added: "2026-02-27"
 
 ## 1️⃣ Purpose & Scope
 
-Ensure every A/B test is **valid, rigorous, and safe** before a single line of code is written.
+Define an experiment that can answer a specific product question, and verify its assumptions before exposing users. This procedure cannot guarantee validity by itself.
 
-- Prevents "peeking"
-- Enforces statistical power
-- Blocks invalid hypotheses
+- Documents the stopping rule
+- Estimates sample needs under stated assumptions
+- Makes the hypothesis and decision criteria reviewable
 
 ---
 
@@ -49,11 +49,7 @@ Before designing variants or metrics, you MUST:
   - Expected direction of effect
   - Minimum Detectable Effect (MDE)
 
-Ask explicitly:
-
-> “Is this the final hypothesis we are committing to for this test?”
-
-**Do NOT proceed until confirmed.**
+Use the hypothesis already agreed in the task. If a launch-critical choice is missing, present the concrete choice for confirmation while continuing independent analysis. Do not repeatedly request approval for a decision already authorized.
 
 ---
 
@@ -115,7 +111,7 @@ Define upfront:
 
 - Baseline rate
 - MDE
-- Significance level (typically 95%)
+- Significance level alpha (often 0.05, corresponding to 95% confidence)
 - Statistical power (typically 80%)
 
 Estimate:
@@ -131,10 +127,10 @@ Estimate:
 
 Before entering the Execution Readiness Gate below, run through this checklist to make "Tracking is verified" mean something concrete:
 
-1. **Event firing:** Trigger each event the primary and secondary metrics depend on (sign-up, add-to-cart, custom event) on staging or a debug page, and confirm it lands in your analytics destination within 30 seconds.
+1. **Event firing:** Trigger each event the primary and secondary metrics depend on (sign-up, add-to-cart, custom event) on staging or a debug page, and confirm it arrives within that pipeline’s documented latency; record the observed delay.
 2. **Variant attribution:** Verify that the variant assignment ID is attached to every fired event — not just the entry event. Use your analytics' raw event view to compare a sample of 5+ events per variant.
-3. **De-duplication:** Confirm that a user reloading the page does not cause double-counted events. If your stack uses client-side de-duping, the variant ID must be part of the dedup key.
-4. **Sample randomization:** Pull the first 100 assignment records from your assignment table; the variant split should be within ±5% of the configured allocation.
+3. **De-duplication:** Confirm that a user reloading the page does not cause double-counted events. Use a stable event/transaction ID and document cross-client/server deduplication; a variant label alone is not a unique event key.
+4. **Sample randomization:** Check sample-ratio mismatch against the configured allocation with a pre-specified statistical check and adequate records. A fixed ±5% band on 100 records is not a valid universal randomization test. Inspect assignment stability, unit independence and missing exposure records.
 5. **Guardrail metric pipeline:** Each guardrail metric defined in §6️⃣ must have a working dashboard or alert by the time the test launches.
 
 If any of the above fails, stop and resolve it before Gate 8.
@@ -191,7 +187,7 @@ When interpreting results:
 | -------------------- | -------------------------------------- |
 | Significant positive | Consider rollout                       |
 | Significant negative | Reject variant, document learning      |
-| Inconclusive         | Consider more traffic or bolder change |
+| Inconclusive         | Report uncertainty; use the pre-specified continuation rule or design a new test |
 | Guardrail failure    | Do not ship, even if primary wins      |
 
 ---
@@ -240,18 +236,54 @@ Explain why and recommend next steps.
 
 ---
 
-## Final Reminder
-
-A/B testing is not about proving ideas right.
-It is about **learning the truth with confidence**.
-
-If you feel tempted to rush, simplify, or “just try it” —
-that is the signal to **slow down and re-check the design**.
-
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+
+Use when a product change has enough eligible traffic for a randomized comparison and a measurable outcome. For low-volume launches or qualitative discovery, consider usability research or descriptive measurement instead of claiming causal lift.
+
+### Sample-size calculation example
+
+For an illustrative binary metric, estimate the per-variant sample for a change
+from 10% to 11% (one percentage point, 10% relative lift), 50/50 allocation,
+two-sided alpha 0.05 and power 0.80. This Python 3 large-sample approximation uses
+[Cohen's proportion effect size](https://www.statsmodels.org/stable/generated/statsmodels.stats.proportion.proportion_effectsize.html):
+
+```python
+from math import asin, ceil, sqrt
+from statistics import NormalDist
+
+baseline, variant = 0.10, 0.11  # illustrative assumptions, not measured data
+alpha, power = 0.05, 0.80
+h = abs(2 * asin(sqrt(variant)) - 2 * asin(sqrt(baseline)))
+z = NormalDist()
+per_variant = ceil(2 * (z.inv_cdf(1 - alpha / 2) + z.inv_cdf(power)) ** 2 / h ** 2)
+print(per_variant)
+```
+
+Expected output: `14745` observations per variant for these assumptions.
+
+This calculation assumes independent units, one binary outcome, a fixed horizon
+and no multiplicity adjustment. It is inappropriate for clustered or repeated
+observations, sequential decisions or continuous revenue metrics. Account for
+eligible traffic, attrition, outcome delay and the sampling unit before turning a
+sample estimate into calendar duration. Equal assumed rates have zero effect size
+and no finite sample for detecting that difference.
+
+## Worked example
+
+```text
+Observation: users abandon a long signup form.
+Change: remove one optional field; unit: account; allocation: 50/50 and stable.
+Primary metric: completed signup / eligible assigned accounts within 24 hours.
+Guardrails: validation failures and support requests.
+Before launch: estimate sample needs from baseline and MDE, verify exposure and
+completion IDs, define analysis window and stopping rule.
+Expected report: counts, absolute/relative effect, interval, data-quality checks,
+guardrail results and a decision with its limits; never just “p < 0.05, ship”.
+```
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Clustered users, spillovers and repeated observations can invalidate independent-sample calculations.
+- Sequential monitoring needs a planned sequential method; fixed-horizon significance does not authorize repeated peeking.
+- A tracking gap or sample-ratio mismatch can invalidate inference despite a favorable primary metric.
+- This skill does not activate flags, publish variants or establish regulatory compliance automatically.

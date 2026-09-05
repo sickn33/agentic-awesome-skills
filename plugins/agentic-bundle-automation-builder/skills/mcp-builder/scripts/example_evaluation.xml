@@ -4,7 +4,7 @@
       <answer>11614.72</answer>
    </qa_pair>
    <qa_pair>
-      <question>A projectile is launched at a 45-degree angle with an initial velocity of 50 m/s. Calculate the total distance (in meters) it has traveled from the launch point after 2 seconds, assuming g=9.8 m/s². Round to 2 decimal places.</question>
+      <question>A projectile is launched at a 45-degree angle with an initial velocity of 50 m/s. Calculate the straight-line displacement magnitude from the launch point (in meters) after 2 seconds, assuming g=9.8 m/s². Round to 2 decimal places.</question>
       <answer>87.25</answer>
    </qa_pair>
    <qa_pair>

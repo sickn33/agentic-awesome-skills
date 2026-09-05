@@ -1,4 +1,9 @@
-# Content Creation Frameworks & Templates
+<!-- Templates are drafting prompts, not authorization to send or publish. -->
+# Content Creation Frameworks
+
+All metrics, quotes, deadlines, ratios, durations and examples below are placeholders.
+Replace them with documented facts or remove them; do not invent scarcity or testimonials.
+Adapt length and channel format to the actual audience and current native composer.
 
 ## Content Types & Templates
 
@@ -282,7 +287,7 @@ What's your biggest challenge with [topic]? Let me know below 👇
 
 -
 #hashtag1 #hashtag2 #hashtag3 #hashtag4 #hashtag5
-[10-30 relevant hashtags total]
+[Use only relevant tags supported by the current composer]
 ```
 
 ### 3. Email Marketing Templates
@@ -359,7 +364,7 @@ P.S. [Reinforce urgency or add bonus]
 
 ### 4. Content Planning Frameworks
 
-#### Content Pillar Strategy
+#### Example Content Pillar Mix (not a benchmark)
 ```
 Pillar 1: Educational (40%)
 - How-to guides
@@ -427,7 +432,7 @@ Introduction (50-100 words)
 
 ## H2: Secondary Keyword Variation 1
 
-[Content with LSI keywords naturally integrated]
+[Content with relevant terminology naturally integrated]
 
 ### H3: Specific subtopic
 - Detail point 1
@@ -438,7 +443,7 @@ Introduction (50-100 words)
 
 [Content continues...]
 
-## H2: Related Questions (FAQ Schema)
+## H2: Related Questions (structured data only if appropriate and supported)
 
 ### Question 1?
 [Concise answer with keyword]
@@ -513,8 +518,8 @@ Original: Blog Post (2000 words)
 
 ### Pre-Publishing Checklist
 - [ ] Keyword research completed
-- [ ] Title under 60 characters
-- [ ] Meta description written (155 chars)
+- [ ] Descriptive title previewed in its destination
+- [ ] Accurate meta description written and previewed
 - [ ] Headers properly structured (H1, H2, H3)
 - [ ] Internal links added (2-3)
 - [ ] Images optimized with alt text

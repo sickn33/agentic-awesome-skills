@@ -1,6 +1,6 @@
 # E2E Testing Patterns Implementation Playbook
 
-This file contains detailed patterns, checklists, and code samples referenced by the skill.
+Integration sketches for an existing test project. Application routes, test-data adapters and installed framework versions must match your repository; examples do not provision accounts or prove a production flow.
 
 ## Core Concepts
 
@@ -16,7 +16,7 @@ This file contains detailed patterns, checklists, and code samples referenced by
 **What NOT to Test with E2E:**
 - Unit-level logic (use unit tests)
 - API contracts (use integration tests)
-- Edge cases (too slow)
+- Pure algorithm edge cases (use unit tests); retain critical failure/recovery paths in E2E
 - Internal implementation details
 
 ### 2. Test Philosophy
@@ -37,7 +37,7 @@ This file contains detailed patterns, checklists, and code samples referenced by
 - Keep tests independent
 - Make tests deterministic
 - Optimize for speed
-- Use data-testid, not CSS selectors
+- Prefer role/label locators; use explicit test IDs when semantic locators are insufficient
 
 ## Playwright Patterns
 
@@ -131,8 +131,7 @@ test('failed login shows error', async ({ page }) => {
     await loginPage.goto();
     await loginPage.login('invalid@example.com', 'wrong');
 
-    const error = await loginPage.getErrorMessage();
-    expect(error).toContain('Invalid credentials');
+    await expect(loginPage.errorMessage).toContainText('Invalid credentials');
 });
 ```
 
@@ -157,15 +156,17 @@ type TestData = {
 export const test = base.extend<TestData>({
     testUser: async ({}, use) => {
         const user = {
-            email: `test-${Date.now()}@example.com`,
+            email: `test-${crypto.randomUUID()}@example.com`,
             password: 'Test123!@#',
             name: 'Test User',
         };
         // Setup: Create user in database
         await createTestUser(user);
-        await use(user);
-        // Teardown: Clean up user
-        await deleteTestUser(user.email);
+        try {
+            await use(user);
+        } finally {
+            await deleteTestUser(user.email);
+        }
     },
 
     adminUser: async ({}, use) => {
@@ -200,7 +201,6 @@ test('user can update profile', async ({ page, testUser }) => {
 await page.waitForTimeout(3000);  // Flaky!
 
 // ✅ Good: Wait for specific conditions
-await page.waitForLoadState('networkidle');
 await page.waitForURL('/dashboard');
 await page.waitForSelector('[data-testid="user-profile"]');
 
@@ -221,7 +221,6 @@ expect(data.users).toHaveLength(10);
 // Wait for multiple conditions
 await Promise.all([
     page.waitForURL('/success'),
-    page.waitForLoadState('networkidle'),
     expect(page.getByText('Payment successful')).toBeVisible(),
 ]);
 ```
@@ -407,27 +406,12 @@ test('button in all states', async ({ page }) => {
 ### Pattern 2: Parallel Testing with Sharding
 
 ```typescript
-// playwright.config.ts
-export default defineConfig({
-    projects: [
-        {
-            name: 'shard-1',
-            use: { ...devices['Desktop Chrome'] },
-            grepInvert: /@slow/,
-            shard: { current: 1, total: 4 },
-        },
-        {
-            name: 'shard-2',
-            use: { ...devices['Desktop Chrome'] },
-            shard: { current: 2, total: 4 },
-        },
-        // ... more shards
-    ],
-});
-
-// Run in CI
+// Keep one browser project configuration; shard the suite at the CLI level.
+// Run these as independent CI jobs against isolated test data:
 // npx playwright test --shard=1/4
 // npx playwright test --shard=2/4
+// npx playwright test --shard=3/4
+// npx playwright test --shard=4/4
 ```
 
 ### Pattern 3: Accessibility Testing
@@ -441,7 +425,6 @@ test('page should not have accessibility violations', async ({ page }) => {
     await page.goto('/');
 
     const accessibilityScanResults = await new AxeBuilder({ page })
-        .exclude('#third-party-widget')
         .analyze();
 
     expect(accessibilityScanResults.violations).toEqual([]);
@@ -460,7 +443,7 @@ test('form is accessible', async ({ page }) => {
 
 ## Best Practices
 
-1. **Use Data Attributes**: `data-testid` or `data-cy` for stable selectors
+1. **Use Semantic Locators**: Role/label first; test IDs for otherwise ambiguous controls
 2. **Avoid Brittle Selectors**: Don't rely on CSS classes or DOM structure
 3. **Test User Behavior**: Click, type, see - not implementation details
 4. **Keep Tests Independent**: Each test should run in isolation
@@ -475,8 +458,9 @@ cy.get('.btn.btn-primary.submit-button').click();
 cy.get('div > form > div:nth-child(2) > input').type('text');
 
 // ✅ Good selectors
-cy.getByRole('button', { name: 'Submit' }).click();
-cy.getByLabel('Email address').type('user@example.com');
+// With @testing-library/cypress configured:
+cy.findByRole('button', { name: 'Submit' }).click();
+cy.findByLabelText('Email address').type('user@example.com');
 cy.get('[data-testid="email-input"]').type('user@example.com');
 ```
 
@@ -521,11 +505,8 @@ test('checkout flow', async ({ page }) => {
 await page.pause();  // Pauses execution, opens inspector
 ```
 
-## Resources
+## Verification and limits
 
-- **references/playwright-best-practices.md**: Playwright-specific patterns
-- **references/cypress-best-practices.md**: Cypress-specific patterns
-- **references/flaky-test-debugging.md**: Debugging unreliable tests
-- **assets/e2e-testing-checklist.md**: What to test with E2E
-- **assets/selector-strategies.md**: Finding reliable selectors
-- **scripts/test-analyzer.ts**: Analyze test flakiness and duration
+Run the targeted flow first with retries disabled, then under the intended CI/browser configuration. A retry pass is still a flake to investigate. Use web-first assertions for visible state; `networkidle` is not proof that the UI is ready. Mocked payment responses verify the UI branch, not Stripe fulfillment. Axe results cover automated rules on the scanned state, not full accessibility; add keyboard, focus and responsive checks. Review traces/screenshots for test credentials before sharing.
+
+See the official [Playwright waiting API](https://playwright.dev/docs/api/class-page#page-wait-for-load-state), [sharding guide](https://playwright.dev/docs/test-sharding), and [Cypress Testing Library commands](https://testing-library.com/docs/cypress-testing-library/intro/). No other reference files or analyzer scripts are bundled with this skill.
