@@ -1,3 +1,11 @@
+# Outcome discovery and clearer selection evidence - 2026-09-05
+
+- Added optional goal-based candidate discovery to catalog and Workbench, with explained term relevance and full-catalog access.
+- Exposed provenance, license, author-declared risk and setup gaps without assigning reliability scores or hiding canonical skill IDs.
+- Connected candidates to the existing comparison and agent-brief workflow, including an explicit action to reuse the discovery goal.
+- Kept Workbench artifact review independent of catalog downloads; discovery downloads public data only when opened. Goals and imported artifacts are never sent.
+- Removed the unshipped usage-history experiment at the user's request. No installation/reuse measurement or collection was added.
+
 # TypeScript 6 migration and configuration checks - 2026-09-05
 
 - Upgraded the compiler to TypeScript 6.0.3, within typescript-eslint's supported range; TypeScript 7 remains outside that range.

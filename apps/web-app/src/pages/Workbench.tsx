@@ -1,6 +1,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { SelectionFeedback } from '../components/SelectionFeedback';
+import OutcomeExplorer from '../components/OutcomeExplorer';
 import { Link } from 'react-router';
 import { releaseFileUrl } from '../utils/catalogRelease';
 import exampleStack from '../../../../docs/examples/workflows/mcp-contract/aas-stack.json';
@@ -430,12 +431,14 @@ export function Workbench(): React.ReactElement {
             <p>Review the exact skills, project profile and proposed changes saved by your agent. Import <code>aas-stack.json</code>, an immutable CLI plan, and optional selection evidence, or explore the recorded example below.</p>
           </div>
           <dl>
-            <div><dt>Privacy</dt><dd>In-memory only</dd></div>
+            <div><dt>Imported artifacts</dt><dd>In-memory only</dd></div>
             <div><dt>Target changes</dt><dd>None</dd></div>
-            <div><dt>Network</dt><dd>Not used</dd></div>
+            <div><dt>Artifact review</dt><dd>No network</dd></div>
           </dl>
         </div>
       </header>
+
+      <OutcomeExplorer />
 
       <section className="workbench-boundary" aria-labelledby="workbench-start-title">
         <h2 id="workbench-start-title">Need a stack to review?</h2>
