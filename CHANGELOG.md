@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- npm skill packages exclude generated Python bytecode and cache directories left by local tests, with a real pack-list regression and preserved source/support files.
 - CLI native filesystem failures now return a bounded AAS error envelope instead of failing error-schema validation and exposing a stack trace.
 
 - Installer retrieval now uses a release-verified partial/sparse checkout of complete canonical skills, reducing temporary worktree bytes by 70.9% in the recorded same-release comparison. Failed retrieval cleans its temporary source and leaves targets unchanged.

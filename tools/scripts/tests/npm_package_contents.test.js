@@ -8,9 +8,9 @@ const packageJson = require(path.resolve(__dirname, "..", "..", "..", "package.j
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 
-function runNpmPackDryRunJson() {
+function runNpmPackDryRunJson(cwd = repoRoot) {
   const result = spawnSync(npmCommand, ["pack", "--dry-run", "--json"], {
-    cwd: repoRoot,
+    cwd,
     encoding: "utf8",
     shell: process.platform === "win32",
     env: { ...process.env, npm_config_cache: path.join(os.tmpdir(), "aas-npm-pack-test-cache") },
@@ -35,6 +35,49 @@ for (const dependency of ["ajv", "sanitize-filename", "yaml"]) {
 
 const packagedEntries = new Map(packOutput[0].files.map((file) => [file.path, file]));
 const packagedFiles = new Set(packagedEntries.keys());
+
+for (const file of packagedFiles) {
+  assert.ok(!file.split("/").includes("__pycache__"), `generated Python cache must not ship: ${file}`);
+  assert.ok(!/\.py[co]$/i.test(file), `generated Python bytecode must not ship: ${file}`);
+}
+
+// Exercise npm's real directory allowlist and nested ignore behavior without
+// writing test debris into canonical skills or relying on local Python caches.
+const cacheFixture = fs.mkdtempSync(path.join(os.tmpdir(), "aas-package-cache-"));
+try {
+  fs.writeFileSync(path.join(cacheFixture, "package.json"), JSON.stringify({
+    name: "aas-package-cache-fixture",
+    version: "1.0.0",
+    files: packageJson.files,
+  }));
+  fs.copyFileSync(path.join(repoRoot, ".gitignore"), path.join(cacheFixture, ".gitignore"));
+  const retained = [
+    "skills/sample/SKILL.md",
+    "skills/sample/scripts/helper.py",
+    "skills/sample/references/example.md",
+    "skills/sample/scripts/native.pyd",
+    "skills/nested/sample/SKILL.md",
+  ];
+  const excluded = [
+    "skills/sample/scripts/__pycache__/helper.cpython-314.pyc",
+    "skills/sample/scripts/__pycache__/cache-metadata.txt",
+    "skills/sample/scripts/helper.pyc",
+    "skills/nested/sample/helper.pyo",
+  ];
+  for (const file of [...retained, ...excluded]) {
+    const absolute = path.join(cacheFixture, file);
+    fs.mkdirSync(path.dirname(absolute), { recursive: true });
+    fs.writeFileSync(absolute, "inert packaging fixture\n");
+  }
+  const before = new Set(runNpmPackDryRunJson(cacheFixture)[0].files.map((file) => file.path));
+  assert.ok(before.has(excluded[0]), "negative control: root ignores alone do not exclude the cache");
+  fs.copyFileSync(path.join(repoRoot, "skills", ".gitignore"), path.join(cacheFixture, "skills", ".gitignore"));
+  const after = new Set(runNpmPackDryRunJson(cacheFixture)[0].files.map((file) => file.path));
+  for (const file of excluded) assert.ok(!after.has(file), `nested package policy must exclude ${file}`);
+  for (const file of retained) assert.ok(after.has(file), `canonical payload must remain available: ${file}`);
+} finally {
+  fs.rmSync(cacheFixture, { recursive: true, force: true });
+}
 
 assert.ok(packagedFiles.has("tools/bin/install.js"), "published package must include tools/bin/install.js");
 assert.ok(packagedFiles.has("tools/bin/aas.js"), "published package must include tools/bin/aas.js");

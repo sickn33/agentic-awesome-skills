@@ -1,3 +1,9 @@
 # Local-only: disabled skills for lean configuration
 # These skills are kept in the repository but disabled locally
 .disabled/
+
+# npm's explicit skills/ inclusion bypasses root ignore rules. Keep generated
+# Python interpreter caches out of both Git additions and skill tarballs.
+__pycache__/
+*.pyc
+*.pyo
