@@ -9,11 +9,12 @@
     "prerender:seo": "node scripts/prerender-routes.js",
     "prebuild": "npm run generate:sitemap",
     "verify:seo": "node scripts/verify-seo-assets.js --require-hosted-url",
-    "build": "tsc && vite build && npm run prerender:seo",
+    "build": "npm run typecheck && vite build && npm run prerender:seo",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.node.json --noEmit"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.3.0",
@@ -53,7 +54,7 @@
     "jsdom": "^30.0.1",
     "postcss": "8.5.25",
     "tailwindcss": "^4.2.0",
-    "typescript": "^5.4.0",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.65.0",
     "vite": "^8.0.16",
     "vitest": "^5.0.0"

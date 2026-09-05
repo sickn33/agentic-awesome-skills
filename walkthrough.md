@@ -1,3 +1,10 @@
+# TypeScript 6 migration and configuration checks - 2026-09-05
+
+- Upgraded the compiler to TypeScript 6.0.3, within typescript-eslint's supported range; TypeScript 7 remains outside that range.
+- Removed deprecated `baseUrl` and made the `@/` alias relative to the configuration file. Explicitly loaded Node types required by the existing tests and build configuration.
+- Added `npm run typecheck` to production builds so Vite and Vitest configuration are checked alongside application sources. Declared the JavaScript refresh plugin's default Vite plugin contract and kept incremental compiler state under ignored node_modules.
+- Preserved strict checks, test assertions, timeouts, and coverage thresholds.
+
 # Web test toolchain migration - 2026-09-05
 
 - Upgraded Vitest and its V8 coverage provider to 5, jsdom to 30, jest-dom to 7, and ESLint globals to 17.
