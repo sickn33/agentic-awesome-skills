@@ -109,7 +109,10 @@
     "skills",
     "skills_index.json",
     "tools/bin",
-    "tools/lib"
+    "tools/lib",
+    "!**/__pycache__/**",
+    "!**/*.pyc",
+    "!**/*.pyo"
   ],
   "keywords": [
     "aas-core",
