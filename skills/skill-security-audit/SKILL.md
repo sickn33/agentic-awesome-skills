@@ -53,6 +53,20 @@ Then provide:
 5. Unanswered questions.
 6. A minimal-permission test plan.
 
+## Examples
+
+### Example 1: A local, read-only Skill
+
+Input: a repository containing only `SKILL.md` and Markdown references, with no scripts, dependencies, credentials, or network instructions.
+
+Report: record the reviewed revision and files, mark command/network/credential capabilities as not observed in scope, note any missing license or provenance evidence, and recommend a disposable-data trial only if the remaining questions are resolved.
+
+### Example 2: An MCP server with a token
+
+Input: a server whose setup reads `API_TOKEN` and whose tools can create or delete records.
+
+Report: trace the token and request destinations, classify the write/delete capability separately from read access, require a least-privilege test account and action-time confirmation, and do not run the server with production credentials during review.
+
 ## Best Practices
 
 - ✅ Prefer implementation and current primary documentation over badges, screenshots, descriptions, or popularity.
