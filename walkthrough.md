@@ -669,3 +669,10 @@ Added the official theme-aware Star History chart and live global-rank badge to 
 ## README project support
 
 Moved [Support the Project](README.md#support-the-project) directly below the opening badges. Added a concise invitation for sponsors, with GitHub Sponsors and Buy Me a Coffee links, a compact banner, and the existing Snyk tooling attribution. Removed monetary targets and contribution calculations.
+
+## Snyk EU Python dependency remediation (2026-09-06)
+
+- Raise slack-gif-creator Pillow minimum to 12.3.0 to exclude the vulnerable 12.2.x series (SNYK-PYTHON-PILLOW-17972377).
+- Require SoupSieve 2.8.4 or newer alongside BeautifulSoup in junta-leiloeiros to exclude CVE-2026-49477.
+- Generated plugin mirrors are validated locally and remain owned by protected canonical synchronization.
+- Validation: repository chain, reference validation and docs security passed; Pillow 12.3.0 GIF creation/reopening and SoupSieve 2.8.4 selector smoke passed. Snyk EU found no security vulnerabilities in either resolved requirements set; junta-leiloeiros retains a certifi MPL-2.0 license-policy finding.
