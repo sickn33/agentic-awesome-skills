@@ -7,6 +7,7 @@ Importado por todos os outros scripts.
 from __future__ import annotations
 
 import os
+import stat
 import shutil
 from pathlib import Path
 from typing import Any, Dict
@@ -23,6 +24,35 @@ EXPORTS_DIR = DATA_DIR / "exports"
 STATIC_DIR = ROOT_DIR / "static"
 DB_PATH = DATA_DIR / "instagram.db"
 
+def protect_state_path(path, *, directory=False):
+    """Repair only owned state paths; never follow links or mutate hard links."""
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+    if path.is_symlink():
+        raise OSError(f"Refusing linked state path: {path}")
+    if directory:
+        path.mkdir(parents=True, exist_ok=True, mode=0o700)
+        # Windows does not support opening directories this way; privacy there
+        # is governed by the user profile ACL, not POSIX permission bits.
+        if os.name == "nt":
+            path.chmod(0o700)
+            return
+        flags |= getattr(os, "O_DIRECTORY", 0)
+    elif not path.exists():
+        return
+    fd = os.open(path, flags)
+    try:
+        info = os.fstat(fd)
+        valid = stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode) and info.st_nlink == 1
+        if not valid:
+            raise OSError(f"Refusing unsafe state path: {path}")
+        if hasattr(os, "fchmod"):
+            os.fchmod(fd, 0o700 if directory else 0o600)
+        else:
+            os.chmod(path, 0o600)
+    finally:
+        os.close(fd)
+
+
 # Tokens and app secrets are stored in the SQLite database. Keep every newly
 # created database, journal, and sidecar private, and migrate legacy state once.
 os.umask(0o077)
@@ -30,14 +60,9 @@ if LEGACY_DATA_DIR.exists() and LEGACY_DATA_DIR != DATA_DIR and not DATA_DIR.exi
     DATA_DIR.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     shutil.move(str(LEGACY_DATA_DIR), str(DATA_DIR))
     print(f"AVISO: dados sensiveis do Instagram migrados para {DATA_DIR}")
-for directory in (DATA_DIR.parent.parent, DATA_DIR.parent, DATA_DIR, EXPORTS_DIR):
-    directory.mkdir(parents=True, exist_ok=True, mode=0o700)
-    try:
-        directory.chmod(0o700)
-    except OSError:
-        pass
-if DB_PATH.exists() and not DB_PATH.is_symlink():
-    DB_PATH.chmod(0o600)
+for directory in (DATA_DIR, EXPORTS_DIR):
+    protect_state_path(directory, directory=True)
+protect_state_path(DB_PATH)
 
 # ── Instagram Graph API ───────────────────────────────────────────────────────
 API_VERSION = "v21.0"
