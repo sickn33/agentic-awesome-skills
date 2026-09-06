@@ -645,3 +645,7 @@ Audited 205 repository Markdown documents outside skill content and generated pl
 ## MCP and CLI pipeline audit — 2026-09-06
 
 Reviewed the supported package-to-plan pipeline and repaired MCP overload correlation, notification responses and invalid envelope handling. Added negative and real-stdio regressions; verification includes the isolated installed-candidate smoke and the existing Core/repository suites. Scope and limits: [pipeline audit](docs/maintainers/mcp-cli-pipeline-audit-2026-09-06.md). No release or host configuration change is included.
+
+## Agent-owned CLI workflow — 2026-09-06
+
+Added a [manifest-to-installation preview](docs/users/aas-core.md#use-the-reviewed-selection), unique verified runtime lookup, and actionable bounded error guidance. Selection and project analysis remain exclusively agent-owned. Verification details are recorded in [the workflow audit](docs/maintainers/agent-owned-cli-workflow-2026-09-06.md). No publication or real host configuration changes.

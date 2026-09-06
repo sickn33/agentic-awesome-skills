@@ -265,17 +265,25 @@ types and denied access return bounded `AAS_CLI_*` filesystem errors; correct th
 path or its permissions and retry. Native exception messages and private paths are
 not copied into the result. This error-handling refinement is available from 16.8.0.
 
-On `main`, `--target` is inferred only when the validated manifest has one target;
-otherwise supply, for example, `--target codex:project`. The runtime version comes
-from the manifest, and its verified catalog must match the manifest's catalog.
-The npm SRI is the `runtime.integrity` returned by the approved MCP configuration;
-cache location and target directory remain explicit. These refinements are available from 16.8.0. Older clients still require the explicit `--target` shown above.
+From 16.8.0, `--target` is inferred only when the validated manifest has one target; otherwise supply, for example, `--target codex:project`. The runtime version comes from the manifest, and its verified catalog must match the manifest's catalog. Cache location and target directory remain explicit.
+
+On unreleased `main`, the CLI can resolve the runtime when exactly one fully verified cached runtime exists for the manifest version. It reads only the explicit cache, never downloads, and rejects ambiguity. Supply `--runtime-integrity` to select an exact runtime when needed; published 16.8.0 still requires it. The npm SRI is the `runtime.integrity` returned by the approved MCP configuration.
 
 `stack audit` is also read-only. It validates all three artifacts independently, resolves the manifest's pinned verified catalog, and reports whether their manifest digests, catalog identities, target, and selected skill IDs remain consistent. A structurally invalid or unverifiable artifact fails closed; a valid but differently bound artifact returns `status: "inconsistent"` with stable reason codes.
 
 Stop after reviewing the plan unless you are deliberately participating in controlled preview development. `stack apply` and `stack recover` remain experimental and require explicit opt-in.
 
 ## Use the reviewed selection
+
+On unreleased `main`, prepare the direct-installer preview from the agent's manifest without copying IDs manually:
+
+```bash
+aas stack install-preview \
+  --manifest /absolute/path/to/aas-stack.json \
+  --destination /absolute/path/to/project/.agents/skills
+```
+
+For PowerShell, add `--shell powershell`. `--destination` is the actual skill directory, not the project root. The command validates the manifest against its verified local catalog (use `--cache-root` for another cached catalog) and returns a shell-quoted command plus executable/argument fields. It reads no project source, chooses no skills, executes nothing, and always prepares `--dry-run`. Empty selections and unknown IDs fail. It does not check release availability: an unpublished source catalog is not proof that the same bytes are available from npm. Run and review the direct installer's preview before authorizing installation. This handoff does not apply a Core plan or alter the experimental apply/recovery boundary.
 
 **Prepare installation preview** in shortlist comparison or Workbench generates a copyable direct-installer command. Enter the actual skill directory and choose bash/zsh or PowerShell. The command preserves the selected IDs and exact catalog release and always includes `--dry-run`. It stays in page memory and is never executed by the browser. Workbench hides preparation while supplied artifacts are invalid or inconsistent; browser checks still do not prove semantic suitability or catalog integrity.
 

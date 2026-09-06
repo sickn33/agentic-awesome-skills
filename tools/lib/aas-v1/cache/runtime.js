@@ -12,6 +12,7 @@ const {
   DIGEST_VERSION,
   RUNTIME_IDENTITY_FILE,
   cacheError,
+  filesystemSafeIntegrityKey,
   parseNpmIntegrity,
   runtimeCachePath,
   validateCacheRoot,
@@ -339,6 +340,33 @@ async function runtimeStatus({ cacheRoot, packageVersion, integrity, closureDige
   }
 }
 
+async function resolveUniqueRuntime({ cacheRoot, packageVersion }) {
+  const directory = path.join(validateCacheRoot(cacheRoot), "runtimes", validatePackageVersion(packageVersion));
+  let entries;
+  try {
+    await assertSafeCacheAncestorChain(directory);
+    entries = await fsp.readdir(directory, { withFileTypes: true });
+  } catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  }
+  if (entries.length > 64) throw cacheError("AAS_RUNTIME_RESOLVER_LIMIT", "runtime cache lookup exceeds 64 entries; provide runtime-integrity");
+  const candidates = [];
+  for (const entry of entries) {
+    if (!entry.isDirectory() || entry.isSymbolicLink()) continue;
+    const match = /^(sha256|sha384|sha512)-([A-Za-z0-9_-]+)$/.exec(entry.name);
+    if (!match) continue;
+    const integrity = `${match[1]}-${Buffer.from(match[2], "base64url").toString("base64")}`;
+    try { parseNpmIntegrity(integrity); } catch { continue; }
+    if (filesystemSafeIntegrityKey(integrity) !== entry.name) continue;
+    // Verify the entire asset closure, never trust a directory name or metadata alone.
+    const status = await runtimeStatus({ cacheRoot, packageVersion, integrity });
+    if (status.status === "verified") candidates.push(status);
+    if (candidates.length > 1) throw cacheError("AAS_RUNTIME_RESOLVER_AMBIGUOUS", "multiple verified runtimes; provide runtime-integrity");
+  }
+  return candidates[0] || null;
+}
+
 async function promoteRuntime({ cacheRoot, release, parsed }) {
   const scanned = runtimeRecords(parsed.entries, release.version);
   const targetPath = runtimeCachePath({ cacheRoot, packageVersion: release.version, integrity: release.integrity });
@@ -428,5 +456,6 @@ module.exports = {
   runtimeMcpPath,
   runtimeRecords,
   runtimeStatus,
+  resolveUniqueRuntime,
   validateRuntimeIdentity,
 };

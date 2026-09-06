@@ -326,11 +326,20 @@ async function main() {
   const validated = parseCliSuccess(runNode(aasBin, ["stack", "validate", "--manifest", manifestPath], { cwd: projectRoot }), "VALIDATE");
   assert.equal(validated.status, "valid");
 
+  const beforeHandoff = { project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) };
+  const handoff = parseCliSuccess(runNode(aasBin, [
+    "stack", "install-preview", "--manifest", manifestPath,
+    "--destination", path.join(projectRoot, ".agents", "skills"),
+  ], { cwd: projectRoot }), "INSTALL_PREVIEW");
+  assert.deepEqual(handoff.selectedSkillIds, manifest.skills.map((skill) => skill.id));
+  assert.equal(handoff.executes, false);
+  assert.equal(handoff.preview.args.at(-1), "--dry-run");
+  assert.deepEqual({ project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) }, beforeHandoff);
+
   const planPath = path.join(workRoot, "plan.json");
   const planned = parseCliSuccess(runNode(aasBin, [
     "stack", "plan", "--manifest", manifestPath,
     "--target-root", projectRoot, "--cache-root", cacheRoot,
-    "--runtime-integrity", runtimeIntegrity,
     "--out", planPath,
     ...previewOutputArgs,
   ], { cwd: projectRoot }), "PLAN");
@@ -489,7 +498,7 @@ async function main() {
     package: { name: metadata.name, version: metadata.version, tarballIntegrity: runtimeIntegrity, tarballSha256: sha256(tarballBytes) },
     selectionDigest: sha256(fs.readFileSync(selectionPath)),
     mcpContractDigest: sha256(stable({ toolNames, templates: ["aas://skills/{id}"] })),
-    lifecycle: { initialized: true, selected: true, composed: true, validated: true, planned: true, doctorReadOnly: true },
+    lifecycle: { initialized: true, selected: true, composed: true, validated: true, planned: true, doctorReadOnly: true, installPreviewPrepared: true, runtimeAutoResolved: true },
     writeGuards: { applyDisabledByDefault: true, recoveryDisabledByDefault: true, targetStateCreated: false },
     mcp: { localStdio: true, readOnlySnapshot: true, nativeAttemptObservation: "notEvaluated" },
     runtimeCache: { integrity: promoted.runtimeIdentity.integrity, closureDigest: promoted.runtimeIdentity.closureDigest },
