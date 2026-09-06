@@ -1,3 +1,11 @@
+# Full Snyk group reconciliation — 2026-09-06
+
+- Exported all 551 analytics rows and read all live project/issue records; distinguished stale CLI snapshots, mirror copies, and current findings.
+- Require fixed qs 6.16.x in Telegram and WhatsApp Node templates, because Express 4 still resolves a vulnerable qs minor line.
+- Set manifest-local Python 3.14 for Shopify and WhatsApp SCM scans; their existing zipp security floor was omitted under Python 3.7.
+- Raise the GIF template setuptools security floor to 83.0.0 for the additional Unicode-handling advisory found in the group inventory.
+- No security findings are suppressed by these changes.
+
 # Snyk contextual file-safety remediation — 2026-09-06
 
 - Reproduced destructive hard-link writes in VideoDB and founder-profile export, incorrect parent-directory chmod in Instagram/NotebookLM, and insecure existing VideoDB file modes before fixing them.
