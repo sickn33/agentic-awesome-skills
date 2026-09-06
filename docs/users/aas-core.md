@@ -330,3 +330,7 @@ Direct file search can find candidate prose, but it leaves the result in the con
 - [Plugins for Claude Code and Codex](plugins.md)
 - [Bundles](bundles.md)
 - [FAQ](faq.md)
+
+### MCP overload and notifications
+
+The stdio queue accepts at most 32 pending frames. A rejected call receives `AAS_MCP_QUEUE_FULL` with its bounded, strictly parsed request ID, so the client can finish that call and retry with fewer simultaneous requests. Notifications have no reply, including on overload; they must not be used for operations that require a confirmed result. Malformed JSON and invalid request envelopes are rejected without reflecting an invalid identifier. See the [JSON-RPC response and notification rules](https://www.jsonrpc.org/specification).

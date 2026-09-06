@@ -144,6 +144,10 @@ Before ANY commit that adds/modifies skills, run the chain:
     > See [`docs/maintainers/ci-drift-fix.md`](../docs/maintainers/ci-drift-fix.md) for details.
     > Protected `main` never receives an automatic direct push. Canonical drift is published through the fixed `automation/canonical-repo-state` PR only when it stays inside the generated-files contract; unmanaged drift fails closed.
 
+### MCP and CLI pipeline checks
+
+Keep overload errors correlated to bounded, strictly parsed request IDs; valid notifications receive no response, including when the queue is full or a handler fails. Reject invalid envelopes without reflecting invalid IDs, and test the burst path through real stdio. Run the focused Core tests and catalog integrity check, then exercise the installed candidate through the current `verification/aas-preview/run-installed-candidate.mjs` runner when changing the published runtime. Packed smoke is not proof of a real Codex/Claude client session or authorization to change host configuration.
+
 ### Specialized plugin updates
 
 Specialized membership comes from `data/specialized-plugin-candidates.json`; installable composition and product copy come from `data/editorial-bundles.json`. These are editorial source inputs. Validate selected IDs against canonical `skills_index.json`, derive the web list and prerender/live-check counts from the source inputs, and test stale-count rejection and complete skill-list access. Keep prose-declared local resources present and byte-identical in generated specialized bundles; the resource regression checks entrypoints, while fenced application examples require semantic review. Exercise documented calculation and chunking fixes with the pure-example regressions. Run bundle generation for validation, then exclude generated plugin folders, marketplaces and bundle docs from the source commit. The protected canonical-sync PR owns those outputs; no release or deployment is implied.

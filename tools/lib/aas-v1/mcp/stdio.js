@@ -16,6 +16,10 @@ function isPlainObject(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
+function isNotification(request) {
+  return request.jsonrpc === "2.0" && typeof request.method === "string" && !Object.hasOwn(request, "id");
+}
+
 function requestLimitError(request) {
   const error = new StrictJsonError("AAS_MCP_LINE_TOO_LARGE");
   // Only attach an ID after strict JSON parsing, and never reflect unbounded data.
@@ -74,11 +78,33 @@ function runStdio(server, options = {}) {
   let pendingRequests = 0;
   let sequence = Promise.resolve();
 
+  function rejectParse(error) {
+    const code = error instanceof StrictJsonError ? error.code : "AAS_MCP_PARSE_FAILED";
+    if (error.notification) return;
+    if (error.requestId !== undefined) {
+      writeJsonLine(output, { jsonrpc: "2.0", id: error.requestId, error: { code: -32602, message: "Request exceeds its byte limit", data: { code } } });
+      return;
+    }
+    writeJsonLine(output, parseErrorResponse(code));
+  }
+
   function enqueue(line) {
     if (pendingRequests >= MAX_PENDING_REQUESTS) {
+      // Rejected requests still need correlation. Parse with the same bounded,
+      // duplicate-key-rejecting parser; never extract IDs from raw text.
+      let request;
+      try { request = parseMcpRequestLine(line); }
+      catch (error) { rejectParse(error); return; }
+      if (isNotification(request)) return;
+      const validId = request.id === null || (typeof request.id === "number" && Number.isFinite(request.id))
+        || (typeof request.id === "string" && request.id.length <= 128);
+      if (request.jsonrpc !== "2.0" || typeof request.method !== "string" || !validId) {
+        writeJsonLine(output, { jsonrpc: "2.0", id: null, error: { code: -32600, message: "Invalid Request" } });
+        return;
+      }
       writeJsonLine(output, {
         jsonrpc: "2.0",
-        id: null,
+        id: request.id,
         error: { code: -32000, message: "Request queue full", data: { code: "AAS_MCP_QUEUE_FULL" } },
       });
       return;
@@ -89,19 +115,17 @@ function runStdio(server, options = {}) {
       try {
         request = parseMcpRequestLine(line);
       } catch (error) {
-        const code = error instanceof StrictJsonError ? error.code : "AAS_MCP_PARSE_FAILED";
-        if (error.notification) return;
-        if (error.requestId !== undefined) {
-          writeJsonLine(output, { jsonrpc: "2.0", id: error.requestId, error: { code: -32602, message: "Request exceeds its byte limit", data: { code } } });
-          return;
-        }
-        writeJsonLine(output, parseErrorResponse(code));
+        rejectParse(error);
         return;
       }
       try {
         const response = await server.handle(request);
         if (response) writeJsonLine(output, response);
       } catch {
+        if (isNotification(request)) {
+          diagnostics.write("AAS MCP notification error (details redacted)\n");
+          return;
+        }
         writeJsonLine(output, {
           jsonrpc: "2.0",
           id: Object.hasOwn(request, "id") ? request.id : null,

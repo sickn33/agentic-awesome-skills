@@ -1,7 +1,7 @@
 "use strict";
 
 const assert = require("node:assert/strict");
-const { spawn } = require("node:child_process");
+const { spawn, spawnSync } = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
 const { PassThrough } = require("node:stream");
@@ -771,7 +771,7 @@ test("stdio counts the newline in the byte boundary and bounds its pending reque
   release();
   await runner.completed();
   const responses = Buffer.concat(chunks).toString("utf8").trim().split("\n").map((line) => JSON.parse(line));
-  assert.equal(responses.filter((entry) => entry.error?.data?.code === "AAS_MCP_QUEUE_FULL").length, 2);
+  assert.deepEqual(responses.filter((entry) => entry.error?.data?.code === "AAS_MCP_QUEUE_FULL").map((entry) => entry.id), [32, 33]);
   assert.equal(responses.filter((entry) => entry.result).length, 32);
 });
 
@@ -802,4 +802,75 @@ test("stdio entrypoint emits protocol-only stdout and survives a malformed line"
   assert.equal(lines[1].error.code, -32700);
   assert.deepEqual(lines[2].result.tools.map((entry) => entry.name), TOOL_NAMES);
   assert.equal(Buffer.concat(stderr).toString("utf8"), "");
+});
+
+
+test("MCP notifications never receive replies and invalid envelopes do not reflect invalid IDs", async () => {
+  const server = await initializedServer();
+  for (const method of ["initialize", "tools/call", "resources/read", "unknown"]) {
+    assert.equal(await server.handle({ jsonrpc: "2.0", method, params: {} }), null);
+  }
+  const invalid = await server.handle({ jsonrpc: "wrong", id: { private: "sentinel" }, method: "ping" });
+  assert.equal(invalid.id, null);
+  assert.equal(invalid.error.code, -32600);
+  const misusedNotification = await server.handle({jsonrpc: "2.0", id: "call", method: "notifications/initialized"});
+  assert.equal(misusedNotification.id, "call");
+  assert.equal(misusedNotification.error.code, -32600);
+  const noMethod = await server.handle({ jsonrpc: "2.0" });
+  assert.equal(noMethod.error.code, -32600);
+});
+
+test("saturated MCP queue suppresses notifications and parses rejected requests safely", async () => {
+  const input = new PassThrough();
+  const output = new PassThrough();
+  const chunks = [];
+  output.on("data", (chunk) => chunks.push(chunk));
+  const runner = runStdio({ handle: async (request) => ({ jsonrpc: "2.0", id: request.id, result: {} }) }, {
+    input, output, diagnostics: new PassThrough(),
+  });
+  const rows = Array.from({ length: 32 }, (_,id) => JSON.stringify({ jsonrpc: "2.0", id, method: "ping" }));
+  rows.push(JSON.stringify({ jsonrpc: "2.0", method: "notifications/cancelled", params: {} }));
+  rows.push(JSON.stringify({ jsonrpc: "2.0", id: "overflow", method: "ping" }));
+  rows.push('{"jsonrpc":"2.0","id":"first","id":"duplicate","method":"ping"}');
+  rows.push(JSON.stringify({ jsonrpc: "2.0", id: "x".repeat(129), method: "ping" }));
+  input.end(rows.join("\n") + "\n");
+  await runner.completed();
+  const replies = Buffer.concat(chunks).toString().trim().split("\n").map(JSON.parse);
+  assert.equal(replies.length, 35);
+  assert.equal(replies.find((reply) => reply.id === "overflow").error.data.code, "AAS_MCP_QUEUE_FULL");
+  assert.equal(replies.filter((reply) => reply.error?.code === -32700).length, 1);
+  assert.equal(replies.filter((reply) => reply.error?.code === -32600).length, 1);
+  assert.ok(replies.every((reply) => typeof reply.id !== "string" || reply.id.length <= 128));
+});
+
+
+test("real stdio overload correlates every call and keeps initialized notifications silent", () => {
+  const rows = [
+    { jsonrpc: "2.0", id: "init", method: "initialize", params: { protocolVersion: core.protocolVersion } },
+    { jsonrpc: "2.0", method: "notifications/initialized" },
+    ...Array.from({ length: 32 }, (_,id) => ({ jsonrpc: "2.0", id, method: "ping" })),
+  ];
+  const result = spawnSync(process.execPath, [path.join(ROOT, "tools/bin/aas-mcp.js")], {
+    input: rows.map((row) => JSON.stringify(row)).join("\n") + "\n",
+    encoding: "utf8", timeout: 15000, maxBuffer: 1024 * 1024,
+  });
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+  const replies = result.stdout.trim().split("\n").map(JSON.parse);
+  assert.equal(replies.length, 33);
+  assert.deepEqual(new Set(replies.map((reply) => reply.id)), new Set(["init", ...Array.from({length:32}, (_,id) => id)]));
+  assert.ok(replies.every((reply) => reply.result || reply.error?.data?.code === "AAS_MCP_QUEUE_FULL"));
+});
+
+test("transport exceptions do not create replies to valid notifications", async () => {
+  const input = new PassThrough();
+  const output = new PassThrough();
+  const diagnostics = new PassThrough();
+  const chunks = [];
+  output.on("data", (chunk) => chunks.push(chunk));
+  const runner = runStdio({ handle: async () => { throw new Error("private sentinel"); } }, {input, output, diagnostics});
+  input.end(JSON.stringify({jsonrpc:"2.0",method:"notifications/cancelled"}) + "\n");
+  await runner.completed();
+  assert.equal(Buffer.concat(chunks).toString(), "");
+  assert.equal(diagnostics.read().toString(), "AAS MCP notification error (details redacted)\n");
 });

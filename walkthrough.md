@@ -641,3 +641,7 @@
 ## Repository documentation consistency — 2026-09-06
 
 Audited 205 repository Markdown documents outside skill content and generated plugin copies for references and commands; cross-checked operational guidance with exact-base implementation. Corrected protected-workflow contradictions, stale translations, update/rollback claims, plugin status and navigation. Added a repeatable regression with explicit historical exceptions. Full scope and limitations: [audit report](docs/maintainers/documentation-consistency-2026-09-06.md). No publication is included.
+
+## MCP and CLI pipeline audit — 2026-09-06
+
+Reviewed the supported package-to-plan pipeline and repaired MCP overload correlation, notification responses and invalid envelope handling. Added negative and real-stdio regressions; verification includes the isolated installed-candidate smoke and the existing Core/repository suites. Scope and limits: [pipeline audit](docs/maintainers/mcp-cli-pipeline-audit-2026-09-06.md). No release or host configuration change is included.

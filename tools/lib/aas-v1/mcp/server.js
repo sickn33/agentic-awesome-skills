@@ -673,14 +673,18 @@ class McpServer {
     const validId = id === null
       || typeof id === "string"
       || (typeof id === "number" && Number.isFinite(id));
-    if (request.jsonrpc !== "2.0" || typeof request.method !== "string") {
-      return hasId ? this.rpcError(id, -32600, "Invalid Request") : null;
-    }
     if (hasId && !validId) return this.rpcError(null, -32600, "Invalid Request");
+    if (request.jsonrpc !== "2.0" || typeof request.method !== "string") {
+      return this.rpcError(hasId ? id : null, -32600, "Invalid Request");
+    }
     if (request.method === "notifications/initialized") {
-      if (!hasId && this.initializeAccepted) this.initialized = true;
+      if (hasId) return this.rpcError(id, -32600, "Invalid Request");
+      if (this.initializeAccepted) this.initialized = true;
       return null;
     }
+    // A valid notification has no response, including unsupported methods and
+    // invalid parameters. Only the initialized notification changes session state.
+    if (!hasId) return null;
     if (request.method === "initialize") return this.initialize(request);
     if (!this.initialized) {
       return hasId ? this.rpcError(id, -32002, "Server not initialized") : null;
