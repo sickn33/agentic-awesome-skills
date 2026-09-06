@@ -661,3 +661,7 @@ The packed preview matrix now includes Windows with PowerShell execution and rea
 ## PowerShell 5.1 and 16.9.0 readiness
 
 The Windows packed verification now repeats the complete installation lifecycle under Windows PowerShell 5.1, alongside PowerShell 7, with version-bound receipts and fail-closed aggregation. The 16.9.0 changelog covers the accumulated agent-owned CLI handoff, MCP fixes and Specialized Plugin refresh. Native Windows app interaction remains outside the observed coverage.
+
+## Atomic CLI JSON input reads — 2026-09-06
+
+CLI JSON inputs are now opened without following leaf symlinks, checked against the pre-open file identity, read through the same descriptor with a fixed byte budget, and rechecked before parsing. Focused regressions replace the file after inspection and grow it past the configured limit; both cases fail closed without changing normal manifest, plan, selection or evidence behavior.

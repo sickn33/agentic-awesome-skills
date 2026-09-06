@@ -106,13 +106,40 @@ function boundedInteger(value, field, minimum, maximum, fallback) {
 
 function readJsonFile(filePath, maximumBytes = 4 * 1024 * 1024) {
   const absolute = path.resolve(filePath);
-  const stat = fs.lstatSync(absolute);
-  if (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1 || stat.size > maximumBytes) {
-    throw cliError("AAS_CLI_JSON_FILE_UNSAFE", "invalidInput", {});
+  const unsafe = () => cliError("AAS_CLI_JSON_FILE_UNSAFE", "invalidInput", {});
+  const prior = fs.lstatSync(absolute);
+  if (!prior.isFile() || prior.isSymbolicLink() || prior.nlink !== 1 || prior.size > maximumBytes) {
+    throw unsafe();
   }
-  const text = fs.readFileSync(absolute, "utf8");
-  scanJson(text, 64);
-  return JSON.parse(text);
+  let descriptor;
+  try {
+    descriptor = fs.openSync(absolute, fs.constants.O_RDONLY | (fs.constants.O_NOFOLLOW || 0));
+    const before = fs.fstatSync(descriptor);
+    if (!before.isFile() || before.nlink !== 1 || before.dev !== prior.dev || before.ino !== prior.ino
+      || before.size !== prior.size || before.size > maximumBytes) throw unsafe();
+    const bytes = Buffer.alloc(before.size);
+    let offset = 0;
+    while (offset < bytes.length) {
+      const count = fs.readSync(descriptor, bytes, offset, bytes.length - offset, offset);
+      if (!count) throw unsafe();
+      offset += count;
+    }
+    const after = fs.fstatSync(descriptor);
+    const current = fs.lstatSync(absolute);
+    if (!after.isFile() || after.nlink !== 1 || after.dev !== before.dev
+      || after.ino !== before.ino || after.size !== before.size
+      || after.mtimeMs !== before.mtimeMs || after.ctimeMs !== before.ctimeMs
+      || !current.isFile() || current.isSymbolicLink() || current.nlink !== 1
+      || current.dev !== before.dev || current.ino !== before.ino || current.size !== before.size) throw unsafe();
+    const text = bytes.toString("utf8");
+    scanJson(text, 64);
+    return JSON.parse(text);
+  } catch (error) {
+    if (error.code === "ELOOP" || (descriptor !== undefined && error.code === "ENOENT")) throw unsafe();
+    throw error;
+  } finally {
+    if (descriptor !== undefined) fs.closeSync(descriptor);
+  }
 }
 
 function writeNewJson(filePath, value, { previewWindowsOutput = false } = {}) {
