@@ -70,6 +70,14 @@ function validateReceipt(receipt) {
   assert.equal(receipt.lifecycle.validated, true);
   assert.equal(receipt.lifecycle.planned, true);
   assert.equal(receipt.lifecycle.doctorReadOnly, true);
+  assert.equal(receipt.lifecycle.installPreviewPrepared, true);
+  assert.equal(receipt.lifecycle.runtimeAutoResolved, true);
+  assert.equal(receipt.installation?.status, "passed");
+  assert.equal(receipt.installation.publicationResolution, "fixture");
+  assert.equal(receipt.installation.installer, "actual-packed-candidate");
+  for (const check of ["dryRunUnchanged", "installedBytesMatch", "repeatPreservesBytes", "staleManagedSkillsRemoved", "unmanagedFilePreserved", "movedReleaseRejected", "symlinkTargetRejected"]) {
+    assert.equal(receipt.installation[check], true, `installation check missing: ${check}`);
+  }
   assert.equal(receipt.writeGuards.applyDisabledByDefault, true);
   assert.equal(receipt.writeGuards.recoveryDisabledByDefault, true);
   assert.equal(receipt.writeGuards.targetStateCreated, false);

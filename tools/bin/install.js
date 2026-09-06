@@ -1238,7 +1238,14 @@ function main() {
     return;
   }
 
-  const targets = opts.auditOnly ? [] : getTargets(opts);
+  let targets;
+  try {
+    targets = opts.auditOnly ? [] : getTargets(opts);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    process.exitCode = 1;
+    return;
+  }
   if (!opts.auditOnly && (!targets.length || (!HOME && !opts.pathArg))) {
     console.error(
       "Could not resolve home directory. Use --path <absolute-path>.",

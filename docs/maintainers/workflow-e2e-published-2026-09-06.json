@@ -1,0 +1,54 @@
+{
+  "client": "Codex desktop MCP connector",
+  "catalogDigest": "sha256-a7db321f2062a10cd9637a711bfbada92a2249fe162b05e9d6e197879125b6cf",
+  "release": "16.8.0",
+  "publishedGitHead": "ac3f70dddf90297e21848cc4902f80435cbeea0e",
+  "dryRunCreatedTarget": false,
+  "installedExactAgentSelection": true,
+  "installedFileDigestsMatchNativeMcp": true,
+  "files": [
+    {
+      "skillId": "nodejs-best-practices",
+      "path": "SKILL.md",
+      "sha256": "sha256-bbe124438b07704e44a5dd4ad80abbb8d52039bbb600fc7a5b5152c64efff930",
+      "size": 8773,
+      "type": "file"
+    },
+    {
+      "skillId": "debugging-strategies",
+      "path": "SKILL.md",
+      "sha256": "sha256-49fb069639aed6df0e1d86629cfa291422cab2911daf9d4c6e29834e3fdac2a9",
+      "size": 1550,
+      "type": "file"
+    },
+    {
+      "skillId": "debugging-strategies",
+      "path": "resources/implementation-playbook.md",
+      "sha256": "sha256-b74622e440ab2ac223d1eaec23ebf02d1ce54dcb8a8d3246b44f9130fda02b86",
+      "size": 11944,
+      "type": "file"
+    },
+    {
+      "skillId": "test-automator",
+      "path": "SKILL.md",
+      "sha256": "sha256-2b7dea7aef254bf90a0fef4f7c60696e0aed7740d23dc9de23f006e0981282a7",
+      "size": 11448,
+      "type": "file"
+    },
+    {
+      "skillId": "security-auditor",
+      "path": "SKILL.md",
+      "sha256": "sha256-01a5687de84be124b8d6c4ecd9e21185ddb31b5293474c60cac9c3f9fce57ca3",
+      "size": 11490,
+      "type": "file"
+    },
+    {
+      "skillId": "ci-cd-and-automation",
+      "path": "SKILL.md",
+      "sha256": "sha256-49edeafcca52ff934be0c9a621dfb1d9218d5df9ddd712199091c366058c24a9",
+      "size": 11983,
+      "type": "file"
+    }
+  ],
+  "releasePublicationPerformed": false
+}

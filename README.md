@@ -119,7 +119,7 @@ Use direct installation when your host does not yet have a native AAS Core adapt
 
 ### From selection to use
 
-On unreleased `main`, `aas stack install-preview --manifest <file> --destination <skill-directory>` prepares a direct-installer dry run from the agent-selected IDs. It does not execute installation or choose skills. See [the manifest handoff](docs/users/aas-core.md#use-the-reviewed-selection).
+On unreleased `main`, `aas stack install-preview --manifest <file> --destination <skill-directory>` prepares a direct-installer dry run from the agent-selected IDs. It does not execute installation or choose skills; destination names must satisfy the installer's filename restrictions. See [the manifest handoff](docs/users/aas-core.md#use-the-reviewed-selection).
 
 1. Describe the project outcome to Codex or Claude with the local AAS MCP configured.
 2. Have the agent compare candidates and read the selected instructions and support files. Preserve the exact IDs in `aas-stack.json` and review their prerequisites.

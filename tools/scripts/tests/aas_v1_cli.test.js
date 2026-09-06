@@ -730,6 +730,13 @@ test("installation handoff preserves the agent selection and only prepares a quo
   const powershell = await execute(["stack", "install-preview", "--manifest", file, "--destination", "C:\\Users\\Nicco's Skills", "--shell", "powershell"]);
   assert.match(powershell.preview.command, /Nicco''s Skills/);
   assert.equal(powershell.preview.executable, "npm.cmd");
+  for (const invalid of ["bad?directory", "bad|directory", "CON", "trailing."]) {
+    await assert.rejects(execute(["stack", "install-preview", "--manifest", file, "--destination", path.join(item.root, invalid)]), { code: "AAS_CLI_INSTALL_DESTINATION_INVALID" });
+    const rejected = spawnSync(process.execPath, [path.join(ROOT, "tools/bin/install.js"), "--path", path.join(item.root, invalid), "--skills", "debugging-strategies", "--dry-run"], { encoding: "utf8" });
+    assert.equal(rejected.status, 1);
+    assert.match(rejected.stderr, /^Error: Unsafe path segment:/);
+    assert.doesNotMatch(rejected.stderr, /\n\s+at /);
+  }
   manifest.skills = [];
   fs.writeFileSync(file, core.canonicalJson(manifest));
   await assert.rejects(execute(argv), { code: "AAS_CLI_SELECTION_EMPTY" });

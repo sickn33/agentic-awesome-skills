@@ -1,5 +1,8 @@
 "use strict";
 
+const path = require("node:path");
+const sanitizeFilename = require("sanitize-filename");
+
 // Text generation only: the caller owns selection and authorizes installation.
 function installationHandoff(manifest, destination, shell = "posix") {
   function invalid(code) {
@@ -14,6 +17,12 @@ function installationHandoff(manifest, destination, shell = "posix") {
     invalid("AAS_CLI_INSTALL_DESTINATION_INVALID");
   }
   if (shell === "powershell" && /["&|<>^%!`$()]/.test(destination)) {
+    invalid("AAS_CLI_INSTALL_DESTINATION_INVALID");
+  }
+  const pathApi = shell === "powershell" ? path.win32 : path;
+  const resolved = pathApi.resolve(destination);
+  const segments = resolved.slice(pathApi.parse(resolved).root.length).split(pathApi.sep).filter(Boolean);
+  if (segments.some((segment) => !sanitizeFilename(segment) || sanitizeFilename(segment) !== segment)) {
     invalid("AAS_CLI_INSTALL_DESTINATION_INVALID");
   }
   const ids = manifest.skills.map((skill) => skill.id);

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict";
+import { verifyInstallation } from "./installation.mjs";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import { createRequire } from "node:module";
@@ -293,7 +294,7 @@ async function main() {
       frameworks: [],
       constraints: [],
     },
-    skillIds: ["ai-agents-architect"],
+    skillIds: ["ai-agents-architect", "debugging-strategies"],
   };
   fs.writeFileSync(selectionPath, `${stable(selection)}\n`, { mode: 0o600 });
   const manifestPath = path.join(workRoot, "aas-stack.json");
@@ -313,7 +314,7 @@ async function main() {
   assert.equal(fs.readFileSync(manifestPath, "utf8"), fs.readFileSync(replayManifestPath, "utf8"), "agent selection replay drifted");
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   assert.equal(manifest.schemaVersion, 2);
-  assert.deepEqual(manifest.skills, [{ id: "ai-agents-architect" }]);
+  assert.deepEqual(manifest.skills, selection.skillIds.map((id) => ({ id })));
   assert.deepEqual(manifest.profile, selection.profile);
 
   const malformedSelectionPath = path.join(workRoot, "malformed-selection.json");
@@ -488,7 +489,10 @@ async function main() {
   const afterMcp = { project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) };
   assert.deepEqual(afterMcp, beforeMcp, "MCP changed persistent project or cache state");
 
+  const installation = verifyInstallation({ packageRoot, workRoot, manifest, snapshotTree });
+
   const receipt = {
+    installation,
     schemaVersion: 1,
     assuranceProfile: "agent-first-preview-1",
     previewQualified: true,

@@ -37,7 +37,8 @@ function receipt(jobId) {
     package: { name: "agentic-awesome-skills", version: "14.6.0", tarballIntegrity: "sha512-test", tarballSha256: "sha256-test" },
     selectionDigest: "sha256-selection",
     mcpContractDigest: "sha256-contract",
-    lifecycle: { initialized: true, selected: true, composed: true, validated: true, planned: true, doctorReadOnly: true },
+    lifecycle: { initialized: true, selected: true, composed: true, validated: true, planned: true, doctorReadOnly: true, installPreviewPrepared: true, runtimeAutoResolved: true },
+    installation: { status: "passed", publicationResolution: "fixture", installer: "actual-packed-candidate", dryRunUnchanged: true, installedBytesMatch: true, repeatPreservesBytes: true, staleManagedSkillsRemoved: true, unmanagedFilePreserved: true, movedReleaseRejected: true, symlinkTargetRejected: true },
     writeGuards: { applyDisabledByDefault: true, recoveryDisabledByDefault: true, targetStateCreated: false },
     mcp: { localStdio: true, readOnlySnapshot: true, nativeAttemptObservation: "notEvaluated" },
     runtimeCache: { integrity: "sha512-test", closureDigest: "sha256-closure" },
@@ -94,4 +95,17 @@ test("preview receipt aggregation rejects an unexpected job identity", (t) => {
   const result = run(item);
   assert.notEqual(result.status, 0);
   assert.equal(fs.existsSync(item.out), false);
+});
+
+test("preview aggregation refuses missing or failed actual installation evidence", (t) => {
+  const item = fixture();
+  t.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  for (const failure of ["missing", "installedBytesMatch", "unmanagedFilePreserved", "symlinkTargetRejected", "movedReleaseRejected"]) {
+    const changed = receipt(jobs[0]);
+    if (failure === "missing") delete changed.installation;
+    else changed.installation[failure] = false;
+    writeJson(item.receipts[0], changed);
+    assert.notEqual(run(item).status, 0, failure);
+    assert.equal(fs.existsSync(item.out), false);
+  }
 });
