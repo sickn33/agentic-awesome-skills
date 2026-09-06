@@ -72,7 +72,7 @@ function runNode(script, args, options = {}) {
 }
 
 function parseCliSuccess(result, label) {
-  if (result.status !== 0 || result.stderr.trim()) fail(`${label}_FAILED`);
+  if (result.status !== 0 || result.stderr.trim()) fail(`${label}_FAILED: ${result.stderr || result.stdout || result.error?.message || result.status}`);
   const value = JSON.parse(result.stdout);
   if (value.ok !== true || value.schemaVersion !== 1) fail(`${label}_ENVELOPE_INVALID`);
   return value;

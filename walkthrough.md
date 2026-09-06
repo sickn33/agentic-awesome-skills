@@ -653,3 +653,7 @@ Added a [manifest-to-installation preview](docs/users/aas-core.md#use-the-review
 ## Complete CLI handoff verification — 2026-09-06
 
 Exercised native Codex MCP selection through an actual published-release installation, checked installed file digests, and extended candidate tests through real copying, repetition, pruning and negative paths. Fixed inconsistent destination validation and the direct installer's unhandled path error. See [the end-to-end report](docs/maintainers/workflow-e2e-verification-2026-09-06.md). No publication or real MCP configuration changes.
+
+## Windows and PowerShell workflow verification
+
+The packed preview matrix now includes Windows with PowerShell execution and real Git against an isolated local candidate release fixture. Linux and Windows receipts are both required; a missing Windows receipt fails aggregation. Publication and real host configuration are outside this check.

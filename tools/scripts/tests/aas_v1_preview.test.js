@@ -6,7 +6,7 @@ const { spawnSync } = require("node:child_process");
 const test = require("node:test");
 
 const aggregator = path.resolve(__dirname, "../../../verification/aas-preview/aggregate.mjs");
-const jobs = ["linux-node-22"];
+const jobs = ["linux-node-22", "windows-node-22"];
 const notEvaluated = [
   "native-network-and-filesystem-attempt-observation",
   "transactional-crash-and-race-certification",
@@ -33,12 +33,12 @@ function receipt(jobId) {
     previewQualified: true,
     certifiedV1: false,
     jobId,
-    runtime: { node: { "22": "v22.23.1" }[major], platform: { linux: "linux" }[platform], architecture: "x64" },
+    runtime: { node: { "22": "v22.23.1" }[major], platform: { linux: "linux", windows: "win32" }[platform], architecture: "x64" },
     package: { name: "agentic-awesome-skills", version: "14.6.0", tarballIntegrity: "sha512-test", tarballSha256: "sha256-test" },
     selectionDigest: "sha256-selection",
     mcpContractDigest: "sha256-contract",
     lifecycle: { initialized: true, selected: true, composed: true, validated: true, planned: true, doctorReadOnly: true, installPreviewPrepared: true, runtimeAutoResolved: true },
-    installation: { status: "passed", publicationResolution: "fixture", installer: "actual-packed-candidate", dryRunUnchanged: true, installedBytesMatch: true, repeatPreservesBytes: true, staleManagedSkillsRemoved: true, unmanagedFilePreserved: true, movedReleaseRejected: true, symlinkTargetRejected: true },
+    installation: { shell: platform === "windows" ? "powershell" : "posix", status: "passed", publicationResolution: "fixture", installer: "actual-packed-candidate", dryRunUnchanged: true, installedBytesMatch: true, repeatPreservesBytes: true, staleManagedSkillsRemoved: true, unmanagedFilePreserved: true, movedReleaseRejected: true, symlinkTargetRejected: true },
     writeGuards: { applyDisabledByDefault: true, recoveryDisabledByDefault: true, targetStateCreated: false },
     mcp: { localStdio: true, readOnlySnapshot: true, nativeAttemptObservation: "notEvaluated" },
     runtimeCache: { integrity: "sha512-test", closureDigest: "sha256-closure" },
@@ -81,7 +81,7 @@ test("preview receipt aggregation requires the supported packed smoke and a pass
   const aggregate = JSON.parse(fs.readFileSync(item.out, "utf8"));
   assert.equal(aggregate.previewQualified, true);
   assert.equal(aggregate.certifiedV1, false);
-  assert.equal(aggregate.jobs.length, 1);
+  assert.equal(aggregate.jobs.length, 2);
   assert.equal(aggregate.selectionDigest, "sha256-selection");
   assert.deepEqual(aggregate.notEvaluated, notEvaluated);
 });
@@ -108,4 +108,24 @@ test("preview aggregation refuses missing or failed actual installation evidence
     assert.notEqual(run(item).status, 0, failure);
     assert.equal(fs.existsSync(item.out), false);
   }
+});
+
+
+test("preview aggregation rejects a missing Windows receipt", (t) => {
+  const item = fixture();
+  t.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  item.receipts.pop();
+  assert.notEqual(run(item).status, 0);
+  assert.equal(fs.existsSync(item.out), false);
+});
+
+
+test("preview aggregation rejects Windows evidence from a POSIX shell", (t) => {
+  const item = fixture();
+  t.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const changed = receipt("windows-node-22");
+  changed.installation.shell = "posix";
+  writeJson(item.receipts[1], changed);
+  assert.notEqual(run(item).status, 0);
+  assert.equal(fs.existsSync(item.out), false);
 });

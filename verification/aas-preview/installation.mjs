@@ -2,11 +2,12 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { pathToFileURL } from 'node:url';
 
 // Exercise the installed candidate's real CLI and copier before publication.
 // Only external npm/Git resolution is a fixture, never the installer itself.
 export function verifyInstallation({ packageRoot, workRoot, manifest, snapshotTree }) {
-  if (process.platform === 'win32') return { status: 'notEvaluated', reason: 'POSIX command fixture' };
+  const windows = process.platform === 'win32';
   const root = path.join(workRoot, 'installation-roundtrip');
   const bin = path.join(root, 'bin');
   const target = path.join(root, "Nicco's skills");
@@ -14,11 +15,44 @@ export function verifyInstallation({ packageRoot, workRoot, manifest, snapshotTr
   fs.mkdirSync(bin, { recursive: true });
   fs.writeFileSync(manifestPath, JSON.stringify(manifest));
   const ids = manifest.skills.map(({ id }) => id);
-  const head = '1234567890123456789012345678901234567890';
+  let head = '1234567890123456789012345678901234567890';
+  // Windows uses real Git against a disposable local release. This avoids
+  // pretending a POSIX executable shim proves Windows process behavior.
+  const source = path.join(root, 'release-source');
+  if (windows) {
+    fs.mkdirSync(source);
+    const git = (args) => {
+      const result = spawnSync('git', ['-C', source, ...args], { encoding: 'utf8', timeout: 60000 });
+      assert.equal(result.status, 0, result.stderr);
+      return result.stdout.trim();
+    };
+    git(['init', '--initial-branch=main']);
+    git(['config', 'core.autocrlf', 'false']);
+    git(['config', 'user.name', 'AAS test fixture']);
+    git(['config', 'user.email', 'fixture@example.invalid']);
+    for (const id of ids) fs.cpSync(path.join(packageRoot, 'skills', id), path.join(source, 'skills', id), { recursive: true });
+    git(['add', 'skills']);
+    git(['commit', '-m', 'Local candidate release fixture']);
+    git(['tag', 'v' + manifest.catalog.version]);
+    head = git(['rev-parse', 'HEAD']);
+  }
   const env = { ...process.env, PATH: `${bin}${path.delimiter}${process.env.PATH || ''}`,
     AAS_FIXTURE_PACKAGE: packageRoot, AAS_FIXTURE_IDS: JSON.stringify(ids),
     AAS_FIXTURE_VERSION: manifest.catalog.version, AAS_FIXTURE_HEAD: head };
-  const writeBin = (name, body) => fs.writeFileSync(path.join(bin, name), `#!${process.execPath}\n${body}`, { mode: 0o700 });
+  if (windows) {
+    for (const key of Object.keys(env)) if (key !== 'PATH' && key.toUpperCase() === 'PATH') delete env[key];
+    env.GIT_CONFIG_COUNT = '2';
+    env.GIT_CONFIG_KEY_0 = `url.${pathToFileURL(source).href}.insteadOf`;
+    env.GIT_CONFIG_VALUE_0 = 'https://github.com/sickn33/agentic-awesome-skills.git';
+    env.GIT_CONFIG_KEY_1 = 'core.autocrlf';
+    env.GIT_CONFIG_VALUE_1 = 'false';
+    env.npm_execpath = path.join(bin, 'npm-cli.js');
+  }
+  const writeBin = (name, body) => {
+    const file = path.join(bin, windows ? 'npm-cli.js' : name);
+    fs.writeFileSync(file, `#!${process.execPath}\n${body}`, { mode: 0o700 });
+    if (windows) fs.writeFileSync(path.join(bin, 'npm.cmd'), `@"${process.execPath}" "${file}" %*\r\n`);
+  };
   writeBin('npm', `
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
@@ -27,14 +61,14 @@ const args = process.argv.slice(2);
 if (args[0] === 'view') {
   assert.equal(args[1], 'agentic-awesome-skills@' + process.env.AAS_FIXTURE_VERSION);
   assert.equal(args[2], 'gitHead');
-  process.stdout.write(JSON.stringify(process.env.AAS_FIXTURE_HEAD));
+  process.stdout.write(JSON.stringify(process.platform === 'win32' && process.env.AAS_FIXTURE_CLONED_HEAD ? process.env.AAS_FIXTURE_CLONED_HEAD : process.env.AAS_FIXTURE_HEAD));
 } else {
   assert.deepEqual(args.slice(0, 6), ['exec', '--yes', '--ignore-scripts', '--package=agentic-awesome-skills@' + process.env.AAS_FIXTURE_VERSION, '--', 'agentic-awesome-skills']);
   const result = spawnSync(process.execPath, [path.join(process.env.AAS_FIXTURE_PACKAGE, 'tools/bin/install.js'), ...args.slice(6)], { stdio: 'inherit', env: process.env });
   process.exit(result.status === null ? 1 : result.status);
 }
 `);
-  writeBin('git', `
+  if (!windows) writeBin('git', `
 const fs = require('node:fs');
 const path = require('node:path');
 const args = process.argv.slice(2);
@@ -49,11 +83,11 @@ if (args[0] === 'clone') {
 `);
   const cli = (args) => spawnSync(process.execPath, [path.join(packageRoot, 'tools/bin/aas.js'), ...args], { cwd: root, env, encoding: 'utf8', timeout: 60000 });
   const preview = () => {
-    const result = cli(['stack', 'install-preview', '--manifest', manifestPath, '--destination', target]);
+    const result = cli(['stack', 'install-preview', '--manifest', manifestPath, '--destination', target, '--shell', windows ? 'powershell' : 'posix']);
     assert.equal(result.status, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
-  const execute = (command, extraEnv = {}) => spawnSync('/bin/sh', ['-c', command], { cwd: root, env: { ...env, ...extraEnv }, encoding: 'utf8', timeout: 60000 });
+  const execute = (command, extraEnv = {}) => spawnSync(windows ? 'pwsh' : '/bin/sh', windows ? ['-NoProfile', '-NonInteractive', '-Command', command + '; exit $LASTEXITCODE'] : ['-c', command], { cwd: root, env: { ...env, ...extraEnv }, encoding: 'utf8', timeout: 60000 });
   const handoff = preview();
   assert.deepEqual(handoff.selectedSkillIds, ids);
   const dryRun = execute(handoff.preview.command);
@@ -90,7 +124,7 @@ if (args[0] === 'clone') {
   assert.equal(fs.readFileSync(path.join(target, 'user-note.txt'), 'utf8'), 'preserve this file');
   const saved = path.join(root, 'saved');
   fs.renameSync(target, saved);
-  fs.symlinkSync(saved, target);
+  fs.symlinkSync(saved, target, windows ? 'junction' : 'dir');
   const beforeLink = snapshotTree(saved);
   const linked = execute(reduced.preview.command);
   assert.notEqual(linked.status, 0);
@@ -98,7 +132,7 @@ if (args[0] === 'clone') {
   assert.equal(snapshotTree(saved), beforeLink);
   fs.unlinkSync(target);
   fs.renameSync(saved, target);
-  return { status: 'passed', publicationResolution: 'fixture', installer: 'actual-packed-candidate',
+  return { shell: windows ? 'powershell' : 'posix', status: 'passed', publicationResolution: 'fixture', installer: 'actual-packed-candidate',
     dryRunUnchanged: true, installedBytesMatch: true, repeatPreservesBytes: true,
     staleManagedSkillsRemoved: true, unmanagedFilePreserved: true,
     movedReleaseRejected: true, symlinkTargetRejected: true, selectedSkillIds: ids };

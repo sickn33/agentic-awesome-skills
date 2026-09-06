@@ -7,6 +7,7 @@ import process from "node:process";
 
 const EXPECTED_JOBS = Object.freeze([
   "linux-node-22",
+  "windows-node-22",
 ]);
 const EXPECTED_NODE = Object.freeze({ "22": "v22.23.1" });
 const EXPECTED_NOT_EVALUATED = Object.freeze([
@@ -75,6 +76,7 @@ function validateReceipt(receipt) {
   assert.equal(receipt.installation?.status, "passed");
   assert.equal(receipt.installation.publicationResolution, "fixture");
   assert.equal(receipt.installation.installer, "actual-packed-candidate");
+  assert.equal(receipt.installation.shell, receipt.jobId.startsWith("windows-") ? "powershell" : "posix");
   for (const check of ["dryRunUnchanged", "installedBytesMatch", "repeatPreservesBytes", "staleManagedSkillsRemoved", "unmanagedFilePreserved", "movedReleaseRejected", "symlinkTargetRejected"]) {
     assert.equal(receipt.installation[check], true, `installation check missing: ${check}`);
   }
