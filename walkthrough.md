@@ -1,3 +1,13 @@
+# Snyk contextual file-safety remediation — 2026-09-06
+
+- Reproduced destructive hard-link writes in VideoDB and founder-profile export, incorrect parent-directory chmod in Instagram/NotebookLM, and insecure existing VideoDB file modes before fixing them.
+- Validate opened regular-file descriptors and link counts before truncation; preserve append content, repair private modes, and open nonblocking to reject named pipes safely.
+- Restrict state permission repair to the configured private tree, reject linked state files/directories, and propagate protection failures.
+- Reject non-regular source files in the bounded annotation inventory so a named pipe cannot stall a scan.
+- Added `tools/scripts/tests/test_snyk_file_boundaries.py` regression coverage. No new Snyk exclusions or ignore rules.
+- Reviewed the 29 canonical-source Snyk Code results: the remaining DOM anchor uses the active document URL with React escaping; the local viewer returns request-derived metadata as JSON; three secret findings are deliberate test canaries; PostgreSQL accepts whole SQL and database configuration from its local operator and sets a read-only session. Other remaining path findings accept operator-selected local paths rather than remote names. These contextual dispositions do not claim a scanner count of zero or a comprehensive audit of all bundled integrations.
+- Earlier dependency fixes (#1401, canonical #1402) raised Pillow to 12.3.0 and SoupSieve to 2.8.4. The two live EU CLI dependency scans found no security vulnerabilities; certifi's MPL-2.0 license-policy warning requires a license decision, not a dependency downgrade. Added manifest-local `.snyk` Python 3.14 settings for these two projects, matching the interpreter used in the successful scans, so SCM retests do not inherit the obsolete organization-wide Python 3.7 default. The organization setting is unchanged.
+
 # Discovery and installation handoff follow-up - 2026-09-05
 
 - Fixed explicit English/Italian exclusions and grouped declared compatibility aliases while preserving explicit ID selection.

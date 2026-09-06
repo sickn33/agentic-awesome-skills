@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import stat
 
 MAX_FILES = 30
 MAX_BYTES = 1_000_000
@@ -31,7 +32,11 @@ def inventory(project_path, language):
             result['truncated'] = True
             break
         try:
-            with path.open('rb') as handle:
+            flags = os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0)
+            fd = os.open(path, flags)
+            with os.fdopen(fd, 'rb') as handle:
+                if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                    raise ValueError('source is not a regular file')
                 raw = handle.read(MAX_BYTES + 1)
             if len(raw) > MAX_BYTES:
                 raise ValueError('source exceeds byte limit')

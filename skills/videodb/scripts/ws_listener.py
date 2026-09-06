@@ -124,7 +124,8 @@ def secure_open(path: Path, *, append: bool):
     """Open a regular file without following symlinks."""
     ensure_output_dir()
     flags = os.O_WRONLY | os.O_CREAT
-    flags |= os.O_APPEND if append else os.O_TRUNC
+    flags |= os.O_APPEND if append else 0
+    flags |= getattr(os, "O_NONBLOCK", 0)
     flags |= getattr(os, "O_NOFOLLOW", 0)
 
     fd = os.open(safe_output_path(path), flags, FILE_MODE)
@@ -134,6 +135,12 @@ def secure_open(path: Path, *, append: bool):
             raise OSError(f"Refusing to write non-regular file: {path}")
         if file_stat.st_nlink != 1:
             raise OSError(f"Refusing to write multiply linked file: {path}")
+        if hasattr(os, "fchmod"):
+            os.fchmod(fd, FILE_MODE)
+        else:
+            os.chmod(path, FILE_MODE)
+        if not append:
+            os.ftruncate(fd, 0)
         return fd
     except Exception:
         os.close(fd)
