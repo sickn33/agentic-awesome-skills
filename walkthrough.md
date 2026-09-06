@@ -668,4 +668,4 @@ Added the official theme-aware Star History chart and live global-rank badge to 
 
 ## README project support
 
-Moved [Support the Project](README.md#support-the-project) directly below the opening badges, with a prominent contribution link and a compact banner. Reframed the existing €100/month target around recurring maintenance costs, explained the work it supports, and distinguished Snyk tooling support from cash contributions.
+Moved [Support the Project](README.md#support-the-project) directly below the opening badges. Added a concise invitation for sponsors, with GitHub Sponsors and Buy Me a Coffee links, a compact banner, and the existing Snyk tooling attribution. Removed monetary targets and contribution calculations.

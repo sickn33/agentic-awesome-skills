@@ -44,21 +44,17 @@ This is an independent community project. It is not affiliated with, sponsored b
 
 ## Support the Project
 
-**Help keep AAS free, useful, and actively maintained.** If its skills, plugins, or tools help you ship better work, a small monthly contribution helps sustain the work behind them: reviewing contributions, improving skill content, testing installation workflows, and maintaining releases.
+**We’re looking for sponsors to support Agentic Awesome Skills.** If you or your company would like to support the project, become a sponsor.
 
-**Our recurring funding target is €100 per month** to help cover the AI tools used for that work. Twenty people contributing €5 a month would meet this target. Regular support makes these costs easier to plan for; one-time contributions are welcome too.
+### [♥ Sponsor AAS →](https://github.com/sponsors/sickn33)
 
-### [♥ Support AAS on Buy Me a Coffee →](https://buymeacoffee.com/sickn33)
-
-Choose a monthly contribution if you can. Support is optional: AAS remains free and open-source for everyone.
+You can also [support AAS on Buy Me a Coffee](https://buymeacoffee.com/sickn33).
 
 <a href="https://buymeacoffee.com/sickn33">
   <img src="assets/buy-me-a-coffee-banner.png" alt="Support Agentic Awesome Skills on Buy Me a Coffee" width="420" />
 </a>
 
-You can also help by [reporting reproducible bugs](https://github.com/sickn33/agentic-awesome-skills/issues), [contributing fixes or skills](CONTRIBUTING.md), or sharing AAS with people who would find it useful.
-
-*Tooling support: [Snyk](https://snyk.io/) provides security tooling. This is separate from the recurring funding target above.*
+*Security tooling support: [Snyk](https://snyk.io/).*
 
 ## AAS Core: Agent-First Preview
 
