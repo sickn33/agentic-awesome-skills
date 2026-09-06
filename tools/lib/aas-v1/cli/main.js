@@ -113,7 +113,9 @@ function readJsonFile(filePath, maximumBytes = 4 * 1024 * 1024) {
   }
   let descriptor;
   try {
-    descriptor = fs.openSync(absolute, fs.constants.O_RDONLY | (fs.constants.O_NOFOLLOW || 0));
+    // Nonblocking open prevents a raced FIFO from stalling before fstat can reject it.
+    const flags = fs.constants.O_RDONLY | (fs.constants.O_NOFOLLOW || 0) | (fs.constants.O_NONBLOCK || 0);
+    descriptor = fs.openSync(absolute, flags);
     const before = fs.fstatSync(descriptor);
     if (!before.isFile() || before.nlink !== 1 || before.dev !== prior.dev || before.ino !== prior.ino
       || before.size !== prior.size || before.size > maximumBytes) throw unsafe();

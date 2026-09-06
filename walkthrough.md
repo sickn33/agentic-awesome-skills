@@ -664,4 +664,4 @@ The Windows packed verification now repeats the complete installation lifecycle 
 
 ## Atomic CLI JSON input reads — 2026-09-06
 
-CLI JSON inputs are now opened without following leaf symlinks, checked against the pre-open file identity, read through the same descriptor with a fixed byte budget, and rechecked before parsing. Focused regressions replace the file after inspection and grow it past the configured limit; both cases fail closed without changing normal manifest, plan, selection or evidence behavior.
+CLI JSON inputs are now opened without following leaf symlinks or blocking on raced FIFOs, checked against the pre-open file identity, read through the same descriptor with a fixed byte budget, and rechecked before parsing. Focused regressions replace the file after inspection, substitute a FIFO and grow it past the configured limit; all cases fail closed without changing normal manifest, plan, selection or evidence behavior.

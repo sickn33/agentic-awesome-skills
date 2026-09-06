@@ -341,6 +341,52 @@ test("CLI JSON reads reject a file replaced between inspection and open", (conte
   assert.throws(() => readJsonFile(input), { code: "AAS_CLI_JSON_FILE_UNSAFE" });
 });
 
+test("CLI JSON reads do not block when the inspected file becomes a FIFO", (context) => {
+  if (process.platform === "win32") {
+    context.skip("POSIX FIFO behavior");
+    return;
+  }
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const input = path.join(item.root, "input.json");
+  const modulePath = path.join(ROOT, "tools/lib/aas-v1/cli/main.js");
+  const probe = `
+    const fs = require("node:fs");
+    const { spawnSync } = require("node:child_process");
+    const [input, modulePath] = process.argv.slice(1);
+    const { readJsonFile } = require(modulePath);
+    fs.writeFileSync(input, "{}\\n");
+    const originalLstatSync = fs.lstatSync;
+    let replaced = false;
+    fs.lstatSync = function lstatAndReplace(candidate, ...args) {
+      const stat = originalLstatSync(candidate, ...args);
+      if (candidate === input && !replaced) {
+        replaced = true;
+        fs.renameSync(input, input + ".original");
+        const result = spawnSync("mkfifo", [input], { encoding: "utf8" });
+        if (result.status !== 0) throw new Error(result.stderr || "mkfifo failed");
+      }
+      return stat;
+    };
+    try {
+      readJsonFile(input);
+      process.exitCode = 2;
+    } catch (error) {
+      if (error.code !== "AAS_CLI_JSON_FILE_UNSAFE") {
+        console.error(error);
+        process.exitCode = 3;
+      }
+    }
+  `;
+
+  const result = spawnSync(process.execPath, ["-e", probe, input, modulePath], {
+    encoding: "utf8",
+    timeout: 2_000,
+  });
+  assert.notEqual(result.error?.code, "ETIMEDOUT", "opening the raced FIFO must not block");
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+});
+
 test("CLI JSON reads enforce the byte limit when a file grows after inspection", (context) => {
   const item = fixture();
   context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
