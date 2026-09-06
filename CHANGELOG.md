@@ -35,6 +35,8 @@ without changing agent-owned skill selection or the 2,113-skill catalog.
 - Lock Telegram and WhatsApp Node templates to patched qs dependencies and
   synchronize the corresponding plugin copies.
 
+Thanks to @Beverly621 for the CLI JSON-read hardening in #1398.
+
 ### Validation scope
 
 All 66 dependency findings in the reconciled Snyk group export were resolved,
