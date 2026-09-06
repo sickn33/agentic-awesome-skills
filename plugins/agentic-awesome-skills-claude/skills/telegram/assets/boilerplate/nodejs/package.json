@@ -18,5 +18,8 @@
     "@types/express": "^4.17.0",
     "typescript": "^5.4.0",
     "ts-node-dev": "^2.0.0"
+  },
+  "overrides": {
+    "qs": "^6.16.0"
   }
 }
