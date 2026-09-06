@@ -661,3 +661,7 @@ The packed preview matrix now includes Windows with PowerShell execution and rea
 ## PowerShell 5.1 and 16.9.0 readiness
 
 The Windows packed verification now repeats the complete installation lifecycle under Windows PowerShell 5.1, alongside PowerShell 7, with version-bound receipts and fail-closed aggregation. The 16.9.0 changelog covers the accumulated agent-owned CLI handoff, MCP fixes and Specialized Plugin refresh. Native Windows app interaction remains outside the observed coverage.
+
+## README Star History embeds
+
+Added the official theme-aware Star History chart and live global-rank badge to the existing [Star History section](README.md#star-history), retaining the direct chart link. Rank is fetched from Star History rather than hardcoded.
