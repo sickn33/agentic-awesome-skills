@@ -665,3 +665,7 @@ The Windows packed verification now repeats the complete installation lifecycle 
 ## README Star History embeds
 
 Added the official theme-aware Star History chart and live global-rank badge to the existing [Star History section](README.md#star-history), retaining the direct chart link. Rank is fetched from Star History rather than hardcoded.
+
+## README project support
+
+Moved [Support the Project](README.md#support-the-project) directly below the opening badges, with a prominent contribution link and a compact banner. Reframed the existing €100/month target around recurring maintenance costs, explained the work it supports, and distinguished Snyk tooling support from cash contributions.

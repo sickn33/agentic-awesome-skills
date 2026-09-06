@@ -42,6 +42,24 @@ This is an independent community project. It is not affiliated with, sponsored b
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray?style=for-the-badge)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-AI%20IDE-red?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills)
 
+## Support the Project
+
+**Help keep AAS free, useful, and actively maintained.** If its skills, plugins, or tools help you ship better work, a small monthly contribution helps sustain the work behind them: reviewing contributions, improving skill content, testing installation workflows, and maintaining releases.
+
+**Our recurring funding target is €100 per month** to help cover the AI tools used for that work. Twenty people contributing €5 a month would meet this target. Regular support makes these costs easier to plan for; one-time contributions are welcome too.
+
+### [♥ Support AAS on Buy Me a Coffee →](https://buymeacoffee.com/sickn33)
+
+Choose a monthly contribution if you can. Support is optional: AAS remains free and open-source for everyone.
+
+<a href="https://buymeacoffee.com/sickn33">
+  <img src="assets/buy-me-a-coffee-banner.png" alt="Support Agentic Awesome Skills on Buy Me a Coffee" width="420" />
+</a>
+
+You can also help by [reporting reproducible bugs](https://github.com/sickn33/agentic-awesome-skills/issues), [contributing fixes or skills](CONTRIBUTING.md), or sharing AAS with people who would find it useful.
+
+*Tooling support: [Snyk](https://snyk.io/) provides security tooling. This is separate from the recurring funding target above.*
+
 ## AAS Core: Agent-First Preview
 
 > **The agent composes. You control. AAS keeps the stack reproducible.**
@@ -89,6 +107,7 @@ Direct file search can find candidate prose, but it leaves the result in the con
 
 ## Table of Contents
 
+- [Support the Project](#support-the-project)
 - [AAS Core: Agent-First Preview](#aas-core-agent-first-preview)
 - [Why This Repo](#why-this-repo)
 - [Installation](#installation)
@@ -99,7 +118,6 @@ Direct file search can find candidate prose, but it leaves the result in the con
 - [Browse 2,113+ Skills](#browse-2113-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
-- [Support the Project](#support-the-project)
 - [Contributing](#contributing)
 - [Community](#community)
 - [Credits & Sources](#credits--sources)
@@ -418,22 +436,6 @@ Host integrations should use:
 - [`data/skills_index.json`](./data/skills_index.json) as the compatibility mirror.
 
 This keeps discovery stable (`id`, `path`, metadata) while ensuring hosts only load `SKILL.md` for requested `@skill-id` values.
-
-## Support the Project
-
-The immediate goal is **€100 per month** to help cover the AI tools used to maintain AAS, review contributions, and keep releases moving. Small recurring contributions add up: 20 people giving €5 per month would cover that goal.
-
-[Support AAS on Buy Me a Coffee](https://buymeacoffee.com/sickn33) and select **Make this monthly** for recurring support. One-time contributions are welcome too. Support is optional; the project stays free and open-source for everyone.
-
-[![Buy me a coffee](assets/buy-me-a-coffee-banner.png)](https://buymeacoffee.com/sickn33)
-
-- [Help maintain AAS on Buy Me a Coffee](https://buymeacoffee.com/sickn33)
-- Security tooling support: [Snyk](https://snyk.io/)
-- Star the repository
-- Open reproducible issues
-- Contribute docs, fixes, and skills
-
----
 
 ## Contributing
 
