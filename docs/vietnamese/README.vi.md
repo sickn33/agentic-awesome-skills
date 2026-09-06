@@ -4,7 +4,7 @@
 
 Codex hoặc Claude tự kiểm tra dự án; AAS không quét repository. Agent tìm kiếm catalog cục bộ đầy đủ theo thứ tự ổn định, tự đánh giá kết quả không có điểm số hay xếp hạng, rồi gửi `profile` cùng chính xác các ID đã chọn tới `compose_stack`. AAS Core ghi nhận lựa chọn trong `aas-stack.json` schema 2; CLI xác thực manifest và tạo kế hoạch preview bất biến trước khi thay đổi kỹ năng.
 
-> **Ranh giới phát hành:** Dòng 15.x hiện tại bao gồm AAS Core. Chỉ dùng một phiên bản chính xác có release notes tuyên bố rõ rằng nó bao gồm Core. Luồng preview được hỗ trợ dừng sau khi xem kế hoạch; `apply` và `recover` vẫn mang tính thử nghiệm. [Tìm hiểu AAS Core](AAS_CORE.vi.md).
+> **Ranh giới phát hành:** AAS Core được cung cấp từ dòng 15.x. Chỉ dùng một phiên bản chính xác có release notes tuyên bố rõ rằng nó bao gồm Core. Luồng preview được hỗ trợ dừng sau khi xem kế hoạch; `apply` và `recover` vẫn mang tính thử nghiệm. [Tìm hiểu AAS Core](AAS_CORE.vi.md).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Anthropic-purple)](https://claude.ai)
@@ -26,7 +26,7 @@ Các playbook `SKILL.md`, plugin chuyên biệt, bundle, workflow và installer 
 - ⚪ **OpenCode** (Mã nguồn mở CLI)
 - 🟡 **Kiro CLI / IDE** và **AdaL CLI**
 
-**Ranh giới phiên bản:** Dòng 14.x là baseline phân phối kỹ năng trực tiếp và không chứa AAS Core; dòng 15.x hiện tại chứa Core. GitHub là nguồn chuẩn cho Core, catalog, plugin và tài liệu; website được host chỉ là bề mặt duyệt catalog và review trong trình duyệt, không phải control plane được host.
+**Ranh giới phiên bản:** Dòng 14.x là baseline phân phối kỹ năng trực tiếp và không chứa AAS Core; Core được cung cấp từ dòng 15.x. GitHub là nguồn chuẩn cho Core, catalog, plugin và tài liệu; website được host chỉ là bề mặt duyệt catalog và review trong trình duyệt, không phải control plane được host.
 
 ### 1. 🐣 Bối cảnh: Đây là gì?
 

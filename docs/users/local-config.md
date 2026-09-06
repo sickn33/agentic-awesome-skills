@@ -1,7 +1,7 @@
 # Local Skills Configuration Snapshot
 
 > **Historical snapshot**: This page preserves an older 35-skill local configuration recommendation from 2026-01-16. It is not the current repository catalog.
-> **Current catalog**: Use [`../../skills_index.json`](../../skills_index.json), [`../../CATALOG.md`](../../CATALOG.md), or the installer filters in the README for the active 1,684+ skill library.
+> **Current catalog**: Use [`../../skills_index.json`](../../skills_index.json), [`../../CATALOG.md`](../../CATALOG.md), or the installer filters in the README for the active skill library.
 
 ## 📊 Recommended High-Priority Skills (35)
 

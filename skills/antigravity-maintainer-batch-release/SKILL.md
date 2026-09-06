@@ -82,6 +82,10 @@ Before changing anything:
 
 When changing maintainer scripts, workflows, or policy, update the canonical skill, maintainer documentation, and regression tests in the same source PR. Add a negative test for every failure mode being fixed, run the relevant dry-run path, and reject any implementation/documentation mismatch. Source PRs must exclude generated registries and plugin mirrors; the protected canonical-sync PR owns that derived state, except for files intentionally staged by the scripted protected-release flow.
 
+## Repository documentation consistency
+
+When auditing repository documentation, compare operational guides and translations with exact-base scripts and workflow behavior. Check local links, heading anchors and documented npm commands with `tools/scripts/tests/test_documentation_consistency.py`; dated evidence and backup snapshots are historical, not current instructions. Keep canonical guides discoverable from `docs/README.md`, distinguish source merge from release availability, and report the scope of the audit without claiming that all skill procedures or external integrations ran.
+
 ## Specialized Plugin Consistency
 
 Use `data/specialized-plugin-candidates.json` for specialized-plugin membership and `data/editorial-bundles.json` for the installable composition, descriptions, limits and starter prompts. Review changes against canonical `skills_index.json`; keep IDs stable unless a migration is explicitly requested. Derive the web catalog and prerender/live-verifier counts from these sources instead of maintaining copied lists or fixed counts. Verify full skill-list expansion, source-to-web parity and a negative stale-count case. The specialized-resource regression must reject missing prose-declared local support paths and verify their bytes in generated specialized bundles; fenced application examples remain a separate semantic review. Run the pure-example regressions when editing documented calculations or chunking behavior. Regenerate plugin artifacts as evidence, but leave their commit to the protected canonical-sync lane. A source refresh does not authorize release or deployment.

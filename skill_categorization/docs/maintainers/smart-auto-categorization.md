@@ -170,7 +170,7 @@ Available auto-categorization keywords by category:
 
 ### Add Custom Keywords
 
-Edit [`tools/scripts/auto_categorize_skills.py`](../../tools/scripts/auto_categorize_skills.py):
+Edit [`tools/scripts/auto_categorize_skills.py`](../../../tools/scripts/auto_categorize_skills.py):
 
 ```python
 CATEGORY_KEYWORDS = {

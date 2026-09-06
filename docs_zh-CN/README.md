@@ -1,15 +1,14 @@
-<!-- registry-sync: version=14.6.0; skills=1967; stars=43394; updated_at=2026-07-16T14:29:29+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **面向编码代理的本地、确定性技能栈编排：从显式项目配置文件到任何目标变更前可审查的计划。**
 
 Codex 或 Claude 使用自身能力检查项目；AAS 不会扫描项目。代理通过本地、只读的 AAS MCP 搜索完整目录，自行评估无分数、无排名的稳定分页结果，再把 `profile` 和精确的已选技能 ID 交给 `compose_stack`。AAS Core 将选择记录为 schema 2 的 `aas-stack.json`，随后 `aas` CLI 在任何技能变更前验证该清单并生成不可变的预览计划。
 
-> **发布边界：** 当前 15.x 版本包含 AAS Core。请使用发布说明明确声明包含 Core 的精确版本；当前支持的预览路径在检查计划后停止，`apply` 和 `recover` 仍是实验功能。[了解 AAS Core](users/aas-core.md)。
+> **发布边界：** AAS Core 从 15.x 系列开始提供。请使用发布说明明确声明包含 Core 的精确版本；当前支持的预览路径在检查计划后停止，`apply` 和 `recover` 仍是实验功能。[了解 AAS Core](users/aas-core.md)。
 
 `SKILL.md` 剧本、专用插件、捆绑包、工作流和直接安装器仍然重要；它们是 AAS Core 周围的内容、策展、分发和兼容层，而不是并列的主要产品。
 
-**从这里开始：** [AAS Core](users/aas-core.md) · [为仓库加星](https://github.com/sickn33/agentic-awesome-skills/stargazers) · [1 分钟安装](#installation) · [选择你的工具](#choose-your-tool) · [按工具查看最佳技能](#best-skills-by-tool) · [捆绑包](users/bundles.md) · [工作流](users/workflows.md)
+**从这里开始：** [AAS Core](users/aas-core.md) · [为仓库加星](https://github.com/sickn33/agentic-awesome-skills/stargazers) · [1 分钟安装](#安装) · [选择你的工具](#选择你的工具) · [按工具查看最佳技能](#按工具查看最佳技能) · [捆绑包](users/bundles.md) · [工作流](users/workflows.md)
 
 [![GitHub stars](https://img.shields.io/badge/⭐%2035%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
@@ -18,13 +17,13 @@ Codex 或 Claude 使用自身能力检查项目；AAS 不会扫描项目。代�
 [![Codex CLI](https://img.shields.io/badge/Codex%20CLI-OpenAI-green)](https://github.com/openai/codex)
 [![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-Google-blue)](https://github.com/google-gemini/gemini-cli)
 [![Latest Release](https://img.shields.io/github/v/release/sickn33/agentic-awesome-skills?display_name=tag&style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/releases/latest)
-[![Install with NPX](https://img.shields.io/badge/Install-npx%20agentic--awesome--skills-black?style=for-the-badge&logo=npm)](#installation)
+[![Install with NPX](https://img.shields.io/badge/Install-npx%20agentic--awesome--skills-black?style=for-the-badge&logo=npm)](#安装)
 [![Kiro](https://img.shields.io/badge/Kiro-AWS-orange?style=for-the-badge)](https://kiro.dev)
 [![Copilot](https://img.shields.io/badge/Copilot-GitHub-lightblue?style=for-the-badge)](https://github.com/features/copilot)
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray?style=for-the-badge)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-AI%20IDE-red?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills)
 
-**版本边界：** 14.x 系列是直接技能分发基线，不包含 AAS Core；当前 15.x 系列包含 Core。GitHub 仓库是 Core、目录、插件和文档的规范来源；托管网站仅用于目录浏览和浏览器内审查，并非托管控制平面。
+**版本边界：** 14.x 系列是直接技能分发基线，不包含 AAS Core；Core 从 15.x 系列开始提供。GitHub 仓库是 Core、目录、插件和文档的规范来源；托管网站仅用于目录浏览和浏览器内审查，并非托管控制平面。
 
 ## 为什么开发者为这个仓库加星
 

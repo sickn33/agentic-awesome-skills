@@ -1,43 +1,15 @@
 # Rollback Procedure
 
-Use this when a structural refactor, generated artifact refresh, or release prep needs to be backed out safely.
+A new branch preserves committed history; it does not back up uncommitted edits. Inspect `git status --short` first and copy affected untracked files plus staged/unstaged changes to a verified backup before any discard operation. Keep unrelated work intact.
 
-## Before Rolling Back
+## Committed changes
 
-- Capture the current branch name with `git branch --show-current`.
-- Review changed files with `git status --short`.
-- Decide whether you need to keep any generated files before reverting.
+Use a topic branch based on current `origin/main`, select the exact source commit to reverse, and inspect `git revert <commit>` before committing. Run the checks appropriate to the reversal and merge the repair through `npm run merge:batch`. Generated state belongs to the protected canonical-sync PR; never revert or patch it independently on `main`.
 
-## Safe Rollback Flow
+## Uncommitted changes
 
-1. Create a temporary safety branch:
+After verifying the backup, inspect each selected path. `git restore --staged -- <path>` unstages it without discarding working-tree content. `git restore -- <path>` discards working-tree changes in that path; use it only for explicitly selected disposable work. A branch switch alone is not recovery evidence.
 
-```bash
-git switch -c rollback-safety-check
-```
+## Published releases
 
-2. Verify the repository still reports the expected changed files:
-
-```bash
-git status --short
-```
-
-3. Switch back to the original branch:
-
-```bash
-git switch -
-```
-
-4. If you need to discard only this refactor later, revert the relevant commit(s) or restore specific files explicitly:
-
-```bash
-git restore README.md CONTRIBUTING.md package.json package-lock.json
-git restore --staged README.md CONTRIBUTING.md package.json package-lock.json
-```
-
-5. If the refactor has already been committed, prefer `git revert <commit>` over history-rewriting commands.
-
-## Notes
-
-- Avoid `git reset --hard` unless you have explicit approval and understand the impact on unrelated work.
-- For generated artifacts, regenerate after rollback with the standard scripts instead of manually editing them.
+Do not rewrite published history, move a released tag, or reuse an npm version. Prepare a corrective source PR and a separately authorized patch release through the [release process](release-process.md). Confirm the resulting checks and generated-state convergence before declaring recovery complete.

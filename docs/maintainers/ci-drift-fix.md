@@ -40,16 +40,7 @@ The workflow expects the repository to be clean after those sync steps finish. A
    git diff
    ```
 
-3. If the sync produced only canonical/generated changes, open a source-free PR rather than pushing to protected `main`. Prefer the generated-files contract instead of a hand-maintained file list:
-
-   ```bash
-   node tools/scripts/generated_files.js --include-mixed
-   git add $(node tools/scripts/generated_files.js --include-mixed)
-   git switch -c chore/canonical-artifact-repair
-   git commit -m "chore: sync canonical artifacts"
-   git push -u origin chore/canonical-artifact-repair
-   gh pr create --base main --fill
-   ```
+3. If the sync produced only canonical/generated changes, inspect them locally and let the trusted `main` workflow open or update `automation/canonical-repo-state`. Do not create an ordinary generated-only repair PR: the protected lane requires the expected bot identity, branch and exact reproduced tree. If automation failed, inspect that run and repair its source cause through a topic PR before retrying the existing workflow.
 
 4. If `sync:repo-state` leaves unrelated or unmanaged drift, stop and inspect it. The bot is only allowed to publish the canonical/generated subset; anything else must fail instead of being silently included.
 

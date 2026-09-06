@@ -1,6 +1,6 @@
 # The Full Skill Library: At-a-Glance Overview
 
-Agentic Awesome Skills ships a verified catalog of **2,107 skills** in `skills/<skill-id>/SKILL.md`. This page is a curated high-level map of the whole library: how skills are organized, the main capability areas and their approximate sizes, the risk labels you will encounter, and the authoritative surfaces to browse when you need the complete, current list.
+Agentic Awesome Skills ships an installable catalog of agent skills in `skills/<skill-id>/SKILL.md`. This page is a curated high-level map of the whole library: how skills are organized, the main capability areas and their approximate sizes, the risk labels you will encounter, and the authoritative surfaces to browse when you need the complete, current list.
 
 The authoritative, machine-generated catalog is [`CATALOG.md`](../../CATALOG.md). This overview is a hand-maintained index; it can lag the catalog after a release, so treat `CATALOG.md` and `skills_index.json` as the source of truth for counts and exact skill lists.
 
@@ -59,7 +59,7 @@ Every skill carries a `risk:` label in its frontmatter:
 | `offensive` | Offensive security / penetration-testing content; review the security guardrails before use |
 | `unknown` | Legacy or unclassified content that predates the risk-labeling scheme |
 
-Of the current catalog, roughly **1,090 are `critical`**, **850 are `safe`**, **100 are `none`**, and **60 are `offensive`**.
+Risk totals change with the catalog. Read the current labels from `skills_index.json`; they are declared metadata, not evidence that every procedure has been executed or audited.
 
 Read [`SECURITY_GUARDRAILS.md`](../../docs/SECURITY_GUARDRAILS.md) and the [`security-guardrails`](../../docs/contributors/security-guardrails.md) contributor guide before invoking anything marked `critical` or `offensive`.
 

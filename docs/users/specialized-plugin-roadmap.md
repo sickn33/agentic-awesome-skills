@@ -45,7 +45,7 @@ This pass checked the 21 compositions against the current 2,113-entry catalog an
 - **Web App Builder:** replace `nextjs-best-practices` with `browser-automation`. React performance and App Router guidance remain; the bundle now includes verification of the implemented user journey.
 - **Data Analytics:** replace `database-architect` with `data-quality-frameworks`. Database platform architecture remains in Data Engineering Platform; analytical users get checks for data assumptions, contracts and transformations.
 - **Privacy & Compliance Engineering:** remove the broad `security-audit` testing workflow. The five remaining skills cover privacy-by-design, data handling, scoped compliance and defensive review. Formal certification and legal advice remain outside its scope.
-- **Secure App Builder:** remove `security-and-hardening` from this curated set because its two references to `references/security-checklist.md` have no bundled target. The remaining nine skills retain API, backend/frontend, auth, SAST, secrets and access-review coverage. The canonical skill remains available; repairing its missing reference is separate content debt.
+- **Secure App Builder:** removed `security-and-hardening` during the composition review because its checklist was missing at that time. The remaining nine skills retain API, backend/frontend, auth, SAST, secrets and access-review coverage. The follow-up repaired the canonical checklist; the nine-skill curated composition remains unchanged.
 - All 21 plugin IDs stay stable. Removed bundle members remain canonical skills and can still be selected separately.
 
 ## Choosing between related plugins
