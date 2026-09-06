@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [16.9.1] - 2026-09-06 - "Security Fixes and Safer Local Files"
+
+A corrective release for AAS users on Claude Code, Cursor, Codex CLI and Gemini CLI.
+It distributes the dependency and local-file fixes integrated after 16.9.0,
+without changing agent-owned skill selection or the 2,113-skill catalog.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@16.9.1`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Fixed
+
+- Bind CLI JSON validation and bounded reads to the same file descriptor;
+  reject file replacement, raced FIFOs and growth beyond the input budget.
+- Preserve private local state and reject unsafe linked files in VideoDB,
+  profile export and Instagram/NotebookLM configuration; avoid blocking on
+  non-regular files during type inventory.
+- Update Pillow, SoupSieve and setuptools requirements. Use manifest-local
+  Python settings so Snyk resolves the supported dependency versions.
+- Lock Telegram and WhatsApp Node templates to patched qs dependencies and
+  synchronize the corresponding plugin copies.
+
+### Validation scope
+
+All 66 dependency findings in the reconciled Snyk group export were resolved,
+including SpendWise findings addressed in its separate repository. Contextual
+Code and license-policy findings remain visible; this release does not claim
+zero static-analysis findings or Windows ACL verification.
+
 ## [16.9.0] - 2026-09-06 - "From Agent Selection to Verified Installation"
 
 > Connects exact agent-selected skills to a reviewable installation command,

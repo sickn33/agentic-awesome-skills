@@ -1,0 +1,3 @@
+version: v1.25.1
+language-settings:
+  python: '3.14'

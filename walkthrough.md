@@ -1,3 +1,21 @@
+# Full Snyk group reconciliation — 2026-09-06
+
+- Exported all 551 analytics rows and read all live project/issue records; distinguished stale CLI snapshots, mirror copies, and current findings.
+- Require fixed qs 6.16.x in Telegram and WhatsApp Node templates, because Express 4 still resolves a vulnerable qs minor line.
+- Set manifest-local Python 3.14 for Shopify and WhatsApp SCM scans; their existing zipp security floor was omitted under Python 3.7.
+- Raise the GIF template setuptools security floor to 83.0.0 for the additional Unicode-handling advisory found in the group inventory.
+- No security findings are suppressed by these changes.
+
+# Snyk contextual file-safety remediation — 2026-09-06
+
+- Reproduced destructive hard-link writes in VideoDB and founder-profile export, incorrect parent-directory chmod in Instagram/NotebookLM, and insecure existing VideoDB file modes before fixing them.
+- Validate opened regular-file descriptors and link counts before truncation; preserve append content, repair private modes, and open nonblocking to reject named pipes safely.
+- Restrict state permission repair to the configured private tree, reject linked state files/directories, and propagate protection failures.
+- Reject non-regular source files in the bounded annotation inventory so a named pipe cannot stall a scan.
+- Added `tools/scripts/tests/test_snyk_file_boundaries.py` regression coverage. No new Snyk exclusions or ignore rules.
+- Reviewed the 29 canonical-source Snyk Code results: the remaining DOM anchor uses the active document URL with React escaping; the local viewer returns request-derived metadata as JSON; three secret findings are deliberate test canaries; PostgreSQL accepts whole SQL and database configuration from its local operator and sets a read-only session. Other remaining path findings accept operator-selected local paths rather than remote names. These contextual dispositions do not claim a scanner count of zero or a comprehensive audit of all bundled integrations.
+- Earlier dependency fixes (#1401, canonical #1402) raised Pillow to 12.3.0 and SoupSieve to 2.8.4. The two live EU CLI dependency scans found no security vulnerabilities; certifi's MPL-2.0 license-policy warning requires a license decision, not a dependency downgrade. Added manifest-local `.snyk` Python 3.14 settings for these two projects, matching the interpreter used in the successful scans, so SCM retests do not inherit the obsolete organization-wide Python 3.7 default. The organization setting is unchanged.
+
 # Discovery and installation handoff follow-up - 2026-09-05
 
 - Fixed explicit English/Italian exclusions and grouped declared compatibility aliases while preserving explicit ID selection.
@@ -665,3 +683,18 @@ The Windows packed verification now repeats the complete installation lifecycle 
 ## Atomic CLI JSON input reads — 2026-09-06
 
 CLI JSON inputs are now opened without following leaf symlinks or blocking on raced FIFOs, checked against the pre-open file identity, read through the same descriptor with a fixed byte budget, and rechecked before parsing. Focused regressions replace the file after inspection, substitute a FIFO and grow it past the configured limit; all cases fail closed without changing normal manifest, plan, selection or evidence behavior.
+
+## README Star History embeds
+
+Added the official theme-aware Star History chart and live global-rank badge to the existing [Star History section](README.md#star-history), retaining the direct chart link. Rank is fetched from Star History rather than hardcoded.
+
+## README project support
+
+Moved [Support the Project](README.md#support-the-project) directly below the opening badges. Added a concise invitation for sponsors, with GitHub Sponsors and Buy Me a Coffee links, a compact banner, and the existing Snyk tooling attribution. Removed monetary targets and contribution calculations.
+
+## Snyk EU Python dependency remediation (2026-09-06)
+
+- Raise slack-gif-creator Pillow minimum to 12.3.0 to exclude the vulnerable 12.2.x series (SNYK-PYTHON-PILLOW-17972377).
+- Require SoupSieve 2.8.4 or newer alongside BeautifulSoup in junta-leiloeiros to exclude CVE-2026-49477.
+- Generated plugin mirrors are validated locally and remain owned by protected canonical synchronization.
+- Validation: repository chain, reference validation and docs security passed; Pillow 12.3.0 GIF creation/reopening and SoupSieve 2.8.4 selector smoke passed. Snyk EU found no security vulnerabilities in either resolved requirements set; junta-leiloeiros retains a certifi MPL-2.0 license-policy finding.
