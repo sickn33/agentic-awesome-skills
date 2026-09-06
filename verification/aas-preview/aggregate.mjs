@@ -80,6 +80,18 @@ function validateReceipt(receipt) {
   for (const check of ["dryRunUnchanged", "installedBytesMatch", "repeatPreservesBytes", "staleManagedSkillsRemoved", "unmanagedFilePreserved", "movedReleaseRejected", "symlinkTargetRejected"]) {
     assert.equal(receipt.installation[check], true, `installation check missing: ${check}`);
   }
+  if (receipt.runtime.platform === "win32") {
+    assert.equal(receipt.installation.shellExecutable, "pwsh");
+    assert.match(receipt.installation.shellVersion, /^7\./);
+    const legacy = receipt.installation.windowsPowerShell51;
+    assert.equal(legacy?.status, "passed");
+    assert.equal(legacy.shell, "powershell");
+    assert.equal(legacy.shellExecutable, "powershell.exe");
+    assert.match(legacy.shellVersion, /^5\.1\./);
+    for (const field of ["publicationResolution", "installer", "selectedSkillIds", "dryRunUnchanged", "installedBytesMatch", "repeatPreservesBytes", "staleManagedSkillsRemoved", "unmanagedFilePreserved", "movedReleaseRejected", "symlinkTargetRejected"]) {
+      assert.deepEqual(legacy[field], receipt.installation[field], `Windows PowerShell 5.1 mismatch: ${field}`);
+    }
+  }
   assert.equal(receipt.writeGuards.applyDisabledByDefault, true);
   assert.equal(receipt.writeGuards.recoveryDisabledByDefault, true);
   assert.equal(receipt.writeGuards.targetStateCreated, false);

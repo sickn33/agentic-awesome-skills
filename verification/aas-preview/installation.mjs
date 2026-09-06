@@ -6,9 +6,24 @@ import { pathToFileURL } from 'node:url';
 
 // Exercise the installed candidate's real CLI and copier before publication.
 // Only external npm/Git resolution is a fixture, never the installer itself.
-export function verifyInstallation({ packageRoot, workRoot, manifest, snapshotTree }) {
+export function verifyInstallation(options) {
+  const primary = verifyInstallationWithShell(options);
+  if (process.platform === 'win32') {
+    primary.windowsPowerShell51 = verifyInstallationWithShell({ ...options, windowsShell: 'powershell.exe' });
+  }
+  return primary;
+}
+
+function verifyInstallationWithShell({ packageRoot, workRoot, manifest, snapshotTree, windowsShell = 'pwsh' }) {
   const windows = process.platform === 'win32';
-  const root = path.join(workRoot, 'installation-roundtrip');
+  const root = path.join(workRoot, windows && windowsShell === 'powershell.exe' ? 'installation-powershell51' : 'installation-roundtrip');
+  let shellVersion;
+  if (windows) {
+    const version = spawnSync(windowsShell, ['-NoProfile', '-NonInteractive', '-Command', '$PSVersionTable.PSVersion.ToString()'], { encoding: 'utf8', timeout: 60000 });
+    assert.equal(version.status, 0, version.stderr);
+    shellVersion = version.stdout.trim();
+    assert.match(shellVersion, windowsShell === 'powershell.exe' ? /^5\.1\./ : /^7\./);
+  }
   const bin = path.join(root, 'bin');
   const target = path.join(root, "Nicco's skills");
   const manifestPath = path.join(root, 'manifest.json');
@@ -87,7 +102,7 @@ if (args[0] === 'clone') {
     assert.equal(result.status, 0, result.stderr);
     return JSON.parse(result.stdout);
   };
-  const execute = (command, extraEnv = {}) => spawnSync(windows ? 'pwsh' : '/bin/sh', windows ? ['-NoProfile', '-NonInteractive', '-Command', command + '; exit $LASTEXITCODE'] : ['-c', command], { cwd: root, env: { ...env, ...extraEnv }, encoding: 'utf8', timeout: 60000 });
+  const execute = (command, extraEnv = {}) => spawnSync(windows ? windowsShell : '/bin/sh', windows ? ['-NoProfile', '-NonInteractive', '-Command', command + '; exit $LASTEXITCODE'] : ['-c', command], { cwd: root, env: { ...env, ...extraEnv }, encoding: 'utf8', timeout: 60000 });
   const handoff = preview();
   assert.deepEqual(handoff.selectedSkillIds, ids);
   const dryRun = execute(handoff.preview.command);
@@ -132,7 +147,7 @@ if (args[0] === 'clone') {
   assert.equal(snapshotTree(saved), beforeLink);
   fs.unlinkSync(target);
   fs.renameSync(saved, target);
-  return { shell: windows ? 'powershell' : 'posix', status: 'passed', publicationResolution: 'fixture', installer: 'actual-packed-candidate',
+  return { ...(windows ? { shellExecutable: windowsShell, shellVersion } : {}), shell: windows ? 'powershell' : 'posix', status: 'passed', publicationResolution: 'fixture', installer: 'actual-packed-candidate',
     dryRunUnchanged: true, installedBytesMatch: true, repeatPreservesBytes: true,
     staleManagedSkillsRemoved: true, unmanagedFilePreserved: true,
     movedReleaseRejected: true, symlinkTargetRejected: true, selectedSkillIds: ids };

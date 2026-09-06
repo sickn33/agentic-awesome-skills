@@ -27,7 +27,7 @@ function writeJson(file, value) {
 
 function receipt(jobId) {
   const [platform, , major] = jobId.split("-");
-  return {
+  const result = {
     schemaVersion: 1,
     assuranceProfile: "agent-first-preview-1",
     previewQualified: true,
@@ -44,6 +44,12 @@ function receipt(jobId) {
     runtimeCache: { integrity: "sha512-test", closureDigest: "sha256-closure" },
     notEvaluated,
   };
+  if (platform === "windows") {
+    result.installation.windowsPowerShell51 = { ...result.installation, shellExecutable: "powershell.exe", shellVersion: "5.1.26100.1" };
+    result.installation.shellExecutable = "pwsh";
+    result.installation.shellVersion = "7.5.1";
+  }
+  return result;
 }
 
 function fixture() {
@@ -128,4 +134,19 @@ test("preview aggregation rejects Windows evidence from a POSIX shell", (t) => {
   writeJson(item.receipts[1], changed);
   assert.notEqual(run(item).status, 0);
   assert.equal(fs.existsSync(item.out), false);
+});
+
+
+test("preview aggregation requires a passing actual Windows PowerShell 5.1 run", (t) => {
+  const item = fixture();
+  t.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  for (const failure of ["missing", "version", "installedBytesMatch", "unmanagedFilePreserved", "symlinkTargetRejected"]) {
+    const changed = receipt("windows-node-22");
+    if (failure === "missing") delete changed.installation.windowsPowerShell51;
+    else if (failure === "version") changed.installation.windowsPowerShell51.shellVersion = "7.5.1";
+    else changed.installation.windowsPowerShell51[failure] = false;
+    writeJson(item.receipts[1], changed);
+    assert.notEqual(run(item).status, 0, failure);
+    assert.equal(fs.existsSync(item.out), false);
+  }
 });

@@ -657,3 +657,7 @@ Exercised native Codex MCP selection through an actual published-release install
 ## Windows and PowerShell workflow verification
 
 The packed preview matrix now includes Windows with PowerShell execution and real Git against an isolated local candidate release fixture. Linux and Windows receipts are both required; a missing Windows receipt fails aggregation. Publication and real host configuration are outside this check.
+
+## PowerShell 5.1 and 16.9.0 readiness
+
+The Windows packed verification now repeats the complete installation lifecycle under Windows PowerShell 5.1, alongside PowerShell 7, with version-bound receipts and fail-closed aggregation. The 16.9.0 changelog covers the accumulated agent-owned CLI handoff, MCP fixes and Specialized Plugin refresh. Native Windows app interaction remains outside the observed coverage.

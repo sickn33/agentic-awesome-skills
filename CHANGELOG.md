@@ -9,6 +9,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [16.9.0] - 2026-09-06 - "From Agent Selection to Verified Installation"
+
+> Connects exact agent-selected skills to a reviewable installation command,
+> refreshes Specialized Plugins, and verifies the packed workflow on Linux
+> and Windows. The catalog contains 2,113 skills.
+
+The coding agent remains responsible for project analysis and skill choice.
+MCP and CLI expose the catalog, validate explicit selections and prepare plans
+and installation previews; they do not choose skills for the project.
+
+Start here:
+
+- Install: `npx agentic-awesome-skills@16.9.0`
+- [AAS Core workflow](docs/users/aas-core.md)
+- [Specialized Plugins](docs/users/specialized-plugin-roadmap.md)
+- [Getting started](docs/users/getting-started.md)
+
+### Added
+
+- `aas stack install-preview` prepares a version-pinned direct-installer dry run
+  from an explicit manifest, with POSIX and PowerShell quoting and no automatic
+  execution or change to the selected IDs.
+- Offline runtime auto-resolution when exactly one fully verified cached
+  identity matches, with actionable errors for missing or ambiguous runtimes.
+- Packed installation verification on Linux and Windows, including PowerShell 7
+  and Windows PowerShell 5.1, exact payload comparison, repeat/prune behavior,
+  unmanaged-file preservation, and moved-release and link-target rejection.
+  Candidate publication metadata remains a fixture; native Windows app
+  interaction is outside this verification.
+
+### Changed
+
+- Refreshed all 21 Specialized Plugin definitions and starter prompts, with a
+  shared source for the web catalog, complete membership and dynamic counts.
+- Completed local support resources in Specialized Plugins and corrected
+  worked examples, while preserving canonical skill IDs and mirrored bytes.
+- Added exact-selection installation previews to the Workbench and preserved
+  caller discovery constraints across review and handoff.
+- Reconciled repository documentation with the protected maintenance,
+  source-only contribution and release workflows.
+
+### Fixed
+
+- MCP request correlation during overload and invalid requests, bounded error
+  IDs, and silent handling of valid notifications.
+- Archive and installer boundary checks, unsafe managed entries and browser
+  review behavior around hostile or inconsistent input.
+- Destination validation before installation-command preparation, including
+  invalid filename characters and reserved names; direct installer failures
+  return a concise error instead of an uncaught stack trace.
+- Executable examples and limitations in linting, SQL, observability, security,
+  Google Workspace and other Specialized Plugin procedures.
+
 ## [16.8.0] - 2026-09-05 - "Discover, Inspect, and Review Your Skills"
 
 > Added public-web research and read-only skill auditing, goal-based catalog
