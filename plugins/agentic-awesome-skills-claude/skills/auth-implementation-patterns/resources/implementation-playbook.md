@@ -1,6 +1,6 @@
 # Authentication and Authorization Implementation Patterns Implementation Playbook
 
-This file contains detailed patterns, checklists, and code samples referenced by the skill.
+These are integration sketches, not a complete authentication service. Supply project-specific database adapters, validated configuration, request types, error handling and tests before use. Check the installed library versions; never paste an example into production without exercising the rejection cases below.
 
 ## Core Concepts
 
@@ -30,7 +30,7 @@ This file contains detailed patterns, checklists, and code samples referenced by
 - Can store claims
 
 **OAuth2/OpenID Connect:**
-- Delegate authentication
+- OAuth delegates authorization; OpenID Connect adds identity verification
 - Social login (Google, GitHub)
 - Enterprise SSO
 
@@ -56,13 +56,13 @@ function generateTokens(userId: string, email: string, role: string) {
     const accessToken = jwt.sign(
         { userId, email, role },
         process.env.JWT_SECRET!,
-        { expiresIn: '15m' }  // Short-lived
+        { expiresIn: '15m', algorithm: 'HS256', issuer: 'example-auth', audience: 'example-api' }
     );
 
     const refreshToken = jwt.sign(
         { userId },
         process.env.JWT_REFRESH_SECRET!,
-        { expiresIn: '7d' }  // Long-lived
+        { expiresIn: '7d', algorithm: 'HS256', issuer: 'example-auth', audience: 'example-refresh' }
     );
 
     return { accessToken, refreshToken };
@@ -71,7 +71,16 @@ function generateTokens(userId: string, email: string, role: string) {
 // Verify JWT
 function verifyToken(token: string): JWTPayload {
     try {
-        return jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+        const payload = jwt.verify(token, process.env.JWT_SECRET!, {
+            algorithms: ['HS256'], issuer: 'example-auth', audience: 'example-api',
+        });
+        if (typeof payload === 'string' || typeof payload.userId !== 'string'
+            || typeof payload.email !== 'string' || typeof payload.role !== 'string'
+            || !Number.isSafeInteger(payload.iat) || !Number.isSafeInteger(payload.exp)
+            || Number(payload.exp) <= Number(payload.iat)) {
+            throw new Error('Invalid claims');
+        }
+        return payload as JWTPayload;
     } catch (error) {
         if (error instanceof jwt.TokenExpiredError) {
             throw new Error('Token expired');
@@ -108,98 +117,19 @@ app.get('/api/profile', authenticate, (req, res) => {
 
 ### Pattern 2: Refresh Token Flow
 
-```typescript
-interface StoredRefreshToken {
-    token: string;
-    userId: string;
-    expiresAt: Date;
-    createdAt: Date;
-}
+A signed refresh token is not sufficient revocation state. The access and refresh audiences above are deliberately distinct. Prefer the identity provider's implemented refresh flow; if the application owns it, implement this transaction contract with project-specific adapters:
 
-class RefreshTokenService {
-    // Store refresh token in database
-    async storeRefreshToken(userId: string, refreshToken: string) {
-        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-        await db.refreshTokens.create({
-            token: await hash(refreshToken),  // Hash before storing
-            userId,
-            expiresAt,
-        });
-    }
-
-    // Refresh access token
-    async refreshAccessToken(refreshToken: string) {
-        // Verify refresh token
-        let payload;
-        try {
-            payload = jwt.verify(
-                refreshToken,
-                process.env.JWT_REFRESH_SECRET!
-            ) as { userId: string };
-        } catch {
-            throw new Error('Invalid refresh token');
-        }
-
-        // Check if token exists in database
-        const storedToken = await db.refreshTokens.findOne({
-            where: {
-                token: await hash(refreshToken),
-                userId: payload.userId,
-                expiresAt: { $gt: new Date() },
-            },
-        });
-
-        if (!storedToken) {
-            throw new Error('Refresh token not found or expired');
-        }
-
-        // Get user
-        const user = await db.users.findById(payload.userId);
-        if (!user) {
-            throw new Error('User not found');
-        }
-
-        // Generate new access token
-        const accessToken = jwt.sign(
-            { userId: user.id, email: user.email, role: user.role },
-            process.env.JWT_SECRET!,
-            { expiresIn: '15m' }
-        );
-
-        return { accessToken };
-    }
-
-    // Revoke refresh token (logout)
-    async revokeRefreshToken(refreshToken: string) {
-        await db.refreshTokens.deleteOne({
-            token: await hash(refreshToken),
-        });
-    }
-
-    // Revoke all user tokens (logout all devices)
-    async revokeAllUserTokens(userId: string) {
-        await db.refreshTokens.deleteMany({ userId });
-    }
-}
-
-// API endpoints
-app.post('/api/auth/refresh', async (req, res) => {
-    const { refreshToken } = req.body;
-    try {
-        const { accessToken } = await refreshTokenService
-            .refreshAccessToken(refreshToken);
-        res.json({ accessToken });
-    } catch (error) {
-        res.status(401).json({ error: 'Invalid refresh token' });
-    }
-});
-
-app.post('/api/auth/logout', authenticate, async (req, res) => {
-    const { refreshToken } = req.body;
-    await refreshTokenService.revokeRefreshToken(refreshToken);
-    res.json({ message: 'Logged out successfully' });
-});
+```text
+Validate the refresh signature, fixed algorithm, issuer, refresh audience and expiry.
+Compute a deterministic keyed digest of the high-entropy token; never store its raw value.
+In one database transaction, lock the token record and check expiry/revocation/user status.
+Mark the old token consumed, create a new refresh token and store its digest in the same family.
+Commit before returning the new token pair; a second use must not issue another pair.
+On reuse, revoke the token family and require reauthentication according to the recovery policy.
+Logout revokes the relevant family; password/account changes invalidate affected sessions.
 ```
+
+Do not use a freshly salted password hash as a lookup key, or perform check-then-delete outside a transaction. Concurrent refresh, lost responses and reuse handling require integration tests. Cookie-based refresh endpoints also need CSRF defenses. The illustrative `generateTokens` function above only issues tokens; it does not implement storage, rotation or revocation.
 
 ## Session-Based Authentication
 
@@ -207,7 +137,7 @@ app.post('/api/auth/logout', authenticate, async (req, res) => {
 
 ```typescript
 import session from 'express-session';
-import RedisStore from 'connect-redis';
+import { RedisStore } from 'connect-redis';
 import { createClient } from 'redis';
 
 // Setup Redis for session storage
@@ -218,7 +148,10 @@ await redisClient.connect();
 
 app.use(
     session({
-        store: new RedisStore({ client: redisClient }),
+        store: new RedisStore({
+        sendCommand: (...args: string[]) => redisClient.sendCommand(args),
+        prefix: 'login-rate:',
+    }),
         secret: process.env.SESSION_SECRET!,
         resave: false,
         saveUninitialized: false,
@@ -226,7 +159,7 @@ app.use(
             secure: process.env.NODE_ENV === 'production',  // HTTPS only
             httpOnly: true,  // No JavaScript access
             maxAge: 24 * 60 * 60 * 1000,  // 24 hours
-            sameSite: 'strict',  // CSRF protection
+            sameSite: 'strict',  // Defense in depth; also enforce the app's CSRF policy
         },
     })
 );
@@ -240,11 +173,16 @@ app.post('/api/auth/login', async (req, res) => {
         return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Store user in session
-    req.session.userId = user.id;
-    req.session.role = user.role;
-
-    res.json({ user: { id: user.id, email: user.email, role: user.role } });
+    // Regenerate after authentication to prevent session fixation.
+    req.session.regenerate((err) => {
+        if (err) return res.status(500).json({ error: 'Login failed' });
+        req.session.userId = user.id;
+        req.session.role = user.role;
+        req.session.save((saveError) => {
+            if (saveError) return res.status(500).json({ error: 'Login failed' });
+            res.json({ user: { id: user.id, email: user.email, role: user.role } });
+        });
+    });
 });
 
 // Session middleware
@@ -275,61 +213,19 @@ app.post('/api/auth/logout', (req, res) => {
 
 ## OAuth2 / Social Login
 
-### Pattern 1: OAuth2 with Passport.js
+### Browser login callback contract
 
-```typescript
-import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { Strategy as GitHubStrategy } from 'passport-github2';
+Use the installed provider SDK's authorization-code flow with state, PKCE and, for OIDC, nonce and ID-token validation as applicable. Bind the callback to the original browser session, use an exact registered redirect URI, and identify an account by the validated issuer/subject pair. Do not automatically link accounts by an unverified email.
 
-// Google OAuth
-passport.use(
-    new GoogleStrategy(
-        {
-            clientID: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-            callbackURL: '/api/auth/google/callback',
-        },
-        async (accessToken, refreshToken, profile, done) => {
-            try {
-                // Find or create user
-                let user = await db.users.findOne({
-                    googleId: profile.id,
-                });
-
-                if (!user) {
-                    user = await db.users.create({
-                        googleId: profile.id,
-                        email: profile.emails?.[0]?.value,
-                        name: profile.displayName,
-                        avatar: profile.photos?.[0]?.value,
-                    });
-                }
-
-                return done(null, user);
-            } catch (error) {
-                return done(error, undefined);
-            }
-        }
-    )
-);
-
-// Routes
-app.get('/api/auth/google', passport.authenticate('google', {
-    scope: ['profile', 'email'],
-}));
-
-app.get(
-    '/api/auth/google/callback',
-    passport.authenticate('google', { session: false }),
-    (req, res) => {
-        // Generate JWT
-        const tokens = generateTokens(req.user.id, req.user.email, req.user.role);
-        // Redirect to frontend with token
-        res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${tokens.accessToken}`);
-    }
-);
+```text
+Start: create state/nonce/PKCE verifier using the provider SDK and bind them to this browser.
+Callback: verify the binding, exchange the code server-side, validate provider identity.
+Resolve the local user and current access policy; rotate the server session ID.
+Set the protected session cookie, then redirect to a fixed, allowlisted application path.
+Expected: no access or refresh token appears in the URL, browser history or redirect logs.
 ```
+
+The exact SDK setup depends on the provider. Do not treat a bare Passport callback as a complete OIDC implementation. Keep long-lived provider credentials server-side and out of analytics and logs.
 
 ## Authorization Patterns
 
@@ -349,7 +245,7 @@ const roleHierarchy: Record<Role, Role[]> = {
 };
 
 function hasRole(userRole: Role, requiredRole: Role): boolean {
-    return roleHierarchy[userRole].includes(requiredRole);
+    return roleHierarchy[userRole]?.includes(requiredRole) ?? false;
 }
 
 // Middleware
@@ -437,7 +333,7 @@ app.get('/api/users',
 
 ```typescript
 // Check if user owns resource
-async function requireOwnership(
+function requireOwnership(
     resourceType: 'post' | 'comment',
     resourceIdParam: string = 'id'
 ) {
@@ -448,11 +344,7 @@ async function requireOwnership(
 
         const resourceId = req.params[resourceIdParam];
 
-        // Admins can access anything
-        if (req.user.role === Role.ADMIN) {
-            return next();
-        }
-
+        // No implicit administrator bypass: tenant and resource policy still apply.
         // Check ownership
         let resource;
         if (resourceType === 'post') {
@@ -479,7 +371,9 @@ app.put('/api/posts/:id',
     requireOwnership('post'),
     async (req, res) => {
         // User can only update their own posts
-        const post = await db.posts.update(req.params.id, req.body);
+        // Parse an allowlisted update DTO and include owner/tenant predicates in the write.
+        const update = postUpdateSchema.parse(req.body);
+        const post = await db.posts.updateOwned(req.params.id, req.user.userId, update);
         res.json({ post });
     }
 );
@@ -493,17 +387,15 @@ app.put('/api/posts/:id',
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
 
-// Password validation schema
-const passwordSchema = z.string()
-    .min(12, 'Password must be at least 12 characters')
-    .regex(/[A-Z]/, 'Password must contain uppercase letter')
-    .regex(/[a-z]/, 'Password must contain lowercase letter')
-    .regex(/[0-9]/, 'Password must contain number')
-    .regex(/[^A-Za-z0-9]/, 'Password must contain special character');
+// Illustrative single-factor length policy: no mandatory character-class rules.
+// Also check a compromised/common-password blocklist. Account recovery and MFA matter.
+const passwordSchema = z.string().min(15).max(128);
 
 // Hash password
 async function hashPassword(password: string): Promise<string> {
     const saltRounds = 12;  // 2^12 iterations
+    // Legacy bcrypt has a 72-byte input limit; never silently truncate.
+    if (Buffer.byteLength(password, 'utf8') > 72) throw new Error('Unsupported password length');
     return bcrypt.hash(password, saltRounds);
 }
 
@@ -547,7 +439,7 @@ app.post('/api/auth/register', async (req, res) => {
         });
     } catch (error) {
         if (error instanceof z.ZodError) {
-            return res.status(400).json({ error: error.errors[0].message });
+            return res.status(400).json({ error: error.issues[0].message });
         }
         res.status(500).json({ error: 'Registration failed' });
     }
@@ -558,11 +450,14 @@ app.post('/api/auth/register', async (req, res) => {
 
 ```typescript
 import rateLimit from 'express-rate-limit';
-import RedisStore from 'rate-limit-redis';
+import { RedisStore } from 'rate-limit-redis';
 
 // Login rate limiter
 const loginLimiter = rateLimit({
-    store: new RedisStore({ client: redisClient }),
+    store: new RedisStore({
+        sendCommand: (...args: string[]) => redisClient.sendCommand(args),
+        prefix: 'login-rate:',
+    }),
     windowMs: 15 * 60 * 1000,  // 15 minutes
     max: 5,  // 5 attempts
     message: 'Too many login attempts, please try again later',
@@ -608,11 +503,8 @@ app.use('/api/', apiLimiter);
 - **No Rate Limiting**: Vulnerable to brute force
 - **Trusting Client Data**: Always validate on server
 
-## Resources
+## Verification and references
 
-- **references/jwt-best-practices.md**: JWT implementation guide
-- **references/oauth2-flows.md**: OAuth2 flow diagrams and examples
-- **references/session-security.md**: Secure session management
-- **assets/auth-security-checklist.md**: Security review checklist
-- **assets/password-policy-template.md**: Password requirements template
-- **scripts/token-validator.ts**: JWT validation utility
+Test expired/wrong-audience/wrong-issuer/wrong-algorithm tokens, unknown roles, cross-tenant ownership, refresh reuse/concurrency, login session-ID rotation, logout invalidation and CSRF rejection. Verify logs and redirect URLs contain no credentials. These are required project checks, not results claimed by this example.
+
+For new password storage use a reviewed scheme that supports the full accepted password length, such as Argon2id; the legacy bcrypt sketch above deliberately rejects oversized inputs and is not a complete modern password policy. See [NIST password guidance](https://pages.nist.gov/800-63-4/sp800-63b.html), [JWT BCP](https://www.rfc-editor.org/rfc/rfc8725.html), [OWASP session management](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html), [express-session](https://expressjs.com/en/resources/middleware/session/), [connect-redis](https://github.com/tj/connect-redis), [rate-limit-redis](https://github.com/express-rate-limit/rate-limit-redis), and [Zod error issues](https://zod.dev/error-customization). No unbundled reference files are implied.

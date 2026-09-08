@@ -82,6 +82,11 @@ Prioritize teaching usefulness over decoration: one focused course topic, clear 
 
 Keep the UI responsive and dense enough for repeated study. Avoid oversized marketing hero layouts; this should feel like a polished lesson workspace, not a landing page.
 
+## Example
+
+**User request:**
+
+> Build compact, standalone multi-lesson course artifacts with lesson navigation, objectives, flashcards, quizzes, and source links.
 
 ## Limitations
 

@@ -260,6 +260,12 @@ When helping a user, ask:
 - **schema-markup**: For implementing structured data after stability is restored.
 - **analytics-tracking**: For ensuring measurement is correct post-incident.
 
+## Example
+
+**User request:**
+
+> Investigate this sudden organic-traffic drop, establish the timeline and likely cause, and produce a prioritized recovery plan.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

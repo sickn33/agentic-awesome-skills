@@ -4,7 +4,7 @@ This file contains detailed patterns, checklists, and code samples referenced by
 
 # SQL Optimization Patterns
 
-Transform slow database queries into lightning-fast operations through systematic optimization, proper indexing, and query plan analysis.
+Preserve the query result before assessing performance. PostgreSQL-specific examples target PostgreSQL 18 unless marked otherwise; use an authorized test database with matching tables. DDL, configuration and maintenance examples require explicit authorization. EXPLAIN ANALYZE executes the statement, including possible function side effects.
 
 ## Do not use this skill when
 
@@ -53,9 +53,9 @@ WHERE u.created_at > NOW() - INTERVAL '30 days';
 ```
 
 **Key Metrics to Watch:**
-- **Seq Scan**: Full table scan (usually slow for large tables)
-- **Index Scan**: Using index (good)
-- **Index Only Scan**: Using index without touching table (best)
+- **Seq Scan**: May be appropriate for small tables or queries returning much of a table
+- **Index Scan**: Assess selectivity and heap reads, not just the node name
+- **Index Only Scan**: Check heap fetches and visibility; not automatically fastest
 - **Nested Loop**: Join method (okay for small datasets)
 - **Hash Join**: Join method (good for larger datasets)
 - **Merge Join**: Join method (good for sorted data)
@@ -127,18 +127,18 @@ SELECT * FROM users WHERE email = 'user@example.com';
 
 **Optimize JOINs:**
 ```sql
--- Bad: Cartesian product then filter
+-- Equivalent inner-join spelling; the optimizer may produce the same plan
 SELECT u.name, o.total
 FROM users u, orders o
 WHERE u.id = o.user_id AND u.created_at > '2024-01-01';
 
--- Good: Filter before join
+-- Explicit JOIN improves readability, not necessarily execution
 SELECT u.name, o.total
 FROM users u
 JOIN orders o ON u.id = o.user_id
 WHERE u.created_at > '2024-01-01';
 
--- Better: Filter both tables
+-- Equivalent subquery form; only users are filtered here
 SELECT u.name, o.total
 FROM (SELECT * FROM users WHERE created_at > '2024-01-01') u
 JOIN orders o ON u.id = o.user_id;
@@ -172,28 +172,24 @@ SELECT * FROM orders
 WHERE user_id IN (1, 2, 3, 4, 5);
 ```
 
-```python
-# Good: Single query with JOIN or batch load
-# Using JOIN
-results = db.query("""
-    SELECT u.id, u.name, o.id as order_id, o.total
-    FROM users u
-    LEFT JOIN orders o ON u.id = o.user_id
-    WHERE u.id IN (1, 2, 3, 4, 5)
-""")
+**Executable SQLite batch loading** (an existing connection and table are required):
 
-# Or batch load
-users = db.query("SELECT * FROM users LIMIT 10")
-user_ids = [u.id for u in users]
-orders = db.query(
-    "SELECT * FROM orders WHERE user_id IN (?)",
-    user_ids
-)
-# Group orders by user_id
-orders_by_user = {}
-for order in orders:
-    orders_by_user.setdefault(order.user_id, []).append(order)
+```python
+# batch-loading-example
+
+def load_orders(connection, user_ids):
+    if not user_ids:
+        return []
+    if len(user_ids) > 500:
+        raise ValueError("Batch limit is 500 IDs; split larger inputs")
+    placeholders = ",".join("?" for _ in user_ids)
+    return connection.execute(
+        f"SELECT id, user_id, total FROM orders WHERE user_id IN ({placeholders}) ORDER BY id",
+        tuple(user_ids),
+    ).fetchall()
 ```
+
+Values are bound, never interpolated. A single `IN (?)` parameter does not expand a Python list. Other drivers use different placeholders. Preserve parents with no orders when reconstructing parent/child results; a JOIN duplicates parent rows when multiple children match.
 
 ### Pattern 2: Optimize Pagination
 
@@ -207,13 +203,13 @@ LIMIT 20 OFFSET 100000;  -- Very slow!
 
 **Good: Cursor-Based Pagination**
 ```sql
--- Much faster: Use cursor (last seen ID)
+-- Single-column cursor is valid only when created_at is unique and non-null
 SELECT * FROM users
 WHERE created_at < '2024-01-15 10:30:00'  -- Last cursor
 ORDER BY created_at DESC
 LIMIT 20;
 
--- With composite sorting
+-- For timestamp ties, use both non-null created_at and unique id from the last row
 SELECT * FROM users
 WHERE (created_at, id) < ('2024-01-15 10:30:00', 12345)
 ORDER BY created_at DESC, id DESC
@@ -230,10 +226,10 @@ CREATE INDEX idx_users_cursor ON users(created_at DESC, id DESC);
 -- Bad: Counts all rows
 SELECT COUNT(*) FROM orders;  -- Slow on large tables
 
--- Good: Use estimates for approximate counts
+-- Approximate count only; not equivalent to exact COUNT(*)
 SELECT reltuples::bigint AS estimate
 FROM pg_class
-WHERE relname = 'orders';
+WHERE oid = 'public.orders'::regclass;
 
 -- Good: Filter before counting
 SELECT COUNT(*) FROM orders
@@ -253,14 +249,14 @@ FROM orders
 GROUP BY user_id
 HAVING COUNT(*) > 10;
 
--- Better: Filter first, then group (if possible)
+-- DIFFERENT REQUIREMENT: count only completed orders; not an equivalent rewrite
 SELECT user_id, COUNT(*) as order_count
 FROM orders
 WHERE status = 'completed'
 GROUP BY user_id
 HAVING COUNT(*) > 10;
 
--- Best: Use covering index
+-- Candidate index; compare the actual plan and write overhead
 CREATE INDEX idx_orders_user_status ON orders(user_id, status);
 ```
 
@@ -279,7 +275,7 @@ FROM users u
 LEFT JOIN orders o ON o.user_id = u.id
 GROUP BY u.id, u.name, u.email;
 
--- Better: Use window functions
+-- Alternative window form; may process more rows, measure before choosing
 SELECT DISTINCT ON (u.id)
     u.name, u.email,
     COUNT(o.id) OVER (PARTITION BY u.id) as order_count
@@ -335,11 +331,11 @@ UPDATE users SET status = 'active' WHERE id = 2;
 -- Good: Single UPDATE with IN clause
 UPDATE users
 SET status = 'active'
-WHERE id IN (1, 2, 3, 4, 5, ...);
+WHERE id IN (1, 2, 3, 4, 5);
 
 -- Better: Use temporary table for large batches
 CREATE TEMP TABLE temp_user_updates (id INT, new_status VARCHAR);
-INSERT INTO temp_user_updates VALUES (1, 'active'), (2, 'active'), ...;
+INSERT INTO temp_user_updates VALUES (1, 'active'), (2, 'active');
 
 UPDATE users u
 SET status = t.new_status
@@ -372,7 +368,8 @@ CREATE INDEX idx_user_summary_spent ON user_order_summary(total_spent DESC);
 -- Refresh materialized view
 REFRESH MATERIALIZED VIEW user_order_summary;
 
--- Concurrent refresh (PostgreSQL)
+-- Concurrent refresh requires a populated view and a non-partial UNIQUE index on plain columns.
+CREATE UNIQUE INDEX idx_user_summary_id ON user_order_summary(id);
 REFRESH MATERIALIZED VIEW CONCURRENTLY user_order_summary;
 
 -- Query materialized view (very fast)
@@ -403,24 +400,24 @@ CREATE TABLE orders_2024_q2 PARTITION OF orders
 
 -- Queries automatically use appropriate partition
 SELECT * FROM orders
-WHERE created_at BETWEEN '2024-02-01' AND '2024-02-28';
+WHERE created_at >= '2024-02-01' AND created_at < '2024-03-01';
 -- Only scans orders_2024_q1 partition
 ```
 
 ### Query Hints and Optimization
 
 ```sql
--- Force index usage (MySQL)
+-- Restrict candidate indexes (MySQL); USE INDEX does not force an index scan
 SELECT * FROM users
 USE INDEX (idx_users_email)
 WHERE email = 'user@example.com';
 
 -- Parallel query (PostgreSQL)
 SET max_parallel_workers_per_gather = 4;
-SELECT * FROM large_table WHERE condition;
+SELECT * FROM large_table WHERE id = 123;
 
 -- Join hints (PostgreSQL)
-SET enable_nestloop = OFF;  -- Force hash or merge join
+SET enable_nestloop = OFF;  -- Discourage nested loops for diagnosis; not an absolute prohibition
 ```
 
 ## Best Practices
@@ -454,17 +451,18 @@ REINDEX TABLE users;
 - **Unused Indexes**: Waste space and slow writes
 - **Missing Indexes**: Slow queries, full table scans
 - **Implicit Type Conversion**: Prevents index usage
-- **OR Conditions**: Can't use indexes efficiently
-- **LIKE with Leading Wildcard**: `LIKE '%abc'` can't use index
+- **OR Conditions**: May combine indexes; inspect the plan
+- **LIKE with Leading Wildcard**: Ordinary B-tree indexes often do not help; specialized indexes may
 - **Function in WHERE**: Prevents index usage unless functional index exists
 
 ## Monitoring Queries
 
 ```sql
--- Find slow queries (PostgreSQL)
-SELECT query, calls, total_time, mean_time
+-- Requires an already configured pg_stat_statements extension and suitable privileges.
+-- Query text can contain sensitive values; do not export it without permission.
+SELECT query, calls, total_exec_time, mean_exec_time
 FROM pg_stat_statements
-ORDER BY mean_time DESC
+ORDER BY mean_exec_time DESC
 LIMIT 10;
 
 -- Find missing indexes (PostgreSQL)
@@ -480,11 +478,11 @@ WHERE seq_scan > 0
 ORDER BY seq_tup_read DESC
 LIMIT 10;
 
--- Find unused indexes (PostgreSQL)
+-- Zero scans are observations since statistics reset, not permission to drop an index.
 SELECT
     schemaname,
     tablename,
-    indexname,
+    indexrelname,
     idx_scan,
     idx_tup_read,
     idx_tup_fetch
@@ -493,12 +491,10 @@ WHERE idx_scan = 0
 ORDER BY pg_relation_size(indexrelid) DESC;
 ```
 
-## Resources
+## Verified reference material
 
-- **references/postgres-optimization-guide.md**: PostgreSQL-specific optimization
-- **references/mysql-optimization-guide.md**: MySQL/MariaDB optimization
-- **references/query-plan-analysis.md**: Deep dive into EXPLAIN plans
-- **assets/index-strategy-checklist.md**: When and how to create indexes
-- **assets/query-optimization-checklist.md**: Step-by-step optimization guide
-- **scripts/analyze-slow-queries.sql**: Identify slow queries in your database
-- **scripts/index-recommendations.sql**: Generate index recommendations
+- [PostgreSQL 18 EXPLAIN](https://www.postgresql.org/docs/18/using-explain.html): execution, estimates and observed plans.
+- [PostgreSQL 18 materialized-view refresh](https://www.postgresql.org/docs/18/sql-refreshmaterializedview.html): populated view and unique-index requirements.
+- [PostgreSQL 18 statement statistics](https://www.postgresql.org/docs/18/pgstatstatements.html): extension prerequisites and current time columns.
+
+The former references to unbundled local guides and scripts have been removed. Examples above assume application tables and permissions; they are not one migration script. Performance, locks, concurrent changes, extension setup and production-provider behavior require separate environment-specific verification.

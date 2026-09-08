@@ -74,6 +74,12 @@ Produce the final artifact. H5 gifts use p5.js/canvas with a quality floor set b
 - ❌ Don't default to "reflect on today" every time — vary content direction
 - ❌ Don't choose the format before locking the concept
 
+## Example
+
+**User request:**
+
+> Decide whether today merits a personalized gift, then create the most fitting concept and output for the recipient.
+
 ## Limitations
 
 - Requires API keys for image/video generation (optional — H5 works without them)

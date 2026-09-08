@@ -17,9 +17,9 @@ You do **not** treat GA4 numbers as truth unless validated.
 
 ---
 
-## Phase 0: Measurement Readiness & Signal Quality Index (Required)
+## Phase 0: Measurement Evidence and Optional Review Rubric
 
-Before adding or changing tracking, calculate the **Measurement Readiness & Signal Quality Index**.
+Before changing tracking, inspect actual event definitions and sample events. The optional rubric below organizes reviewer judgments; it has no empirically validated score thresholds and cannot certify data quality. Unknown dimensions remain unknown rather than receiving invented points.
 
 ### Purpose
 
@@ -27,7 +27,7 @@ This index answers:
 
 > **Can this analytics setup produce reliable, decision-grade insights?**
 
-It prevents:
+Use it to identify possible:
 
 * event sprawl
 * vanity tracking
@@ -109,22 +109,22 @@ This is a **diagnostic score**, not a performance KPI.
 
 ---
 
-### Readiness Bands (Required)
+### Illustrative planning bands (not validation gates)
 
 | Score  | Verdict               | Interpretation                    |
 | ------ | --------------------- | --------------------------------- |
-| 85–100 | **Measurement-Ready** | Safe to optimize and experiment   |
+| 85–100 | **Measurement-Ready** | Review whether observed evidence supports the intended decision   |
 | 70–84  | **Usable with Gaps**  | Fix issues before major decisions |
 | 55–69  | **Unreliable**        | Data cannot be trusted yet        |
 | <55    | **Broken**            | Do not act on this data           |
 
-If verdict is **Broken**, stop and recommend remediation first.
+Prioritize concrete defects such as duplicate purchases, missing exposures or consent violations regardless of the total score. A high score must never override a failed reconciliation.
 
 ---
 
 ## Phase 1: Context & Decision Definition
 
-(Proceed only after scoring)
+(Start from the product decision and available evidence)
 
 ### 1. Business Context
 
@@ -354,7 +354,7 @@ Analytics that violate trust undermine optimization.
 
 ### Measurement Strategy Summary
 
-* Measurement Readiness Index score + verdict
+* Observed reconciliation results, unknowns and optional subjective rubric
 * Key risks and gaps
 * Recommended remediation order
 
@@ -402,9 +402,18 @@ Analytics that violate trust undermine optimization.
 ---
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+
+Use when adding a decision-relevant event, investigating discrepant conversion counts, or auditing consent, attribution and duplicate firing. Start with existing instrumentation before proposing another analytics service.
+
+## Worked example
+
+Input: the UI fires `purchase_completed` on both redirect and reload. Define the paid transaction ID as the deduplication key, distinguish payment success from button clicks, and reconcile one successful transaction plus two reloads against the order source of truth. Expected: one counted purchase, a documented treatment of refunds, and no card data, email or raw URL query in event properties.
+
+Record the source transaction count, accepted events, rejected duplicates and unexplained differences for the same time window. Test consent denied, consent granted and a delayed backend confirmation separately; do not infer delivery from a dataLayer push alone.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Browser blockers, consent and offline clients create missing data; analytics totals need not equal all users or transactions.
+- Attribution models describe assigned credit, not causal impact.
+- Pseudonymous identifiers and URLs can still expose personal information; minimize and validate actual payloads.
+- The rubric is a review aid, not a benchmark, compliance badge or authorization to deploy tracking.

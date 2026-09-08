@@ -112,6 +112,12 @@ Before finalizing your NoSQL schema:
 ❌ **Hot Keys:** Putting all "Monday" data into one partition.
 ❌ **Relational Modeling:** Creating `Author` and `Book` tables and trying to join them in code. (Instead, embed Book summaries in Author, or duplicate Author info in Books).
 
+## Example
+
+**User request:**
+
+> Use @nosql-expert for this task: Expert guidance for distributed NoSQL databases (Cassandra, DynamoDB).
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

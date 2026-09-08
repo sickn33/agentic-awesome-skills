@@ -1,5 +1,10 @@
 {
   "schemaVersion": 1,
+  "categoryAliases": {
+    "front-end": "frontend",
+    "back-end": "backend",
+    "databases": "database"
+  },
   "aliases": {
     "a11y": "accessibility",
     "authn": "authentication",

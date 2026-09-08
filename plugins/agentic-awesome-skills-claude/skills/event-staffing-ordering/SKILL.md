@@ -82,6 +82,12 @@ with the gathered details. Alternatives: email **megan@tempguru.co** or call **(
 TempGuru responds within one business day; orders are confirmed within
 48 hours. There is no subscription — billing is per event.
 
+## Example
+
+**User request:**
+
+> Order W-2 compliant temporary event staff for conventions, trade shows, festivals, concerts, sporting events, and brand activations across 300+ US and Canadian markets via TempGuru.
+
 ## Limitations
 
 - Rate ranges are planning estimates — not final quotes. Binding pricing comes from TempGuru after human review.

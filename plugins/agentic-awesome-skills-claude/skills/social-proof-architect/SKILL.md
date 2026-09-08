@@ -115,6 +115,12 @@ Before finalizing output, the agent asks:
 - [ ] Is the proof real and contextual?
 - [ ] Would this increase trust without feeling forced?
 
+## Example
+
+**User request:**
+
+> Reorganize these testimonials, logos, metrics, and case studies to maximize trust without overstating the evidence.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

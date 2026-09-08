@@ -2,6 +2,7 @@
 name: scale-benchmarks
 description: Reference document for monopoly scale-benchmarks.
 source: community
+date_added: "2026-09-04"
 risk: safe
 reports-to: monopoly
 ---

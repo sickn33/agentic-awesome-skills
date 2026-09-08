@@ -126,6 +126,12 @@ Before finalizing output, the agent asks:
 - [ ] Did I avoid emotional overreach or coercion?
 - [ ] Would this arc actually help the target human act?
 
+## Example
+
+**User request:**
+
+> Design the emotional arc for this landing page from first impression through the final call to action.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

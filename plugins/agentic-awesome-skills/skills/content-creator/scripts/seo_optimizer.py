@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SEO Content Optimizer - Analyzes and optimizes content for SEO
+SEO Content Optimizer - local Markdown diagnostics; no ranking or quality score
 """
 
 import re
@@ -38,7 +38,7 @@ class SEOOptimizer:
             'url_length': (50, 60),
             'paragraph_length': (40, 150),
             'heading_keyword_placement': True,
-            'keyword_density': (0.01, 0.03)  # 1-3%
+            # No keyword-density or word-count target is a ranking guarantee.
         }
     
     def analyze(self, content: str, target_keyword: str = None, 
@@ -51,7 +51,8 @@ class SEOOptimizer:
             'structure_analysis': self._analyze_structure(content),
             'readability': self._analyze_readability(content),
             'meta_suggestions': {},
-            'optimization_score': 0,
+            'optimization_score': None,  # Legacy field: no defensible aggregate SEO score.
+            'method': 'Local text diagnostics; not a ranking or quality assessment',
             'recommendations': []
         }
         
@@ -67,7 +68,7 @@ class SEOOptimizer:
         )
         
         # Calculate optimization score
-        analysis['optimization_score'] = self._calculate_seo_score(analysis)
+        # Keep the legacy score field null rather than inventing a quality threshold.
         
         # Generate recommendations
         analysis['recommendations'] = self._generate_recommendations(analysis)
@@ -83,14 +84,14 @@ class SEOOptimizer:
         results = {
             'primary_keyword': {
                 'keyword': primary,
-                'count': content_lower.count(primary.lower()),
+                'count': len(re.findall(r'(?<!\w)' + re.escape(primary.lower()) + r'(?!\w)', content_lower)),
                 'density': 0,
-                'in_title': False,
-                'in_headings': False,
+                'in_title': bool(re.search(r'^# .*?(?<!\w)' + re.escape(primary) + r'(?!\w)', content, re.I | re.M)),
+                'in_headings': bool(re.search(r'^#{1,6} .*?(?<!\w)' + re.escape(primary) + r'(?!\w)', content, re.I | re.M)),
                 'in_first_paragraph': False
             },
             'secondary_keywords': [],
-            'lsi_keywords': []
+            'frequent_terms': []
         }
         
         # Calculate primary keyword metrics
@@ -107,7 +108,7 @@ class SEOOptimizer:
         
         # Analyze secondary keywords
         for keyword in secondary:
-            count = content_lower.count(keyword.lower())
+            count = len(re.findall(r'(?<!\w)' + re.escape(keyword.lower()) + r'(?!\w)', content_lower)) if keyword.strip() else 0
             results['secondary_keywords'].append({
                 'keyword': keyword,
                 'count': count,
@@ -115,7 +116,7 @@ class SEOOptimizer:
             })
         
         # Extract potential LSI keywords
-        results['lsi_keywords'] = self._extract_lsi_keywords(content, primary)
+        results['frequent_terms'] = self._extract_frequent_terms(content, primary)
         
         return results
     
@@ -177,11 +178,11 @@ class SEOOptimizer:
     
     def _analyze_readability(self, content: str) -> Dict:
         """Analyze content readability"""
-        sentences = re.split(r'[.!?]+', content)
+        sentences = [s.strip() for s in re.split(r'[.!?]+', content) if s.strip()]
         words = content.split()
         
         if not sentences or not words:
-            return {'score': 0, 'level': 'Unknown'}
+            return {'score': 0, 'level': 'Unknown', 'avg_sentence_length': 0}
         
         avg_sentence_length = len(words) / len(sentences)
         
@@ -205,8 +206,8 @@ class SEOOptimizer:
             'avg_sentence_length': round(avg_sentence_length, 1)
         }
     
-    def _extract_lsi_keywords(self, content: str, primary_keyword: str) -> List[str]:
-        """Extract potential LSI (semantically related) keywords"""
+    def _extract_frequent_terms(self, content: str, primary_keyword: str) -> List[str]:
+        """Count repeated English words; this does not measure semantic relationships"""
         words = re.findall(r'\b[a-z]+\b', content.lower())
         word_freq = {}
         
@@ -231,7 +232,7 @@ class SEOOptimizer:
     def _generate_meta_suggestions(self, content: str, keyword: str = None) -> Dict:
         """Generate SEO meta tag suggestions"""
         # Extract first sentence for description base
-        sentences = re.split(r'[.!?]+', content)
+        sentences = [s.strip() for s in re.split(r'[.!?]+', content) if s.strip()]
         first_sentence = sentences[0] if sentences else content[:160]
         
         suggestions = {
@@ -244,12 +245,12 @@ class SEOOptimizer:
         
         if keyword:
             # Title suggestion
-            suggestions['title'] = f"{keyword.title()} - Complete Guide"
+            suggestions['title'] = f"{keyword.title()} - Overview"
             if len(suggestions['title']) > 60:
                 suggestions['title'] = keyword.title()[:57] + "..."
             
             # Meta description
-            desc_base = f"Learn everything about {keyword}. {first_sentence}"
+            desc_base = f"Read about {keyword}. {first_sentence}"
             if len(desc_base) > 160:
                 desc_base = desc_base[:157] + "..."
             suggestions['meta_description'] = desc_base
@@ -264,82 +265,15 @@ class SEOOptimizer:
         
         return suggestions
     
-    def _calculate_seo_score(self, analysis: Dict) -> int:
-        """Calculate overall SEO optimization score"""
-        score = 0
-        max_score = 100
-        
-        # Content length scoring (20 points)
-        if 300 <= analysis['content_length'] <= 2500:
-            score += 20
-        elif 200 <= analysis['content_length'] < 300:
-            score += 10
-        elif analysis['content_length'] > 2500:
-            score += 15
-        
-        # Keyword optimization (30 points)
-        if analysis['keyword_analysis']:
-            kw_data = analysis['keyword_analysis']['primary_keyword']
-            
-            # Density scoring
-            if 0.01 <= kw_data['density'] <= 0.03:
-                score += 15
-            elif 0.005 <= kw_data['density'] < 0.01:
-                score += 8
-            
-            # Placement scoring
-            if kw_data['in_first_paragraph']:
-                score += 10
-            if kw_data.get('in_headings'):
-                score += 5
-        
-        # Structure scoring (25 points)
-        struct = analysis['structure_analysis']
-        if struct['headings']['total'] > 0:
-            score += 10
-        if struct['paragraphs'] >= 3:
-            score += 10
-        if struct['links']['internal'] > 0 or struct['links']['external'] > 0:
-            score += 5
-        
-        # Readability scoring (25 points)
-        readability_score = analysis['readability']['score']
-        score += int(readability_score * 0.25)
-        
-        return min(score, max_score)
-    
     def _generate_recommendations(self, analysis: Dict) -> List[str]:
         """Generate SEO improvement recommendations"""
         recommendations = []
         
-        # Content length recommendations
-        if analysis['content_length'] < 300:
-            recommendations.append(
-                f"Increase content length to at least 300 words (currently {analysis['content_length']})"
-            )
-        elif analysis['content_length'] > 3000:
-            recommendations.append(
-                "Consider breaking long content into multiple pages or adding a table of contents"
-            )
-        
-        # Keyword recommendations
+        # Presence is an observation, not an instruction to stuff keywords.
         if analysis['keyword_analysis']:
-            kw_data = analysis['keyword_analysis']['primary_keyword']
-            
-            if kw_data['density'] < 0.01:
-                recommendations.append(
-                    f"Increase keyword density for '{kw_data['keyword']}' (currently {kw_data['density']:.2%})"
-                )
-            elif kw_data['density'] > 0.03:
-                recommendations.append(
-                    f"Reduce keyword density to avoid over-optimization (currently {kw_data['density']:.2%})"
-                )
-            
-            if not kw_data['in_first_paragraph']:
-                recommendations.append(
-                    "Include primary keyword in the first paragraph"
-                )
-        
+            if analysis['keyword_analysis']['primary_keyword']['count'] == 0:
+                recommendations.append('Target phrase absent: check whether the draft answers the intended reader question')
+
         # Structure recommendations
         struct = analysis['structure_analysis']
         if struct['headings']['total'] == 0:
@@ -369,7 +303,7 @@ def optimize_content(content: str, keyword: str = None,
     # Format output
     output = [
         "=== SEO Content Analysis ===",
-        f"Overall SEO Score: {results['optimization_score']}/100",
+        'Local text diagnostics; no ranking or quality score',
         f"Content Length: {results['content_length']} words",
         f"",
         "Content Structure:",
@@ -394,9 +328,9 @@ def optimize_content(content: str, keyword: str = None,
             f""
         ])
         
-        if results['keyword_analysis']['lsi_keywords']:
-            output.append("  Related Keywords Found:")
-            for lsi in results['keyword_analysis']['lsi_keywords'][:5]:
+        if results['keyword_analysis']['frequent_terms']:
+            output.append("  Frequent English Terms (not semantic keywords):")
+            for lsi in results['keyword_analysis']['frequent_terms'][:5]:
                 output.append(f"    • {lsi}")
             output.append("")
     
@@ -422,8 +356,11 @@ if __name__ == "__main__":
     import sys
     
     if len(sys.argv) > 1:
-        with safe_user_path(sys.argv[1]).open('r') as f:
-            content = f.read()
+        with safe_user_path(sys.argv[1]).open('rb') as f:
+            raw = f.read(1024 * 1024 + 1)
+        if len(raw) > 1024 * 1024:
+            raise SystemExit('Input exceeds 1 MiB')
+        content = raw.decode('utf-8')
         
         keyword = sys.argv[2] if len(sys.argv) > 2 else None
         secondary = sys.argv[3] if len(sys.argv) > 3 else None

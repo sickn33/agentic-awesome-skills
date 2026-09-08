@@ -226,6 +226,12 @@ Fix action: Use path.basename() and generate safe name
 - User mentions or implies: image upload
 - User mentions or implies: cloud storage
 
+## Example
+
+**User request:**
+
+> Use @file-uploads for this task: Expert at handling file uploads and cloud storage.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

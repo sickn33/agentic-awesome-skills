@@ -8,6 +8,7 @@ import json
 import os
 import re
 import sys
+import stat
 from collections import defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -395,9 +396,14 @@ def write_json(path: Path, data: dict, *, private: bool) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.is_symlink():
         raise ProfileError(f"Refusing to write through symlink: {path}")
-    flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
+    flags = os.O_WRONLY | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0)
+    flags |= getattr(os, "O_NONBLOCK", 0)
     fd = os.open(path, flags, 0o600 if private else 0o644)
     with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        file_stat = os.fstat(handle.fileno())
+        if not stat.S_ISREG(file_stat.st_mode) or file_stat.st_nlink != 1:
+            raise ProfileError(f"Refusing to write non-regular or multiply linked file: {path}")
+        os.ftruncate(handle.fileno(), 0)
         os.fchmod(handle.fileno(), 0o600 if private else 0o644)
         json.dump(data, handle, indent=2, ensure_ascii=False, sort_keys=True)
         handle.write("\n")

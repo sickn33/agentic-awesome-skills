@@ -10,6 +10,7 @@ const core = require("../../lib/aas-v1");
 const {
   execute,
   main,
+  readJsonFile,
   windowsOutputDurabilityDetails,
   writeNewStackArtifactDirectory,
 } = require("../../lib/aas-v1/cli/main");
@@ -94,6 +95,34 @@ test("Windows output reports certified durability without marking the preview fa
     windowsOutputDurabilityDetails({ outputDurability: "directorySynced", certificationStatus: "certifiable" }, "linux"),
     {},
   );
+});
+
+test("planning infers a sole target, rejects ambiguity and binds the runtime catalog", async (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const catalog = core.loadBundledCatalog({ root: ROOT });
+  const { manifest } = core.composeStack(catalog, {
+    targets: [{ host: "codex", scope: "project" }],
+    profile: { goals: ["test planning"], languages: [], frameworks: [], constraints: [] },
+    skillIds: ["ai-agents-architect"],
+  });
+  const manifestPath = path.join(item.root, "manifest.json");
+  const out = path.join(item.root, "plan.json");
+  const argv = ["stack", "plan", "--manifest", manifestPath, "--target-root", item.root, "--out", out];
+  fs.writeFileSync(manifestPath, core.canonicalJson(manifest));
+  await execute(argv, item.dependencies);
+  assert.equal(JSON.parse(fs.readFileSync(out)).payload.target.host, "codex");
+  fs.unlinkSync(out);
+  const before = fs.readdirSync(item.root).sort();
+  manifest.targets.push({ host: "claude", scope: "project" });
+  fs.writeFileSync(manifestPath, core.canonicalJson(manifest));
+  await assert.rejects(execute(argv, item.dependencies), { code: "AAS_CLI_TARGET_REQUIRED" });
+  await assert.rejects(execute([...argv, "--target", "codex:user"], item.dependencies), { code: "AAS_CLI_TARGET_NOT_IN_MANIFEST" });
+  assert.deepEqual(fs.readdirSync(item.root).sort(), before);
+  await assert.rejects(execute([...argv, "--target", "codex:project"], {
+    resolveVerifiedRuntime: async () => ({ identity: item.runtime, sourceRoot: item.root }),
+  }), { code: "AAS_PLAN_RUNTIME_CATALOG_MISMATCH" });
+  assert.deepEqual(fs.readdirSync(item.root).sort(), before);
 });
 
 test("CLI stack lifecycle persists an explicit agent selection, plans it, applies it, and diagnoses it", async (context) => {
@@ -258,6 +287,124 @@ test("CLI exits stably on missing approval and never prints a stack trace", asyn
   assert.equal(error.status, "error");
   assert.equal(error.protocolVersion, core.protocolVersion);
   assert.doesNotMatch(stderr, /\bat\s+\S+\.js:/);
+});
+
+test("CLI normalizes native file errors without throwing or exposing paths", async (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const leaf = path.join(item.root, "private-leaf");
+  fs.writeFileSync(leaf, "unchanged fixture");
+  for (const [manifestPath, expectedCode, expectedExit, expectedCategory] of [
+    [path.join(item.root, "private-missing.json"), "AAS_CLI_PATH_NOT_FOUND", 5, "filesystem"],
+    [path.join(leaf, "child.json"), "AAS_CLI_EXPECTED_DIRECTORY", 5, "filesystem"],
+    [item.root, "AAS_CLI_JSON_FILE_UNSAFE", 2, "invalidInput"],
+  ]) {
+    let stdout = "";
+    let stderr = "";
+    const code = await main(["stack", "validate", "--manifest", manifestPath], {
+      stdout: { write: (value) => { stdout += value; } },
+      stderr: { write: (value) => { stderr += value; } },
+    });
+    assert.equal(code, expectedExit);
+    assert.equal(stdout, "");
+    const result = JSON.parse(stderr);
+    assert.equal(result.code, expectedCode);
+    assert.equal(result.category, expectedCategory);
+    assert.deepEqual(result.details, {});
+    assert.equal(stderr.includes(item.root), false);
+    assert.doesNotMatch(stderr, /AAS_CLI_ERROR_SCHEMA_INVALID|ENOENT|EISDIR|\bat\s+\S+\.js:/);
+    assert.deepEqual(fs.readdirSync(item.root), ["private-leaf"]);
+    assert.equal(fs.readFileSync(leaf, "utf8"), "unchanged fixture");
+  }
+});
+
+test("CLI JSON reads reject a file replaced between inspection and open", (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const input = path.join(item.root, "input.json");
+  const replacement = path.join(item.root, "replacement.json");
+  fs.writeFileSync(input, '{"value":"original"}\n');
+  fs.writeFileSync(replacement, '{"value":"replacement"}\n');
+  const originalLstatSync = fs.lstatSync;
+  context.after(() => { fs.lstatSync = originalLstatSync; });
+  let replaced = false;
+  fs.lstatSync = function lstatAndReplace(candidate, ...args) {
+    const stat = originalLstatSync(candidate, ...args);
+    if (candidate === input && !replaced) {
+      replaced = true;
+      fs.renameSync(input, path.join(item.root, "inspected.json"));
+      fs.renameSync(replacement, input);
+    }
+    return stat;
+  };
+
+  assert.throws(() => readJsonFile(input), { code: "AAS_CLI_JSON_FILE_UNSAFE" });
+});
+
+test("CLI JSON reads do not block when the inspected file becomes a FIFO", (context) => {
+  if (process.platform === "win32") {
+    context.skip("POSIX FIFO behavior");
+    return;
+  }
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const input = path.join(item.root, "input.json");
+  const modulePath = path.join(ROOT, "tools/lib/aas-v1/cli/main.js");
+  const probe = `
+    const fs = require("node:fs");
+    const { spawnSync } = require("node:child_process");
+    const [input, modulePath] = process.argv.slice(1);
+    const { readJsonFile } = require(modulePath);
+    fs.writeFileSync(input, "{}\\n");
+    const originalLstatSync = fs.lstatSync;
+    let replaced = false;
+    fs.lstatSync = function lstatAndReplace(candidate, ...args) {
+      const stat = originalLstatSync(candidate, ...args);
+      if (candidate === input && !replaced) {
+        replaced = true;
+        fs.renameSync(input, input + ".original");
+        const result = spawnSync("mkfifo", [input], { encoding: "utf8" });
+        if (result.status !== 0) throw new Error(result.stderr || "mkfifo failed");
+      }
+      return stat;
+    };
+    try {
+      readJsonFile(input);
+      process.exitCode = 2;
+    } catch (error) {
+      if (error.code !== "AAS_CLI_JSON_FILE_UNSAFE") {
+        console.error(error);
+        process.exitCode = 3;
+      }
+    }
+  `;
+
+  const result = spawnSync(process.execPath, ["-e", probe, input, modulePath], {
+    encoding: "utf8",
+    timeout: 2_000,
+  });
+  assert.notEqual(result.error?.code, "ETIMEDOUT", "opening the raced FIFO must not block");
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+});
+
+test("CLI JSON reads enforce the byte limit when a file grows after inspection", (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const input = path.join(item.root, "input.json");
+  fs.writeFileSync(input, "{}\n");
+  const originalLstatSync = fs.lstatSync;
+  context.after(() => { fs.lstatSync = originalLstatSync; });
+  let grown = false;
+  fs.lstatSync = function lstatAndGrow(candidate, ...args) {
+    const stat = originalLstatSync(candidate, ...args);
+    if (candidate === input && !grown) {
+      grown = true;
+      fs.writeFileSync(input, `${JSON.stringify({ padding: "x".repeat(4096) })}\n`);
+    }
+    return stat;
+  };
+
+  assert.throws(() => readJsonFile(input, 64), { code: "AAS_CLI_JSON_FILE_UNSAFE" });
 });
 
 test("CLI reports an invalid stack manifest as invalid input", async (context) => {
@@ -574,15 +721,20 @@ test("production CLI resolves and re-verifies a content-addressed runtime cache"
     ["package/package.json", `${JSON.stringify(packageJson)}\n`],
     ["package/tools/bin/aas-mcp.js", "#!/usr/bin/env node\n"],
     ["package/tools/lib/aas-v1/index.js", "module.exports = {};\n"],
-    ["package/data/aas-v1/catalog-manifest.v1.json", "{}\n"],
-    ["package/data/catalog.json", '{"skills":[]}\n'],
     ["package/data/plugin-compatibility.json", '{"skills":[]}\n'],
     ["package/node_modules/ajv/package.json", '{"name":"ajv","version":"8.20.0"}\n'],
     ["package/node_modules/sanitize-filename/package.json", '{"name":"sanitize-filename","version":"1.6.4"}\n'],
     ["package/node_modules/yaml/package.json", '{"name":"yaml","version":"2.9.0"}\n'],
     ["package/skills_index.json", `${JSON.stringify([{ id: "ai-agents-architect", path: "skills/ai-agents-architect" }])}\n`],
-    ["package/skills/ai-agents-architect/SKILL.md", "# AI Agents Architect\n"],
+    ["package/skills/ai-agents-architect/SKILL.md", fs.readFileSync(path.join(ROOT, "skills/ai-agents-architect/SKILL.md"))],
   ].map(([entryPath, bytes]) => ({ path: entryPath, bytes: Buffer.from(bytes) }));
+  const offlineManifest = "data/aas-v1/catalog-manifest.v1.json";
+  const offline = JSON.parse(fs.readFileSync(path.join(ROOT, offlineManifest)));
+  for (const file of [offlineManifest, ...offline.assets.map(asset => asset.path)]) {
+    const entry = { path: `package/${file}`, bytes: fs.readFileSync(path.join(ROOT, file)) };
+    const existing = entries.findIndex(candidate => candidate.path === entry.path);
+    if (existing === -1) entries.push(entry); else entries[existing] = entry;
+  }
   const promoted = await core.cache.promoteRuntime({
     cacheRoot,
     release: {
@@ -608,7 +760,7 @@ test("production CLI resolves and re-verifies a content-addressed runtime cache"
   const planned = spawnSync(process.execPath, [
     path.join(ROOT, "tools/bin/aas.js"), "stack", "plan",
     "--manifest", manifestPath, "--target", "codex:project", "--target-root", targetRoot,
-    "--cache-root", cacheRoot, "--runtime-integrity", integrity,
+    "--cache-root", cacheRoot,
     "--out", planPath,
   ], { cwd: targetRoot, encoding: "utf8" });
   assert.equal(planned.status, 0, planned.stderr);
@@ -636,4 +788,61 @@ test("production CLI resolves and re-verifies a content-addressed runtime cache"
   assert.equal(rejected.status, 3, rejected.stderr);
   assert.equal(JSON.parse(rejected.stderr).code, "AAS_RUNTIME_NOT_VERIFIED");
   assert.equal(fs.existsSync(path.join(targetRoot, ".aas")), false);
+});
+
+test("installation handoff preserves the agent selection and only prepares a quoted dry run", async (context) => {
+  const item = fixture();
+  context.after(() => fs.rmSync(item.root, { recursive: true, force: true }));
+  const catalog = core.loadBundledCatalog({ root: ROOT });
+  const { manifest } = core.composeStack(catalog, {
+    targets: [{ host: "codex", scope: "project" }],
+    profile: { goals: ["agent decision"], languages: [], frameworks: [], constraints: [] },
+    skillIds: ["debugging-strategies", "ai-agents-architect"],
+  });
+  const file = path.join(item.root, "manifest.json");
+  fs.writeFileSync(file, core.canonicalJson(manifest));
+  const destination = path.join(item.root, "Nicco's $(touch unexpected) `oops`");
+  const argv = ["stack", "install-preview", "--manifest", file, "--destination", destination];
+  const result = await execute(argv);
+  assert.equal(result.selectionSource, "agent");
+  assert.deepEqual(result.selectedSkillIds, manifest.skills.map((skill) => skill.id));
+  assert.equal(result.executes, false);
+  assert.equal(result.appliesCorePlan, false);
+  assert.equal(result.preview.args.at(-1), "--dry-run");
+  assert.ok(result.preview.args.includes(`--package=agentic-awesome-skills@${catalog.version}`));
+  // Replace npm with a shell function that prints argv: prove quoting without invoking npm.
+  const parsed = spawnSync("/bin/sh", ["-c", `npm() { printf '%s\\n' "$@"; }; ${result.preview.command}`], { encoding: "utf8", cwd: item.root });
+  assert.equal(parsed.status, 0, parsed.stderr);
+  assert.deepEqual(parsed.stdout.trimEnd().split("\n"), result.preview.args);
+  assert.deepEqual(fs.readdirSync(item.root), ["manifest.json"]);
+  await assert.rejects(execute([...argv, "--shell", "powershell"]), { code: "AAS_CLI_INSTALL_DESTINATION_INVALID" });
+  await assert.rejects(execute([...argv, "--shell", "fish"]), { code: "AAS_CLI_SHELL_INVALID" });
+  const powershell = await execute(["stack", "install-preview", "--manifest", file, "--destination", "C:\\Users\\Nicco's Skills", "--shell", "powershell"]);
+  assert.match(powershell.preview.command, /Nicco''s Skills/);
+  assert.equal(powershell.preview.executable, "npm.cmd");
+  for (const invalid of ["bad?directory", "bad|directory", "CON", "trailing."]) {
+    await assert.rejects(execute(["stack", "install-preview", "--manifest", file, "--destination", path.join(item.root, invalid)]), { code: "AAS_CLI_INSTALL_DESTINATION_INVALID" });
+    const rejected = spawnSync(process.execPath, [path.join(ROOT, "tools/bin/install.js"), "--path", path.join(item.root, invalid), "--skills", "debugging-strategies", "--dry-run"], { encoding: "utf8" });
+    assert.equal(rejected.status, 1);
+    assert.match(rejected.stderr, /^Error: Unsafe path segment:/);
+    assert.doesNotMatch(rejected.stderr, /\n\s+at /);
+  }
+  manifest.skills = [];
+  fs.writeFileSync(file, core.canonicalJson(manifest));
+  await assert.rejects(execute(argv), { code: "AAS_CLI_SELECTION_EMPTY" });
+  manifest.skills = [{ id: "not-a-real-canonical-skill" }];
+  fs.writeFileSync(file, core.canonicalJson(manifest));
+  await assert.rejects(execute(argv));
+});
+
+test("CLI actionable errors keep private native paths out of the result", async () => {
+  let output = "";
+  const code = await main(["stack", "validate", "--manifest", "/nonexistent/private-project/secret.json"], {
+    stderr: { write: (value) => { output += value; } },
+  });
+  assert.notEqual(code, 0);
+  const result = JSON.parse(output);
+  assert.equal(result.code, "AAS_CLI_PATH_NOT_FOUND");
+  assert.equal(result.remediation[0].action, "review-input");
+  assert.ok(!output.includes("private-project"));
 });

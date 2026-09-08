@@ -9,492 +9,65 @@ metadata:
 
 # Langfuse
 
-Expert in Langfuse - the open-source LLM observability platform. Covers tracing,
-prompt management, evaluation, datasets, and integration with LangChain, LlamaIndex,
-and OpenAI. Essential for debugging, monitoring, and improving LLM applications
-in production.
-
-**Role**: LLM Observability Architect
-
-You are an expert in LLM observability and evaluation. You think in terms of
-traces, spans, and metrics. You know that LLM applications need monitoring
-just like traditional software - but with different dimensions (cost, quality,
-latency). You use data to drive prompt improvements and catch regressions.
-
-### Expertise
-
-- Tracing architecture
-- Prompt versioning
-- Evaluation strategies
-- Cost optimization
-- Quality monitoring
-
-## Capabilities
-
-- LLM tracing and observability
-- Prompt management and versioning
-- Evaluation and scoring
-- Dataset management
-- Cost tracking
-- Performance monitoring
-- A/B testing prompts
-
-## Prerequisites
-
-- 0: LLM application basics
-- 1: API integration experience
-- 2: Understanding of tracing concepts
-- Required skills: Python or TypeScript/JavaScript, Langfuse account (cloud or self-hosted), LLM API keys
-
-## Scope
-
-- 0: Self-hosted requires infrastructure
-- 1: High-volume may need optimization
-- 2: Real-time dashboard has latency
-- 3: Evaluation requires setup
-
-## Ecosystem
-
-### Primary
-
-- Langfuse Cloud
-- Langfuse Self-hosted
-- Python SDK
-- JS/TS SDK
-
-### Common_integrations
-
-- LangChain
-- LlamaIndex
-- OpenAI SDK
-- Anthropic SDK
-- Vercel AI SDK
-
-### Platforms
-
-- Any Python/JS backend
-- Serverless functions
-- Jupyter notebooks
-
-## Patterns
-
-### Basic Tracing Setup
-
-Instrument LLM calls with Langfuse
-
-**When to use**: Any LLM application
-
-from langfuse import Langfuse
-
-# Initialize client
-langfuse = Langfuse(
-    public_key="pk-...",
-    secret_key="sk-...",
-    host="https://cloud.langfuse.com"  # or self-hosted URL
-)
-
-# Create a trace for a user request
-trace = langfuse.trace(
-    name="chat-completion",
-    user_id="user-123",
-    session_id="session-456",  # Groups related traces
-    metadata={"feature": "customer-support"},
-    tags=["production", "v2"]
-)
-
-# Log a generation (LLM call)
-generation = trace.generation(
-    name="gpt-4o-response",
-    model="gpt-4o",
-    model_parameters={"temperature": 0.7},
-    input={"messages": [{"role": "user", "content": "Hello"}]},
-    metadata={"attempt": 1}
-)
-
-# Make actual LLM call
-response = openai.chat.completions.create(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "Hello"}]
-)
-
-# Complete the generation with output
-generation.end(
-    output=response.choices[0].message.content,
-    usage={
-        "input": response.usage.prompt_tokens,
-        "output": response.usage.completion_tokens
-    }
-)
-
-# Score the trace
-trace.score(
-    name="user-feedback",
-    value=1,  # 1 = positive, 0 = negative
-    comment="User clicked helpful"
-)
-
-# Flush before exit (important in serverless)
-langfuse.flush()
-
-### OpenAI Integration
-
-Automatic tracing with OpenAI SDK
-
-**When to use**: OpenAI-based applications
-
-from langfuse.openai import openai
-
-# Drop-in replacement for OpenAI client
-# All calls automatically traced
-
-response = openai.chat.completions.create(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "Hello"}],
-    # Langfuse-specific parameters
-    name="greeting",  # Trace name
-    session_id="session-123",
-    user_id="user-456",
-    tags=["test"],
-    metadata={"feature": "chat"}
-)
-
-# Works with streaming
-stream = openai.chat.completions.create(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "Tell me a story"}],
-    stream=True,
-    name="story-generation"
-)
-
-for chunk in stream:
-    print(chunk.choices[0].delta.content, end="")
-
-# Works with async
-import asyncio
-from langfuse.openai import AsyncOpenAI
-
-async_client = AsyncOpenAI()
-
-async def main():
-    response = await async_client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": "Hello"}],
-        name="async-greeting"
-    )
-
-### LangChain Integration
-
-Trace LangChain applications
-
-**When to use**: LangChain-based applications
-
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
-from langfuse.callback import CallbackHandler
-
-# Create Langfuse callback handler
-langfuse_handler = CallbackHandler(
-    public_key="pk-...",
-    secret_key="sk-...",
-    host="https://cloud.langfuse.com",
-    session_id="session-123",
-    user_id="user-456"
-)
-
-# Use with any LangChain component
-llm = ChatOpenAI(model="gpt-4o")
-
-prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are a helpful assistant."),
-    ("user", "{input}")
-])
-
-chain = prompt | llm
-
-# Pass handler to invoke
-response = chain.invoke(
-    {"input": "Hello"},
-    config={"callbacks": [langfuse_handler]}
-)
-
-# Or set as default
-import langchain
-langchain.callbacks.manager.set_handler(langfuse_handler)
-
-# Then all calls are traced
-response = chain.invoke({"input": "Hello"})
-
-# Works with agents, retrievers, etc.
-from langchain.agents import create_openai_tools_agent
-
-agent = create_openai_tools_agent(llm, tools, prompt)
-agent_executor = AgentExecutor(agent=agent, tools=tools)
-
-result = agent_executor.invoke(
-    {"input": "What's the weather?"},
-    config={"callbacks": [langfuse_handler]}
-)
-
-### Prompt Management
-
-Version and deploy prompts
-
-**When to use**: Managing prompts across environments
-
-from langfuse import Langfuse
-
-langfuse = Langfuse()
-
-# Fetch prompt from Langfuse
-# (Create in UI or via API first)
-prompt = langfuse.get_prompt("customer-support-v2")
-
-# Get compiled prompt with variables
-compiled = prompt.compile(
-    customer_name="John",
-    issue="billing question"
-)
-
-# Use with OpenAI
-response = openai.chat.completions.create(
-    model=prompt.config.get("model", "gpt-4o"),
-    messages=compiled,
-    temperature=prompt.config.get("temperature", 0.7)
-)
-
-# Link generation to prompt version
-trace = langfuse.trace(name="support-chat")
-generation = trace.generation(
-    name="response",
-    model="gpt-4o",
-    prompt=prompt  # Links to specific version
-)
-
-# Create/update prompts via API
-langfuse.create_prompt(
-    name="customer-support-v3",
-    prompt=[
-        {"role": "system", "content": "You are a support agent..."},
-        {"role": "user", "content": "{{user_message}}"}
-    ],
-    config={
-        "model": "gpt-4o",
-        "temperature": 0.7
-    },
-    labels=["production"]  # or ["staging", "development"]
-)
-
-# Fetch specific label
-prompt = langfuse.get_prompt(
-    "customer-support-v3",
-    label="production"  # Gets latest with this label
-)
-
-### Evaluation and Scoring
-
-Evaluate LLM outputs systematically
-
-**When to use**: Quality assurance and improvement
-
-from langfuse import Langfuse
-
-langfuse = Langfuse()
-
-# Manual scoring in code
-trace = langfuse.trace(name="qa-flow")
-
-# After getting response
-trace.score(
-    name="relevance",
-    value=0.85,  # 0-1 scale
-    comment="Response addressed the question"
-)
-
-trace.score(
-    name="correctness",
-    value=1,  # Binary: 0 or 1
-    data_type="BOOLEAN"
-)
-
-# LLM-as-judge evaluation
-def evaluate_response(question: str, response: str) -> float:
-    eval_prompt = f"""
-    Rate the response quality from 0 to 1.
-
-    Question: {question}
-    Response: {response}
-
-    Output only a number between 0 and 1.
-    """
-
-    result = openai.chat.completions.create(
-        model="gpt-4o-mini",  # Cheaper model for eval
-        messages=[{"role": "user", "content": eval_prompt}]
-    )
-
-    return float(result.choices[0].message.content.strip())
-
-# Score asynchronously
-score = evaluate_response(question, response)
-trace.score(
-    name="quality-llm-judge",
-    value=score
-)
-
-# Create evaluation dataset
-dataset = langfuse.create_dataset(name="support-qa-v1")
-
-# Add items to dataset
-langfuse.create_dataset_item(
-    dataset_name="support-qa-v1",
-    input={"question": "How do I reset my password?"},
-    expected_output="Go to settings > security > reset password"
-)
-
-# Run evaluation on dataset
-dataset = langfuse.get_dataset("support-qa-v1")
-
-for item in dataset.items:
-    # Generate response
-    response = generate_response(item.input["question"])
-
-    # Link to dataset item
-    trace = langfuse.trace(name="eval-run")
-    trace.generation(
-        name="response",
-        input=item.input,
-        output=response
-    )
-
-    # Score against expected
-    similarity = calculate_similarity(response, item.expected_output)
-    trace.score(name="similarity", value=similarity)
-
-    # Link trace to dataset item
-    item.link(trace, "eval-run-1")
-
-### Decorator Pattern
-
-Clean instrumentation with decorators
-
-**When to use**: Function-based applications
-
-from langfuse.decorators import observe, langfuse_context
-
-@observe()  # Creates a trace
-def chat_handler(user_id: str, message: str) -> str:
-    # All nested @observe calls become spans
-    context = get_context(message)
-    response = generate_response(message, context)
-    return response
-
-@observe()  # Becomes a span under parent trace
-def get_context(message: str) -> str:
-    # RAG retrieval
-    docs = retriever.get_relevant_documents(message)
-    return "\n".join([d.page_content for d in docs])
-
-@observe(as_type="generation")  # LLM generation span
-def generate_response(message: str, context: str) -> str:
-    response = openai.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {"role": "system", "content": f"Context: {context}"},
-            {"role": "user", "content": message}
-        ]
-    )
-    return response.choices[0].message.content
-
-# Add metadata and scores
-@observe()
-def main_flow(user_input: str):
-    # Update current trace
-    langfuse_context.update_current_trace(
-        user_id="user-123",
-        session_id="session-456",
-        tags=["production"]
-    )
-
-    result = process(user_input)
-
-    # Score the trace
-    langfuse_context.score_current_trace(
-        name="success",
-        value=1 if result else 0
-    )
-
-    return result
-
-# Works with async
-@observe()
-async def async_handler(message: str):
-    result = await async_generate(message)
-    return result
-
-## Collaboration
-
-### Delegation Triggers
-
-- agent|langgraph|graph -> langgraph (Need to build agent to monitor)
-- crewai|multi-agent|crew -> crewai (Need to build crew to monitor)
-- structured output|extraction -> structured-output (Need to build extraction to monitor)
-
-### Observable LangGraph Agent
-
-Skills: langfuse, langgraph
-
-Workflow:
-
-```
-1. Build agent with LangGraph
-2. Add Langfuse callback handler
-3. Trace all LLM calls and tool uses
-4. Score outputs for quality
-5. Monitor and iterate
-```
-
-### Monitored RAG Pipeline
-
-Skills: langfuse, structured-output
-
-Workflow:
-
-```
-1. Build RAG with retrieval and generation
-2. Trace retrieval and LLM calls
-3. Score relevance and accuracy
-4. Track costs and latency
-5. Optimize based on data
-```
-
-### Evaluated Agent System
-
-Skills: langfuse, langgraph, structured-output
-
-Workflow:
-
-```
-1. Build agent with structured outputs
-2. Create evaluation dataset
-3. Run evaluations with traces
-4. Compare prompt versions
-5. Deploy best performers
-```
-
-## Related Skills
-
-Works well with: `langgraph`, `crewai`, `structured-output`, `autonomous-agents`
+Instrument an existing LLM application with traceable, minimized observations and versioned evaluation inputs. Modified by AAS maintainers on 2026-09-05 to replace mixed legacy SDK examples with a current, bounded setup procedure; existing source attribution is preserved.
 
 ## When to Use
-- User mentions or implies: langfuse
-- User mentions or implies: llm observability
-- User mentions or implies: llm tracing
-- User mentions or implies: prompt management
-- User mentions or implies: llm evaluation
-- User mentions or implies: monitor llm
-- User mentions or implies: debug llm
+
+Use when an application already needs Langfuse tracing, prompt management or evaluation, or when debugging missing/duplicated spans. Do not add an observability service merely because an LLM is present; start from the incident or product decision the data must support.
+
+## Inputs and prerequisites
+
+- Installed Python or JS SDK version, framework and runtime lifecycle.
+- The explicitly authorized Langfuse project/endpoint, credentials supplied through the project’s secret mechanism, and data retention/access policy.
+- An allowlist of observable fields and a synthetic request that contains no private content.
+- A defined verifier: expected parent/child spans, status, timing, model/prompt version and flush behavior.
+
+## Procedure
+
+1. Inspect the dependency lock and existing instrumentation. Do not mix old `langfuse.trace()`, `langfuse.decorators` or `langfuse.callback` examples with the current SDK without checking its migration guide.
+2. Choose one integration layer: direct SDK spans, a framework callback or OpenTelemetry instrumentation. Avoid tracing the same call twice through overlapping wrappers.
+3. Configure the approved endpoint and credentials outside source. Verify export permission before running an example: instrumentation can send inputs, outputs, metadata and exceptions externally.
+4. Start with explicit observations containing only synthetic or allowlisted values. Add correlation IDs only when their scope and privacy treatment are defined.
+5. Execute one success and one failure request; inspect the actual exported span tree and verify no sensitive fields escaped through nested metadata or third-party instrumentation.
+6. Flush in short-lived processes and test shutdown/timeouts. A returned SDK call does not by itself prove ingestion.
+7. Add prompt/evaluation metadata only after the trace boundary works. Pin the prompt version or record the exact resolved version; a mutable production label is not an immutable experiment input.
+
+## Minimal Python observation
+
+The current [Python SDK overview](https://langfuse.com/docs/observability/sdk/overview) documents `get_client()` and context-managed observations. Use the API matching the installed SDK. After configuration and export authorization, this synthetic example creates one span and no LLM call:
+
+```python
+from langfuse import get_client
+
+client = get_client()
+with client.start_as_current_observation(as_type="span", name="synthetic-health-check") as span:
+    span.update(output={"status": "ok"})
+client.flush()
+```
+
+Expected observation: one completed `synthetic-health-check` span in the intended project with the fixed status value. This skill does not claim that a live ingestion check has run. A wrong endpoint, missing credentials or exporter failure must be reported as a failed/unverified check.
+
+## Privacy and masking
+
+Do not treat truncation as redaction. Prefer omitting raw prompts, user messages and tool payloads; inspect all configured exporters. Current Python SDKs provide `mask_otel_spans` for export-time transformation; the legacy `mask` hook covers a narrower set of SDK-created attributes. Choose the installed-version mechanism using the [masking documentation](https://langfuse.com/docs/observability/features/masking), and test a synthetic secret in nested metadata and an exception. Collector-side filtering occurs after data leaves the application, so place it within the approved trust boundary.
+
+## Prompt management and evaluation
+
+Record dataset revision, prompt version, model identifier, tool configuration and evaluator definition. Keep evaluator errors distinct from low scores. A judge response must pass a bounded schema and finite-range validation; never convert arbitrary model text directly with `float()` and call it measured quality. Calibrate judgments against reviewed examples and report disagreement. Separate user feedback from an automatic judge score.
+
+Worked comparison: run the same fixed support examples against prompt versions A and B, record each output and verifier outcome, then inspect regressions and cost/latency. Expected: a reproducible comparison with failures retained, not an automatic production-label change after the highest average score.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- SDK methods and integrations evolve; server version, Python SDK version and JS package versions are separate compatibility facts.
+- Traces expose observable operations, not hidden chain-of-thought or proof of answer correctness.
+- Masking one exporter does not sanitize every log or exporter in the application.
+- Sampling, queue loss and shutdown behavior affect trace completeness; evaluate them explicitly.
+- This skill does not create accounts, change production prompt labels, upload datasets or configure external telemetry without task authorization.
+
+## References
+
+- [Tracing setup](https://langfuse.com/docs/observability/get-started)
+- [SDK overview](https://langfuse.com/docs/observability/sdk/overview)
+- [Advanced SDK features](https://langfuse.com/docs/observability/sdk/advanced-features)
+- [Masking](https://langfuse.com/docs/observability/features/masking)

@@ -252,6 +252,12 @@ When a user requests file organization help:
 - Old versions after migration to new systems
 - Files you're hesitant to delete (archive first)
 
+## Example
+
+**User request:**
+
+> Organize my Downloads folder into a predictable structure, show the proposed moves first, and avoid deleting files.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

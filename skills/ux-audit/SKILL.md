@@ -127,6 +127,12 @@ Target: **$ARGUMENTS**
 4. **Minor Issues**: Nice to fix (polish)
 5. **Recommendations**: Specific code changes for each issue
 
+## Example
+
+**User request:**
+
+> Audit screens for UX issues using Nielsen's heuristics and modern mobile UX best practices.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

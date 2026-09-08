@@ -1,6 +1,6 @@
 ---
 name: logic-explain
-description: Explain what a specific piece of code actually does for a given input by producing a step-by-step execution trace (interprocedural, with name resolution and type transitions). Trigger when the user is confused about behavior or asks why code produces X instead of Y — "walk me through...
+description: "Explain what a specific piece of code actually does for a given input by producing a step-by-step execution trace (interprocedural, with name resolution and type transitions)."
 risk: safe
 source: https://github.com/hyhmrright/logic-lens/tree/main/skills/logic-explain
 source_repo: hyhmrright/logic-lens
@@ -42,6 +42,12 @@ Note: `logic-risks.md` is intentionally skipped — logic-explain does not produ
 **Mode line in report:** `Execution Explain` (Chinese: `执行解释`).
 
 **Note:** Execution Explain is descriptive, not evaluative. Omit the Logic Score / Fault Confidence / Verdict line from the report header.
+
+## Example
+
+**User request:**
+
+> Explain what a specific piece of code actually does for a given input by producing a step-by-step execution trace (interprocedural, with name resolution and type transitions).
 
 ## Limitations
 

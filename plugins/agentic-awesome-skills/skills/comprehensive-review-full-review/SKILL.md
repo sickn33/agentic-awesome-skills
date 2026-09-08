@@ -148,6 +148,12 @@ Review is considered successful when:
 
 Target: $ARGUMENTS
 
+## Example
+
+**User request:**
+
+> Review the current change end to end for correctness, security, maintainability, performance, and missing tests.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

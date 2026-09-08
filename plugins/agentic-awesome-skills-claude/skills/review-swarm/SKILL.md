@@ -1,6 +1,6 @@
 ---
 name: review-swarm
-description: Parallel read-only multi-agent review of a current git diff or explicit file scope to find behavioral regressions, security or privacy risks, performance or reliability issues, and contract or test coverage gaps. Use when the user asks for a review swarm, parallel review, diff review,...
+description: "Parallel read-only multi-agent review of a current git diff or explicit file scope to find behavioral regressions, security or privacy risks, performance or reliability issues, and contract or test coverage gaps."
 risk: safe
 source: https://github.com/Dimillian/Skills/tree/main/review-swarm
 source_repo: Dimillian/Skills
@@ -177,6 +177,12 @@ When helpful, group the path forward into:
 - `optional follow-up`
 
 Do not implement fixes as part of this skill. The output is a read-only review plus a prioritized recommendation.
+
+## Example
+
+**User request:**
+
+> Use @review-swarm for this task: Parallel read-only multi-agent review of a current git diff or explicit file scope to find behavioral regressions, security or privacy risks, performance or reliability issues, and contract or test coverage gaps.
 
 ## Limitations
 

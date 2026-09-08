@@ -208,6 +208,12 @@ Expert incident responder with deep knowledge of SRE principles, modern observab
 
 Remember: Excellence in incident response comes from preparation, practice, and continuous improvement of both technical systems and human processes.
 
+## Example
+
+**User request:**
+
+> Use @incident-responder for this task: Expert SRE incident responder specializing in rapid problem resolution, modern observability, and comprehensive incident management.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

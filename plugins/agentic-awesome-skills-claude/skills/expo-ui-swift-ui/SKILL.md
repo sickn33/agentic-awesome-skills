@@ -3,6 +3,7 @@ name: expo-ui-swift-ui
 description: expo-ui-swift-ui
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 ---

@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { VirtuosoGrid } from 'react-virtuoso';
+import { categoryFacet, matchCatalogSkill, searchMode, type SearchMode } from '../utils/catalogSearch';
 import { SkillCard } from '../components/SkillCard';
+import { ShortlistReview } from '../components/ShortlistReview';
+import OutcomeExplorer from '../components/OutcomeExplorer';
 import { Icon } from '../components/ui/Icon';
 import { useSkills } from '../context/SkillContext';
 import { seoLandingPages } from '../data/seoLandingPages';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useSkillShortlist } from '../hooks/useSkillShortlist';
-import type { CategoryStats, Skill, SyncMessage } from '../types';
+import type { CategoryStats, SyncMessage } from '../types';
 import { buildHomeMeta, getHomeFaqItems, toIndexableRoutePath } from '../utils/seo';
 
 const conceptCards = [
@@ -48,58 +51,6 @@ function useLatest<T>(value: T): { readonly current: T } {
   return ref;
 }
 
-interface SearchField {
-  key: 'id' | 'name' | 'description' | 'category' | 'source' | 'tags';
-  weight: number;
-}
-
-// Fields searched, weighted by how specific they are for ranking a skill.
-const SEARCH_FIELDS: SearchField[] = [
-  { key: 'name', weight: 3 },
-  { key: 'id', weight: 2 },
-  { key: 'category', weight: 2 },
-  { key: 'tags', weight: 2 },
-  { key: 'description', weight: 1 },
-  { key: 'source', weight: 1 },
-];
-
-/**
- * fzf-style fuzzy matcher: every character of the token must appear in the
- * haystack in order (with gaps allowed). This gives typo tolerance for free —
- * "reactj" matches "reactjs" — unlike a plain substring test. Returns a score
- * that rewards tight matches, or 0 when the token does not match.
- */
-function fuzzyTokenScore(token: string, haystack: string): number {
-  if (!haystack || !token) return 0;
-  let cursor = 0;
-  let gapPenalty = 0;
-  for (let i = 0; i < token.length; i += 1) {
-    const next = haystack.indexOf(token.charAt(i), cursor);
-    if (next === -1) return 0;
-    gapPenalty += next - cursor;
-    cursor = next + 1;
-  }
-  return Math.max(1, token.length - gapPenalty);
-}
-
-/** Score a skill against the query tokens. 0 means a token matched nowhere. */
-function fuzzySearchSkill(skill: Skill, tokens: string[]): number {
-  let total = 0;
-  for (const token of tokens) {
-    let bestTokenScore = 0;
-    for (const field of SEARCH_FIELDS) {
-      const value = field.key === 'tags'
-        ? (skill.tags || []).join(' ')
-        : String(skill[field.key] || '');
-      const fieldScore = fuzzyTokenScore(token, value.toLowerCase());
-      if (fieldScore > 0) bestTokenScore = Math.max(bestTokenScore, fieldScore * field.weight);
-    }
-    if (bestTokenScore === 0) return 0;
-    total += bestTokenScore;
-  }
-  return total;
-}
-
 const isMacLike =
   typeof navigator !== 'undefined' &&
   /Mac|iPhone|iPad|iPod/i.test(
@@ -114,11 +65,14 @@ export function Home(): React.ReactElement {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(() => getInitialFilter(searchParams, 'q', ''));
   const [debouncedSearch, setDebouncedSearch] = useState(() => getInitialFilter(searchParams, 'q', ''));
-  const [categoryFilter, setCategoryFilter] = useState(() => getInitialFilter(searchParams, 'category', 'all'));
+  const [categoryFilter, setCategoryFilter] = useState(() => categoryFacet(getInitialFilter(searchParams, 'category', 'all')));
+  const [matchMode, setMatchMode] = useState<SearchMode>(() => searchMode(searchParams.get('match')));
+  const [requiredTerms, setRequiredTerms] = useState(() => getInitialFilter(searchParams, 'required', ''));
   const [riskFilter, setRiskFilter] = useState(() => getInitialFilter(searchParams, 'risk', 'all'));
   const [sourceFilter, setSourceFilter] = useState(() => getInitialFilter(searchParams, 'source', 'all'));
   const [scopeFilter, setScopeFilter] = useState(() => getInitialFilter(searchParams, 'scope', 'all'));
   const [sortBy, setSortBy] = useState(() => getInitialFilter(searchParams, 'sort', 'default'));
+  const [discoveryGoal, setDiscoveryGoal] = useState('');
   const [syncing, setSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState<SyncMessage | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -162,6 +116,8 @@ export function Home(): React.ReactElement {
   useEffect(() => {
     const next = new URLSearchParams();
     if (search) next.set('q', search);
+    if (matchMode !== 'all') next.set('match', matchMode);
+    if (requiredTerms) next.set('required', requiredTerms);
     if (categoryFilter !== 'all') next.set('category', categoryFilter);
     if (riskFilter !== 'all') next.set('risk', riskFilter);
     if (sourceFilter !== 'all') next.set('source', sourceFilter);
@@ -171,7 +127,7 @@ export function Home(): React.ReactElement {
       skipNextUrlSyncRef.current = true;
       setSearchParamsRef.current(next, { replace: true });
     }
-  }, [categoryFilter, riskFilter, scopeFilter, search, searchParamsRef, setSearchParamsRef, sortBy, sourceFilter]);
+  }, [categoryFilter, matchMode, requiredTerms, riskFilter, scopeFilter, search, searchParamsRef, setSearchParamsRef, sortBy, sourceFilter]);
 
   // URL -> State: restore filters after browser back/forward navigation or a
   // manual address-bar edit. Without this, the state->URL effect would
@@ -184,24 +140,21 @@ export function Home(): React.ReactElement {
     const nextSearch = getInitialFilter(searchParams, 'q', '');
     setSearch(nextSearch);
     setDebouncedSearch(nextSearch); // avoid a 300ms unfiltered flash on load/nav
-    setCategoryFilter(getInitialFilter(searchParams, 'category', 'all'));
+    setCategoryFilter(categoryFacet(getInitialFilter(searchParams, 'category', 'all')));
+    setMatchMode(searchMode(searchParams.get('match')));
+    setRequiredTerms(getInitialFilter(searchParams, 'required', ''));
     setRiskFilter(getInitialFilter(searchParams, 'risk', 'all'));
     setSourceFilter(getInitialFilter(searchParams, 'source', 'all'));
     setScopeFilter(getInitialFilter(searchParams, 'scope', 'all'));
     setSortBy(getInitialFilter(searchParams, 'sort', 'default'));
   }, [searchParams]);
 
+  const searchMatches = useMemo(() => new Map(skills.map((skill) => [skill.id, matchCatalogSkill(skill, debouncedSearch, matchMode, requiredTerms)])), [skills, debouncedSearch, matchMode, requiredTerms]);
+
   const filteredSkills = useMemo(() => {
     let result = [...skills];
-    if (debouncedSearch) {
-      const tokens = debouncedSearch.toLowerCase().trim().split(/\s+/).filter(Boolean);
-      result = result
-        .map((skill) => ({ skill, score: fuzzySearchSkill(skill, tokens) }))
-        .filter((entry) => entry.score > 0)
-        .sort((a, b) => b.score - a.score)
-        .map((entry) => entry.skill);
-    }
-    if (categoryFilter !== 'all') result = result.filter((skill) => skill.category === categoryFilter);
+    result = result.filter((skill) => searchMatches.get(skill.id)?.matches);
+    if (categoryFilter !== 'all') result = result.filter((skill) => categoryFacet(skill.category) === categoryFilter);
     if (riskFilter !== 'all') result = result.filter((skill) => (skill.risk || 'unknown') === riskFilter);
     if (sourceFilter !== 'all') result = result.filter((skill) => (skill.source_type || 'community') === sourceFilter);
     if (scopeFilter === 'shortlist') result = result.filter((skill) => shortlistIds.includes(skill.id));
@@ -209,11 +162,11 @@ export function Home(): React.ReactElement {
     if (sortBy === 'newest') result.sort((a, b) => (b.date_added || '').localeCompare(a.date_added || ''));
     if (sortBy === 'az') result.sort((a, b) => a.name.localeCompare(b.name));
     return result;
-  }, [categoryFilter, debouncedSearch, riskFilter, scopeFilter, shortlistIds, skills, sortBy, sourceFilter, stars]);
+  }, [categoryFilter, searchMatches, riskFilter, scopeFilter, shortlistIds, skills, sortBy, sourceFilter, stars]);
 
   const { categories, categoryStats } = useMemo(() => {
-    const stats: CategoryStats = {};
-    skills.forEach((skill) => { stats[skill.category] = (stats[skill.category] || 0) + 1; });
+    const stats: CategoryStats = Object.create(null);
+    skills.forEach((skill) => { const category = categoryFacet(skill.category); stats[category] = (stats[category] || 0) + 1; });
     const ordered = Object.keys(stats)
       .filter((category) => category !== 'uncategorized')
       .sort((a, b) => stats[b] - stats[a]);
@@ -228,21 +181,16 @@ export function Home(): React.ReactElement {
   }, [skills]);
 
   const shortlistSkills = useMemo(() => skills.filter((skill) => shortlistIds.includes(skill.id)), [shortlistIds, skills]);
-  const shortlistRisks = useMemo(() => new Set(shortlistSkills.map((skill) => skill.risk || 'unknown')), [shortlistSkills]);
 
   const clearFilters = () => {
     setSearch('');
+    setRequiredTerms('');
+    setMatchMode('all');
     setCategoryFilter('all');
     setRiskFilter('all');
     setSourceFilter('all');
     setScopeFilter('all');
     setSortBy('default');
-  };
-
-  const copyShortlist = async () => {
-    await navigator.clipboard.writeText(shortlistSkills.map((skill) => skill.id).join('\n'));
-    setSyncMsg({ type: 'success', text: 'Canonical skill IDs copied to your clipboard.' });
-    window.setTimeout(() => setSyncMsg(null), 5000);
   };
 
   const handleSync = async () => {
@@ -304,12 +252,27 @@ export function Home(): React.ReactElement {
               type="search"
               aria-label="Search skills"
               placeholder="Search skills, tools, or workflows"
+              maxLength={256}
               value={search}
               ref={searchInputRef}
               onChange={(event) => setSearch(event.target.value)}
             />
             <kbd>{searchShortcutHint}</kbd>
           </label>
+
+          <div className="catalog-search-options">
+            <label>Match
+              <select aria-label="Search matching" value={matchMode} onChange={(event) => setMatchMode(searchMode(event.target.value))}>
+                <option value="all">All words</option>
+                <option value="any">Any word</option>
+                <option value="fuzzy">Approximate</option>
+              </select>
+            </label>
+            <label>Must also include
+              <input aria-label="Required search terms" type="text" value={requiredTerms} maxLength={1024} placeholder="e.g. postgres" onChange={(event) => setRequiredTerms(event.target.value)} />
+            </label>
+          </div>
+          <p className="catalog-note">{matchMode === 'fuzzy' ? 'Approximate matching allows gaps between letters. Required terms still match whole words.' : 'Match whole words and known aliases across names, descriptions, categories, and tags.'} Results keep catalog order unless you choose another sort.</p>
 
           <div className="catalog-mobile-categories" aria-label="Quick category filters">
             {categories.slice(0, 6).map((category) => (
@@ -377,6 +340,9 @@ export function Home(): React.ReactElement {
           </div>
         </section>
 
+        <OutcomeExplorer catalog={skills} onGoalChange={setDiscoveryGoal} />
+        <ShortlistReview suggestedGoal={discoveryGoal} skills={shortlistSkills} onRemove={toggleShortlist} onClear={clearShortlist} />
+
         <section className="catalog-results" aria-labelledby="catalog-results-title">
           <header>
             <div>
@@ -421,24 +387,10 @@ export function Home(): React.ReactElement {
               listClassName="catalog-result-list"
               itemContent={(index) => {
                 const skill = filteredSkills[index];
-                return <SkillCard key={skill.id} skill={skill} starCount={stars[skill.id] || 0} shortlisted={shortlistIds.includes(skill.id)} onToggleShortlist={toggleShortlist} />;
+                return <SkillCard key={skill.id} skill={skill} starCount={stars[skill.id] || 0} matchExplanation={searchMatches.get(skill.id)?.explanation} shortlisted={shortlistIds.includes(skill.id)} onToggleShortlist={toggleShortlist} />;
               }}
             />
           )}
-        </section>
-
-        <section className="catalog-shortlist" aria-labelledby="shortlist-title">
-          <div>
-            <p>Browser-local shortlist</p>
-            <h2 id="shortlist-title">Build a stack before you ask your agent to act.</h2>
-            <span>{shortlistSkills.length} selected · {shortlistRisks.size || 0} risk levels</span>
-          </div>
-          {shortlistSkills.length > 0 ? (
-            <div className="catalog-shortlist__actions">
-              <button type="button" onClick={() => void copyShortlist()}>Copy exact IDs</button>
-              <button type="button" onClick={clearShortlist}>Clear shortlist</button>
-            </div>
-          ) : <p>Add skills from the catalog to compare and export their exact IDs. Nothing leaves this browser.</p>}
         </section>
 
         <section className="catalog-health" aria-labelledby="catalog-health-title">
@@ -449,7 +401,7 @@ export function Home(): React.ReactElement {
             <div><dt>Tagged for discovery</dt><dd>{skills.length ? Math.round((catalogHealth.documented / skills.length) * 100) : 0}%</dd></div>
             <div><dt>Latest addition</dt><dd>{catalogHealth.latest || 'Not recorded'}</dd></div>
           </dl>
-          <p>Discovery interactions stay in this browser. Connect a consent-based analytics provider later if you want aggregate search-gap reporting.</p>
+          <p>Search and shortlist stay in this browser. Check each skill's setup, source, and instructions before using it.</p>
         </section>
 
         <section className="catalog-support" aria-label="Catalog guides">

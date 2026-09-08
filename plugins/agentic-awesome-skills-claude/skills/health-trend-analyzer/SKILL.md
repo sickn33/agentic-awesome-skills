@@ -4,6 +4,7 @@ description: 分析一段时间内健康数据的趋势和模式。关联药物�
 allowed-tools: Read, Grep, Glob, Write
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # 健康趋势分析器

@@ -334,6 +334,12 @@ Works well with: `ai-agents-architect`, `prompt-engineer`, `database-architect`,
 - User mentions or implies: chromadb
 - User mentions or implies: pgvector
 
+## Example
+
+**User request:**
+
+> Use @rag-engineer for this task: Expert in building Retrieval-Augmented Generation systems.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -77,6 +77,12 @@ View analytics on memory usage.
    - **After Task**: Write new findings to memory.
 3. **Sync**: Your writes are automatically synced to standard markdown files in the project.
 
+## Example
+
+**User request:**
+
+> Use @agent-memory for this task: A hybrid memory system that provides persistent, searchable knowledge management for AI agents.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

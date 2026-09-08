@@ -172,6 +172,12 @@ Automate Airtable operations through Composio's Airtable toolkit via Rube MCP.
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Automate Airtable tasks via Rube MCP (Composio): records, bases, tables, fields, views.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

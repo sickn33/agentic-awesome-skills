@@ -6,6 +6,7 @@ const versions = require("./versions");
 const { canonicalJson, sha256 } = require("./canonical-json");
 const { compareStrings, sortedUnique, tokenize } = require("./normalize");
 const { validateInstance } = require("./schema-validator");
+const { validateSkillFilePath } = require("./skill-files");
 
 const OFFLINE_MANIFEST = "data/aas-v1/catalog-manifest.v1.json";
 const CONTENT_INDEX = "data/aas-v1/skill-content-index.v1.json";
@@ -73,6 +74,17 @@ function loadBundledCatalog(options = {}) {
       || !/^sha256-[a-f0-9]{64}$/.test(contentRef.sha256)) {
       throw new Error(`Offline skill content reference is invalid: ${canonicalId}`);
     }
+    if (contentRef.files !== undefined) {
+      if (!Array.isArray(contentRef.files) || contentRef.files.length > 10000) throw new Error("Invalid skill file inventory");
+      let previous = "";
+      for (const file of contentRef.files) {
+        validateSkillFilePath(file.path);
+        if (file.path <= previous || !["file", "symlink"].includes(file.type)
+          || (file.type === "file" && (!Number.isSafeInteger(file.size) || file.size < 0
+            || !/^sha256-[a-f0-9]{64}$/.test(file.sha256)))) throw new Error("Invalid skill file record");
+        previous = file.path;
+      }
+    }
     return {
       id: canonicalId,
       name: entry.name || canonicalId,
@@ -90,6 +102,7 @@ function loadBundledCatalog(options = {}) {
         ...(entry.triggers || []),
       ])),
       untrustedContentPath: entry.path || null,
+      ...(contentRef.files ? { untrustedFiles: contentRef.files } : {}),
       untrustedContentRef: {
         assetPath: "data/aas-v1/skill-content.v1.ndjson",
         offset: contentRef.offset,

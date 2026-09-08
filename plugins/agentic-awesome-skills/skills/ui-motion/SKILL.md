@@ -1,6 +1,6 @@
 ---
 name: ui-motion
-description: Apply a named StyleSeed motion to a component — either one of the 5 personality seeds (Spring/Silk/Snap/Float/Pulse × entrance/exit/hover/press/layout) or a distinctive keyword move from the motion library (toggle-flip, toggle-curtain, reveal-blur, pop-in, shimmer, …). Translates vibe...
+description: "Apply a named StyleSeed motion to a component — either one of the 5 personality seeds (Spring/Silk/Snap/Float/Pulse × entrance/exit/hover/press/layout) or a distinctive keyword move from the motion library (toggle-flip, toggle-curtain, reveal-blur, pop-in, shimmer, …)."
 risk: critical
 source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-motion
 source_repo: bitjaru/styleseed
@@ -173,6 +173,12 @@ Apply seed: **$0** · Context: **$1** · Target: **$ARGUMENTS**
 - Do not edit `engine/motion/seeds/*.ts` from this skill — those are calibrated by hand. Add a new seed only via a separate, explicit ask.
 - Do not introduce a third-party animation lib (gsap, anime.js). StyleSeed targets framer-motion exclusively.
 - Do not add scroll-linked, parallax, or infinite animations (DESIGN-LANGUAGE.md Rule 59).
+
+## Example
+
+**User request:**
+
+> Review this interface with @ui-motion, identify the highest-impact design problems, and propose an implementation-ready improvement.
 
 ## Limitations
 

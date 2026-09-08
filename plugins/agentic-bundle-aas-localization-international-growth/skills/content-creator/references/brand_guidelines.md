@@ -1,5 +1,9 @@
 # Brand Voice & Style Guidelines
 
+This is a worksheet, not the user's actual brand policy. Replace attributes and
+examples with approved evidence. Never manufacture research, customer quotes or
+urgency. Existing brand requirements take precedence over these optional choices.
+
 ## Brand Voice Framework
 
 ### 1. Voice Dimensions
@@ -32,7 +36,7 @@ Choose one primary and one secondary archetype:
 **The Expert**
 - Tone: Knowledgeable, confident, informative
 - Content: Data-driven, research-backed, educational
-- Example: "Our research shows that 87% of businesses..."
+- Example: "[Cited research] found [verified result] in [specified population]..."
 
 **The Friend**
 - Tone: Warm, supportive, conversational
@@ -60,7 +64,7 @@ Choose one primary and one secondary archetype:
 - Use simple words when possible
 - Break complex ideas into digestible pieces
 - Lead with the main point
-- Use active voice (80% of the time)
+- Prefer active voice when it makes responsibility clear
 
 #### Customer-Centric
 - Focus on benefits, not features
@@ -85,7 +89,7 @@ Choose one primary and one secondary archetype:
 - **Jargon**: Synergy, leverage (as verb), bandwidth (for availability)
 - **Overused**: Innovative, disruptive, cutting-edge (unless truly applicable)
 - **Weak**: Very, really, just, maybe, hopefully
-- **Negative**: Can't, won't, impossible, problem (use "challenge")
+- **Unsupported certainty**: Do not hide real problems, uncertainty or product limitations behind positive language
 
 ### 5. Content Structure Templates
 

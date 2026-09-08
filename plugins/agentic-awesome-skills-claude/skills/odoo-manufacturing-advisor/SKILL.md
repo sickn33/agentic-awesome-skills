@@ -3,6 +3,7 @@ name: odoo-manufacturing-advisor
 description: "Expert guide for Odoo Manufacturing: Bills of Materials (BoM), Work Centers, routings, MRP planning, and production order workflows."
 risk: safe
 source: "self"
+date_added: "2026-09-04"
 ---
 
 # Odoo Manufacturing Advisor

@@ -19,6 +19,12 @@ tools: [claude, cursor, codex, antigravity]
 - Use when designing warm monochrome interfaces with crisp borders, generous whitespace, muted pastel accents, and quiet motion.
 - Use when the task should avoid gradients, heavy shadows, saturated colors, pill-heavy components, and generic SaaS visuals.
 
+## Example
+
+**User request:**
+
+> Review this interface with @minimalist-ui, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 
 - Minimalism can hide hierarchy when content is dense; validate scannability, contrast, and navigation clarity with real content.

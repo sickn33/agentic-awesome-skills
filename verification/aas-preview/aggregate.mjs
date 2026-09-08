@@ -7,6 +7,7 @@ import process from "node:process";
 
 const EXPECTED_JOBS = Object.freeze([
   "linux-node-22",
+  "windows-node-22",
 ]);
 const EXPECTED_NODE = Object.freeze({ "22": "v22.23.1" });
 const EXPECTED_NOT_EVALUATED = Object.freeze([
@@ -70,6 +71,27 @@ function validateReceipt(receipt) {
   assert.equal(receipt.lifecycle.validated, true);
   assert.equal(receipt.lifecycle.planned, true);
   assert.equal(receipt.lifecycle.doctorReadOnly, true);
+  assert.equal(receipt.lifecycle.installPreviewPrepared, true);
+  assert.equal(receipt.lifecycle.runtimeAutoResolved, true);
+  assert.equal(receipt.installation?.status, "passed");
+  assert.equal(receipt.installation.publicationResolution, "fixture");
+  assert.equal(receipt.installation.installer, "actual-packed-candidate");
+  assert.equal(receipt.installation.shell, receipt.jobId.startsWith("windows-") ? "powershell" : "posix");
+  for (const check of ["dryRunUnchanged", "installedBytesMatch", "repeatPreservesBytes", "staleManagedSkillsRemoved", "unmanagedFilePreserved", "movedReleaseRejected", "symlinkTargetRejected"]) {
+    assert.equal(receipt.installation[check], true, `installation check missing: ${check}`);
+  }
+  if (receipt.runtime.platform === "win32") {
+    assert.equal(receipt.installation.shellExecutable, "pwsh");
+    assert.match(receipt.installation.shellVersion, /^7\./);
+    const legacy = receipt.installation.windowsPowerShell51;
+    assert.equal(legacy?.status, "passed");
+    assert.equal(legacy.shell, "powershell");
+    assert.equal(legacy.shellExecutable, "powershell.exe");
+    assert.match(legacy.shellVersion, /^5\.1\./);
+    for (const field of ["publicationResolution", "installer", "selectedSkillIds", "dryRunUnchanged", "installedBytesMatch", "repeatPreservesBytes", "staleManagedSkillsRemoved", "unmanagedFilePreserved", "movedReleaseRejected", "symlinkTargetRejected"]) {
+      assert.deepEqual(legacy[field], receipt.installation[field], `Windows PowerShell 5.1 mismatch: ${field}`);
+    }
+  }
   assert.equal(receipt.writeGuards.applyDisabledByDefault, true);
   assert.equal(receipt.writeGuards.recoveryDisabledByDefault, true);
   assert.equal(receipt.writeGuards.targetStateCreated, false);

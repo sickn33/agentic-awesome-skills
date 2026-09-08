@@ -46,6 +46,12 @@ When asked to build or generate UI components, default to the following stack un
 - Ensure all animations are disabled for users with `prefers-reduced-motion: reduce`.
 - Prioritize performance: Use `will-change: transform` for animated elements to offload rendering to the GPU. Do not animate expensive properties like `box-shadow` or `filter` continuously.
 
+## Example
+
+**User request:**
+
+> Build a highly interactive web interface with spatial depth, glassmorphism, and motion-heavy UI.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -1,10 +1,17 @@
 ---
 name: internal-comms-anthropic
-description: "To write internal communications, use this skill for:"
+description: "Compatibility alias for internal-comms: draft status updates, newsletters and FAQs from approved sources."
 risk: safe
 source: community
 date_added: "2026-02-27"
 ---
+
+## Compatibility and maintenance
+
+Compatibility alias of `internal-comms`; use that ID for new references when no existing contract requires this one. The full instructions and support files remain local so existing installations
+continue to work offline. This is one shared procedure, not an additional capability.
+Preserve the callable ID when an existing manifest or client configuration uses it.
+Modified in AAS on 2026-09-05; original metadata and license notices are retained.
 
 ## When to use this skill
 To write internal communications, use this skill for:
@@ -28,7 +35,19 @@ To write any internal communication:
     - `examples/general-comms.md` - For anything else that doesn't explicitly match one of the above
 3. **Follow the specific instructions** in that file for formatting, tone, and content gathering
 
-If the communication type doesn't match any existing guideline, ask for clarification or more context about the desired format.
+For other formats, use the provided audience/purpose and the general guide. Ask only for missing information that materially changes the draft.
+
+## Scope and example
+
+Use the supplied audience, date range and approved sources. Read only relevant
+accessible material; reactions, executive seniority and document views are not proof
+of accuracy. A private source does not automatically belong in a company-wide update.
+Drafting does not authorize sending, scheduling or publishing the communication.
+
+For a weekly 3P update, turn two confirmed shipped items, one next-week task and one
+open dependency into Progress/Plans/Problems. Preserve dates and uncertainty, link the
+source where appropriate and leave unknown metrics out. Expected handoff is a draft
+for the intended audience, not a claim that a message was sent.
 
 ## Keywords
 3P updates, company newsletter, company comms, weekly update, faqs, common questions, updates, internal comms

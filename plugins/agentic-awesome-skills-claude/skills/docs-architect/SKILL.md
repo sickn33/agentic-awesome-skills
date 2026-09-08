@@ -95,6 +95,12 @@ Generate documentation in Markdown format with:
 
 Remember: Your goal is to create documentation that serves as the definitive technical reference for the system, suitable for onboarding new team members, architectural reviews, and long-term maintenance.
 
+## Example
+
+**User request:**
+
+> Use @docs-architect for this task: Creates comprehensive technical documentation from existing codebases.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -156,6 +156,12 @@ Optimize application performance end-to-end using specialized performance and op
 
 Performance optimization target: $ARGUMENTS
 
+## Example
+
+**User request:**
+
+> Coordinate performance optimization across backend, frontend, and infrastructure.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

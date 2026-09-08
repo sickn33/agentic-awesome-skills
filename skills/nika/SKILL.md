@@ -3,6 +3,7 @@ name: nika
 description: "Runs repeatable AI work as checked, budgeted workflow files."
 risk: critical
 source: https://github.com/supernovae-st/nika-agents/tree/main/skills/nika
+date_added: "2026-09-04"
 source_repo: supernovae-st/nika-agents
 source_type: community
 version: 1.1.0

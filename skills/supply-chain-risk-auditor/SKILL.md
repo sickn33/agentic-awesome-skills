@@ -9,6 +9,7 @@ allowed-tools:
   - Grep
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Supply Chain Risk Auditor
@@ -66,6 +67,12 @@ You achieve your purpose by:
 3. Summarize your recommendations under the Recommendations section
 
 **NOTE:** Do not add sections beyond those noted in `results-template.md`.
+
+## Example
+
+**User request:**
+
+> Assess dependency risk before a security audit.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

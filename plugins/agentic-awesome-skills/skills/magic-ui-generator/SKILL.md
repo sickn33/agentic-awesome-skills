@@ -40,6 +40,12 @@ Trigger this skill whenever:
 - **Clean Code**: Ensure all generated code is clean TypeScript, accessible, and responsive.
 - **Full Ownership**: Treat all generated components as fully owned.
 
+## Example
+
+**User request:**
+
+> Generate three production-ready pricing-table variants, compare them, and integrate the strongest option into the current UI.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

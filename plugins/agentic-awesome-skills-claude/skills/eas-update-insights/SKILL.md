@@ -1,6 +1,6 @@
 ---
 name: eas-update-insights
-description: "Check the health of published EAS Updates: crash rates, install/launch counts, unique users, payload size, and the split between embedded and OTA users per channel. Use when the user asks how an update is performing, whether a rollout is healthy, how many users are on the embedded..."
+description: "Check the health of published EAS Updates: crash rates, install/launch counts, unique users, payload size, and the split between embedded and OTA users per channel."
 risk: critical
 source: https://github.com/expo/skills/tree/main/plugins/expo/skills/eas-update-insights
 source_repo: expo/skills

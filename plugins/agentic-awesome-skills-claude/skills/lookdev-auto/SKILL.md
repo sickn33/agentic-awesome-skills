@@ -95,6 +95,12 @@ a tight optimize loop. Worked reference: the `screenstudio-alternative` skill (`
 - Vision/video models perceive gross differences well, fine ones poorly — keep variant
   spacing perceptible; near-identical variants get noise-rated.
 
+## Example
+
+**User request:**
+
+> Use @lookdev-auto for this task: Automated visual tuning: a vision or video model rates rendered variants in a loop.
+
 ## Limitations
 
 - Model ratings are probabilistic aesthetic judgments, not objective truth; keep a human review step for brand-critical or subjective work.

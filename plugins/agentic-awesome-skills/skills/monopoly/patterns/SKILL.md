@@ -2,6 +2,7 @@
 name: patterns
 description: Reference document for monopoly patterns.
 source: community
+date_added: "2026-09-04"
 risk: safe
 reports-to: monopoly
 ---

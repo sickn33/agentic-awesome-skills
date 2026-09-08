@@ -14,16 +14,17 @@ The earlier deterministic recommendation design and goal documents are retained 
 ## Supported surfaces
 
 - A complete, integrity-verified local catalog in which every canonical skill is searchable, readable, and available for agent selection.
-- Local stdio MCP tools `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, and `diff_stack`, plus `aas://skills/{id}`.
+- Local stdio MCP tools `search_skills`, `get_skill`, `list_skill_files`, `read_skill_file`, `compose_stack`, `inspect_stack`, and `diff_stack`, plus evidence export/inspection and `aas://skills/{id}`. Bundle inventory records bind file bytes into the catalog identity without duplicating the payload. Text reads are bounded, inert, and reject unsafe paths and changed bytes; old catalogs explicitly report inventory unavailability.
 - Minimal, schema-validated `aas-stack.json` with pinned catalog identity, targets, goals, and exact agent-selected skill IDs.
 - CLI manifest validation, immutable plan preview, and read-only diagnosis.
-- Workbench import and review of the agent-owned stack and immutable plan.
+- Workbench import and review of the agent-owned stack, immutable plan and optional selection evidence. Browser checks bind digests, project references and artifact identities; the CLI/MCP inspector remains the full trace-contract verifier. Recorded examples and voluntary feedback exports must identify what was actually executed, with no ambient data collection.
 
 ## Selection contract
 
 1. The coding agent owns semantic selection. It may inspect the project with its normal local capabilities, search broadly, read full skill content when useful, compare alternatives, and choose exact IDs.
 2. AAS Core does not rank, recommend, promote, demote, exclude, or abstain on skills.
 3. Catalog metadata is informational only. Missing, incomplete, cautionary, or manually reviewed metadata must never make a canonical skill unsearchable or unavailable for agent selection.
+   Caller-supplied category/tag filters and required search terms narrow retrieval only when explicitly requested. They do not define eligibility, recommendations, or a composition gate; every ID remains available without filters. Verify both broad/default and all-term modes, stable pagination, normalized category aliases, and evidence export/inspection with the exact search options preserved.
 4. `compose_stack` validates catalog identity, target shape, goals, exact IDs, and structural limits, then returns the pinned stack shape. It does not substitute a different selection.
 5. `aas-stack.json` has no Core selection policy. User constraints can guide the agent's reasoning, but they are not an MCP eligibility filter or manifest gate.
 
@@ -32,11 +33,12 @@ The earlier deterministic recommendation design and goal documents are retained 
 The packed-product smoke path must prove:
 
 1. **Catalog completeness** — packaged catalog count and IDs equal the canonical registry; exact-ID search, `get_skill`, and content reads work for every canonical skill.
-2. **MCP contract** — the five supported read-only tools and resource template work over real stdio framing without repository scanning or state writes.
+2. **MCP contract** — the nine supported read-only tools and resource template work over real stdio framing without repository scanning or state writes.
 3. **Agent-owned composition** — `compose_stack` preserves the exact ordered ID selection supplied by the agent and returns a structurally valid manifest without a policy field.
 4. **No metadata gating** — skills with unknown, critical, manual, blocked, incomplete, or absent informational metadata remain searchable, selectable, composable, and plannable.
 5. **Stack lifecycle** — compose, inspect, validate, plan, and doctor succeed in isolated roots without materializing target skills or managed state.
-6. **Workbench** — bounded text-only import/review tests and production build pass without ambient filesystem access.
+6. **Workbench** — bounded text-only import/review tests and production build pass without ambient filesystem access. Verify stale-result replacement, cross-artifact profile/catalog/manifest/selection checks, a recorded public example and mobile use. Feedback export contains only user-entered fields and performs no network or storage writes.
+   Artifact transport regressions must cross real stdio, including manifests and evidence requests above 4 KiB, the unchanged 256 KiB frame limit, unrelated metadata rejection, and request-ID correlation for safely parsed size errors. Direct calls to the in-process server do not exercise framing.
 
 ## Experimental writes
 

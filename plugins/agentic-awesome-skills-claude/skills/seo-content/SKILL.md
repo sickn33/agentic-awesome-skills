@@ -184,6 +184,12 @@ If DataForSEO MCP tools are available, use `kw_data_google_ads_search_volume` fo
 | Content behind paywall (402/403, login wall) | Report that the content is not publicly accessible. Analyze only the visible portion (meta tags, headers) and note the limitation. |
 | Thin content (fewer than 100 words retrievable) | Report the findings as-is rather than guessing. Flag the page as potentially JavaScript-rendered or gated, and suggest the user provide the full text directly. |
 
+## Example
+
+**User request:**
+
+> Audit content quality, readability, thin content risk, or E-E-A-T signals.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

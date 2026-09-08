@@ -4,6 +4,7 @@ description: AI驱动的综合健康分析系统，整合多维度健康数据�
 allowed-tools: Read, Grep, Glob, Write
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # AI健康分析器

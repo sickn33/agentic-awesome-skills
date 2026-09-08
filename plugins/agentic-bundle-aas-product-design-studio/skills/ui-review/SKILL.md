@@ -102,6 +102,12 @@ Provide:
 2. **Issues**: List each violation with file:line reference
 3. **Fixes**: Concrete code changes for each issue
 
+## Example
+
+**User request:**
+
+> Review UI code for design system compliance, accessibility, and best practices.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

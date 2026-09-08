@@ -41,3 +41,46 @@ test("archive paths reject NTFS streams, device aliases, reserved characters, an
   ]) assert.throws(() => safeArchivePath(value), { code: "AAS_ARCHIVE_PATH_INVALID" });
   assert.equal(safeArchivePath("package/console.txt"), "package/console.txt");
 });
+
+function smallTar(specs) {
+  const blocks = [];
+  for (const { name, type = "0", body = "" } of specs) {
+    const bytes = Buffer.from(body);
+    const header = Buffer.alloc(512);
+    header.write(name, 0, 100, "utf8");
+    header.write("0000644\0", 100, "ascii");
+    header.write(bytes.length.toString(8).padStart(11, "0") + "\0", 124, "ascii");
+    header.fill(0x20, 148, 156);
+    header.write(type, 156, "ascii");
+    const checksum = header.reduce((sum, byte) => sum + byte, 0);
+    header.write(checksum.toString(8).padStart(6, "0") + "\0 ", 148, "ascii");
+    blocks.push(header, bytes, Buffer.alloc((512 - bytes.length % 512) % 512));
+  }
+  return Buffer.concat([...blocks, Buffer.alloc(1024)]);
+}
+
+test("archive entry budget includes directories and path metadata even when selecting no files", () => {
+  for (const type of ["5", "x", "g", "L"]) {
+    const entries = Array.from({ length: 3 }, (_, index) => ({
+      name: `package/entry-${index}`, type, body: type === "L" ? `package/file-${index}\0` : "",
+    }));
+    // End long-path metadata with a regular file; metadata cannot escape the budget.
+    if (type === "L") entries.push({ name: "package/end", type: "0", body: "" });
+    assert.throws(() => parsePackageArchive(smallTar(entries), { limits: { maxEntries: 2 }, selectPaths: [] }),
+      { code: "AAS_ARCHIVE_ENTRY_LIMIT" });
+  }
+  const exact = smallTar([{ name: "package", type: "5" }, { name: "package/file" }]);
+  assert.equal(parsePackageArchive(exact, { limits: { maxEntries: 2 } }).fileCount, 1);
+});
+
+test("archive ancestor collisions use normalized paths in either entry order", () => {
+  for (const [parent, child] of [["package/Foo", "package/foo/bar"], ["package/café", "package/cafe\u0301/bar"]]) {
+    for (const names of [[parent, child], [child, parent]]) {
+      assert.throws(() => parsePackageArchive(smallTar(names.map((name) => ({ name })))),
+        { code: "AAS_ARCHIVE_FILE_DIRECTORY_COLLISION" });
+    }
+  }
+  assert.doesNotThrow(() => parsePackageArchive(smallTar([
+    { name: "package/a/one" }, { name: "package/a/two" }, { name: "package/a", type: "5" },
+  ])));
+});

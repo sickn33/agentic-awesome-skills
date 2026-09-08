@@ -1,6 +1,6 @@
 ---
 name: product-marketing
-description: When the user wants to create or update their product marketing context document. Also use when the user mentions 'product context,' 'marketing context,' 'set up context,' 'positioning,' 'who is my target audience,' 'describe my product,' 'ICP,' 'ideal customer profile,' or wants to...
+description: "When the user wants to create or update their product marketing context document."
 risk: critical
 source: https://github.com/coreyhaines31/marketingskills/tree/main/skills/product-marketing
 source_repo: coreyhaines31/marketingskills

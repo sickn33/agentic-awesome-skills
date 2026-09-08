@@ -1,6 +1,6 @@
 ---
 name: neon-object-storage
-description: S3-compatible object storage that branches with your Neon project, so files and the database stay in sync across every branch. Use when a user wants object storage, a bucket, blob/file storage, or somewhere to put uploads, images, documents, avatars, or user-generated files for their...
+description: "S3-compatible object storage that branches with your Neon project, so files and the database stay in sync across every branch."
 risk: critical
 source: https://github.com/neondatabase/agent-skills/tree/main/skills/neon-object-storage
 source_repo: neondatabase/agent-skills

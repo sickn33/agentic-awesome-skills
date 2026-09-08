@@ -4,6 +4,7 @@ description: 'Expert guide for Odoo eCommerce and Website: product catalog, paym
 metadata:
   aas-risk: safe
   aas-source: self
+  aas-date-added: '2026-09-04'
 ---
 
 # Odoo eCommerce Configurator

@@ -78,6 +78,12 @@ You are an elite Scala engineer specializing in enterprise-grade functional prog
 
 Deliver robust, maintainable, and performant Scala solutions that scale to millions of users.
 
+## Example
+
+**User request:**
+
+> Review this Scala implementation for correctness, idiomatic design, performance, and test coverage.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -113,6 +113,12 @@ Before finalizing output, the agent asks:
 - [ ] Did I avoid panic language?
 - [ ] Does this preserve trust and autonomy?
 
+## Example
+
+**User request:**
+
+> Rewrite this urgency message so the deadline is credible, specific, and persuasive without manipulation.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

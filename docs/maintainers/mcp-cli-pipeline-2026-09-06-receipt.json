@@ -1,0 +1,49 @@
+{
+  "assuranceProfile": "agent-first-preview-1",
+  "certifiedV1": false,
+  "jobId": "macos-node-24",
+  "lifecycle": {
+    "composed": true,
+    "doctorReadOnly": true,
+    "initialized": true,
+    "planned": true,
+    "selected": true,
+    "validated": true
+  },
+  "mcp": {
+    "localStdio": true,
+    "nativeAttemptObservation": "notEvaluated",
+    "readOnlySnapshot": true
+  },
+  "mcpContractDigest": "sha256-877f6afb9cfc6017c5da0d25d5f83a0bfe7b56a377019dc0716a16684c5bd31c",
+  "notEvaluated": [
+    "native-network-and-filesystem-attempt-observation",
+    "transactional-crash-and-race-certification",
+    "benchmark-80-90-100",
+    "real-host-configuration-writes",
+    "public-release"
+  ],
+  "package": {
+    "name": "agentic-awesome-skills",
+    "tarballIntegrity": "sha512-I9nSAzXgjjAT3W4oK8hQENNhIko2/Nr6dwPkxsEoH7kfxuNbu6nurUNBPNfShippQOgwHXkuSIqVmJwMWD4dQQ==",
+    "tarballSha256": "sha256-8d300b3d9e6de7d902be3f8ba3285c3761b5bd0f76e9d59103b17a3a93529951",
+    "version": "16.8.0"
+  },
+  "previewQualified": true,
+  "runtime": {
+    "architecture": "arm64",
+    "node": "v24.19.0",
+    "platform": "darwin"
+  },
+  "runtimeCache": {
+    "closureDigest": "sha256-fdf7b443d39c69790a859c5d376c634901b36dfeb220025f26354a8ad035e31b",
+    "integrity": "sha512-I9nSAzXgjjAT3W4oK8hQENNhIko2/Nr6dwPkxsEoH7kfxuNbu6nurUNBPNfShippQOgwHXkuSIqVmJwMWD4dQQ=="
+  },
+  "schemaVersion": 1,
+  "selectionDigest": "sha256-eccde13a7285157eb4f03b51dae6d913fdea10cae5e75b68c65563f56aed1076",
+  "writeGuards": {
+    "applyDisabledByDefault": true,
+    "recoveryDisabledByDefault": true,
+    "targetStateCreated": false
+  }
+}

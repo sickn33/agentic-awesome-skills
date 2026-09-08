@@ -6,6 +6,7 @@ metadata:
     skill-author: K-Dense Inc.
 risk: critical
 source: "https://github.com/networkx/networkx"
+date_added: "2026-09-04"
 ---
 
 # NetworkX

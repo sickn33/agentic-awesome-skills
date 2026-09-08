@@ -67,6 +67,12 @@ Always include disclaimer: "This is a template for informational purposes. Consu
 
 Focus on comprehensiveness, clarity, and regulatory compliance while maintaining readability.
 
+## Example
+
+**User request:**
+
+> Draft privacy policies, terms of service, disclaimers, and legal notices.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

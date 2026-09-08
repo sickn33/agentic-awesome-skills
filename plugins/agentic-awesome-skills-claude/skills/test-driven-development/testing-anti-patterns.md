@@ -8,7 +8,7 @@ Tests must verify real behavior, not mock behavior. Mocks are a means to isolate
 
 **Core principle:** Test what the code does, not what the mocks do.
 
-**Following strict TDD prevents these anti-patterns.**
+Test-first work can reveal these mistakes, but test order alone does not prevent them.
 
 ## The Iron Laws
 
@@ -120,7 +120,7 @@ BEFORE adding any method to production class:
 **The violation:**
 ```typescript
 // ❌ BAD: Mock breaks test logic
-test('detects duplicate server', () => {
+test('detects duplicate server', async () => {
   // Mock prevents config write that test depends on!
   vi.mock('ToolCatalog', () => ({
     discoverAndCacheTools: vi.fn().mockResolvedValue(undefined)
@@ -139,12 +139,12 @@ test('detects duplicate server', () => {
 **The fix:**
 ```typescript
 // ✅ GOOD: Mock at correct level
-test('detects duplicate server', () => {
+test('detects duplicate server', async () => {
   // Mock the slow part, preserve behavior test needs
   vi.mock('MCPServerManager'); // Just mock slow server startup
 
   await addServer(config);  // Config written
-  await addServer(config);  // Duplicate detected ✓
+  await expect(addServer(config)).rejects.toThrow(/duplicate/i);
 });
 ```
 
@@ -260,7 +260,7 @@ TDD cycle:
 
 **Consider:** Integration tests with real components often simpler than complex mocks
 
-## TDD Prevents These Anti-Patterns
+## How test-first work can reveal these anti-patterns
 
 **Why TDD helps:**
 1. **Write test first** → Forces you to think about what you're actually testing
@@ -268,7 +268,7 @@ TDD cycle:
 3. **Minimal implementation** → No test-only methods creep in
 4. **Real dependencies** → You see what the test actually needs before mocking
 
-**If you're testing mock behavior, you violated TDD** - you added mocks without watching test fail against real code first.
+An assertion on a mock call can be valid when the call is the contract, such as sending exactly one notification. Pair it with appropriate integration coverage; asserting only that a mocked component exists rarely verifies the user flow.
 
 ## Quick Reference
 

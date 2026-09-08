@@ -81,6 +81,12 @@ Scan the repository for build files to determine the primary language for code e
 ### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Create onboarding documentation that helps a new engineer run, understand, and safely change this codebase.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

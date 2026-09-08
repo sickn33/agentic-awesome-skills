@@ -31,6 +31,11 @@ Ask the questions one at a time, waiting for feedback on each question before co
 
 If a question can be answered by exploring the codebase, explore the codebase instead.
 
+## Example
+
+**User request:**
+
+> Use @grilling for this task: Interview the user relentlessly about a plan or design.
 
 ## Limitations
 

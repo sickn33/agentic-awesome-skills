@@ -23,10 +23,10 @@
 
 ```
 Why tRPC:
-├── Zero schema maintenance
+├── Shared TypeScript types; still validate untrusted runtime input
 ├── End-to-end type inference
 ├── IDE autocomplete across stack
-├── Instant API changes reflected
+├── Type errors surface for clients rebuilt against the shared contract
 └── No code generation step
 ```
 

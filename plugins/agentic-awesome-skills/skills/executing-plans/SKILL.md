@@ -81,6 +81,12 @@ After all tasks complete and verified:
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Use @executing-plans for this task: Use when you have a written implementation plan to execute in a separate session with review checkpoints.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -1,8 +1,14 @@
 # Node/TypeScript MCP Server Implementation Guide
 
+Modified in AAS on 2026-09-05. These are SDK **v1** integration sketches, with imports
+from `@modelcontextprotocol/sdk`. Confirm the installed version and lockfile against
+[the v1 guide](https://ts.sdk.modelcontextprotocol.io/server). The newer split-package
+SDK uses different imports; do not mix its examples with this guide. Service-specific
+adapters, authentication and schemas below must be supplied and tested.
+
 ## Overview
 
-This document provides Node/TypeScript-specific best practices and examples for implementing MCP servers using the MCP TypeScript SDK. It covers project structure, server setup, tool registration patterns, input validation with Zod, error handling, and complete working examples.
+This document provides Node/TypeScript-specific best practices and examples for implementing MCP servers using the MCP TypeScript SDK. It covers project structure, server setup, tool registration patterns, input validation with Zod, error handling, and version-scoped integration sketches.
 
 ---
 
@@ -55,9 +61,9 @@ The official MCP TypeScript SDK provides:
 - Zod schema integration for runtime input validation
 - Type-safe tool handler implementations
 
-**IMPORTANT - Use Modern APIs Only:**
+**Choose the API supported by the installed SDK:**
 - **DO use**: `server.registerTool()`, `server.registerResource()`, `server.registerPrompt()`
-- **DO NOT use**: Old deprecated APIs such as `server.tool()`, `server.setRequestHandler(ListToolsRequestSchema, ...)`, or manual handler registration
+- Low-level `Server.setRequestHandler` remains useful for explicit protocol contracts; do not label it deprecated merely because a high-level wrapper exists
 - The `register*` methods provide better type safety, automatic schema handling, and are the recommended approach
 
 See the MCP SDK documentation in the references for complete details.
@@ -263,6 +269,7 @@ Error Handling:
       };
     } catch (error) {
       return {
+        isError: true,
         content: [{
           type: "text",
           text: handleApiError(error)
@@ -348,7 +355,7 @@ const inputSchema = z.object({
 
 **JSON format**:
 - Return complete, structured data suitable for programmatic processing
-- Include all available fields and metadata
+- Include authorized fields needed by this task
 - Use consistent field names and types
 
 ## Pagination Implementation
@@ -379,31 +386,13 @@ async function listItems(params: z.infer<typeof ListSchema>) {
 }
 ```
 
-## Character Limits and Truncation
+## Bounded response serialization
 
-Add a CHARACTER_LIMIT constant to prevent overwhelming responses:
-
-```typescript
-// At module level in constants.ts
-export const CHARACTER_LIMIT = 25000;  // Maximum response size in characters
-
-async function searchTool(params: SearchInput) {
-  let result = generateResponse(data);
-
-  // Check character limit and truncate if needed
-  if (result.length > CHARACTER_LIMIT) {
-    const truncatedData = data.slice(0, Math.max(1, data.length / 2));
-    response.data = truncatedData;
-    response.truncated = true;
-    response.truncation_message =
-      `Response truncated from ${data.length} to ${truncatedData.length} items. ` +
-      `Use 'offset' parameter or add filters to see more results.`;
-    result = JSON.stringify(response, null, 2);
-  }
-
-  return result;
-}
-```
+Limit upstream response bytes and result counts before parsing. Reduce whole items,
+then serialize and check actual UTF-8 bytes, including metadata and text duplication.
+If one item cannot fit, return an explicit tool error with narrower-query guidance.
+Never slice serialized JSON or halve once and assume the result fits. Preserve a
+cursor for omitted results and distinguish truncation from an empty successful page.
 
 ## Error Handling
 
@@ -429,7 +418,7 @@ function handleApiError(error: unknown): string {
       return "Error: Request timed out. Please try again.";
     }
   }
-  return `Error: Unexpected error occurred: ${error instanceof Error ? error.message : String(error)}`;
+  return "Error: Unexpected upstream failure; consult the restricted server log.";
 }
 ```
 
@@ -541,10 +530,10 @@ async function getUser(id: string): Promise<any> {
     "clean": "rm -rf dist"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.6.1",
+    "@modelcontextprotocol/sdk": "^1.10.0",
     "axios": "^1.7.9",
     "zod": "^3.23.8"
   },
@@ -581,7 +570,7 @@ async function getUser(id: string): Promise<any> {
 }
 ```
 
-## Complete Example
+## Integration outline (not a runnable complete service)
 
 ```typescript
 #!/usr/bin/env node
@@ -673,7 +662,7 @@ function handleApiError(error: unknown): string {
       return "Error: Request timed out. Please try again.";
     }
   }
-  return `Error: Unexpected error occurred: ${error instanceof Error ? error.message : String(error)}`;
+  return "Error: Unexpected upstream failure; consult the restricted server log.";
 }
 
 // Create MCP server instance
@@ -714,45 +703,10 @@ async function runStdio() {
   console.error("MCP server running via stdio");
 }
 
-// For streamable HTTP (remote):
-async function runHTTP() {
-  if (!process.env.EXAMPLE_API_KEY) {
-    console.error("ERROR: EXAMPLE_API_KEY environment variable is required");
-    process.exit(1);
-  }
-
-  const app = express();
-  app.use(express.json());
-
-  app.post('/mcp', async (req, res) => {
-    const transport = new StreamableHTTPServerTransport({
-      sessionIdGenerator: undefined,
-      enableJsonResponse: true
-    });
-    res.on('close', () => transport.close());
-    await server.connect(transport);
-    await transport.handleRequest(req, res, req.body);
-  });
-
-  const port = parseInt(process.env.PORT || '3000');
-  app.listen(port, () => {
-    console.error(`MCP server running on http://localhost:${port}/mcp`);
-  });
-}
-
-// Choose transport based on environment
-const transport = process.env.TRANSPORT || 'stdio';
-if (transport === 'http') {
-  runHTTP().catch(error => {
-    console.error("Server error:", error);
-    process.exit(1);
-  });
-} else {
-  runStdio().catch(error => {
-    console.error("Server error:", error);
-    process.exit(1);
-  });
-}
+runStdio().catch(() => {
+  console.error("Server startup failed");
+  process.exitCode = 1;
+});
 ```
 
 ---
@@ -764,49 +718,22 @@ if (transport === 'http') {
 Expose data as resources for efficient, URI-based access:
 
 ```typescript
-import { ResourceTemplate } from "@modelcontextprotocol/sdk/types.js";
+import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-// Register a resource with URI template
+// Static allowlist, not a filesystem path derived from user input.
+const documents = new Map([["help", "Synthetic fixture documentation"]]);
 server.registerResource(
-  {
-    uri: "file://documents/{name}",
-    name: "Document Resource",
-    description: "Access documents by name",
-    mimeType: "text/plain"
-  },
-  async (uri: string) => {
-    // Extract parameter from URI
-    const match = uri.match(/^file:\/\/documents\/(.+)$/);
-    if (!match) {
-      throw new Error("Invalid URI format");
-    }
-
-    const documentName = match[1];
-    const content = await loadDocument(documentName);
-
-    return {
-      contents: [{
-        uri,
-        mimeType: "text/plain",
-        text: content
-      }]
-    };
+  "document", new ResourceTemplate("docs://{name}", { list: undefined }),
+  { mimeType: "text/plain" },
+  async (uri, { name }) => {
+    if (typeof name !== "string" || !documents.has(name)) throw new Error("Unknown document");
+    return { contents: [{ uri: uri.href, text: documents.get(name)! }] };
   }
 );
-
-// List available resources dynamically
-server.registerResourceList(async () => {
-  const documents = await getAvailableDocuments();
-  return {
-    resources: documents.map(doc => ({
-      uri: `file://documents/${doc.name}`,
-      name: doc.name,
-      mimeType: "text/plain",
-      description: doc.description
-    }))
-  };
-});
 ```
+
+Real resources need per-principal authorization, bounded reads and safe path handling;
+a template match alone grants no filesystem access.
 
 **When to use Resources vs Tools:**
 - **Resources**: For data access with simple URI-based parameters
@@ -820,28 +747,11 @@ The TypeScript SDK supports two main transport mechanisms:
 
 #### Streamable HTTP (Recommended for Remote Servers)
 
-```typescript
-import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import express from "express";
-
-const app = express();
-app.use(express.json());
-
-app.post('/mcp', async (req, res) => {
-  // Create new transport for each request (stateless, prevents request ID collisions)
-  const transport = new StreamableHTTPServerTransport({
-    sessionIdGenerator: undefined,
-    enableJsonResponse: true
-  });
-
-  res.on('close', () => transport.close());
-
-  await server.connect(transport);
-  await transport.handleRequest(req, res, req.body);
-});
-
-app.listen(3000);
-```
+Use the installed SDK's tested HTTP example. For stateless handling, create both a
+server and transport for each request; sharing a connected server across concurrent
+transports is not a session model. Enforce authentication, token audience/scopes,
+origin/host validation, request limits and cleanup before exposing the endpoint.
+A localhost demonstration without these controls is not a deployment template.
 
 #### stdio (For Local Integrations)
 
@@ -860,17 +770,9 @@ await server.connect(transport);
 
 Notify clients when server state changes:
 
-```typescript
-// Notify when tools list changes
-server.notification({
-  method: "notifications/tools/list_changed"
-});
-
-// Notify when resources change
-server.notification({
-  method: "notifications/resources/list_changed"
-});
-```
+Use the installed SDK's notification API and the negotiated client's capabilities.
+Do not call an invented high-level `server.notification` method. Verify receipt in a
+real client; protocol versions and session models differ.
 
 Use notifications sparingly - only when server capabilities genuinely change.
 
@@ -965,6 +867,6 @@ Before finalizing your Node/TypeScript MCP server implementation, ensure:
 ### Testing and Build
 - [ ] `npm run build` completes successfully without errors
 - [ ] dist/index.js created and executable
-- [ ] Server runs: `node dist/index.js --help`
+- [ ] Real client initializes the built stdio command and invokes a fixture tool; do not assume --help exists
 - [ ] All imports resolve correctly
 - [ ] Sample tool calls work as expected

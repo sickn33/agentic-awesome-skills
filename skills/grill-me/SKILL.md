@@ -28,6 +28,11 @@ Use when this workflow matches the user request: A relentless interview to sharp
 
 _Source: [mattpocock/skills](https://github.com/mattpocock/skills) (MIT)._Run a `/grilling` session.
 
+## Example
+
+**User request:**
+
+> Use @grill-me for this task: A relentless interview to sharpen a plan or design.
 
 ## Limitations
 

@@ -159,6 +159,12 @@ Optionally invite reflection with a prompt such as:
 
 Questions should appear naturally during reasoning, not as a mandatory closing statement.
 
+## Example
+
+**User request:**
+
+> Explain a concept.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

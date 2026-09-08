@@ -58,6 +58,12 @@ All four use the portable SKILL.md standard; project skills win over global.
 - Codex, Pi, OpenCode: need `pty=true`.
 - Claude Code: prefer `claude --print --permission-mode bypassPermissions` (no PTY).
 
+## Example
+
+**User request:**
+
+> Delegate these independent work items with complete context, clear ownership, and progress checks.
+
 ## Limitations
 
 - Adapted from `davidondrej/skills`; verify local paths, tools, credentials, and agent features before acting.

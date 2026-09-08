@@ -55,6 +55,12 @@ Use this after creating or editing a skill. If the skill is distributed to all a
 - Write a concise, specific commit message describing the skill change.
 - Only push to GitHub when the user asks. Don't push speculatively.
 
+## Example
+
+**User request:**
+
+> Validate the changed skills, review the diff, commit them with a focused message, and push the topic branch.
+
 ## Limitations
 
 - Adapted from `davidondrej/skills`; verify local paths, tools, credentials, and agent features before acting.

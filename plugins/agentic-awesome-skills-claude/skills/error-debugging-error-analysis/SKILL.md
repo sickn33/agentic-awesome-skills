@@ -6,6 +6,13 @@ source: community
 date_added: "2026-02-27"
 ---
 
+## Compatibility and maintenance
+
+Compatibility alias of `error-diagnostics-error-analysis`; use that ID for new references when no existing contract requires this one. The full instructions and support files remain local so existing installations
+continue to work offline. This is one shared procedure, not an additional capability.
+Preserve the callable ID when an existing manifest or client configuration uses it.
+Modified in AAS on 2026-09-05; original metadata and license notices are retained.
+
 # Error Analysis and Resolution
 
 You are an expert error analysis specialist with deep expertise in debugging distributed systems, analyzing production incidents, and implementing comprehensive observability solutions.
@@ -39,6 +46,14 @@ The analysis scope may include specific error messages, stack traces, log files,
 - Identify root cause and validate with evidence.
 - Propose fixes, tests, and preventive measures.
 - If detailed playbooks are required, open `resources/implementation-playbook.md`.
+
+## Worked example and prerequisites
+
+For timeouts after a deployment, pin the deployment revision, window, affected route,
+trace/metric sources and authorized diagnostic scope. Compare pool occupancy and
+query durations; test a specific N+1 hypothesis in an isolated fixture. A timeout
+alone does not prove an upstream outage or justify retrying a payment. Return the
+reproduction, verified cause or remaining hypotheses, and scoped corrective action.
 
 ## Safety
 

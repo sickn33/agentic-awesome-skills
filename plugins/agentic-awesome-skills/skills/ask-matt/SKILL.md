@@ -84,6 +84,11 @@ Off the main flow entirely.
 
 **`/setup-matt-pocock-skills`** — run before your first engineering flow to configure the issue tracker, triage labels, and doc layout the other skills assume. Custom issue trackers also work.
 
+## Example
+
+**User request:**
+
+> Use @ask-matt for this task: Ask which skill or flow fits your situation.
 
 ## Limitations
 

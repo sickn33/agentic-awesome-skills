@@ -1,0 +1,90 @@
+{
+  "date": "2026-09-05",
+  "gitVersion": "git version 2.50.1 (Apple Git-155)",
+  "method": "One sequential HTTPS clone per mode, same immutable release commit. Logical file bytes, excluding symlinks; gitBytes includes metadata and objects. This is storage observation, not network wire measurement or a repeated timing benchmark.",
+  "results": [
+    {
+      "kind": "full",
+      "commit": "c91abcfb9c52ac8a7c1292cc0326f459106cde1d",
+      "elapsedSeconds": 25.294,
+      "worktreeFiles": 22100,
+      "worktreeBytes": 283698316,
+      "gitBytes": 54658608
+    },
+    {
+      "kind": "sparse",
+      "commit": "c91abcfb9c52ac8a7c1292cc0326f459106cde1d",
+      "elapsedSeconds": 20.962,
+      "worktreeFiles": 7005,
+      "worktreeBytes": 82489568,
+      "gitBytes": 44242352
+    }
+  ],
+  "canonicalEntriesCompared": 6993,
+  "canonicalModesBytesAndSymlinkTargetsEqual": true,
+  "commands": [
+    [
+      "git",
+      "clone",
+      "--depth",
+      "1",
+      "--branch",
+      "v16.7.0",
+      "https://github.com/sickn33/agentic-awesome-skills.git",
+      "<full>"
+    ],
+    [
+      "git",
+      "clone",
+      "--depth",
+      "1",
+      "--filter=blob:none",
+      "--sparse",
+      "--branch",
+      "v16.7.0",
+      "https://github.com/sickn33/agentic-awesome-skills.git",
+      "<sparse>"
+    ],
+    [
+      "git",
+      "-C",
+      "<sparse>",
+      "sparse-checkout",
+      "set",
+      "--cone",
+      "skills"
+    ]
+  ],
+  "freshPackedInstaller": {
+    "status": "passed",
+    "sourceRelease": "16.7.0",
+    "expectedGitHead": "c91abcfb9c52ac8a7c1292cc0326f459106cde1d",
+    "candidateInstaller": "fresh npm pack and install",
+    "dryRunLeftTargetAbsent": true,
+    "selectedIds": [
+      "mcp-builder",
+      "systematic-debugging",
+      "game-development/2d-games"
+    ],
+    "installedManifest": {
+      "schemaVersion": 1,
+      "updatedAt": "2026-09-05T01:58:54.999Z",
+      "entries": [
+        "game-development/2d-games",
+        "mcp-builder",
+        "systematic-debugging"
+      ]
+    },
+    "targetScope": "isolated temporary fixture, not personal host",
+    "completeTreeComparison": {
+      "status": "passed",
+      "fileBytesAndModesEqual": true,
+      "entriesPerSkill": {
+        "mcp-builder": 10,
+        "systematic-debugging": 11,
+        "game-development/2d-games": 1
+      },
+      "baseline": "full shallow Git checkout of the same npm gitHead"
+    }
+  }
+}

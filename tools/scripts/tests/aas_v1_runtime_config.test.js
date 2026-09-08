@@ -386,3 +386,29 @@ test("backup cleanup has a path-redacted exact approval and preserves retained r
   assert.equal(cleaned.removedCount, 2);
   assert.equal(cleaned.retained, 1);
 });
+
+test("runtime discovery verifies bytes, rejects ambiguity, and never downloads or writes", async (t) => {
+  const root = await temp(t);
+  const cacheRoot = path.join(root, "cache");
+  const options = { cacheRoot, packageVersion: "14.6.0" };
+  assert.equal(await core.cache.resolveUniqueRuntime(options), null);
+  assert.equal(fs.existsSync(cacheRoot), false);
+  const fixture = releaseFixture();
+  const installed = await core.cache.installRuntimeFromRegistry({ cacheRoot, version: "14.6.0", fetcher: fixture.fetcher });
+  assert.deepEqual((await core.cache.resolveUniqueRuntime(options)).runtimeIdentity, installed.runtimeIdentity);
+  assert.equal(await core.cache.resolveUniqueRuntime({ ...options, packageVersion: "14.7.0" }), null);
+  // A second content-addressed identity is deliberately ambiguous, even for the same payload.
+  const secondIntegrity = `sha256-${crypto.createHash("sha256").update(fixture.archive).digest("base64")}`;
+  await core.cache.promoteRuntime({ cacheRoot, release: {
+    version: "14.6.0", integrity: secondIntegrity,
+    provenance: { registryOrigin: "https://registry.npmjs.org", signaturesPresent: false, attestationsPresent: false },
+  }, parsed: core.cache.parsePackageArchive(fixture.archive, { limits: core.cache.RUNTIME_ARCHIVE_LIMITS }) });
+  await assert.rejects(core.cache.resolveUniqueRuntime(options), { code: "AAS_RUNTIME_RESOLVER_AMBIGUOUS" });
+  const secondPath = core.cache.runtimeCachePath({ ...options, integrity: secondIntegrity });
+  await fsp.appendFile(path.join(secondPath, "package", "skills_index.json"), "tampered");
+  assert.deepEqual((await core.cache.resolveUniqueRuntime(options)).runtimeIdentity, installed.runtimeIdentity);
+  await fsp.appendFile(path.join(installed.targetPath, "package", "skills_index.json"), "tampered");
+  assert.equal(await core.cache.resolveUniqueRuntime(options), null);
+  for (let index = 0; index < 63; index++) await fsp.mkdir(path.join(path.dirname(secondPath), `ignored-${index}`));
+  await assert.rejects(core.cache.resolveUniqueRuntime(options), { code: "AAS_RUNTIME_RESOLVER_LIMIT" });
+});

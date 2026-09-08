@@ -4,6 +4,7 @@ description: 分析旅行健康数据、评估目的地健康风险、提供疫�
 allowed-tools: Read, Write, Grep, Glob
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # 旅行健康分析技能

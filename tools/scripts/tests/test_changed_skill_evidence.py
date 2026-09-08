@@ -113,6 +113,26 @@ class ChangedSkillEvidenceTests(unittest.TestCase):
             changed_skill_evidence.canonical_skill_id("docs/example.md", roots)
         )
 
+    def test_copy_into_existing_skill_is_a_modification(self):
+        record = changed_skill_evidence.ChangeRecord(
+            status="C",
+            old_path="skills/source/SKILL.md",
+            new_path="skills/target/references/detailed-guide.md",
+            old_mode="100644",
+            new_mode="100644",
+            old_oid="a" * 40,
+            new_oid="b" * 40,
+            similarity=90,
+        )
+
+        pairs = changed_skill_evidence.skill_pairs(
+            [record],
+            {"source", "target"},
+            {"source", "target"},
+        )
+
+        self.assertEqual(pairs, [("target", "target", [record])])
+
     def test_mixed_copy_and_rename_keep_distinct_change_types(self):
         root, base = init_repo()
         original = root / "skills/example/SKILL.md"

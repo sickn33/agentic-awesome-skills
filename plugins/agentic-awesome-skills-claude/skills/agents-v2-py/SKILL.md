@@ -6,6 +6,13 @@ source: community
 date_added: "2026-02-27"
 ---
 
+## Compatibility and maintenance
+
+Compatibility alias of `hosted-agents-v2-py`; use that ID for new references when no existing contract requires this one. The full instructions and support files remain local so existing installations
+continue to work offline. This is one shared procedure, not an additional capability.
+Preserve the callable ID when an existing manifest or client configuration uses it.
+Modified in AAS on 2026-09-05; original metadata and license notices are retained.
+
 # Azure AI Hosted Agents (Python)
 
 Build container-based hosted agents using `ImageBasedHostedAgentDefinition` from the Azure AI Projects SDK.
@@ -13,10 +20,10 @@ Build container-based hosted agents using `ImageBasedHostedAgentDefinition` from
 ## Installation
 
 ```bash
-pip install azure-ai-projects>=2.0.0b3 azure-identity
+pip install 'azure-ai-projects>=2.0.0b3,<3' azure-identity
 ```
 
-**Minimum SDK Version:** `2.0.0b3` or later required for hosted agent support.
+These are preview-era SDK v2 sketches. Check the exact installed version and current Azure hosted-agent documentation before provisioning; a broad version range is not an integration test.
 
 ## Environment Variables
 
@@ -35,11 +42,13 @@ Before creating hosted agents:
 
 ## Authentication
 
-Always use `DefaultAzureCredential`:
+Use the approved Azure credential flow for the intended tenant/subscription; this sketch uses `DefaultAzureCredential`:
 
 ```python
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
+
+import os
 
 credential = DefaultAzureCredential()
 client = AIProjectClient(
@@ -150,7 +159,7 @@ definition=ImageBasedHostedAgentDefinition(
 )
 ```
 
-**Resource Limits:**
+**Illustrative resource sizes; verify regional/SKU limits before provisioning:**
 | Resource | Min | Max | Default |
 |----------|-----|-----|---------|
 | CPU | 0.5 | 4 | 1 |
@@ -323,7 +332,16 @@ async def create_hosted_agent_async():
 - [Azure Container Registry](https://learn.microsoft.com/azure/container-registry/)
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+Use for reviewing or creating an explicitly requested container-based Foundry hosted
+agent. First confirm image digest, subscription/tenant, region, service availability,
+permissions and cost scope. Creating agents, granting roles and deleting versions are
+cloud writes; do them only within the user's authorization.
+
+## Review example
+Given a pinned container image and test project, check SDK model fields and registry
+pull access, then prepare the create request. Provision only if authorized and record
+the exact returned version and observed health. Do not delete unrelated versions as
+routine cleanup. Expected result is a version-specific receipt, not an assumed deploy.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

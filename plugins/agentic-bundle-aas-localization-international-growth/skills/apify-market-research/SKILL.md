@@ -4,6 +4,7 @@ description: Analyze market conditions, geographic opportunities, pricing, consu
 metadata:
   aas-risk: critical
   aas-source: community
+  aas-date-added: '2026-09-04'
 ---
 
 # Market Research

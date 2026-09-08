@@ -1,6 +1,6 @@
 ---
 name: design-ux
-description: UX / usability audit — heuristic evaluation of INTERACTIVE UIs (not just visual polish). Load with design when a UI "feels off", "sucks to use", is hard to learn, needs an instruction wall, or before shipping an interactive tool/editor/app. Scores the RENDERED UI against Nielsen's 10 +...
+description: "UX / usability audit — heuristic evaluation of INTERACTIVE UIs (not just visual polish). Load with design when a UI \"feels off\", \"sucks to use\", is hard to learn, needs an instruction wall, or before shipping an interactive tool/editor/app."
 risk: critical
 source: https://github.com/connerkward/ckw-design-skill/tree/main/deterministic-design/design-ux
 source_repo: connerkward/ckw-design-skill
@@ -67,6 +67,12 @@ A scored table — `Heuristic | Finding (located) | Severity | Fix` — then a p
 - **design-spatial** owns the render-then-critique mechanism + Fitts/transit + overflow gate; this skill applies that lens to *usability* specifically and adds the heuristic scorecard.
 - **design-thinking** owns the UX *principles* (goals/tasks, IA, feedback, accessibility, progressive disclosure); this skill turns them into a *scored audit + fix loop*.
 - Run a usability audit **before** declaring an interactive UI "done" — alongside the visual critique, not instead of it.
+
+## Example
+
+**User request:**
+
+> Review this interface with @design-ux, identify the highest-impact design problems, and propose an implementation-ready improvement.
 
 ## Limitations
 

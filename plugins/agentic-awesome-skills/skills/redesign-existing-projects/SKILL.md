@@ -19,6 +19,12 @@ tools: [claude, cursor, codex, antigravity]
 - Use when the task is to audit current frontend code and make targeted visual improvements without changing the product architecture.
 - Use when the design feels generic, AI-generated, poorly spaced, visually flat, or missing responsive, interactive, loading, empty, or error states.
 
+## Example
+
+**User request:**
+
+> Use @redesign-existing-projects for this task: Use when upgrading existing websites or apps by auditing generic UI patterns and applying premium design fixes without rewrites.
+
 ## Limitations
 
 - This skill upgrades existing UI but does not authorize framework migrations, information-architecture rewrites, or product-scope expansion by default.

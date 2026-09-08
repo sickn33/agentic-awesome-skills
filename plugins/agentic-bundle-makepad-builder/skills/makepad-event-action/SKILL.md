@@ -12,6 +12,7 @@ description: 'CRITICAL: Use for Makepad event and action handling. Triggers on:
 metadata:
   aas-risk: safe
   aas-source: community
+  aas-date-added: '2026-09-04'
 ---
 
 # Makepad Event/Action Skill

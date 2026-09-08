@@ -22,6 +22,12 @@ This skill provides guidance and patterns for ai-powered ppt generation with doc
 
 For more information, see the [source repository](https://github.com/op7418/NanoBanana-PPT-Skills).
 
+## Example
+
+**User request:**
+
+> Use @nanobanana-ppt-skills for this task: AI-powered PPT generation with document analysis and styled images.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

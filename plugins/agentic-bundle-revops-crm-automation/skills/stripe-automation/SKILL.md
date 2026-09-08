@@ -201,6 +201,12 @@ Stripe uses smallest currency unit:
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Automate Stripe tasks via Rube MCP (Composio): customers, charges, subscriptions, invoices, products, refunds.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

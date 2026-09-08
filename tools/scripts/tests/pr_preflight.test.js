@@ -6,7 +6,23 @@ const { spawnSync } = require("child_process");
 
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const scriptPath = path.join(repoRoot, "tools", "scripts", "pr_preflight.cjs");
-const { evaluateForkSafety, parseArgs } = require("../pr_preflight.cjs");
+const { changedFilesFromRecords, evaluateForkSafety, parseArgs } = require("../pr_preflight.cjs");
+const { getDirectDerivedChanges, loadWorkflowContract } = require("../../lib/workflow-contract");
+
+const copyOrigin = "plugins/agentic-awesome-skills/skills/internal-comms/examples/faq-answers.md";
+const copyTarget = "skills/internal-comms-community/examples/faq-answers.md";
+const copyRecord = { status: "C", old_path: copyOrigin, new_path: copyTarget };
+const workflowContract = loadWorkflowContract(repoRoot);
+assert.deepStrictEqual(changedFilesFromRecords([copyRecord]), [copyTarget]);
+assert.deepStrictEqual(getDirectDerivedChanges(changedFilesFromRecords([copyRecord]), workflowContract), []);
+for (const record of [
+  { ...copyRecord, status: "R" },
+  { status: "C", old_path: copyTarget, new_path: copyOrigin },
+  { status: "M", old_path: copyOrigin, new_path: copyOrigin },
+]) {
+  assert.ok(getDirectDerivedChanges(changedFilesFromRecords([record]), workflowContract).includes(copyOrigin),
+    "rename/removal, copy into, and modification of a generated path remain source-only violations");
+}
 
 assert.strictEqual(parseArgs(["--repo", repoRoot, "--check-fork-safety"]).repo, repoRoot);
 assert.strictEqual(parseArgs(["--repo", repoRoot, "--check-fork-safety"]).checkForkSafety, true);

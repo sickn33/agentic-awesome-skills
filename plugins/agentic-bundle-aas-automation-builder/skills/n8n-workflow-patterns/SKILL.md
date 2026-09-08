@@ -4,6 +4,7 @@ description: Proven architectural patterns for building n8n workflows.
 metadata:
   aas-risk: critical
   aas-source: community
+  aas-date-added: '2026-09-04'
 ---
 
 # n8n Workflow Patterns

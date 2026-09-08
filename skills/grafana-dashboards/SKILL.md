@@ -117,7 +117,7 @@ Design effective Grafana dashboards for monitoring applications, infrastructure,
 }
 ```
 
-**Reference:** See `assets/api-dashboard.json`
+**Reference:** See [inline example](#api-monitoring-dashboard)
 
 ## Panel Types
 
@@ -306,7 +306,7 @@ providers:
 - Pod count by namespace
 - Node status
 
-**Reference:** See `assets/infrastructure-dashboard.json`
+**Reference:** See [inline example](#infrastructure-dashboard)
 
 ### Database Dashboard
 
@@ -319,7 +319,7 @@ providers:
 - Replication lag
 - Slow queries
 
-**Reference:** See `assets/database-dashboard.json`
+**Reference:** See [inline example](#database-dashboard)
 
 ### Application Dashboard
 
@@ -373,9 +373,9 @@ resource "grafana_folder" "monitoring" {
 
 ## Reference Files
 
-- `assets/api-dashboard.json` - API monitoring dashboard
-- `assets/infrastructure-dashboard.json` - Infrastructure dashboard
-- `assets/database-dashboard.json` - Database monitoring dashboard
+- [inline example](#api-monitoring-dashboard) - API monitoring dashboard
+- [inline example](#infrastructure-dashboard) - Infrastructure dashboard
+- [inline example](#database-dashboard) - Database monitoring dashboard
 - `references/dashboard-design.md` - Dashboard design guide
 
 ## Related Skills

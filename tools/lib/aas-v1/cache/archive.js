@@ -86,7 +86,9 @@ function parseTar(tarBytes, options = {}) {
   const entries = [];
   const seen = new Map();
   const collisionKeys = new Map();
+  const ancestorKeys = new Set();
   let offset = 0;
+  let entryCount = 0;
   let fileCount = 0;
   let expandedBytes = 0;
   let pendingPath = null;
@@ -100,6 +102,8 @@ function parseTar(tarBytes, options = {}) {
       continue;
     }
     zeroBlocks = 0;
+    entryCount += 1;
+    if (entryCount > limits.maxEntries) throw cacheError("AAS_ARCHIVE_ENTRY_LIMIT", "archive exceeds the entry-count limit");
     const expectedChecksum = parseOctal(header.subarray(148, 156), "checksum");
     let checksum = 0;
     for (let index = 0; index < 512; index += 1) checksum += index >= 148 && index < 156 ? 0x20 : header[index];
@@ -134,19 +138,24 @@ function parseTar(tarBytes, options = {}) {
     if (directory && size !== 0) throw cacheError("AAS_ARCHIVE_HEADER_INVALID", "directory entry has data");
     fileCount += regular ? 1 : 0;
     expandedBytes += regular ? size : 0;
-    if (fileCount > limits.maxEntries) throw cacheError("AAS_ARCHIVE_ENTRY_LIMIT", "archive exceeds the file-count limit");
     if (regular && size > limits.maxSingleFileBytes) throw cacheError("AAS_ARCHIVE_FILE_LIMIT", "archive file exceeds the size limit");
     if (expandedBytes > limits.maxExpandedTotalBytes) throw cacheError("AAS_ARCHIVE_TOTAL_LIMIT", "archive exceeds the expanded-byte limit");
     const kind = directory ? "directory" : "file";
     if (seen.has(archivePath)) throw cacheError("AAS_ARCHIVE_DUPLICATE_PATH", "archive contains a duplicate path");
     const key = collisionKey(archivePath);
     if (collisionKeys.has(key)) throw cacheError("AAS_ARCHIVE_PATH_COLLISION", "archive paths collide by case or Unicode normalization");
-    for (const [existingPath, existingKind] of seen) {
-      if ((archivePath.startsWith(`${existingPath}/`) && existingKind === "file")
-        || (existingPath.startsWith(`${archivePath}/`) && kind === "file")) {
+    const parents = [];
+    for (let slash = key.indexOf("/"); slash !== -1; slash = key.indexOf("/", slash + 1)) {
+      const parent = key.slice(0, slash);
+      parents.push(parent);
+      if (seen.get(collisionKeys.get(parent)) === "file") {
         throw cacheError("AAS_ARCHIVE_FILE_DIRECTORY_COLLISION", "archive file and directory paths collide");
       }
     }
+    if (regular && ancestorKeys.has(key)) {
+      throw cacheError("AAS_ARCHIVE_FILE_DIRECTORY_COLLISION", "archive file and directory paths collide");
+    }
+    for (const parent of parents) ancestorKeys.add(parent);
     seen.set(archivePath, kind);
     collisionKeys.set(key, archivePath);
     if (regular && (!selected || selected.has(archivePath))) entries.push({ path: archivePath, mode, bytes: Buffer.from(body) });

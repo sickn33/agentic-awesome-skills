@@ -58,6 +58,12 @@ Read and display the requested token file in a formatted table.
 - Colors should support both light and dark modes
 - New tokens must be added to BOTH the JSON source AND the CSS implementation
 
+## Example
+
+**User request:**
+
+> Review this interface with @ui-tokens, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

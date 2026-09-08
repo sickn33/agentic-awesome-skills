@@ -22,6 +22,12 @@ rewrite your last response to be simpler & shorter. do not do anything else.
 - Use when the user asks for a shorter, simpler, or TLDR version of the previous response.
 - Use when the current answer should be compressed without changing the substance.
 
+## Example
+
+**User request:**
+
+> Rewrite your previous response in half the length while preserving every decision and action item.
+
 ## Limitations
 
 - Adapted from `davidondrej/skills`; verify local paths, tools, credentials, and agent features before acting.

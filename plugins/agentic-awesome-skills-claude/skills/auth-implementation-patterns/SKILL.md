@@ -1,6 +1,6 @@
 ---
 name: auth-implementation-patterns
-description: "Build secure, scalable authentication and authorization systems using industry-standard patterns and modern best practices."
+description: "Implement or review authentication and authorization with explicit token, session and resource-access boundaries."
 risk: critical
 source: community
 date_added: "2026-02-27"
@@ -41,7 +41,17 @@ Build secure, scalable authentication and authorization systems using industry-s
 
 - `resources/implementation-playbook.md` for detailed patterns and examples.
 
+## Worked example
+
+Input: an Express application accepts a user's login and keeps the pre-login session ID. Read the bundled playbook, regenerate the session after credential verification, save only required identity fields, and verify that the old cookie cannot access `/api/profile`. Also test failed login, logout and store failure. Expected: successful login changes the session ID; failed login grants no access.
+
+## Inputs and prerequisites
+
+Record the installed framework/SDK versions, identity provider, tenant model, credential store and test environment. Supply project-specific database adapters and request schemas; examples are integration sketches, not a runnable identity service.
+
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- JWT validation does not establish resource ownership; enforce tenant and object policy on reads and writes.
+- Refresh rotation requires atomic persistence and concurrency tests; the issuance example alone does not provide it.
+- Cookie flags do not replace CSRF protection, and secure-cookie behavior needs the actual HTTPS/proxy configuration tested.
+- Provider integrations and password policies must be checked against current primary documentation and the application's threat model.

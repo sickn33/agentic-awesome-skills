@@ -1,0 +1,3034 @@
+{
+  "schemaVersion": 1,
+  "kind": "aas.selection-evidence",
+  "digest": "sha256-adb62eb09edea486dbd45ef05d6e9b84130d0eb81c285d82cc05e7412b48e11e",
+  "payload": {
+    "schemaVersion": 1,
+    "kind": "aas.selection-evidence.payload",
+    "project": {
+      "schemaVersion": 1,
+      "commit": "251eefb9a58e36d41902dbc4a4fadc4eab72ab66",
+      "files": [
+        {
+          "path": "apps/web-app/package.json",
+          "size": 1980,
+          "sha256": "sha256-344f0b4466b8e06aafb0b08c95492b34b8a19408c61256ad8b2f7982fda8b399"
+        },
+        {
+          "path": "apps/web-app/src/pages/Workbench.tsx",
+          "size": 25576,
+          "sha256": "sha256-0a3be6c70deaa1d75c6384afb1f05efe8eed1651c58e9ac7a99f395c10248cf4"
+        },
+        {
+          "path": "apps/web-app/src/utils/workbenchReview.ts",
+          "size": 27686,
+          "sha256": "sha256-3320a0dbcb2ca274863d083d7722a5453ac54f2fdb4da55d69d2611c0dc74224"
+        }
+      ],
+      "fingerprint": "sha256-369b21fcc362064480f9f58d3b4adb0ba1520d0a748c7a7763ed594f728596ff"
+    },
+    "catalog": {
+      "package": "agentic-awesome-skills",
+      "version": "16.7.0",
+      "integrity": "sha256-1e464d8b3053b349fc16ba5a0f23a7aa4042802362a5a97604b9675846a22e27"
+    },
+    "manifestDigest": "sha256-3eb8e1a07cd328a91ef93ab0e40f19d07d7d3d7a306391a9c91e94aac4c5d073",
+    "dimensions": [
+      {
+        "capabilityIds": [
+          "r"
+        ],
+        "id": "architecture-runtime",
+        "status": "applicable"
+      },
+      {
+        "capabilityIds": [
+          "t"
+        ],
+        "id": "languages-frameworks",
+        "status": "applicable"
+      },
+      {
+        "capabilityIds": [
+          "b"
+        ],
+        "id": "domain-behavior",
+        "status": "applicable"
+      },
+      {
+        "capabilityIds": [
+          "m"
+        ],
+        "id": "data-storage",
+        "status": "applicable"
+      },
+      {
+        "capabilityIds": [],
+        "id": "external-integrations",
+        "status": "not-applicable"
+      },
+      {
+        "capabilityIds": [
+          "x"
+        ],
+        "id": "testing-quality",
+        "status": "applicable"
+      },
+      {
+        "capabilityIds": [
+          "p"
+        ],
+        "id": "security-privacy",
+        "status": "applicable"
+      },
+      {
+        "capabilityIds": [
+          "a"
+        ],
+        "id": "user-experience-accessibility",
+        "status": "applicable"
+      },
+      {
+        "capabilityIds": [
+          "d"
+        ],
+        "id": "deployment-operations",
+        "status": "applicable"
+      },
+      {
+        "capabilityIds": [
+          "w"
+        ],
+        "id": "maintenance-workflow",
+        "status": "applicable"
+      }
+    ],
+    "capabilities": [
+      {
+        "dimensionId": "architecture-runtime",
+        "evidence": [
+          {
+            "path": "apps/web-app/src/pages/Workbench.tsx",
+            "sha256": "sha256-0a3be6c70deaa1d75c6384afb1f05efe8eed1651c58e9ac7a99f395c10248cf4"
+          }
+        ],
+        "id": "r",
+        "selectedSkillIds": [
+          "react-patterns"
+        ],
+        "status": "covered"
+      },
+      {
+        "dimensionId": "languages-frameworks",
+        "evidence": [
+          {
+            "path": "apps/web-app/package.json",
+            "sha256": "sha256-344f0b4466b8e06aafb0b08c95492b34b8a19408c61256ad8b2f7982fda8b399"
+          }
+        ],
+        "id": "t",
+        "selectedSkillIds": [
+          "typescript-pro"
+        ],
+        "status": "covered"
+      },
+      {
+        "dimensionId": "domain-behavior",
+        "evidence": [
+          {
+            "path": "apps/web-app/src/utils/workbenchReview.ts",
+            "sha256": "sha256-3320a0dbcb2ca274863d083d7722a5453ac54f2fdb4da55d69d2611c0dc74224"
+          }
+        ],
+        "id": "b",
+        "selectedSkillIds": [
+          "invariant-guard"
+        ],
+        "status": "covered"
+      },
+      {
+        "dimensionId": "data-storage",
+        "evidence": [
+          {
+            "path": "apps/web-app/src/pages/Workbench.tsx",
+            "sha256": "sha256-0a3be6c70deaa1d75c6384afb1f05efe8eed1651c58e9ac7a99f395c10248cf4"
+          }
+        ],
+        "id": "m",
+        "selectedSkillIds": [
+          "privacy-by-design"
+        ],
+        "status": "covered"
+      },
+      {
+        "dimensionId": "testing-quality",
+        "evidence": [
+          {
+            "path": "apps/web-app/package.json",
+            "sha256": "sha256-344f0b4466b8e06aafb0b08c95492b34b8a19408c61256ad8b2f7982fda8b399"
+          }
+        ],
+        "id": "x",
+        "selectedSkillIds": [
+          "vitest-skill"
+        ],
+        "status": "covered"
+      },
+      {
+        "dimensionId": "security-privacy",
+        "evidence": [
+          {
+            "path": "apps/web-app/src/utils/workbenchReview.ts",
+            "sha256": "sha256-3320a0dbcb2ca274863d083d7722a5453ac54f2fdb4da55d69d2611c0dc74224"
+          }
+        ],
+        "id": "p",
+        "selectedSkillIds": [
+          "privacy-by-design"
+        ],
+        "status": "covered"
+      },
+      {
+        "dimensionId": "user-experience-accessibility",
+        "evidence": [
+          {
+            "path": "apps/web-app/src/pages/Workbench.tsx",
+            "sha256": "sha256-0a3be6c70deaa1d75c6384afb1f05efe8eed1651c58e9ac7a99f395c10248cf4"
+          }
+        ],
+        "id": "a",
+        "selectedSkillIds": [
+          "fixing-accessibility"
+        ],
+        "status": "covered"
+      },
+      {
+        "dimensionId": "deployment-operations",
+        "evidence": [
+          {
+            "path": "apps/web-app/package.json",
+            "sha256": "sha256-344f0b4466b8e06aafb0b08c95492b34b8a19408c61256ad8b2f7982fda8b399"
+          }
+        ],
+        "id": "d",
+        "selectedSkillIds": [
+          "antigravity-maintainer-batch-release"
+        ],
+        "status": "covered"
+      },
+      {
+        "dimensionId": "maintenance-workflow",
+        "evidence": [
+          {
+            "path": "apps/web-app/package.json",
+            "sha256": "sha256-344f0b4466b8e06aafb0b08c95492b34b8a19408c61256ad8b2f7982fda8b399"
+          }
+        ],
+        "id": "w",
+        "selectedSkillIds": [
+          "antigravity-maintainer-batch-release"
+        ],
+        "status": "covered"
+      }
+    ],
+    "selectedSkillIds": [
+      "react-patterns",
+      "typescript-pro",
+      "invariant-guard",
+      "vitest-skill",
+      "privacy-by-design",
+      "fixing-accessibility",
+      "antigravity-maintainer-batch-release"
+    ],
+    "processTrace": {
+      "calls": [
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 37,
+          "canonicalOutputBytes": 1190,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "mcp"
+          },
+          "output": {
+            "nextCursor": 50,
+            "ok": true,
+            "returnedSkillIds": [
+              "accesslint-audit",
+              "activecampaign-automation",
+              "agent-harness-fault-injection",
+              "agent-memory-mcp",
+              "agent-qa-authoring",
+              "agent-qa-debug-fix",
+              "agent-qa-result-triage",
+              "ai-dev-jobs-mcp",
+              "airtable-automation",
+              "amplitude-automation",
+              "anti-deception",
+              "antigravity-maintainer-batch-release",
+              "antigravity-skill-orchestrator",
+              "anywrite",
+              "aomi-transact",
+              "apple-notes-search",
+              "asana-automation",
+              "audit-agent-run-evidence",
+              "automated-triage",
+              "aws-agentic-ai",
+              "aws-mcp-setup",
+              "bamboohr-automation",
+              "basecamp-automation",
+              "bdistill-behavioral-xray",
+              "bdistill-knowledge-extraction",
+              "bilig-workpaper",
+              "bitbucket-automation",
+              "brevo-automation",
+              "browser-testing-with-devtools",
+              "bumblebee",
+              "buywhere-product-catalog",
+              "cal-com-automation",
+              "calendly-automation",
+              "canva-automation",
+              "circleci-automation",
+              "clarvia-aeo-check",
+              "claude-in-chrome-troubleshooting",
+              "clickup-automation",
+              "close-automation",
+              "coda-automation",
+              "confluence-automation",
+              "convertkit-automation",
+              "copilot-sdk",
+              "datadog-automation",
+              "discord-automation",
+              "docusign-automation",
+              "dotnet-backend-patterns",
+              "dropbox-automation",
+              "ejentum-reasoning-harness",
+              "event-staffing-compliance"
+            ],
+            "totalMatches": 145
+          },
+          "sequence": 1,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 44,
+          "canonicalOutputBytes": 1025,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "typescript"
+          },
+          "output": {
+            "nextCursor": 50,
+            "ok": true,
+            "returnedSkillIds": [
+              "api-sdk-generator",
+              "aws-cdk-development",
+              "aws-serverless-eda",
+              "azure-ai-voicelive-ts",
+              "azure-cosmos-ts",
+              "azure-postgres-ts",
+              "azure-storage-blob-ts",
+              "azure-storage-file-share-ts",
+              "azure-storage-queue-ts",
+              "bilig-workpaper",
+              "bullmq-specialist",
+              "bun-development",
+              "cc-skill-coding-standards",
+              "cdk-patterns",
+              "comfyui-gateway",
+              "convex",
+              "cypress-skill",
+              "dbos-typescript",
+              "drizzle-orm-expert",
+              "expo-module",
+              "fp-async",
+              "fp-backend",
+              "fp-data-transforms",
+              "fp-errors",
+              "fp-pragmatic",
+              "fp-react",
+              "fp-refactor",
+              "fp-ts-errors",
+              "fp-ts-pragmatic",
+              "fp-types-ref",
+              "frontend-mobile-development-component-scaffold",
+              "hono",
+              "javascript-testing-patterns",
+              "javascript-typescript-typescript-scaffold",
+              "jest-skill",
+              "m365-agents-ts",
+              "mcp-builder-ms",
+              "mcp-tool-developer",
+              "neon-postgres",
+              "ontoly-software-graph",
+              "react-flow-node-ts",
+              "react-nextjs-development",
+              "react-patterns",
+              "saas-multi-tenant",
+              "senior-frontend",
+              "sveltekit",
+              "transformers-js",
+              "trigger-dev",
+              "trpc-fullstack",
+              "typescript"
+            ],
+            "totalMatches": 58
+          },
+          "sequence": 2,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 41,
+          "canonicalOutputBytes": 696,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "builder"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "agent-tool-builder",
+              "api-endpoint-builder",
+              "app-builder",
+              "browser-extension-builder",
+              "electron-development",
+              "fastapi-templates",
+              "find-complementary-founders",
+              "frontend-mobile-development-component-scaffold",
+              "hugging-face-tool-builder",
+              "huggingface-lora-space-builder",
+              "huggingface-tool-builder",
+              "javascript-typescript-typescript-scaffold",
+              "mcp-builder",
+              "mcp-builder-ms",
+              "odoo-xml-views-builder",
+              "personal-tool-builder",
+              "reference-builder",
+              "security-bluebook-builder",
+              "seo-authority-builder",
+              "slack-bot-builder",
+              "telegram-bot-builder",
+              "templates",
+              "viral-generator-builder",
+              "web-artifacts-builder",
+              "wiki-builder",
+              "wjttc-builder"
+            ],
+            "totalMatches": 26
+          },
+          "sequence": 3,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 44,
+          "canonicalOutputBytes": 859,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "javascript"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "animejs-animation",
+              "appium-skill",
+              "applicationinsights-web-ts",
+              "azure-ai-voicelive-ts",
+              "azure-cosmos-ts",
+              "azure-keyvault-keys-ts",
+              "azure-keyvault-secrets-ts",
+              "azure-storage-blob-ts",
+              "azure-storage-file-share-ts",
+              "azure-storage-queue-ts",
+              "bun-development",
+              "cc-skill-coding-standards",
+              "cucumber-skill",
+              "cypress-skill",
+              "discord-bot-architect",
+              "dsl-vm-reverse",
+              "frontend-api-integration-patterns",
+              "frontend-mobile-security-xss-scan",
+              "javascript-mastery",
+              "javascript-pro",
+              "javascript-testing-patterns",
+              "javascript-typescript-typescript-scaffold",
+              "jest-skill",
+              "js-reverse",
+              "modern-javascript-patterns",
+              "n8n-code-javascript",
+              "n8n-code-tool",
+              "odoo-rpc-api",
+              "pdf-official",
+              "selenium-skill",
+              "seo-technical",
+              "slack-bot-builder",
+              "transformers-js",
+              "typescript-expert",
+              "vitest-skill",
+              "webdriverio-skill"
+            ],
+            "totalMatches": 36
+          },
+          "sequence": 4,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 40,
+          "canonicalOutputBytes": 1098,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "search"
+          },
+          "output": {
+            "nextCursor": 50,
+            "ok": true,
+            "returnedSkillIds": [
+              "activecampaign-automation",
+              "ai-dev-jobs-mcp",
+              "ai-engineer",
+              "ai-seo",
+              "airtable-automation",
+              "algolia-search",
+              "alternatives-pages",
+              "amplitude-automation",
+              "anywrite",
+              "apple-notes-search",
+              "arrowspace",
+              "asana-automation",
+              "auto-research",
+              "aws-mcp-setup",
+              "azure-maps-search-dotnet",
+              "azure-search-documents-dotnet",
+              "azure-search-documents-py",
+              "azure-search-documents-ts",
+              "bamboohr-automation",
+              "basecamp-automation",
+              "bitbucket-automation",
+              "box-automation",
+              "buywhere-product-catalog",
+              "cal-com-automation",
+              "calendly-automation",
+              "canva-automation",
+              "circleci-automation",
+              "clarvia-aeo-check",
+              "clickup-automation",
+              "close-automation",
+              "coda-automation",
+              "competitor-alternatives",
+              "confluence-automation",
+              "convertkit-automation",
+              "datadog-automation",
+              "deep-research",
+              "discord-automation",
+              "docs-as-marketing",
+              "docusign-automation",
+              "dropbox-automation",
+              "efficient-web-research",
+              "embedding-strategies",
+              "entropy-box",
+              "error-detective",
+              "exa-search",
+              "figma-automation",
+              "freshdesk-automation",
+              "freshservice-automation",
+              "geo-fundamentals",
+              "gitlab-automation"
+            ],
+            "totalMatches": 140
+          },
+          "sequence": 5,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 47,
+          "canonicalOutputBytes": 503,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "accessibility"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "accessibility-compliance-accessibility-audit",
+              "accesslint-audit",
+              "accesslint-diff",
+              "accesslint-scan",
+              "browser-testing-with-devtools",
+              "fixing-accessibility",
+              "high-contrast",
+              "liuguang-banlan-ui",
+              "pagespeed-enhancer",
+              "product-design",
+              "review-animations",
+              "screen-reader-testing",
+              "senior-frontend",
+              "seo-geo",
+              "tailwind-design-system",
+              "technical-change-tracker",
+              "ui-a11y",
+              "ui-review",
+              "ui-ux-designer",
+              "ui-visual-validator",
+              "uxui-principles"
+            ],
+            "totalMatches": 21
+          },
+          "sequence": 6,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 46,
+          "canonicalOutputBytes": 1221,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "unit testing"
+          },
+          "output": {
+            "nextCursor": 50,
+            "ok": true,
+            "returnedSkillIds": [
+              "ab-testing",
+              "active-directory-attacks",
+              "ad-creative",
+              "agent-evaluation",
+              "agent-qa-authoring",
+              "agent-qa-debug-fix",
+              "agent-qa-result-triage",
+              "airflow-dag-patterns",
+              "android-ui-journey-testing",
+              "android_ui_verification",
+              "api-fuzzing-bug-bounty",
+              "api-security",
+              "api-security-testing",
+              "api-testing-observability-api-mock",
+              "appium-skill",
+              "aws-penetration-testing",
+              "awt-e2e-testing",
+              "azure-microsoft-playwright-testing-ts",
+              "azure-resource-manager-playwright-dotnet",
+              "bash-scripting",
+              "bats-testing-patterns",
+              "bdistill-behavioral-xray",
+              "brooks-test",
+              "browser-automation",
+              "browser-testing-with-devtools",
+              "bug-hunter",
+              "burp-suite-testing",
+              "cloud-penetration-testing",
+              "code-showcase-testing-patterns",
+              "conductor-revert",
+              "crossframe-debate",
+              "csharp-pro",
+              "cypress-skill",
+              "data-engineering-data-driven-feature",
+              "dbt-transformation-patterns",
+              "debugger",
+              "debugging-strategies",
+              "dependency-upgrade",
+              "deployment-validation-config-validate",
+              "django-pro",
+              "doc-coauthoring",
+              "e2e-testing",
+              "e2e-testing-patterns",
+              "ethical-hacking-methodology",
+              "evaluation",
+              "ffuf-web-fuzzing",
+              "firmware-pentest",
+              "framework-migration-deps-upgrade",
+              "github-actions-templates",
+              "gitlab-ci-patterns"
+            ],
+            "totalMatches": 123
+          },
+          "sequence": 7,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 45,
+          "canonicalOutputBytes": 239,
+          "input": {
+            "cursor": 50,
+            "limit": 50,
+            "query": "typescript"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "typescript-advanced-types",
+              "typescript-expert",
+              "typescript-pro",
+              "vitest-skill",
+              "vscode-extension-guide-en",
+              "webdriverio-skill",
+              "zod-validation-expert",
+              "zustand-store-ts"
+            ],
+            "totalMatches": 58
+          },
+          "sequence": 8,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 42,
+          "canonicalOutputBytes": 830,
+          "input": {
+            "cursor": 100,
+            "limit": 50,
+            "query": "search"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "sentry-automation",
+              "seo",
+              "seo-aeo-keyword-research",
+              "seo-drift",
+              "seo-fundamentals",
+              "seo-geo",
+              "seo-structure-architect",
+              "shopify-automation",
+              "similarity-search-patterns",
+              "slack-automation",
+              "square-automation",
+              "stability-ai",
+              "stripe-automation",
+              "supabase-automation",
+              "tavily-web",
+              "telegram-automation",
+              "tiktok-automation",
+              "todoist-automation",
+              "trello-automation",
+              "twitter-automation",
+              "vector-database-engineer",
+              "vector-index-tuning",
+              "vercel-automation",
+              "vexor",
+              "videodb",
+              "videodb-skills",
+              "weaviate",
+              "weaviate-cookbooks",
+              "web-media-getter",
+              "webflow-automation",
+              "whatsapp-automation",
+              "workorai",
+              "wrike-automation",
+              "x-twitter-scraper",
+              "xiaohongshu-content-strategist",
+              "youtube-automation",
+              "youtube-full",
+              "zendesk-automation",
+              "zoho-crm-automation",
+              "zoom-automation"
+            ],
+            "totalMatches": 140
+          },
+          "sequence": 9,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 41,
+          "canonicalOutputBytes": 1085,
+          "input": {
+            "cursor": 50,
+            "limit": 50,
+            "query": "search"
+          },
+          "output": {
+            "nextCursor": 100,
+            "ok": true,
+            "returnedSkillIds": [
+              "global-chat-agent-discovery",
+              "google-analytics-automation",
+              "googlesheets-automation",
+              "hasdata-cli",
+              "helium-mcp",
+              "helpdesk-automation",
+              "hf-mcp",
+              "hig-components-search",
+              "hybrid-search-implementation",
+              "ii-commons",
+              "instagram-automation",
+              "intercom-automation",
+              "interview-coach",
+              "invariant-guard",
+              "jira-automation",
+              "jobgpt",
+              "klaviyo-automation",
+              "linear-automation",
+              "linkedin-automation",
+              "linkedin-cli",
+              "mailchimp-automation",
+              "make-automation",
+              "microsoft-teams-automation",
+              "miro-automation",
+              "mixpanel-automation",
+              "mmx-cli",
+              "monday-automation",
+              "multi-source-search",
+              "nextjs-seo-indexing",
+              "not-human-search-mcp",
+              "notion-automation",
+              "obsidian-cli",
+              "odoo-orm-expert",
+              "odoo-xml-views-builder",
+              "one-drive-automation",
+              "outlook-automation",
+              "outlook-calendar-automation",
+              "pagerduty-automation",
+              "papers-skill",
+              "people-data",
+              "pi-web-search",
+              "pipedrive-automation",
+              "posthog-automation",
+              "postmark-automation",
+              "reddit-automation",
+              "render-automation",
+              "salesforce-automation",
+              "scientific-writing",
+              "search-specialist",
+              "segment-automation"
+            ],
+            "totalMatches": 140
+          },
+          "sequence": 10,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 40,
+          "canonicalOutputBytes": 82,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "vitest"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "vitest-skill"
+            ],
+            "totalMatches": 1
+          },
+          "sequence": 11,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 40,
+          "canonicalOutputBytes": 803,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "schema"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "agent-qa-authoring",
+              "agent-tool-builder",
+              "atlas-cloud-media",
+              "convex",
+              "cross-platform-contract-propagation-audit",
+              "database-architect",
+              "database-design",
+              "database-migration",
+              "drizzle-orm-expert",
+              "graphql",
+              "graphql-schema",
+              "llm-structured-output",
+              "monte-carlo-prevent",
+              "muapi-media",
+              "neon-postgres-branches",
+              "openapi-spec-generator",
+              "postgres-best-practices",
+              "postgresql",
+              "prisma-expert",
+              "saas-multi-tenant",
+              "sandbase-mcp",
+              "schema-markup",
+              "schema-markup-generator",
+              "seo",
+              "seo-aeo-schema-generator",
+              "seo-competitor-pages",
+              "seo-drift",
+              "seo-image-gen",
+              "seo-page",
+              "seo-schema",
+              "seo-structure-architect",
+              "site-architecture",
+              "supabase-postgres-best-practices",
+              "wordpress-centric-high-seo-optimized-blogwriting-skill",
+              "zod-validation-expert"
+            ],
+            "totalMatches": 35
+          },
+          "sequence": 12,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 41,
+          "canonicalOutputBytes": 234,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "privacy"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "find-complementary-founders",
+              "gdpr-data-handling",
+              "legal-advisor",
+              "local-llm-expert",
+              "privacy-by-design",
+              "privacy-mask",
+              "review-swarm",
+              "tree-ring-memory",
+              "warehouse"
+            ],
+            "totalMatches": 9
+          },
+          "sequence": 13,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 42,
+          "canonicalOutputBytes": 41,
+          "input": {
+            "id": "mcp-builder",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "mcp-builder"
+          },
+          "sequence": 14,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 49,
+          "canonicalOutputBytes": 48,
+          "input": {
+            "id": "agent-tool-builder",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "agent-tool-builder"
+          },
+          "sequence": 15,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 46,
+          "canonicalOutputBytes": 45,
+          "input": {
+            "id": "invariant-guard",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "invariant-guard"
+          },
+          "sequence": 16,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 72,
+          "canonicalOutputBytes": 71,
+          "input": {
+            "id": "cross-platform-contract-propagation-audit",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "cross-platform-contract-propagation-audit"
+          },
+          "sequence": 17,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 43,
+          "canonicalOutputBytes": 42,
+          "input": {
+            "id": "vitest-skill",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "vitest-skill"
+          },
+          "sequence": 18,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 58,
+          "canonicalOutputBytes": 57,
+          "input": {
+            "id": "javascript-testing-patterns",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "javascript-testing-patterns"
+          },
+          "sequence": 19,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 58,
+          "canonicalOutputBytes": 1203,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "accessibility-compliance"
+          },
+          "output": {
+            "nextCursor": 50,
+            "ok": true,
+            "returnedSkillIds": [
+              "accessibility-compliance-accessibility-audit",
+              "accesslint-audit",
+              "accesslint-diff",
+              "accesslint-scan",
+              "aegisops-ai",
+              "ai-md",
+              "akf-trust-metadata",
+              "aws-compliance-checker",
+              "aws-security-audit",
+              "bdistill-behavioral-xray",
+              "browser-testing-with-devtools",
+              "codebase-cleanup-deps-audit",
+              "crossframe-public",
+              "customs-trade-compliance",
+              "dependency-management-deps-audit",
+              "event-staffing-compliance",
+              "event-staffing-ordering",
+              "fda-food-safety-auditor",
+              "fda-medtech-compliance-auditor",
+              "fixing-accessibility",
+              "fsi-compliance-checker",
+              "high-contrast",
+              "lex",
+              "liuguang-banlan-ui",
+              "llm-security",
+              "mailtrap-setting-up-sending-domain",
+              "odoo-l10n-compliance",
+              "openapi-spec-generation",
+              "pagespeed-enhancer",
+              "payment-integration",
+              "pci-compliance",
+              "plaid-fintech",
+              "product-design",
+              "review-animations",
+              "scanning-tools",
+              "screen-reader-testing",
+              "security-auditor",
+              "security-compliance-compliance-check",
+              "security-scanning-security-hardening",
+              "senior-frontend",
+              "seo-aeo-content-quality-auditor",
+              "seo-geo",
+              "spec-to-code-compliance",
+              "tailwind-design-system",
+              "technical-change-tracker",
+              "ui-a11y",
+              "ui-review",
+              "ui-ux-designer",
+              "ui-visual-validator",
+              "uxui-principles"
+            ],
+            "totalMatches": 51
+          },
+          "sequence": 20,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 42,
+          "canonicalOutputBytes": 1239,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "frontend"
+          },
+          "output": {
+            "nextCursor": 50,
+            "ok": true,
+            "returnedSkillIds": [
+              "anti-ui-slop",
+              "api-and-interface-design",
+              "application-performance-performance-optimization",
+              "astro",
+              "azd-deployment",
+              "browser-testing-with-devtools",
+              "cc-skill-frontend-patterns",
+              "ckw-design",
+              "design-it",
+              "design-philosophy",
+              "design-system",
+              "design-taste-frontend",
+              "design-thinking",
+              "development",
+              "emil-design-eng",
+              "frontend-api-integration-patterns",
+              "frontend-architecture",
+              "frontend-data-contracts",
+              "frontend-design",
+              "frontend-dev-guidelines",
+              "frontend-developer",
+              "frontend-lighthouse",
+              "frontend-mobile-development-component-scaffold",
+              "frontend-mobile-security-xss-scan",
+              "frontend-observability",
+              "frontend-optimistic-mutations",
+              "frontend-security-coder",
+              "frontend-seo",
+              "frontend-slides",
+              "frontend-slides-frontend-slides",
+              "frontend-ui-dark-ts",
+              "frontend-ui-engineering",
+              "full-output-enforcement",
+              "gpt-taste",
+              "high-end-visual-design",
+              "industrial-brutalist-ui",
+              "javascript-typescript-typescript-scaffold",
+              "liuguang-banlan-ui",
+              "markstream-angular",
+              "markstream-custom-components",
+              "markstream-install",
+              "markstream-migration",
+              "markstream-nuxt",
+              "markstream-react",
+              "markstream-svelte",
+              "markstream-vue",
+              "markstream-vue2",
+              "markstream-vue2-cli",
+              "markstream-vue2-vite",
+              "minimalist-ui"
+            ],
+            "totalMatches": 65
+          },
+          "sequence": 21,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 44,
+          "canonicalOutputBytes": 136,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "maintainer"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "agents-md",
+              "antigravity-maintainer-batch-release",
+              "repo-maintainer"
+            ],
+            "totalMatches": 3
+          },
+          "sequence": 22,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 44,
+          "canonicalOutputBytes": 917,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "deployment"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "acceptance-orchestrator",
+              "airflow-dag-patterns",
+              "android-cli",
+              "audit-agent-run-evidence",
+              "aws-agentic-ai",
+              "aws-serverless",
+              "azd-deployment",
+              "backend-development-feature-development",
+              "ci-cd-and-automation",
+              "closed-loop-delivery",
+              "convex",
+              "dep",
+              "deploy-to-vercel",
+              "deployment-engineer",
+              "deployment-pipeline-design",
+              "deployment-procedures",
+              "deployment-validation-config-validate",
+              "django-pro",
+              "docker-expert",
+              "expo-cicd-workflows",
+              "expo-deployment",
+              "flutter-expert",
+              "gitlab-ci-patterns",
+              "hugging-face-model-trainer",
+              "kubernetes-deployment",
+              "local-llm-expert",
+              "makepad-deployment",
+              "mcp-tool-developer",
+              "ml-pipeline-workflow",
+              "monte-carlo-monitor-creation",
+              "odoo-docker-deployment",
+              "pre-ship-gate",
+              "production-audit",
+              "skill-installer",
+              "temporal-python-pro",
+              "unity-developer",
+              "using-n8n-mcp-skills",
+              "vercel-deployment",
+              "vibecode-production-qa-validator"
+            ],
+            "totalMatches": 39
+          },
+          "sequence": 23,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 45,
+          "canonicalOutputBytes": 44,
+          "input": {
+            "id": "javascript-pro",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "javascript-pro"
+          },
+          "sequence": 24,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 57,
+          "canonicalOutputBytes": 56,
+          "input": {
+            "id": "modern-javascript-patterns",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "modern-javascript-patterns"
+          },
+          "sequence": 25,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 48,
+          "canonicalOutputBytes": 47,
+          "input": {
+            "id": "privacy-by-design",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "privacy-by-design"
+          },
+          "sequence": 26,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 58,
+          "canonicalOutputBytes": 57,
+          "input": {
+            "id": "api-security-best-practices",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "api-security-best-practices"
+          },
+          "sequence": 27,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 46,
+          "canonicalOutputBytes": 45,
+          "input": {
+            "id": "repo-maintainer",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "repo-maintainer"
+          },
+          "sequence": 28,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 67,
+          "canonicalOutputBytes": 66,
+          "input": {
+            "id": "antigravity-maintainer-batch-release",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "antigravity-maintainer-batch-release"
+          },
+          "sequence": 29,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 2,
+          "canonicalInputBytes": 58,
+          "canonicalOutputBytes": 57,
+          "input": {
+            "id": "javascript-testing-patterns",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "javascript-testing-patterns"
+          },
+          "sequence": 30,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 75,
+          "canonicalOutputBytes": 74,
+          "input": {
+            "id": "accessibility-compliance-accessibility-audit",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "accessibility-compliance-accessibility-audit"
+          },
+          "sequence": 31,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 49,
+          "canonicalOutputBytes": 48,
+          "input": {
+            "id": "frontend-developer",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "frontend-developer"
+          },
+          "sequence": 32,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 51,
+          "canonicalOutputBytes": 50,
+          "input": {
+            "id": "fixing-accessibility",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "fixing-accessibility"
+          },
+          "sequence": 33,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 196,
+          "canonicalOutputBytes": 305,
+          "input": {
+            "skillIds": [
+              "mcp-builder",
+              "javascript-pro",
+              "invariant-guard",
+              "cross-platform-contract-propagation-audit",
+              "javascript-testing-patterns",
+              "privacy-by-design",
+              "antigravity-maintainer-batch-release"
+            ]
+          },
+          "output": {
+            "manifestDigest": "sha256-00747b7401376c63bea313b561b16a665a5e6043629a98384296caefab0ce13c",
+            "ok": true,
+            "selectedSkillIds": [
+              "mcp-builder",
+              "javascript-pro",
+              "invariant-guard",
+              "cross-platform-contract-propagation-audit",
+              "javascript-testing-patterns",
+              "privacy-by-design",
+              "antigravity-maintainer-batch-release"
+            ]
+          },
+          "sequence": 34,
+          "tool": "compose_stack"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 92,
+          "canonicalOutputBytes": 322,
+          "input": {
+            "manifestDigest": "sha256-00747b7401376c63bea313b561b16a665a5e6043629a98384296caefab0ce13c"
+          },
+          "output": {
+            "manifestDigest": "sha256-00747b7401376c63bea313b561b16a665a5e6043629a98384296caefab0ce13c",
+            "ok": true,
+            "selectedSkillIds": [
+              "mcp-builder",
+              "javascript-pro",
+              "invariant-guard",
+              "cross-platform-contract-propagation-audit",
+              "javascript-testing-patterns",
+              "privacy-by-design",
+              "antigravity-maintainer-batch-release"
+            ],
+            "status": "valid"
+          },
+          "sequence": 35,
+          "tool": "inspect_stack"
+        },
+        {
+          "attempt": 2,
+          "canonicalInputBytes": 92,
+          "canonicalOutputBytes": 322,
+          "input": {
+            "manifestDigest": "sha256-00747b7401376c63bea313b561b16a665a5e6043629a98384296caefab0ce13c"
+          },
+          "output": {
+            "manifestDigest": "sha256-00747b7401376c63bea313b561b16a665a5e6043629a98384296caefab0ce13c",
+            "ok": true,
+            "selectedSkillIds": [
+              "mcp-builder",
+              "javascript-pro",
+              "invariant-guard",
+              "cross-platform-contract-propagation-audit",
+              "javascript-testing-patterns",
+              "privacy-by-design",
+              "antigravity-maintainer-batch-release"
+            ],
+            "status": "valid"
+          },
+          "sequence": 36,
+          "tool": "inspect_stack"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 47,
+          "canonicalOutputBytes": 503,
+          "input": {
+            "cursor": 0,
+            "limit": 30,
+            "query": "accessibility"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "accessibility-compliance-accessibility-audit",
+              "accesslint-audit",
+              "accesslint-diff",
+              "accesslint-scan",
+              "browser-testing-with-devtools",
+              "fixing-accessibility",
+              "high-contrast",
+              "liuguang-banlan-ui",
+              "pagespeed-enhancer",
+              "product-design",
+              "review-animations",
+              "screen-reader-testing",
+              "senior-frontend",
+              "seo-geo",
+              "tailwind-design-system",
+              "technical-change-tracker",
+              "ui-a11y",
+              "ui-review",
+              "ui-ux-designer",
+              "ui-visual-validator",
+              "uxui-principles"
+            ],
+            "totalMatches": 21
+          },
+          "sequence": 37,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 51,
+          "canonicalOutputBytes": 540,
+          "input": {
+            "cursor": 0,
+            "limit": 20,
+            "query": "frontend-security"
+          },
+          "output": {
+            "nextCursor": 20,
+            "ok": true,
+            "returnedSkillIds": [
+              "007",
+              "active-directory-attacks",
+              "agentic-actions-auditor",
+              "ai-engineering-toolkit",
+              "anti-reversing-techniques",
+              "anti-ui-slop",
+              "antigravity-workflows",
+              "api-and-interface-design",
+              "api-endpoint-builder",
+              "api-security",
+              "api-security-best-practices",
+              "api-security-testing",
+              "application-performance-performance-optimization",
+              "astro",
+              "attack-tree-construction",
+              "audit-skills",
+              "auth-implementation-patterns",
+              "aws-compliance-checker",
+              "aws-cost-operations",
+              "aws-iam-best-practices"
+            ],
+            "totalMatches": 214
+          },
+          "sequence": 38,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 47,
+          "canonicalOutputBytes": 521,
+          "input": {
+            "cursor": 0,
+            "limit": 20,
+            "query": "react-testing"
+          },
+          "output": {
+            "nextCursor": 20,
+            "ok": true,
+            "returnedSkillIds": [
+              "3d-web-experience",
+              "ab-testing",
+              "active-directory-attacks",
+              "ad-creative",
+              "agent-evaluation",
+              "agent-qa-authoring",
+              "agent-qa-debug-fix",
+              "agent-qa-result-triage",
+              "airflow-dag-patterns",
+              "algolia-search",
+              "android-ui-journey-testing",
+              "android_ui_verification",
+              "api-fuzzing-bug-bounty",
+              "api-security",
+              "api-security-testing",
+              "api-testing-observability-api-mock",
+              "appium-skill",
+              "aws-penetration-testing",
+              "awt-e2e-testing",
+              "azure-microsoft-playwright-testing-ts"
+            ],
+            "totalMatches": 179
+          },
+          "sequence": 39,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 40,
+          "canonicalOutputBytes": 82,
+          "input": {
+            "cursor": 0,
+            "limit": 20,
+            "query": "vitest"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "vitest-skill"
+            ],
+            "totalMatches": 1
+          },
+          "sequence": 40,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 55,
+          "canonicalOutputBytes": 503,
+          "input": {
+            "cursor": 0,
+            "limit": 20,
+            "query": "react-testing-library"
+          },
+          "output": {
+            "nextCursor": 20,
+            "ok": true,
+            "returnedSkillIds": [
+              "3d-web-experience",
+              "ab-testing",
+              "active-directory-attacks",
+              "ad-creative",
+              "agent-evaluation",
+              "agent-qa-authoring",
+              "agent-qa-debug-fix",
+              "agent-qa-result-triage",
+              "airflow-dag-patterns",
+              "algolia-search",
+              "android-ui-journey-testing",
+              "android_ui_verification",
+              "animejs-animation",
+              "api-fuzzing-bug-bounty",
+              "api-sdk-generator",
+              "api-security",
+              "api-security-testing",
+              "api-testing-observability-api-mock",
+              "appium-skill",
+              "aws-penetration-testing"
+            ],
+            "totalMatches": 206
+          },
+          "sequence": 41,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 48,
+          "canonicalOutputBytes": 444,
+          "input": {
+            "cursor": 0,
+            "limit": 20,
+            "query": "typescript-pro"
+          },
+          "output": {
+            "nextCursor": 20,
+            "ok": true,
+            "returnedSkillIds": [
+              "api-sdk-generator",
+              "auri-core",
+              "aws-cdk-development",
+              "aws-serverless-eda",
+              "azure-ai-voicelive-ts",
+              "azure-cosmos-ts",
+              "azure-postgres-ts",
+              "azure-storage-blob-ts",
+              "azure-storage-file-share-ts",
+              "azure-storage-queue-ts",
+              "bash-pro",
+              "bilig-workpaper",
+              "boost-asio-pro",
+              "bullmq-specialist",
+              "bun-development",
+              "c-pro",
+              "cc-skill-coding-standards",
+              "cdk-patterns",
+              "comfyui-gateway",
+              "convex"
+            ],
+            "totalMatches": 93
+          },
+          "sequence": 42,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 51,
+          "canonicalOutputBytes": 480,
+          "input": {
+            "cursor": 0,
+            "limit": 20,
+            "query": "privacy-by-design"
+          },
+          "output": {
+            "nextCursor": 20,
+            "ok": true,
+            "returnedSkillIds": [
+              "3d-ui",
+              "3d-web-experience",
+              "ab-testing",
+              "accessibility-compliance-accessibility-audit",
+              "accesslint-diff",
+              "accint-frames",
+              "agent-tool-builder",
+              "agents-generator",
+              "ai-engineering-toolkit",
+              "ai-native-cli",
+              "ai-native-ui",
+              "analytics-tracking",
+              "android-jetpack-compose-expert",
+              "anti-ui-slop",
+              "antigravity-design-expert",
+              "api-and-interface-design",
+              "api-design-principles",
+              "api-designer",
+              "api-onboarding",
+              "api-patterns"
+            ],
+            "totalMatches": 286
+          },
+          "sequence": 43,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 70,
+          "canonicalOutputBytes": 536,
+          "input": {
+            "cursor": 0,
+            "limit": 20,
+            "query": "antigravity-maintainer-batch-release"
+          },
+          "output": {
+            "nextCursor": 20,
+            "ok": true,
+            "returnedSkillIds": [
+              "agents-md",
+              "agy-delegate",
+              "airflow-dag-patterns",
+              "analyze-project",
+              "antigravity-agent-manager",
+              "antigravity-design-expert",
+              "antigravity-maintainer-batch-release",
+              "antigravity-skill-orchestrator",
+              "antigravity-workflows",
+              "app-store-changelog",
+              "azure-ai-transcription-py",
+              "azure-ai-translation-document-py",
+              "azure-compute-batch-java",
+              "azure-data-tables-py",
+              "blockrun",
+              "brooks-harness",
+              "changelog-automation",
+              "changelog-updates",
+              "data-engineering-data-pipeline",
+              "dispatch"
+            ],
+            "totalMatches": 33
+          },
+          "sequence": 44,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 57,
+          "canonicalOutputBytes": 540,
+          "input": {
+            "cursor": 0,
+            "limit": 20,
+            "query": "frontend-security-coder"
+          },
+          "output": {
+            "nextCursor": 20,
+            "ok": true,
+            "returnedSkillIds": [
+              "007",
+              "active-directory-attacks",
+              "agentic-actions-auditor",
+              "ai-engineering-toolkit",
+              "anti-reversing-techniques",
+              "anti-ui-slop",
+              "antigravity-workflows",
+              "api-and-interface-design",
+              "api-endpoint-builder",
+              "api-security",
+              "api-security-best-practices",
+              "api-security-testing",
+              "application-performance-performance-optimization",
+              "astro",
+              "attack-tree-construction",
+              "audit-skills",
+              "auth-implementation-patterns",
+              "aws-compliance-checker",
+              "aws-cost-operations",
+              "aws-iam-best-practices"
+            ],
+            "totalMatches": 217
+          },
+          "sequence": 45,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 20,
+          "canonicalOutputBytes": 71,
+          "input": {
+            "inputValid": false
+          },
+          "output": {
+            "category": "invalidInput",
+            "code": "AAS_INPUT_LIMIT_INVALID",
+            "ok": false
+          },
+          "sequence": 46,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 2,
+          "canonicalInputBytes": 44,
+          "canonicalOutputBytes": 1025,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "typescript"
+          },
+          "output": {
+            "nextCursor": 50,
+            "ok": true,
+            "returnedSkillIds": [
+              "api-sdk-generator",
+              "aws-cdk-development",
+              "aws-serverless-eda",
+              "azure-ai-voicelive-ts",
+              "azure-cosmos-ts",
+              "azure-postgres-ts",
+              "azure-storage-blob-ts",
+              "azure-storage-file-share-ts",
+              "azure-storage-queue-ts",
+              "bilig-workpaper",
+              "bullmq-specialist",
+              "bun-development",
+              "cc-skill-coding-standards",
+              "cdk-patterns",
+              "comfyui-gateway",
+              "convex",
+              "cypress-skill",
+              "dbos-typescript",
+              "drizzle-orm-expert",
+              "expo-module",
+              "fp-async",
+              "fp-backend",
+              "fp-data-transforms",
+              "fp-errors",
+              "fp-pragmatic",
+              "fp-react",
+              "fp-refactor",
+              "fp-ts-errors",
+              "fp-ts-pragmatic",
+              "fp-types-ref",
+              "frontend-mobile-development-component-scaffold",
+              "hono",
+              "javascript-testing-patterns",
+              "javascript-typescript-typescript-scaffold",
+              "jest-skill",
+              "m365-agents-ts",
+              "mcp-builder-ms",
+              "mcp-tool-developer",
+              "neon-postgres",
+              "ontoly-software-graph",
+              "react-flow-node-ts",
+              "react-nextjs-development",
+              "react-patterns",
+              "saas-multi-tenant",
+              "senior-frontend",
+              "sveltekit",
+              "transformers-js",
+              "trigger-dev",
+              "trpc-fullstack",
+              "typescript"
+            ],
+            "totalMatches": 58
+          },
+          "sequence": 47,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 2,
+          "canonicalInputBytes": 41,
+          "canonicalOutputBytes": 234,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "privacy"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "find-complementary-founders",
+              "gdpr-data-handling",
+              "legal-advisor",
+              "local-llm-expert",
+              "privacy-by-design",
+              "privacy-mask",
+              "review-swarm",
+              "tree-ring-memory",
+              "warehouse"
+            ],
+            "totalMatches": 9
+          },
+          "sequence": 48,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 41,
+          "canonicalOutputBytes": 1227,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "testing"
+          },
+          "output": {
+            "nextCursor": 50,
+            "ok": true,
+            "returnedSkillIds": [
+              "ab-testing",
+              "active-directory-attacks",
+              "ad-creative",
+              "agent-evaluation",
+              "agent-qa-authoring",
+              "agent-qa-debug-fix",
+              "agent-qa-result-triage",
+              "airflow-dag-patterns",
+              "android-ui-journey-testing",
+              "android_ui_verification",
+              "api-fuzzing-bug-bounty",
+              "api-security",
+              "api-security-testing",
+              "api-testing-observability-api-mock",
+              "appium-skill",
+              "aws-penetration-testing",
+              "awt-e2e-testing",
+              "azure-microsoft-playwright-testing-ts",
+              "azure-resource-manager-playwright-dotnet",
+              "bash-scripting",
+              "bats-testing-patterns",
+              "bdistill-behavioral-xray",
+              "brooks-test",
+              "browser-automation",
+              "browser-testing-with-devtools",
+              "bug-hunter",
+              "burp-suite-testing",
+              "cloud-penetration-testing",
+              "code-showcase-testing-patterns",
+              "crossframe-debate",
+              "csharp-pro",
+              "cypress-skill",
+              "data-engineering-data-driven-feature",
+              "dbt-transformation-patterns",
+              "debugger",
+              "debugging-strategies",
+              "dependency-upgrade",
+              "deployment-validation-config-validate",
+              "django-pro",
+              "doc-coauthoring",
+              "e2e-testing",
+              "e2e-testing-patterns",
+              "ethical-hacking-methodology",
+              "evaluation",
+              "ffuf-web-fuzzing",
+              "firmware-pentest",
+              "framework-migration-deps-upgrade",
+              "github-actions-templates",
+              "gitlab-ci-patterns",
+              "html-injection-testing"
+            ],
+            "totalMatches": 121
+          },
+          "sequence": 49,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 57,
+          "canonicalOutputBytes": 1272,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "frontend-security-coder"
+          },
+          "output": {
+            "nextCursor": 50,
+            "ok": true,
+            "returnedSkillIds": [
+              "007",
+              "active-directory-attacks",
+              "agentic-actions-auditor",
+              "ai-engineering-toolkit",
+              "anti-reversing-techniques",
+              "anti-ui-slop",
+              "antigravity-workflows",
+              "api-and-interface-design",
+              "api-endpoint-builder",
+              "api-security",
+              "api-security-best-practices",
+              "api-security-testing",
+              "application-performance-performance-optimization",
+              "astro",
+              "attack-tree-construction",
+              "audit-skills",
+              "auth-implementation-patterns",
+              "aws-compliance-checker",
+              "aws-cost-operations",
+              "aws-iam-best-practices",
+              "aws-secrets-rotation",
+              "aws-security-audit",
+              "azd-deployment",
+              "azure-cosmos-db-py",
+              "azure-security-keyvault-keys-dotnet",
+              "azure-security-keyvault-keys-java",
+              "azure-security-keyvault-secrets-java",
+              "backend-security-coder",
+              "binary-analysis-patterns",
+              "broken-authentication",
+              "browser-testing-with-devtools",
+              "bugs-are-annoying",
+              "bumblebee",
+              "burp-suite-testing",
+              "burpsuite-project-parser",
+              "cc-skill-frontend-patterns",
+              "cc-skill-security-review",
+              "cicd-automation-workflow-automate",
+              "ckw-design",
+              "cloud-k8s",
+              "cloud-penetration-testing",
+              "cloudflare-security-audit",
+              "code-audit",
+              "code-review-checklist",
+              "codebase-audit-pre-push",
+              "codebase-cleanup-deps-audit",
+              "constant-time-analysis",
+              "container-security-hardening",
+              "cred-omega",
+              "cyber-audit"
+            ],
+            "totalMatches": 217
+          },
+          "sequence": 50,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 39,
+          "canonicalOutputBytes": 1210,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "react"
+          },
+          "output": {
+            "nextCursor": 50,
+            "ok": true,
+            "returnedSkillIds": [
+              "3d-web-experience",
+              "algolia-search",
+              "awt-e2e-testing",
+              "cc-skill-coding-standards",
+              "cc-skill-frontend-patterns",
+              "ckw-design",
+              "code-showcase-react-ui-patterns",
+              "codebase-to-wordpress-converter",
+              "context7-auto-research",
+              "design-taste-frontend",
+              "expo-brownfield",
+              "expo-observe",
+              "expo-tailwind-setup",
+              "expo-ui",
+              "fp-react",
+              "fp-ts-react",
+              "frontend-api-integration-patterns",
+              "frontend-architecture",
+              "frontend-data-contracts",
+              "frontend-developer",
+              "frontend-mobile-development-component-scaffold",
+              "frontend-mobile-security-xss-scan",
+              "frontend-observability",
+              "frontend-optimistic-mutations",
+              "frontend-seo",
+              "frontend-ui-dark-ts",
+              "jest-skill",
+              "landing-page-generator",
+              "langgraph",
+              "lovable-cleanup",
+              "markstream-custom-components",
+              "markstream-install",
+              "markstream-react",
+              "mobile-developer",
+              "native-data-fetching",
+              "nextjs-app-router-patterns",
+              "rayden-code",
+              "react-best-practices",
+              "react-component-performance",
+              "react-flow-architect",
+              "react-flow-node-ts",
+              "react-modernization",
+              "react-native-architecture",
+              "react-native-skills",
+              "react-nextjs-development",
+              "react-patterns",
+              "react-state-management",
+              "react-ui-patterns",
+              "remotion-best-practices",
+              "senior-frontend"
+            ],
+            "totalMatches": 60
+          },
+          "sequence": 51,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 58,
+          "canonicalOutputBytes": 1192,
+          "input": {
+            "cursor": 50,
+            "limit": 50,
+            "query": "frontend-security-coder"
+          },
+          "output": {
+            "nextCursor": 100,
+            "ok": true,
+            "returnedSkillIds": [
+              "database-security",
+              "dependency-management-deps-audit",
+              "design-it",
+              "design-philosophy",
+              "design-system",
+              "design-taste-frontend",
+              "design-thinking",
+              "developer-signup-flow",
+              "development",
+              "differential-review",
+              "docker-expert",
+              "doubt-driven-development",
+              "email-security",
+              "emil-design-eng",
+              "ethical-hacking-methodology",
+              "ffuf-claude-skill",
+              "ffuf-web-fuzzing",
+              "file-path-traversal",
+              "file-uploads",
+              "find-bugs",
+              "firebase",
+              "firmware-analyst",
+              "frontend-api-integration-patterns",
+              "frontend-architecture",
+              "frontend-data-contracts",
+              "frontend-design",
+              "frontend-dev-guidelines",
+              "frontend-developer",
+              "frontend-lighthouse",
+              "frontend-mobile-development-component-scaffold",
+              "frontend-mobile-security-xss-scan",
+              "frontend-observability",
+              "frontend-optimistic-mutations",
+              "frontend-security-coder",
+              "frontend-seo",
+              "frontend-slides",
+              "frontend-slides-frontend-slides",
+              "frontend-ui-dark-ts",
+              "frontend-ui-engineering",
+              "fsi-compliance-checker",
+              "full-output-enforcement",
+              "gdpr-data-handling",
+              "gha-security-review",
+              "gpt-taste",
+              "graphql-architect",
+              "hardware-security",
+              "high-end-visual-design",
+              "html-injection-testing",
+              "idor-testing",
+              "industrial-brutalist-ui"
+            ],
+            "totalMatches": 217
+          },
+          "sequence": 52,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 2,
+          "canonicalInputBytes": 45,
+          "canonicalOutputBytes": 239,
+          "input": {
+            "cursor": 50,
+            "limit": 50,
+            "query": "typescript"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "typescript-advanced-types",
+              "typescript-expert",
+              "typescript-pro",
+              "vitest-skill",
+              "vscode-extension-guide-en",
+              "webdriverio-skill",
+              "zod-validation-expert",
+              "zustand-store-ts"
+            ],
+            "totalMatches": 58
+          },
+          "sequence": 53,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 41,
+          "canonicalOutputBytes": 307,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "release"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "antigravity-maintainer-batch-release",
+              "app-store-changelog",
+              "brooks-harness",
+              "changelog-automation",
+              "changelog-updates",
+              "git-pushing",
+              "github-actions-advanced",
+              "graceful-shutdown",
+              "pre-release-review",
+              "public-relations",
+              "repo-maintainer"
+            ],
+            "totalMatches": 11
+          },
+          "sequence": 54,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 57,
+          "canonicalOutputBytes": 1151,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "frontend-data-contracts"
+          },
+          "output": {
+            "nextCursor": 50,
+            "ok": true,
+            "returnedSkillIds": [
+              "ad-campaign-analyzer",
+              "adhx",
+              "agent-qa-authoring",
+              "ai-engineering-toolkit",
+              "ai-native-cli",
+              "airflow-dag-patterns",
+              "alpha-vantage",
+              "amplitude-automation",
+              "analytics-product",
+              "analytics-tracking",
+              "angular-ui-patterns",
+              "anti-ui-slop",
+              "api-and-interface-design",
+              "apify-ecommerce",
+              "apify-ultimate-scraper",
+              "application-performance-performance-optimization",
+              "aria",
+              "arrowspace",
+              "astro",
+              "astropy",
+              "atlas-contract",
+              "audit-skills",
+              "azd-deployment",
+              "azure-ai-document-intelligence-dotnet",
+              "azure-ai-document-intelligence-ts",
+              "azure-cosmos-py",
+              "azure-cosmos-rust",
+              "azure-cosmos-ts",
+              "azure-data-tables-java",
+              "azure-data-tables-py",
+              "azure-eventhub-java",
+              "azure-eventhub-rust",
+              "azure-eventhub-ts",
+              "azure-maps-search-dotnet",
+              "azure-monitor-ingestion-java",
+              "azure-security-keyvault-secrets-java",
+              "azure-storage-file-datalake-py",
+              "base",
+              "bdistill-knowledge-extraction",
+              "blockchain-developer",
+              "browser-extension-reverse",
+              "browser-testing-with-devtools",
+              "burpsuite-project-parser",
+              "business-analyst",
+              "calc",
+              "cc-skill-clickhouse-io",
+              "cc-skill-frontend-patterns",
+              "ckw-design",
+              "clarity-gate",
+              "claude-api"
+            ],
+            "totalMatches": 247
+          },
+          "sequence": 55,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 45,
+          "canonicalOutputBytes": 44,
+          "input": {
+            "id": "react-patterns",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "react-patterns"
+          },
+          "sequence": 56,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 3,
+          "canonicalInputBytes": 58,
+          "canonicalOutputBytes": 57,
+          "input": {
+            "id": "javascript-testing-patterns",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "javascript-testing-patterns"
+          },
+          "sequence": 57,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 2,
+          "canonicalInputBytes": 43,
+          "canonicalOutputBytes": 42,
+          "input": {
+            "id": "vitest-skill",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "vitest-skill"
+          },
+          "sequence": 58,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 48,
+          "canonicalOutputBytes": 47,
+          "input": {
+            "id": "react-ui-patterns",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "react-ui-patterns"
+          },
+          "sequence": 59,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 45,
+          "canonicalOutputBytes": 44,
+          "input": {
+            "id": "typescript-pro",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "typescript-pro"
+          },
+          "sequence": 60,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 41,
+          "canonicalOutputBytes": 40,
+          "input": {
+            "id": "typescript",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "typescript"
+          },
+          "sequence": 61,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 2,
+          "canonicalInputBytes": 48,
+          "canonicalOutputBytes": 47,
+          "input": {
+            "id": "privacy-by-design",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "privacy-by-design"
+          },
+          "sequence": 62,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 43,
+          "canonicalOutputBytes": 42,
+          "input": {
+            "id": "privacy-mask",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "privacy-mask"
+          },
+          "sequence": 63,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 54,
+          "canonicalOutputBytes": 53,
+          "input": {
+            "id": "frontend-security-coder",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "frontend-security-coder"
+          },
+          "sequence": 64,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 2,
+          "canonicalInputBytes": 51,
+          "canonicalOutputBytes": 50,
+          "input": {
+            "id": "fixing-accessibility",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "fixing-accessibility"
+          },
+          "sequence": 65,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 38,
+          "canonicalOutputBytes": 37,
+          "input": {
+            "id": "ui-a11y",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "ui-a11y"
+          },
+          "sequence": 66,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 2,
+          "canonicalInputBytes": 67,
+          "canonicalOutputBytes": 66,
+          "input": {
+            "id": "antigravity-maintainer-batch-release",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "antigravity-maintainer-batch-release"
+          },
+          "sequence": 67,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 55,
+          "canonicalOutputBytes": 54,
+          "input": {
+            "id": "github-actions-templates",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "github-actions-templates"
+          },
+          "sequence": 68,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 54,
+          "canonicalOutputBytes": 53,
+          "input": {
+            "id": "frontend-data-contracts",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "frontend-data-contracts"
+          },
+          "sequence": 69,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 43,
+          "canonicalOutputBytes": 101,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "invariant"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "invariant-guard",
+              "runaway-guard"
+            ],
+            "totalMatches": 2
+          },
+          "sequence": 70,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 38,
+          "canonicalOutputBytes": 977,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "file"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "akf-trust-metadata",
+              "appdeploy",
+              "azure-storage-file-datalake-py",
+              "azure-storage-file-share-py",
+              "azure-storage-file-share-ts",
+              "biopython",
+              "box-automation",
+              "cc-skill-security-review",
+              "codebase-audit-pre-push",
+              "cohesivity",
+              "convex",
+              "cowork-to-code-bridge",
+              "cucumber-skill",
+              "docx-official",
+              "dropbox-automation",
+              "faf-go",
+              "file-organizer",
+              "file-path-traversal",
+              "file-uploads",
+              "filesystem-context",
+              "gh-attach",
+              "huggingface-local-models",
+              "incremental-implementation",
+              "interview-style-doc-building",
+              "logic-review",
+              "neon-object-storage",
+              "one-drive-automation",
+              "photopea-embedded-editor",
+              "playwright-skill",
+              "postman-openapi-converter",
+              "pptx-official",
+              "professional-proofreader",
+              "rclone-cli",
+              "re-create",
+              "review-and-simplify-changes",
+              "review-swarm",
+              "robot-framework-skill",
+              "seo-images",
+              "slideops",
+              "src-hunter",
+              "subagent-orchestrator",
+              "sveltekit",
+              "the-honoured-one",
+              "ui-score",
+              "unslop-file",
+              "vexor",
+              "vexor-cli",
+              "wiki-qa"
+            ],
+            "totalMatches": 48
+          },
+          "sequence": 71,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 42,
+          "canonicalOutputBytes": 323,
+          "input": {
+            "cursor": 0,
+            "limit": 50,
+            "query": "contract"
+          },
+          "output": {
+            "nextCursor": null,
+            "ok": true,
+            "returnedSkillIds": [
+              "atlas-contract",
+              "atlas-ledger",
+              "beautiful-prose",
+              "cross-platform-contract-propagation-audit",
+              "defi-protocol-templates",
+              "employment-contract-templates",
+              "invariant-guard",
+              "lex",
+              "openapi-spec-generation",
+              "review-swarm",
+              "solidity-security",
+              "verify-document"
+            ],
+            "totalMatches": 12
+          },
+          "sequence": 72,
+          "tool": "search_skills"
+        },
+        {
+          "attempt": 2,
+          "canonicalInputBytes": 46,
+          "canonicalOutputBytes": 45,
+          "input": {
+            "id": "invariant-guard",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "invariant-guard"
+          },
+          "sequence": 73,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 52,
+          "canonicalOutputBytes": 51,
+          "input": {
+            "id": "frontend-architecture",
+            "includeContent": true
+          },
+          "output": {
+            "ok": true,
+            "openedSkillId": "frontend-architecture"
+          },
+          "sequence": 74,
+          "tool": "get_skill"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 163,
+          "canonicalOutputBytes": 272,
+          "input": {
+            "skillIds": [
+              "react-patterns",
+              "typescript-pro",
+              "invariant-guard",
+              "vitest-skill",
+              "privacy-by-design",
+              "fixing-accessibility",
+              "antigravity-maintainer-batch-release"
+            ]
+          },
+          "output": {
+            "manifestDigest": "sha256-3eb8e1a07cd328a91ef93ab0e40f19d07d7d3d7a306391a9c91e94aac4c5d073",
+            "ok": true,
+            "selectedSkillIds": [
+              "react-patterns",
+              "typescript-pro",
+              "invariant-guard",
+              "vitest-skill",
+              "privacy-by-design",
+              "fixing-accessibility",
+              "antigravity-maintainer-batch-release"
+            ]
+          },
+          "sequence": 75,
+          "tool": "compose_stack"
+        },
+        {
+          "attempt": 1,
+          "canonicalInputBytes": 92,
+          "canonicalOutputBytes": 289,
+          "input": {
+            "manifestDigest": "sha256-3eb8e1a07cd328a91ef93ab0e40f19d07d7d3d7a306391a9c91e94aac4c5d073"
+          },
+          "output": {
+            "manifestDigest": "sha256-3eb8e1a07cd328a91ef93ab0e40f19d07d7d3d7a306391a9c91e94aac4c5d073",
+            "ok": true,
+            "selectedSkillIds": [
+              "react-patterns",
+              "typescript-pro",
+              "invariant-guard",
+              "vitest-skill",
+              "privacy-by-design",
+              "fixing-accessibility",
+              "antigravity-maintainer-batch-release"
+            ],
+            "status": "valid"
+          },
+          "sequence": 76,
+          "tool": "inspect_stack"
+        }
+      ],
+      "schemaVersion": 1
+    },
+    "client": {
+      "name": "codex-mcp-client",
+      "version": "0.153.1"
+    }
+  },
+  "runtimeObservations": {
+    "calls": [
+      {
+        "durationMicros": 18955,
+        "sequence": 1
+      },
+      {
+        "durationMicros": 6805,
+        "sequence": 2
+      },
+      {
+        "durationMicros": 4647,
+        "sequence": 3
+      },
+      {
+        "durationMicros": 6815,
+        "sequence": 4
+      },
+      {
+        "durationMicros": 4097,
+        "sequence": 5
+      },
+      {
+        "durationMicros": 4538,
+        "sequence": 6
+      },
+      {
+        "durationMicros": 6535,
+        "sequence": 7
+      },
+      {
+        "durationMicros": 5792,
+        "sequence": 8
+      },
+      {
+        "durationMicros": 5288,
+        "sequence": 9
+      },
+      {
+        "durationMicros": 4238,
+        "sequence": 10
+      },
+      {
+        "durationMicros": 4351,
+        "sequence": 11
+      },
+      {
+        "durationMicros": 4920,
+        "sequence": 12
+      },
+      {
+        "durationMicros": 3764,
+        "sequence": 13
+      },
+      {
+        "durationMicros": 11543,
+        "sequence": 14
+      },
+      {
+        "durationMicros": 1383,
+        "sequence": 15
+      },
+      {
+        "durationMicros": 2470,
+        "sequence": 16
+      },
+      {
+        "durationMicros": 1885,
+        "sequence": 17
+      },
+      {
+        "durationMicros": 1315,
+        "sequence": 18
+      },
+      {
+        "durationMicros": 1409,
+        "sequence": 19
+      },
+      {
+        "durationMicros": 7926,
+        "sequence": 20
+      },
+      {
+        "durationMicros": 4226,
+        "sequence": 21
+      },
+      {
+        "durationMicros": 4438,
+        "sequence": 22
+      },
+      {
+        "durationMicros": 3789,
+        "sequence": 23
+      },
+      {
+        "durationMicros": 2884,
+        "sequence": 24
+      },
+      {
+        "durationMicros": 1713,
+        "sequence": 25
+      },
+      {
+        "durationMicros": 1542,
+        "sequence": 26
+      },
+      {
+        "durationMicros": 2376,
+        "sequence": 27
+      },
+      {
+        "durationMicros": 1784,
+        "sequence": 28
+      },
+      {
+        "durationMicros": 2358,
+        "sequence": 29
+      },
+      {
+        "durationMicros": 1275,
+        "sequence": 30
+      },
+      {
+        "durationMicros": 759,
+        "sequence": 31
+      },
+      {
+        "durationMicros": 899,
+        "sequence": 32
+      },
+      {
+        "durationMicros": 964,
+        "sequence": 33
+      },
+      {
+        "durationMicros": 23165,
+        "sequence": 34
+      },
+      {
+        "durationMicros": 1792,
+        "sequence": 35
+      },
+      {
+        "durationMicros": 1997,
+        "sequence": 36
+      },
+      {
+        "durationMicros": 13422,
+        "sequence": 37
+      },
+      {
+        "durationMicros": 4921,
+        "sequence": 38
+      },
+      {
+        "durationMicros": 4261,
+        "sequence": 39
+      },
+      {
+        "durationMicros": 8022,
+        "sequence": 40
+      },
+      {
+        "durationMicros": 7624,
+        "sequence": 41
+      },
+      {
+        "durationMicros": 3905,
+        "sequence": 42
+      },
+      {
+        "durationMicros": 4955,
+        "sequence": 43
+      },
+      {
+        "durationMicros": 4628,
+        "sequence": 44
+      },
+      {
+        "durationMicros": 5081,
+        "sequence": 45
+      },
+      {
+        "durationMicros": 1915,
+        "sequence": 46
+      },
+      {
+        "durationMicros": 6462,
+        "sequence": 47
+      },
+      {
+        "durationMicros": 4965,
+        "sequence": 48
+      },
+      {
+        "durationMicros": 9513,
+        "sequence": 49
+      },
+      {
+        "durationMicros": 4673,
+        "sequence": 50
+      },
+      {
+        "durationMicros": 6435,
+        "sequence": 51
+      },
+      {
+        "durationMicros": 7216,
+        "sequence": 52
+      },
+      {
+        "durationMicros": 6659,
+        "sequence": 53
+      },
+      {
+        "durationMicros": 6371,
+        "sequence": 54
+      },
+      {
+        "durationMicros": 5102,
+        "sequence": 55
+      },
+      {
+        "durationMicros": 2978,
+        "sequence": 56
+      },
+      {
+        "durationMicros": 1055,
+        "sequence": 57
+      },
+      {
+        "durationMicros": 2500,
+        "sequence": 58
+      },
+      {
+        "durationMicros": 1778,
+        "sequence": 59
+      },
+      {
+        "durationMicros": 1046,
+        "sequence": 60
+      },
+      {
+        "durationMicros": 1691,
+        "sequence": 61
+      },
+      {
+        "durationMicros": 1228,
+        "sequence": 62
+      },
+      {
+        "durationMicros": 949,
+        "sequence": 63
+      },
+      {
+        "durationMicros": 743,
+        "sequence": 64
+      },
+      {
+        "durationMicros": 750,
+        "sequence": 65
+      },
+      {
+        "durationMicros": 1025,
+        "sequence": 66
+      },
+      {
+        "durationMicros": 882,
+        "sequence": 67
+      },
+      {
+        "durationMicros": 967,
+        "sequence": 68
+      },
+      {
+        "durationMicros": 688,
+        "sequence": 69
+      },
+      {
+        "durationMicros": 5975,
+        "sequence": 70
+      },
+      {
+        "durationMicros": 4283,
+        "sequence": 71
+      },
+      {
+        "durationMicros": 3955,
+        "sequence": 72
+      },
+      {
+        "durationMicros": 1042,
+        "sequence": 73
+      },
+      {
+        "durationMicros": 1212,
+        "sequence": 74
+      },
+      {
+        "durationMicros": 4246,
+        "sequence": 75
+      },
+      {
+        "durationMicros": 1311,
+        "sequence": 76
+      }
+    ],
+    "digestScope": "excluded-from-evidence-digest",
+    "schemaVersion": 1
+  }
+}

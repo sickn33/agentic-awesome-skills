@@ -316,6 +316,12 @@ Upon completion, the orchestrated pipeline will provide:
 - Cost optimization and scaling strategies
 - Disaster recovery and rollback procedures
 
+## Example
+
+**User request:**
+
+> Design and implement a complete ML pipeline for: $ARGUMENTS.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

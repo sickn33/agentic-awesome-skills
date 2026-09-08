@@ -123,6 +123,10 @@
       "properties": {
         "inputValid": { "type": "boolean" },
         "query": { "type": "string", "maxLength": 256 },
+        "matchMode": { "type": "string", "enum": ["any", "all"] },
+        "requiredTerms": { "type": "array", "maxItems": 16, "items": { "type": "string", "minLength": 1, "maxLength": 64 } },
+        "categories": { "type": "array", "maxItems": 16, "items": { "type": "string", "minLength": 1, "maxLength": 64 } },
+        "tags": { "type": "array", "maxItems": 16, "items": { "type": "string", "minLength": 1, "maxLength": 64 } },
         "cursor": { "type": "integer", "minimum": 0 },
         "limit": { "type": "integer", "minimum": 1, "maximum": 50 },
         "id": { "$ref": "#/$defs/id" },

@@ -25,6 +25,12 @@ Routing sugar over the two MCP verbs — no logic lives here.
    (a real reply, a passing test, a world result). Never tag your own grade as reality.
 4. Leave genuinely-waiting commitments open — `waiting` is a first-class clean state.
 
+## Example
+
+**User request:**
+
+> Triage acc's open promises and close them with honest real-world verdicts via acc_act(runtime="outcome").
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

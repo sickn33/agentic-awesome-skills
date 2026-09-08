@@ -5,6 +5,7 @@ allowed-tools: Read, Grep, Glob, Bash, Task
 license: LICENSE
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Django Performance Review

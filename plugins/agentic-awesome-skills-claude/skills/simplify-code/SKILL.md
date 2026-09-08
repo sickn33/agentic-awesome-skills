@@ -177,6 +177,12 @@ Close with a brief result:
 
 If the code is already clean for this rubric, say that directly instead of manufacturing edits.
 
+## Example
+
+**User request:**
+
+> Simplify the changed code while preserving behavior, then run focused tests to prove the refactor is safe.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -1,3 +1,86 @@
+# Full Snyk group reconciliation — 2026-09-06
+
+- Exported all 551 analytics rows and read all live project/issue records; distinguished stale CLI snapshots, mirror copies, and current findings.
+- Require fixed qs 6.16.x in Telegram and WhatsApp Node templates, because Express 4 still resolves a vulnerable qs minor line.
+- Set manifest-local Python 3.14 for Shopify and WhatsApp SCM scans; their existing zipp security floor was omitted under Python 3.7.
+- Raise the GIF template setuptools security floor to 83.0.0 for the additional Unicode-handling advisory found in the group inventory.
+- No security findings are suppressed by these changes.
+
+# Snyk contextual file-safety remediation — 2026-09-06
+
+- Reproduced destructive hard-link writes in VideoDB and founder-profile export, incorrect parent-directory chmod in Instagram/NotebookLM, and insecure existing VideoDB file modes before fixing them.
+- Validate opened regular-file descriptors and link counts before truncation; preserve append content, repair private modes, and open nonblocking to reject named pipes safely.
+- Restrict state permission repair to the configured private tree, reject linked state files/directories, and propagate protection failures.
+- Reject non-regular source files in the bounded annotation inventory so a named pipe cannot stall a scan.
+- Added `tools/scripts/tests/test_snyk_file_boundaries.py` regression coverage. No new Snyk exclusions or ignore rules.
+- Reviewed the 29 canonical-source Snyk Code results: the remaining DOM anchor uses the active document URL with React escaping; the local viewer returns request-derived metadata as JSON; three secret findings are deliberate test canaries; PostgreSQL accepts whole SQL and database configuration from its local operator and sets a read-only session. Other remaining path findings accept operator-selected local paths rather than remote names. These contextual dispositions do not claim a scanner count of zero or a comprehensive audit of all bundled integrations.
+- Earlier dependency fixes (#1401, canonical #1402) raised Pillow to 12.3.0 and SoupSieve to 2.8.4. The two live EU CLI dependency scans found no security vulnerabilities; certifi's MPL-2.0 license-policy warning requires a license decision, not a dependency downgrade. Added manifest-local `.snyk` Python 3.14 settings for these two projects, matching the interpreter used in the successful scans, so SCM retests do not inherit the obsolete organization-wide Python 3.7 default. The organization setting is unchanged.
+
+# Discovery and installation handoff follow-up - 2026-09-05
+
+- Fixed explicit English/Italian exclusions and grouped declared compatibility aliases while preserving explicit ID selection.
+- Added a text-only, exact-version direct-installer preview to shortlist comparison and Workbench, with shell quoting, an explicit destination, and invalid/inconsistent-artifact guards.
+- Corrected stale release-status guidance after verifying GitHub and npm 16.8.0 publication.
+- Reviewed and repaired the complete `lint-and-validate` and `sql-optimization-patterns` bundles. Added six runnable regression cases; see the scoped content review for evidence and limits.
+
+# Outcome discovery and clearer selection evidence - 2026-09-05
+
+- Added optional goal-based candidate discovery to catalog and Workbench, with explained term relevance and full-catalog access.
+- Exposed provenance, license, author-declared risk and setup gaps without assigning reliability scores or hiding canonical skill IDs.
+- Connected candidates to the existing comparison and agent-brief workflow, including an explicit action to reuse the discovery goal.
+- Kept Workbench artifact review independent of catalog downloads; discovery downloads public data only when opened. Goals and imported artifacts are never sent.
+- Removed the unshipped usage-history experiment at the user's request. No installation/reuse measurement or collection was added.
+
+# TypeScript 6 migration and configuration checks - 2026-09-05
+
+- Upgraded the compiler to TypeScript 6.0.3, within typescript-eslint's supported range; TypeScript 7 remains outside that range.
+- Removed deprecated `baseUrl` and made the `@/` alias relative to the configuration file. Explicitly loaded Node types required by the existing tests and build configuration.
+- Added `npm run typecheck` to production builds so Vite and Vitest configuration are checked alongside application sources. Declared the JavaScript refresh plugin's default Vite plugin contract and kept incremental compiler state under ignored node_modules.
+- Preserved strict checks, test assertions, timeouts, and coverage thresholds.
+
+# Web test toolchain migration - 2026-09-05
+
+- Upgraded Vitest and its V8 coverage provider to 5, jsdom to 30, jest-dom to 7, and ESLint globals to 17.
+- Aligned Node type definitions with the Node 22 CI runtime and declared the web development toolchain's supported Node versions in its private package.
+- Preserved all test cases, assertions, isolation settings, and coverage thresholds. After a clean install, all 201 web tests pass on Node 22.23.1 and Node 26 with unchanged coverage (86.89% statements, 91.34% lines); the production build and lint also pass.
+- Kept the TypeScript compiler migration separate from the test-environment upgrade.
+
+# Long skill modularization - 2026-09-05
+
+- Reduced all 211 oversized `SKILL.md` entrypoints below the 500-line quality threshold.
+- Moved their detailed procedures and reference material into local `references/detailed-guide.md` files without deleting source content.
+- Kept activation rules, examples, limitations, prerequisites, and dedicated safety or security sections in the root skill; each root now directs agents to load the detailed guide before execution.
+- Rewrote relative Markdown links for their new document location and preserved cross-links between root and detailed sections.
+- Reduced the strict objective audit to 0 warnings and 0 errors across all 2,111 skills.
+
+# Actionable skill examples - 2026-09-05
+
+- Added a concise, task-specific user request to every canonical skill that lacked a real example.
+- Normalized the existing `Code_example` headings in `algolia-search` and `clerk-auth` so the examples are recognized consistently.
+- Reduced the strict skill-audit baseline from 507 warnings across 491 skills to 211 warnings across 211 skills; `missing_examples` is now zero.
+- Kept the remaining `skill_too_long` findings visible for the next modularization batch.
+
+# Real skill example recognition - 2026-09-05
+
+- Updated the structural audit to recognize example headings nested below level
+  two, non-empty files in a bundled `examples/` directory, and concrete examples
+  inside bundled Markdown, reStructuredText, or text support documents.
+- Kept symlinked and empty example files from satisfying the audit so external
+  paths and placeholder bundles cannot hide missing documentation.
+- Reclassified existing examples without changing canonical skill content.
+
+# Truncated skill description cleanup - 2026-09-05
+
+- Repaired all 134 catalog descriptions that ended in an ellipsis: 126 now
+  retain only their existing complete source sentences, while eight descriptions
+  were rewritten against their skill content where no complete sentence existed.
+- Updated the repair utility to prefer a complete frontmatter sentence over a
+  synthesized body fallback, with regression coverage for that behavior.
+- Lowered the strict audit budget from 805 observed warnings to 671 and added a
+  zero-tolerance budget for future truncated descriptions.
+- Kept the cleanup source-only; protected canonical synchronization owns
+  generated registries and plugin mirrors.
+
 # Dependency advisory remediation - 2026-09-03
 
 - Raised the bundled `fast-uri` runtime floor to 3.1.6 to resolve the current
@@ -532,3 +615,86 @@
 - Repaired the `agents-md` contribution before merge so its evidence-first guidance remains source-only and contains no promotional link or unrelated walkthrough change.
 - Updated the web app lockfile from vulnerable `browserslist` `4.28.4` to `4.28.8`, including its lockfile-resolved browser-data dependencies; `npm audit` then reported zero known vulnerabilities for the web app.
 - Kept generated registries and contributor credits in the protected canonical-sync lane. No release was requested or published during this sweep.
+
+# Maintenance Walkthrough - 2026-09-05 Funding Target
+
+- Reduced the one-time FLOSS/fund request from USD 25,000 to USD 10,000, the minimum published at https://floss.fund/faq, and revised the proposed allocation to total USD 10,000.
+- Set the README immediate community-support target to EUR 100 per month with an explicit recurring Buy Me a Coffee route. This monthly target is separate from the annual grant proposal.
+- Preserved the existing project identifiers, funding channel, and dated adoption evidence.
+
+## 2026-09-05 — Complete skill metadata dates
+
+- Added the historical Git introduction date to every canonical skill that lacked `date_added`.
+- Derived all 216 values from each file's first addition commit; every affected skill entered the repository on 2026-09-04.
+- Removed the remaining optional metadata advisories without changing skill behavior.
+
+## 2026-09-05 — Refresh compatible web dependencies
+
+- Updated the web app lockfile to the newest versions allowed by its existing dependency ranges; npm audit remains at zero vulnerabilities.
+- Rewrote the unsafe-path control-character check to satisfy the stricter linter while preserving rejection behavior, with a regression test for NUL-containing paths.
+- Made the Vitest Vite-config import explicit so the native config-loader compatibility warning is gone.
+
+## 2026-09-05 — Substantive input-boundary audit
+
+- Corrected archive entry accounting and normalized ancestor collision checks, installer manifest hardlink handling and replacement, duplicate Workbench JSON keys, stale skill navigation results, and premature clipboard success.
+- Added reproductions and regression tests; checked the syntax of all 877 tracked Python, shell and JavaScript skill scripts without executing them.
+- Full scope, evidence and limits: [deep input-boundary audit](docs/maintainers/deep-input-boundary-audit-2026-09-05.md).
+- Source maintenance only; no release or deployment.
+
+## 2026-09-05 — Specialized plugin review
+
+- Reviewed all 21 specialized compositions, refreshed output-oriented descriptions and starter briefs, and clarified neighboring scopes.
+- Added browser verification to Web App Builder and data-quality checks to Data Analytics; narrowed Privacy & Compliance Engineering to five relevant defensive workflows and removed an incomplete support-file dependency from Secure App Builder.
+- Replaced the stale 14-entry web list with the canonical editorial definitions, exposed all included skills and starter briefs, and bound links to the catalog release.
+- Removed fixed 15-plugin counts from prerendering and live verification; added source parity and stale-count regressions.
+- Scope and composition rationale: [Specialized Plugins](docs/users/specialized-plugin-roadmap.md). No release or deployment.
+
+## Specialized plugin support-file completion
+
+- Supplied every previously reported missing support file and checked all selected entrypoints for prose-declared resource paths.
+- Removed imaginary OAuth/script clients, routed template references to actual inline procedures, and repaired the hardening checklist.
+- Added resource/mirror parity and executable chunking/KPI/SLO regressions; corrected unsafe or misleading examples encountered during the content review.
+- Updated the [plugin review](docs/users/specialized-plugin-roadmap.md) with resolved findings and explicit verification scope. No release or deployment.
+
+## Repository documentation consistency — 2026-09-06
+
+Audited 205 repository Markdown documents outside skill content and generated plugin copies for references and commands; cross-checked operational guidance with exact-base implementation. Corrected protected-workflow contradictions, stale translations, update/rollback claims, plugin status and navigation. Added a repeatable regression with explicit historical exceptions. Full scope and limitations: [audit report](docs/maintainers/documentation-consistency-2026-09-06.md). No publication is included.
+
+## MCP and CLI pipeline audit — 2026-09-06
+
+Reviewed the supported package-to-plan pipeline and repaired MCP overload correlation, notification responses and invalid envelope handling. Added negative and real-stdio regressions; verification includes the isolated installed-candidate smoke and the existing Core/repository suites. Scope and limits: [pipeline audit](docs/maintainers/mcp-cli-pipeline-audit-2026-09-06.md). No release or host configuration change is included.
+
+## Agent-owned CLI workflow — 2026-09-06
+
+Added a [manifest-to-installation preview](docs/users/aas-core.md#use-the-reviewed-selection), unique verified runtime lookup, and actionable bounded error guidance. Selection and project analysis remain exclusively agent-owned. Verification details are recorded in [the workflow audit](docs/maintainers/agent-owned-cli-workflow-2026-09-06.md). No publication or real host configuration changes.
+
+## Complete CLI handoff verification — 2026-09-06
+
+Exercised native Codex MCP selection through an actual published-release installation, checked installed file digests, and extended candidate tests through real copying, repetition, pruning and negative paths. Fixed inconsistent destination validation and the direct installer's unhandled path error. See [the end-to-end report](docs/maintainers/workflow-e2e-verification-2026-09-06.md). No publication or real MCP configuration changes.
+
+## Windows and PowerShell workflow verification
+
+The packed preview matrix now includes Windows with PowerShell execution and real Git against an isolated local candidate release fixture. Linux and Windows receipts are both required; a missing Windows receipt fails aggregation. Publication and real host configuration are outside this check.
+
+## PowerShell 5.1 and 16.9.0 readiness
+
+The Windows packed verification now repeats the complete installation lifecycle under Windows PowerShell 5.1, alongside PowerShell 7, with version-bound receipts and fail-closed aggregation. The 16.9.0 changelog covers the accumulated agent-owned CLI handoff, MCP fixes and Specialized Plugin refresh. Native Windows app interaction remains outside the observed coverage.
+
+## Atomic CLI JSON input reads — 2026-09-06
+
+CLI JSON inputs are now opened without following leaf symlinks or blocking on raced FIFOs, checked against the pre-open file identity, read through the same descriptor with a fixed byte budget, and rechecked before parsing. Focused regressions replace the file after inspection, substitute a FIFO and grow it past the configured limit; all cases fail closed without changing normal manifest, plan, selection or evidence behavior.
+
+## README Star History embeds
+
+Added the official theme-aware Star History chart and live global-rank badge to the existing [Star History section](README.md#star-history), retaining the direct chart link. Rank is fetched from Star History rather than hardcoded.
+
+## README project support
+
+Moved [Support the Project](README.md#support-the-project) directly below the opening badges. Added a concise invitation for sponsors, with GitHub Sponsors and Buy Me a Coffee links, a compact banner, and the existing Snyk tooling attribution. Removed monetary targets and contribution calculations.
+
+## Snyk EU Python dependency remediation (2026-09-06)
+
+- Raise slack-gif-creator Pillow minimum to 12.3.0 to exclude the vulnerable 12.2.x series (SNYK-PYTHON-PILLOW-17972377).
+- Require SoupSieve 2.8.4 or newer alongside BeautifulSoup in junta-leiloeiros to exclude CVE-2026-49477.
+- Generated plugin mirrors are validated locally and remain owned by protected canonical synchronization.
+- Validation: repository chain, reference validation and docs security passed; Pillow 12.3.0 GIF creation/reopening and SoupSieve 2.8.4 selector smoke passed. Snyk EU found no security vulnerabilities in either resolved requirements set; junta-leiloeiros retains a certifi MPL-2.0 license-policy finding.

@@ -1,0 +1,5 @@
+# Match the supported interpreter used to verify these requirements.
+# Scoped to this manifest; does not change organization-wide settings.
+version: v1.25.1
+language-settings:
+  python: '3.14'

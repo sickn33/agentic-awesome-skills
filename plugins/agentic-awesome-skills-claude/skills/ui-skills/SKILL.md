@@ -22,6 +22,12 @@ This skill provides guidance and patterns for opinionated, evolving constraints 
 
 For more information, see the [source repository](https://github.com/ibelick/ui-skills).
 
+## Example
+
+**User request:**
+
+> Review this interface with @ui-skills, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

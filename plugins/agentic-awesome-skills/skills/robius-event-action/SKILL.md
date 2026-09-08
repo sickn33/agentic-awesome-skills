@@ -7,6 +7,7 @@ description: |
   事件处理, 自定义动作
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Robius Event and Action Patterns Skill

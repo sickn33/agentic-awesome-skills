@@ -7,6 +7,7 @@ description: |
   app structure, MatchEvent, handle_startup
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Robius App Architecture Skill

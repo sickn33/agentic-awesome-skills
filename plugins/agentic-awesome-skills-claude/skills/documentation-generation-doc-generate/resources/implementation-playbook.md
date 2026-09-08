@@ -1,6 +1,10 @@
 # Automated Documentation Generation Implementation Playbook
 
-This file contains detailed patterns, checklists, and code samples referenced by the skill.
+This file contains integration sketches and templates. They are not a complete
+runnable documentation generator: route adapters, schemas, scripts and actual project
+configuration must be supplied. Validate examples against the current source rather
+than treating comments, docstring presence or example architecture as ground truth.
+Publishing a documentation site requires existing user authorization.
 
 ## Instructions
 
@@ -63,7 +67,7 @@ class APIDocExtractor:
             tree = ast.parse(f.read())
 
         for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 for decorator in node.decorator_list:
                     if self._is_route_decorator(decorator):
                         endpoint = {
@@ -122,7 +126,7 @@ def extract_pydantic_schemas(file_path):
 
 ### Example 2: OpenAPI Specification Generation
 
-**OpenAPI Template**
+**OpenAPI template fragment:** define Pagination, Unauthorized and bearerAuth before schema validation; these references are intentionally incomplete below.
 ```yaml
 openapi: 3.0.0
 info:
@@ -376,7 +380,7 @@ def generate_function_docs(func):
     for param_name, param in sig.parameters.items():
         param_str = param_name
         if param.annotation != param.empty:
-            param_str += f": {param.annotation.__name__}"
+            param_str += f": {inspect.formatannotation(param.annotation)}"
         if param.default != param.empty:
             param_str += f" = {param.default}"
         params.append(param_str)
@@ -384,7 +388,7 @@ def generate_function_docs(func):
 
     return_type = ""
     if sig.return_annotation != sig.empty:
-        return_type = f" -> {sig.return_annotation.__name__}"
+        return_type = f" -> {inspect.formatannotation(sig.return_annotation)}"
 
     doc_template = f'''
 def {func.__name__}({", ".join(params)}){return_type}:
@@ -460,18 +464,18 @@ def {func.__name__}({", ".join(params)}){return_type}:
 
 ### Example 7: Interactive API Playground
 
-**Swagger UI Setup**
+**Swagger UI sketch:** vendor the exact reviewed Swagger UI assets locally first; do not load mutable remote code.
 ```html
 <!DOCTYPE html>
 <html>
 <head>
     <title>API Documentation</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@latest/swagger-ui.css">
+    <link rel="stylesheet" href="/assets/vendor/swagger-ui.css">
 </head>
 <body>
     <div id="swagger-ui"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@latest/swagger-ui-bundle.js"></script>
+    <script src="/assets/vendor/swagger-ui-bundle.js"></script>
     <script>
         window.onload = function() {
             SwaggerUIBundle({
@@ -479,7 +483,7 @@ def {func.__name__}({", ".join(params)}){return_type}:
                 dom_id: '#swagger-ui',
                 deepLinking: true,
                 presets: [SwaggerUIBundle.presets.apis],
-                layout: "StandaloneLayout"
+                layout: "BaseLayout"
             });
         }
     </script>
@@ -526,48 +530,11 @@ curl -X {endpoint['method']} https://api.example.com{endpoint['path']} \\
 
 ### Example 8: Documentation CI/CD
 
-**GitHub Actions Workflow**
-```yaml
-name: Generate Documentation
-
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'src/**'
-      - 'api/**'
-
-jobs:
-  generate-docs:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-
-    - name: Install dependencies
-      run: |
-        pip install -r requirements-docs.txt
-        npm install -g @redocly/cli
-
-    - name: Generate API documentation
-      run: |
-        python scripts/generate_openapi.py > docs/api/openapi.json
-        redocly build-docs docs/api/openapi.json -o docs/api/index.html
-
-    - name: Generate code documentation
-      run: sphinx-build -b html docs/source docs/build
-
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs/build
-```
+Use the repository's existing documentation build and review workflow. Add the actual
+source paths, locked tool versions and generated output locations to that workflow.
+If using third-party actions, pin reviewed commit SHAs and least-privilege permissions.
+A documentation request does not authorize automatic deployment, token access, or a
+new global package install. Record the exact schema/build/link checks that ran.
 
 ### Example 9: Documentation Coverage Validation
 
@@ -590,7 +557,7 @@ class DocCoverage:
             module = ast.parse(open(file_path).read())
 
             for node in ast.walk(module):
-                if isinstance(node, ast.FunctionDef):
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                     results['total_functions'] += 1
                     if ast.get_docstring(node):
                         results['documented_functions'] += 1
@@ -617,11 +584,11 @@ class DocCoverage:
         # Calculate coverage percentages
         results['function_coverage'] = (
             results['documented_functions'] / results['total_functions'] * 100
-            if results['total_functions'] > 0 else 100
+            if results['total_functions'] > 0 else None
         )
         results['class_coverage'] = (
             results['documented_classes'] / results['total_classes'] * 100
-            if results['total_classes'] > 0 else 100
+            if results['total_classes'] > 0 else None
         )
 
         return results
@@ -635,6 +602,17 @@ class DocCoverage:
 4. **User Guides**: Step-by-step tutorials
 5. **Developer Guides**: Setup, contribution, and API usage guides
 6. **Reference Documentation**: Complete API reference with examples
-7. **Documentation Site**: Deployed static site with search functionality
+7. **Documentation Site**: Build preview; deploy only within the requested scope
 
 Focus on creating documentation that is accurate, comprehensive, and easy to maintain alongside code changes.
+
+## Limits of these extractors
+
+AST sketches do not resolve arbitrary decorators, imported types, Pydantic factories
+or framework runtime routing. The parameter sketch marks arguments required without
+resolving defaults; the schema sketch likewise cannot infer all Field(...) semantics.
+Use the framework's actual OpenAPI/schema export as the authority when available.
+Docstring coverage reports presence only, not accuracy; no functions/classes means
+no applicable percentage, not 100% quality. Generated snippets containing placeholders
+must remain labelled until replaced and tested. Do not import untrusted project modules
+just to inspect them: imports can execute code.

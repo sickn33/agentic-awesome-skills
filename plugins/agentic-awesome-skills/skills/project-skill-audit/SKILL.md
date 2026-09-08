@@ -188,6 +188,12 @@ Return a compact audit with:
 
 If the user asks to actually create or update one of the recommended skills, switch to `$skill-creator` and implement the chosen skill rather than continuing the audit.
 
+## Example
+
+**User request:**
+
+> Audit this repository to identify which skills it needs, which existing skills are stale, and the exact changes to make.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

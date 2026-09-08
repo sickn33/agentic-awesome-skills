@@ -25,6 +25,12 @@ Once done, use /review to review the work.
 
 Commit your work to the current branch.
 
+## Example
+
+**User request:**
+
+> Implement a piece of work based on a PRD or set of issues.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

@@ -49,6 +49,12 @@ In central this lives as a subdir of ckw-design; it **publishes separately** as
 `deterministic-design-skill` (its own distribution) via publish-skill. One of the two
 flagship narratives — the *determinism* one; its sibling is human-in-the-loop (lookdev).
 
+## Example
+
+**User request:**
+
+> Review this interface with @deterministic-design, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 
 - Layout metrics and vision-judged audits catch many spatial and usability failures, but they are not a substitute for product judgment or user testing.

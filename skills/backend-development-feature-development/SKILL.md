@@ -182,6 +182,12 @@ If issues arise during or after deployment:
 
 Feature description: $ARGUMENTS
 
+## Example
+
+**User request:**
+
+> Coordinate end-to-end feature delivery across backend, frontend, and data.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

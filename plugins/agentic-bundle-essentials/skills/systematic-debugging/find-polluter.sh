@@ -1,63 +1,83 @@
 #!/usr/bin/env bash
-# Bisection script to find which test creates unwanted files/state
-# Usage: ./find-polluter.sh <file_or_dir_to_check> <test_pattern>
-# Example: ./find-polluter.sh '.git' 'src/**/*.test.ts'
-
-set -e
-
-if [ $# -ne 2 ]; then
-  echo "Usage: $0 <file_to_check> <test_pattern>"
-  echo "Example: $0 '.git' 'src/**/*.test.ts'"
-  exit 1
+# Sequential diagnostic, not bisection. Runs project code in the caller's cwd.
+# Use an isolated checkout and a test runner accepting: npm test -- <file>.
+set -euo pipefail
+if [ "$#" -ne 2 ]; then
+  echo 'Usage: find-polluter.sh <absent-relative-path> <relative-test-glob>' >&2
+  exit 2
 fi
+python3 - "$1" "$2" <<'PY'
+import json
+import os
+from pathlib import Path
+import signal
+import subprocess
+import sys
+import time
 
-POLLUTION_CHECK="$1"
-TEST_PATTERN="$2"
 
-echo "🔍 Searching for test that creates: $POLLUTION_CHECK"
-echo "Test pattern: $TEST_PATTERN"
-echo ""
+def main():
+    root = Path.cwd().resolve()
+    checked = Path(sys.argv[1])
+    pattern = sys.argv[2]
+    if checked.is_absolute() or '..' in checked.parts or checked == Path('.'):
+        raise ValueError("Check path must be a nonempty relative child")
+    if Path(pattern).is_absolute() or '..' in Path(pattern).parts:
+        raise ValueError("Test glob must stay inside the checkout")
+    target = root / checked
+    if any(parent.is_symlink() for parent in target.parents if parent != root.parent):
+        raise ValueError("Linked check-path ancestors are unsupported")
+    if os.path.lexists(target):
+        raise ValueError("Checked path already exists; no tests run")
+    excluded = {'node_modules', '.git', 'dist', 'build', '__pycache__'}
+    files = []
+    for candidate in root.glob(pattern):
+        relative = candidate.relative_to(root)
+        if any(part in excluded for part in relative.parts) or not candidate.is_file():
+            continue
+        if any(part.is_symlink() for part in [candidate, *candidate.parents] if part != root.parent):
+            raise ValueError("Linked test paths are unsupported")
+        files.append(relative.as_posix())
+        if len(files) > 1000:
+            raise ValueError("Too many test files; narrow the glob")
+    files = sorted(set(files))
+    if not files:
+        raise ValueError("No matching test files; no clean result can be inferred")
+    print(f"Inspecting {len(files)} tests; per-test limit 60s, total run budget 300s.", flush=True)
+    deadline = time.monotonic() + 300
+    failures = 0
+    for filename in files:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise ValueError("Run budget exhausted; incomplete inspection")
+        if os.path.lexists(target):
+            raise ValueError("Checked path appeared between tests; attribution is uncertain")
+        print(f"Running {json.dumps(filename)}", flush=True)
+        process = subprocess.Popen(['npm', 'test', '--', filename], cwd=root,
+                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                                   start_new_session=True)
+        try:
+            status = process.wait(timeout=min(60, remaining))
+        except subprocess.TimeoutExpired:
+            os.killpg(process.pid, signal.SIGKILL)
+            process.wait()
+            raise ValueError("Test timed out; incomplete inspection")
+        if os.path.lexists(target):
+            print(f"Observed pollution after {json.dumps(filename)} (test exit {status}).")
+            return 1
+        if status != 0:
+            failures += 1
+            print(f"Test failed with exit {status}; no pollution observed for this invocation.")
+    if failures:
+        print(f"No pollution observed, but {failures} tests failed; result is incomplete.")
+        return 2
+    print("No pollution observed in the selected successful test invocations.")
+    return 0
 
-# Get list of test files
-TEST_FILES=$(find . -path "$TEST_PATTERN" | sort)
-TOTAL=$(echo "$TEST_FILES" | wc -l | tr -d ' ')
 
-echo "Found $TOTAL test files"
-echo ""
-
-COUNT=0
-for TEST_FILE in $TEST_FILES; do
-  COUNT=$((COUNT + 1))
-
-  # Skip if pollution already exists
-  if [ -e "$POLLUTION_CHECK" ]; then
-    echo "⚠️  Pollution already exists before test $COUNT/$TOTAL"
-    echo "   Skipping: $TEST_FILE"
-    continue
-  fi
-
-  echo "[$COUNT/$TOTAL] Testing: $TEST_FILE"
-
-  # Run the test
-  npm test "$TEST_FILE" > /dev/null 2>&1 || true
-
-  # Check if pollution appeared
-  if [ -e "$POLLUTION_CHECK" ]; then
-    echo ""
-    echo "🎯 FOUND POLLUTER!"
-    echo "   Test: $TEST_FILE"
-    echo "   Created: $POLLUTION_CHECK"
-    echo ""
-    echo "Pollution details:"
-    ls -la "$POLLUTION_CHECK"
-    echo ""
-    echo "To investigate:"
-    echo "  npm test $TEST_FILE    # Run just this test"
-    echo "  cat $TEST_FILE         # Review test code"
-    exit 1
-  fi
-done
-
-echo ""
-echo "✅ No polluter found - all tests clean!"
-exit 0
+try:
+    sys.exit(main())
+except (OSError, ValueError) as error:
+    print(f"Polluter inspection stopped: {error}", file=sys.stderr)
+    sys.exit(2)
+PY

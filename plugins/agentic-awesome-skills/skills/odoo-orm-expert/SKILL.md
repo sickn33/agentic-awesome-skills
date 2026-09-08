@@ -3,6 +3,7 @@ name: odoo-orm-expert
 description: "Master Odoo ORM patterns: search, browse, create, write, domain filters, computed fields, and performance-safe query techniques."
 risk: safe
 source: "self"
+date_added: "2026-09-04"
 ---
 
 # Odoo ORM Expert

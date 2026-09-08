@@ -116,9 +116,11 @@ class LocalEmbedder:
     def __init__(
         self,
         model_name: str = "BAAI/bge-large-en-v1.5",
-        device: str = "cuda"
+        device: str = "cpu",
+        query_prefix: str = ""
     ):
         self.model = SentenceTransformer(model_name, device=device)
+        self.query_prefix = query_prefix  # Choose from the selected model card.
 
     def embed(
         self,
@@ -136,11 +138,8 @@ class LocalEmbedder:
         return embeddings
 
     def embed_query(self, query: str) -> np.ndarray:
-        """Embed a query with BGE-style prefix."""
-        # BGE models benefit from query prefix
-        if "bge" in self.model.get_sentence_embedding_dimension():
-            query = f"Represent this sentence for searching relevant passages: {query}"
-        return self.embed([query])[0]
+        """Embed a query with the explicitly configured model prefix."""
+        return self.embed([self.query_prefix + query])[0]
 
     def embed_documents(self, documents: List[str]) -> np.ndarray:
         """Embed documents for indexing."""
@@ -172,8 +171,13 @@ def chunk_by_tokens(
     tokenizer=None
 ) -> List[str]:
     """Chunk text by token count."""
-    import tiktoken
-    tokenizer = tokenizer or tiktoken.get_encoding("cl100k_base")
+    if not isinstance(chunk_size, int) or not isinstance(chunk_overlap, int):
+        raise ValueError("chunk size and overlap must be integers")
+    if chunk_size <= 0 or not 0 <= chunk_overlap < chunk_size:
+        raise ValueError("require chunk_size > 0 and 0 <= overlap < chunk_size")
+    if tokenizer is None:
+        import tiktoken
+        tokenizer = tiktoken.get_encoding("cl100k_base")
 
     tokens = tokenizer.encode(text)
     chunks = []
@@ -184,6 +188,8 @@ def chunk_by_tokens(
         chunk_tokens = tokens[start:end]
         chunk_text = tokenizer.decode(chunk_tokens)
         chunks.append(chunk_text)
+        if end >= len(tokens):
+            break
         start = end - chunk_overlap
 
     return chunks
@@ -250,58 +256,28 @@ def recursive_character_splitter(
     chunk_overlap: int = 200,
     separators: List[str] = None
 ) -> List[str]:
-    """LangChain-style recursive splitter."""
-    separators = separators or ["\n\n", "\n", ". ", " ", ""]
+    """Bounded character chunks, preferring a separator inside each window."""
+    if chunk_size <= 0 or not 0 <= chunk_overlap < chunk_size:
+        raise ValueError("require chunk_size > 0 and 0 <= overlap < chunk_size")
+    separators = separators or ["\n\n", "\n", ". ", " "]
+    chunks = []
+    start = 0
+    while start < len(text):
+        end = min(start + chunk_size, len(text))
+        if end < len(text):
+            for separator in separators:
+                if not separator:
+                    continue
+                boundary = text.rfind(separator, start + chunk_overlap + 1, end)
+                if boundary >= 0:
+                    end = boundary + len(separator)
+                    break
+        chunks.append(text[start:end])
+        if end == len(text):
+            break
+        start = end - chunk_overlap
+    return chunks
 
-    def split_text(text: str, separators: List[str]) -> List[str]:
-        if not text:
-            return []
-
-        separator = separators[0]
-        remaining_separators = separators[1:]
-
-        if separator == "":
-            # Character-level split
-            return [text[i:i+chunk_size] for i in range(0, len(text), chunk_size - chunk_overlap)]
-
-        splits = text.split(separator)
-        chunks = []
-        current_chunk = []
-        current_length = 0
-
-        for split in splits:
-            split_length = len(split) + len(separator)
-
-            if current_length + split_length > chunk_size and current_chunk:
-                chunk_text = separator.join(current_chunk)
-
-                # Recursively split if still too large
-                if len(chunk_text) > chunk_size and remaining_separators:
-                    chunks.extend(split_text(chunk_text, remaining_separators))
-                else:
-                    chunks.append(chunk_text)
-
-                # Start new chunk with overlap
-                overlap_splits = []
-                overlap_length = 0
-                for s in reversed(current_chunk):
-                    if overlap_length + len(s) <= chunk_overlap:
-                        overlap_splits.insert(0, s)
-                        overlap_length += len(s)
-                    else:
-                        break
-                current_chunk = overlap_splits
-                current_length = overlap_length
-
-            current_chunk.append(split)
-            current_length += split_length
-
-        if current_chunk:
-            chunks.append(separator.join(current_chunk))
-
-        return chunks
-
-    return split_text(text, separators)
 ```
 
 ### Template 4: Domain-Specific Embedding Pipeline
@@ -382,8 +358,8 @@ class DomainEmbeddingPipeline:
 class CodeEmbeddingPipeline:
     """Specialized pipeline for code embeddings."""
 
-    def __init__(self, model: str = "voyage-code-2"):
-        self.model = model
+    def __init__(self, embed_fn):
+        self.embed_fn = embed_fn  # Supply a reviewed provider-specific embedding adapter.
 
     def chunk_code(self, code: str, language: str) -> List[dict]:
         """Chunk code by functions/classes."""
@@ -392,12 +368,12 @@ class CodeEmbeddingPipeline:
         # Parse with tree-sitter
         # Extract functions, classes, methods
         # Return chunks with context
-        pass
+        raise NotImplementedError("Supply the installed parser and language grammar")
 
     def embed_with_context(self, chunk: str, context: str) -> List[float]:
         """Embed code with surrounding context."""
         combined = f"Context: {context}\n\nCode:\n{chunk}"
-        return get_embedding(combined, model=self.model)
+        return self.embed_fn(combined)
 ```
 
 ### Template 5: Embedding Quality Evaluation

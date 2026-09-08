@@ -125,6 +125,12 @@ Before finalizing output, the agent asks:
 - [ ] Would a psychologist recognize this as a real profile, not a stereotype?
 - [ ] Does this respect the ethical guardrails?
 
+## Example
+
+**User request:**
+
+> Build a psychographic profile for this audience before we decide positioning, copy, or funnel structure.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

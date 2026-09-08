@@ -7,6 +7,7 @@ description: >
   "PR review", "pull request", or asks to document a diff for reviewers.
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Pull Request Enhancement

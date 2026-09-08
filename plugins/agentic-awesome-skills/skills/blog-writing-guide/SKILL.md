@@ -162,6 +162,12 @@ Run through both checklists:
 
 When providing feedback, be specific and constructive. Quote the weak passage, explain why it's weak, and rewrite it to show the standard.
 
+## Example
+
+**User request:**
+
+> Draft or edit a Sentry blog post.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

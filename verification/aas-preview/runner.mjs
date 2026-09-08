@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict";
+import { verifyInstallation } from "./installation.mjs";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import { createRequire } from "node:module";
@@ -71,7 +72,7 @@ function runNode(script, args, options = {}) {
 }
 
 function parseCliSuccess(result, label) {
-  if (result.status !== 0 || result.stderr.trim()) fail(`${label}_FAILED`);
+  if (result.status !== 0 || result.stderr.trim()) fail(`${label}_FAILED: ${result.stderr || result.stdout || result.error?.message || result.status}`);
   const value = JSON.parse(result.stdout);
   if (value.ok !== true || value.schemaVersion !== 1) fail(`${label}_ENVELOPE_INVALID`);
   return value;
@@ -293,7 +294,7 @@ async function main() {
       frameworks: [],
       constraints: [],
     },
-    skillIds: ["ai-agents-architect"],
+    skillIds: ["ai-agents-architect", "debugging-strategies"],
   };
   fs.writeFileSync(selectionPath, `${stable(selection)}\n`, { mode: 0o600 });
   const manifestPath = path.join(workRoot, "aas-stack.json");
@@ -313,7 +314,7 @@ async function main() {
   assert.equal(fs.readFileSync(manifestPath, "utf8"), fs.readFileSync(replayManifestPath, "utf8"), "agent selection replay drifted");
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   assert.equal(manifest.schemaVersion, 2);
-  assert.deepEqual(manifest.skills, [{ id: "ai-agents-architect" }]);
+  assert.deepEqual(manifest.skills, selection.skillIds.map((id) => ({ id })));
   assert.deepEqual(manifest.profile, selection.profile);
 
   const malformedSelectionPath = path.join(workRoot, "malformed-selection.json");
@@ -326,11 +327,20 @@ async function main() {
   const validated = parseCliSuccess(runNode(aasBin, ["stack", "validate", "--manifest", manifestPath], { cwd: projectRoot }), "VALIDATE");
   assert.equal(validated.status, "valid");
 
+  const beforeHandoff = { project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) };
+  const handoff = parseCliSuccess(runNode(aasBin, [
+    "stack", "install-preview", "--manifest", manifestPath,
+    "--destination", path.join(projectRoot, ".agents", "skills"),
+  ], { cwd: projectRoot }), "INSTALL_PREVIEW");
+  assert.deepEqual(handoff.selectedSkillIds, manifest.skills.map((skill) => skill.id));
+  assert.equal(handoff.executes, false);
+  assert.equal(handoff.preview.args.at(-1), "--dry-run");
+  assert.deepEqual({ project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) }, beforeHandoff);
+
   const planPath = path.join(workRoot, "plan.json");
   const planned = parseCliSuccess(runNode(aasBin, [
-    "stack", "plan", "--manifest", manifestPath, "--target", "codex:project",
+    "stack", "plan", "--manifest", manifestPath,
     "--target-root", projectRoot, "--cache-root", cacheRoot,
-    "--runtime-version", metadata.version, "--runtime-integrity", runtimeIntegrity,
     "--out", planPath,
     ...previewOutputArgs,
   ], { cwd: projectRoot }), "PLAN");
@@ -361,6 +371,15 @@ async function main() {
   assert.equal(fs.existsSync(path.join(projectRoot, ".agents")), false);
   assert.equal(fs.existsSync(path.join(projectRoot, ".aas")), false);
 
+  // Real fixture files make the evidence request exceed the old 4 KiB frame
+  // bottleneck. Create them before the read-only MCP snapshot.
+  const projectFiles = [{ path: "README.md", size: projectEvidenceBytes.length, sha256: sha256(projectEvidenceBytes) }];
+  for (let index = 0; index < 32; index += 1) {
+    const relative = `evidence-${String(index).padStart(2, "0")}.txt`;
+    const bytes = Buffer.from(`preview evidence file ${index}\n`);
+    fs.writeFileSync(path.join(projectRoot, relative), bytes, { flag: "wx", mode: 0o600 });
+    projectFiles.push({ path: relative, size: bytes.length, sha256: sha256(bytes) });
+  }
   const beforeMcp = { project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) };
   const client = new JsonLineClient(mcpBin, ["--cache-root", cacheRoot], projectRoot);
   const initialize = await client.request(1, "initialize", {
@@ -375,6 +394,8 @@ async function main() {
   assert.deepEqual(toolNames, [
     "search_skills",
     "get_skill",
+    "list_skill_files",
+    "read_skill_file",
     "compose_stack",
     "inspect_stack",
     "diff_stack",
@@ -389,6 +410,24 @@ async function main() {
   const get = await client.request(5, "tools/call", { name: "get_skill", arguments: { id: skillId } });
   assert.equal(get.result.structuredContent.skill.id, skillId);
   assert.equal(get.result.structuredContent.untrustedContent.authority, "untrusted");
+  const bundleFiles = await client.request(51, "tools/call", {
+    name: "list_skill_files", arguments: { id: "debugging-strategies", limit: 50 },
+  });
+  assert.equal(bundleFiles.result.structuredContent.ok, true);
+  const reference = bundleFiles.result.structuredContent.files.find((file) => file.path === "resources/implementation-playbook.md");
+  assert.ok(reference);
+  const bundleRead = await client.request(52, "tools/call", {
+    name: "read_skill_file", arguments: { id: "debugging-strategies", path: reference.path },
+  });
+  assert.equal(bundleRead.result.structuredContent.ok, true);
+  assert.equal(bundleRead.result.structuredContent.authority, "untrusted");
+  assert.equal(sha256(Buffer.from(bundleRead.result.structuredContent.text)), reference.sha256);
+  assert.equal(bundleRead.result.structuredContent.catalogDigest, aas.loadBundledCatalog({ root: packageRoot }).digest);
+  const bundleEscape = await client.request(53, "tools/call", {
+    name: "read_skill_file", arguments: { id: "debugging-strategies", path: "../package.json" },
+  });
+  assert.equal(bundleEscape.result.isError, true);
+  assert.equal(bundleEscape.result.structuredContent.code, "AAS_SKILL_FILE_PATH_INVALID");
   const resource = await client.request(6, "resources/read", { uri: `aas://skills/${skillId}` });
   assert.equal(resource.result.contents[0].uri, `aas://skills/${skillId}`);
   assert.equal(resource.result.contents[0].mimeType, "application/json");
@@ -405,11 +444,6 @@ async function main() {
   assert.deepEqual(mcpComposition.result.structuredContent.manifest, manifest);
   const inspection = await client.request(8, "tools/call", { name: "inspect_stack", arguments: { manifest } });
   assert.equal(inspection.result.structuredContent.ok, true);
-  const projectFiles = [{
-    path: "README.md",
-    size: projectEvidenceBytes.length,
-    sha256: sha256(projectEvidenceBytes),
-  }];
   const project = {
     schemaVersion: 1,
     files: projectFiles,
@@ -427,7 +461,7 @@ async function main() {
     evidence: [{ path: "README.md", sha256: projectFiles[0].sha256 }],
     selectedSkillIds: selection.skillIds,
   }];
-  const exported = await client.request(9, "tools/call", {
+  const exportParams = {
     name: "export_selection_evidence",
     arguments: {
       manifestDigest: composed.manifestDigest,
@@ -435,7 +469,9 @@ async function main() {
       dimensions,
       capabilities,
     },
-  });
+  };
+  assert.ok(Buffer.byteLength(JSON.stringify(exportParams)) > 4096, "packed evidence probe must cross the old request limit");
+  const exported = await client.request(9, "tools/call", exportParams);
   assert.equal(exported.result.structuredContent.ok, true);
   assert.deepEqual(exported.result.structuredContent.evidence.payload.selectedSkillIds, selection.skillIds);
   const evidenceInspection = await client.request(10, "tools/call", {
@@ -453,7 +489,10 @@ async function main() {
   const afterMcp = { project: snapshotTree(projectRoot), cache: snapshotTree(cacheRoot) };
   assert.deepEqual(afterMcp, beforeMcp, "MCP changed persistent project or cache state");
 
+  const installation = verifyInstallation({ packageRoot, workRoot, manifest, snapshotTree });
+
   const receipt = {
+    installation,
     schemaVersion: 1,
     assuranceProfile: "agent-first-preview-1",
     previewQualified: true,
@@ -463,7 +502,7 @@ async function main() {
     package: { name: metadata.name, version: metadata.version, tarballIntegrity: runtimeIntegrity, tarballSha256: sha256(tarballBytes) },
     selectionDigest: sha256(fs.readFileSync(selectionPath)),
     mcpContractDigest: sha256(stable({ toolNames, templates: ["aas://skills/{id}"] })),
-    lifecycle: { initialized: true, selected: true, composed: true, validated: true, planned: true, doctorReadOnly: true },
+    lifecycle: { initialized: true, selected: true, composed: true, validated: true, planned: true, doctorReadOnly: true, installPreviewPrepared: true, runtimeAutoResolved: true },
     writeGuards: { applyDisabledByDefault: true, recoveryDisabledByDefault: true, targetStateCreated: false },
     mcp: { localStdio: true, readOnlySnapshot: true, nativeAttemptObservation: "notEvaluated" },
     runtimeCache: { integrity: promoted.runtimeIdentity.integrity, closureDigest: promoted.runtimeIdentity.closureDigest },

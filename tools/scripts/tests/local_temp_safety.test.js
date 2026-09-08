@@ -29,7 +29,8 @@ const lokiAutonomy = fs.readFileSync(
   "utf8",
 );
 
-assert.match(compactScript, /XDG_STATE_HOME/, "strategic compact counter should use a user-owned state directory");
+assert.match(compactScript, /COMPACT_TOOL_COUNT/, "strategic compact should accept an explicit session count");
+assert.doesNotMatch(compactScript, /mkdir|COUNTER_FILE|XDG_STATE_HOME/, "strategic compact must not persist a cross-session counter");
 assert.doesNotMatch(compactScript, /\/tmp\/claude-tool-count/, "strategic compact counter must not use predictable /tmp files");
 assert.match(wsListener, /XDG_STATE_HOME/, "videodb listener should default to a user-owned state directory");
 assert.doesNotMatch(wsListener, /VIDEODB_EVENTS_DIR", "\/tmp"/, "videodb listener must not default to /tmp");

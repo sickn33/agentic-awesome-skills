@@ -1,6 +1,6 @@
 ---
 name: developer-listening
-description: "Monitor what developers say about your brand, competitors, and the problems they're solving. Track mentions and conversations across GitHub, Hacker News, Reddit, Stack Overflow, Twitter, and Discord. Trigger phrases: \"developer listening\", \"monitor developer conversations\", \"track..."
+description: "Monitor what developers say about your brand, competitors, and the problems they're solving. Track mentions and conversations across GitHub, Hacker News, Reddit, Stack Overflow, Twitter, and Discord."
 risk: critical
 source: https://github.com/jonathimer/devmarketing-skills/tree/main/skills/developer-listening
 source_repo: jonathimer/devmarketing-skills
@@ -224,6 +224,12 @@ Use a monitoring tool that tracks developer platforms. Key capabilities to look 
 - **competitor-tracking** - Systematic competitor analysis beyond conversation monitoring
 - **alternatives-pages** - Convert competitive insights into comparison content
 - **community-engagement** - Best practices for responding to developer conversations
+
+## Example
+
+**User request:**
+
+> Monitor what developers say about your brand, competitors, and the problems they're solving.
 
 ## Limitations
 

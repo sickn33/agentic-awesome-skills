@@ -66,6 +66,12 @@ Description: $ARGUMENTS
 
 4. Generate the actual page files using `/ss-page` conventions.
 
+## Example
+
+**User request:**
+
+> Design user flows and navigation structure following proven UX patterns.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

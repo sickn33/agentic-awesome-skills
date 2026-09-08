@@ -1,6 +1,6 @@
 ---
 name: observability-and-instrumentation
-description: Instruments code so production behavior is visible and diagnosable. Use when adding logging, metrics, tracing, or alerting. Use when shipping any feature that runs in production and you need evidence it works. Use when production issues are reported but you can't tell what happened...
+description: "Instruments code so production behavior is visible and diagnosable. Use when adding logging, metrics, tracing, or alerting. Use when shipping any feature that runs in production and you need evidence it works."
 risk: critical
 source: https://github.com/addyosmani/agent-skills/tree/main/skills/observability-and-instrumentation
 source_repo: addyosmani/agent-skills
@@ -88,7 +88,10 @@ logger.warn({
 ```typescript
 // Express: child logger per request, ID propagated downstream
 app.use((req, res, next) => {
-  req.id = req.headers['x-request-id'] ?? crypto.randomUUID();
+  const suppliedId = req.headers['x-request-id'];
+  req.id = typeof suppliedId === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(suppliedId)
+    ? suppliedId
+    : crypto.randomUUID();
   req.log = logger.child({ requestId: req.id });
   res.setHeader('x-request-id', req.id);
   next();

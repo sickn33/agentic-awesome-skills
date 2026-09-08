@@ -67,6 +67,12 @@ Description: $ARGUMENTS
 
 5. Make the pattern a reusable component with props for dynamic content.
 
+## Example
+
+**User request:**
+
+> Generate a composed UI pattern (card layout, list, form section, grid, etc.) using design system primitives.
+
 ## Limitations
 
 - Use this skill only when the task clearly matches its upstream source and local project context.

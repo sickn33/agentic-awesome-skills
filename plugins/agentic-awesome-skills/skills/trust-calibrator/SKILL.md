@@ -114,6 +114,12 @@ Before finalizing output, the agent asks:
 - [ ] Did I avoid defensive over-explaining?
 - [ ] Does the output feel credible, calm, and real?
 
+## Example
+
+**User request:**
+
+> Calibrate the certainty, proof, and claim strength in this message for a skeptical audience.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

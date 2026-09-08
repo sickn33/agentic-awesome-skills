@@ -2,9 +2,9 @@
 
 To transform **Agentic Awesome Skills** from a collection of scripts into a trusted platform, every skill must meet a specific standard of quality and safety.
 
-## The "Validated" Badge ✅
+## What validation establishes
 
-A skill earns the "Validated" badge only if it meets these **6 quality checks**. Some are enforced automatically today, while others still require reviewer judgment:
+The following checks describe contributor expectations. Passing a structural check does not award a general reliability badge. Semantic review must identify its exact content, scope, reviewer or process, actual checks and remaining limitations.
 
 ### 1. Metadata Integrity
 
@@ -69,15 +69,23 @@ Risk labels remain declared metadata. The audit validates their presence and sha
 
 ---
 
-## Support Levels
+## Provenance, compatibility and review evidence
 
-We also categorize skills by who maintains them:
+Source attribution identifies origin; it does not prove current maintenance, efficacy
+or security. Do not infer reliability from “official”, “community”, a risk label or
+an unqualified “verified” badge. Keep original attribution and license notices when
+editing; record modifications without inventing upstream endorsement.
 
-| Level         | Badge | Meaning                                             |
-| :------------ | :---- | :-------------------------------------------------- |
-| **Official**  | 🟣    | Maintained by the core team. High reliability.      |
-| **Community** | ⚪    | Contributed by the ecosystem. Best effort support.  |
-| **Verified**  | ✨    | Community skill that has passed deep manual review. |
+The [compatibility map](content-aliases.json) explicitly records retained duplicate
+IDs. Aliases keep complete local instructions and support files for offline use;
+they are not separate capabilities, recommendations or eligibility rules. Correct the
+primary editorial path and every alias together, and verify their body/bundle equality.
+Do not remove callable IDs or omit support files simply to improve duplicate counts.
+
+The [2026-09-05 content review](content-review-2026-09-05.md) records a bounded cohort,
+file fingerprints, actual checks, retained aliases and remaining whole-corpus debt.
+A content fingerprint binds bytes, not truth or effectiveness. Review evidence becomes
+stale when those bytes change and cannot replace the exact-head merge gate.
 
 ---
 

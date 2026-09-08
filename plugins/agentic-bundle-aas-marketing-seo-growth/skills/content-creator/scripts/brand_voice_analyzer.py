@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Brand Voice Analyzer - Analyzes content to establish and maintain brand voice consistency
+Brand Voice Analyzer - local English lexical heuristics, not brand certification
 """
 
 import re
@@ -44,6 +44,7 @@ class BrandVoiceAnalyzer:
         word_count = len(text.split())
         
         results = {
+            'method': 'English lexical heuristics; not a validated brand or reading assessment',
             'word_count': word_count,
             'readability_score': self._calculate_readability(text),
             'voice_profile': {},
@@ -55,12 +56,13 @@ class BrandVoiceAnalyzer:
         for dimension, categories in self.voice_dimensions.items():
             dim_scores = {}
             for category, keywords in categories.items():
-                score = sum(1 for keyword in keywords if keyword in text_lower)
+                score = sum(1 for keyword in keywords if re.search(r'(?<!\w)' + re.escape(keyword) + r'(?!\w)', text_lower))
                 dim_scores[category] = score
             
             # Determine dominant voice
             if sum(dim_scores.values()) > 0:
-                dominant = max(dim_scores, key=dim_scores.get)
+                leaders = [key for key, value in dim_scores.items() if value == max(dim_scores.values())]
+                dominant = leaders[0] if len(leaders) == 1 else 'mixed'
                 results['voice_profile'][dimension] = {
                     'dominant': dominant,
                     'scores': dim_scores
@@ -73,7 +75,7 @@ class BrandVoiceAnalyzer:
     
     def _calculate_readability(self, text: str) -> float:
         """Calculate Flesch Reading Ease score"""
-        sentences = re.split(r'[.!?]+', text)
+        sentences = [s.strip() for s in re.split(r'[.!?]+', text) if s.strip()]
         words = text.split()
         syllables = sum(self._count_syllables(word) for word in words)
         
@@ -89,7 +91,7 @@ class BrandVoiceAnalyzer:
     
     def _count_syllables(self, word: str) -> int:
         """Count syllables in a word (simplified)"""
-        word = word.lower()
+        word = re.sub(r"[^a-z]", "", word.lower())
         vowels = 'aeiou'
         syllable_count = 0
         previous_was_vowel = False
@@ -108,11 +110,11 @@ class BrandVoiceAnalyzer:
     
     def _analyze_sentences(self, text: str) -> Dict:
         """Analyze sentence structure"""
-        sentences = re.split(r'[.!?]+', text)
+        sentences = [s.strip() for s in re.split(r'[.!?]+', text) if s.strip()]
         sentences = [s.strip() for s in sentences if s.strip()]
         
         if not sentences:
-            return {'average_length': 0, 'variety': 'low'}
+            return {'average_length': 0, 'variety': 'low', 'count': 0}
         
         lengths = [len(s.split()) for s in sentences]
         avg_length = sum(lengths) / len(lengths) if lengths else 0
@@ -190,8 +192,11 @@ if __name__ == "__main__":
     import sys
     
     if len(sys.argv) > 1:
-        with safe_user_path(sys.argv[1]).open('r') as f:
-            content = f.read()
+        with safe_user_path(sys.argv[1]).open('rb') as f:
+            raw = f.read(1024 * 1024 + 1)
+        if len(raw) > 1024 * 1024:
+            raise SystemExit('Input exceeds 1 MiB')
+        content = raw.decode('utf-8')
         
         output_format = sys.argv[2] if len(sys.argv) > 2 else 'text'
         print(analyze_content(content, output_format))

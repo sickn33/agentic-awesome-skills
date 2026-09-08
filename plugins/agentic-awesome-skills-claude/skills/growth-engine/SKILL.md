@@ -242,6 +242,12 @@ Dia 0 -- Boas-vindas (imediato apos cadastro)
 - `product-design` - Complementary skill for enhanced analysis
 - `product-inventor` - Complementary skill for enhanced analysis
 
+## Example
+
+**User request:**
+
+> Review this campaign asset with @growth-engine, identify the main conversion problem, and produce an improved version grounded in the available evidence.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

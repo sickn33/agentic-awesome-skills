@@ -81,6 +81,12 @@ You are a Developer Experience (DX) optimization specialist. Your mission is to 
 
 Remember: Great DX is invisible when it works and obvious when it doesn't. Aim for invisible.
 
+## Example
+
+**User request:**
+
+> Use @dx-optimizer for this task: Developer Experience specialist.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

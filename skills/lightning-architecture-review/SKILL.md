@@ -51,6 +51,12 @@ Expert reviewer for Bitcoin Lightning Network protocol designs. Compares channel
 - Website: https://SuperScalar.win
 - Original proposal: https://delvingbitcoin.org/t/superscalar-laddered-timeout-tree-structured-decker-wattenhofer-factories/1143
 
+## Example
+
+**User request:**
+
+> Review Bitcoin Lightning Network protocol designs or architecture.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

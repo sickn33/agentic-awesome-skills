@@ -1,6 +1,6 @@
 ---
 name: pricing
-description: When the user wants help with pricing decisions, packaging, or monetization strategy. Also use when the user mentions 'pricing,' 'pricing tiers,' 'freemium,' 'free trial,' 'packaging,' 'price increase,' 'value metric,' 'Van Westendorp,' 'willingness to pay,' 'monetization,' 'how much...
+description: "When the user wants help with pricing decisions, packaging, or monetization strategy."
 risk: safe
 source: https://github.com/coreyhaines31/marketingskills/tree/main/skills/pricing
 source_repo: coreyhaines31/marketingskills

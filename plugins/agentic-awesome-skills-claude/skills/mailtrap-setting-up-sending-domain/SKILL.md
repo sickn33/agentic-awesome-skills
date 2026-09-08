@@ -72,6 +72,12 @@ If the user's provider is not listed, the same rule applies: **copy every record
 
 If your DNS provider **proxies** records (orange-cloud on Cloudflare, similar CDN/proxy modes elsewhere), verification-related records must be **DNS-only** (grey cloud / non-proxied) unless Mailtrap documentation explicitly allows proxying—proxied CNAMEs and similar often break SPF/DKIM verification. The same constraint applies to any host that fronts DNS with a proxy.
 
+## Example
+
+**User request:**
+
+> Add or verify a Mailtrap sending domain, troubleshoot DNS propagation, publish SPF/DKIM/DMARC records, and complete compliance.
+
 ## Limitations
 
 - DNS and compliance screens can change; always copy the exact current records from Mailtrap before publishing DNS.

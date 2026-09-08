@@ -19,6 +19,12 @@ tools: [claude, cursor, codex, antigravity]
 - Use when building a landing page, portfolio, SaaS UI, consumer product page, or app surface that needs premium depth and motion.
 - Use when the design must avoid generic fonts, harsh shadows, static layouts, default navbars, and ordinary Bootstrap-style grids.
 
+## Example
+
+**User request:**
+
+> Review this interface with @high-end-visual-design, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 
 - This skill is visual-design focused; it does not replace brand strategy, conversion research, accessibility validation, or production QA.

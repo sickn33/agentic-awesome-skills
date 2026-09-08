@@ -134,6 +134,12 @@ Orchestrate a comprehensive legacy system modernization using the strangler fig 
 
 Target: $ARGUMENTS
 
+## Example
+
+**User request:**
+
+> Plan a strangler-fig migration for this legacy system, preserving service continuity and defining measurable cutover stages.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

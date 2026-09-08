@@ -7,6 +7,7 @@ description: |
   makepad 入门, 创建 makepad 应用, makepad 教程, makepad 项目结构
 risk: critical
 source: "https://github.com/makepad/makepad"
+date_added: "2026-09-04"
 ---
 
 # Makepad Basics Skill

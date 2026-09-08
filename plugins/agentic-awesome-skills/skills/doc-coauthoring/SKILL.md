@@ -380,6 +380,12 @@ Announce document completion. Provide a few final tips:
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Turn these rough notes into a structured document through an iterative coauthoring workflow.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

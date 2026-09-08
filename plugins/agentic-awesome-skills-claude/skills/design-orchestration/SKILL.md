@@ -168,6 +168,12 @@ This meta-skill exists to enforce the former.
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Review this interface with @design-orchestration, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

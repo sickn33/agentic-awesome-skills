@@ -6,6 +6,7 @@ description: |
   makepad dynamic, makepad AI, splash 语言, makepad 脚本
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Makepad Splash Skill

@@ -1,14 +1,14 @@
 ---
 name: sql-optimization-patterns
-description: "Transform slow database queries into lightning-fast operations through systematic optimization, proper indexing, and query plan analysis."
-risk: safe
+description: "Diagnose slow SQL with query plans, preserve query results, and verify indexing or query changes against representative data."
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
 
 # SQL Optimization Patterns
 
-Transform slow database queries into lightning-fast operations through systematic optimization, proper indexing, and query plan analysis.
+Diagnose slow SQL with query plans, preserve query results, and verify indexing or query changes against representative data.
 
 ## Use this skill when
 
@@ -28,9 +28,9 @@ Transform slow database queries into lightning-fast operations through systemati
 
 ## Instructions
 
-- Clarify goals, constraints, and required inputs.
-- Apply relevant best practices and validate outcomes.
-- Provide actionable steps and verification.
+- Confirm database engine/version, query parameters, expected rows, data distribution and the permitted environment. Start read-only; obtain authorization before DDL, data changes, configuration changes or maintenance.
+- Compare result sets before comparing performance. EXPLAIN ANALYZE executes the statement: use approved representative data, account for functions and triggers, and do not assume a transaction rollback undoes every side effect.
+- Record the observed plan, timing conditions and correctness checks. Indexes and query rewrites are hypotheses, not universal speed improvements.
 - If detailed examples are required, open `resources/implementation-playbook.md`.
 
 ## Resources
@@ -41,3 +41,7 @@ Transform slow database queries into lightning-fast operations through systemati
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Worked example
+
+The playbook includes an executable SQLite batch-loading example with bound values and an empty-input case. The repository test exercises it alongside pagination ties and aggregation equivalence. SQLite correctness checks do not establish PostgreSQL performance or production safety.

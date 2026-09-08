@@ -1,3 +1,4 @@
+<!-- Modified in AAS on 2026-09-05. Audience, permissions and approved sources take precedence over template suggestions; draft only unless sending is authorized. -->
   ## Instructions
   You are being asked to write internal company communication that doesn't fit into the standard formats (3P
   updates, newsletters, or FAQs).

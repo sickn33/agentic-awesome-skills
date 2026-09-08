@@ -41,7 +41,8 @@ If you touch **any of these**:
 - Running `npm run chain` is **NOT optional**.
 - `npm run chain` already includes catalog generation; do not invoke `npm run catalog` again immediately afterward.
 
-For contributor PRs, the contract is now **source-only**:
+For contributor PRs, the contract is now **source-only**. References below to generated `data/*.json` mean files classified by `tools/scripts/generated_files.js`, not every JSON file in `data/`. Editorial inputs such as `data/editorial-bundles.json`, `data/specialized-plugin-candidates.json` and `data/workflows.json` remain source files:
+
 
 - contributors should not commit `CATALOG.md`, `skills_index.json`, or `data/*.json`
 - PR CI previews generated drift but does not require those files in the branch
@@ -119,7 +120,7 @@ Before ANY commit that adds/modifies skills, run the chain:
     ```
     This wraps `chain + sync:web-assets + sync:contributors + audit:consistency` for a full local repo-state refresh; `chain` already generates the catalog.
     The scheduled GitHub Actions workflow `Repo Hygiene` runs this same sweep weekly to catch slow drift on `main`.
-    It also enforces the frozen validation warning budget, so new warnings do not creep in silently while the legacy `135` known warnings remain accepted.
+    It also enforces the frozen validation warning budget using the current maximum in `tools/config/validation-budget.json` (currently zero).
 
     When you need the live GitHub repo metadata updated too, run:
 
@@ -143,6 +144,16 @@ Before ANY commit that adds/modifies skills, run the chain:
     > See [`docs/maintainers/ci-drift-fix.md`](../docs/maintainers/ci-drift-fix.md) for details.
     > Protected `main` never receives an automatic direct push. Canonical drift is published through the fixed `automation/canonical-repo-state` PR only when it stays inside the generated-files contract; unmanaged drift fails closed.
 
+### MCP and CLI pipeline checks
+
+Keep overload errors correlated to bounded, strictly parsed request IDs; valid notifications receive no response, including when the queue is full or a handler fails. Reject invalid envelopes without reflecting invalid IDs, and test the burst path through real stdio. Run the focused Core tests and catalog integrity check, then exercise the installed candidate through the current `verification/aas-preview/run-installed-candidate.mjs` runner when changing the published runtime. Packed smoke is not proof of a real Codex/Claude client session or authorization to change host configuration.
+
+Manifest-to-installer preparation must preserve the exact agent selection and emit only a quoted dry run. Verify runtime auto-resolution against missing, tampered and ambiguous cached identities; it must remain offline, bounded and fully verified. Project analysis and skill choice belong exclusively to the agent. The packed runner must execute a temporary installation, compare complete selected payloads, verify repeat/prune behavior and unmanaged-file preservation, and reject symlink targets and release identity drift. Its publication resolution is a fixture, recorded separately from native-client and live-release evidence; the aggregate rejects missing or failed installation checks. Require both Linux and Windows packed receipts. Execute the emitted PowerShell command with both PowerShell 7 and Windows PowerShell 5.1 on a disposable Windows runner, recording and checking both actual shell versions, including paths with spaces and apostrophes, full payload comparison, repeat/prune behavior and junction rejection. Local Git/publication fixtures are not proof of registry availability or a native client session.
+
+### Specialized plugin updates
+
+Specialized membership comes from `data/specialized-plugin-candidates.json`; installable composition and product copy come from `data/editorial-bundles.json`. These are editorial source inputs. Validate selected IDs against canonical `skills_index.json`, derive the web list and prerender/live-check counts from the source inputs, and test stale-count rejection and complete skill-list access. Keep prose-declared local resources present and byte-identical in generated specialized bundles; the resource regression checks entrypoints, while fenced application examples require semantic review. Exercise documented calculation and chunking fixes with the pure-example regressions. Run bundle generation for validation, then exclude generated plugin folders, marketplaces and bundle docs from the source commit. The protected canonical-sync PR owns those outputs; no release or deployment is implied.
+
 ### B. When You Merge a PR (Step-by-Step)
 
 > **Agent instruction (when analyzing or handling PRs):** Always merge accepted PRs with the guarded `npm run merge:batch` command, which performs GitHub's protected squash merge. Never integrate locally and then close the PR. If a PR was historically closed after local integration, reopen and repair it before using the guarded command so it ends up **Merged**. Contributors must get credit.
@@ -156,11 +167,13 @@ For every canonical `SKILL.md` or tracked bundle-file change, run validation, re
 Changed-skill evidence resolves canonical ownership from the changed path's ancestors rather than scanning the complete skill registry for every Git record. Keep this lookup bounded and preserve the five-minute trusted evaluator budget so repository-wide maintenance batches can complete without weakening fail-closed evidence checks. Legacy canonical `SKILL.md` blobs with executable mode are parsed only as private, non-executable snapshot data; they remain reported as unsafe entries, while symlinks, gitlinks, and every other executable file remain unmaterialized.
 
 1.  **CI is green** — Validation, warning-budget enforcement, README source-credit checks, reference checks, tests, and generated artifact steps passed (see [`.github/workflows/ci.yml`](workflows/ci.yml)). If the PR changes anything under `skills/**` or `plugins/**/skills/**`, the separate [`skill-review` workflow](workflows/skill-review.yml) must also report a truthful outcome.
-2.  **Generated drift understood** — On pull requests, generator drift is informational only. Do not block a good PR solely because canonical artifacts would be regenerated. Also do not accept PRs that directly edit `CATALOG.md`, `skills_index.json`, or `data/*.json`; those files are `main`-owned.
-3.  **Quality Bar** — PR description confirms the [Quality Bar Checklist](.github/PULL_REQUEST_TEMPLATE.md) (metadata, risk label, credits if applicable).
+2.  **Generated drift understood** — On pull requests, generator drift is informational only. Do not block a good PR solely because canonical artifacts would be regenerated. Also do not accept PRs that directly edit `CATALOG.md`, `skills_index.json`, or generated `data/*.json`; those files are `main`-owned.
+3.  **Quality Bar** — PR description confirms the [Quality Bar Checklist](PULL_REQUEST_TEMPLATE.md) (metadata, risk label, credits if applicable).
 4.  **Issue link** — If the PR fixes an issue, the PR description should contain `Closes #N` or `Fixes #N` so GitHub auto-closes the issue on merge.
 
 **Required-CI execution contract:**
+
+- Source-only classification counts the destination of a Git copy as changed; its unchanged origin is not a generated-file mutation. Renames still count both paths. Raw records, blob safety, fork classification and exact-head review remain enforced independently.
 
 - `pr-policy` executes the fork-safety intake with code and dependencies materialized from the exact protected base before the dependent required jobs start. The classifier's `NODE_PATH` must point only at that protected-base worktree, never at pull-request-controlled `node_modules`. This is an early, unprivileged rejection of unsafe fork diffs; `merge:batch` still recomputes the trusted decision and remains the only fork-run approval and merge authority.
 - The reported `impact_profile` is shadow telemetry only. It does not skip, downgrade, or satisfy any required check.
@@ -200,6 +213,8 @@ Use this playbook:
 
 `merge:batch` evaluates the PR as it exists. It does not rewrite or normalize the PR body, and it does not close or reopen the PR to manufacture replacement workflow runs. The reopen procedure below is only for repairing a PR that was historically closed after unsupported local integration.
 
+<a id="if-a-pr-was-closed-after-local-integration-reopen-and-merge"></a>
+
 **If a PR was closed after local integration (reopen and merge):**
 
 If a PR was integrated via local squash and then **closed** (so it shows "Closed" instead of "Merged"), you can still give the contributor credit by reopening it and merging it on GitHub. The merge can be effectively "empty" (no new diff vs `main`); what matters is that the PR ends up **Merged**.
@@ -237,7 +252,7 @@ We used this flow for PRs [#220](https://github.com/sickn33/agentic-awesome-skil
 1.  **If the PR had `Closes #N`** — The issue is closed automatically; no extra action.
 2.  **If an issue was fixed but not linked** — Close it manually and add a comment, e.g.:
     ```text
-    Fixed in #<PR_NUMBER>. Shipped in release vX.Y.Z.
+    Fixed on main in #<PR_NUMBER>. Release availability is separate; name a version only after publication is verified.
     ```
 3.  **Complete the post-batch credits verification below** after the source batch, including a one-PR batch.
 
@@ -294,12 +309,14 @@ We discovered several consistency issues during V4 development. Follow these rul
 
 ### A. Table of Contents (TOC) Anchors
 
-GitHub's anchor generation breaks if headers have emojis.
+Heading punctuation and emoji affect the generated anchor. Check the actual target instead of guessing its slug.
 
 - **BAD**: `## 🚀 New Here?` -> Anchor: `#--new-here` (Broken)
 - **GOOD**: `## New Here?` -> Anchor: `#new-here` (Clean)
 
-**Rule**: **NEVER put emojis in H2 (`##`) headers.** Put them in the text below if needed.
+For new headings, prefer plain text. Existing emoji headings may remain, but their table-of-contents links must match the generated anchors.
+
+The repository documentation regression is `tools/scripts/tests/test_documentation_consistency.py`, included in `npm test`. It checks active local Markdown targets and anchors, declared npm scripts with explicit example/history exceptions, and protected-maintenance documentation boundaries. It does not validate external websites or execute every skill procedure. Keep dated evidence and backup snapshots clearly separate from active guides.
 
 ### B. The "Trinity" of Docs
 
@@ -372,13 +389,20 @@ Reject any PR that fails this:
 5.  **Risk Limits**: If the skill includes shell/network/filesystem/mutation guidance, instructions include explicit prerequisites and warnings.
 6.  **Repo Security Scan**: Run `npm run security:docs` for command-heavy, network-execution, or token-like guidance in `SKILL.md`.
 
-### B. Risk Labels (V4)
+Scoped content reviews may publish file fingerprints, observed checks and remaining
+corpus debt. These are historical evidence, not reliability badges or substitutes for
+exact-head review. Preserve the compatibility IDs and complete local support bundles
+listed in `docs/contributors/content-aliases.json`; validate their equality when editing
+a shared procedure. The existing `content_alias_integrity.test.js` regression covers
+missing files and divergent aliases without influencing Core selection eligibility.
 
-- ⚪ **Safe**: Default.
-- 🔴 **Risk**: Destructive/Security tools. MUST have `[Authorized Use Only]` warning.
-- 🟣 **Official**: Vendor mirrors only.
+### B. Risk labels and provenance
+
+Use the actual `risk` values: `none`, `safe`, `critical`, `offensive`, or `unknown`. See the [quality bar](../docs/contributors/quality-bar.md) for their meanings. `offensive` guidance requires an Authorized Use Only boundary. Official/vendor origin is provenance (`source_type`), not a risk value or safety guarantee.
 
 ---
+
+<a id="4-release-workflow"></a>
 
 ## 4. 🚀 Release Workflow
 
@@ -426,7 +450,7 @@ Preflight verification → Changelog → repository/plugin convergence → `npm 
     Manual GitHub UI publication is emergency-only and does not waive the protected-merge, identity, or full-alignment gates below.
 
 5.  **Publish to npm** (so `npx agentic-awesome-skills` works):
-    - The normal path is CI: publishing the protected GitHub Release triggers [Publish to npm](.github/workflows/publish-npm.yml), which publishes the stable version to `latest` and a prerelease to `next` when `NPM_TOKEN` is configured.
+    - The normal path is CI: publishing the protected GitHub Release triggers [Publish to npm](workflows/publish-npm.yml), which publishes the stable version to `latest` and a prerelease to `next` when `NPM_TOKEN` is configured.
     - Manual `npm publish` is emergency-only. It must publish the exact protected tag contents with the intended dist-tag and does not waive any verification below.
 
 6.  **Run the mandatory full-release-alignment gate**:
@@ -571,7 +595,7 @@ If GitHub does not support pinning via API, create/update the discussion program
 | Situation                                                | Action                                                                                         |
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | PR merges and PR body contains `Closes #N` or `Fixes #N` | GitHub closes the issue automatically.                                                         |
-| PR merges but did not reference the issue                | After merge, close manually: `gh issue close N --comment "Fixed in #<PR>. Shipped in vX.Y.Z."` |
+| PR merges but did not reference the issue                | After merge, close manually: `gh issue close N --comment "Fixed on main in #<PR>."` |
 | Fix/feature shipped in a release, no PR referenced       | Close with: `gh issue close N --comment "Shipped in vX.Y.Z. See CHANGELOG."`                   |
 
 ### 📋 Changelog Entry Template
@@ -622,9 +646,9 @@ _Upgrade now: `git pull origin main` to fetch the latest skills._
 
 If a skill is found to be harmful or broken:
 
-1.  **Move to broken folder** (don't detect): `mv skills/bad-skill skills/.broken/`
-2.  **Or Add Warning**: Add `> [!WARNING]` to the top of `SKILL.md`.
-3.  **Push Immediately**.
+1. Preserve evidence and assess the affected workflow on a topic branch. Do not silently move canonical IDs into a hidden directory.
+2. Repair the content or add a scoped warning after the frontmatter. Review the complete skill subtree and run the required checks.
+3. Push the topic branch and use the protected `merge:batch` flow with exact-head review; let canonical sync update distributions. Publish a release only when separately authorized.
 
 ---
 

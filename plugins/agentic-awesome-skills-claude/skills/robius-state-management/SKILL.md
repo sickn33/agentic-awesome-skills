@@ -7,6 +7,7 @@ description: |
   状态持久化, 主题切换
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Robius State Management Skill

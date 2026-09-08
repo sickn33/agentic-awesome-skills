@@ -1,11 +1,11 @@
 {
   "name": "agentic-awesome-skills",
-  "version": "16.7.0",
+  "version": "16.9.1",
   "aasCore": {
     "includedFromMajor": 15,
     "status": "agent-first-preview"
   },
-  "description": "AAS Core: complete local skill discovery, agent-owned selection, stack validation, and planning, backed by 2,111+ agentic skills.",
+  "description": "AAS Core: complete local skill discovery, agent-owned selection, stack validation, and planning, backed by 2,113+ agentic skills.",
   "license": "MIT",
   "scripts": {
     "validate": "node tools/scripts/run-python.js tools/scripts/validate_skills.py",
@@ -109,7 +109,10 @@
     "skills",
     "skills_index.json",
     "tools/bin",
-    "tools/lib"
+    "tools/lib",
+    "!**/__pycache__/**",
+    "!**/*.pyc",
+    "!**/*.pyo"
   ],
   "keywords": [
     "aas-core",
