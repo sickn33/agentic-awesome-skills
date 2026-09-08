@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-06T14:45:34.000Z",
-  "total": 2113,
+  "total": 2115,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -10691,6 +10691,41 @@
         "writing"
       ],
       "path": "skills/brave-man/SKILL.md"
+    },
+    {
+      "id": "break-ai-fix-loops",
+      "canonical_id": "break-ai-fix-loops",
+      "name": "break-ai-fix-loops",
+      "description": "Stop ineffective AI coding repair loops with stable failure fingerprints, a three-attempt budget, real-path proof, negative controls, and tested rollback.",
+      "category": "code-quality",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "twoicewoo/awesome-copilot",
+      "license": "MIT",
+      "license_source": "https://github.com/twoicewoo/awesome-copilot/blob/886bf799bb05501bfd1afa7aae9cc5a77dedb03e/LICENSE",
+      "tags": [
+        "ai-agents",
+        "debugging",
+        "verification",
+        "negative-control",
+        "rollback"
+      ],
+      "triggers": [
+        "ai-agents",
+        "debugging",
+        "verification",
+        "negative-control",
+        "rollback",
+        "break",
+        "ai",
+        "fix",
+        "loops",
+        "stop",
+        "ineffective",
+        "coding"
+      ],
+      "path": "skills/break-ai-fix-loops/SKILL.md"
     },
     {
       "id": "brendangregg-use-tsa",
@@ -51108,6 +51143,41 @@
         "backed"
       ],
       "path": "skills/skill-optimizer/SKILL.md"
+    },
+    {
+      "id": "skill-porter",
+      "canonical_id": "skill-porter",
+      "name": "skill-porter",
+      "description": "Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity.",
+      "category": "developer-tools",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Pranav-Nexus/antigravity-skill-porter",
+      "license": "MIT",
+      "license_source": "https://github.com/Pranav-Nexus/antigravity-skill-porter/blob/7a5b42c0fe1be283ae9f5b5fe70792aa78733af7/LICENSE",
+      "tags": [
+        "antigravity",
+        "claude",
+        "skills",
+        "migration",
+        "agent"
+      ],
+      "triggers": [
+        "antigravity",
+        "claude",
+        "skills",
+        "migration",
+        "agent",
+        "skill",
+        "porter",
+        "preview",
+        "conservative",
+        "name",
+        "translations",
+        "copy"
+      ],
+      "path": "skills/skill-porter/SKILL.md"
     },
     {
       "id": "skill-rails-upgrade",

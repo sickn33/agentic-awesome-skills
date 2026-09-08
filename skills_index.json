@@ -8865,6 +8865,39 @@
     }
   },
   {
+    "id": "break-ai-fix-loops",
+    "path": "skills/break-ai-fix-loops",
+    "category": "code-quality",
+    "name": "break-ai-fix-loops",
+    "description": "Stop ineffective AI coding repair loops with stable failure fingerprints, a three-attempt budget, real-path proof, negative controls, and tested rollback.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "twoicewoo/awesome-copilot",
+    "license": "MIT",
+    "license_source": "https://github.com/twoicewoo/awesome-copilot/blob/886bf799bb05501bfd1afa7aae9cc5a77dedb03e/LICENSE",
+    "tags": [
+      "ai-agents",
+      "debugging",
+      "verification",
+      "negative-control",
+      "rollback"
+    ]
+  },
+  {
     "id": "brendangregg-use-tsa",
     "path": "skills/brendangregg-use-tsa",
     "category": "devops",
@@ -42916,6 +42949,39 @@
         "target_specific_home_path"
       ]
     }
+  },
+  {
+    "id": "skill-porter",
+    "path": "skills/skill-porter",
+    "category": "developer-tools",
+    "name": "skill-porter",
+    "description": "Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "Pranav-Nexus/antigravity-skill-porter",
+    "license": "MIT",
+    "license_source": "https://github.com/Pranav-Nexus/antigravity-skill-porter/blob/7a5b42c0fe1be283ae9f5b5fe70792aa78733af7/LICENSE",
+    "tags": [
+      "antigravity",
+      "claude",
+      "skills",
+      "migration",
+      "agent"
+    ]
   },
   {
     "id": "skill-rails-upgrade",

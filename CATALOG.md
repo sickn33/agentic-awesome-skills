@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-06T14:45:34.000Z
 
-Total skills: 2113
+Total skills: 2115
 
 ## agent-behavior (5)
 
@@ -705,11 +705,12 @@ Total skills: 2113
 | `typescript-pro` | Master TypeScript with advanced types, generics, and strict type safety. Handles complex type systems, decorators, and enterprise-grade patterns. | safe | community | typescript | typescript, pro, types, generics, strict, type, safety, complex, decorators, enterprise, grade |
 | `unreal-engine-cpp-pro` | Expert guide for Unreal Engine 5.x C++ development, covering UObject hygiene, performance patterns, and best practices. | safe | self | unreal, engine, cpp | unreal, engine, cpp, pro, development, covering, uobject, hygiene, performance |
 
-## code-quality (17)
+## code-quality (18)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `babysit-pr` | Babysit a pull request through its bot review rounds: verify, fix, reply, resolve. Use for any babysit or watch-the-PR ask. | critical | amElnagdy/review-skills | babysit, pr | babysit, pr, pull, request, through, bot, review, rounds, verify, fix, reply, resolve |
+| `break-ai-fix-loops` | Stop ineffective AI coding repair loops with stable failure fingerprints, a three-attempt budget, real-path proof, negative controls, and tested rollback. | critical | twoicewoo/awesome-copilot | ai-agents, debugging, verification, negative-control, rollback | ai-agents, debugging, verification, negative-control, rollback, break, ai, fix, loops, stop, ineffective, coding |
 | `clean-code` | This skill embodies the principles of "Clean Code" by Robert C. Martin (Uncle Bob). Use it to transform "code that works" into "code that is clean." | safe | ClawForge (https://github.com/jackjin1997/ClawForge) | clean, code | clean, code, skill, embodies, principles, robert, martin, uncle, bob, transform, works |
 | `code-refactoring-refactor-clean` | You are a code refactoring expert specializing in clean code principles, SOLID design patterns, and modern software engineering best practices. Analyze and r... | critical | community | code, refactoring, refactor, clean | code, refactoring, refactor, clean, specializing, principles, solid, software, engineering, analyze, provided, improve |
 | `code-review-checklist` | Comprehensive checklist for conducting thorough code reviews covering functionality, security, performance, and maintainability | critical | community | code, checklist | code, checklist, review, conducting, thorough, reviews, covering, functionality, security, performance, maintainability |
@@ -1024,7 +1025,7 @@ Total skills: 2113
 | `design-it/widget-based-design` | Web and App implementation guide for Widget-Based Design. Trigger when user wants modular blocks, iOS Home Screen aesthetics, and customizable mini-apps. | safe | self | it/widget, based | it/widget, based, widget, web, app, trigger, user, wants, modular, blocks, ios, home |
 | `design-it/y2k-design` | Web and App implementation guide for Y2K Design. Trigger when user wants chrome effects, futuristic 2000s look, blob shapes, and tech optimism. | safe | self | it/y2k | it/y2k, y2k, web, app, trigger, user, wants, chrome, effects, futuristic, 2000s, look |
 
-## developer-tools (5)
+## developer-tools (6)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1032,6 +1033,7 @@ Total skills: 2113
 | `gh-attach` | Upload and download GitHub user-attachments (screenshots, PDFs, zips, videos) from the terminal; use when asked to attach or embed a file in a PR, issue, or ... | critical | sudosubin/gh-attach | github, attachments, screenshots, gh-extension, cli | github, attachments, screenshots, gh-extension, cli, gh, attach, upload, download, user, pdfs, zips |
 | `gh-image` | Upload local images to GitHub and get canonical user-attachments embed URLs; use when asked to attach a screenshot to a PR, issue, or comment, or to embed be... | critical | drogers0/gh-image | github, images, screenshots, gh-extension, cli | github, images, screenshots, gh-extension, cli, gh, image, upload, local, get, canonical, user |
 | `mcp-tool-developer` | Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publi... | safe | demo112/yunqu-ai-skills | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol | mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol, developer, model, context, protocol, servers |
+| `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
 ## development (187)

@@ -7052,6 +7052,25 @@
       "runtime_files": []
     },
     {
+      "id": "break-ai-fix-loops",
+      "path": "skills/break-ai-fix-loops",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "brendangregg-use-tsa",
       "path": "skills/brendangregg-use-tsa",
       "targets": {
@@ -33596,6 +33615,25 @@
       "runtime_files": []
     },
     {
+      "id": "skill-porter",
+      "path": "skills/skill-porter",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "skill-rails-upgrade",
       "path": "skills/skill-rails-upgrade",
       "targets": {
@@ -40608,10 +40646,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2113,
+    "total_skills": 2115,
     "supported": {
-      "codex": 2033,
-      "claude": 2055
+      "codex": 2035,
+      "claude": 2057
     },
     "blocked": {
       "codex": 80,
