@@ -204,3 +204,8 @@ Decision: PROVEN.
 - `closed-loop-delivery` spans acceptance through delivery; this skill is the narrower anti-stagnation and verifier-falsification protocol for repair loops.
 - `audit-agent-run-evidence` performs a read-only post-run audit; this skill governs the repair while it is happening.
 
+
+## Source and license
+
+The upstream MIT copyright and permission notice is preserved in
+[LICENSE](LICENSE), alongside the commit-pinned provenance above.
