@@ -9,6 +9,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [17.0.0] - 2026-09-08 - "Evidence, Portable Bundles, and Grounded Profiles"
+
+A skill-library release for Claude Code, Cursor, Codex CLI and Gemini CLI,
+with bounded repair evidence, conservative local bundle adaptation, and a more
+conversational LinkedIn profile workflow. The catalog contains 2,115 skills.
+Existing agent-owned selection and installation interfaces remain supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.0.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- `break-ai-fix-loops`: a three-attempt repair workflow with stable symptom
+  fingerprints, real-path evidence, negative controls and disposable rollback
+  checks. Its local Python helper validates fingerprint records.
+- `skill-porter`: preview conservative tool-name substitutions and copy complete
+  local skill bundles to fresh destinations. Preserve support bytes and source
+  metadata; reject links, special files and overwrites. Remote acquisition and
+  semantic adaptation remain separate reviewed steps, not automatic conversion.
+
+### Improved
+
+- LinkedIn profile rewrites collect missing source material conversationally,
+  honor the user's delivery preferences and ground skills and achievements in
+  evidence. Supporting research uses relevant public source links; illustrative
+  metrics are explicitly fictional.
+- Preserve upstream MIT license notices in both new bundles.
+- Permit the two reviewed script-bearing contributions through a protected-base
+  ledger bound to their complete skill trees. Exact-current-head review, source
+  checks, mode/path/size restrictions and strict branch protection remain required.
+
+### Validation scope
+
+Local repository checks, bundled helper tests and a real temporary-workspace
+porter invocation cover the changed behavior. Text translation does not certify
+Antigravity tool compatibility or execute imported skills. GitHub security and
+root/web dependency audits were rechecked during maintenance.
+
+Thanks to @twoicewoo (#1337), @Pranav-Nexus (#1413), and
+@WHOISABHISHEKADHIKARI (#1379) for their contributions.
+
+
 ## [16.9.1] - 2026-09-06 - "Security Fixes and Safer Local Files"
 
 A corrective release for AAS users on Claude Code, Cursor, Codex CLI and Gemini CLI.

@@ -52,3 +52,9 @@ Every stable or prerelease version must finish with the full-release-alignment g
 #### Skill Content Review Gate
 
 For every canonical `SKILL.md` change or tracked bundle-file change, run `npm run validate`, `npm run validate:references`, `npm run security:docs`, and the relevant tests. Inspect semantics, safety, provenance, declared risk, limitations, and every bundled file. The official merge gate remains a truthful Tessl `review` or a maintainer review attested to the exact full head SHA; heuristic local scores and inferred risk labels are not merge authority.
+
+Reviewed fork bundle exceptions are restricted to the protected-base ledger in
+`tools/config/reviewed-fork-skills.json` and the current maintainer skill. They
+bind a complete previously reviewed skill tree and still require exact-current-head
+attestation, all required checks and strict protection; no general script allowlist
+or PR-controlled ledger is authorized.

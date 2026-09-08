@@ -1469,7 +1469,7 @@ Total skills: 2113
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `indexing-issue-auditor` | High-level technical SEO and site architecture auditor. Invoke to scan local or live environments for indexing, crawl budget, and structural errors. | safe | self | seo, architecture, indexing, crawler, sitemap | seo, architecture, indexing, crawler, sitemap, issue, auditor, high, level, technical, site, invoke |
-| `linkedin-profile-optimizer` | High-intent expert for LinkedIn profile checks, authority building, and SEO optimization. Invoke to audit, rewrite, and enhance profiles for top 1% positioning. | safe | self | linkedin, branding, career, growth, personal-brand | linkedin, branding, career, growth, personal-brand, profile, optimizer, high, intent, checks, authority, building |
+| `linkedin-profile-optimizer` | High-intent expert for LinkedIn profile checks and SEO optimization. Silently audits and rewrites profiles, delivering only the finished, ready-to-paste result. | safe | self | linkedin, branding, career, growth, personal-brand | linkedin, branding, career, growth, personal-brand, profile, optimizer, high, intent, checks, seo, optimization |
 | `social-post-writer-seo` | Social Media Strategist and Content Writer. Creates clear, engaging social media posts for Instagram, LinkedIn, and Facebook. | safe | self | social-media, marketing, content-writing, seo, growth | social-media, marketing, content-writing, seo, growth, social, post, writer, media, strategist, content, creates |
 
 ## health (17)

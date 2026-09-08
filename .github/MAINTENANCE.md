@@ -263,6 +263,26 @@ We used this flow for PRs [#220](https://github.com/sickn33/agentic-awesome-skil
 - The script keeps the GitHub-only squash merge rule, handles guarded fork-run approvals, waits on required checks bound to the current PR and exact head, and hands contributor/generated drift to the protected canonical-sync lane. It does not run `sync:contributors` itself, mutate PR metadata, close/reopen PRs, or retry base drift; rerun it from fresh `origin/main` whenever the base or head moves. Sensitive repository-wide source changes use the same-repository exception only when the PR is authored by the repository owner and its exact full head SHA is attested; collaborator-authored sensitive PRs remain under the external safety policy.
 - It is intentionally not a conflict resolver. If a PR is conflicting, stop and follow the manual conflict playbook.
 
+
+### Reviewed fork bundle exceptions
+
+`tools/config/reviewed-fork-skills.json` is a protected-base ledger for the two
+explicitly reviewed fork contributions #1337 and #1413. Each entry binds the
+base repository, fork repository, PR number, original full reviewed head and
+complete Git skill-tree object. It permits only Python files under that skill's
+`scripts/` subtree and its root `LICENSE`, with a read-only Git copy origin when
+needed. It does not allow workflows, arbitrary script types, generated-file
+mutations, unsafe modes, links, invalid paths/objects or oversized content.
+
+Both CI intake and `merge:batch` load the ledger from their trusted evaluator
+checkout, never the PR's repository directory. Any change anywhere in the skill
+subtree invalidates the exception. A base-only merge may reuse identical content,
+but the maintainer must inspect the new complete PR diff and attest its exact
+current head with `--reviewed-head`. Evidence, source-only checks, truthful skill
+review, immutable PR/workflow binding and strict branch protection all remain
+mandatory. Missing or malformed ledger data fails closed. Further exceptions or
+policy expansions need explicit maintainer authorization and protected review.
+
 ### C. Post-Batch Credits Verification
 
 After every source batch, including a one-PR batch, verify that both README credit surfaces converge correctly on protected `main`:
