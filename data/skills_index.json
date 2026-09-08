@@ -27937,7 +27937,7 @@
     "path": "skills/linkedin-profile-optimizer",
     "category": "growth",
     "name": "linkedin-profile-optimizer",
-    "description": "High-intent expert for LinkedIn profile checks, authority building, and SEO optimization. Invoke to audit, rewrite, and enhance profiles for top 1% positioning.",
+    "description": "High-intent expert for LinkedIn profile checks and SEO optimization. Silently audits and rewrites profiles, delivering only the finished, ready-to-paste result.",
     "risk": "safe",
     "source": "self",
     "date_added": "2026-04-13",
