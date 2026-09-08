@@ -49,6 +49,26 @@ Use `--dry-run` to exercise local classification without approving a run or merg
 - call GitHub's immediate squash-merge endpoint and continue only when it reports `merged: true`
 - pull the protected `main`; its trusted workflow opens a canonical-sync bot PR for generated artifacts and contributor credits when needed
 
+
+### Reviewed fork bundle exceptions
+
+`tools/config/reviewed-fork-skills.json` is a protected-base ledger for the two
+explicitly reviewed fork contributions #1337 and #1413. Each entry binds the
+base repository, fork repository, PR number, original full reviewed head and
+complete Git skill-tree object. It permits only Python files under that skill's
+`scripts/` subtree and its root `LICENSE`, with a read-only Git copy origin when
+needed. It does not allow workflows, arbitrary script types, generated-file
+mutations, unsafe modes, links, invalid paths/objects or oversized content.
+
+Both CI intake and `merge:batch` load the ledger from their trusted evaluator
+checkout, never the PR's repository directory. Any change anywhere in the skill
+subtree invalidates the exception. A base-only merge may reuse identical content,
+but the maintainer must inspect the new complete PR diff and attest its exact
+current head with `--reviewed-head`. Evidence, source-only checks, truthful skill
+review, immutable PR/workflow binding and strict branch protection all remain
+mandatory. Missing or malformed ledger data fails closed. Further exceptions or
+policy expansions need explicit maintainer authorization and protected review.
+
 ## What It Automates
 
 - exact-head required-check polling

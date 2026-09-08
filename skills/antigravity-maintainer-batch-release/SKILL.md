@@ -78,6 +78,26 @@ Before changing anything:
    - Verify its managed-only diff, required checks, merge result, and the resulting `origin/main`.
    - If an unmanaged repair remains, use a topic PR; never patch `main` directly.
 
+
+### Reviewed fork bundle exceptions
+
+`tools/config/reviewed-fork-skills.json` is a protected-base ledger for the two
+explicitly reviewed fork contributions #1337 and #1413. Each entry binds the
+base repository, fork repository, PR number, original full reviewed head and
+complete Git skill-tree object. It permits only Python files under that skill's
+`scripts/` subtree and its root `LICENSE`, with a read-only Git copy origin when
+needed. It does not allow workflows, arbitrary script types, generated-file
+mutations, unsafe modes, links, invalid paths/objects or oversized content.
+
+Both CI intake and `merge:batch` load the ledger from their trusted evaluator
+checkout, never the PR's repository directory. Any change anywhere in the skill
+subtree invalidates the exception. A base-only merge may reuse identical content,
+but the maintainer must inspect the new complete PR diff and attest its exact
+current head with `--reviewed-head`. Evidence, source-only checks, truthful skill
+review, immutable PR/workflow binding and strict branch protection all remain
+mandatory. Missing or malformed ledger data fails closed. Further exceptions or
+policy expansions need explicit maintainer authorization and protected review.
+
 ## Workflow Contract Change Gate
 
 When changing maintainer scripts, workflows, or policy, update the canonical skill, maintainer documentation, and regression tests in the same source PR. Add a negative test for every failure mode being fixed, run the relevant dry-run path, and reject any implementation/documentation mismatch. Source PRs must exclude generated registries and plugin mirrors; the protected canonical-sync PR owns that derived state, except for files intentionally staged by the scripted protected-release flow.

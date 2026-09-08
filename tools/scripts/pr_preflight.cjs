@@ -182,6 +182,8 @@ function loadPullRequestEvent(eventPath) {
   return JSON.parse(rawEvent).pull_request || null;
 }
 
+const { resolveReviewedSkillRoots } = require("../lib/reviewed-fork-skills");
+
 function evaluateForkSafety(projectRoot, changeRecords, pullRequest) {
   if (!pullRequest) {
     return { applicable: false, approvalSafe: true, reasons: [], requiresHumanReview: false };
@@ -213,12 +215,16 @@ function evaluateForkSafety(projectRoot, changeRecords, pullRequest) {
     };
   }
 
-  const preliminary = classifyChangeRecords(changeRecords, { requireBlobSizes: false });
+  const reviewedSkillRoots = resolveReviewedSkillRoots(projectRoot, {
+    pr: pullRequest.number, baseRepository: pullRequest.base.repo.full_name,
+    headRepository: pullRequest.head.repo.full_name, head: pullRequest.head.sha,
+  });
+  const preliminary = classifyChangeRecords(changeRecords, { requireBlobSizes: false, reviewedSkillRoots });
   if (!preliminary.approvalSafe) {
     return { applicable: true, ...preliminary };
   }
   const blobSizes = resolveBlobSizes(projectRoot, changeRecords);
-  return { applicable: true, ...classifyChangeRecords(changeRecords, { blobSizes }) };
+  return { applicable: true, ...classifyChangeRecords(changeRecords, { blobSizes, reviewedSkillRoots }) };
 }
 
 function appendGithubOutput(result) {

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "pr": 1337,
+      "base_repository": "sickn33/agentic-awesome-skills",
+      "head_repository": "twoicewoo/agentic-awesome-skills",
+      "skill_root": "skills/break-ai-fix-loops",
+      "reviewed_head": "d37495c6854ecc9d94751899eb3d5e2662dd7723",
+      "tree_oid": "1e5184dcd44eb1130d7f32ff246e424cba21a23f"
+    },
+    {
+      "pr": 1413,
+      "base_repository": "sickn33/agentic-awesome-skills",
+      "head_repository": "Pranav-Nexus/agentic-awesome-skills",
+      "skill_root": "skills/skill-porter",
+      "reviewed_head": "43b06dfdf31482297fc140a8cf7adc31194adc33",
+      "tree_oid": "accbfb34570362bb4422985bd487f22d2f2c7acb"
+    }
+  ]
+}

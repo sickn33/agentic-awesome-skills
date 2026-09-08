@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const { isReviewedSupportPath } = require("./reviewed-fork-skills");
+
 const { findProjectRoot } = require("./project-root");
 
 const DOC_PREFIXES = ["docs/"];
@@ -241,7 +243,17 @@ function classifyChangeRecords(records, options = {}) {
         continue;
       }
 
-      const pathPolicy = classifyPathPolicy(filePath);
+      let pathPolicy = classifyPathPolicy(filePath);
+      const reviewedRoots = options.reviewedSkillRoots || [];
+      const reviewedSupport = isReviewedSupportPath(filePath, reviewedRoots);
+      // A Git copy reads its origin; only its destination changes. The original
+      // side still passes raw-path, mode, object, size and total-budget checks.
+      const reviewedCopyOrigin = status === "C" && side === "old"
+        && isReviewedSupportPath(record.new_path || "", reviewedRoots);
+      if ((reviewedSupport || reviewedCopyOrigin) && validateRawRepoPath(filePath).safe) {
+        pathPolicy = { safe: true, sensitive: false, approvalSafe: true,
+          kind: reviewedSupport ? "skill_support" : "reviewed_copy_origin", reasons: [] };
+      }
       paths.push({ record: index, side, path: filePath, ...pathPolicy });
       if (!pathPolicy.approvalSafe) {
         sensitive = true;
