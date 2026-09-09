@@ -128,6 +128,12 @@ Before ANY commit that adds/modifies skills, run the chain:
     npm run sync:github-about
     npm run audit:consistency:github
     ```
+    The approved GitHub About text is rendered by `build_about_description` in
+    `tools/scripts/sync_repo_metadata.py`. Preserve the community-token mint, fee
+    disclosure and trading non-endorsement alongside the software description;
+    keep it aligned with [Funding & transparency](../docs/users/funding-transparency.md)
+    and within 350 characters. Publish the linked page before applying the About.
+
     For a read-only summary of current repo health, run:
     ```bash
     npm run audit:maintainer

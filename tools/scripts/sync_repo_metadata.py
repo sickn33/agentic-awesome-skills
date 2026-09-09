@@ -93,10 +93,13 @@ BUNDLES_FOOTER_RE = re.compile(
 
 
 def build_about_description(metadata: dict) -> str:
+    # Keep this approved disclosure aligned with docs/users/funding-transparency.md.
     return (
-        "AAS Core is the local, agent-first control plane for complete catalog discovery, agent-owned selection, "
-        f"stack validation, and planning, backed by {metadata['total_skills_label']} agentic skills. "
-        "Includes CLI, local MCP, catalog, plugins, and Workbench."
+        "AAS Core: local skill discovery, agent-owned selection and stack planning. "
+        "CLI, MCP, plugins and Workbench. Community-managed token: "
+        "3PoVcc3rDcp5HC3C92Sx6WguMDqGzpK6RtbF9tR8pump · "
+        "Maintainer receives fees; does not endorse trading — "
+        "see Funding & transparency in README."
     )
 
 

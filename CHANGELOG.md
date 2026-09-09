@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- Publish [Funding & transparency](docs/users/funding-transparency.md), linked from
+  the README support section and documentation index, with the community-token
+  mint, maintainer fee receipt and trading non-endorsement. Keep the approved
+  GitHub About wording in metadata synchronization so maintenance preserves it.
+
 ## [17.0.0] - 2026-09-08 - "Evidence, Portable Bundles, and Grounded Profiles"
 
 A skill-library release for Claude Code, Cursor, Codex CLI and Gemini CLI,

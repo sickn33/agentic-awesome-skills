@@ -4,6 +4,8 @@ Current operational guidance lives in `users/`, `contributors/`, and the current
 
 ## Users
 
+- [Funding & transparency](users/funding-transparency.md) — community-managed token, maintainer fees, and other ways to support the project
+
 - [`users/aas-core.md`](users/aas-core.md) — canonical AAS Core preview guide
 - [`users/getting-started.md`](users/getting-started.md)
 - [`users/usage.md`](users/usage.md)

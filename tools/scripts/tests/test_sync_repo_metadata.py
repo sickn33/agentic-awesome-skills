@@ -172,15 +172,21 @@ The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
             self.assertIn("1,304+ skill", jetski_cortex)
             self.assertNotIn("1,1", jetski_cortex)
 
-    def test_build_about_description_uses_live_skill_count(self):
-        description = sync_repo_metadata.build_about_description(
-            {
-                "total_skills_label": "1,304+",
-            }
-        )
-        self.assertIn("AAS Core is the local, agent-first control plane", description)
-        self.assertIn("1,304+ agentic skills", description)
-        self.assertIn("local MCP", description)
+    def test_about_preserves_approved_funding_disclosure(self):
+        description = sync_repo_metadata.build_about_description({"total_skills_label": "1,304+"})
+        self.assertLessEqual(len(description), 350)
+        self.assertIn("AAS Core: local skill discovery", description)
+        self.assertIn("CLI, MCP, plugins and Workbench", description)
+        self.assertIn("Maintainer receives fees; does not endorse trading", description)
+        self.assertIn("see Funding & transparency in README", description)
+        mint = "3PoVcc3rDcp5HC3C92Sx6WguMDqGzpK6RtbF9tR8pump"
+        self.assertIn(mint, description)
+        root = Path(__file__).resolve().parents[3]
+        page = (root / "docs/users/funding-transparency.md").read_text()
+        self.assertIn(f"`{mint}`", page)
+        self.assertIn("docs/users/funding-transparency.md", (root / "README.md").read_text())
+        # A later catalog-count refresh must not erase the approved disclosure.
+        self.assertEqual(description, sync_repo_metadata.build_about_description({"total_skills_label": "9,999+"}))
 
     def test_core_release_capability_is_major_based_and_fail_closed(self):
         self.assertEqual(
