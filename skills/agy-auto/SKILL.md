@@ -2,7 +2,7 @@
 name: agy-auto
 description: "Configure agy-auto PreToolUse security gate to run Antigravity CLI (agy) unattended with layered policy controls instead of --dangerously-skip-permissions."
 category: security
-risk: safe
+risk: critical
 source: community
 source_repo: onkarbadve/agy-auto
 source_type: community
@@ -28,13 +28,25 @@ tools: [antigravity]
 
 ## How It Works
 
-### Step 1: Install agy-auto
+### Step 1: Review, Pin, and Install agy-auto
 
-Choose either the Native Plugin method or the Global Hook installer:
+> [!IMPORTANT]
+> Because `agy-auto` installs as an active PreToolUse hook on the permission evaluation path, never clone a mutable branch directly into your live plugin directory. Always clone to a temporary staging folder, pin an immutable release tag or commit SHA, and inspect the codebase before making the hook executable.
 
 **Option A: Native Antigravity Plugin (Recommended)**
 ```bash
-git clone https://github.com/onkarbadve/agy-auto.git ~/.gemini/config/plugins/agy-auto
+# 1. Clone into a temporary review directory and checkout an immutable release tag
+git clone https://github.com/onkarbadve/agy-auto.git /tmp/agy-auto-review
+cd /tmp/agy-auto-review
+git checkout v0.2.0-alpha
+
+# 2. Inspect hook.sh and engine/ files before deployment
+less hook.sh
+python3 -m unittest -v tests/test_engine.py
+
+# 3. Once reviewed and verified, copy to the Antigravity plugin directory and set permissions
+mkdir -p ~/.gemini/config/plugins/agy-auto
+cp -r . ~/.gemini/config/plugins/agy-auto/
 chmod +x ~/.gemini/config/plugins/agy-auto/hook.sh
 ```
 
@@ -47,10 +59,14 @@ Ensure `toolPermission: "always-proceed"` is configured in `~/.gemini/antigravit
 
 **Option B: Global Hook via Installer**
 ```bash
+# 1. Clone to an isolated location and pin release
 git clone https://github.com/onkarbadve/agy-auto.git ~/.local/share/agy-auto
 cd ~/.local/share/agy-auto
+git checkout v0.2.0-alpha
+
+# 2. Review and run the installer
 chmod +x hook.sh
-./install.sh
+./install.sh                  # registers hook in hooks.json, sets always-proceed, runs smoke tests
 ```
 
 ### Step 2: Policy Evaluation Layers
