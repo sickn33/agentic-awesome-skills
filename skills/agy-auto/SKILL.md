@@ -9,6 +9,8 @@ source_type: community
 date_added: "2026-09-11"
 author: onkarbadve
 tags: [antigravity, agy, security, permissions, sandboxing, guardrails, cli]
+license: "MIT"
+license_source: "https://github.com/onkarbadve/agy-auto/blob/main/LICENSE"
 tools: [antigravity]
 ---
 
@@ -106,6 +108,12 @@ agy --add-dir . -p "Run test suite and fix failing cases"
   **Solution:** Increase `timeout_s` in `~/.gemini/config/agy-auto/policy.toml` (especially when running local LLMs on integrated graphics), or verify your `GEMINI_API_KEY`.
 - **Problem:** Changes to `policy.toml` or `hook.sh` are blocked by `[agy-auto/hard_deny]`.
   **Solution:** `agy-auto` enforces self-protection against agents tampering with the security gate. Edit policy files directly from your own shell.
+
+## Limitations
+
+- `agy-auto` only intercepts actions performed via tool calls (e.g. `run_command`, `write_to_file`); it cannot restrict internal LLM network reasoning or Antigravity's own internal context-gathering file reads.
+- Requires `toolPermission: "always-proceed"` in Antigravity settings to ensure the PreToolUse hook intercepts all tool invocations.
+- Shell parsing is conservative: complex pipelines with computed variable expansions that cannot be statically resolved will fall through to the LLM classifier or require manual token approval.
 
 ## Additional Resources
 
