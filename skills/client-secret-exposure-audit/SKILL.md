@@ -136,7 +136,7 @@ key the same way — report the pattern.
 ### Step 6: Report
 
 Write findings as Markdown using the format in
-[example-report.md](example-report.md): one row/section per finding with
+[references/example-report.md](references/example-report.md): one row/section per finding with
 `Severity · Category (OWASP/CWE) · Location · Evidence (redacted) · Impact ·
 Remediation`. Redact real secret material to a prefix + length. End with
 prioritized remediation and a note on which secrets must be **rotated**, not just
@@ -175,7 +175,7 @@ done
 #    real files, not the SPA catch-all page.
 ```
 
-A full worked report for this target is in [example-report.md](example-report.md).
+A full worked report for this target is in [references/example-report.md](references/example-report.md).
 
 ## Best Practices
 
