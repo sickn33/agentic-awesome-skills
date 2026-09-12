@@ -125,7 +125,7 @@ DEPLOYMENT IDENTITY: PASS — artifact maps to revision 8f31c2a
 DATABASE MIGRATIONS: BLOCKED — target database access unavailable
 LIVENESS: FAIL — HTTP 503 at 2026-09-12T10:14:22Z
 READINESS: FAIL — HTTP 503 at 2026-09-12T10:14:24Z
-CRITICAL ROUTES: FAIL — smoke checks stopped after readiness failure
+CRITICAL ROUTES: BLOCKED — smoke checks stopped after readiness failure
 OPERATIONAL SIGNALS: BLOCKED — log access unavailable
 
 OVERALL: RED
