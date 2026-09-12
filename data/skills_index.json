@@ -22717,6 +22717,38 @@
     }
   },
   {
+    "id": "glasser",
+    "path": "skills/glasser",
+    "category": "data",
+    "name": "glasser",
+    "description": "Search, inspect, and run third-party data APIs through one CLI when the environment has no suitable integration.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-09-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "api",
+      "data",
+      "search",
+      "enrichment",
+      "marketing",
+      "research",
+      "cli"
+    ]
+  },
+  {
     "id": "glassmorphism",
     "path": "skills/design-it/glassmorphism",
     "category": "design-it",
@@ -29958,6 +29990,36 @@
     }
   },
   {
+    "id": "marketplace-rbac-audit",
+    "path": "skills/marketplace-rbac-audit",
+    "category": "security",
+    "name": "marketplace-rbac-audit",
+    "description": "Audit multi-role marketplace authorization across roles, resource ownership, tenant boundaries, and order-state transitions; use when access rules need evidence, not UI assumptions.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "marketplace",
+      "rbac",
+      "authorization",
+      "access-control",
+      "security"
+    ]
+  },
+  {
     "id": "markstream-angular",
     "path": "skills/markstream-angular",
     "category": "frontend",
@@ -37119,6 +37181,36 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "production-runtime-certification",
+    "path": "skills/production-runtime-certification",
+    "category": "devops",
+    "name": "production-runtime-certification",
+    "description": "Certify a deployed service with fresh evidence across source, CI, migrations, runtime health, readiness, and critical routes; use before declaring a release production-ready.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "production",
+      "deployment",
+      "verification",
+      "reliability",
+      "devops"
+    ]
   },
   {
     "id": "production-scheduling",

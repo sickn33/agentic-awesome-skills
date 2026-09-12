@@ -18322,6 +18322,25 @@
       "runtime_files": []
     },
     {
+      "id": "glasser",
+      "path": "skills/glasser",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "global-chat-agent-discovery",
       "path": "skills/global-chat-agent-discovery",
       "targets": {
@@ -23785,6 +23804,25 @@
       "runtime_files": []
     },
     {
+      "id": "marketplace-rbac-audit",
+      "path": "skills/marketplace-rbac-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "markstream-angular",
       "path": "skills/markstream-angular",
       "targets": {
@@ -29104,6 +29142,25 @@
     {
       "id": "production-code-audit",
       "path": "skills/production-code-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "production-runtime-certification",
+      "path": "skills/production-runtime-certification",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -40709,10 +40766,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2118,
+    "total_skills": 2121,
     "supported": {
-      "codex": 2037,
-      "claude": 2059
+      "codex": 2040,
+      "claude": 2062
     },
     "blocked": {
       "codex": 81,

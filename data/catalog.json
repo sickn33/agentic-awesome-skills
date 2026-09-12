@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-12T08:59:35.000Z",
-  "total": 2118,
+  "total": 2121,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -27779,6 +27779,40 @@
       "path": "skills/gitops-workflow/SKILL.md"
     },
     {
+      "id": "glasser",
+      "canonical_id": "glasser",
+      "name": "glasser",
+      "description": "Search, inspect, and run third-party data APIs through one CLI when the environment has no suitable integration.",
+      "category": "data",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "api",
+        "data",
+        "search",
+        "enrichment",
+        "marketing",
+        "research",
+        "cli"
+      ],
+      "triggers": [
+        "api",
+        "data",
+        "search",
+        "enrichment",
+        "marketing",
+        "research",
+        "cli",
+        "glasser",
+        "inspect",
+        "run",
+        "third",
+        "party"
+      ],
+      "path": "skills/glasser/SKILL.md"
+    },
+    {
       "id": "global-chat-agent-discovery",
       "canonical_id": "global-chat-agent-discovery",
       "name": "global-chat-agent-discovery",
@@ -36135,6 +36169,38 @@
       "path": "skills/marketing-psychology/SKILL.md"
     },
     {
+      "id": "marketplace-rbac-audit",
+      "canonical_id": "marketplace-rbac-audit",
+      "name": "marketplace-rbac-audit",
+      "description": "Audit multi-role marketplace authorization across roles, resource ownership, tenant boundaries, and order-state transitions; use when access rules need evidence, not UI assumptions.",
+      "category": "security",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "marketplace",
+        "rbac",
+        "authorization",
+        "access-control",
+        "security"
+      ],
+      "triggers": [
+        "marketplace",
+        "rbac",
+        "authorization",
+        "access-control",
+        "security",
+        "audit",
+        "multi",
+        "role",
+        "roles",
+        "resource",
+        "ownership",
+        "tenant"
+      ],
+      "path": "skills/marketplace-rbac-audit/SKILL.md"
+    },
+    {
       "id": "markstream-angular",
       "canonical_id": "markstream-angular",
       "name": "markstream-angular",
@@ -44347,6 +44413,38 @@
         "then"
       ],
       "path": "skills/production-code-audit/SKILL.md"
+    },
+    {
+      "id": "production-runtime-certification",
+      "canonical_id": "production-runtime-certification",
+      "name": "production-runtime-certification",
+      "description": "Certify a deployed service with fresh evidence across source, CI, migrations, runtime health, readiness, and critical routes; use before declaring a release production-ready.",
+      "category": "devops",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "production",
+        "deployment",
+        "verification",
+        "reliability",
+        "devops"
+      ],
+      "triggers": [
+        "production",
+        "deployment",
+        "verification",
+        "reliability",
+        "devops",
+        "runtime",
+        "certification",
+        "certify",
+        "deployed",
+        "fresh",
+        "evidence",
+        "source"
+      ],
+      "path": "skills/production-runtime-certification/SKILL.md"
     },
     {
       "id": "production-scheduling",

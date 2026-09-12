@@ -43,7 +43,25 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/glasser/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/marketplace-rbac-audit/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://sickn33.github.io/agentic-awesome-skills/skill/md2video-audio/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/production-runtime-certification/</loc>
     <lastmod>2026-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -1100,24 +1118,6 @@
   </url>
   <url>
     <loc>https://sickn33.github.io/agentic-awesome-skills/skill/scikit-learn/</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/seaborn/</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/security-bluebook-builder/</loc>
-    <lastmod>2026-09-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/security-checklist/</loc>
     <lastmod>2026-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

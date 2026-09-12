@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-12T08:59:35.000Z
 
-Total skills: 2118
+Total skills: 2121
 
 ## agent-behavior (5)
 
@@ -838,7 +838,7 @@ Total skills: 2118
 | `liuguang-banlan-ui` | Builds two parameterized UI modes—流光溢彩白 (iridescent white) and 五彩斑斓黑 (colorful black)—with OKLCH, WebGL/CSS fallback, vision gating, screenshot QA, and total... | critical | self | ui, frontend, oklch, webgl, accessibility | ui, frontend, oklch, webgl, accessibility, liuguang, banlan, two, parameterized, modes, iridescent, white |
 | `modellix` | Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download). | critical | Modellix/modellix-plugin | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api, integrate, async, ai |
 
-## data (24)
+## data (25)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -850,6 +850,7 @@ Total skills: 2118
 | `data-engineer` | Build scalable data pipelines, modern data warehouses, and real-time streaming architectures. Implements Apache Spark, dbt, Airflow, and cloud-native data pl... | critical | community | data | data, engineer, scalable, pipelines, warehouses, real, time, streaming, architectures, implements, apache, spark |
 | `dbt-transformation-patterns` | Production-ready patterns for dbt (data build tool) including model organization, testing strategies, documentation, and incremental processing. | none | community | dbt, transformation | dbt, transformation, data, including, model, organization, testing, documentation, incremental, processing |
 | `firecrawl-scraper` | Deep web scraping, screenshots, PDF parsing, and website crawling using Firecrawl API. Use when you need deep content extraction from web pages, page interac... | critical | community | firecrawl, scraper | firecrawl, scraper, deep, web, scraping, screenshots, pdf, parsing, website, crawling, api, content |
+| `glasser` | Search, inspect, and run third-party data APIs through one CLI when the environment has no suitable integration. | critical | self | api, data, search, enrichment, marketing, research, cli | api, data, search, enrichment, marketing, research, cli, glasser, inspect, run, third, party |
 | `mixpanel-automation` | Automate Mixpanel tasks via Rube MCP (Composio): events, segmentation, funnels, cohorts, user profiles, JQL queries. Always search tools first for current sc... | critical | community | mixpanel | mixpanel, automation, automate, tasks, via, rube, mcp, composio, events, segmentation, funnels, cohorts |
 | `monte-carlo-monitor-creation` | Guides creation of Monte Carlo monitors via MCP tools, producing monitors-as-code YAML for CI/CD deployment. | safe | monte-carlo-data/mc-agent-toolkit | data-observability, monitoring, monte-carlo, monitors-as-code | data-observability, monitoring, monte-carlo, monitors-as-code, monte, carlo, monitor, creation, guides, monitors, via, mcp |
 | `monte-carlo-prevent` | Surfaces Monte Carlo data observability context (table health, alerts, lineage, blast radius) before SQL/dbt edits. | safe | monte-carlo-data/mc-agent-toolkit | data-observability, dbt, schema, monte-carlo, lineage | data-observability, dbt, schema, monte-carlo, lineage, monte, carlo, prevent, surfaces, data, observability, context |
@@ -1239,7 +1240,7 @@ Total skills: 2118
 | `systematic-debugging` | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes | critical | community | systematic, debugging | systematic, debugging, encountering, any, bug, test, failure, unexpected, behavior, before, proposing, fixes |
 | `test-fixing` | Systematically identify and fix all failing tests using smart grouping strategies. Use when explicitly asks to fix tests ("fix these tests", "make tests pass... | safe | community | fixing | fixing, test, systematically, identify, fix, all, failing, tests, smart, grouping, explicitly, asks |
 
-## devops (38)
+## devops (39)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1273,6 +1274,7 @@ Total skills: 2118
 | `observability-and-instrumentation` | Instruments code so production behavior is visible and diagnosable. Use when adding logging, metrics, tracing, or alerting. Use when shipping any feature tha... | critical | addyosmani/agent-skills | observability, and, instrumentation | observability, and, instrumentation, instruments, code, so, behavior, visible, diagnosable, adding, logging, metrics |
 | `observability-monitoring-monitor-setup` | You are a monitoring and observability expert specializing in implementing comprehensive monitoring solutions. Set up metrics collection, distributed tracing... | critical | community | observability, monitoring, monitor, setup | observability, monitoring, monitor, setup, specializing, implementing, solutions, set, up, metrics, collection, distributed |
 | `observability-monitoring-slo-implement` | You are an SLO (Service Level Objective) expert specializing in implementing reliability standards and error budget-based engineering practices. Design compr... | critical | community | observability, monitoring, slo, implement | observability, monitoring, slo, implement, level, objective, specializing, implementing, reliability, standards, error, budget |
+| `production-runtime-certification` | Certify a deployed service with fresh evidence across source, CI, migrations, runtime health, readiness, and critical routes; use before declaring a release ... | safe | self | production, deployment, verification, reliability, devops | production, deployment, verification, reliability, devops, runtime, certification, certify, deployed, fresh, evidence, source |
 | `service-mesh-observability` | Complete guide to observability patterns for Istio, Linkerd, and service mesh deployments. | critical | community | service, mesh, observability | service, mesh, observability, complete, istio, linkerd, deployments |
 | `shipping-and-launch` | Prepares production launches. Use when preparing to deploy to production. Use when you need a pre-launch checklist, when setting up monitoring, when planning... | critical | addyosmani/agent-skills | shipping, and, launch | shipping, and, launch, prepares, launches, preparing, deploy, pre, checklist, setting, up, monitoring |
 | `sshepherd` | Zero-knowledge SSH ops CLI — server health checks, docker/systemd control, log tailing, Postgres introspection, and declarative deploys, without ever exposin... | critical | Antheurus/sshepherd | ssh, devops, cli, server-ops, postgres, deploy, zero-knowledge | ssh, devops, cli, server-ops, postgres, deploy, zero-knowledge, sshepherd, zero, knowledge, ops, server |
@@ -1931,7 +1933,7 @@ Total skills: 2118
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | safe | community | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
 | `sympy` | SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations. | safe | https://github.com/sympy/sympy | sympy | sympy, python, library, symbolic, mathematics, enables, exact, computation, mathematical, symbols, rather, than |
 
-## security (85)
+## security (86)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1970,6 +1972,7 @@ Total skills: 2118
 | `laravel-security-audit` | Security auditor for Laravel applications. Analyzes code for vulnerabilities, misconfigurations, and insecure practices using OWASP standards and Laravel sec... | safe | community | laravel, security, audit | laravel, security, audit, auditor, applications, analyzes, code, vulnerabilities, misconfigurations, insecure, owasp, standards |
 | `linux-privilege-escalation` | Execute systematic privilege escalation assessments on Linux systems to identify and exploit misconfigurations, vulnerable services, and security weaknesses ... | offensive | community | linux, privilege, escalation | linux, privilege, escalation, execute, systematic, assessments, identify, exploit, misconfigurations, vulnerable, security, weaknesses |
 | `malware-analyst` | Expert malware analyst specializing in defensive malware research, threat intelligence, and incident response. Masters sandbox analysis, behavioral analysis,... | critical | community | malware, analyst | malware, analyst, specializing, defensive, research, threat, intelligence, incident, response, masters, sandbox, analysis |
+| `marketplace-rbac-audit` | Audit multi-role marketplace authorization across roles, resource ownership, tenant boundaries, and order-state transitions; use when access rules need evide... | safe | self | marketplace, rbac, authorization, access-control, security | marketplace, rbac, authorization, access-control, security, audit, multi, role, roles, resource, ownership, tenant |
 | `memory-forensics` | Comprehensive techniques for acquiring, analyzing, and extracting artifacts from memory dumps for incident response and malware analysis. | critical | community | memory, forensics | memory, forensics, techniques, acquiring, analyzing, extracting, artifacts, dumps, incident, response, malware, analysis |
 | `metasploit-framework` | ⚠️ AUTHORIZED USE ONLY > This skill is for educational purposes or authorized security assessments only. > You must have explicit, written permission from th... | offensive | community | metasploit, framework | metasploit, framework, authorized, skill, educational, purposes, security, assessments, must, explicit, written, permission |
 | `mtls-configuration` | Configure mutual TLS (mTLS) for zero-trust service-to-service communication. Use when implementing zero-trust networking, certificate management, or securing... | critical | community | mtls, configuration | mtls, configuration, configure, mutual, tls, zero, trust, communication, implementing, networking, certificate, securing |
