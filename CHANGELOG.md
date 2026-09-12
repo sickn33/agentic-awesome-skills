@@ -9,17 +9,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [17.1.0] - 2026-09-12 - "Community Skill Additions"
 
-Maintenance release adding three reviewed community skills:
+> Adds three reviewed community skills and refreshes the AAS distribution surfaces.
+
+A maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It adds three community skills reviewed through the protected maintainer workflow;
+the catalog contains 2,118 skills and existing installation interfaces remain supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.1.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
 
 ### Added
 
-- `agy-auto`: guarded Antigravity CLI permission automation.
-- `client-secret-exposure-audit`: client-secret exposure auditing workflow.
-- `md2video-audio`: Markdown-to-narrated-video generation workflow.
+- `agy-auto`: guarded Antigravity CLI permission automation for scoped approvals
+  and safer Antigravity CLI workflows.
+- `client-secret-exposure-audit`: a read-only workflow for identifying and
+  remediating client-side secret exposure.
+- `md2video-audio`: a Markdown-to-narrated-video workflow with synchronized
+  slides and narration.
 
-### Maintenance
+### Improved
 
-- Refreshed canonical indexes, catalogs, plugin mirrors, editorial bundles, and web assets.
+- Refreshed canonical indexes, catalogs, plugin mirrors, editorial bundles, and
+  web assets for the 2,118-skill release.
+
+### Validation scope
+
+The three source PRs passed maintainer repair, exact-head review, repository
+validation, reference and documentation-security checks, protected CI, CodeQL,
+dependency review, package publication and release-only Pages verification.
+
+Thanks to @onkarbadve (#1423), @siddanta-ar1 (#1422), and @70v-Yoyo (#1425)
+for their contributions.
 
 ## [Unreleased]
 
