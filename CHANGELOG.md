@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [17.1.0] - 2026-09-12 - "Community Skill Additions"
+
+Maintenance release adding three reviewed community skills:
+
+### Added
+
+- `agy-auto`: guarded Antigravity CLI permission automation.
+- `client-secret-exposure-audit`: client-secret exposure auditing workflow.
+- `md2video-audio`: Markdown-to-narrated-video generation workflow.
+
+### Maintenance
+
+- Refreshed canonical indexes, catalogs, plugin mirrors, editorial bundles, and web assets.
+
 ## [Unreleased]
 
 ### Documentation
