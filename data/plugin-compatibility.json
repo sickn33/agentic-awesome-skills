@@ -24127,6 +24127,25 @@
       "runtime_files": []
     },
     {
+      "id": "md2video-audio",
+      "path": "skills/md2video-audio",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "mdpr-skill",
       "path": "skills/mdpr-skill",
       "targets": {
@@ -40690,10 +40709,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2117,
+    "total_skills": 2118,
     "supported": {
-      "codex": 2036,
-      "claude": 2058
+      "codex": 2037,
+      "claude": 2059
     },
     "blocked": {
       "codex": 81,

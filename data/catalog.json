@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-08T17:12:44.000Z",
-  "total": 2117,
+  "total": 2118,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -36741,6 +36741,42 @@
         "servers"
       ],
       "path": "skills/mcp-tool-developer/SKILL.md"
+    },
+    {
+      "id": "md2video-audio",
+      "canonical_id": "md2video-audio",
+      "name": "md2video-audio",
+      "description": "Convert Markdown documents into narrated MP4 videos with synchronized visuals and voice narration.",
+      "category": "media",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "70v-Yoyo/md2video-audio-skill",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/70v-Yoyo/md2video-audio-skill/blob/main/LICENSE",
+      "tags": [
+        "markdown",
+        "video",
+        "audio",
+        "text-to-speech",
+        "marp",
+        "presentation"
+      ],
+      "triggers": [
+        "markdown",
+        "video",
+        "audio",
+        "text-to-speech",
+        "marp",
+        "presentation",
+        "md2video",
+        "convert",
+        "documents",
+        "narrated",
+        "mp4",
+        "videos"
+      ],
+      "path": "skills/md2video-audio/SKILL.md"
     },
     {
       "id": "mdpr-skill",

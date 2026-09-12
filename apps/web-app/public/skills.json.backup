@@ -30610,6 +30610,40 @@
     ]
   },
   {
+    "id": "md2video-audio",
+    "path": "skills/md2video-audio",
+    "category": "media",
+    "name": "md2video-audio",
+    "description": "Convert Markdown documents into narrated MP4 videos with synchronized visuals and voice narration.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "70v-Yoyo/md2video-audio-skill",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/70v-Yoyo/md2video-audio-skill/blob/main/LICENSE",
+    "tags": [
+      "markdown",
+      "video",
+      "audio",
+      "text-to-speech",
+      "marp",
+      "presentation"
+    ]
+  },
+  {
     "id": "mdpr-skill",
     "path": "skills/mdpr-skill",
     "category": "productivity",
