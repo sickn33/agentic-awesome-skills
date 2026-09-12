@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-08T17:12:44.000Z",
-  "total": 2115,
+  "total": 2117,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1811,6 +1811,43 @@
         "sessions"
       ],
       "path": "skills/agenttrace-session-audit/SKILL.md"
+    },
+    {
+      "id": "agy-auto",
+      "canonical_id": "agy-auto",
+      "name": "agy-auto",
+      "description": "Configure agy-auto PreToolUse security gate to run Antigravity CLI (agy) unattended with layered policy controls instead of --dangerously-skip-permissions.",
+      "category": "security",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "onkarbadve/agy-auto",
+      "license": "MIT",
+      "license_source": "https://github.com/onkarbadve/agy-auto/blob/main/LICENSE",
+      "tags": [
+        "antigravity",
+        "agy",
+        "security",
+        "permissions",
+        "sandboxing",
+        "guardrails",
+        "cli"
+      ],
+      "triggers": [
+        "antigravity",
+        "agy",
+        "security",
+        "permissions",
+        "sandboxing",
+        "guardrails",
+        "cli",
+        "auto",
+        "configure",
+        "pretooluse",
+        "gate",
+        "run"
+      ],
+      "path": "skills/agy-auto/SKILL.md"
     },
     {
       "id": "agy-delegate",
@@ -13108,6 +13145,39 @@
         "via"
       ],
       "path": "skills/clickup-automation/SKILL.md"
+    },
+    {
+      "id": "client-secret-exposure-audit",
+      "canonical_id": "client-secret-exposure-audit",
+      "name": "client-secret-exposure-audit",
+      "description": "Audit a deployed web app for secrets exposed to the browser: hardcoded API keys/tokens in JS, secrets in HTML meta/attributes/comments, publicly reachable source/config/deploy files, and header/CORS misconfig.",
+      "category": "security",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "security",
+        "secrets",
+        "owasp",
+        "reconnaissance",
+        "web",
+        "headers"
+      ],
+      "triggers": [
+        "security",
+        "secrets",
+        "owasp",
+        "reconnaissance",
+        "web",
+        "headers",
+        "client",
+        "secret",
+        "exposure",
+        "audit",
+        "deployed",
+        "app"
+      ],
+      "path": "skills/client-secret-exposure-audit/SKILL.md"
     },
     {
       "id": "cline-delegate",

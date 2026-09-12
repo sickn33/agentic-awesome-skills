@@ -48,6 +48,7 @@
     "cicd-automation-automate": "cicd-automation-workflow-automate",
     "claude-in-troubleshooting": "claude-in-chrome-troubleshooting",
     "claude-win11-skill": "claude-win11-speckit-update-skill",
+    "client-secret-audit": "client-secret-exposure-audit",
     "code-documentation-explain": "code-documentation-code-explain",
     "code-documentation-generate": "code-documentation-doc-generate",
     "code-refactoring-restore": "code-refactoring-context-restore",

@@ -1195,6 +1195,31 @@
       "runtime_files": []
     },
     {
+      "id": "agy-auto",
+      "path": "skills/agy-auto",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": [
+          "target_specific_home_path"
+        ]
+      },
+      "runtime_files": []
+    },
+    {
       "id": "agy-delegate",
       "path": "skills/agy-delegate",
       "targets": {
@@ -8634,6 +8659,25 @@
     {
       "id": "clickup-automation",
       "path": "skills/clickup-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "client-secret-exposure-audit",
+      "path": "skills/client-secret-exposure-audit",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -40646,14 +40690,14 @@
     }
   ],
   "summary": {
-    "total_skills": 2115,
+    "total_skills": 2117,
     "supported": {
-      "codex": 2035,
-      "claude": 2057
+      "codex": 2036,
+      "claude": 2058
     },
     "blocked": {
-      "codex": 80,
-      "claude": 58
+      "codex": 81,
+      "claude": 59
     },
     "manual_setup": 20
   }
