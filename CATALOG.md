@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-08T17:12:44.000Z
 
-Total skills: 2115
+Total skills: 2117
 
 ## agent-behavior (5)
 
@@ -1930,12 +1930,13 @@ Total skills: 2115
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | safe | community | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
 | `sympy` | SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations. | safe | https://github.com/sympy/sympy | sympy | sympy, python, library, symbolic, mathematics, enables, exact, computation, mathematical, symbols, rather, than |
 
-## security (83)
+## security (85)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `007` | Security audit, hardening, threat modeling (STRIDE/PASTA), Red/Blue Team, OWASP checks, code review, incident response, and infrastructure security for any p... | critical | community | security, audit, owasp, threat-modeling, hardening, pentest | security, audit, owasp, threat-modeling, hardening, pentest, 007, threat, modeling, stride, pasta, red |
 | `active-directory-attacks` | Provide comprehensive techniques for attacking Microsoft Active Directory environments. Covers reconnaissance, credential harvesting, Kerberos attacks, later... | offensive | community | active, directory, attacks | active, directory, attacks, provide, techniques, attacking, microsoft, environments, covers, reconnaissance, credential, harvesting |
+| `agy-auto` | Configure agy-auto PreToolUse security gate to run Antigravity CLI (agy) unattended with layered policy controls instead of --dangerously-skip-permissions. | critical | onkarbadve/agy-auto | antigravity, agy, security, permissions, sandboxing, guardrails, cli | antigravity, agy, security, permissions, sandboxing, guardrails, cli, auto, configure, pretooluse, gate, run |
 | `anti-reversing-techniques` | AUTHORIZED USE ONLY: This skill contains dual-use security techniques. Before proceeding with any bypass or analysis: > 1. | offensive | community | anti, reversing, techniques | anti, reversing, techniques, authorized, skill, contains, dual, security, before, proceeding, any, bypass |
 | `attack-tree-construction` | Build comprehensive attack trees to visualize threat paths. Use when mapping attack scenarios, identifying defense gaps, or communicating security risks to s... | offensive | community | attack, tree, construction | attack, tree, construction, trees, visualize, threat, paths, mapping, scenarios, identifying, defense, gaps |
 | `audit-skills` | Expert security auditor for AI Skills and Bundles. Performs non-intrusive static analysis to identify malicious patterns, data leaks, system stability risks,... | safe | community | security, audit, skills, bundles, cross-platform | security, audit, skills, bundles, cross-platform, auditor, ai, performs, non, intrusive, static, analysis |
@@ -1945,6 +1946,7 @@ Total skills: 2115
 | `bumblebee` | Run Bumblebee supply-chain inventory and exposure scans on macOS/Linux to detect compromised packages, extensions, and MCP host configs. | safe | mycelos-ai/bumblebee-skill | security, supply-chain, incident-response, npm, pypi, tooling | security, supply-chain, incident-response, npm, pypi, tooling, bumblebee, run, supply, chain, inventory, exposure |
 | `burp-suite-testing` | Execute comprehensive web application security testing using Burp Suite's integrated toolset, including HTTP traffic interception and modification, request a... | offensive | community | burp, suite | burp, suite, testing, execute, web, application, security, integrated, toolset, including, http, traffic |
 | `burpsuite-project-parser` | Searches and explores Burp Suite project files (.burp) from the command line. Use when searching response headers or bodies with regex patterns, extracting s... | critical | community | burpsuite, parser | burpsuite, parser, searches, explores, burp, suite, files, command, line, searching, response, headers |
+| `client-secret-exposure-audit` | Audit a deployed web app for secrets exposed to the browser: hardcoded API keys/tokens in JS, secrets in HTML meta/attributes/comments, publicly reachable so... | safe | self | security, secrets, owasp, reconnaissance, web, headers | security, secrets, owasp, reconnaissance, web, headers, client, secret, exposure, audit, deployed, app |
 | `constant-time-analysis` | Analyze cryptographic code to detect operations that leak secret data through execution timing variations. | critical | community | constant, time | constant, time, analysis, analyze, cryptographic, code, detect, operations, leak, secret, data, through |
 | `container-security-hardening` | Harden Docker/container images and runtime deployments with secure base images, non-root users, CVE scanning, SBOM/signing, seccomp/AppArmor, and Kubernetes ... | safe | community | container, security, hardening | container, security, hardening, harden, docker, images, runtime, deployments, secure, base, non, root |
 | `cred-omega` | CISO operacional enterprise para gestao total de credenciais e segredos. | critical | community | credentials, secrets, security, api-keys, vault | credentials, secrets, security, api-keys, vault, cred, omega, ciso, operacional, enterprise, para, gestao |

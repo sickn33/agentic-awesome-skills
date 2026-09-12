@@ -1415,6 +1415,43 @@
     ]
   },
   {
+    "id": "agy-auto",
+    "path": "skills/agy-auto",
+    "category": "security",
+    "name": "agy-auto",
+    "description": "Configure agy-auto PreToolUse security gate to run Antigravity CLI (agy) unattended with layered policy controls instead of --dangerously-skip-permissions.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-11",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    },
+    "source_type": "community",
+    "source_repo": "onkarbadve/agy-auto",
+    "license": "MIT",
+    "license_source": "https://github.com/onkarbadve/agy-auto/blob/main/LICENSE",
+    "tags": [
+      "antigravity",
+      "agy",
+      "security",
+      "permissions",
+      "sandboxing",
+      "guardrails",
+      "cli"
+    ]
+  },
+  {
     "id": "agy-delegate",
     "path": "skills/agy-delegate",
     "category": "agent-orchestration",
@@ -11034,6 +11071,37 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "client-secret-exposure-audit",
+    "path": "skills/client-secret-exposure-audit",
+    "category": "security",
+    "name": "client-secret-exposure-audit",
+    "description": "Audit a deployed web app for secrets exposed to the browser: hardcoded API keys/tokens in JS, secrets in HTML meta/attributes/comments, publicly reachable source/config/deploy files, and header/CORS misconfig.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-10",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "security",
+      "secrets",
+      "owasp",
+      "reconnaissance",
+      "web",
+      "headers"
+    ]
   },
   {
     "id": "cline-delegate",
