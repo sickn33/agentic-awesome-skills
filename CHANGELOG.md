@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [17.2.0] - 2026-09-13 - "Three New Skills and Documentation Cleanup"
+
+> Adds three reviewed community skills and refreshes repository documentation
+> and distribution surfaces.
+
+A maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It adds three community skills reviewed through the protected maintainer workflow;
+the catalog contains 2,121 skills and existing installation interfaces remain
+supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.2.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- `glasser`: a workflow for working with the Glasser data API.
+- `production-runtime-certification`: a workflow for certifying production
+  runtimes with bounded evidence.
+- `marketplace-rbac-audit`: a workflow for auditing marketplace role-based
+  access control.
+
+### Improved
+
+- Refreshed canonical indexes, catalogs, plugin mirrors, editorial bundles, and
+  web assets for the 2,121-skill release.
+- Removed the Funding & transparency page and related README and documentation
+  links, and restored the software-only GitHub About metadata synchronization.
+
+### Validation scope
+
+The three source PRs passed maintainer repair, exact-head review, repository
+validation, reference and documentation-security checks, protected CI, CodeQL,
+dependency review, package publication and release-only Pages verification.
+
+Thanks to @adriansurething (#1429) and @mosinlshaikh (#1430, #1432)
+for their contributions.
+
+## [Unreleased]
+
 ## [17.1.0] - 2026-09-12 - "Community Skill Additions"
 
 > Adds three reviewed community skills and refreshes the AAS distribution surfaces.
@@ -45,15 +89,6 @@ dependency review, package publication and release-only Pages verification.
 
 Thanks to @onkarbadve (#1423), @siddanta-ar1 (#1422), and @70v-Yoyo (#1425)
 for their contributions.
-
-## [Unreleased]
-
-### Documentation
-
-- Remove the Funding & transparency page and its links from the README support
-  section and documentation index.
-- Restore the software-only GitHub About template with its live skill count;
-  metadata synchronization does not insert the token or fee disclosure.
 
 ## [17.0.0] - 2026-09-08 - "Evidence, Portable Bundles, and Grounded Profiles"
 
