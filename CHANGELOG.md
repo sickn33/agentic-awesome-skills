@@ -50,9 +50,8 @@ for their contributions.
 
 ### Documentation
 
-- Publish [Funding & transparency](docs/users/funding-transparency.md), linked from
-  the README support section and documentation index, with the community-token
-  mint, maintainer fee receipt and trading non-endorsement.
+- Remove the Funding & transparency page and its links from the README support
+  section and documentation index.
 - Restore the software-only GitHub About template with its live skill count;
   metadata synchronization does not insert the token or fee disclosure.
 
