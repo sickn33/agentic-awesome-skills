@@ -519,6 +519,7 @@ Key source families include:
 
 ### Community Contributors
 
+- **[tubeagentkit/youtube-transcript-skills](https://github.com/tubeagentkit/youtube-transcript-skills)**: Source for the `youtube-transcript-skills` skill - YouTube transcript fetching, video/channel search, channel browsing, and playlist extraction via the getyoutubetranscript.com API, free tier with no card required (MIT).
 - **[Pranav-Nexus/antigravity-skill-porter](https://github.com/Pranav-Nexus/antigravity-skill-porter)**: MIT source for `skill-porter`, adapted for conservative local bundle previews and complete support-file copying.
 - **[70v-Yoyo/md2video-audio-skill](https://github.com/70v-Yoyo/md2video-audio-skill)**: Apache-2.0 community source for `md2video-audio`, converting Markdown into narrated MP4 video with synchronized slides and narration.
 - **[onkarbadve/agy-auto](https://github.com/onkarbadve/agy-auto)**: MIT community source for `agy-auto`, providing guarded Antigravity CLI permission automation with scoped approvals.
