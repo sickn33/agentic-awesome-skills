@@ -50,8 +50,6 @@ This is an independent community project. It is not affiliated with, sponsored b
 
 You can also [support AAS on Buy Me a Coffee](https://buymeacoffee.com/sickn33).
 
-Read [Funding & transparency](docs/users/funding-transparency.md) for details on the community-managed token and fees received by the maintainer.
-
 <a href="https://buymeacoffee.com/sickn33">
   <img src="assets/buy-me-a-coffee-banner.png" alt="Support Agentic Awesome Skills on Buy Me a Coffee" width="420" />
 </a>
