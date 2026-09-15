@@ -15334,6 +15334,42 @@
     ]
   },
   {
+    "id": "de-ai-writer",
+    "path": "skills/de-ai-writer",
+    "category": "content-writing",
+    "name": "de-ai-writer",
+    "description": "Chinese AI-smell removal engine: 35 Chinese AI-tell patterns (\u8d4b\u80fd/\u95ed\u73af), AI-smell scoring, de-AI rewriting, style clone. Use when a Chinese draft reads machine-written or the user asks \u53bbAI\u5473.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-14",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "jiawood2006/hermes-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/jiawood2006/hermes-skills/blob/main/LICENSE",
+    "tags": [
+      "chinese",
+      "writing",
+      "editing",
+      "humanize",
+      "de-ai",
+      "copywriting",
+      "style-clone",
+      "ai-detection"
+    ]
+  },
+  {
     "id": "debate-review",
     "path": "skills/debate-review",
     "category": "code-quality",
