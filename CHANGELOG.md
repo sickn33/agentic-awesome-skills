@@ -49,6 +49,46 @@ dependency review, package publication and release-only Pages verification.
 Thanks to @adriansurething (#1429) and @mosinlshaikh (#1430, #1432)
 for their contributions.
 
+## [17.3.0] - 2026-09-15 - "Community Skill and Reference Cleanup"
+
+> Adds one reviewed community skill and cleans up a canonical skill reference.
+
+A maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It adds one community skill reviewed through the protected maintainer workflow
+and removes an internal flaw register from the `cv-generator` detailed guide;
+the catalog contains 2,122 skills and existing installation interfaces remain
+supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.3.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- `de-ai-writer`: a Chinese AI-smell removal engine with a 35-pattern catalog,
+  a deterministic AI-smell index, and a deletion-first edit procedure that
+  preserves every source fact.
+
+### Improved
+
+- Refreshed canonical indexes, catalogs, plugin mirrors, editorial bundles, and
+  web assets for the 2,122-skill release.
+- Removed the internal flaw register from the `cv-generator` detailed guide so
+  the reference describes current behavior only.
+
+### Validation scope
+
+The source PRs passed maintainer repair, exact-head review, repository
+validation, reference and documentation-security checks, protected CI, CodeQL,
+dependency review, package publication and release-only Pages verification.
+
+Thanks to @jiawood2006 (#1441) and @WHOISABHISHEKADHIKARI (#1442)
+for their contributions.
+
 ## [Unreleased]
 
 ## [17.1.0] - 2026-09-12 - "Community Skill Additions"
