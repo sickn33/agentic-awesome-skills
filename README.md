@@ -754,7 +754,7 @@ Key source families include:
 ### Additional Sources
 
 - **[agent-cards/skill](https://github.com/agent-cards/skill)**: Manage prepaid virtual Visa cards for AI agents. Create cards, check balances, view credentials, close cards, and get support via MCP tools.
-- **[HostDeFi](https://hostdefi.com/api/v1/mcp)**: Hosted MCP server for token-safety checks — A+–F grades for Solana and 7 EVM chains, plus x402-paid analytics and an A2A agent card.
+- **[HostDeFi](https://hostdefi.com)**: Hosted MCP server for token-safety checks (endpoint `https://hostdefi.com/api/v1/mcp`) — A+–F grades for Solana and 7 EVM chains, plus x402-paid analytics and an A2A agent card.
 
 
 </details>
