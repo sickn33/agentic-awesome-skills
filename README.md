@@ -57,7 +57,7 @@ You can also [support AAS on Buy Me a Coffee](https://buymeacoffee.com/sickn33).
 *Security tooling support: [Snyk](https://snyk.io/).*  
 *AI compute & model credits: [Atlas Cloud](https://atlascloud.ai/) (supporting media generation workflows via [`atlas-cloud-media`](skills/atlas-cloud-media/SKILL.md)).*
 
-[![Powered by Atlas Cloud](https://img.shields.io/badge/Powered%20by-Atlas%20Cloud-blue?style=for-the-badge&logo=cloud)](https://atlascloud.ai)
+[![Powered by Atlas Cloud](https://www.atlascloud.ai/oss-program/powered-by-atlas-cloud.svg)](https://www.atlascloud.ai/)
 
 ## AAS Core: Agent-First Preview
 
