@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-15T08:25:37.000Z
 
-Total skills: 2122
+Total skills: 2123
 
 ## agent-behavior (5)
 
@@ -249,7 +249,7 @@ Total skills: 2122
 | `10-andruia-skill-smith` | Ingeniero de Sistemas de Andru.ia. Diseña, redacta y despliega nuevas habilidades (skills) dentro del repositorio siguiendo el Estándar de Diamante. | safe | personal | 10, andruia, skill, smith | 10, andruia, skill, smith, ingeniero, de, sistemas, andru, ia, dise, redacta, despliega |
 | `20-andruia-niche-intelligence` | Estratega de Inteligencia de Dominio de Andru.ia. Analiza el nicho específico de un proyecto para inyectar conocimientos, regulaciones y estándares únicos de... | safe | personal | 20, andruia, niche, intelligence | 20, andruia, niche, intelligence, estratega, de, inteligencia, dominio, andru, ia, analiza, el |
 
-## api-integration (30)
+## api-integration (31)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -283,6 +283,7 @@ Total skills: 2122
 | `us-property-data` | Use when a task needs real U.S. residential property data: valuation, listings, price or tax history, schools, or a zillow.com URL. | safe | ZeroPointRepo/zillow-skills | property-data, real-estate, api, zillow | property-data, real-estate, api, zillow, us, property, data, task, real, residential, valuation, listings |
 | `whatsapp-automation` | Automate WhatsApp Business tasks via Rube MCP (Composio): send messages, manage templates, upload media, and handle contacts. Always search tools first for c... | critical | community | whatsapp | whatsapp, automation, automate, business, tasks, via, rube, mcp, composio, send, messages, upload |
 | `youtube-full` | Fetch YouTube transcripts, search videos, browse channels, and extract playlists via TranscriptAPI — no yt-dlp, no Google API key, works from any cloud server. | safe | ZeroPointRepo/youtube-skills | youtube, transcripts, video-search, channels, playlists, api, transcriptapi | youtube, transcripts, video-search, channels, playlists, api, transcriptapi, full, fetch, search, videos, browse |
+| `youtube-transcript-skills` | Fetch YouTube video transcripts, search videos/channels, browse channels, and extract playlists via the getyoutubetranscript.com API - free tier, no card req... | safe | tubeagentkit/youtube-transcript-skills | youtube, transcripts, video-search, channels, playlists, api | youtube, transcripts, video-search, channels, playlists, api, transcript, skills, fetch, video, search, videos |
 
 ## app-builder (4)
 

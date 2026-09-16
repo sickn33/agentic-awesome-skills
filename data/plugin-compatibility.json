@@ -40613,6 +40613,25 @@
       "runtime_files": []
     },
     {
+      "id": "youtube-transcript-skills",
+      "path": "skills/youtube-transcript-skills",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "zapier-make-patterns",
       "path": "skills/zapier-make-patterns",
       "targets": {
@@ -40785,10 +40804,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2122,
+    "total_skills": 2123,
     "supported": {
-      "codex": 2041,
-      "claude": 2063
+      "codex": 2042,
+      "claude": 2064
     },
     "blocked": {
       "codex": 81,

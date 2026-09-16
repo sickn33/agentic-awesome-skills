@@ -52280,6 +52280,40 @@
     ]
   },
   {
+    "id": "youtube-transcript-skills",
+    "path": "skills/youtube-transcript-skills",
+    "category": "api-integration",
+    "name": "youtube-transcript-skills",
+    "description": "Fetch YouTube video transcripts, search videos/channels, browse channels, and extract playlists via the getyoutubetranscript.com API - free tier, no card required.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "tubeagentkit/youtube-transcript-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/tubeagentkit/youtube-transcript-skills/blob/main/LICENSE",
+    "tags": [
+      "youtube",
+      "transcripts",
+      "video-search",
+      "channels",
+      "playlists",
+      "api"
+    ]
+  },
+  {
     "id": "zapier-make-patterns",
     "path": "skills/zapier-make-patterns",
     "category": "automation",

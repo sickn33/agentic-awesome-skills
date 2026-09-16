@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-15T08:25:37.000Z",
-  "total": 2122,
+  "total": 2123,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -61724,6 +61724,42 @@
         "clean"
       ],
       "path": "skills/youtube-transcript/SKILL.md"
+    },
+    {
+      "id": "youtube-transcript-skills",
+      "canonical_id": "youtube-transcript-skills",
+      "name": "youtube-transcript-skills",
+      "description": "Fetch YouTube video transcripts, search videos/channels, browse channels, and extract playlists via the getyoutubetranscript.com API - free tier, no card required.",
+      "category": "api-integration",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "tubeagentkit/youtube-transcript-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/tubeagentkit/youtube-transcript-skills/blob/main/LICENSE",
+      "tags": [
+        "youtube",
+        "transcripts",
+        "video-search",
+        "channels",
+        "playlists",
+        "api"
+      ],
+      "triggers": [
+        "youtube",
+        "transcripts",
+        "video-search",
+        "channels",
+        "playlists",
+        "api",
+        "transcript",
+        "skills",
+        "fetch",
+        "video",
+        "search",
+        "videos"
+      ],
+      "path": "skills/youtube-transcript-skills/SKILL.md"
     },
     {
       "id": "zapier-make-patterns",
