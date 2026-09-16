@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-09-12T08:59:35.000Z
+Generated at: 2026-09-15T08:25:37.000Z
 
-Total skills: 2121
+Total skills: 2122
 
 ## agent-behavior (5)
 
@@ -817,6 +817,12 @@ Total skills: 2121
 | `wordpress-centric-high-seo-optimized-blogwriting-skill` | Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modu... | safe | self | writing, blog, seo, content, wordpress | writing, blog, seo, content, wordpress, centric, high, optimized, blogwriting, skill, generate, clean |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | safe | community | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | safe | community | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
+
+## content-writing (1)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `de-ai-writer` | Chinese AI-smell removal engine: 35 Chinese AI-tell patterns (赋能/闭环), AI-smell scoring, de-AI rewriting, style clone. Use when a Chinese draft reads machine-... | safe | jiawood2006/hermes-skills | chinese, writing, editing, humanize, de-ai, copywriting, style-clone, ai-detection | chinese, writing, editing, humanize, de-ai, copywriting, style-clone, ai-detection, de, ai, writer, smell |
 
 ## context-optimization (1)
 

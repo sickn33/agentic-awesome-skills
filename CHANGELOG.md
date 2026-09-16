@@ -7,6 +7,90 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [17.2.0] - 2026-09-13 - "Three New Skills and Documentation Cleanup"
+
+> Adds three reviewed community skills and refreshes repository documentation
+> and distribution surfaces.
+
+A maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It adds three community skills reviewed through the protected maintainer workflow;
+the catalog contains 2,121 skills and existing installation interfaces remain
+supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.2.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- `glasser`: a workflow for working with the Glasser data API.
+- `production-runtime-certification`: a workflow for certifying production
+  runtimes with bounded evidence.
+- `marketplace-rbac-audit`: a workflow for auditing marketplace role-based
+  access control.
+
+### Improved
+
+- Refreshed canonical indexes, catalogs, plugin mirrors, editorial bundles, and
+  web assets for the 2,121-skill release.
+- Removed the Funding & transparency page and related README and documentation
+  links, and restored the software-only GitHub About metadata synchronization.
+
+### Validation scope
+
+The three source PRs passed maintainer repair, exact-head review, repository
+validation, reference and documentation-security checks, protected CI, CodeQL,
+dependency review, package publication and release-only Pages verification.
+
+Thanks to @adriansurething (#1429) and @mosinlshaikh (#1430, #1432)
+for their contributions.
+
+## [17.3.0] - 2026-09-15 - "Community Skill and Reference Cleanup"
+
+> Adds one reviewed community skill and cleans up a canonical skill reference.
+
+A maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It adds one community skill reviewed through the protected maintainer workflow
+and removes an internal flaw register from the `cv-generator` detailed guide;
+the catalog contains 2,122 skills and existing installation interfaces remain
+supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.3.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- `de-ai-writer`: a Chinese AI-smell removal engine with a 35-pattern catalog,
+  a deterministic AI-smell index, and a deletion-first edit procedure that
+  preserves every source fact.
+
+### Improved
+
+- Refreshed canonical indexes, catalogs, plugin mirrors, editorial bundles, and
+  web assets for the 2,122-skill release.
+- Removed the internal flaw register from the `cv-generator` detailed guide so
+  the reference describes current behavior only.
+
+### Validation scope
+
+The source PRs passed maintainer repair, exact-head review, repository
+validation, reference and documentation-security checks, protected CI, CodeQL,
+dependency review, package publication and release-only Pages verification.
+
+Thanks to @jiawood2006 (#1441) and @WHOISABHISHEKADHIKARI (#1442)
+for their contributions.
+
+## [Unreleased]
+
 ## [17.1.0] - 2026-09-12 - "Community Skill Additions"
 
 > Adds three reviewed community skills and refreshes the AAS distribution surfaces.
@@ -45,16 +129,6 @@ dependency review, package publication and release-only Pages verification.
 
 Thanks to @onkarbadve (#1423), @siddanta-ar1 (#1422), and @70v-Yoyo (#1425)
 for their contributions.
-
-## [Unreleased]
-
-### Documentation
-
-- Publish [Funding & transparency](docs/users/funding-transparency.md), linked from
-  the README support section and documentation index, with the community-token
-  mint, maintainer fee receipt and trading non-endorsement.
-- Restore the software-only GitHub About template with its live skill count;
-  metadata synchronization does not insert the token or fee disclosure.
 
 ## [17.0.0] - 2026-09-08 - "Evidence, Portable Bundles, and Grounded Profiles"
 
