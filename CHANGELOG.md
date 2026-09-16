@@ -7,6 +7,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [17.4.0] - 2026-09-16 - "YouTube Transcript Skill and Catalog Persistence"
+
+> Adds one reviewed community skill and fixes catalog saved-state persistence.
+
+A maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It adds one community skill reviewed through the protected maintainer workflow
+and keeps the hosted catalog shortlist aligned with actual browser storage;
+the catalog contains 2,123 skills and existing installation interfaces remain
+supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.4.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- `youtube-transcript-skills`: fetch YouTube transcripts, search videos and
+  channels, browse channels, and extract playlists via the
+  getyoutubetranscript.com API.
+
+### Fixed
+
+- Mark catalog skills as saved only after local persistence succeeds.
+- Keep the catalog shortlist aligned with the last confirmed browser write.
+
+### Improved
+
+- Refreshed canonical indexes, catalogs, plugin mirrors, editorial bundles, and
+  web assets for the 2,123-skill release.
+- Allow catalog web-app browser source through the fork-safety intake.
+- Allow the pinned AAS agent-first preview workflow in fork-run approvals.
+
+### Validation scope
+
+The source PRs passed maintainer repair, exact-head review, repository
+validation, reference and documentation-security checks, protected CI, CodeQL,
+dependency review, package publication and release-only Pages verification.
+
+Thanks to @pushkarsingh32 (#1434), @jhuang-tt (#1446), and @ShaunLinTW (#1448)
+for their contributions.
+
 ## [17.2.0] - 2026-09-13 - "Three New Skills and Documentation Cleanup"
 
 > Adds three reviewed community skills and refreshes repository documentation
