@@ -54,7 +54,10 @@ You can also [support AAS on Buy Me a Coffee](https://buymeacoffee.com/sickn33).
   <img src="assets/buy-me-a-coffee-banner.png" alt="Support Agentic Awesome Skills on Buy Me a Coffee" width="420" />
 </a>
 
-*Security tooling support: [Snyk](https://snyk.io/).*
+*Security tooling support: [Snyk](https://snyk.io/).*  
+*AI compute & model credits: [Atlas Cloud](https://atlascloud.ai/) (supporting media generation workflows via [`atlas-cloud-media`](skills/atlas-cloud-media/SKILL.md)).*
+
+[![Powered by Atlas Cloud](https://img.shields.io/badge/Powered%20by-Atlas%20Cloud-blue?style=for-the-badge&logo=cloud)](https://atlascloud.ai)
 
 ## AAS Core: Agent-First Preview
 
@@ -471,6 +474,7 @@ Key source families include:
 
 ### Official Sources
 
+- **[Atlas Cloud](https://atlascloud.ai/)**: Official source for the [`atlas-cloud-media`](skills/atlas-cloud-media/SKILL.md) skill — asynchronous image and video generation through the Atlas Cloud API.
 - **[sandbaseai/cli](https://github.com/sandbaseai/cli)**: Official source for the `sandbase-mcp` skill - discover, inspect, and invoke 2,000+ AI models and APIs through a local MCP bridge with explicit schema and cost checks (Apache-2.0).
 - **[vostride/agent-qa](https://github.com/vostride/agent-qa)**: Official Agent QA skills for authoring natural-language web and mobile tests, evidence-backed run triage, and scoped debug/fix workflows (FSL-1.1-ALv2, Apache-2.0 after two years).
 - **[uizze/uizze](https://github.com/uizze/uizze)**: Official UIZZE source for the free `anti-ui-slop` skill—product-specific UI references, design contracts, required states, and a hard finish gate grounded in 800,000+ real web and iOS screens (MIT).

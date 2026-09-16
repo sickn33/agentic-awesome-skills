@@ -10,6 +10,7 @@ If you recognize your work here and it is not properly attributed, please open a
 | `owasp-top-10`              | [OWASP](https://owasp.org/)                                                | CC-BY-SA       | Methodology adapted.          |
 | `burp-suite-testing`        | [PortSwigger](https://portswigger.net/burp)                                | N/A            | Usage guide only (no binary). |
 | `crewai`                    | [CrewAI](https://github.com/joaomdmoura/crewAI)                            | MIT            | Framework guides.             |
+| `atlas-cloud-media`         | [Atlas Cloud](https://atlascloud.ai/)                                      | MIT            | Official source for asynchronous image and video generation through the Atlas Cloud API. |
 | `hasdata`, `hasdata-cli`    | [HasData CLI](https://github.com/HasData/hasdata-cli)                      | MIT            | Official HasData API and CLI guidance. |
 | `runapi-cli`                | [RunAPI CLI Skill](https://github.com/runapi-ai/cli-skill)                 | Apache-2.0     | Official RunAPI CLI skill for generating AI images, videos, and music/audio, plus other model API jobs. |
 | `weaviate`, `weaviate-cookbooks` | [Weaviate Agent Skills](https://github.com/weaviate/agent-skills)     | BSD-3-Clause   | Official Weaviate vector database operations, RAG cookbooks, and agentic app blueprints. |
