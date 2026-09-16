@@ -31,6 +31,12 @@ const SKILL_SUPPORT_PATH = new RegExp(
   "u",
 );
 const NARROW_DOC_PATH = /^(?:README\.md|CONTRIBUTING\.md|docs\/(?:[^/]+\/)*[^/]+\.md)$/;
+// Browser source for the hosted catalog app. It is reviewable in isolation: it
+// cannot change dependencies, lockfiles, build configuration or generated
+// assets, and every change still requires an exact-head maintainer attestation
+// before merge (see requiresHumanReview in classifyChangeRecords).
+const WEB_APP_SOURCE_PATH = /^apps\/web-app\/src\/(?:[^/]+\/)*[^/]+$/;
+const WEB_APP_SOURCE_EXTENSIONS = new Set([".css", ".ts", ".tsx"]);
 const LOW_RISK_EXTENSIONS = new Set([
   ".csv",
   ".gif",
@@ -124,10 +130,13 @@ function classifyPathPolicy(filePath) {
     kind = "skill_support";
   } else if (NARROW_DOC_PATH.test(filePath)) {
     kind = "documentation";
+  } else if (WEB_APP_SOURCE_PATH.test(filePath)) {
+    kind = "web_app_source";
   }
 
   const extension = path.posix.extname(filePath).toLowerCase();
-  const recognizedExtension = LOW_RISK_EXTENSIONS.has(extension);
+  const recognizedExtension = LOW_RISK_EXTENSIONS.has(extension)
+    || (kind === "web_app_source" && WEB_APP_SOURCE_EXTENSIONS.has(extension));
   const reasons = [];
   if (kind === "unknown") {
     reasons.push("unapproved_path");
@@ -187,6 +196,7 @@ function classifyChangeRecords(records, options = {}) {
   const skillContentChanges = [];
   let sensitive = false;
   let totalBlobBytes = 0;
+  let webAppSourceChangeCount = 0;
 
   if (!Array.isArray(records) || records.length === 0) {
     return {
@@ -267,6 +277,9 @@ function classifyChangeRecords(records, options = {}) {
       if (["canonical_skill", "skill_support"].includes(pathPolicy.kind)) {
         skillContentChanges.push(filePath);
       }
+      if (pathPolicy.kind === "web_app_source") {
+        webAppSourceChangeCount += 1;
+      }
 
       if (mode !== REGULAR_FILE_MODE) {
         sensitive = true;
@@ -323,7 +336,7 @@ function classifyChangeRecords(records, options = {}) {
     approvalSafe,
     reasons: uniqueReasons,
     paths,
-    requiresHumanReview: uniqueSkillContentChanges.length > 0,
+    requiresHumanReview: uniqueSkillContentChanges.length > 0 || webAppSourceChangeCount > 0,
     canonicalSkillChanges: uniqueCanonicalSkillChanges,
     skillContentChanges: uniqueSkillContentChanges,
   };

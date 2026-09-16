@@ -29,6 +29,7 @@ Use `--dry-run` to exercise local classification without approving a run or merg
 ## CI Intake Contract
 
 - Before dependent required jobs do expensive setup or wait work, `pr-policy` runs the fork-safety classifier from the exact protected-base implementation and fails an unsafe fork diff early.
+- The intake allowlist also covers browser source under `apps/web-app/src/**` with `.css`, `.ts` or `.tsx` extensions. Those files cannot change dependencies, lockfiles, build configuration or generated assets, so their fork runs may be approved; every web-app source change still requires an exact-head maintainer attestation (`--reviewed-head`) before merge.
 - That CI result is fail-fast evidence, not merge authority. `merge:batch` independently recomputes the complete decision from trusted `main` and remains the only command allowed to approve fork runs or merge the PR.
 - `impact_profile` is shadow-only telemetry. It never skips a required job, test, review, or merge gate.
 - Normal source PRs generate derived preview state once in `source-validation`; `artifact-preview` verifies the exact-head manifest and digest instead of generating the tree again.

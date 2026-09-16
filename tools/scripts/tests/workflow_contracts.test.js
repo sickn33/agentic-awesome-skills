@@ -150,6 +150,10 @@ for (const contractText of [maintenanceGuide, mergeBatchGuide, autonomyGuide]) {
 assert.match(autonomyGuide, /timing telemetry/);
 assert.match(autonomyGuide, /npm run test:local -- --shard-index N --shard-count M/);
 assert.match(mergingGuide, /No local-integration exception/);
+for (const contractText of [maintainerSkill, maintenanceGuide, mergeBatchGuide]) {
+  assert.match(contractText, /apps\/web-app\/src\/\*\*/);
+  assert.match(contractText, /exact-head maintainer attestation/);
+}
 assert.doesNotMatch(mergingGuide, /Rare exception: local squash|`gh pr merge <PR_NUMBER>/);
 assert.match(maintainerSkillUi, /\$antigravity-maintainer-batch-release/);
 assert.doesNotMatch(maintainerSkillUi, /frozen matrix|product, verifier, and gold|recommend|rank/i);
@@ -449,6 +453,10 @@ for (const [filePath, expectedKind] of [
   ["skills/example/assets/screenshot.png", "skill_support"],
   ["README.md", "documentation"],
   ["docs/users/faq.md", "documentation"],
+  ["apps/web-app/src/hooks/useSkillStars.ts", "web_app_source"],
+  ["apps/web-app/src/pages/Home.tsx", "web_app_source"],
+  ["apps/web-app/src/styles/theme.css", "web_app_source"],
+  ["apps/web-app/src/data/seoLandingPages.json", "web_app_source"],
 ]) {
   const policy = classifyPathPolicy(filePath);
   assert.strictEqual(policy.approvalSafe, true, filePath);
@@ -459,6 +467,15 @@ for (const [filePath, reason] of [
   [".github/workflows/ci.yml", "unapproved_path"],
   ["tools/scripts/check.js", "unapproved_path"],
   ["skills/example/references/run.py", "unknown_extension"],
+  ["apps/web-app/package.json", "unapproved_path"],
+  ["apps/web-app/package-lock.json", "unapproved_path"],
+  ["apps/web-app/vite.config.ts", "unapproved_path"],
+  ["apps/web-app/public/skills.json", "unapproved_path"],
+  ["apps/web-app/e2e/browse.spec.ts", "unapproved_path"],
+  ["apps/web-app/scripts/prerender-routes.js", "unapproved_path"],
+  ["apps/web-app/src/hooks/run.sh", "unknown_extension"],
+  ["apps/web-app/src/legacy/tool.js", "unknown_extension"],
+  ["skills/example/scripts/run.ts", "unknown_extension"],
   ["skills/example\\references\\guide.md", "backslash_path"],
   ["skills/example/references/../SKILL.md", "noncanonical_path"],
   ["skills/design-it/glassmorphism/references/../../escape.md", "noncanonical_path"],
@@ -495,6 +512,28 @@ for (const [filePath, reason] of [
   assert.strictEqual(policy.requiresHumanReview, true);
   assert.deepStrictEqual(policy.canonicalSkillChanges, []);
   assert.deepStrictEqual(policy.skillContentChanges, ["skills/example/references/guide.md"]);
+}
+
+{
+  const policy = classifyChangeRecords([
+    modifiedRecord("apps/web-app/src/hooks/useSkillStars.ts"),
+  ]);
+  assert.strictEqual(policy.approvalSafe, true);
+  assert.strictEqual(
+    policy.requiresHumanReview,
+    true,
+    "web-app source runs may be approved, but the merge still requires an exact-head attestation",
+  );
+  assert.deepStrictEqual(policy.canonicalSkillChanges, []);
+  assert.deepStrictEqual(policy.skillContentChanges, []);
+  assert.ok(policy.paths.every((entry) => entry.kind === "web_app_source"));
+}
+
+{
+  const policy = classifyChangeRecords([addedRecord("apps/web-app/package-lock.json")]);
+  assert.strictEqual(policy.approvalSafe, false);
+  assert.strictEqual(policy.requiresHumanReview, false);
+  assert.ok(policy.reasons.some((entry) => entry.includes("new_unapproved_path")));
 }
 
 {

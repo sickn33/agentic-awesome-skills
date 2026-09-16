@@ -414,6 +414,36 @@ function approvalDependencies(overrides = {}) {
 
 {
   const prDetails = { number: 450, baseRefName: "main", baseRefOid: BASE_SHA, headRefOid: HEAD_SHA };
+  const webAppRecord = {
+    status: "M",
+    old_path: "apps/web-app/src/hooks/useSkillStars.ts",
+    new_path: "apps/web-app/src/hooks/useSkillStars.ts",
+    old_mode: "100644",
+    new_mode: "100644",
+    old_oid: BASE_SHA,
+    new_oid: BLOB_SHA,
+  };
+  const dependencies = approvalDependencies({
+    readRawChangeRecords() { return [webAppRecord]; },
+    resolveBlobSizes() { return new Map([[BASE_SHA, 100], [BLOB_SHA, 100]]); },
+  });
+  assert.throws(
+    () => mergeBatch.approveActionRequiredRuns("/repo", "owner/repo", prDetails, { dependencies }),
+    /--reviewed-head/,
+    "web-app browser source must require an exact-head maintainer attestation",
+  );
+  const approved = mergeBatch.approveActionRequiredRuns("/repo", "owner/repo", prDetails, {
+    dependencies,
+    reviewedHeads: [HEAD_SHA],
+    dryRun: true,
+  });
+  assert.strictEqual(approved.policy.approvalSafe, true);
+  assert.strictEqual(approved.policy.requiresHumanReview, true);
+  assert.deepStrictEqual(approved.policy.canonicalSkillChanges, []);
+}
+
+{
+  const prDetails = { number: 450, baseRefName: "main", baseRefOid: BASE_SHA, headRefOid: HEAD_SHA };
   let approvals = 0;
   let tupleReads = 0;
   const dependencies = approvalDependencies({
