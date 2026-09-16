@@ -32594,6 +32594,25 @@
       "runtime_files": []
     },
     {
+      "id": "seo-aeo-orchestrator",
+      "path": "skills/seo-aeo-orchestrator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "seo-aeo-schema-generator",
       "path": "skills/seo-aeo-schema-generator",
       "targets": {
@@ -40804,10 +40823,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2123,
+    "total_skills": 2124,
     "supported": {
-      "codex": 2042,
-      "claude": 2064
+      "codex": 2043,
+      "claude": 2065
     },
     "blocked": {
       "codex": 81,

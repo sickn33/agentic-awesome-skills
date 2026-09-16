@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-15T08:25:37.000Z",
-  "total": 2123,
+  "total": 2124,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -49461,7 +49461,7 @@
       "id": "seo-aeo-blog-writer",
       "canonical_id": "seo-aeo-blog-writer",
       "name": "seo-aeo-blog-writer",
-      "description": "Writes long-form blog posts with TL;DR block, definition sentence, comparison table, and 5-question FAQ for SEO ranking and AEO citation. Activate when the user wants to write a blog post, article, or long-form content piece.",
+      "description": "Writes search-intent-led long-form articles with answer-first structure, FAQ coverage, internal links, and conversion paths for SEO and AEO.",
       "category": "content",
       "risk": "safe",
       "source": "community",
@@ -49477,13 +49477,13 @@
         "blog",
         "writer",
         "writes",
+        "search",
+        "intent",
+        "led",
         "long",
         "form",
-        "posts",
-        "tl",
-        "dr",
-        "block",
-        "definition"
+        "articles",
+        "answer"
       ],
       "path": "skills/seo-aeo-blog-writer/SKILL.md"
     },
@@ -49491,7 +49491,7 @@
       "id": "seo-aeo-content-cluster",
       "canonical_id": "seo-aeo-content-cluster",
       "name": "seo-aeo-content-cluster",
-      "description": "Builds a topical authority map with a pillar page, prioritised cluster articles, content types, internal link map, and content gap analysis. Activate when the user wants to build a content cluster, topic map, or content strategy.",
+      "description": "Builds a topical authority map from business goals, search intent, existing content, and gaps, then prioritises foundational and supporting pages.",
       "category": "content",
       "risk": "safe",
       "source": "community",
@@ -49509,11 +49509,11 @@
         "topical",
         "authority",
         "map",
-        "pillar",
-        "page",
-        "prioritised",
-        "articles",
-        "types"
+        "business",
+        "goals",
+        "search",
+        "intent",
+        "existing"
       ],
       "path": "skills/seo-aeo-content-cluster/SKILL.md"
     },
@@ -49521,7 +49521,7 @@
       "id": "seo-aeo-content-quality-auditor",
       "canonical_id": "seo-aeo-content-quality-auditor",
       "name": "seo-aeo-content-quality-auditor",
-      "description": "Audits content for SEO and AEO performance with scored reports, severity-ranked fix lists, and projected scores after fixes. Activate when the user wants to audit, review, or score content for SEO or AEO compliance.",
+      "description": "Audits a website, codebase, page, or content set for technical SEO, search intent, AEO, conversion paths, and publishing readiness, then produces prioritised fixes that can be implemented and verified.",
       "category": "content",
       "risk": "safe",
       "source": "community",
@@ -49539,12 +49539,12 @@
         "quality",
         "auditor",
         "audits",
-        "performance",
-        "scored",
-        "reports",
-        "severity",
-        "ranked",
-        "fix"
+        "website",
+        "codebase",
+        "page",
+        "set",
+        "technical",
+        "search"
       ],
       "path": "skills/seo-aeo-content-quality-auditor/SKILL.md"
     },
@@ -49552,7 +49552,7 @@
       "id": "seo-aeo-internal-linking",
       "canonical_id": "seo-aeo-internal-linking",
       "name": "seo-aeo-internal-linking",
-      "description": "Maps internal link opportunities between pages with anchor text, placement instructions, orphan page detection, and cannibalization checks. Activate when the user wants to build an internal linking strategy or find link opportunities.",
+      "description": "Maps internal link opportunities between pages with relevant anchor text, placement instructions, orphan-page detection, and cannibalisation checks.",
       "category": "uncategorized",
       "risk": "safe",
       "source": "community",
@@ -49572,9 +49572,9 @@
         "opportunities",
         "between",
         "pages",
+        "relevant",
         "anchor",
-        "text",
-        "placement"
+        "text"
       ],
       "path": "skills/seo-aeo-internal-linking/SKILL.md"
     },
@@ -49582,7 +49582,7 @@
       "id": "seo-aeo-keyword-research",
       "canonical_id": "seo-aeo-keyword-research",
       "name": "seo-aeo-keyword-research",
-      "description": "Researches and prioritises SEO keywords with AEO question queries, difficulty tiers, cannibalization checks, and a content map. Activate when the user wants to find keywords, research search terms, or build a keyword strategy.",
+      "description": "Researches and prioritises keywords from the site context and live search intent, including problem queries, question queries, difficulty tiers, and a content map.",
       "category": "content",
       "risk": "safe",
       "source": "community",
@@ -49600,11 +49600,11 @@
         "researches",
         "prioritises",
         "keywords",
-        "question",
-        "queries",
-        "difficulty",
-        "tiers",
-        "cannibalization"
+        "site",
+        "context",
+        "live",
+        "search",
+        "intent"
       ],
       "path": "skills/seo-aeo-keyword-research/SKILL.md"
     },
@@ -49612,7 +49612,7 @@
       "id": "seo-aeo-landing-page-writer",
       "canonical_id": "seo-aeo-landing-page-writer",
       "name": "seo-aeo-landing-page-writer",
-      "description": "Writes complete, structured landing pages optimized for SEO ranking, AEO citation, and visitor conversion. Activate when the user wants to write or generate a landing page for a product, service, or offer.",
+      "description": "Writes or improves conversion-focused landing pages for products, services, and offers with practical SEO and AEO structure.",
       "category": "uncategorized",
       "risk": "safe",
       "source": "community",
@@ -49630,12 +49630,12 @@
         "page",
         "writer",
         "writes",
-        "complete",
-        "structured",
+        "improves",
+        "conversion",
         "pages",
-        "optimized",
-        "ranking",
-        "citation"
+        "products",
+        "offers",
+        "practical"
       ],
       "path": "skills/seo-aeo-landing-page-writer/SKILL.md"
     },
@@ -49643,7 +49643,7 @@
       "id": "seo-aeo-meta-description-generator",
       "canonical_id": "seo-aeo-meta-description-generator",
       "name": "seo-aeo-meta-description-generator",
-      "description": "Writes 3 title tag variants and 3 meta description variants per page with SERP preview, OG tags, and Twitter Card tags. Activate when the user wants to write meta tags, title tags, or social sharing tags for any page.",
+      "description": "Writes title tags, meta descriptions, Open Graph tags, and Twitter Card tags aligned to page intent and conversion goals.",
       "category": "uncategorized",
       "risk": "safe",
       "source": "community",
@@ -49662,19 +49662,49 @@
         "generator",
         "writes",
         "title",
-        "tag",
-        "variants",
-        "per",
-        "page",
-        "serp"
+        "tags",
+        "descriptions",
+        "open",
+        "graph",
+        "twitter"
       ],
       "path": "skills/seo-aeo-meta-description-generator/SKILL.md"
+    },
+    {
+      "id": "seo-aeo-orchestrator",
+      "canonical_id": "seo-aeo-orchestrator",
+      "name": "seo-aeo-orchestrator",
+      "description": "Runs an audit-first SEO/AEO growth workflow from project discovery through implementation, foundational content, measurement setup, deployment verification, and optional weekly monitoring.",
+      "category": "uncategorized",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "seo",
+        "aeo",
+        "orchestrator"
+      ],
+      "triggers": [
+        "seo",
+        "aeo",
+        "orchestrator",
+        "runs",
+        "audit",
+        "first",
+        "growth",
+        "discovery",
+        "through",
+        "foundational",
+        "content",
+        "measurement"
+      ],
+      "path": "skills/seo-aeo-orchestrator/SKILL.md"
     },
     {
       "id": "seo-aeo-schema-generator",
       "canonical_id": "seo-aeo-schema-generator",
       "name": "seo-aeo-schema-generator",
-      "description": "Generates valid JSON-LD structured data for 10 schema types with rich result eligibility validation and implementation-ready script blocks. Activate when the user wants to generate schema markup, JSON-LD, or structured data for any page.",
+      "description": "Generates and validates implementation-ready JSON-LD structured data for relevant page types and rich-result eligibility.",
       "category": "uncategorized",
       "risk": "safe",
       "source": "community",
@@ -49690,13 +49720,13 @@
         "schema",
         "generator",
         "generates",
-        "valid",
+        "validates",
         "json",
         "ld",
         "structured",
         "data",
-        "10",
-        "types"
+        "relevant",
+        "page"
       ],
       "path": "skills/seo-aeo-schema-generator/SKILL.md"
     },

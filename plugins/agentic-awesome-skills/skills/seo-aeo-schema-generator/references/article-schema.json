@@ -1,0 +1,10 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "{{headline}}",
+  "description": "{{description}}",
+  "author": {"@type": "Person", "name": "{{author_name}}"},
+  "datePublished": "{{date_published}}",
+  "dateModified": "{{date_modified}}",
+  "mainEntityOfPage": "{{url}}"
+}

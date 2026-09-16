@@ -1,0 +1,8 @@
+{
+  "@context": "https://schema.org",
+  "@type": "AggregateRating",
+  "itemReviewed": {"@type": "Product", "name": "{{item_name}}"},
+  "ratingValue": "{{rating_value}}",
+  "bestRating": "{{best_rating}}",
+  "ratingCount": "{{rating_count}}"
+}
