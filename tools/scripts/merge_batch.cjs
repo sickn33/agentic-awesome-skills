@@ -45,6 +45,10 @@ const APPROVAL_WORKFLOW_PATHS = new Set([
   ".github/workflows/ci.yml",
   ".github/workflows/codeql.yml",
   ".github/workflows/dependency-review.yml",
+  // Runs with `contents: read`, no secrets and SHA-pinned actions; it is the
+  // preview lane for `apps/web-app/**` PRs and must be approvable for fork
+  // web-app source contributions alongside ci.yml.
+  ".github/workflows/aas-agent-first-preview.yml",
   ".github/workflows/skill-review.yml",
 ]);
 

@@ -262,6 +262,18 @@ function runFixture(overrides = {}) {
   );
   assert.strictEqual(valid.length, 1);
 
+  assert.ok(
+    mergeBatch.approvalWorkflowPaths.has(".github/workflows/aas-agent-first-preview.yml"),
+    "the pinned read-only AAS agent-first preview workflow must be approvable for fork web-app PRs",
+  );
+  const previewValid = mergeBatch.validateActionRequiredRuns(
+    [runFixture({ path: ".github/workflows/aas-agent-first-preview.yml", workflow_id: 102 })],
+    [workflowFixture({ id: 102, path: ".github/workflows/aas-agent-first-preview.yml" })],
+    450,
+    HEAD_SHA,
+  );
+  assert.strictEqual(previewValid.length, 1);
+
   const emptyMetadataIdentity = {
     headRefName: "feature/example",
     headRepository: "contributor/repo",
