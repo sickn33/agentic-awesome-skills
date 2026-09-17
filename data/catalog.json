@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-16T16:59:38.000Z",
-  "total": 2124,
+  "total": 2125,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -10051,6 +10051,43 @@
         "domain"
       ],
       "path": "skills/bdistill-knowledge-extraction/SKILL.md"
+    },
+    {
+      "id": "beatra-ai-video-studio",
+      "canonical_id": "beatra-ai-video-studio",
+      "name": "beatra-ai-video-studio",
+      "description": "Install and use the official Beatra AI Video Studio package, pinned by digest, for paid text-to-video, image-to-video, and video edit or extend jobs on the hosted Beatra service.",
+      "category": "media",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "beatra-ai/beatra-skills",
+      "license": "MIT-0",
+      "license_source": "https://github.com/beatra-ai/beatra-skills/blob/95d662f7aeddd6e2aa6da9e14f9c985e3f6b914d/LICENSE",
+      "tags": [
+        "video-generation",
+        "text-to-video",
+        "image-to-video",
+        "video-editing",
+        "mcp",
+        "paid-api",
+        "beatra"
+      ],
+      "triggers": [
+        "video-generation",
+        "text-to-video",
+        "image-to-video",
+        "video-editing",
+        "mcp",
+        "paid-api",
+        "beatra",
+        "ai",
+        "video",
+        "studio",
+        "install",
+        "official"
+      ],
+      "path": "skills/beatra-ai-video-studio/SKILL.md"
     },
     {
       "id": "beautiful-prose",

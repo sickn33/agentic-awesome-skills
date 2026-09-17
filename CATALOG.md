@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-16T16:59:38.000Z
 
-Total skills: 2124
+Total skills: 2125
 
 ## agent-behavior (5)
 
@@ -1606,11 +1606,12 @@ Total skills: 2124
 | `not-human-search-mcp` | Search AI-ready websites, inspect indexed site details, verify MCP endpoints, and discover tools and APIs using the Not Human Search MCP server | safe | https://nothumansearch.ai | mcp, search, ai-discovery, api-discovery, mcp-verification, agent-tools | mcp, search, ai-discovery, api-discovery, mcp-verification, agent-tools, human, ai, websites, inspect, indexed, site |
 | `parallel-search-mcp` | Search the public web and verify sources with Parallel's free Search MCP. Use when the user chooses Parallel or its connected tools for current information a... | safe | self | mcp, web-search, research, citations | mcp, web-search, research, citations, parallel, search, public, web, verify, sources, free, user |
 
-## media (11)
+## media (12)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `atlas-cloud-media` | Generate Atlas Cloud images and videos through its asynchronous media API with schema-first model selection and credential-safe polling. | critical | self | atlas-cloud, image-generation, video-generation, media-api | atlas-cloud, image-generation, video-generation, media-api, atlas, cloud, media, generate, images, videos, through, asynchronous |
+| `beatra-ai-video-studio` | Install and use the official Beatra AI Video Studio package, pinned by digest, for paid text-to-video, image-to-video, and video edit or extend jobs on the h... | critical | beatra-ai/beatra-skills | video-generation, text-to-video, image-to-video, video-editing, mcp, paid-api, beatra | video-generation, text-to-video, image-to-video, video-editing, mcp, paid-api, beatra, ai, video, studio, install, official |
 | `generate-nanobanana` | Generate and edit images/video with Google's Gemini media models (Nano Banana 2/Pro, Gemini Omni Flash), with cost-approval gates, reference-image support, a... | critical | AntonioCardenas/generate-nanobanana | nanobanana, gemini, google-ai-studio, image-generation, video-generation | nanobanana, gemini, google-ai-studio, image-generation, video-generation, generate, edit, images, video, google, media, models |
 | `image-generator` | Generate and edit images using Gemini's Nano Banana Pro model (gemini-3-pro-image-preview). Use this skill when the user asks you to generate images, create ... | safe | dair-ai/dair-academy-plugins | dair-academy, ai, workflow | dair-academy, ai, workflow, image, generator, generate, edit, images, gemini, nano, banana, pro |
 | `md2video-audio` | Convert Markdown documents into narrated MP4 videos with synchronized visuals and voice narration. | safe | 70v-Yoyo/md2video-audio-skill | markdown, video, audio, text-to-speech, marp, presentation | markdown, video, audio, text-to-speech, marp, presentation, md2video, convert, documents, narrated, mp4, videos |

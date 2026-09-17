@@ -8298,6 +8298,41 @@
     ]
   },
   {
+    "id": "beatra-ai-video-studio",
+    "path": "skills/beatra-ai-video-studio",
+    "category": "media",
+    "name": "beatra-ai-video-studio",
+    "description": "Install and use the official Beatra AI Video Studio package, pinned by digest, for paid text-to-video, image-to-video, and video edit or extend jobs on the hosted Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/beatra-skills",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/beatra-skills/blob/95d662f7aeddd6e2aa6da9e14f9c985e3f6b914d/LICENSE",
+    "tags": [
+      "video-generation",
+      "text-to-video",
+      "image-to-video",
+      "video-editing",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
+  },
+  {
     "id": "beautiful-prose",
     "path": "skills/beautiful-prose",
     "category": "content",

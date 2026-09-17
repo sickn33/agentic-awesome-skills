@@ -695,6 +695,7 @@
         "azure-servicebus-dotnet",
         "azure-servicebus-py",
         "azure-servicebus-rust",
+        "beatra-ai-video-studio",
         "chrome-extension-developer",
         "cloud-devops",
         "cloud-k8s",
