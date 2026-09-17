@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-16T16:59:38.000Z
 
-Total skills: 2125
+Total skills: 2126
 
 ## agent-behavior (5)
 
@@ -2145,7 +2145,7 @@ Total skills: 2125
 | --- | --- | --- | --- | --- | --- |
 | `travel-planner` | 旅行/行程规划需求时使用:规划去某地旅行、X天X城、带老人孩子、自驾、假期安排等。产出逐日行程表、预算估算(经济/舒适/奢华三档)、交通住宿建议、景点美食清单。必须先问预算,预算未确认只输出问题清单;事实数据带来源和查询日期。 | safe | saudademjj/luopan | travel, itinerary, planning, trip, chinese | travel, itinerary, planning, trip, chinese, planner |
 
-## uncategorized (333)
+## uncategorized (334)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2325,6 +2325,7 @@ Total skills: 2125
 | `mathguard` | Math-heavy escalation for n >= 10^6 — Bloom, HyperLogLog, Count-Min, MinHash/LSH, FFT, JL projection, sweep line. Use when classical O(n log n) is the floor ... | safe | morsechimwai/lemmaly | algorithms, probabilistic-data-structures, approximate-algorithms, bloom-filter, hyperloglog, fft, performance | algorithms, probabilistic-data-structures, approximate-algorithms, bloom-filter, hyperloglog, fft, performance, mathguard, math, heavy, escalation, 10 |
 | `maxia` | Connect to MAXIA AI-to-AI marketplace on Solana. Discover, buy, sell AI services. Earn USDC. 13 MCP tools, A2A protocol, DeFi yields, sentiment analysis, rug... | critical | community | solana, crypto, marketplace, ai-agents, mcp, defi, usdc, web3, a2a | solana, crypto, marketplace, ai-agents, mcp, defi, usdc, web3, a2a, maxia, connect, ai |
 | `mercury-mcp` | Cheatsheet for the Mercury (proton) MCP tools. Use when connected to the Mercury MCP server to look up which mercury_* tool to call for messaging teammates, ... | critical | community | mercury, mcp | mercury, mcp, cheatsheet, proton, connected, server, look, up, which, call, messaging, teammates |
+| `meteora-dlmm-pool-screening` | Screen and rank Meteora DLMM pools for LP quality using public Meteora APIs (fee/TVL, bin step, organic score). Read-only: never deploys, swaps, or signs. | safe | romankurnovskii/etemaro | meteora, dlmm, pool, screening | meteora, dlmm, pool, screening, screen, rank, pools, lp, quality, public, apis, fee |
 | `mmx-cli` | Use mmx to generate text, images, video, speech, and music via the MiniMax AI platform. Use when the user wants to create media content, chat with MiniMax mo... | safe | https://github.com/MiniMax-AI/cli | mmx, cli | mmx, cli, generate, text, images, video, speech, music, via, minimax, ai, platform |
 | `monte-carlo-asset-health` | Check the health of a data table/asset using Monte Carlo. Activates on "how is table X", "check health of X", "is X healthy", "status of X", "check on X tabl... | critical | monte-carlo-data/mc-agent-toolkit | monte, carlo, asset, health | monte, carlo, asset, health, check, data, table, activates, how, healthy, status, any |
 | `monte-carlo-performance-diagnosis` | Diagnoses pipeline performance issues -- slow jobs, expensive queries, latency trends -- using Monte Carlo's cross-platform observability. Uses a tiered inve... | critical | monte-carlo-data/mc-agent-toolkit | monte, carlo, performance, diagnosis | monte, carlo, performance, diagnosis, diagnoses, pipeline, issues, slow, jobs, expensive, queries, latency |

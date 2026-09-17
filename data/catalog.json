@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-16T16:59:38.000Z",
-  "total": 2125,
+  "total": 2126,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -37169,6 +37169,39 @@
         "permission"
       ],
       "path": "skills/metasploit-framework/SKILL.md"
+    },
+    {
+      "id": "meteora-dlmm-pool-screening",
+      "canonical_id": "meteora-dlmm-pool-screening",
+      "name": "meteora-dlmm-pool-screening",
+      "description": "Screen and rank Meteora DLMM pools for LP quality using public Meteora APIs (fee/TVL, bin step, organic score). Read-only: never deploys, swaps, or signs.",
+      "category": "uncategorized",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "romankurnovskii/etemaro",
+      "license": "MIT",
+      "tags": [
+        "meteora",
+        "dlmm",
+        "pool",
+        "screening"
+      ],
+      "triggers": [
+        "meteora",
+        "dlmm",
+        "pool",
+        "screening",
+        "screen",
+        "rank",
+        "pools",
+        "lp",
+        "quality",
+        "public",
+        "apis",
+        "fee"
+      ],
+      "path": "skills/meteora-dlmm-pool-screening/SKILL.md"
     },
     {
       "id": "micro-saas-launcher",

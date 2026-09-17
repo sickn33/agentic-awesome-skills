@@ -24399,6 +24399,25 @@
       "runtime_files": []
     },
     {
+      "id": "meteora-dlmm-pool-screening",
+      "path": "skills/meteora-dlmm-pool-screening",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "micro-saas-launcher",
       "path": "skills/micro-saas-launcher",
       "targets": {
@@ -40842,10 +40861,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2125,
+    "total_skills": 2126,
     "supported": {
-      "codex": 2044,
-      "claude": 2066
+      "codex": 2045,
+      "claude": 2067
     },
     "blocked": {
       "codex": 81,

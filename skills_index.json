@@ -30990,6 +30990,31 @@
     }
   },
   {
+    "id": "meteora-dlmm-pool-screening",
+    "path": "skills/meteora-dlmm-pool-screening",
+    "category": "uncategorized",
+    "name": "meteora-dlmm-pool-screening",
+    "description": "Screen and rank Meteora DLMM pools for LP quality using public Meteora APIs (fee/TVL, bin step, organic score). Read-only: never deploys, swaps, or signs.\n",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "romankurnovskii/etemaro",
+    "license": "MIT"
+  },
+  {
     "id": "micro-saas-launcher",
     "path": "skills/micro-saas-launcher",
     "category": "business",
