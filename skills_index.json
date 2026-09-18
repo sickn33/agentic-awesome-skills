@@ -50452,6 +50452,37 @@
     }
   },
   {
+    "id": "weather-model-data-fetching",
+    "path": "skills/weather-model-data-fetching",
+    "category": "data",
+    "name": "weather-model-data-fetching",
+    "description": "Retrieve numerical weather prediction data from public AWS S3 and HTTP archives using GRIB2 inventories, byte ranges, Herbie, provider fallbacks, and verified caching.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "weather",
+      "grib2",
+      "aws-s3",
+      "herbie",
+      "noaa",
+      "nwp"
+    ]
+  },
+  {
     "id": "weaviate",
     "path": "skills/weaviate",
     "category": "databases",

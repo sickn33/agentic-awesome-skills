@@ -39315,6 +39315,25 @@
       "runtime_files": []
     },
     {
+      "id": "weather-model-data-fetching",
+      "path": "skills/weather-model-data-fetching",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "weaviate",
       "path": "skills/weaviate",
       "targets": {
@@ -40861,10 +40880,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2126,
+    "total_skills": 2127,
     "supported": {
-      "codex": 2045,
-      "claude": 2067
+      "codex": 2046,
+      "claude": 2068
     },
     "blocked": {
       "codex": 81,

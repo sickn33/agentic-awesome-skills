@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-18T03:54:02.000Z",
-  "total": 2126,
+  "total": 2127,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -59740,6 +59740,39 @@
         "remediation"
       ],
       "path": "skills/wcag-audit-patterns/SKILL.md"
+    },
+    {
+      "id": "weather-model-data-fetching",
+      "canonical_id": "weather-model-data-fetching",
+      "name": "weather-model-data-fetching",
+      "description": "Retrieve numerical weather prediction data from public AWS S3 and HTTP archives using GRIB2 inventories, byte ranges, Herbie, provider fallbacks, and verified caching.",
+      "category": "data",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "weather",
+        "grib2",
+        "aws-s3",
+        "herbie",
+        "noaa",
+        "nwp"
+      ],
+      "triggers": [
+        "weather",
+        "grib2",
+        "aws-s3",
+        "herbie",
+        "noaa",
+        "nwp",
+        "model",
+        "data",
+        "fetching",
+        "retrieve",
+        "numerical",
+        "prediction"
+      ],
+      "path": "skills/weather-model-data-fetching/SKILL.md"
     },
     {
       "id": "weaviate",
