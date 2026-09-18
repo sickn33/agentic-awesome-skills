@@ -25359,6 +25359,93 @@
     }
   },
   {
+    "id": "idea-evaluator",
+    "path": "skills/idea-evaluator",
+    "category": "agent-orchestration",
+    "name": "idea-evaluator",
+    "description": "Evaluates an idea by hosting a multi-turn debate between a Pro and Con agent, delivering a final verdict on whether it's worth pursuing.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "ideation",
+      "validation",
+      "debate",
+      "multi-agent"
+    ]
+  },
+  {
+    "id": "idea-evaluator-con",
+    "path": "skills/idea-evaluator/idea-evaluator-con",
+    "category": "agent-persona",
+    "name": "idea-evaluator-con",
+    "description": "The Con Agent persona for idea evaluation. Critiques an idea by identifying potential flaws, risks, and market challenges.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "ideation",
+      "validation",
+      "persona",
+      "critic"
+    ]
+  },
+  {
+    "id": "idea-evaluator-pro",
+    "path": "skills/idea-evaluator/idea-evaluator-pro",
+    "category": "agent-persona",
+    "name": "idea-evaluator-pro",
+    "description": "The Pro Agent persona for idea evaluation. Logically supports an idea, arguing for its market fit, feasibility, and potential.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "ideation",
+      "validation",
+      "persona",
+      "supporter"
+    ]
+  },
+  {
     "id": "idea-os",
     "path": "skills/idea-os",
     "category": "product-management",

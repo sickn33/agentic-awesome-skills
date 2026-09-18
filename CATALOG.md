@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-18T03:54:02.000Z
 
-Total skills: 2127
+Total skills: 2130
 
 ## agent-behavior (5)
 
@@ -21,7 +21,7 @@ Total skills: 2127
 | `agent-evaluation-reporting` | Use when summarizing agent evaluations where autonomous, assisted, failed, timed-out, or invalid outcomes must remain distinct and comparable. | none | self | agent-evaluation, metrics, reporting, reliability, benchmarking | agent-evaluation, metrics, reporting, reliability, benchmarking, agent, evaluation, summarizing, evaluations, where, autonomous, assisted |
 | `run-deep-swe` | Run reproducible DeepSWE coding-agent benchmark evaluations through OpenRouter and mini-swe-agent. | critical | davidondrej/skills | benchmark, deepswe, openrouter, evaluation | benchmark, deepswe, openrouter, evaluation, run, deep, swe, reproducible, coding, agent, evaluations, through |
 
-## agent-orchestration (25)
+## agent-orchestration (26)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -40,6 +40,7 @@ Total skills: 2127
 | `goal-loop` | Draft and explain persistent goal-loop prompts for long-running agent work with clear stop conditions. | safe | davidondrej/skills | goals, autonomy, planning | goals, autonomy, planning, goal, loop, draft, explain, persistent, prompts, long, running, agent |
 | `grok-build` | Delegate well-specified implementation tasks to xAI's Grok Build CLI running headlessly while the orchestrating agent plans, writes task specs, reviews every... | critical | sanjay3290/ai-skills | grok, delegation, code-generation, xai | grok, delegation, code-generation, xai, delegate, well, specified, tasks, cli, running, headlessly, while |
 | `grok-delegate` | Delegate coding tasks to the Grok Build CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | critical | amElnagdy/delegate-skills | grok, delegate | grok, delegate, coding, tasks, cli, user, explicitly, requests, while, orchestrator, retains, review |
+| `idea-evaluator` | Evaluates an idea by hosting a multi-turn debate between a Pro and Con agent, delivering a final verdict on whether it's worth pursuing. | safe | self | ideation, validation, debate, multi-agent | ideation, validation, debate, multi-agent, idea, evaluator, evaluates, hosting, multi, turn, between, pro |
 | `kimi-delegate` | Delegate coding tasks to the Kimi Code CLI (`kimi`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | critical | amElnagdy/delegate-skills | kimi, delegate | kimi, delegate, coding, tasks, code, cli, user, explicitly, requests, while, orchestrator, retains |
 | `multi-agent-task-orchestrator` | Route tasks to specialized AI agents with anti-duplication, quality gates, and 30-minute heartbeat monitoring | safe | milkomida77/guardian-agent-prompts | multi-agent, orchestration, task-routing, quality-gates, anti-duplication | multi-agent, orchestration, task-routing, quality-gates, anti-duplication, multi, agent, task, orchestrator, route, tasks, specialized |
 | `omp-delegate` | Delegate coding tasks to Oh My Pi (`omp`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | critical | amElnagdy/delegate-skills | omp, delegate | omp, delegate, coding, tasks, oh, my, pi, user, explicitly, requests, while, orchestrator |
@@ -50,6 +51,13 @@ Total skills: 2127
 | `vibe-delegate` | Delegate coding tasks to the Mistral Vibe CLI (`vibe`) only when the user explicitly requests it, while the orchestrator retains review and landing responsib... | critical | amElnagdy/delegate-skills | vibe, delegate | vibe, delegate, coding, tasks, mistral, cli, user, explicitly, requests, while, orchestrator, retains |
 | `warp-delegate` | Delegate coding tasks to the Warp Agent CLI (`oz`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | critical | amElnagdy/delegate-skills | warp, delegate | warp, delegate, coding, tasks, agent, cli, oz, user, explicitly, requests, while, orchestrator |
 | `zcode-delegate` | Delegate coding tasks to the Z.AI ZCode CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | critical | amElnagdy/delegate-skills | zcode, delegate | zcode, delegate, coding, tasks, ai, cli, user, explicitly, requests, while, orchestrator, retains |
+
+## agent-persona (2)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `idea-evaluator/idea-evaluator-con` | The Con Agent persona for idea evaluation. Critiques an idea by identifying potential flaws, risks, and market challenges. | safe | self | ideation, validation, persona, critic | ideation, validation, persona, critic, idea, evaluator, con, agent, evaluation, critiques, identifying, potential |
+| `idea-evaluator/idea-evaluator-pro` | The Pro Agent persona for idea evaluation. Logically supports an idea, arguing for its market fit, feasibility, and potential. | safe | self | ideation, validation, persona, supporter | ideation, validation, persona, supporter, idea, evaluator, pro, agent, evaluation, logically, supports, arguing |
 
 ## agent-squad (8)
 

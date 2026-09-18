@@ -20251,6 +20251,63 @@
       "runtime_files": []
     },
     {
+      "id": "idea-evaluator",
+      "path": "skills/idea-evaluator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "idea-evaluator/idea-evaluator-con",
+      "path": "skills/idea-evaluator/idea-evaluator-con",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "idea-evaluator/idea-evaluator-pro",
+      "path": "skills/idea-evaluator/idea-evaluator-pro",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "idea-os",
       "path": "skills/idea-os",
       "targets": {
@@ -40880,10 +40937,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2127,
+    "total_skills": 2130,
     "supported": {
-      "codex": 2046,
-      "claude": 2068
+      "codex": 2049,
+      "claude": 2071
     },
     "blocked": {
       "codex": 81,
