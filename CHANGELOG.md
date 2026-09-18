@@ -17,6 +17,14 @@ lands two source PRs reviewed and merged through the protected maintainer
 workflow and two web-app fixes; the catalog contains 2,126 skills and existing
 installation interfaces remain supported.
 
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.5.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
 ### Added
 
 - `beatra-ai-video-studio`: official Beatra catalog entry pinned to a verified
