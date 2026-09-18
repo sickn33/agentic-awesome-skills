@@ -1,7 +1,7 @@
 ---
 name: hig-components-layout
 description: Apple Human Interface Guidelines for layout and navigation components.
-risk: unknown
+risk: none
 source: community
 date_added: '2026-02-27'
 ---
@@ -93,6 +93,12 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Use @hig-components-layout for this task: Apple Human Interface Guidelines for layout and navigation components.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

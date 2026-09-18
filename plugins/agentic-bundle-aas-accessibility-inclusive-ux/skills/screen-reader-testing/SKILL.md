@@ -1,9 +1,10 @@
 ---
 name: screen-reader-testing
-description: "Practical guide to testing web applications with screen readers for comprehensive accessibility validation."
-risk: safe
-source: community
-date_added: "2026-02-27"
+description: Practical guide to testing web applications with screen readers for comprehensive accessibility validation.
+metadata:
+  aas-risk: safe
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Screen Reader Testing

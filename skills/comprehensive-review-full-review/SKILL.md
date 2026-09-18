@@ -1,7 +1,7 @@
 ---
 name: comprehensive-review-full-review
 description: "Use when working with comprehensive review full review"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -147,6 +147,12 @@ Review is considered successful when:
 - Team has clear prioritized action plan for remediation
 
 Target: $ARGUMENTS
+
+## Example
+
+**User request:**
+
+> Review the current change end to end for correctness, security, maintainability, performance, and missing tests.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

@@ -18,5 +18,5 @@ Consider:
 ├── Public API? → Version in URI
 ├── Internal only? → May not need versioning
 ├── GraphQL? → Typically no versions (evolve schema)
-├── tRPC? → Types enforce compatibility
+├── tRPC? → Test deployed-client compatibility; types only help at build time
 ```

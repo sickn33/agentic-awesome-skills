@@ -1,7 +1,7 @@
 ---
 name: shipping-and-launch
 description: Prepares production launches. Use when preparing to deploy to production. Use when you need a pre-launch checklist, when setting up monitoring, when planning a staged rollout, or when you need a rollback strategy.
-risk: unknown
+risk: critical
 source: https://github.com/addyosmani/agent-skills/tree/main/skills/shipping-and-launch
 source_repo: addyosmani/agent-skills
 source_type: community

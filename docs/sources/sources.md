@@ -10,6 +10,7 @@ If you recognize your work here and it is not properly attributed, please open a
 | `owasp-top-10`              | [OWASP](https://owasp.org/)                                                | CC-BY-SA       | Methodology adapted.          |
 | `burp-suite-testing`        | [PortSwigger](https://portswigger.net/burp)                                | N/A            | Usage guide only (no binary). |
 | `crewai`                    | [CrewAI](https://github.com/joaomdmoura/crewAI)                            | MIT            | Framework guides.             |
+| `atlas-cloud-media`         | [Atlas Cloud](https://atlascloud.ai/)                                      | MIT            | Official source for asynchronous image and video generation through the Atlas Cloud API. |
 | `hasdata`, `hasdata-cli`    | [HasData CLI](https://github.com/HasData/hasdata-cli)                      | MIT            | Official HasData API and CLI guidance. |
 | `runapi-cli`                | [RunAPI CLI Skill](https://github.com/runapi-ai/cli-skill)                 | Apache-2.0     | Official RunAPI CLI skill for generating AI images, videos, and music/audio, plus other model API jobs. |
 | `weaviate`, `weaviate-cookbooks` | [Weaviate Agent Skills](https://github.com/weaviate/agent-skills)     | BSD-3-Clause   | Official Weaviate vector database operations, RAG cookbooks, and agentic app blueprints. |
@@ -19,6 +20,15 @@ If you recognize your work here and it is not properly attributed, please open a
 | `langgraph`                 | [LangGraph](https://github.com/langchain-ai/langgraph)                     | MIT            | Framework guides.             |
 | `react-patterns`            | [React Docs](https://react.dev/)                                           | CC-BY          | Official patterns.            |
 | **All Official Skills**     | [Anthropic / Google / OpenAI / Microsoft / Supabase / Apify / Vercel Labs] | Proprietary    | Usage encouraged by vendors.  |
+
+## Skills from zhaoxuya520/reverse-skill
+
+The following 43 security skills were adapted from the [reverse-skill](https://github.com/zhaoxuya520/reverse-skill) cybersecurity routing pack (MIT). The GPLv3 `CTF-Sandbox-Orchestrator` sidecar and runtime bootstrap scripts were intentionally not bundled.
+
+| Skill | Original Source | License | Notes |
+| :---- | :-------------- | :------ | :---- |
+| `api-security`, `apk-reverse`, `attack-chain`, `binary-diff`, `browser-extension-reverse`, `case-review`, `cloud-k8s`, `code-audit`, `database-security`, `diagram-generator`, `digital-forensics`, `docs-generator`, `dotnet-reverse`, `edr-bypass-re`, `email-security`, `firmware-pentest`, `ghidra-reverse`, `go-rust-reverse`, `hardware-security`, `ida-reverse`, `identity-federation`, `js-reverse`, `llm-security`, `macos-reverse`, `malware-analysis`, `mobile-reverse`, `ot-ics`, `patch-diff-exploit`, `pentest-tools`, `protocol-reverse`, `pwn-chain`, `radare2`, `radio-sdr`, `reverse-browser-automation`, `reverse-engineering`, `supply-chain-security`, `thick-client`, `threat-hunting`, `threat-intelligence`, `wifi-wireless`, `windows-ad`, `reverse-engineering/dsl-vm-reverse`, `pentest-tools/src-hunter` | [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) | MIT | Reverse engineering, binary analysis, offensive assessment, and threat-intelligence workflows, adapted with English metadata and upstream safety gates. |
+
 
 ## Skills from VoltAgent/awesome-agent-skills
 

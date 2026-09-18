@@ -17,6 +17,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent))
+
+from csv_utils import spreadsheet_safe_record
+
 
 def safe_user_path(path_value, base_dir="."):
     """Resolve a CLI path under the current workspace."""
@@ -29,8 +33,6 @@ def safe_user_path(path_value, base_dir="."):
     except ValueError as exc:
         raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
     return resolved_path
-
-sys.path.insert(0, str(Path(__file__).parent))
 
 _db = None
 
@@ -96,7 +98,7 @@ def export_csv_file(records: list, output_dir: Path, name: str) -> Path:
     with safe_user_path(path).open("w", newline="", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(f, fieldnames=list(records[0].keys()), extrasaction="ignore")
         writer.writeheader()
-        writer.writerows(records)
+        writer.writerows(spreadsheet_safe_record(record) for record in records)
     print(f"[CSV] {len(records)} registros ->{path}")
     return path
 

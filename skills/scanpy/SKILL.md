@@ -4,8 +4,9 @@ description: "Scanpy is a scalable Python toolkit for analyzing single-cell RNA-
 license: SD-3-Clause license
 metadata:
     skill-author: K-Dense Inc.
-risk: unknown
+risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Scanpy: Single-Cell Analysis

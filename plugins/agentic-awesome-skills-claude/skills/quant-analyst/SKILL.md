@@ -50,6 +50,12 @@ You are a quantitative analyst specializing in algorithmic trading and financial
 
 Use pandas, numpy, and scipy. Include realistic assumptions about market microstructure.
 
+## Example
+
+**User request:**
+
+> Build financial models, backtest trading strategies, and analyze market data.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

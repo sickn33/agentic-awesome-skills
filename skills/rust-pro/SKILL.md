@@ -1,7 +1,7 @@
 ---
 name: rust-pro
 description: Master Rust 1.75+ with modern async patterns, advanced type system features, and production-ready systems programming.
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---

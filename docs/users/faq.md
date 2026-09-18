@@ -4,7 +4,31 @@
 
 ---
 
+On unreleased `main`, `aas stack install-preview --manifest <file> --destination <skill-directory>` prepares a direct-installer dry run from the agent-selected IDs. It does not execute installation or choose skills; destination names must satisfy the installer's filename restrictions. See [the manifest handoff](aas-core.md#use-the-reviewed-selection).
+
 ## General Questions
+
+### What is AAS Core?
+
+AAS Core is the versioned control plane that gives Codex or Claude complete local catalog access and turns the agent's exact selection into a reproducible project stack. The agent inspects the repository, searches and reads skills, chooses exact IDs, and uses `compose_stack` to propose `aas-stack.json`. The `aas` CLI then validates the manifest and previews an immutable plan.
+
+AAS Core is the product; the approved `aas-stack.json` and immutable plan are its durable artifacts. Skills and the catalog provide content and evidence, MCP and CLI are interfaces, Workbench is a review surface, and plugins, bundles, workflows, and installers provide curation or distribution around Core. Start with [AAS Core](aas-core.md).
+
+### Is AAS Core fully certified?
+
+Core supports complete local catalog search and inspection, agent-owned selection, reproducible composition, manifest validation, and plan preview. Transactional apply/recovery safety remains outside the supported claim.
+
+`stack apply` and `stack recover` are experimental, disabled by default, and are not supported preview safety claims. The recommended public flow stops after reviewing `stack validate` and `stack plan` output.
+
+### How do I use the skills after reviewing a plan?
+
+Use the supported direct installer with the same exact IDs, pinned release and intended directory. Review its `--dry-run` output, then repeat without that flag when installation is authorized. It uses its own ownership format and does not consume a Core plan. [From selection to use](../../README.md#from-selection-to-use) gives a complete example; [worked cases](workflows.md#recorded-worked-cases) show observed results and limits.
+
+On `main`, `stack plan` infers `--target` when the validated manifest has exactly one target; multiple targets require an explicit choice. Runtime version already comes from the manifest. Cache path, target directory and npm integrity remain explicit, and the runtime's catalog must match the manifest's catalog. No parameter omission enables writes to the target. These refinements are unreleased.
+
+### Does AAS upload my repository or use another model?
+
+No. The agent inspects the project using its normal local capabilities. AAS MCP only exposes the complete bundled or verified local catalog and validates agent-selected IDs; it does not scan the repository, rank skills, or enforce selection policy. MCP is local stdio, read-only, offline-capable, and contains no model credentials or telemetry.
 
 ### What are "skills" exactly?
 
@@ -13,9 +37,16 @@ Skills are specialized instruction files that teach AI assistants how to handle 
 
 ### Do I need to install every skill?
 
-**No!** When you clone the repository, all skills are available, but your AI only loads them when you explicitly invoke them with `@skill-name`.
-It's like having a library - all books are there, but you only read the ones you need.
-**Pro Tip:** Use [Starter Packs](bundles.md) to focus on the skills that match your role first.
+**No.** With AAS Core, ask the agent to inspect the project and choose the exact skills from the complete catalog. On a broad direct install, all skills may be present locally while the host loads only the skills it invokes.
+
+The direct installer keeps its historical full-catalog default for other hosts,
+but Antigravity requires an exact selection, metadata filter, or explicit
+`--all` consent because its watched directory can overload the host. Use
+`audit --skills <ids>` to read an exact selection and its bundled files without
+executing them, then use the same `--skills` selection with `--dry-run` before
+installation.
+
+Use [Starter Packs](bundles.md) as human-curated presets when you want a fixed starting point.
 
 If you want a narrower install surface for **Claude Code** or **Codex**, use the new plugin distributions documented in [plugins.md](plugins.md) instead of the full library install.
 
@@ -31,12 +62,13 @@ Start from:
 - [bundles.md](bundles.md)
 - [workflows.md](workflows.md)
 
-### What is the difference between skills and MCP tools?
+### What is the difference between skills, AAS MCP, and the CLI?
 
 - **Skills** are reusable `SKILL.md` playbooks that guide an AI assistant through a workflow.
-- **MCP tools** are integrations or callable capabilities that let the assistant interact with external systems.
+- **AAS MCP** is the local, read-only discovery and composition interface to AAS Core. It exposes every catalog skill, reads requested content, validates agent-selected IDs, and checks or compares manifests.
+- **The `aas` CLI** manages explicit lifecycle operations such as catalog status/update, MCP configuration, stack validation, planning, and diagnostics.
 
-Use skills when you want better process, structure, and execution quality. Use MCP tools when you need access to APIs, services, databases, or other systems. Use both when you want reliable workflows plus external capabilities.
+Other MCP servers may grant access to APIs, services, databases, or hosted systems. AAS MCP has a narrower boundary: it does not install, apply, update catalogs, scan repositories, or modify configuration through tool calls.
 
 For the longer explanation, read [skills-vs-mcp-tools.md](skills-vs-mcp-tools.md).
 
@@ -111,33 +143,55 @@ We classify skills so you know what you're running. These values map directly to
 
 ### Can these skills hack my computer?
 
-**No.** Skills are text files. However, they _instruct_ the AI to run commands. If a skill says "delete all files", a compliant AI might try to do it.
-_Always check the Risk label and review the code._
+A Markdown file is not a running process, but calling it “just text” is not a
+sufficient security model. A loaded skill can instruct an agent to run commands,
+use credentials, access the network, or modify files. Installation alone is not
+evidence that any of that happened; execution logs and resulting system changes
+are. Review the exact skill and every bundled file before use, keep agent
+permissions narrow, and require confirmation for consequential actions. See
+[Security, trust, and antivirus alerts](security-and-antivirus.md).
 
 ---
 
 ## Installation & Setup
+
+### How do I start with AAS Core?
+
+Use the pinned `aas` binary from a release whose notes explicitly state that it includes AAS Core to preview and approve local MCP configuration for Codex or Claude. Release 14.6.0 predates Core; Core-capable packages begin with the 15.x line. Restart the host if needed, then ask the agent to search the full catalog, choose exact IDs, and compose a stack without applying it. The command template and trust boundaries are in [AAS Core](aas-core.md).
+
+The package publishes separate `agentic-awesome-skills`, `aas`, and `aas-mcp` binaries. Use the explicit `aas` binary for Core lifecycle commands; the legacy `agentic-awesome-skills` entrypoint remains the direct installer.
 
 ### Where should I install the skills?
 
 It depends on how you install:
 
 - **Using the installer CLI (`npx agentic-awesome-skills`)**:
-  The default install target is `~/.agents/skills/` for Antigravity's global library.
+  The default target is `~/.agents/skills/` for Antigravity's global library.
+  Because Antigravity may overload when the complete catalog is present, the
+  installer requires `--skills`, a metadata filter, or explicit `--all` consent
+  before cloning or changing that target.
 - **Using a tool-specific flag**:
   Use `--claude`, `--cursor`, `--gemini`, `--codex`, `--kiro`, or `--antigravity` to target the matching tool path automatically.
 - **Using a manual clone or custom workspace path**:
   `.agent/skills/` is still a good universal workspace convention for Antigravity/custom setups.
 
-If you get a 404 from npm, use: `npx github:sickn33/agentic-awesome-skills`
+If npm returns 404, check the package name, exact release and registry access. Preserve the reviewed release pin rather than switching to a moving GitHub source.
 
 **Using git clone:**
 
 ```bash
-git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
+git clone --depth 1 --branch v16.7.0 https://github.com/sickn33/agentic-awesome-skills.git ./aas-review-16.7.0
+git -C ./aas-review-16.7.0 rev-parse HEAD
 ```
 
-The installer CLI is the recommended path for most users because it performs a lighter shallow clone of the current library. Manual `git clone` is still the right option when you want the full repository history or plan to contribute from the same checkout.
+Keep the review checkout outside active skill directories; v16.7.0 resolves to `c91abcfb9c52ac8a7c1292cc0326f459106cde1d`. For direct skill distribution, the installer on `main` requires Git 2.25+ and uses a shallow partial clone plus sparse checkout of complete canonical skill trees, after release identity verification. This optimization is unreleased; 16.7.0 still uses a full temporary checkout. See the [storage comparison](../maintainers/distribution-efficiency.md). Manual `git clone` remains appropriate when you want the full repository history or plan to contribute from the same checkout. For Codex or Claude users who want project-specific agent selection with reproducible state, start with AAS Core instead of treating a full-library install as the primary product path.
+
+For Antigravity, ask a Codex or Claude agent with the read-only AAS Core MCP
+configured to inspect the project and choose exact IDs, then preview the selected
+set with `npx agentic-awesome-skills --antigravity --skills <ids> --dry-run`.
+The agent chooses the IDs; AAS MCP validates them without installing. The complete catalog
+requires the explicit `npx agentic-awesome-skills --antigravity --all` override
+because it can exhaust context or trigger a truncation crash loop.
 
 **Tool-specific paths:**
 
@@ -164,6 +218,10 @@ This repository also includes repo-local plugin metadata for Codex:
 
 That path exposes the new plugin-safe Codex root plugin plus generated bundle plugins. For the full explanation, read [plugins.md](plugins.md).
 
+**Portable Agent Plugins alternative:**
+
+Cross-host-safe specialized bundles also include a standard Agent Plugins 1.0 `plugin.json` at the bundle root. Compatible clients discover the included skills from the adjacent `skills/` directory. AAS omits that root manifest when a bundle does not satisfy the portable flat-layout gate, and the host-specific full-library roots remain separate.
+
 ### Why do I not see `Sync Skills` on the hosted website?
 
 Because the public site is a static GitHub Pages catalog, not a maintainer control surface.
@@ -188,7 +246,7 @@ The app may show optional read-only community counts when configured, but clicki
 
 ### What does `plugin-safe` mean?
 
-Plugin-safe means the published Claude Code and Codex plugins only include the subset of skills that is ready for marketplace-style distribution.
+Plugin-safe means the published Claude Code and Codex plugins only include the subset of skills that is ready for packaged distribution. Agent Plugins portability is a stricter package-level claim: the bundle must also have a standard root manifest and directly discoverable immediate skill directories.
 
 Skills can stay repo-only for a while if they still need:
 
@@ -203,10 +261,13 @@ So it is normal for the **full library** to be larger than the **plugin-safe** p
 **Yes.** Use the same standard install flow as other platforms:
 
 ```bash
-npx agentic-awesome-skills
+npx agentic-awesome-skills --antigravity --skills brainstorming --dry-run
 ```
 
-If you have an older clone created around the removed symlink workaround, reinstall into a fresh directory or rerun `npx agentic-awesome-skills`.
+If you have an older clone created around the removed symlink workaround,
+reinstall into a fresh directory or rerun the installer with an exact selection.
+
+For AAS Core MCP configuration, native Windows 10 and 11 with Node.js 22 are supported preview targets. A preview failure with `AAS_ADAPTER_WINDOWS_ACL_FAILED` refers to the Codex/Claude configuration directory or file checked with PowerShell `Get-Acl`, not the AAS cache and not `icacls`. Read the returned `path`, `phase`, `status`, and bounded diagnostic; correct the named configuration-path ownership problem, then rerun preview. Never add `--approve` before an approval digest is produced. See the [AAS Core Windows notes](aas-core.md#native-windows-and-codex).
 
 ### I hit a truncation or context crash loop on Windows. How do I recover?
 
@@ -246,11 +307,27 @@ You can narrow further with `--tags` or exclude values with a trailing `-`:
 npx agentic-awesome-skills --path .agents/skills --tags debugging,typescript-
 ```
 
+To manage a reproducible exact set and inspect every install, update, or removal without writing:
+
+```bash
+npx agentic-awesome-skills@14.3.0 --path .agents/skills --release 14.3.0 --skills frontend-design,backend-dev-guidelines --dry-run
+```
+
+Default and `--release` installs fail closed unless the cloned Git commit matches
+the immutable `gitHead` recorded for that exact npm version. `--tag` intentionally
+accepts mutable Git refs and prints a warning because it skips that identity check.
+
+Remove `--dry-run` only after reviewing the plan.
+
+To review a Core stack manifest or immutable plan visually, use the hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench). It imports the JSON in browser memory and checks the supported artifact structure; it does not assemble a stack, generate install commands, access the filesystem, or install skills.
+
 The filter rules are:
 
 - comma-separated values are ORed within one flag
 - exclusions use a trailing `-`, for example `legal-`
 - `--risk`, `--category`, and `--tags` combine with AND
+- `--skills` accepts exact names, ids, or nested paths; unknown or ambiguous values fail closed
+- exact selection and metadata filters combine with AND
 
 This keeps the installed skill set smaller and reduces the chance of context overload in OpenCode-style runtimes.
 
@@ -343,9 +420,13 @@ Examples:
 
 ### How do I know which skill to use?
 
+With AAS Core, describe the project outcome and constraints, then ask the agent to search and read the full catalog, choose exact IDs, and call `compose_stack`. Review the agent's rationale and proposed IDs before accepting the stack.
+
+For manual discovery:
+
 1. **Browse the catalog**: Check the [Skill Catalog](../../CATALOG.md).
-2. **Search**: `ls skills/ | grep "keyword"`
-3. **Ask your AI**: "What skills do you have for testing?"
+2. **Search**: `ls skills/ | grep "keyword"`.
+3. **Use a preset**: Start from [Bundles](bundles.md).
 
 ---
 
@@ -411,7 +492,7 @@ Common fixes:
 
 ### My PR triggered the `skill-review` automated check. What is it?
 
-Since v8.0.0, GitHub automatically runs a `skill-review` workflow on any PR that adds or modifies a `SKILL.md` file. It reviews your skill against the quality bar and flags common issues — missing sections, weak triggers, or risky command patterns. The workflow now uses Tessl Review; fork PRs may need maintainer manual review when GitHub withholds repository secrets.
+Since v8.0.0, GitHub automatically runs a `skill-review` workflow on any PR that adds or modifies a `SKILL.md` file. It reviews your skill against the quality bar and flags common issues — missing sections, weak triggers, or risky command patterns. The workflow now uses Tessl Review; fork PRs may need maintainer manual review when GitHub withholds repository secrets. Successful reviews are keyed to the changed skill content, so unrelated pushes and base-branch refreshes reuse the result without spending more Tessl credits. If the monthly credit quota is unavailable, the workflow requests an exact-head maintainer review rather than returning a false automated pass.
 
 **If it reports findings:**
 
@@ -435,7 +516,7 @@ Maintainers regenerate and canonicalize those files on `main` after merge. If yo
 
 ### Can I update an "Official" skill?
 
-**No.** Official skills (in `skills/official/`) are mirrored from vendors. Open an issue instead.
+Check the provenance metadata and subtree instructions in `skills/<skill-id>/SKILL.md`. Vendor origin does not imply a shared `skills/official/` directory. Preserve attribution and licensing; open an issue first when a change needs upstream synchronization.
 
 ---
 

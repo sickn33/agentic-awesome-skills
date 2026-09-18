@@ -1,9 +1,10 @@
 ---
 name: gdpr-data-handling
-description: "Practical implementation guide for GDPR-compliant data processing, consent management, and privacy controls."
-risk: safe
-source: community
-date_added: "2026-02-27"
+description: Practical implementation guide for GDPR-compliant data processing, consent management, and privacy controls.
+metadata:
+  aas-risk: safe
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # GDPR Data Handling

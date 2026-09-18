@@ -1,7 +1,7 @@
 ---
 name: azure-search-documents-ts
 description: "Build search applications with vector, hybrid, and semantic search capabilities."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

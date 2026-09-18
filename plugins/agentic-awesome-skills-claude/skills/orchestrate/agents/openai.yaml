@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrate"
+  short_description: "Manage large-scope work across agents"
+  default_prompt: "Use $orchestrate to manage this large-scope task across focused agents."

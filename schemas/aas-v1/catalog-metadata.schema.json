@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agentic-awesome-skills:schema:catalog-entry:v2",
+  "title": "AAS descriptive catalog entry v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "description", "category", "tags", "triggers", "searchTokens", "untrustedContentPath", "untrustedContentRef"],
+  "properties": {
+    "id": { "$ref": "#/$defs/id" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "description": { "type": "string", "maxLength": 8192 },
+    "category": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "tags": { "$ref": "#/$defs/strings" },
+    "triggers": { "$ref": "#/$defs/strings" },
+    "searchTokens": { "$ref": "#/$defs/strings" },
+    "untrustedContentPath": { "type": ["string", "null"], "maxLength": 512 },
+    "untrustedContentRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assetPath", "offset", "length", "sha256"],
+      "properties": {
+        "assetPath": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "offset": { "type": "integer", "minimum": 0 },
+        "length": { "type": "integer", "minimum": 1 },
+        "sha256": { "type": "string", "pattern": "^sha256-[a-f0-9]{64}$" }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)*$" },
+    "strings": { "type": "array", "uniqueItems": true, "items": { "type": "string", "maxLength": 256 } }
+  }
+}

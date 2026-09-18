@@ -1,103 +1,136 @@
 ---
 name: seo-aeo-landing-page-writer
-description: "Writes complete, structured landing pages optimized for SEO ranking, AEO citation, and visitor conversion. Activate when the user wants to write or generate a landing page for a product, service, or offer."
+description: "Writes or improves conversion-focused landing pages for products, services, and offers with practical SEO and AEO structure."
 risk: safe
 source: community
 date_added: "2026-04-01"
 ---
 
-# SEO-AEO Landing Page Writer
 
-## Overview
+# Landing Page Writer Skill
 
-Generates a full, publish-ready landing page following a defined section order with SEO heading structure, AEO extraction blocks, FAQ section, comparison table, social proof, and conversion-focused CTAs. Every section serves a specific purpose in a narrative arc that moves the visitor from awareness to action.
+Write a publishable landing-page draft that helps the intended visitor understand the offer, trust it, and take the next step. Optimize for humans first, then make the page easy for search engines and answer engines to parse.
 
-Part of the [SEO-AEO Engine](https://github.com/mrprewsh/seo-aeo-engine).
+## Inputs
 
-## When to Use This Skill
+Use these fields when supplied. Infer only what is obvious; otherwise list missing assumptions before the draft.
 
-- Use when building a landing page for a new product or service
-- Use when an existing landing page needs a full SEO and AEO rewrite
-- Use when you need a page that can be cited by AI engines like Perplexity or ChatGPT
-- Use when you want conversion copy that leads with pain before pitching the product
+```json
+{
+  "product_name": "string",
+  "business_type": "string — what the product or service does",
+  "target_audience": "string",
+  "primary_keyword": "string — exact target phrase, if known",
+  "secondary_keywords": ["string"],
+  "usp": ["string — differentiators, up to 5"],
+  "pain_points": ["string"],
+  "features": ["string"],
+  "benefits": ["string — user outcomes mapped to features"],
+  "social_proof": {"testimonials": ["string"], "logos": ["string"], "stats": ["string"]},
+  "cta_primary": "string",
+  "cta_secondary": "string",
+  "offer": "string — optional and factual",
+  "keyword_data": "string — optional seo-aeo-keyword-research output",
+  "competitor": "string — optional named alternative",
+  "tone": "professional | conversational | bold | empathetic | authoritative"
+}
+```
 
+If critical inputs are missing, proceed with clearly marked placeholders rather than inventing product facts. Never invent customers, reviews, logos, performance claims, prices, guarantees, awards, security claims, or compliance certifications. If a comparison lacks reliable competitor facts, compare against a generic alternative such as “doing this manually” and label it as a positioning draft.
+
+## Decision rules
+
+- Follow the visitor’s search intent and requested conversion goal; do not force a sales structure onto an informational request.
+- Choose one emotional anchor from the pain points and one central outcome from the benefits.
+- Map every included feature to a concrete user benefit. Omit features with no clear outcome.
+- Keep the product out of the opening problem section so the reader’s situation is established before the pitch.
+- Use the primary keyword naturally in the H1, opening copy, one relevant H2, and at least one FAQ answer when provided. Do not use arbitrary density targets.
+- Make claims proportional to the evidence supplied. Use placeholders such as `[verified customer quote]` where proof is missing.
+- Prefer short paragraphs, descriptive headings, scannable lists, and direct answers.
+
+## Required page flow
+
+Use this order unless the user requests another structure:
+
+1. SEO metadata
+2. Hero and direct-answer block
+3. Problem
+4. Solution
+5. Features and benefits
+6. Social proof or trust evidence
+7. Mid-page CTA
+8. How it works
+9. Comparison or alternatives
+10. FAQ
+11. Trust and risk-reversal signals
+12. Final CTA
+13. Internal-link suggestions
+
+The problem section must not mention the product. The hero must state what the product is, who it is for, and the primary outcome in one standalone sentence of roughly 25–40 words. Keep this AEO extraction block factual and free of hype.
+
+## Output format
+
+Return Markdown in the exact section order above. Include:
+
+```markdown
+## SEO Metadata
+H1: [one H1, normally 6–10 words]
+Meta Title: [50–60 characters where practical, keyword-led]
+Meta Description: [draft only; hand off to seo-aeo-meta-description-generator when available]
+URL Slug: /[short lowercase hyphenated slug]
+
+## Hero
+# [H1]
+> [standalone definition and audience/outcome sentence]
+[sub-headline]
+[primary CTA]  [secondary CTA]
+
+## Problem
+## Solution
+## Features and Benefits
+| Feature | User outcome |
+|---|---|
+
+## Social Proof
+## Mid-page CTA
 ## How It Works
+1. **Step** — [short description]
 
-### Step 1: Map Inputs
-Extract product name, audience, primary keyword, pain points, features, benefits, USPs, social proof, and CTAs. Map every feature to a user outcome before writing any copy.
+## Comparison or Alternatives
+| Dimension | Product | Alternative |
+|---|---|---|
 
-### Step 2: Write AEO Extraction Sentence
-Write one 25–40 word sentence that answers "What is [product]?" — standalone, no jargon, placed in a blockquote immediately after the H1. This is the sentence AI engines extract.
+## Frequently Asked Questions
+**Q: [question]**
+A: [standalone answer]
 
-### Step 3: Follow the Narrative Arc
-Write sections in this exact order:
-1. Hero — H1 + AEO sentence + CTA
-2. Problem — audience pain, no product mention yet
-3. Solution — introduce product as the answer
-4. Features as Benefits — table format
-5. Social Proof — testimonials, logos, stats
-6. Mid-page CTA
-7. How It Works — numbered steps
-8. Comparison — table with honest competitor comparison
-9. FAQ — minimum 6 entries, each under 50 words
-10. Trust Signals
-11. Final CTA
+## Trust and Risk Reversal
+## Final CTA
+## Internal-Link Suggestions
+```
 
-### Step 4: Run SEO and AEO Checklists
-Verify keyword placement, heading hierarchy, FAQ count, AEO block presence, and meta description placeholder before outputting.
+## Quality checks before returning
 
-## Examples
+- Exactly one H1; headings are hierarchical and descriptive.
+- The first paragraph explains the offer and audience without unexplained jargon.
+- The hero contains one direct-answer block and a clear primary CTA.
+- Include at least three useful FAQ entries when context allows; use six only when the audience has six genuine questions. The first FAQ should define the product when relevant.
+- FAQ answers are standalone and normally under 50 words; never add FAQ schema for content that is not visible on the page.
+- Features are rewritten as outcomes in a table, and every major pain point has a corresponding benefit or explanation.
+- Comparison claims are fair and evidence-based; include a dimension where the alternative may be better when applicable.
+- Metadata is concise, unique, and free of keyword stuffing. Do not fabricate character-perfect results.
+- Suggest internal links only to supplied or clearly named related pages, using descriptive anchors rather than “click here”.
+- End with `Assumptions and verification notes` only when placeholders, unsupported claims, or missing inputs remain.
 
-### Example 1: Hero Section Output
-Ship Faster With Your Remote Team
+## Connected skills
 
-Syncro is a remote-first project management platform that helps
-distributed engineering teams track work, communicate
-asynchronously, and ship without the chaos of email and
-scattered spreadsheets.
+- Receives optional context from `seo-aeo-keyword-research` and `seo-aeo-content-cluster`.
+- Hand off the completed page to `seo-aeo-meta-description-generator`, `seo-aeo-content-quality-auditor`, `seo-aeo-internal-linking`, and `seo-aeo-schema-generator` when available or requested.
 
-[Start Free Trial]  [See How It Works]
-"4,000+ remote teams" · "40% fewer status meetings" · "4.8/5 on G2"
+## When to Use
 
-### Example 2: FAQ Section Output
-Q: What is Syncro?
-A: Syncro is a remote-first project management platform for
-distributed engineering teams. It centralises task tracking,
-async communication, and sprint planning in one tool.
-Q: How much does Syncro cost?
-A: Syncro offers a flat-rate plan at $49/month for unlimited
-users. A 14-day free trial is available — no credit card required.
-
-## Best Practices
-
-- ✅ **Do:** Write the problem section before mentioning the product — empathy first
-- ✅ **Do:** Place the AEO extraction sentence in a blockquote immediately after H1
-- ✅ **Do:** Write FAQ answers as standalone — each must make sense without context
-- ✅ **Do:** Include at least one honest point in the comparison table where the alternative wins
-- ❌ **Don't:** Use "revolutionary", "game-changing", or "best-in-class" anywhere
-- ❌ **Don't:** Use "Submit" or "Click Here" as CTA button text
-- ❌ **Don't:** Write paragraphs longer than 4 lines
-
-## Common Pitfalls
-
-- **Problem:** Product mentioned in the pain section
-  **Solution:** The pain section exists to build empathy. Save the product introduction for the solution section.
-
-- **Problem:** FAQ answers are too long to be extracted by AI engines
-  **Solution:** Every FAQ answer must be under 50 words and self-contained.
-
-## Related Skills
-
-- `@seo-aeo-keyword-research` — provides the primary keyword and AEO queries
-- `@seo-aeo-meta-description-generator` — writes title and meta description from page output
-- `@seo-aeo-content-quality-auditor` — audits the completed landing page
-
-## Additional Resources
-
-- [SEO-AEO Engine Repository](https://github.com/mrprewsh/seo-aeo-engine)
-- [Full Landing Page Writer SKILL.md](https://github.com/mrprewsh/seo-aeo-engine/blob/main/.agent/skills/landing-page-writer/SKILL.md)
+Use when creating or improving a conversion-focused product, service, offer, or homepage while preserving clear search and answer-engine structure.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Draft copy cannot validate legal claims, product capabilities, accessibility, performance, or actual conversion results without project-specific review.

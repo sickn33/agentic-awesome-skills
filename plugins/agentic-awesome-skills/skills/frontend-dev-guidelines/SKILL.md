@@ -1,7 +1,7 @@
 ---
 name: frontend-dev-guidelines
 description: "You are a senior frontend engineer operating under strict architectural and performance standards. Use when creating components or pages, adding new features, or fetching or mutating data."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

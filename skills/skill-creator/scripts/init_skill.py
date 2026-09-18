@@ -12,6 +12,7 @@ Examples:
 """
 
 import sys
+import re
 from pathlib import Path
 
 
@@ -204,6 +205,16 @@ def title_case_skill_name(skill_name):
     return ' '.join(word.capitalize() for word in skill_name.split('-'))
 
 
+SKILL_NAME_RE = re.compile(r"\A[a-z0-9]+(?:-[a-z0-9]+)*\Z")
+
+
+def validate_skill_name(skill_name):
+    """Accept only one portable directory component."""
+    if not SKILL_NAME_RE.fullmatch(skill_name) or len(skill_name) > 64:
+        raise ValueError("skill name must be 1-64 lowercase letters, digits, or hyphen-separated words")
+    return skill_name
+
+
 def init_skill(skill_name, path):
     """
     Initialize a new skill directory with template SKILL.md.
@@ -215,8 +226,13 @@ def init_skill(skill_name, path):
     Returns:
         Path to created skill directory, or None if error
     """
-    # Determine skill directory path
-    skill_dir = safe_user_path(path).resolve() / skill_name
+    # Determine skill directory path. Validation prevents absolute paths,
+    # separators, dot segments, and traversal from becoming filesystem names.
+    skill_name = validate_skill_name(skill_name)
+    parent_dir = safe_user_path(path).resolve()
+    if parent_dir.is_symlink():
+        raise ValueError("skill parent must not be a symbolic link")
+    skill_dir = parent_dir / skill_name
 
     # Check if directory already exists
     if skill_dir.exists():

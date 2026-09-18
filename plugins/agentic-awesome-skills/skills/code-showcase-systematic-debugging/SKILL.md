@@ -1,7 +1,7 @@
 ---
 name: code-showcase-systematic-debugging
 description: Four-phase debugging methodology with root cause analysis. Use when investigating bugs, fixing test failures, or troubleshooting unexpected behavior. Emphasizes NO FIXES WITHOUT ROOT CAUSE FIRST.
-risk: unknown
+risk: critical
 source: https://github.com/ChrisWiles/claude-code-showcase/tree/main/.claude/skills/systematic-debugging
 source_repo: ChrisWiles/claude-code-showcase
 source_type: community

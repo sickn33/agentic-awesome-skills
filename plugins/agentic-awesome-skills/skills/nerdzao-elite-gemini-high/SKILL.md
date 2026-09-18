@@ -49,6 +49,12 @@ Você está no modo High: máximo de qualidade com mínimo de tokens desperdiça
 ## When to Use
 Use when you need maximum quality output with Gemini 3.1 Pro High, pixel-perfect UI, and token-efficient workflow.
 
+## Example
+
+**User request:**
+
+> Use @nerdzao-elite-gemini-high for this task: Modo Elite Coder + UX Pixel-Perfect otimizado especificamente para Gemini 3.1 Pro High.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

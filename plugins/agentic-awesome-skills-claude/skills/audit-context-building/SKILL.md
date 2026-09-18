@@ -1,8 +1,9 @@
 ---
 name: audit-context-building
 description: Enables ultra-granular, line-by-line code analysis to build deep architectural context before vulnerability or bug finding.
-risk: unknown
+risk: safe
 source: community
+date_added: "2026-09-04"
 ---
 
 # Deep Context Builder Skill (Ultra-Granular Pure Context Mode)

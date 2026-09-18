@@ -13,11 +13,14 @@ const NORMALIZED_BASE_PATH = BASE_PATH && BASE_PATH !== '/' ? BASE_PATH : '';
 const DEFAULT_SITE_URL = 'https://sickn33.github.io/agentic-awesome-skills';
 
 const SITE_URL = (process.env.SEO_SITE_URL || process.env.WEBSITE_BASE_URL || DEFAULT_SITE_URL).replace(/\/$/, '');
-const TOP_SKILL_COUNT = Number.parseInt(process.env.TOP_SKILL_COUNT || '40', 10);
+// Keep this curated: broad enough to form a crawlable catalog, well below the
+// full library so thin/low-signal detail pages are not mass-submitted.
+export const DEFAULT_TOP_SKILL_COUNT = 180;
+const TOP_SKILL_COUNT = Number.parseInt(process.env.TOP_SKILL_COUNT || String(DEFAULT_TOP_SKILL_COUNT), 10);
 const DEFAULT_LASTMOD = new Date().toISOString().slice(0, 10);
 
 function getTopSkillCount() {
-  return Number.isFinite(TOP_SKILL_COUNT) ? Math.max(TOP_SKILL_COUNT, 0) : 40;
+  return Number.isFinite(TOP_SKILL_COUNT) ? Math.max(TOP_SKILL_COUNT, 0) : DEFAULT_TOP_SKILL_COUNT;
 }
 
 function escapeXml(text) {
@@ -138,7 +141,13 @@ export function buildSitemap(skills, topCount = TOP_SKILL_COUNT, baseUrl = SITE_
   const landingPaths = getSeoLandingPaths();
   return generateSitemapXml({
     baseUrl,
-    paths: ['/', toIndexableRoutePath('/plugins'), ...landingPaths, ...topSkillPaths.map(toIndexableRoutePath)],
+    paths: [
+      '/',
+      toIndexableRoutePath('/workbench'),
+      toIndexableRoutePath('/plugins'),
+      ...landingPaths,
+      ...topSkillPaths.map(toIndexableRoutePath),
+    ],
   });
 }
 

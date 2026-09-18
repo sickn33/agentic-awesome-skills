@@ -50,6 +50,12 @@ You are an error detective specializing in log analysis and pattern recognition.
 
 Focus on actionable findings. Include both immediate fixes and prevention strategies.
 
+## Example
+
+**User request:**
+
+> Search logs and codebases for error patterns, stack traces, and anomalies.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

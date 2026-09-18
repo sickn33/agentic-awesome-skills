@@ -1,0 +1,107 @@
+@supports not (color: oklch(0% 0 0)) {
+  :root {
+    --app-canvas: #111820;
+    --app-wash: rgba(17, 24, 32, 0.18);
+    --topbar-surface: rgba(19, 27, 35, 0.86);
+    --sidebar-surface: rgba(18, 26, 34, 0.82);
+    --band-surface: rgba(23, 32, 42, 0.82);
+    --workbench-surface: rgba(21, 29, 39, 0.82);
+    --pane-surface: rgba(22, 30, 40, 0.79);
+    --panel-surface: rgba(20, 28, 37, 0.95);
+    --button-surface: rgba(34, 44, 56, 0.66);
+    --ink-primary: #e4e9ec;
+    --ink-secondary: #abb8bf;
+    --ink-tertiary: #829099;
+    --ink-muted: #68757f;
+    --line-subtle: rgba(222, 231, 236, 0.075);
+    --line-default: rgba(222, 231, 236, 0.12);
+    --line-strong: rgba(222, 231, 236, 0.22);
+    --state-hover: rgba(201, 220, 227, 0.07);
+    --state-selected: rgba(102, 184, 181, 0.13);
+    --brand-mark: radial-gradient(circle at 35% 30%, #58b3ae, #29445d 43%, #402b4f);
+    --brand-mark-detail: rgba(186, 217, 218, 0.64);
+    --account-orb: linear-gradient(135deg, #315f61, #40314e);
+    --status-good: #4ba885;
+    --status-good-wash: rgba(75, 168, 133, 0.12);
+    --active-rule: #3c9a9e;
+    --focus-ring: #5ab2b5;
+    --selection: rgba(70, 166, 163, 0.34);
+    --control-accent: #4ca9a6;
+    --primary-surface: #a5cecb;
+    --primary-hover: #b3d8d4;
+    --primary-border: rgba(174, 218, 216, 0.46);
+    --primary-ink: #131c24;
+    --scroll-thumb: rgba(216, 231, 236, 0.19);
+    --observation-ribbon: linear-gradient(90deg, rgba(96, 166, 158, 0.78), rgba(75, 123, 153, 0.72), rgba(96, 82, 145, 0.64), rgba(145, 125, 70, 0.52));
+    --workbench-shadow: 0 0 0 1px rgba(255, 255, 255, 0.018);
+    --panel-shadow: -18px 0 50px rgba(0, 0, 0, 0.34);
+    --mini-map: rgba(24, 39, 49, 0.88);
+    --marker-cyan: #3eaaa8;
+    --marker-rose: #a66e78;
+    --marker-lilac: #8870a6;
+    --marker-gold: #a58a4e;
+  }
+}
+
+@supports (color: oklch(0% 0 0)) {
+:root {
+  --app-canvas: oklch(9.8% 0.012 236);
+  --app-wash: oklch(8.5% 0.012 238 / 0.18);
+  --topbar-surface: oklch(11.5% 0.014 238 / 0.86);
+  --sidebar-surface: oklch(10.8% 0.014 238 / 0.82);
+  --band-surface: oklch(13.4% 0.018 226 / 0.82);
+  --workbench-surface: oklch(12.3% 0.013 238 / 0.82);
+  --pane-surface: oklch(12.8% 0.012 240 / 0.79);
+  --panel-surface: oklch(12.2% 0.017 236 / 0.95);
+  --button-surface: oklch(17% 0.014 238 / 0.66);
+  --ink-primary: oklch(92% 0.012 218);
+  --ink-secondary: oklch(73% 0.015 221);
+  --ink-tertiary: oklch(58% 0.014 224);
+  --ink-muted: oklch(46% 0.013 226);
+  --line-subtle: oklch(92% 0.016 218 / 0.075);
+  --line-default: oklch(92% 0.016 218 / 0.12);
+  --line-strong: oklch(92% 0.018 218 / 0.22);
+  --state-hover: oklch(84% 0.028 211 / 0.07);
+  --state-selected: oklch(64% 0.07 194 / 0.13);
+  --brand-mark: radial-gradient(circle at 35% 30%, oklch(62% 0.085 180), oklch(28% 0.065 220) 43%, oklch(25% 0.06 312));
+  --brand-mark-detail: oklch(84% 0.04 192 / 0.64);
+  --account-orb: linear-gradient(135deg, oklch(32% 0.065 186), oklch(25% 0.055 308));
+  --status-good: oklch(69% 0.12 163);
+  --status-good-wash: oklch(69% 0.12 163 / 0.12);
+  --active-rule: oklch(69% 0.09 191);
+  --focus-ring: oklch(74% 0.11 192);
+  --selection: oklch(56% 0.09 191 / 0.34);
+  --control-accent: oklch(68% 0.11 190);
+  --primary-surface: oklch(72% 0.07 190);
+  --primary-hover: oklch(77% 0.075 190);
+  --primary-border: oklch(82% 0.06 190 / 0.46);
+  --primary-ink: oklch(15% 0.02 225);
+  --scroll-thumb: oklch(80% 0.02 220 / 0.19);
+  --observation-ribbon: linear-gradient(90deg, oklch(48% 0.075 188 / 0.78), oklch(42% 0.065 224 / 0.72), oklch(40% 0.066 290 / 0.64), oklch(46% 0.065 78 / 0.52));
+  --workbench-shadow: 0 0 0 1px oklch(100% 0 0 / 0.018);
+  --panel-shadow: -18px 0 50px oklch(0% 0 0 / 0.34);
+  --mini-map: oklch(14% 0.022 220 / 0.88);
+  --marker-cyan: oklch(62% 0.10 188);
+  --marker-rose: oklch(55% 0.08 18);
+  --marker-lilac: oklch(55% 0.085 310);
+  --marker-gold: oklch(58% 0.08 82);
+}
+}
+
+.field-fallback body {
+  background: var(
+    --field-fallback-background,
+    radial-gradient(ellipse at 12% 18%, rgba(35, 89, 86, 0.70), transparent 50%),
+    radial-gradient(ellipse at 78% 22%, rgba(54, 42, 92, 0.55), transparent 52%),
+    radial-gradient(ellipse at 44% 82%, rgba(78, 63, 36, 0.38), transparent 56%),
+    var(--app-canvas)
+  );
+}
+
+@supports (color: oklch(0% 0 0)) {
+@media (color-gamut: p3) {
+  :root {
+    --observation-ribbon: linear-gradient(90deg, oklch(48% 0.09 188 / 0.78), oklch(42% 0.078 224 / 0.72), oklch(40% 0.078 290 / 0.64), oklch(46% 0.073 78 / 0.52));
+  }
+}
+}

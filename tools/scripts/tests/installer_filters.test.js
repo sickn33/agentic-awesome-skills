@@ -203,3 +203,27 @@ withTempDir((root) => {
     "a nested skill that does not match filters must not leak into the installation",
   );
 });
+
+withTempDir((root) => {
+  const repoRoot = path.join(root, "repo");
+  fs.mkdirSync(path.join(repoRoot, "skills"), { recursive: true });
+  fs.mkdirSync(path.join(repoRoot, "docs"), { recursive: true });
+  writeSkill(
+    repoRoot,
+    "audited-skill",
+    'name: audited-skill\ncategory: testing\nrisk: unknown\ntags: [audit]',
+  );
+  fs.appendFileSync(
+    path.join(repoRoot, "skills", "audited-skill", "SKILL.md"),
+    "\n```bash\ngit clone https://example.com/tool.git /tmp/tool\nrm -rf /tmp/tool\n```\n",
+  );
+  const report = installer.auditSkillEntries(repoRoot, ["audited-skill", "docs"]);
+  assert.strictEqual(report.length, 1);
+  assert.strictEqual(report[0].skill, "audited-skill");
+  assert.ok(report[0].findings.some((finding) => finding.categories.includes("external-install")));
+  assert.ok(report[0].findings.some((finding) => finding.categories.includes("destructive-or-irreversible")));
+  assert.deepStrictEqual(
+    installer.buildRiskSummary(repoRoot, ["audited-skill", "docs"]),
+    { unknown: 1 },
+  );
+});

@@ -4,8 +4,9 @@ argument-hint: [path to source image]
 description: Generate favicons from a source image
 allowed-tools: Bash(magick *), Bash(which *), Bash(cp *), Bash(mkdir *)
 context: fork
-risk: unknown
+risk: critical
 source: community
+date_added: "2026-09-04"
 metadata:
   author: Shpigford
   version: "1.0"

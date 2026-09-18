@@ -265,7 +265,7 @@ ls -la ~/.claude/
 
 ### Autonomous Runner Won't Start
 
-**Problem:** `./autonomy/run.sh` gives "command not found" or permission errors.
+**Problem:** `bash autonomy/run.sh` gives "command not found" or permission errors.
 
 **Solutions:**
 1. **Make executable:**
@@ -277,7 +277,7 @@ ls -la ~/.claude/
    ```bash
    # Make sure you're in the loki-mode directory
    cd ~/.claude/skills/loki-mode
-   ./autonomy/run.sh
+   bash autonomy/run.sh
    ```
 
 3. **Check prerequisites:**
@@ -362,7 +362,7 @@ After installation:
 
 1. **Quick Test:** Run a simple example
    ```bash
-   ./autonomy/run.sh examples/simple-todo-app.md
+   bash autonomy/run.sh examples/simple-todo-app.md
    ```
 
 2. **Read Documentation:** Check out [README.md](README.md) for usage guides

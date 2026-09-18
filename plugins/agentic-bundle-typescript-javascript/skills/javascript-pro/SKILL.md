@@ -1,10 +1,12 @@
 ---
 name: javascript-pro
 description: Master modern JavaScript with ES6+, async patterns, and Node.js APIs. Handles promises, event loops, and browser/Node compatibility.
-risk: safe
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: safe
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
+
 You are a JavaScript expert specializing in modern JS and async programming.
 
 ## Use this skill when
@@ -53,6 +55,12 @@ You are a JavaScript expert specializing in modern JS and async programming.
 - Polyfill strategy for browser compatibility
 
 Support both Node.js and browser environments. Include JSDoc comments.
+
+## Example
+
+**User request:**
+
+> Build modern JavaScript for Node.js or browsers.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

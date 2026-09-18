@@ -60,6 +60,12 @@ Expert service mesh architect specializing in Istio, Linkerd, and cloud-native n
 - Keep sidecar resources appropriately sized
 - Use destination rules for consistent load balancing
 
+## Example
+
+**User request:**
+
+> Implement service-to-service communication in Kubernetes.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -1,7 +1,7 @@
 ---
 name: design-thinking
 description: Direction and intent for frontend design. Use with design when defining purpose, tone, domain, color world, and review bar; includes cross-domain lens from cinema, architecture, marketing, UX, automotive, industrial design.
-risk: unknown
+risk: critical
 source: https://github.com/connerkward/ckw-design-skill/tree/main/design-thinking
 source_repo: connerkward/ckw-design-skill
 source_type: community
@@ -101,6 +101,12 @@ When defining direction, choose which disciplines fit the product and apply 2–
 - **Tactility**: Buttons and controls feel "pressable" or "grabbable" (hover/active state, depth).
 - **Product personality**: One clear character (friendly, serious, playful, premium); consistent across the UI.
 - **Simplify**: Remove until it breaks; "best part is no part" for UI clutter.
+
+## Example
+
+**User request:**
+
+> Review this interface with @design-thinking, identify the highest-impact design problems, and propose an implementation-ready improvement.
 
 ## Limitations
 

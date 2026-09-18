@@ -60,6 +60,12 @@ Activa este skill **después de que el nicho de mercado esté claro** y ya exist
 - Antes de diseñar experiencias de usuario, flujos de seguridad o modelos de datos que dependan fuertemente del contexto del nicho.
 - Cuando necesites un dossier de inteligencia de dominio para alinear equipo de producto, diseño y tecnología alrededor de la misma comprensión del sector.
 
+## Example
+
+**User request:**
+
+> Analiza este proyecto, identifica su sector y añade los estándares, regulaciones y conocimientos específicos del dominio.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

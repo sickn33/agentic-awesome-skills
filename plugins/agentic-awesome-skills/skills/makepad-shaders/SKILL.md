@@ -5,8 +5,9 @@ description: |
   makepad shader, makepad draw_bg, Sdf2d, makepad pixel,
   makepad glsl, makepad sdf, draw_quad, makepad gpu,
   makepad 着色器, makepad shader 语法, makepad 绘制
-risk: unknown
+risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Makepad Shaders Skill

@@ -22,6 +22,12 @@ This skill provides guidance and patterns for ai-powered image editing with styl
 
 For more information, see the [source repository](https://github.com/fal-ai-community/skills/blob/main/skills/claude.ai/fal-image-edit/SKILL.md).
 
+## Example
+
+**User request:**
+
+> Use @fal-image-edit for this task: AI-powered image editing with style transfer and object removal.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -6,7 +6,7 @@ Multi-agent autonomous startup system for Claude Code. Takes PRD to fully deploy
 
 ```bash
 # Launch Claude Code with autonomous permissions
-claude --dangerously-skip-permissions
+claude
 
 # Then invoke:
 # "Loki Mode" or "Loki Mode with PRD at path/to/prd"

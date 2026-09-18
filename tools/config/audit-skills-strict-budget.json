@@ -1,12 +1,12 @@
 {
-  "maxWarnings": 864,
-  "maxWarningOnlySkills": 740,
+  "maxWarnings": 0,
+  "maxWarningOnlySkills": 0,
   "maxTopFindingCodes": {
-    "risk_suggestion": 1013,
-    "missing_examples": 387,
-    "skill_too_long": 192
+    "description_truncated": 0,
+    "missing_examples": 0,
+    "skill_too_long": 0
   },
   "owner": "repository maintainers",
-  "lastReviewed": "2026-05-23",
-  "rationale": "Legacy strict skill-audit warnings are tracked as explicit backlog debt. Strict mode fails on errors or warning regressions above this budget."
+  "lastReviewed": "2026-09-05",
+  "rationale": "The objective skill audit is clean after repairing truncated descriptions, adding or recognizing examples, and modularizing oversized entrypoints. Strict mode now fails on any error or warning regression."
 }

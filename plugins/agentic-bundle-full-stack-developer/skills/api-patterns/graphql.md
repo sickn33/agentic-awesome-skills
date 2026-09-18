@@ -37,5 +37,5 @@ Protect against:
 ├── Query depth attacks → Set max depth
 ├── Query complexity → Calculate cost
 ├── Batching abuse → Limit batch size
-├── Introspection → Disable in production
+├── Introspection → Set policy for the audience; not an authorization boundary
 ```

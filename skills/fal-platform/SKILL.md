@@ -22,6 +22,12 @@ This skill provides guidance and patterns for platform apis for model management
 
 For more information, see the [source repository](https://github.com/fal-ai-community/skills/blob/main/skills/claude.ai/fal-platform/SKILL.md).
 
+## Example
+
+**User request:**
+
+> Use @fal-platform for this task: Platform APIs for model management, pricing, and usage tracking.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

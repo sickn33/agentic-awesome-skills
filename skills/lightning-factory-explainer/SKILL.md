@@ -50,6 +50,12 @@ Expert guide for understanding Bitcoin Lightning Network channel factories and t
 - Website: https://SuperScalar.win
 - Original proposal: https://delvingbitcoin.org/t/superscalar-laddered-timeout-tree-structured-decker-wattenhofer-factories/1143
 
+## Example
+
+**User request:**
+
+> Explain Bitcoin Lightning channel factories and scalable onboarding.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -1,7 +1,7 @@
 ---
 name: accint-frames
 description: Drain acc's deliberation queue — open/waiting brain_frames checkpointed by headless runs — via acc_act(runtime="continue").
-risk: unknown
+risk: critical
 source: https://github.com/maxbaluev/accreted-intelligence/tree/main/plugins/claude/skills/frames
 source_repo: maxbaluev/accreted-intelligence
 source_type: community
@@ -27,6 +27,12 @@ Routing sugar over the two MCP verbs — no logic lives here.
 4. An identical duplicate submit replays the cached result — resubmitting is safe.
 5. Surface each resolution's `commitment` id and cited `[ids]`; drain the queue fully
    before taking new work — checkpointed frames are work headless runs saved for you.
+
+## Example
+
+**User request:**
+
+> Use @accint-frames for this task: Drain acc's deliberation queue — open/waiting brain_frames checkpointed by headless runs — via acc_act(runtime="continue").
 
 ## Limitations
 

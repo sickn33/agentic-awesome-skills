@@ -1,6 +1,10 @@
-# 🌌 Agentic Awesome Skills: 1,936+ Kỹ năng (Skills) cho Claude Code, Gemini CLI, Cursor, Copilot và nhiều hơn nữa
+# AAS Core — Agentic Awesome Skills
 
-> **Thư viện GitHub có thể cài đặt gồm hơn 1,936 kỹ năng agentic cho Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity và các trợ lý lập trình AI khác.**
+> **Ghép stack kỹ năng cục bộ, xác định cho coding agent: từ hồ sơ dự án tường minh đến kế hoạch có thể xem lại trước mọi thay đổi trên target.**
+
+Codex hoặc Claude tự kiểm tra dự án; AAS không quét repository. Agent tìm kiếm catalog cục bộ đầy đủ theo thứ tự ổn định, tự đánh giá kết quả không có điểm số hay xếp hạng, rồi gửi `profile` cùng chính xác các ID đã chọn tới `compose_stack`. AAS Core ghi nhận lựa chọn trong `aas-stack.json` schema 2; CLI xác thực manifest và tạo kế hoạch preview bất biến trước khi thay đổi kỹ năng.
+
+> **Ranh giới phát hành:** AAS Core được cung cấp từ dòng 15.x. Chỉ dùng một phiên bản chính xác có release notes tuyên bố rõ rằng nó bao gồm Core. Luồng preview được hỗ trợ dừng sau khi xem kế hoạch; `apply` và `recover` vẫn mang tính thử nghiệm. [Tìm hiểu AAS Core](AAS_CORE.vi.md).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Anthropic-purple)](https://claude.ai)
@@ -11,7 +15,7 @@
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-DeepMind-red)](https://github.com/sickn33/agentic-awesome-skills)
 
-**Agentic Awesome Skills** là một thư viện kỹ năng có thể cài đặt với **1,936+ kỹ năng `SKILL.md`** được thiết kế để hoạt động mượt mà trên các trợ lý lập trình AI lớn:
+Các playbook `SKILL.md`, plugin chuyên biệt, bundle, workflow và installer trực tiếp vẫn rất quan trọng. Chúng là lớp nội dung, tuyển chọn, phân phối và tương thích xung quanh AAS Core, không phải sản phẩm chính cạnh tranh với Core:
 
 - 🟣 **Claude Code** (Anthropic CLI)
 - 🔵 **Gemini CLI** (Google DeepMind)
@@ -22,11 +26,11 @@
 - ⚪ **OpenCode** (Mã nguồn mở CLI)
 - 🟡 **Kiro CLI / IDE** và **AdaL CLI**
 
-**Phiên bản hiện tại: V14.0.0.** Đây không chỉ là một danh sách prompt; repository này cung cấp kỹ năng, bundles, workflows, catalog sinh tự động và installer CLI để dùng lại các playbook đã được kiểm chứng.
+**Ranh giới phiên bản:** Dòng 14.x là baseline phân phối kỹ năng trực tiếp và không chứa AAS Core; Core được cung cấp từ dòng 15.x. GitHub là nguồn chuẩn cho Core, catalog, plugin và tài liệu; website được host chỉ là bề mặt duyệt catalog và review trong trình duyệt, không phải control plane được host.
 
 ### 1. 🐣 Bối cảnh: Đây là gì?
 
-**Agentic Awesome Skills** (Phiên bản 14.0.0) là một thư viện kỹ năng lớn cho AI coding assistants.
+**Agentic Awesome Skills** là repository chuẩn của AAS Core. Core là lớp sản phẩm cục bộ và xác định; catalog, bundle, workflow, plugin và installer CLI cung cấp bằng chứng, tuyển chọn, phân phối và khả năng tương thích xung quanh Core.
 
 Các trợ lý AI (như Claude Code, Cursor, hoặc Gemini) rất thông minh, nhưng chúng thiếu các **công cụ chuyên biệt**. Chúng không biết "Quy trình Triển khai" của công ty bạn hoặc cú pháp cụ thể cho "AWS CloudFormation".  
 **Skills** là các tệp markdown nhỏ dạy cho chúng cách thực hiện những tác vụ cụ thể này một cách chính xác trong mọi lần thực thi.
@@ -55,7 +59,7 @@ Repository được tổ chức thành các lĩnh vực chuyên biệt để bi�
 
 [Xem các Gói khởi đầu tại docs/vietnamese/BUNDLES.md](BUNDLES.vi.md) để tìm bộ công cụ hoàn hảo cho vai trò của bạn.
 
-## Duyệt hơn 1,936 Kỹ năng
+## Duyệt kỹ năng
 
 Chúng tôi đã chuyển danh sách đầy đủ các kỹ năng sang một danh mục riêng biệt để giữ cho file README này gọn gàng.
 
@@ -184,10 +188,4 @@ Chúng tôi chính thức cảm ơn những người đóng góp sau đây đã 
 
 ## Lịch sử Star
 
-<a href="https://www.star-history.com/?repos=sickn33%2Fagentic-awesome-skills&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=sickn33/agentic-awesome-skills&type=date&theme=dark&legend=top-left&sealed_token=5UEckOplDlF6KsKi881R_B44YTNBEFj0fRwovC_U0W2Um19HD9wLMQXclNblk6wFKgeGn0RzW0rGZkVCqzoKxaGB3IMaiN8tP8yqLRbhs6lf-kO3KeJWjftxgtV1zdrTVHjfEYfnevKZuYFww2_H2vC8IlXgfaTdNinFb3MD9CcMlu44hpLYu2iABkYy" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=sickn33/agentic-awesome-skills&type=date&legend=top-left&sealed_token=5UEckOplDlF6KsKi881R_B44YTNBEFj0fRwovC_U0W2Um19HD9wLMQXclNblk6wFKgeGn0RzW0rGZkVCqzoKxaGB3IMaiN8tP8yqLRbhs6lf-kO3KeJWjftxgtV1zdrTVHjfEYfnevKZuYFww2_H2vC8IlXgfaTdNinFb3MD9CcMlu44hpLYu2iABkYy" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=sickn33/agentic-awesome-skills&type=date&legend=top-left&sealed_token=5UEckOplDlF6KsKi881R_B44YTNBEFj0fRwovC_U0W2Um19HD9wLMQXclNblk6wFKgeGn0RzW0rGZkVCqzoKxaGB3IMaiN8tP8yqLRbhs6lf-kO3KeJWjftxgtV1zdrTVHjfEYfnevKZuYFww2_H2vC8IlXgfaTdNinFb3MD9CcMlu44hpLYu2iABkYy" />
- </picture>
-</a>
+[Xem biểu đồ Star History trực tiếp](https://www.star-history.com/?repos=sickn33%2Fagentic-awesome-skills&type=date&legend=top-left).

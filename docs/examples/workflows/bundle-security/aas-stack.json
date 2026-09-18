@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "name": "bundle-read-security-review",
+  "catalog": {
+    "package": "agentic-awesome-skills",
+    "version": "16.7.0",
+    "integrity": "sha256-1e464d8b3053b349fc16ba5a0f23a7aa4042802362a5a97604b9675846a22e27"
+  },
+  "targets": [
+    {
+      "host": "codex",
+      "scope": "project"
+    }
+  ],
+  "profile": {
+    "goals": [
+      "Review catalog-bound bundle reads, path containment and inert bounded output"
+    ],
+    "projectType": "local-mcp-server",
+    "languages": [
+      "JavaScript"
+    ],
+    "frameworks": [
+      "Node.js",
+      "MCP"
+    ],
+    "constraints": [
+      "Defensive local source and isolated fixtures only; no live target probing or payload execution"
+    ]
+  },
+  "skills": [
+    {
+      "id": "mcp-builder"
+    },
+    {
+      "id": "javascript-pro"
+    },
+    {
+      "id": "invariant-guard"
+    },
+    {
+      "id": "threat-modeling-expert"
+    },
+    {
+      "id": "javascript-testing-patterns"
+    },
+    {
+      "id": "privacy-by-design"
+    },
+    {
+      "id": "antigravity-maintainer-batch-release"
+    }
+  ]
+}

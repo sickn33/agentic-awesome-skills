@@ -65,7 +65,13 @@ class EditorialBundlesTests(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_get_bundle_skills_reads_json_manifest_by_name_and_id(self):
-        expected = ["concise-planning", "git-pushing", "kaizen", "lint-and-validate", "systematic-debugging"]
+        expected = [
+            "concise-planning",
+            "git-pushing",
+            "lint-and-validate",
+            "systematic-debugging",
+            "test-driven-development",
+        ]
         self.assertEqual(get_bundle_skills.get_bundle_skills(["Essentials"]), expected)
         self.assertEqual(get_bundle_skills.get_bundle_skills(["essentials"]), expected)
         web_wizard_skills = get_bundle_skills.get_bundle_skills(["web-wizard"])
@@ -74,6 +80,17 @@ class EditorialBundlesTests(unittest.TestCase):
         self.assertIn(
             "game-development/game-design",
             get_bundle_skills.get_bundle_skills(["indie-game-dev"]),
+        )
+
+    def test_oss_maintainer_bundle_contains_local_workflow_dependencies(self):
+        skill_ids = {
+            skill["id"]
+            for skill in next(
+                bundle for bundle in self.manifest_bundles if bundle["id"] == "oss-maintainer"
+            )["skills"]
+        }
+        self.assertTrue(
+            {"commit", "create-branch", "create-pr", "pr-writer"}.issubset(skill_ids)
         )
 
     def test_generated_bundle_plugin_contains_expected_skills(self):
@@ -91,13 +108,222 @@ class EditorialBundlesTests(unittest.TestCase):
         sample_skill_dir = essentials_plugin / "concise-planning"
         self.assertTrue((sample_skill_dir / "SKILL.md").is_file())
 
-    def test_generated_plugin_count_matches_manifest(self):
-        generated_plugins = sorted(
+    def test_agent_plugin_manifest_is_closed_and_schema_pinned(self):
+        metadata = editorial_bundles.load_metadata(str(REPO_ROOT))
+        essentials = next(
+            bundle for bundle in self.manifest_bundles if bundle["id"] == "essentials"
+        )
+        manifest = editorial_bundles._bundle_agent_plugin_manifest(metadata, essentials)
+
+        self.assertEqual(manifest["$schema"], editorial_bundles.AGENT_PLUGIN_SCHEMA_URL)
+        self.assertEqual(manifest["name"], "agentic-bundle-essentials")
+        self.assertNotIn("skills", manifest)
+        self.assertNotIn("interface", manifest)
+
+        with self.assertRaisesRegex(ValueError, "unsupported field: skills"):
+            editorial_bundles._validate_agent_plugin_manifest(
+                {**manifest, "skills": "./skills/"}
+            )
+
+        with self.assertRaisesRegex(ValueError, "Invalid Agent Plugins manifest name"):
+            editorial_bundles._validate_agent_plugin_manifest(
+                {**manifest, "name": "invalid--name"}
+            )
+
+    def test_flagship_codex_manifest_has_public_listing_metadata_and_assets(self):
+        metadata = editorial_bundles.load_metadata(str(REPO_ROOT))
+        flagship = next(
+            bundle
+            for bundle in self.manifest_bundles
+            if bundle["id"] == editorial_bundles.FLAGSHIP_BUNDLE_ID
+        )
+        manifest = editorial_bundles._bundle_codex_plugin_manifest(metadata, flagship)
+        interface = manifest["interface"]
+
+        self.assertEqual(interface["websiteURL"], editorial_bundles.CATALOG_URL)
+        self.assertEqual(
+            interface["privacyPolicyURL"],
+            editorial_bundles.PRIVACY_POLICY_URL,
+        )
+        self.assertEqual(
+            interface["termsOfServiceURL"],
+            editorial_bundles.TERMS_OF_SERVICE_URL,
+        )
+        self.assertEqual(interface["logo"], "./assets/logo.png")
+        self.assertEqual(interface["composerIcon"], "./assets/composer-icon.png")
+
+        plugin_root = REPO_ROOT / "plugins" / "agentic-bundle-aas-agent-mcp-builder"
+        for relative_path, source_path in editorial_bundles._bundle_asset_sources(
+            REPO_ROOT,
+            flagship,
+        ).items():
+            self.assertEqual(
+                (plugin_root / relative_path).read_bytes(),
+                source_path.read_bytes(),
+            )
+
+    def test_flagship_asset_sources_reject_symlinks(self):
+        with (
+            tempfile.TemporaryDirectory() as temp_dir,
+            tempfile.TemporaryDirectory() as external_dir,
+        ):
+            root = pathlib.Path(temp_dir)
+            source_path = root / next(iter(editorial_bundles.FLAGSHIP_ASSET_SOURCES.values()))
+            source_path.parent.mkdir(parents=True)
+            external_asset = pathlib.Path(external_dir) / "build-host-secret.png"
+            external_asset.write_bytes(b"sensitive build-host content")
+            source_path.symlink_to(external_asset)
+
+            with self.assertRaisesRegex(ValueError, "must not contain a symlink"):
+                editorial_bundles._bundle_asset_sources(
+                    root,
+                    {"id": editorial_bundles.FLAGSHIP_BUNDLE_ID},
+                )
+
+    def test_flagship_asset_sources_reject_symlinked_parent(self):
+        with (
+            tempfile.TemporaryDirectory() as temp_dir,
+            tempfile.TemporaryDirectory() as external_dir,
+        ):
+            root = pathlib.Path(temp_dir)
+            configured_source = next(iter(editorial_bundles.FLAGSHIP_ASSET_SOURCES.values()))
+            external_root = pathlib.Path(external_dir)
+            external_asset = external_root.joinpath(*configured_source.parts[1:])
+            external_asset.parent.mkdir(parents=True)
+            external_asset.write_bytes(b"sensitive build-host content")
+            (root / configured_source.parts[0]).symlink_to(
+                external_root,
+                target_is_directory=True,
+            )
+
+            with self.assertRaisesRegex(ValueError, "must not contain a symlink"):
+                editorial_bundles._bundle_asset_sources(
+                    root,
+                    {"id": editorial_bundles.FLAGSHIP_BUNDLE_ID},
+                )
+
+    def test_portable_skill_export_preserves_body_and_moves_aas_metadata(self):
+        source = """---
+name: sample-skill
+description: Use this skill for a sample task.
+risk: safe
+source: community
+tags: [sample, portable]
+---
+
+# Sample Skill
+
+Keep this body byte-for-byte.
+"""
+        exported = editorial_bundles._portable_skill_markdown(source)
+        frontmatter = editorial_bundles.parse_frontmatter(exported)
+
+        self.assertEqual(
+            set(frontmatter),
+            {"name", "description", "metadata"},
+        )
+        self.assertEqual(frontmatter["metadata"]["aas-risk"], "safe")
+        self.assertEqual(frontmatter["metadata"]["aas-source"], "community")
+        self.assertEqual(
+            frontmatter["metadata"]["aas-tags"],
+            '["sample","portable"]',
+        )
+        self.assertTrue(
+            exported.endswith("# Sample Skill\n\nKeep this body byte-for-byte.\n")
+        )
+
+    def test_generated_agent_plugin_skills_use_standard_frontmatter(self):
+        allowed_fields = editorial_bundles.AGENT_SKILL_ALLOWED_FIELDS
+        for plugin_root in sorted((REPO_ROOT / "plugins").glob("agentic-bundle-*")):
+            for skill_root in sorted((plugin_root / "skills").iterdir()):
+                if not skill_root.is_dir():
+                    continue
+                frontmatter = editorial_bundles.parse_frontmatter(
+                    (skill_root / "SKILL.md").read_text(encoding="utf-8")
+                )
+                self.assertFalse(
+                    set(frontmatter) - allowed_fields,
+                    f"non-standard frontmatter in {skill_root}",
+                )
+                self.assertEqual(frontmatter["name"], skill_root.name)
+                self.assertLessEqual(len(frontmatter["name"]), 64)
+                self.assertTrue(frontmatter["description"])
+                self.assertLessEqual(len(frontmatter["description"]), 1024)
+                self.assertTrue(
+                    all(
+                        isinstance(key, str) and isinstance(value, str)
+                        for key, value in frontmatter.get("metadata", {}).items()
+                    ),
+                    f"metadata must contain only string pairs in {skill_root}",
+                )
+
+    def test_agent_plugin_eligibility_flattens_unambiguous_qualified_skills(self):
+        essentials = next(
+            bundle for bundle in self.manifest_bundles if bundle["id"] == "essentials"
+        )
+        essentials_status = editorial_bundles._bundle_target_status(
+            essentials,
+            self.compatibility_by_id,
+        )
+        self.assertTrue(essentials_status["agent_plugins"])
+
+        indie_game = next(
+            bundle for bundle in self.manifest_bundles if bundle["id"] == "indie-game-dev"
+        )
+        indie_game_status = editorial_bundles._bundle_target_status(
+            indie_game,
+            self.compatibility_by_id,
+        )
+        self.assertTrue(indie_game_status["codex"])
+        self.assertTrue(indie_game_status["claude"])
+        self.assertTrue(indie_game_status["agent_plugins"])
+        self.assertTrue(editorial_bundles._bundle_has_flat_skill_layout(indie_game))
+
+        ambiguous_bundle = {
+            "skills": [
+                {"id": "first/game-design"},
+                {"id": "second/game-design"},
+            ]
+        }
+        self.assertFalse(
+            editorial_bundles._bundle_has_flat_skill_layout(ambiguous_bundle)
+        )
+
+        ambiguous_compatibility = {
+            "first/game-design": {
+                "targets": {"codex": "supported", "claude": "supported"},
+                "setup": {"type": "none"},
+            },
+            "second/game-design": {
+                "targets": {"codex": "supported", "claude": "supported"},
+                "setup": {"type": "none"},
+            },
+        }
+        ambiguous_status = editorial_bundles._bundle_target_status(
+            ambiguous_bundle,
+            ambiguous_compatibility,
+        )
+        self.assertTrue(ambiguous_status["codex"])
+        self.assertTrue(ambiguous_status["claude"])
+        self.assertFalse(ambiguous_status["agent_plugins"])
+
+    def test_agent_plugin_pilot_manifests_are_generated(self):
+        for bundle_id in ("essentials", "skill-author", "aas-agent-mcp-builder"):
+            manifest_path = (
+                REPO_ROOT
+                / "plugins"
+                / f"agentic-bundle-{bundle_id}"
+                / "plugin.json"
+            )
+            self.assertTrue(manifest_path.is_file(), f"missing {manifest_path}")
+
+    def test_generated_plugins_cover_manifest_during_source_only_prs(self):
+        generated_plugins = {
             path.name
             for path in (REPO_ROOT / "plugins").iterdir()
             if path.is_dir() and path.name.startswith("agentic-bundle-")
-        )
-        expected_plugins = sorted(
+        }
+        expected_plugins = {
             f'agentic-bundle-{bundle["id"]}'
             for bundle in self.manifest_bundles
             if any(
@@ -107,8 +333,22 @@ class EditorialBundlesTests(unittest.TestCase):
                 )
                 for target in ("codex", "claude")
             )
+        }
+        self.assertFalse(
+            expected_plugins - generated_plugins,
+            f"generated bundle plugins are missing: {sorted(expected_plugins - generated_plugins)}",
         )
-        self.assertEqual(generated_plugins, expected_plugins)
+
+    def test_plugin_sync_prunes_stale_bundle_directories(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = pathlib.Path(temp_dir)
+            stale_plugin = root / "plugins" / "agentic-bundle-retired"
+            stale_plugin.mkdir(parents=True)
+            (stale_plugin / "marker.txt").write_text("stale", encoding="utf-8")
+
+            editorial_bundles.sync_editorial_bundle_plugins(root, {}, [], {})
+
+            self.assertFalse(stale_plugin.exists())
 
     def test_codex_bundle_plugin_names_keep_qualified_skill_names_valid(self):
         max_name_length = 64
@@ -129,6 +369,14 @@ class EditorialBundlesTests(unittest.TestCase):
             self.assertEqual(manifest["name"], plugin_name)
             if bundle.get("defaultPrompts"):
                 self.assertEqual(manifest["interface"]["defaultPrompt"], bundle["defaultPrompts"])
+            else:
+                self.assertEqual(len(manifest["interface"]["defaultPrompt"]), 2)
+                self.assertTrue(
+                    all(
+                        len(prompt) <= 128
+                        for prompt in manifest["interface"]["defaultPrompt"]
+                    )
+                )
             if bundle.get("positioning"):
                 self.assertEqual(manifest["interface"]["shortDescription"], bundle["positioning"])
             self.assertLessEqual(
@@ -206,6 +454,113 @@ class EditorialBundlesTests(unittest.TestCase):
                 compatibility["targets"]["claude"] == "supported",
                 f"Claude root plugin inclusion mismatch for {skill_id}",
             )
+
+    def test_skill_mirror_check_rejects_stale_and_unexpected_files(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = pathlib.Path(temp_dir)
+            canonical = root / "skills" / "sample"
+            mirror = root / "plugin" / "skills" / "sample"
+            canonical.mkdir(parents=True)
+            mirror.mkdir(parents=True)
+            (canonical / "SKILL.md").write_text("canonical\n", encoding="utf-8")
+            (mirror / "SKILL.md").write_text("stale\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(ValueError, "stale mirrored file: sample/SKILL.md"):
+                editorial_bundles._assert_skill_mirror_matches(
+                    root,
+                    root / "plugin" / "skills",
+                    ["sample"],
+                    "sample plugin",
+                )
+
+            (mirror / "SKILL.md").write_text("canonical\n", encoding="utf-8")
+            (mirror / "unexpected.txt").write_text("extra\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "unexpected mirrored file: sample/unexpected.txt"):
+                editorial_bundles._assert_skill_mirror_matches(
+                    root,
+                    root / "plugin" / "skills",
+                    ["sample"],
+                    "sample plugin",
+                )
+
+    def test_skill_mirror_check_rejects_symlinks(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = pathlib.Path(temp_dir)
+            canonical = root / "skills" / "sample"
+            mirror = root / "plugin" / "skills" / "sample"
+            canonical.mkdir(parents=True)
+            mirror.mkdir(parents=True)
+            (canonical / "SKILL.md").write_text("canonical\n", encoding="utf-8")
+            (mirror / "SKILL.md").symlink_to(canonical / "SKILL.md")
+
+            with self.assertRaisesRegex(ValueError, "unexpected symlink: sample/SKILL.md"):
+                editorial_bundles._assert_skill_mirror_matches(
+                    root,
+                    root / "plugin" / "skills",
+                    ["sample"],
+                    "sample plugin",
+                )
+
+            mirror_root_link = root / "linked-skills"
+            mirror_root_link.symlink_to(root / "plugin" / "skills", target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "skills directory must not be a symlink"):
+                editorial_bundles._assert_skill_mirror_matches(
+                    root,
+                    mirror_root_link,
+                    ["sample"],
+                    "sample plugin",
+                )
+
+    def test_plugin_metadata_layout_rejects_unexpected_files(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            plugin_root = pathlib.Path(temp_dir) / "plugin"
+            manifest = plugin_root / ".codex-plugin" / "plugin.json"
+            manifest.parent.mkdir(parents=True)
+            manifest.write_text("{}\n", encoding="utf-8")
+            (plugin_root / "README.md").write_text("stale\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(ValueError, "metadata layout is out of sync: unexpected README.md"):
+                editorial_bundles._assert_plugin_metadata_layout(
+                    plugin_root,
+                    {".codex-plugin/plugin.json"},
+                    "sample plugin",
+                )
+
+    def test_json_check_requires_canonical_serialization_and_regular_file(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = pathlib.Path(temp_dir)
+            manifest = root / "plugin.json"
+            manifest.write_text('{"name":"sample"}\n', encoding="utf-8")
+
+            with self.assertRaisesRegex(ValueError, "is out of sync"):
+                editorial_bundles._assert_json_matches(
+                    manifest,
+                    {"name": "sample"},
+                    "sample manifest",
+                    root,
+                )
+
+            manifest.write_bytes(b'{\r\n  "name": "sample"\r\n}\r\n')
+            with self.assertRaisesRegex(ValueError, "is out of sync"):
+                editorial_bundles._assert_json_matches(
+                    manifest,
+                    {"name": "sample"},
+                    "sample manifest",
+                    root,
+                )
+
+            external = root / "external"
+            external.mkdir()
+            (external / "plugin.json").write_text('{\n  "name": "sample"\n}\n', encoding="utf-8")
+            linked_parent = root / "linked"
+            linked_parent.symlink_to(external, target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "path must not contain a symlink"):
+                editorial_bundles._assert_json_matches(
+                    linked_parent / "plugin.json",
+                    {"name": "sample"},
+                    "sample manifest",
+                    root,
+                )
 
     def test_remove_tree_retries_on_enotempty(self):
         target = REPO_ROOT / "plugins" / "agentic-awesome-skills" / "skills"

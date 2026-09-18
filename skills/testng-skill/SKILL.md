@@ -1,7 +1,7 @@
 ---
 name: testng-skill
 description: 'Generates TestNG tests in Java with groups, data providers, parallel execution, XML suite configuration, and listeners. Use when user mentions "TestNG", "@DataProvider", "testng.xml", "groups". Triggers on: "TestNG", "@DataProvider", "testng.xml", "TestNG suite", "parallel tests Java".'
-risk: unknown
+risk: critical
 source: https://github.com/LambdaTest/agent-skills/tree/main/testng-skill
 source_repo: LambdaTest/agent-skills
 source_type: community

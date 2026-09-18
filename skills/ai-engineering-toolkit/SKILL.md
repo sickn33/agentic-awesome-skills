@@ -10,6 +10,20 @@ tags: [prompt-engineering, rag, security, evaluation, ai-engineering, llm]
 tools: [claude, cursor, gemini, copilot]
 ---
 
+> **⚠️ AUTHORIZED USE ONLY**
+> This skill is for educational purposes or authorized security assessments only.
+> You must have explicit, written permission from the system owner before using this tool.
+> Misuse of this tool is illegal and strictly prohibited.
+
+> **Mandatory confirmation gate**
+> Before running any command that probes, exploits, changes, persists on, extracts data from, or attempts credential access against a target:
+> 1. Ask the user to state the exact target URL, IP, account, or resource.
+> 2. Ask the user to confirm written authorization and the permitted scope.
+> 3. Show the exact command(s) and explain their expected effect.
+> 4. Wait for explicit confirmation in the current conversation.
+>
+> Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
+
 # AI Engineering Toolkit
 
 ## Overview
@@ -42,11 +56,6 @@ Analyzes token distribution across 5 context zones (System, Few-shot, User input
 Walks through a complete architecture decision tree: document format → parsing strategy → chunking approach (fixed/semantic/recursive) → embedding model selection → retrieval method (vector/keyword/hybrid) → evaluation metrics (Faithfulness, Relevancy, Context Precision). Covers Naive RAG, Advanced RAG, and Modular RAG patterns.
 
 ### Skill 4: Agent Safety Guard
-
-> **⚠️ AUTHORIZED USE ONLY**
-> This skill is for educational purposes or authorized security assessments only.
-> You must have explicit, written permission from the system owner before using this tool.
-> Misuse of this tool is illegal and strictly prohibited.
 
 Executes a 65-point red-team audit across 5 attack categories: direct prompt injection, indirect prompt injection (via RAG documents), information extraction (system prompt / API key leakage), tool abuse (SQL injection, path traversal, command injection), and goal hijacking. The AI constructs adversarial test prompts for evaluation purposes, asks the user for confirmation before each test phase, judges pass/fail, and generates fix recommendations. All tests are contained within the evaluation context and do not interact with external systems. It is recommended to run audits in a sandboxed environment (Docker/VM).
 

@@ -69,6 +69,12 @@ Each iteration takes a different lens and builds on all prior findings:
 ### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Explain how this subsystem works across files, including control flow, data flow, boundaries, and evidence.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

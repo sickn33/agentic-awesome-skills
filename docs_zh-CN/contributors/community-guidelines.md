@@ -143,12 +143,9 @@
 ### 社交媒体
 - 🐦 [Twitter](https://twitter.com/antigravity_ai) - 项目动态
 - 💬 [Discord](https://discord.gg/antigravity) - 实时聊天
-- 📺 [YouTube](https://youtube.com/c/antigravity) - 教程和演示
 
 ### 本地社区
 - 🌍 [本地聚会](https://meetup.com/antigravity-skills) - 线下交流
-- 🎓 [学习小组](https://study-groups.antigravity-skills.org) - 协作学习
-- 👥 [贡献者聚会](https://contributors.antigravity-skills.org) - 定期交流
 
 ---
 

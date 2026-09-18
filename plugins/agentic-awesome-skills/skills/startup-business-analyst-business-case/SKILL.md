@@ -5,7 +5,7 @@ description: 'Generate comprehensive investor-ready business case document with
   market, solution, financials, and strategy
 
   '
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---

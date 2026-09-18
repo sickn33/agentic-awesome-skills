@@ -1,7 +1,7 @@
 ---
 name: memory-forensics
 description: "Comprehensive techniques for acquiring, analyzing, and extracting artifacts from memory dumps for incident response and malware analysis."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

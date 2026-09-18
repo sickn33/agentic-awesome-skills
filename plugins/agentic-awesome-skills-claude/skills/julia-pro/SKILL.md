@@ -1,7 +1,7 @@
 ---
 name: julia-pro
 description: Master Julia 1.10+ with modern features, performance optimization, multiple dispatch, and production-ready practices.
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---

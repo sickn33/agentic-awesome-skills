@@ -1,16 +1,18 @@
 ---
 name: high-end-visual-design
-description: "Use when designing expensive agency-grade interfaces with premium fonts, spatial rhythm, soft depth, and fluid microinteractions."
-category: frontend
-risk: safe
-source: community
-source_repo: Leonxlnx/taste-skill
-source_type: community
-date_added: "2026-04-17"
-author: Leonxlnx
-tags: [frontend, visual-design, motion, ui]
-tools: [claude, cursor, codex, antigravity]
+description: Use when designing expensive agency-grade interfaces with premium fonts, spatial rhythm, soft depth, and fluid microinteractions.
+metadata:
+  aas-category: frontend
+  aas-risk: safe
+  aas-source: community
+  aas-source-repo: Leonxlnx/taste-skill
+  aas-source-type: community
+  aas-date-added: '2026-04-17'
+  aas-author: Leonxlnx
+  aas-tags: '["frontend","visual-design","motion","ui"]'
+  aas-tools: '["claude","cursor","codex","antigravity"]'
 ---
+
 # Agent Skill: Principal UI/UX Architect & Motion Choreographer (Awwwards-Tier)
 
 ## When to Use
@@ -18,6 +20,12 @@ tools: [claude, cursor, codex, antigravity]
 - Use when the user wants a high-end agency, Awwwards-tier, Apple-like, Linear-like, luxury, or polished visual design.
 - Use when building a landing page, portfolio, SaaS UI, consumer product page, or app surface that needs premium depth and motion.
 - Use when the design must avoid generic fonts, harsh shadows, static layouts, default navbars, and ordinary Bootstrap-style grids.
+
+## Example
+
+**User request:**
+
+> Review this interface with @high-end-visual-design, identify the highest-impact design problems, and propose an implementation-ready improvement.
 
 ## Limitations
 

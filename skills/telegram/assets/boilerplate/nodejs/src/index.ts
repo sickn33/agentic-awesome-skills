@@ -21,6 +21,9 @@ async function main() {
     const port = parseInt(process.env.PORT || '3000');
     const webhookUrl = process.env.WEBHOOK_URL!;
     const secret = process.env.WEBHOOK_SECRET;
+    if (!secret) {
+      throw new Error('WEBHOOK_SECRET is required in webhook mode');
+    }
     await client.startWebhook(port, webhookUrl, secret);
     console.log(`Bot running in webhook mode on port ${port}`);
   } else {

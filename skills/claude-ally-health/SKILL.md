@@ -22,6 +22,12 @@ This skill provides guidance and patterns for a health assistant skill for medic
 
 For more information, see the [source repository](https://github.com/huifer/Claude-Ally-Health).
 
+## Example
+
+**User request:**
+
+> Use @claude-ally-health for this task: A health assistant skill for medical information analysis, symptom tracking, and wellness guidance.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

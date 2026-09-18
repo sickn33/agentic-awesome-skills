@@ -114,6 +114,12 @@ Before finalizing output, the agent asks:
 - [ ] Did I avoid fear mongering?
 - [ ] Does the frame preserve credibility and autonomy?
 
+## Example
+
+**User request:**
+
+> Reframe this offer around the credible cost of inaction without exaggerating risk or manufacturing urgency.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

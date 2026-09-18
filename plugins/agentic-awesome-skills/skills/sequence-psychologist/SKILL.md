@@ -113,6 +113,12 @@ Before finalizing output, the agent asks:
 - [ ] Did I resolve open loops on time?
 - [ ] Does the sequence feel respectful and useful?
 
+## Example
+
+**User request:**
+
+> Rewrite this email sequence with a clearer step-by-step persuasion arc and credible transitions.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

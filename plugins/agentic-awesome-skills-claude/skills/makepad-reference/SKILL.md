@@ -1,8 +1,9 @@
 ---
 name: makepad-reference
 description: "This category provides reference materials for debugging, code quality, and advanced layout patterns."
-risk: unknown
+risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Makepad Reference

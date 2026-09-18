@@ -35,7 +35,7 @@ class MCPConnection(ABC):
             elif len(result) == 3:
                 read, write, _ = result
             else:
-                raise ValueError(f"Unexpected context result: {result}")
+                raise ValueError("Unexpected connection context shape")
 
             session_ctx = ClientSession(read, write)
             self.session = await self._stack.enter_async_context(session_ctx)
@@ -54,20 +54,27 @@ class MCPConnection(ABC):
 
     async def list_tools(self) -> list[dict[str, Any]]:
         """Retrieve available tools from the MCP server."""
-        response = await self.session.list_tools()
-        return [
-            {
-                "name": tool.name,
-                "description": tool.description,
-                "input_schema": tool.inputSchema,
-            }
-            for tool in response.tools
-        ]
+        tools = []
+        seen_cursors = set()
+        cursor = None
+        for _ in range(100):
+            response = await self.session.list_tools(cursor=cursor)
+            tools.extend({"name": tool.name, "description": tool.description or "",
+                          "input_schema": tool.inputSchema} for tool in response.tools)
+            if len(tools) > 1000 or len({tool["name"] for tool in tools}) != len(tools):
+                raise ValueError("Oversized or duplicate tool inventory")
+            cursor = response.nextCursor
+            if not cursor:
+                return tools
+            if cursor in seen_cursors:
+                raise ValueError("Repeated tool-list cursor")
+            seen_cursors.add(cursor)
+        raise ValueError("Tool-list page budget exhausted")
 
     async def call_tool(self, tool_name: str, arguments: dict[str, Any]) -> Any:
         """Call a tool on the MCP server with provided arguments."""
         result = await self.session.call_tool(tool_name, arguments=arguments)
-        return result.content
+        return result.model_dump(mode="json", by_alias=True, exclude_none=True)
 
 
 class MCPConnectionStdio(MCPConnection):

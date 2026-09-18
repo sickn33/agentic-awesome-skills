@@ -22,6 +22,12 @@ This skill provides guidance and patterns for web fuzzing with ffuf.
 
 For more information, see the [source repository](https://github.com/jthack/ffuf_claude_skill).
 
+## Example
+
+**User request:**
+
+> Use @ffuf-claude-skill for this task: Web fuzzing with ffuf.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -1,7 +1,7 @@
 ---
 name: ui-review
 description: Review UI code for design system compliance, accessibility, and best practices
-risk: unknown
+risk: safe
 source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-review
 source_repo: bitjaru/styleseed
 source_type: community
@@ -100,6 +100,12 @@ Provide:
 1. **Score**: Pass / Needs Improvement / Fail
 2. **Issues**: List each violation with file:line reference
 3. **Fixes**: Concrete code changes for each issue
+
+## Example
+
+**User request:**
+
+> Review UI code for design system compliance, accessibility, and best practices.
 
 ## Limitations
 

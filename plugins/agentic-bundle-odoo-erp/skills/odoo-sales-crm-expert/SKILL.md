@@ -1,8 +1,10 @@
 ---
 name: odoo-sales-crm-expert
-description: "Expert guide for Odoo Sales and CRM: pipeline stages, quotation templates, pricelists, sales teams, lead scoring, and forecasting."
-risk: safe
-source: "self"
+description: 'Expert guide for Odoo Sales and CRM: pipeline stages, quotation templates, pricelists, sales teams, lead scoring, and forecasting.'
+metadata:
+  aas-risk: safe
+  aas-source: self
+  aas-date-added: '2026-09-04'
 ---
 
 # Odoo Sales & CRM Expert

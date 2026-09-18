@@ -20,6 +20,7 @@ FRONTMATTER_PATTERN = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
 MARKDOWN_DECORATION_PATTERN = re.compile(r"[*_`]+")
 HTML_TAG_PATTERN = re.compile(r"<[^>]+>")
 MULTISPACE_PATTERN = re.compile(r"\s+")
+COMPLETE_SENTENCE_PATTERN = re.compile(r"[.!?](?:[\"'’”)]?)(?=\s|$)")
 
 
 def strip_frontmatter(content: str) -> str:
@@ -98,7 +99,22 @@ def normalize_for_match(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", text.lower())
 
 
+def recover_complete_prefix(description: str) -> str | None:
+    """Keep complete source sentences and discard only the cut-off tail."""
+    prefix = ELLIPSIS_PATTERN.sub("", description).rstrip()
+    matches = list(COMPLETE_SENTENCE_PATTERN.finditer(prefix))
+    if not matches:
+        return None
+
+    candidate = prefix[: matches[-1].end()].strip()
+    return candidate if len(candidate) >= MIN_PARAGRAPH_LENGTH else None
+
+
 def pick_candidate(description: str, body: str) -> str | None:
+    complete_prefix = recover_complete_prefix(description)
+    if complete_prefix:
+        return complete_prefix
+
     paragraphs = [paragraph for paragraph in split_candidate_paragraphs(body) if is_usable_paragraph(paragraph)]
     if not paragraphs:
         return None
@@ -113,6 +129,14 @@ def pick_candidate(description: str, body: str) -> str | None:
                 return paragraph
 
     return paragraphs[0]
+
+
+def prepare_description(description: str, candidate: str) -> str:
+    """Preserve source markup when the candidate came from frontmatter."""
+    complete_prefix = recover_complete_prefix(description)
+    if complete_prefix == candidate:
+        return MULTISPACE_PATTERN.sub(" ", candidate).strip()
+    return clamp_description(candidate)
 
 
 def clamp_description(text: str, max_length: int = MAX_DESCRIPTION_LENGTH) -> str:
@@ -188,7 +212,7 @@ def update_skill_file(skill_path: Path) -> tuple[bool, str | None]:
     if not candidate:
         return False, None
 
-    new_description = clamp_description(candidate)
+    new_description = prepare_description(description, candidate)
     if not new_description or new_description == normalize_text(description):
         return False, None
 
@@ -234,7 +258,7 @@ def main() -> int:
             print(f"SKIP {skill_path.relative_to(repo_root)}")
             continue
 
-        new_description = clamp_description(candidate)
+        new_description = prepare_description(description, candidate)
         if args.dry_run:
             fixed += 1
             print(f"FIX  {skill_path.relative_to(repo_root)} -> {new_description}")

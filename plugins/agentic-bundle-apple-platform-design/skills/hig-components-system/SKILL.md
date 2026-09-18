@@ -1,9 +1,10 @@
 ---
 name: hig-components-system
 description: 'Apple HIG guidance for system experience components: widgets, live activities, notifications, complications, home screen quick actions, top shelf, watch faces, app clips, and app shortcuts.'
-risk: unknown
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: safe
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Apple HIG: System Experiences
@@ -99,6 +100,12 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Use @hig-components-system for this task: Apple HIG guidance for system experience components: widgets, live activities, notifications, complications, home screen quick actions, top shelf, watch faces, app clips, and app shortcuts.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

@@ -38,6 +38,12 @@ Answer repository questions grounded entirely in source code evidence.
 ### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Answer this repository question using only source-code evidence, with direct file and line references.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

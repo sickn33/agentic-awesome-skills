@@ -1,9 +1,10 @@
 ---
 name: stripe-automation
-description: "Automate Stripe tasks via Rube MCP (Composio): customers, charges, subscriptions, invoices, products, refunds. Always search tools first for current schemas."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: 'Automate Stripe tasks via Rube MCP (Composio): customers, charges, subscriptions, invoices, products, refunds. Always search tools first for current schemas.'
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Stripe Automation via Rube MCP
@@ -199,6 +200,12 @@ Stripe uses smallest currency unit:
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Automate Stripe tasks via Rube MCP (Composio): customers, charges, subscriptions, invoices, products, refunds.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

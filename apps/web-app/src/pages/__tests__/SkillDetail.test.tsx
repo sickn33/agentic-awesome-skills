@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import { SkillDetail } from '../SkillDetail';
 import { renderWithRouter } from '../../utils/testUtils';
 import { createMockSkill } from '../../factories/skill';
@@ -107,7 +108,7 @@ describe('SkillDetail', () => {
         expect(screen.getByText(/Related topic guides/i)).toBeInTheDocument();
         expect(screen.getByRole('link', { name: /Antigravity plugins/i })).toHaveAttribute(
           'href',
-          '/topics/antigravity-plugins',
+          '/topics/antigravity-plugins/',
         );
         expect(screen.getByTestId('markdown-content')).toHaveTextContent('This is the skill content.');
         expect(document.title).toContain('react-patterns');
@@ -237,6 +238,26 @@ describe('SkillDetail', () => {
     });
   });
 
+  it('ignores an older markdown request after navigating to another skill', async () => {
+    const first = createMockSkill({ id: 'delayed-first', name: 'delayed-first', path: 'delayed-first' });
+    const second = createMockSkill({ id: 'current-second', name: 'current-second', path: 'current-second' });
+    (useSkills as Mock).mockReturnValue({ skills: [first, second], stars: {}, loading: false });
+    let finishFirst!: (response: unknown) => void;
+    global.fetch = vi.fn().mockImplementation((url: string) => url.includes('delayed-first')
+      ? new Promise((resolve) => { finishFirst = resolve; })
+      : Promise.resolve({ ok: true, text: async () => '# Current second content' }));
+    const router = createMemoryRouter([{ path: '/skill/:id', element: <SkillDetail /> }],
+      { initialEntries: ['/skill/delayed-first'] });
+    render(<RouterProvider router={router} />);
+    await waitFor(() => expect(finishFirst).toBeDefined());
+    await act(() => router.navigate('/skill/current-second'));
+    await waitFor(() => expect(screen.getByTestId('markdown-content')).toHaveTextContent('Current second content'));
+    await act(async () => { finishFirst({ ok: true, text: async () => '# Stale first content' }); });
+    expect(screen.getByTestId('markdown-content')).toHaveTextContent('Current second content');
+    fireEvent.click(screen.getByRole('button', { name: /Copy Full Content/i }));
+    expect(navigator.clipboard.writeText).toHaveBeenLastCalledWith('# Current second content');
+  });
+
   describe('Copy functionality', () => {
     it('should copy skill name to clipboard when clicked', async () => {
       const mockSkill = createMockSkill({ id: 'click-test', name: 'click-test' });
@@ -268,7 +289,20 @@ describe('SkillDetail', () => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith('Use @click-test');
     });
 
-    it('should copy install command when copy command CTA is clicked', async () => {
+    it.each(['Copy @Skill', 'Copy Full Content'])('reports a failed %s without claiming success', async (button) => {
+      const skill = createMockSkill({ id: 'clipboard-failure', name: 'clipboard-failure' });
+      (useSkills as Mock).mockReturnValue({ skills: [skill], stars: {}, loading: false });
+      global.fetch = vi.fn().mockResolvedValue({ ok: true, text: async () => '# Copyable content' });
+      renderWithRouter(<SkillDetail />, { route: '/skill/clipboard-failure', path: '/skill/:id', useProvider: false });
+      const copy = await screen.findByRole('button', { name: button });
+      vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(new Error('clipboard permission denied'));
+      fireEvent.click(copy);
+      expect(await screen.findByRole('alert')).toHaveTextContent('Clipboard unavailable');
+      expect(copy).toHaveTextContent(button);
+      expect(copy).not.toHaveTextContent('Copied');
+    });
+
+    it('should link to Core artifact review without promising composition', async () => {
       const mockSkill = createMockSkill({ id: 'click-install', name: 'click-install' });
 
       (useSkills as Mock).mockReturnValue({
@@ -289,20 +323,13 @@ describe('SkillDetail', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /Copy command/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /Review Core artifacts/i })).toBeInTheDocument();
       });
 
-      vi.useFakeTimers();
-      try {
-        await act(async () => {
-          fireEvent.click(screen.getByRole('button', { name: /Copy command/i }));
-          await vi.runAllTimersAsync();
-        });
-      } finally {
-        vi.useRealTimers();
-      }
-
-      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('npx agentic-awesome-skills');
+      expect(screen.getByRole('link', { name: /Review Core artifacts/i })).toHaveAttribute(
+        'href',
+        '/workbench/',
+      );
     });
   });
 
@@ -332,6 +359,85 @@ describe('SkillDetail', () => {
         expect(starBtn).toBeInTheDocument();
         expect(starBtn).toHaveAttribute('data-community-count', '10');
       });
+    });
+  });
+
+  describe('Similar skills recommendations', () => {
+    it('suggests skills that share a category or tags, excluding the current skill', async () => {
+      const current = createMockSkill({
+        id: 'react-patterns',
+        name: 'react-patterns',
+        category: 'frontend',
+        tags: ['react', 'ui'],
+      });
+      const similar = createMockSkill({
+        id: 'react-hooks',
+        name: 'react-hooks',
+        category: 'frontend',
+        tags: ['react'],
+      });
+      const unrelated = createMockSkill({
+        id: 'terraform',
+        name: 'terraform',
+        category: 'infra',
+        tags: ['iac'],
+      });
+
+      (useSkills as Mock).mockReturnValue({
+        skills: [current, similar, unrelated],
+        stars: {},
+        loading: false,
+      });
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        text: async () => '# content',
+      });
+
+      renderWithRouter(<SkillDetail />, {
+        route: '/skill/react-patterns',
+        path: '/skill/:id',
+        useProvider: false,
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText(/Similar skills to consider/i)).toBeInTheDocument();
+      });
+
+      expect(screen.getByText('@react-hooks')).toBeInTheDocument();
+      expect(screen.queryByText('@terraform')).not.toBeInTheDocument();
+    });
+
+    it('does not render recommendations when no other skill shares category or tags', async () => {
+      const current = createMockSkill({
+        id: 'solo-skill',
+        name: 'solo-skill',
+        category: 'frontend',
+        tags: ['react'],
+      });
+
+      (useSkills as Mock).mockReturnValue({
+        skills: [current],
+        stars: {},
+        loading: false,
+      });
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        text: async () => '# Solo content',
+      });
+
+      renderWithRouter(<SkillDetail />, {
+        route: '/skill/solo-skill',
+        path: '/skill/:id',
+        useProvider: false,
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('@solo-skill')).toBeInTheDocument();
+      });
+
+      expect(screen.queryByText(/Similar skills to consider/i)).not.toBeInTheDocument();
     });
   });
 });

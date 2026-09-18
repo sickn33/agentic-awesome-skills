@@ -45,7 +45,7 @@
 
 ### 示例："Web Wizard" 捆绑包
 
-当你看到 [Web Wizard 捆绑包](bundles.md#-the-web-wizard-pack)时，它列出了：
+当你看到 [Web Wizard 捆绑包](bundles.md#-web-向导包)时，它列出了：
 
 - `frontend-design`
 - `react-best-practices`

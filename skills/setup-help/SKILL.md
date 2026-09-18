@@ -44,6 +44,12 @@ Repeat this format for every response until setup is done.
 - Update the "Still remaining" list each time as steps get done.
 - When nothing remains, say setup is complete instead of showing the list.
 
+## Example
+
+**User request:**
+
+> Use @setup-help for this task: Walk a user through setup or installation one step at a time with the remaining steps visible.
+
 ## Limitations
 
 - Adapted from `davidondrej/skills`; verify local paths, tools, credentials, and agent features before acting.

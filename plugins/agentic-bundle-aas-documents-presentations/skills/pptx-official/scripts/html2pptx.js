@@ -26,12 +26,43 @@
  */
 
 const { chromium } = require('playwright');
+const fs = require('fs');
 const path = require('path');
+const { fileURLToPath } = require('url');
 const sharp = require('sharp');
 
 const PT_PER_PX = 0.75;
 const PX_PER_IN = 96;
 const EMU_PER_IN = 914400;
+
+function resolveTrustedAsset(assetValue, allowedRoot) {
+  let candidate;
+  try {
+    const parsed = new URL(assetValue, `file://${allowedRoot}${path.sep}`);
+    if (parsed.protocol !== 'file:') throw new Error('only local file assets are supported');
+    candidate = fileURLToPath(parsed);
+  } catch (error) {
+    throw new Error(`Unsafe slide asset ${JSON.stringify(assetValue)}: ${error.message}`);
+  }
+  const realRoot = fs.realpathSync(allowedRoot);
+  const realAsset = fs.realpathSync(candidate);
+  const relativeAsset = path.relative(realRoot, realAsset);
+  if (relativeAsset.startsWith('..') || path.isAbsolute(relativeAsset)) {
+    throw new Error(`Slide asset escapes the HTML directory: ${assetValue}`);
+  }
+  const stat = fs.lstatSync(realAsset);
+  if (!stat.isFile() || stat.isSymbolicLink()) throw new Error(`Slide asset must be a regular file: ${assetValue}`);
+  return realAsset;
+}
+
+function constrainSlideAssets(slideData, allowedRoot) {
+  if (slideData.background?.type === 'image' && slideData.background.path) {
+    slideData.background.path = resolveTrustedAsset(slideData.background.path, allowedRoot);
+  }
+  for (const element of slideData.elements) {
+    if (element.type === 'image') element.src = resolveTrustedAsset(element.src, allowedRoot);
+  }
+}
 
 // Helper: Get body dimensions and check for overflow
 async function getBodyDimensions(page) {
@@ -120,10 +151,7 @@ function validateTextBoxPosition(slideData, bodyDimensions) {
 // Helper: Add background to slide
 async function addBackground(slideData, targetSlide, tmpDir) {
   if (slideData.background.type === 'image' && slideData.background.path) {
-    let imagePath = slideData.background.path.startsWith('file://')
-      ? slideData.background.path.replace('file://', '')
-      : slideData.background.path;
-    targetSlide.background = { path: imagePath };
+    targetSlide.background = { path: slideData.background.path };
   } else if (slideData.background.type === 'color' && slideData.background.value) {
     targetSlide.background = { color: slideData.background.value };
   }
@@ -133,9 +161,8 @@ async function addBackground(slideData, targetSlide, tmpDir) {
 function addElements(slideData, targetSlide, pres) {
   for (const el of slideData.elements) {
     if (el.type === 'image') {
-      let imagePath = el.src.startsWith('file://') ? el.src.replace('file://', '') : el.src;
       targetSlide.addImage({
-        path: imagePath,
+        path: el.src,
         x: el.position.x,
         y: el.position.y,
         w: el.position.w,
@@ -911,7 +938,8 @@ async function html2pptx(htmlFile, pres, options = {}) {
     let bodyDimensions;
     let slideData;
 
-    const filePath = path.isAbsolute(htmlFile) ? htmlFile : path.join(process.cwd(), htmlFile);
+    const filePath = fs.realpathSync(path.isAbsolute(htmlFile) ? htmlFile : path.join(process.cwd(), htmlFile));
+    const assetRoot = path.dirname(filePath);
     const validationErrors = [];
 
     try {
@@ -931,6 +959,7 @@ async function html2pptx(htmlFile, pres, options = {}) {
       });
 
       slideData = await extractSlideData(page);
+      constrainSlideAssets(slideData, assetRoot);
     } finally {
       await browser.close();
     }

@@ -1,7 +1,7 @@
 ---
 name: framework-migration-legacy-modernize
 description: "Orchestrate a comprehensive legacy system modernization using the strangler fig pattern, enabling gradual replacement of outdated components while maintaining continuous business operations through ex"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -133,6 +133,12 @@ Orchestrate a comprehensive legacy system modernization using the strangler fig 
 - Complete documentation enabling new developer onboarding in <1 week
 
 Target: $ARGUMENTS
+
+## Example
+
+**User request:**
+
+> Plan a strangler-fig migration for this legacy system, preserving service continuity and defining measurable cutover stages.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

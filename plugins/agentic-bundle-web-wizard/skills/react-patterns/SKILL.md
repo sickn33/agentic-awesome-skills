@@ -1,9 +1,10 @@
 ---
 name: react-patterns
-description: "Modern React patterns and principles. Hooks, composition, performance, TypeScript best practices."
-risk: safe
-source: community
-date_added: "2026-02-27"
+description: Modern React patterns and principles. Hooks, composition, performance, TypeScript best practices.
+metadata:
+  aas-risk: safe
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # React Patterns
@@ -209,6 +210,12 @@ Use this image as a reference for a better file structure of the project
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Use @react-patterns for this task: Modern React patterns and principles.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

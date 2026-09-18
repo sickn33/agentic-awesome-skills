@@ -17,6 +17,7 @@ from patchright.sync_api import BrowserContext, Page
 sys.path.insert(0, str(Path(__file__).parent))
 
 from browser_utils import StealthUtils
+from input_safety import format_untrusted_content, validate_notebook_url
 
 
 def _get_hostname(url: str) -> str:
@@ -49,7 +50,7 @@ class BrowserSession:
         self.created_at = time.time()
         self.last_activity = time.time()
         self.message_count = 0
-        self.notebook_url = notebook_url
+        self.notebook_url = validate_notebook_url(notebook_url)
         self.context = context
         self.page = None
         self.stealth = StealthUtils()
@@ -149,7 +150,7 @@ class BrowserSession:
             return {
                 "status": "success",
                 "question": question,
-                "answer": answer,
+                "answer": format_untrusted_content(answer),
                 "session_id": self.id,
                 "notebook_url": self.notebook_url
             }

@@ -1,18 +1,21 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 import { Icon } from '../components/ui/Icon';
-import { getSeoLandingPage, seoLandingPages } from '../data/seoLandingPages';
+import { useSkills } from '../context/SkillContext';
+import { getCuratedSkillsForSeoLandingPage, getSeoLandingPage, seoLandingPages } from '../data/seoLandingPages';
 import { usePageMeta } from '../hooks/usePageMeta';
-import { buildTopicLandingFallbackMeta, buildTopicLandingMeta } from '../utils/seo';
+import { buildTopicLandingFallbackMeta, buildTopicLandingMeta, toIndexableRoutePath } from '../utils/seo';
 
 export function TopicLanding(): React.ReactElement {
   const { slug } = useParams<{ slug: string }>();
   const page = getSeoLandingPage(slug);
+  const { skills } = useSkills();
+  const curatedSkills = page ? getCuratedSkillsForSeoLandingPage(page, skills) : [];
 
-  usePageMeta(page ? buildTopicLandingMeta(page) : buildTopicLandingFallbackMeta(slug));
+  usePageMeta(page ? buildTopicLandingMeta(page, curatedSkills) : buildTopicLandingFallbackMeta(slug));
 
   if (!page) {
     return (
-      <div className="px-6 py-14 text-center sm:px-8">
+      <div className="topic-missing">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
           Topic guide
         </p>
@@ -32,7 +35,7 @@ export function TopicLanding(): React.ReactElement {
           {seoLandingPages.slice(0, 2).map((landing) => (
             <Link
               key={landing.slug}
-              to={`/topics/${landing.slug}`}
+              to={toIndexableRoutePath(`/topics/${landing.slug}`)}
               className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
             >
               {landing.eyebrow}
@@ -46,8 +49,8 @@ export function TopicLanding(): React.ReactElement {
   const relatedTopicPages = seoLandingPages.filter((landing) => landing.slug !== page.slug).slice(0, 3);
 
   return (
-    <article className="space-y-10 px-6 py-8 sm:px-8 lg:px-10">
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
+    <article className="topic-page">
+      <section className="topic-hero">
         <div>
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
             {page.eyebrow}
@@ -65,7 +68,7 @@ export function TopicLanding(): React.ReactElement {
             {page.links.map((link) => link.to ? (
               <Link
                 key={`${link.label}-${link.to}`}
-                to={link.to}
+                to={toIndexableRoutePath(link.to)}
                 className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 {link.label}
@@ -84,7 +87,7 @@ export function TopicLanding(): React.ReactElement {
           </div>
         </div>
 
-        <aside className="rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-950">
+        <aside className="topic-intent">
           <h2 className="text-base font-semibold tracking-normal text-slate-900 dark:text-slate-100">
             Search intent covered
           </h2>
@@ -101,7 +104,7 @@ export function TopicLanding(): React.ReactElement {
         </aside>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="topic-sections">
         {page.sections.map((section) => (
           <article
             key={section.heading}
@@ -117,7 +120,27 @@ export function TopicLanding(): React.ReactElement {
         ))}
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+      <section className="topic-continue" aria-labelledby="recommended-skills-title">
+        <h2 id="recommended-skills-title" className="text-xl font-bold tracking-normal text-slate-900 dark:text-slate-100">
+          Recommended skills for this workflow
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+          These catalog entries are selected from the current library using editorial picks and deterministic topic matching.
+        </p>
+        <div className="mt-5 grid gap-3 md:grid-cols-2">
+          {curatedSkills.map((skill) => (
+            <article key={skill.id} className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+              <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                <Link to={toIndexableRoutePath(`/skill/${encodeURIComponent(skill.id)}`)}>@{skill.name}</Link>
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{skill.description}</p>
+              <p className="mt-3 text-xs font-medium uppercase tracking-wide text-slate-500">{skill.category}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="topic-continue">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="text-xl font-bold tracking-normal text-slate-900 dark:text-slate-100">
@@ -143,7 +166,7 @@ export function TopicLanding(): React.ReactElement {
             {relatedTopicPages.map((landing) => (
               <Link
                 key={landing.slug}
-                to={`/topics/${landing.slug}`}
+                to={toIndexableRoutePath(`/topics/${landing.slug}`)}
                 className="inline-flex items-center justify-center rounded-lg border border-slate-300 px-3.5 py-2 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 {landing.h1}

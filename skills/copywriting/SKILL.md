@@ -1,7 +1,7 @@
 ---
 name: copywriting
 description: Write rigorous, conversion-focused marketing copy for landing pages and emails. Enforces brief confirmation and strict no-fabrication rules.
-risk: unknown
+risk: none
 source: community
 date_added: "2026-02-27"
 ---
@@ -247,6 +247,12 @@ rewrite it until it feels obvious.
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Write rigorous, conversion-focused marketing copy for landing pages and emails.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

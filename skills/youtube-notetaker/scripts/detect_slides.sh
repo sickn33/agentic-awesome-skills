@@ -6,7 +6,9 @@ set -euo pipefail
 VIDEO="${1:?usage: detect_slides.sh <video.mp4> <out_dir> [threshold]}"
 OUT="${2:?usage: detect_slides.sh <video.mp4> <out_dir> [threshold]}"
 THRESH="${3:-0.3}"
-mkdir -p "$OUT"
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+source "$SCRIPT_DIR/scratch_safety.sh"
+OUT=$(validate_ytnote_scratch "$OUT")
 
 # showinfo on the scene-selected frames prints pts_time per cut.
 ffmpeg -hide_banner -i "$VIDEO" \

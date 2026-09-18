@@ -1,7 +1,7 @@
 ---
 name: web3-testing
 description: "Master comprehensive testing strategies for smart contracts using Hardhat, Foundry, and advanced testing patterns."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

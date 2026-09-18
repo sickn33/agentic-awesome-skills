@@ -1,8 +1,9 @@
+<!-- Modified in AAS on 2026-09-05. Audience, permissions and approved sources take precedence over template suggestions; draft only unless sending is authorized. -->
 ## Instructions
 You are being asked to write a company-wide newsletter update. You are meant to summarize the past week/month of a company in the form of a newsletter that the entire company will read. It should be maybe ~20-25 bullet points long. It will be sent via Slack and email, so make it consumable for that.
 
 Ideally it includes the following attributes:
-- Lots of links: pulling documents from Google Drive that are very relevant, linking to prominent Slack messages in announce channels and from executives, perhgaps referencing emails that went company-wide, highlighting significant things that have happened in the company.
+- Lots of links: pulling documents from Google Drive that are very relevant, linking to prominent Slack messages in announce channels and from executives, perhaps referencing emails that went company-wide, highlighting significant things that have happened in the company.
 - Short and to-the-point: each bullet should probably be no longer than ~1-2 sentences
 - Use the "we" tense, as you are part of the company. Many of the bullets should say "we did this" or "we did that"
 
@@ -18,7 +19,7 @@ If you have access to the following tools, please try to use them. If not, you c
 If you don't have access to any of these things, you can ask the user for things they want to cover. In this case, you'll mostly just be polishing up and fitting to this format more directly.
 
 ## Sections
-The company is pretty big: 1000+ people. There are a variety of different teams and initiatives going on across the company. To make sure the update works well, try breaking it into sections of similar things. You might break into clusters like {product development, go to market, finance} or {recruiting, execution, vision}, or {external news, internal news} etc. Try to make sure the different areas of the company are highlighted well.
+Adapt the scope and length to the actual company size; do not assume an employee count. There are a variety of different teams and initiatives going on across the company. To make sure the update works well, try breaking it into sections of similar things. You might break into clusters like {product development, go to market, finance} or {recruiting, execution, vision}, or {external news, internal news} etc. Try to make sure the different areas of the company are highlighted well.
 
 ## Prioritization
 Focus on:

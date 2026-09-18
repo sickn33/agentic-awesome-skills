@@ -331,7 +331,7 @@ npm run security:docs
 
 ### 我可以更新"官方"技能吗？
 
-**不可以。**官方技能（在 `skills/official/` 中）是从供应商镜像的。改为打开问题。
+先检查 `skills/<skill-id>/SKILL.md` 中的来源元数据和该目录的说明。供应商来源并不意味着存在统一的 `skills/official/` 目录；保持来源和许可证不变，并在需要上游同步时先提交问题。
 
 ---
 

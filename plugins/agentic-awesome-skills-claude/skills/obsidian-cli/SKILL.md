@@ -1,7 +1,7 @@
 ---
 name: obsidian-cli
 description: "Use the Obsidian CLI to read, create, search, and manage vault content, or to develop and debug Obsidian plugins and themes from the command line."
-risk: unknown
+risk: critical
 source: "https://github.com/kepano/obsidian-skills"
 date_added: "2026-03-21"
 ---

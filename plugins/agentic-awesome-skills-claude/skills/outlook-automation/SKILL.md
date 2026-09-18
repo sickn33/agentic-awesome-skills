@@ -1,7 +1,7 @@
 ---
 name: outlook-automation
 description: "Automate Outlook tasks via Rube MCP (Composio): emails, calendar, contacts, folders, attachments. Always search tools first for current schemas."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -192,6 +192,12 @@ Automate Microsoft Outlook operations through Composio's Outlook toolkit via Rub
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Automate Outlook tasks via Rube MCP (Composio): emails, calendar, contacts, folders, attachments.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

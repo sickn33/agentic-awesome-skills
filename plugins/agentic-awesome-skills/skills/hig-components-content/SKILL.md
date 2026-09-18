@@ -1,7 +1,7 @@
 ---
 name: hig-components-content
 description: Apple Human Interface Guidelines for content display components.
-risk: unknown
+risk: safe
 source: community
 date_added: '2026-02-27'
 ---
@@ -79,6 +79,12 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Use @hig-components-content for this task: Apple Human Interface Guidelines for content display components.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

@@ -1,7 +1,7 @@
 ---
 name: machine-learning-ops-ml-pipeline
 description: "Design and implement a complete ML pipeline for: $ARGUMENTS"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -315,6 +315,12 @@ Upon completion, the orchestrated pipeline will provide:
 - CI/CD pipelines for continuous improvement
 - Cost optimization and scaling strategies
 - Disaster recovery and rollback procedures
+
+## Example
+
+**User request:**
+
+> Design and implement a complete ML pipeline for: $ARGUMENTS.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

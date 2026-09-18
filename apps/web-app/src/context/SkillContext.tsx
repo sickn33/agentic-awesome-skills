@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import type { Skill, StarMap } from '../types';
 import { supabase } from '../lib/supabase';
 import { getSkillsIndexCandidateUrls } from '../utils/publicAssetUrls';
+import { isSkillsIndex } from '../utils/skillsIndex';
 
 interface SkillContextType {
     skills: Skill[];
@@ -18,8 +19,10 @@ export function SkillProvider({ children }: { children: React.ReactNode }) {
     const [stars, setStars] = useState<StarMap>({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const latestRequestRef = useRef(0);
 
     const fetchSkillsAndStars = useCallback(async (silent = false) => {
+        const requestId = ++latestRequestRef.current;
         if (!silent) setLoading(true);
         setError(null);
         try {
@@ -51,11 +54,11 @@ export function SkillProvider({ children }: { children: React.ReactNode }) {
                         throw new Error(`Non-JSON response from ${url} (${contentType})`);
                     }
 
-                    if (!Array.isArray(parsed) || parsed.length === 0) {
+                    if (!isSkillsIndex(parsed)) {
                         throw new Error(`Invalid or empty payload from ${url}`);
                     }
 
-                    data = parsed as Skill[];
+                    data = parsed;
                     break;
                 } catch (err) {
                     lastError = err instanceof Error ? err : new Error(String(err));
@@ -66,8 +69,9 @@ export function SkillProvider({ children }: { children: React.ReactNode }) {
                 throw lastError || new Error('Unable to load skills.json from any known source');
             }
 
+            if (requestId !== latestRequestRef.current) return;
+
             setSkills(data);
-            if (!silent) setLoading(false);
 
             // Star counts are optional metadata. They must never delay the
             // authoritative local catalog or make valid routes look missing.
@@ -76,7 +80,7 @@ export function SkillProvider({ children }: { children: React.ReactNode }) {
                     .from('skill_stars')
                     .select('skill_id, star_count')
                     .then(({ data: starData, error }) => {
-                        if (error || !starData) return;
+                        if (requestId !== latestRequestRef.current || error || !starData) return;
                         const starMap: StarMap = {};
                         starData.forEach((item: { skill_id: string; star_count: number }) => {
                             starMap[item.skill_id] = item.star_count;
@@ -86,11 +90,12 @@ export function SkillProvider({ children }: { children: React.ReactNode }) {
             }
 
         } catch (err) {
+            if (requestId !== latestRequestRef.current) return;
             const message = err instanceof Error ? err.message : 'Unable to load the skills catalog.';
             setError(message);
             console.error('SkillContext: Failed to load skills', err);
         } finally {
-            if (!silent) setLoading(false);
+            if (requestId === latestRequestRef.current) setLoading(false);
         }
     }, []);
 

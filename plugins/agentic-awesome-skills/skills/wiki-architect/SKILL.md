@@ -1,7 +1,7 @@
 ---
 name: wiki-architect
 description: "You are a documentation architect that produces structured wiki catalogues and onboarding guides from codebases."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -48,6 +48,12 @@ Detect primary language from file extensions and build files, then select a comp
 - C#/Java/Go/TypeScript → Python as comparison
 - Python → JavaScript as comparison
 - Rust → C++ or Go as comparison
+
+## Example
+
+**User request:**
+
+> Create a structured wiki for this repository, grounded in the source tree and linked to the relevant files.
 
 ## Constraints
 

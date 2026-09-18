@@ -1,9 +1,10 @@
 ---
 name: programmatic-seo
 description: Design and evaluate programmatic SEO strategies for creating SEO-driven pages at scale using templates and structured data.
-risk: unknown
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 ---
@@ -360,6 +361,12 @@ If triggered, **halt indexing or roll back**:
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Design and evaluate programmatic SEO strategies for creating SEO-driven pages at scale using templates and structured data.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

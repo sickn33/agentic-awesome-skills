@@ -6,7 +6,7 @@ const { findProjectRoot } = require("../../lib/project-root");
 const projectRoot = findProjectRoot(__dirname);
 const candidatesPath = path.join(projectRoot, "data", "specialized-plugin-candidates.json");
 const bundlesPath = path.join(projectRoot, "data", "editorial-bundles.json");
-const skillsIndexPath = path.join(projectRoot, "data", "skills_index.json");
+const skillsIndexPath = path.join(projectRoot, "skills_index.json");
 const codexMarketplacePath = path.join(projectRoot, ".agents", "plugins", "marketplace.json");
 const claudeMarketplacePath = path.join(projectRoot, ".claude-plugin", "marketplace.json");
 
@@ -55,6 +55,10 @@ for (const candidate of candidates) {
   assert.ok(
     fs.existsSync(path.join(pluginRoot, ".claude-plugin", "plugin.json")),
     `candidate ${candidate.id} should have a Claude plugin manifest`,
+  );
+  assert.ok(
+    fs.existsSync(path.join(pluginRoot, "plugin.json")),
+    `candidate ${candidate.id} should have an Agent Plugins manifest`,
   );
   assert.ok(
     codexPluginNames.has(`aasb-${candidate.id}`),

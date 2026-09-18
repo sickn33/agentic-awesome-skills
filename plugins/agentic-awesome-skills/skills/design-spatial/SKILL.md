@@ -1,7 +1,7 @@
 ---
 name: design-spatial
 description: Design — spatial composition
-risk: unknown
+risk: critical
 source: https://github.com/connerkward/ckw-design-skill/tree/main/deterministic-design/design-spatial
 source_repo: connerkward/ckw-design-skill
 source_type: community

@@ -1,7 +1,7 @@
 ---
 name: slack-gif-creator
 description: "A toolkit providing utilities and knowledge for creating animated GIFs optimized for Slack."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

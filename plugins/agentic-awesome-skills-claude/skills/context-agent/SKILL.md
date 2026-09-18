@@ -1,7 +1,7 @@
 ---
 name: context-agent
 description: Agente de contexto para continuidade entre sessoes. Salva resumos, decisoes, tarefas pendentes e carrega briefing automatico na sessao seguinte.
-risk: safe
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -20,26 +20,36 @@ tools:
 
 # Context Agent
 
-## Overview
+> Este guia e intencionalmente escrito em portugues brasileiro. O cabecalho
+> Os cabecalhos `When to Use` e `Limitations` permanecem em ingles apenas para
+> compatibilidade com a descoberta e a validacao automatica do catalogo.
+
+> [!WARNING]
+> Esta skill escreve contexto, registros, um banco SQLite e `MEMORY.md` em
+> caminhos locais; a manutencao tambem pode arquivar e remover resumos antigos.
+> Confirme os caminhos, mantenha um backup e obtenha aprovacao explicita antes
+> de executar `init`, `save`, `archive` ou `maintain`.
+
+## Visao Geral
 
 Agente de contexto para continuidade entre sessoes. Salva resumos, decisoes, tarefas pendentes e carrega briefing automatico na sessao seguinte.
 
 ## When to Use This Skill
 
-- When the user mentions "salvar contexto" or related topics
-- When the user mentions "salva o contexto" or related topics
-- When the user mentions "proxima sessao" or related topics
-- When the user mentions "briefing sessao" or related topics
-- When the user mentions "resumo sessao" or related topics
-- When the user mentions "continuidade sessao" or related topics
+- Quando o usuario mencionar "salvar contexto" ou assuntos relacionados
+- Quando o usuario mencionar "salva o contexto" ou assuntos relacionados
+- Quando o usuario mencionar "proxima sessao" ou assuntos relacionados
+- Quando o usuario mencionar "briefing sessao" ou assuntos relacionados
+- Quando o usuario mencionar "resumo sessao" ou assuntos relacionados
+- Quando o usuario mencionar "continuidade sessao" ou assuntos relacionados
 
-## Do Not Use This Skill When
+## Quando Nao Usar Esta Skill
 
-- The task is unrelated to context agent
-- A simpler, more specific tool can handle the request
-- The user needs general-purpose assistance without domain expertise
+- A tarefa nao estiver relacionada a continuidade de contexto
+- Uma ferramenta mais simples e especifica puder atender ao pedido
+- O usuario precisar apenas de assistencia geral, sem esta especializacao
 
-## How It Works
+## Como Funciona
 
 Continuidade perfeita entre sessões do Claude Code. Captura, comprime e
 restaura contexto automaticamente — tópicos, decisões, tarefas, erros,
@@ -171,23 +181,27 @@ e decisões tomadas — sem precisar de nenhuma ação manual.
 - Para formato detalhado dos arquivos: `references/context-format.md`
 - Para regras de compressão e arquivamento: `references/compression-rules.md`
 
-## Best Practices
+## Boas Praticas
 
-- Provide clear, specific context about your project and requirements
-- Review all suggestions before applying them to production code
-- Combine with other complementary skills for comprehensive analysis
+- Forneca contexto claro e especifico sobre o projeto e seus requisitos
+- Revise todas as sugestoes antes de aplica-las em codigo de producao
+- Combine esta skill com outras skills complementares quando necessario
 
-## Common Pitfalls
+## Armadilhas Comuns
 
-- Using this skill for tasks outside its domain expertise
-- Applying recommendations without understanding your specific context
-- Not providing enough project context for accurate analysis
+- Usar esta skill em tarefas fora de seu dominio
+- Aplicar recomendacoes sem entender o contexto especifico
+- Fornecer contexto insuficiente para uma analise precisa
 
-## Related Skills
+## Skills Relacionadas
 
-- `context-guardian` - Complementary skill for enhanced analysis
+- `context-guardian` - Skill complementar para preservar contexto antes da compactacao
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use esta skill somente quando a tarefa corresponder claramente ao escopo acima.
+- A implementacao incluida usa caminhos absolutos especificos do Windows e do
+  autor; adapte e valide todos os caminhos antes de qualquer execucao.
+- Nao trate a saida como substituta de validacao, testes ou revisao especializada.
+- Pare e peca esclarecimentos quando faltarem entradas, permissoes, limites de
+  seguranca ou criterios de sucesso.

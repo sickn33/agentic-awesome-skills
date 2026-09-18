@@ -4,8 +4,9 @@ description: "Cirq is Google Quantum AI's open-source framework for designing, s
 license: Apache-2.0 license
 metadata:
     skill-author: K-Dense Inc.
-risk: unknown
+risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Cirq - Quantum Computing with Python

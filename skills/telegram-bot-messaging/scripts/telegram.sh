@@ -26,6 +26,7 @@ Commands:
 
 Config: TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID env vars, or ~/.config/telegram/config
         Named bots: BOT_<NAME>_TOKEN   Named targets: TARGET_<NAME>=<chat_id>
+        Group approvals: TELEGRAM_APPROVER_IDS or APPROVERS_<TARGET>=<user_id,...>
 EOF
   exit 1
 }
@@ -63,29 +64,65 @@ resolve_bot() {
     BOT_KEY="$name"
     [ -n "$BOT_TOKEN" ] || die "no token for bot '$name' — run 'telegram.sh setup --bot $name' or set $var"
   fi
+  [[ "$BOT_TOKEN" =~ ^[0-9]+:[A-Za-z0-9_-]+$ ]] \
+    || die "invalid bot token format"
 }
 
 resolve_target() {
   local t="${1:-}"
+  APPROVER_IDS_RAW="${TELEGRAM_APPROVER_IDS:-}"
   if [ -z "$t" ]; then
     CHAT_ID="${TELEGRAM_CHAT_ID:-}"
     [ -n "$CHAT_ID" ] || die "no default chat — run 'telegram.sh setup' or set TELEGRAM_CHAT_ID"
   elif [[ "$t" =~ ^-?[0-9]+$ ]]; then
     CHAT_ID="$t"
   else
-    local var
+    local var approver_var
     var="TARGET_$(upper_key "$t")"
     CHAT_ID="${!var:-}"
     [ -n "$CHAT_ID" ] || die "unknown target '$t' — add $var=<chat_id> to $CONFIG_FILE"
+    approver_var="APPROVERS_$(upper_key "$t")"
+    APPROVER_IDS_RAW="${!approver_var:-${TELEGRAM_APPROVER_IDS:-}}"
   fi
+}
+
+# Private chat IDs identify the sender, so existing private-chat approval flows
+# need no extra configuration. Group chat IDs are shared: fail closed unless an
+# explicit sender-user allowlist is configured for that target (or globally).
+resolve_approvers() {
+  if [[ "$CHAT_ID" != -* ]]; then
+    APPROVER_IDS="$CHAT_ID"
+    return 0
+  fi
+
+  [ -n "$APPROVER_IDS_RAW" ] \
+    || die "group ask requires TELEGRAM_APPROVER_IDS or APPROVERS_<TARGET>"
+
+  local raw id normalized=""
+  raw="${APPROVER_IDS_RAW//,/ }"
+  for id in $raw; do
+    [[ "$id" =~ ^[0-9]+$ ]] \
+      || die "approver IDs must be comma-separated Telegram user IDs"
+    normalized="${normalized}${normalized:+$'\n'}${id}"
+  done
+  [ -n "$normalized" ] || die "group ask requires at least one approver user ID"
+  APPROVER_IDS="$normalized"
+}
+
+# Keep the token-bearing URL out of curl's argv. The URL is supplied through a
+# one-shot config on stdin; all other request arguments remain ordinary argv.
+curl_telegram() {
+  local method="$1"
+  shift
+  printf 'url = "%s/bot%s/%s"\n' "$API_BASE" "$BOT_TOKEN" "$method" \
+    | curl -sS --max-time "${TELEGRAM_CURL_TIMEOUT:-35}" --config - "$@"
 }
 
 # api METHOD [curl args...] — prints the JSON response, dies if .ok != true
 api() {
   local method="$1" resp
   shift
-  resp=$(curl -sS --max-time "${TELEGRAM_CURL_TIMEOUT:-35}" \
-    "$API_BASE/bot$BOT_TOKEN/$method" "$@") || die "network error calling $method"
+  resp=$(curl_telegram "$method" "$@") || die "network error calling $method"
   [ "$(jq -r '.ok' <<<"$resp")" = "true" ] \
     || die "$method failed: $(jq -r '.description // "unknown error"' <<<"$resp")"
   printf '%s' "$resp"
@@ -128,8 +165,7 @@ cmd_send() {
 send_chunk() {
   local text="$1" parse_mode="$2" silent="$3" resp
   if [ -n "$parse_mode" ]; then
-    resp=$(curl -sS --max-time "${TELEGRAM_CURL_TIMEOUT:-35}" \
-      "$API_BASE/bot$BOT_TOKEN/sendMessage" \
+    resp=$(curl_telegram sendMessage \
       -d "chat_id=$CHAT_ID" --data-urlencode "text=$text" \
       -d "disable_notification=$silent" -d "parse_mode=$parse_mode") \
       || die "network error calling sendMessage"
@@ -237,6 +273,7 @@ cmd_ask() {
   [[ "$timeout" =~ ^[0-9]+$ ]] || die "--timeout must be a whole number of seconds"
   resolve_bot "$bot"
   resolve_target "$to"
+  resolve_approvers
 
   # Flush pending updates so stale messages can't answer the question.
   local offset resp last
@@ -265,10 +302,12 @@ cmd_ask() {
     if [ -n "$last" ]; then offset="$last"; save_offset "$offset"; fi
 
     # Button tap on our question message?
-    cb=$(jq -r --argjson mid "$msg_id" --argjson chat "$CHAT_ID" '
-      [.result[]
+    cb=$(jq -r --argjson mid "$msg_id" --argjson chat "$CHAT_ID" --arg allowed "$APPROVER_IDS" '
+      ($allowed | split("\n")) as $ok
+      | [.result[]
        | select(.callback_query.message.message_id == $mid)
        | select(.callback_query.message.chat.id == $chat)
+       | select((.callback_query.from.id | tostring) as $u | $ok | index($u) != null)
        | .callback_query]
       | if length > 0 then "\(.[0].data)\t\(.[0].id)" else "" end' <<<"$resp")
     if [ -n "$cb" ]; then
@@ -282,9 +321,11 @@ cmd_ask() {
     fi
 
     # Free-text reply from the asked chat?
-    answer=$(jq -r --argjson chat "$CHAT_ID" '
-      [.result[]
+    answer=$(jq -r --argjson chat "$CHAT_ID" --arg allowed "$APPROVER_IDS" '
+      ($allowed | split("\n")) as $ok
+      | [.result[]
        | select(.message.chat.id == $chat)
+       | select((.message.from.id | tostring) as $u | $ok | index($u) != null)
        | select(.message.text != null)
        | .message.text]
       | if length > 0 then .[0] else "" end' <<<"$resp")

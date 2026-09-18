@@ -1,7 +1,7 @@
 ---
 name: hig-platforms
 description: Apple Human Interface Guidelines for platform-specific design.
-risk: unknown
+risk: safe
 source: community
 date_added: '2026-02-27'
 ---
@@ -79,6 +79,12 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Use @hig-platforms for this task: Apple Human Interface Guidelines for platform-specific design.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

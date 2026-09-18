@@ -1,9 +1,10 @@
 ---
 name: documentation-templates
-description: "Documentation templates and structure guidelines. README, API docs, code comments, and AI-friendly documentation."
-risk: safe
-source: community
-date_added: "2026-02-27"
+description: Documentation templates and structure guidelines. README, API docs, code comments, and AI-friendly documentation.
+metadata:
+  aas-risk: safe
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Documentation Templates

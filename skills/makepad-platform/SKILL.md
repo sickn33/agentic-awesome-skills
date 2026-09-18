@@ -6,8 +6,9 @@ description: |
   makepad android, makepad ios, makepad web, makepad wasm, makepad metal,
   makepad d3d11, makepad opengl, makepad webgl, OsType, CxOs,
   makepad 跨平台, makepad 平台支持
-risk: unknown
+risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Makepad Platform Skill

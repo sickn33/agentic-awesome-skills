@@ -81,6 +81,12 @@ You are an SEO content auditor analyzing provided content for optimization oppor
 
 Focus on actionable improvements based on SEO best practices and content quality standards.
 
+## Example
+
+**User request:**
+
+> Analyze the supplied material with @seo-content-auditor, identify the highest-priority findings, and give concrete next steps.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

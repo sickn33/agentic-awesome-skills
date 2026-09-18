@@ -2,6 +2,7 @@
 name: not-a-vibe-coder
 description: Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases.
 source: community
+date_added: "2026-09-04"
 risk: critical
 ---
 
@@ -145,6 +146,12 @@ Only after this input is gathered do you write Design.md.
 - Design.md → always ask style + colors first, no exceptions.
 - Any completed task → update Tracker.md immediately.
 - Mid-project pivot → update all affected files proactively, summarize changes.
+
+## Example
+
+**User request:**
+
+> Turn this new-product idea into the eight structured planning files required before implementation.
 
 ## Limitations
 - Only works for new projects. Will fail if run on existing codebases.

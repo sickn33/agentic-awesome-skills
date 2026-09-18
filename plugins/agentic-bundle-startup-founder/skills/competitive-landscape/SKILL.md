@@ -1,9 +1,10 @@
 ---
 name: competitive-landscape
-description: "Comprehensive frameworks for analyzing competition, identifying differentiation opportunities, and developing winning market positioning strategies."
-risk: safe
-source: community
-date_added: '2026-02-27'
+description: Comprehensive frameworks for analyzing competition, identifying differentiation opportunities, and developing winning market positioning strategies.
+metadata:
+  aas-risk: safe
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Competitive Landscape Analysis

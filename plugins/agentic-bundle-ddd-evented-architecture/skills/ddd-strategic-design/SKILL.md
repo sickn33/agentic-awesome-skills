@@ -1,10 +1,11 @@
 ---
 name: ddd-strategic-design
-description: "Design DDD strategic artifacts including subdomains, bounded contexts, and ubiquitous language for complex business domains."
-risk: safe
-source: self
-tags: "[ddd, strategic-design, bounded-context, ubiquitous-language]"
-date_added: "2026-02-27"
+description: Design DDD strategic artifacts including subdomains, bounded contexts, and ubiquitous language for complex business domains.
+metadata:
+  aas-risk: safe
+  aas-source: self
+  aas-tags: '[ddd, strategic-design, bounded-context, ubiquitous-language]'
+  aas-date-added: '2026-02-27'
 ---
 
 # DDD Strategic Design

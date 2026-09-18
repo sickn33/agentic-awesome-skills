@@ -4,7 +4,7 @@ description: >
   Content quality and E-E-A-T analysis with AI citation readiness assessment.
   Use when user says "content quality", "E-E-A-T", "content analysis",
   "readability check", "thin content", or "content audit".
-risk: unknown
+risk: critical
 source: "https://github.com/AgriciDaniel/claude-seo"
 date_added: "2026-03-21"
 user-invokable: true
@@ -183,6 +183,12 @@ If DataForSEO MCP tools are available, use `kw_data_google_ads_search_volume` fo
 | URL unreachable (DNS failure, connection refused) | Report the error clearly. Do not guess page content. Suggest the user verify the URL and try again. |
 | Content behind paywall (402/403, login wall) | Report that the content is not publicly accessible. Analyze only the visible portion (meta tags, headers) and note the limitation. |
 | Thin content (fewer than 100 words retrievable) | Report the findings as-is rather than guessing. Flag the page as potentially JavaScript-rendered or gated, and suggest the user provide the full text directly. |
+
+## Example
+
+**User request:**
+
+> Audit content quality, readability, thin content risk, or E-E-A-T signals.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

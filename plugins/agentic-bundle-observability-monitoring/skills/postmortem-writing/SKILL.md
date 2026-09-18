@@ -1,9 +1,10 @@
 ---
 name: postmortem-writing
-description: "Comprehensive guide to writing effective, blameless postmortems that drive organizational learning and prevent incident recurrence."
-risk: unknown
-source: community
-date_added: "2026-02-27"
+description: Comprehensive guide to writing effective, blameless postmortems that drive organizational learning and prevent incident recurrence.
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Postmortem Writing
@@ -167,7 +168,7 @@ The deployment completed at 14:23, but the first alert didn't fire until 14:31 (
 ### Customer Impact
 - 12,000 unique customers affected
 - Average impact duration: 35 minutes
-- 847 support tickets (23% of affected users)
+- 847 support tickets (about 7.1% of the affected-user count; not necessarily unique users)
 - Customer satisfaction score dropped 12 points
 
 ### Business Impact

@@ -1,7 +1,7 @@
 ---
 name: payment-integration
 description: Integrate Stripe, PayPal, and payment processors. Handles checkout flows, subscriptions, webhooks, and PCI compliance. Use PROACTIVELY when implementing payments, billing, or subscription features.
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---
@@ -74,6 +74,12 @@ You are a payment integration specialist focused on secure, reliable payment pro
 - Environment variable configuration
 
 Always use official SDKs. Include both server-side and client-side code where needed.
+
+## Example
+
+**User request:**
+
+> Integrate Stripe, PayPal, and payment processors.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

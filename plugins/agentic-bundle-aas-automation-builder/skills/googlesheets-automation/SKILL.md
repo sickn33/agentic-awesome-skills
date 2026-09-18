@@ -1,9 +1,10 @@
 ---
 name: googlesheets-automation
-description: "Automate Google Sheets operations (read, write, format, filter, manage spreadsheets) via Rube MCP (Composio). Read/write data, manage tabs, apply formatting, and search rows programmatically."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Automate Google Sheets operations (read, write, format, filter, manage spreadsheets) via Rube MCP (Composio). Read/write data, manage tabs, apply formatting, and search rows programmatically.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Google Sheets Automation via Rube MCP
@@ -198,6 +199,12 @@ Google Sheets enforces strict rate limits:
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Automate Google Sheets operations (read, write, format, filter, manage spreadsheets) via Rube MCP (Composio).
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

@@ -1,7 +1,7 @@
 ---
 name: multiplayer
 description: "Multiplayer game development principles. Architecture, networking, synchronization."
-risk: unknown
+risk: none
 source: community
 date_added: "2026-02-27"
 ---

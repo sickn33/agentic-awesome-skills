@@ -1,7 +1,7 @@
 ---
 name: vr-ar
 description: "VR/AR development principles. Comfort, interaction, performance requirements."
-risk: unknown
+risk: none
 source: community
 date_added: "2026-02-27"
 ---
@@ -126,6 +126,12 @@ date_added: "2026-02-27"
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Use @vr-ar for this task: VR/AR development principles.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

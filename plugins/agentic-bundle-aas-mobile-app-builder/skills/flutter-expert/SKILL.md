@@ -1,14 +1,15 @@
 ---
 name: flutter-expert
 description: Master Flutter development with Dart 3, advanced widgets, and multi-platform deployment.
-category: mobile
-risk: safe
-source: community
-source_type: community
-date_added: '2026-02-27'
-author: Franklyn-R-Silva
-tags: [flutter, dart, mobile, cross-platform, riverpod]
-tools: [claude, cursor, gemini]
+metadata:
+  aas-category: mobile
+  aas-risk: safe
+  aas-source: community
+  aas-source-type: community
+  aas-date-added: '2026-02-27'
+  aas-author: Franklyn-R-Silva
+  aas-tags: '["flutter","dart","mobile","cross-platform","riverpod"]'
+  aas-tools: '["claude","cursor","gemini"]'
 ---
 
 ## Use this skill when

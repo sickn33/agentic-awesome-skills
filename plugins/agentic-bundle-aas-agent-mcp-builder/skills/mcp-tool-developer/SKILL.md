@@ -1,15 +1,16 @@
 ---
 name: mcp-tool-developer
-description: "Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publishing."
-category: developer-tools
-risk: safe
-source: community
-source_repo: demo112/yunqu-ai-skills
-source_type: community
-date_added: "2026-05-13"
-author: yundu-ai
-tags: [mcp, ai-agent, tool-development, typescript, python, llm, model-context-protocol]
-tools: [claude, cursor, gemini]
+description: Build Model Context Protocol (MCP) servers and tools from scratch. Full-stack MCP development with TypeScript/Python, testing, deployment, and registry publishing.
+metadata:
+  aas-category: developer-tools
+  aas-risk: safe
+  aas-source: community
+  aas-source-repo: demo112/yunqu-ai-skills
+  aas-source-type: community
+  aas-date-added: '2026-05-13'
+  aas-author: yundu-ai
+  aas-tags: '["mcp","ai-agent","tool-development","typescript","python","llm","model-context-protocol"]'
+  aas-tools: '["claude","cursor","gemini"]'
 ---
 
 # MCP Tool Developer

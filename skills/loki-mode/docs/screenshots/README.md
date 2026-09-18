@@ -14,7 +14,7 @@ This directory contains screenshots for the Loki Mode README.
 1. Run Loki Mode with a test project:
    ```bash
    cd /path/to/test/project
-   ../../autonomy/run.sh examples/simple-todo-app.md
+   bash ../../autonomy/run.sh examples/simple-todo-app.md
    ```
 
 2. Open the dashboard:

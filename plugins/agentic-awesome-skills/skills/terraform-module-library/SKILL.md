@@ -1,7 +1,7 @@
 ---
 name: terraform-module-library
 description: "Production-ready Terraform module patterns for AWS, Azure, and GCP infrastructure."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

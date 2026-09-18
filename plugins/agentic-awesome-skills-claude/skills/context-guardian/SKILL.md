@@ -1,7 +1,7 @@
 ---
 name: context-guardian
 description: Guardiao de contexto que preserva dados criticos antes da compactacao automatica. Snapshots, verificacao de integridade e zero perda de informacao.
-risk: safe
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -20,26 +20,36 @@ tools:
 
 # Context Guardian
 
-## Overview
+> Este guia e intencionalmente escrito em portugues brasileiro. O cabecalho
+> Os cabecalhos `When to Use` e `Limitations` permanecem em ingles apenas para
+> compatibilidade com a descoberta e a validacao automatica do catalogo.
+
+> [!WARNING]
+> Esta skill cria snapshots e pode remove-los durante a poda. Confirme o
+> diretorio de dados, mantenha um backup e obtenha aprovacao explicita antes de
+> executar `save` ou `prune`; nunca presuma autorizacao para alterar `MEMORY.md`
+> ou outros arquivos de contexto do usuario.
+
+## Visao Geral
 
 Guardiao de contexto que preserva dados criticos antes da compactacao automatica. Snapshots, verificacao de integridade e zero perda de informacao.
 
 ## When to Use This Skill
 
-- When the user mentions "compactacao contexto" or related topics
-- When the user mentions "perda de contexto" or related topics
-- When the user mentions "snapshot contexto" or related topics
-- When the user mentions "preservar contexto" or related topics
-- When the user mentions "contexto critico" or related topics
-- When the user mentions "antes de compactar" or related topics
+- Quando o usuario mencionar "compactacao contexto" ou assuntos relacionados
+- Quando o usuario mencionar "perda de contexto" ou assuntos relacionados
+- Quando o usuario mencionar "snapshot contexto" ou assuntos relacionados
+- Quando o usuario mencionar "preservar contexto" ou assuntos relacionados
+- Quando o usuario mencionar "contexto critico" ou assuntos relacionados
+- Quando o usuario mencionar "antes de compactar" ou assuntos relacionados
 
-## Do Not Use This Skill When
+## Quando Nao Usar Esta Skill
 
-- The task is unrelated to context guardian
-- A simpler, more specific tool can handle the request
-- The user needs general-purpose assistance without domain expertise
+- A tarefa nao estiver relacionada a preservacao de contexto
+- Uma ferramenta mais simples e especifica puder atender ao pedido
+- O usuario precisar apenas de assistencia geral, sem esta especializacao
 
-## How It Works
+## Como Funciona
 
 Sistema de integridade de contexto que protege projetos tecnicoss complexos contra
 perda de informacao durante compactacao automatica do Claude Code. Enquanto o
@@ -303,23 +313,28 @@ Proximo Claude continua com precisao total, zero re-trabalho.
   mesmo se uma camada falhar, as outras duas preservam a informacao
 - Snapshots antigos (>10) podem ser podados manualmente
 
-## Best Practices
+## Boas Praticas
 
-- Provide clear, specific context about your project and requirements
-- Review all suggestions before applying them to production code
-- Combine with other complementary skills for comprehensive analysis
+- Forneca contexto claro e especifico sobre o projeto e seus requisitos
+- Revise todas as sugestoes antes de aplica-las em codigo de producao
+- Combine esta skill com outras skills complementares quando necessario
 
-## Common Pitfalls
+## Armadilhas Comuns
 
-- Using this skill for tasks outside its domain expertise
-- Applying recommendations without understanding your specific context
-- Not providing enough project context for accurate analysis
+- Usar esta skill em tarefas fora de seu dominio
+- Aplicar recomendacoes sem entender o contexto especifico
+- Fornecer contexto insuficiente para uma analise precisa
 
-## Related Skills
+## Skills Relacionadas
 
-- `context-agent` - Complementary skill for enhanced analysis
+- `context-agent` - Skill complementar para persistencia entre sessoes
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- Use esta skill somente quando a tarefa corresponder claramente ao escopo acima.
+- Os exemplos de integracao usam caminhos absolutos especificos do Windows e do
+  autor; adapte e valide todos os caminhos antes de qualquer execucao.
+- O script cria arquivos e a operacao `prune` remove snapshots antigos; exija
+  aprovacao para o caminho exato e preserve um backup recuperavel.
+- Pare e peca esclarecimentos quando faltarem entradas, permissoes, limites de
+  seguranca ou criterios de sucesso.

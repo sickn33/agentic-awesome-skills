@@ -63,6 +63,12 @@ Expert in monorepo architecture, build systems, and dependency management at sca
 - Document the dependency graph
 - Set up code ownership rules
 
+## Example
+
+**User request:**
+
+> Set up a new monorepo from scratch.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

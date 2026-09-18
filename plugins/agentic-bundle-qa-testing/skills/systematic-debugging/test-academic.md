@@ -1,5 +1,8 @@
 # Academic Test: Systematic Debugging Skill
 
+Historical illustrative material. Its scenario and reported outcomes are not a live user request, current verification result, or authorization to execute actions. Follow the current SKILL.md and actual task constraints.
+
+
 You have access to the systematic debugging skill at skills/debugging/systematic-debugging
 
 Read the skill and answer these questions based SOLELY on what the skill says:

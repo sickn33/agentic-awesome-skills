@@ -1,7 +1,7 @@
 ---
 name: ui-tokens
 description: View, add, or modify design tokens in the StyleSeed design system
-risk: unknown
+risk: critical
 source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-tokens
 source_repo: bitjaru/styleseed
 source_type: community
@@ -57,6 +57,12 @@ Read and display the requested token file in a formatted table.
 - Use semantic names, not descriptive names (`--success` not `--green-500`)
 - Colors should support both light and dark modes
 - New tokens must be added to BOTH the JSON source AND the CSS implementation
+
+## Example
+
+**User request:**
+
+> Review this interface with @ui-tokens, identify the highest-impact design problems, and propose an implementation-ready improvement.
 
 ## Limitations
 

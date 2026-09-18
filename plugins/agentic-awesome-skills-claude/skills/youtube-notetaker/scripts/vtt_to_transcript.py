@@ -33,6 +33,11 @@ def clean(text):
     text=html.unescape(text)
     return re.sub(r'\s+',' ',text).strip()
 
+def markdown_text(text):
+    """Keep caption text inert when the transcript is embedded in Markdown."""
+    text=html.escape(str(text),quote=False)
+    return re.sub(r'([\\`*_{}\[\]()#+.!|-])',r'\\\1',text)
+
 def main():
     if len(sys.argv)!=3: sys.exit("usage: vtt_to_transcript.py <in.vtt> <out.txt>")
     raw=safe_user_path(sys.argv[1]).open(encoding='utf-8',errors='replace').read().splitlines()
@@ -64,7 +69,7 @@ def main():
             if seen_words[-k:]==words[:k]: overlap=k; break
         new=words[overlap:]
         if new:
-            out.append(f"{label} {' '.join(new)}")
+            out.append(f"{label} {markdown_text(' '.join(new))}")
         seen_words=(seen_words+new)[-40:]  # bounded window
     with safe_user_path(sys.argv[2]).open('w',encoding='utf-8') as f:
         f.write('\n'.join(out)+'\n')

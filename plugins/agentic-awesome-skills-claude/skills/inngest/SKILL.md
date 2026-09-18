@@ -37,6 +37,7 @@ and durable execution without managing queues or workers.
 ## Scope
 
 - redis-queues -> bullmq-specialist
+- serverless-queues -> upstash-qstash
 - workflow-orchestration -> temporal-craftsman
 - message-streaming -> event-architect
 - infrastructure -> infra-architect
@@ -388,6 +389,7 @@ Fix action: Add idempotency: 'event.data.orderId' to function config
 ### Delegation Triggers
 
 - redis|queue infrastructure|bullmq -> bullmq-specialist (Need Redis-based queue with existing infrastructure)
+- serverless queue|http queue|scheduled http -> upstash-qstash (Need plain HTTP delivery and cron without an event framework)
 - saga|compensation|rollback|long-running workflow -> temporal-craftsman (Need complex workflow orchestration with compensation)
 - event sourcing|event store|cqrs -> event-architect (Need event sourcing patterns)
 - vercel|deploy|production -> vercel-deployment (Need deployment configuration)

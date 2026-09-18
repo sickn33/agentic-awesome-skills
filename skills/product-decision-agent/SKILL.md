@@ -77,6 +77,12 @@ license_source: "https://github.com/atdy/maoxuan-product-agent/blob/main/LICENSE
 - 维护或审查“后台推理是否来自完整方法转译”时：读 `references/methodology-basis.md`。默认回答用户时不要引用它。
 - 维护样例输出质量时：运行 `scripts/quality_gate.py` 检查样例是否中文、可执行、无来源暴露。
 
+## Example
+
+**User request:**
+
+> 判断这些产品需求的优先级，明确事实、核心阻塞、下一步行动和切换条件。
+
 ## Limitations（能力边界）
 
 - 不能替代用户研究、数据核验、法务审查、财务判断或最终业务责任。

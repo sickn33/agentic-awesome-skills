@@ -1,7 +1,7 @@
 ---
 name: accint-commitments
 description: Triage acc's open promises and close them with honest real-world verdicts via acc_act(runtime="outcome").
-risk: unknown
+risk: critical
 source: https://github.com/maxbaluev/accreted-intelligence/tree/main/plugins/claude/skills/commitments
 source_repo: maxbaluev/accreted-intelligence
 source_type: community
@@ -24,6 +24,12 @@ Routing sugar over the two MCP verbs — no logic lives here.
    Pass `owner` only when the owner validated, `external`/`runtime` only when reality did
    (a real reply, a passing test, a world result). Never tag your own grade as reality.
 4. Leave genuinely-waiting commitments open — `waiting` is a first-class clean state.
+
+## Example
+
+**User request:**
+
+> Triage acc's open promises and close them with honest real-world verdicts via acc_act(runtime="outcome").
 
 ## Limitations
 

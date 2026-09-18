@@ -57,6 +57,12 @@ Goal: turn a vague research need into ONE self-contained paragraph that a resear
 
 To run the finished prompt with an AI researcher, execute it via DeepAPI `POST /v1/research/deep` — follow the `deep-research` skill.
 
+## Example
+
+**User request:**
+
+> Turn vague research needs into one precise deep-research prompt with context and output criteria.
+
 ## Limitations
 
 - Adapted from `davidondrej/skills`; verify local paths, tools, credentials, and agent features before acting.

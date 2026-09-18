@@ -1,10 +1,10 @@
 ---
 name: prompt-caching
-description: Caching strategies for LLM prompts including Anthropic prompt
-  caching, response caching, and CAG (Cache Augmented Generation)
-risk: none
-source: vibeship-spawner-skills (Apache 2.0)
-date_added: 2026-02-27
+description: Caching strategies for LLM prompts including Anthropic prompt caching, response caching, and CAG (Cache Augmented Generation)
+metadata:
+  aas-risk: none
+  aas-source: vibeship-spawner-skills (Apache 2.0)
+  aas-date-added: '2026-02-27'
 ---
 
 # Prompt Caching
@@ -34,7 +34,7 @@ Caching strategies for LLM prompts including Anthropic prompt caching, response 
 ### Primary_tools
 
 - Anthropic Prompt Caching - Native prompt caching in Claude API
-- Redis - In-memory cache for responses
+- Redis - In-memory cache for responses (ioredis on servers; @upstash/redis over HTTP on serverless, see `upstash-redis`)
 - OpenAI Caching - Automatic caching in OpenAI API
 
 ## Patterns
@@ -91,6 +91,8 @@ import { createHash } from 'crypto';
 import Redis from 'ioredis';
 
 const redis = new Redis(process.env.REDIS_URL);
+// Serverless/edge alternative without a persistent connection:
+// import { Redis } from '@upstash/redis'; const redis = Redis.fromEnv();  // then use redis.set(key, value, { ex: ttl })
 
 class ResponseCache {
     private ttl = 3600;  // 1 hour default

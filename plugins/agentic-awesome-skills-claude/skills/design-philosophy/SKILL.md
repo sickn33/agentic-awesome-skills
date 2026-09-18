@@ -1,7 +1,7 @@
 ---
 name: design-philosophy
 description: Visual philosophy and art-direction for frontend. Use when creating high-concept work, campaigns, or when the user asks for a visual philosophy, manifesto, or unmistakable art-like aesthetic.
-risk: unknown
+risk: none
 source: https://github.com/connerkward/ckw-design-skill/tree/main/design-philosophy
 source_repo: connerkward/ckw-design-skill
 source_type: community

@@ -1,0 +1,8 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "{{name}}",
+  "description": "{{description}}",
+  "brand": {"@type": "Brand", "name": "{{brand_name}}"},
+  "offers": {"@type": "Offer", "url": "{{url}}", "priceCurrency": "{{price_currency}}", "price": "{{price}}", "availability": "{{availability}}"}
+}

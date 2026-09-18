@@ -1,0 +1,22 @@
+{
+  "fixtureNote": "Anonymized; not a real user configuration",
+  "unrelated": {
+    "token": "fixture-root-secret-must-not-appear-in-preview"
+  },
+  "mcpServers": {
+    "other": {
+      "command": "other-server",
+      "env": {
+        "TOKEN": "fixture-other-secret-must-not-appear-in-preview"
+      }
+    },
+    "aas": {
+      "command": "old-aas-mcp",
+      "args": ["--old"],
+      "env": {
+        "OLD_TOKEN": "fixture-old-secret-must-not-appear-in-preview"
+      },
+      "disabled": false
+    }
+  }
+}

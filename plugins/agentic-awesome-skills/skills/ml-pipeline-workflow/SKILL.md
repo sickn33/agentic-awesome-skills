@@ -1,7 +1,7 @@
 ---
 name: ml-pipeline-workflow
 description: "Complete end-to-end MLOps pipeline orchestration from data preparation through model deployment."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

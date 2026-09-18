@@ -1,7 +1,7 @@
 ---
 name: ui-a11y
 description: Audit a component or page for accessibility issues and fix them
-risk: unknown
+risk: critical
 source: https://github.com/bitjaru/styleseed/tree/main/engine/.claude/skills/ss-a11y
 source_repo: bitjaru/styleseed
 source_type: community
@@ -81,6 +81,12 @@ Target: **$ARGUMENTS**
 1. **Issues found**: List with severity (Critical/Major/Minor)
 2. **Auto-fixes**: Apply fixes directly where possible
 3. **Manual review needed**: Flag items that need human judgment
+
+## Example
+
+**User request:**
+
+> Audit a component or page for accessibility issues and fix them.
 
 ## Limitations
 

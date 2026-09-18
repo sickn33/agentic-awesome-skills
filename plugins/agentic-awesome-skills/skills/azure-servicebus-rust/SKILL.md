@@ -1,7 +1,7 @@
 ---
 name: azure-servicebus-rust
 description: 'Azure Service Bus library for Rust. Send and receive messages using queues, topics, and subscriptions. Triggers: "service bus rust", "ServiceBusClient rust", "send message servicebus rust", "receive message servicebus rust", "queue rust messaging", "topic subscription rust".'
-risk: unknown
+risk: critical
 source: https://github.com/microsoft/skills/tree/main/.github/plugins/azure-sdk-rust/skills/azure-servicebus-rust
 source_repo: microsoft/skills
 source_type: official

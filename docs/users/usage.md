@@ -1,28 +1,53 @@
-# Usage Guide: How to Actually Use These Skills
+# Usage Guide: Compose and Use an AAS Skill Stack
 
-> **Confused after installation?** This guide walks you through exactly what to do next, step by step.
+> **Recommended path:** let Codex or Claude inspect the project, search and read the complete AAS catalog, and choose the exact skills. AAS Core records and validates that agent-owned selection.
+
+## Primary workflow: agent-first composition
+
+After configuring the local AAS MCP, ask your agent to inspect the repository and choose a stack for the outcome you want:
+
+```text
+Inspect this repository and enumerate its primary capability areas. For each
+capability, search the complete AAS catalog, paginate or refine the query, and
+compare multiple plausible candidates with get_skill when available. Select at
+least one non-redundant valid skill per capability, explicitly report catalog
+gaps, and evaluate architecture/runtime, languages/frameworks, domain behavior,
+data/storage, integrations, testing/quality, security/privacy, UX/accessibility,
+deployment/operations, and maintenance workflow. Mark dimensions not applicable
+instead of silently omitting them. Do not stop at the first few matches or
+optimize for the smallest stack. Core has no semantic policy favoring a small
+stack; each manifest has a technical maximum of 128 selected skills. Only then
+use compose_stack with a project profile, inspect the schema 2 manifest returned
+in memory, and do not apply it.
+```
+
+The agent must use `search_skills` and `get_skill` across the complete catalog, build a capability-to-skill coverage map, continue searching while a primary capability remains uncovered, choose the exact IDs itself, call `compose_stack`, then check the in-memory proposal with `inspect_stack` before presenting it. Every current catalog skill remains individually searchable, readable, and selectable. A client or the CLI can persist the reviewed `aas-stack.json`; an audit-enabled flow can then call `export_selection_evidence`, validate it with `inspect_selection_evidence`, and atomically publish the manifest and separate `aas-selection-evidence.json` sidecar in an `artifact-dir`. Use `aas stack plan` to preview the exact operations without materializing skills or managed state in the target.
+
+Selection evidence contains the raw `search_skills` queries observed during the MCP session. Do not place secrets, credentials, private source text, or personal data in catalog queries.
+
+Selection belongs to the coding agent. AAS MCP does not inspect the repository itself, rank or exclude skills, install skills, update catalogs, or change configuration. See [AAS Core](aas-core.md) for setup, the exact tool boundary, CLI commands, and preview limitations.
+
+`stack apply` and `stack recover` are experimental, disabled by default, and are not supported or certified preview safety claims.
 
 ---
 
-## "I just installed the repository. Now what?"
+## Alternative workflow: direct skill installation
 
-Great question! Here's what just happened and what to do next:
+If you came in through a **Claude Code** or **Codex** plugin instead of AAS Core or a full library install, invoke individual skills in prompts. Plugins ship a fixed plugin-safe subset; AAS Core instead validates and records the exact stack the agent selected from the verified catalog in `aas-stack.json`. See [plugins.md](plugins.md) for the distribution model.
 
-If you came in through a **Claude Code** or **Codex** plugin instead of a full library install, the mental model is the same: you still invoke individual skills in prompts. The main difference is that plugins ship the plugin-safe subset. See [plugins.md](plugins.md) for the install model.
-
-### What You Just Did
+### What direct distribution provides
 
 When you ran `npx agentic-awesome-skills` or cloned the repository, you:
 
-✅ **Downloaded 1,946+ skill files** to your computer (default: `~/.agents/skills/`; or a custom path like `~/.agent/skills/` if you used `--path`)
+✅ **Downloaded 2,127+ skill files** to your computer (default: `~/.agents/skills/`; or a custom path like `~/.agent/skills/` if you used `--path`)
 ✅ **Made them available** to your AI assistant
 ❌ **Did NOT enable them all automatically** (they're just sitting there, waiting)
 
-Think of it like installing a toolbox. You have all the tools now, but you need to **pick which ones to use** for each job.
+Direct distribution makes skill files available to the host. It does not select a project-specific stack, record desired state, or produce a preview plan; those are AAS Core responsibilities.
 
 ---
 
-## Step 1: Understanding "Bundles" (Recommendations or Focused Installs)
+## Direct-install Step 1: Understanding Bundles
 
 **Common confusion:** "Do I need to download each skill separately?"
 
@@ -32,11 +57,7 @@ Think of it like installing a toolbox. You have all the tools now, but you need 
 
 Bundles are **curated groups** of skills organized by role. They help you decide which skills to start using, and they can also be exposed as focused marketplace plugins for Claude Code and Codex.
 
-**Analogy:**
-
-- You installed a toolbox with 1,946+ tools (✅ done)
-- Bundles are like **labeled organizer trays** saying: "If you're a carpenter, start with these 10 tools"
-- You can either **pick skills from the tray** or install that tray as a focused marketplace bundle plugin
+Bundles provide editorial shortlists. You can either select individual skills from a bundle or install its focused marketplace plugin where supported.
 
 ### What Bundles Are NOT
 
@@ -73,9 +94,7 @@ If you want only one bundle active at a time in Antigravity, use the activation 
 
 ---
 
-## Step 2: How to Actually Execute/Use a Skill
-
-This is the part that should have been explained better! Here's how to use skills:
+## Direct-install Step 2: Invoke a Skill
 
 ### The Simple Answer
 
@@ -126,7 +145,7 @@ Use @brainstorming to plan this feature
 
 ---
 
-## Step 3: What Should My Prompts Look Like?
+## Direct-install Step 3: Write a Focused Prompt
 
 Here are **real-world examples** of good prompts:
 
@@ -182,7 +201,7 @@ Here are **real-world examples** of good prompts:
 
 ---
 
-## Step 4: Your First Skill (Hands-On Tutorial)
+## Direct-install Step 4: Your First Skill
 
 Let's actually use a skill right now. Follow these steps:
 
@@ -210,9 +229,9 @@ Let's actually use a skill right now. Follow these steps:
 
 ---
 
-## Step 5: Picking Your First Skills (Practical Advice)
+## Direct-install Step 5: Pick Skills Manually
 
-Don't try to use all 1,946+ skills at once. Here's a sensible approach:
+Don't try to use all 2,127+ skills at once. Here's a sensible approach:
 
 If you want a tool-specific starting point before choosing skills, use:
 
@@ -327,7 +346,7 @@ AI: [Creates tests, sets up CI/CD, deploys to Vercel]
 
 ### "Can I see all available skills?"
 
-Yes! Three ways:
+Yes. With AAS Core, ask the agent to call `search_skills` and inspect candidates with `get_skill`. On a direct install, you can also:
 
 1. Browse [CATALOG.md](../../CATALOG.md) (searchable list)
 2. Run `ls ~/.agents/skills/` (or your actual install path)
@@ -343,7 +362,7 @@ Usually no, but if your AI doesn't recognize a skill:
 
 ### "Can I load all skills into the model at once?"
 
-No. Even though you have 1,946+ skills installed locally, you should **not** concatenate every `SKILL.md` into a single system prompt or context block.
+No. Even though you have 2,127+ skills installed locally, you should **not** concatenate every `SKILL.md` into a single system prompt or context block.
 
 The intended pattern is:
 
@@ -394,7 +413,13 @@ Use @skill-creator to help me build a custom skill for [your task]
 
 ## Next Steps
 
-Now that you understand how to use skills:
+For the Core-first path:
+
+1. Configure the local MCP with the [AAS Core guide](aas-core.md).
+2. Ask the agent to search the complete catalog, choose exact IDs, and explain its selection.
+3. Review `aas-stack.json`, validate it, and preview the plan.
+
+For direct/manual use:
 
 1. ✅ **Try one skill right now** - Start with `@brainstorming` on any idea you have
 2. 📚 **Pick 3-5 skills** from your role's bundle in [bundles.md](bundles.md)

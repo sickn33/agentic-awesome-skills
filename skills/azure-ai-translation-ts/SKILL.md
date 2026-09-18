@@ -1,7 +1,7 @@
 ---
 name: azure-ai-translation-ts
 description: "Text and document translation with REST-style clients."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

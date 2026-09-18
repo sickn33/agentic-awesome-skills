@@ -1,7 +1,7 @@
 ---
 name: wiki-onboarding
 description: "Generate two complementary onboarding documents that together give any engineer — from newcomer to principal — a complete understanding of a codebase. Use when user asks for onboarding docs or getting-started guides, user runs /deep-wiki, or user wants to help new team members understand a codebase."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -80,6 +80,12 @@ Scan the repository for build files to determine the primary language for code e
 
 ### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Create onboarding documentation that helps a new engineer run, understand, and safely change this codebase.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

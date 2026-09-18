@@ -1,7 +1,7 @@
 ---
 name: implement
 description: Implement a piece of work based on a PRD or set of issues.
-risk: unknown
+risk: critical
 source: https://github.com/mattpocock/skills/tree/main/skills/engineering/implement
 source_repo: mattpocock/skills
 source_type: community
@@ -24,6 +24,12 @@ Run typechecking regularly, single test files regularly, and the full test suite
 Once done, use /review to review the work.
 
 Commit your work to the current branch.
+
+## Example
+
+**User request:**
+
+> Implement a piece of work based on a PRD or set of issues.
 
 ## Limitations
 

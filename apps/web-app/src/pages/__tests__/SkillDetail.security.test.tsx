@@ -66,4 +66,33 @@ describe('SkillDetail security', () => {
 
     expect(pluginNames).not.toContain('rehypeRaw');
   });
+
+  it.each([
+    'skills/../../api/session#',
+    'skills/%2e%2e/%2e%2e/api/session',
+  ])('rejects unsafe catalog paths without issuing a fetch: %s', async (skillPath) => {
+    const mockSkill = createMockSkill({
+      id: 'unsafe-path',
+      name: 'unsafe-path',
+      description: 'Skill with an unsafe catalog path',
+      path: skillPath,
+    });
+
+    (useSkills as Mock).mockReturnValue({
+      skills: [mockSkill],
+      stars: {},
+      loading: false,
+    });
+
+    global.fetch = vi.fn();
+    renderWithRouter(<SkillDetail />, {
+      route: '/skill/unsafe-path',
+      path: '/skill/:id',
+      useProvider: false,
+    });
+
+    await waitFor(() => {
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
+  });
 });

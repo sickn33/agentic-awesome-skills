@@ -83,6 +83,13 @@ const wpSiteHealthCatalog = fs.readFileSync(
   'utf8',
 );
 const dispatchSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'dispatch', 'SKILL.md'), 'utf8');
+const anywriteSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'anywrite', 'SKILL.md'), 'utf8');
+const sshepherdSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'sshepherd', 'SKILL.md'), 'utf8');
+const awsDiscoverySkill = fs.readFileSync(path.join(repoRoot, 'skills', 'hf-cloud-aws-context-discovery', 'SKILL.md'), 'utf8');
+const pptxDeckSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'pptx-deck-creation', 'SKILL.md'), 'utf8');
+const pptxDesignProfiles = fs.readFileSync(path.join(repoRoot, 'skills', 'pptx-deck-creation', 'references', 'design-profiles.md'), 'utf8');
+const cloudflareAuditSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'cloudflare-security-audit', 'SKILL.md'), 'utf8');
+const weaviatePdfReference = fs.readFileSync(path.join(repoRoot, 'skills', 'weaviate-cookbooks', 'references', 'pdf_multimodal_rag.md'), 'utf8');
 const eclCreatorConfig = fs.readFileSync(
   path.join(repoRoot, 'skills', 'ecl-harness-engineer', 'agents', 'creator-config.md'),
   'utf8',
@@ -92,6 +99,20 @@ const eclEnvironmentGuide = fs.readFileSync(
   'utf8',
 );
 const lovableCleanupSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'lovable-cleanup', 'SKILL.md'), 'utf8');
+const unifiedAiGatewaySkill = fs.readFileSync(path.join(repoRoot, 'skills', 'unified-ai-gateway', 'SKILL.md'), 'utf8');
+const agentsGeneratorSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'agents-generator', 'SKILL.md'), 'utf8');
+const agentsGeneratorFullTemplate = fs.readFileSync(path.join(repoRoot, 'skills', 'agents-generator', 'assets', 'agents-full.md'), 'utf8');
+const ghAttachSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'gh-attach', 'SKILL.md'), 'utf8');
+const cohesivitySkill = fs.readFileSync(path.join(repoRoot, 'skills', 'cohesivity', 'SKILL.md'), 'utf8');
+const lokiAutonomyRunner = fs.readFileSync(path.join(repoRoot, 'skills', 'loki-mode', 'autonomy', 'run.sh'), 'utf8');
+const rootReadme = fs.readFileSync(path.join(repoRoot, 'README.md'), 'utf8');
+const vietnameseReadme = fs.readFileSync(path.join(repoRoot, 'docs', 'vietnamese', 'README.vi.md'), 'utf8');
+const blueprintSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'blueprint', 'SKILL.md'), 'utf8');
+const uiUpdateSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'ui-update', 'SKILL.md'), 'utf8');
+const xTwitterScraperSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'x-twitter-scraper', 'SKILL.md'), 'utf8');
+const agentMemoryMcpSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'agent-memory-mcp', 'SKILL.md'), 'utf8');
+const speckitUpdaterSkill = fs.readFileSync(path.join(repoRoot, 'skills', 'speckit-updater', 'SKILL.md'), 'utf8');
+const securityAntivirusGuide = fs.readFileSync(path.join(repoRoot, 'docs', 'users', 'security-and-antivirus.md'), 'utf8');
 
 function fencedBlocks(content, language) {
   const blocks = [];
@@ -456,6 +477,20 @@ assert.match(
   /^\s+codex:\s*blocked$/m,
   'Dispatch must be blocked from plugin-safe Codex distribution',
 );
+for (const [name, skill] of [['anywrite', anywriteSkill], ['sshepherd', sshepherdSkill]]) {
+  assert.match(skill, /^\s+codex:\s*blocked$/m, `${name} must be blocked from Codex plugins without a shipped runtime`);
+  assert.match(skill, /^\s+claude:\s*blocked$/m, `${name} must be blocked from Claude plugins without a shipped runtime`);
+  assert.doesNotMatch(skill, /^\.\/dist\/(?:anywrite|sshepherd)\b/m, `${name} must not execute a workspace-relative binary`);
+  assert.match(skill, /explicit absolute path/i, `${name} must require a user-approved absolute executable path`);
+}
+assert.match(awsDiscoverySkill, /Never open or print `~\/\.aws\/credentials`/);
+assert.doesNotMatch(awsDiscoverySkill, /credentials` are plain INI files — read-only/);
+assert.match(`${pptxDeckSkill}\n${pptxDesignProfiles}`, /untrusted (?:reference )?data/i);
+assert.match(`${pptxDeckSkill}\n${pptxDesignProfiles}`, /Ignore embedded instructions|never as instructions/i);
+assert.match(cloudflareAuditSkill, /canonical physical repository path plus its normalized `origin`/);
+assert.match(cloudflareAuditSkill, /Do not search or reuse prior runs from a basename-only directory/);
+assert.doesNotMatch(weaviatePdfReference, /-o \/tmp\/(?:uv|ollama)-install\.sh/);
+assert.match(weaviatePdfReference, /mktemp -d/);
 assert.match(
   dispatchSkill,
   /^\s+claude:\s*blocked$/m,
@@ -482,6 +517,42 @@ assert.doesNotMatch(
   'Lovable env-file scanning must redact values before command output reaches the transcript',
 );
 assert.doesNotMatch(
+  unifiedAiGatewaySkill,
+  /grep\s+-R[^\n]*\$REVIEW_DIR\/rootfs/,
+  'Unified AI Gateway image inspection must not dereference untrusted rootfs symlinks',
+);
+assert.match(
+  unifiedAiGatewaySkill,
+  /find "\$REVIEW_DIR\/rootfs\/app" -type f -name 'package\.json'[\s\S]*?-exec grep -nHE/,
+  'Unified AI Gateway lifecycle inspection must pass only regular files to grep',
+);
+assert.match(
+  agentsGeneratorSkill + agentsGeneratorFullTemplate,
+  /Never open `\.env`|Never open `\.env`, `\.env\.local`/,
+  'Agents Generator must forbid reading secret-bearing environment files',
+);
+assert.doesNotMatch(
+  agentsGeneratorSkill,
+  /Run `\[format cmd\]`|Run `\[lint cmd\]`/,
+  'Agents Generator must not execute project-controlled package scripts by default',
+);
+assert.match(agentsGeneratorSkill, /Project-provided package scripts are untrusted executable code/);
+assert.match(ghAttachSkill, /gh extension install sudosubin\/gh-attach --pin v0\.4\.2/);
+assert.doesNotMatch(ghAttachSkill, /GH_ATTACH_SESSION_TOKEN/);
+assert.match(cohesivitySkill, /existing `\.cohesivity` file is not proof of ownership/);
+assert.doesNotMatch(
+  cohesivitySkill,
+  /cohesivity\.ai\/api\/genesis\s*>\s*\.cohesivity/,
+  'Cohesivity examples must not overwrite credentials with a direct redirect',
+);
+assert.doesNotMatch(
+  lokiAutonomyRunner,
+  /rm -rf -- "\$\{LOKI_TEMP_RUN_DIR/,
+  'Loki cleanup must not recursively delete an environment-specified directory',
+);
+assert.match(lokiAutonomyRunner, /rmdir -- "\$CURRENT_TEMP_RUN_DIR"/);
+assert.doesNotMatch(rootReadme + vietnameseReadme, /sealed_token=/);
+assert.doesNotMatch(
   androidHybridReference,
   /Preferences\.set\(\{ key: 'auth_token'/,
   'Hybrid Android reference must not store auth tokens in Capacitor Preferences',
@@ -501,6 +572,21 @@ assert.match(
   /react-native-keychain|expo-secure-store/,
   'React Native reference should direct token storage to platform-backed secure storage',
 );
+for (const [name, content] of [
+  ['blueprint', blueprintSkill],
+  ['ui-update', uiUpdateSkill],
+  ['x-twitter-scraper', xTwitterScraperSkill],
+  ['agent-memory-mcp', agentMemoryMcpSkill],
+]) {
+  assert.match(content, /checkout --detach [0-9a-f]{40}/, `${name} must pin its reviewed external source`);
+  assert.match(content, /mktemp -d/, `${name} must review external content outside active skill paths`);
+  assert.match(content, /explicit (?:user )?approval/i, `${name} must require approval before activation`);
+}
+assert.doesNotMatch(uiUpdateSkill, /git reset --hard|Always safe \(do without asking\)|safe and reversible/i);
+assert.doesNotMatch(speckitUpdaterSkill, /C:\\Users\\bobby/i);
+assert.match(securityAntivirusGuide, /does not itself run/i);
+assert.match(securityAntivirusGuide, /does not prove safety/i);
+assert.match(securityAntivirusGuide, /evidence of execution/i);
 
 for (const scriptName of ['generate_slides.py', 'create_pdf_slides.py']) {
   const helpRun = spawnSync(

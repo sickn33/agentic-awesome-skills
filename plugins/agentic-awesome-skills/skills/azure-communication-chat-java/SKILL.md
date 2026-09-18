@@ -1,7 +1,7 @@
 ---
 name: azure-communication-chat-java
 description: "Build real-time chat applications with thread management, messaging, participants, and read receipts."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

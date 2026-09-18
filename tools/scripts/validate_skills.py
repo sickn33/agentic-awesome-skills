@@ -87,7 +87,18 @@ def collect_validation_results(skills_dir, strict_mode=False):
     skill_count = 0
 
     # Pre-compiled regex
-    security_disclaimer_pattern = re.compile(r"AUTHORIZED USE ONLY", re.IGNORECASE)
+    security_disclaimer_pattern = re.compile(
+        r"> \*\*⚠️ AUTHORIZED USE ONLY\*\*\s*\n"
+        r"> This skill is for educational purposes or authorized security assessments only\.\s*\n"
+        r"> You must have explicit, written permission from the system owner before using this tool\.\s*\n"
+        r"> Misuse of this tool is illegal and strictly prohibited\.",
+    )
+    offensive_confirmation_pattern = re.compile(
+        r"Mandatory confirmation gate[\s\S]{0,900}"
+        r"exact target URL, IP, account, or resource[\s\S]{0,900}"
+        r"Wait for explicit confirmation in the current conversation",
+        re.IGNORECASE,
+    )
 
     valid_risk_levels = ["none", "safe", "critical", "offensive", "unknown"]
     date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}$')  # YYYY-MM-DD format
@@ -183,7 +194,9 @@ def collect_validation_results(skills_dir, strict_mode=False):
             # 4. Security Guardrails
             if metadata.get("risk") == "offensive":
                 if not security_disclaimer_pattern.search(content):
-                    errors.append(f"🚨 {rel_path}: OFFENSIVE SKILL MISSING SECURITY DISCLAIMER! (Must contain 'AUTHORIZED USE ONLY')")
+                    errors.append(f"🚨 {rel_path}: OFFENSIVE SKILL MISSING THE EXACT AUTHORIZED-USE DISCLAIMER")
+                if not offensive_confirmation_pattern.search(content):
+                    errors.append(f"🚨 {rel_path}: OFFENSIVE SKILL MISSING THE MANDATORY PER-ACTION CONFIRMATION GATE")
 
             # 5. Dangling Links Validation
             # Look for markdown links: [text](href)

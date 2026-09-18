@@ -59,6 +59,68 @@ def init_repo(readme: str, skill_files: dict[str, str]) -> Path:
 
 
 class ReadmeCreditsTests(unittest.TestCase):
+    def test_deleted_skill_is_skipped_without_reading_missing_head_file(self):
+        root = init_repo(
+            """# Repo
+
+### Community Contributors
+
+- [other/tool](https://github.com/other/tool)
+""",
+            {
+                "external": """name: external
+description: External
+source: community
+source_type: community
+source_repo: other/tool
+""",
+            },
+        )
+        base = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=root, check=True, capture_output=True, text=True
+        ).stdout.strip()
+        (root / "skills/external/SKILL.md").unlink()
+        (root / "skills/external").rmdir()
+        git(root, "add", "-A")
+        git(root, "commit", "-m", "delete skill")
+
+        report = check_readme_credits.check_readme_credits(root, base, "HEAD")
+
+        self.assertEqual(report["skill_files"], [])
+        self.assertEqual(report["errors"], [])
+
+    def test_renamed_skill_reads_destination_snapshot(self):
+        root = init_repo(
+            """# Repo
+
+### Community Contributors
+
+- [other/tool](https://github.com/other/tool)
+""",
+            {
+                "external": """name: external
+description: External
+source: community
+source_type: community
+source_repo: other/tool
+""",
+            },
+        )
+        base = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=root, check=True, capture_output=True, text=True
+        ).stdout.strip()
+        git(root, "mv", "skills/external", "skills/renamed")
+        path = root / "skills/renamed/SKILL.md"
+        path.write_text(path.read_text(encoding="utf-8").replace("name: external", "name: renamed"), encoding="utf-8")
+        git(root, "add", "-A")
+        git(root, "commit", "-m", "rename skill")
+
+        report = check_readme_credits.check_readme_credits(root, base, "HEAD")
+
+        self.assertEqual(report["skill_files"], ["skills/renamed/SKILL.md"])
+        self.assertEqual(report["errors"], [])
+        self.assertEqual(report["checked_skills"][0]["path"], "skills/renamed/SKILL.md")
+
     def test_no_skill_changes_is_noop(self):
         root = init_repo(
             """# Repo

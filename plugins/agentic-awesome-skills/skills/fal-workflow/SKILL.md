@@ -22,6 +22,12 @@ This skill provides guidance and patterns for generate workflow json files for c
 
 For more information, see the [source repository](https://github.com/fal-ai-community/skills/blob/main/skills/claude.ai/fal-workflow/SKILL.md).
 
+## Example
+
+**User request:**
+
+> Generate workflow JSON files for chaining AI models.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -1,7 +1,7 @@
 ---
 name: context-driven-development
 description: "Guide for implementing and maintaining context as a managed artifact alongside code, enabling consistent AI interactions and team alignment through structured project documentation."
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---
@@ -20,7 +20,8 @@ Guide for implementing and maintaining context as a managed artifact alongside c
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
-- If detailed examples are required, open `resources/implementation-playbook.md`.
+- Use the workflow, artifact relationships, and validation checklist below when
+  detailed implementation guidance is required.
 
 ## Use this skill when
 

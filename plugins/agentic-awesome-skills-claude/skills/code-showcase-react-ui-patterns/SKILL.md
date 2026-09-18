@@ -1,7 +1,7 @@
 ---
 name: code-showcase-react-ui-patterns
 description: Modern React UI patterns for loading states, error handling, and data fetching. Use when building UI components, handling async data, or managing UI states.
-risk: unknown
+risk: critical
 source: https://github.com/ChrisWiles/claude-code-showcase/tree/main/.claude/skills/react-ui-patterns
 source_repo: ChrisWiles/claude-code-showcase
 source_type: community

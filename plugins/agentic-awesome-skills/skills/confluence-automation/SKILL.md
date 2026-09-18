@@ -210,6 +210,12 @@ Confluence uses two pagination styles:
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
+## Example
+
+**User request:**
+
+> Automate Confluence page creation, content search, space management, labels, and hierarchy navigation via Rube MCP (Composio).
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -19,6 +19,12 @@ tools: [claude, cursor, codex, antigravity]
 - Use when building data-heavy dashboards, portfolios, editorial pages, or command-center UIs that should feel raw and mechanical.
 - Use when a design must reject soft gradients, rounded consumer UI, glassmorphism, and generic SaaS card layouts.
 
+## Example
+
+**User request:**
+
+> Review this interface with @industrial-brutalist-ui, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 
 - This style is intentionally severe and may not fit consumer products, accessibility-sensitive flows, or brands that require warmth and softness.

@@ -1,7 +1,7 @@
 ---
 name: nosql-expert
 description: "Expert guidance for distributed NoSQL databases (Cassandra, DynamoDB). Focuses on mental models, query-first modeling, single-table design, and avoiding hot partitions in high-scale systems."
-risk: unknown
+risk: none
 source: community
 date_added: "2026-02-27"
 ---
@@ -111,6 +111,12 @@ Before finalizing your NoSQL schema:
 ❌ **Scatter-Gather:** Querying *all* partitions to find one item (Scan).
 ❌ **Hot Keys:** Putting all "Monday" data into one partition.
 ❌ **Relational Modeling:** Creating `Author` and `Book` tables and trying to join them in code. (Instead, embed Book summaries in Author, or duplicate Author info in Books).
+
+## Example
+
+**User request:**
+
+> Use @nosql-expert for this task: Expert guidance for distributed NoSQL databases (Cassandra, DynamoDB).
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

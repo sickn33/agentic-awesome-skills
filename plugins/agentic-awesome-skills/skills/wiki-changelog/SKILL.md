@@ -1,7 +1,7 @@
 ---
 name: wiki-changelog
 description: "Generate structured changelogs from git history. Use when user asks \"what changed recently\", \"generate a changelog\", \"summarize commits\" or user wants to understand recent development activity."
-risk: unknown
+risk: safe
 source: community
 date_added: "2026-02-27"
 ---
@@ -20,6 +20,12 @@ Generate structured changelogs from git history.
 2. Group by time period: daily (last 7 days), weekly (older)
 3. Classify each commit: Features (🆕), Fixes (🐛), Refactoring (🔄), Docs (📝), Config (🔧), Dependencies (📦), Breaking (⚠️)
 4. Generate concise user-facing descriptions using project terminology
+
+## Example
+
+**User request:**
+
+> Generate a changelog from the recent git history, grouping user-visible changes and linking each claim to its commit.
 
 ## Constraints
 

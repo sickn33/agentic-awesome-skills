@@ -5,7 +5,7 @@ description: >
   templates, competitive analysis, content strategy, and implementation
   roadmap. Use when user says "SEO plan", "SEO strategy", "content strategy",
   "site architecture", or "SEO roadmap".
-risk: unknown
+risk: critical
 source: "https://github.com/AgriciDaniel/claude-seo"
 date_added: "2026-03-21"
 user-invokable: true

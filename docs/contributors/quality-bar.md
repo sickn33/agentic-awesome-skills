@@ -2,9 +2,9 @@
 
 To transform **Agentic Awesome Skills** from a collection of scripts into a trusted platform, every skill must meet a specific standard of quality and safety.
 
-## The "Validated" Badge ✅
+## What validation establishes
 
-A skill earns the "Validated" badge only if it meets these **6 quality checks**. Some are enforced automatically today, while others still require reviewer judgment:
+The following checks describe contributor expectations. Passing a structural check does not award a general reliability badge. Semantic review must identify its exact content, scope, reviewer or process, actual checks and remaining limitations.
 
 ### 1. Metadata Integrity
 
@@ -47,7 +47,7 @@ A list of known edge cases or things the skill _cannot_ do.
 
 If a skill includes command examples, remote fetch steps, secrets, or mutation guidance, the PR must document the risk and pass `npm run security:docs` in addition to normal validation.
 
-For pull requests that add or modify `SKILL.md`, GitHub also runs the automated `skill-review` workflow. Treat that review as part of the normal PR quality gate and address any actionable findings before merge.
+For pull requests that add or modify `SKILL.md`, GitHub also runs the automated `skill-review` workflow. Treat that review as part of the normal PR quality gate and address any actionable findings before merge. A successful result is reused when a later push has the identical changed-skill content; if Tessl credits are unavailable, the workflow records `manual-review-required` for exact-head maintainer attestation instead of pretending an automated review passed.
 Automated checks are necessary, but they do **not** replace manual reviewer judgment on logic, safety, and likely failure modes.
 
 `npm run security:docs` enforces a repo-wide scan for:
@@ -65,19 +65,27 @@ Use `npm run audit:skills` when you need a repo-wide report that goes beyond sch
 - which skills are missing examples or limitations,
 - and which skills have the highest concentration of warnings/errors.
 
-Maintainers can pair that report with `npm run sync:risk-labels` for conservative legacy cleanup. That sync only rewrites `risk: unknown` when the suggested label is explicit and high-confidence enough to automate safely, and it preserves the contributor-facing rule that new or uncertain submissions can still start as `unknown`.
+Risk labels remain declared metadata. The audit validates their presence and shape, while ambiguous `risk: unknown` cases require semantic review rather than lexical inference.
 
 ---
 
-## Support Levels
+## Provenance, compatibility and review evidence
 
-We also categorize skills by who maintains them:
+Source attribution identifies origin; it does not prove current maintenance, efficacy
+or security. Do not infer reliability from “official”, “community”, a risk label or
+an unqualified “verified” badge. Keep original attribution and license notices when
+editing; record modifications without inventing upstream endorsement.
 
-| Level         | Badge | Meaning                                             |
-| :------------ | :---- | :-------------------------------------------------- |
-| **Official**  | 🟣    | Maintained by the core team. High reliability.      |
-| **Community** | ⚪    | Contributed by the ecosystem. Best effort support.  |
-| **Verified**  | ✨    | Community skill that has passed deep manual review. |
+The [compatibility map](content-aliases.json) explicitly records retained duplicate
+IDs. Aliases keep complete local instructions and support files for offline use;
+they are not separate capabilities, recommendations or eligibility rules. Correct the
+primary editorial path and every alias together, and verify their body/bundle equality.
+Do not remove callable IDs or omit support files simply to improve duplicate counts.
+
+The [2026-09-05 content review](content-review-2026-09-05.md) records a bounded cohort,
+file fingerprints, actual checks, retained aliases and remaining whole-corpus debt.
+A content fingerprint binds bytes, not truth or effectiveness. Review evidence becomes
+stale when those bytes change and cannot replace the exact-head merge gate.
 
 ---
 
@@ -97,7 +105,6 @@ Notes:
 
 - `npm run validate` is the operational contributor gate.
 - `npm run audit:skills` is the maintainer-facing compliance/usability report for the full library.
-- `npm run sync:risk-labels` is a maintainer cleanup tool for high-confidence legacy `risk:` fixes.
 - `npm run security:docs` is required for command-heavy or risky skill content.
 - PRs that touch `SKILL.md` also get an automated `skill-review` GitHub Actions check.
 - Skill changes and risky guidance still require a manual logic review before merge, even when the automated gates pass.

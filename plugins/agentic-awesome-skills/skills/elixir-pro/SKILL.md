@@ -1,7 +1,7 @@
 ---
 name: elixir-pro
 description: Write idiomatic Elixir code with OTP patterns, supervision trees, and Phoenix LiveView. Masters concurrency, fault tolerance, and distributed systems.
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---
@@ -55,6 +55,12 @@ You are an Elixir expert specializing in concurrent, fault-tolerant, and distrib
 - Telemetry instrumentation for observability
 
 Follow Elixir conventions. Design for fault tolerance and horizontal scaling.
+
+## Example
+
+**User request:**
+
+> Review this Elixir implementation for correctness, idiomatic design, performance, and test coverage.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

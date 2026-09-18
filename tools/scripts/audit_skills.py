@@ -23,14 +23,13 @@ def safe_user_path(path_value, base_dir="."):
     return resolved_path
 
 from _project_paths import find_repo_root
-from risk_classifier import suggest_risk
 from validate_skills import configure_utf8_output, has_when_to_use_section, parse_frontmatter
 
 
 ELLIPSIS_PATTERN = re.compile(r"(?:\.\.\.|…)\s*$")
 FENCED_CODE_BLOCK_PATTERN = re.compile(r"^```", re.MULTILINE)
 EXAMPLES_HEADING_PATTERNS = [
-    re.compile(r"^##\s+Example(s)?\b", re.MULTILINE | re.IGNORECASE),
+    re.compile(r"^#{2,4}\s+.*\bExample(s)?\b", re.MULTILINE | re.IGNORECASE),
     re.compile(r"^##\s+Usage\b", re.MULTILINE | re.IGNORECASE),
 ]
 LIMITATIONS_HEADING_PATTERNS = [
@@ -42,11 +41,21 @@ LIMITATIONS_HEADING_PATTERNS = [
 ]
 MARKDOWN_LINK_PATTERN = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-SECURITY_DISCLAIMER_PATTERN = re.compile(r"AUTHORIZED USE ONLY", re.IGNORECASE)
+SECURITY_DISCLAIMER_PATTERN = re.compile(
+    r"> \*\*⚠️ AUTHORIZED USE ONLY\*\*\s*\n"
+    r"> This skill is for educational purposes or authorized security assessments only\.\s*\n"
+    r"> You must have explicit, written permission from the system owner before using this tool\.\s*\n"
+    r"> Misuse of this tool is illegal and strictly prohibited\.",
+)
+OFFENSIVE_CONFIRMATION_PATTERN = re.compile(
+    r"Mandatory confirmation gate[\s\S]{0,900}"
+    r"exact target URL, IP, account, or resource[\s\S]{0,900}"
+    r"Wait for explicit confirmation in the current conversation",
+    re.IGNORECASE,
+)
 VALID_RISK_LEVELS = {"none", "safe", "critical", "offensive", "unknown"}
 DEFAULT_MARKDOWN_TOP_FINDINGS = 15
 DEFAULT_MARKDOWN_TOP_SKILLS = 20
-DEFAULT_MARKDOWN_TOP_RISK_SUGGESTIONS = 20
 STRICT_BUDGET_PATH = Path("tools/config/audit-skills-strict-budget.json")
 
 
@@ -62,32 +71,95 @@ class Finding:
             "code": self.code,
             "message": self.message,
         }
-def has_examples(content: str) -> bool:
-    return bool(FENCED_CODE_BLOCK_PATTERN.search(content)) or any(
+def safe_bundled_files(directory: Path, *, skip_nested_skills: bool = False):
+    if directory.is_symlink() or not directory.is_dir():
+        return
+
+    for root, dirs, files in os.walk(directory, followlinks=False):
+        root_path = Path(root)
+        if skip_nested_skills and root_path != directory and (root_path / "SKILL.md").exists():
+            dirs[:] = []
+            continue
+        dirs[:] = [name for name in dirs if not (root_path / name).is_symlink()]
+        for filename in files:
+            path = root_path / filename
+            try:
+                if not path.is_symlink() and path.is_file() and path.stat().st_size > 0:
+                    yield path
+            except OSError:
+                continue
+
+
+def has_bundled_examples(skill_root: Path) -> bool:
+    examples_root = skill_root / "examples"
+    if next(safe_bundled_files(examples_root), None) is not None:
+        return True
+
+    for support_path in safe_bundled_files(skill_root, skip_nested_skills=True):
+        if support_path == skill_root / "SKILL.md":
+            continue
+        if support_path.suffix.lower() not in {".md", ".rst", ".txt"}:
+            continue
+        try:
+            support_content = support_path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        if has_examples(support_content):
+            return True
+    return False
+
+
+def has_examples(content: str, skill_root: Path | None = None) -> bool:
+    inline_examples = bool(FENCED_CODE_BLOCK_PATTERN.search(content)) or any(
         pattern.search(content) for pattern in EXAMPLES_HEADING_PATTERNS
     )
+    return inline_examples or (skill_root is not None and has_bundled_examples(skill_root))
 
 
 def has_limitations(content: str) -> bool:
     return any(pattern.search(content) for pattern in LIMITATIONS_HEADING_PATTERNS)
 
 
-def find_dangling_links(content: str, skill_root: Path) -> list[str]:
+def find_dangling_links(
+    content: str,
+    skill_root: Path,
+    snapshot_root: Path | None = None,
+) -> list[str]:
+    """Return missing or escaping local links without consulting host paths.
+
+    ``snapshot_root`` is the trust boundary. A link that escapes it is broken
+    even when the destination happens to exist on the machine running the
+    audit.
+    """
     broken_links: list[str] = []
+    containment_root = (snapshot_root or skill_root).resolve()
     for link in MARKDOWN_LINK_PATTERN.findall(content):
         link_clean = link.split("#", 1)[0].strip()
-        if not link_clean or link_clean.startswith(("http://", "https://", "mailto:", "<", ">")):
+        if link_clean.startswith("<") and link_clean.endswith(">"):
+            link_clean = link_clean[1:-1].strip()
+        if not link_clean or link_clean.startswith(("http://", "https://", "mailto:")):
             continue
         if os.path.isabs(link_clean):
+            broken_links.append(link)
             continue
 
         target_path = (skill_root / link_clean).resolve()
+        try:
+            target_path.relative_to(containment_root)
+        except ValueError:
+            broken_links.append(link)
+            continue
         if not target_path.exists():
             broken_links.append(link)
     return broken_links
 
 
-def build_skill_report(skill_root: Path, skills_dir: Path) -> dict[str, object]:
+def build_skill_report(
+    skill_root: Path,
+    skills_dir: Path,
+    *,
+    snapshot_root: Path | None = None,
+) -> dict[str, object]:
     skill_file = skill_root / "SKILL.md"
     rel_dir = skill_root.relative_to(skills_dir).as_posix()
     rel_file = f"{rel_dir}/SKILL.md"
@@ -122,7 +194,6 @@ def build_skill_report(skill_root: Path, skills_dir: Path) -> dict[str, object]:
     risk = metadata.get("risk")
     source = metadata.get("source")
     date_added = metadata.get("date_added")
-    risk_suggestion = suggest_risk(content, metadata)
 
     if name != skill_root.name:
         findings.append(
@@ -166,7 +237,7 @@ def build_skill_report(skill_root: Path, skills_dir: Path) -> dict[str, object]:
 
     if risk is None:
         findings.append(Finding("warning", "missing_risk", "Missing risk classification."))
-    elif risk not in VALID_RISK_LEVELS:
+    elif not isinstance(risk, str) or risk not in VALID_RISK_LEVELS:
         findings.append(
             Finding(
                 "error",
@@ -174,17 +245,6 @@ def build_skill_report(skill_root: Path, skills_dir: Path) -> dict[str, object]:
                 f"Risk must be one of {sorted(VALID_RISK_LEVELS)}, got '{risk}'.",
             )
         )
-
-    if risk_suggestion.risk not in ("unknown", "none"):
-        risk_needs_review = risk is None or risk == "unknown" or risk != risk_suggestion.risk
-        if risk_needs_review:
-            findings.append(
-                Finding(
-                    "info" if risk in (None, "unknown") else "warning",
-                    "risk_suggestion",
-                    f"Suggested risk is {risk_suggestion.risk} based on: {', '.join(risk_suggestion.reasons[:3])}.",
-                )
-            )
 
     if source is None:
         findings.append(Finding("warning", "missing_source", "Missing source attribution."))
@@ -201,7 +261,7 @@ def build_skill_report(skill_root: Path, skills_dir: Path) -> dict[str, object]:
     if not has_when_to_use_section(content):
         findings.append(Finding("warning", "missing_when_to_use", "Missing a recognized 'When to Use' section."))
 
-    if not has_examples(content):
+    if not has_examples(content, skill_root):
         findings.append(Finding("warning", "missing_examples", "Missing an example section or fenced example block."))
 
     if not has_limitations(content):
@@ -217,7 +277,7 @@ def build_skill_report(skill_root: Path, skills_dir: Path) -> dict[str, object]:
             )
         )
 
-    for broken_link in find_dangling_links(content, skill_root):
+    for broken_link in find_dangling_links(content, skill_root, snapshot_root):
         findings.append(
             Finding(
                 "error",
@@ -234,14 +294,20 @@ def build_skill_report(skill_root: Path, skills_dir: Path) -> dict[str, object]:
                 "Offensive skill is missing the required 'AUTHORIZED USE ONLY' disclaimer.",
             )
         )
+    if risk == "offensive" and not OFFENSIVE_CONFIRMATION_PATTERN.search(content):
+        findings.append(
+            Finding(
+                "error",
+                "missing_offensive_confirmation_gate",
+                "Offensive skill is missing the mandatory target, authorization, command preview, and explicit confirmation gate.",
+            )
+        )
 
     return finalize_skill_report(
         rel_dir,
         rel_file,
         findings,
         risk=risk,
-        suggested_risk=risk_suggestion.risk,
-        suggested_risk_reasons=list(risk_suggestion.reasons),
     )
 
 
@@ -251,8 +317,6 @@ def finalize_skill_report(
     findings: list[Finding],
     *,
     risk: str | None = None,
-    suggested_risk: str = "unknown",
-    suggested_risk_reasons: list[str] | None = None,
 ) -> dict[str, object]:
     severity_counts = Counter(finding.severity for finding in findings)
     if severity_counts["error"] > 0:
@@ -270,8 +334,6 @@ def finalize_skill_report(
         "warning_count": severity_counts["warning"],
         "info_count": severity_counts["info"],
         "risk": risk,
-        "suggested_risk": suggested_risk,
-        "suggested_risk_reasons": suggested_risk_reasons or [],
         "findings": [finding.to_dict() for finding in findings],
     }
 
@@ -286,36 +348,31 @@ def audit_skills(skills_dir: str | Path) -> dict[str, object]:
         dirs[:] = [directory for directory in dirs if not directory.startswith(".")]
         if "SKILL.md" not in files:
             continue
-        reports.append(build_skill_report(safe_user_path(root, skills_root), skills_root))
+        reports.append(
+            build_skill_report(
+                safe_user_path(root, skills_root),
+                skills_root,
+                snapshot_root=skills_root.parent,
+            )
+        )
 
     reports.sort(key=lambda report: str(report["id"]).lower())
 
     code_counts = Counter()
     severity_counts = Counter()
-    risk_suggestion_counts = Counter()
     for report in reports:
         for finding in report["findings"]:
             code_counts[finding["code"]] += 1
             severity_counts[finding["severity"]] += 1
-        if report["suggested_risk"] not in (None, "unknown", "none"):
-            risk_suggestion_counts[report["suggested_risk"]] += 1
 
     summary = {
         "skills_scanned": len(reports),
         "skills_ok": sum(report["status"] == "ok" for report in reports),
         "skills_with_errors": sum(report["status"] == "error" for report in reports),
         "skills_with_warnings_only": sum(report["status"] == "warning" for report in reports),
-        "skills_with_suggested_risk": sum(
-            report["suggested_risk"] not in ("unknown", "none")
-            for report in reports
-        ),
         "errors": severity_counts["error"],
         "warnings": severity_counts["warning"],
         "infos": severity_counts["info"],
-        "risk_suggestions": [
-            {"risk": risk, "count": count}
-            for risk, count in risk_suggestion_counts.most_common()
-        ],
         "top_finding_codes": [
             {"code": code, "count": count}
             for code, count in code_counts.most_common()
@@ -337,16 +394,6 @@ def write_markdown_report(report: dict[str, object], destination: str | Path) ->
     top_skills = [
         skill for skill in skills if skill["status"] != "ok"
     ][:DEFAULT_MARKDOWN_TOP_SKILLS]
-    risk_suggestions = [
-        skill
-        for skill in skills
-        if skill.get("suggested_risk") not in (None, "unknown", "none")
-        and (
-            skill.get("risk") in (None, "unknown")
-            or skill.get("risk") != skill.get("suggested_risk")
-        )
-    ][:DEFAULT_MARKDOWN_TOP_RISK_SUGGESTIONS]
-
     lines = [
         "# Skills Audit Report",
         "",
@@ -358,17 +405,10 @@ def write_markdown_report(report: dict[str, object], destination: str | Path) ->
         f"- Skills ready: **{summary['skills_ok']}**",
         f"- Skills with errors: **{summary['skills_with_errors']}**",
         f"- Skills with warnings only: **{summary['skills_with_warnings_only']}**",
-        f"- Skills with suggested risk: **{summary['skills_with_suggested_risk']}**",
         f"- Total errors: **{summary['errors']}**",
         f"- Total warnings: **{summary['warnings']}**",
         f"- Total info findings: **{summary['infos']}**",
     ]
-
-    if summary.get("risk_suggestions"):
-        summary_text = ", ".join(
-            f"{item['risk']}: {item['count']}" for item in summary["risk_suggestions"]
-        )
-        lines.append(f"- Suggested risks: **{summary_text}**")
 
     lines.extend(
         [
@@ -403,24 +443,6 @@ def write_markdown_report(report: dict[str, object], destination: str | Path) ->
     else:
         lines.append("| _none_ | ok | 0 | 0 |")
 
-    lines.extend(
-        [
-            "",
-            "## Risk Suggestions",
-            "",
-            "| Skill | Current | Suggested | Why |",
-            "| --- | --- | --- | --- |",
-        ]
-    )
-
-    if risk_suggestions:
-        lines.extend(
-            f"| `{skill['id']}` | {skill.get('risk') or 'unknown'} | {skill.get('suggested_risk') or 'unknown'} | {', '.join(skill.get('suggested_risk_reasons', [])[:3]) or '_n/a_'} |"
-            for skill in risk_suggestions
-        )
-    else:
-        lines.append("| _none_ | _none_ | _none_ | _n/a_ |")
-
     destination_path = Path(destination).expanduser().resolve()
     safe_user_path(destination_path, destination_path.parent).write_text(
         "\n".join(lines) + "\n",
@@ -435,17 +457,9 @@ def print_summary(report: dict[str, object]) -> None:
     print(f"   Ready: {summary['skills_ok']}")
     print(f"   Warning only: {summary['skills_with_warnings_only']}")
     print(f"   With errors: {summary['skills_with_errors']}")
-    print(f"   With suggested risk: {summary['skills_with_suggested_risk']}")
     print(f"   Total warnings: {summary['warnings']}")
     print(f"   Total errors: {summary['errors']}")
     print(f"   Total info findings: {summary['infos']}")
-    if summary.get("risk_suggestions"):
-        risk_summary = ", ".join(
-            f"{item['risk']}: {item['count']}"
-            for item in summary["risk_suggestions"]
-        )
-        print(f"   Suggested risks: {risk_summary}")
-
     top_findings = summary["top_finding_codes"][:10]
     if top_findings:
         print("   Top findings:")

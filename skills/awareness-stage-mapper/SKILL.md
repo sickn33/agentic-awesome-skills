@@ -116,6 +116,12 @@ Before finalizing output, the agent asks:
 - [ ] Did I avoid premature solution pitching?
 - [ ] Does the strategy preserve autonomy and trust?
 
+## Example
+
+**User request:**
+
+> Identify how aware an audience already is before writing messaging or offers.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -17,6 +17,7 @@ function readExpectedState() {
   return {
     countLabel: `${skills.length.toLocaleString('en-US')}+`,
     releaseLabel: `V${pkg.version}`,
+    pluginCount: JSON.parse(fs.readFileSync(path.join(repoRoot, 'data/specialized-plugin-candidates.json'), 'utf8')).candidates.length,
   };
 }
 
@@ -68,24 +69,15 @@ function assertNotIncludes(text, snippet, label) {
   }
 }
 
-async function main() {
-  const expected = readExpectedState();
-  const [home, plugins, sitemap, llms, robots] = await Promise.all([
-    fetchText(`${baseUrl}/`),
-    fetchText(`${baseUrl}/plugins`),
-    fetchText(`${baseUrl}/sitemap.xml`),
-    fetchText(`${baseUrl}/llms.txt`),
-    fetchText(`${baseUrl}/robots.txt`),
-  ]);
-
-  assertIncludes(home, `Agentic Awesome Skills GitHub | ${expected.countLabel} AI coding skills`, 'home');
+function assertLiveSeoDocuments({ home, plugins, sitemap, llms, robots }, expected) {
+  assertIncludes(home, `AAS Core Preview | Agent-first stacks backed by ${expected.countLabel} skills`, 'home');
   assertIncludes(home, 'SoftwareSourceCode', 'home JSON-LD');
   assertIncludes(home, 'FAQPage', 'home JSON-LD');
   assertIncludes(home, 'specialized plugins', 'home');
   assertIncludes(home, expected.countLabel, 'home');
   assertNotIncludes(home, 'prompt templates', 'home');
 
-  assertIncludes(plugins, 'AAS Specialized Plugins | 15 AI coding workflow packs', 'plugins');
+  assertIncludes(plugins, `AAS Specialized Plugins | ${expected.pluginCount.toLocaleString('en-US')} AI coding workflow packs`, 'plugins');
   assertIncludes(plugins, 'specialized plugin packs', 'plugins');
   assertIncludes(plugins, 'numberOfItems', 'plugins JSON-LD');
 
@@ -97,11 +89,28 @@ async function main() {
   assertIncludes(robots, 'User-agent: OAI-SearchBot', 'robots.txt');
   assertIncludes(robots, 'User-agent: ClaudeBot', 'robots.txt');
   assertIncludes(robots, 'User-agent: PerplexityBot', 'robots.txt');
+}
+
+async function main() {
+  const expected = readExpectedState();
+  const [home, plugins, sitemap, llms, robots] = await Promise.all([
+    fetchText(`${baseUrl}/`),
+    fetchText(`${baseUrl}/plugins`),
+    fetchText(`${baseUrl}/sitemap.xml`),
+    fetchText(`${baseUrl}/llms.txt`),
+    fetchText(`${baseUrl}/robots.txt`),
+  ]);
+
+  assertLiveSeoDocuments({ home, plugins, sitemap, llms, robots }, expected);
 
   console.log(`Live SEO/GEO check passed for ${baseUrl}`);
 }
 
-main().catch((error) => {
-  console.error(error.message);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error.message);
+    process.exit(1);
+  });
+}
+
+module.exports = { assertLiveSeoDocuments, readExpectedState };

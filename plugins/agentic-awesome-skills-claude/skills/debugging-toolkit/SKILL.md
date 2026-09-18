@@ -1,7 +1,7 @@
 ---
 name: debugging-toolkit
 description: "Use when working with debugging toolkit smart debug (Alias for debugging-toolkit-smart-debug)"
-risk: unknown
+risk: none
 source: "alias"
 date_added: "2026-06-02"
 ---

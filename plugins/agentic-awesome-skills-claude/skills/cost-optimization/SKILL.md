@@ -1,7 +1,7 @@
 ---
 name: cost-optimization
 description: "Strategies and patterns for optimizing cloud costs across AWS, Azure, and GCP."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

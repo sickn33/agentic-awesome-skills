@@ -25,6 +25,9 @@ const REPOSITORY_ALIASES = new Map([
 ]);
 const CURRENT_PAGES_PROPERTY = "https://sickn33.github.io/agentic-awesome-skills/";
 const LEGACY_PAGES_PROPERTY = "https://sickn33.github.io/antigravity-awesome-skills/";
+const LEGACY_PACKAGE = "antigravity-awesome-skills";
+const CURRENT_PACKAGE = "agentic-awesome-skills";
+const NPM_PACKAGES = new Set([LEGACY_PACKAGE, CURRENT_PACKAGE]);
 
 const DASHBOARDS = [
   {
@@ -290,9 +293,145 @@ function canonicalRepository(value) {
   return REPOSITORY_ALIASES.get(normalized) || normalized;
 }
 
+function npmPackageEntries(payload) {
+  if (!payload || payload.status !== "success") return { ok: false, reason: "non-success capture" };
+  if (Array.isArray(payload.responses)) return { ok: true, entries: payload.responses };
+  if (Array.isArray(payload.packages)) return { ok: true, entries: payload.packages };
+  if (typeof payload.package === "string" && Array.isArray(payload.downloads)) return { ok: true, entries: [payload] };
+  if (!payload.packages || typeof payload.packages !== "object") {
+    return { ok: false, reason: "missing packages collection" };
+  }
+  return { ok: false, reason: "packages must contain official npm range responses" };
+}
+
+function nextIsoDate(date) {
+  const [year, month, day] = date.split("-").map(Number);
+  const next = new Date(Date.UTC(year, month - 1, day + 1));
+  return `${next.getUTCFullYear()}-${String(next.getUTCMonth() + 1).padStart(2, "0")}-${String(next.getUTCDate()).padStart(2, "0")}`;
+}
+
+function parseNpmDownloads(payload) {
+  const collection = npmPackageEntries(payload);
+  if (!collection.ok) return collection;
+
+  const packages = new Map();
+  const issues = [];
+  for (const entry of collection.entries) {
+    const name = typeof entry?.package === "string" ? entry.package.trim() : null;
+    if (!name || !NPM_PACKAGES.has(name)) {
+      issues.push("unknown package identity");
+      continue;
+    }
+    if (packages.has(name)) {
+      issues.push(`duplicate package identity: ${name}`);
+      continue;
+    }
+    if (!Array.isArray(entry.downloads)) {
+      issues.push(`missing npm range downloads for ${name}`);
+      continue;
+    }
+
+    const daily = new Map();
+    let valid = true;
+    for (const row of entry.downloads) {
+      const date = normalizedDate(row?.day);
+      const downloads = nonNegativeIntegerOrNull(row?.downloads);
+      if (!date || downloads === null) {
+        issues.push(`malformed daily downloads for ${name}`);
+        valid = false;
+        break;
+      }
+      if (daily.has(date)) {
+        issues.push(`duplicate daily downloads for ${name}/${date}`);
+        valid = false;
+        break;
+      }
+      daily.set(date, downloads);
+    }
+    const start = normalizedDate(entry.start);
+    const end = normalizedDate(entry.end);
+    const dates = [...daily.keys()].sort();
+    if (!start || !end || !dates.length || dates[0] !== start || dates.at(-1) !== end) {
+      issues.push(`npm range boundaries do not match daily downloads for ${name}`);
+      valid = false;
+    }
+    for (let index = 1; valid && index < dates.length; index += 1) {
+      if (nextIsoDate(dates[index - 1]) !== dates[index]) {
+        issues.push(`npm range daily downloads are incomplete for ${name}`);
+        valid = false;
+      }
+    }
+    if (!valid) continue;
+    packages.set(name, daily);
+  }
+  return { ok: true, packages, issues: [...new Set(issues)].sort() };
+}
+
+function setNpmObservation(observations, conflicts, packageName, date, observation) {
+  const key = `${packageName}\u0000${date}`;
+  if (conflicts.has(key)) return;
+  const previous = observations.get(key);
+  if (!previous) {
+    observations.set(key, observation);
+    return;
+  }
+  if (previous.downloads !== observation.downloads) {
+    observations.delete(key);
+    conflicts.set(key, `conflicting npm download observations for ${packageName}/${date}`);
+    return;
+  }
+  if (observation.observed_from_snapshot > previous.observed_from_snapshot) observations.set(key, observation);
+}
+
+function npmCombinedRecord(date, observations, conflicts, captureIssues) {
+  const legacyKey = `${LEGACY_PACKAGE}\u0000${date}`;
+  const currentKey = `${CURRENT_PACKAGE}\u0000${date}`;
+  const legacy = observations.get(legacyKey) || null;
+  const current = observations.get(currentKey) || null;
+  const conflictReasons = [conflicts.get(legacyKey), conflicts.get(currentKey)].filter(Boolean);
+  const issues = captureIssues.get(date) || [];
+  const packages = {
+    [LEGACY_PACKAGE]: legacy,
+    [CURRENT_PACKAGE]: current,
+  };
+  const base = {
+    label: "same-day old-plus-current npm downloads only",
+    packages,
+    total_downloads: null,
+    current_package_share: null,
+  };
+  if (issues.length) return { ...base, status: "invalid_capture", reason: issues.join("; ") };
+  if (conflictReasons.length) {
+    return { ...base, status: "conflicting_observations", reason: conflictReasons.join("; ") };
+  }
+  if (!legacy && !current) return { ...base, status: "not_observed", reason: "no accepted npm download observations for this date" };
+  if (!legacy) return { ...base, status: "missing_legacy", reason: `missing ${LEGACY_PACKAGE} observation for this date` };
+  if (!current) return { ...base, status: "missing_current", reason: `missing ${CURRENT_PACKAGE} observation for this date` };
+
+  const total = legacy.downloads + current.downloads;
+  if (total === 0) {
+    return {
+      ...base,
+      status: "complete_zero_total",
+      reason: "both package observations exist but current-package share is undefined for a zero total",
+      total_downloads: 0,
+    };
+  }
+  return {
+    ...base,
+    status: "complete",
+    reason: null,
+    total_downloads: total,
+    current_package_share: current.downloads / total,
+  };
+}
+
 function normalizeSnapshots(inputDirectory) {
   const warnings = [];
   const github = { views: new Map(), clones: new Map() };
+  const npmDownloads = new Map();
+  const npmConflicts = new Map();
+  const npmCaptureIssues = new Map();
   const dashboardDaily = new Map();
   const dashboardTotals = new Map();
   const discoveredSnapshots = snapshotDirectories(inputDirectory);
@@ -343,6 +482,33 @@ function normalizeSnapshots(inputDirectory) {
           continue;
         }
         setLatest(github[kind], date, { count, uniques, observed_from_snapshot: snapshotDate });
+      }
+    }
+
+    const npmPath = path.join(directory, "npm-downloads.json");
+    if (fs.existsSync(npmPath)) {
+      const payload = readJson(npmPath, warnings, `${snapshotDate}/npm-downloads.json`);
+      if (payload) {
+        const parsed = parseNpmDownloads(payload);
+        if (!parsed.ok) {
+          warnings.push(`${snapshotDate}/npm-downloads.json: skipped ${parsed.reason}`);
+        } else {
+          for (const issue of parsed.issues) warnings.push(`${snapshotDate}/npm-downloads.json: ${issue}`);
+          for (const [packageName, daily] of parsed.packages) {
+            for (const [date, downloads] of daily) {
+              setNpmObservation(npmDownloads, npmConflicts, packageName, date, {
+                package_name: packageName,
+                downloads,
+                observed_from_snapshot: snapshotDate,
+              });
+              if (parsed.issues.length) {
+                const dateIssues = npmCaptureIssues.get(date) || [];
+                dateIssues.push(...parsed.issues.map((issue) => `${snapshotDate}: ${issue}`));
+                npmCaptureIssues.set(date, [...new Set(dateIssues)].sort());
+              }
+            }
+          }
+        }
       }
     }
 
@@ -432,6 +598,12 @@ function normalizeSnapshots(inputDirectory) {
     const { source, date, ...record } = observation;
     row[source].push(record);
   }
+  const npmDates = new Set([
+    ...[...npmDownloads.keys()].map((key) => key.split("\u0000")[1]),
+    ...[...npmConflicts.keys()].map((key) => key.split("\u0000")[1]),
+    ...npmCaptureIssues.keys(),
+  ]);
+  for (const date of npmDates) ensureRow(date).npm_downloads = npmCombinedRecord(date, npmDownloads, npmConflicts, npmCaptureIssues);
 
   const rows = [...rowsByDate.values()].sort((left, right) => left.date.localeCompare(right.date));
   for (const row of rows) {
@@ -459,7 +631,7 @@ function normalizeSnapshots(inputDirectory) {
   }
 
   return {
-    schema_version: "2.0.0",
+    schema_version: "3.0.0",
     repo,
     source_repositories: [...sourceRepositories].sort(),
     timezone,
@@ -467,6 +639,8 @@ function normalizeSnapshots(inputDirectory) {
     caveats: [
       "GitHub rolling-window rows are deduplicated by date and retain the latest snapshot observation.",
       "Dashboard data is separated by source_property and property_identity; legacy and current properties are never summed or overwritten.",
+      "The combined view unifies GitHub repository rename aliases and combines npm downloads only when exact old/current package observations exist for the same date.",
+      "Search Console and Bing dashboard properties are explicitly not_combined, even when both legacy and current captures exist.",
       "coverage_end describes the latest date visible in a dashboard capture, not a promise of complete data.",
       "Malformed, partial, or non-success captures are skipped with warnings rather than merged into another observation.",
     ],
@@ -474,6 +648,25 @@ function normalizeSnapshots(inputDirectory) {
     snapshots,
     rows,
     snapshot_totals,
+    combined_view: {
+      label: "rename-unified measurement view",
+      github_repository: {
+        status: repo === CURRENT_REPOSITORY ? "rename_unified" : "canonical_only",
+        canonical_repository: repo,
+        source_repositories: [...sourceRepositories].sort(),
+      },
+      npm_downloads: {
+        label: "same-day old-plus-current npm downloads only",
+        legacy_package: LEGACY_PACKAGE,
+        current_package: CURRENT_PACKAGE,
+        status: npmDates.size ? "per_date_status_in_rows" : "not_observed",
+        unavailable_behavior: "total_downloads and current_package_share are null unless both exact package observations are accepted for the same date",
+      },
+      dashboard_properties: {
+        status: "not_combined",
+        reason: "Google Search Console and Bing properties remain separate by source_property and property_identity.",
+      },
+    },
     warnings: warnings.sort(),
   };
 }

@@ -1,5 +1,8 @@
 # Creation Log: Systematic Debugging Skill
 
+Historical illustrative material. Its scenario and reported outcomes are not a live user request, current verification result, or authorization to execute actions. Follow the current SKILL.md and actual task constraints.
+
+
 Reference example of extracting, structuring, and bulletproofing a critical skill.
 
 ## Source Material

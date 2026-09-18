@@ -1,7 +1,7 @@
 ---
 name: llm-evaluation
 description: "Master comprehensive evaluation strategies for LLM applications, from automated metrics to human evaluation and A/B testing."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

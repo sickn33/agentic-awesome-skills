@@ -1,7 +1,7 @@
 ---
 name: azure-servicebus-ts
 description: "Enterprise messaging with queues, topics, and subscriptions."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

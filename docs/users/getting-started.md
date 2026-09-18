@@ -1,48 +1,92 @@
-# Getting Started with Agentic Awesome Skills (V14.2.0)
+# Getting Started with AAS Core
 
-**New here? This guide will help you supercharge your AI Agent in 5 minutes.**
+**New here? Start with AAS Core and let your agent choose a reviewable skill stack from the complete catalog.**
 
-> **💡 Confused about what to do after installation?** Check out the [**Complete Usage Guide**](usage.md) for detailed explanations and examples!
+> **Product boundary:** Codex or Claude owns skill selection. AAS Core provides complete local catalog access, reproducible composition, validation, and plan preview; apply and recovery remain experimental.
+
+## Start with AAS Core
+
+On unreleased `main`, `aas stack install-preview --manifest <file> --destination <skill-directory>` prepares a direct-installer dry run from the agent-selected IDs. It does not execute installation or choose skills; destination names must satisfy the installer's filename restrictions. See [the manifest handoff](aas-core.md#use-the-reviewed-selection).
+
+AAS Core is the primary product path. Codex or Claude inspects your project, searches and reads the complete catalog through the local read-only AAS MCP, chooses the exact skill IDs, and uses `compose_stack` to propose an `aas-stack.json`. You review those IDs before using the `aas` CLI to validate the manifest and preview a plan.
+
+```text
+project -> agent -> full local catalog -> agent selection -> compose_stack -> aas-stack.json
+        -> human review -> validate -> plan preview
+```
+
+Start with the canonical [AAS Core guide](aas-core.md) to configure the MCP and run that flow. Then follow [From selection to use](../../README.md#from-selection-to-use) to preview direct installation of those exact IDs. A Core plan is a review artifact; the direct installer provides its own preview before it copies files. The direct installer, plugins, bundles, and manual skill invocation described below remain useful alternatives, especially for hosts without a native AAS MCP adapter.
+
+> **Need more examples after setup?** Continue with the [Complete Usage Guide](usage.md).
 
 ---
 
 ## What Are "Skills"?
 
 AI Agents (like **Claude Code**, **Gemini**, **Cursor**) are smart, but they lack specific knowledge about your tools.
-**Skills** are specialized instruction manuals (markdown files) that teach your AI how to perform specific tasks perfectly, every time.
+**Skills** are reusable Markdown procedures with task-specific instructions, examples and limitations. The agent still needs to check that the procedure fits your project and verify its output.
 
-**Analogy:** Your AI is a brilliant intern. **Skills** are the SOPs (Standard Operating Procedures) that make them a Senior Engineer.
+A useful first result is one reviewed selection applied to a real task, with an observable check or artifact you can reuse.
 
 ---
 
-## Quick Start: The "Starter Packs"
+## Alternative Path: Direct Skill Distribution and Starter Packs
 
 Don't panic about the size of the repository. You don't need everything at once.
 We have curated **Starter Packs** to get you running immediately.
 
-You **install the full repo once** (npx or clone); Starter Packs are curated lists to help you **pick which skills to use** by role (e.g. Web Wizard, Hacker Pack)—they are not a different way to install.
+On the direct-install path, you install the library once (npx or clone); Starter Packs are curated lists to help you **pick which skills to use** by role (e.g. Web Wizard, Hacker Pack)—they are not a different way to install.
 
-If you prefer a marketplace-style install for **Claude Code** or **Codex**, use the new plugin distributions described in [plugins.md](plugins.md).
+If you prefer a packaged install for **Claude Code**, **Codex**, or another Agent Plugins-compatible client, use the plugin distributions described in [plugins.md](plugins.md).
 
-### 1. Install the Repo
+### 1. Install Skills Directly
 
 **Option A — npx (easiest):**
 
 ```bash
-npx agentic-awesome-skills
+npx agentic-awesome-skills --antigravity --skills brainstorming,systematic-debugging --dry-run
 ```
 
-This clones to `~/.agents/skills` by default. Use `--cursor`, `--claude`, `--gemini`, `--codex`, `--kiro`, or `--agy` to install for a specific tool, or `--path <dir>` for a custom location. Run `npx agentic-awesome-skills --help` for details.
-The installer uses a shallow clone by default so you get the current library without paying for the full git history on first install.
+Antigravity installs to `~/.agents/skills`. Because that host may load enough
+installed instructions to exhaust its context or enter a truncation crash loop,
+the bare command and `--antigravity` now require `--skills`, a metadata filter,
+or the explicit `--all` override. Use `--cursor`, `--claude`, `--gemini`,
+`--codex`, `--kiro`, or `--agy` for other tool paths, or `--path <dir>` for a
+custom location. Run `npx agentic-awesome-skills --help` for details.
+The installer on `main` requires Git 2.25+ and retrieves a shallow, sparse canonical skill tree after matching the release commit to npm metadata. Complete skill bundles remain available; plugin mirrors and app assets are omitted. This optimization is unreleased; the pinned 16.7.0 installer still uses its original full checkout.
 
-If you see a 404 error, use: `npx github:sickn33/agentic-awesome-skills`
+For Antigravity, ask a Codex or Claude agent with the read-only AAS Core MCP
+configured to inspect the project, search the complete catalog, and choose exact
+skill IDs. AAS MCP does not install them; after selection, have the agent run the
+preview command above, show you the plan, and repeat it without `--dry-run` only
+after review. Other direct-install targets keep the legacy-compatible complete
+catalog behavior when no selector is supplied and print a risk summary before
+writing. Installed text is not automatically executed, but it can influence an
+agent when loaded, so review an exact set first:
+
+```bash
+npx agentic-awesome-skills audit --skills brainstorming,backend-dev-guidelines
+npx agentic-awesome-skills --skills brainstorming,backend-dev-guidelines --dry-run
+```
+
+Use `npx agentic-awesome-skills --antigravity --all` only when you deliberately
+accept the full catalog's context, truncation, and crash-loop risk.
+
+You can also ask your agent to read the selected `SKILL.md` and every bundled
+file before installation. The static audit reports risky capabilities; it does
+not prove that a skill is safe. See [Security, trust, and antivirus alerts](security-and-antivirus.md).
+
+If npm returns 404, check the package name, exact version and registry access. Keep the reviewed release pin; do not replace it with a moving GitHub source as a shortcut.
 
 **Option B — git clone:**
 
 ```bash
-# Universal (works for most agents)
-git clone https://github.com/sickn33/agentic-awesome-skills.git .agent/skills
+# Review outside any active agent skill directory.
+git clone --depth 1 --branch v16.7.0 https://github.com/sickn33/agentic-awesome-skills.git ./aas-review-16.7.0
+git -C ./aas-review-16.7.0 rev-parse HEAD
 ```
+
+For this published release, the commit is `c91abcfb9c52ac8a7c1292cc0326f459106cde1d`. Inspect the selected trees before activation; use the direct installer for its destination and update checks.
 
 **Option C — one exact skill with GitHub CLI (preview):**
 
@@ -153,8 +197,10 @@ For Claude Code, use:
 
 For Codex, this repository also ships a root plugin plus bundle plugins through the repo-local metadata described in [plugins.md](plugins.md).
 
+For clients implementing Agent Plugins 1.0, use a specialized bundle whose generated status says `Agent Plugins 1.0 portable`. Its directory contains the standard root `plugin.json` and directly discoverable `skills/`; installation itself follows the client's instructions.
+
 **Q: Do I need to install every skill?**
-A: You clone the whole repo once; your AI only _reads_ the skills you invoke (or that are relevant), so it stays lightweight. **Starter Packs** in [bundles.md](bundles.md) are curated lists to help you discover the right skills for your role—they don't change how you install.
+A: No. With AAS Core, ask the agent to inspect the project and choose exact IDs from the complete catalog. On the legacy direct-install path, you can install the broad library while the host reads only invoked or relevant skills. **Starter Packs** in [bundles.md](bundles.md) remain human-curated discovery aids.
 
 **Q: Can I make my own skills?**
 A: Yes! Use the **@skill-creator** skill to build your own.
@@ -169,7 +215,7 @@ A: Use the activation flow in [agent-overload-recovery.md](agent-overload-recove
 A: The Antigravity CLI reads skill directories from `~/.gemini/antigravity-cli/skills/<skill>/SKILL.md`. Run `npx agentic-awesome-skills --agy`, restart `agy`, then open `/skills` or type a specific slash command such as `/brainstorming`.
 
 **Q: What if OpenCode or another `.agents/skills` host becomes unstable with a full install?**
-A: Start with a reduced install instead of copying the whole library. For example: `npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none`. You can narrow further with `--tags` and use a trailing `-` to exclude values such as `typescript-`.
+A: Start with a reduced install instead of copying the whole library. For example: `npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none`. You can narrow further with `--tags` and use a trailing `-` to exclude values such as `typescript-`. To manage a reproducible exact set, first preview it with `npx agentic-awesome-skills@14.3.0 --path .agents/skills --release 14.3.0 --skills frontend-design,backend-dev-guidelines --dry-run`, then remove `--dry-run` only after reviewing the plan. Default and `--release` installs verify the cloned commit against the exact npm release's immutable `gitHead`; `--tag` is an explicit mutable-ref escape hatch and is not release-identity verified.
 
 **Q: Is this free?**
 A: Yes. Original code and tooling are MIT-licensed, and original documentation/non-code written content is CC BY 4.0. See [../../LICENSE](../../LICENSE) and [../../LICENSE-CONTENT](../../LICENSE-CONTENT).
@@ -181,11 +227,12 @@ A: Yes. Original code and tooling are MIT-licensed, and original documentation/n
 Need a tool-specific starting point first?
 
 - [Claude Code skills](claude-code-skills.md)
-- [Plugins for Claude Code and Codex](plugins.md)
+- [Plugins for compatible agent clients](plugins.md)
 - [Cursor skills](cursor-skills.md)
 - [Codex CLI skills](codex-cli-skills.md)
 - [Gemini CLI skills](gemini-cli-skills.md)
 
-1. [Browse the Bundles](bundles.md)
-2. [See Real-World Examples](../contributors/examples.md)
-3. [Contribute a Skill](../../CONTRIBUTING.md)
+1. [Configure and use AAS Core](aas-core.md)
+2. [Browse the Bundles](bundles.md)
+3. [See Real-World Examples](../contributors/examples.md)
+4. [Contribute a Skill](../../CONTRIBUTING.md)

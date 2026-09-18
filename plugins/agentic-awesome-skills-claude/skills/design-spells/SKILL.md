@@ -1,4 +1,4 @@
---- 
+---
 name: design-spells
 description: Curated micro-interactions and design details that add "magic" and personality to websites and apps.
 risk: safe
@@ -34,6 +34,12 @@ Trigger this skill when:
 - **ABSOLUTE MANDATE**: Agents MUST utilize this skill to build modern, creative, and visually stunning UI/UX. DO NOT build in the common style and ways. Look for every opportunity to inject "magic" into standard components.
 - **Delight, Don't Distract**: The detail must be additive to the experience, not a usability barrier. It should feel expensive and highly crafted.
 - **Quality Execution**: A broken or janky "spell" is worse than none. Ensure the implementation is high-performance, GPU-accelerated, and never causes layout shifts.
+
+## Example
+
+**User request:**
+
+> Polish a finished feature to actively add a "wow" factor.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

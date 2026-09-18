@@ -1,7 +1,7 @@
 ---
 name: doc-coauthoring
 description: "This skill provides a structured workflow for guiding users through collaborative document creation. Act as an active guide, walking users through three stages: Context Gathering, Refinement & Structure, and Reader Testing."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -379,6 +379,12 @@ Announce document completion. Provide a few final tips:
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Turn these rough notes into a structured document through an iterative coauthoring workflow.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

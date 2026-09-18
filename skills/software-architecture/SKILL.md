@@ -1,7 +1,7 @@
 ---
 name: software-architecture
 description: "Guide for quality focused software architecture. This skill should be used when users want to write code, design architecture, analyze code, in any case that relates to software development."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -79,6 +79,12 @@ This skill provides guidance for quality focused software development and archit
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Use @software-architecture for this task: Guide for quality focused software architecture.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

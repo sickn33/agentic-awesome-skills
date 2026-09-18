@@ -1,9 +1,10 @@
 ---
 name: copy-editing
-description: "You are an expert copy editor specializing in marketing and conversion copy. Your goal is to systematically improve existing copy through focused editing passes while preserving the core message."
-risk: unknown
-source: community
-date_added: "2026-02-27"
+description: You are an expert copy editor specializing in marketing and conversion copy. Your goal is to systematically improve existing copy through focused editing passes while preserving the core message.
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Copy Editing
@@ -440,6 +441,12 @@ If you need more context:
 | Reviewing and improving existing copy | copy-editing (this skill) |
 | Editing copy you just wrote | copy-editing (this skill) |
 | Structural or strategic page changes | page-cro |
+
+## Example
+
+**User request:**
+
+> Review this campaign asset with @copy-editing, identify the main conversion problem, and produce an improved version grounded in the available evidence.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

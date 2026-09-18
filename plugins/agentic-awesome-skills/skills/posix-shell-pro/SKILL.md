@@ -302,6 +302,12 @@ Use `[ ]` test command with POSIX operators:
 ### Tools & Testing
 - [checkbashisms](https://manpages.debian.org/testing/devscripts/checkbashisms.1.en.html) - Detect bash-specific constructs
 
+## Example
+
+**User request:**
+
+> Use @posix-shell-pro for this task: Expert in strict POSIX sh scripting for maximum portability across Unix-like systems.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

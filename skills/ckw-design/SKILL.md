@@ -122,6 +122,12 @@ the wrong set.
   check-all) needs its inverse one tap away. Symmetry of action — see
   restraint-rule (don't strand the user mid-task).
 
+## Example
+
+**User request:**
+
+> Review this interface with @ckw-design, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 
 - This skill improves visual direction and review discipline, but it does not replace rendering the actual UI and checking it in target browsers or devices.

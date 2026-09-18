@@ -1,7 +1,7 @@
 ---
 name: resolving-merge-conflicts
 description: Use when you need to resolve an in-progress git merge/rebase conflict.
-risk: unknown
+risk: critical
 source: https://github.com/mattpocock/skills/tree/main/skills/engineering/resolving-merge-conflicts
 source_repo: mattpocock/skills
 source_type: community
@@ -24,6 +24,12 @@ Use when you need to resolve an in-progress git merge/rebase conflict.
 4. Discover the project's **automated checks** and run them — typically typecheck, then tests, then format. Fix anything the merge broke.
 
 5. **Finish the merge/rebase.** Stage everything and commit. If rebasing, continue the rebase process until all commits are rebased.
+
+## Example
+
+**User request:**
+
+> Use @resolving-merge-conflicts for this task: Use when you need to resolve an in-progress git merge/rebase conflict.
 
 ## Limitations
 

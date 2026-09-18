@@ -148,6 +148,11 @@ Before finishing, check that:
 - The next step is clear.
 - Any generated files or code are actually usable in the target environment.
 
+## Example
+
+**User request:**
+
+> Use @learn for this task: Help a user learn a topic through adaptive tutoring, lesson planning, practice, retrieval checks, explanations, study guides, or exercises.
 
 ## Limitations
 

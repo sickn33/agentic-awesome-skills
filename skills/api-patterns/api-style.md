@@ -1,4 +1,4 @@
-# API Style Selection (2025)
+# API Style Selection
 
 > REST vs GraphQL vs tRPC - Hangi durumda hangisi?
 
@@ -29,7 +29,7 @@ Who are the API consumers?
 |--------|------|---------|------|
 | **Best for** | Public APIs | Complex apps | TS monorepos |
 | **Learning curve** | Low | Medium | Low (if TS) |
-| **Over/under fetching** | Common | Solved | Solved |
+| **Over/under fetching** | Shape endpoints for consumers | Client selects fields; enforce cost limits | Depends on procedure design |
 | **Type safety** | Manual (OpenAPI) | Schema-based | Automatic |
 | **Caching** | HTTP native | Complex | Client-based |
 

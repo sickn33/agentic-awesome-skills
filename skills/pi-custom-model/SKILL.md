@@ -62,6 +62,12 @@ Pi's saved default only loads if the exact `provider/id` exists in its model reg
 - **Project override.** A repo's `.pi/settings.json` overrides global. If a default reverts only inside one project, check that file first.
 - Restart Pi fully — the registry loads at startup.
 
+## Example
+
+**User request:**
+
+> Register custom Pi Agent model slugs so saved OpenRouter variants resolve correctly.
+
 ## Limitations
 
 - Adapted from `davidondrej/skills`; verify local paths, tools, credentials, and agent features before acting.

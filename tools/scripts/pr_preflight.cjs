@@ -5,9 +5,13 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 const sanitizeFilename = require("sanitize-filename");
 
+const { resolveBlobSizes } = require("../lib/git-blob-sizes");
 const { findProjectRoot } = require("../lib/project-root");
+const { parseRawDiff } = require("../lib/git-raw-diff");
 const {
+  classifyChangeRecords,
   classifyChangedFiles,
+  classifyShadowImpact,
   getDirectDerivedChanges,
   hasIssueLink,
   hasQualityChecklist,
@@ -18,10 +22,12 @@ const {
 
 function parseArgs(argv) {
   const args = {
+    repo: null,
     base: null,
     head: "HEAD",
     eventPath: null,
     checkPolicy: false,
+    checkForkSafety: false,
     noRun: false,
     writeGithubOutput: false,
     writeStepSummary: false,
@@ -30,7 +36,10 @@ function parseArgs(argv) {
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
-    if (arg === "--base") {
+    if (arg === "--repo") {
+      args.repo = argv[index + 1] || null;
+      index += 1;
+    } else if (arg === "--base") {
       args.base = argv[index + 1];
       index += 1;
     } else if (arg === "--head") {
@@ -41,6 +50,8 @@ function parseArgs(argv) {
       index += 1;
     } else if (arg === "--check-policy") {
       args.checkPolicy = true;
+    } else if (arg === "--check-fork-safety") {
+      args.checkForkSafety = true;
     } else if (arg === "--no-run") {
       args.noRun = true;
     } else if (arg === "--write-github-output") {
@@ -126,27 +137,94 @@ function resolveBaseRef(projectRoot) {
   return "HEAD";
 }
 
-function getChangedFiles(projectRoot, baseRef, headRef) {
+function getChangeRecords(projectRoot, baseRef, headRef) {
   if (baseRef === headRef) {
     return [];
   }
 
-  const diffOutput = runGit(["diff", "--name-only", `${baseRef}...${headRef}`], {
-    cwd: projectRoot,
-    capture: true,
-  });
-
-  return [...new Set(diffOutput.split(/\r?\n/).map(normalizeRepoPath).filter(Boolean))];
+  const result = spawnSync(
+    "git",
+    ["diff", "--raw", "--no-abbrev", "-z", "-M", "--find-copies-harder", `${baseRef}...${headRef}`, "--"],
+    {
+      cwd: projectRoot,
+      encoding: null,
+      stdio: ["ignore", "pipe", "pipe"],
+      maxBuffer: 64 * 1024 * 1024,
+    },
+  );
+  if (result.error) throw result.error;
+  if (typeof result.status !== "number" || result.status !== 0) {
+    const stderr = Buffer.isBuffer(result.stderr) ? result.stderr.toString("utf8").trim() : "";
+    throw new Error(stderr || `git diff failed with status ${result.status}`);
+  }
+  return parseRawDiff(result.stdout, { allowEmpty: true });
 }
 
-function loadPullRequestBody(eventPath) {
+function getChangedFiles(projectRoot, baseRef, headRef) {
+  return changedFilesFromRecords(getChangeRecords(projectRoot, baseRef, headRef));
+}
+
+function changedFilesFromRecords(records) {
+  // A copy reads its origin without changing it. Renames still modify both
+  // paths, and the independent fork-safety classifier retains the raw records.
+  return [...new Set(records.flatMap((record) => record.status === "C"
+    ? [record.new_path] : [record.old_path, record.new_path])
+    .filter(Boolean)
+    .map(normalizeRepoPath))];
+}
+
+function loadPullRequestEvent(eventPath) {
   if (!eventPath) {
     return null;
   }
 
   const rawEvent = fs.readFileSync(safeUserPath(eventPath), "utf8");
-  const event = JSON.parse(rawEvent);
-  return event.pull_request?.body || "";
+  return JSON.parse(rawEvent).pull_request || null;
+}
+
+const { resolveReviewedSkillRoots } = require("../lib/reviewed-fork-skills");
+
+function evaluateForkSafety(projectRoot, changeRecords, pullRequest) {
+  if (!pullRequest) {
+    return { applicable: false, approvalSafe: true, reasons: [], requiresHumanReview: false };
+  }
+  const headRepository = String(pullRequest?.head?.repo?.full_name || "").toLowerCase();
+  const baseRepository = String(pullRequest?.base?.repo?.full_name || "").toLowerCase();
+  if (!headRepository || !baseRepository) {
+    return {
+      applicable: true,
+      approvalSafe: false,
+      reasons: ["pull_request_repository_identity_unavailable"],
+      requiresHumanReview: false,
+    };
+  }
+  if (headRepository === baseRepository) {
+    return { applicable: false, approvalSafe: true, reasons: [], requiresHumanReview: false };
+  }
+  if (Array.isArray(changeRecords) && changeRecords.length === 0) {
+    return {
+      applicable: true,
+      safe: true,
+      sensitive: false,
+      approvalSafe: true,
+      reasons: [],
+      paths: [],
+      requiresHumanReview: false,
+      canonicalSkillChanges: [],
+      skillContentChanges: [],
+    };
+  }
+
+  const reviewedSkillRoots = resolveReviewedSkillRoots(projectRoot, {
+    pr: pullRequest.number, baseRepository: pullRequest.base.repo.full_name,
+    headRepository: pullRequest.head.repo.full_name, head: pullRequest.head.sha,
+  });
+  const preliminary = classifyChangeRecords(changeRecords, { requireBlobSizes: false, reviewedSkillRoots });
+  if (!preliminary.approvalSafe) {
+    return { applicable: true, ...preliminary };
+  }
+  const blobSizes = resolveBlobSizes(projectRoot, changeRecords);
+  return { applicable: true, ...classifyChangeRecords(changeRecords, { blobSizes, reviewedSkillRoots }) };
 }
 
 function appendGithubOutput(result) {
@@ -164,6 +242,11 @@ function appendGithubOutput(result) {
     `changed_files_count=${String(result.changedFiles.length)}`,
     `has_quality_checklist=${String(result.prBody.hasQualityChecklist)}`,
     `has_issue_link=${String(result.prBody.hasIssueLink)}`,
+    `fork_safety_applicable=${String(result.forkSafety.applicable)}`,
+    `fork_approval_safe=${String(result.forkSafety.approvalSafe)}`,
+    `fork_safety_reasons=${JSON.stringify(result.forkSafety.reasons)}`,
+    `impact_profile=${result.shadowImpact.profile}`,
+    `impact_reasons=${JSON.stringify(result.shadowImpact.reasons)}`,
   ];
 
   fs.appendFileSync(outputPath, `${lines.join("\n")}\n`, "utf8");
@@ -190,6 +273,8 @@ function appendStepSummary(result) {
     `- \`validate:references\` required: ${result.requiresReferencesValidation ? "yes" : "no"}`,
     `- PR template checklist: ${result.prBody.hasQualityChecklist ? "present" : "missing"}`,
     `- Issue auto-close link: ${result.prBody.hasIssueLink ? "detected" : "not detected"}`,
+    `- Fork approval safety: ${result.forkSafety.applicable ? (result.forkSafety.approvalSafe ? "safe" : "blocked") : "not applicable"}`,
+    `- Shadow impact profile: \`${result.shadowImpact.profile}\` (observational only; no test is skipped)`,
     "",
     "> Generated drift is reported separately in the artifact preview job and remains informational on pull requests.",
   ];
@@ -199,22 +284,29 @@ function appendStepSummary(result) {
 
 function main() {
   const args = parseArgs(process.argv.slice(2));
-  const projectRoot = findProjectRoot(__dirname);
+  const projectRoot = args.repo ? path.resolve(args.repo) : findProjectRoot(__dirname);
   const contract = loadWorkflowContract(__dirname);
   const baseRef = args.base || resolveBaseRef(projectRoot);
-  const changedFiles = getChangedFiles(projectRoot, baseRef, args.head);
+  const changeRecords = getChangeRecords(projectRoot, baseRef, args.head);
+  const changedFiles = changedFilesFromRecords(changeRecords);
   const classification = classifyChangedFiles(changedFiles, contract);
   const directDerivedChanges = getDirectDerivedChanges(changedFiles, contract);
-  const pullRequestBody = loadPullRequestBody(args.eventPath);
+  const pullRequest = loadPullRequestEvent(args.eventPath);
+  const pullRequestBody = pullRequest?.body ?? null;
+  const forkSafety = evaluateForkSafety(projectRoot, changeRecords, pullRequest);
+  const shadowImpact = classifyShadowImpact(changeRecords, contract);
 
   const result = {
     baseRef,
     headRef: args.head,
+    changeRecords,
     changedFiles,
     categories: classification.categories,
     primaryCategory: classification.primaryCategory,
     directDerivedChanges,
     requiresReferencesValidation: requiresReferencesValidation(changedFiles, contract),
+    forkSafety,
+    shadowImpact,
     prBody: {
       available: pullRequestBody !== null,
       hasQualityChecklist: hasQualityChecklist(pullRequestBody),
@@ -258,6 +350,11 @@ function main() {
     }
   }
 
+  if (args.checkForkSafety && forkSafety.applicable && !forkSafety.approvalSafe) {
+    console.error(`Fork PR is not approval-safe: ${forkSafety.reasons.slice(0, 12).join(", ") || "unclassified diff"}.`);
+    process.exit(1);
+  }
+
   if (!args.noRun) {
     runCommand("npm", ["run", "validate"], projectRoot);
 
@@ -269,4 +366,15 @@ function main() {
   }
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  changedFilesFromRecords,
+  evaluateForkSafety,
+  getChangeRecords,
+  getChangedFiles,
+  loadPullRequestEvent,
+  parseArgs,
+};

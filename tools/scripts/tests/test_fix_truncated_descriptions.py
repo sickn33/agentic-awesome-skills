@@ -30,6 +30,23 @@ fix_truncated_descriptions = load_module(
 
 
 class FixTruncatedDescriptionsTests(unittest.TestCase):
+    def test_pick_candidate_preserves_complete_description_sentences(self):
+        description = (
+            "Design resilient APIs with `v2` and `with-*` integrations. "
+            "Trigger phrases include API design, versioning, or..."
+        )
+        body = "Use this skill when you need designs resilient APIs for production services."
+
+        candidate = fix_truncated_descriptions.pick_candidate(description, body)
+
+        self.assertEqual(
+            candidate,
+            "Design resilient APIs with `v2` and `with-*` integrations.",
+        )
+
+        prepared = fix_truncated_descriptions.prepare_description(description, candidate)
+        self.assertEqual(prepared, candidate)
+
     def test_pick_candidate_prefers_matching_paragraph(self):
         description = "Master API design principles for resilient services..."
         body = """

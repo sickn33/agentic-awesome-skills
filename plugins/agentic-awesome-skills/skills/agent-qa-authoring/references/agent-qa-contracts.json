@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "source": "packages/mcp/references/agent-qa-contracts.json",
+  "ids": {
+    "instruction": "Generate IDs with agent_qa_generate_id or `agent-qa ids generate <type>`; never hand-write IDs.",
+    "contracts": [
+      { "type": "test", "prefix": "t", "prefixWithSeparator": "t_", "words": 10 },
+      { "type": "suite", "prefix": "s", "prefixWithSeparator": "s_", "words": 10 },
+      { "type": "hook", "prefix": "h", "prefixWithSeparator": "h_", "words": 10 },
+      { "type": "observation", "prefix": "obs", "prefixWithSeparator": "obs_", "words": 10 },
+      { "type": "run", "prefix": "r", "prefixWithSeparator": "r_", "words": 10 }
+    ]
+  },
+  "config": {
+    "rootKeys": ["workspace", "services", "registry", "use", "analytics"],
+    "mcpFields": ["enabled", "transport", "host", "port", "path"]
+  },
+  "test": {
+    "requiredKeys": ["test-id", "name", "target", "steps"],
+    "optionalKeys": ["context", "use", "meta", "setup", "teardown"]
+  },
+  "suite": {
+    "requiredKeys": ["name", "target", "tests"],
+    "optionalKeys": ["suite-id", "context", "setup", "teardown", "use"],
+    "testEntryKeys": ["test", "id"]
+  },
+  "hooks": {
+    "rootKeys": ["hooks"],
+    "hookKeys": ["id", "name", "runtime", "file", "deps", "packageFile", "timeout", "network"]
+  }
+}

@@ -53,6 +53,12 @@ When reviewing fix commits:
 
 For more information, see the [source repository](https://github.com/trailofbits/skills/tree/main/plugins/fix-review).
 
+## Example
+
+**User request:**
+
+> Review commits that address security audit findings.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

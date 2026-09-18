@@ -1,7 +1,7 @@
 ---
 name: security-scanning-security-hardening
 description: "Coordinate multi-layer security scanning and hardening across application, infrastructure, and compliance controls."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -148,6 +148,12 @@ Implement comprehensive security hardening with defense-in-depth strategy throug
 - Regular security reviews scheduled post-implementation
 
 Security hardening target: $ARGUMENTS
+
+## Example
+
+**User request:**
+
+> Run a coordinated security hardening program.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

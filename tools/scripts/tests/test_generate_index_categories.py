@@ -100,6 +100,38 @@ class GenerateIndexCategoryTests(unittest.TestCase):
             self.assertEqual(categories["nested-skill"], "bundles")
             self.assertEqual(categories["playwright-skill"], "test-automation")
 
+    def test_generate_index_preserves_top_level_and_nested_tags(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            base = pathlib.Path(temp_dir)
+            skills_dir = base / "skills"
+            output_file = base / "skills_index.json"
+
+            top_level = skills_dir / "top-level"
+            top_level.mkdir(parents=True)
+            (top_level / "SKILL.md").write_text(
+                "---\nname: top-level\ndescription: Top level tags\ntags: [api, typescript, api]\n---\nbody\n",
+                encoding="utf-8",
+            )
+
+            nested_tags = skills_dir / "nested-tags"
+            nested_tags.mkdir(parents=True)
+            (nested_tags / "SKILL.md").write_text(
+                "---\nname: nested-tags\ndescription: Nested tags\nmetadata:\n  tags: data, python\n---\nbody\n",
+                encoding="utf-8",
+            )
+
+            skills = generate_index.generate_index(str(skills_dir), str(output_file))
+            by_id = {skill["id"]: skill for skill in skills}
+
+            self.assertEqual(by_id["top-level"]["tags"], ["api", "typescript"])
+            self.assertEqual(by_id["nested-tags"]["tags"], ["data", "python"])
+
+    def test_tag_coercion_is_deterministic_for_yaml_sets(self):
+        self.assertEqual(
+            generate_index.coerce_metadata_list({"typescript", "api"}),
+            ["api", "typescript"],
+        )
+
     def test_generate_index_rejects_duplicate_route_ids(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             base = pathlib.Path(temp_dir)

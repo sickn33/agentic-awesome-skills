@@ -38,11 +38,13 @@ function getUserStarsFromStorage(): UserStars {
 /**
  * Safely save to localStorage with error handling
  */
-function saveUserStarsToStorage(stars: UserStars): void {
+function saveUserStarsToStorage(stars: UserStars): boolean {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stars));
+    return true;
   } catch (error) {
     console.warn(`Failed to save ${STORAGE_KEY} to localStorage:`, error);
+    return false;
   }
 }
 
@@ -70,8 +72,9 @@ export function useSkillStars(skillId: string | undefined): UseSkillStarsReturn 
 
     try {
       const updatedStars = { ...storedStars, [skillId]: true };
-      saveUserStarsToStorage(updatedStars);
-      setUserStars(updatedStars);
+      if (saveUserStarsToStorage(updatedStars)) {
+        setUserStars(updatedStars);
+      }
     } catch (error) {
       console.error('Failed to save skill locally:', error);
     } finally {

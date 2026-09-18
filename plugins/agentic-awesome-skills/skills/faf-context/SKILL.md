@@ -1,7 +1,7 @@
 ---
 name: faf-context
 description: Get your project to 100% ✪ AI-readiness, fast — the AI auto-detects your stack and only asks for what it can't know (your goal and the human "why"). Least typing, maximum context. For time-conscious builders; feeds into faf-expert for depth.
-risk: unknown
+risk: critical
 source: https://github.com/Wolfe-Jam/faf-skills/tree/main/skills/faf-context
 source_repo: Wolfe-Jam/faf-skills
 source_type: community

@@ -1,6 +1,6 @@
 {
   "name": "aasb-agent-architect",
-  "version": "14.2.0",
+  "version": "17.5.0",
   "description": "Install the \"Agent Architect\" editorial skill bundle from Agentic Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
@@ -19,15 +19,21 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Agent Architect",
-    "shortDescription": "AI & Agents · 6 curated skills",
-    "longDescription": "For building AI systems and autonomous agents. Covers Agent Evaluation, LangGraph, and 4 more skills.",
+    "shortDescription": "AI & Agents · 7 curated skills",
+    "longDescription": "For building AI systems and autonomous agents. Covers Prompt Engineering, AI Agents Architect, and 5 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "AI & Agents",
     "capabilities": [
       "Interactive",
       "Write"
     ],
-    "websiteURL": "https://github.com/sickn33/agentic-awesome-skills",
-    "brandColor": "#111827"
+    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the \"Agent Architect\" skills to help me complete this task.",
+      "Review this project with the \"Agent Architect\" workflow."
+    ]
   }
 }

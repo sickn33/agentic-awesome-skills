@@ -185,6 +185,12 @@ When refactoring:
 - Do not assume cloud infrastructure
 - Keep solutions pragmatic and realistic
 
+## Example
+
+**User request:**
+
+> Build new Laravel features.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

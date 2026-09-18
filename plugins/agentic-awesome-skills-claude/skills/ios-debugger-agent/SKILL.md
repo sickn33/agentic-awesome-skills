@@ -57,6 +57,12 @@ Use these when asked to inspect or interact with the running app.
 - If the wrong app launches, confirm the scheme and bundle id.
 - If UI elements are not hittable, re-run `describe_ui` after layout changes.
 
+## Example
+
+**User request:**
+
+> Run, debug, or inspect an iOS app on a simulator.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

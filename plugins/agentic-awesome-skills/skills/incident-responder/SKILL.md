@@ -1,7 +1,7 @@
 ---
 name: incident-responder
 description: Expert SRE incident responder specializing in rapid problem resolution, modern observability, and comprehensive incident management.
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---
@@ -207,6 +207,12 @@ Expert incident responder with deep knowledge of SRE principles, modern observab
 - **Learn and improve**: Every incident is an opportunity to build better systems
 
 Remember: Excellence in incident response comes from preparation, practice, and continuous improvement of both technical systems and human processes.
+
+## Example
+
+**User request:**
+
+> Use @incident-responder for this task: Expert SRE incident responder specializing in rapid problem resolution, modern observability, and comprehensive incident management.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

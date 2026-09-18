@@ -1,7 +1,7 @@
 ---
 name: supabase-postgres-best-practices
 description: Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database configurations.
-risk: unknown
+risk: safe
 source: https://github.com/supabase/agent-skills/tree/main/skills/supabase-postgres-best-practices
 source_repo: supabase/agent-skills
 source_type: official

@@ -30,6 +30,19 @@ function dashboard(property, dailyValues, extra = {}) {
   };
 }
 
+function npmRange(packageName, daily) {
+  return {
+    package: packageName,
+    start: daily[0].date,
+    end: daily.at(-1).date,
+    downloads: daily.map(({ date, downloads }) => ({ day: date, downloads })),
+  };
+}
+
+function npmDownloads(responses, extra = {}) {
+  return { status: "success", responses, ...extra };
+}
+
 try {
   writeManifest("2026-07-01");
   writeJson("2026-07-01/views.json", {
@@ -48,6 +61,13 @@ try {
     date_range_visible: "June 1, 2026 to July 9, 2026",
     totals: { clicks: 4, impressions: "1.5K" },
   });
+  writeJson("2026-07-01/npm-downloads.json", npmDownloads([
+    npmRange("antigravity-awesome-skills", [
+      { date: "2026-06-30", downloads: 5 },
+      { date: "2026-07-01", downloads: 7 },
+    ]),
+    npmRange("agentic-awesome-skills", [{ date: "2026-06-30", downloads: 15 }]),
+  ]));
 
   writeManifest("2026-07-02");
   writeJson("2026-07-02/views.json", {
@@ -72,6 +92,23 @@ try {
     daily_values: [{ date: "June 30, 2026", total_citations: 7, avg_cited_pages: 1 }],
     total_citations: 7,
   });
+  writeJson("2026-07-02/npm-downloads.json", npmDownloads([
+    {
+      package: "antigravity-awesome-skills",
+      start: "2026-07-01",
+      end: "2026-07-02",
+      downloads: [
+        { day: "2026-07-01", downloads: 7 },
+        { day: "2026-07-02", downloads: 8 },
+      ],
+    },
+    {
+      package: "agentic-awesome-skills",
+      start: "2026-07-01",
+      end: "2026-07-01",
+      downloads: [{ day: "2026-07-01", downloads: 3 }],
+    },
+  ]));
 
   // A malformed file and partial rows must not leak values into valid rows.
   writeManifest("2026-07-03");
@@ -84,7 +121,7 @@ try {
   ));
 
   const normalized = normalizeSnapshots(fixtureRoot);
-  assert.strictEqual(normalized.schema_version, "2.0.0");
+  assert.strictEqual(normalized.schema_version, "3.0.0");
   assert.strictEqual(normalized.repo, "owner/repo");
   assert.deepStrictEqual(normalized.source_repositories, ["owner/repo"]);
   assert.deepStrictEqual(normalized.snapshots, ["2026-07-01", "2026-07-02", "2026-07-03"]);
@@ -97,6 +134,18 @@ try {
   assert.deepStrictEqual(row.bing_search.map((value) => value.coverage_end), ["2026-06-30", "2026-06-30"]);
   assert.deepStrictEqual(row.bing_search.map((value) => value.clicks), [11, 3]);
   assert.strictEqual(row.bing_ai[0].citations, 7, "human-readable compact Bing dates and total_citations are supported");
+  assert.strictEqual(row.npm_downloads.status, "complete");
+  assert.strictEqual(row.npm_downloads.total_downloads, 20);
+  assert.strictEqual(row.npm_downloads.current_package_share, 0.75);
+  assert.strictEqual(row.npm_downloads.packages["antigravity-awesome-skills"].downloads, 5);
+  assert.strictEqual(row.npm_downloads.packages["agentic-awesome-skills"].downloads, 15);
+  const npmMissingCurrent = normalized.rows.find((value) => value.date === "2026-07-02").npm_downloads;
+  assert.strictEqual(npmMissingCurrent.status, "missing_current");
+  assert.strictEqual(npmMissingCurrent.total_downloads, null);
+  assert.strictEqual(npmMissingCurrent.current_package_share, null);
+  assert.strictEqual(normalized.combined_view.github_repository.status, "canonical_only");
+  assert.strictEqual(normalized.combined_view.dashboard_properties.status, "not_combined");
+  assert.strictEqual(normalized.combined_view.npm_downloads.status, "per_date_status_in_rows");
 
   const gscTotals = normalized.snapshot_totals.google_search_console;
   assert.strictEqual(gscTotals.length, 2, "GSC legacy and current totals are never coalesced");
@@ -152,6 +201,42 @@ try {
     daily_values: [{ date: "2026-06-29", clicks: 999, impressions: 999 }],
     totals: { clicks: 999, impressions: 999 },
   });
+  writeJson("2026-07-05/npm-downloads.json", { status: "unavailable", responses: [] });
+  writeJson("2026-07-06/npm-downloads.json", npmDownloads([
+    npmRange("antigravity-awesome-skills", [{ date: "2026-07-03", downloads: 1 }]),
+    npmRange("agentic-awesome-skills", [{ date: "2026-07-03", downloads: 2 }]),
+    npmRange("attacker-awesome-skills", [{ date: "2026-07-03", downloads: 999 }]),
+  ]));
+  writeJson("2026-07-07/npm-downloads.json", npmDownloads([
+    npmRange("antigravity-awesome-skills", [{ date: "2026-06-30", downloads: 99 }]),
+    npmRange("agentic-awesome-skills", [{ date: "2026-06-30", downloads: 15 }]),
+  ]));
+  writeJson("2026-07-08/npm-downloads.json", npmDownloads([
+    npmRange("antigravity-awesome-skills", [{ date: "2026-07-04", downloads: 1 }]),
+    npmRange("antigravity-awesome-skills", [{ date: "2026-07-04", downloads: 1 }]),
+    {
+      package: "agentic-awesome-skills",
+      start: "2026-07-04",
+      end: "2026-07-04",
+      downloads: [{ day: "2026-07-04", downloads: -1 }],
+    },
+  ]));
+  writeManifest("2026-07-09");
+  writeJson("2026-07-09/npm-downloads.json", npmDownloads([
+    npmRange("antigravity-awesome-skills", [{ date: "2026-07-05", downloads: 4 }]),
+  ]));
+  writeManifest("2026-07-10");
+  writeJson("2026-07-10/npm-downloads.json", npmDownloads([
+    {
+      package: "antigravity-awesome-skills",
+      start: "1900-01-01",
+      end: "9999-12-31",
+      downloads: [
+        { day: "1900-01-01", downloads: 1 },
+        { day: "9999-12-31", downloads: 1 },
+      ],
+    },
+  ]));
   const adversarial = normalizeSnapshots(fixtureRoot);
   const stableRow = adversarial.rows.find((value) => value.date === "2026-06-30");
   assert.strictEqual(stableRow.github.views.count, 9, "mismatched repository snapshot cannot overwrite the series");
@@ -173,6 +258,22 @@ try {
     .find((value) => value.property_identity === "current" && value.coverage_end === "2026-07-10");
   assert.strictEqual(preferredTotal.clicks, 5, "observed totals cannot be overwritten by newer intended-only data");
   assert.strictEqual(preferredTotal.property_provenance, "observed");
+  const conflictingNpm = adversarial.rows.find((value) => value.date === "2026-06-30").npm_downloads;
+  assert.strictEqual(conflictingNpm.status, "conflicting_observations");
+  assert.strictEqual(conflictingNpm.total_downloads, null);
+  assert.strictEqual(conflictingNpm.current_package_share, null);
+  const unknownNpm = adversarial.rows.find((value) => value.date === "2026-07-03").npm_downloads;
+  assert.strictEqual(unknownNpm.status, "invalid_capture", "unknown identities cannot make a combined total eligible");
+  assert.strictEqual(unknownNpm.packages["antigravity-awesome-skills"].downloads, 1, "known package evidence remains raw and inspectable");
+  assert.strictEqual(unknownNpm.packages["agentic-awesome-skills"].downloads, 2);
+  const onePackageNpm = adversarial.rows.find((value) => value.date === "2026-07-05").npm_downloads;
+  assert.strictEqual(onePackageNpm.status, "missing_current", "a one-package capture retains the valid raw legacy observation");
+  assert.strictEqual(onePackageNpm.packages["antigravity-awesome-skills"].downloads, 4);
+  assert.strictEqual(onePackageNpm.total_downloads, null);
+  assert(adversarial.warnings.some((warning) => warning.includes("npm-downloads.json: skipped non-success capture")));
+  assert(adversarial.warnings.some((warning) => warning.includes("npm-downloads.json: unknown package identity")));
+  assert(adversarial.warnings.some((warning) => warning.includes("npm-downloads.json: duplicate package identity")));
+  assert(adversarial.warnings.some((warning) => warning.includes("npm range daily downloads are incomplete")));
 
   const outputPath = path.join(fixtureRoot, "out", "daily-normalized.json");
   const first = spawnSync(process.execPath, [scriptPath, "--input", fixtureRoot, "--output", outputPath], { encoding: "utf8" });

@@ -6,7 +6,10 @@ Usage:
     python webhook_server.py
 """
 
+import html
 import os
+import hmac
+import re
 import logging
 import asyncio
 from dotenv import load_dotenv
@@ -23,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
-WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET", "default-secret")
+WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET", "")
 PORT = int(os.getenv("PORT", "5000"))
 
 flask_app = Flask(__name__)
@@ -36,7 +39,7 @@ application = Application.builder().token(TOKEN).build()
 
 async def start(update: Update, context):
     await update.message.reply_html(
-        f"Ola, <b>{update.effective_user.first_name}</b>! Bot ativo via webhook."
+        f"Ola, <b>{html.escape(update.effective_user.first_name or '')}</b>! Bot ativo via webhook."
     )
 
 async def echo(update: Update, context):
@@ -50,12 +53,12 @@ application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
 # --- Flask Routes ---
 
-@flask_app.route(f"/webhook/{TOKEN}", methods=["POST"])
+@flask_app.route("/webhook", methods=["POST"])
 def webhook():
     """Handle incoming Telegram updates."""
     # Validate secret token
     secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token")
-    if secret != WEBHOOK_SECRET:
+    if not secret or not hmac.compare_digest(secret, WEBHOOK_SECRET):
         logger.warning("Invalid secret token received")
         return "Forbidden", 403
 
@@ -85,7 +88,7 @@ def register_webhook():
     import requests as req
     url = f"https://api.telegram.org/bot{TOKEN}/setWebhook"
     resp = req.post(url, json={
-        "url": f"{WEBHOOK_URL}/webhook/{TOKEN}",
+        "url": f"{WEBHOOK_URL.rstrip('/')}/webhook",
         "allowed_updates": ["message", "callback_query", "inline_query"],
         "secret_token": WEBHOOK_SECRET,
         "max_connections": 40
@@ -103,6 +106,9 @@ if __name__ == "__main__":
         exit(1)
     if not WEBHOOK_URL:
         logger.error("Set WEBHOOK_URL in .env")
+        exit(1)
+    if len(WEBHOOK_SECRET) < 32 or len(WEBHOOK_SECRET) > 256 or not re.fullmatch(r"[A-Za-z0-9_-]+", WEBHOOK_SECRET):
+        logger.error("Set WEBHOOK_SECRET to 32-256 random characters using letters, digits, _ or -")
         exit(1)
 
     register_webhook()

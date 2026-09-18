@@ -1,7 +1,7 @@
 ---
 name: full-stack-orchestration-full-stack-feature
 description: "Use when working with full stack orchestration full stack feature"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -136,6 +136,12 @@ Orchestrate full-stack feature development across backend, frontend, and infrast
 - Ensure consistent error handling and API responses across services
 
 Feature to implement: $ARGUMENTS
+
+## Example
+
+**User request:**
+
+> Implement this feature across backend, frontend, and data layers, then verify the end-to-end behavior.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

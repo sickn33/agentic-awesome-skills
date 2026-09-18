@@ -1,7 +1,7 @@
 ---
 name: search-specialist
 description: "Expert web researcher using advanced search techniques and"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -76,6 +76,12 @@ You are a search specialist expert at finding and synthesizing information from 
 - Recommendations for further research
 
 Focus on actionable insights. Always provide direct quotes for important claims.
+
+## Example
+
+**User request:**
+
+> Research this question using primary sources, reconcile conflicting evidence, and cite every material conclusion.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

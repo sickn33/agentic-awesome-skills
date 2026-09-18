@@ -1,7 +1,7 @@
 ---
 name: seo-programmatic
 description: "Plan and audit programmatic SEO pages generated at scale from structured data. Use when designing templates, URL systems, internal linking, quality gates, and index-bloat safeguards for pages at scale."
-risk: unknown
+risk: critical
 source: "https://github.com/AgriciDaniel/claude-seo"
 date_added: "2026-03-21"
 user-invokable: true
@@ -181,6 +181,12 @@ Measure against all other pages in the programmatic set. Shared headers, footers
 | No programmatic pages detected | Inform user that no template-generated or data-driven page patterns were found. Suggest checking if pages use client-side rendering or if the URL points to the correct section. |
 | Thin content threshold exceeded | Trigger quality gate warning. Report the unique content percentage and flag pages below 40% uniqueness. Require user acknowledgment before proceeding. |
 | Quality gate violation | Halt analysis at the HARD STOP threshold (500+ pages without justification or <30% unique content). Present findings and require explicit user approval to continue. |
+
+## Example
+
+**User request:**
+
+> Plan and audit programmatic SEO pages generated at scale from structured data.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

@@ -19,6 +19,12 @@ tools: [claude, cursor, codex, antigravity]
 - Use when React, Next.js, Tailwind, motion, component states, typography, spacing, color, or responsive behavior need senior-level design judgment.
 - Use when the output must override common LLM UI biases such as centered heroes, purple gradients, card overuse, poor states, and fragile layouts.
 
+## Example
+
+**User request:**
+
+> Review this interface with @design-taste-frontend, identify the highest-impact design problems, and propose an implementation-ready improvement.
+
 ## Limitations
 
 - This skill provides frontend design and implementation guidance; it does not replace project-specific product requirements, accessibility review, or user testing.

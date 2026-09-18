@@ -254,7 +254,7 @@ Passing `npm run validate` or `skill-review` is not enough on its own for skill 
 - obvious failure modes, unsafe assumptions, and user-facing edge cases,
 - whether the declared `risk:` level still matches the actual behavior.
 
-Submitting `risk: unknown` is still acceptable for genuinely legacy or not-yet-classified content. Maintainers may later use `npm run audit:skills` and `npm run sync:risk-labels` to reconcile high-confidence legacy labels without asking contributors to regenerate catalog artifacts in their PRs.
+Submitting `risk: unknown` is still acceptable for genuinely legacy or not-yet-classified content. Maintainers review ambiguous labels semantically; the repository does not infer or rewrite risk from isolated words.
 
 For **docs / workflows / infra changes**:
 
@@ -512,7 +512,7 @@ docs: add examples to react-best-practices
 
 ### New to Git/GitHub?
 - [GitHub's Hello World Guide](https://guides.github.com/activities/hello-world/)
-- [Git Basics](https://git-scm.com/book/en/v2/Getting-Started-Git-Basics)
+- [Git Basics](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository)
 
 ### New to Markdown?
 - [Markdown Guide](https://www.markdownguide.org/basic-syntax/)

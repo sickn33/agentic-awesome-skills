@@ -1,7 +1,7 @@
 ---
 name: file-organizer
 description: "6. Reduces Clutter: Identifies old files you probably don't need anymore"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -251,6 +251,12 @@ When a user requests file organization help:
 - Completed work that might be referenced later
 - Old versions after migration to new systems
 - Files you're hesitant to delete (archive first)
+
+## Example
+
+**User request:**
+
+> Organize my Downloads folder into a predictable structure, show the proposed moves first, and avoid deleting files.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

@@ -1,2 +1,4 @@
-anthropic>=0.39.0
-mcp>=1.1.0
+# SDK v1 harness; use Python 3.11+ and lock the resolved versions in the evaluation environment.
+anthropic>=0.39.0,<1
+mcp>=1.10.0,<2
+defusedxml>=0.7.1,<1

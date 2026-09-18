@@ -1,7 +1,7 @@
 ---
 name: event-sourcing-architect
 description: "Expert in event sourcing, CQRS, and event-driven architecture patterns. Masters event store design, projection building, saga orchestration, and eventual consistency patterns. Use PROACTIVELY for event-sourced systems, audit trail requirements, or complex domain modeling with temporal queries."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -64,6 +64,12 @@ Expert in event sourcing, CQRS, and event-driven architecture patterns. Masters 
 ## Related Skills
 
 Works well with: `saga-orchestration`, `architecture-patterns`, `dbos-*`
+
+## Example
+
+**User request:**
+
+> Build systems requiring complete audit trails.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

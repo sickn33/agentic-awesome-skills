@@ -1,7 +1,7 @@
 ---
 name: ruby-pro
 description: Write idiomatic Ruby code with metaprogramming, Rails patterns, and performance optimization. Specializes in Ruby on Rails, gem development, and testing frameworks.
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---
@@ -52,6 +52,12 @@ You are a Ruby expert specializing in clean, maintainable, and performant Ruby c
 - Refactoring suggestions for legacy Ruby code
 
 Favor Ruby's expressiveness. Include Gemfile and .rubocop.yml when relevant.
+
+## Example
+
+**User request:**
+
+> Review this Ruby implementation for correctness, idiomatic design, performance, and test coverage.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

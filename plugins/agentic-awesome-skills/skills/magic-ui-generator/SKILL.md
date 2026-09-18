@@ -1,4 +1,4 @@
---- 
+---
 name: magic-ui-generator
 description: Utilizes Magic by 21st.dev to generate, compare, and integrate multiple production-ready UI component variations.
 risk: safe
@@ -39,6 +39,12 @@ Trigger this skill whenever:
 - **Choice First**: Always offer multiple premium design variations before writing the final code to the project.
 - **Clean Code**: Ensure all generated code is clean TypeScript, accessible, and responsive.
 - **Full Ownership**: Treat all generated components as fully owned.
+
+## Example
+
+**User request:**
+
+> Generate three production-ready pricing-table variants, compare them, and integrate the strongest option into the current UI.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

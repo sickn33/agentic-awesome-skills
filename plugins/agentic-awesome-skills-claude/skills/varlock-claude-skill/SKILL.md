@@ -22,6 +22,12 @@ This skill provides guidance and patterns for secure environment variable manage
 
 For more information, see the [source repository](https://github.com/wrsmith108/varlock-claude-skill).
 
+## Example
+
+**User request:**
+
+> Use @varlock-claude-skill for this task: Secure environment variable management ensuring secrets are never exposed in Claude sessions, terminals, logs, or git commits.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -18,7 +18,7 @@ slides.json: a JSON array of slide objects. Each:
 Writes  $VIDEO_LIBRARY_DIR/<YTID>.md  (default ~/video-deepdives/<YTID>.md)
 with YAML frontmatter + transcript body. No em dashes or arrows in titles/notes.
 """
-import argparse, json, os, sys, datetime
+import argparse, json, os, re, sys, datetime
 from pathlib import Path
 
 
@@ -39,6 +39,7 @@ except ImportError:
     sys.exit("pip install pyyaml")
 
 LIB = os.path.expanduser(os.environ.get("VIDEO_LIBRARY_DIR", "~/video-deepdives"))
+YTID_RE = re.compile(r"\A[A-Za-z0-9_-]{11}\Z")
 
 def main():
     ap=argparse.ArgumentParser()
@@ -50,6 +51,8 @@ def main():
     ap.add_argument("--transcript",required=True)
     ap.add_argument("--created",default=datetime.date.today().isoformat())
     a=ap.parse_args()
+    if not YTID_RE.fullmatch(a.id):
+        sys.exit("--id must be an exact 11-character YouTube video id")
 
     slides=json.load(open(a.slides))
     slides=sorted(slides,key=lambda s:s["t"])
@@ -70,9 +73,17 @@ def main():
         "slides":slides,
     }
     body=open(a.transcript,encoding="utf-8").read().strip()
-    os.makedirs(LIB,exist_ok=True)
-    path=os.path.join(LIB,f"{a.id}.md")
-    with safe_user_path(path).open("w",encoding="utf-8") as f:
+    library = Path(LIB).expanduser()
+    if library.is_symlink():
+        sys.exit("VIDEO_LIBRARY_DIR must not be a symbolic link")
+    library.mkdir(parents=True, exist_ok=True)
+    library = library.resolve()
+    path = library / f"{a.id}.md"
+    flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    fd = os.open(path, flags, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
         f.write("---\n")
         yaml.safe_dump(fm,f,sort_keys=False,allow_unicode=True,width=100)
         f.write("---\n## Transcript\n")

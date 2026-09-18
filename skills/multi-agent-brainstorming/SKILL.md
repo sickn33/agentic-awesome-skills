@@ -1,7 +1,7 @@
 ---
 name: multi-agent-brainstorming
 description: "Simulate a structured peer-review process using multiple specialized agents to validate designs, surface hidden assumptions, and identify failure modes before implementation."
-risk: unknown
+risk: none
 source: community
 date_added: "2026-02-27"
 ---
@@ -254,6 +254,12 @@ If the answer is unclear, **do not exit this skill**.
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Use @multi-agent-brainstorming for this task: Simulate a structured peer-review process using multiple specialized agents to validate designs, surface hidden assumptions, and identify failure modes before implementation.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

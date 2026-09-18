@@ -62,6 +62,30 @@ class PluginCompatibilityTests(unittest.TestCase):
             self.assertEqual(entry["targets"]["claude"], "supported")
             self.assertIn("target_specific_home_path", entry["blocked_reasons"]["codex"])
 
+    def test_referenced_markdown_preserves_portability_findings(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            skills_dir = pathlib.Path(temp_dir) / "skills"
+            skill_dir = self._write_skill(
+                skills_dir,
+                "modular-skill",
+                (
+                    "---\nname: modular-skill\ndescription: Example\n---\n"
+                    "Read [the detailed guide](references/detailed-guide.md).\n"
+                ),
+            )
+            references = skill_dir / "references"
+            references.mkdir()
+            (references / "detailed-guide.md").write_text(
+                "Use /Users/tester/private/file and ~/.claude/projects/cache.\n",
+                encoding="utf-8",
+            )
+
+            entry = plugin_compatibility.build_report(skills_dir)["skills"][0]
+            self.assertEqual(entry["targets"]["codex"], "blocked")
+            self.assertEqual(entry["targets"]["claude"], "blocked")
+            self.assertIn("absolute_host_path", entry["reasons"])
+            self.assertIn("target_specific_home_path", entry["blocked_reasons"]["codex"])
+
     def test_runtime_dependency_requires_explicit_manual_setup(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             skills_dir = pathlib.Path(temp_dir) / "skills"

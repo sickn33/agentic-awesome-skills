@@ -1,3 +1,309 @@
+# Full Snyk group reconciliation — 2026-09-06
+
+- Exported all 551 analytics rows and read all live project/issue records; distinguished stale CLI snapshots, mirror copies, and current findings.
+- Require fixed qs 6.16.x in Telegram and WhatsApp Node templates, because Express 4 still resolves a vulnerable qs minor line.
+- Set manifest-local Python 3.14 for Shopify and WhatsApp SCM scans; their existing zipp security floor was omitted under Python 3.7.
+- Raise the GIF template setuptools security floor to 83.0.0 for the additional Unicode-handling advisory found in the group inventory.
+- No security findings are suppressed by these changes.
+
+# Snyk contextual file-safety remediation — 2026-09-06
+
+- Reproduced destructive hard-link writes in VideoDB and founder-profile export, incorrect parent-directory chmod in Instagram/NotebookLM, and insecure existing VideoDB file modes before fixing them.
+- Validate opened regular-file descriptors and link counts before truncation; preserve append content, repair private modes, and open nonblocking to reject named pipes safely.
+- Restrict state permission repair to the configured private tree, reject linked state files/directories, and propagate protection failures.
+- Reject non-regular source files in the bounded annotation inventory so a named pipe cannot stall a scan.
+- Added `tools/scripts/tests/test_snyk_file_boundaries.py` regression coverage. No new Snyk exclusions or ignore rules.
+- Reviewed the 29 canonical-source Snyk Code results: the remaining DOM anchor uses the active document URL with React escaping; the local viewer returns request-derived metadata as JSON; three secret findings are deliberate test canaries; PostgreSQL accepts whole SQL and database configuration from its local operator and sets a read-only session. Other remaining path findings accept operator-selected local paths rather than remote names. These contextual dispositions do not claim a scanner count of zero or a comprehensive audit of all bundled integrations.
+- Earlier dependency fixes (#1401, canonical #1402) raised Pillow to 12.3.0 and SoupSieve to 2.8.4. The two live EU CLI dependency scans found no security vulnerabilities; certifi's MPL-2.0 license-policy warning requires a license decision, not a dependency downgrade. Added manifest-local `.snyk` Python 3.14 settings for these two projects, matching the interpreter used in the successful scans, so SCM retests do not inherit the obsolete organization-wide Python 3.7 default. The organization setting is unchanged.
+
+# Discovery and installation handoff follow-up - 2026-09-05
+
+- Fixed explicit English/Italian exclusions and grouped declared compatibility aliases while preserving explicit ID selection.
+- Added a text-only, exact-version direct-installer preview to shortlist comparison and Workbench, with shell quoting, an explicit destination, and invalid/inconsistent-artifact guards.
+- Corrected stale release-status guidance after verifying GitHub and npm 16.8.0 publication.
+- Reviewed and repaired the complete `lint-and-validate` and `sql-optimization-patterns` bundles. Added six runnable regression cases; see the scoped content review for evidence and limits.
+
+# Outcome discovery and clearer selection evidence - 2026-09-05
+
+- Added optional goal-based candidate discovery to catalog and Workbench, with explained term relevance and full-catalog access.
+- Exposed provenance, license, author-declared risk and setup gaps without assigning reliability scores or hiding canonical skill IDs.
+- Connected candidates to the existing comparison and agent-brief workflow, including an explicit action to reuse the discovery goal.
+- Kept Workbench artifact review independent of catalog downloads; discovery downloads public data only when opened. Goals and imported artifacts are never sent.
+- Removed the unshipped usage-history experiment at the user's request. No installation/reuse measurement or collection was added.
+
+# TypeScript 6 migration and configuration checks - 2026-09-05
+
+- Upgraded the compiler to TypeScript 6.0.3, within typescript-eslint's supported range; TypeScript 7 remains outside that range.
+- Removed deprecated `baseUrl` and made the `@/` alias relative to the configuration file. Explicitly loaded Node types required by the existing tests and build configuration.
+- Added `npm run typecheck` to production builds so Vite and Vitest configuration are checked alongside application sources. Declared the JavaScript refresh plugin's default Vite plugin contract and kept incremental compiler state under ignored node_modules.
+- Preserved strict checks, test assertions, timeouts, and coverage thresholds.
+
+# Web test toolchain migration - 2026-09-05
+
+- Upgraded Vitest and its V8 coverage provider to 5, jsdom to 30, jest-dom to 7, and ESLint globals to 17.
+- Aligned Node type definitions with the Node 22 CI runtime and declared the web development toolchain's supported Node versions in its private package.
+- Preserved all test cases, assertions, isolation settings, and coverage thresholds. After a clean install, all 201 web tests pass on Node 22.23.1 and Node 26 with unchanged coverage (86.89% statements, 91.34% lines); the production build and lint also pass.
+- Kept the TypeScript compiler migration separate from the test-environment upgrade.
+
+# Long skill modularization - 2026-09-05
+
+- Reduced all 211 oversized `SKILL.md` entrypoints below the 500-line quality threshold.
+- Moved their detailed procedures and reference material into local `references/detailed-guide.md` files without deleting source content.
+- Kept activation rules, examples, limitations, prerequisites, and dedicated safety or security sections in the root skill; each root now directs agents to load the detailed guide before execution.
+- Rewrote relative Markdown links for their new document location and preserved cross-links between root and detailed sections.
+- Reduced the strict objective audit to 0 warnings and 0 errors across all 2,111 skills.
+
+# Actionable skill examples - 2026-09-05
+
+- Added a concise, task-specific user request to every canonical skill that lacked a real example.
+- Normalized the existing `Code_example` headings in `algolia-search` and `clerk-auth` so the examples are recognized consistently.
+- Reduced the strict skill-audit baseline from 507 warnings across 491 skills to 211 warnings across 211 skills; `missing_examples` is now zero.
+- Kept the remaining `skill_too_long` findings visible for the next modularization batch.
+
+# Real skill example recognition - 2026-09-05
+
+- Updated the structural audit to recognize example headings nested below level
+  two, non-empty files in a bundled `examples/` directory, and concrete examples
+  inside bundled Markdown, reStructuredText, or text support documents.
+- Kept symlinked and empty example files from satisfying the audit so external
+  paths and placeholder bundles cannot hide missing documentation.
+- Reclassified existing examples without changing canonical skill content.
+
+# Truncated skill description cleanup - 2026-09-05
+
+- Repaired all 134 catalog descriptions that ended in an ellipsis: 126 now
+  retain only their existing complete source sentences, while eight descriptions
+  were rewritten against their skill content where no complete sentence existed.
+- Updated the repair utility to prefer a complete frontmatter sentence over a
+  synthesized body fallback, with regression coverage for that behavior.
+- Lowered the strict audit budget from 805 observed warnings to 671 and added a
+  zero-tolerance budget for future truncated descriptions.
+- Kept the cleanup source-only; protected canonical synchronization owns
+  generated registries and plugin mirrors.
+
+# Dependency advisory remediation - 2026-09-03
+
+- Raised the bundled `fast-uri` runtime floor to 3.1.6 to resolve the current
+  host-confusion and SSRF advisories in the published package dependency tree.
+- Raised the Loki example backend's `qs` override floor to 6.16.0 so fresh
+  installs and its committed lockfile avoid the bracket-key and `isBuffer`
+  denial-of-service advisories.
+- Kept the canonical skill bundle as the source of truth; protected canonical
+  synchronization owns the corresponding Claude plugin mirror update.
+
+# Codex security findings remediation - 2026-08-31
+
+- Re-evaluated all 14 exported Codex Security records against the current
+  protected `main`: 13 remained actionable and the graceful-shutdown counter
+  fix was already present and byte-identical in both plugin mirrors.
+- Replaced executable theme-manifest validation with a bounded static parser;
+  removed moving package and pipe-to-shell fallbacks; confined Atlas artifacts;
+  made favicon replacement symlink-safe and atomic; capped network frames before
+  allocation; rejected raw URL controls; and pinned model/dataset inputs by full
+  reviewed Hub revisions.
+- Corrected the risk metadata for Atlas, autonomous PR babysitting, and all 17
+  write-capable delegate skills, with focused regression coverage for each
+  affected trust boundary.
+- Kept the repair source-only. Generated registries, catalog metadata, and both
+  plugin distributions remain owned by protected canonical synchronization.
+
+# FLOSS/fund sustainability application - 2026-08-31
+
+- Added a public `funding.json` manifest using the current v1.1.0 schema for a
+  one-time USD 25,000 AAS sustainability request.
+- Tied the request to a concrete 12-month allocation covering maintainer and
+  reviewer time, security and provenance work, CI and catalog infrastructure,
+  and documentation and community support.
+- Kept the plan description within the directory's 500-character validation
+  limit while retaining the complete allocation.
+- Kept bank details and funding history out of the public manifest; payment and
+  tax documentation remain private follow-up items if the application is
+  selected.
+
+# Multi-source evidence integrity repair - 2026-08-20
+
+- Ported the executable follow-up from community PR #1204 onto the protected
+  maintainer lane, preserving contributor credit while keeping fork code out of
+  the direct source-merge path.
+- Made every claim classify cited evidence as supporting or contradicting, and
+  made conflict state fail closed against that classification.
+- Canonicalized URL identity for fragment, host-case, and default-port variants
+  before duplicate-source checks, with focused offline regression coverage.
+
+# Multi-source research ledger import - 2026-08-20
+
+- Ported community PR #1200 from the Apache-2.0 SandBase source at immutable
+  upstream commit `fc25b2ed4548b1bb91621661e82d07d4bbd285a1` because the fork could
+  not merge executable Python under the repository's approval policy.
+- Preserved the bounded, provider-optional research workflow and offline
+  evidence ledger while pinning its licence reference and distinguishing it
+  from post-run evidence auditing.
+- Adapted the upstream validator tests into the repository suite and added an
+  ISO-date check for time-sensitive search metadata. Generated registries and
+  plugin mirrors remain owned by protected canonical synchronization.
+
+# Stack artifact cross-audit - 2026-08-20
+
+- Ported the maintainer-only portions of community PRs #1187 and #1188 into one
+  coherent review path: `aas stack audit` for local CLI checks and paired
+  stack/plan comparison in the browser-local Workbench.
+- Kept both surfaces read-only. They compare manifest digests, catalog
+  identities, target bindings, and exact selected skill sets without applying
+  a stack or reading project files in the browser.
+- Preserved the contributor's CLI and web regression coverage and kept all
+  generated catalog state outside the source PR.
+
+# YouTube transcript compatibility repair - 2026-08-20
+
+- Ported the canonical-source portion of community PR #1194 while leaving both
+  plugin mirrors to protected canonical synchronization.
+- Updated the bundled extractor and documented examples for both the legacy
+  class API and the current instance API in `youtube-transcript-api`, including
+  URL parsing and UTF-8 console output.
+- Added isolated regression coverage for common YouTube URL forms, invalid
+  URLs, legacy transcript retrieval, and modern raw-data retrieval without
+  making network requests.
+
+# Community skill import - 2026-08-14
+
+- Imported the Apache-2.0-licensed `using-lwc` skill from
+  [JanYork/using-lwc](https://github.com/JanYork/using-lwc) at immutable upstream
+  commit `7bd8052e6fa012786e50eee09f46df06b0cda1b8`.
+- Preserved the complete 22-file bundle while adding catalog metadata, explicit
+  triggers, limitations, critical-risk classification, consent gates for CLI
+  and global-memory initialization, and source credit required by this
+  repository.
+- Kept the contribution source-only; generated registries and plugin mirrors
+  remain owned by protected canonical synchronization.
+
+# Maintenance Walkthrough - 2026-08-09
+
+- Resolved the dangling `resources/implementation-playbook.md` instruction in
+  `context-driven-development` by pointing readers to the complete workflow and
+  validation material already bundled in the skill.
+- Restored Markdown rendering for every reported TypeScript example in
+  `conversation-memory` and `context-window-management` with balanced,
+  language-labelled code fences.
+- Made the intended Brazilian Portuguese operating language explicit and
+  internally consistent in `context-agent` and `context-guardian`, while
+  retaining the English discovery and limitations headings required by catalog
+  validation.
+- Corrected both context skills from `safe` to `critical` because their bundled
+  commands write local state and can archive or remove old context artifacts;
+  added exact approval, backup, path, and platform limitations without changing
+  the bundled runtime scripts.
+- Kept the repair source-only. Generated catalogs and plugin mirrors remain
+  owned by the protected canonical synchronization lane.
+
+# Secur0 coordinated remediation - 2026-07-30
+
+- Re-evaluated all 35 Secur0 reports against current protected `main`: 22 were
+  open and 13 already closed or duplicated; rejected scanner-only claims that
+  do not bypass exact-head semantic review and recovered three valid closed
+  findings covering CSV formula injection and npm release provenance.
+- Added source fixes for protected npm publication, read-only Supabase RLS,
+  authenticated Telegram webhooks, Loki permission/dashboard boundaries,
+  private credential storage, catalog read integrity, path and temporary-file
+  confinement, safe external links, Vercel exclusion handling, pinned 2slides
+  downloads, and spreadsheet-safe CSV exports.
+- Added focused regression contracts, ran the required skill/reference/docs and
+  workflow gates, regenerated the complete catalog once as validation, and
+  removed generated registries and plugin mirrors from this source-only branch.
+- Production Supabase migration, report status/comments, public PR, and any
+  release remain separate approval gates; no coordinated-disclosure material
+  was published by this local remediation pass.
+
+# Maintenance Walkthrough - 2026-07-30
+
+- Changed only the Antigravity direct-install default: a bare Antigravity target
+  now stops before cloning or writing unless exact skills, metadata filters, or
+  the explicit `--all` override are supplied.
+- Added copyable guidance for an MCP-enabled Codex or Claude agent to inspect the
+  project, choose exact AAS skill IDs, and preview the resulting Antigravity
+  install while preserving AAS MCP's read-only boundary.
+- Added regression coverage proving the blocked path performs no clone or target
+  mutation, explicit selections and `--all` continue, and non-Antigravity hosts
+  retain their existing behavior.
+
+# Maintenance Walkthrough - 2026-07-29
+
+- Hardened the legacy full-catalog installer without breaking its historical
+  default: it now displays the selected risk distribution and provides a
+  read-only `audit --skills` mode that recursively reports sensitive behavior,
+  symlinks, and binary payloads before installation.
+- Added a documented trust and antivirus-response model that distinguishes a
+  signature match in instruction text from evidence of execution while treating
+  loaded skills as untrusted instructions with real agent-tool consequences.
+- Replaced thread-identified moving-branch installs with inspect-first,
+  full-commit-pinned workflows and removed blanket safety claims, hidden writes,
+  destructive rollback advice, and a developer-specific absolute path.
+- Enforced an exact authorized-use disclaimer and a per-action target, scope,
+  command, effect, and confirmation gate across every offensive-risk skill.
+- Revalidated all 15 exported Codex Security findings against current protected `main` instead of treating historical scanner anchors as current code.
+- Removed BrowserAct's mutable provider-served guide from the supported operating path; the pinned local CLI help may describe syntax, while the checked-in skill remains the complete policy.
+- Enforced full-SHA GitHub blob URLs for linked FindMate profiles on both Moltbook drafts and GitHub thread parsing, with regression coverage for mutable branches, foreign hosts, query strings, and traversal-shaped paths.
+
+# Maintenance Walkthrough - 2026-07-28
+
+- Added a fail-closed provenance exception ledger for maintainer-verified upstream repository renames. The initial Modellix entry records that `Modellix/modellix-skill` and `Modellix/modellix-plugin` resolve to GitHub repository ID `1150322983`; only the exact recorded transition is allowed, while unrelated provenance changes remain blocked.
+- Traced a live Search Console `Pagina con reindirizzamento` report to the
+  slashless `/plugins` URL, which GitHub Pages correctly redirects to the
+  indexable `/plugins/` route.
+- Normalized every runtime link to workbench, plugin, topic, and skill pages
+  through the existing trailing-slash route helper so crawlers are no longer
+  invited to request redirecting URL variants.
+- Added focused web-app assertions for trailing-slash navigation targets; the
+  sitemap, canonical metadata, and public route remain aligned on `/plugins/`.
+
+# Maintenance Walkthrough - 2026-07-26
+
+- Imported the MIT-licensed `fedora-hyprland-installer` contribution from
+  [maleksaadi0109/hyprfedora](https://github.com/maleksaadi0109/hyprfedora) at
+  upstream commit `3ec6d4fc5eecdb188613dd841dce9926ae5c8319`.
+- Hardened its privileged Fedora workflow with explicit critical-risk metadata,
+  provenance, limitations, consistent NVIDIA guidance, isolated tests, and
+  claims bounded to the behavior implemented by the bundled scripts.
+- Added the MIT-licensed `find-complementary-founders` skill from
+  [merc1305/findMate](https://github.com/merc1305/findMate).
+- Preserved its own-owner-only invariant, offline evidence assessment,
+  hash-bound publication approvals, expiring profiles, and stop-at-101 star
+  rule while adapting metadata, triggers, provenance, and limitations to the
+  AAS quality contract.
+- Included the complete source skill directory without generated registry
+  artifacts, private owner data, credentials, or publication receipts.
+- Synced the five actionable review fixes from canonical FindMate release
+  `v1.3.4`: consent-free private drafts, temporal consent validation,
+  one-sided seeking cards, source-identity self-exclusion, and the bundled
+  Russian onboarding reference. The canonical suite passes 40 tests and the
+  portable release resolves to commit `c78a78b0280f4168294b72f38aa39317e7b7d7b8`.
+- Synced the privacy-preserving G35 publication path from immutable canonical
+  release `v1.3.5` at
+  `d23cd66d0ee324c0ed7e85156606d8814250c1f8`: one exact owner-approved GitHub
+  comment may now carry bounded inline JSON, the existing immutable linked
+  source remains supported, and deleting or unmarking the source removes its
+  current validation receipt. The owner is warned that the publishing login
+  and proof/contact links may connect the alias to a real identity and that
+  public edit history or copies prevent any promise of complete erasure.
+- Preserved the AAS catalog metadata, usage guidance, provenance, limitations,
+  source-only contract, and all owner consent boundaries while updating the
+  five compatible reference/script files. The canonical FindMate suite passes
+  47 tests; no owner profile, credential, generated registry, or plugin mirror
+  is included in this contributor update.
+- Added the MIT-licensed `orchestrate` skill from
+  [provencher/codex-skills](https://github.com/provencher/codex-skills) at
+  upstream commit `8aa6c42b73781c905c55f8a1253a18127079ac21`.
+- Preserved its concise Codex-native delegation policy and UI metadata while
+  adding the repository-required usage guidance, limitations, immutable
+  provenance, and user-held approval boundaries.
+- Kept the source PR limited to canonical skill content, source credit, and this
+  maintenance evidence; generated registries and plugin mirrors remain owned by
+  protected canonical synchronization.
+- Consolidated the two open UIZZE contribution paths into one protected maintainer repair, preserving the actionable public-catalog research, design-contract, implementation, and hard finish-gate workflow contributed by [@samuelbushi](https://github.com/samuelbushi) in PR `#929` together with the bounded preview introduced by PR `#983`.
+- Kept the free `check_ui_slop` preview optional while requiring explicit approval before persistent MCP configuration or external HTML/CSS transmission.
+- Added the official MIT license metadata and organizational author while preserving the existing immutable source identity; GitHub redirects the historical upstream URL to the transferred official repository.
+- Left generated registries and plugin mirrors out of the source PR so the protected canonical synchronization workflow remains their sole owner.
+- Merged the consolidated source through PR [#985](https://github.com/sickn33/agentic-awesome-skills/pull/985), then converged generated state and plugin mirrors through protected PR [#986](https://github.com/sickn33/agentic-awesome-skills/pull/986).
+
 # Maintenance Walkthrough - 2026-04-17
 
 - Imported 8 frontend/design skills from [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) into `skills/`:
@@ -257,3 +563,138 @@
 - Added maintainer automation for repo-state hygiene: `sync:contributors` updates the README contributor list from GitHub contributors, `check:stale-claims`/`audit:consistency` catch drift in count-sensitive docs, and `sync:repo-state` now chains the local maintainer sweep into a single command.
 - Hardened automation surfaces beyond the local CLI: `main` CI now runs the unified repo-state sync, tracked web artifacts are refreshed through `sync:web-assets`, release verification now uses a deterministic `sync:release-state` path plus `npm pack --dry-run`, the npm publish workflow reruns those checks before publishing, and a weekly `Repo Hygiene` GitHub Actions workflow now sweeps slow drift on `main`.
 - Added two maintainer niceties on top of the hardening work: `check:warning-budget` freezes the accepted `135` validation warnings so they cannot silently grow, and `audit:maintainer` prints a read-only health snapshot of warning budget, consistency drift, and git cleanliness.
+
+# Maintenance Walkthrough - 2026-07-16 Android Overheating Diagnostics
+
+- Audited the cached third-party `adb-performance` skill and rejected a direct import because its linked source repository is unavailable, its license cannot be verified, and it mixes weak snapshot heuristics with unguarded device mutations.
+- Added the clean-room canonical `diagnose-android-overheating` skill, grounded in current Android and AOSP documentation.
+- Replaced generic “optimization” commands with a read-only-first evidence workflow, controlled comparisons, OEM-aware interpretation, confidence labels, privacy handling, explicit approval gates, rollback requirements, and a hardware-safety stop.
+- Added `references/evidence-and-interpretation.md` for symptom-specific ADB evidence, thermal status interpretation, correlation rules, Batterystats capture discipline, and bugreport privacy.
+
+# Maintenance Walkthrough - 2026-07-16 Tessl Workspace Repair
+
+- Corrected the Skill Review workflow and trusted review helper to use the token-visible `antigravity-awesome-skills` Tessl workspace instead of the renamed repository slug.
+- Added a repository-variable override so future Tessl workspace migrations can be handled through `TESSL_WORKSPACE` without another workflow patch.
+- Updated the review command regression test to lock the corrected workspace argument.
+
+# Maintenance Walkthrough - 2026-07-16 Tessl Credit Guard
+
+- Added a deterministic fingerprint over the changed `SKILL.md` content and active review policy.
+- Reuse a previously successful review for identical content, avoiding Tessl setup and another charged review after unrelated PR pushes or base refreshes.
+- Route an explicit Tessl credit/quota failure to `manual-review-required` with exact-head attestation; unrelated Tessl failures still fail closed.
+- Added regression coverage for fingerprint invalidation, GitHub Actions cache wiring, quota classification, and truthful review outcomes.
+# Maintenance Walkthrough - 2026-07-17 Legacy Redirect Infrastructure
+
+- Preserved the Google Search Console HTML verification file on the legacy Pages path and the Bing Webmaster Tools meta token on the legacy root redirect.
+- Made redirect generation follow the current `skills_index.json` count while retaining the curated sitemap-count lock and exact route-set validation.
+- Added `pages:redirect-verify` for byte-exact managed-tree validation plus bounded or full live route probing.
+- Versioned the redirect manifest contract as schema `3`, including webmaster-verification evidence consumed by the protected sync.
+- Added explicit source-repository provenance to the live manifest and used that change to exercise the complete protected auto-sync cycle.
+- Documented the protected cross-repository synchronization contract for `sickn33/sickn33.github.io`.
+- Added regression coverage for webmaster tokens, reserved-path collisions, dynamic skill counts, local drift, stale files, and live manifest/route verification.
+
+# Maintenance Walkthrough - 2026-07-22 Security Findings and Windows Preview
+
+- Remediated the live dependency advisories for `fast-uri`, `brace-expansion`, and `body-parser` in their affected lockfiles.
+- Hardened AAS Core cache ancestry, transaction durability, bounded MCP manifest state, exact-search behavior, redirect-tree reads, release-PR selection, and maintainer merge authorization.
+- Expanded skill-review fingerprints and workflow triggers to cover bundled support files, and tightened unsafe guidance in the affected canonical skills.
+- Fixed native Windows ACL inspection for AAS preview by making PowerShell path handling explicit and returning bounded phase/path diagnostics for unresolved ACL identities.
+- Added regression coverage for every confirmed code-path finding and documented the Windows 10/11 Codex CLI preview contract from discussion `#956`.
+
+# Maintenance Walkthrough - 2026-08-06 Agent Plugins 1.0 Portability
+
+- Added a standard root `plugin.json` to every editorial bundle that passes the existing Codex/Claude safety gates and the Agent Plugins immediate-child skill-layout rule.
+- Kept the host-specific full-library roots separate, flattened qualified paths only inside generated packages, and normalized AAS provenance/risk fields into standard string metadata without changing instruction bodies.
+- Pinned offline validation to an attributed snapshot of the official Agent Plugins 1.0.0 JSON Schema, added deterministic Codex prompt fallbacks, and covered closed-schema, fixed-discovery, pilot-bundle, and release-alignment regressions.
+- Updated the user onboarding trinity, plugin/bundle guides, maintainer contract, and release checklist while leaving the active release-notes PR untouched.
+
+# Maintenance Walkthrough - 2026-09-02 Source and Dependency Sweep
+
+- Merged the documentation overview and the safe `email-issue-fixer` skill after exact-head policy, evidence, source-validation, artifact-preview, and semantic-review gates passed.
+- Updated the Supabase and Highlight.js dependency lines through their contributor pull requests.
+- Repaired the `agents-md` contribution before merge so its evidence-first guidance remains source-only and contains no promotional link or unrelated walkthrough change.
+- Updated the web app lockfile from vulnerable `browserslist` `4.28.4` to `4.28.8`, including its lockfile-resolved browser-data dependencies; `npm audit` then reported zero known vulnerabilities for the web app.
+- Kept generated registries and contributor credits in the protected canonical-sync lane. No release was requested or published during this sweep.
+
+# Maintenance Walkthrough - 2026-09-05 Funding Target
+
+- Reduced the one-time FLOSS/fund request from USD 25,000 to USD 10,000, the minimum published at https://floss.fund/faq, and revised the proposed allocation to total USD 10,000.
+- Set the README immediate community-support target to EUR 100 per month with an explicit recurring Buy Me a Coffee route. This monthly target is separate from the annual grant proposal.
+- Preserved the existing project identifiers, funding channel, and dated adoption evidence.
+
+## 2026-09-05 — Complete skill metadata dates
+
+- Added the historical Git introduction date to every canonical skill that lacked `date_added`.
+- Derived all 216 values from each file's first addition commit; every affected skill entered the repository on 2026-09-04.
+- Removed the remaining optional metadata advisories without changing skill behavior.
+
+## 2026-09-05 — Refresh compatible web dependencies
+
+- Updated the web app lockfile to the newest versions allowed by its existing dependency ranges; npm audit remains at zero vulnerabilities.
+- Rewrote the unsafe-path control-character check to satisfy the stricter linter while preserving rejection behavior, with a regression test for NUL-containing paths.
+- Made the Vitest Vite-config import explicit so the native config-loader compatibility warning is gone.
+
+## 2026-09-05 — Substantive input-boundary audit
+
+- Corrected archive entry accounting and normalized ancestor collision checks, installer manifest hardlink handling and replacement, duplicate Workbench JSON keys, stale skill navigation results, and premature clipboard success.
+- Added reproductions and regression tests; checked the syntax of all 877 tracked Python, shell and JavaScript skill scripts without executing them.
+- Full scope, evidence and limits: [deep input-boundary audit](docs/maintainers/deep-input-boundary-audit-2026-09-05.md).
+- Source maintenance only; no release or deployment.
+
+## 2026-09-05 — Specialized plugin review
+
+- Reviewed all 21 specialized compositions, refreshed output-oriented descriptions and starter briefs, and clarified neighboring scopes.
+- Added browser verification to Web App Builder and data-quality checks to Data Analytics; narrowed Privacy & Compliance Engineering to five relevant defensive workflows and removed an incomplete support-file dependency from Secure App Builder.
+- Replaced the stale 14-entry web list with the canonical editorial definitions, exposed all included skills and starter briefs, and bound links to the catalog release.
+- Removed fixed 15-plugin counts from prerendering and live verification; added source parity and stale-count regressions.
+- Scope and composition rationale: [Specialized Plugins](docs/users/specialized-plugin-roadmap.md). No release or deployment.
+
+## Specialized plugin support-file completion
+
+- Supplied every previously reported missing support file and checked all selected entrypoints for prose-declared resource paths.
+- Removed imaginary OAuth/script clients, routed template references to actual inline procedures, and repaired the hardening checklist.
+- Added resource/mirror parity and executable chunking/KPI/SLO regressions; corrected unsafe or misleading examples encountered during the content review.
+- Updated the [plugin review](docs/users/specialized-plugin-roadmap.md) with resolved findings and explicit verification scope. No release or deployment.
+
+## Repository documentation consistency — 2026-09-06
+
+Audited 205 repository Markdown documents outside skill content and generated plugin copies for references and commands; cross-checked operational guidance with exact-base implementation. Corrected protected-workflow contradictions, stale translations, update/rollback claims, plugin status and navigation. Added a repeatable regression with explicit historical exceptions. Full scope and limitations: [audit report](docs/maintainers/documentation-consistency-2026-09-06.md). No publication is included.
+
+## MCP and CLI pipeline audit — 2026-09-06
+
+Reviewed the supported package-to-plan pipeline and repaired MCP overload correlation, notification responses and invalid envelope handling. Added negative and real-stdio regressions; verification includes the isolated installed-candidate smoke and the existing Core/repository suites. Scope and limits: [pipeline audit](docs/maintainers/mcp-cli-pipeline-audit-2026-09-06.md). No release or host configuration change is included.
+
+## Agent-owned CLI workflow — 2026-09-06
+
+Added a [manifest-to-installation preview](docs/users/aas-core.md#use-the-reviewed-selection), unique verified runtime lookup, and actionable bounded error guidance. Selection and project analysis remain exclusively agent-owned. Verification details are recorded in [the workflow audit](docs/maintainers/agent-owned-cli-workflow-2026-09-06.md). No publication or real host configuration changes.
+
+## Complete CLI handoff verification — 2026-09-06
+
+Exercised native Codex MCP selection through an actual published-release installation, checked installed file digests, and extended candidate tests through real copying, repetition, pruning and negative paths. Fixed inconsistent destination validation and the direct installer's unhandled path error. See [the end-to-end report](docs/maintainers/workflow-e2e-verification-2026-09-06.md). No publication or real MCP configuration changes.
+
+## Windows and PowerShell workflow verification
+
+The packed preview matrix now includes Windows with PowerShell execution and real Git against an isolated local candidate release fixture. Linux and Windows receipts are both required; a missing Windows receipt fails aggregation. Publication and real host configuration are outside this check.
+
+## PowerShell 5.1 and 16.9.0 readiness
+
+The Windows packed verification now repeats the complete installation lifecycle under Windows PowerShell 5.1, alongside PowerShell 7, with version-bound receipts and fail-closed aggregation. The 16.9.0 changelog covers the accumulated agent-owned CLI handoff, MCP fixes and Specialized Plugin refresh. Native Windows app interaction remains outside the observed coverage.
+
+## Atomic CLI JSON input reads — 2026-09-06
+
+CLI JSON inputs are now opened without following leaf symlinks or blocking on raced FIFOs, checked against the pre-open file identity, read through the same descriptor with a fixed byte budget, and rechecked before parsing. Focused regressions replace the file after inspection, substitute a FIFO and grow it past the configured limit; all cases fail closed without changing normal manifest, plan, selection or evidence behavior.
+
+## README Star History embeds
+
+Added the official theme-aware Star History chart and live global-rank badge to the existing [Star History section](README.md#star-history), retaining the direct chart link. Rank is fetched from Star History rather than hardcoded.
+
+## README project support
+
+Moved [Support the Project](README.md#support-the-project) directly below the opening badges. Added a concise invitation for sponsors, with GitHub Sponsors and Buy Me a Coffee links, a compact banner, and the existing Snyk tooling attribution. Removed monetary targets and contribution calculations.
+
+## Snyk EU Python dependency remediation (2026-09-06)
+
+- Raise slack-gif-creator Pillow minimum to 12.3.0 to exclude the vulnerable 12.2.x series (SNYK-PYTHON-PILLOW-17972377).
+- Require SoupSieve 2.8.4 or newer alongside BeautifulSoup in junta-leiloeiros to exclude CVE-2026-49477.
+- Generated plugin mirrors are validated locally and remain owned by protected canonical synchronization.
+- Validation: repository chain, reference validation and docs security passed; Pillow 12.3.0 GIF creation/reopening and SoupSieve 2.8.4 selector smoke passed. Snyk EU found no security vulnerabilities in either resolved requirements set; junta-leiloeiros retains a certifi MPL-2.0 license-policy finding.

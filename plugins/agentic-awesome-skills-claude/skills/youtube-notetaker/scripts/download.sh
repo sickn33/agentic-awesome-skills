@@ -4,7 +4,10 @@
 set -euo pipefail
 YTID="${1:?usage: download.sh <YTID> <scratch_dir>}"
 OUT="${2:?usage: download.sh <YTID> <scratch_dir>}"
-mkdir -p "$OUT"
+[[ "$YTID" =~ ^[A-Za-z0-9_-]{11}$ ]] || { echo "Invalid YouTube id" >&2; exit 1; }
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+source "$SCRIPT_DIR/scratch_safety.sh"
+OUT=$(validate_ytnote_scratch "$OUT" "$YTID")
 URL="https://www.youtube.com/watch?v=$YTID"
 
 # Video: 720p mp4 is plenty for 1280px slide frames; merge to a single file.

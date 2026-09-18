@@ -1,8 +1,9 @@
 ---
 name: sharp-edges
 description: sharp-edges
-risk: unknown
+risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 ---

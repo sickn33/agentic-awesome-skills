@@ -7,13 +7,14 @@ Usage:
     python lint_runner.py <project_path>
 
 Supports:
-    - Node.js: npm run lint, npx tsc --noEmit
+    - Node.js: npm run lint, installed local tsc --noEmit
     - Python: ruff check, mypy
 """
 
 import subprocess
 import sys
 import json
+import os
 from pathlib import Path
 from datetime import datetime
 
@@ -44,14 +45,14 @@ def detect_project_type(project_path: Path) -> dict:
             if "lint" in scripts:
                 result["linters"].append({"name": "npm lint", "cmd": ["npm", "run", "lint"]})
             elif "eslint" in deps:
-                result["linters"].append({"name": "eslint", "cmd": ["npx", "eslint", "."]})
+                result["linters"].append({"name": "eslint", "cmd": [str(project_path / "node_modules" / ".bin" / ("eslint.cmd" if os.name == "nt" else "eslint")), "."]})
 
             # Check for TypeScript
             if "typescript" in deps or (project_path / "tsconfig.json").exists():
-                result["linters"].append({"name": "tsc", "cmd": ["npx", "tsc", "--noEmit"]})
+                result["linters"].append({"name": "tsc", "cmd": [str(project_path / "node_modules" / ".bin" / ("tsc.cmd" if os.name == "nt" else "tsc")), "--noEmit"]})
 
-        except:
-            pass
+        except (OSError, ValueError, TypeError, AttributeError) as error:
+            raise ValueError(f"Cannot inspect package.json: {error}") from error
 
     # Python project
     if (project_path / "pyproject.toml").exists() or (project_path / "requirements.txt").exists():
@@ -111,7 +112,14 @@ def main():
     print(f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     # Detect project type
-    project_info = detect_project_type(project_path)
+    if not project_path.is_dir():
+        print("Project directory does not exist.", file=sys.stderr)
+        sys.exit(2)
+    try:
+        project_info = detect_project_type(project_path)
+    except ValueError as error:
+        print(str(error), file=sys.stderr)
+        sys.exit(2)
     print(f"Type: {project_info['type']}")
     print(f"Linters: {len(project_info['linters'])}")
     print("-"*60)
@@ -123,11 +131,12 @@ def main():
             "project": str(project_path),
             "type": project_info["type"],
             "checks": [],
-            "passed": True,
+            "passed": False,
+            "status": "not-checked",
             "message": "No linters configured"
         }
         print(json.dumps(output, indent=2))
-        sys.exit(0)
+        sys.exit(2)
 
     # Run each linter
     results = []

@@ -8,7 +8,6 @@ import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/600.css';
 import './index.css';
 import App from './App';
-import { SkillProvider } from './context/SkillContext';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -17,8 +16,6 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <SkillProvider>
-      <App />
-    </SkillProvider>
+    <App />
   </StrictMode>,
 );

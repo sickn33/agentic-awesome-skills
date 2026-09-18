@@ -1,26 +1,32 @@
-# Visual Quick Start Guide
+# Visual Guide: AAS Core and Skill Distribution
 
-**Learn by seeing!** This guide uses diagrams and visual examples to help you understand skills.
+This guide shows the primary AAS Core workflow and the supporting catalog and distribution surfaces.
 
 ---
 
 ## The Big Picture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    YOU (Developer)                          │
-│                          ↓                                  │
-│              "Help me build a payment system"               │
-│                          ↓                                  │
-├─────────────────────────────────────────────────────────────┤
-│                  AI ASSISTANT                               │
-│                          ↓                                  │
-│              Loads @stripe-integration skill                │
-│                          ↓                                  │
-│         Becomes an expert in Stripe payments                │
-│                          ↓                                  │
-│    Provides specialized help with code examples             │
-└─────────────────────────────────────────────────────────────┘
+PROJECT
+   │ inspected by Codex or Claude, not by AAS
+   ▼
+AGENT SEARCHES + READS COMPLETE LOCAL CATALOG
+   │
+   ▼
+CODEX OR CLAUDE CHOOSES EXACT SKILL IDS
+   │
+   ▼
+compose_stack ── validates · pins · never recommends
+   │
+   ▼
+AGENT PROPOSES aas-stack.json (no selection policy)
+   │
+   ├────────► WORKBENCH (optional browser-local review)
+   ▼
+CLI VALIDATE ──► CLI PLAN ──► HUMAN REVIEW
+
+Supported path: stop after plan review.
+Apply and recovery remain experimental.
 ```
 
 ---
@@ -34,7 +40,7 @@ agentic-awesome-skills/
 ├── 📄 CONTRIBUTING.md                  ← Contributor workflow
 ├── 📄 CATALOG.md                       ← Full generated catalog
 │
-├── 📁 skills/                          ← 1,946+ skills live here
+├── 📁 skills/                          ← 2,127+ skills live here
 │   │
 │   ├── 📁 brainstorming/
 │   │   └── 📄 SKILL.md                 ← Skill definition
@@ -47,7 +53,7 @@ agentic-awesome-skills/
 │   │   └── 📁 2d-games/
 │   │       └── 📄 SKILL.md             ← Nested skills also supported
 │   │
-│   └── ... (1,946+ total)
+│   └── ... (2,127+ total)
 │
 ├── 📁 apps/
 │   └── 📁 web-app/                     ← Interactive browser
@@ -66,7 +72,7 @@ agentic-awesome-skills/
 
 ---
 
-## How Skills Work (Flow Diagram)
+## Alternative: Direct Skill Distribution
 
 ```
 ┌──────────────┐
@@ -90,7 +96,7 @@ agentic-awesome-skills/
        │
        ↓
 ┌──────────────┐
-│ 5. RESULT    │  You get specialized help!
+│ 5. RESULT    │  The agent follows the selected instructions
 └──────────────┘
 ```
 
@@ -100,7 +106,7 @@ agentic-awesome-skills/
 
 ```
                     ┌─────────────────────────┐
-                    │  1,946+ SKILLS          │
+                    │  2,127+ SKILLS          │
                     └────────────┬────────────┘
                                  │
         ┌────────────────────────┼────────────────────────┐
@@ -201,7 +207,7 @@ If you want a workspace-style manual install instead, cloning into `.agent/skill
 │   ├── 📁 brainstorming/                 │
 │   ├── 📁 stripe-integration/            │
 │   ├── 📁 react-best-practices/          │
-│   └── ... (1,946+ total)                │
+│   └── ... (2,127+ total)                │
 └─────────────────────────────────────────┘
 ```
 

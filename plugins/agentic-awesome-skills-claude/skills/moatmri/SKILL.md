@@ -27,6 +27,12 @@ Ask if not provided:
 - **Entity type** (e.g., "independent broker", "solo practitioner", "regional franchise")
 - **Target name** (optional — specific organization for named analysis)
 
+## Example
+
+**User request:**
+
+> Assess where this business is most exposed to AI disruption and produce a prioritized 90-day defensive plan.
+
 ## Limitations
 
 - Produces strategic risk analysis, not audited market research or investment advice.

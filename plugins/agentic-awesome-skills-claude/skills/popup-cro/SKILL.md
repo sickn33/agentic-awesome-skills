@@ -1,7 +1,7 @@
 ---
 name: popup-cro
 description: "Create and optimize popups, modals, overlays, slide-ins, and banners to increase conversions without harming user experience or brand trust."
-risk: unknown
+risk: none
 source: community
 date_added: "2026-02-27"
 ---
@@ -350,6 +350,12 @@ Multiple CTAs or mixed goals destroy performance.
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Create and optimize popups, modals, overlays, slide-ins, and banners to increase conversions without harming user experience or brand trust.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

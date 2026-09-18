@@ -7,6 +7,7 @@ description: |
   makepad 事件, makepad action, 事件处理
 risk: safe
 source: community
+date_added: "2026-09-04"
 ---
 
 # Makepad Event/Action Skill

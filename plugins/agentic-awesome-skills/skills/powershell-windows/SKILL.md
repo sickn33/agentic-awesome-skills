@@ -1,7 +1,7 @@
 ---
 name: powershell-windows
 description: "PowerShell Windows patterns. Critical pitfalls, operator syntax, error handling."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

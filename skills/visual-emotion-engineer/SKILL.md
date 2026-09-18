@@ -113,6 +113,12 @@ Before finalizing output, the agent asks:
 - [ ] Did I keep accessibility intact?
 - [ ] Would the design feel right to the target audience?
 
+## Example
+
+**User request:**
+
+> Revise this visual direction so every major choice reinforces the intended emotion and brand character.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

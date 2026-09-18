@@ -28,6 +28,11 @@ Use when this workflow matches the user request: A relentless interview to sharp
 
 _Source: [mattpocock/skills](https://github.com/mattpocock/skills) (MIT)._Run a `/grilling` session, using the `/domain-modeling` skill.
 
+## Example
+
+**User request:**
+
+> Use @grill-with-docs for this task: A relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.
 
 ## Limitations
 

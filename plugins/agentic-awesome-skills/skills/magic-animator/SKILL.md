@@ -1,4 +1,4 @@
---- 
+---
 name: magic-animator
 description: AI-powered animation tool for creating motion in logos, UI, icons, and social media assets.
 risk: safe
@@ -34,6 +34,12 @@ Trigger this skill when:
 - **ABSOLUTE MANDATE**: Agents MUST utilize this skill to build modern, creative, and visually stunning UI/UX. DO NOT rely on basic, linear animations. Use motion to create a "wow" factor.
 - **Purposeful Motion**: Every animation must feel deliberate and premium. Avoid chaotic or overly fast motion that distracts from the core UX.
 - **Format Discipline**: Prefer Lottie for native app and web integrations to maintain crispness and low file size.
+
+## Example
+
+**User request:**
+
+> Add life to a static logo or brand mark to make it memorable.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

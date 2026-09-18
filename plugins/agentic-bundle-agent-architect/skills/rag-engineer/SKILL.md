@@ -1,11 +1,10 @@
 ---
 name: rag-engineer
-description: Expert in building Retrieval-Augmented Generation systems. Masters
-  embedding models, vector databases, chunking strategies, and retrieval
-  optimization for LLM applications.
-risk: unknown
-source: vibeship-spawner-skills (Apache 2.0)
-date_added: 2026-02-27
+description: Expert in building Retrieval-Augmented Generation systems. Masters embedding models, vector databases, chunking strategies, and retrieval optimization for LLM applications.
+metadata:
+  aas-risk: critical
+  aas-source: vibeship-spawner-skills (Apache 2.0)
+  aas-date-added: '2026-02-27'
 ---
 
 # RAG Engineer
@@ -334,6 +333,12 @@ Works well with: `ai-agents-architect`, `prompt-engineer`, `database-architect`,
 - User mentions or implies: weaviate
 - User mentions or implies: chromadb
 - User mentions or implies: pgvector
+
+## Example
+
+**User request:**
+
+> Use @rag-engineer for this task: Expert in building Retrieval-Augmented Generation systems.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

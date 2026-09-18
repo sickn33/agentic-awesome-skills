@@ -48,6 +48,12 @@ decisions.
 - README: vision only. Decisions go in ADRs.
 - Don't challenge the user's thinking unless they ask, or they're making a severe mistake.
 
+## Example
+
+**User request:**
+
+> Extract project vision, decisions, or preferences into durable docs.
+
 ## Limitations
 
 - Adapted from `davidondrej/skills`; verify local paths, tools, credentials, and agent features before acting.

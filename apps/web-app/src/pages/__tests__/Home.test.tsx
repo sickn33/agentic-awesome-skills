@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter, Routes, Route, useLocation, useNavigate } from 'react-router';
 import { Home } from '../Home';
-import { renderWithRouter } from '../../utils/testUtils';
+import { render, renderWithRouter } from '../../utils/testUtils';
 import { createMockSkill } from '../../factories/skill';
 import { useSkills } from '../../context/SkillContext';
 
@@ -85,19 +86,23 @@ describe('Home', () => {
       renderWithRouter(<Home />, { useProvider: false });
 
       await waitFor(() => {
-        expect(document.title).toContain('Agentic Awesome Skills');
+        expect(document.title).toContain('AAS Core Preview');
       });
 
-      expect(screen.getByRole('button', { name: /Copy install command/i })).toBeInTheDocument();
-      expect(screen.getAllByText(/npx agentic-awesome-skills/i).length).toBeGreaterThan(0);
+      expect(screen.getByRole('heading', {
+        level: 1,
+        name: /AAS Core: agent-first skill stacks for Codex, Claude Code, and compatible clients/i,
+      })).toBeInTheDocument();
+      expect(screen.getByText(/Search\. Choose\. Validate\. Preview\./i)).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Review an AAS Core stack/i })).toHaveAttribute('href', '/workbench/');
       expect(screen.getByText(/What is the difference between skills and MCP tools/i)).toBeInTheDocument();
       expect(document.querySelector('meta[property="og:title"]')).toHaveAttribute(
         'content',
-        expect.stringContaining('Agentic Awesome Skills'),
+        expect.stringContaining('AAS Core Preview'),
       );
     });
 
-    it('should copy install command from hero CTA', async () => {
+    it('routes the primary catalog action to exact composition', async () => {
       (useSkills as Mock).mockReturnValue({
         skills: [],
         stars: {},
@@ -108,24 +113,29 @@ describe('Home', () => {
       renderWithRouter(<Home />, { useProvider: false });
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /Copy install command/i })).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /Review an AAS Core stack/i })).toBeInTheDocument();
       });
 
-      vi.useFakeTimers();
-      try {
-        await act(async () => {
-          fireEvent.click(screen.getByRole('button', { name: /Copy install command/i }));
-          await vi.runAllTimersAsync();
-        });
-      } finally {
-        vi.useRealTimers();
-      }
-
-      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('npx agentic-awesome-skills');
+      expect(screen.getByText(/Inspect evidence, select exact IDs/i)).toBeInTheDocument();
     });
   });
 
   describe('Search and Filtering', () => {
+    it('focuses search when the advertised keyboard shortcut is pressed', () => {
+      (useSkills as Mock).mockReturnValue({
+        skills: [],
+        stars: {},
+        loading: false,
+        error: null,
+      });
+
+      renderWithRouter(<Home />, { useProvider: false });
+      const searchInput = screen.getByLabelText(/Search skills/i);
+      fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
+
+      expect(searchInput).toHaveFocus();
+    });
+
     it('should filter skills based on search term', async () => {
       const mockSkills = [
         createMockSkill({ id: 'react', name: 'React Patterns' }),
@@ -175,6 +185,32 @@ describe('Home', () => {
         expect(screen.queryByText('@Backend Skill')).not.toBeInTheDocument();
       });
     });
+
+    it('filters by risk and keeps a browser-local shortlist', async () => {
+      const mockSkills = [
+        createMockSkill({ id: 'safe-skill', name: 'Safe Skill', risk: 'safe' }),
+        createMockSkill({ id: 'critical-skill', name: 'Critical Skill', risk: 'critical' }),
+      ];
+
+      (useSkills as Mock).mockReturnValue({
+        skills: mockSkills,
+        stars: {},
+        loading: false,
+        error: null,
+      });
+
+      renderWithRouter(<Home />, { useProvider: false });
+      fireEvent.change(screen.getByLabelText(/Filter by risk/i), { target: { value: 'critical' } });
+
+      await waitFor(() => {
+        expect(screen.getByText('@Critical Skill')).toBeInTheDocument();
+        expect(screen.queryByText('@Safe Skill')).not.toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: /Add to shortlist/i }));
+      expect(screen.getByRole('button', { name: /In shortlist/i })).toBeInTheDocument();
+      expect(screen.getByText(/^1 selected · catalog/)).toBeInTheDocument();
+    });
   });
 
   describe('User Settings and Sync', () => {
@@ -220,5 +256,167 @@ describe('Home', () => {
     fireEvent.click(screen.getByRole('button', { name: /Retry loading catalog/i }));
 
     expect(refreshSkills).toHaveBeenCalled();
+  });
+
+  describe('Fuzzy search', () => {
+    it('matches across fields with typo tolerance (reactj finds reactjs)', async () => {
+      const mockSkills = [
+        createMockSkill({ id: 'reactjs', name: 'reactjs patterns', description: 'React component recipes', category: 'frontend' }),
+        createMockSkill({ id: 'vue', name: 'Vue Basics', category: 'frontend' }),
+      ];
+
+      (useSkills as Mock).mockReturnValue({
+        skills: mockSkills,
+        stars: {},
+        loading: false,
+        error: null,
+      });
+
+      renderWithRouter(<Home />, { useProvider: false });
+
+      fireEvent.change(screen.getByLabelText('Search matching'), { target: { value: 'fuzzy' } });
+      const searchInput = screen.getByLabelText(/Search skills/i);
+      fireEvent.change(searchInput, { target: { value: 'reactj' } });
+
+      await waitFor(() => {
+        expect(screen.getByText('@reactjs patterns')).toBeInTheDocument();
+        expect(screen.queryByText('@Vue Basics')).not.toBeInTheDocument();
+      });
+    });
+
+    it('requires every token to match somewhere (AND across tokens)', async () => {
+      const mockSkills = [
+        createMockSkill({ id: 'react-hooks', name: 'React Hooks', category: 'frontend', tags: ['react'] }),
+        createMockSkill({ id: 'react-forms', name: 'React Forms', category: 'frontend', tags: ['forms'] }),
+      ];
+
+      (useSkills as Mock).mockReturnValue({
+        skills: mockSkills,
+        stars: {},
+        loading: false,
+        error: null,
+      });
+
+      renderWithRouter(<Home />, { useProvider: false });
+
+      const searchInput = screen.getByLabelText(/Search skills/i);
+      fireEvent.change(searchInput, { target: { value: 'react forms' } });
+
+      await waitFor(() => {
+        expect(screen.getByText('@React Forms')).toBeInTheDocument();
+        expect(screen.queryByText('@React Hooks')).not.toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('URL-synced filters', () => {
+    function LocationProbe() {
+      const location = useLocation();
+      return <span data-testid="location">{location.pathname + location.search}</span>;
+    }
+
+    function NavControls() {
+      const navigate = useNavigate();
+      return (
+        <>
+          <button onClick={() => navigate(1)}>go forward</button>
+          <button onClick={() => navigate(-1)}>go back</button>
+        </>
+      );
+    }
+
+    function renderCatalog(initialEntries: string[], initialIndex = 0, skills = [createMockSkill()]) {
+      (useSkills as Mock).mockReturnValue({
+        skills,
+        stars: {},
+        loading: false,
+        error: null,
+        refreshSkills: vi.fn().mockResolvedValue(undefined),
+      });
+
+      return render(
+        <MemoryRouter initialEntries={initialEntries} initialIndex={initialIndex}>
+          <Routes>
+            <Route path="*" element={<><Home /><LocationProbe /><NavControls /></>} />
+          </Routes>
+        </MemoryRouter>
+      );
+    }
+
+    it('writes active filters and search into the URL as they change', async () => {
+      renderCatalog(['/'], 0, [createMockSkill({ id: 'frontend-a', category: 'frontend', name: 'Frontend A' })]);
+
+      fireEvent.change(screen.getByLabelText(/Filter by category/i), { target: { value: 'frontend' } });
+      await waitFor(() => {
+        expect(screen.getByTestId('location')).toHaveTextContent('category=frontend');
+      });
+
+      fireEvent.change(screen.getByLabelText(/Search skills/i), { target: { value: 'front' } });
+      await waitFor(() => {
+        expect(screen.getByTestId('location')).toHaveTextContent('q=front');
+      });
+    });
+
+    it('restores search modes, required terms, and category aliases through navigation', async () => {
+      const skills = [
+        createMockSkill({ id: 'migration', name: 'Migration', description: 'Database migration', category: 'databases' }),
+        createMockSkill({ id: 'postgres', name: 'Postgres', description: 'Postgres migration', category: 'database' }),
+      ];
+      renderCatalog(['/?q=postgres+migration&match=any&category=databases', '/?q=postgres+migration&required=postgres&category=database'], 0, skills);
+      await waitFor(() => expect(screen.getByText('@Migration')).toBeInTheDocument());
+      expect(screen.getByLabelText('Filter by category')).toHaveValue('database');
+      expect(screen.getByLabelText('Search matching')).toHaveValue('any');
+      expect(screen.getByRole('option', { name: 'Database (2)' })).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'go forward' }));
+      await waitFor(() => expect(screen.queryByText('@Migration')).not.toBeInTheDocument());
+      expect(screen.getByText('@Postgres')).toBeInTheDocument();
+      expect(screen.getByLabelText('Search matching')).toHaveValue('all');
+      expect(screen.getByLabelText('Required search terms')).toHaveValue('postgres');
+      expect(screen.getByText('Matched terms: postgres, migration · Required: postgres')).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'go back' }));
+      await waitFor(() => expect(screen.getByText('@Migration')).toBeInTheDocument());
+      expect(screen.getByLabelText('Search matching')).toHaveValue('any');
+      expect(screen.getByLabelText('Required search terms')).toHaveValue('');
+    });
+
+    it('restores filters after forward and back navigation', async () => {
+      const skills = [
+        createMockSkill({ id: 'frontend-a', category: 'frontend', name: 'Frontend A' }),
+        createMockSkill({ id: 'backend-a', category: 'backend', name: 'Backend A' }),
+      ];
+
+      renderCatalog(['/?category=frontend', '/?category=backend'], 0, skills);
+
+      // Start on the frontend view.
+      await waitFor(() => expect(screen.getByText('@Frontend A')).toBeInTheDocument());
+
+      // Navigate forward: the URL changes, so the backend filter must take over.
+      fireEvent.click(screen.getByRole('button', { name: 'go forward' }));
+      await waitFor(() => expect(screen.getByText('@Backend A')).toBeInTheDocument());
+      expect(screen.queryByText('@Frontend A')).not.toBeInTheDocument();
+
+      // Navigate back: the frontend filter must be restored from the URL.
+      fireEvent.click(screen.getByRole('button', { name: 'go back' }));
+      await waitFor(() => expect(screen.getByText('@Frontend A')).toBeInTheDocument());
+      expect(screen.queryByText('@Backend A')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Search shortcut hint', () => {
+    it('shows the platform-appropriate keyboard hint in the search field', async () => {
+      (useSkills as Mock).mockReturnValue({
+        skills: [],
+        stars: {},
+        loading: false,
+        error: null,
+      });
+
+      renderWithRouter(<Home />, { useProvider: false });
+
+      // jsdom reports no Mac platform, so the Windows/Linux hint is expected.
+      await waitFor(() => {
+        expect(screen.getByText('Ctrl K')).toBeInTheDocument();
+      });
+    });
   });
 });

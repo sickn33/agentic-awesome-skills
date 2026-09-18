@@ -20,7 +20,7 @@
             "concise-planning",
             "writing-plans"
           ],
-          "notes": "Define problem, user persona, MVP boundaries, and acceptance criteria before coding."
+          "notes": "Define problem, user persona, MVP boundaries, and acceptance criteria before coding. Review the exact skill IDs and support files before an authorized direct installation; Core plans remain review artifacts."
         },
         {
           "title": "Build backend and API",

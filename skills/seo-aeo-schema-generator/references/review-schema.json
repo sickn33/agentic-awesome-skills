@@ -1,0 +1,8 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Review",
+  "itemReviewed": {"@type": "Product", "name": "{{item_name}}"},
+  "reviewRating": {"@type": "Rating", "ratingValue": "{{rating_value}}", "bestRating": "{{best_rating}}"},
+  "author": {"@type": "Person", "name": "{{author_name}}"},
+  "reviewBody": "{{review_body}}"
+}

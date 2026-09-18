@@ -6,3 +6,5 @@
 
 # Documentation
 *.md @sickn33
+
+/.github/CODEOWNERS @sickn33

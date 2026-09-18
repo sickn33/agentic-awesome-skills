@@ -1,7 +1,7 @@
 ---
 name: tdd-workflows
 description: "Use when working with tdd workflows tdd cycle (Alias for tdd-workflows-tdd-cycle)"
-risk: unknown
+risk: none
 source: "alias"
 date_added: "2026-06-02"
 ---

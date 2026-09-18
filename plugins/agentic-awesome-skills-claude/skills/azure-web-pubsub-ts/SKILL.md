@@ -1,7 +1,7 @@
 ---
 name: azure-web-pubsub-ts
 description: "Real-time messaging with WebSocket connections and pub/sub patterns."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

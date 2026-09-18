@@ -1,7 +1,7 @@
 ---
 name: page-cro
 description: Analyze and optimize individual pages for conversion performance.
-risk: unknown
+risk: none
 source: community
 date_added: '2026-02-27'
 ---

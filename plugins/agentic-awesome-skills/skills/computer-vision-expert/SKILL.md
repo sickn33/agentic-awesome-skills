@@ -1,7 +1,7 @@
 ---
 name: computer-vision-expert
 description: "SOTA Computer Vision Expert (2026). Specialized in YOLO26, Segment Anything 3 (SAM 3), Vision Language Models, and real-time spatial analysis."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -71,6 +71,12 @@ To provide expert guidance on designing, implementing, and optimizing state-of-t
 
 ## Related Skills
 `ai-engineer`, `robotics-expert`, `research-engineer`, `embedded-systems`
+
+## Example
+
+**User request:**
+
+> Design high-performance real-time detection systems (YOLO26).
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

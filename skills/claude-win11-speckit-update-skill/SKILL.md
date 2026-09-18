@@ -22,6 +22,12 @@ This skill provides guidance and patterns for windows 11 system management.
 
 For more information, see the [source repository](https://github.com/NotMyself/claude-win11-speckit-update-skill).
 
+## Example
+
+**User request:**
+
+> Use @claude-win11-speckit-update-skill for this task: Windows 11 system management.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

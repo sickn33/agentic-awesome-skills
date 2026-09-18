@@ -113,6 +113,12 @@ Before finalizing output, the agent asks:
 - [ ] Did I preserve autonomy and accessibility?
 - [ ] Would the flow feel easier, not pushier?
 
+## Example
+
+**User request:**
+
+> Redesign this product flow so layout, sequencing, and cues guide the decision clearly and ethically.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

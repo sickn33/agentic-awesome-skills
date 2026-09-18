@@ -26,7 +26,7 @@ Set environment variable before running:
 
 ```bash
 export LOKI_VIBE_KANBAN=true
-./scripts/loki-wrapper.sh ./docs/requirements.md
+bash scripts/loki-wrapper.sh ./docs/requirements.md
 ```
 
 Or create `.loki/config/integrations.yaml`:
@@ -157,7 +157,7 @@ while true; do
         inotifywait -e modify,create "$LOKI_DIR/queue/" 2>/dev/null
     fi
 
-    ./scripts/export-to-vibe-kanban.sh
+    bash scripts/export-to-vibe-kanban.sh
     sleep 2
 done
 ```

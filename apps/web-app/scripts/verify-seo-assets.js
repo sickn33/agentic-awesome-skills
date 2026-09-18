@@ -1,11 +1,17 @@
 import fs from 'node:fs';
+import crypto from 'node:crypto';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { JSDOM } from 'jsdom';
 import sanitizeFilename from 'sanitize-filename';
 import { getSeoLandingPaths } from './generate-sitemap.js';
 
 const APP_ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const REPO_ROOT_DIR = path.resolve(APP_ROOT_DIR, '..', '..');
+const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
+const PACKAGE_URL = 'https://www.npmjs.com/package/agentic-awesome-skills';
+const EXPECTED_HOSTED_CATALOG_ROOT = 'https://sickn33.github.io/agentic-awesome-skills/';
 
 function safeUserPath(pathValue, baseDir = process.cwd()) {
   const basePath = path.resolve(baseDir);
@@ -23,6 +29,51 @@ function safeUserPath(pathValue, baseDir = process.cwd()) {
     sanitizedSegments.push(sanitizedSegment);
   }
   return path.resolve(basePath, ...sanitizedSegments);
+}
+
+function assertPlainFileInsideRoot(filePath, rootDir) {
+  const resolvedRoot = path.resolve(rootDir);
+  const resolvedFile = path.resolve(filePath);
+  const relative = path.relative(resolvedRoot, resolvedFile);
+  assert(
+    relative && !relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative),
+    `File must remain inside verification root: ${filePath}`,
+  );
+  const candidateAnchors = [REPO_ROOT_DIR, APP_ROOT_DIR, process.cwd(), os.tmpdir(), '/tmp']
+    .map((candidate) => path.resolve(candidate))
+    .filter((candidate, index, anchors) => anchors.indexOf(candidate) === index && fs.existsSync(candidate))
+    .filter((candidate) => {
+      const candidateRelative = path.relative(candidate, resolvedRoot);
+      return !candidateRelative.startsWith(`..${path.sep}`) && candidateRelative !== '..' && !path.isAbsolute(candidateRelative);
+    })
+    .sort((left, right) => right.length - left.length);
+  assert(candidateAnchors.length > 0, `Verification root is outside trusted filesystem anchors: ${resolvedRoot}`);
+  const trustedAnchor = candidateAnchors[0];
+  let current = trustedAnchor;
+  const rootRelative = path.relative(trustedAnchor, resolvedRoot);
+  for (const segment of rootRelative.split(path.sep).filter(Boolean)) {
+    current = path.join(current, segment);
+    const stat = fs.lstatSync(current);
+    assert(!stat.isSymbolicLink(), `Verification path must not contain symlinks: ${current}`);
+  }
+  const rootStat = fs.lstatSync(resolvedRoot);
+  assert(rootStat.isDirectory() && !rootStat.isSymbolicLink(), `Verification root must be a plain directory: ${resolvedRoot}`);
+  current = resolvedRoot;
+  for (const segment of relative.split(path.sep)) {
+    current = path.join(current, segment);
+    const stat = fs.lstatSync(current);
+    assert(!stat.isSymbolicLink(), `Verification path must not contain symlinks: ${current}`);
+  }
+  const fileStat = fs.lstatSync(resolvedFile);
+  assert(fileStat.isFile() && !fileStat.isSymbolicLink(), `Verification input must be a plain file: ${resolvedFile}`);
+  const physicalRoot = fs.realpathSync(resolvedRoot);
+  const physicalFile = fs.realpathSync(resolvedFile);
+  const physicalRelative = path.relative(physicalRoot, physicalFile);
+  assert(
+    physicalRelative && !physicalRelative.startsWith(`..${path.sep}`) && physicalRelative !== '..' && !path.isAbsolute(physicalRelative),
+    `Verification input escaped its physical root: ${resolvedFile}`,
+  );
+  return resolvedFile;
 }
 
 export function extractSitemapLocations(xmlText) {
@@ -45,7 +96,7 @@ function assert(condition, message) {
 function parseCliArgs(argv) {
   const defaultMinSkillUrls = parseCount(
     process.env.PRERENDER_VERIFY_MIN_SKILL_URLS || process.env.PRERENDER_TOP_SKILL_COUNT || process.env.TOP_SKILL_COUNT,
-    40,
+    180,
   );
   const args = {
     sitemapPath: 'dist/sitemap.xml',
@@ -140,25 +191,46 @@ function parseCliArgs(argv) {
   return args;
 }
 
-function getPackageReleaseLabel() {
+function getPackageReleaseMetadata() {
   const raw = readFile(path.join(REPO_ROOT_DIR, 'package.json'), REPO_ROOT_DIR);
   const pkg = JSON.parse(raw);
   assert(typeof pkg.version === 'string' && pkg.version.trim(), 'Root package.json must define version.');
-  return `V${pkg.version.trim()}`;
+  assert(
+    Number.isInteger(pkg.aasCore?.includedFromMajor) && pkg.aasCore.includedFromMajor > 0,
+    'Root package.json must define aasCore.includedFromMajor.',
+  );
+  const major = Number.parseInt(pkg.version.split('.')[0], 10);
+  assert(Number.isInteger(major), 'Root package.json version must begin with a major number.');
+  return {
+    label: `V${pkg.version.trim()}`,
+    coreIncluded: major >= pkg.aasCore.includedFromMajor,
+  };
 }
 
 function extractMetaContent(htmlText, selectorType, selectorValue) {
-  const pattern = new RegExp(
-    `<meta\\s+[^>]*${selectorType}=["']${selectorValue}["'][^>]*\\scontent=["']([^"']+)["'][^>]*>`,
-    'i',
+  const document = new JSDOM(String(htmlText ?? '')).window.document;
+  const match = [...document.querySelectorAll('meta')].find(
+    (element) => element.getAttribute(selectorType) === selectorValue,
   );
-  const match = htmlText.match(pattern);
-  return match?.[1]?.trim();
+  return match?.getAttribute('content')?.trim();
+}
+
+function extractCanonicalHrefs(htmlText) {
+  const document = new JSDOM(String(htmlText ?? '')).window.document;
+  return [...document.querySelectorAll('link')]
+    .filter((element) => (element.getAttribute('rel') || '').split(/\s+/).some((token) => token.toLowerCase() === 'canonical'))
+    .map((element) => element.getAttribute('href')?.trim());
+}
+
+function extractExactMetaContents(htmlText, selectorType, selectorValue) {
+  const document = new JSDOM(String(htmlText ?? '')).window.document;
+  return [...document.querySelectorAll('meta')]
+    .filter((element) => element.getAttribute(selectorType) === selectorValue)
+    .map((element) => element.getAttribute('content')?.trim());
 }
 
 function extractTitle(htmlText) {
-  const match = String(htmlText ?? '').match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-  return match?.[1]?.trim() || '';
+  return new JSDOM(String(htmlText ?? '')).window.document.title.trim();
 }
 
 function extractSkillCountLabels(text) {
@@ -208,6 +280,7 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = f
     if (requireHostedUrl) {
       assert(url.hostname !== 'localhost', `Sitemap URL must not use localhost: ${location}`);
     }
+    assert(url.pathname.endsWith('/'), `Sitemap indexable route must end with a trailing slash: ${location}`);
     return { raw: location, parsed: url };
   });
 
@@ -224,7 +297,19 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = f
   assert(Boolean(rootCandidate), 'Sitemap does not expose a homepage candidate URL.');
 
   const rootUrl = new URL(rootCandidate.raw);
+  if (requireHostedUrl) {
+    assert(rootCandidate.raw === EXPECTED_HOSTED_CATALOG_ROOT, `Hosted sitemap root must equal ${EXPECTED_HOSTED_CATALOG_ROOT}`);
+  }
   const normalizedRoot = rootUrl.pathname === '/' ? '' : rootUrl.pathname.replace(/\/+$/, '');
+  const rootPrefix = normalizedRoot ? `${normalizedRoot}/` : '/';
+  for (const { raw, parsed: parsedUrl } of parsed) {
+    assert(parsedUrl.origin === rootUrl.origin, `Sitemap URL must share the homepage origin ${rootUrl.origin}: ${raw}`);
+    assert(
+      parsedUrl.pathname === rootUrl.pathname || parsedUrl.pathname === normalizedRoot || parsedUrl.pathname.startsWith(rootPrefix),
+      `Sitemap URL must remain inside the homepage root ${rootUrl.pathname}: ${raw}`,
+    );
+    assert(!parsedUrl.username && !parsedUrl.password && !parsedUrl.search && !parsedUrl.hash, `Sitemap URL must not contain credentials, query, or fragment: ${raw}`);
+  }
   const skillPrefix = `${normalizedRoot}/skill/`;
   const rootPathVariants = new Set([
     rootUrl.pathname,
@@ -233,10 +318,15 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = f
 
   const isRoot = ({ parsed: parsedUrl }) => rootPathVariants.has(parsedUrl.pathname);
   const extraRoutes = parsed.filter(({ parsed: parsedUrl }) => !isRoot({ parsed: parsedUrl }));
-  const allowedExtraPathVariants = new Set([
+  const pluginPathVariants = new Set([
     `${normalizedRoot}/plugins`,
     `${normalizedRoot}/plugins/`,
   ]);
+  const workbenchPathVariants = new Set([
+    `${normalizedRoot}/workbench`,
+    `${normalizedRoot}/workbench/`,
+  ]);
+  const allowedExtraPathVariants = new Set([...pluginPathVariants, ...workbenchPathVariants]);
   const topicPathVariants = new Set(
     getSeoLandingPaths().flatMap((topicPath) => [
       `${normalizedRoot}${topicPath}`,
@@ -268,12 +358,16 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = f
 
   return {
     locations,
+    rootUrl: rootCandidate.raw,
     rootPath: rootUrl.pathname,
     normalizedRootPath: normalizedRoot,
     skillUrls: skillRoutes.map(({ raw }) => raw),
     topicUrls: topicRoutes.map(({ raw }) => raw),
     pluginUrls: extraRoutes
-      .filter(({ parsed: parsedUrl }) => allowedExtraPathVariants.has(parsedUrl.pathname))
+      .filter(({ parsed: parsedUrl }) => pluginPathVariants.has(parsedUrl.pathname))
+      .map(({ raw }) => raw),
+    workbenchUrls: extraRoutes
+      .filter(({ parsed: parsedUrl }) => workbenchPathVariants.has(parsedUrl.pathname))
       .map(({ raw }) => raw),
   };
 }
@@ -283,14 +377,14 @@ export function assertSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = fa
 }
 
 function extractJsonLdEntries(htmlText) {
-  const raw = String(htmlText ?? '');
-  const matches = raw.matchAll(
-    /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
-  );
   const entries = [];
+  const document = new JSDOM(String(htmlText ?? '')).window.document;
+  const scripts = [...document.querySelectorAll('script')].filter(
+    (element) => (element.getAttribute('type') || '').trim().toLowerCase() === 'application/ld+json',
+  );
 
-  for (const match of matches) {
-    const text = match[1]?.trim();
+  for (const script of scripts) {
+    const text = script.textContent?.trim();
     if (!text) {
       continue;
     }
@@ -312,36 +406,299 @@ function extractJsonLdEntries(htmlText) {
   return entries;
 }
 
+function hasSchemaType(value, schemaType) {
+  const declaredTypes = Array.isArray(value?.['@type']) ? value['@type'] : [value?.['@type']];
+  return declaredTypes.some((declaredType) =>
+    declaredType === schemaType ||
+    declaredType === `schema:${schemaType}` ||
+    declaredType === `https://schema.org/${schemaType}` ||
+    declaredType === `http://schema.org/${schemaType}`,
+  );
+}
+
+function collectSchemaNodes(value, schemaType, output = []) {
+  if (Array.isArray(value)) {
+    value.forEach((entry) => collectSchemaNodes(entry, schemaType, output));
+    return output;
+  }
+  if (!value || typeof value !== 'object') {
+    return output;
+  }
+  if (hasSchemaType(value, schemaType)) {
+    output.push(value);
+  }
+  Object.values(value).forEach((entry) => collectSchemaNodes(entry, schemaType, output));
+  return output;
+}
+
 function assertJsonLdTypes(htmlText, requiredTypes) {
   const entries = extractJsonLdEntries(htmlText);
-  const types = new Set(entries.map((entry) => entry?.['@type']).filter(Boolean));
 
   for (const requiredType of requiredTypes) {
-    assert(types.has(requiredType), `JSON-LD missing required @type: ${requiredType}`);
+    assert(entries.some((entry) => hasSchemaType(entry, requiredType)), `JSON-LD missing required @type: ${requiredType}`);
   }
 }
 
 function assertRepositoryJsonLdSignals(htmlText) {
   const entries = extractJsonLdEntries(htmlText);
-  const repoUrl = 'https://github.com/sickn33/agentic-awesome-skills';
-  const sourceCode = entries.find((entry) => entry?.['@type'] === 'SoftwareSourceCode');
-  const organization = entries.find((entry) => entry?.['@type'] === 'Organization');
-  const collectionPage = entries.find((entry) => entry?.['@type'] === 'CollectionPage');
+  const sourceCode = entries.find((entry) => hasSchemaType(entry, 'SoftwareSourceCode'));
+  const organization = entries.find((entry) => hasSchemaType(entry, 'Organization'));
+  const collectionPage = entries.find((entry) => hasSchemaType(entry, 'CollectionPage'));
 
-  assert(sourceCode?.url === repoUrl, 'SoftwareSourceCode JSON-LD must use the GitHub repository as its URL.');
-  assert(sourceCode?.codeRepository === repoUrl, 'SoftwareSourceCode JSON-LD must expose the GitHub repository.');
+  assert(sourceCode?.url === REPOSITORY_URL, 'SoftwareSourceCode JSON-LD must use the GitHub repository as its URL.');
+  assert(sourceCode?.codeRepository === REPOSITORY_URL, 'SoftwareSourceCode JSON-LD must expose the GitHub repository.');
   assert(
     typeof sourceCode?.mainEntityOfPage === 'string' && sourceCode.mainEntityOfPage.length > 0,
     'SoftwareSourceCode JSON-LD must link back to the hosted catalog page with mainEntityOfPage.',
   );
-  assert(organization?.url === repoUrl, 'Organization JSON-LD must use the GitHub repository as its URL.');
-  assert(collectionPage?.sameAs === repoUrl, 'CollectionPage JSON-LD must link the hosted catalog to the GitHub repository.');
+  assert(organization?.url === REPOSITORY_URL, 'Organization JSON-LD must use the GitHub repository as its URL.');
+  assert(collectionPage?.sameAs === REPOSITORY_URL, 'CollectionPage JSON-LD must link the hosted catalog to the GitHub repository.');
+}
+
+function buildIdentityContext(rootUrl, normalizedRootPath) {
+  const root = new URL(rootUrl);
+  const rootPath = normalizedRootPath ? `${normalizedRootPath.replace(/\/+$/, '')}/` : '/';
+  const catalogRootUrl = new URL(rootPath, root.origin).href;
+  const catalogBaseUrl = catalogRootUrl.replace(/\/$/, '');
+  return {
+    catalogBaseUrl,
+    catalogRootUrl,
+    origin: root.origin,
+    socialImageUrl: `${catalogBaseUrl}/social-card.png`,
+  };
+}
+
+function assertCurrentIdentityUrl(value, fieldName, identityContext) {
+  if (typeof value !== 'string' || !/^https?:\/\//i.test(value)) {
+    return;
+  }
+
+  let parsed;
+  try {
+    parsed = new URL(value);
+  } catch (_err) {
+    throw new Error(`JSON-LD ${fieldName} must contain a valid URL: ${value}`);
+  }
+
+  if (parsed.hostname === 'github.com' && parsed.pathname.startsWith('/sickn33/')) {
+    assert(
+      value === REPOSITORY_URL || value.startsWith(`${REPOSITORY_URL}/`) || value.startsWith(`${REPOSITORY_URL}#`),
+      `JSON-LD ${fieldName} must not use a legacy first-party GitHub repository: ${value}`,
+    );
+  }
+
+  if (parsed.hostname.endsWith('.github.io')) {
+    const catalogPath = new URL(identityContext.catalogRootUrl).pathname.replace(/\/$/, '');
+    assert(
+      parsed.origin === identityContext.origin &&
+        (parsed.pathname === catalogPath || parsed.pathname.startsWith(`${catalogPath}/`)),
+      `JSON-LD ${fieldName} must not use a legacy first-party Pages catalog URL: ${value}`,
+    );
+  }
+
+  if (parsed.hostname === 'npmjs.com' || parsed.hostname === 'www.npmjs.com') {
+    assert(
+      value === PACKAGE_URL,
+      `JSON-LD ${fieldName} must not use a legacy first-party package URL: ${value}`,
+    );
+  }
+}
+
+function assertJsonLdIdentityUrls(htmlText, identityContext, routeUrl) {
+  const entries = extractJsonLdEntries(htmlText);
+  const identityFields = new Set(['@id', 'codeRepository', 'item', 'mainEntityOfPage', 'sameAs', 'target', 'url']);
+
+  function inspect(value, fieldName = '') {
+    if (Array.isArray(value)) {
+      value.forEach((entry) => inspect(entry, fieldName));
+      return;
+    }
+    if (!value || typeof value !== 'object') {
+      if (identityFields.has(fieldName)) {
+        assertCurrentIdentityUrl(value, fieldName, identityContext);
+      }
+      return;
+    }
+    for (const [key, nestedValue] of Object.entries(value)) {
+      inspect(nestedValue, key);
+    }
+  }
+
+  entries.forEach((entry) => inspect(entry));
+
+  const routePath = new URL(routeUrl).pathname;
+  const rootPath = new URL(identityContext.catalogRootUrl).pathname;
+  const relativeRoutePath = routePath.slice(rootPath.length).replace(/^\/+/, '');
+  const requiresRichProjectIdentity = routePath === rootPath || relativeRoutePath.startsWith('topics/') || relativeRoutePath === 'workbench/';
+  const requiresProjectOrganization = requiresRichProjectIdentity || relativeRoutePath === 'plugins/';
+  const organizations = entries.filter((entry) => hasSchemaType(entry, 'Organization'));
+  if (requiresProjectOrganization) {
+    assert(organizations.length === 1, `${routeUrl} must expose exactly one project Organization.`);
+  }
+  const organizationNodes = collectSchemaNodes(entries, 'Organization');
+  const allowedOrganizationIdentities = new Set([
+    'https://x.com/AASkills_',
+    PACKAGE_URL,
+    identityContext.catalogRootUrl,
+  ]);
+  for (const organization of organizationNodes) {
+    if (organization.url === undefined && organization['@id'] === undefined) {
+      continue;
+    }
+    assert(organization.url === REPOSITORY_URL, 'Project Organization JSON-LD must use the current repository URL.');
+    assert(organization['@id'] === `${REPOSITORY_URL}#organization`, 'Project Organization JSON-LD must use the current repository @id.');
+    if (organization.sameAs !== undefined) {
+      const sameAs = Array.isArray(organization.sameAs) ? organization.sameAs : [organization.sameAs];
+      assert(
+        new Set(sameAs).size === sameAs.length && sameAs.every((value) => allowedOrganizationIdentities.has(value)),
+        'Project Organization JSON-LD sameAs may contain only exact current project identities.',
+      );
+    }
+    if (requiresRichProjectIdentity && organizations.includes(organization)) {
+      const sameAs = Array.isArray(organization.sameAs) ? organization.sameAs : [organization.sameAs].filter(Boolean);
+      assert(
+        sameAs.length === allowedOrganizationIdentities.size &&
+          [...allowedOrganizationIdentities].every((value) => sameAs.includes(value)),
+        'Project Organization JSON-LD must expose exactly the current social, npm package, and catalog identities.',
+      );
+    }
+  }
+
+  const sourceCodeEntries = entries.filter((entry) => hasSchemaType(entry, 'SoftwareSourceCode'));
+  if (requiresRichProjectIdentity) {
+    assert(sourceCodeEntries.length === 1, `${routeUrl} must expose exactly one project SoftwareSourceCode entity.`);
+  }
+  const expectedSourceIdentities = [...new Set([routeUrl, identityContext.catalogRootUrl, PACKAGE_URL])];
+  for (const sourceCode of collectSchemaNodes(entries, 'SoftwareSourceCode')) {
+    assert(sourceCode.url === REPOSITORY_URL, 'SoftwareSourceCode JSON-LD must use the current repository URL.');
+    assert(sourceCode.codeRepository === REPOSITORY_URL, 'SoftwareSourceCode JSON-LD must use the current codeRepository URL.');
+    if (sourceCode['@id'] !== undefined) {
+      assert(
+        sourceCode['@id'] === REPOSITORY_URL || sourceCode['@id'].startsWith(`${REPOSITORY_URL}#`),
+        'SoftwareSourceCode JSON-LD @id must remain on the exact current repository identity.',
+      );
+    }
+    assert(sourceCode.mainEntityOfPage === routeUrl, 'SoftwareSourceCode JSON-LD must bind mainEntityOfPage to the exact sitemap route.');
+    const sameAs = Array.isArray(sourceCode.sameAs) ? sourceCode.sameAs : [];
+    assert(
+      sameAs.length === expectedSourceIdentities.length &&
+        new Set(sameAs).size === sameAs.length &&
+        expectedSourceIdentities.every((value) => sameAs.includes(value)),
+      'SoftwareSourceCode JSON-LD sameAs must contain exactly the current route, catalog root, and npm package identities.',
+    );
+  }
+
+  const topLevelWebSites = entries.filter((entry) => hasSchemaType(entry, 'WebSite'));
+  if (requiresRichProjectIdentity) {
+    assert(topLevelWebSites.length === 1, `${routeUrl} must expose exactly one top-level project WebSite entity.`);
+  }
+  for (const webSite of collectSchemaNodes(entries, 'WebSite')) {
+    assert(webSite.url === identityContext.catalogBaseUrl, 'WebSite JSON-LD must use the exact current catalog base URL.');
+    if (webSite['@id'] !== undefined) {
+      assert(
+        webSite['@id'] === identityContext.catalogBaseUrl || webSite['@id'].startsWith(`${identityContext.catalogBaseUrl}#`),
+        'WebSite JSON-LD @id must remain on the exact current catalog identity.',
+      );
+    }
+    if (webSite.sameAs !== undefined) {
+      assert(webSite.sameAs === REPOSITORY_URL, 'WebSite JSON-LD sameAs must use the exact current repository URL.');
+    }
+    if (webSite.potentialAction !== undefined) {
+      assert(webSite.potentialAction?.['@type'] === 'SearchAction', 'WebSite JSON-LD potentialAction must be a SearchAction.');
+      assert(
+        webSite.potentialAction?.target === `${identityContext.catalogBaseUrl}/?q={search_term_string}`,
+        'WebSite JSON-LD SearchAction target must remain under the exact current catalog root.',
+      );
+    }
+  }
+  if (requiresRichProjectIdentity) {
+    assert(topLevelWebSites[0].sameAs === REPOSITORY_URL, 'Top-level WebSite JSON-LD must use the exact current repository identity.');
+    assert(
+      topLevelWebSites[0].potentialAction?.target === `${identityContext.catalogBaseUrl}/?q={search_term_string}`,
+      'Top-level WebSite JSON-LD must expose the exact current catalog SearchAction.',
+    );
+  }
+}
+
+function assertPrimaryRouteJsonLdIdentity(htmlText, routeUrl) {
+  const entries = extractJsonLdEntries(htmlText);
+  const applications = entries.filter((entry) => hasSchemaType(entry, 'SoftwareApplication'));
+  const pageEntities = entries.filter((entry) =>
+    entry && (hasSchemaType(entry, 'CollectionPage') || hasSchemaType(entry, 'WebPage')) && entry.url !== undefined,
+  );
+  assert(applications.length || pageEntities.length, `${routeUrl} must expose a primary route JSON-LD entity.`);
+  if (applications.length) {
+    assert(applications.length === 1, `${routeUrl} must expose exactly one SoftwareApplication route entity.`);
+    assert(applications[0]['@id'] === routeUrl, `${routeUrl} SoftwareApplication @id must equal the sitemap route.`);
+  }
+  for (const primary of [...applications, ...pageEntities]) {
+    assert(primary.url === routeUrl, `${routeUrl} primary JSON-LD url must equal the sitemap route.`);
+    if (primary.mainEntityOfPage !== undefined) {
+      const mainEntityUrl = typeof primary.mainEntityOfPage === 'string'
+        ? primary.mainEntityOfPage
+        : primary.mainEntityOfPage?.['@id'];
+      assert(mainEntityUrl === routeUrl, `${routeUrl} primary JSON-LD mainEntityOfPage must equal the sitemap route.`);
+    }
+  }
+}
+
+function assertExactMetaContent(htmlText, selectorType, selectorValue, expectedValue, routeUrl) {
+  const values = extractExactMetaContents(htmlText, selectorType, selectorValue);
+  assert(
+    values.length === 1,
+    `${routeUrl} must expose exactly one ${selectorType}="${selectorValue}" tag; got ${values.length}.`,
+  );
+  const actualValue = values[0];
+  assert(
+    actualValue === expectedValue,
+    `${routeUrl} must set ${selectorType}="${selectorValue}" to exactly ${expectedValue}; got ${actualValue || 'missing'}.`,
+  );
+}
+
+export function assertPrerenderedRouteIdentities(routeUrls, distDir = 'dist', normalizedRootPath = '', rootUrl = '') {
+  assert(routeUrls.length > 0, 'Cannot verify route identities without sitemap URLs.');
+  assert(typeof rootUrl === 'string' && rootUrl, 'Route identity verification requires the explicit sitemap root URL.');
+  const identityContext = buildIdentityContext(rootUrl, normalizedRootPath);
+  const expectedRootPath = new URL(identityContext.catalogRootUrl).pathname;
+
+  for (const routeUrl of routeUrls) {
+    const parsed = new URL(routeUrl);
+    assert(parsed.pathname.endsWith('/'), `Indexable route must end with a trailing slash: ${routeUrl}`);
+    assert(
+      parsed.origin === identityContext.origin &&
+        (parsed.pathname === expectedRootPath || parsed.pathname.startsWith(expectedRootPath)),
+      `Sitemap route must remain within the explicit current catalog root: ${routeUrl}`,
+    );
+    const filePath = safeUserPath(routePathToDistFile(parsed.pathname, normalizedRootPath), distDir);
+    assert(fs.existsSync(filePath), `Missing prerendered page for sitemap route: ${parsed.pathname}. Expected ${filePath}.`);
+    const html = readFile(filePath, distDir);
+    const canonicalHrefs = extractCanonicalHrefs(html);
+    assert(canonicalHrefs.length === 1, `${routeUrl} must expose exactly one rel="canonical" link; got ${canonicalHrefs.length}.`);
+    const canonical = canonicalHrefs[0];
+    assert(
+      canonical === routeUrl,
+      `${routeUrl} must set rel="canonical" to exactly ${routeUrl}; got ${canonical || 'missing'}.`,
+    );
+    assertExactMetaContent(html, 'property', 'og:url', routeUrl, routeUrl);
+    assertExactMetaContent(html, 'property', 'og:image', identityContext.socialImageUrl, routeUrl);
+    assertExactMetaContent(html, 'name', 'twitter:image', identityContext.socialImageUrl, routeUrl);
+    assertPrimaryRouteJsonLdIdentity(html, routeUrl);
+    assertJsonLdIdentityUrls(html, identityContext, routeUrl);
+  }
 }
 
 export function assertIndexSocialMeta(htmlText) {
   assertMetaContent(htmlText, 'property', 'og:image');
   assertMetaContent(htmlText, 'name', 'twitter:image');
   assertMetaContent(htmlText, 'name', 'twitter:image:alt');
+}
+
+export function assertWebmasterVerificationMeta(htmlText) {
+  const bingVerificationToken = extractMetaContent(htmlText, 'name', 'msvalidate.01');
+  assert(
+    bingVerificationToken === 'CAC904EB0D2DD1B22B5F2BC540CAD654',
+    'Index HTML must expose the current Bing Webmaster Tools verification token.',
+  );
 }
 
 function readSkillCountLabel(distDir) {
@@ -377,11 +734,20 @@ export function assertIndexDiscoveryMeta(htmlText, { expectedSkillCountLabel = '
     combined.includes(expectedSkillCountLabel),
     `Home SEO metadata must expose the current ${expectedSkillCountLabel} skill count.`,
   );
-  assert(combined.includes('GitHub library'), 'Home SEO metadata must mention the GitHub library.');
-  assert(combined.includes('specialized plugins'), 'Home SEO metadata must mention specialized plugins.');
+  assert(combined.includes('AAS Core'), 'Home SEO metadata must lead with AAS Core.');
+  assert(combined.includes('preview'), 'Home SEO metadata must state the preview boundary.');
+  assert(combined.includes('catalog'), 'Home SEO metadata must identify the supporting catalog.');
+  assert(
+    !/\bAAS Core[^.]*recommend|\bCore preview[^.]*recommend|\brecommend(?:ing|ation)?(?:,\s*validat|\s+and\s+plan)/i.test(combined),
+    'Home SEO metadata must not describe current AAS Core as a recommender.',
+  );
   assert(!combined.includes('prompt templates'), 'Home SEO metadata must not use stale prompt-template positioning.');
   assertOnlyExpectedSkillCountLabel(combined, expectedSkillCountLabel, 'Home SEO metadata');
   const jsonLdText = JSON.stringify(extractJsonLdEntries(htmlText));
+  assert(
+    !/\bAAS Core[^.]*recommend|\bCore preview[^.]*recommend|\brecommend(?:ing|ation)?(?:,\s*validat|\s+and\s+plan)/i.test(jsonLdText),
+    'Home JSON-LD must not describe current AAS Core as a recommender.',
+  );
   assertOnlyExpectedSkillCountLabel(jsonLdText, expectedSkillCountLabel, 'Home JSON-LD');
   if (requireHostedUrl) {
     assertNoLocalhostUrl(combined, 'Home SEO metadata');
@@ -404,8 +770,13 @@ export function assertStaticIndexShell(htmlText, { expectedSkillCountLabel = '1,
     combined.includes(expectedSkillCountLabel),
     `Source index shell must expose the current ${expectedSkillCountLabel} skill count.`,
   );
-  assert(combined.includes('GitHub library'), 'Source index shell must mention the GitHub library.');
-  assert(combined.includes('specialized plugins'), 'Source index shell must mention specialized plugins.');
+  assert(combined.includes('AAS Core'), 'Source index shell must lead with AAS Core.');
+  assert(combined.includes('preview'), 'Source index shell must state the preview boundary.');
+  assert(combined.includes('catalog'), 'Source index shell must identify the supporting catalog.');
+  assert(
+    !/\bAAS Core[^.]*recommend|\bCore preview[^.]*recommend|\brecommend(?:ing|ation)?(?:,\s*validat|\s+and\s+plan)/i.test(combined),
+    'Source index shell must not describe current AAS Core as a recommender.',
+  );
   assertOnlyExpectedSkillCountLabel(combined, expectedSkillCountLabel, 'Source index shell');
   if (requireHostedUrl) {
     assertNoLocalhostUrl(combined, 'Source index shell');
@@ -437,6 +808,19 @@ export function assertSocialCard(cardData, { expectedSkillCountLabel = '1,678+' 
   );
   assert(text.includes('Agentic Awesome Skills'), 'Social card must identify Agentic Awesome Skills.');
   assertOnlyExpectedSkillCountLabel(text, expectedSkillCountLabel, 'Social card');
+}
+
+export function assertSocialCardProvenance(cardData, provenanceText) {
+  const provenance = JSON.parse(String(provenanceText ?? ''));
+  const { width, height } = readPngDimensions(cardData);
+  const digest = crypto.createHash('sha256').update(cardData).digest('hex');
+
+  assert(provenance.schemaVersion === 1, 'Social card provenance must use schema version 1.');
+  assert(provenance.generator === 'OpenAI ImageGen', 'Social card provenance must identify OpenAI ImageGen.');
+  assert(provenance.dimensions?.width === width && provenance.dimensions?.height === height, 'Social card provenance dimensions must match the PNG.');
+  assert(provenance.sha256 === digest, 'Social card provenance SHA-256 must match the PNG.');
+  assert(Array.isArray(provenance.visibleCopy) && provenance.visibleCopy.includes('AAS Core'), 'Social card provenance must preserve AAS Core as the primary visible product.');
+  assert(provenance.visibleCopy.includes('profile → stack → plan'), 'Social card provenance must preserve the Core workflow.');
 }
 
 export function assertPluginsDiscoveryMeta(htmlText) {
@@ -479,8 +863,11 @@ function assertStaticRelatedTopicLinks(htmlText, routeType) {
 function routePathToDistFile(routePath, normalizedRootPath) {
   const normalizedPath = (routePath || '/').replace(/\/+$/, '') || '/';
   const normalizedRoot = normalizedRootPath === '/' ? '' : String(normalizedRootPath || '').replace(/\/+$/, '');
-  const withLeadingRoot = normalizedRoot ? `${normalizedRoot}/` : '';
-  const trimmedRoute = normalizedPath.startsWith(withLeadingRoot) ? normalizedPath.slice(withLeadingRoot.length) || '/' : normalizedPath;
+  const trimmedRoute = normalizedRoot && normalizedPath === normalizedRoot
+    ? '/'
+    : normalizedRoot && normalizedPath.startsWith(`${normalizedRoot}/`)
+      ? normalizedPath.slice(normalizedRoot.length) || '/'
+      : normalizedPath;
   const withoutLeadingSlash = trimmedRoute === '/' ? '' : trimmedRoute.replace(/^\//, '');
   const routeAsFilePath = withoutLeadingSlash ? `${withoutLeadingSlash}/index.html` : 'index.html';
   return routeAsFilePath;
@@ -510,6 +897,20 @@ export function assertPrerenderedPluginRoutes(pluginUrls, distDir = 'dist', norm
   }
 }
 
+export function assertPrerenderedWorkbenchRoutes(workbenchUrls, distDir = 'dist', normalizedRootPath = '') {
+  for (const workbenchUrl of workbenchUrls) {
+    const parsed = new URL(workbenchUrl);
+    const filePath = safeUserPath(routePathToDistFile(parsed.pathname, normalizedRootPath), distDir);
+    assert(
+      fs.existsSync(filePath),
+      `Missing prerendered page for workbench route: ${parsed.pathname}. Expected ${filePath}.`,
+    );
+    const html = readFile(filePath, distDir);
+    assert(extractTitle(html).includes('AAS Core Stack Review'), 'Workbench prerender must expose its AAS Core review title.');
+    assert(extractMetaContent(html, 'name', 'description')?.includes('Imports stay in memory'), 'Workbench prerender must describe in-memory review.');
+  }
+}
+
 export function assertPrerenderedTopicRoutes(topicUrls, distDir = 'dist', normalizedRootPath = '') {
   for (const topicUrl of topicUrls) {
     const parsed = new URL(topicUrl);
@@ -524,36 +925,56 @@ export function assertPrerenderedTopicRoutes(topicUrls, distDir = 'dist', normal
   }
 }
 
-export function assertRobots(robotsText) {
+export function assertRobots(robotsText, { expectedSitemapUrl = '' } = {}) {
   const lines = String(robotsText ?? '').split(/\r?\n/).map((line) => line.trim());
   const allowsRoot = lines.some((line) => line.startsWith('Allow: /'));
-  const hasSitemap = lines.some((line) => /^Sitemap:\s*.+\/?sitemap\.xml$/i.test(line));
+  const sitemapUrls = lines
+    .map((line) => line.match(/^Sitemap:\s*(\S+)\s*$/i)?.[1])
+    .filter(Boolean);
   const allowsAiSearchCrawlers = ['GPTBot', 'OAI-SearchBot', 'ClaudeBot', 'PerplexityBot'].every((crawler) =>
     lines.some((line) => line === `User-agent: ${crawler}`),
   );
 
   assert(allowsRoot, 'robots.txt must allow root crawling.');
-  assert(hasSitemap, 'robots.txt must expose sitemap location.');
+  assert(sitemapUrls.length > 0, 'robots.txt must expose sitemap location.');
+  if (expectedSitemapUrl) {
+    assert(sitemapUrls.length === 1, 'robots.txt must expose exactly one sitemap location.');
+    assert(
+      sitemapUrls[0] === expectedSitemapUrl,
+      `robots.txt must point to the current sitemap exactly: ${expectedSitemapUrl}; got ${sitemapUrls[0]}.`,
+    );
+  }
   assert(allowsAiSearchCrawlers, 'robots.txt must explicitly expose AI search crawler directives.');
 }
 
-export function assertLlms(llmsText, { expectedSkillCountLabel = '1,678+', expectedReleaseLabel = '' } = {}) {
+export function assertLlms(
+  llmsText,
+  { expectedSkillCountLabel = '1,678+', expectedReleaseLabel = '', expectedCoreIncluded = false } = {},
+) {
   const text = String(llmsText ?? '');
   const requiredSnippets = [
     '# Agentic Awesome Skills',
+    'AAS Core preview',
     expectedSkillCountLabel,
     'specialized plugins',
     'Claude Code',
     'Codex CLI',
     'https://github.com/sickn33/agentic-awesome-skills',
+    'https://sickn33.github.io/agentic-awesome-skills/workbench',
     'Canonical source of truth',
+    expectedCoreIncluded ? 'includes AAS Core' : 'predates AAS Core',
   ];
 
   for (const snippet of requiredSnippets) {
     assert(text.includes(snippet), `llms.txt missing required snippet: ${snippet}`);
   }
   if (expectedReleaseLabel) {
-    assert(text.includes(`Current release: ${expectedReleaseLabel}.`), `llms.txt missing current release: ${expectedReleaseLabel}`);
+    const releaseLines = text.split(/\r?\n/).filter((line) => line.trim().startsWith('- Current release:'));
+    assert(releaseLines.length === 1, 'llms.txt must expose exactly one canonical current-release line.');
+    assert(
+      releaseLines[0].trim() === `- Current release: ${expectedReleaseLabel}.`,
+      `llms.txt current release must equal ${expectedReleaseLabel} exactly.`,
+    );
   }
   assertOnlyExpectedSkillCountLabel(text, expectedSkillCountLabel, 'llms.txt');
 }
@@ -571,7 +992,13 @@ export function assertManifest(manifestText) {
 }
 
 function readFile(filePath, baseDir = process.cwd()) {
-  return fs.readFileSync(safeUserPath(filePath, baseDir), 'utf-8');
+  const safePath = safeUserPath(filePath, baseDir);
+  return fs.readFileSync(assertPlainFileInsideRoot(safePath, baseDir), 'utf-8');
+}
+
+function readBinaryFile(filePath, baseDir = process.cwd()) {
+  const safePath = safeUserPath(filePath, baseDir);
+  return fs.readFileSync(assertPlainFileInsideRoot(safePath, baseDir));
 }
 
 export function runVerification({
@@ -595,20 +1022,39 @@ export function runVerification({
   socialImagePath = safeUserPath(socialImagePath);
   distDir = safeUserPath(distDir);
 
-  const expectedReleaseLabel = getPackageReleaseLabel();
+  const releaseMetadata = getPackageReleaseMetadata();
   const sitemapText = readFile(sitemapPath);
   const sitemapReport = analyzeSitemap(sitemapText, { minSkillUrls, requireHostedUrl });
   const indexHtml = readFile(indexPath);
   const expectedSkillCountLabel = readSkillCountLabel(distDir);
   assertPrerenderedSkillRoutes(sitemapReport.skillUrls, distDir, sitemapReport.normalizedRootPath);
   assertPrerenderedPluginRoutes(sitemapReport.pluginUrls, distDir, sitemapReport.normalizedRootPath);
+  assertPrerenderedWorkbenchRoutes(sitemapReport.workbenchUrls, distDir, sitemapReport.normalizedRootPath);
   assertPrerenderedTopicRoutes(sitemapReport.topicUrls, distDir, sitemapReport.normalizedRootPath);
+  assertPrerenderedRouteIdentities(
+    sitemapReport.locations,
+    distDir,
+    sitemapReport.normalizedRootPath,
+    sitemapReport.rootUrl,
+  );
   assertIndexSocialMeta(indexHtml);
   assertIndexDiscoveryMeta(indexHtml, { expectedSkillCountLabel, requireHostedUrl });
-  assertStaticIndexShell(readFile(sourceIndexPath), { expectedSkillCountLabel, requireHostedUrl });
-  assertSocialCard(fs.readFileSync(socialImagePath), { expectedSkillCountLabel });
-  assertRobots(readFile(robotsPath));
-  assertLlms(readFile(llmsPath), { expectedSkillCountLabel, expectedReleaseLabel });
+  assertWebmasterVerificationMeta(indexHtml);
+  const sourceIndexHtml = readFile(sourceIndexPath);
+  assertStaticIndexShell(sourceIndexHtml, { expectedSkillCountLabel, requireHostedUrl });
+  assertWebmasterVerificationMeta(sourceIndexHtml);
+  const socialCard = readBinaryFile(socialImagePath);
+  assertSocialCard(socialCard, { expectedSkillCountLabel });
+  const socialCardProvenancePath = path.join(path.dirname(socialImagePath), 'social-card.provenance.json');
+  assertSocialCardProvenance(socialCard, readFile(socialCardProvenancePath));
+  assertRobots(readFile(robotsPath), {
+    expectedSitemapUrl: new URL('sitemap.xml', sitemapReport.rootUrl).href,
+  });
+  assertLlms(readFile(llmsPath), {
+    expectedSkillCountLabel,
+    expectedReleaseLabel: releaseMetadata.label,
+    expectedCoreIncluded: releaseMetadata.coreIncluded,
+  });
   assertManifest(readFile(manifestPath));
   if (requireHostedUrl) {
     assertNoLocalhostUrl(sitemapText, 'Sitemap');

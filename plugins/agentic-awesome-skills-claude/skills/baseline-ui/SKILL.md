@@ -1,7 +1,7 @@
 ---
 name: baseline-ui
 description: Quickly deslop UI code by fixing spacing, hierarchy, typography, and small layout issues. Use when the interface needs a fast cleanup or polish pass.
-risk: unknown
+risk: critical
 source: https://github.com/ibelick/ui-skills/tree/main/skills/baseline-ui
 source_repo: ibelick/ui-skills
 source_type: community
@@ -94,6 +94,12 @@ Enforces an opinionated UI baseline to prevent AI-generated interface slop.
 - MUST give empty states one clear next action
 - SHOULD limit accent color usage to one per view
 - SHOULD use existing theme or Tailwind CSS color tokens before introducing new ones
+
+## Example
+
+**User request:**
+
+> Review this interface with @baseline-ui, identify the highest-impact design problems, and propose an implementation-ready improvement.
 
 ## Limitations
 

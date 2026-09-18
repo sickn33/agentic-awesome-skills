@@ -1,7 +1,7 @@
 ---
 name: azure-ai-projects-ts
 description: "High-level SDK for Azure AI Foundry projects with agents, connections, deployments, and evaluations."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

@@ -1,7 +1,7 @@
 ---
 name: observability-monitoring-monitor-setup
 description: "You are a monitoring and observability expert specializing in implementing comprehensive monitoring solutions. Set up metrics collection, distributed tracing, log aggregation, and create insightful da"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

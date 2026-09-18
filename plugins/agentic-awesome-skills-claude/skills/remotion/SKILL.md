@@ -8,8 +8,9 @@ allowed-tools:
   - "Read"
   - "Write"
   - "web_fetch"
-risk: unknown
+risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Stitch to Remotion Walkthrough Videos

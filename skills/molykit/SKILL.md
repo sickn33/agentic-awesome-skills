@@ -5,8 +5,9 @@ description: |
   BotClient, OpenAI, SSE streaming, AI chat, molykit,
   PlatformSend, spawn(), ThreadToken, cross-platform async,
   Chat widget, Messages, PromptInput, Avatar, LLM
-risk: unknown
+risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # MolyKit Skill

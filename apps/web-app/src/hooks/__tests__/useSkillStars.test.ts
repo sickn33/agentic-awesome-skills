@@ -85,7 +85,7 @@ describe('useSkillStars', () => {
       expect(result.current.hasSaved).toBe(true);
     });
 
-    it('should optimistically mark the skill as saved', async () => {
+    it('should mark the skill as saved after persistence succeeds', async () => {
       const { result } = renderHook(() => useSkillStars('optimistic-skill'));
 
       expect(result.current.hasSaved).toBe(false);
@@ -131,7 +131,7 @@ describe('useSkillStars', () => {
     it('should handle setItem errors gracefully', async () => {
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-      localStorage.setItem = vi.fn(() => {
+      const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
         throw new Error('Storage quota exceeded');
       });
 
@@ -141,12 +141,14 @@ describe('useSkillStars', () => {
         await result.current.handleSaveClick();
       });
 
-      expect(result.current.hasSaved).toBe(true);
+      expect(result.current.hasSaved).toBe(false);
+      expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
       expect(consoleSpy).toHaveBeenCalledWith(
         `Failed to save ${STORAGE_KEY} to localStorage:`,
         expect.any(Error)
       );
 
+      setItemSpy.mockRestore();
       consoleSpy.mockRestore();
     });
   });

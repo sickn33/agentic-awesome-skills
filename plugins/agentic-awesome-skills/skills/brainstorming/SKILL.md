@@ -1,7 +1,7 @@
 ---
 name: brainstorming
 description: "Use before creative or constructive work (features, architecture, behavior). Transforms vague ideas into validated designs through disciplined reasoning and collaboration."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -230,6 +230,12 @@ If the design is high-impact, high-risk, or requires elevated confidence, you MU
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Turn this rough feature idea into a validated design with explicit requirements and tradeoffs before implementation.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

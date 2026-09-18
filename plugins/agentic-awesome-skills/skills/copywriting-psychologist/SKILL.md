@@ -122,6 +122,12 @@ Before finalizing output, the agent asks:
 - [ ] Does every major block have a psychological job?
 - [ ] Does the copy preserve autonomy and credibility?
 
+## Example
+
+**User request:**
+
+> Write conversion copy that needs stronger psychological framing, motivation, and belief sequencing.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

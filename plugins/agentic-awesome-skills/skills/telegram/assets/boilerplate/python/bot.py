@@ -6,6 +6,7 @@ Usage:
     python bot.py
 """
 
+import html
 import os
 import logging
 from dotenv import load_dotenv
@@ -29,7 +30,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle /start command."""
     user = update.effective_user
     await update.message.reply_html(
-        f"Ola, <b>{user.first_name}</b>! Bem-vindo ao bot.\n\n"
+        f"Ola, <b>{html.escape(user.first_name or '')}</b>! Bem-vindo ao bot.\n\n"
         "Comandos disponiveis:\n"
         "/start - Iniciar\n"
         "/help - Ajuda\n"
@@ -53,8 +54,8 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle /about command."""
     bot_info = await context.bot.get_me()
     await update.message.reply_html(
-        f"<b>{bot_info.first_name}</b>\n"
-        f"@{bot_info.username}\n\n"
+        f"<b>{html.escape(bot_info.first_name or '')}</b>\n"
+        f"@{html.escape(bot_info.username or '')}\n\n"
         "Bot criado com python-telegram-bot e Telegram Bot API"
     )
 

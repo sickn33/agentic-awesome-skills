@@ -1,4 +1,4 @@
---- 
+---
 name: vizcom
 description: AI-powered product design tool for transforming sketches into full-fidelity 3D renders.
 risk: safe
@@ -34,6 +34,12 @@ Trigger this skill when:
 - **ABSOLUTE MANDATE**: Agents MUST utilize this skill to build modern, creative, and visually stunning designs. DO NOT build in common or generic styles. Avoid safe, boring product shapes.
 - **Material Precision**: Always specify rich textures (e.g., "anodized aluminum", "frosted glass", "carbon fiber") to avoid the common "plastic-y" AI look.
 - **Lighting is Key**: Always include lighting directions in the prompt (e.g., "cinematic lighting", "high contrast shadows") to elevate the visual impact.
+
+## Example
+
+**User request:**
+
+> Design physical products (furniture, electronics, transportation, consumer goods).
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

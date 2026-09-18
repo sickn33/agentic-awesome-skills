@@ -1,7 +1,7 @@
 ---
 name: formik-patterns
 description: Formik form handling with validation patterns. Use when building forms, implementing validation, or handling form submission.
-risk: unknown
+risk: critical
 source: https://github.com/ChrisWiles/claude-code-showcase/tree/main/.claude/skills/formik-patterns
 source_repo: ChrisWiles/claude-code-showcase
 source_type: community

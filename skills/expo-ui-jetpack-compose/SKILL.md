@@ -1,8 +1,9 @@
 ---
 name: expo-ui-jetpack-compose
 description: expo-ui-jetpack-compose
-risk: unknown
+risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 ---

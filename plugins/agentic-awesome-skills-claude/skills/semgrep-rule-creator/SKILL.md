@@ -9,8 +9,9 @@ allowed-tools:
   - Glob
   - Grep
   - WebFetch
-risk: unknown
+risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Semgrep Rule Creator

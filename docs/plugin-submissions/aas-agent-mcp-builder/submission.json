@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0",
+  "submissionState": "draft-ready",
+  "submissionType": "skills-only",
+  "plugin": {
+    "name": "AAS Agent & MCP Builder",
+    "packageId": "aasb-aas-agent-mcp-builder",
+    "packagePath": "plugins/agentic-bundle-aas-agent-mcp-builder",
+    "skillsPath": "plugins/agentic-bundle-aas-agent-mcp-builder/skills",
+    "versionSource": "package.json",
+    "authenticationRequired": false,
+    "mcpServerIncluded": false
+  },
+  "listing": {
+    "shortDescription": "Design reliable agents, MCP servers, RAG systems, evaluations, tracing, prompts, and context-aware workflows.",
+    "longDescription": "A focused toolkit for designing and reviewing production-minded agent systems. It helps developers turn a workflow into agent roles, MCP tool contracts, RAG architecture, evaluation criteria, observability plans, prompt strategies, and context-management decisions. The plugin produces reviewable designs and implementation plans; it does not deploy infrastructure, access private systems, or provide a hosted MCP service.",
+    "categoryRecommendation": "Developer Tools",
+    "logoPath": "apps/web-app/public/web-app-manifest-512x512.png",
+    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "supportURL": "https://github.com/sickn33/agentic-awesome-skills/discussions/new?category=q-a",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md"
+  },
+  "starterPrompts": [
+    "Design an MCP server for this workflow, including tools, schemas, trust boundaries, and test cases.",
+    "Create an evaluation plan for this agent and define reliability, safety, and quality metrics.",
+    "Review this RAG or LangGraph architecture for tool, memory, prompt, context, and observability gaps."
+  ],
+  "evaluationCasesPath": "docs/plugin-submissions/aas-agent-mcp-builder/evaluation-cases.json",
+  "availability": {
+    "recommendation": "All OpenAI-supported countries where the verified publisher is prepared to provide support under the published policies.",
+    "requiresPublisherConfirmation": true
+  },
+  "releaseNotes": "Initial public submission of AAS Agent & MCP Builder as a skills-only plugin. The package contains ten focused workflows for agent architecture, MCP design, RAG, LangGraph, evaluation, tracing, prompting, and context management. It requires no authentication and operates through the capabilities explicitly granted to the host agent client.",
+  "externalRequirements": [
+    "Select the verified developer or business identity that will publish the plugin.",
+    "Confirm Apps Management Write access in the publishing OpenAI organization.",
+    "Select the final portal category and country availability.",
+    "Review and accept the submission policy attestations in the OpenAI Platform."
+  ]
+}

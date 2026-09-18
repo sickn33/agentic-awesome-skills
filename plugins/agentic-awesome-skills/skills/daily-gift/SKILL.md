@@ -2,7 +2,7 @@
 name: daily-gift
 description: "Relationship-aware daily gift engine with five-stage creative pipeline — editorial judgment, synthesis, concept generation, visual strategy, and rendering in H5, image, or video"
 category: productivity
-risk: unknown
+risk: critical
 source: community
 source_repo: openclaw/skills
 source_type: community
@@ -73,6 +73,12 @@ Produce the final artifact. H5 gifts use p5.js/canvas with a quality floor set b
 - ❌ Don't skip straight from thesis to rendering without a real creative concept
 - ❌ Don't default to "reflect on today" every time — vary content direction
 - ❌ Don't choose the format before locking the concept
+
+## Example
+
+**User request:**
+
+> Decide whether today merits a personalized gift, then create the most fitting concept and output for the recipient.
 
 ## Limitations
 

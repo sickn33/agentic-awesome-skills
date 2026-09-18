@@ -1,7 +1,7 @@
 ---
 name: geo-fundamentals
 description: "Generative Engine Optimization for AI search engines (ChatGPT, Claude, Perplexity)."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -158,6 +158,12 @@ How AI engines select content to cite:
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Use @geo-fundamentals for this task: Generative Engine Optimization for AI search engines (ChatGPT, Claude, Perplexity).
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

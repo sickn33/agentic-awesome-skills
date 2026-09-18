@@ -22,6 +22,12 @@ This skill provides guidance and patterns for lab environment for claude superpo
 
 For more information, see the [source repository](https://github.com/obra/superpowers-lab).
 
+## Example
+
+**User request:**
+
+> Use @superpowers-lab for this task: Lab environment for Claude superpowers.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

@@ -1,9 +1,10 @@
 ---
 name: hig-patterns
 description: Apple Human Interface Guidelines interaction and UX patterns.
-risk: unknown
-source: community
-date_added: '2026-02-27'
+metadata:
+  aas-risk: none
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Apple HIG: Interaction Patterns
@@ -97,6 +98,12 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Use @hig-patterns for this task: Apple Human Interface Guidelines interaction and UX patterns.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

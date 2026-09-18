@@ -3,6 +3,7 @@ name: evolution
 description: "This skill enables makepad-skills to self-improve continuously during development."
 risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Makepad Skills Evolution

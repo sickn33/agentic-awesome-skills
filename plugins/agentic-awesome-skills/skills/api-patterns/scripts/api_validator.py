@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-API Validator - Checks API endpoints for best practices.
-Validates OpenAPI specs, response formats, and common issues.
+Heuristic triage of up to 15 matching source/spec files.
+Regex and shallow checks do not validate OpenAPI schemas or security behavior.
 """
 import sys
 import json
@@ -32,7 +32,8 @@ def find_api_files(project_path: Path) -> list:
         files.extend(project_path.glob(pattern))
     
     # Exclude node_modules, etc.
-    return [f for f in files if not any(x in str(f) for x in ['node_modules', '.git', 'dist', 'build', '__pycache__'])]
+    return sorted({f for f in files if f.is_file() and not f.is_symlink()
+                   and not any(x in f.parts for x in ['node_modules', '.git', 'dist', 'build', '__pycache__'])})
 
 def check_openapi_spec(file_path: Path) -> dict:
     """Check OpenAPI/Swagger specification."""
@@ -164,7 +165,7 @@ def main():
     project_path = Path(target)
     
     print("\n" + "=" * 60)
-    print("  API VALIDATOR - Endpoint Best Practices Check")
+    print("  API HEURISTIC TRIAGE - Not schema or security validation")
     print("=" * 60 + "\n")
     
     api_files = find_api_files(project_path)
@@ -174,6 +175,7 @@ def main():
         print("   Looking for: routes/, controllers/, api/, openapi.json/yaml")
         sys.exit(0)
     
+    print(f"[SCOPE] Inspecting {min(15, len(api_files))} of {len(api_files)} matching files.")
     results = []
     for file_path in api_files[:15]:  # Limit
         if 'openapi' in file_path.name.lower() or 'swagger' in file_path.name.lower():
@@ -197,14 +199,14 @@ def main():
                 total_issues += 1
     
     print("\n" + "=" * 60)
-    print(f"[RESULTS] {total_passed} passed, {total_issues} critical issues")
+    print(f"[RESULTS] {total_passed} passed, {total_issues} heuristic issues")
     print("=" * 60)
     
     if total_issues == 0:
-        print("[OK] API validation passed")
+        print("[INFO] No flagged issues in sampled files; validation remains unperformed")
         sys.exit(0)
     else:
-        print("[X] Fix critical issues before deployment")
+        print("[X] Fix heuristic issues before deployment")
         sys.exit(1)
 
 if __name__ == "__main__":

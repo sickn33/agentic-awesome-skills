@@ -1,7 +1,10 @@
 # Documentation Index
 
+Current operational guidance lives in `users/`, `contributors/`, and the current maintainer playbooks. Dated audits, release notes, worklogs and `maintainers/backups/` preserve historical evidence; their counts and commands are not current requirements. Translations can lag: use the linked English source and exact-base `package.json` when instructions differ.
+
 ## Users
 
+- [`users/aas-core.md`](users/aas-core.md) — canonical AAS Core preview guide
 - [`users/getting-started.md`](users/getting-started.md)
 - [`users/usage.md`](users/usage.md)
 - [`users/faq.md`](users/faq.md)
@@ -13,11 +16,14 @@
 - [`users/agentic-awesome-skills-vs-awesome-claude-skills.md`](users/agentic-awesome-skills-vs-awesome-claude-skills.md)
 - [`users/best-claude-code-skills-github.md`](users/best-claude-code-skills-github.md)
 - [`users/best-cursor-skills-github.md`](users/best-cursor-skills-github.md)
+- [`users/plugins.md`](users/plugins.md) — installation and distribution boundaries
+- [`users/specialized-plugin-roadmap.md`](users/specialized-plugin-roadmap.md) — curated scope and resolved findings
 - [`users/bundles.md`](users/bundles.md)
 - [`users/workflows.md`](users/workflows.md)
 - [`users/kiro-integration.md`](users/kiro-integration.md)
 - [`users/visual-guide.md`](users/visual-guide.md)
 - [`users/local-config.md`](users/local-config.md)
+- [`users/skills-library-overview.md`](users/skills-library-overview.md)
 
 ## Contributors
 

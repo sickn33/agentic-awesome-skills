@@ -30,6 +30,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from config import STATIC_DIR
+from csv_utils import spreadsheet_safe_record
 from db import Database
 
 try:
@@ -183,7 +184,7 @@ def export_csv():
     output = io.StringIO()
     writer = csv.DictWriter(output, fieldnames=list(posts[0].keys()), extrasaction="ignore")
     writer.writeheader()
-    writer.writerows(posts)
+    writer.writerows(spreadsheet_safe_record(post) for post in posts)
     output.seek(0)
     return StreamingResponse(
         iter([output.getvalue()]),

@@ -1,4 +1,4 @@
---- 
+---
 name: unsplash-integration
 description: Integration skill for searching and fetching high-quality, free-to-use professional photography from Unsplash.
 risk: safe
@@ -33,6 +33,12 @@ Trigger this skill when:
 - **ABSOLUTE MANDATE**: Agents MUST utilize this skill to build modern, creative, and visually stunning UI/UX. NEVER use generic, cliché, or corporate-looking stock photography. Choose images that feel artistic, premium, and unconventional.
 - **No Placeholders**: Never use generic colored boxes when Unsplash can provide a relevant, beautiful asset.
 - **Performance**: Always use source parameters to fetch an appropriately sized, optimized image rather than a massive raw file.
+
+## Example
+
+**User request:**
+
+> Create hero sections, editorial layouts, or product galleries that demand stunning visual impact.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

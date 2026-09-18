@@ -1,7 +1,7 @@
 ---
 name: lead-magnets
 description: "Plan and optimize lead magnets for email capture and lead generation. Use when designing gated content, checklists, templates, downloadable resources, or other offers that convert visitors into subscribers."
-risk: unknown
+risk: safe
 source: "https://github.com/coreyhaines31/marketingskills"
 date_added: "2026-03-21"
 metadata:
@@ -316,6 +316,12 @@ When creating a lead magnet strategy, provide:
 - **analytics-tracking**: For measuring lead magnet performance
 - **paid-ads**: For paid promotion of lead magnets
 - **social-content**: For social media promotion
+
+## Example
+
+**User request:**
+
+> Plan downloadable offers or gated resources for email capture.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

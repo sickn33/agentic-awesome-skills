@@ -26,7 +26,7 @@ Webhooks sao a forma recomendada para producao. O Telegram envia updates via HTT
 ```
 POST https://api.telegram.org/bot<TOKEN>/setWebhook
 {
-  "url": "https://seu-dominio.com/webhook/<TOKEN>",
+  "url": "https://seu-dominio.com/webhook",
   "allowed_updates": ["message", "callback_query", "inline_query"],
   "max_connections": 40,
   "secret_token": "seu_token_secreto_256chars_max"
@@ -55,7 +55,8 @@ import { Telegraf } from 'telegraf';
 const app = express();
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN!;
 const WEBHOOK_URL = process.env.WEBHOOK_URL!; // https://seu-dominio.com
-const SECRET_TOKEN = process.env.WEBHOOK_SECRET || 'meu-secret-seguro';
+const SECRET_TOKEN = process.env.WEBHOOK_SECRET;
+if (!SECRET_TOKEN || !/^[A-Za-z0-9_-]{32,256}$/.test(SECRET_TOKEN)) throw new Error('WEBHOOK_SECRET invalido');
 
 const bot = new Telegraf(TOKEN);
 
@@ -109,7 +110,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 WEBHOOK_URL = os.getenv('WEBHOOK_URL')
-SECRET_TOKEN = os.getenv('WEBHOOK_SECRET', 'meu-secret-seguro')
+SECRET_TOKEN = os.environ['WEBHOOK_SECRET']
 
 flask_app = Flask(__name__)
 
@@ -121,7 +122,7 @@ async def start(update: Update, context):
 
 application.add_handler(CommandHandler('start', start))
 
-@flask_app.route(f'/webhook/{TOKEN}', methods=['POST'])
+@flask_app.route('/webhook', methods=['POST'])
 async def webhook():
     # Validar secret token
     secret = request.headers.get('X-Telegram-Bot-Api-Secret-Token')
@@ -141,7 +142,7 @@ import requests
 requests.post(
     f'https://api.telegram.org/bot{TOKEN}/setWebhook',
     json={
-        'url': f'{WEBHOOK_URL}/webhook/{TOKEN}',
+        'url': f'{WEBHOOK_URL}/webhook',
         'allowed_updates': ['message', 'callback_query'],
         'secret_token': SECRET_TOKEN,
         'max_connections': 40
@@ -161,7 +162,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 WEBHOOK_URL = os.getenv('WEBHOOK_URL')
-SECRET_TOKEN = os.getenv('WEBHOOK_SECRET', 'meu-secret-seguro')
+SECRET_TOKEN = os.environ['WEBHOOK_SECRET']
 
 app = FastAPI()
 application = Application.builder().token(TOKEN).build()
@@ -184,7 +185,7 @@ async def on_startup():
 async def on_shutdown():
     await application.shutdown()
 
-@app.post(f'/webhook/{TOKEN}')
+@app.post('/webhook')
 async def webhook(request: Request):
     secret = request.headers.get('x-telegram-bot-api-secret-token')
     if secret != SECRET_TOKEN:
@@ -216,7 +217,7 @@ ngrok fornece URL tipo `https://abc123.ngrok-free.app`. Use essa URL para regist
 ```bash
 curl -X POST "https://api.telegram.org/bot$TOKEN/setWebhook" \
   -H "Content-Type: application/json" \
-  -d "{\"url\": \"https://abc123.ngrok-free.app/webhook/$TOKEN\"}"
+  -d "{\"url\": \"https://abc123.ngrok-free.app/webhook\"}"
 ```
 
 **Alternativa gratuita:** localtunnel
@@ -290,7 +291,7 @@ CMD ["node", "dist/index.js"]
 ## Seguranca
 
 1. **Secret Token:** Sempre use `secret_token` ao registrar webhook e valide o header `X-Telegram-Bot-Api-Secret-Token`
-2. **URL com token:** Inclua o token na URL do webhook para uma camada extra de seguranca
+2. **URL sem token:** Nao exponha o bot token na URL; autentique sempre pelo header secreto do Telegram
 3. **IP whitelist:** Telegram envia webhooks dos IPs:
    - `149.154.160.0/20`
    - `91.108.4.0/22`

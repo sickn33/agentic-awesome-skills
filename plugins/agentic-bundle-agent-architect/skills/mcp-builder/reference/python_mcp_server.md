@@ -1,8 +1,13 @@
 # Python MCP Server Implementation Guide
 
+Modified in AAS on 2026-09-05. These examples target MCP Python SDK v1 and Pydantic v2.
+Check the installed versions against their matching documentation. They are integration
+sketches: example.com is a placeholder, authentication and application adapters must be
+provided, and syntax compilation does not prove protocol/client compatibility.
+
 ## Overview
 
-This document provides Python-specific best practices and examples for implementing MCP servers using the MCP Python SDK. It covers server setup, tool registration patterns, input validation with Pydantic, error handling, and complete working examples.
+This document provides Python-specific best practices and examples for implementing MCP servers using the MCP Python SDK. It covers server setup, tool registration patterns, input validation with Pydantic, error handling, and integration sketches.
 
 ---
 
@@ -87,7 +92,7 @@ class ServiceToolInput(BaseModel):
 
     param1: str = Field(..., description="First parameter description (e.g., 'user123', 'project-abc')", min_length=1, max_length=100)
     param2: Optional[int] = Field(default=None, description="Optional integer parameter with constraints", ge=0, le=1000)
-    tags: Optional[List[str]] = Field(default_factory=list, description="List of tags to apply", max_items=10)
+    tags: Optional[List[str]] = Field(default_factory=list, description="List of tags to apply", max_length=10)
 
 @mcp.tool(
     name="service_tool_name",
@@ -132,7 +137,8 @@ from pydantic import BaseModel, Field, field_validator, ConfigDict
 class CreateUserInput(BaseModel):
     model_config = ConfigDict(
         str_strip_whitespace=True,
-        validate_assignment=True
+        validate_assignment=True,
+        extra="forbid"
     )
 
     name: str = Field(..., description="User's full name", min_length=1, max_length=100)
@@ -176,7 +182,7 @@ class UserSearchInput(BaseModel):
 
 **JSON format**:
 - Return complete, structured data suitable for programmatic processing
-- Include all available fields and metadata
+- Include only the authorized fields required by the task
 - Use consistent field names and types
 
 ## Pagination Implementation
@@ -185,8 +191,8 @@ For tools that list resources:
 
 ```python
 class ListInput(BaseModel):
-    limit: Optional[int] = Field(default=20, description="Maximum results to return", ge=1, le=100)
-    offset: Optional[int] = Field(default=0, description="Number of results to skip for pagination", ge=0)
+    limit: int = Field(default=20, description="Maximum results to return", ge=1, le=100)
+    offset: int = Field(default=0, description="Number of results to skip for pagination", ge=0)
 
 async def list_items(params: ListInput) -> str:
     # Make API request with pagination
@@ -327,9 +333,9 @@ async def search_users(params: UserSearchInput) -> str:
     '''
 ```
 
-## Complete Example
+## Integration example (requires a real service adapter)
 
-See below for a complete Python MCP server example:
+The following skeleton needs service-specific authorization and response validation:
 
 ```python
 #!/usr/bin/env python3
@@ -363,12 +369,13 @@ class UserSearchInput(BaseModel):
     '''Input model for user search operations.'''
     model_config = ConfigDict(
         str_strip_whitespace=True,
-        validate_assignment=True
+        validate_assignment=True,
+        extra="forbid"
     )
 
     query: str = Field(..., description="Search string to match against names/emails", min_length=2, max_length=200)
-    limit: Optional[int] = Field(default=20, description="Maximum results to return", ge=1, le=100)
-    offset: Optional[int] = Field(default=0, description="Number of results to skip for pagination", ge=0)
+    limit: int = Field(default=20, description="Maximum results to return", ge=1, le=100)
+    offset: int = Field(default=0, description="Number of results to skip for pagination", ge=0)
     response_format: ResponseFormat = Field(default=ResponseFormat.MARKDOWN, description="Output format")
 
     @field_validator('query')
@@ -465,7 +472,7 @@ async def example_search_users(params: UserSearchInput) -> str:
             return json.dumps(response, indent=2)
 
     except Exception as e:
-        return _handle_api_error(e)
+        raise ValueError(_handle_api_error(e)) from None
 
 if __name__ == "__main__":
     mcp.run()
@@ -479,73 +486,28 @@ if __name__ == "__main__":
 
 FastMCP can automatically inject a `Context` parameter into tools for advanced capabilities like logging, progress reporting, resource reading, and user interaction:
 
-```python
-from mcp.server.fastmcp import FastMCP, Context
-
-mcp = FastMCP("example_mcp")
-
-@mcp.tool()
-async def advanced_search(query: str, ctx: Context) -> str:
-    '''Advanced tool with context access for logging and progress.'''
-
-    # Report progress for long operations
-    await ctx.report_progress(0.25, "Starting search...")
-
-    # Log information for debugging
-    await ctx.log_info("Processing query", {"query": query, "timestamp": datetime.now()})
-
-    # Perform search
-    results = await search_api(query)
-    await ctx.report_progress(0.75, "Formatting results...")
-
-    # Access server configuration
-    server_name = ctx.fastmcp.name
-
-    return format_results(results)
-
-@mcp.tool()
-async def interactive_tool(resource_id: str, ctx: Context) -> str:
-    '''Tool that can request additional input from users.'''
-
-    # Request sensitive information when needed
-    api_key = await ctx.elicit(
-        prompt="Please provide your API key:",
-        input_type="password"
-    )
-
-    # Use the provided key
-    return await api_call(resource_id, api_key)
-```
-
-**Context capabilities:**
-- `ctx.report_progress(progress, message)` - Report progress for long operations
-- `ctx.log_info(message, data)` / `ctx.log_error()` / `ctx.log_debug()` - Logging
-- `ctx.elicit(prompt, input_type)` - Request input from users
-- `ctx.fastmcp.name` - Access server configuration
-- `ctx.read_resource(uri)` - Read MCP resources
+Read the installed SDK's Context API before using progress, logging or elicitation.
+For SDK v1, use named arguments such as `progress`, `total` and `message` as supported
+by that version. Do not put queries, credentials or raw payloads in telemetry. Form
+elicitation must not request API keys or passwords; use the approved authentication
+flow. Check the client's negotiated capabilities before any request to the client.
 
 ### Resource Registration
 
 Expose data as resources for efficient, template-based access:
 
 ```python
-@mcp.resource("file://documents/{name}")
-async def get_document(name: str) -> str:
-    '''Expose documents as MCP resources.
+DOCUMENTS = {"help": "Synthetic fixture documentation"}
 
-    Resources are useful for static or semi-static data that doesn't
-    require complex parameters. They use URI templates for flexible access.
-    '''
-    document_path = f"./docs/{name}"
-    with open(document_path, "r") as f:
-        return f.read()
-
-@mcp.resource("config://settings/{key}")
-async def get_setting(key: str, ctx: Context) -> str:
-    '''Expose configuration as resources with context.'''
-    settings = await load_settings()
-    return json.dumps(settings.get(key, {}))
+@mcp.resource("docs://{name}")
+def get_document(name: str) -> str:
+    if name not in DOCUMENTS:
+        raise ValueError("Unknown document")
+    return DOCUMENTS[name]
 ```
+
+A real resource needs per-principal authorization and bounded reads. Never concatenate
+a template parameter into a filesystem path or expose arbitrary configuration keys.
 
 **When to use Resources vs Tools:**
 - **Resources**: For data access with simple parameters (URI templates)
@@ -594,24 +556,24 @@ Initialize resources that persist across requests:
 from contextlib import asynccontextmanager
 
 @asynccontextmanager
-async def app_lifespan():
+async def app_lifespan(server: FastMCP):
     '''Manage resources that live for the server's lifetime.'''
     # Initialize connections, load config, etc.
     db = await connect_to_database()
     config = load_configuration()
 
     # Make available to all tools
-    yield {"db": db, "config": config}
-
-    # Cleanup on shutdown
-    await db.close()
+    try:
+        yield {"db": db, "config": config}
+    finally:
+        await db.close()
 
 mcp = FastMCP("example_mcp", lifespan=app_lifespan)
 
 @mcp.tool()
 async def query_data(query: str, ctx: Context) -> str:
     '''Access lifespan resources through context.'''
-    db = ctx.request_context.lifespan_state["db"]
+    db = ctx.request_context.lifespan_context["db"]
     results = await db.query(query)
     return format_results(results)
 ```
@@ -627,7 +589,7 @@ if __name__ == "__main__":
 
 # Streamable HTTP transport (for remote servers)
 if __name__ == "__main__":
-    mcp.run(transport="streamable_http", port=8000)
+    mcp.run(transport="streamable-http")  # Configure host/port on FastMCP for the installed SDK
 ```
 
 **Transport selection:**
@@ -694,7 +656,7 @@ Before finalizing your Python MCP server implementation, ensure:
 - [ ] All Pydantic Fields have explicit types and descriptions with constraints
 - [ ] All tools have comprehensive docstrings with explicit input/output types
 - [ ] Docstrings include complete schema structure for dict/JSON returns
-- [ ] Pydantic models handle input validation (no manual validation needed)
+- [ ] Pydantic validates structure; authorization and application invariants are checked separately
 
 ### Advanced Features (where applicable)
 - [ ] Context injection used for logging, progress, or elicitation
@@ -713,7 +675,7 @@ Before finalizing your Python MCP server implementation, ensure:
 - [ ] Constants are defined at module level in UPPER_CASE
 
 ### Testing
-- [ ] Server runs successfully: `python your_server.py --help`
+- [ ] Real client initializes the stdio command and invokes a fixture tool; --help may not be implemented
 - [ ] All imports resolve correctly
 - [ ] Sample tool calls work as expected
 - [ ] Error scenarios handled gracefully

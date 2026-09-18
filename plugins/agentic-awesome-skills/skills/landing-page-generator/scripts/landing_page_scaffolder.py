@@ -17,6 +17,7 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime
 import html as html_module
 from pathlib import Path
+from urllib.parse import urlsplit
 
 
 def safe_user_path(path_value, base_dir="."):
@@ -35,6 +36,30 @@ def safe_user_path(path_value, base_dir="."):
 def escape(text: str) -> str:
     """HTML-escape text."""
     return html_module.escape(str(text))
+
+
+def tsx_string(value: object) -> str:
+    """Encode config-derived text as a JavaScript string literal."""
+    return json.dumps(str(value), ensure_ascii=True)
+
+
+def tsx_value(value: object) -> str:
+    """Encode config-derived text as an inert JSX expression."""
+    return "{" + tsx_string(value) + "}"
+
+
+def tsx_href(value: object) -> str:
+    """Encode a link while refusing executable URL schemes and controls."""
+    raw = str(value).strip()
+    if not raw or any(ord(character) < 32 or ord(character) == 127 for character in raw):
+        raw = "#"
+    try:
+        scheme = urlsplit(raw).scheme.lower()
+    except ValueError:
+        scheme = "invalid"
+    if scheme and scheme not in {"http", "https", "mailto", "tel"}:
+        raw = "#"
+    return tsx_value(raw)
 
 
 # ---------------------------------------------------------------------------
@@ -86,18 +111,18 @@ def tsx_nav(config: Dict[str, Any], style: Dict[str, str]) -> str:
     nav_links = config.get("nav_links", [])
     cta = config.get("nav_cta", {"text": "Get Started", "url": "#"})
     links_jsx = "\n          ".join(
-        f'<a href="{l.get("url", "#")}" className="{style["muted"]} hover:{style["text"]} font-medium transition-colors">{l.get("text", "")}</a>'
+        f'<a href={tsx_href(l.get("url", "#"))} className="{style["muted"]} hover:{style["text"]} font-medium transition-colors">{tsx_value(l.get("text", ""))}</a>'
         for l in nav_links
     )
     return f'''function Navbar() {{
   return (
     <nav className="sticky top-0 z-50 {style["bg"]} border-b {style["border"]} backdrop-blur-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <a href="#" className="text-xl font-bold {style["text"]}">{brand}</a>
+        <a href="#" className="text-xl font-bold {style["text"]}">{tsx_value(brand)}</a>
         <div className="hidden items-center gap-8 md:flex">
           {links_jsx}
-          <a href="{cta.get("url", "#")}" className="rounded-lg {style["btn"]} px-5 py-2.5 text-sm font-semibold transition-colors">
-            {cta.get("text", "Get Started")}
+          <a href={tsx_href(cta.get("url", "#"))} className="rounded-lg {style["btn"]} px-5 py-2.5 text-sm font-semibold transition-colors">
+            {tsx_value(cta.get("text", "Get Started"))}
           </a>
         </div>
       </div>
@@ -114,22 +139,22 @@ def tsx_hero(hero: Dict[str, Any], style: Dict[str, str]) -> str:
     secondary_jsx = ""
     if secondary_cta:
         secondary_jsx = f'''
-          <a href="{secondary_cta.get("url", "#")}" className="rounded-lg {style["btn_secondary"]} px-8 py-3 text-lg font-semibold transition-colors">
-            {secondary_cta.get("text", "Learn More")}
+          <a href={tsx_href(secondary_cta.get("url", "#"))} className="rounded-lg {style["btn_secondary"]} px-8 py-3 text-lg font-semibold transition-colors">
+            {tsx_value(secondary_cta.get("text", "Learn More"))}
           </a>'''
     return f'''function Hero() {{
   return (
     <section className="flex min-h-[80vh] flex-col items-center justify-center px-6 py-24 text-center {style["bg"]}">
       <div className="mx-auto max-w-4xl">
         <h1 className="mb-6 text-5xl font-bold tracking-tight {style["text"]} md:text-7xl">
-          {h1}
+          {tsx_value(h1)}
         </h1>
         <p className="mx-auto mb-10 max-w-2xl text-xl {style["muted"]}">
-          {sub}
+          {tsx_value(sub)}
         </p>
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-          <a href="{primary_cta.get("url", "#")}" className="rounded-lg {style["btn"]} px-8 py-3 text-lg font-semibold transition-colors">
-            {primary_cta.get("text", "Get Started")}
+          <a href={tsx_href(primary_cta.get("url", "#"))} className="rounded-lg {style["btn"]} px-8 py-3 text-lg font-semibold transition-colors">
+            {tsx_value(primary_cta.get("text", "Get Started"))}
           </a>{secondary_jsx}
         </div>
       </div>
@@ -144,9 +169,9 @@ def tsx_features(features: Dict[str, Any], style: Dict[str, str]) -> str:
     items = features.get("items", [])
     cards_jsx = "\n        ".join(
         f'''<div className="{style["card_bg"]} rounded-xl p-8">
-          <div className="mb-4 text-3xl">{f.get("icon", "")}</div>
-          <h3 className="mb-3 text-xl font-semibold {style["text"]}">{f.get("title", "")}</h3>
-          <p className="{style["muted"]}">{f.get("description", "")}</p>
+          <div className="mb-4 text-3xl">{tsx_value(f.get("icon", ""))}</div>
+          <h3 className="mb-3 text-xl font-semibold {style["text"]}">{tsx_value(f.get("title", ""))}</h3>
+          <p className="{style["muted"]}">{tsx_value(f.get("description", ""))}</p>
         </div>'''
         for f in items
     )
@@ -154,8 +179,8 @@ def tsx_features(features: Dict[str, Any], style: Dict[str, str]) -> str:
   return (
     <section className="{style["section_alt"]} px-6 py-24">
       <div className="mx-auto max-w-7xl">
-        <h2 className="mb-4 text-center text-4xl font-bold {style["text"]}">{title}</h2>
-        <p className="mx-auto mb-16 max-w-2xl text-center text-lg {style["muted"]}">{subtitle}</p>
+        <h2 className="mb-4 text-center text-4xl font-bold {style["text"]}">{tsx_value(title)}</h2>
+        <p className="mx-auto mb-16 max-w-2xl text-center text-lg {style["muted"]}">{tsx_value(subtitle)}</p>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {cards_jsx}
         </div>
@@ -172,10 +197,10 @@ def tsx_testimonials(testimonials: Dict[str, Any], style: Dict[str, str]) -> str
         return ""
     cards_jsx = "\n        ".join(
         f'''<div className="rounded-xl border {style["border"]} p-8">
-          <p className="mb-6 text-lg italic {style["muted"]}">"{t.get("quote", "")}"</p>
+          <p className="mb-6 text-lg italic {style["muted"]}">{tsx_value('"' + str(t.get("quote", "")) + '"')}</p>
           <div>
-            <p className="font-semibold {style["text"]}">{t.get("name", "")}</p>
-            <p className="text-sm {style["muted"]}">{t.get("title", "")}, {t.get("company", "")}</p>
+            <p className="font-semibold {style["text"]}">{tsx_value(t.get("name", ""))}</p>
+            <p className="text-sm {style["muted"]}">{tsx_value(t.get("title", ""))}, {tsx_value(t.get("company", ""))}</p>
           </div>
         </div>'''
         for t in items
@@ -184,7 +209,7 @@ def tsx_testimonials(testimonials: Dict[str, Any], style: Dict[str, str]) -> str
   return (
     <section className="px-6 py-24 {style["bg"]}">
       <div className="mx-auto max-w-7xl">
-        <h2 className="mb-16 text-center text-4xl font-bold {style["text"]}">{title}</h2>
+        <h2 className="mb-16 text-center text-4xl font-bold {style["text"]}">{tsx_value(title)}</h2>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {cards_jsx}
         </div>
@@ -206,18 +231,18 @@ def tsx_pricing(pricing: Dict[str, Any], style: Dict[str, str]) -> str:
         border_cls = f"border-2 border-{accent}-500 ring-4 ring-{accent}-500/20" if featured else f"border {style['border']}"
         badge = f'\n            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-{accent}-600 px-4 py-1 text-xs font-semibold text-white">Most Popular</div>' if featured else ""
         features_jsx = "\n              ".join(
-            f'<li className="flex items-center gap-2 py-2"><span className="text-{accent}-500 font-bold">&#10003;</span> {feat}</li>'
+            f'<li className="flex items-center gap-2 py-2"><span className="text-{accent}-500 font-bold">&#10003;</span> {tsx_value(feat)}</li>'
             for feat in p.get("features", [])
         )
         cards.append(f'''<div className="relative rounded-2xl {border_cls} {style["card_bg"]} p-8 text-center">{badge}
-            <h3 className="mb-2 text-xl font-semibold {style["text"]}">{p.get("name", "")}</h3>
-            <div className="my-6 text-5xl font-extrabold {style["text"]}">${p.get("price", "0")}<span className="text-base font-normal {style["muted"]}">/mo</span></div>
-            <p className="{style["muted"]} mb-6">{p.get("description", "")}</p>
+            <h3 className="mb-2 text-xl font-semibold {style["text"]}">{tsx_value(p.get("name", ""))}</h3>
+            <div className="my-6 text-5xl font-extrabold {style["text"]}">${tsx_value(p.get("price", "0"))}<span className="text-base font-normal {style["muted"]}">/mo</span></div>
+            <p className="{style["muted"]} mb-6">{tsx_value(p.get("description", ""))}</p>
             <ul className="mb-8 space-y-1 text-left {style["muted"]}">
               {features_jsx}
             </ul>
-            <a href="{p.get("cta_url", "#")}" className="block w-full rounded-lg {style["btn"]} py-3 text-center font-semibold transition-colors">
-              {p.get("cta_text", "Choose Plan")}
+            <a href={tsx_href(p.get("cta_url", "#"))} className="block w-full rounded-lg {style["btn"]} py-3 text-center font-semibold transition-colors">
+              {tsx_value(p.get("cta_text", "Choose Plan"))}
             </a>
           </div>''')
     cards_jsx = "\n        ".join(cards)
@@ -225,7 +250,7 @@ def tsx_pricing(pricing: Dict[str, Any], style: Dict[str, str]) -> str:
   return (
     <section className="{style["section_alt"]} px-6 py-24">
       <div className="mx-auto max-w-5xl">
-        <h2 className="mb-16 text-center text-4xl font-bold {style["text"]}">{title}</h2>
+        <h2 className="mb-16 text-center text-4xl font-bold {style["text"]}">{tsx_value(title)}</h2>
         <div className="grid gap-8 lg:grid-cols-{min(len(plans), 3)}">
         {cards_jsx}
         </div>
@@ -241,10 +266,10 @@ def tsx_cta(cta: Dict[str, Any], style: Dict[str, str]) -> str:
   return (
     <section className="bg-{accent}-600 px-6 py-24 text-center text-white">
       <div className="mx-auto max-w-3xl">
-        <h2 className="mb-4 text-4xl font-bold">{cta.get("headline", "Ready to get started?")}</h2>
-        <p className="mb-10 text-xl opacity-90">{cta.get("subheadline", "")}</p>
-        <a href="{cta.get("url", "#")}" className="rounded-lg bg-white px-8 py-3 text-lg font-semibold text-{accent}-600 transition-colors hover:bg-gray-100">
-          {cta.get("text", "Start Free Trial")}
+        <h2 className="mb-4 text-4xl font-bold">{tsx_value(cta.get("headline", "Ready to get started?"))}</h2>
+        <p className="mb-10 text-xl opacity-90">{tsx_value(cta.get("subheadline", ""))}</p>
+        <a href={tsx_href(cta.get("url", "#"))} className="rounded-lg bg-white px-8 py-3 text-lg font-semibold text-{accent}-600 transition-colors hover:bg-gray-100">
+          {tsx_value(cta.get("text", "Start Free Trial"))}
         </a>
       </div>
     </section>
@@ -259,7 +284,7 @@ def tsx_footer(config: Dict[str, Any], style: Dict[str, str]) -> str:
     return f'''function Footer() {{
   return (
     <footer className="border-t {style["border"]} {style["bg"]} px-6 py-10 text-center {style["muted"]}">
-      <p>&copy; {footer_text}</p>
+      <p>&copy; {tsx_value(footer_text)}</p>
     </footer>
   );
 }}'''
@@ -267,8 +292,9 @@ def tsx_footer(config: Dict[str, Any], style: Dict[str, str]) -> str:
 
 def generate_tsx(config: Dict[str, Any]) -> str:
     """Generate complete Next.js/React TSX landing page with Tailwind CSS."""
-    style_name = config.get("design_style", "clean-minimal")
-    style = DESIGN_STYLES.get(style_name, DESIGN_STYLES["clean-minimal"])
+    requested_style = config.get("design_style", "clean-minimal")
+    style_name = requested_style if requested_style in DESIGN_STYLES else "clean-minimal"
+    style = DESIGN_STYLES[style_name]
 
     components = []
     component_names = []
@@ -312,11 +338,11 @@ def generate_tsx(config: Dict[str, Any]) -> str:
 import type {{ Metadata }} from "next";
 
 export const metadata: Metadata = {{
-  title: "{title}",
-  description: "{meta_desc}",
+  title: {tsx_string(title)},
+  description: {tsx_string(meta_desc)},
   openGraph: {{
-    title: "{title}",
-    description: "{meta_desc}",
+    title: {tsx_string(title)},
+    description: {tsx_string(meta_desc)},
     type: "website",
   }},
 }};

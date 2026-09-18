@@ -8,13 +8,13 @@ const packageMetadata = require(path.resolve(__dirname, "..", "..", "..", "packa
 
 assert.deepStrictEqual(
   installer.buildCloneArgs("https://example.com/repo.git", "/tmp/skills"),
-  ["clone", "--depth", "1", "https://example.com/repo.git", "/tmp/skills"],
+  ["clone", "--depth", "1", "--filter=blob:none", "--sparse", "https://example.com/repo.git", "/tmp/skills"],
   "installer should use a shallow clone by default",
 );
 
 assert.deepStrictEqual(
   installer.buildCloneArgs("https://example.com/repo.git", "/tmp/skills", "v1.2.3"),
-  ["clone", "--depth", "1", "--branch", "v1.2.3", "https://example.com/repo.git", "/tmp/skills"],
+  ["clone", "--depth", "1", "--branch", "v1.2.3", "--filter=blob:none", "--sparse", "https://example.com/repo.git", "/tmp/skills"],
   "installer should keep versioned installs shallow while selecting the requested ref",
 );
 

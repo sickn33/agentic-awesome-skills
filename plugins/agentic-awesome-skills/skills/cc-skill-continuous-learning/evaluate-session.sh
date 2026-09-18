@@ -1,60 +1,57 @@
-#!/bin/bash
-# Continuous Learning - Session Evaluator
-# Runs on Stop hook to extract reusable patterns from Claude Code sessions
-#
-# Why Stop hook instead of UserPromptSubmit:
-# - Stop runs once at session end (lightweight)
-# - UserPromptSubmit runs every message (heavy, adds latency)
-#
-# Hook config (in ~/.claude/settings.json):
-# {
-#   "hooks": {
-#     "Stop": [{
-#       "matcher": "*",
-#       "hooks": [{
-#         "type": "command",
-#         "command": "~/.claude/skills/continuous-learning/evaluate-session.sh"
-#       }]
-#     }]
-#   }
-# }
-#
-# Patterns to detect: error_resolution, debugging_techniques, workarounds, project_specific
-# Patterns to ignore: simple_typos, one_time_fixes, external_api_issues
-# Extracted skills saved to: ~/.claude/skills/learned/
-
-set -e
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG_FILE="$SCRIPT_DIR/config.json"
-LEARNED_SKILLS_PATH="${HOME}/.claude/skills/learned"
-MIN_SESSION_LENGTH=10
-
-# Load config if exists
-if [ -f "$CONFIG_FILE" ]; then
-  MIN_SESSION_LENGTH=$(jq -r '.min_session_length // 10' "$CONFIG_FILE")
-  LEARNED_SKILLS_PATH=$(jq -r '.learned_skills_path // "~/.claude/skills/learned/"' "$CONFIG_FILE" | sed "s|~|$HOME|")
+#!/usr/bin/env bash
+# Read-only message-count reminder. No extraction, model call, or persistence.
+set -euo pipefail
+if [ "$#" -gt 1 ]; then
+  echo 'Usage: evaluate-session.sh [session.jsonl]' >&2
+  exit 2
 fi
+transcript_path="${1:-${CLAUDE_TRANSCRIPT_PATH:-}}"
+[ -n "$transcript_path" ] || exit 0
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+python3 - "$transcript_path" "$script_dir/config.json" <<'PY'
+import json
+import os
+import stat
+import sys
 
-# Ensure learned skills directory exists
-mkdir -p "$LEARNED_SKILLS_PATH"
 
-# Get transcript path from environment (set by Claude Code)
-transcript_path="${CLAUDE_TRANSCRIPT_PATH:-}"
+def inspect_session():
+    with open(sys.argv[2], "rb") as config_file:
+        config_bytes = config_file.read(16385)
+    if len(config_bytes) > 16384:
+        raise ValueError("Oversize configuration")
+    threshold = json.loads(config_bytes)["min_session_length"]
+    if type(threshold) is not int or not 1 <= threshold <= 100000:
+        raise ValueError("Invalid threshold")
+    descriptor = os.open(sys.argv[1], os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(descriptor, "rb") as transcript:
+        info = os.fstat(transcript.fileno())
+        if not stat.S_ISREG(info.st_mode) or info.st_size > 16 * 1024 * 1024:
+            raise ValueError("Unsupported transcript")
+        count = 0
+        consumed = 0
+        while True:
+            line = transcript.readline(1024 * 1024 + 1)
+            if not line:
+                break
+            consumed += len(line)
+            if len(line) > 1024 * 1024 or consumed > 16 * 1024 * 1024:
+                raise ValueError("Oversize transcript")
+            if not line.strip():
+                continue
+            message = json.loads(line)
+            if not isinstance(message, dict):
+                raise ValueError("Expected message object")
+            count += message.get("type") == "user"
+    if count < threshold:
+        print(f"[ContinuousLearning] {count} user messages; below review threshold {threshold}.", file=sys.stderr)
+    else:
+        print(f"[ContinuousLearning] {count} user messages; consider reviewing a verified reusable lesson. Nothing extracted or saved.", file=sys.stderr)
 
-if [ -z "$transcript_path" ] || [ ! -f "$transcript_path" ]; then
-  exit 0
-fi
 
-# Count messages in session
-message_count=$(grep -c '"type":"user"' "$transcript_path" 2>/dev/null || echo "0")
-
-# Skip short sessions
-if [ "$message_count" -lt "$MIN_SESSION_LENGTH" ]; then
-  echo "[ContinuousLearning] Session too short ($message_count messages), skipping" >&2
-  exit 0
-fi
-
-# Signal to Claude that session should be evaluated for extractable patterns
-echo "[ContinuousLearning] Session has $message_count messages - evaluate for extractable patterns" >&2
-echo "[ContinuousLearning] Save learned skills to: $LEARNED_SKILLS_PATH" >&2
+try:
+    inspect_session()
+except (OSError, ValueError, KeyError, TypeError, AttributeError, RecursionError):
+    print("[ContinuousLearning] Cannot inspect this transcript or configuration. Nothing extracted or saved.", file=sys.stderr)
+    sys.exit(2)
+PY

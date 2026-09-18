@@ -1,7 +1,7 @@
 ---
 name: database-migration
 description: "Master database schema and data migrations across ORMs (Sequelize, TypeORM, Prisma), including rollback strategies and zero-downtime deployments."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

@@ -4,8 +4,9 @@ description: Transforms vague UI ideas into polished, Stitch-optimized prompts. 
 allowed-tools:
   - "Read"
   - "Write"
-risk: unknown
+risk: critical
 source: community
+date_added: "2026-09-04"
 ---
 
 # Enhance Prompt for Stitch

@@ -1,7 +1,7 @@
 ---
 name: blockrun
 description: "BlockRun works with Claude Code and Google Antigravity."
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---

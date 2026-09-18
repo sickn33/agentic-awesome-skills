@@ -1,8 +1,10 @@
 ---
 name: django-access-review
 description: django-access-review
-risk: unknown
-source: community
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-09-04'
 ---
 
 ---

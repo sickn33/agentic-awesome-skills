@@ -1,9 +1,10 @@
 ---
 name: git-advanced-workflows
-description: "Master advanced Git techniques to maintain clean history, collaborate effectively, and recover from any situation with confidence."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Master advanced Git techniques to maintain clean history, collaborate effectively, and recover from any situation with confidence.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Git Advanced Workflows
@@ -20,9 +21,8 @@ Master advanced Git techniques to maintain clean history, collaborate effectivel
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
-- If detailed examples are required, open `resources/implementation-playbook.md`.
 
-## Use this skill when
+## When to Use
 
 - Cleaning up commit history before merging
 - Applying specific commits across branches
@@ -404,15 +404,6 @@ git reset --hard HEAD^
 git reflog
 git branch recovered-branch abc123
 ```
-
-## Resources
-
-- **references/git-rebase-guide.md**: Deep dive into interactive rebase
-- **references/git-conflict-resolution.md**: Advanced conflict resolution strategies
-- **references/git-history-rewriting.md**: Safely rewriting Git history
-- **assets/git-workflow-checklist.md**: Pre-PR cleanup checklist
-- **assets/git-aliases.md**: Useful Git aliases for advanced workflows
-- **scripts/git-clean-branches.sh**: Clean up merged and stale branches
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

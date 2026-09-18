@@ -1,7 +1,7 @@
 ---
 name: executing-plans
 description: "Use when you have a written implementation plan to execute in a separate session with review checkpoints"
-risk: unknown
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -80,6 +80,12 @@ After all tasks complete and verified:
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Use @executing-plans for this task: Use when you have a written implementation plan to execute in a separate session with review checkpoints.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

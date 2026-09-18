@@ -1,7 +1,7 @@
 ---
 name: cold-email
 description: "Write B2B cold emails and follow-up sequences that earn replies. Use when creating outbound prospecting emails, SDR outreach, personalized opening lines, subject lines, CTAs, and multi-touch follow-up sequences."
-risk: unknown
+risk: safe
 source: "https://github.com/coreyhaines31/marketingskills"
 date_added: "2026-03-21"
 metadata:
@@ -164,6 +164,12 @@ Use this data to inform your writing — not as a checklist to satisfy.
 - **social-content**: For LinkedIn and social posts
 - **product-marketing-context**: For establishing foundational positioning
 - **revops**: For lead scoring, routing, and pipeline management
+
+## Example
+
+**User request:**
+
+> Write outbound prospecting emails or cold follow-up sequences.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

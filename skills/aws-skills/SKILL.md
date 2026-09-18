@@ -22,6 +22,12 @@ This skill provides guidance and patterns for aws development with infrastructur
 
 For more information, see the [source repository](https://github.com/zxkane/aws-skills).
 
+## Example
+
+**User request:**
+
+> Use @aws-skills for this task: AWS development with infrastructure automation and cloud architecture patterns.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

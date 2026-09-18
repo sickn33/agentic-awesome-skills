@@ -1,7 +1,7 @@
 ---
 name: accint-solve
 description: Route a goal through acc's scored-memory loop via acc_act(runtime="solve"); deliberate any returned brain_frame and submit via continue.
-risk: unknown
+risk: critical
 source: https://github.com/maxbaluev/accreted-intelligence/tree/main/plugins/claude/skills/solve
 source_repo: maxbaluev/accreted-intelligence
 source_type: community
@@ -27,6 +27,12 @@ Routing sugar over the two MCP verbs — no logic lives here.
    the owner sees it and uses it to calibrate the Work Model against later outcomes.
 5. Never leave a received frame unresolved; never solo-derive outside the loop.
 6. Close the commitment honestly later with `acc_act(runtime="outcome", ...)`.
+
+## Example
+
+**User request:**
+
+> Use @accint-solve for this task: Route a goal through acc's scored-memory loop via acc_act(runtime="solve"); deliberate any returned brain_frame and submit via continue.
 
 ## Limitations
 

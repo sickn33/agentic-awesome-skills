@@ -1,7 +1,7 @@
 ---
 name: hig-foundations
 description: Apple Human Interface Guidelines design foundations.
-risk: unknown
+risk: none
 source: community
 date_added: '2026-02-27'
 ---
@@ -92,6 +92,12 @@ Consider how principles interact:
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Use @hig-foundations for this task: Apple Human Interface Guidelines design foundations.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

@@ -1,9 +1,10 @@
 ---
 name: slack-automation
-description: "Automate Slack workspace operations including messaging, search, channel management, and reaction workflows through Composio's Slack toolkit."
-risk: critical
-source: community
-date_added: "2026-02-27"
+description: Automate Slack workspace operations including messaging, search, channel management, and reaction workflows through Composio's Slack toolkit.
+metadata:
+  aas-risk: critical
+  aas-source: community
+  aas-date-added: '2026-02-27'
 ---
 
 # Slack Automation via Rube MCP
@@ -190,6 +191,12 @@ Most list endpoints use cursor-based pagination:
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Example
+
+**User request:**
+
+> Automate Slack workspace operations including messaging, search, channel management, and reaction workflows through Composio's Slack toolkit.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
