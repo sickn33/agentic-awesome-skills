@@ -12,10 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > Adds two reviewed skills (one official vendor catalog pointer, one read-only
 > community screening skill) and hardens the hosted catalog input boundary.
 
-A maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI. It
-lands two source PRs reviewed and merged through the protected maintainer
-workflow and two web-app fixes; the catalog contains 2,126 skills and existing
-installation interfaces remain supported.
+A maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It adds one official vendor catalog entry and one community skill reviewed and
+merged through the protected maintainer workflow, and hardens the hosted catalog
+input boundary; the catalog contains 2,126 skills and existing installation
+interfaces remain supported.
 
 ### Start here
 
@@ -40,6 +41,22 @@ installation interfaces remain supported.
 - The hosted catalog validates every skills-index record before accepting it
   and falls back to the next source on malformed payloads; one shared validator
   serves `SkillProvider` and `OutcomeExplorer`.
+
+### Improved
+
+- Refreshed canonical indexes, catalogs, plugin mirrors, editorial bundles, and
+  web assets for the 2,126-skill release.
+- Official Beatra AI sponsorship attribution and README credits in
+  `### Official Sources` and `### Community Contributors`.
+
+### Validation scope
+
+The source PRs passed maintainer repair, exact-head review, repository
+validation, reference and documentation-security checks, protected CI, CodeQL,
+dependency review, package publication and release-only Pages verification.
+
+Thanks to @beatra-ai (#1467), @romankurnovskii (#1466), and @jhuang-tt
+(#1464, #1465) for their contributions.
 
 ---
 
