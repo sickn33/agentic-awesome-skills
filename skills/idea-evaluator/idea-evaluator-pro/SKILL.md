@@ -53,6 +53,11 @@ When acting as the Pro Agent in a debate:
 - ❌ Don't ignore the Con Agent's points; address them head-on.
 - ❌ Avoid generic praise like "This is a great idea!" Get specific about *why* it's great.
 
+## Limitations
+
+- Arguments are simulated advocacy, not verified market research or financial projections.
+- Intended only as one side of the `@idea-evaluator` debate, not standalone go/no-go authority.
+
 ## Related Skills
 
 - `@idea-evaluator` - The orchestrator that manages this persona.
