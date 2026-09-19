@@ -7,15 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [17.6.0] - 2026-09-19 - "Maintainer Jev Hints and Community Skill Batch"
+## [17.6.0] - 2026-09-19 - "Weather Skills, Idea Evaluator, Google No-Code, and Anti-Slop Design"
 
-> Adds optional TypeSafe Jev triage for maintainers and merges five reviewed
-> community skills plus a dependency hygiene patch in the Loki example app.
+> Adds six reviewed skills (weather model and observation retrieval, multi-agent
+> idea evaluation, Google Forms automation, resumable implementation contracts,
+> and anti-slop UI engineering) and refreshes maintainer tooling.
 
 A maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI.
-It introduces optional local Jev hints for maintainer skill triage (never a merge
-gate), merges five community skills through the protected workflow, and bumps an
-example-app dependency; existing installation interfaces remain supported.
+It merges six skills through the protected maintainer workflow (including two
+weather-data skills and a maintainer-carried idea-evaluation bundle), refreshes
+catalog and plugin surfaces for **2,134** skills, and adds optional local Jev
+hints for maintainers only; existing installation interfaces remain supported.
 
 ### Start here
 
@@ -27,24 +29,39 @@ example-app dependency; existing installation interfaces remain supported.
 
 ### Added
 
-- Optional maintainer command `npm run maintainer:jev-hints` with
-  `docs/maintainers/jev-hints.md` (TypeSafe Jev advisory triage only).
-- `anti-slop-design`: design-quality guardrails for agent-generated UI copy and layout.
-- `google-no-code`: Google Forms plus Apps Script trigger patterns without a full app stack.
-- `resumable-implementation-contracts`: resumable multi-step implementation contracts for agents.
-- `weather-observation-fetching`: fetching and normalizing public weather observation data.
+- `weather-model-data-fetching`: GRIB2 and public-archive weather model retrieval
+  with inventories, byte ranges, Herbie, provider fallbacks, and verified caching.
+- `weather-observation-fetching`: surface and upper-air observations from
+  authoritative APIs and archives with station identity, time, units, and quality
+  flags preserved.
+- `idea-evaluator`: multi-turn Pro/Con debate over an idea with a final verdict,
+  including bundled `idea-evaluator-pro` and `idea-evaluator-con` agent skills.
+- `google-no-code`: Google Forms plus Apps Script triggers for alerts, spreadsheet
+  logging, and dynamic questions without a separate code editor workflow.
+- `resumable-implementation-contracts`: repository-based execution contracts with
+  stable task IDs, evidence, checkpoints, and exact resume state across sessions.
+- `anti-slop-design`: community skill for curing AI frontend slop with token
+  archetypes and a seven-axis pre-ship quality gate (source: `wwewtech/anti-slop-design`).
 
 ### Improved
 
+- Refreshed canonical indexes, catalogs, plugin mirrors, editorial bundles, and
+  web assets for the 2,134-skill release.
 - Bumped `express-rate-limit` in the Loki Mode todo example backend (8.6.2 → 8.7.0).
-- Maintainer batch-release skill documents when to run Jev hints during PR triage.
+- Optional maintainer-only TypeSafe Jev triage via `npm run maintainer:jev-hints` and
+  `docs/maintainers/jev-hints.md` (advisory; not a merge or CI gate).
 
 ### Validation scope
 
-Source PRs passed maintainer attestation at exact head SHAs, repository validation,
-reference and documentation-security checks, protected CI, and CodeQL where required.
-Jev output was used only to prioritize maintainer inspection; Tessl or manual review
-remained authoritative for skill semantics.
+The source PRs passed maintainer attestation at exact head SHAs where required,
+repository validation, reference and documentation-security checks, protected CI,
+CodeQL, dependency review, package publication, and release-only Pages verification.
+Maintainer Jev output was used only to prioritize inspection; Tessl review or
+manual maintainer review remained authoritative for skill semantics.
+
+Thanks to @ShianMike (#1488, #1498), @WHOISABHISHEKADHIKARI (#1497), and @wwewtech
+(#1494) for their contributions, and to the maintainers for the carried
+`idea-evaluator` import (#1492).
 
 ---
 
