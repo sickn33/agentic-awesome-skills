@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-18T03:54:02.000Z",
-  "total": 2130,
+  "total": 2133,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -28338,6 +28338,36 @@
       "path": "skills/google-drive-automation/SKILL.md"
     },
     {
+      "id": "google-no-code",
+      "canonical_id": "google-no-code",
+      "name": "google-no-code",
+      "description": "Design Google Forms and wire Apps Script triggers (onFormSubmit) for email alerts, spreadsheet logging, and dynamic questions — no code editor required.",
+      "category": "automation",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "google",
+        "forms",
+        "apps-script"
+      ],
+      "triggers": [
+        "google",
+        "forms",
+        "apps-script",
+        "no",
+        "code",
+        "wire",
+        "apps",
+        "script",
+        "triggers",
+        "onformsubmit",
+        "email",
+        "alerts"
+      ],
+      "path": "skills/google-no-code/SKILL.md"
+    },
+    {
       "id": "google-sheets-automation",
       "canonical_id": "google-sheets-automation",
       "name": "google-sheets-automation",
@@ -47105,6 +47135,38 @@
       "path": "skills/resolving-merge-conflicts/SKILL.md"
     },
     {
+      "id": "resumable-implementation-contracts",
+      "canonical_id": "resumable-implementation-contracts",
+      "name": "resumable-implementation-contracts",
+      "description": "Create repository-based execution contracts for multi-session implementation work, with stable task IDs, evidence, checkpoints, and exact resume state.",
+      "category": "project-management",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "project-management",
+        "execution-contracts",
+        "checkpoints",
+        "verification",
+        "agent-workflows"
+      ],
+      "triggers": [
+        "project-management",
+        "execution-contracts",
+        "checkpoints",
+        "verification",
+        "agent-workflows",
+        "resumable",
+        "contracts",
+        "repository",
+        "execution",
+        "multi",
+        "session",
+        "work"
+      ],
+      "path": "skills/resumable-implementation-contracts/SKILL.md"
+    },
+    {
       "id": "returns-reverse-logistics",
       "canonical_id": "returns-reverse-logistics",
       "name": "returns-reverse-logistics",
@@ -59866,6 +59928,39 @@
         "prediction"
       ],
       "path": "skills/weather-model-data-fetching/SKILL.md"
+    },
+    {
+      "id": "weather-observation-fetching",
+      "canonical_id": "weather-observation-fetching",
+      "name": "weather-observation-fetching",
+      "description": "Retrieve surface and upper-air weather observations from authoritative APIs and archives with station identity, time, units, and quality flags preserved.",
+      "category": "data",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "weather",
+        "observations",
+        "metar",
+        "radiosonde",
+        "noaa",
+        "quality-control"
+      ],
+      "triggers": [
+        "weather",
+        "observations",
+        "metar",
+        "radiosonde",
+        "noaa",
+        "quality-control",
+        "observation",
+        "fetching",
+        "retrieve",
+        "surface",
+        "upper",
+        "air"
+      ],
+      "path": "skills/weather-observation-fetching/SKILL.md"
     },
     {
       "id": "weaviate",

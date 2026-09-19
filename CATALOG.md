@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-18T03:54:02.000Z
 
-Total skills: 2130
+Total skills: 2133
 
 ## agent-behavior (5)
 
@@ -335,7 +335,7 @@ Total skills: 2130
 | `site-architecture` | Plan or restructure website hierarchy, navigation, URL patterns, breadcrumbs, and internal linking. Use when mapping pages, sections, and site structure, but... | safe | https://github.com/coreyhaines31/marketingskills | site, architecture | site, architecture, plan, restructure, website, hierarchy, navigation, url, breadcrumbs, internal, linking, mapping |
 | `software-architecture` | Guide for quality focused software architecture. This skill should be used when users want to write code, design architecture, analyze code, in any case that... | critical | community | software, architecture | software, architecture, quality, skill, should, used, users, want, write, code, analyze, any |
 
-## automation (55)
+## automation (56)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -362,6 +362,7 @@ Total skills: 2130
 | `google-analytics-automation` | Automate Google Analytics tasks via Rube MCP (Composio): run reports, list accounts/properties, funnels, pivots, key events. Always search tools first for cu... | critical | community | google, analytics | google, analytics, automation, automate, tasks, via, rube, mcp, composio, run, reports, list |
 | `google-docs-automation` | Read and edit Google Docs through an available authenticated connector or reviewed API integration, with scoped changes and read-back verification. | critical | community | google, docs | google, docs, automation, read, edit, through, available, authenticated, connector, reviewed, api, integration |
 | `google-drive-automation` | Lightweight Google Drive integration with standalone OAuth authentication. No MCP server required. Full read/write access. | critical | community | google, drive | google, drive, automation, lightweight, integration, standalone, oauth, authentication, no, mcp, server, required |
+| `google-no-code` | Design Google Forms and wire Apps Script triggers (onFormSubmit) for email alerts, spreadsheet logging, and dynamic questions — no code editor required. | safe | self | google, forms, apps-script | google, forms, apps-script, no, code, wire, apps, script, triggers, onformsubmit, email, alerts |
 | `helpdesk-automation` | Automate HelpDesk tasks via Rube MCP (Composio): list tickets, manage views, use canned responses, and configure custom fields. Always search tools first for... | critical | community | helpdesk | helpdesk, automation, automate, tasks, via, rube, mcp, composio, list, tickets, views, canned |
 | `hubspot-automation` | Automate HubSpot CRM operations (contacts, companies, deals, tickets, properties) via Rube MCP using Composio integration. | critical | community | hubspot | hubspot, automation, automate, crm, operations, contacts, companies, deals, tickets, properties, via, rube |
 | `intercom-automation` | Automate Intercom tasks via Rube MCP (Composio): conversations, contacts, companies, segments, admins. Always search tools first for current schemas. | critical | community | intercom | intercom, automation, automate, tasks, via, rube, mcp, composio, conversations, contacts, companies, segments |
@@ -853,7 +854,7 @@ Total skills: 2130
 | `liuguang-banlan-ui` | Builds two parameterized UI modes—流光溢彩白 (iridescent white) and 五彩斑斓黑 (colorful black)—with OKLCH, WebGL/CSS fallback, vision gating, screenshot QA, and total... | critical | self | ui, frontend, oklch, webgl, accessibility | ui, frontend, oklch, webgl, accessibility, liuguang, banlan, two, parameterized, modes, iridescent, white |
 | `modellix` | Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download). | critical | Modellix/modellix-plugin | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api, integrate, async, ai |
 
-## data (26)
+## data (27)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -881,6 +882,7 @@ Total skills: 2130
 | `sql-sentinel` | Audit SQL for the cost & performance anti-patterns that burn warehouse credits. Scores warehouse health 0-100 and outputs a prioritized cost-reduction plan f... | critical | takeaseatventure/sql-sentinel | sql, bigquery, snowflake, redshift, postgres, data-warehouse, cost-optimization, performance, audit, finops | sql, bigquery, snowflake, redshift, postgres, data-warehouse, cost-optimization, performance, audit, finops, sentinel, cost |
 | `warehouse` | Plan and review read-only data warehouse analysis with explicit scope, privacy, provenance, and validation checks. | critical | self | analytics, data-warehouse, sql, data-quality | analytics, data-warehouse, sql, data-quality, warehouse, plan, review, read, data, analysis, explicit, scope |
 | `weather-model-data-fetching` | Retrieve numerical weather prediction data from public AWS S3 and HTTP archives using GRIB2 inventories, byte ranges, Herbie, provider fallbacks, and verifie... | safe | self | weather, grib2, aws-s3, herbie, noaa, nwp | weather, grib2, aws-s3, herbie, noaa, nwp, model, data, fetching, retrieve, numerical, prediction |
+| `weather-observation-fetching` | Retrieve surface and upper-air weather observations from authoritative APIs and archives with station identity, time, units, and quality flags preserved. | safe | self | weather, observations, metar, radiosonde, noaa, quality-control | weather, observations, metar, radiosonde, noaa, quality-control, observation, fetching, retrieve, surface, upper, air |
 | `web-scraper` | Web scraping inteligente multi-estrategia. Extrai dados estruturados de paginas web (tabelas, listas, precos). Paginacao, monitoramento e export CSV/JSON. | safe | community | scraping, data-extraction, automation, csv | scraping, data-extraction, automation, csv, web, scraper, inteligente, multi, estrategia, extrai, dados, estruturados |
 | `x-twitter-scraper` | Use Xquik for X data workflows: tweet search, user lookup, follower export, media downloads, monitors, webhooks, REST API, MCP, SDK setup, and approval-gated... | critical | Xquik-dev/x-twitter-scraper | twitter, x, social-media, x-api, tweet-search, follower-export, automation, mcp, sdk, webhooks | twitter, x, social-media, x-api, tweet-search, follower-export, automation, mcp, sdk, webhooks, scraper, xquik |
 
@@ -1845,7 +1847,7 @@ Total skills: 2130
 | `trading-ledger` | A trading journal that captures the decision, not just the fill: thesis, plan, and emotion at the moment of entry, written to the user's own Notion database;... | critical | cruisekkk/trading-ledger | trading-journal, notion, journaling, market-wizards, decision-making | trading-journal, notion, journaling, market-wizards, decision-making, trading, ledger, journal, captures, decision, just, fill |
 | `workorai` | WorkorAI talent-marketplace skill: candidates search jobs and manage applications; employers run the job lifecycle and get ranked candidate matches with whit... | critical | work0r-ai/agent-kit | job-search, hiring, recruiting, talent-marketplace, mcp | job-search, hiring, recruiting, talent-marketplace, mcp, workorai, talent, marketplace, skill, candidates, search, jobs |
 
-## project-management (22)
+## project-management (23)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1862,6 +1864,7 @@ Total skills: 2130
 | `monday-automation` | Automate Monday.com work management including boards, items, columns, groups, subitems, and updates via Rube MCP (Composio). Always search tools first for cu... | critical | community | monday | monday, automation, automate, com, work, including, boards, items, columns, groups, subitems, updates |
 | `progressive-estimation` | Estimate AI-assisted and hybrid human+agent development work with research-backed PERT statistics and calibration feedback loops | safe | community | estimation, project-management, pert, sprint-planning, ai-agents | estimation, project-management, pert, sprint-planning, ai-agents, progressive, estimate, ai, assisted, hybrid, human, agent |
 | `project-state-governor` | Govern evidence-backed canonical project state across sessions, branches, reviews, and research cycles without inventing product intent. | critical | Ghost011118/project-state-governor | project-state, project-memory, documentation, governance, context-engineering, multi-agent | project-state, project-memory, documentation, governance, context-engineering, multi-agent, state, governor, govern, evidence, backed, canonical |
+| `resumable-implementation-contracts` | Create repository-based execution contracts for multi-session implementation work, with stable task IDs, evidence, checkpoints, and exact resume state. | safe | self | project-management, execution-contracts, checkpoints, verification, agent-workflows | project-management, execution-contracts, checkpoints, verification, agent-workflows, resumable, contracts, repository, execution, multi, session, work |
 | `sred-project-organizer` | Take a list of projects and their related documentation, and organize them into the SRED format for submission. | critical | community | sred, organizer | sred, organizer, take, list, related, documentation, organize, them, format, submission |
 | `sred-work-summary` | Go back through the previous year of work and create a Notion doc that groups relevant links into projects that can then be documented as SRED projects. | critical | community | sred, work, summary | sred, work, summary, go, back, through, previous, year, notion, doc, groups, relevant |
 | `team-collaboration-issue` | You are a GitHub issue resolution expert specializing in systematic bug investigation, feature implementation, and collaborative development workflows. Your ... | safe | community | team, collaboration, issue | team, collaboration, issue, github, resolution, specializing, systematic, bug, investigation, feature, collaborative, development |

@@ -23245,6 +23245,34 @@
     "license": "Apache-2.0"
   },
   {
+    "id": "google-no-code",
+    "path": "skills/google-no-code",
+    "category": "automation",
+    "name": "google-no-code",
+    "description": "Design Google Forms and wire Apps Script triggers (onFormSubmit) for email alerts, spreadsheet logging, and dynamic questions \u2014 no code editor required.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "google",
+      "forms",
+      "apps-script"
+    ]
+  },
+  {
     "id": "google-sheets-automation",
     "path": "skills/google-sheets-automation",
     "category": "spreadsheet-processing",
@@ -39546,6 +39574,36 @@
     "license_source": "https://github.com/mattpocock/skills/blob/main/LICENSE"
   },
   {
+    "id": "resumable-implementation-contracts",
+    "path": "skills/resumable-implementation-contracts",
+    "category": "project-management",
+    "name": "resumable-implementation-contracts",
+    "description": "Create repository-based execution contracts for multi-session implementation work, with stable task IDs, evidence, checkpoints, and exact resume state.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "project-management",
+      "execution-contracts",
+      "checkpoints",
+      "verification",
+      "agent-workflows"
+    ]
+  },
+  {
     "id": "retro-design",
     "path": "skills/design-it/retro-design",
     "category": "design-it",
@@ -50567,6 +50625,37 @@
       "herbie",
       "noaa",
       "nwp"
+    ]
+  },
+  {
+    "id": "weather-observation-fetching",
+    "path": "skills/weather-observation-fetching",
+    "category": "data",
+    "name": "weather-observation-fetching",
+    "description": "Retrieve surface and upper-air weather observations from authoritative APIs and archives with station identity, time, units, and quality flags preserved.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "weather",
+      "observations",
+      "metar",
+      "radiosonde",
+      "noaa",
+      "quality-control"
     ]
   },
   {
