@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-19T07:53:30.000Z",
-  "total": 2134,
+  "total": 2141,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -4857,6 +4857,38 @@
         "grav"
       ],
       "path": "skills/article-illustrations/SKILL.md"
+    },
+    {
+      "id": "artifact-yylo",
+      "canonical_id": "artifact-yylo",
+      "name": "artifact-yylo",
+      "description": "Capture and retrieve durable YYLO Ledger artifact Records with intentional profiles, payload modes, provenance, retention, and secret-safe immutable evidence.",
+      "category": "project-management",
+      "risk": "safe",
+      "source": "https://github.com/yylo-dev/yylo-skills",
+      "source_type": "community",
+      "source_repo": "yylo-dev/yylo-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE",
+      "tags": [
+        "artifact",
+        "yylo"
+      ],
+      "triggers": [
+        "artifact",
+        "yylo",
+        "capture",
+        "retrieve",
+        "durable",
+        "ledger",
+        "records",
+        "intentional",
+        "profiles",
+        "payload",
+        "modes",
+        "provenance"
+      ],
+      "path": "skills/artifact-yylo/SKILL.md"
     },
     {
       "id": "asana-automation",
@@ -33390,6 +33422,39 @@
       "path": "skills/learn/SKILL.md"
     },
     {
+      "id": "ledger-tasks-yylo",
+      "canonical_id": "ledger-tasks-yylo",
+      "name": "ledger-tasks-yylo",
+      "description": "Use YYLO Ledger task management: create, list, search, get, mark, update, archive, deps, ready, order and merge with dependencies.",
+      "category": "project-management",
+      "risk": "safe",
+      "source": "https://github.com/yylo-dev/yylo-skills",
+      "source_type": "community",
+      "source_repo": "yylo-dev/yylo-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE",
+      "tags": [
+        "ledger",
+        "tasks",
+        "yylo"
+      ],
+      "triggers": [
+        "ledger",
+        "tasks",
+        "yylo",
+        "task",
+        "list",
+        "search",
+        "get",
+        "mark",
+        "update",
+        "archive",
+        "deps",
+        "order"
+      ],
+      "path": "skills/ledger-tasks-yylo/SKILL.md"
+    },
+    {
       "id": "legacy-modernizer",
       "canonical_id": "legacy-modernizer",
       "name": "legacy-modernizer",
@@ -43227,6 +43292,40 @@
       "path": "skills/plaid-fintech/SKILL.md"
     },
     {
+      "id": "plan-ledger-tasks-yylo",
+      "canonical_id": "plan-ledger-tasks-yylo",
+      "name": "plan-ledger-tasks-yylo",
+      "description": "Create a concise Product Development Requirement and one or more implementation-sized YYLO Ledger tasks when the user explicitly asks to plan or register work.",
+      "category": "project-management",
+      "risk": "safe",
+      "source": "https://github.com/yylo-dev/yylo-skills",
+      "source_type": "community",
+      "source_repo": "yylo-dev/yylo-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE",
+      "tags": [
+        "plan",
+        "ledger",
+        "tasks",
+        "yylo"
+      ],
+      "triggers": [
+        "plan",
+        "ledger",
+        "tasks",
+        "yylo",
+        "concise",
+        "product",
+        "development",
+        "requirement",
+        "one",
+        "sized",
+        "user",
+        "explicitly"
+      ],
+      "path": "skills/plan-ledger-tasks-yylo/SKILL.md"
+    },
+    {
       "id": "plan-writing",
       "canonical_id": "plan-writing",
       "name": "plan-writing",
@@ -46103,6 +46202,39 @@
         "optimization"
       ],
       "path": "skills/rag-implementation/SKILL.md"
+    },
+    {
+      "id": "ralph-loop-yylo",
+      "canonical_id": "ralph-loop-yylo",
+      "name": "ralph-loop-yylo",
+      "description": "Execute exactly one explicitly assigned YYLO Ledger task through the Ralph loop to a validated queued commit. Use only when the user explicitly requests ralph-loop-yylo.",
+      "category": "agent-orchestration",
+      "risk": "critical",
+      "source": "https://github.com/yylo-dev/yylo-skills",
+      "source_type": "community",
+      "source_repo": "yylo-dev/yylo-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE",
+      "tags": [
+        "ralph",
+        "loop",
+        "yylo"
+      ],
+      "triggers": [
+        "ralph",
+        "loop",
+        "yylo",
+        "execute",
+        "exactly",
+        "one",
+        "explicitly",
+        "assigned",
+        "ledger",
+        "task",
+        "through",
+        "validated"
+      ],
+      "path": "skills/ralph-loop-yylo/SKILL.md"
     },
     {
       "id": "rayden-code",
@@ -57666,6 +57798,38 @@
       "path": "skills/uncle-bob-craft/SKILL.md"
     },
     {
+      "id": "understand-project-yylo",
+      "canonical_id": "understand-project-yylo",
+      "name": "understand-project-yylo",
+      "description": "Inspect the current product architecture, dependencies, and validation loops before planning or implementing a requested change.",
+      "category": "project-management",
+      "risk": "safe",
+      "source": "https://github.com/yylo-dev/yylo-skills",
+      "source_type": "community",
+      "source_repo": "yylo-dev/yylo-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE",
+      "tags": [
+        "understand",
+        "yylo"
+      ],
+      "triggers": [
+        "understand",
+        "yylo",
+        "inspect",
+        "current",
+        "product",
+        "architecture",
+        "dependencies",
+        "validation",
+        "loops",
+        "before",
+        "planning",
+        "implementing"
+      ],
+      "path": "skills/understand-project-yylo/SKILL.md"
+    },
+    {
       "id": "unified-ai-gateway",
       "canonical_id": "unified-ai-gateway",
       "name": "unified-ai-gateway",
@@ -60809,6 +60973,38 @@
       "path": "skills/wiki-vitepress/SKILL.md"
     },
     {
+      "id": "wiki-yylo",
+      "canonical_id": "wiki-yylo",
+      "name": "wiki-yylo",
+      "description": "Use YYLO Ledger wiki Records as durable project knowledge. Search before creating, classify information correctly, and make revision-safe Markdown updates without editing Ledger storage directly.",
+      "category": "project-management",
+      "risk": "safe",
+      "source": "https://github.com/yylo-dev/yylo-skills",
+      "source_type": "community",
+      "source_repo": "yylo-dev/yylo-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE",
+      "tags": [
+        "wiki",
+        "yylo"
+      ],
+      "triggers": [
+        "wiki",
+        "yylo",
+        "ledger",
+        "records",
+        "durable",
+        "knowledge",
+        "search",
+        "before",
+        "creating",
+        "classify",
+        "information",
+        "correctly"
+      ],
+      "path": "skills/wiki-yylo/SKILL.md"
+    },
+    {
       "id": "windows-ad",
       "canonical_id": "windows-ad",
       "name": "windows-ad",
@@ -61258,6 +61454,37 @@
         "commits"
       ],
       "path": "skills/workflow-patterns/SKILL.md"
+    },
+    {
+      "id": "workflow-yylo",
+      "canonical_id": "workflow-yylo",
+      "name": "workflow-yylo",
+      "description": "Create and maintain validated YYLO Ledger workflow Records while keeping storage, execution, and run evidence as separate explicit boundaries.",
+      "category": "project-management",
+      "risk": "safe",
+      "source": "https://github.com/yylo-dev/yylo-skills",
+      "source_type": "community",
+      "source_repo": "yylo-dev/yylo-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE",
+      "tags": [
+        "yylo"
+      ],
+      "triggers": [
+        "yylo",
+        "maintain",
+        "validated",
+        "ledger",
+        "records",
+        "while",
+        "keeping",
+        "storage",
+        "execution",
+        "run",
+        "evidence",
+        "separate"
+      ],
+      "path": "skills/workflow-yylo/SKILL.md"
     },
     {
       "id": "workorai",

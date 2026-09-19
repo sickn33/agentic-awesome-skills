@@ -3203,6 +3203,25 @@
       "runtime_files": []
     },
     {
+      "id": "artifact-yylo",
+      "path": "skills/artifact-yylo",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "asana-automation",
       "path": "skills/asana-automation",
       "targets": {
@@ -21965,6 +21984,25 @@
       "runtime_files": []
     },
     {
+      "id": "ledger-tasks-yylo",
+      "path": "skills/ledger-tasks-yylo",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "legacy-modernizer",
       "path": "skills/legacy-modernizer",
       "targets": {
@@ -28364,6 +28402,25 @@
       "runtime_files": []
     },
     {
+      "id": "plan-ledger-tasks-yylo",
+      "path": "skills/plan-ledger-tasks-yylo",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "plan-writing",
       "path": "skills/plan-writing",
       "targets": {
@@ -30229,6 +30286,25 @@
     {
       "id": "rag-implementation",
       "path": "skills/rag-implementation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ralph-loop-yylo",
+      "path": "skills/ralph-loop-yylo",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -37988,6 +38064,25 @@
       "runtime_files": []
     },
     {
+      "id": "understand-project-yylo",
+      "path": "skills/understand-project-yylo",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "unified-ai-gateway",
       "path": "skills/unified-ai-gateway",
       "targets": {
@@ -39999,6 +40094,25 @@
       "runtime_files": []
     },
     {
+      "id": "wiki-yylo",
+      "path": "skills/wiki-yylo",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "windows-ad",
       "path": "skills/windows-ad",
       "targets": {
@@ -40286,6 +40400,25 @@
     {
       "id": "workflow-patterns",
       "path": "skills/workflow-patterns",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "workflow-yylo",
+      "path": "skills/workflow-yylo",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -41013,10 +41146,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2134,
+    "total_skills": 2141,
     "supported": {
-      "codex": 2053,
-      "claude": 2075
+      "codex": 2060,
+      "claude": 2082
     },
     "blocked": {
       "codex": 81,

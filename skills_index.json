@@ -4044,6 +4044,32 @@
     ]
   },
   {
+    "id": "artifact-yylo",
+    "path": "skills/artifact-yylo",
+    "category": "project-management",
+    "name": "artifact-yylo",
+    "description": "Capture and retrieve durable YYLO Ledger artifact Records with intentional profiles, payload modes, provenance, retention, and secret-safe immutable evidence.",
+    "risk": "safe",
+    "source": "https://github.com/yylo-dev/yylo-skills",
+    "date_added": "2026-09-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "yylo-dev/yylo-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE"
+  },
+  {
     "id": "asana-automation",
     "path": "skills/asana-automation",
     "category": "project-management",
@@ -27749,6 +27775,32 @@
     ]
   },
   {
+    "id": "ledger-tasks-yylo",
+    "path": "skills/ledger-tasks-yylo",
+    "category": "project-management",
+    "name": "ledger-tasks-yylo",
+    "description": "Use YYLO Ledger task management: create, list, search, get, mark, update, archive, deps, ready, order and merge with dependencies.",
+    "risk": "safe",
+    "source": "https://github.com/yylo-dev/yylo-skills",
+    "date_added": "2026-09-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "yylo-dev/yylo-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE"
+  },
+  {
     "id": "legacy-modernizer",
     "path": "skills/legacy-modernizer",
     "category": "development",
@@ -36165,6 +36217,32 @@
     }
   },
   {
+    "id": "plan-ledger-tasks-yylo",
+    "path": "skills/plan-ledger-tasks-yylo",
+    "category": "project-management",
+    "name": "plan-ledger-tasks-yylo",
+    "description": "Create a concise Product Development Requirement and one or more implementation-sized YYLO Ledger tasks when the user explicitly asks to plan or register work.",
+    "risk": "safe",
+    "source": "https://github.com/yylo-dev/yylo-skills",
+    "date_added": "2026-09-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "yylo-dev/yylo-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE"
+  },
+  {
     "id": "plan-writing",
     "path": "skills/plan-writing",
     "category": "planning",
@@ -38685,6 +38763,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "ralph-loop-yylo",
+    "path": "skills/ralph-loop-yylo",
+    "category": "agent-orchestration",
+    "name": "ralph-loop-yylo",
+    "description": "Execute exactly one explicitly assigned YYLO Ledger task through the Ralph loop to a validated queued commit. Use only when the user explicitly requests ralph-loop-yylo.",
+    "risk": "critical",
+    "source": "https://github.com/yylo-dev/yylo-skills",
+    "date_added": "2026-09-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "yylo-dev/yylo-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE"
   },
   {
     "id": "rayden-code",
@@ -48603,6 +48707,32 @@
     ]
   },
   {
+    "id": "understand-project-yylo",
+    "path": "skills/understand-project-yylo",
+    "category": "project-management",
+    "name": "understand-project-yylo",
+    "description": "Inspect the current product architecture, dependencies, and validation loops before planning or implementing a requested change.",
+    "risk": "safe",
+    "source": "https://github.com/yylo-dev/yylo-skills",
+    "date_added": "2026-09-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "yylo-dev/yylo-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE"
+  },
+  {
     "id": "unified-ai-gateway",
     "path": "skills/unified-ai-gateway",
     "category": "ai-ml",
@@ -51447,6 +51577,32 @@
     }
   },
   {
+    "id": "wiki-yylo",
+    "path": "skills/wiki-yylo",
+    "category": "project-management",
+    "name": "wiki-yylo",
+    "description": "Use YYLO Ledger wiki Records as durable project knowledge. Search before creating, classify information correctly, and make revision-safe Markdown updates without editing Ledger storage directly.",
+    "risk": "safe",
+    "source": "https://github.com/yylo-dev/yylo-skills",
+    "date_added": "2026-09-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "yylo-dev/yylo-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE"
+  },
+  {
     "id": "windows-ad",
     "path": "skills/windows-ad",
     "category": "uncategorized",
@@ -51819,6 +51975,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "workflow-yylo",
+    "path": "skills/workflow-yylo",
+    "category": "project-management",
+    "name": "workflow-yylo",
+    "description": "Create and maintain validated YYLO Ledger workflow Records while keeping storage, execution, and run evidence as separate explicit boundaries.",
+    "risk": "safe",
+    "source": "https://github.com/yylo-dev/yylo-skills",
+    "date_added": "2026-09-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "yylo-dev/yylo-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/yylo-dev/yylo-skills/blob/main/LICENSE"
   },
   {
     "id": "workorai",
