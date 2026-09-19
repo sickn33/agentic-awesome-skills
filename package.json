@@ -46,6 +46,9 @@
     "audit:consistency": "node tools/scripts/run-python.js tools/scripts/audit_consistency.py",
     "audit:consistency:github": "node tools/scripts/run-python.js tools/scripts/audit_consistency.py --check-github-about",
     "audit:maintainer": "node tools/scripts/run-python.js tools/scripts/maintainer_audit.py",
+    "maintainer:jev-hints": "node tools/scripts/run-python.js tools/scripts/jev_maintainer_hints.py",
+    "maintainer:jev-batch": "node tools/scripts/run-python.js tools/scripts/jev_maintainer_hints.py --open-prs",
+    "maintainer:sweep": "node tools/scripts/run-python.js tools/scripts/maintainer_sweep.py",
     "security:docs": "node tools/scripts/tests/docs_security_content.test.js",
     "security:scan": "node tools/scripts/run-python.js tools/scripts/security_scanner.py",
     "security:scan:strict": "node tools/scripts/run-python.js tools/scripts/security_scanner.py --strict",
@@ -75,8 +78,7 @@
     "app:test:coverage": "cd apps/web-app && npm run test:coverage -- --run",
     "app:dev": "npm run app:setup && cd apps/web-app && npm run dev",
     "app:build": "npm run app:setup && cd apps/web-app && npm run build",
-    "app:preview": "cd apps/web-app && npm run preview",
-    "maintainer:jev-hints": "node tools/scripts/run-python.js tools/scripts/jev_maintainer_hints.py"
+    "app:preview": "cd apps/web-app && npm run preview"
   },
   "dependencies": {
     "ajv": "^8.20.0",

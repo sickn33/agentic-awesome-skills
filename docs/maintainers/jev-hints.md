@@ -34,9 +34,19 @@ Do **not** add Jev to required CI, `merge:batch`, or branch protection.
 
 ## Command
 
+### Single PR or local range
+
 ```bash
 npm run maintainer:jev-hints -- --base origin/main --head <pr-head-sha>
 ```
+
+### Open PR batch
+
+```bash
+npm run maintainer:jev-batch
+```
+
+Equivalent: `npm run maintainer:jev-hints -- --open-prs`
 
 Evaluate one skill without a diff range:
 
@@ -55,14 +65,17 @@ npm run maintainer:jev-hints -- --repo .worktrees/pr-1498 --base origin/main --h
 Flags:
 
 - `--max-skills 5` — caps API calls per run (default `5`) to stay within a small monthly budget.
+- `--max-prs 15` — with `--open-prs`, how many open PRs to scan (default `15`).
 - `--dry-run` — list targets only.
-- `--json` — machine-readable output for scripting.
+- `--json` — machine-readable output (`urgency_score`, `pr_number` when set).
+
+Five parallel questions per skill call (security, provenance, priority, triage bucket, deep review).
 
 If `TYPESAFE_API_KEY` is unset, the command exits `0` immediately with a one-line skip message.
 
 ## Budget
 
-Each changed skill directory costs **one** `systemOne` request with three bundled questions.
+Each changed skill directory costs **one** `systemOne` request with five bundled questions.
 At current Jev pricing, a maintainer sweep over a handful of skills is typically cents, not dollars.
 Raise `--max-skills` only when needed.
 

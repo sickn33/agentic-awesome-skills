@@ -21,7 +21,10 @@ API_URL = "https://api.typesafe.ai/v1/systemone"
 DEFAULT_MODEL = "jev-latest"
 MAX_STATE_CHARS = 12_000
 DEFAULT_MAX_SKILLS = 5
+DEFAULT_MAX_PRS = 15
+MAX_PR_BODY_CHARS = 2_000
 MAX_LISTED_FILES = 40
+JEV_FETCH_REF_PREFIX = "refs/jev-maintainer/pr-"
 
 QUESTIONS: dict[str, Any] = {
     "doc_security_red_flags": {
@@ -56,9 +59,36 @@ QUESTIONS: dict[str, Any] = {
             "stop_and_inspect": "Likely policy, safety, or provenance blocker until resolved.",
         },
     },
+    "triage_bucket": {
+        "type": "choice",
+        "instructions": "Which maintainer triage bucket best fits this skill change?",
+        "criteria": {
+            "valid_source": "Legitimate contribution; normal validate, Tessl, and merge path.",
+            "repairable": "Likely mergeable after small fixes on the contributor branch.",
+            "likely_noise": "Promotional links, generated-only churn, or clearly out-of-scope spam.",
+            "policy_blocker": "License, ownership, or safety policy likely blocks merge until resolved.",
+        },
+    },
+    "deep_semantic_review": {
+        "type": "noul",
+        "instructions": (
+            "Before merge, a maintainer likely needs a careful read of the full skill subtree "
+            "(not only SKILL.md): semantics, bundled scripts, declared risk, and limitations."
+        ),
+        "criteria": {
+            "true": "Substantive semantic review is likely necessary.",
+            "false": "Routine checks and the standard Tessl path are likely sufficient.",
+        },
+    },
 }
 
 PRIORITY_ORDER = {"routine": 0, "review_before_merge": 1, "stop_and_inspect": 2}
+TRIAGE_ORDER = {
+    "valid_source": 0,
+    "repairable": 1,
+    "likely_noise": 2,
+    "policy_blocker": 3,
+}
 
 
 def configure_utf8_output() -> None:
@@ -187,8 +217,34 @@ def list_skill_files_at_ref(repo: Path, skill_rel: str, ref: str) -> list[str]:
     return sorted(paths)
 
 
-def build_state(repo: Path, skill_rel: str, base: str, head: str) -> str:
+def build_pr_context_block(pr_meta: dict[str, Any] | None) -> str | None:
+    if not pr_meta:
+        return None
+    lines = [f"pr_number: {pr_meta.get('number', '')}"]
+    title = (pr_meta.get("title") or "").strip()
+    if title:
+        lines.append(f"title: {title}")
+    body = (pr_meta.get("body") or "").strip()
+    if body:
+        if len(body) > MAX_PR_BODY_CHARS:
+            body = body[: MAX_PR_BODY_CHARS - 40] + "\n[... PR body truncated ...]"
+        lines.append("--- pr_body ---")
+        lines.append(body)
+    return "\n".join(lines)
+
+
+def build_state(
+    repo: Path,
+    skill_rel: str,
+    base: str,
+    head: str,
+    pr_meta: dict[str, Any] | None = None,
+) -> str:
     body_parts = [f"skill_path: {skill_rel}", f"evaluated_at_ref: {head}"]
+    pr_block = build_pr_context_block(pr_meta)
+    if pr_block:
+        body_parts.append("--- pr_context ---")
+        body_parts.append(pr_block)
     skill_text = read_skill_md_at_ref(repo, skill_rel, head)
     if skill_text is None:
         skill_md = repo / skill_rel / "SKILL.md"
@@ -258,25 +314,145 @@ def call_jev(api_key: str, state: str, model: str, timeout: float) -> dict[str, 
     return parsed
 
 
-def format_hint(skill_rel: str, response: dict[str, Any]) -> str:
+def urgency_score(answers: dict[str, Any] | None) -> float:
+    if not answers:
+        return 0.0
+    priority = answers.get("maintainer_priority") or {}
+    triage = answers.get("triage_bucket") or {}
+    deep = answers.get("deep_semantic_review") or {}
+    security = answers.get("doc_security_red_flags") or {}
+    provenance = answers.get("provenance_or_attribution_gap") or {}
+    score = float(PRIORITY_ORDER.get(str(priority.get("choice")), 1)) * 10.0
+    score += float(TRIAGE_ORDER.get(str(triage.get("choice")), 0)) * 3.0
+    if isinstance(deep.get("noul"), (int, float)):
+        score += float(deep["noul"]) * 4.0
+    if isinstance(security.get("noul"), (int, float)):
+        score += float(security["noul"]) * 5.0
+    if isinstance(provenance.get("noul"), (int, float)):
+        score += float(provenance["noul"]) * 4.0
+    return score
+
+
+def format_hint(
+    skill_rel: str,
+    response: dict[str, Any],
+    pr_number: int | None = None,
+) -> str:
     answers = response.get("answers") or {}
     security = answers.get("doc_security_red_flags") or {}
     provenance = answers.get("provenance_or_attribution_gap") or {}
     priority = answers.get("maintainer_priority") or {}
+    triage = answers.get("triage_bucket") or {}
+    deep = answers.get("deep_semantic_review") or {}
     sec_p = security.get("noul")
     prov_p = provenance.get("noul")
     choice = priority.get("choice")
-    parts = [f"{skill_rel}:"]
+    bucket = triage.get("choice")
+    deep_p = deep.get("noul")
+    prefix = f"#{pr_number} " if pr_number is not None else ""
+    parts = [f"{prefix}{skill_rel}:"]
     if choice:
         parts.append(f"priority={choice}")
+    if bucket:
+        parts.append(f"triage={bucket}")
     if isinstance(sec_p, (int, float)):
         parts.append(f"security_p={sec_p:.2f}")
     if isinstance(prov_p, (int, float)):
         parts.append(f"provenance_p={prov_p:.2f}")
+    if isinstance(deep_p, (int, float)):
+        parts.append(f"deep_review_p={deep_p:.2f}")
     model = response.get("model")
     if model:
         parts.append(f"model={model}")
     return " ".join(parts)
+
+
+def run_gh(repo: Path, *args: str) -> str:
+    result = subprocess.run(
+        ["gh", *args],
+        cwd=str(repo),
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return result.stdout
+
+
+def gh_available(repo: Path) -> bool:
+    try:
+        subprocess.run(
+            ["gh", "auth", "status"],
+            cwd=str(repo),
+            capture_output=True,
+            check=True,
+        )
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return False
+
+
+def list_open_prs(repo: Path, limit: int) -> list[dict[str, Any]]:
+    output = run_gh(
+        repo,
+        "pr",
+        "list",
+        "--state",
+        "open",
+        "--limit",
+        str(limit),
+        "--json",
+        "number,title,body,headRefOid,baseRefOid",
+    )
+    parsed = json.loads(output)
+    if not isinstance(parsed, list):
+        raise ValueError("Unexpected gh pr list output")
+    return parsed
+
+
+def fetch_pr_head_ref(repo: Path, pr_number: int) -> str:
+    ref = f"{JEV_FETCH_REF_PREFIX}{pr_number}"
+    run_git(repo, "fetch", "--quiet", "origin", f"pull/{pr_number}/head:{ref}")
+    return ref
+
+
+def discover_open_pr_skill_targets(
+    repo: Path,
+    max_prs: int,
+    max_skills: int,
+) -> list[dict[str, Any]]:
+    if max_skills <= 0:
+        return []
+    targets: list[dict[str, Any]] = []
+    for pr in list_open_prs(repo, max_prs):
+        number = int(pr["number"])
+        base_sha = str(pr.get("baseRefOid") or "origin/main")
+        if not pr.get("headRefOid"):
+            continue
+        try:
+            head_ref = fetch_pr_head_ref(repo, number)
+        except subprocess.CalledProcessError:
+            continue
+        skill_dirs = list_changed_skill_dirs(repo, base_sha, head_ref)
+        if not skill_dirs:
+            continue
+        pr_meta = {
+            "number": number,
+            "title": pr.get("title") or "",
+            "body": pr.get("body") or "",
+        }
+        for skill_rel in skill_dirs:
+            targets.append(
+                {
+                    "pr_number": number,
+                    "pr_meta": pr_meta,
+                    "skill_dir": skill_rel,
+                    "base": base_sha,
+                    "head": head_ref,
+                },
+            )
+            if len(targets) >= max_skills:
+                return targets
+    return targets
 
 
 def parse_args() -> argparse.Namespace:
@@ -306,6 +482,17 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--timeout", type=float, default=30.0, help="HTTP timeout seconds")
     parser.add_argument("--json", action="store_true", help="Print machine-readable output")
     parser.add_argument("--dry-run", action="store_true", help="Show targets without calling Jev")
+    parser.add_argument(
+        "--open-prs",
+        action="store_true",
+        help="Discover changed skills across open GitHub PRs (requires gh auth).",
+    )
+    parser.add_argument(
+        "--max-prs",
+        type=int,
+        default=DEFAULT_MAX_PRS,
+        help=f"Max open PRs to scan with --open-prs (default: {DEFAULT_MAX_PRS})",
+    )
     return parser.parse_args()
 
 
@@ -315,31 +502,71 @@ def main() -> int:
     repo = (args.repo.resolve() if args.repo else find_repo_root(__file__))
     load_dotenv_local(find_repo_root(__file__))
 
+    eval_targets: list[dict[str, Any]] = []
     skill_dirs: list[str] = list(dict.fromkeys(args.skill_dir))
-    if not skill_dirs:
-        if not args.base or not args.head:
+    if skill_dirs:
+        base = args.base or "HEAD"
+        head = args.head or "HEAD"
+        for skill_rel in skill_dirs:
+            eval_targets.append(
+                {
+                    "pr_number": None,
+                    "pr_meta": None,
+                    "skill_dir": skill_rel,
+                    "base": base,
+                    "head": head,
+                },
+            )
+    elif args.open_prs:
+        if not gh_available(repo):
             print(
-                "Usage: maintainer:jev-hints -- --base <ref> --head <ref>\n"
-                "       maintainer:jev-hints -- --skill-dir skills/my-skill",
+                "Jev open-PR batch requires authenticated `gh` (see docs/maintainers/jev-hints.md).",
                 file=sys.stderr,
             )
             return 2
-        skill_dirs = list_changed_skill_dirs(repo, args.base, args.head)
+        eval_targets = discover_open_pr_skill_targets(repo, args.max_prs, args.max_skills)
+    else:
+        if not args.base or not args.head:
+            print(
+                "Usage: maintainer:jev-hints -- --base <ref> --head <ref>\n"
+                "       maintainer:jev-hints -- --skill-dir skills/my-skill\n"
+                "       maintainer:jev-hints -- --open-prs",
+                file=sys.stderr,
+            )
+            return 2
+        for skill_rel in list_changed_skill_dirs(repo, args.base, args.head):
+            eval_targets.append(
+                {
+                    "pr_number": None,
+                    "pr_meta": None,
+                    "skill_dir": skill_rel,
+                    "base": args.base,
+                    "head": args.head,
+                },
+            )
 
-    if not skill_dirs:
-        print("No changed canonical skill directories for this range.")
+    if not eval_targets:
+        if args.open_prs:
+            print("No open PRs with changed canonical skill directories in scan range.")
+        else:
+            print("No changed canonical skill directories for this range.")
         return 0
 
     skipped = 0
-    if len(skill_dirs) > args.max_skills:
-        skipped = len(skill_dirs) - args.max_skills
-        skill_dirs = skill_dirs[: args.max_skills]
+    if not args.open_prs and len(eval_targets) > args.max_skills:
+        skipped = len(eval_targets) - args.max_skills
+        eval_targets = eval_targets[: args.max_skills]
 
     api_key = resolve_api_key()
     if args.dry_run:
-        print(f"Would evaluate {len(skill_dirs)} skill(s):" if api_key else "Dry run (no TYPESAFE_API_KEY):")
-        for skill_rel in skill_dirs:
-            print(f"- {skill_rel}")
+        print(
+            f"Would evaluate {len(eval_targets)} skill(s):"
+            if api_key
+            else "Dry run (no TYPESAFE_API_KEY):",
+        )
+        for target in eval_targets:
+            prefix = f"#{target['pr_number']} " if target.get("pr_number") else ""
+            print(f"- {prefix}{target['skill_dir']}")
         if skipped:
             print(f"(Skipping {skipped} additional skill(s); raise --max-skills to include them.)")
         return 0
@@ -351,14 +578,19 @@ def main() -> int:
         )
         return 0
 
-    base = args.base or "HEAD"
-    head = args.head or "HEAD"
     results: list[dict[str, Any]] = []
     total_input = 0
     total_output = 0
 
-    for skill_rel in skill_dirs:
-        state = build_state(repo, skill_rel, base, head)
+    for target in eval_targets:
+        skill_rel = target["skill_dir"]
+        state = build_state(
+            repo,
+            skill_rel,
+            target["base"],
+            target["head"],
+            pr_meta=target.get("pr_meta"),
+        )
         try:
             response = call_jev(api_key, state, args.model, args.timeout)
         except (error.URLError, error.HTTPError, TimeoutError, json.JSONDecodeError, ValueError) as exc:
@@ -367,15 +599,18 @@ def main() -> int:
         usage = response.get("usage") or {}
         total_input += int(usage.get("input_tokens") or 0)
         total_output += int(usage.get("output_tokens") or 0)
+        answers = response.get("answers") or {}
         row = {
             "skill_dir": skill_rel,
-            "answers": response.get("answers"),
+            "pr_number": target.get("pr_number"),
+            "answers": answers,
+            "urgency_score": urgency_score(answers),
             "model": response.get("model"),
             "usage": usage,
         }
         results.append(row)
         if not args.json:
-            print(format_hint(skill_rel, response))
+            print(format_hint(skill_rel, response, pr_number=target.get("pr_number")))
 
     if args.json:
         print(
@@ -391,21 +626,31 @@ def main() -> int:
     else:
         print(
             f"Jev usage this run: {total_input} input / {total_output} output tokens "
-            f"({len(skill_dirs)} skill call(s)). Advisory only — not a merge gate.",
+            f"({len(eval_targets)} skill call(s)). Advisory only — not a merge gate.",
         )
         if skipped:
             print(f"Skipped {skipped} additional changed skill(s); re-run with --max-skills.")
 
-        ranked = []
-        for row in results:
-            choice = ((row.get("answers") or {}).get("maintainer_priority") or {}).get("choice")
-            ranked.append((PRIORITY_ORDER.get(str(choice), 1), row["skill_dir"], choice))
-        ranked.sort(reverse=True)
-        hot = [item for item in ranked if item[0] >= PRIORITY_ORDER["review_before_merge"]]
+        ranked = sorted(
+            results,
+            key=lambda row: float(row.get("urgency_score") or 0.0),
+            reverse=True,
+        )
+        hot = [
+            row
+            for row in ranked
+            if float(row.get("urgency_score") or 0.0) >= PRIORITY_ORDER["review_before_merge"] * 10.0
+            or (
+                ((row.get("answers") or {}).get("maintainer_priority") or {}).get("choice")
+                in ("review_before_merge", "stop_and_inspect")
+            )
+        ]
         if hot:
             print("Inspect first:")
-            for _, skill_rel, choice in hot[:5]:
-                print(f"- {skill_rel} ({choice})")
+            for row in hot[:8]:
+                choice = ((row.get("answers") or {}).get("maintainer_priority") or {}).get("choice")
+                prefix = f"#{row['pr_number']} " if row.get("pr_number") else ""
+                print(f"- {prefix}{row['skill_dir']} ({choice})")
 
     return 0
 

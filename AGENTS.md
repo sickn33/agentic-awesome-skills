@@ -58,3 +58,20 @@ Reviewed fork bundle exceptions are restricted to the protected-base ledger in
 bind a complete previously reviewed skill tree and still require exact-current-head
 attestation, all required checks and strict protection; no general script allowlist
 or PR-controlled ledger is authorized.
+
+## Learned User Preferences
+
+- For maintainer sweeps, PR merges, issue closure, and releases, follow the canonical `antigravity-maintainer-batch-release` skill together with `.github/MAINTENANCE.md`; do not substitute a generic Git or GitHub workflow.
+- When executing an attached plan, implement the plan without editing the plan file; use existing todos instead of recreating them.
+- Optional TypeSafe Jev tooling must accelerate triage and quality; never add mandatory steps to `merge:batch`, CI, or branch protection.
+- Keep Jev usage within a small monthly TypeSafe budget by capping skills per run and treating output as advisory only.
+- Store TypeSafe API keys only in gitignored `.env.local`; rotate any key exposed in chat, logs, or commits.
+- Before committing new maintainer tooling, run a full validation round on a real open skill PR (worktree, deterministic checks, and Jev smoke when applicable).
+- Release changelog and GitHub release notes must match the actual tag diff (skill counts, catalog totals, contributor thanks); emphasize catalog skills in user-facing notes, not maintainer-only tooling.
+- Respond in Italian when the user writes maintainer or release requests in Italian.
+
+## Learned Workspace Facts
+
+- `npm run maintainer:jev-hints` evaluates skill content from the `--head` git ref via `git show`; pass `--repo` with a PR worktree when changed skills are not present on the current checkout.
+- Jev hints default to five skills per run, exit 0 with a skip message when `TYPESAFE_API_KEY` is unset, and never satisfy Tessl or `--reviewed-head` skill review.
+- Maintainer documentation for Jev lives in `docs/maintainers/jev-hints.md`; the upstream TypeSafe agent skill is installed under `.agents/skills/typesafe-ai/` via `npx skills add typesafe-ai/skills --skill typesafe-ai`.

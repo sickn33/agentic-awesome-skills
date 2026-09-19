@@ -46,6 +46,19 @@ class JevMaintainerHintsTest(unittest.TestCase):
                         with mock.patch("sys.argv", ["jev", "--base", "a", "--head", "b"]):
                             self.assertEqual(hints.main(), 0)
 
+    def test_urgency_score_ranks_stop_and_inspect_highest(self):
+        low = hints.urgency_score(
+            {"maintainer_priority": {"choice": "routine"}, "triage_bucket": {"choice": "valid_source"}},
+        )
+        high = hints.urgency_score(
+            {
+                "maintainer_priority": {"choice": "stop_and_inspect"},
+                "triage_bucket": {"choice": "policy_blocker"},
+                "doc_security_red_flags": {"noul": 0.9},
+            },
+        )
+        self.assertGreater(high, low)
+
     def test_call_jev_parses_response(self):
         payload = {
             "model": "jev-1.13.0",
