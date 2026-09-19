@@ -37,6 +37,8 @@ Current operational guidance lives in `users/`, `contributors/`, and the current
 
 ## Maintainers
 
+- [`maintainers/merge-batch.md`](maintainers/merge-batch.md)
+- [`maintainers/jev-hints.md`](maintainers/jev-hints.md) — optional TypeSafe Jev triage (local only)
 - [`maintainers/release-process.md`](maintainers/release-process.md)
 - [`maintainers/merging-prs.md`](maintainers/merging-prs.md)
 - [`maintainers/rollback-procedure.md`](maintainers/rollback-procedure.md)

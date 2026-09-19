@@ -5,6 +5,7 @@
 ## Prerequisites
 
 - Start from a clean `main` that exactly matches `origin/main`.
+- Optional: while triaging skill PRs, run [`maintainer:jev-hints`](jev-hints.md) locally for a fast priority sort. It is not part of `merge:batch` and never satisfies skill review.
 - For a real merge, require pull-request-only strict branch protection with the four exact GitHub-Actions-owned checks, administrator enforcement, no applicable ruleset bypass actors, and no merge queue. Dry runs remain available without this server-side prerequisite.
 - Make sure [`.github/MAINTENANCE.md`](../../.github/MAINTENANCE.md) is the governing policy.
 - Have `gh` authenticated with maintainer permissions.

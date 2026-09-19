@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [17.6.0] - 2026-09-19 - "Maintainer Jev Hints and Community Skill Batch"
+
+> Adds optional TypeSafe Jev triage for maintainers and merges five reviewed
+> community skills plus a dependency hygiene patch in the Loki example app.
+
+A maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It introduces optional local Jev hints for maintainer skill triage (never a merge
+gate), merges five community skills through the protected workflow, and bumps an
+example-app dependency; existing installation interfaces remain supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.6.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- Optional maintainer command `npm run maintainer:jev-hints` with
+  `docs/maintainers/jev-hints.md` (TypeSafe Jev advisory triage only).
+- `anti-slop-design`: design-quality guardrails for agent-generated UI copy and layout.
+- `google-no-code`: Google Forms plus Apps Script trigger patterns without a full app stack.
+- `resumable-implementation-contracts`: resumable multi-step implementation contracts for agents.
+- `weather-observation-fetching`: fetching and normalizing public weather observation data.
+
+### Improved
+
+- Bumped `express-rate-limit` in the Loki Mode todo example backend (8.6.2 → 8.7.0).
+- Maintainer batch-release skill documents when to run Jev hints during PR triage.
+
+### Validation scope
+
+Source PRs passed maintainer attestation at exact head SHAs, repository validation,
+reference and documentation-security checks, protected CI, and CodeQL where required.
+Jev output was used only to prioritize maintainer inspection; Tessl or manual review
+remained authoritative for skill semantics.
+
+---
+
 ## [17.5.0] - 2026-09-18 - "Beatra Video Studio, Meteora DLMM Screening, and Catalog Validation Hardening"
 
 > Adds two reviewed skills (one official vendor catalog pointer, one read-only

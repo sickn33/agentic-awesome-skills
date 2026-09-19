@@ -38,6 +38,7 @@ Before changing anything:
    - Separate valid source changes, repairable PRs, conflicts, generated-only noise, promotional links, and unsupported ownership/license changes.
    - Review semantics, safety, provenance, risk labels, limitations, source credits, and changed-skill evidence.
    - Prefer narrow maintainer repairs on the contributor branch when maintainer edits are enabled.
+   - Optional accelerator when triaging several skill PRs: if `TYPESAFE_API_KEY` is set locally, run `npm run maintainer:jev-hints -- --base origin/main --head <head-sha>` once to sort “inspect first” candidates. Jev output is advisory only; Tessl and `--reviewed-head` attestation remain authoritative. See `docs/maintainers/jev-hints.md`.
 
 2. Validate changed skills truthfully.
    - Run `npm run validate`, `npm run validate:references`, `npm run security:docs`, changed-skill evidence, and the relevant tests.

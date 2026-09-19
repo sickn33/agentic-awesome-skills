@@ -75,7 +75,8 @@
     "app:test:coverage": "cd apps/web-app && npm run test:coverage -- --run",
     "app:dev": "npm run app:setup && cd apps/web-app && npm run dev",
     "app:build": "npm run app:setup && cd apps/web-app && npm run build",
-    "app:preview": "cd apps/web-app && npm run preview"
+    "app:preview": "cd apps/web-app && npm run preview",
+    "maintainer:jev-hints": "node tools/scripts/run-python.js tools/scripts/jev_maintainer_hints.py"
   },
   "dependencies": {
     "ajv": "^8.20.0",
