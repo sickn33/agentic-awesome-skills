@@ -7,6 +7,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [17.7.0] - 2026-09-19 - "YYLO Ledger Skills Suite"
+
+> Adds seven community skills for YYLO Ledger task, wiki, workflow, and artifact
+> workflows plus the Ralph loop executor, with refreshed catalog surfaces.
+
+A maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It merges seven YYLO skills through the protected maintainer workflow, refreshes
+catalog and plugin surfaces for **2,141** skills, and closes a redundant Snyk
+dependency PR that violated the source-only contract. Existing installation
+interfaces remain supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.7.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- `artifact-yylo`: capture and retrieve durable YYLO Ledger artifact Records with
+  secret-safe immutable evidence (source: `yylo-dev/yylo-skills`).
+- `ledger-tasks-yylo`: YYLO Ledger task lifecycle, dependencies, routing, and
+  registry-aware cross-project access.
+- `plan-ledger-tasks-yylo`: concise PDR plus implementation-sized Ledger tasks when
+  the user explicitly asks to plan work.
+- `ralph-loop-yylo`: execute one explicitly assigned Ledger task through the Ralph
+  loop to a validated queued commit (`risk: critical`; no push/deploy).
+- `understand-project-yylo`: read-only architecture and validation-loop inspection
+  before planning or implementation.
+- `wiki-yylo`: revision-safe YYLO wiki Records without direct Ledger storage edits.
+- `workflow-yylo`: validated workflow Records with explicit storage/execution/evidence
+  boundaries.
+
+### Improved
+
+- Refreshed canonical indexes, catalogs, plugin mirrors, editorial bundles, and
+  web assets for the 2,141-skill release.
+
+### Validation scope
+
+PR #1507 passed maintainer attestation at head `d588e6b5b8546bd6a45d32654cb1c9b05d858258`,
+repository validation, reference and documentation-security checks, protected CI,
+CodeQL, dependency review, package publication, and release-only Pages verification.
+Tessl was unavailable; maintainer semantic review covered all seven skill subtrees.
+
+Thanks to @FrancoStino (#1507) for the YYLO skills contribution.
+
+---
+
 ## [17.6.0] - 2026-09-19 - "Weather Skills, Idea Evaluator, Google No-Code, and Anti-Slop Design"
 
 > Adds six reviewed skills (weather model and observation retrieval, multi-agent
