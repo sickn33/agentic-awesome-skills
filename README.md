@@ -522,6 +522,7 @@ Key source families include:
 
 ### Community Contributors
 
+- **[wwewtech/anti-slop-design](https://github.com/wwewtech/anti-slop-design)**: Source for the `anti-slop-design` skill - anti-AI-slop UI/UX engineering with token archetypes and a seven-axis quality gate (MIT).
 - **[romankurnovskii/etemaro](https://github.com/romankurnovskii/etemaro)**: Source of the `meteora-dlmm-pool-screening` skill - read-only screening and ranking of Meteora DLMM pools from public APIs (MIT).
 - **[tubeagentkit/youtube-transcript-skills](https://github.com/tubeagentkit/youtube-transcript-skills)**: Source for the `youtube-transcript-skills` skill - YouTube transcript fetching, video/channel search, channel browsing, and playlist extraction via the getyoutubetranscript.com API, free tier with no card required (MIT).
 - **[Pranav-Nexus/antigravity-skill-porter](https://github.com/Pranav-Nexus/antigravity-skill-porter)**: MIT source for `skill-porter`, adapted for conservative local bundle previews and complete support-file copying.

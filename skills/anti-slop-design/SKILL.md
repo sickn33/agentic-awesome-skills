@@ -384,3 +384,10 @@ Use this transformation blueprint when refactoring vibe-coded components:
 
 Before delivering code, assert:
 > *"Does this interface feel like it was crafted by an elite, disciplined design technologist with extreme respect for the user's attention and time, or does it look like an AI generated it from a prompt? If any element feels like prompt-slop, eliminate it immediately."*
+
+## Limitations
+
+- Opinionated aesthetic rules may conflict with an existing brand system; align tokens with the product's design system when one is already mandated.
+- The seven-axis gate is a heuristic checklist, not a substitute for user research, usability testing, or brand/legal review.
+- Does not replace accessibility audits, performance profiling, or backend/API design work.
+- Archetype tokens and Tailwind examples assume a web stack; native mobile or desktop toolkits need separate patterns.
