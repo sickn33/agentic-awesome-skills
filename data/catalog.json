@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-18T03:54:02.000Z",
-  "total": 2133,
+  "total": 2134,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -3124,6 +3124,41 @@
         "supervised"
       ],
       "path": "skills/anti-sleep/SKILL.md"
+    },
+    {
+      "id": "anti-slop-design",
+      "canonical_id": "anti-slop-design",
+      "name": "anti-slop-design",
+      "description": "Autonomous Principal Design Technologist. Cures vibe-coded software from AI frontend slop using curated token archetypes and 7-axis quality gating.",
+      "category": "frontend",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "wwewtech/anti-slop-design",
+      "license": "MIT",
+      "license_source": "https://github.com/wwewtech/anti-slop-design/blob/main/LICENSE",
+      "tags": [
+        "ui-ux",
+        "design-systems",
+        "anti-slop",
+        "frontend",
+        "tailwind"
+      ],
+      "triggers": [
+        "ui-ux",
+        "design-systems",
+        "anti-slop",
+        "frontend",
+        "tailwind",
+        "anti",
+        "slop",
+        "autonomous",
+        "principal",
+        "technologist",
+        "cures",
+        "vibe"
+      ],
+      "path": "skills/anti-slop-design/SKILL.md"
     },
     {
       "id": "anti-sycophancy",

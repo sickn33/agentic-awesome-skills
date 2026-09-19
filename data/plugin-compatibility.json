@@ -2076,6 +2076,25 @@
       "runtime_files": []
     },
     {
+      "id": "anti-slop-design",
+      "path": "skills/anti-slop-design",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "anti-sycophancy",
       "path": "skills/anti-sycophancy",
       "targets": {
@@ -40994,10 +41013,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2133,
+    "total_skills": 2134,
     "supported": {
-      "codex": 2052,
-      "claude": 2074
+      "codex": 2053,
+      "claude": 2075
     },
     "blocked": {
       "codex": 81,
