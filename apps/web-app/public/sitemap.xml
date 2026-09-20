@@ -43,13 +43,79 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/access-review/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/asset-inventory/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/audit-logging/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/aws-cloudtrail/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/azure-monitor-audit/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/business-continuity/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://sickn33.github.io/agentic-awesome-skills/skill/career-ops/</loc>
     <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/change-management/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://sickn33.github.io/agentic-awesome-skills/skill/constraint-driven-development/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/disaster-recovery/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/fedramp-compliance/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/gcp-audit-logs/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/gdpr-compliance/</loc>
     <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -139,7 +205,19 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/hipaa-compliance/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://sickn33.github.io/agentic-awesome-skills/skill/i-have-adhd/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/incident-management/</loc>
     <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -151,7 +229,43 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/iso27001-compliance/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/pci-dss-compliance/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/policy-as-code/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/runbook-creation/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/soc2-compliance/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://sickn33.github.io/agentic-awesome-skills/skill/using-agent-skills/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/vendor-management/</loc>
     <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -1004,120 +1118,6 @@
   </url>
   <url>
     <loc>https://sickn33.github.io/agentic-awesome-skills/skill/multi-agent-patterns/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/n8n-code-javascript/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/n8n-code-python/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/n8n-expression-syntax/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/n8n-mcp-tools-expert/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/n8n-node-configuration/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/n8n-validation-expert/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/n8n-workflow-patterns/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/networkx/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/new-rails-project/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/nika/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/not-a-vibe-coder/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/nutrition-analyzer/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/occupational-health-analyzer/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/odoo-accounting-setup/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/odoo-automated-tests/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/odoo-backup-strategy/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/odoo-docker-deployment/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/odoo-ecommerce-configurator/</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sickn33.github.io/agentic-awesome-skills/skill/odoo-edi-connector/</loc>
     <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

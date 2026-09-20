@@ -174,6 +174,25 @@
       "runtime_files": []
     },
     {
+      "id": "access-review",
+      "path": "skills/access-review",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "accessibility-compliance-accessibility-audit",
       "path": "skills/accessibility-compliance-accessibility-audit",
       "targets": {
@@ -3298,6 +3317,25 @@
       "runtime_files": []
     },
     {
+      "id": "asset-inventory",
+      "path": "skills/asset-inventory",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "astro",
       "path": "skills/astro",
       "targets": {
@@ -3502,6 +3540,25 @@
     {
       "id": "audit-context-building",
       "path": "skills/audit-context-building",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "audit-logging",
+      "path": "skills/audit-logging",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -3780,6 +3837,25 @@
     {
       "id": "aws-cdk-development",
       "path": "skills/aws-cdk-development",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "aws-cloudtrail",
+      "path": "skills/aws-cloudtrail",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -5566,6 +5642,25 @@
     {
       "id": "azure-microsoft-playwright-testing-ts",
       "path": "skills/azure-microsoft-playwright-testing-ts",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "azure-monitor-audit",
+      "path": "skills/azure-monitor-audit",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -7685,6 +7780,25 @@
       "runtime_files": []
     },
     {
+      "id": "business-continuity",
+      "path": "skills/business-continuity",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "busybox-on-windows",
       "path": "skills/busybox-on-windows",
       "targets": {
@@ -8124,6 +8238,25 @@
     {
       "id": "cdk-patterns",
       "path": "skills/cdk-patterns",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "change-management",
+      "path": "skills/change-management",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -13900,6 +14033,25 @@
       "runtime_files": []
     },
     {
+      "id": "disaster-recovery",
+      "path": "skills/disaster-recovery",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "discord-automation",
       "path": "skills/discord-automation",
       "targets": {
@@ -16187,6 +16339,25 @@
       "runtime_files": []
     },
     {
+      "id": "fedramp-compliance",
+      "path": "skills/fedramp-compliance",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ffuf-claude-skill",
       "path": "skills/ffuf-claude-skill",
       "targets": {
@@ -17713,6 +17884,25 @@
       "runtime_files": []
     },
     {
+      "id": "gcp-audit-logs",
+      "path": "skills/gcp-audit-logs",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "gcp-cloud-run",
       "path": "skills/gcp-cloud-run",
       "targets": {
@@ -17734,6 +17924,25 @@
     {
       "id": "gdb-cli",
       "path": "skills/gdb-cli",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "gdpr-compliance",
+      "path": "skills/gdpr-compliance",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -19911,6 +20120,25 @@
       "runtime_files": []
     },
     {
+      "id": "hipaa-compliance",
+      "path": "skills/hipaa-compliance",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "hono",
       "path": "skills/hono",
       "targets": {
@@ -20924,6 +21152,25 @@
       "runtime_files": []
     },
     {
+      "id": "incident-management",
+      "path": "skills/incident-management",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "incident-responder",
       "path": "skills/incident-responder",
       "targets": {
@@ -21401,6 +21648,25 @@
     {
       "id": "ios-developer",
       "path": "skills/ios-developer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "iso27001-compliance",
+      "path": "skills/iso27001-compliance",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -28258,6 +28524,25 @@
       "runtime_files": []
     },
     {
+      "id": "pci-dss-compliance",
+      "path": "skills/pci-dss-compliance",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "pdf-conversion-router",
       "path": "skills/pdf-conversion-router",
       "targets": {
@@ -28927,6 +29212,25 @@
     {
       "id": "polars",
       "path": "skills/polars",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "policy-as-code",
+      "path": "skills/policy-as-code",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -31869,6 +32173,25 @@
       "runtime_files": []
     },
     {
+      "id": "runbook-creation",
+      "path": "skills/runbook-creation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "rust-async-patterns",
       "path": "skills/rust-async-patterns",
       "targets": {
@@ -34749,6 +35072,25 @@
     {
       "id": "snowflake-development",
       "path": "skills/snowflake-development",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "soc2-compliance",
+      "path": "skills/soc2-compliance",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -39228,6 +39570,25 @@
       "runtime_files": []
     },
     {
+      "id": "vendor-management",
+      "path": "skills/vendor-management",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "vercel-ai-sdk-expert",
       "path": "skills/vercel-ai-sdk-expert",
       "targets": {
@@ -41515,10 +41876,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2160,
+    "total_skills": 2179,
     "supported": {
-      "codex": 2077,
-      "claude": 2101
+      "codex": 2096,
+      "claude": 2120
     },
     "blocked": {
       "codex": 83,

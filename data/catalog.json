@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-19T18:17:10.000Z",
-  "total": 2160,
+  "total": 2179,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -272,6 +272,35 @@
         "verification"
       ],
       "path": "skills/acceptance-orchestrator/SKILL.md"
+    },
+    {
+      "id": "access-review",
+      "canonical_id": "access-review",
+      "name": "access-review",
+      "description": "Conduct periodic access reviews and certifications. Implement access governance and recertification workflows. Use when managing access compliance.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "access"
+      ],
+      "triggers": [
+        "access",
+        "review",
+        "conduct",
+        "periodic",
+        "reviews",
+        "certifications",
+        "governance",
+        "recertification",
+        "managing",
+        "compliance"
+      ],
+      "path": "skills/access-review/SKILL.md"
     },
     {
       "id": "accessibility-compliance-accessibility-audit",
@@ -5013,6 +5042,38 @@
       "path": "skills/ask-questions-if-underspecified/SKILL.md"
     },
     {
+      "id": "asset-inventory",
+      "canonical_id": "asset-inventory",
+      "name": "asset-inventory",
+      "description": "Maintain IT asset inventory and configuration management database. Track hardware, software, and cloud resources. Use when managing IT assets.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "asset",
+        "inventory"
+      ],
+      "triggers": [
+        "asset",
+        "inventory",
+        "maintain",
+        "configuration",
+        "database",
+        "track",
+        "hardware",
+        "software",
+        "cloud",
+        "resources",
+        "managing",
+        "assets"
+      ],
+      "path": "skills/asset-inventory/SKILL.md"
+    },
+    {
       "id": "astro",
       "canonical_id": "astro",
       "name": "astro",
@@ -5346,6 +5407,38 @@
         "before"
       ],
       "path": "skills/audit-context-building/SKILL.md"
+    },
+    {
+      "id": "audit-logging",
+      "canonical_id": "audit-logging",
+      "name": "audit-logging",
+      "description": "Implement centralized audit logging and SIEM integration. Configure log retention and security monitoring. Use when implementing audit trail requirements.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "audit",
+        "logging"
+      ],
+      "triggers": [
+        "audit",
+        "logging",
+        "centralized",
+        "siem",
+        "integration",
+        "configure",
+        "log",
+        "retention",
+        "security",
+        "monitoring",
+        "implementing",
+        "trail"
+      ],
+      "path": "skills/audit-logging/SKILL.md"
     },
     {
       "id": "audit-skills",
@@ -5751,6 +5844,38 @@
         "python"
       ],
       "path": "skills/aws-cdk-development/SKILL.md"
+    },
+    {
+      "id": "aws-cloudtrail",
+      "canonical_id": "aws-cloudtrail",
+      "name": "aws-cloudtrail",
+      "description": "Configure AWS CloudTrail for audit logging. Set up organization trails and event analysis. Use when auditing AWS activity.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "aws",
+        "cloudtrail"
+      ],
+      "triggers": [
+        "aws",
+        "cloudtrail",
+        "configure",
+        "audit",
+        "logging",
+        "set",
+        "up",
+        "organization",
+        "trails",
+        "event",
+        "analysis",
+        "auditing"
+      ],
+      "path": "skills/aws-cloudtrail/SKILL.md"
     },
     {
       "id": "aws-cost-cleanup",
@@ -8491,6 +8616,39 @@
         "integrated"
       ],
       "path": "skills/azure-microsoft-playwright-testing-ts/SKILL.md"
+    },
+    {
+      "id": "azure-monitor-audit",
+      "canonical_id": "azure-monitor-audit",
+      "name": "azure-monitor-audit",
+      "description": "Configure Azure Monitor and Activity Log for auditing. Set up diagnostic settings and log analytics. Use when auditing Azure activity.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "azure",
+        "monitor",
+        "audit"
+      ],
+      "triggers": [
+        "azure",
+        "monitor",
+        "audit",
+        "configure",
+        "activity",
+        "log",
+        "auditing",
+        "set",
+        "up",
+        "diagnostic",
+        "settings",
+        "analytics"
+      ],
+      "path": "skills/azure-monitor-audit/SKILL.md"
     },
     {
       "id": "azure-monitor-ingestion-java",
@@ -11718,6 +11876,38 @@
       "path": "skills/business-analyst/SKILL.md"
     },
     {
+      "id": "business-continuity",
+      "canonical_id": "business-continuity",
+      "name": "business-continuity",
+      "description": "Develop business continuity plans and impact analysis. Implement BCP testing and communication procedures. Use when building organizational resilience.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "business",
+        "continuity"
+      ],
+      "triggers": [
+        "business",
+        "continuity",
+        "develop",
+        "plans",
+        "impact",
+        "analysis",
+        "bcp",
+        "testing",
+        "communication",
+        "procedures",
+        "building",
+        "organizational"
+      ],
+      "path": "skills/business-continuity/SKILL.md"
+    },
+    {
       "id": "busybox-on-windows",
       "canonical_id": "busybox-on-windows",
       "name": "busybox-on-windows",
@@ -12386,6 +12576,35 @@
         "reusable"
       ],
       "path": "skills/cdk-patterns/SKILL.md"
+    },
+    {
+      "id": "change-management",
+      "canonical_id": "change-management",
+      "name": "change-management",
+      "description": "Implement change management processes. Configure CAB reviews, change windows, and rollback procedures. Use when managing production changes.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "change"
+      ],
+      "triggers": [
+        "change",
+        "processes",
+        "configure",
+        "cab",
+        "reviews",
+        "windows",
+        "rollback",
+        "procedures",
+        "managing",
+        "changes"
+      ],
+      "path": "skills/change-management/SKILL.md"
     },
     {
       "id": "changelog-automation",
@@ -21084,6 +21303,38 @@
       "path": "skills/digital-forensics/SKILL.md"
     },
     {
+      "id": "disaster-recovery",
+      "canonical_id": "disaster-recovery",
+      "name": "disaster-recovery",
+      "description": "Implement disaster recovery strategies and runbooks. Configure RPO/RTO targets and failover procedures. Use when planning for business continuity.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "disaster",
+        "recovery"
+      ],
+      "triggers": [
+        "disaster",
+        "recovery",
+        "runbooks",
+        "configure",
+        "rpo",
+        "rto",
+        "targets",
+        "failover",
+        "procedures",
+        "planning",
+        "business",
+        "continuity"
+      ],
+      "path": "skills/disaster-recovery/SKILL.md"
+    },
+    {
       "id": "discord-automation",
       "canonical_id": "discord-automation",
       "name": "discord-automation",
@@ -24528,6 +24779,38 @@
       "path": "skills/fedora-hyprland-installer/SKILL.md"
     },
     {
+      "id": "fedramp-compliance",
+      "canonical_id": "fedramp-compliance",
+      "name": "fedramp-compliance",
+      "description": "Implement FedRAMP requirements for federal cloud services. Configure NIST 800-53 controls and continuous monitoring. Use when providing cloud services to US federal agencies.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "fedramp",
+        "compliance"
+      ],
+      "triggers": [
+        "fedramp",
+        "compliance",
+        "requirements",
+        "federal",
+        "cloud",
+        "configure",
+        "nist",
+        "800",
+        "53",
+        "controls",
+        "continuous",
+        "monitoring"
+      ],
+      "path": "skills/fedramp-compliance/SKILL.md"
+    },
+    {
       "id": "ffuf-claude-skill",
       "canonical_id": "ffuf-claude-skill",
       "name": "ffuf-claude-skill",
@@ -26889,6 +27172,39 @@
       "path": "skills/game-development/web-games/SKILL.md"
     },
     {
+      "id": "gcp-audit-logs",
+      "canonical_id": "gcp-audit-logs",
+      "name": "gcp-audit-logs",
+      "description": "Configure GCP Cloud Audit Logs for compliance. Set up log routing and BigQuery analysis. Use when auditing GCP activity.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "gcp",
+        "audit",
+        "logs"
+      ],
+      "triggers": [
+        "gcp",
+        "audit",
+        "logs",
+        "configure",
+        "cloud",
+        "compliance",
+        "set",
+        "up",
+        "log",
+        "routing",
+        "bigquery",
+        "analysis"
+      ],
+      "path": "skills/gcp-audit-logs/SKILL.md"
+    },
+    {
       "id": "gcp-cloud-run",
       "canonical_id": "gcp-cloud-run",
       "name": "gcp-cloud-run",
@@ -26948,6 +27264,38 @@
         "core"
       ],
       "path": "skills/gdb-cli/SKILL.md"
+    },
+    {
+      "id": "gdpr-compliance",
+      "canonical_id": "gdpr-compliance",
+      "name": "gdpr-compliance",
+      "description": "Implement GDPR data protection requirements. Configure consent management, data subject rights, and privacy by design. Use when processing EU personal data.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "gdpr",
+        "compliance"
+      ],
+      "triggers": [
+        "gdpr",
+        "compliance",
+        "data",
+        "protection",
+        "requirements",
+        "configure",
+        "consent",
+        "subject",
+        "rights",
+        "privacy",
+        "processing",
+        "eu"
+      ],
+      "path": "skills/gdpr-compliance/SKILL.md"
     },
     {
       "id": "gdpr-data-handling",
@@ -30250,6 +30598,38 @@
       "path": "skills/high-end-visual-design/SKILL.md"
     },
     {
+      "id": "hipaa-compliance",
+      "canonical_id": "hipaa-compliance",
+      "name": "hipaa-compliance",
+      "description": "Implement HIPAA security and privacy rules. Configure PHI protections and BAA requirements. Use when handling healthcare data.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "hipaa",
+        "compliance"
+      ],
+      "triggers": [
+        "hipaa",
+        "compliance",
+        "security",
+        "privacy",
+        "rules",
+        "configure",
+        "phi",
+        "protections",
+        "baa",
+        "requirements",
+        "handling",
+        "healthcare"
+      ],
+      "path": "skills/hipaa-compliance/SKILL.md"
+    },
+    {
       "id": "hono",
       "canonical_id": "hono",
       "name": "hono",
@@ -31880,6 +32260,36 @@
       "path": "skills/improve-codebase-architecture/SKILL.md"
     },
     {
+      "id": "incident-management",
+      "canonical_id": "incident-management",
+      "name": "incident-management",
+      "description": "Implement incident management processes and escalation procedures. Configure on-call schedules and post-incident reviews. Use when managing production incidents.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "incident"
+      ],
+      "triggers": [
+        "incident",
+        "processes",
+        "escalation",
+        "procedures",
+        "configure",
+        "call",
+        "schedules",
+        "post",
+        "reviews",
+        "managing",
+        "incidents"
+      ],
+      "path": "skills/incident-management/SKILL.md"
+    },
+    {
       "id": "incident-responder",
       "canonical_id": "incident-responder",
       "name": "incident-responder",
@@ -32632,6 +33042,38 @@
         "core"
       ],
       "path": "skills/ios-developer/SKILL.md"
+    },
+    {
+      "id": "iso27001-compliance",
+      "canonical_id": "iso27001-compliance",
+      "name": "iso27001-compliance",
+      "description": "Implement ISO 27001 Information Security Management System. Configure ISMS controls and risk management. Use when implementing enterprise security frameworks.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "iso27001",
+        "compliance"
+      ],
+      "triggers": [
+        "iso27001",
+        "compliance",
+        "iso",
+        "27001",
+        "information",
+        "security",
+        "configure",
+        "isms",
+        "controls",
+        "risk",
+        "implementing",
+        "enterprise"
+      ],
+      "path": "skills/iso27001-compliance/SKILL.md"
     },
     {
       "id": "issues",
@@ -43124,6 +43566,39 @@
       "path": "skills/pci-compliance/SKILL.md"
     },
     {
+      "id": "pci-dss-compliance",
+      "canonical_id": "pci-dss-compliance",
+      "name": "pci-dss-compliance",
+      "description": "Implement PCI DSS requirements for payment card data. Configure cardholder data environment and security controls. Use when processing payment cards.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "pci",
+        "dss",
+        "compliance"
+      ],
+      "triggers": [
+        "pci",
+        "dss",
+        "compliance",
+        "requirements",
+        "payment",
+        "card",
+        "data",
+        "configure",
+        "cardholder",
+        "environment",
+        "security",
+        "controls"
+      ],
+      "path": "skills/pci-dss-compliance/SKILL.md"
+    },
+    {
       "id": "pdf-conversion-router",
       "canonical_id": "pdf-conversion-router",
       "name": "pdf-conversion-router",
@@ -44183,6 +44658,39 @@
         "data"
       ],
       "path": "skills/polars/SKILL.md"
+    },
+    {
+      "id": "policy-as-code",
+      "canonical_id": "policy-as-code",
+      "name": "policy-as-code",
+      "description": "Implement policy as code with OPA, Sentinel, and Kyverno. Automate policy enforcement in CI/CD and infrastructure. Use when enforcing compliance through automation.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "policy",
+        "as",
+        "code"
+      ],
+      "triggers": [
+        "policy",
+        "as",
+        "code",
+        "opa",
+        "sentinel",
+        "kyverno",
+        "automate",
+        "enforcement",
+        "ci",
+        "cd",
+        "infrastructure",
+        "enforcing"
+      ],
+      "path": "skills/policy-as-code/SKILL.md"
     },
     {
       "id": "polis-protocol",
@@ -48703,6 +49211,38 @@
       "path": "skills/runaway-guard/SKILL.md"
     },
     {
+      "id": "runbook-creation",
+      "canonical_id": "runbook-creation",
+      "name": "runbook-creation",
+      "description": "Create operational runbooks and standard operating procedures. Document troubleshooting guides and recovery procedures. Use when documenting operational knowledge.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "runbook",
+        "creation"
+      ],
+      "triggers": [
+        "runbook",
+        "creation",
+        "operational",
+        "runbooks",
+        "standard",
+        "operating",
+        "procedures",
+        "document",
+        "troubleshooting",
+        "guides",
+        "recovery",
+        "documenting"
+      ],
+      "path": "skills/runbook-creation/SKILL.md"
+    },
+    {
       "id": "rust-async-patterns",
       "canonical_id": "rust-async-patterns",
       "name": "rust-async-patterns",
@@ -53009,6 +53549,38 @@
         "snowpipe"
       ],
       "path": "skills/snowflake-development/SKILL.md"
+    },
+    {
+      "id": "soc2-compliance",
+      "canonical_id": "soc2-compliance",
+      "name": "soc2-compliance",
+      "description": "Implement SOC 2 Trust Services Criteria. Configure security, availability, and processing integrity controls. Use when achieving SOC 2 certification.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "soc2",
+        "compliance"
+      ],
+      "triggers": [
+        "soc2",
+        "compliance",
+        "soc",
+        "trust",
+        "criteria",
+        "configure",
+        "security",
+        "availability",
+        "processing",
+        "integrity",
+        "controls",
+        "achieving"
+      ],
+      "path": "skills/soc2-compliance/SKILL.md"
     },
     {
       "id": "social-content",
@@ -59663,6 +60235,36 @@
         "quantization"
       ],
       "path": "skills/vector-index-tuning/SKILL.md"
+    },
+    {
+      "id": "vendor-management",
+      "canonical_id": "vendor-management",
+      "name": "vendor-management",
+      "description": "Implement vendor risk management programs. Assess third-party security and maintain vendor inventory. Use when managing supplier security.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "vendor"
+      ],
+      "triggers": [
+        "vendor",
+        "risk",
+        "programs",
+        "assess",
+        "third",
+        "party",
+        "security",
+        "maintain",
+        "inventory",
+        "managing",
+        "supplier"
+      ],
+      "path": "skills/vendor-management/SKILL.md"
     },
     {
       "id": "vercel-ai-sdk-expert",
