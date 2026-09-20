@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-19T18:17:10.000Z",
-  "total": 2214,
+  "total": 2284,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -2142,6 +2142,40 @@
         "scoring"
       ],
       "path": "skills/ai-engineering-toolkit/SKILL.md"
+    },
+    {
+      "id": "ai-inference-service-mesh",
+      "canonical_id": "ai-inference-service-mesh",
+      "name": "ai-inference-service-mesh",
+      "description": "Use service mesh patterns for AI inference traffic management, mTLS, canary releases, policy enforcement, and cross-cluster resilience.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "ai",
+        "inference",
+        "service",
+        "mesh"
+      ],
+      "triggers": [
+        "ai",
+        "inference",
+        "service",
+        "mesh",
+        "traffic",
+        "mtls",
+        "canary",
+        "releases",
+        "policy",
+        "enforcement",
+        "cross",
+        "cluster"
+      ],
+      "path": "skills/ai-inference-service-mesh/SKILL.md"
     },
     {
       "id": "ai-loop",
@@ -4951,6 +4985,36 @@
       "path": "skills/arm-cortex-expert/SKILL.md"
     },
     {
+      "id": "arm-templates",
+      "canonical_id": "arm-templates",
+      "name": "arm-templates",
+      "description": "Deploy Azure resources with ARM templates and Bicep. Create modular deployments and manage dependencies. Use when deploying Azure-native IaC.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "arm"
+      ],
+      "triggers": [
+        "arm",
+        "deploy",
+        "azure",
+        "resources",
+        "bicep",
+        "modular",
+        "deployments",
+        "dependencies",
+        "deploying",
+        "native",
+        "iac"
+      ],
+      "path": "skills/arm-templates/SKILL.md"
+    },
+    {
       "id": "arrowspace",
       "canonical_id": "arrowspace",
       "name": "arrowspace",
@@ -6069,6 +6133,39 @@
       "path": "skills/aws-cost-operations/SKILL.md"
     },
     {
+      "id": "aws-cost-optimization",
+      "canonical_id": "aws-cost-optimization",
+      "name": "aws-cost-optimization",
+      "description": "Reduce AWS spend with rightsizing, autoscaling, commitment planning, and storage lifecycle policies. Use when running FinOps reviews, lowering cloud bills, or improving cost-per-request metrics.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "aws",
+        "cost",
+        "optimization"
+      ],
+      "triggers": [
+        "aws",
+        "cost",
+        "optimization",
+        "reduce",
+        "spend",
+        "rightsizing",
+        "autoscaling",
+        "commitment",
+        "planning",
+        "storage",
+        "lifecycle",
+        "policies"
+      ],
+      "path": "skills/aws-cost-optimization/SKILL.md"
+    },
+    {
       "id": "aws-cost-optimizer",
       "canonical_id": "aws-cost-optimizer",
       "name": "aws-cost-optimizer",
@@ -6092,6 +6189,134 @@
         "explorer"
       ],
       "path": "skills/aws-cost-optimizer/SKILL.md"
+    },
+    {
+      "id": "aws-ec2",
+      "canonical_id": "aws-ec2",
+      "name": "aws-ec2",
+      "description": "Manage EC2 instances, AMIs, and auto-scaling groups. Configure security groups, key pairs, and instance types. Use when deploying compute resources on AWS.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "aws",
+        "ec2"
+      ],
+      "triggers": [
+        "aws",
+        "ec2",
+        "instances",
+        "amis",
+        "auto",
+        "scaling",
+        "groups",
+        "configure",
+        "security",
+        "key",
+        "pairs",
+        "instance"
+      ],
+      "path": "skills/aws-ec2/SKILL.md"
+    },
+    {
+      "id": "aws-ecs-fargate",
+      "canonical_id": "aws-ecs-fargate",
+      "name": "aws-ecs-fargate",
+      "description": "Deploy containers on ECS and Fargate. Configure task definitions, services, and load balancing. Use when running containerized workloads on AWS.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "aws",
+        "ecs",
+        "fargate"
+      ],
+      "triggers": [
+        "aws",
+        "ecs",
+        "fargate",
+        "deploy",
+        "containers",
+        "configure",
+        "task",
+        "definitions",
+        "load",
+        "balancing",
+        "running",
+        "containerized"
+      ],
+      "path": "skills/aws-ecs-fargate/SKILL.md"
+    },
+    {
+      "id": "aws-iam",
+      "canonical_id": "aws-iam",
+      "name": "aws-iam",
+      "description": "Manage IAM users, roles, and policies. Implement least-privilege access and security best practices. Use when configuring AWS identity and access management.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "aws",
+        "iam"
+      ],
+      "triggers": [
+        "aws",
+        "iam",
+        "users",
+        "roles",
+        "policies",
+        "least",
+        "privilege",
+        "access",
+        "security",
+        "configuring",
+        "identity"
+      ],
+      "path": "skills/aws-iam/SKILL.md"
+    },
+    {
+      "id": "aws-lambda",
+      "canonical_id": "aws-lambda",
+      "name": "aws-lambda",
+      "description": "Build and deploy serverless functions on AWS Lambda. Configure triggers, manage permissions, and optimize performance. Use when implementing serverless applications.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "aws",
+        "lambda"
+      ],
+      "triggers": [
+        "aws",
+        "lambda",
+        "deploy",
+        "serverless",
+        "functions",
+        "configure",
+        "triggers",
+        "permissions",
+        "optimize",
+        "performance",
+        "implementing",
+        "applications"
+      ],
+      "path": "skills/aws-lambda/SKILL.md"
     },
     {
       "id": "aws-mcp-setup",
@@ -6153,6 +6378,69 @@
         "escalation"
       ],
       "path": "skills/aws-penetration-testing/SKILL.md"
+    },
+    {
+      "id": "aws-rds",
+      "canonical_id": "aws-rds",
+      "name": "aws-rds",
+      "description": "Provision and manage RDS databases. Configure backups, replication, and security. Use when deploying managed relational databases on AWS.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "aws",
+        "rds"
+      ],
+      "triggers": [
+        "aws",
+        "rds",
+        "provision",
+        "databases",
+        "configure",
+        "backups",
+        "replication",
+        "security",
+        "deploying",
+        "managed",
+        "relational"
+      ],
+      "path": "skills/aws-rds/SKILL.md"
+    },
+    {
+      "id": "aws-s3",
+      "canonical_id": "aws-s3",
+      "name": "aws-s3",
+      "description": "Configure S3 buckets, policies, and lifecycle rules. Implement versioning, replication, and security. Use when managing object storage on AWS.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "aws",
+        "s3"
+      ],
+      "triggers": [
+        "aws",
+        "s3",
+        "configure",
+        "buckets",
+        "policies",
+        "lifecycle",
+        "rules",
+        "versioning",
+        "replication",
+        "security",
+        "managing",
+        "object"
+      ],
+      "path": "skills/aws-s3/SKILL.md"
     },
     {
       "id": "aws-secrets-manager",
@@ -6294,6 +6582,38 @@
         "framework"
       ],
       "path": "skills/aws-sst-development/SKILL.md"
+    },
+    {
+      "id": "aws-vpc",
+      "canonical_id": "aws-vpc",
+      "name": "aws-vpc",
+      "description": "Design and implement VPCs and networking. Configure subnets, route tables, and security groups. Use when setting up AWS network infrastructure.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "aws",
+        "vpc"
+      ],
+      "triggers": [
+        "aws",
+        "vpc",
+        "vpcs",
+        "networking",
+        "configure",
+        "subnets",
+        "route",
+        "tables",
+        "security",
+        "groups",
+        "setting",
+        "up"
+      ],
+      "path": "skills/aws-vpc/SKILL.md"
     },
     {
       "id": "awt-e2e-testing",
@@ -7245,6 +7565,38 @@
       "path": "skills/azure-ai-voicelive-ts/SKILL.md"
     },
     {
+      "id": "azure-aks",
+      "canonical_id": "azure-aks",
+      "name": "azure-aks",
+      "description": "Deploy and manage Azure Kubernetes Service clusters. Configure node pools, networking, and integrations. Use when running Kubernetes workloads on Azure.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "azure",
+        "aks"
+      ],
+      "triggers": [
+        "azure",
+        "aks",
+        "deploy",
+        "kubernetes",
+        "clusters",
+        "configure",
+        "node",
+        "pools",
+        "networking",
+        "integrations",
+        "running",
+        "workloads"
+      ],
+      "path": "skills/azure-aks/SKILL.md"
+    },
+    {
       "id": "azure-appconfiguration-java",
       "canonical_id": "azure-appconfiguration-java",
       "name": "azure-appconfiguration-java",
@@ -7995,6 +8347,38 @@
         "optimization"
       ],
       "path": "skills/azure-functions/SKILL.md"
+    },
+    {
+      "id": "azure-functions-devsec",
+      "canonical_id": "azure-functions-devsec",
+      "name": "azure-functions-devsec",
+      "description": "Build serverless applications on Azure Functions. Configure triggers, bindings, and deployment. Use when implementing serverless workloads on Azure.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "azure",
+        "functions",
+        "devsec"
+      ],
+      "triggers": [
+        "azure",
+        "functions",
+        "devsec",
+        "serverless",
+        "applications",
+        "configure",
+        "triggers",
+        "bindings",
+        "deployment",
+        "implementing",
+        "workloads"
+      ],
+      "path": "skills/azure-functions-devsec/SKILL.md"
     },
     {
       "id": "azure-identity-dotnet",
@@ -9081,6 +9465,38 @@
       "path": "skills/azure-monitor-query-py/SKILL.md"
     },
     {
+      "id": "azure-networking",
+      "canonical_id": "azure-networking",
+      "name": "azure-networking",
+      "description": "Configure Azure VNets, NSGs, and Azure Firewall. Implement hub-spoke topology and private endpoints. Use when designing Azure network infrastructure.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "azure",
+        "networking"
+      ],
+      "triggers": [
+        "azure",
+        "networking",
+        "configure",
+        "vnets",
+        "nsgs",
+        "firewall",
+        "hub",
+        "spoke",
+        "topology",
+        "private",
+        "endpoints",
+        "designing"
+      ],
+      "path": "skills/azure-networking/SKILL.md"
+    },
+    {
       "id": "azure-postgres-ts",
       "canonical_id": "azure-postgres-ts",
       "name": "azure-postgres-ts",
@@ -9634,6 +10050,38 @@
       "path": "skills/azure-speech-to-text-rest-py/SKILL.md"
     },
     {
+      "id": "azure-sql",
+      "canonical_id": "azure-sql",
+      "name": "azure-sql",
+      "description": "Provision Azure SQL Database and Cosmos DB. Configure security, backups, and replication. Use when deploying managed databases on Azure.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "azure",
+        "sql"
+      ],
+      "triggers": [
+        "azure",
+        "sql",
+        "provision",
+        "database",
+        "cosmos",
+        "db",
+        "configure",
+        "security",
+        "backups",
+        "replication",
+        "deploying",
+        "managed"
+      ],
+      "path": "skills/azure-sql/SKILL.md"
+    },
+    {
       "id": "azure-storage-blob-java",
       "canonical_id": "azure-storage-blob-java",
       "name": "azure-storage-blob-java",
@@ -9931,6 +10379,38 @@
       "path": "skills/azure-storage-queue-ts/SKILL.md"
     },
     {
+      "id": "azure-vms",
+      "canonical_id": "azure-vms",
+      "name": "azure-vms",
+      "description": "Manage Azure Virtual Machines and scale sets. Configure availability sets and managed disks. Use when deploying compute resources on Azure.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "azure",
+        "vms"
+      ],
+      "triggers": [
+        "azure",
+        "vms",
+        "virtual",
+        "machines",
+        "scale",
+        "sets",
+        "configure",
+        "availability",
+        "managed",
+        "disks",
+        "deploying",
+        "compute"
+      ],
+      "path": "skills/azure-vms/SKILL.md"
+    },
+    {
       "id": "azure-web-pubsub-ts",
       "canonical_id": "azure-web-pubsub-ts",
       "name": "azure-web-pubsub-ts",
@@ -10124,6 +10604,37 @@
         "estimates"
       ],
       "path": "skills/backtesting-frameworks/SKILL.md"
+    },
+    {
+      "id": "backup-recovery",
+      "canonical_id": "backup-recovery",
+      "name": "backup-recovery",
+      "description": "Implement backup and recovery strategies. Configure rsync, Restic, and cloud backups. Use when designing data protection solutions.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "backup",
+        "recovery"
+      ],
+      "triggers": [
+        "backup",
+        "recovery",
+        "configure",
+        "rsync",
+        "restic",
+        "cloud",
+        "backups",
+        "designing",
+        "data",
+        "protection",
+        "solutions"
+      ],
+      "path": "skills/backup-recovery/SKILL.md"
     },
     {
       "id": "bamboohr-automation",
@@ -10821,6 +11332,36 @@
         "mcp"
       ],
       "path": "skills/bitbucket-automation/SKILL.md"
+    },
+    {
+      "id": "block-storage",
+      "canonical_id": "block-storage",
+      "name": "block-storage",
+      "description": "Manage block storage volumes and LVM. Configure cloud block storage and local disks. Use when managing disk storage.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "block",
+        "storage"
+      ],
+      "triggers": [
+        "block",
+        "storage",
+        "volumes",
+        "lvm",
+        "configure",
+        "cloud",
+        "local",
+        "disks",
+        "managing",
+        "disk"
+      ],
+      "path": "skills/block-storage/SKILL.md"
     },
     {
       "id": "blockchain-developer",
@@ -12769,6 +13310,38 @@
       "path": "skills/cdk-patterns/SKILL.md"
     },
     {
+      "id": "cdn-setup",
+      "canonical_id": "cdn-setup",
+      "name": "cdn-setup",
+      "description": "Configure CDNs for content delivery. Set up CloudFront, Cloudflare, and Fastly. Use when optimizing global content delivery.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "cdn",
+        "setup"
+      ],
+      "triggers": [
+        "cdn",
+        "setup",
+        "configure",
+        "cdns",
+        "content",
+        "delivery",
+        "set",
+        "up",
+        "cloudfront",
+        "cloudflare",
+        "fastly",
+        "optimizing"
+      ],
+      "path": "skills/cdn-setup/SKILL.md"
+    },
+    {
       "id": "change-management",
       "canonical_id": "change-management",
       "name": "change-management",
@@ -13955,6 +14528,70 @@
       "path": "skills/cloud-penetration-testing/SKILL.md"
     },
     {
+      "id": "cloudflare-pages",
+      "canonical_id": "cloudflare-pages",
+      "name": "cloudflare-pages",
+      "description": "Deploy static sites and full-stack apps on Cloudflare Pages with previews, functions, and custom domains.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "cloudflare",
+        "pages"
+      ],
+      "triggers": [
+        "cloudflare",
+        "pages",
+        "deploy",
+        "static",
+        "sites",
+        "full",
+        "stack",
+        "apps",
+        "previews",
+        "functions",
+        "custom",
+        "domains"
+      ],
+      "path": "skills/cloudflare-pages/SKILL.md"
+    },
+    {
+      "id": "cloudflare-r2",
+      "canonical_id": "cloudflare-r2",
+      "name": "cloudflare-r2",
+      "description": "Manage Cloudflare R2 buckets, lifecycle, and signed URLs. Use for low-egress object storage and media delivery.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "cloudflare",
+        "r2"
+      ],
+      "triggers": [
+        "cloudflare",
+        "r2",
+        "buckets",
+        "lifecycle",
+        "signed",
+        "urls",
+        "low",
+        "egress",
+        "object",
+        "storage",
+        "media",
+        "delivery"
+      ],
+      "path": "skills/cloudflare-r2/SKILL.md"
+    },
+    {
       "id": "cloudflare-security-audit",
       "canonical_id": "cloudflare-security-audit",
       "name": "cloudflare-security-audit",
@@ -13986,6 +14623,36 @@
       "path": "skills/cloudflare-security-audit/SKILL.md"
     },
     {
+      "id": "cloudflare-workers",
+      "canonical_id": "cloudflare-workers",
+      "name": "cloudflare-workers",
+      "description": "Build and deploy edge functions with Cloudflare Workers and Wrangler. Use for APIs, cron jobs, and edge middleware.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "cloudflare",
+        "workers"
+      ],
+      "triggers": [
+        "cloudflare",
+        "workers",
+        "deploy",
+        "edge",
+        "functions",
+        "wrangler",
+        "apis",
+        "cron",
+        "jobs",
+        "middleware"
+      ],
+      "path": "skills/cloudflare-workers/SKILL.md"
+    },
+    {
       "id": "cloudflare-workers-expert",
       "canonical_id": "cloudflare-workers-expert",
       "name": "cloudflare-workers-expert",
@@ -14012,6 +14679,67 @@
         "r2"
       ],
       "path": "skills/cloudflare-workers-expert/SKILL.md"
+    },
+    {
+      "id": "cloudflare-zero-trust",
+      "canonical_id": "cloudflare-zero-trust",
+      "name": "cloudflare-zero-trust",
+      "description": "Protect internal apps with Cloudflare Access, device posture, and Zero Trust policies.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "cloudflare",
+        "zero",
+        "trust"
+      ],
+      "triggers": [
+        "cloudflare",
+        "zero",
+        "trust",
+        "protect",
+        "internal",
+        "apps",
+        "access",
+        "device",
+        "posture",
+        "policies"
+      ],
+      "path": "skills/cloudflare-zero-trust/SKILL.md"
+    },
+    {
+      "id": "cloudformation",
+      "canonical_id": "cloudformation",
+      "name": "cloudformation",
+      "description": "Deploy AWS resources with CloudFormation templates. Create stacks, use nested stacks, and implement drift detection. Use when deploying AWS-native IaC.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "cloudformation"
+      ],
+      "triggers": [
+        "cloudformation",
+        "deploy",
+        "aws",
+        "resources",
+        "stacks",
+        "nested",
+        "drift",
+        "detection",
+        "deploying",
+        "native",
+        "iac"
+      ],
+      "path": "skills/cloudformation/SKILL.md"
     },
     {
       "id": "cloudformation-best-practices",
@@ -16488,6 +17216,38 @@
       "path": "skills/convex/SKILL.md"
     },
     {
+      "id": "convex-backend",
+      "canonical_id": "convex-backend",
+      "name": "convex-backend",
+      "description": "Build reactive backends with Convex functions, schema validation, auth integration, and deployment workflows. Use when building real-time apps with type-safe server functions and automatic caching.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "convex",
+        "backend"
+      ],
+      "triggers": [
+        "convex",
+        "backend",
+        "reactive",
+        "backends",
+        "functions",
+        "schema",
+        "validation",
+        "auth",
+        "integration",
+        "deployment",
+        "building",
+        "real"
+      ],
+      "path": "skills/convex-backend/SKILL.md"
+    },
+    {
       "id": "copilot-delegate",
       "canonical_id": "copilot-delegate",
       "name": "copilot-delegate",
@@ -18141,6 +18901,36 @@
         "architectures"
       ],
       "path": "skills/database-architect/SKILL.md"
+    },
+    {
+      "id": "database-backups",
+      "canonical_id": "database-backups",
+      "name": "database-backups",
+      "description": "Implement database backup strategies. Configure automated backups, retention, and recovery testing. Use when designing backup and recovery procedures.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "database",
+        "backups"
+      ],
+      "triggers": [
+        "database",
+        "backups",
+        "backup",
+        "configure",
+        "automated",
+        "retention",
+        "recovery",
+        "testing",
+        "designing",
+        "procedures"
+      ],
+      "path": "skills/database-backups/SKILL.md"
     },
     {
       "id": "database-cloud-optimization-cost-optimize",
@@ -21988,6 +22778,36 @@
       "path": "skills/django-pro/SKILL.md"
     },
     {
+      "id": "dns-management",
+      "canonical_id": "dns-management",
+      "name": "dns-management",
+      "description": "Configure DNS zones and records. Manage Route53, Cloud DNS, and self-hosted DNS. Use when setting up DNS infrastructure.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "dns"
+      ],
+      "triggers": [
+        "dns",
+        "configure",
+        "zones",
+        "records",
+        "route53",
+        "cloud",
+        "self",
+        "hosted",
+        "setting",
+        "up",
+        "infrastructure"
+      ],
+      "path": "skills/dns-management/SKILL.md"
+    },
+    {
       "id": "doc-coauthoring",
       "canonical_id": "doc-coauthoring",
       "name": "doc-coauthoring",
@@ -25488,6 +26308,39 @@
       "path": "skills/firebase/SKILL.md"
     },
     {
+      "id": "firebase-app-platform",
+      "canonical_id": "firebase-app-platform",
+      "name": "firebase-app-platform",
+      "description": "Build and operate apps on Firebase using Auth, Firestore, Cloud Functions, and Hosting. Use when building mobile/web backends with managed services, real-time data sync, or serverless APIs.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "firebase",
+        "app",
+        "platform"
+      ],
+      "triggers": [
+        "firebase",
+        "app",
+        "platform",
+        "operate",
+        "apps",
+        "auth",
+        "firestore",
+        "cloud",
+        "functions",
+        "hosting",
+        "building",
+        "mobile"
+      ],
+      "path": "skills/firebase-app-platform/SKILL.md"
+    },
+    {
       "id": "firecrawl-scraper",
       "canonical_id": "firecrawl-scraper",
       "name": "firecrawl-scraper",
@@ -27573,6 +28426,38 @@
       "path": "skills/gcp-audit-logs/SKILL.md"
     },
     {
+      "id": "gcp-cloud-functions",
+      "canonical_id": "gcp-cloud-functions",
+      "name": "gcp-cloud-functions",
+      "description": "Deploy serverless functions on Google Cloud Functions. Configure triggers and manage deployments. Use when implementing serverless workloads on GCP.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "gcp",
+        "cloud",
+        "functions"
+      ],
+      "triggers": [
+        "gcp",
+        "cloud",
+        "functions",
+        "deploy",
+        "serverless",
+        "google",
+        "configure",
+        "triggers",
+        "deployments",
+        "implementing",
+        "workloads"
+      ],
+      "path": "skills/gcp-cloud-functions/SKILL.md"
+    },
+    {
       "id": "gcp-cloud-run",
       "canonical_id": "gcp-cloud-run",
       "name": "gcp-cloud-run",
@@ -27600,6 +28485,135 @@
         "event"
       ],
       "path": "skills/gcp-cloud-run/SKILL.md"
+    },
+    {
+      "id": "gcp-cloud-sql",
+      "canonical_id": "gcp-cloud-sql",
+      "name": "gcp-cloud-sql",
+      "description": "Provision Cloud SQL and Spanner databases. Configure high availability, backups, and security. Use when deploying managed databases on GCP.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "gcp",
+        "cloud",
+        "sql"
+      ],
+      "triggers": [
+        "gcp",
+        "cloud",
+        "sql",
+        "provision",
+        "spanner",
+        "databases",
+        "configure",
+        "high",
+        "availability",
+        "backups",
+        "security",
+        "deploying"
+      ],
+      "path": "skills/gcp-cloud-sql/SKILL.md"
+    },
+    {
+      "id": "gcp-compute",
+      "canonical_id": "gcp-compute",
+      "name": "gcp-compute",
+      "description": "Manage Compute Engine instances and instance templates. Configure managed instance groups and preemptible VMs. Use when deploying compute resources on GCP.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "gcp",
+        "compute"
+      ],
+      "triggers": [
+        "gcp",
+        "compute",
+        "engine",
+        "instances",
+        "instance",
+        "configure",
+        "managed",
+        "groups",
+        "preemptible",
+        "vms",
+        "deploying",
+        "resources"
+      ],
+      "path": "skills/gcp-compute/SKILL.md"
+    },
+    {
+      "id": "gcp-gke",
+      "canonical_id": "gcp-gke",
+      "name": "gcp-gke",
+      "description": "Deploy and manage Google Kubernetes Engine clusters. Configure node pools, networking, and workload identity. Use when running Kubernetes on GCP.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "gcp",
+        "gke"
+      ],
+      "triggers": [
+        "gcp",
+        "gke",
+        "deploy",
+        "google",
+        "kubernetes",
+        "engine",
+        "clusters",
+        "configure",
+        "node",
+        "pools",
+        "networking",
+        "workload"
+      ],
+      "path": "skills/gcp-gke/SKILL.md"
+    },
+    {
+      "id": "gcp-networking",
+      "canonical_id": "gcp-networking",
+      "name": "gcp-networking",
+      "description": "Configure VPCs, firewall rules, and Cloud NAT. Implement shared VPC and private service connect. Use when designing GCP network infrastructure.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "gcp",
+        "networking"
+      ],
+      "triggers": [
+        "gcp",
+        "networking",
+        "configure",
+        "vpcs",
+        "firewall",
+        "rules",
+        "cloud",
+        "nat",
+        "shared",
+        "vpc",
+        "private",
+        "connect"
+      ],
+      "path": "skills/gcp-networking/SKILL.md"
     },
     {
       "id": "gcp-secret-manager",
@@ -29822,6 +30836,67 @@
         "aida"
       ],
       "path": "skills/gpt-taste/SKILL.md"
+    },
+    {
+      "id": "gpu-kubernetes-operations",
+      "canonical_id": "gpu-kubernetes-operations",
+      "name": "gpu-kubernetes-operations",
+      "description": "Operate GPU-backed Kubernetes clusters for AI inference and training with scheduling, autoscaling, node health, MIG partitioning, and cost controls.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "gpu",
+        "kubernetes",
+        "operations"
+      ],
+      "triggers": [
+        "gpu",
+        "kubernetes",
+        "operations",
+        "operate",
+        "backed",
+        "clusters",
+        "ai",
+        "inference",
+        "training",
+        "scheduling",
+        "autoscaling",
+        "node"
+      ],
+      "path": "skills/gpu-kubernetes-operations/SKILL.md"
+    },
+    {
+      "id": "gpu-server-management",
+      "canonical_id": "gpu-server-management",
+      "name": "gpu-server-management",
+      "description": "Set up and manage NVIDIA GPU servers for AI workloads",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "gpu",
+        "server"
+      ],
+      "triggers": [
+        "gpu",
+        "server",
+        "set",
+        "up",
+        "nvidia",
+        "servers",
+        "ai",
+        "workloads"
+      ],
+      "path": "skills/gpu-server-management/SKILL.md"
     },
     {
       "id": "graceful-shutdown",
@@ -32383,6 +33458,38 @@
         "convergent"
       ],
       "path": "skills/idea-refine/SKILL.md"
+    },
+    {
+      "id": "identity-access-management",
+      "canonical_id": "identity-access-management",
+      "name": "identity-access-management",
+      "description": "Set up and manage SSO, SCIM provisioning, and MFA for startup teams using Google Workspace, Okta, or Azure AD.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "identity",
+        "access"
+      ],
+      "triggers": [
+        "identity",
+        "access",
+        "set",
+        "up",
+        "sso",
+        "scim",
+        "provisioning",
+        "mfa",
+        "startup",
+        "teams",
+        "google",
+        "workspace"
+      ],
+      "path": "skills/identity-access-management/SKILL.md"
     },
     {
       "id": "identity-federation",
@@ -35782,6 +36889,32 @@
       "path": "skills/lint-and-validate/SKILL.md"
     },
     {
+      "id": "linux-administration",
+      "canonical_id": "linux-administration",
+      "name": "linux-administration",
+      "description": "System administration for Linux servers. Manage packages, services, and system configuration. Use when administering Linux systems.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "linux",
+        "administration"
+      ],
+      "triggers": [
+        "linux",
+        "administration",
+        "servers",
+        "packages",
+        "configuration",
+        "administering"
+      ],
+      "path": "skills/linux-administration/SKILL.md"
+    },
+    {
       "id": "linux-hardening",
       "canonical_id": "linux-hardening",
       "name": "linux-hardening",
@@ -36129,6 +37262,104 @@
       "path": "skills/llm-evaluation/SKILL.md"
     },
     {
+      "id": "llm-fine-tuning",
+      "canonical_id": "llm-fine-tuning",
+      "name": "llm-fine-tuning",
+      "description": "Set up infrastructure for fine-tuning LLMs with QLoRA, LoRA, and full fine-tuning using Hugging Face TRL, Axolotl, and distributed training with DeepSpeed or FSDP.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "llm",
+        "fine",
+        "tuning"
+      ],
+      "triggers": [
+        "llm",
+        "fine",
+        "tuning",
+        "set",
+        "up",
+        "infrastructure",
+        "llms",
+        "qlora",
+        "lora",
+        "full",
+        "hugging",
+        "face"
+      ],
+      "path": "skills/llm-fine-tuning/SKILL.md"
+    },
+    {
+      "id": "llm-gateway",
+      "canonical_id": "llm-gateway",
+      "name": "llm-gateway",
+      "description": "Deploy an API gateway for LLM traffic with load balancing, rate limiting, key management, semantic caching, fallback routing, and cost tracking.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "llm",
+        "gateway"
+      ],
+      "triggers": [
+        "llm",
+        "gateway",
+        "deploy",
+        "api",
+        "traffic",
+        "load",
+        "balancing",
+        "rate",
+        "limiting",
+        "key",
+        "semantic",
+        "caching"
+      ],
+      "path": "skills/llm-gateway/SKILL.md"
+    },
+    {
+      "id": "llm-inference-scaling",
+      "canonical_id": "llm-inference-scaling",
+      "name": "llm-inference-scaling",
+      "description": "Auto-scale LLM inference clusters on Kubernetes using KEDA, custom GPU metrics, and horizontal pod autoscaling.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "llm",
+        "inference",
+        "scaling"
+      ],
+      "triggers": [
+        "llm",
+        "inference",
+        "scaling",
+        "auto",
+        "scale",
+        "clusters",
+        "kubernetes",
+        "keda",
+        "custom",
+        "gpu",
+        "metrics",
+        "horizontal"
+      ],
+      "path": "skills/llm-inference-scaling/SKILL.md"
+    },
+    {
       "id": "llm-ops",
       "canonical_id": "llm-ops",
       "name": "llm-ops",
@@ -36248,6 +37479,38 @@
         "format"
       ],
       "path": "skills/llm-structured-output/SKILL.md"
+    },
+    {
+      "id": "load-balancing",
+      "canonical_id": "load-balancing",
+      "name": "load-balancing",
+      "description": "Configure load balancers and traffic distribution. Implement health checks and SSL termination. Use when distributing traffic across servers.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "load",
+        "balancing"
+      ],
+      "triggers": [
+        "load",
+        "balancing",
+        "configure",
+        "balancers",
+        "traffic",
+        "distribution",
+        "health",
+        "checks",
+        "ssl",
+        "termination",
+        "distributing",
+        "servers"
+      ],
+      "path": "skills/load-balancing/SKILL.md"
     },
     {
       "id": "local-legal-seo-audit",
@@ -37009,6 +38272,40 @@
         "js"
       ],
       "path": "skills/m365-agents-ts/SKILL.md"
+    },
+    {
+      "id": "mac-mini-llm-lab",
+      "canonical_id": "mac-mini-llm-lab",
+      "name": "mac-mini-llm-lab",
+      "description": "Configure a Mac mini as a reliable local LLM server with remote access, observability, and power-safe operation. Use when building an always-on private AI inference server on Apple Silicon.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "mac",
+        "mini",
+        "llm",
+        "lab"
+      ],
+      "triggers": [
+        "mac",
+        "mini",
+        "llm",
+        "lab",
+        "configure",
+        "reliable",
+        "local",
+        "server",
+        "remote",
+        "access",
+        "observability",
+        "power"
+      ],
+      "path": "skills/mac-mini-llm-lab/SKILL.md"
     },
     {
       "id": "machine-learning-ops-ml-pipeline",
@@ -38748,6 +40045,32 @@
       "path": "skills/md2video-audio/SKILL.md"
     },
     {
+      "id": "mdm-device-management",
+      "canonical_id": "mdm-device-management",
+      "name": "mdm-device-management",
+      "description": "Manage and secure company devices with MDM solutions",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "mdm",
+        "device"
+      ],
+      "triggers": [
+        "mdm",
+        "device",
+        "secure",
+        "company",
+        "devices",
+        "solutions"
+      ],
+      "path": "skills/mdm-device-management/SKILL.md"
+    },
+    {
       "id": "mdpr-skill",
       "canonical_id": "mdpr-skill",
       "name": "mdpr-skill",
@@ -39754,6 +41077,35 @@
       "path": "skills/monetization/SKILL.md"
     },
     {
+      "id": "mongodb",
+      "canonical_id": "mongodb",
+      "name": "mongodb",
+      "description": "Administer MongoDB databases. Configure replica sets, sharding, and backups. Use when managing MongoDB deployments.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "mongodb"
+      ],
+      "triggers": [
+        "mongodb",
+        "administer",
+        "databases",
+        "configure",
+        "replica",
+        "sets",
+        "sharding",
+        "backups",
+        "managing",
+        "deployments"
+      ],
+      "path": "skills/mongodb/SKILL.md"
+    },
+    {
       "id": "monopoly",
       "canonical_id": "monopoly",
       "name": "monopoly",
@@ -40613,6 +41965,69 @@
         "produce"
       ],
       "path": "skills/multi-source-search/SKILL.md"
+    },
+    {
+      "id": "multi-tenant-llm-hosting",
+      "canonical_id": "multi-tenant-llm-hosting",
+      "name": "multi-tenant-llm-hosting",
+      "description": "Design secure, multi-tenant LLM hosting platforms with tenant isolation, quotas, billing attribution, noisy-neighbor protection, and per-tenant policy controls.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "multi",
+        "tenant",
+        "llm",
+        "hosting"
+      ],
+      "triggers": [
+        "multi",
+        "tenant",
+        "llm",
+        "hosting",
+        "secure",
+        "platforms",
+        "isolation",
+        "quotas",
+        "billing",
+        "attribution",
+        "noisy",
+        "neighbor"
+      ],
+      "path": "skills/multi-tenant-llm-hosting/SKILL.md"
+    },
+    {
+      "id": "mysql",
+      "canonical_id": "mysql",
+      "name": "mysql",
+      "description": "Administer MySQL/MariaDB databases. Configure replication and optimize performance. Use when managing MySQL deployments.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "mysql"
+      ],
+      "triggers": [
+        "mysql",
+        "administer",
+        "mariadb",
+        "databases",
+        "configure",
+        "replication",
+        "optimize",
+        "performance",
+        "managing",
+        "deployments"
+      ],
+      "path": "skills/mysql/SKILL.md"
     },
     {
       "id": "n8n-agents",
@@ -41614,6 +43029,38 @@
       "path": "skills/nextjs-supabase-auth/SKILL.md"
     },
     {
+      "id": "nfs-storage",
+      "canonical_id": "nfs-storage",
+      "name": "nfs-storage",
+      "description": "Configure NFS servers and clients. Implement network file sharing for Linux systems. Use when setting up shared storage.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "nfs",
+        "storage"
+      ],
+      "triggers": [
+        "nfs",
+        "storage",
+        "configure",
+        "servers",
+        "clients",
+        "network",
+        "file",
+        "sharing",
+        "linux",
+        "setting",
+        "up",
+        "shared"
+      ],
+      "path": "skills/nfs-storage/SKILL.md"
+    },
+    {
       "id": "nft-standards",
       "canonical_id": "nft-standards",
       "name": "nft-standards",
@@ -41936,6 +43383,37 @@
         "caching"
       ],
       "path": "skills/nx-workspace-patterns/SKILL.md"
+    },
+    {
+      "id": "object-storage",
+      "canonical_id": "object-storage",
+      "name": "object-storage",
+      "description": "Configure object storage with S3, GCS, and MinIO. Implement lifecycle policies and access controls. Use when managing object storage.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "object",
+        "storage"
+      ],
+      "triggers": [
+        "object",
+        "storage",
+        "configure",
+        "s3",
+        "gcs",
+        "minio",
+        "lifecycle",
+        "policies",
+        "access",
+        "controls",
+        "managing"
+      ],
+      "path": "skills/object-storage/SKILL.md"
     },
     {
       "id": "objection-preemptor",
@@ -42994,6 +44472,38 @@
       "path": "skills/office-productivity/SKILL.md"
     },
     {
+      "id": "ollama-stack",
+      "canonical_id": "ollama-stack",
+      "name": "ollama-stack",
+      "description": "Run local LLM workloads with Ollama, Open WebUI, and GPU-aware tuning for private development environments.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "ollama",
+        "stack"
+      ],
+      "triggers": [
+        "ollama",
+        "stack",
+        "run",
+        "local",
+        "llm",
+        "workloads",
+        "open",
+        "webui",
+        "gpu",
+        "aware",
+        "tuning",
+        "private"
+      ],
+      "path": "skills/ollama-stack/SKILL.md"
+    },
+    {
       "id": "omp-delegate",
       "canonical_id": "omp-delegate",
       "name": "omp-delegate",
@@ -43401,6 +44911,73 @@
       "path": "skills/openclaw-github-repo-commander/SKILL.md"
     },
     {
+      "id": "openclaw-local-mac-mini",
+      "canonical_id": "openclaw-local-mac-mini",
+      "name": "openclaw-local-mac-mini",
+      "description": "Set up OpenClaw locally and run it reliably on a Mac mini for private, always-on local agent workflows.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "openclaw",
+        "local",
+        "mac",
+        "mini"
+      ],
+      "triggers": [
+        "openclaw",
+        "local",
+        "mac",
+        "mini",
+        "set",
+        "up",
+        "locally",
+        "run",
+        "reliably",
+        "private",
+        "always",
+        "agent"
+      ],
+      "path": "skills/openclaw-local-mac-mini/SKILL.md"
+    },
+    {
+      "id": "openclaw-security-hardening",
+      "canonical_id": "openclaw-security-hardening",
+      "name": "openclaw-security-hardening",
+      "description": "Harden OpenClaw self-hosted environments with baseline host controls, auth tightening, secret handling, network segmentation, and safe update/rollback workflows.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "openclaw",
+        "security",
+        "hardening"
+      ],
+      "triggers": [
+        "openclaw",
+        "security",
+        "hardening",
+        "harden",
+        "self",
+        "hosted",
+        "environments",
+        "baseline",
+        "host",
+        "controls",
+        "auth",
+        "tightening"
+      ],
+      "path": "skills/openclaw-security-hardening/SKILL.md"
+    },
+    {
       "id": "opencode-delegate",
       "canonical_id": "opencode-delegate",
       "name": "opencode-delegate",
@@ -43431,6 +45008,38 @@
         "review"
       ],
       "path": "skills/opencode-delegate/SKILL.md"
+    },
+    {
+      "id": "opentofu-migration",
+      "canonical_id": "opentofu-migration",
+      "name": "opentofu-migration",
+      "description": "Migrate from Terraform to OpenTofu with state compatibility, provider registry setup, and CI/CD pipeline updates. Use when adopting the open-source Terraform fork or evaluating license-free IaC.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "opentofu",
+        "migration"
+      ],
+      "triggers": [
+        "opentofu",
+        "migration",
+        "migrate",
+        "terraform",
+        "state",
+        "compatibility",
+        "provider",
+        "registry",
+        "setup",
+        "ci",
+        "cd",
+        "pipeline"
+      ],
+      "path": "skills/opentofu-migration/SKILL.md"
     },
     {
       "id": "optim-agent",
@@ -44630,6 +46239,38 @@
       "path": "skills/performance-testing-review-multi-agent-review/SKILL.md"
     },
     {
+      "id": "performance-tuning",
+      "canonical_id": "performance-tuning",
+      "name": "performance-tuning",
+      "description": "Optimize Linux system performance. Configure kernel parameters, analyze bottlenecks, and tune resources. Use when improving system performance.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "performance",
+        "tuning"
+      ],
+      "triggers": [
+        "performance",
+        "tuning",
+        "optimize",
+        "linux",
+        "configure",
+        "kernel",
+        "parameters",
+        "analyze",
+        "bottlenecks",
+        "tune",
+        "resources",
+        "improving"
+      ],
+      "path": "skills/performance-tuning/SKILL.md"
+    },
+    {
       "id": "permission-manager",
       "canonical_id": "permission-manager",
       "name": "permission-manager",
@@ -45082,6 +46723,34 @@
         "features"
       ],
       "path": "skills/plan-writing/SKILL.md"
+    },
+    {
+      "id": "planetscale",
+      "canonical_id": "planetscale",
+      "name": "planetscale",
+      "description": "Operate MySQL-compatible databases on PlanetScale with branching workflows, safe migrations, and production rollouts.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "planetscale"
+      ],
+      "triggers": [
+        "planetscale",
+        "operate",
+        "mysql",
+        "compatible",
+        "databases",
+        "branching",
+        "safe",
+        "migrations",
+        "rollouts"
+      ],
+      "path": "skills/planetscale/SKILL.md"
     },
     {
       "id": "planning-and-task-breakdown",
@@ -45598,6 +47267,37 @@
         "usage"
       ],
       "path": "skills/postgresql-cli/SKILL.md"
+    },
+    {
+      "id": "postgresql-devsec",
+      "canonical_id": "postgresql-devsec",
+      "name": "postgresql-devsec",
+      "description": "Administer PostgreSQL databases. Configure replication, backups, and performance tuning. Use when managing PostgreSQL deployments.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "postgresql",
+        "devsec"
+      ],
+      "triggers": [
+        "postgresql",
+        "devsec",
+        "administer",
+        "databases",
+        "configure",
+        "replication",
+        "backups",
+        "performance",
+        "tuning",
+        "managing",
+        "deployments"
+      ],
+      "path": "skills/postgresql-devsec/SKILL.md"
     },
     {
       "id": "postgresql-optimization",
@@ -48000,6 +49700,38 @@
       "path": "skills/rag-implementation/SKILL.md"
     },
     {
+      "id": "rag-infrastructure",
+      "canonical_id": "rag-infrastructure",
+      "name": "rag-infrastructure",
+      "description": "Build and operate Retrieval-Augmented Generation (RAG) infrastructure with vector stores, embedding pipelines, and hybrid search.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "rag",
+        "infrastructure"
+      ],
+      "triggers": [
+        "rag",
+        "infrastructure",
+        "operate",
+        "retrieval",
+        "augmented",
+        "generation",
+        "vector",
+        "stores",
+        "embedding",
+        "pipelines",
+        "hybrid",
+        "search"
+      ],
+      "path": "skills/rag-infrastructure/SKILL.md"
+    },
+    {
       "id": "ralph-loop-yylo",
       "canonical_id": "ralph-loop-yylo",
       "name": "ralph-loop-yylo",
@@ -48760,6 +50492,37 @@
       "path": "skills/redesign-existing-projects/SKILL.md"
     },
     {
+      "id": "redis",
+      "canonical_id": "redis",
+      "name": "redis",
+      "description": "Configure Redis for caching and data storage. Set up clustering, persistence, and Sentinel. Use when implementing Redis caching or queues.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "redis"
+      ],
+      "triggers": [
+        "redis",
+        "configure",
+        "caching",
+        "data",
+        "storage",
+        "set",
+        "up",
+        "clustering",
+        "persistence",
+        "sentinel",
+        "implementing",
+        "queues"
+      ],
+      "path": "skills/redis/SKILL.md"
+    },
+    {
       "id": "redis-cli",
       "canonical_id": "redis-cli",
       "name": "redis-cli",
@@ -49281,6 +51044,38 @@
         "iife"
       ],
       "path": "skills/reverse-engineering/dsl-vm-reverse/SKILL.md"
+    },
+    {
+      "id": "reverse-proxy",
+      "canonical_id": "reverse-proxy",
+      "name": "reverse-proxy",
+      "description": "Configure nginx and Traefik as reverse proxies. Implement SSL termination and routing. Use when setting up application gateways.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "reverse",
+        "proxy"
+      ],
+      "triggers": [
+        "reverse",
+        "proxy",
+        "configure",
+        "nginx",
+        "traefik",
+        "proxies",
+        "ssl",
+        "termination",
+        "routing",
+        "setting",
+        "up",
+        "application"
+      ],
+      "path": "skills/reverse-proxy/SKILL.md"
     },
     {
       "id": "review-and-simplify-changes",
@@ -50050,6 +51845,33 @@
         "stack"
       ],
       "path": "skills/saas-mvp-launcher/SKILL.md"
+    },
+    {
+      "id": "saas-security-posture",
+      "canonical_id": "saas-security-posture",
+      "name": "saas-security-posture",
+      "description": "Audit and harden your SaaS tool stack",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "saas",
+        "security",
+        "posture"
+      ],
+      "triggers": [
+        "saas",
+        "security",
+        "posture",
+        "audit",
+        "harden",
+        "stack"
+      ],
+      "path": "skills/saas-security-posture/SKILL.md"
     },
     {
       "id": "saga-orchestration",
@@ -52870,6 +54692,38 @@
       "path": "skills/server-management/SKILL.md"
     },
     {
+      "id": "service-mesh",
+      "canonical_id": "service-mesh",
+      "name": "service-mesh",
+      "description": "Implement Istio and Linkerd service meshes. Configure mTLS, traffic management, and observability. Use when managing microservices communication.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "service",
+        "mesh"
+      ],
+      "triggers": [
+        "service",
+        "mesh",
+        "istio",
+        "linkerd",
+        "meshes",
+        "configure",
+        "mtls",
+        "traffic",
+        "observability",
+        "managing",
+        "microservices",
+        "communication"
+      ],
+      "path": "skills/service-mesh/SKILL.md"
+    },
+    {
       "id": "service-mesh-expert",
       "canonical_id": "service-mesh-expert",
       "name": "service-mesh-expert",
@@ -55142,6 +56996,38 @@
       "path": "skills/sred-work-summary/SKILL.md"
     },
     {
+      "id": "ssh-configuration",
+      "canonical_id": "ssh-configuration",
+      "name": "ssh-configuration",
+      "description": "Configure SSH servers and clients securely. Manage keys, tunnels, and config files. Use when setting up secure remote access.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "ssh",
+        "configuration"
+      ],
+      "triggers": [
+        "ssh",
+        "configuration",
+        "configure",
+        "servers",
+        "clients",
+        "securely",
+        "keys",
+        "tunnels",
+        "config",
+        "files",
+        "setting",
+        "up"
+      ],
+      "path": "skills/ssh-configuration/SKILL.md"
+    },
+    {
       "id": "ssh-penetration-testing",
       "canonical_id": "ssh-penetration-testing",
       "name": "ssh-penetration-testing",
@@ -55413,6 +57299,37 @@
         "analysis"
       ],
       "path": "skills/startup-financial-modeling/SKILL.md"
+    },
+    {
+      "id": "startup-it-troubleshooting",
+      "canonical_id": "startup-it-troubleshooting",
+      "name": "startup-it-troubleshooting",
+      "description": "Practical IT troubleshooting playbooks for small teams without dedicated IT staff.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "startup",
+        "it",
+        "troubleshooting"
+      ],
+      "triggers": [
+        "startup",
+        "it",
+        "troubleshooting",
+        "practical",
+        "playbooks",
+        "small",
+        "teams",
+        "without",
+        "dedicated",
+        "staff"
+      ],
+      "path": "skills/startup-it-troubleshooting/SKILL.md"
     },
     {
       "id": "startup-metrics-framework",
@@ -56662,6 +58579,34 @@
       "path": "skills/systematic-debugging/SKILL.md"
     },
     {
+      "id": "systemd-services",
+      "canonical_id": "systemd-services",
+      "name": "systemd-services",
+      "description": "Create and manage systemd services and timers. Configure service dependencies and resource limits. Use when managing system services.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "systemd",
+        "services"
+      ],
+      "triggers": [
+        "systemd",
+        "services",
+        "timers",
+        "configure",
+        "dependencies",
+        "resource",
+        "limits",
+        "managing"
+      ],
+      "path": "skills/systemd-services/SKILL.md"
+    },
+    {
       "id": "systems-programming-rust-project",
       "canonical_id": "systems-programming-rust-project",
       "name": "systems-programming-rust-project",
@@ -57529,6 +59474,36 @@
       "path": "skills/temporal-python-testing/SKILL.md"
     },
     {
+      "id": "terraform-aws",
+      "canonical_id": "terraform-aws",
+      "name": "terraform-aws",
+      "description": "Provision AWS infrastructure with Terraform. Create modules, manage state, and implement IaC best practices. Use when deploying AWS resources declaratively.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "terraform",
+        "aws"
+      ],
+      "triggers": [
+        "terraform",
+        "aws",
+        "provision",
+        "infrastructure",
+        "modules",
+        "state",
+        "iac",
+        "deploying",
+        "resources",
+        "declaratively"
+      ],
+      "path": "skills/terraform-aws/SKILL.md"
+    },
+    {
       "id": "terraform-aws-modules",
       "canonical_id": "terraform-aws-modules",
       "name": "terraform-aws-modules",
@@ -57555,6 +59530,69 @@
         "infrastructure"
       ],
       "path": "skills/terraform-aws-modules/SKILL.md"
+    },
+    {
+      "id": "terraform-azure",
+      "canonical_id": "terraform-azure",
+      "name": "terraform-azure",
+      "description": "Provision Azure infrastructure with Terraform. Configure providers, manage state, and deploy resources. Use when implementing IaC for Azure.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "terraform",
+        "azure"
+      ],
+      "triggers": [
+        "terraform",
+        "azure",
+        "provision",
+        "infrastructure",
+        "configure",
+        "providers",
+        "state",
+        "deploy",
+        "resources",
+        "implementing",
+        "iac"
+      ],
+      "path": "skills/terraform-azure/SKILL.md"
+    },
+    {
+      "id": "terraform-gcp",
+      "canonical_id": "terraform-gcp",
+      "name": "terraform-gcp",
+      "description": "Provision GCP infrastructure with Terraform. Configure providers and deploy Google Cloud resources. Use when implementing IaC for GCP.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "terraform",
+        "gcp"
+      ],
+      "triggers": [
+        "terraform",
+        "gcp",
+        "provision",
+        "infrastructure",
+        "configure",
+        "providers",
+        "deploy",
+        "google",
+        "cloud",
+        "resources",
+        "implementing",
+        "iac"
+      ],
+      "path": "skills/terraform-gcp/SKILL.md"
     },
     {
       "id": "terraform-infrastructure",
@@ -60594,6 +62632,35 @@
       "path": "skills/use-dom/SKILL.md"
     },
     {
+      "id": "user-management",
+      "canonical_id": "user-management",
+      "name": "user-management",
+      "description": "Manage users, groups, and permissions on Linux systems. Configure sudo and access controls. Use when managing system access.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "user"
+      ],
+      "triggers": [
+        "user",
+        "users",
+        "groups",
+        "permissions",
+        "linux",
+        "configure",
+        "sudo",
+        "access",
+        "controls",
+        "managing"
+      ],
+      "path": "skills/user-management/SKILL.md"
+    },
+    {
       "id": "user-thoughts",
       "canonical_id": "user-thoughts",
       "name": "user-thoughts",
@@ -61126,6 +63193,35 @@
       "path": "skills/vector-database-engineer/SKILL.md"
     },
     {
+      "id": "vector-database-ops",
+      "canonical_id": "vector-database-ops",
+      "name": "vector-database-ops",
+      "description": "Deploy, manage, and optimize vector databases for AI applications.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "vector",
+        "database",
+        "ops"
+      ],
+      "triggers": [
+        "vector",
+        "database",
+        "ops",
+        "deploy",
+        "optimize",
+        "databases",
+        "ai",
+        "applications"
+      ],
+      "path": "skills/vector-database-ops/SKILL.md"
+    },
+    {
       "id": "vector-index-tuning",
       "canonical_id": "vector-index-tuning",
       "name": "vector-index-tuning",
@@ -61291,6 +63387,38 @@
         "js"
       ],
       "path": "skills/vercel-deployment/SKILL.md"
+    },
+    {
+      "id": "vercel-deployments",
+      "canonical_id": "vercel-deployments",
+      "name": "vercel-deployments",
+      "description": "Deploy frontend and full-stack apps on Vercel with previews, edge functions, environment promotion, and production guardrails.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "vercel",
+        "deployments"
+      ],
+      "triggers": [
+        "vercel",
+        "deployments",
+        "deploy",
+        "frontend",
+        "full",
+        "stack",
+        "apps",
+        "previews",
+        "edge",
+        "functions",
+        "environment",
+        "promotion"
+      ],
+      "path": "skills/vercel-deployments/SKILL.md"
     },
     {
       "id": "vercel-optimize",
@@ -61944,6 +64072,38 @@
         "renders"
       ],
       "path": "skills/vizcom/SKILL.md"
+    },
+    {
+      "id": "vllm-server",
+      "canonical_id": "vllm-server",
+      "name": "vllm-server",
+      "description": "Deploy and manage vLLM for high-throughput LLM inference. Configure continuous batching, tensor parallelism, quantization, and OpenAI-compatible API endpoints for production LLM serving.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "vllm",
+        "server"
+      ],
+      "triggers": [
+        "vllm",
+        "server",
+        "deploy",
+        "high",
+        "throughput",
+        "llm",
+        "inference",
+        "configure",
+        "continuous",
+        "batching",
+        "tensor",
+        "parallelism"
+      ],
+      "path": "skills/vllm-server/SKILL.md"
     },
     {
       "id": "voice-agents",
@@ -63329,6 +65489,36 @@
         "testing"
       ],
       "path": "skills/windows-privilege-escalation/SKILL.md"
+    },
+    {
+      "id": "windows-server",
+      "canonical_id": "windows-server",
+      "name": "windows-server",
+      "description": "Administer Windows Server systems. Manage IIS, Active Directory, and PowerShell automation. Use when administering Windows infrastructure.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "windows",
+        "server"
+      ],
+      "triggers": [
+        "windows",
+        "server",
+        "administer",
+        "iis",
+        "active",
+        "directory",
+        "powershell",
+        "automation",
+        "administering",
+        "infrastructure"
+      ],
+      "path": "skills/windows-server/SKILL.md"
     },
     {
       "id": "windows-shell-reliability",
