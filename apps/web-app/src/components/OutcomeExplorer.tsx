@@ -72,7 +72,7 @@ function DiscoverySession({ catalog, onGoalChange }: Props): React.ReactElement 
           <button type="button" aria-label={`${ids.includes(skill.id) ? 'Remove from shortlist' : 'Add to shortlist'} ${skill.name}`} aria-pressed={ids.includes(skill.id)} onClick={() => toggle(skill.id)}>{ids.includes(skill.id) ? 'Remove from shortlist' : 'Add to shortlist'}</button>
         </article>)}</div>
         {results.length > limit ? <button type="button" onClick={() => setLimit((current) => current + 12)}>Show more candidates</button> : null}
-        <p><Link to="/">Browse the complete catalog</Link> · All {skills.length.toLocaleString('en-US')} skills remain available regardless of metadata or this ranking.</p>
+        <p><Link to="/core">Browse the complete catalog</Link> · All {skills.length.toLocaleString('en-US')} skills remain available regardless of metadata or this ranking.</p>
         {!catalog ? <ShortlistReview suggestedGoal={query} skills={skills.filter((skill) => ids.includes(skill.id))} onRemove={toggle} onClear={clear} /> : null}
       </> : null}
     </div>;

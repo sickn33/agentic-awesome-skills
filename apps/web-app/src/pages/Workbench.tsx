@@ -445,7 +445,7 @@ export function Workbench(): React.ReactElement {
       <section className="workbench-boundary" aria-labelledby="workbench-start-title">
         <h2 id="workbench-start-title">Need a stack to review?</h2>
         <ol>
-          <li><Link to="/">Compare skills in the catalog</Link> and copy an agent brief with your goal and target.</li>
+          <li><Link to="/core">Compare skills in the catalog</Link> and copy an agent brief with your goal and target.</li>
           <li>Give the brief to your coding agent with AAS MCP configured. Let it inspect your project and select exact IDs; review its choices before saving <code>aas-stack.json</code>.</li>
           <li>Validate the manifest and generate a preview plan with the CLI, then import both files and optional <code>aas-selection-evidence.json</code> below.</li>
         </ol>

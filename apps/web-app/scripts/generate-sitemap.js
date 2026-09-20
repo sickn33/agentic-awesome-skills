@@ -143,6 +143,7 @@ export function buildSitemap(skills, topCount = TOP_SKILL_COUNT, baseUrl = SITE_
     baseUrl,
     paths: [
       '/',
+      toIndexableRoutePath('/core'),
       toIndexableRoutePath('/workbench'),
       toIndexableRoutePath('/plugins'),
       ...landingPaths,

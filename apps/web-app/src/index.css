@@ -135,8 +135,9 @@ textarea {
 }
 
 .brand-link__logo {
-  width: 36px;
-  height: 36px;
+  width: auto;
+  height: 28px;
+  max-width: 9.5rem;
   object-fit: contain;
 }
 
@@ -2148,8 +2149,9 @@ textarea {
   }
 
   .brand-link__logo {
-    width: 30px;
-    height: 30px;
+    width: auto;
+    height: 24px;
+    max-width: 7.5rem;
   }
 
   .brand-link__name {

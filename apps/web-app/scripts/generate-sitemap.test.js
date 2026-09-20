@@ -23,6 +23,7 @@ describe('sitemap generation script helpers', () => {
     const xml = buildSitemap(catalog, 1, 'https://example.com');
 
     expect(xml).toContain('https://example.com/</loc>');
+    expect(xml).toContain('https://example.com/core/</loc>');
     expect(xml).toContain('https://example.com/workbench/</loc>');
     expect(xml).toContain('https://example.com/topics/antigravity-cli-skills/</loc>');
     expect(xml).toContain('https://example.com/skill/gamma/</loc>');
@@ -47,6 +48,7 @@ describe('sitemap generation script helpers', () => {
     const xml = buildSitemap(catalog, 0, 'https://example.com');
 
     expect(xml).toContain('https://example.com/</loc>');
+    expect(xml).toContain('https://example.com/core/</loc>');
     expect(xml).toContain('https://example.com/workbench/</loc>');
     expect(xml).toContain('https://example.com/topics/github-ai-skills-repository/</loc>');
     expect(xml).not.toContain('https://example.com/skill');

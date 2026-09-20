@@ -141,7 +141,7 @@
       },
       {
         "label": "Browse all skills",
-        "to": "/"
+        "to": "/core"
       }
     ]
   },
@@ -288,7 +288,7 @@
     "links": [
       {
         "label": "Browse the catalog",
-        "to": "/"
+        "to": "/core"
       },
       {
         "label": "Open the GitHub repository",

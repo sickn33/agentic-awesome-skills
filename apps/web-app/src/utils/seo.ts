@@ -121,7 +121,9 @@ export function getAbsoluteAssetUrl(assetPath: string): string {
 function getCatalogBaseUrl(canonicalUrl: string): string {
   try {
     const parsed = new URL(canonicalUrl);
-    const strippedSkillPath = parsed.pathname.replace(/\/skill\/[^/]+\/?$/, '/');
+    const strippedSkillPath = parsed.pathname
+      .replace(/\/skill\/[^/]+\/?$/, '/')
+      .replace(/\/core\/?$/, '/');
     const normalizedPath = strippedSkillPath.endsWith('/') ? strippedSkillPath : `${strippedSkillPath}/`;
     const normalizedCatalog = normalizedPath === '' ? '/' : normalizedPath;
     return `${parsed.origin}${normalizedCatalog}`;
@@ -159,7 +161,7 @@ function buildWebSiteSchema(canonicalUrl: string): Record<string, unknown> {
     inLanguage: 'en',
     potentialAction: {
       '@type': 'SearchAction',
-      target: `${getCatalogBaseUrl(canonicalUrl).replace(/\/+$/, '')}/?q={search_term_string}`,
+      target: `${getCatalogBaseUrl(canonicalUrl).replace(/\/+$/, '')}/core/?q={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
   };
@@ -375,6 +377,36 @@ export function isTopSkill(skillId: string, skills: ReadonlyArray<Skill>, limit 
   return selectTopSkills(skills, limit).some((entry) => entry.id === skillId);
 }
 
+export function buildLandingMeta(): SeoMeta {
+  const title = 'Agentic Awesome Skills | Agent-first skill catalog and AAS Core';
+  const description =
+    'Open-source SKILL.md playbooks for Codex, Claude Code, Cursor, and compatible clients. Explore AAS Core for catalog search, agent-owned selection, validation, and plan preview.';
+  return {
+    title,
+    description,
+    canonicalPath: '/',
+    ogTitle: title,
+    ogDescription: description,
+    ogImage: DEFAULT_SOCIAL_IMAGE,
+    twitterCard: 'summary_large_image',
+    jsonLd: (canonicalUrl: string) => [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: SITE_NAME,
+        description,
+        url: canonicalUrl,
+        isPartOf: buildWebSiteSchema(canonicalUrl),
+        sameAs: REPOSITORY_URL,
+        about: buildSoftwareSourceCodeSchema(canonicalUrl, 0),
+      },
+      buildOrganizationSchema(),
+      buildWebSiteSchema(canonicalUrl),
+      buildSoftwareSourceCodeSchema(canonicalUrl, 0),
+    ],
+  };
+}
+
 export function buildHomeMeta(skillCount: number): SeoMeta {
   const visibleCount = Math.max(skillCount, 0);
   const visibleCountLabel = visibleCount > 0 ? getCatalogCountLabel(visibleCount) : '';
@@ -387,7 +419,7 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
   return {
     title,
     description,
-    canonicalPath: '/',
+    canonicalPath: '/core',
     ogTitle: title,
     ogDescription: description,
     ogImage: DEFAULT_SOCIAL_IMAGE,
@@ -396,7 +428,7 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
       {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
-        name: 'Agentic Awesome Skills',
+        name: 'AAS Core skill catalog',
         description,
         url: canonicalUrl,
         isPartOf: buildWebSiteSchema(canonicalUrl),

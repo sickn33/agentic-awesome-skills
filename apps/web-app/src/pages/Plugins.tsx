@@ -31,7 +31,7 @@ export function Plugins(): React.ReactElement {
         <p>These bundles contain skill instructions. External tools, service accounts and connectors must be configured separately. Choose the skills relevant to your project; a bundle is not a requirement to use every included tool.</p>
         <div>
           <a href={pluginDocUrl()} target="_blank" rel="noreferrer">Read plugin install guide <Icon name="arrowRight" size={16} /></a>
-          <Link to="/">Browse full skill catalog <Icon name="arrowRight" size={16} /></Link>
+          <Link to="/core">Browse full skill catalog <Icon name="arrowRight" size={16} /></Link>
           <a href={gettingStartedDocUrl()} target="_blank" rel="noreferrer">Install one skill with GitHub CLI</a>
         </div>
       </header>

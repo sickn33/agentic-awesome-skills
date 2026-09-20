@@ -7,6 +7,7 @@ describe('App route loading', () => {
     const appPath = path.resolve(__dirname, '..', 'App.tsx');
     const source = fs.readFileSync(appPath, 'utf8');
 
+    expect(source).toMatch(/lazy\(\(\) => import\('\.\/pages\/Landing'\)\)/);
     expect(source).toMatch(/lazy\(\(\) => import\('\.\/pages\/Home'\)\)/);
     expect(source).toMatch(/lazy\(\(\) => import\('\.\/pages\/SkillDetail'\)\)/);
     expect(source).toMatch(/lazy\(\(\) => import\('\.\/pages\/Workbench'\)\)/);
@@ -20,6 +21,8 @@ describe('App route loading', () => {
     const appSource = fs.readFileSync(appPath, 'utf8');
     const mainSource = fs.readFileSync(mainPath, 'utf8');
 
+    expect(appSource).toMatch(/<Route path="\/" element={<Landing \/>} \/>/);
+    expect(appSource).toMatch(/<Route path="\/core" element={<Home \/>} \/>/);
     expect(appSource).toMatch(/<Route path="\/workbench" element={<Workbench \/>} \/>/);
     expect(appSource).toMatch(/<Route element={<CatalogRouteProvider \/>}>/);
     expect(appSource).not.toContain("from './context/SkillContext'");

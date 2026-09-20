@@ -4,6 +4,7 @@ import {
   DEFAULT_TOP_SKILL_COUNT,
   DEFAULT_SOCIAL_IMAGE,
   buildHomeMeta,
+  buildLandingMeta,
   buildSkillFallbackMeta,
   buildSkillMeta,
   buildTopicLandingMeta,
@@ -40,8 +41,18 @@ describe('SEO helpers', () => {
     expect(meta.title).toContain('10+ skills');
     expect(meta.description).toContain('neutral catalog retrieval, exact agent-owned selection, validation, and planning');
     expect(meta.description).toContain('10+ cataloged skills');
-    expect(meta.canonicalPath).toBe('/');
+    expect(meta.canonicalPath).toBe('/core');
     expect(meta.ogTitle).toBe(meta.title);
+    expect(meta.ogImage).toBe(DEFAULT_SOCIAL_IMAGE);
+    expect(typeof meta.jsonLd).toBe('function');
+  });
+
+  it('builds intro landing metadata for the site root', () => {
+    const meta = buildLandingMeta();
+
+    expect(meta.title).toContain('Agentic Awesome Skills');
+    expect(meta.description).toContain('AAS Core');
+    expect(meta.canonicalPath).toBe('/');
     expect(meta.ogImage).toBe(DEFAULT_SOCIAL_IMAGE);
     expect(typeof meta.jsonLd).toBe('function');
   });

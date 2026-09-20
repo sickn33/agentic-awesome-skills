@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Link, NavLink, Route, Routes } from 'react-rou
 import { Icon } from './components/ui/Icon';
 import { toIndexableRoutePath } from './utils/seo';
 
+const Landing = lazy(() => import('./pages/Landing'));
 const Home = lazy(() => import('./pages/Home'));
 const SkillDetail = lazy(() => import('./pages/SkillDetail'));
 const Workbench = lazy(() => import('./pages/Workbench'));
@@ -12,21 +13,21 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const CatalogRouteProvider = lazy(() => import('./context/CatalogRouteProvider'));
 
 function App(): React.ReactElement {
-  const logoSrc = `${import.meta.env.BASE_URL}agentic-skills-logo.png`;
+  const logoSrc = `${import.meta.env.BASE_URL}aas-wordmark.png`;
 
   return (
     <Router basename={import.meta.env.BASE_URL.replace(/\/$/, '') || '/'}>
       <div className="app-shell min-h-screen bg-[var(--surface-canvas)] text-[var(--text-primary)]">
         <header className="app-header">
           <div className="app-header__inner">
-            <Link to="/" className="brand-link" aria-label="AAS Core home">
+            <Link to="/" className="brand-link" aria-label="Agentic Awesome Skills home">
               <img
                 src={logoSrc}
-                alt="AAS Core logo"
+                alt="AAS"
                 className="brand-link__logo"
               />
               <span className="brand-link__name">
-                AAS Core
+                Agentic Awesome Skills
               </span>
             </Link>
 
@@ -34,6 +35,12 @@ function App(): React.ReactElement {
               <NavLink
                 to="/"
                 end
+                className={({ isActive }) => `app-nav__link ${isActive ? 'is-active' : ''}`}
+              >
+                Home
+              </NavLink>
+              <NavLink
+                to={toIndexableRoutePath('/core')}
                 className={({ isActive }) => `app-nav__link ${isActive ? 'is-active' : ''}`}
               >
                 Core
@@ -66,7 +73,8 @@ function App(): React.ReactElement {
               <details className="mobile-nav">
                 <summary aria-label="Open navigation">Menu</summary>
                 <nav aria-label="Mobile navigation">
-                  <Link to="/">Core</Link>
+                  <Link to="/">Home</Link>
+                  <Link to={toIndexableRoutePath('/core')}>Core</Link>
                   <Link to={toIndexableRoutePath('/workbench')}>Workbench</Link>
                   <Link to={toIndexableRoutePath('/plugins')}>Plugins</Link>
                   <a href="https://github.com/sickn33/agentic-awesome-skills" target="_blank" rel="noreferrer">View on GitHub</a>
@@ -85,8 +93,9 @@ function App(): React.ReactElement {
             }
           >
             <Routes>
+              <Route path="/" element={<Landing />} />
               <Route element={<CatalogRouteProvider />}>
-                <Route path="/" element={<Home />} />
+                <Route path="/core" element={<Home />} />
                 <Route path="/topics/:slug" element={<TopicLanding />} />
                 <Route path="/skill/:id" element={<SkillDetail />} />
               </Route>
