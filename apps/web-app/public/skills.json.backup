@@ -31328,6 +31328,39 @@
     "license_source": "https://github.com/LambdaTest/agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "jev-use",
+    "path": "skills/jev-use",
+    "category": "agent-orchestration",
+    "name": "jev-use",
+    "description": "Route enumerable judgment steps - did it work, which option, how risky, is this safe to run - to the Jev judgment model through the jev_judge and jev_gate MCP tools, batched into one call per state.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "shitianfang/jev-use",
+    "license": "MIT",
+    "license_source": "https://github.com/shitianfang/jev-use/blob/main/LICENSE",
+    "tags": [
+      "agent-orchestration",
+      "mcp",
+      "routing",
+      "judgment",
+      "escalation"
+    ]
+  },
+  {
     "id": "jira-automation",
     "path": "skills/jira-automation",
     "category": "project-management",

@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-19T18:17:10.000Z
 
-Total skills: 2405
+Total skills: 2406
 
 ## agent-behavior (5)
 
@@ -21,7 +21,7 @@ Total skills: 2405
 | `agent-evaluation-reporting` | Use when summarizing agent evaluations where autonomous, assisted, failed, timed-out, or invalid outcomes must remain distinct and comparable. | none | self | agent-evaluation, metrics, reporting, reliability, benchmarking | agent-evaluation, metrics, reporting, reliability, benchmarking, agent, evaluation, summarizing, evaluations, where, autonomous, assisted |
 | `run-deep-swe` | Run reproducible DeepSWE coding-agent benchmark evaluations through OpenRouter and mini-swe-agent. | critical | davidondrej/skills | benchmark, deepswe, openrouter, evaluation | benchmark, deepswe, openrouter, evaluation, run, deep, swe, reproducible, coding, agent, evaluations, through |
 
-## agent-orchestration (27)
+## agent-orchestration (28)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -41,6 +41,7 @@ Total skills: 2405
 | `grok-build` | Delegate well-specified implementation tasks to xAI's Grok Build CLI running headlessly while the orchestrating agent plans, writes task specs, reviews every... | critical | sanjay3290/ai-skills | grok, delegation, code-generation, xai | grok, delegation, code-generation, xai, delegate, well, specified, tasks, cli, running, headlessly, while |
 | `grok-delegate` | Delegate coding tasks to the Grok Build CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | critical | amElnagdy/delegate-skills | grok, delegate | grok, delegate, coding, tasks, cli, user, explicitly, requests, while, orchestrator, retains, review |
 | `idea-evaluator` | Evaluates an idea by hosting a multi-turn debate between a Pro and Con agent, delivering a final verdict on whether it's worth pursuing. | safe | self | ideation, validation, debate, multi-agent | ideation, validation, debate, multi-agent, idea, evaluator, evaluates, hosting, multi, turn, between, pro |
+| `jev-use` | Route enumerable judgment steps - did it work, which option, how risky, is this safe to run - to the Jev judgment model through the jev_judge and jev_gate MC... | safe | shitianfang/jev-use | agent-orchestration, mcp, routing, judgment, escalation | agent-orchestration, mcp, routing, judgment, escalation, jev, route, enumerable, steps, did, work, which |
 | `kimi-delegate` | Delegate coding tasks to the Kimi Code CLI (`kimi`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | critical | amElnagdy/delegate-skills | kimi, delegate | kimi, delegate, coding, tasks, code, cli, user, explicitly, requests, while, orchestrator, retains |
 | `multi-agent-task-orchestrator` | Route tasks to specialized AI agents with anti-duplication, quality gates, and 30-minute heartbeat monitoring | safe | milkomida77/guardian-agent-prompts | multi-agent, orchestration, task-routing, quality-gates, anti-duplication | multi-agent, orchestration, task-routing, quality-gates, anti-duplication, multi, agent, task, orchestrator, route, tasks, specialized |
 | `omp-delegate` | Delegate coding tasks to Oh My Pi (`omp`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | critical | amElnagdy/delegate-skills | omp, delegate | omp, delegate, coding, tasks, oh, my, pi, user, explicitly, requests, while, orchestrator |

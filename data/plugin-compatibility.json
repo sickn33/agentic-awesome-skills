@@ -24534,6 +24534,25 @@
       "runtime_files": []
     },
     {
+      "id": "jev-use",
+      "path": "skills/jev-use",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "jira-automation",
       "path": "skills/jira-automation",
       "targets": {
@@ -46180,10 +46199,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2405,
+    "total_skills": 2406,
     "supported": {
-      "codex": 2320,
-      "claude": 2345
+      "codex": 2321,
+      "claude": 2346
     },
     "blocked": {
       "codex": 85,

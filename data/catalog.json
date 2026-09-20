@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-19T18:17:10.000Z",
-  "total": 2405,
+  "total": 2406,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -37334,6 +37334,41 @@
         "async"
       ],
       "path": "skills/jest-skill/SKILL.md"
+    },
+    {
+      "id": "jev-use",
+      "canonical_id": "jev-use",
+      "name": "jev-use",
+      "description": "Route enumerable judgment steps - did it work, which option, how risky, is this safe to run - to the Jev judgment model through the jev_judge and jev_gate MCP tools, batched into one call per state.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "shitianfang/jev-use",
+      "license": "MIT",
+      "license_source": "https://github.com/shitianfang/jev-use/blob/main/LICENSE",
+      "tags": [
+        "agent-orchestration",
+        "mcp",
+        "routing",
+        "judgment",
+        "escalation"
+      ],
+      "triggers": [
+        "agent-orchestration",
+        "mcp",
+        "routing",
+        "judgment",
+        "escalation",
+        "jev",
+        "route",
+        "enumerable",
+        "steps",
+        "did",
+        "work",
+        "which"
+      ],
+      "path": "skills/jev-use/SKILL.md"
     },
     {
       "id": "jira-automation",
