@@ -7,6 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [17.8.0] - 2026-09-20 - "OpenCode #126 Catalog Expansion and Jev Judgment Routing"
+
+> Imports 264 reviewed skills from opencode-skills-collection #126 across DevSec,
+> BugHunter, and starter bundles, plus `jev-use` for batched judgment-model
+> routing through MCP.
+
+A maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It merges the FrancoStino opencode-skills-collection #126 batch (#1512–#1517)
+and the community `jev-use` skill (#1511), refreshes catalog and plugin surfaces
+for **2,406** skills, and converges canonical indexes through the protected bot
+lane. Existing installation interfaces remain supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.8.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **OpenCode #126 batch (264 skills, #1512–#1517)** — docs-only DevSec compliance,
+  DevOps, infrastructure, and security skills; gated BugHunter assessment workflows;
+  and starter bundles (productivity, career-ops, geo/SEO, and related collections)
+  sourced from the MIT-licensed opencode-skills-collection #126 import, with
+  maintainer repairs for policy, provenance, and documentation-security gates.
+- **`jev-use` (#1511)** — routes enumerable no-text judgment steps (success checks,
+  option picks, risk gates) to the Jev judgment model through `jev_judge` and
+  `jev_gate` MCP tools, with explicit escalation back to the orchestrator for
+  steps that require generated text or non-enumerable choices.
+
+### Improved
+
+- Refreshed canonical indexes, catalogs, plugin mirrors, editorial bundles, and
+  web assets for the 2,406-skill release.
+
+### Validation scope
+
+PRs #1512–#1517 and #1511 passed maintainer attestation on their exact merge
+heads, repository validation, reference and documentation-security checks,
+protected CI, CodeQL, dependency review, and canonical synchronization.
+Tessl was unavailable for several heads; maintainer semantic review covered
+every changed canonical skill subtree.
+
+Thanks to @FrancoStino (#1512–#1517) for the opencode-skills-collection #126
+import and to @shitianfang (#1511) for `jev-use`.
+
+---
+
 ## [17.7.0] - 2026-09-19 - "YYLO Ledger Skills Suite"
 
 > Adds seven community skills for YYLO Ledger task, wiki, workflow, and artifact
