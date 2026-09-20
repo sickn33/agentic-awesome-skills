@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-19T18:17:10.000Z",
-  "total": 2284,
+  "total": 2366,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -4520,6 +4520,33 @@
         "platforms"
       ],
       "path": "skills/apify-ultimate-scraper/SKILL.md"
+    },
+    {
+      "id": "apk-redteam-pipeline",
+      "canonical_id": "apk-redteam-pipeline",
+      "name": "apk-redteam-pipeline",
+      "description": "End-to-end Android APK red-team pipeline",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "apk",
+        "redteam",
+        "pipeline"
+      ],
+      "triggers": [
+        "apk",
+        "redteam",
+        "pipeline",
+        "android",
+        "red",
+        "team"
+      ],
+      "path": "skills/apk-redteam-pipeline/SKILL.md"
     },
     {
       "id": "apk-reverse",
@@ -10886,6 +10913,38 @@
       "path": "skills/bazel-build-optimization/SKILL.md"
     },
     {
+      "id": "bb-methodology",
+      "canonical_id": "bb-methodology",
+      "name": "bb-methodology",
+      "description": "Use at the START of any bug bounty hunting session, when switching targets, or when feeling lost about what to do next.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "bb",
+        "methodology"
+      ],
+      "triggers": [
+        "bb",
+        "methodology",
+        "start",
+        "any",
+        "bug",
+        "bounty",
+        "hunting",
+        "session",
+        "switching",
+        "targets",
+        "feeling",
+        "lost"
+      ],
+      "path": "skills/bb-methodology/SKILL.md"
+    },
+    {
       "id": "bdi-mental-states",
       "canonical_id": "bdi-mental-states",
       "name": "bdi-mental-states",
@@ -12264,6 +12323,29 @@
       "path": "skills/browser-testing-with-devtools/SKILL.md"
     },
     {
+      "id": "bug-bounty",
+      "canonical_id": "bug-bounty",
+      "name": "bug-bounty",
+      "description": "Complete bug bounty workflow",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "bug",
+        "bounty"
+      ],
+      "triggers": [
+        "bug",
+        "bounty",
+        "complete"
+      ],
+      "path": "skills/bug-bounty/SKILL.md"
+    },
+    {
       "id": "bug-hunt-swarm",
       "canonical_id": "bug-hunt-swarm",
       "name": "bug-hunt-swarm",
@@ -12323,6 +12405,33 @@
         "root"
       ],
       "path": "skills/bug-hunter/SKILL.md"
+    },
+    {
+      "id": "bugcrowd-reporting",
+      "canonical_id": "bugcrowd-reporting",
+      "name": "bugcrowd-reporting",
+      "description": "Bugcrowd-specific reporting tactics complementing report-writing",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "bugcrowd",
+        "reporting"
+      ],
+      "triggers": [
+        "bugcrowd",
+        "reporting",
+        "specific",
+        "tactics",
+        "complementing",
+        "report",
+        "writing"
+      ],
+      "path": "skills/bugcrowd-reporting/SKILL.md"
     },
     {
       "id": "bugs-are-annoying",
@@ -14466,6 +14575,37 @@
         "monitoring"
       ],
       "path": "skills/cloud-devops/SKILL.md"
+    },
+    {
+      "id": "cloud-iam-deep",
+      "canonical_id": "cloud-iam-deep",
+      "name": "cloud-iam-deep",
+      "description": "Cloud IAM red-team attack chain across AWS, Azure, GCP",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "cloud",
+        "iam",
+        "deep"
+      ],
+      "triggers": [
+        "cloud",
+        "iam",
+        "deep",
+        "red",
+        "team",
+        "attack",
+        "chain",
+        "aws",
+        "azure",
+        "gcp"
+      ],
+      "path": "skills/cloud-iam-deep/SKILL.md"
     },
     {
       "id": "cloud-k8s",
@@ -24303,6 +24443,36 @@
       "path": "skills/enhance-prompt/SKILL.md"
     },
     {
+      "id": "enterprise-vpn-attack",
+      "canonical_id": "enterprise-vpn-attack",
+      "name": "enterprise-vpn-attack",
+      "description": "External SSL VPN / remote-access appliance attack matrix",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "enterprise",
+        "vpn",
+        "attack"
+      ],
+      "triggers": [
+        "enterprise",
+        "vpn",
+        "attack",
+        "external",
+        "ssl",
+        "remote",
+        "access",
+        "appliance",
+        "matrix"
+      ],
+      "path": "skills/enterprise-vpn-attack/SKILL.md"
+    },
+    {
       "id": "entropy-box",
       "canonical_id": "entropy-box",
       "name": "entropy-box",
@@ -24747,6 +24917,35 @@
         "persistence"
       ],
       "path": "skills/event-store-design/SKILL.md"
+    },
+    {
+      "id": "evidence-hygiene",
+      "canonical_id": "evidence-hygiene",
+      "name": "evidence-hygiene",
+      "description": "Evidence-capture and PoC-redaction discipline for bug-bounty submissions",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "evidence",
+        "hygiene"
+      ],
+      "triggers": [
+        "evidence",
+        "hygiene",
+        "capture",
+        "poc",
+        "redaction",
+        "discipline",
+        "bug",
+        "bounty",
+        "submissions"
+      ],
+      "path": "skills/evidence-hygiene/SKILL.md"
     },
     {
       "id": "evolution",
@@ -32995,6 +33194,1540 @@
       "path": "skills/humanize-chinese/SKILL.md"
     },
     {
+      "id": "hunt-api-misconfig",
+      "canonical_id": "hunt-api-misconfig",
+      "name": "hunt-api-misconfig",
+      "description": "Hunt API security misconfiguration",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "api",
+        "misconfig"
+      ],
+      "triggers": [
+        "hunt",
+        "api",
+        "misconfig",
+        "security",
+        "misconfiguration"
+      ],
+      "path": "skills/hunt-api-misconfig/SKILL.md"
+    },
+    {
+      "id": "hunt-aspnet",
+      "canonical_id": "hunt-aspnet",
+      "name": "hunt-aspnet",
+      "description": "Hunt ASP.NET-specific surface",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "aspnet"
+      ],
+      "triggers": [
+        "hunt",
+        "aspnet",
+        "asp",
+        "net",
+        "specific",
+        "surface"
+      ],
+      "path": "skills/hunt-aspnet/SKILL.md"
+    },
+    {
+      "id": "hunt-ato",
+      "canonical_id": "hunt-ato",
+      "name": "hunt-ato",
+      "description": "Hunt account takeover taxonomy",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "ato"
+      ],
+      "triggers": [
+        "hunt",
+        "ato",
+        "account",
+        "takeover",
+        "taxonomy"
+      ],
+      "path": "skills/hunt-ato/SKILL.md"
+    },
+    {
+      "id": "hunt-auth-bypass",
+      "canonical_id": "hunt-auth-bypass",
+      "name": "hunt-auth-bypass",
+      "description": "Hunting skill for auth bypass vulnerabilities.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "auth",
+        "bypass"
+      ],
+      "triggers": [
+        "hunt",
+        "auth",
+        "bypass",
+        "hunting",
+        "skill",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-auth-bypass/SKILL.md"
+    },
+    {
+      "id": "hunt-brute-force",
+      "canonical_id": "hunt-brute-force",
+      "name": "hunt-brute-force",
+      "description": "Hunt Missing/Weak Rate Limiting",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "brute",
+        "force"
+      ],
+      "triggers": [
+        "hunt",
+        "brute",
+        "force",
+        "missing",
+        "weak",
+        "rate",
+        "limiting"
+      ],
+      "path": "skills/hunt-brute-force/SKILL.md"
+    },
+    {
+      "id": "hunt-business-logic",
+      "canonical_id": "hunt-business-logic",
+      "name": "hunt-business-logic",
+      "description": "Hunting skill for business logic vulnerabilities.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "business",
+        "logic"
+      ],
+      "triggers": [
+        "hunt",
+        "business",
+        "logic",
+        "hunting",
+        "skill",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-business-logic/SKILL.md"
+    },
+    {
+      "id": "hunt-cache-poison",
+      "canonical_id": "hunt-cache-poison",
+      "name": "hunt-cache-poison",
+      "description": "Hunting skill for cache poison vulnerabilities.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "cache",
+        "poison"
+      ],
+      "triggers": [
+        "hunt",
+        "cache",
+        "poison",
+        "hunting",
+        "skill",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-cache-poison/SKILL.md"
+    },
+    {
+      "id": "hunt-captcha-bypass",
+      "canonical_id": "hunt-captcha-bypass",
+      "name": "hunt-captcha-bypass",
+      "description": "Hunt CAPTCHA Bypass",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "captcha",
+        "bypass"
+      ],
+      "triggers": [
+        "hunt",
+        "captcha",
+        "bypass"
+      ],
+      "path": "skills/hunt-captcha-bypass/SKILL.md"
+    },
+    {
+      "id": "hunt-cicd",
+      "canonical_id": "hunt-cicd",
+      "name": "hunt-cicd",
+      "description": "Hunt CI/CD pipeline vulnerabilities",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "cicd"
+      ],
+      "triggers": [
+        "hunt",
+        "cicd",
+        "ci",
+        "cd",
+        "pipeline",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-cicd/SKILL.md"
+    },
+    {
+      "id": "hunt-clickjacking",
+      "canonical_id": "hunt-clickjacking",
+      "name": "hunt-clickjacking",
+      "description": "Hunt Clickjacking",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "clickjacking"
+      ],
+      "triggers": [
+        "hunt",
+        "clickjacking"
+      ],
+      "path": "skills/hunt-clickjacking/SKILL.md"
+    },
+    {
+      "id": "hunt-cloud-misconfig",
+      "canonical_id": "hunt-cloud-misconfig",
+      "name": "hunt-cloud-misconfig",
+      "description": "Hunt cloud / infrastructure misconfigurations.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "cloud",
+        "misconfig"
+      ],
+      "triggers": [
+        "hunt",
+        "cloud",
+        "misconfig",
+        "infrastructure",
+        "misconfigurations"
+      ],
+      "path": "skills/hunt-cloud-misconfig/SKILL.md"
+    },
+    {
+      "id": "hunt-cors",
+      "canonical_id": "hunt-cors",
+      "name": "hunt-cors",
+      "description": "Hunt CORS Misconfiguration",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "cors"
+      ],
+      "triggers": [
+        "hunt",
+        "cors",
+        "misconfiguration"
+      ],
+      "path": "skills/hunt-cors/SKILL.md"
+    },
+    {
+      "id": "hunt-csrf",
+      "canonical_id": "hunt-csrf",
+      "name": "hunt-csrf",
+      "description": "Hunting skill for csrf vulnerabilities.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "csrf"
+      ],
+      "triggers": [
+        "hunt",
+        "csrf",
+        "hunting",
+        "skill",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-csrf/SKILL.md"
+    },
+    {
+      "id": "hunt-deserialization",
+      "canonical_id": "hunt-deserialization",
+      "name": "hunt-deserialization",
+      "description": "Hunt Insecure Deserialization",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "deserialization"
+      ],
+      "triggers": [
+        "hunt",
+        "deserialization",
+        "insecure"
+      ],
+      "path": "skills/hunt-deserialization/SKILL.md"
+    },
+    {
+      "id": "hunt-dispatch",
+      "canonical_id": "hunt-dispatch",
+      "name": "hunt-dispatch",
+      "description": "Skill-set loader for /hunt orchestrator.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "dispatch"
+      ],
+      "triggers": [
+        "hunt",
+        "dispatch",
+        "skill",
+        "set",
+        "loader",
+        "orchestrator"
+      ],
+      "path": "skills/hunt-dispatch/SKILL.md"
+    },
+    {
+      "id": "hunt-dom",
+      "canonical_id": "hunt-dom",
+      "name": "hunt-dom",
+      "description": "Hunt client-side DOM vulnerabilities",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "dom"
+      ],
+      "triggers": [
+        "hunt",
+        "dom",
+        "client",
+        "side",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-dom/SKILL.md"
+    },
+    {
+      "id": "hunt-exceptional-conditions",
+      "canonical_id": "hunt-exceptional-conditions",
+      "name": "hunt-exceptional-conditions",
+      "description": "Hunt mishandling of exceptional conditions",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "exceptional",
+        "conditions"
+      ],
+      "triggers": [
+        "hunt",
+        "exceptional",
+        "conditions",
+        "mishandling"
+      ],
+      "path": "skills/hunt-exceptional-conditions/SKILL.md"
+    },
+    {
+      "id": "hunt-file-upload",
+      "canonical_id": "hunt-file-upload",
+      "name": "hunt-file-upload",
+      "description": "Hunt file upload bugs",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "file",
+        "upload"
+      ],
+      "triggers": [
+        "hunt",
+        "file",
+        "upload",
+        "bugs"
+      ],
+      "path": "skills/hunt-file-upload/SKILL.md"
+    },
+    {
+      "id": "hunt-fintech-graphql",
+      "canonical_id": "hunt-fintech-graphql",
+      "name": "hunt-fintech-graphql",
+      "description": "Hunt fintech-specific GraphQL vulnerabilities",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "fintech",
+        "graphql"
+      ],
+      "triggers": [
+        "hunt",
+        "fintech",
+        "graphql",
+        "specific",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-fintech-graphql/SKILL.md"
+    },
+    {
+      "id": "hunt-forgot-password",
+      "canonical_id": "hunt-forgot-password",
+      "name": "hunt-forgot-password",
+      "description": "Hunt Forgot Password / Account Recovery Authentication Flaws",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "forgot",
+        "password"
+      ],
+      "triggers": [
+        "hunt",
+        "forgot",
+        "password",
+        "account",
+        "recovery",
+        "authentication",
+        "flaws"
+      ],
+      "path": "skills/hunt-forgot-password/SKILL.md"
+    },
+    {
+      "id": "hunt-graphql",
+      "canonical_id": "hunt-graphql",
+      "name": "hunt-graphql",
+      "description": "Hunting skill for graphql vulnerabilities.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "graphql"
+      ],
+      "triggers": [
+        "hunt",
+        "graphql",
+        "hunting",
+        "skill",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-graphql/SKILL.md"
+    },
+    {
+      "id": "hunt-grpc",
+      "canonical_id": "hunt-grpc",
+      "name": "hunt-grpc",
+      "description": "Hunt gRPC vulnerabilities",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "grpc"
+      ],
+      "triggers": [
+        "hunt",
+        "grpc",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-grpc/SKILL.md"
+    },
+    {
+      "id": "hunt-host-header",
+      "canonical_id": "hunt-host-header",
+      "name": "hunt-host-header",
+      "description": "Hunt Host Header Injection",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "host",
+        "header"
+      ],
+      "triggers": [
+        "hunt",
+        "host",
+        "header",
+        "injection"
+      ],
+      "path": "skills/hunt-host-header/SKILL.md"
+    },
+    {
+      "id": "hunt-html-injection",
+      "canonical_id": "hunt-html-injection",
+      "name": "hunt-html-injection",
+      "description": "Hunt HTML Injection",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "html",
+        "injection"
+      ],
+      "triggers": [
+        "hunt",
+        "html",
+        "injection"
+      ],
+      "path": "skills/hunt-html-injection/SKILL.md"
+    },
+    {
+      "id": "hunt-http-smuggling",
+      "canonical_id": "hunt-http-smuggling",
+      "name": "hunt-http-smuggling",
+      "description": "Hunt HTTP request smuggling (CL.TE, TE.CL, H2.CL, H2.TE).",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "http",
+        "smuggling"
+      ],
+      "triggers": [
+        "hunt",
+        "http",
+        "smuggling",
+        "request",
+        "cl",
+        "te",
+        "h2"
+      ],
+      "path": "skills/hunt-http-smuggling/SKILL.md"
+    },
+    {
+      "id": "hunt-idor",
+      "canonical_id": "hunt-idor",
+      "name": "hunt-idor",
+      "description": "Hunting skill for idor vulnerabilities. Built from 26 public bug bounty reports. Use when hunting idor on any target.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "idor"
+      ],
+      "triggers": [
+        "hunt",
+        "idor",
+        "hunting",
+        "skill",
+        "vulnerabilities",
+        "built",
+        "26",
+        "public",
+        "bug",
+        "bounty",
+        "reports",
+        "any"
+      ],
+      "path": "skills/hunt-idor/SKILL.md"
+    },
+    {
+      "id": "hunt-jwt-crypto",
+      "canonical_id": "hunt-jwt-crypto",
+      "name": "hunt-jwt-crypto",
+      "description": "Hunt JWT cryptographic failures",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "jwt",
+        "crypto"
+      ],
+      "triggers": [
+        "hunt",
+        "jwt",
+        "crypto",
+        "cryptographic",
+        "failures"
+      ],
+      "path": "skills/hunt-jwt-crypto/SKILL.md"
+    },
+    {
+      "id": "hunt-k8s",
+      "canonical_id": "hunt-k8s",
+      "name": "hunt-k8s",
+      "description": "Hunt Kubernetes & Docker",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "k8s"
+      ],
+      "triggers": [
+        "hunt",
+        "k8s",
+        "kubernetes",
+        "docker"
+      ],
+      "path": "skills/hunt-k8s/SKILL.md"
+    },
+    {
+      "id": "hunt-laravel",
+      "canonical_id": "hunt-laravel",
+      "name": "hunt-laravel",
+      "description": "Hunt Laravel specific vulnerabilities",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "laravel"
+      ],
+      "triggers": [
+        "hunt",
+        "laravel",
+        "specific",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-laravel/SKILL.md"
+    },
+    {
+      "id": "hunt-ldap",
+      "canonical_id": "hunt-ldap",
+      "name": "hunt-ldap",
+      "description": "Hunt LDAP Injection and XPath Injection",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "ldap"
+      ],
+      "triggers": [
+        "hunt",
+        "ldap",
+        "injection",
+        "xpath"
+      ],
+      "path": "skills/hunt-ldap/SKILL.md"
+    },
+    {
+      "id": "hunt-lfi",
+      "canonical_id": "hunt-lfi",
+      "name": "hunt-lfi",
+      "description": "Hunt Local File Inclusion (LFI), Remote File Inclusion (RFI), and Path Traversal",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "lfi"
+      ],
+      "triggers": [
+        "hunt",
+        "lfi",
+        "local",
+        "file",
+        "inclusion",
+        "remote",
+        "rfi",
+        "path",
+        "traversal"
+      ],
+      "path": "skills/hunt-lfi/SKILL.md"
+    },
+    {
+      "id": "hunt-llm-ai",
+      "canonical_id": "hunt-llm-ai",
+      "name": "hunt-llm-ai",
+      "description": "Hunt LLM/AI feature bugs",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "llm",
+        "ai"
+      ],
+      "triggers": [
+        "hunt",
+        "llm",
+        "ai",
+        "feature",
+        "bugs"
+      ],
+      "path": "skills/hunt-llm-ai/SKILL.md"
+    },
+    {
+      "id": "hunt-mfa-bypass",
+      "canonical_id": "hunt-mfa-bypass",
+      "name": "hunt-mfa-bypass",
+      "description": "Hunt MFA / 2FA bypass",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "mfa",
+        "bypass"
+      ],
+      "triggers": [
+        "hunt",
+        "mfa",
+        "bypass",
+        "2fa"
+      ],
+      "path": "skills/hunt-mfa-bypass/SKILL.md"
+    },
+    {
+      "id": "hunt-misc",
+      "canonical_id": "hunt-misc",
+      "name": "hunt-misc",
+      "description": "Hunting skill for misc vulnerabilities. Built from 225 public bug bounty reports. Use when hunting misc on any target.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "misc"
+      ],
+      "triggers": [
+        "hunt",
+        "misc",
+        "hunting",
+        "skill",
+        "vulnerabilities",
+        "built",
+        "225",
+        "public",
+        "bug",
+        "bounty",
+        "reports",
+        "any"
+      ],
+      "path": "skills/hunt-misc/SKILL.md"
+    },
+    {
+      "id": "hunt-nextjs",
+      "canonical_id": "hunt-nextjs",
+      "name": "hunt-nextjs",
+      "description": "Hunt Next.js specific vulnerabilities",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "nextjs"
+      ],
+      "triggers": [
+        "hunt",
+        "nextjs",
+        "next",
+        "js",
+        "specific",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-nextjs/SKILL.md"
+    },
+    {
+      "id": "hunt-nodejs",
+      "canonical_id": "hunt-nodejs",
+      "name": "hunt-nodejs",
+      "description": "Hunt Node.js specific vulnerabilities",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "nodejs"
+      ],
+      "triggers": [
+        "hunt",
+        "nodejs",
+        "node",
+        "js",
+        "specific",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-nodejs/SKILL.md"
+    },
+    {
+      "id": "hunt-nosqli",
+      "canonical_id": "hunt-nosqli",
+      "name": "hunt-nosqli",
+      "description": "Hunt NoSQL Injection",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "nosqli"
+      ],
+      "triggers": [
+        "hunt",
+        "nosqli",
+        "nosql",
+        "injection"
+      ],
+      "path": "skills/hunt-nosqli/SKILL.md"
+    },
+    {
+      "id": "hunt-ntlm-info",
+      "canonical_id": "hunt-ntlm-info",
+      "name": "hunt-ntlm-info",
+      "description": "Hunt NTLM/Negotiate information disclosure on internet-reachable IIS/SharePoint/Exchange.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "ntlm",
+        "info"
+      ],
+      "triggers": [
+        "hunt",
+        "ntlm",
+        "info",
+        "negotiate",
+        "information",
+        "disclosure",
+        "internet",
+        "reachable",
+        "iis",
+        "sharepoint",
+        "exchange"
+      ],
+      "path": "skills/hunt-ntlm-info/SKILL.md"
+    },
+    {
+      "id": "hunt-oauth",
+      "canonical_id": "hunt-oauth",
+      "name": "hunt-oauth",
+      "description": "Hunting skill for oauth vulnerabilities. Built from 19 public bug bounty reports. Use when hunting oauth on any target.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "oauth"
+      ],
+      "triggers": [
+        "hunt",
+        "oauth",
+        "hunting",
+        "skill",
+        "vulnerabilities",
+        "built",
+        "19",
+        "public",
+        "bug",
+        "bounty",
+        "reports",
+        "any"
+      ],
+      "path": "skills/hunt-oauth/SKILL.md"
+    },
+    {
+      "id": "hunt-open-redirect",
+      "canonical_id": "hunt-open-redirect",
+      "name": "hunt-open-redirect",
+      "description": "Hunt Open Redirect",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "open",
+        "redirect"
+      ],
+      "triggers": [
+        "hunt",
+        "open",
+        "redirect"
+      ],
+      "path": "skills/hunt-open-redirect/SKILL.md"
+    },
+    {
+      "id": "hunt-race-condition",
+      "canonical_id": "hunt-race-condition",
+      "name": "hunt-race-condition",
+      "description": "Hunting skill for race condition vulnerabilities.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "race",
+        "condition"
+      ],
+      "triggers": [
+        "hunt",
+        "race",
+        "condition",
+        "hunting",
+        "skill",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-race-condition/SKILL.md"
+    },
+    {
+      "id": "hunt-rag-vector",
+      "canonical_id": "hunt-rag-vector",
+      "name": "hunt-rag-vector",
+      "description": "Hunt vector-store / embedding-layer weaknesses in RAG pipelines (OWASP LLM08 Vector and Embedding Weaknesses)",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "rag",
+        "vector"
+      ],
+      "triggers": [
+        "hunt",
+        "rag",
+        "vector",
+        "store",
+        "embedding",
+        "layer",
+        "weaknesses",
+        "pipelines",
+        "owasp",
+        "llm08"
+      ],
+      "path": "skills/hunt-rag-vector/SKILL.md"
+    },
+    {
+      "id": "hunt-rce",
+      "canonical_id": "hunt-rce",
+      "name": "hunt-rce",
+      "description": "Hunting skill for rce vulnerabilities. Built from 67 public bug bounty reports. Use when hunting rce on any target.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "rce"
+      ],
+      "triggers": [
+        "hunt",
+        "rce",
+        "hunting",
+        "skill",
+        "vulnerabilities",
+        "built",
+        "67",
+        "public",
+        "bug",
+        "bounty",
+        "reports",
+        "any"
+      ],
+      "path": "skills/hunt-rce/SKILL.md"
+    },
+    {
+      "id": "hunt-saml",
+      "canonical_id": "hunt-saml",
+      "name": "hunt-saml",
+      "description": "Hunt SAML / SSO attacks.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "saml"
+      ],
+      "triggers": [
+        "hunt",
+        "saml",
+        "sso",
+        "attacks"
+      ],
+      "path": "skills/hunt-saml/SKILL.md"
+    },
+    {
+      "id": "hunt-session",
+      "canonical_id": "hunt-session",
+      "name": "hunt-session",
+      "description": "Hunt Session Management vulnerabilities",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "session"
+      ],
+      "triggers": [
+        "hunt",
+        "session",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-session/SKILL.md"
+    },
+    {
+      "id": "hunt-shadow-api",
+      "canonical_id": "hunt-shadow-api",
+      "name": "hunt-shadow-api",
+      "description": "Hunt shadow / zombie / undocumented API surface (OWASP API9 Improper Inventory Management)",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "shadow",
+        "api"
+      ],
+      "triggers": [
+        "hunt",
+        "shadow",
+        "api",
+        "zombie",
+        "undocumented",
+        "surface",
+        "owasp",
+        "api9",
+        "improper",
+        "inventory"
+      ],
+      "path": "skills/hunt-shadow-api/SKILL.md"
+    },
+    {
+      "id": "hunt-sharepoint",
+      "canonical_id": "hunt-sharepoint",
+      "name": "hunt-sharepoint",
+      "description": "Hunt Microsoft SharePoint Server (2013/2016/2019/Subscription Edition) on-prem farms",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "sharepoint"
+      ],
+      "triggers": [
+        "hunt",
+        "sharepoint",
+        "microsoft",
+        "server",
+        "2013",
+        "2016",
+        "2019",
+        "subscription",
+        "edition",
+        "prem",
+        "farms"
+      ],
+      "path": "skills/hunt-sharepoint/SKILL.md"
+    },
+    {
+      "id": "hunt-source-leak",
+      "canonical_id": "hunt-source-leak",
+      "name": "hunt-source-leak",
+      "description": "Hunt source code and build artifact leakage",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "source",
+        "leak"
+      ],
+      "triggers": [
+        "hunt",
+        "source",
+        "leak",
+        "code",
+        "artifact",
+        "leakage"
+      ],
+      "path": "skills/hunt-source-leak/SKILL.md"
+    },
+    {
+      "id": "hunt-spa-api",
+      "canonical_id": "hunt-spa-api",
+      "name": "hunt-spa-api",
+      "description": "Discover a single-page-app's hidden backend API from its public JS bundle, then test that API for broken access control / missing authentication.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "spa",
+        "api"
+      ],
+      "triggers": [
+        "hunt",
+        "spa",
+        "api",
+        "discover",
+        "single",
+        "page",
+        "app",
+        "hidden",
+        "backend",
+        "public",
+        "js",
+        "bundle"
+      ],
+      "path": "skills/hunt-spa-api/SKILL.md"
+    },
+    {
+      "id": "hunt-springboot",
+      "canonical_id": "hunt-springboot",
+      "name": "hunt-springboot",
+      "description": "Hunt Spring Boot specific vulnerabilities",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "springboot"
+      ],
+      "triggers": [
+        "hunt",
+        "springboot",
+        "spring",
+        "boot",
+        "specific",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-springboot/SKILL.md"
+    },
+    {
+      "id": "hunt-sqli",
+      "canonical_id": "hunt-sqli",
+      "name": "hunt-sqli",
+      "description": "Hunting skill for sqli vulnerabilities.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "sqli"
+      ],
+      "triggers": [
+        "hunt",
+        "sqli",
+        "hunting",
+        "skill",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-sqli/SKILL.md"
+    },
+    {
+      "id": "hunt-ssrf",
+      "canonical_id": "hunt-ssrf",
+      "name": "hunt-ssrf",
+      "description": "Hunting skill for ssrf vulnerabilities.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "ssrf"
+      ],
+      "triggers": [
+        "hunt",
+        "ssrf",
+        "hunting",
+        "skill",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-ssrf/SKILL.md"
+    },
+    {
+      "id": "hunt-ssti",
+      "canonical_id": "hunt-ssti",
+      "name": "hunt-ssti",
+      "description": "Hunt server-side template injection (SSTI) across Jinja2 (Flask/Django), Twig (Symfony), Freemarker (Java), ERB (Rails), Spring, Velocity, Mako, Thymeleaf, Smarty.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "ssti"
+      ],
+      "triggers": [
+        "hunt",
+        "ssti",
+        "server",
+        "side",
+        "injection",
+        "jinja2",
+        "flask",
+        "django",
+        "twig",
+        "symfony",
+        "freemarker",
+        "java"
+      ],
+      "path": "skills/hunt-ssti/SKILL.md"
+    },
+    {
+      "id": "hunt-subdomain",
+      "canonical_id": "hunt-subdomain",
+      "name": "hunt-subdomain",
+      "description": "Hunting skill for subdomain takeover vulnerabilities.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "subdomain"
+      ],
+      "triggers": [
+        "hunt",
+        "subdomain",
+        "hunting",
+        "skill",
+        "takeover",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-subdomain/SKILL.md"
+    },
+    {
+      "id": "hunt-tls-network",
+      "canonical_id": "hunt-tls-network",
+      "name": "hunt-tls-network",
+      "description": "Hunt TLS/SSL and DNS misconfigurations",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "tls",
+        "network"
+      ],
+      "triggers": [
+        "hunt",
+        "tls",
+        "network",
+        "ssl",
+        "dns",
+        "misconfigurations"
+      ],
+      "path": "skills/hunt-tls-network/SKILL.md"
+    },
+    {
+      "id": "hunt-websocket",
+      "canonical_id": "hunt-websocket",
+      "name": "hunt-websocket",
+      "description": "Hunt WebSocket vulnerabilities",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "websocket"
+      ],
+      "triggers": [
+        "hunt",
+        "websocket",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-websocket/SKILL.md"
+    },
+    {
+      "id": "hunt-xss",
+      "canonical_id": "hunt-xss",
+      "name": "hunt-xss",
+      "description": "Hunting skill for xss vulnerabilities.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "xss"
+      ],
+      "triggers": [
+        "hunt",
+        "xss",
+        "hunting",
+        "skill",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-xss/SKILL.md"
+    },
+    {
+      "id": "hunt-xxe",
+      "canonical_id": "hunt-xxe",
+      "name": "hunt-xxe",
+      "description": "Hunting skill for xxe vulnerabilities.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "hunt",
+        "xxe"
+      ],
+      "triggers": [
+        "hunt",
+        "xxe",
+        "hunting",
+        "skill",
+        "vulnerabilities"
+      ],
+      "path": "skills/hunt-xxe/SKILL.md"
+    },
+    {
       "id": "hybrid-cloud-architect",
       "canonical_id": "hybrid-cloud-architect",
       "name": "hybrid-cloud-architect",
@@ -34602,6 +36335,32 @@
         "core"
       ],
       "path": "skills/ios-developer/SKILL.md"
+    },
+    {
+      "id": "ios-redteam-pipeline",
+      "canonical_id": "ios-redteam-pipeline",
+      "name": "ios-redteam-pipeline",
+      "description": "End-to-end iOS red-team pipeline",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "ios",
+        "redteam",
+        "pipeline"
+      ],
+      "triggers": [
+        "ios",
+        "redteam",
+        "pipeline",
+        "red",
+        "team"
+      ],
+      "path": "skills/ios-redteam-pipeline/SKILL.md"
     },
     {
       "id": "iso27001-compliance",
@@ -38274,6 +40033,36 @@
       "path": "skills/m365-agents-ts/SKILL.md"
     },
     {
+      "id": "m365-entra-attack",
+      "canonical_id": "m365-entra-attack",
+      "name": "m365-entra-attack",
+      "description": "Microsoft 365 / Entra ID red-team attack chain",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "m365",
+        "entra",
+        "attack"
+      ],
+      "triggers": [
+        "m365",
+        "entra",
+        "attack",
+        "microsoft",
+        "365",
+        "id",
+        "red",
+        "team",
+        "chain"
+      ],
+      "path": "skills/m365-entra-attack/SKILL.md"
+    },
+    {
       "id": "mac-mini-llm-lab",
       "canonical_id": "mac-mini-llm-lab",
       "name": "mac-mini-llm-lab",
@@ -40108,6 +41897,32 @@
       "path": "skills/mdpr-skill/SKILL.md"
     },
     {
+      "id": "meme-coin-audit",
+      "canonical_id": "meme-coin-audit",
+      "name": "meme-coin-audit",
+      "description": "Meme coin and token security audit",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "meme",
+        "coin",
+        "audit"
+      ],
+      "triggers": [
+        "meme",
+        "coin",
+        "audit",
+        "token",
+        "security"
+      ],
+      "path": "skills/meme-coin-audit/SKILL.md"
+    },
+    {
       "id": "memory-forensics",
       "canonical_id": "memory-forensics",
       "name": "memory-forensics",
@@ -40468,6 +42283,40 @@
         "channels"
       ],
       "path": "skills/microsoft-teams-automation/SKILL.md"
+    },
+    {
+      "id": "mid-engagement-ir-detection",
+      "canonical_id": "mid-engagement-ir-detection",
+      "name": "mid-engagement-ir-detection",
+      "description": "Methodology for detecting client SOC patches, attacker activity, and security-state changes that occur DURING a red-team engagement",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "mid",
+        "engagement",
+        "ir",
+        "detection"
+      ],
+      "triggers": [
+        "mid",
+        "engagement",
+        "ir",
+        "detection",
+        "methodology",
+        "detecting",
+        "client",
+        "soc",
+        "patches",
+        "attacker",
+        "activity",
+        "security"
+      ],
+      "path": "skills/mid-engagement-ir-detection/SKILL.md"
     },
     {
       "id": "minecraft-bukkit-pro",
@@ -44413,6 +46262,37 @@
       "path": "skills/odw/SKILL.md"
     },
     {
+      "id": "offensive-osint",
+      "canonical_id": "offensive-osint",
+      "name": "offensive-osint",
+      "description": "Operational arsenal for authorized external red-team and bug-bounty recon.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "offensive",
+        "osint"
+      ],
+      "triggers": [
+        "offensive",
+        "osint",
+        "operational",
+        "arsenal",
+        "authorized",
+        "external",
+        "red",
+        "team",
+        "bug",
+        "bounty",
+        "recon"
+      ],
+      "path": "skills/offensive-osint/SKILL.md"
+    },
+    {
       "id": "offers",
       "canonical_id": "offers",
       "name": "offers",
@@ -44470,6 +46350,32 @@
         "microsoft"
       ],
       "path": "skills/office-productivity/SKILL.md"
+    },
+    {
+      "id": "okta-attack",
+      "canonical_id": "okta-attack",
+      "name": "okta-attack",
+      "description": "Okta-as-IdP red-team attack chain",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "okta",
+        "attack"
+      ],
+      "triggers": [
+        "okta",
+        "attack",
+        "idp",
+        "red",
+        "team",
+        "chain"
+      ],
+      "path": "skills/okta-attack/SKILL.md"
     },
     {
       "id": "ollama-stack",
@@ -45254,6 +47160,36 @@
         "debugging"
       ],
       "path": "skills/os-scripting/SKILL.md"
+    },
+    {
+      "id": "osint-methodology",
+      "canonical_id": "osint-methodology",
+      "name": "osint-methodology",
+      "description": "Comprehensive OSINT methodology for external red-team operations and authorized attack-surface assessments.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "osint",
+        "methodology"
+      ],
+      "triggers": [
+        "osint",
+        "methodology",
+        "external",
+        "red",
+        "team",
+        "operations",
+        "authorized",
+        "attack",
+        "surface",
+        "assessments"
+      ],
+      "path": "skills/osint-methodology/SKILL.md"
     },
     {
       "id": "oss-hunter",
@@ -50306,6 +52242,35 @@
       "path": "skills/receiving-code-review/SKILL.md"
     },
     {
+      "id": "recon-scope-triage",
+      "canonical_id": "recon-scope-triage",
+      "name": "recon-scope-triage",
+      "description": "Triage ASM/recon output for ownership before testing",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "recon",
+        "scope",
+        "triage"
+      ],
+      "triggers": [
+        "recon",
+        "scope",
+        "triage",
+        "asm",
+        "output",
+        "ownership",
+        "before",
+        "testing"
+      ],
+      "path": "skills/recon-scope-triage/SKILL.md"
+    },
+    {
       "id": "recsys-pipeline-architect",
       "canonical_id": "recsys-pipeline-architect",
       "name": "recsys-pipeline-architect",
@@ -50555,6 +52520,60 @@
       "path": "skills/redis-cli/SKILL.md"
     },
     {
+      "id": "redteam-mindset",
+      "canonical_id": "redteam-mindset",
+      "name": "redteam-mindset",
+      "description": "Red-team operator discipline",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "redteam",
+        "mindset"
+      ],
+      "triggers": [
+        "redteam",
+        "mindset",
+        "red",
+        "team",
+        "operator",
+        "discipline"
+      ],
+      "path": "skills/redteam-mindset/SKILL.md"
+    },
+    {
+      "id": "redteam-report-template",
+      "canonical_id": "redteam-report-template",
+      "name": "redteam-report-template",
+      "description": "Client-facing red-team deliverable format",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "redteam",
+        "report"
+      ],
+      "triggers": [
+        "redteam",
+        "report",
+        "client",
+        "facing",
+        "red",
+        "team",
+        "deliverable",
+        "format"
+      ],
+      "path": "skills/redteam-report-template/SKILL.md"
+    },
+    {
       "id": "reference-builder",
       "canonical_id": "reference-builder",
       "name": "reference-builder",
@@ -50769,6 +52788,34 @@
         "state"
       ],
       "path": "skills/repo-maintainer/SKILL.md"
+    },
+    {
+      "id": "report-writing",
+      "canonical_id": "report-writing",
+      "name": "report-writing",
+      "description": "Bug bounty report writing for H1/Bugcrowd/Intigriti/Immunefi",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "report",
+        "writing"
+      ],
+      "triggers": [
+        "report",
+        "writing",
+        "bug",
+        "bounty",
+        "h1",
+        "bugcrowd",
+        "intigriti",
+        "immunefi"
+      ],
+      "path": "skills/report-writing/SKILL.md"
     },
     {
       "id": "requesting-code-review",
@@ -52745,6 +54792,38 @@
         "data"
       ],
       "path": "skills/security-and-hardening/SKILL.md"
+    },
+    {
+      "id": "security-arsenal",
+      "canonical_id": "security-arsenal",
+      "name": "security-arsenal",
+      "description": "Security payloads, bypass tables, wordlists, gf pattern names, always-rejected bug list, and conditionally-valid-with-chain table.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "security",
+        "arsenal"
+      ],
+      "triggers": [
+        "security",
+        "arsenal",
+        "payloads",
+        "bypass",
+        "tables",
+        "wordlists",
+        "gf",
+        "names",
+        "always",
+        "rejected",
+        "bug",
+        "list"
+      ],
+      "path": "skills/security-arsenal/SKILL.md"
     },
     {
       "id": "security-audit",
@@ -58199,6 +60278,35 @@
       "path": "skills/superpowers-lab/SKILL.md"
     },
     {
+      "id": "supply-chain-attack-recon",
+      "canonical_id": "supply-chain-attack-recon",
+      "name": "supply-chain-attack-recon",
+      "description": "External recon for software supply-chain attack surface",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "supply",
+        "chain",
+        "attack",
+        "recon"
+      ],
+      "triggers": [
+        "supply",
+        "chain",
+        "attack",
+        "recon",
+        "external",
+        "software",
+        "surface"
+      ],
+      "path": "skills/supply-chain-attack-recon/SKILL.md"
+    },
+    {
       "id": "supply-chain-attack-response",
       "canonical_id": "supply-chain-attack-response",
       "name": "supply-chain-attack-response",
@@ -61087,6 +63195,33 @@
         "roles"
       ],
       "path": "skills/triage/SKILL.md"
+    },
+    {
+      "id": "triage-validation",
+      "canonical_id": "triage-validation",
+      "name": "triage-validation",
+      "description": "Finding validation before writing any report",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "triage",
+        "validation"
+      ],
+      "triggers": [
+        "triage",
+        "validation",
+        "finding",
+        "before",
+        "writing",
+        "any",
+        "report"
+      ],
+      "path": "skills/triage-validation/SKILL.md"
     },
     {
       "id": "trigger-dev",
@@ -64106,6 +66241,34 @@
       "path": "skills/vllm-server/SKILL.md"
     },
     {
+      "id": "vmware-vcenter-attack",
+      "canonical_id": "vmware-vcenter-attack",
+      "name": "vmware-vcenter-attack",
+      "description": "VMware vSphere / vCenter Server external attack matrix",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "vmware",
+        "vcenter",
+        "attack"
+      ],
+      "triggers": [
+        "vmware",
+        "vcenter",
+        "attack",
+        "vsphere",
+        "server",
+        "external",
+        "matrix"
+      ],
+      "path": "skills/vmware-vcenter-attack/SKILL.md"
+    },
+    {
       "id": "voice-agents",
       "canonical_id": "voice-agents",
       "name": "voice-agents",
@@ -64828,6 +66991,54 @@
         "authentication"
       ],
       "path": "skills/web-security-testing/SKILL.md"
+    },
+    {
+      "id": "web2-recon",
+      "canonical_id": "web2-recon",
+      "name": "web2-recon",
+      "description": "Web2 recon pipeline",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "web2",
+        "recon"
+      ],
+      "triggers": [
+        "web2",
+        "recon",
+        "pipeline"
+      ],
+      "path": "skills/web2-recon/SKILL.md"
+    },
+    {
+      "id": "web3-audit",
+      "canonical_id": "web3-audit",
+      "name": "web3-audit",
+      "description": "Smart contract security audit",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/elementalsouls/Claude-BugHunter",
+      "source_type": "community",
+      "source_repo": "elementalsouls/Claude-BugHunter",
+      "license": "MIT",
+      "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE",
+      "tags": [
+        "web3",
+        "audit"
+      ],
+      "triggers": [
+        "web3",
+        "audit",
+        "smart",
+        "contract",
+        "security"
+      ],
+      "path": "skills/web3-audit/SKILL.md"
     },
     {
       "id": "web3-testing",
