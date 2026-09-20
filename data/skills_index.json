@@ -10145,6 +10145,32 @@
     "source_type": "self"
   },
   {
+    "id": "career-ops",
+    "path": "skills/career-ops",
+    "category": "productivity",
+    "name": "career-ops",
+    "description": "Multi-CLI job-search command center: evaluate offers, scan portals, tailor CVs, track applications, prep interviews. Invoke per mode.",
+    "risk": "safe",
+    "source": "https://github.com/career-ops-hq/career-ops",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "career-ops-hq/career-ops",
+    "license": "MIT",
+    "license_source": "https://github.com/career-ops-hq/career-ops/blob/main/LICENSE"
+  },
+  {
     "id": "carrier-relationship-management",
     "path": "skills/carrier-relationship-management",
     "category": "business",
@@ -12984,6 +13010,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "constraint-driven-development",
+    "path": "skills/constraint-driven-development",
+    "category": "code-quality",
+    "name": "constraint-driven-development",
+    "description": "Write the project quality bar as enforced CONSTRAINTS.md so agents stop quietly lowering it: coverage, performance, accessibility thresholds watched on every diff.",
+    "risk": "safe",
+    "source": "https://github.com/addyosmani/agent-skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "addyosmani/agent-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/addyosmani/agent-skills/blob/main/LICENSE"
   },
   {
     "id": "container-security-hardening",
@@ -22222,6 +22274,179 @@
     ]
   },
   {
+    "id": "geo-audit",
+    "path": "skills/geo-audit",
+    "category": "seo",
+    "name": "geo-audit",
+    "description": "Full website GEO+SEO audit with parallel subagent delegation.",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE"
+  },
+  {
+    "id": "geo-brand-mentions",
+    "path": "skills/geo-brand-mentions",
+    "category": "seo",
+    "name": "geo-brand-mentions",
+    "description": "Brand mention and authority scanner for AI visibility.",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE"
+  },
+  {
+    "id": "geo-citability",
+    "path": "skills/geo-citability",
+    "category": "seo",
+    "name": "geo-citability",
+    "description": "AI citability scoring and optimization.",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE"
+  },
+  {
+    "id": "geo-compare",
+    "path": "skills/geo-compare",
+    "category": "seo",
+    "name": "geo-compare",
+    "description": "Monthly delta tracking and progress reporting for GEO clients.",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE",
+    "tags": [
+      "geo",
+      "business",
+      "delta",
+      "monthly",
+      "reporting",
+      "client",
+      "progress"
+    ]
+  },
+  {
+    "id": "geo-content",
+    "path": "skills/geo-content",
+    "category": "seo",
+    "name": "geo-content",
+    "description": "Content quality and E-E-A-T assessment for AI citability \u2014 evaluate experience, expertise, authoritativeness, trustworthiness, and content structure",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE",
+    "tags": [
+      "geo",
+      "content-quality",
+      "eeat",
+      "citability",
+      "ai-content",
+      "topical-authority"
+    ]
+  },
+  {
+    "id": "geo-crawlers",
+    "path": "skills/geo-crawlers",
+    "category": "seo",
+    "name": "geo-crawlers",
+    "description": "AI crawler access analysis.",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE"
+  },
+  {
     "id": "geo-fundamentals",
     "path": "skills/geo-fundamentals",
     "category": "marketing",
@@ -22242,6 +22467,274 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "geo-llmstxt",
+    "path": "skills/geo-llmstxt",
+    "category": "seo",
+    "name": "geo-llmstxt",
+    "description": "Analyzes and generates llms.txt files -- the emerging standard for helping AI systems understand website structure and content.",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE"
+  },
+  {
+    "id": "geo-platform-optimizer",
+    "path": "skills/geo-platform-optimizer",
+    "category": "seo",
+    "name": "geo-platform-optimizer",
+    "description": "Platform-specific AI search optimization \u2014 audit and optimize for Google AI Overviews, ChatGPT, Perplexity, Gemini, and Bing Copilot individually",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE",
+    "tags": [
+      "geo",
+      "ai-search",
+      "platform-optimization",
+      "chatgpt",
+      "perplexity",
+      "gemini",
+      "aio"
+    ]
+  },
+  {
+    "id": "geo-proposal",
+    "path": "skills/geo-proposal",
+    "category": "seo",
+    "name": "geo-proposal",
+    "description": "Auto-generate a professional, client-ready GEO service proposal from audit data.",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE",
+    "tags": [
+      "geo",
+      "business",
+      "proposal",
+      "sales",
+      "pricing",
+      "client"
+    ]
+  },
+  {
+    "id": "geo-prospect",
+    "path": "skills/geo-prospect",
+    "category": "seo",
+    "name": "geo-prospect",
+    "description": "CRM-lite for managing GEO agency prospects and clients.",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE",
+    "tags": [
+      "geo",
+      "business",
+      "crm",
+      "prospect",
+      "pipeline",
+      "sales"
+    ]
+  },
+  {
+    "id": "geo-report",
+    "path": "skills/geo-report",
+    "category": "seo",
+    "name": "geo-report",
+    "description": "Generate a professional, client-facing GEO report combining all audit results into a single deliverable with scores, findings, and prioritized actions",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE",
+    "tags": [
+      "geo",
+      "report",
+      "client-deliverable",
+      "executive-summary",
+      "action-plan"
+    ]
+  },
+  {
+    "id": "geo-report-pdf",
+    "path": "skills/geo-report-pdf",
+    "category": "seo",
+    "name": "geo-report-pdf",
+    "description": "Generate a professional PDF report from a GEO audit using pandoc + Chrome headless.",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE",
+    "tags": [
+      "geo",
+      "pdf",
+      "report",
+      "client-deliverable",
+      "professional"
+    ]
+  },
+  {
+    "id": "geo-schema",
+    "path": "skills/geo-schema",
+    "category": "seo",
+    "name": "geo-schema",
+    "description": "Schema.org structured data audit and generation optimized for AI discoverability \u2014 detect, validate, and generate JSON-LD markup",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE",
+    "tags": [
+      "geo",
+      "schema",
+      "structured-data",
+      "json-ld",
+      "entity-recognition",
+      "ai-discoverability"
+    ]
+  },
+  {
+    "id": "geo-technical",
+    "path": "skills/geo-technical",
+    "category": "seo",
+    "name": "geo-technical",
+    "description": "Technical SEO audit with GEO-specific checks \u2014 crawlability, indexability, security, performance, SSR, and AI crawler access",
+    "risk": "safe",
+    "source": "https://github.com/zubair-trabzada/geo-seo-claude",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zubair-trabzada/geo-seo-claude",
+    "license": "MIT",
+    "license_source": "https://github.com/zubair-trabzada/geo-seo-claude/blob/main/LICENSE",
+    "tags": [
+      "geo",
+      "technical-seo",
+      "core-web-vitals",
+      "ssr",
+      "crawlability",
+      "security",
+      "performance"
+    ]
   },
   {
     "id": "geoffrey-hinton",
@@ -25321,6 +25814,38 @@
     "license_source": "https://github.com/LambdaTest/agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "i-have-adhd",
+    "path": "skills/i-have-adhd",
+    "category": "productivity",
+    "name": "i-have-adhd",
+    "description": "Shape output for ADHD readers: next action first, numbered steps, restated state, no tangents, time estimates, visible wins. Toggle with /i-have-adhd.",
+    "risk": "safe",
+    "source": "https://github.com/ayghri/i-have-adhd",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "ayghri/i-have-adhd",
+    "license": "MIT",
+    "license_source": "https://github.com/ayghri/i-have-adhd/blob/main/LICENSE",
+    "tags": [
+      "ADHD",
+      "Output Style",
+      "Productivity",
+      "Formatting"
+    ]
+  },
+  {
     "id": "i18n-localization",
     "path": "skills/i18n-localization",
     "category": "development",
@@ -26379,6 +26904,32 @@
       "storybank",
       "negotiation"
     ]
+  },
+  {
+    "id": "interview-me",
+    "path": "skills/interview-me",
+    "category": "productivity",
+    "name": "interview-me",
+    "description": "Draw out what the user actually wants with one-question-at-a-time interviews until intent is clear \u2014 before any plan, spec, or code exists.",
+    "risk": "safe",
+    "source": "https://github.com/addyosmani/agent-skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "addyosmani/agent-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/addyosmani/agent-skills/blob/main/LICENSE"
   },
   {
     "id": "interview-style-doc-building",
@@ -49362,6 +49913,32 @@
       "project-management",
       "mdbase"
     ]
+  },
+  {
+    "id": "using-agent-skills",
+    "path": "skills/using-agent-skills",
+    "category": "meta",
+    "name": "using-agent-skills",
+    "description": "Meta-skill for discovering and invoking the right agent skill for the work at hand, applied at session start.",
+    "risk": "safe",
+    "source": "https://github.com/addyosmani/agent-skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "addyosmani/agent-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/addyosmani/agent-skills/blob/main/LICENSE"
   },
   {
     "id": "using-git-worktrees",

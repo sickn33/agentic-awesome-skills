@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-19T18:17:10.000Z
 
-Total skills: 2141
+Total skills: 2160
 
 ## agent-behavior (5)
 
@@ -716,7 +716,7 @@ Total skills: 2141
 | `typescript-pro` | Master TypeScript with advanced types, generics, and strict type safety. Handles complex type systems, decorators, and enterprise-grade patterns. | safe | community | typescript | typescript, pro, types, generics, strict, type, safety, complex, decorators, enterprise, grade |
 | `unreal-engine-cpp-pro` | Expert guide for Unreal Engine 5.x C++ development, covering UObject hygiene, performance patterns, and best practices. | safe | self | unreal, engine, cpp | unreal, engine, cpp, pro, development, covering, uobject, hygiene, performance |
 
-## code-quality (18)
+## code-quality (19)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -729,6 +729,7 @@ Total skills: 2141
 | `codex-review` | Professional code review with auto CHANGELOG generation, integrated with Codex AI. Use when you want professional code review before commits, you need automa... | critical | community | codex | codex, review, professional, code, auto, changelog, generation, integrated, ai, want, before, commits |
 | `comprehensive-review-full-review` | Use when working with comprehensive review full review | critical | community | comprehensive, full | comprehensive, full, review, working |
 | `comprehensive-review-pr-enhance` | Generate structured PR descriptions from diffs, add review checklists, risk assessments, and test coverage summaries. Use when the user says "write a PR desc... | critical | community | comprehensive, pr, enhance | comprehensive, pr, enhance, review, generate, structured, descriptions, diffs, add, checklists, risk, assessments |
+| `constraint-driven-development` | Write the project quality bar as enforced CONSTRAINTS.md so agents stop quietly lowering it: coverage, performance, accessibility thresholds watched on every... | safe | addyosmani/agent-skills | constraint, driven | constraint, driven, development, write, quality, bar, enforced, constraints, md, so, agents, stop |
 | `debate-review` | Two-model debate review of a GitHub PR, GitLab MR, Azure DevOps PR, or local working tree, posted as inline comments or printed. Use for any PR/MR review req... | safe | amElnagdy/review-skills | debate | debate, review, two, model, github, pr, gitlab, mr, azure, devops, local, working |
 | `find-bugs` | Find bugs, security vulnerabilities, and code quality issues in local branch changes. Use when asked to review changes, find bugs, security review, or audit ... | critical | community | find, bugs | find, bugs, security, vulnerabilities, code, quality, issues, local, branch, changes, asked, review |
 | `fix-review` | Verify fix commits address audit findings without new bugs | safe | https://github.com/trailofbits/skills/tree/main/plugins/fix-review | fix | fix, review, verify, commits, address, audit, findings, without, new, bugs |
@@ -1653,7 +1654,7 @@ Total skills: 2141
 | `memory-systems` | Design short-term, long-term, and graph-based memory architectures. Use when building agents that must persist across sessions, needing to maintain entity co... | safe | https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/tree/main/skills/memory-systems | memory | memory, short, term, long, graph, architectures, building, agents, must, persist, sessions, needing |
 | `recallmax` | FREE — God-tier long-context memory for AI agents. Injects 500K-1M clean tokens, auto-summarizes with tone/intent preservation, compresses 14-turn history in... | safe | community | memory, context, rag, summarization, compression, long-context, agent-infrastructure | memory, context, rag, summarization, compression, long-context, agent-infrastructure, recallmax, free, god, tier, long |
 
-## meta (32)
+## meta (33)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1686,6 +1687,7 @@ Total skills: 2141
 | `skill-sentinel` | Auditoria e evolucao do ecossistema de skills. Qualidade de codigo, seguranca, custos, gaps, duplicacoes, dependencias e relatorios de saude. | safe | community | governance, audit, quality, skill-health | governance, audit, quality, skill-health, skill, sentinel, auditoria, evolucao, do, ecossistema, de, skills |
 | `skill-suggester` | Scan prompt history for recurring patterns and unmet needs, then propose new skills or command templates | safe | mskadu/opencode-agent-skills | skill, suggester | skill, suggester, scan, prompt, history, recurring, unmet, then, propose, new, skills, command |
 | `skill-writer` | Create and improve agent skills following the Agent Skills specification. Use when asked to create, write, or update skills. | critical | community | skill, writer | skill, writer, improve, agent, skills, following, specification, asked, write, update |
+| `using-agent-skills` | Meta-skill for discovering and invoking the right agent skill for the work at hand, applied at session start. | safe | addyosmani/agent-skills | using, agent, skills | using, agent, skills, meta, skill, discovering, invoking, right, work, hand, applied, session |
 | `using-superpowers` | Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions | critical | community | using, superpowers | using, superpowers, starting, any, conversation, establishes, how, find, skills, requiring, skill, invocation |
 | `wgm` | Turns a rough request into working software via a governed build loop: align first, plan, then iterate one task at a time with deterministic backpressure and... | safe | agent-frontier/wgm | build-loop, spec-driven, ralph-loop, self-improving, agentic-development, methodology | build-loop, spec-driven, ralph-loop, self-improving, agentic-development, methodology, wgm, turns, rough, request, working, software |
 | `writing-skills` | Use when creating, updating, or improving agent skills. | critical | community | writing, skills | writing, skills, creating, updating, improving, agent |
@@ -1811,7 +1813,7 @@ Total skills: 2141
 | --- | --- | --- | --- | --- | --- |
 | `idea-os` | Five-phase pipeline (triage → clarify → research → PRD → plan) that turns a raw idea into four linked files: clarifying questions, deep research, a PRD with ... | safe | Slashworks-biz/idea-os | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical, idea, os |
 
-## productivity (33)
+## productivity (36)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1821,6 +1823,7 @@ Total skills: 2141
 | `brain-to-docs` | Interview the user to turn project vision and decisions into README and ADR documentation. | critical | davidondrej/skills | documentation, adr, planning | documentation, adr, planning, brain, docs, interview, user, turn, vision, decisions, readme |
 | `cal-com-automation` | Automate Cal.com tasks via Rube MCP (Composio): manage bookings, check availability, configure webhooks, and handle teams. Always search tools first for curr... | critical | community | cal, com | cal, com, automation, automate, tasks, via, rube, mcp, composio, bookings, check, availability |
 | `calendly-automation` | Automate Calendly scheduling, event management, invitee tracking, availability checks, and organization administration via Rube MCP (Composio). Always search... | critical | community | calendly | calendly, automation, automate, scheduling, event, invitee, tracking, availability, checks, organization, administration, via |
+| `career-ops` | Multi-CLI job-search command center: evaluate offers, scan portals, tailor CVs, track applications, prep interviews. Invoke per mode. | safe | career-ops-hq/career-ops | career, ops | career, ops, multi, cli, job, search, command, center, evaluate, offers, scan, portals |
 | `codex-profiles` | Use codex-profiles to run Codex CLI or Codex Desktop with isolated CODEX_HOME profiles for separate accounts, projects, and local state. | critical | Ducksss/codex-profiles | codex, codex-cli, profiles, code-home, account-isolation, desktop | codex, codex-cli, profiles, code-home, account-isolation, desktop, run, cli, isolated, home, separate, accounts |
 | `compile-knowledge` | Compile durable, non-obvious findings into an interlinked markdown knowledge store — atomic files, [[wiki-links]], a maintained index — so an agent gets smar... | safe | 5dive-ai/skills | knowledge-management, memory, documentation, wiki, notes | knowledge-management, memory, documentation, wiki, notes, compile, knowledge, durable, non, obvious, findings, interlinked |
 | `context-kit` | Evaluate, adapt, and safely install Context Kit personal context artifacts for Claude Code or adjacent agent workflows. | critical | JDDavenport/context-kit | personal-context, claude-code, memory, knowledge-management, agent-workflows | personal-context, claude-code, memory, knowledge-management, agent-workflows, context, kit, evaluate, adapt, safely, install, personal |
@@ -1835,7 +1838,9 @@ Total skills: 2141
 | `grill-with-docs` | A relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go. | safe | mattpocock/skills | productivity, workflow, coding-agents | productivity, workflow, coding-agents, grill, docs, relentless, interview, sharpen, plan, which, creates, adr |
 | `grilling` | Interview the user relentlessly about a plan or design. Use when the user wants to stress-test a plan before building, or uses any 'grill' trigger phrases. | safe | mattpocock/skills | productivity, workflow, coding-agents | productivity, workflow, coding-agents, grilling, interview, user, relentlessly, about, plan, wants, stress, test |
 | `handoff` | Compact the current conversation into a handoff document for another agent to pick up. | safe | mattpocock/skills | productivity, workflow, coding-agents | productivity, workflow, coding-agents, handoff, compact, current, conversation, document, another, agent, pick, up |
+| `i-have-adhd` | Shape output for ADHD readers: next action first, numbered steps, restated state, no tangents, time estimates, visible wins. Toggle with /i-have-adhd. | safe | ayghri/i-have-adhd | adhd, output style, productivity, formatting | adhd, output style, productivity, formatting, shape, output, readers, next, action, first, numbered, steps |
 | `interview-coach` | Full job search coaching system — JD decoding, resume, storybank, mock interviews, transcript analysis, comp negotiation. 23 commands, persistent state. | safe | community | interview, job-search, coaching, career, storybank, negotiation | interview, job-search, coaching, career, storybank, negotiation, coach, full, job, search, jd, decoding |
+| `interview-me` | Draw out what the user actually wants with one-question-at-a-time interviews until intent is clear — before any plan, spec, or code exists. | safe | addyosmani/agent-skills | interview, me | interview, me, draw, what, user, actually, wants, one, question, time, interviews, until |
 | `interview-style-doc-building` | Build structured strategy documents by asking one question at a time and patching the file. | critical | davidondrej/skills | documentation, interview, planning | documentation, interview, planning, style, doc, building, structured, documents, asking, one, question, time |
 | `markdown-rendering` | Open Markdown reliably in cmux panes and recover from blank rendered surfaces. | safe | davidondrej/skills | markdown, cmux, rendering | markdown, cmux, rendering, open, reliably, panes, recover, blank, rendered, surfaces |
 | `mdpr-skill` | Review MDPR Markdown presentation workflows with semantic hints, visual checks, and deterministic renderer boundaries. | safe | ch040602/mdpr-skill | mdpr, presentations, markdown, powerpoint, codex, visual-review, agent-hints | mdpr, presentations, markdown, powerpoint, codex, visual-review, agent-hints, skill, review, presentation, semantic, hints |
@@ -2052,10 +2057,24 @@ Total skills: 2141
 | `xss-html-injection` | Execute comprehensive client-side injection vulnerability assessments on web applications to identify XSS and HTML injection flaws, demonstrate exploitation ... | offensive | community | xss, html, injection | xss, html, injection, execute, client, side, vulnerability, assessments, web, applications, identify, flaws |
 | `zeroize-audit` | Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and ... | offensive | community | zeroize, audit | zeroize, audit, detects, missing, zeroization, sensitive, data, source, code, identifies, removed, compiler |
 
-## seo (4)
+## seo (18)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `geo-audit` | Full website GEO+SEO audit with parallel subagent delegation. | safe | zubair-trabzada/geo-seo-claude | geo, audit | geo, audit, full, website, seo, parallel, subagent, delegation |
+| `geo-brand-mentions` | Brand mention and authority scanner for AI visibility. | safe | zubair-trabzada/geo-seo-claude | geo, brand, mentions | geo, brand, mentions, mention, authority, scanner, ai, visibility |
+| `geo-citability` | AI citability scoring and optimization. | safe | zubair-trabzada/geo-seo-claude | geo, citability | geo, citability, ai, scoring, optimization |
+| `geo-compare` | Monthly delta tracking and progress reporting for GEO clients. | safe | zubair-trabzada/geo-seo-claude | geo, business, delta, monthly, reporting, client, progress | geo, business, delta, monthly, reporting, client, progress, compare, tracking, clients |
+| `geo-content` | Content quality and E-E-A-T assessment for AI citability — evaluate experience, expertise, authoritativeness, trustworthiness, and content structure | safe | zubair-trabzada/geo-seo-claude | geo, content-quality, eeat, citability, ai-content, topical-authority | geo, content-quality, eeat, citability, ai-content, topical-authority, content, quality, assessment, ai, evaluate, experience |
+| `geo-crawlers` | AI crawler access analysis. | safe | zubair-trabzada/geo-seo-claude | geo, crawlers | geo, crawlers, ai, crawler, access, analysis |
+| `geo-llmstxt` | Analyzes and generates llms.txt files -- the emerging standard for helping AI systems understand website structure and content. | safe | zubair-trabzada/geo-seo-claude | geo, llmstxt | geo, llmstxt, analyzes, generates, llms, txt, files, emerging, standard, helping, ai, understand |
+| `geo-platform-optimizer` | Platform-specific AI search optimization — audit and optimize for Google AI Overviews, ChatGPT, Perplexity, Gemini, and Bing Copilot individually | safe | zubair-trabzada/geo-seo-claude | geo, ai-search, platform-optimization, chatgpt, perplexity, gemini, aio | geo, ai-search, platform-optimization, chatgpt, perplexity, gemini, aio, platform, optimizer, specific, ai, search |
+| `geo-proposal` | Auto-generate a professional, client-ready GEO service proposal from audit data. | safe | zubair-trabzada/geo-seo-claude | geo, business, proposal, sales, pricing, client | geo, business, proposal, sales, pricing, client, auto, generate, professional, audit, data |
+| `geo-prospect` | CRM-lite for managing GEO agency prospects and clients. | safe | zubair-trabzada/geo-seo-claude | geo, business, crm, prospect, pipeline, sales | geo, business, crm, prospect, pipeline, sales, lite, managing, agency, prospects, clients |
+| `geo-report` | Generate a professional, client-facing GEO report combining all audit results into a single deliverable with scores, findings, and prioritized actions | safe | zubair-trabzada/geo-seo-claude | geo, report, client-deliverable, executive-summary, action-plan | geo, report, client-deliverable, executive-summary, action-plan, generate, professional, client, facing, combining, all, audit |
+| `geo-report-pdf` | Generate a professional PDF report from a GEO audit using pandoc + Chrome headless. | safe | zubair-trabzada/geo-seo-claude | geo, pdf, report, client-deliverable, professional | geo, pdf, report, client-deliverable, professional, generate, audit, pandoc, chrome, headless |
+| `geo-schema` | Schema.org structured data audit and generation optimized for AI discoverability — detect, validate, and generate JSON-LD markup | safe | zubair-trabzada/geo-seo-claude | geo, schema, structured-data, json-ld, entity-recognition, ai-discoverability | geo, schema, structured-data, json-ld, entity-recognition, ai-discoverability, org, structured, data, audit, generation, optimized |
+| `geo-technical` | Technical SEO audit with GEO-specific checks — crawlability, indexability, security, performance, SSR, and AI crawler access | safe | zubair-trabzada/geo-seo-claude | geo, technical-seo, core-web-vitals, ssr, crawlability, security, performance | geo, technical-seo, core-web-vitals, ssr, crawlability, security, performance, technical, seo, audit, specific, checks |
 | `nextjs-seo-indexing` | Fix SEO indexing issues, crawl budget problems, and Search Console coverage errors for Next.js apps. Covers canonical tags, noindex audits, sitemap health, s... | safe | self | seo, indexing, nextjs, search-console, crawl-budget, canonical, sitemap | seo, indexing, nextjs, search-console, crawl-budget, canonical, sitemap, fix, issues, crawl, budget, problems |
 | `schema-markup-generator` | Generate and implement JSON-LD structured data for web apps, blogs, FAQs, and SaaS sites. Supports WebSite, SoftwareApplication, BlogPosting, FAQPage, HowTo,... | safe | self | seo, schema, json-ld, structured-data, rich-results, nextjs, technical-seo | seo, schema, json-ld, structured-data, rich-results, nextjs, technical-seo, markup, generator, generate, json, ld |
 | `social-metadata-hardening` | Fix social sharing previews so URLs render as rich cards on Facebook, LinkedIn, X/Twitter, WhatsApp, Telegram, and more. Covers OG tags, Twitter cards, absol... | safe | self | seo, open-graph, twitter-card, social-sharing, og-image, nextjs, metadata | seo, open-graph, twitter-card, social-sharing, og-image, nextjs, metadata, social, hardening, fix, sharing, previews |

@@ -50,7 +50,7 @@ const client = DocumentIntelligence(
 );
 ```
 
-## Analyze Document (URL)
+## Analyze Document https://example.com
 
 ```typescript
 import DocumentIntelligence, {
