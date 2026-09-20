@@ -564,6 +564,25 @@
       "runtime_files": []
     },
     {
+      "id": "agent-evals",
+      "path": "skills/agent-evals",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "agent-evaluation",
       "path": "skills/agent-evaluation",
       "targets": {
@@ -699,6 +718,25 @@
     {
       "id": "agent-memory-systems",
       "path": "skills/agent-memory-systems",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agent-observability",
+      "path": "skills/agent-observability",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -1513,6 +1551,25 @@
       "runtime_files": []
     },
     {
+      "id": "ai-pipeline-orchestration",
+      "path": "skills/ai-pipeline-orchestration",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ai-product",
       "path": "skills/ai-product",
       "targets": {
@@ -1572,6 +1629,25 @@
     {
       "id": "ai-seo",
       "path": "skills/ai-seo",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ai-sre-incident-response",
+      "path": "skills/ai-sre-incident-response",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -1686,6 +1762,25 @@
     {
       "id": "akf-trust-metadata",
       "path": "skills/akf-trust-metadata",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "alerting-oncall",
+      "path": "skills/alerting-oncall",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -3262,6 +3357,25 @@
     {
       "id": "architecture-patterns",
       "path": "skills/architecture-patterns",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "argocd-gitops",
+      "path": "skills/argocd-gitops",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -5281,6 +5395,25 @@
     {
       "id": "azure-data-tables-py",
       "path": "skills/azure-data-tables-py",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "azure-devops",
+      "path": "skills/azure-devops",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -7514,6 +7647,25 @@
       "runtime_files": []
     },
     {
+      "id": "blue-green-deploy",
+      "path": "skills/blue-green-deploy",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "blueprint",
       "path": "skills/blueprint",
       "targets": {
@@ -8941,6 +9093,25 @@
     {
       "id": "cicd-automation-workflow-automate",
       "path": "skills/cicd-automation-workflow-automate",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "circleci",
+      "path": "skills/circleci",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -10972,6 +11143,25 @@
       "runtime_files": []
     },
     {
+      "id": "container-registries",
+      "path": "skills/container-registries",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "container-scanning",
       "path": "skills/container-scanning",
       "targets": {
@@ -12605,6 +12795,25 @@
     {
       "id": "database-security",
       "path": "skills/database-security",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "datadog",
+      "path": "skills/datadog",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -14443,6 +14652,25 @@
       "runtime_files": []
     },
     {
+      "id": "devcontainers-nix",
+      "path": "skills/devcontainers-nix",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "developer-advocacy",
       "path": "skills/developer-advocacy",
       "targets": {
@@ -15107,8 +15335,46 @@
       "runtime_files": []
     },
     {
+      "id": "docker-compose",
+      "path": "skills/docker-compose",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "docker-expert",
       "path": "skills/docker-expert",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "docker-management",
+      "path": "skills/docker-management",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -15668,6 +15934,25 @@
       "runtime_files": []
     },
     {
+      "id": "ebpf-observability",
+      "path": "skills/ebpf-observability",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ecl-harness-engineer",
       "path": "skills/ecl-harness-engineer",
       "targets": {
@@ -15790,6 +16075,25 @@
     {
       "id": "elixir-pro",
       "path": "skills/elixir-pro",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "elk-stack",
+      "path": "skills/elk-stack",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -17120,6 +17424,25 @@
     {
       "id": "fda-medtech-compliance-auditor",
       "path": "skills/fda-medtech-compliance-auditor",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "feature-flags",
+      "path": "skills/feature-flags",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -19679,6 +20002,25 @@
       "runtime_files": []
     },
     {
+      "id": "git-workflow",
+      "path": "skills/git-workflow",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "git-workflow-and-versioning",
       "path": "skills/git-workflow-and-versioning",
       "targets": {
@@ -19700,6 +20042,25 @@
     {
       "id": "github",
       "path": "skills/github",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "github-actions",
+      "path": "skills/github-actions",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -19852,6 +20213,25 @@
     {
       "id": "gitlab-automation",
       "path": "skills/gitlab-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "gitlab-ci",
+      "path": "skills/gitlab-ci",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -20764,6 +21144,25 @@
     {
       "id": "helm-chart-scaffolding",
       "path": "skills/helm-chart-scaffolding",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "helm-charts",
+      "path": "skills/helm-charts",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -24097,6 +24496,25 @@
       "runtime_files": []
     },
     {
+      "id": "jenkins",
+      "path": "skills/jenkins",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "jest-skill",
       "path": "skills/jest-skill",
       "targets": {
@@ -24534,6 +24952,25 @@
       "runtime_files": []
     },
     {
+      "id": "kubernetes-ops",
+      "path": "skills/kubernetes-ops",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "kubestellar-console",
       "path": "skills/kubestellar-console",
       "targets": {
@@ -24544,6 +24981,25 @@
         "type": "manual",
         "summary": "Requires kc-agent binary (brew tap kubestellar/tap && brew install kc-agent)",
         "docs": "https://github.com/kubestellar/console#quick-start"
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "kustomize",
+      "path": "skills/kustomize",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
       },
       "reasons": [],
       "blocked_reasons": {
@@ -25591,6 +26047,44 @@
       "runtime_files": []
     },
     {
+      "id": "llm-caching",
+      "path": "skills/llm-caching",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "llm-cost-optimization",
+      "path": "skills/llm-cost-optimization",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "llm-council",
       "path": "skills/llm-council",
       "targets": {
@@ -25745,6 +26239,25 @@
     {
       "id": "llm-structured-output",
       "path": "skills/llm-structured-output",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "llmops-platform-engineering",
+      "path": "skills/llmops-platform-engineering",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -25935,6 +26448,25 @@
     {
       "id": "logistics-exception-management",
       "path": "skills/logistics-exception-management",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "loki-logging",
+      "path": "skills/loki-logging",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -28004,6 +28536,44 @@
       "runtime_files": []
     },
     {
+      "id": "model-registry-governance",
+      "path": "skills/model-registry-governance",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "model-serving-kubernetes",
+      "path": "skills/model-serving-kubernetes",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "model-supply-chain-security",
       "path": "skills/model-supply-chain-security",
       "targets": {
@@ -29247,6 +29817,25 @@
     {
       "id": "new-rails-project",
       "path": "skills/new-rails-project",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "new-relic",
+      "path": "skills/new-relic",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -30734,6 +31323,44 @@
       "runtime_files": []
     },
     {
+      "id": "openshift",
+      "path": "skills/openshift",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "opentelemetry",
+      "path": "skills/opentelemetry",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "opentofu-migration",
       "path": "skills/opentofu-migration",
       "targets": {
@@ -31912,6 +32539,25 @@
       "runtime_files": []
     },
     {
+      "id": "platform-engineering",
+      "path": "skills/platform-engineering",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "playwright-java",
       "path": "skills/playwright-java",
       "targets": {
@@ -31973,6 +32619,25 @@
     {
       "id": "podcast-generation",
       "path": "skills/podcast-generation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "podman",
+      "path": "skills/podman",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -33053,6 +33718,25 @@
       "runtime_files": []
     },
     {
+      "id": "prometheus-grafana",
+      "path": "skills/prometheus-grafana",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "prompt-caching",
       "path": "skills/prompt-caching",
       "targets": {
@@ -33796,6 +34480,25 @@
     {
       "id": "rag-infrastructure",
       "path": "skills/rag-infrastructure",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "rag-observability-evals",
+      "path": "skills/rag-observability-evals",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -36162,6 +36865,25 @@
     {
       "id": "selenium-skill",
       "path": "skills/selenium-skill",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "semantic-versioning",
+      "path": "skills/semantic-versioning",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -38651,6 +39373,25 @@
     {
       "id": "squirrel",
       "path": "skills/squirrel",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "sre-dashboards",
+      "path": "skills/sre-dashboards",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -45439,10 +46180,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2366,
+    "total_skills": 2405,
     "supported": {
-      "codex": 2281,
-      "claude": 2306
+      "codex": 2320,
+      "claude": 2345
     },
     "blocked": {
       "codex": 85,

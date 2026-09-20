@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-19T18:17:10.000Z",
-  "total": 2366,
+  "total": 2405,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -862,6 +862,38 @@
       "path": "skills/agent-creator/SKILL.md"
     },
     {
+      "id": "agent-evals",
+      "canonical_id": "agent-evals",
+      "name": "agent-evals",
+      "description": "Build automated evaluation suites for AI agents using golden datasets, rubrics, and regression gates. Use when shipping agent features, validating prompt changes, or gating deployments on quality.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "agent",
+        "evals"
+      ],
+      "triggers": [
+        "agent",
+        "evals",
+        "automated",
+        "evaluation",
+        "suites",
+        "ai",
+        "agents",
+        "golden",
+        "datasets",
+        "rubrics",
+        "regression",
+        "gates"
+      ],
+      "path": "skills/agent-evals/SKILL.md"
+    },
+    {
       "id": "agent-evaluation",
       "canonical_id": "agent-evaluation",
       "name": "agent-evaluation",
@@ -1098,6 +1130,38 @@
         "covers"
       ],
       "path": "skills/agent-memory-systems/SKILL.md"
+    },
+    {
+      "id": "agent-observability",
+      "canonical_id": "agent-observability",
+      "name": "agent-observability",
+      "description": "Instrument AI agents with tracing, token metrics, latency, and cost visibility. Use for reliability and debugging.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "agent",
+        "observability"
+      ],
+      "triggers": [
+        "agent",
+        "observability",
+        "instrument",
+        "ai",
+        "agents",
+        "tracing",
+        "token",
+        "metrics",
+        "latency",
+        "cost",
+        "visibility",
+        "reliability"
+      ],
+      "path": "skills/agent-observability/SKILL.md"
     },
     {
       "id": "agent-orchestration-improve-agent",
@@ -2295,6 +2359,38 @@
       "path": "skills/ai-native-cli/SKILL.md"
     },
     {
+      "id": "ai-pipeline-orchestration",
+      "canonical_id": "ai-pipeline-orchestration",
+      "name": "ai-pipeline-orchestration",
+      "description": "Orchestrate AI/ML pipelines for data ingestion, model training, batch inference, and RAG indexing using Prefect, Airflow, or Dagster.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "ai",
+        "pipeline"
+      ],
+      "triggers": [
+        "ai",
+        "pipeline",
+        "orchestration",
+        "orchestrate",
+        "ml",
+        "pipelines",
+        "data",
+        "ingestion",
+        "model",
+        "training",
+        "batch",
+        "inference"
+      ],
+      "path": "skills/ai-pipeline-orchestration/SKILL.md"
+    },
+    {
       "id": "ai-product",
       "canonical_id": "ai-product",
       "name": "ai-product",
@@ -2415,6 +2511,40 @@
         "gemini"
       ],
       "path": "skills/ai-seo/SKILL.md"
+    },
+    {
+      "id": "ai-sre-incident-response",
+      "canonical_id": "ai-sre-incident-response",
+      "name": "ai-sre-incident-response",
+      "description": "Build AI-focused SRE incident response practices for LLM outages, degraded quality, runaway cost events, and safety regressions.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "ai",
+        "sre",
+        "incident",
+        "response"
+      ],
+      "triggers": [
+        "ai",
+        "sre",
+        "incident",
+        "response",
+        "llm",
+        "outages",
+        "degraded",
+        "quality",
+        "runaway",
+        "cost",
+        "events",
+        "safety"
+      ],
+      "path": "skills/ai-sre-incident-response/SKILL.md"
     },
     {
       "id": "ai-studio-image",
@@ -2593,6 +2723,36 @@
         "exif"
       ],
       "path": "skills/akf-trust-metadata/SKILL.md"
+    },
+    {
+      "id": "alerting-oncall",
+      "canonical_id": "alerting-oncall",
+      "name": "alerting-oncall",
+      "description": "Set up alerting rules, configure on-call rotations, and manage incident response workflows.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "alerting",
+        "oncall"
+      ],
+      "triggers": [
+        "alerting",
+        "oncall",
+        "set",
+        "up",
+        "rules",
+        "configure",
+        "call",
+        "rotations",
+        "incident",
+        "response"
+      ],
+      "path": "skills/alerting-oncall/SKILL.md"
     },
     {
       "id": "algolia-search",
@@ -4982,6 +5142,31 @@
         "scalable"
       ],
       "path": "skills/architecture-patterns/SKILL.md"
+    },
+    {
+      "id": "argocd-gitops",
+      "canonical_id": "argocd-gitops",
+      "name": "argocd-gitops",
+      "description": "Implement GitOps with ArgoCD for declarative Kubernetes deployments.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "argocd",
+        "gitops"
+      ],
+      "triggers": [
+        "argocd",
+        "gitops",
+        "declarative",
+        "kubernetes",
+        "deployments"
+      ],
+      "path": "skills/argocd-gitops/SKILL.md"
     },
     {
       "id": "arm-cortex-expert",
@@ -8120,6 +8305,36 @@
         "value"
       ],
       "path": "skills/azure-data-tables-py/SKILL.md"
+    },
+    {
+      "id": "azure-devops",
+      "canonical_id": "azure-devops",
+      "name": "azure-devops",
+      "description": "Set up Azure Pipelines for CI/CD, configure build and release pipelines, manage Azure DevOps projects, and integrate with Azure services.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "azure",
+        "devops"
+      ],
+      "triggers": [
+        "azure",
+        "devops",
+        "set",
+        "up",
+        "pipelines",
+        "ci",
+        "cd",
+        "configure",
+        "release",
+        "integrate"
+      ],
+      "path": "skills/azure-devops/SKILL.md"
     },
     {
       "id": "azure-eventgrid-dotnet",
@@ -11499,6 +11714,38 @@
       "path": "skills/blog-writing-guide/SKILL.md"
     },
     {
+      "id": "blue-green-deploy",
+      "canonical_id": "blue-green-deploy",
+      "name": "blue-green-deploy",
+      "description": "Configure zero-downtime deployment strategies including blue-green, canary, and rolling deployments.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "blue",
+        "green",
+        "deploy"
+      ],
+      "triggers": [
+        "blue",
+        "green",
+        "deploy",
+        "configure",
+        "zero",
+        "downtime",
+        "deployment",
+        "including",
+        "canary",
+        "rolling",
+        "deployments"
+      ],
+      "path": "skills/blue-green-deploy/SKILL.md"
+    },
+    {
       "id": "blueprint",
       "canonical_id": "blueprint",
       "name": "blueprint",
@@ -13716,6 +13963,31 @@
         "automated"
       ],
       "path": "skills/cicd-automation-workflow-automate/SKILL.md"
+    },
+    {
+      "id": "circleci",
+      "canonical_id": "circleci",
+      "name": "circleci",
+      "description": "Configure CircleCI workflows and orbs for continuous integration and deployment.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "circleci"
+      ],
+      "triggers": [
+        "circleci",
+        "configure",
+        "orbs",
+        "continuous",
+        "integration",
+        "deployment"
+      ],
+      "path": "skills/circleci/SKILL.md"
     },
     {
       "id": "circleci-automation",
@@ -16758,6 +17030,34 @@
       "path": "skills/container-hardening/SKILL.md"
     },
     {
+      "id": "container-registries",
+      "canonical_id": "container-registries",
+      "name": "container-registries",
+      "description": "Manage container registries including ECR, ACR, GCR, and Docker Hub.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "container",
+        "registries"
+      ],
+      "triggers": [
+        "container",
+        "registries",
+        "including",
+        "ecr",
+        "acr",
+        "gcr",
+        "docker",
+        "hub"
+      ],
+      "path": "skills/container-registries/SKILL.md"
+    },
+    {
       "id": "container-scanning",
       "canonical_id": "container-scanning",
       "name": "container-scanning",
@@ -19273,6 +19573,30 @@
         "gaps"
       ],
       "path": "skills/database-security/SKILL.md"
+    },
+    {
+      "id": "datadog",
+      "canonical_id": "datadog",
+      "name": "datadog",
+      "description": "Implement Datadog monitoring and APM for infrastructure and applications.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "datadog"
+      ],
+      "triggers": [
+        "datadog",
+        "monitoring",
+        "apm",
+        "infrastructure",
+        "applications"
+      ],
+      "path": "skills/datadog/SKILL.md"
     },
     {
       "id": "datadog-automation",
@@ -22003,6 +22327,38 @@
       "path": "skills/devcontainer-setup/SKILL.md"
     },
     {
+      "id": "devcontainers-nix",
+      "canonical_id": "devcontainers-nix",
+      "name": "devcontainers-nix",
+      "description": "Create reproducible development environments with Dev Containers, Nix flakes, and Devbox for consistent toolchains across teams.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "devcontainers",
+        "nix"
+      ],
+      "triggers": [
+        "devcontainers",
+        "nix",
+        "reproducible",
+        "development",
+        "environments",
+        "dev",
+        "containers",
+        "flakes",
+        "devbox",
+        "consistent",
+        "toolchains",
+        "teams"
+      ],
+      "path": "skills/devcontainers-nix/SKILL.md"
+    },
+    {
       "id": "developer-advocacy",
       "canonical_id": "developer-advocacy",
       "name": "developer-advocacy",
@@ -23003,6 +23359,33 @@
       "path": "skills/doc2math/SKILL.md"
     },
     {
+      "id": "docker-compose",
+      "canonical_id": "docker-compose",
+      "name": "docker-compose",
+      "description": "Define and run multi-container Docker applications using Docker Compose.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "docker",
+        "compose"
+      ],
+      "triggers": [
+        "docker",
+        "compose",
+        "define",
+        "run",
+        "multi",
+        "container",
+        "applications"
+      ],
+      "path": "skills/docker-compose/SKILL.md"
+    },
+    {
       "id": "docker-expert",
       "canonical_id": "docker-expert",
       "name": "docker-expert",
@@ -23028,6 +23411,30 @@
         "deployment"
       ],
       "path": "skills/docker-expert/SKILL.md"
+    },
+    {
+      "id": "docker-management",
+      "canonical_id": "docker-management",
+      "name": "docker-management",
+      "description": "Build, optimize, and troubleshoot Docker containers and images.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "docker"
+      ],
+      "triggers": [
+        "docker",
+        "optimize",
+        "troubleshoot",
+        "containers",
+        "images"
+      ],
+      "path": "skills/docker-management/SKILL.md"
     },
     {
       "id": "docs-architect",
@@ -23861,6 +24268,38 @@
       "path": "skills/eas-update-insights/SKILL.md"
     },
     {
+      "id": "ebpf-observability",
+      "canonical_id": "ebpf-observability",
+      "name": "ebpf-observability",
+      "description": "Use eBPF for deep kernel-level observability — trace syscalls, network flows, and application behavior without code changes using Cilium, Tetragon, and bpftrace.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "ebpf",
+        "observability"
+      ],
+      "triggers": [
+        "ebpf",
+        "observability",
+        "deep",
+        "kernel",
+        "level",
+        "trace",
+        "syscalls",
+        "network",
+        "flows",
+        "application",
+        "behavior",
+        "without"
+      ],
+      "path": "skills/ebpf-observability/SKILL.md"
+    },
+    {
       "id": "ecl-harness-engineer",
       "canonical_id": "ecl-harness-engineer",
       "name": "ecl-harness-engineer",
@@ -24076,6 +24515,35 @@
         "concurrency"
       ],
       "path": "skills/elixir-pro/SKILL.md"
+    },
+    {
+      "id": "elk-stack",
+      "canonical_id": "elk-stack",
+      "name": "elk-stack",
+      "description": "Deploy and manage the ELK Stack (Elasticsearch, Logstash, Kibana) for log aggregation and analysis.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "elk",
+        "stack"
+      ],
+      "triggers": [
+        "elk",
+        "stack",
+        "deploy",
+        "elasticsearch",
+        "logstash",
+        "kibana",
+        "log",
+        "aggregation",
+        "analysis"
+      ],
+      "path": "skills/elk-stack/SKILL.md"
     },
     {
       "id": "elon-musk",
@@ -26063,6 +26531,33 @@
         "cfr"
       ],
       "path": "skills/fda-medtech-compliance-auditor/SKILL.md"
+    },
+    {
+      "id": "feature-flags",
+      "canonical_id": "feature-flags",
+      "name": "feature-flags",
+      "description": "Implement feature flags for progressive feature rollout using LaunchDarkly, Unleash, or custom solutions.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "flags"
+      ],
+      "triggers": [
+        "flags",
+        "feature",
+        "progressive",
+        "rollout",
+        "launchdarkly",
+        "unleash",
+        "custom",
+        "solutions"
+      ],
+      "path": "skills/feature-flags/SKILL.md"
     },
     {
       "id": "feature-tracking",
@@ -30076,6 +30571,29 @@
       "path": "skills/git-pushing/SKILL.md"
     },
     {
+      "id": "git-workflow",
+      "canonical_id": "git-workflow",
+      "name": "git-workflow",
+      "description": "Implement Git branching strategies, PR workflows, and release management patterns.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "git"
+      ],
+      "triggers": [
+        "git",
+        "branching",
+        "pr",
+        "release"
+      ],
+      "path": "skills/git-workflow/SKILL.md"
+    },
+    {
       "id": "git-workflow-and-versioning",
       "canonical_id": "git-workflow-and-versioning",
       "name": "git-workflow-and-versioning",
@@ -30132,6 +30650,31 @@
         "queries"
       ],
       "path": "skills/github/SKILL.md"
+    },
+    {
+      "id": "github-actions",
+      "canonical_id": "github-actions",
+      "name": "github-actions",
+      "description": "Build, test, and deploy applications using GitHub Actions workflows.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "github",
+        "actions"
+      ],
+      "triggers": [
+        "github",
+        "actions",
+        "test",
+        "deploy",
+        "applications"
+      ],
+      "path": "skills/github-actions/SKILL.md"
     },
     {
       "id": "github-actions-advanced",
@@ -30357,6 +30900,36 @@
         "rube"
       ],
       "path": "skills/gitlab-automation/SKILL.md"
+    },
+    {
+      "id": "gitlab-ci",
+      "canonical_id": "gitlab-ci",
+      "name": "gitlab-ci",
+      "description": "Configure GitLab CI/CD pipelines and runners for automated building, testing, and deployment.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "gitlab",
+        "ci"
+      ],
+      "triggers": [
+        "gitlab",
+        "ci",
+        "configure",
+        "cd",
+        "pipelines",
+        "runners",
+        "automated",
+        "building",
+        "testing",
+        "deployment"
+      ],
+      "path": "skills/gitlab-ci/SKILL.md"
     },
     {
       "id": "gitlab-ci-patterns",
@@ -31736,6 +32309,31 @@
         "applications"
       ],
       "path": "skills/helm-chart-scaffolding/SKILL.md"
+    },
+    {
+      "id": "helm-charts",
+      "canonical_id": "helm-charts",
+      "name": "helm-charts",
+      "description": "Create, manage, and deploy Helm charts for Kubernetes package management.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "helm",
+        "charts"
+      ],
+      "triggers": [
+        "helm",
+        "charts",
+        "deploy",
+        "kubernetes",
+        "package"
+      ],
+      "path": "skills/helm-charts/SKILL.md"
     },
     {
       "id": "helpdesk-automation",
@@ -36679,6 +37277,33 @@
       "path": "skills/javascript-typescript-typescript-scaffold/SKILL.md"
     },
     {
+      "id": "jenkins",
+      "canonical_id": "jenkins",
+      "name": "jenkins",
+      "description": "Create and manage Jenkins CI/CD pipelines, configure agents, manage plugins, and automate builds.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "jenkins"
+      ],
+      "triggers": [
+        "jenkins",
+        "ci",
+        "cd",
+        "pipelines",
+        "configure",
+        "agents",
+        "plugins",
+        "automate"
+      ],
+      "path": "skills/jenkins/SKILL.md"
+    },
+    {
       "id": "jest-skill",
       "canonical_id": "jest-skill",
       "name": "jest-skill",
@@ -37338,6 +37963,31 @@
       "path": "skills/kubernetes-hardening/SKILL.md"
     },
     {
+      "id": "kubernetes-ops",
+      "canonical_id": "kubernetes-ops",
+      "name": "kubernetes-ops",
+      "description": "Deploy, scale, and manage Kubernetes workloads.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "kubernetes",
+        "ops"
+      ],
+      "triggers": [
+        "kubernetes",
+        "ops",
+        "deploy",
+        "scale",
+        "workloads"
+      ],
+      "path": "skills/kubernetes-ops/SKILL.md"
+    },
+    {
       "id": "kubestellar-console",
       "canonical_id": "kubestellar-console",
       "name": "kubestellar-console",
@@ -37373,6 +38023,31 @@
         "ai"
       ],
       "path": "skills/kubestellar-console/SKILL.md"
+    },
+    {
+      "id": "kustomize",
+      "canonical_id": "kustomize",
+      "name": "kustomize",
+      "description": "Customize Kubernetes manifests without templating using Kustomize.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "kustomize"
+      ],
+      "triggers": [
+        "kustomize",
+        "customize",
+        "kubernetes",
+        "manifests",
+        "without",
+        "templating"
+      ],
+      "path": "skills/kustomize/SKILL.md"
     },
     {
       "id": "lambda-lang",
@@ -38965,6 +39640,70 @@
       "path": "skills/llm-application-dev-prompt-optimize/SKILL.md"
     },
     {
+      "id": "llm-caching",
+      "canonical_id": "llm-caching",
+      "name": "llm-caching",
+      "description": "Implement multi-layer LLM caching with exact match, semantic similarity, and provider-side prompt caching.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "llm",
+        "caching"
+      ],
+      "triggers": [
+        "llm",
+        "caching",
+        "multi",
+        "layer",
+        "exact",
+        "match",
+        "semantic",
+        "similarity",
+        "provider",
+        "side",
+        "prompt"
+      ],
+      "path": "skills/llm-caching/SKILL.md"
+    },
+    {
+      "id": "llm-cost-optimization",
+      "canonical_id": "llm-cost-optimization",
+      "name": "llm-cost-optimization",
+      "description": "Reduce LLM API and infrastructure costs through model selection, prompt caching, batching, caching, quantization, and self-hosting strategies.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "llm",
+        "cost",
+        "optimization"
+      ],
+      "triggers": [
+        "llm",
+        "cost",
+        "optimization",
+        "reduce",
+        "api",
+        "infrastructure",
+        "costs",
+        "through",
+        "model",
+        "selection",
+        "prompt",
+        "caching"
+      ],
+      "path": "skills/llm-cost-optimization/SKILL.md"
+    },
+    {
       "id": "llm-council",
       "canonical_id": "llm-council",
       "name": "llm-council",
@@ -39238,6 +39977,39 @@
         "format"
       ],
       "path": "skills/llm-structured-output/SKILL.md"
+    },
+    {
+      "id": "llmops-platform-engineering",
+      "canonical_id": "llmops-platform-engineering",
+      "name": "llmops-platform-engineering",
+      "description": "Build production LLMOps platforms with CI/CD, model promotion workflows, evaluation gates, rollback, and governance across cloud and self-hosted inference.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "llmops",
+        "platform",
+        "engineering"
+      ],
+      "triggers": [
+        "llmops",
+        "platform",
+        "engineering",
+        "platforms",
+        "ci",
+        "cd",
+        "model",
+        "promotion",
+        "evaluation",
+        "gates",
+        "rollback",
+        "governance"
+      ],
+      "path": "skills/llmops-platform-engineering/SKILL.md"
     },
     {
       "id": "load-balancing",
@@ -39551,6 +40323,33 @@
         "carrier"
       ],
       "path": "skills/logistics-exception-management/SKILL.md"
+    },
+    {
+      "id": "loki-logging",
+      "canonical_id": "loki-logging",
+      "name": "loki-logging",
+      "description": "Configure Grafana Loki for log aggregation and analysis.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "loki",
+        "logging"
+      ],
+      "triggers": [
+        "loki",
+        "logging",
+        "configure",
+        "grafana",
+        "log",
+        "aggregation",
+        "analysis"
+      ],
+      "path": "skills/loki-logging/SKILL.md"
     },
     {
       "id": "loki-mode",
@@ -42740,6 +43539,72 @@
       "path": "skills/mock-hunter/SKILL.md"
     },
     {
+      "id": "model-registry-governance",
+      "canonical_id": "model-registry-governance",
+      "name": "model-registry-governance",
+      "description": "Establish model registry standards, governance controls, metadata schemas, approvals, and lifecycle policies for enterprise AI deployments.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "model",
+        "registry",
+        "governance"
+      ],
+      "triggers": [
+        "model",
+        "registry",
+        "governance",
+        "establish",
+        "standards",
+        "controls",
+        "metadata",
+        "schemas",
+        "approvals",
+        "lifecycle",
+        "policies",
+        "enterprise"
+      ],
+      "path": "skills/model-registry-governance/SKILL.md"
+    },
+    {
+      "id": "model-serving-kubernetes",
+      "canonical_id": "model-serving-kubernetes",
+      "name": "model-serving-kubernetes",
+      "description": "Deploy ML models on Kubernetes with KServe (formerly KFServing) and NVIDIA Triton Inference Server.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "model",
+        "serving",
+        "kubernetes"
+      ],
+      "triggers": [
+        "model",
+        "serving",
+        "kubernetes",
+        "deploy",
+        "ml",
+        "models",
+        "kserve",
+        "formerly",
+        "kfserving",
+        "nvidia",
+        "triton",
+        "inference"
+      ],
+      "path": "skills/model-serving-kubernetes/SKILL.md"
+    },
+    {
       "id": "model-supply-chain-security",
       "canonical_id": "model-supply-chain-security",
       "name": "model-supply-chain-security",
@@ -44693,6 +45558,34 @@
         "rails"
       ],
       "path": "skills/new-rails-project/SKILL.md"
+    },
+    {
+      "id": "new-relic",
+      "canonical_id": "new-relic",
+      "name": "new-relic",
+      "description": "Configure New Relic observability platform for infrastructure and application monitoring.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "new",
+        "relic"
+      ],
+      "triggers": [
+        "new",
+        "relic",
+        "configure",
+        "observability",
+        "platform",
+        "infrastructure",
+        "application",
+        "monitoring"
+      ],
+      "path": "skills/new-relic/SKILL.md"
     },
     {
       "id": "newman-cicd-integration",
@@ -46916,6 +47809,57 @@
       "path": "skills/opencode-delegate/SKILL.md"
     },
     {
+      "id": "openshift",
+      "canonical_id": "openshift",
+      "name": "openshift",
+      "description": "Manage Red Hat OpenShift clusters and deployments.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "openshift"
+      ],
+      "triggers": [
+        "openshift",
+        "red",
+        "hat",
+        "clusters",
+        "deployments"
+      ],
+      "path": "skills/openshift/SKILL.md"
+    },
+    {
+      "id": "opentelemetry",
+      "canonical_id": "opentelemetry",
+      "name": "opentelemetry",
+      "description": "Instrument applications and infrastructure with OpenTelemetry for unified traces, metrics, and logs.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "opentelemetry"
+      ],
+      "triggers": [
+        "opentelemetry",
+        "instrument",
+        "applications",
+        "infrastructure",
+        "unified",
+        "traces",
+        "metrics",
+        "logs"
+      ],
+      "path": "skills/opentelemetry/SKILL.md"
+    },
+    {
       "id": "opentofu-migration",
       "canonical_id": "opentofu-migration",
       "name": "opentofu-migration",
@@ -48751,6 +49695,38 @@
       "path": "skills/planning-with-files/SKILL.md"
     },
     {
+      "id": "platform-engineering",
+      "canonical_id": "platform-engineering",
+      "name": "platform-engineering",
+      "description": "Build internal developer platforms (IDPs) with self-service infrastructure, golden paths, and developer portals using Backstage, Crossplane, and score.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "platform",
+        "engineering"
+      ],
+      "triggers": [
+        "platform",
+        "engineering",
+        "internal",
+        "developer",
+        "platforms",
+        "idps",
+        "self",
+        "infrastructure",
+        "golden",
+        "paths",
+        "portals",
+        "backstage"
+      ],
+      "path": "skills/platform-engineering/SKILL.md"
+    },
+    {
       "id": "playwright-java",
       "canonical_id": "playwright-java",
       "name": "playwright-java",
@@ -48866,6 +49842,30 @@
         "api"
       ],
       "path": "skills/podcast-generation/SKILL.md"
+    },
+    {
+      "id": "podman",
+      "canonical_id": "podman",
+      "name": "podman",
+      "description": "Manage containers using Podman, the daemonless container engine.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "podman"
+      ],
+      "triggers": [
+        "podman",
+        "containers",
+        "daemonless",
+        "container",
+        "engine"
+      ],
+      "path": "skills/podman/SKILL.md"
     },
     {
       "id": "poka-yoke",
@@ -50492,6 +51492,33 @@
       "path": "skills/prometheus-configuration/SKILL.md"
     },
     {
+      "id": "prometheus-grafana",
+      "canonical_id": "prometheus-grafana",
+      "name": "prometheus-grafana",
+      "description": "Set up metrics collection and visualization with Prometheus and Grafana.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "prometheus",
+        "grafana"
+      ],
+      "triggers": [
+        "prometheus",
+        "grafana",
+        "set",
+        "up",
+        "metrics",
+        "collection",
+        "visualization"
+      ],
+      "path": "skills/prometheus-grafana/SKILL.md"
+    },
+    {
       "id": "prompt-caching",
       "canonical_id": "prompt-caching",
       "name": "prompt-caching",
@@ -51666,6 +52693,39 @@
         "search"
       ],
       "path": "skills/rag-infrastructure/SKILL.md"
+    },
+    {
+      "id": "rag-observability-evals",
+      "canonical_id": "rag-observability-evals",
+      "name": "rag-observability-evals",
+      "description": "Monitor and evaluate RAG systems with retrieval quality metrics, groundedness checks, hallucination detection, and continuous regression testing.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "rag",
+        "observability",
+        "evals"
+      ],
+      "triggers": [
+        "rag",
+        "observability",
+        "evals",
+        "monitor",
+        "evaluate",
+        "retrieval",
+        "quality",
+        "metrics",
+        "groundedness",
+        "checks",
+        "hallucination",
+        "detection"
+      ],
+      "path": "skills/rag-observability-evals/SKILL.md"
     },
     {
       "id": "ralph-loop-yylo",
@@ -55323,6 +56383,32 @@
         "ruby"
       ],
       "path": "skills/selenium-skill/SKILL.md"
+    },
+    {
+      "id": "semantic-versioning",
+      "canonical_id": "semantic-versioning",
+      "name": "semantic-versioning",
+      "description": "Automate versioning and changelog generation using semantic versioning principles.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "semantic",
+        "versioning"
+      ],
+      "triggers": [
+        "semantic",
+        "versioning",
+        "automate",
+        "changelog",
+        "generation",
+        "principles"
+      ],
+      "path": "skills/semantic-versioning/SKILL.md"
     },
     {
       "id": "semgrep-rule-creator",
@@ -59018,6 +60104,36 @@
         "skill"
       ],
       "path": "skills/squirrel/SKILL.md"
+    },
+    {
+      "id": "sre-dashboards",
+      "canonical_id": "sre-dashboards",
+      "name": "sre-dashboards",
+      "description": "Design and operationalize SRE dashboards that surface reliability, latency, error, saturation, and capacity signals across services.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+      "source_type": "community",
+      "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+      "license": "MIT",
+      "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE",
+      "tags": [
+        "sre",
+        "dashboards"
+      ],
+      "triggers": [
+        "sre",
+        "dashboards",
+        "operationalize",
+        "surface",
+        "reliability",
+        "latency",
+        "error",
+        "saturation",
+        "capacity",
+        "signals"
+      ],
+      "path": "skills/sre-dashboards/SKILL.md"
     },
     {
       "id": "sred-project-organizer",
