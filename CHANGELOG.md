@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [17.8.3] - 2026-09-20 - "Landing JSON-LD Identity for Pages"
+
+> Fixes neon landing SoftwareSourceCode/WebSite JSON-LD so the release-only
+> Pages SEO gate accepts `/` after the catalog moved to `/core`.
+
+A catalog-surface hotfix for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It completes hosted deployment of the neon homepage while keeping the
+**2,406**-skill catalog at `/core`. Existing installation interfaces remain
+supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.8.3`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Fixed
+
+- **Landing JSON-LD identities** — dedupe root `sameAs`, align WebSite URL shape,
+  and treat `/` as the brand landing while `/core` keeps rich catalog identity
+  checks required by the Pages SEO verifier.
+
+### Validation scope
+
+Protected source PR, release checks for v17.8.3, and the release-only Pages
+deploy from the immutable `v17.8.3` tag.
+
+---
+
 ## [17.8.2] - 2026-09-20 - "Pages Deploy for Neon Landing"
 
 > Unblocks GitHub Pages for the neon AAS homepage by allowing `/core` in the

@@ -387,6 +387,16 @@ describe('seo assets verification helpers', () => {
     });
     writeRouteIdentityFixture(distDir, routeUrl, buildRouteIdentityHtml({ routeUrl, jsonLd: missingPackage }));
     expect(() => assertPrerenderedRouteIdentities([routeUrl], distDir, '/repo', FIXTURE_ROOT_URL)).toThrow(
+      'SoftwareSourceCode JSON-LD sameAs must contain exactly the current route, catalog root, and npm package identities',
+    );
+
+    const coreRouteUrl = `${FIXTURE_ROOT_URL}core/`;
+    const missingPackageOnCore = currentIdentityJsonLd(coreRouteUrl).map((entry) => {
+      if (!['Organization', 'SoftwareSourceCode'].includes(entry['@type'])) return entry;
+      return { ...entry, sameAs: (entry.sameAs || []).filter((value) => value !== PACKAGE_URL) };
+    });
+    writeRouteIdentityFixture(distDir, coreRouteUrl, buildRouteIdentityHtml({ routeUrl: coreRouteUrl, jsonLd: missingPackageOnCore }));
+    expect(() => assertPrerenderedRouteIdentities([coreRouteUrl], distDir, '/repo', FIXTURE_ROOT_URL)).toThrow(
       'exactly the current social, npm package, and catalog identities',
     );
   });

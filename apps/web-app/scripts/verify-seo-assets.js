@@ -541,8 +541,8 @@ function assertJsonLdIdentityUrls(htmlText, identityContext, routeUrl) {
   const routePath = new URL(routeUrl).pathname;
   const rootPath = new URL(identityContext.catalogRootUrl).pathname;
   const relativeRoutePath = routePath.slice(rootPath.length).replace(/^\/+/, '');
-  const requiresRichProjectIdentity = routePath === rootPath || relativeRoutePath.startsWith('topics/') || relativeRoutePath === 'workbench/' || relativeRoutePath === 'core/';
-  const requiresProjectOrganization = requiresRichProjectIdentity || relativeRoutePath === 'plugins/';
+  const requiresRichProjectIdentity = relativeRoutePath.startsWith('topics/') || relativeRoutePath === 'workbench/' || relativeRoutePath === 'core/';
+  const requiresProjectOrganization = routePath === rootPath || requiresRichProjectIdentity || relativeRoutePath === 'plugins/';
   const organizations = entries.filter((entry) => hasSchemaType(entry, 'Organization'));
   if (requiresProjectOrganization) {
     assert(organizations.length === 1, `${routeUrl} must expose exactly one project Organization.`);

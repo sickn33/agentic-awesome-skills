@@ -413,7 +413,7 @@ function buildLandingMeta({ imageUrl, canonicalUrl }) {
   const title = 'Agentic Awesome Skills | Agent-first skill catalog and AAS Core';
   const description =
     'Open-source SKILL.md playbooks for Codex, Claude Code, Cursor, and compatible clients. Explore AAS Core for catalog search, agent-owned selection, validation, and plan preview.';
-  const siteRoot = canonicalUrl.replace(/\/$/, '');
+  const catalogBaseUrl = canonicalUrl.replace(/\/$/, '');
 
   return {
     title,
@@ -434,7 +434,7 @@ function buildLandingMeta({ imageUrl, canonicalUrl }) {
         isPartOf: {
           '@type': 'WebSite',
           name: SITE_NAME,
-          url: `${siteRoot}/`,
+          url: catalogBaseUrl,
         },
       },
       {
@@ -453,7 +453,7 @@ function buildLandingMeta({ imageUrl, canonicalUrl }) {
         '@context': 'https://schema.org',
         '@type': 'WebSite',
         name: SITE_NAME,
-        url: `${siteRoot}/`,
+        url: catalogBaseUrl,
         sameAs: REPOSITORY_URL,
       },
       {
@@ -462,7 +462,7 @@ function buildLandingMeta({ imageUrl, canonicalUrl }) {
         name: SITE_NAME,
         description,
         url: REPOSITORY_URL,
-        sameAs: [canonicalUrl, HOSTED_CATALOG_URL, 'https://www.npmjs.com/package/agentic-awesome-skills'],
+        sameAs: [...new Set([canonicalUrl, HOSTED_CATALOG_URL, 'https://www.npmjs.com/package/agentic-awesome-skills'])],
         mainEntityOfPage: canonicalUrl,
         codeRepository: REPOSITORY_URL,
         applicationCategory: 'DeveloperApplication',
