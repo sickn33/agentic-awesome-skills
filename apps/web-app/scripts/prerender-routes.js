@@ -751,7 +751,7 @@ function buildWorkbenchMeta({ imageUrl, canonicalUrl }) {
         inLanguage: 'en',
         potentialAction: {
           '@type': 'SearchAction',
-          target: `${catalogBaseUrl}/?q={search_term_string}`,
+          target: `${catalogBaseUrl}/core/?q={search_term_string}`,
           'query-input': 'required name=search_term_string',
         },
       },
@@ -874,7 +874,7 @@ function buildTopicLandingMeta({ page, featuredSkills = [], imageUrl, canonicalU
         inLanguage: 'en',
         potentialAction: {
           '@type': 'SearchAction',
-          target: `${catalogBaseUrl}/?q={search_term_string}`,
+          target: `${catalogBaseUrl}/core/?q={search_term_string}`,
           'query-input': 'required name=search_term_string',
         },
       },

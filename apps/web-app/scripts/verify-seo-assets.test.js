@@ -98,7 +98,7 @@ function currentIdentityJsonLd(routeUrl) {
       sameAs: 'https://github.com/sickn33/agentic-awesome-skills',
       potentialAction: {
         '@type': 'SearchAction',
-        target: `${FIXTURE_ROOT_URL.replace(/\/$/, '')}/?q={search_term_string}`,
+        target: `${FIXTURE_ROOT_URL.replace(/\/$/, '')}/core/?q={search_term_string}`,
       },
     }, sourceCode);
   } else if (relativeRoute === 'plugins/') {

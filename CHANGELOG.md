@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [17.8.4] - 2026-09-20 - "Core SearchAction for Pages SEO"
+
+> Aligns the Pages SEO verifier SearchAction expectation with `/core` so the
+> neon landing release can deploy to GitHub Pages.
+
+A catalog-surface hotfix for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It finishes publishing the neon homepage to the hosted site while keeping the
+**2,406**-skill catalog at `/core`. Existing installation interfaces remain
+supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.8.4`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Fixed
+
+- **Pages SearchAction gate** — expect WebSite SearchAction targets at
+  `/core/?q={search_term_string}` after the catalog moved off `/`.
+
+### Validation scope
+
+Protected source PR, release checks for v17.8.4, and the release-only Pages
+deploy from the immutable `v17.8.4` tag.
+
+---
+
 ## [17.8.3] - 2026-09-20 - "Landing JSON-LD Identity for Pages"
 
 > Fixes neon landing SoftwareSourceCode/WebSite JSON-LD so the release-only

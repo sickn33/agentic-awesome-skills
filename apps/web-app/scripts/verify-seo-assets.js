@@ -618,16 +618,16 @@ function assertJsonLdIdentityUrls(htmlText, identityContext, routeUrl) {
     if (webSite.potentialAction !== undefined) {
       assert(webSite.potentialAction?.['@type'] === 'SearchAction', 'WebSite JSON-LD potentialAction must be a SearchAction.');
       assert(
-        webSite.potentialAction?.target === `${identityContext.catalogBaseUrl}/?q={search_term_string}`,
-        'WebSite JSON-LD SearchAction target must remain under the exact current catalog root.',
+        webSite.potentialAction?.target === `${identityContext.catalogBaseUrl}/core/?q={search_term_string}`,
+        'WebSite JSON-LD SearchAction target must remain under the exact current Core catalog root.',
       );
     }
   }
   if (requiresRichProjectIdentity) {
     assert(topLevelWebSites[0].sameAs === REPOSITORY_URL, 'Top-level WebSite JSON-LD must use the exact current repository identity.');
     assert(
-      topLevelWebSites[0].potentialAction?.target === `${identityContext.catalogBaseUrl}/?q={search_term_string}`,
-      'Top-level WebSite JSON-LD must expose the exact current catalog SearchAction.',
+      topLevelWebSites[0].potentialAction?.target === `${identityContext.catalogBaseUrl}/core/?q={search_term_string}`,
+      'Top-level WebSite JSON-LD must expose the exact current Core catalog SearchAction.',
     );
   }
 }
