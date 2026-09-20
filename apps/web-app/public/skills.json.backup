@@ -1526,6 +1526,32 @@
     }
   },
   {
+    "id": "ai-agent-security",
+    "path": "skills/ai-agent-security",
+    "category": "security",
+    "name": "ai-agent-security",
+    "description": "Secure AI agents against prompt injection, tool abuse, and data exfiltration with defense-in-depth controls.",
+    "risk": "safe",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "ai-agents-architect",
     "path": "skills/ai-agents-architect",
     "category": "ai-agents",
@@ -1568,6 +1594,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "ai-coding-agent-guardrails",
+    "path": "skills/ai-coding-agent-guardrails",
+    "category": "security",
+    "name": "ai-coding-agent-guardrails",
+    "description": "Secure AI coding agents (Claude Code, Cursor, Codex, Copilot) with permission boundaries, secret protection, code review gates, and safe sandbox configurations for team environments.",
+    "risk": "safe",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "ai-dev-jobs-mcp",
@@ -1797,6 +1849,58 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "ai-red-teaming",
+    "path": "skills/ai-red-teaming",
+    "category": "security",
+    "name": "ai-red-teaming",
+    "description": "Run structured AI red team exercises for jailbreak resistance, data exfiltration risk, harmful output controls, and agent tool abuse resilience.",
+    "risk": "safe",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
+    "id": "ai-security-hardening",
+    "path": "skills/ai-security-hardening",
+    "category": "security",
+    "name": "ai-security-hardening",
+    "description": "Harden AI/LLM deployments against prompt injection, data exfiltration, model theft, and supply chain attacks.",
+    "risk": "safe",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "ai-seo",
@@ -5112,6 +5216,32 @@
     }
   },
   {
+    "id": "aws-secrets-manager",
+    "path": "skills/aws-secrets-manager",
+    "category": "security",
+    "name": "aws-secrets-manager",
+    "description": "Store and rotate secrets in AWS Secrets Manager.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "aws-secrets-rotation",
     "path": "skills/security/aws-secrets-rotation",
     "category": "security",
@@ -6666,6 +6796,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "azure-keyvault",
+    "path": "skills/azure-keyvault",
+    "category": "security",
+    "name": "azure-keyvault",
+    "description": "Manage secrets and certificates in Azure Key Vault. Configure access policies, integrate with Azure services, and implement secure secret management. Use when managing secrets in Azure environments.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "azure-keyvault-certificates-rust",
@@ -10838,6 +10994,32 @@
     "license": "Apache-2.0 license"
   },
   {
+    "id": "cis-benchmarks",
+    "path": "skills/cis-benchmarks",
+    "category": "security",
+    "name": "cis-benchmarks",
+    "description": "Audit and remediate CIS benchmark violations.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "citation-management",
     "path": "skills/citation-management",
     "category": "content",
@@ -13220,6 +13402,58 @@
     "license_source": "https://github.com/addyosmani/agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "container-hardening",
+    "path": "skills/container-hardening",
+    "category": "security",
+    "name": "container-hardening",
+    "description": "Secure Docker images and container runtime configurations.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
+    "id": "container-scanning",
+    "path": "skills/container-scanning",
+    "category": "security",
+    "name": "container-scanning",
+    "description": "Scan container images for vulnerabilities using Trivy, Grype, and cloud-native tools.",
+    "risk": "safe",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "container-security-hardening",
     "path": "skills/container-security-hardening",
     "category": "security",
@@ -15057,6 +15291,32 @@
     "source_type": "self"
   },
   {
+    "id": "dast-scanning",
+    "path": "skills/dast-scanning",
+    "category": "security",
+    "name": "dast-scanning",
+    "description": "Perform dynamic application security testing with OWASP ZAP, Burp Suite, and Nikto.",
+    "risk": "offensive",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "data-dense-design",
     "path": "skills/design-it/data-dense-design",
     "category": "design-it",
@@ -16108,6 +16368,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "dependency-scanning",
+    "path": "skills/dependency-scanning",
+    "category": "security",
+    "name": "dependency-scanning",
+    "description": "Scan package dependencies for known vulnerabilities using Snyk, Dependabot, and OWASP Dependency-Check.",
+    "risk": "safe",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "dependency-upgrade",
@@ -20587,6 +20873,32 @@
     }
   },
   {
+    "id": "firewall-config",
+    "path": "skills/firewall-config",
+    "category": "security",
+    "name": "firewall-config",
+    "description": "Configure iptables, nftables, and cloud firewalls. Implement network segmentation and traffic filtering. Use when securing network perimeters or implementing security zones.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "firmware-analyst",
     "path": "skills/firmware-analyst",
     "category": "security",
@@ -22255,6 +22567,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "gcp-secret-manager",
+    "path": "skills/gcp-secret-manager",
+    "category": "security",
+    "name": "gcp-secret-manager",
+    "description": "Secure secrets in Google Cloud Secret Manager. Configure IAM policies, integrate with GKE, and manage secret versions. Use when managing secrets in GCP environments.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "gdb-cli",
@@ -24671,6 +25009,32 @@
     "license_source": "https://github.com/HasData/hasdata-cli/blob/main/LICENSE"
   },
   {
+    "id": "hashicorp-vault",
+    "path": "skills/hashicorp-vault",
+    "category": "security",
+    "name": "hashicorp-vault",
+    "description": "Manage secrets and PKI with HashiCorp Vault.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "haskell-pro",
     "path": "skills/haskell-pro",
     "category": "code",
@@ -26777,6 +27141,32 @@
     }
   },
   {
+    "id": "incident-response",
+    "path": "skills/incident-response",
+    "category": "security",
+    "name": "incident-response",
+    "description": "Handle security incidents with IR playbooks and procedures.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "incident-response-incident-response",
     "path": "skills/incident-response-incident-response",
     "category": "devops",
@@ -28265,6 +28655,32 @@
     }
   },
   {
+    "id": "kubernetes-hardening",
+    "path": "skills/kubernetes-hardening",
+    "category": "security",
+    "name": "kubernetes-hardening",
+    "description": "Implement Kubernetes security contexts, Pod Security Standards, and network policies.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "kubestellar-console",
     "path": "skills/kubestellar-console",
     "category": "devops",
@@ -29326,6 +29742,32 @@
     }
   },
   {
+    "id": "linux-hardening",
+    "path": "skills/linux-hardening",
+    "category": "security",
+    "name": "linux-hardening",
+    "description": "Apply CIS benchmarks and secure Linux servers.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "linux-privilege-escalation",
     "path": "skills/linux-privilege-escalation",
     "category": "security",
@@ -29442,6 +29884,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "llm-app-security",
+    "path": "skills/llm-app-security",
+    "category": "security",
+    "name": "llm-app-security",
+    "description": "Secure LLM-powered applications with input validation, output controls, tenant isolation, and abuse prevention.",
+    "risk": "safe",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "llm-application-dev-ai-assistant",
@@ -31825,6 +32293,32 @@
     }
   },
   {
+    "id": "mcp-server-security",
+    "path": "skills/mcp-server-security",
+    "category": "security",
+    "name": "mcp-server-security",
+    "description": "Secure Model Context Protocol (MCP) servers with transport encryption, tool authorization, input validation, and audit logging for safe AI agent integrations.",
+    "risk": "safe",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "mcp-tool-developer",
     "path": "skills/mcp-tool-developer",
     "category": "developer-tools",
@@ -32628,6 +33122,32 @@
       "vibe-coding",
       "claude-code"
     ]
+  },
+  {
+    "id": "model-supply-chain-security",
+    "path": "skills/model-supply-chain-security",
+    "category": "security",
+    "name": "model-supply-chain-security",
+    "description": "Secure the AI model supply chain with artifact signing, provenance attestation, SBOM workflows, dependency controls, and trusted model promotion.",
+    "risk": "safe",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "modellix",
@@ -35721,6 +36241,32 @@
     "license_source": "https://github.com/LambdaTest/agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "openclaw-deployment-hardening",
+    "path": "skills/openclaw-deployment-hardening",
+    "category": "security",
+    "name": "openclaw-deployment-hardening",
+    "description": "Secure OpenClaw deployments with preflight hardening checks, CI/CD guardrails, container runtime restrictions, and post-deploy verification.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "openclaw-github-repo-commander",
     "path": "skills/openclaw-github-repo-commander",
     "category": "development-and-testing",
@@ -36561,6 +37107,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "penetration-testing",
+    "path": "skills/penetration-testing",
+    "category": "security",
+    "name": "penetration-testing",
+    "description": "Perform basic penetration testing and security assessments.",
+    "risk": "offensive",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "pentest-checklist",
@@ -38843,6 +39415,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "prompt-injection-defense",
+    "path": "skills/prompt-injection-defense",
+    "category": "security",
+    "name": "prompt-injection-defense",
+    "description": "Defend AI systems against prompt injection and indirect prompt attacks using input controls, tool permissions, output validation, and isolation boundaries.",
+    "risk": "safe",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "prompt-library",
@@ -41793,6 +42391,32 @@
     }
   },
   {
+    "id": "sast-scanning",
+    "path": "skills/sast-scanning",
+    "category": "security",
+    "name": "sast-scanning",
+    "description": "Perform static application security testing with tools like Semgrep, CodeQL, and SonarQube.",
+    "risk": "safe",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "satori",
     "path": "skills/satori",
     "category": "personal-development",
@@ -41825,6 +42449,32 @@
       "jungian",
       "conversation"
     ]
+  },
+  {
+    "id": "sbom-supply-chain",
+    "path": "skills/sbom-supply-chain",
+    "category": "security",
+    "name": "sbom-supply-chain",
+    "description": "Generate, sign, and verify SBOMs and provenance attestations to secure the software supply chain. Use when implementing SLSA controls, artifact trust policies, or compliance evidence for releases.",
+    "risk": "safe",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "scala",
@@ -42377,6 +43027,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "security-automation",
+    "path": "skills/security-automation",
+    "category": "security",
+    "name": "security-automation",
+    "description": "Automate security workflows and remediation. Build security pipelines, automate compliance checks, and implement SOAR capabilities. Use when scaling security operations or implementing DevSecOps.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "security-bluebook-builder",
@@ -45342,6 +46018,32 @@
     }
   },
   {
+    "id": "sops-encryption",
+    "path": "skills/sops-encryption",
+    "category": "security",
+    "name": "sops-encryption",
+    "description": "Encrypt files and configs with Mozilla SOPS.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "source-driven-development",
     "path": "skills/source-driven-development",
     "category": "uncategorized",
@@ -45896,6 +46598,32 @@
       "deploy",
       "zero-knowledge"
     ]
+  },
+  {
+    "id": "ssl-tls-management",
+    "path": "skills/ssl-tls-management",
+    "category": "security",
+    "name": "ssl-tls-management",
+    "description": "Manage SSL/TLS certificates with Let's Encrypt and internal PKI. Configure secure HTTPS, certificate renewal, and cipher suites. Use when implementing secure communications.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "stability-ai",
@@ -46464,6 +47192,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "supply-chain-attack-response",
+    "path": "skills/supply-chain-attack-response",
+    "category": "security",
+    "name": "supply-chain-attack-response",
+    "description": "Detect, respond to, and prevent software supply chain attacks on package registries, container images, and CI/CD pipelines with lockfile auditing, provenance verification",
+    "risk": "offensive",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "supply-chain-risk-auditor",
@@ -48110,6 +48864,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "threat-modeling",
+    "path": "skills/threat-modeling",
+    "category": "security",
+    "name": "threat-modeling",
+    "description": "Conduct threat modeling using STRIDE methodology. Identify threats, assess risks, and design security controls. Use when designing secure systems or assessing application security.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "threat-modeling-expert",
@@ -51620,6 +52400,32 @@
     }
   },
   {
+    "id": "vpn-setup",
+    "path": "skills/vpn-setup",
+    "category": "security",
+    "name": "vpn-setup",
+    "description": "Configure WireGuard, OpenVPN, and cloud VPNs. Implement secure remote access and site-to-site connectivity. Use when setting up secure network tunnels.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
     "id": "vps-server-management",
     "path": "skills/vps-server-management",
     "category": "operations",
@@ -51724,6 +52530,58 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "vulnerability-scanning",
+    "path": "skills/vulnerability-scanning",
+    "category": "security",
+    "name": "vulnerability-scanning",
+    "description": "Scan systems and dependencies for CVEs and security vulnerabilities.",
+    "risk": "offensive",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
+    "id": "waf-setup",
+    "path": "skills/waf-setup",
+    "category": "security",
+    "name": "waf-setup",
+    "description": "Deploy and tune Web Application Firewalls. Configure rules for OWASP Top 10 protection. Use when protecting web applications from common attacks.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "warehouse",
@@ -52698,6 +53556,32 @@
     "source_repo": "zhaoxuya520/reverse-skill",
     "license": "MIT",
     "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
+    "id": "windows-hardening",
+    "path": "skills/windows-hardening",
+    "category": "security",
+    "name": "windows-hardening",
+    "description": "Harden Windows servers per security baselines and CIS benchmarks. Configure Group Policy, Windows Defender, and security features. Use when securing Windows Server environments.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "windows-privilege-escalation",
@@ -53958,6 +54842,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "zero-trust",
+    "path": "skills/zero-trust",
+    "category": "security",
+    "name": "zero-trust",
+    "description": "Implement zero-trust network architecture. Configure identity-based access, micro-segmentation, and continuous verification. Use when implementing modern security architectures.",
+    "risk": "critical",
+    "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
+    "date_added": "2026-09-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
+    "license": "MIT",
+    "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
     "id": "zeroize-audit",
