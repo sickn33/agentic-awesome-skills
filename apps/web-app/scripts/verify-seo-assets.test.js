@@ -5,6 +5,7 @@ import path from 'node:path';
 import {
   assertManifest,
   assertIndexDiscoveryMeta,
+  assertCoreCatalogDiscoveryMeta,
   assertStaticIndexShell,
   assertWebmasterVerificationMeta,
   assertPluginsDiscoveryMeta,
@@ -719,23 +720,22 @@ describe('seo assets verification helpers', () => {
     expect(() => assertIndexSocialMeta(html)).not.toThrow();
   });
 
-  it('requires current discovery copy in rendered index html', () => {
+  it('requires current discovery copy in rendered landing html', () => {
     const html = `
       <html>
         <head>
-          <title>AAS Core Preview | Agent-first stacks backed by 1,678+ skills</title>
-          <meta name="description" content="Use AAS Core preview for neutral catalog retrieval and plan preview backed by 1,678+ cataloged skills." />
-          <meta property="og:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
-          <meta property="og:description" content="Use AAS Core preview with the supporting catalog." />
-          <meta name="twitter:title" content="AAS Core Preview | Agent-first stacks backed by 1,678+ skills" />
-          <meta name="twitter:description" content="Use AAS Core preview with the supporting catalog." />
+          <title>Agentic Awesome Skills | Agent-first skill catalog and AAS Core</title>
+          <meta name="description" content="Open-source SKILL.md playbooks. Explore AAS Core for catalog search and plan preview." />
+          <meta property="og:title" content="Agentic Awesome Skills | Agent-first skill catalog and AAS Core" />
+          <meta property="og:description" content="Open-source SKILL.md playbooks. Explore AAS Core for catalog search and plan preview." />
+          <meta name="twitter:title" content="Agentic Awesome Skills | Agent-first skill catalog and AAS Core" />
+          <meta name="twitter:description" content="Open-source SKILL.md playbooks. Explore AAS Core for catalog search and plan preview." />
           <script type="application/ld+json">
             [
-              {"@context":"https://schema.org","@type":"CollectionPage","sameAs":"https://github.com/sickn33/agentic-awesome-skills"},
+              {"@context":"https://schema.org","@type":"WebPage","sameAs":"https://github.com/sickn33/agentic-awesome-skills"},
               {"@context":"https://schema.org","@type":"Organization","url":"https://github.com/sickn33/agentic-awesome-skills"},
               {"@context":"https://schema.org","@type":"WebSite"},
-              {"@context":"https://schema.org","@type":"SoftwareSourceCode","url":"https://github.com/sickn33/agentic-awesome-skills","codeRepository":"https://github.com/sickn33/agentic-awesome-skills","mainEntityOfPage":"https://owner.github.io/repo/"},
-              {"@context":"https://schema.org","@type":"FAQPage"}
+              {"@context":"https://schema.org","@type":"SoftwareSourceCode","url":"https://github.com/sickn33/agentic-awesome-skills","codeRepository":"https://github.com/sickn33/agentic-awesome-skills","mainEntityOfPage":"https://owner.github.io/repo/"}
             ]
           </script>
         </head>
@@ -745,7 +745,7 @@ describe('seo assets verification helpers', () => {
     expect(() => assertIndexDiscoveryMeta(html)).not.toThrow();
   });
 
-  it('rejects stale count labels in rendered index JSON-LD', () => {
+  it('rejects stale count labels in rendered Core JSON-LD', () => {
     const html = `
       <html>
         <head>
@@ -768,7 +768,7 @@ describe('seo assets verification helpers', () => {
       </html>
     `;
 
-    expect(() => assertIndexDiscoveryMeta(html)).toThrow('stale skill count');
+    expect(() => assertCoreCatalogDiscoveryMeta(html)).toThrow('stale skill count');
   });
 
   it('requires current discovery copy in the source index shell', () => {
@@ -935,11 +935,13 @@ describe('seo assets verification helpers', () => {
     const xml = `
       <urlset>
         <url><loc>https://owner.github.io/repo/</loc></url>
+        <url><loc>https://owner.github.io/repo/core/</loc></url>
         <url><loc>https://owner.github.io/repo/workbench/</loc></url>
       </urlset>
     `;
 
     const report = analyzeSitemap(xml, { minSkillUrls: 0 });
+    expect(report.coreUrls).toEqual(['https://owner.github.io/repo/core/']);
     expect(report.workbenchUrls).toEqual(['https://owner.github.io/repo/workbench/']);
     expect(() => assertPrerenderedWorkbenchRoutes(
       report.workbenchUrls,

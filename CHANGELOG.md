@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [17.8.2] - 2026-09-20 - "Pages Deploy for Neon Landing"
+
+> Unblocks GitHub Pages for the neon AAS homepage by allowing `/core` in the
+> SEO sitemap verifier and verifying Core catalog metadata on `/core`.
+
+A catalog-surface hotfix for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It finishes publishing the neon landing from #1527 / v17.8.1 onto the hosted
+site while keeping the **2,406**-skill catalog at `/core`. Existing installation
+interfaces remain supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.8.2`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Fixed
+
+- **Pages SEO gate for `/core`** — treat `/core` as an allowed non-skill sitemap
+  route, assert the prerendered Core catalog page, and keep landing `/` on
+  WebPage discovery metadata so the release-only Pages deploy can ship the neon
+  homepage.
+- **Plugins coverage timeout** — raise the specialized plugins render test
+  timeout so release npm publication is not blocked by a slow CI worker.
+
+### Validation scope
+
+Source PR plus protected release checks for v17.8.2, including web-app SEO
+verification, coverage, CI, CodeQL, and the release-only Pages deploy from the
+immutable `v17.8.2` tag.
+
+---
+
 ## [17.8.1] - 2026-09-20 - "Neon AAS Landing Homepage"
 
 > Ships a brand-first neon AAS homepage at `/` and moves the searchable catalog

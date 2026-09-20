@@ -326,7 +326,15 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = f
     `${normalizedRoot}/workbench`,
     `${normalizedRoot}/workbench/`,
   ]);
-  const allowedExtraPathVariants = new Set([...pluginPathVariants, ...workbenchPathVariants]);
+  const corePathVariants = new Set([
+    `${normalizedRoot}/core`,
+    `${normalizedRoot}/core/`,
+  ]);
+  const allowedExtraPathVariants = new Set([
+    ...pluginPathVariants,
+    ...workbenchPathVariants,
+    ...corePathVariants,
+  ]);
   const topicPathVariants = new Set(
     getSeoLandingPaths().flatMap((topicPath) => [
       `${normalizedRoot}${topicPath}`,
@@ -368,6 +376,9 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = f
       .map(({ raw }) => raw),
     workbenchUrls: extraRoutes
       .filter(({ parsed: parsedUrl }) => workbenchPathVariants.has(parsedUrl.pathname))
+      .map(({ raw }) => raw),
+    coreUrls: extraRoutes
+      .filter(({ parsed: parsedUrl }) => corePathVariants.has(parsedUrl.pathname))
       .map(({ raw }) => raw),
   };
 }
@@ -452,7 +463,8 @@ function assertRepositoryJsonLdSignals(htmlText) {
     'SoftwareSourceCode JSON-LD must link back to the hosted catalog page with mainEntityOfPage.',
   );
   assert(organization?.url === REPOSITORY_URL, 'Organization JSON-LD must use the GitHub repository as its URL.');
-  assert(collectionPage?.sameAs === REPOSITORY_URL, 'CollectionPage JSON-LD must link the hosted catalog to the GitHub repository.');
+  const pageNode = collectionPage || entries.find((entry) => hasSchemaType(entry, 'WebPage'));
+  assert(pageNode?.sameAs === REPOSITORY_URL, 'Page JSON-LD must link the hosted catalog to the GitHub repository.');
 }
 
 function buildIdentityContext(rootUrl, normalizedRootPath) {
@@ -529,7 +541,7 @@ function assertJsonLdIdentityUrls(htmlText, identityContext, routeUrl) {
   const routePath = new URL(routeUrl).pathname;
   const rootPath = new URL(identityContext.catalogRootUrl).pathname;
   const relativeRoutePath = routePath.slice(rootPath.length).replace(/^\/+/, '');
-  const requiresRichProjectIdentity = routePath === rootPath || relativeRoutePath.startsWith('topics/') || relativeRoutePath === 'workbench/';
+  const requiresRichProjectIdentity = routePath === rootPath || relativeRoutePath.startsWith('topics/') || relativeRoutePath === 'workbench/' || relativeRoutePath === 'core/';
   const requiresProjectOrganization = requiresRichProjectIdentity || relativeRoutePath === 'plugins/';
   const organizations = entries.filter((entry) => hasSchemaType(entry, 'Organization'));
   if (requiresProjectOrganization) {
@@ -714,7 +726,44 @@ function readSkillCountLabel(distDir) {
   return '1,678+';
 }
 
-export function assertIndexDiscoveryMeta(htmlText, { expectedSkillCountLabel = '1,678+', requireHostedUrl = false } = {}) {
+export function assertIndexDiscoveryMeta(htmlText, { requireHostedUrl = false } = {}) {
+  const title = extractTitle(htmlText);
+  const description = extractMetaContent(htmlText, 'name', 'description') || '';
+  const ogTitle = extractMetaContent(htmlText, 'property', 'og:title') || '';
+  const ogDescription = extractMetaContent(htmlText, 'property', 'og:description') || '';
+  const twitterTitle = extractMetaContent(htmlText, 'name', 'twitter:title') || '';
+  const twitterDescription = extractMetaContent(htmlText, 'name', 'twitter:description') || '';
+  const combined = [
+    title,
+    description,
+    ogTitle,
+    ogDescription,
+    twitterTitle,
+    twitterDescription,
+  ].join(' ');
+
+  assert(combined.includes('AAS Core'), 'Landing SEO metadata must lead with AAS Core.');
+  assert(combined.includes('preview'), 'Landing SEO metadata must state the preview boundary.');
+  assert(combined.includes('catalog'), 'Landing SEO metadata must identify the supporting catalog.');
+  assert(
+    !/\bAAS Core[^.]*recommend|\bCore preview[^.]*recommend|\brecommend(?:ing|ation)?(?:,\s*validat|\s+and\s+plan)/i.test(combined),
+    'Landing SEO metadata must not describe current AAS Core as a recommender.',
+  );
+  assert(!combined.includes('prompt templates'), 'Landing SEO metadata must not use stale prompt-template positioning.');
+  const jsonLdText = JSON.stringify(extractJsonLdEntries(htmlText));
+  assert(
+    !/\bAAS Core[^.]*recommend|\bCore preview[^.]*recommend|\brecommend(?:ing|ation)?(?:,\s*validat|\s+and\s+plan)/i.test(jsonLdText),
+    'Landing JSON-LD must not describe current AAS Core as a recommender.',
+  );
+  if (requireHostedUrl) {
+    assertNoLocalhostUrl(combined, 'Landing SEO metadata');
+    assertNoLocalhostUrl(jsonLdText, 'Landing JSON-LD');
+  }
+  assertJsonLdTypes(htmlText, ['WebPage', 'Organization', 'SoftwareSourceCode']);
+  assertRepositoryJsonLdSignals(htmlText);
+}
+
+export function assertCoreCatalogDiscoveryMeta(htmlText, { expectedSkillCountLabel = '1,678+', requireHostedUrl = false } = {}) {
   const title = extractTitle(htmlText);
   const description = extractMetaContent(htmlText, 'name', 'description') || '';
   const ogTitle = extractMetaContent(htmlText, 'property', 'og:title') || '';
@@ -732,29 +781,42 @@ export function assertIndexDiscoveryMeta(htmlText, { expectedSkillCountLabel = '
 
   assert(
     combined.includes(expectedSkillCountLabel),
-    `Home SEO metadata must expose the current ${expectedSkillCountLabel} skill count.`,
+    `Core SEO metadata must expose the current ${expectedSkillCountLabel} skill count.`,
   );
-  assert(combined.includes('AAS Core'), 'Home SEO metadata must lead with AAS Core.');
-  assert(combined.includes('preview'), 'Home SEO metadata must state the preview boundary.');
-  assert(combined.includes('catalog'), 'Home SEO metadata must identify the supporting catalog.');
+  assert(combined.includes('AAS Core'), 'Core SEO metadata must lead with AAS Core.');
+  assert(combined.includes('preview'), 'Core SEO metadata must state the preview boundary.');
+  assert(combined.includes('catalog'), 'Core SEO metadata must identify the supporting catalog.');
   assert(
     !/\bAAS Core[^.]*recommend|\bCore preview[^.]*recommend|\brecommend(?:ing|ation)?(?:,\s*validat|\s+and\s+plan)/i.test(combined),
-    'Home SEO metadata must not describe current AAS Core as a recommender.',
+    'Core SEO metadata must not describe current AAS Core as a recommender.',
   );
-  assert(!combined.includes('prompt templates'), 'Home SEO metadata must not use stale prompt-template positioning.');
-  assertOnlyExpectedSkillCountLabel(combined, expectedSkillCountLabel, 'Home SEO metadata');
+  assert(!combined.includes('prompt templates'), 'Core SEO metadata must not use stale prompt-template positioning.');
+  assertOnlyExpectedSkillCountLabel(combined, expectedSkillCountLabel, 'Core SEO metadata');
   const jsonLdText = JSON.stringify(extractJsonLdEntries(htmlText));
   assert(
     !/\bAAS Core[^.]*recommend|\bCore preview[^.]*recommend|\brecommend(?:ing|ation)?(?:,\s*validat|\s+and\s+plan)/i.test(jsonLdText),
-    'Home JSON-LD must not describe current AAS Core as a recommender.',
+    'Core JSON-LD must not describe current AAS Core as a recommender.',
   );
-  assertOnlyExpectedSkillCountLabel(jsonLdText, expectedSkillCountLabel, 'Home JSON-LD');
+  assertOnlyExpectedSkillCountLabel(jsonLdText, expectedSkillCountLabel, 'Core JSON-LD');
   if (requireHostedUrl) {
-    assertNoLocalhostUrl(combined, 'Home SEO metadata');
-    assertNoLocalhostUrl(jsonLdText, 'Home JSON-LD');
+    assertNoLocalhostUrl(combined, 'Core SEO metadata');
+    assertNoLocalhostUrl(jsonLdText, 'Core JSON-LD');
   }
   assertJsonLdTypes(htmlText, ['CollectionPage', 'Organization', 'WebSite', 'SoftwareSourceCode', 'FAQPage']);
   assertRepositoryJsonLdSignals(htmlText);
+}
+
+export function assertPrerenderedCoreRoutes(coreUrls, distDir = 'dist', normalizedRootPath = '') {
+  for (const coreUrl of coreUrls) {
+    const parsed = new URL(coreUrl);
+    const filePath = safeUserPath(routePathToDistFile(parsed.pathname, normalizedRootPath), distDir);
+    assert(
+      fs.existsSync(filePath),
+      `Missing prerendered page for core route: ${parsed.pathname}. Expected ${filePath}.`,
+    );
+    const html = readFile(filePath, distDir);
+    assert(extractTitle(html).includes('AAS Core'), 'Core prerender must expose an AAS Core title.');
+  }
 }
 
 export function assertStaticIndexShell(htmlText, { expectedSkillCountLabel = '1,678+', requireHostedUrl = false } = {}) {
@@ -1030,6 +1092,7 @@ export function runVerification({
   assertPrerenderedSkillRoutes(sitemapReport.skillUrls, distDir, sitemapReport.normalizedRootPath);
   assertPrerenderedPluginRoutes(sitemapReport.pluginUrls, distDir, sitemapReport.normalizedRootPath);
   assertPrerenderedWorkbenchRoutes(sitemapReport.workbenchUrls, distDir, sitemapReport.normalizedRootPath);
+  assertPrerenderedCoreRoutes(sitemapReport.coreUrls, distDir, sitemapReport.normalizedRootPath);
   assertPrerenderedTopicRoutes(sitemapReport.topicUrls, distDir, sitemapReport.normalizedRootPath);
   assertPrerenderedRouteIdentities(
     sitemapReport.locations,
@@ -1038,7 +1101,10 @@ export function runVerification({
     sitemapReport.rootUrl,
   );
   assertIndexSocialMeta(indexHtml);
-  assertIndexDiscoveryMeta(indexHtml, { expectedSkillCountLabel, requireHostedUrl });
+  assertIndexDiscoveryMeta(indexHtml, { requireHostedUrl });
+  const coreIndexPath = safeUserPath(path.join(distDir, 'core', 'index.html'), distDir);
+  assert(fs.existsSync(coreIndexPath), 'Missing prerendered Core catalog page at dist/core/index.html.');
+  assertCoreCatalogDiscoveryMeta(readFile(coreIndexPath, distDir), { expectedSkillCountLabel, requireHostedUrl });
   assertWebmasterVerificationMeta(indexHtml);
   const sourceIndexHtml = readFile(sourceIndexPath);
   assertStaticIndexShell(sourceIndexHtml, { expectedSkillCountLabel, requireHostedUrl });
