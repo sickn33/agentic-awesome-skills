@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [17.8.1] - 2026-09-20 - "Neon AAS Landing Homepage"
+
+> Ships a brand-first neon AAS homepage at `/` and moves the searchable catalog
+> to `/core`, with matching SEO, sitemap, and prerender routes.
+
+A catalog-surface release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It publishes the neon AAS landing experience (#1527) while keeping the
+**2,406**-skill catalog on Core. Existing installation interfaces remain
+supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@17.8.1`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **Neon AAS landing homepage (#1527)** — brand-first intro at `/` with install
+  hero, agent compatibility tiles, Core/Workbench/Plugins surfaces, guided
+  Search→Choose→Validate→Preview steps, and maintainer strip. The searchable
+  catalog now lives at `/core` with updated nav, SEO, sitemap, and prerender
+  routes.
+
+### Improved
+
+- Pages redirect bridge sitemap route lock bumped for `/core`.
+
+### Validation scope
+
+PR #1527 passed repository web-app tests and typecheck, protected CI
+(`pr-policy`, `pr-evidence`, `source-validation`, `artifact-preview`), CodeQL,
+dependency review, and maintainer attestation on the exact merge head, then
+canonical synchronization.
+
+---
+
 ## [17.8.0] - 2026-09-20 - "OpenCode #126 Catalog Expansion and Jev Judgment Routing"
 
 > Imports 264 reviewed skills from opencode-skills-collection #126 across DevSec,
