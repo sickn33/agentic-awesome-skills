@@ -1,0 +1,4 @@
+interface:
+  display_name: "EAS Observe"
+  short_description: "Paid EAS service. Set up expo-observe app metrics and query launch, route, event, and version performance with the EAS CLI"
+  default_prompt: "Use $eas-observe to add expo-observe instrumentation (AppMetricsRoot/ObserveRoot, useObserve, ObserveInteractiveMarker, the router integrations, error reporting), query metrics with eas observe:* commands, and interpret cold/warm launch, TTR, and TTI results."

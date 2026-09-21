@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fact-Check-X 流程编排"
+  short_description: "编排原始答案采集、知识点对比、权威核验和完整交付"
+  default_prompt: "使用 $fact-check-x-unified 编排完整事实核验链路；语义工作由当前智能体完成，不调用外部模型接口。"

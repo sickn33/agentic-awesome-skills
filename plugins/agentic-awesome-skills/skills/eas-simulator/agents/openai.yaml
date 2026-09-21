@@ -1,0 +1,4 @@
+interface:
+  display_name: "EAS Simulator"
+  short_description: "Paid EAS service. Run and drive your app on a remote iOS/Android simulator on EAS cloud, from the CLI or an agent, with a live browser preview"
+  default_prompt: "Use $eas-simulator to run, install, screenshot, and drive an app on a remote EAS cloud simulator - especially when no local simulator is available (Linux, CI, cloud agents) or a shareable browser preview is needed."

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-20T20:58:44.000Z",
-  "total": 2406,
+  "total": 2444,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -4097,6 +4097,41 @@
       "path": "skills/api-integration/SKILL.md"
     },
     {
+      "id": "api-integration-architect",
+      "canonical_id": "api-integration-architect",
+      "name": "api-integration-architect",
+      "description": "Design, implement, debug, and optimize API integrations with expert-level patterns for REST, GraphQL, webhooks, and authentication flows.",
+      "category": "backend",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "demo112/yunqu-ai-skills",
+      "tags": [
+        "api",
+        "integration",
+        "rest",
+        "graphql",
+        "webhooks",
+        "authentication",
+        "debugging"
+      ],
+      "triggers": [
+        "api",
+        "integration",
+        "rest",
+        "graphql",
+        "webhooks",
+        "authentication",
+        "debugging",
+        "architect",
+        "debug",
+        "optimize",
+        "integrations",
+        "level"
+      ],
+      "path": "skills/api-integration-architect/SKILL.md"
+    },
+    {
       "id": "api-onboarding",
       "canonical_id": "api-onboarding",
       "name": "api-onboarding",
@@ -4542,6 +4577,38 @@
       "path": "skills/apify-ecommerce/SKILL.md"
     },
     {
+      "id": "apify-generate-output-schema",
+      "canonical_id": "apify-generate-output-schema",
+      "name": "apify-generate-output-schema",
+      "description": "Generate output schemas (dataset_schema.json, output_schema.json, key_value_store_schema.json) for an Apify Actor by analyzing its source code. Use when creating or updating Actor output schemas.",
+      "category": "automation",
+      "risk": "unknown",
+      "source": "apify",
+      "source_type": "official",
+      "source_repo": "apify/agent-skills",
+      "tags": [
+        "apify",
+        "generate",
+        "output",
+        "schema"
+      ],
+      "triggers": [
+        "apify",
+        "generate",
+        "output",
+        "schema",
+        "schemas",
+        "dataset",
+        "json",
+        "key",
+        "value",
+        "store",
+        "actor",
+        "analyzing"
+      ],
+      "path": "skills/apify-generate-output-schema/SKILL.md"
+    },
+    {
       "id": "apify-influencer-discovery",
       "canonical_id": "apify-influencer-discovery",
       "name": "apify-influencer-discovery",
@@ -4569,6 +4636,33 @@
         "collaboration"
       ],
       "path": "skills/apify-influencer-discovery/SKILL.md"
+    },
+    {
+      "id": "apify-integration-development",
+      "canonical_id": "apify-integration-development",
+      "name": "apify-integration-development",
+      "description": "Curated upstream guidance for Apify Integration Development; use when the workflow matches the user goal.",
+      "category": "automation",
+      "risk": "unknown",
+      "source": "apify",
+      "source_type": "official",
+      "source_repo": "apify/agent-skills",
+      "tags": [
+        "apify",
+        "integration"
+      ],
+      "triggers": [
+        "apify",
+        "integration",
+        "development",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/apify-integration-development/SKILL.md"
     },
     {
       "id": "apify-lead-generation",
@@ -5142,6 +5236,36 @@
         "scalable"
       ],
       "path": "skills/architecture-patterns/SKILL.md"
+    },
+    {
+      "id": "architecture-review",
+      "canonical_id": "architecture-review",
+      "name": "architecture-review",
+      "description": "Review repository architecture using Ontoly Software Graph and MCP capabilities. Use when asked to explain architecture, module boundaries, package topology, service ownership, or architectural risk.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "0xsarwagya/ontoly",
+      "license": "AGPL-3.0-only",
+      "tags": [
+        "architecture"
+      ],
+      "triggers": [
+        "architecture",
+        "review",
+        "repository",
+        "ontoly",
+        "software",
+        "graph",
+        "mcp",
+        "capabilities",
+        "asked",
+        "explain",
+        "module",
+        "boundaries"
+      ],
+      "path": "skills/architecture-review/SKILL.md"
     },
     {
       "id": "argocd-gitops",
@@ -15591,6 +15715,39 @@
       "path": "skills/code-review-excellence/SKILL.md"
     },
     {
+      "id": "code-review-sensei",
+      "canonical_id": "code-review-sensei",
+      "name": "code-review-sensei",
+      "description": "Expert code reviewer that catches bugs, security issues, performance problems, and design flaws with actionable fix suggestions.",
+      "category": "development",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "demo112/yunqu-ai-skills",
+      "tags": [
+        "code-review",
+        "security",
+        "performance",
+        "quality",
+        "debugging"
+      ],
+      "triggers": [
+        "code-review",
+        "security",
+        "performance",
+        "quality",
+        "debugging",
+        "code",
+        "review",
+        "sensei",
+        "reviewer",
+        "catches",
+        "bugs",
+        "issues"
+      ],
+      "path": "skills/code-review-sensei/SKILL.md"
+    },
+    {
       "id": "code-reviewer",
       "canonical_id": "code-reviewer",
       "name": "code-reviewer",
@@ -15956,6 +16113,37 @@
         "improve"
       ],
       "path": "skills/codebase-design/SKILL.md"
+    },
+    {
+      "id": "codebase-onboarding",
+      "canonical_id": "codebase-onboarding",
+      "name": "codebase-onboarding",
+      "description": "Onboard a developer to a repository using Ontoly graph summaries. Use when asked to explain a new codebase, identify entrypoints, map packages, or suggest first files to inspect.",
+      "category": "development",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "0xsarwagya/ontoly",
+      "license": "AGPL-3.0-only",
+      "tags": [
+        "codebase",
+        "onboarding"
+      ],
+      "triggers": [
+        "codebase",
+        "onboarding",
+        "onboard",
+        "developer",
+        "repository",
+        "ontoly",
+        "graph",
+        "summaries",
+        "asked",
+        "explain",
+        "new",
+        "identify"
+      ],
+      "path": "skills/codebase-onboarding/SKILL.md"
     },
     {
       "id": "codebase-to-wordpress-converter",
@@ -16941,6 +17129,37 @@
         "via"
       ],
       "path": "skills/confluence-automation/SKILL.md"
+    },
+    {
+      "id": "connection-auth-rules",
+      "canonical_id": "connection-auth-rules",
+      "name": "connection-auth-rules",
+      "description": "Build a Connection Auth Rules for a Monte Carlo connection type. Fetches live connector schemas and transform steps from the apollo-agent repo.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "monte-carlo-data/mc-agent-toolkit",
+      "tags": [
+        "connection",
+        "auth",
+        "rules"
+      ],
+      "triggers": [
+        "connection",
+        "auth",
+        "rules",
+        "monte",
+        "carlo",
+        "type",
+        "fetches",
+        "live",
+        "connector",
+        "schemas",
+        "transform",
+        "steps"
+      ],
+      "path": "skills/connection-auth-rules/SKILL.md"
     },
     {
       "id": "constant-time-analysis",
@@ -20293,6 +20512,36 @@
       "path": "skills/delegating-to-agents/SKILL.md"
     },
     {
+      "id": "dependency-analysis",
+      "canonical_id": "dependency-analysis",
+      "name": "dependency-analysis",
+      "description": "Analyze internal and package dependencies using Ontoly graph traversal. Use when asked which modules, packages, services, or files depend on each other.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "0xsarwagya/ontoly",
+      "license": "AGPL-3.0-only",
+      "tags": [
+        "dependency"
+      ],
+      "triggers": [
+        "dependency",
+        "analysis",
+        "analyze",
+        "internal",
+        "package",
+        "dependencies",
+        "ontoly",
+        "graph",
+        "traversal",
+        "asked",
+        "which",
+        "modules"
+      ],
+      "path": "skills/dependency-analysis/SKILL.md"
+    },
+    {
       "id": "dependency-management-deps-audit",
       "canonical_id": "dependency-management-deps-audit",
       "name": "dependency-management-deps-audit",
@@ -22695,6 +22944,40 @@
       "path": "skills/devops-deploy/SKILL.md"
     },
     {
+      "id": "devops-pipeline-builder",
+      "canonical_id": "devops-pipeline-builder",
+      "name": "devops-pipeline-builder",
+      "description": "Design and implement CI/CD pipelines, Docker configurations, deployment strategies, and infrastructure automation with production-ready patterns.",
+      "category": "devops",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "demo112/yunqu-ai-skills",
+      "tags": [
+        "devops",
+        "ci-cd",
+        "docker",
+        "kubernetes",
+        "deployment",
+        "automation"
+      ],
+      "triggers": [
+        "devops",
+        "ci-cd",
+        "docker",
+        "kubernetes",
+        "deployment",
+        "automation",
+        "pipeline",
+        "builder",
+        "ci",
+        "cd",
+        "pipelines",
+        "configurations"
+      ],
+      "path": "skills/devops-pipeline-builder/SKILL.md"
+    },
+    {
       "id": "devops-troubleshooter",
       "canonical_id": "devops-troubleshooter",
       "name": "devops-troubleshooter",
@@ -24235,6 +24518,116 @@
       "path": "skills/earllm-build/SKILL.md"
     },
     {
+      "id": "eas-app-stores",
+      "canonical_id": "eas-app-stores",
+      "name": "eas-app-stores",
+      "description": "Curated upstream guidance for Eas App Stores; use when the workflow matches the user goal.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "expo",
+      "source_type": "official",
+      "source_repo": "expo/skills",
+      "license": "MIT",
+      "tags": [
+        "eas",
+        "app",
+        "stores"
+      ],
+      "triggers": [
+        "eas",
+        "app",
+        "stores",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/eas-app-stores/SKILL.md"
+    },
+    {
+      "id": "eas-hosting",
+      "canonical_id": "eas-hosting",
+      "name": "eas-hosting",
+      "description": "Curated upstream guidance for Eas Hosting; use when the workflow matches the user goal.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "expo",
+      "source_type": "official",
+      "source_repo": "expo/skills",
+      "license": "MIT",
+      "tags": [
+        "eas",
+        "hosting"
+      ],
+      "triggers": [
+        "eas",
+        "hosting",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/eas-hosting/SKILL.md"
+    },
+    {
+      "id": "eas-observe",
+      "canonical_id": "eas-observe",
+      "name": "eas-observe",
+      "description": "Curated upstream guidance for Eas Observe; use when the workflow matches the user goal.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "expo",
+      "source_type": "official",
+      "source_repo": "expo/skills",
+      "license": "MIT",
+      "tags": [
+        "eas",
+        "observe"
+      ],
+      "triggers": [
+        "eas",
+        "observe",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/eas-observe/SKILL.md"
+    },
+    {
+      "id": "eas-simulator",
+      "canonical_id": "eas-simulator",
+      "name": "eas-simulator",
+      "description": "Curated upstream guidance for Eas Simulator; use when the workflow matches the user goal.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "expo",
+      "source_type": "official",
+      "source_repo": "expo/skills",
+      "license": "MIT",
+      "tags": [
+        "eas",
+        "simulator"
+      ],
+      "triggers": [
+        "eas",
+        "simulator",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/eas-simulator/SKILL.md"
+    },
+    {
       "id": "eas-update-insights",
       "canonical_id": "eas-update-insights",
       "name": "eas-update-insights",
@@ -24266,6 +24659,30 @@
         "counts"
       ],
       "path": "skills/eas-update-insights/SKILL.md"
+    },
+    {
+      "id": "eas-workflows",
+      "canonical_id": "eas-workflows",
+      "name": "eas-workflows",
+      "description": "Curated upstream guidance for Eas Workflows; use when the workflow matches the user goal.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "expo",
+      "source_type": "official",
+      "source_repo": "expo/skills",
+      "tags": [
+        "eas"
+      ],
+      "triggers": [
+        "eas",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/eas-workflows/SKILL.md"
     },
     {
       "id": "ebpf-observability",
@@ -25556,6 +25973,33 @@
       "path": "skills/explain-like-socrates/SKILL.md"
     },
     {
+      "id": "expo-animation",
+      "canonical_id": "expo-animation",
+      "name": "expo-animation",
+      "description": "Curated upstream guidance for Expo Animation; use when the workflow matches the user goal.",
+      "category": "mobile",
+      "risk": "unknown",
+      "source": "expo",
+      "source_type": "official",
+      "source_repo": "expo/skills",
+      "license": "MIT",
+      "tags": [
+        "expo",
+        "animation"
+      ],
+      "triggers": [
+        "expo",
+        "animation",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/expo-animation/SKILL.md"
+    },
+    {
       "id": "expo-api-routes",
       "canonical_id": "expo-api-routes",
       "name": "expo-api-routes",
@@ -26009,6 +26453,31 @@
         "answers"
       ],
       "path": "skills/fact-check-x-complete/SKILL.md"
+    },
+    {
+      "id": "fact-check-x-unified",
+      "canonical_id": "fact-check-x-unified",
+      "name": "fact-check-x-unified",
+      "description": "Fact-Check-X 流程编排能力，依次组织各方答案汇总、各方答案聚合（未核验）、权威核验后的最终答案和各方答案测评，生成可打开、可审计、可迁移的阶段产物与完整报告包。",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "asi2030",
+      "source_type": "official",
+      "source_repo": "asi2030/fact-check-x",
+      "license": "Apache-2.0",
+      "tags": [
+        "fact",
+        "check",
+        "x",
+        "unified"
+      ],
+      "triggers": [
+        "fact",
+        "check",
+        "x",
+        "unified"
+      ],
+      "path": "skills/fact-check-x-unified/SKILL.md"
     },
     {
       "id": "faf-context",
@@ -32363,6 +32832,32 @@
       "path": "skills/helpdesk-automation/SKILL.md"
     },
     {
+      "id": "hf-cli",
+      "canonical_id": "hf-cli",
+      "name": "hf-cli",
+      "description": "Curated upstream guidance for Hf Cli; use when the workflow matches the user goal.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "huggingface",
+      "source_type": "official",
+      "source_repo": "huggingface/skills",
+      "tags": [
+        "hf",
+        "cli"
+      ],
+      "triggers": [
+        "hf",
+        "cli",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/hf-cli/SKILL.md"
+    },
+    {
       "id": "hf-cloud-aws-context-discovery",
       "canonical_id": "hf-cloud-aws-context-discovery",
       "name": "hf-cloud-aws-context-discovery",
@@ -33567,6 +34062,64 @@
         "know"
       ],
       "path": "skills/huggingface-best/SKILL.md"
+    },
+    {
+      "id": "huggingface-community-evals",
+      "canonical_id": "huggingface-community-evals",
+      "name": "huggingface-community-evals",
+      "description": "Curated upstream guidance for Huggingface Community Evals; use when the workflow matches the user goal.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "huggingface",
+      "source_type": "official",
+      "source_repo": "huggingface/skills",
+      "tags": [
+        "huggingface",
+        "community",
+        "evals"
+      ],
+      "triggers": [
+        "huggingface",
+        "community",
+        "evals",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/huggingface-community-evals/SKILL.md"
+    },
+    {
+      "id": "huggingface-datasets",
+      "canonical_id": "huggingface-datasets",
+      "name": "huggingface-datasets",
+      "description": "Use this skill for Hugging Face Dataset Viewer API workflows that fetch subset/split metadata, paginate rows, search text, apply filters, download parquet URLs, and read size or statistics.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "huggingface",
+      "source_type": "official",
+      "source_repo": "huggingface/skills",
+      "tags": [
+        "huggingface",
+        "datasets"
+      ],
+      "triggers": [
+        "huggingface",
+        "datasets",
+        "skill",
+        "hugging",
+        "face",
+        "dataset",
+        "viewer",
+        "api",
+        "fetch",
+        "subset",
+        "split",
+        "metadata"
+      ],
+      "path": "skills/huggingface-datasets/SKILL.md"
     },
     {
       "id": "huggingface-local-models",
@@ -37336,6 +37889,43 @@
       "path": "skills/jest-skill/SKILL.md"
     },
     {
+      "id": "jev-social",
+      "canonical_id": "jev-social",
+      "name": "jev-social",
+      "description": "Run read-only, browser-grounded Instagram, TikTok, or LinkedIn research through Jev routing and socai CLI, returning source-linked evidence and reports.",
+      "category": "research",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "socai-io/jev-social",
+      "license": "MIT",
+      "license_source": "https://github.com/socai-io/jev-social/blob/794aac59dbef0929ec57f2650504f4231fef598e/LICENSE",
+      "tags": [
+        "social-media",
+        "research",
+        "instagram",
+        "tiktok",
+        "linkedin",
+        "browser-automation",
+        "jev"
+      ],
+      "triggers": [
+        "social-media",
+        "research",
+        "instagram",
+        "tiktok",
+        "linkedin",
+        "browser-automation",
+        "jev",
+        "social",
+        "run",
+        "read",
+        "browser",
+        "grounded"
+      ],
+      "path": "skills/jev-social/SKILL.md"
+    },
+    {
       "id": "jev-use",
       "canonical_id": "jev-use",
       "name": "jev-use",
@@ -40482,6 +41072,33 @@
       "path": "skills/longbridge-content/SKILL.md"
     },
     {
+      "id": "longbridge-derivatives",
+      "canonical_id": "longbridge-derivatives",
+      "name": "longbridge-derivatives",
+      "description": "Curated upstream guidance for Longbridge Derivatives; use when the workflow matches the user goal.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "longbridge",
+      "source_type": "official",
+      "source_repo": "longbridge/skills",
+      "license": "MIT",
+      "tags": [
+        "longbridge",
+        "derivatives"
+      ],
+      "triggers": [
+        "longbridge",
+        "derivatives",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/longbridge-derivatives/SKILL.md"
+    },
+    {
       "id": "longbridge-fundamentals",
       "canonical_id": "longbridge-fundamentals",
       "name": "longbridge-fundamentals",
@@ -40545,6 +41162,60 @@
         "ticks"
       ],
       "path": "skills/longbridge-market-data/SKILL.md"
+    },
+    {
+      "id": "longbridge-quant",
+      "canonical_id": "longbridge-quant",
+      "name": "longbridge-quant",
+      "description": "Curated upstream guidance for Longbridge Quant; use when the workflow matches the user goal.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "longbridge",
+      "source_type": "official",
+      "source_repo": "longbridge/skills",
+      "license": "MIT",
+      "tags": [
+        "longbridge",
+        "quant"
+      ],
+      "triggers": [
+        "longbridge",
+        "quant",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/longbridge-quant/SKILL.md"
+    },
+    {
+      "id": "longbridge-research",
+      "canonical_id": "longbridge-research",
+      "name": "longbridge-research",
+      "description": "Curated upstream guidance for Longbridge Research; use when the workflow matches the user goal.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "longbridge",
+      "source_type": "official",
+      "source_repo": "longbridge/skills",
+      "license": "MIT",
+      "tags": [
+        "longbridge",
+        "research"
+      ],
+      "triggers": [
+        "longbridge",
+        "research",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/longbridge-research/SKILL.md"
     },
     {
       "id": "lookdev",
@@ -41341,6 +42012,151 @@
         "language"
       ],
       "path": "skills/make-automation/SKILL.md"
+    },
+    {
+      "id": "makepad-2-0-animation",
+      "canonical_id": "makepad-2-0-animation",
+      "name": "makepad-2-0-animation",
+      "description": "Makepad 2.0 guidance for animation; use when building or debugging Makepad UI code.",
+      "category": "development",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "zhanghandong/makepad-skills",
+      "tags": [
+        "makepad",
+        "2",
+        "0",
+        "animation"
+      ],
+      "triggers": [
+        "makepad",
+        "2",
+        "0",
+        "animation",
+        "guidance",
+        "building",
+        "debugging",
+        "ui",
+        "code"
+      ],
+      "path": "skills/makepad-2-0-animation/SKILL.md"
+    },
+    {
+      "id": "makepad-2-0-dsl",
+      "canonical_id": "makepad-2-0-dsl",
+      "name": "makepad-2-0-dsl",
+      "description": "Makepad 2.0 guidance for dsl; use when building or debugging Makepad UI code.",
+      "category": "development",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "zhanghandong/makepad-skills",
+      "tags": [
+        "makepad",
+        "2",
+        "0",
+        "dsl"
+      ],
+      "triggers": [
+        "makepad",
+        "2",
+        "0",
+        "dsl",
+        "guidance",
+        "building",
+        "debugging",
+        "ui",
+        "code"
+      ],
+      "path": "skills/makepad-2-0-dsl/SKILL.md"
+    },
+    {
+      "id": "makepad-2-0-events",
+      "canonical_id": "makepad-2-0-events",
+      "name": "makepad-2-0-events",
+      "description": "Makepad 2.0 guidance for events; use when building or debugging Makepad UI code.",
+      "category": "development",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "zhanghandong/makepad-skills",
+      "tags": [
+        "makepad",
+        "2",
+        "0",
+        "events"
+      ],
+      "triggers": [
+        "makepad",
+        "2",
+        "0",
+        "events",
+        "guidance",
+        "building",
+        "debugging",
+        "ui",
+        "code"
+      ],
+      "path": "skills/makepad-2-0-events/SKILL.md"
+    },
+    {
+      "id": "makepad-2-0-layout",
+      "canonical_id": "makepad-2-0-layout",
+      "name": "makepad-2-0-layout",
+      "description": "Makepad 2.0 guidance for layout; use when building or debugging Makepad UI code.",
+      "category": "development",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "zhanghandong/makepad-skills",
+      "tags": [
+        "makepad",
+        "2",
+        "0",
+        "layout"
+      ],
+      "triggers": [
+        "makepad",
+        "2",
+        "0",
+        "layout",
+        "guidance",
+        "building",
+        "debugging",
+        "ui",
+        "code"
+      ],
+      "path": "skills/makepad-2-0-layout/SKILL.md"
+    },
+    {
+      "id": "makepad-2-0-widgets",
+      "canonical_id": "makepad-2-0-widgets",
+      "name": "makepad-2-0-widgets",
+      "description": "Makepad 2.0 guidance for widgets; use when building or debugging Makepad UI code.",
+      "category": "development",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "zhanghandong/makepad-skills",
+      "tags": [
+        "makepad",
+        "2",
+        "0",
+        "widgets"
+      ],
+      "triggers": [
+        "makepad",
+        "2",
+        "0",
+        "widgets",
+        "guidance",
+        "building",
+        "debugging",
+        "ui",
+        "code"
+      ],
+      "path": "skills/makepad-2-0-widgets/SKILL.md"
     },
     {
       "id": "makepad-animation",
@@ -42731,6 +43547,40 @@
       "path": "skills/mdpr-skill/SKILL.md"
     },
     {
+      "id": "meeting-distiller-pro",
+      "canonical_id": "meeting-distiller-pro",
+      "name": "meeting-distiller-pro",
+      "description": "Transform messy meeting notes and transcripts into structured action items, decisions, and follow-ups. Never lose a meeting insight again.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "demo112/yunqu-ai-skills",
+      "tags": [
+        "meeting",
+        "productivity",
+        "notes",
+        "action-items",
+        "summary",
+        "corporate"
+      ],
+      "triggers": [
+        "meeting",
+        "productivity",
+        "notes",
+        "action-items",
+        "summary",
+        "corporate",
+        "distiller",
+        "pro",
+        "transform",
+        "messy",
+        "transcripts",
+        "structured"
+      ],
+      "path": "skills/meeting-distiller-pro/SKILL.md"
+    },
+    {
       "id": "meme-coin-audit",
       "canonical_id": "meme-coin-audit",
       "name": "meme-coin-audit",
@@ -44024,8 +44874,8 @@
       "id": "monte-carlo-analyze-root-cause",
       "canonical_id": "monte-carlo-analyze-root-cause",
       "name": "monte-carlo-analyze-root-cause",
-      "description": "Investigate data incidents and find root causes using Monte Carlo's observability data. Guides the agent through systematic investigation: alert lookup, lineage tracing, ETL checks, query analysis, and data profiling.",
-      "category": "devops",
+      "description": "Curated upstream guidance for Monte Carlo Analyze Root Cause; use when the workflow matches the user goal.",
+      "category": "uncategorized",
       "risk": "critical",
       "source": "https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/analyze-root-cause",
       "source_type": "community",
@@ -44045,13 +44895,12 @@
         "analyze",
         "root",
         "cause",
-        "investigate",
-        "data",
-        "incidents",
-        "find",
-        "causes",
-        "observability",
-        "guides"
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
       ],
       "path": "skills/monte-carlo-analyze-root-cause/SKILL.md"
     },
@@ -44059,7 +44908,7 @@
       "id": "monte-carlo-asset-health",
       "canonical_id": "monte-carlo-asset-health",
       "name": "monte-carlo-asset-health",
-      "description": "Check the health of a data table/asset using Monte Carlo. Activates on \"how is table X\", \"check health of X\", \"is X healthy\", \"status of X\", \"check on X table\", or any health/status question about a data asset.",
+      "description": "Curated upstream guidance for Monte Carlo Asset Health; use when the workflow matches the user goal.",
       "category": "uncategorized",
       "risk": "critical",
       "source": "https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/asset-health",
@@ -44078,16 +44927,45 @@
         "carlo",
         "asset",
         "health",
-        "check",
-        "data",
-        "table",
-        "activates",
-        "how",
-        "healthy",
-        "status",
-        "any"
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
       ],
       "path": "skills/monte-carlo-asset-health/SKILL.md"
+    },
+    {
+      "id": "monte-carlo-context-detection",
+      "canonical_id": "monte-carlo-context-detection",
+      "name": "monte-carlo-context-detection",
+      "description": "Route data-related requests to the right Monte Carlo skill or workflow. USE WHEN alerts, incidents, data broken, stale, coverage gaps, data quality, or any ambiguous data observability request.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "monte-carlo-data/mc-agent-toolkit",
+      "tags": [
+        "monte",
+        "carlo",
+        "detection"
+      ],
+      "triggers": [
+        "monte",
+        "carlo",
+        "detection",
+        "context",
+        "route",
+        "data",
+        "related",
+        "requests",
+        "right",
+        "skill",
+        "alerts",
+        "incidents"
+      ],
+      "path": "skills/monte-carlo-context-detection/SKILL.md"
     },
     {
       "id": "monte-carlo-monitor-creation",
@@ -53826,6 +54704,117 @@
       "path": "skills/remotion-best-practices/SKILL.md"
     },
     {
+      "id": "remotion-captions",
+      "canonical_id": "remotion-captions",
+      "name": "remotion-captions",
+      "description": "Transcribing, displaying and animating captions",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "remotion-dev",
+      "source_type": "official",
+      "source_repo": "remotion-dev/skills",
+      "tags": [
+        "remotion",
+        "captions"
+      ],
+      "triggers": [
+        "remotion",
+        "captions",
+        "transcribing",
+        "displaying",
+        "animating"
+      ],
+      "path": "skills/remotion-captions/SKILL.md"
+    },
+    {
+      "id": "remotion-create",
+      "canonical_id": "remotion-create",
+      "name": "remotion-create",
+      "description": "Create a new Remotion video",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "remotion-dev",
+      "source_type": "official",
+      "source_repo": "remotion-dev/skills",
+      "tags": [
+        "remotion",
+        "create"
+      ],
+      "triggers": [
+        "remotion",
+        "create",
+        "new",
+        "video"
+      ],
+      "path": "skills/remotion-create/SKILL.md"
+    },
+    {
+      "id": "remotion-docs",
+      "canonical_id": "remotion-docs",
+      "name": "remotion-docs",
+      "description": "Search Remotion documentation",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "remotion-dev",
+      "source_type": "official",
+      "source_repo": "remotion-dev/skills",
+      "tags": [
+        "remotion",
+        "docs"
+      ],
+      "triggers": [
+        "remotion",
+        "docs",
+        "search",
+        "documentation"
+      ],
+      "path": "skills/remotion-docs/SKILL.md"
+    },
+    {
+      "id": "remotion-interactivity",
+      "canonical_id": "remotion-interactivity",
+      "name": "remotion-interactivity",
+      "description": "Structure Remotion markup for interactivity",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "remotion-dev",
+      "source_type": "official",
+      "source_repo": "remotion-dev/skills",
+      "tags": [
+        "remotion",
+        "interactivity"
+      ],
+      "triggers": [
+        "remotion",
+        "interactivity",
+        "structure",
+        "markup"
+      ],
+      "path": "skills/remotion-interactivity/SKILL.md"
+    },
+    {
+      "id": "remotion-render",
+      "canonical_id": "remotion-render",
+      "name": "remotion-render",
+      "description": "Export a Remotion video",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "remotion-dev",
+      "source_type": "official",
+      "source_repo": "remotion-dev/skills",
+      "tags": [
+        "remotion",
+        "render"
+      ],
+      "triggers": [
+        "remotion",
+        "render",
+        "export",
+        "video"
+      ],
+      "path": "skills/remotion-render/SKILL.md"
+    },
+    {
       "id": "render-automation",
       "canonical_id": "render-automation",
       "name": "render-automation",
@@ -54989,6 +55978,40 @@
       "path": "skills/saas-mvp-launcher/SKILL.md"
     },
     {
+      "id": "saas-pricing-strategist",
+      "canonical_id": "saas-pricing-strategist",
+      "name": "saas-pricing-strategist",
+      "description": "Design, optimize, and test pricing strategies for SaaS products using data-driven frameworks, competitive analysis, and psychological pricing principles.",
+      "category": "business",
+      "risk": "unknown",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "demo112/yunqu-ai-skills",
+      "tags": [
+        "saas",
+        "pricing",
+        "strategy",
+        "monetization",
+        "business",
+        "analytics"
+      ],
+      "triggers": [
+        "saas",
+        "pricing",
+        "strategy",
+        "monetization",
+        "business",
+        "analytics",
+        "strategist",
+        "optimize",
+        "test",
+        "products",
+        "data",
+        "driven"
+      ],
+      "path": "skills/saas-pricing-strategist/SKILL.md"
+    },
+    {
       "id": "saas-security-posture",
       "canonical_id": "saas-security-posture",
       "name": "saas-security-posture",
@@ -55602,6 +56625,30 @@
         "pipelines"
       ],
       "path": "skills/scikit-learn/SKILL.md"
+    },
+    {
+      "id": "score-eval",
+      "canonical_id": "score-eval",
+      "name": "score-eval",
+      "description": "Imported skill `score-eval` from upstream source.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "neondatabase",
+      "source_type": "official",
+      "source_repo": "neondatabase/agent-skills",
+      "tags": [
+        "score",
+        "eval"
+      ],
+      "triggers": [
+        "score",
+        "eval",
+        "imported",
+        "skill",
+        "upstream",
+        "source"
+      ],
+      "path": "skills/score-eval/SKILL.md"
     },
     {
       "id": "screen-adverse-media",
@@ -69461,6 +70508,32 @@
         "skill"
       ],
       "path": "skills/writing-great-skills/SKILL.md"
+    },
+    {
+      "id": "writing-guidelines",
+      "canonical_id": "writing-guidelines",
+      "name": "writing-guidelines",
+      "description": "Curated upstream guidance for Writing Guidelines; use when the workflow matches the user goal.",
+      "category": "uncategorized",
+      "risk": "unknown",
+      "source": "vercel-labs",
+      "source_type": "official",
+      "source_repo": "vercel-labs/agent-skills",
+      "tags": [
+        "writing",
+        "guidelines"
+      ],
+      "triggers": [
+        "writing",
+        "guidelines",
+        "curated",
+        "upstream",
+        "guidance",
+        "matches",
+        "user",
+        "goal"
+      ],
+      "path": "skills/writing-guidelines/SKILL.md"
     },
     {
       "id": "writing-plans",

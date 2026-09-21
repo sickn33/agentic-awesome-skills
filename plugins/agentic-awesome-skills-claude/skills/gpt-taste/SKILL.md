@@ -14,7 +14,6 @@ tools: [claude, cursor, codex, antigravity]
 # CORE DIRECTIVE: AWWWARDS-LEVEL DESIGN ENGINEERING
 
 ## When to Use
-
 - Use when the user asks for an award-level landing page, marketing page, or creative frontend with cinematic motion.
 - Use when GSAP, pinned scroll, scrubbing, card stacking, horizontal motion, or other advanced animation is appropriate.
 - Use when the output must avoid narrow six-line hero headings, cheap meta labels, empty bento cells, and generic left-right sections.
@@ -24,6 +23,14 @@ tools: [claude, cursor, codex, antigravity]
 **User request:**
 
 > Create an award-level landing page, marketing page, or creative frontend with cinematic motion.
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

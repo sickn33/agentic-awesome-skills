@@ -2677,6 +2677,25 @@
       "runtime_files": []
     },
     {
+      "id": "api-integration-architect",
+      "path": "skills/api-integration-architect",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "api-onboarding",
       "path": "skills/api-onboarding",
       "targets": {
@@ -2966,8 +2985,46 @@
       "runtime_files": []
     },
     {
+      "id": "apify-generate-output-schema",
+      "path": "skills/apify-generate-output-schema",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "apify-influencer-discovery",
       "path": "skills/apify-influencer-discovery",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "apify-integration-development",
+      "path": "skills/apify-integration-development",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -3357,6 +3414,25 @@
     {
       "id": "architecture-patterns",
       "path": "skills/architecture-patterns",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "architecture-review",
+      "path": "skills/architecture-review",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -10196,6 +10272,25 @@
       "runtime_files": []
     },
     {
+      "id": "code-review-sensei",
+      "path": "skills/code-review-sensei",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "code-reviewer",
       "path": "skills/code-reviewer",
       "targets": {
@@ -10407,6 +10502,25 @@
     {
       "id": "codebase-design",
       "path": "skills/codebase-design",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "codebase-onboarding",
+      "path": "skills/codebase-onboarding",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -11069,6 +11183,25 @@
     {
       "id": "confluence-automation",
       "path": "skills/confluence-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "connection-auth-rules",
+      "path": "skills/connection-auth-rules",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -13293,6 +13426,25 @@
       "runtime_files": []
     },
     {
+      "id": "dependency-analysis",
+      "path": "skills/dependency-analysis",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "dependency-management-deps-audit",
       "path": "skills/dependency-management-deps-audit",
       "targets": {
@@ -14880,6 +15032,25 @@
       "runtime_files": []
     },
     {
+      "id": "devops-pipeline-builder",
+      "path": "skills/devops-pipeline-builder",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "devops-troubleshooter",
       "path": "skills/devops-troubleshooter",
       "targets": {
@@ -15915,8 +16086,103 @@
       "runtime_files": []
     },
     {
+      "id": "eas-app-stores",
+      "path": "skills/eas-app-stores",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "eas-hosting",
+      "path": "skills/eas-hosting",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "eas-observe",
+      "path": "skills/eas-observe",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "eas-simulator",
+      "path": "skills/eas-simulator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "eas-update-insights",
       "path": "skills/eas-update-insights",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "eas-workflows",
+      "path": "skills/eas-workflows",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -16795,6 +17061,25 @@
       "runtime_files": []
     },
     {
+      "id": "expo-animation",
+      "path": "skills/expo-animation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "expo-api-routes",
       "path": "skills/expo-api-routes",
       "targets": {
@@ -17063,6 +17348,25 @@
     {
       "id": "fact-check-x-complete",
       "path": "skills/fact-check-x-complete",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "fact-check-x-unified",
+      "path": "skills/fact-check-x-unified",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -21199,6 +21503,25 @@
       "runtime_files": []
     },
     {
+      "id": "hf-cli",
+      "path": "skills/hf-cli",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "hf-cloud-aws-context-discovery",
       "path": "skills/hf-cloud-aws-context-discovery",
       "targets": {
@@ -21984,6 +22307,50 @@
       "blocked_reasons": {
         "codex": [],
         "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "huggingface-community-evals",
+      "path": "skills/huggingface-community-evals",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "huggingface-datasets",
+      "path": "skills/huggingface-datasets",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": [
+          "target_specific_home_path"
+        ]
       },
       "runtime_files": []
     },
@@ -24534,6 +24901,25 @@
       "runtime_files": []
     },
     {
+      "id": "jev-social",
+      "path": "skills/jev-social",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "jev-use",
       "path": "skills/jev-use",
       "targets": {
@@ -26570,6 +26956,25 @@
       "runtime_files": []
     },
     {
+      "id": "longbridge-derivatives",
+      "path": "skills/longbridge-derivatives",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "longbridge-fundamentals",
       "path": "skills/longbridge-fundamentals",
       "targets": {
@@ -26591,6 +26996,44 @@
     {
       "id": "longbridge-market-data",
       "path": "skills/longbridge-market-data",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "longbridge-quant",
+      "path": "skills/longbridge-quant",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "longbridge-research",
+      "path": "skills/longbridge-research",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -27091,6 +27534,101 @@
     {
       "id": "make-automation",
       "path": "skills/make-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "makepad-2-0-animation",
+      "path": "skills/makepad-2-0-animation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "makepad-2-0-dsl",
+      "path": "skills/makepad-2-0-dsl",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "makepad-2-0-events",
+      "path": "skills/makepad-2-0-events",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "makepad-2-0-layout",
+      "path": "skills/makepad-2-0-layout",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "makepad-2-0-widgets",
+      "path": "skills/makepad-2-0-widgets",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -27956,6 +28494,25 @@
     {
       "id": "mdpr-skill",
       "path": "skills/mdpr-skill",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "meeting-distiller-pro",
+      "path": "skills/meeting-distiller-pro",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -28886,6 +29443,25 @@
     {
       "id": "monte-carlo-asset-health",
       "path": "skills/monte-carlo-asset-health",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "monte-carlo-context-detection",
+      "path": "skills/monte-carlo-context-detection",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -35242,6 +35818,101 @@
       "runtime_files": []
     },
     {
+      "id": "remotion-captions",
+      "path": "skills/remotion-captions",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "remotion-create",
+      "path": "skills/remotion-create",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "remotion-docs",
+      "path": "skills/remotion-docs",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "remotion-interactivity",
+      "path": "skills/remotion-interactivity",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "remotion-render",
+      "path": "skills/remotion-render",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "render-automation",
       "path": "skills/render-automation",
       "targets": {
@@ -35964,6 +36635,25 @@
       "runtime_files": []
     },
     {
+      "id": "saas-pricing-strategist",
+      "path": "skills/saas-pricing-strategist",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "saas-security-posture",
       "path": "skills/saas-security-posture",
       "targets": {
@@ -36346,6 +37036,25 @@
     {
       "id": "scikit-learn",
       "path": "skills/scikit-learn",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "score-eval",
+      "path": "skills/score-eval",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -45565,6 +46274,25 @@
       "runtime_files": []
     },
     {
+      "id": "writing-guidelines",
+      "path": "skills/writing-guidelines",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "writing-plans",
       "path": "skills/writing-plans",
       "targets": {
@@ -46199,14 +46927,14 @@
     }
   ],
   "summary": {
-    "total_skills": 2406,
+    "total_skills": 2444,
     "supported": {
-      "codex": 2321,
-      "claude": 2346
+      "codex": 2358,
+      "claude": 2383
     },
     "blocked": {
-      "codex": 85,
-      "claude": 60
+      "codex": 86,
+      "claude": 61
     },
     "manual_setup": 20
   }

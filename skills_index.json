@@ -3410,6 +3410,39 @@
     "license_source": "https://github.com/LambdaTest/agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "api-integration-architect",
+    "path": "skills/api-integration-architect",
+    "category": "backend",
+    "name": "api-integration-architect",
+    "description": "Design, implement, debug, and optimize API integrations with expert-level patterns for REST, GraphQL, webhooks, and authentication flows.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "demo112/yunqu-ai-skills",
+    "tags": [
+      "api",
+      "integration",
+      "rest",
+      "graphql",
+      "webhooks",
+      "authentication",
+      "debugging"
+    ]
+  },
+  {
     "id": "api-onboarding",
     "path": "skills/api-onboarding",
     "category": "backend",
@@ -3765,6 +3798,30 @@
     }
   },
   {
+    "id": "apify-generate-output-schema",
+    "path": "skills/apify-generate-output-schema",
+    "category": "automation",
+    "name": "apify-generate-output-schema",
+    "description": "Generate output schemas (dataset_schema.json, output_schema.json, key_value_store_schema.json) for an Apify Actor by analyzing its source code. Use when creating or updating Actor output schemas.",
+    "risk": "unknown",
+    "source": "apify",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "apify/agent-skills"
+  },
+  {
     "id": "apify-influencer-discovery",
     "path": "skills/apify-influencer-discovery",
     "category": "automation",
@@ -3785,6 +3842,30 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "apify-integration-development",
+    "path": "skills/apify-integration-development",
+    "category": "automation",
+    "name": "apify-integration-development",
+    "description": "Curated upstream guidance for Apify Integration Development; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "apify",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "apify/agent-skills"
   },
   {
     "id": "apify-lead-generation",
@@ -4244,6 +4325,31 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "architecture-review",
+    "path": "skills/architecture-review",
+    "category": "uncategorized",
+    "name": "architecture-review",
+    "description": "Review repository architecture using Ontoly Software Graph and MCP capabilities. Use when asked to explain architecture, module boundaries, package topology, service ownership, or architectural risk.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "0xsarwagya/ontoly",
+    "license": "AGPL-3.0-only"
   },
   {
     "id": "argocd-gitops",
@@ -13110,6 +13216,37 @@
     }
   },
   {
+    "id": "code-review-sensei",
+    "path": "skills/code-review-sensei",
+    "category": "development",
+    "name": "code-review-sensei",
+    "description": "Expert code reviewer that catches bugs, security issues, performance problems, and design flaws with actionable fix suggestions.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "demo112/yunqu-ai-skills",
+    "tags": [
+      "code-review",
+      "security",
+      "performance",
+      "quality",
+      "debugging"
+    ]
+  },
+  {
     "id": "code-reviewer",
     "path": "skills/code-reviewer",
     "category": "development",
@@ -13401,6 +13538,31 @@
       "workflow",
       "coding-agents"
     ]
+  },
+  {
+    "id": "codebase-onboarding",
+    "path": "skills/codebase-onboarding",
+    "category": "development",
+    "name": "codebase-onboarding",
+    "description": "Onboard a developer to a repository using Ontoly graph summaries. Use when asked to explain a new codebase, identify entrypoints, map packages, or suggest first files to inspect.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "0xsarwagya/ontoly",
+    "license": "AGPL-3.0-only"
   },
   {
     "id": "codebase-to-wordpress-converter",
@@ -14314,6 +14476,30 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "connection-auth-rules",
+    "path": "skills/connection-auth-rules",
+    "category": "uncategorized",
+    "name": "connection-auth-rules",
+    "description": "Build a Connection Auth Rules for a Monte Carlo connection type. Fetches live connector schemas and transform steps from the apollo-agent repo.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "monte-carlo-data/mc-agent-toolkit"
   },
   {
     "id": "constant-time-analysis",
@@ -17414,6 +17600,31 @@
     }
   },
   {
+    "id": "dependency-analysis",
+    "path": "skills/dependency-analysis",
+    "category": "uncategorized",
+    "name": "dependency-analysis",
+    "description": "Analyze internal and package dependencies using Ontoly graph traversal. Use when asked which modules, packages, services, or files depend on each other.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "0xsarwagya/ontoly",
+    "license": "AGPL-3.0-only"
+  },
+  {
     "id": "dependency-management-deps-audit",
     "path": "skills/dependency-management-deps-audit",
     "category": "security",
@@ -18300,6 +18511,38 @@
       "aws",
       "terraform",
       "github-actions"
+    ]
+  },
+  {
+    "id": "devops-pipeline-builder",
+    "path": "skills/devops-pipeline-builder",
+    "category": "devops",
+    "name": "devops-pipeline-builder",
+    "description": "Design and implement CI/CD pipelines, Docker configurations, deployment strategies, and infrastructure automation with production-ready patterns.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "demo112/yunqu-ai-skills",
+    "tags": [
+      "devops",
+      "ci-cd",
+      "docker",
+      "kubernetes",
+      "deployment",
+      "automation"
     ]
   },
   {
@@ -19706,6 +19949,106 @@
     ]
   },
   {
+    "id": "eas-app-stores",
+    "path": "skills/eas-app-stores",
+    "category": "uncategorized",
+    "name": "eas-app-stores",
+    "description": "Curated upstream guidance for Eas App Stores; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "expo",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "expo/skills",
+    "license": "MIT"
+  },
+  {
+    "id": "eas-hosting",
+    "path": "skills/eas-hosting",
+    "category": "uncategorized",
+    "name": "eas-hosting",
+    "description": "Curated upstream guidance for Eas Hosting; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "expo",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "expo/skills",
+    "license": "MIT"
+  },
+  {
+    "id": "eas-observe",
+    "path": "skills/eas-observe",
+    "category": "uncategorized",
+    "name": "eas-observe",
+    "description": "Curated upstream guidance for Eas Observe; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "expo",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "expo/skills",
+    "license": "MIT"
+  },
+  {
+    "id": "eas-simulator",
+    "path": "skills/eas-simulator",
+    "category": "uncategorized",
+    "name": "eas-simulator",
+    "description": "Curated upstream guidance for Eas Simulator; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "expo",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "expo/skills",
+    "license": "MIT"
+  },
+  {
     "id": "eas-update-insights",
     "path": "skills/eas-update-insights",
     "category": "uncategorized",
@@ -19730,6 +20073,30 @@
     "source_repo": "expo/skills",
     "license": "MIT",
     "license_source": "https://github.com/expo/skills/blob/main/LICENSE"
+  },
+  {
+    "id": "eas-workflows",
+    "path": "skills/eas-workflows",
+    "category": "uncategorized",
+    "name": "eas-workflows",
+    "description": "Curated upstream guidance for Eas Workflows; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "expo",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "expo/skills"
   },
   {
     "id": "ebpf-observability",
@@ -20883,6 +21250,31 @@
     }
   },
   {
+    "id": "expo-animation",
+    "path": "skills/expo-animation",
+    "category": "mobile",
+    "name": "expo-animation",
+    "description": "Curated upstream guidance for Expo Animation; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "expo",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "expo/skills",
+    "license": "MIT"
+  },
+  {
     "id": "expo-api-routes",
     "path": "skills/expo-api-routes",
     "category": "mobile",
@@ -21280,6 +21672,31 @@
       "evidence",
       "source-verification"
     ]
+  },
+  {
+    "id": "fact-check-x-unified",
+    "path": "skills/fact-check-x-unified",
+    "category": "uncategorized",
+    "name": "fact-check-x-unified",
+    "description": "Fact-Check-X \u6d41\u7a0b\u7f16\u6392\u80fd\u529b\uff0c\u4f9d\u6b21\u7ec4\u7ec7\u5404\u65b9\u7b54\u6848\u6c47\u603b\u3001\u5404\u65b9\u7b54\u6848\u805a\u5408\uff08\u672a\u6838\u9a8c\uff09\u3001\u6743\u5a01\u6838\u9a8c\u540e\u7684\u6700\u7ec8\u7b54\u6848\u548c\u5404\u65b9\u7b54\u6848\u6d4b\u8bc4\uff0c\u751f\u6210\u53ef\u6253\u5f00\u3001\u53ef\u5ba1\u8ba1\u3001\u53ef\u8fc1\u79fb\u7684\u9636\u6bb5\u4ea7\u7269\u4e0e\u5b8c\u6574\u62a5\u544a\u5305\u3002",
+    "risk": "unknown",
+    "source": "asi2030",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "asi2030/fact-check-x",
+    "license": "Apache-2.0"
   },
   {
     "id": "faf-context",
@@ -26790,6 +27207,30 @@
     }
   },
   {
+    "id": "hf-cli",
+    "path": "skills/hf-cli",
+    "category": "uncategorized",
+    "name": "hf-cli",
+    "description": "Curated upstream guidance for Hf Cli; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "huggingface",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "huggingface/skills"
+  },
+  {
     "id": "hf-cloud-aws-context-discovery",
     "path": "skills/hf-cloud-aws-context-discovery",
     "category": "cloud",
@@ -27822,6 +28263,56 @@
     "source_repo": "huggingface/skills",
     "license": "Apache-2.0",
     "license_source": "https://github.com/huggingface/skills/blob/main/LICENSE"
+  },
+  {
+    "id": "huggingface-community-evals",
+    "path": "skills/huggingface-community-evals",
+    "category": "uncategorized",
+    "name": "huggingface-community-evals",
+    "description": "Curated upstream guidance for Huggingface Community Evals; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "huggingface",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "huggingface/skills"
+  },
+  {
+    "id": "huggingface-datasets",
+    "path": "skills/huggingface-datasets",
+    "category": "uncategorized",
+    "name": "huggingface-datasets",
+    "description": "Use this skill for Hugging Face Dataset Viewer API workflows that fetch subset/split metadata, paginate rows, search text, apply filters, download parquet URLs, and read size or statistics.",
+    "risk": "unknown",
+    "source": "huggingface",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    },
+    "source_type": "official",
+    "source_repo": "huggingface/skills"
   },
   {
     "id": "huggingface-local-models",
@@ -31328,6 +31819,41 @@
     "license_source": "https://github.com/LambdaTest/agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "jev-social",
+    "path": "skills/jev-social",
+    "category": "research",
+    "name": "jev-social",
+    "description": "Run read-only, browser-grounded Instagram, TikTok, or LinkedIn research through Jev routing and socai CLI, returning source-linked evidence and reports.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "socai-io/jev-social",
+    "license": "MIT",
+    "license_source": "https://github.com/socai-io/jev-social/blob/794aac59dbef0929ec57f2650504f4231fef598e/LICENSE",
+    "tags": [
+      "social-media",
+      "research",
+      "instagram",
+      "tiktok",
+      "linkedin",
+      "browser-automation",
+      "jev"
+    ]
+  },
+  {
     "id": "jev-use",
     "path": "skills/jev-use",
     "category": "agent-orchestration",
@@ -33961,6 +34487,31 @@
     "license_source": "https://github.com/longbridge/skills/blob/main/LICENSE"
   },
   {
+    "id": "longbridge-derivatives",
+    "path": "skills/longbridge-derivatives",
+    "category": "uncategorized",
+    "name": "longbridge-derivatives",
+    "description": "Curated upstream guidance for Longbridge Derivatives; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "longbridge",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "longbridge/skills",
+    "license": "MIT"
+  },
+  {
     "id": "longbridge-fundamentals",
     "path": "skills/longbridge-fundamentals",
     "category": "uncategorized",
@@ -34011,6 +34562,56 @@
     "source_repo": "longbridge/skills",
     "license": "MIT",
     "license_source": "https://github.com/longbridge/skills/blob/main/LICENSE"
+  },
+  {
+    "id": "longbridge-quant",
+    "path": "skills/longbridge-quant",
+    "category": "uncategorized",
+    "name": "longbridge-quant",
+    "description": "Curated upstream guidance for Longbridge Quant; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "longbridge",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "longbridge/skills",
+    "license": "MIT"
+  },
+  {
+    "id": "longbridge-research",
+    "path": "skills/longbridge-research",
+    "category": "uncategorized",
+    "name": "longbridge-research",
+    "description": "Curated upstream guidance for Longbridge Research; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "longbridge",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "longbridge/skills",
+    "license": "MIT"
   },
   {
     "id": "lookdev",
@@ -34704,6 +35305,126 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "makepad-2-0-animation",
+    "path": "skills/makepad-2-0-animation",
+    "category": "development",
+    "name": "makepad-2-0-animation",
+    "description": "Makepad 2.0 guidance for animation; use when building or debugging Makepad UI code.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhanghandong/makepad-skills"
+  },
+  {
+    "id": "makepad-2-0-dsl",
+    "path": "skills/makepad-2-0-dsl",
+    "category": "development",
+    "name": "makepad-2-0-dsl",
+    "description": "Makepad 2.0 guidance for dsl; use when building or debugging Makepad UI code.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhanghandong/makepad-skills"
+  },
+  {
+    "id": "makepad-2-0-events",
+    "path": "skills/makepad-2-0-events",
+    "category": "development",
+    "name": "makepad-2-0-events",
+    "description": "Makepad 2.0 guidance for events; use when building or debugging Makepad UI code.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhanghandong/makepad-skills"
+  },
+  {
+    "id": "makepad-2-0-layout",
+    "path": "skills/makepad-2-0-layout",
+    "category": "development",
+    "name": "makepad-2-0-layout",
+    "description": "Makepad 2.0 guidance for layout; use when building or debugging Makepad UI code.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhanghandong/makepad-skills"
+  },
+  {
+    "id": "makepad-2-0-widgets",
+    "path": "skills/makepad-2-0-widgets",
+    "category": "development",
+    "name": "makepad-2-0-widgets",
+    "description": "Makepad 2.0 guidance for widgets; use when building or debugging Makepad UI code.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "zhanghandong/makepad-skills"
   },
   {
     "id": "makepad-animation",
@@ -36016,6 +36737,38 @@
     ]
   },
   {
+    "id": "meeting-distiller-pro",
+    "path": "skills/meeting-distiller-pro",
+    "category": "uncategorized",
+    "name": "meeting-distiller-pro",
+    "description": "Transform messy meeting notes and transcripts into structured action items, decisions, and follow-ups. Never lose a meeting insight again.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "demo112/yunqu-ai-skills",
+    "tags": [
+      "meeting",
+      "productivity",
+      "notes",
+      "action-items",
+      "summary",
+      "corporate"
+    ]
+  },
+  {
     "id": "meme-coin-audit",
     "path": "skills/meme-coin-audit",
     "category": "security",
@@ -37100,9 +37853,9 @@
   {
     "id": "monte-carlo-analyze-root-cause",
     "path": "skills/monte-carlo-analyze-root-cause",
-    "category": "devops",
+    "category": "uncategorized",
     "name": "monte-carlo-analyze-root-cause",
-    "description": "Investigate data incidents and find root causes using Monte Carlo's observability data. Guides the agent through systematic investigation: alert lookup, lineage tracing, ETL checks, query analysis, and data profiling.",
+    "description": "Curated upstream guidance for Monte Carlo Analyze Root Cause; use when the workflow matches the user goal.",
     "risk": "critical",
     "source": "https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/analyze-root-cause",
     "date_added": "2026-07-01",
@@ -37128,7 +37881,7 @@
     "path": "skills/monte-carlo-asset-health",
     "category": "uncategorized",
     "name": "monte-carlo-asset-health",
-    "description": "Check the health of a data table/asset using Monte Carlo. Activates on \"how is table X\", \"check health of X\", \"is X healthy\", \"status of X\", \"check on X table\", or any health/status question about a data asset.",
+    "description": "Curated upstream guidance for Monte Carlo Asset Health; use when the workflow matches the user goal.",
     "risk": "critical",
     "source": "https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/asset-health",
     "date_added": "2026-07-01",
@@ -37148,6 +37901,30 @@
     "source_repo": "monte-carlo-data/mc-agent-toolkit",
     "license": "Apache-2.0",
     "license_source": "https://github.com/monte-carlo-data/mc-agent-toolkit/blob/main/LICENSE"
+  },
+  {
+    "id": "monte-carlo-context-detection",
+    "path": "skills/monte-carlo-context-detection",
+    "category": "uncategorized",
+    "name": "monte-carlo-context-detection",
+    "description": "Route data-related requests to the right Monte Carlo skill or workflow. USE WHEN alerts, incidents, data broken, stale, coverage gaps, data quality, or any ambiguous data observability request.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "monte-carlo-data/mc-agent-toolkit"
   },
   {
     "id": "monte-carlo-monitor-creation",
@@ -45554,6 +46331,126 @@
     ]
   },
   {
+    "id": "remotion-captions",
+    "path": "skills/remotion-captions",
+    "category": "uncategorized",
+    "name": "remotion-captions",
+    "description": "Transcribing, displaying and animating captions",
+    "risk": "unknown",
+    "source": "remotion-dev",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "remotion-dev/skills"
+  },
+  {
+    "id": "remotion-create",
+    "path": "skills/remotion-create",
+    "category": "uncategorized",
+    "name": "remotion-create",
+    "description": "Create a new Remotion video",
+    "risk": "unknown",
+    "source": "remotion-dev",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "remotion-dev/skills"
+  },
+  {
+    "id": "remotion-docs",
+    "path": "skills/remotion-docs",
+    "category": "uncategorized",
+    "name": "remotion-docs",
+    "description": "Search Remotion documentation",
+    "risk": "unknown",
+    "source": "remotion-dev",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "remotion-dev/skills"
+  },
+  {
+    "id": "remotion-interactivity",
+    "path": "skills/remotion-interactivity",
+    "category": "uncategorized",
+    "name": "remotion-interactivity",
+    "description": "Structure Remotion markup for interactivity",
+    "risk": "unknown",
+    "source": "remotion-dev",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "remotion-dev/skills"
+  },
+  {
+    "id": "remotion-render",
+    "path": "skills/remotion-render",
+    "category": "uncategorized",
+    "name": "remotion-render",
+    "description": "Export a Remotion video",
+    "risk": "unknown",
+    "source": "remotion-dev",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "remotion-dev/skills"
+  },
+  {
     "id": "render-automation",
     "path": "skills/render-automation",
     "category": "automation",
@@ -46624,6 +47521,38 @@
     }
   },
   {
+    "id": "saas-pricing-strategist",
+    "path": "skills/saas-pricing-strategist",
+    "category": "business",
+    "name": "saas-pricing-strategist",
+    "description": "Design, optimize, and test pricing strategies for SaaS products using data-driven frameworks, competitive analysis, and psychological pricing principles.",
+    "risk": "unknown",
+    "source": "community",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "demo112/yunqu-ai-skills",
+    "tags": [
+      "saas",
+      "pricing",
+      "strategy",
+      "monetization",
+      "business",
+      "analytics"
+    ]
+  },
+  {
     "id": "saas-security-posture",
     "path": "skills/saas-security-posture",
     "category": "devops",
@@ -47214,6 +48143,30 @@
       "reasons": []
     },
     "license": "BSD-3-Clause license"
+  },
+  {
+    "id": "score-eval",
+    "path": "skills/score-eval",
+    "category": "uncategorized",
+    "name": "score-eval",
+    "description": "Imported skill `score-eval` from upstream source.",
+    "risk": "unknown",
+    "source": "neondatabase",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "neondatabase/agent-skills"
   },
   {
     "id": "screen-adverse-media",
@@ -59123,6 +60076,30 @@
       "workflow",
       "coding-agents"
     ]
+  },
+  {
+    "id": "writing-guidelines",
+    "path": "skills/writing-guidelines",
+    "category": "uncategorized",
+    "name": "writing-guidelines",
+    "description": "Curated upstream guidance for Writing Guidelines; use when the workflow matches the user goal.",
+    "risk": "unknown",
+    "source": "vercel-labs",
+    "date_added": "2026-09-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "vercel-labs/agent-skills"
   },
   {
     "id": "writing-plans",

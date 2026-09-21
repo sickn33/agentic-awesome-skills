@@ -1,0 +1,4 @@
+interface:
+  display_name: "EAS App Stores"
+  short_description: "Paid EAS service. Build and submit iOS and Android apps."
+  default_prompt: "Use $eas-app-stores to set up or verify EAS builds, TestFlight and store submissions, signing, versioning, and store metadata for iOS and Android apps: Expo and other React Native projects, plus existing native apps."

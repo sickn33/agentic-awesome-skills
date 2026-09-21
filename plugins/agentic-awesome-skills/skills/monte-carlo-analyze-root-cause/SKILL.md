@@ -1,6 +1,6 @@
 ---
+description: Curated upstream guidance for Monte Carlo Analyze Root Cause; use when the workflow matches the user goal.
 name: monte-carlo-analyze-root-cause
-description: "Investigate data incidents and find root causes using Monte Carlo's observability data. Guides the agent through systematic investigation: alert lookup, lineage tracing, ETL checks, query analysis, and data profiling."
 risk: critical
 source: https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/analyze-root-cause
 source_repo: monte-carlo-data/mc-agent-toolkit
@@ -9,6 +9,9 @@ date_added: 2026-07-01
 license: Apache-2.0
 license_source: https://github.com/monte-carlo-data/mc-agent-toolkit/blob/main/LICENSE
 ---
+## When to Use
+
+- Use when the user goal matches this upstream workflow.
 
 # Monte Carlo Root Cause Analysis Skill
 
@@ -221,6 +224,14 @@ Read `references/common-root-causes.md` to match findings against known patterns
 - **Cross-platform awareness.** ETL issues can come from Airflow, dbt, or Databricks. Check all platforms that are relevant.
 - **Do not invoke TSA without an incident UUID.** `run_troubleshooting_agent` requires one. If intake is on the no-incident path, skip TSA entirely until/unless an alert is identified.
 - **Honor explicit user opt-outs.** If the user says "skip TSA", "manual only", or similar, do not call `run_troubleshooting_agent` or `alert_assessment` — proceed with the manual investigation only.
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

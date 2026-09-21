@@ -1,0 +1,4 @@
+interface:
+  display_name: "EAS Hosting"
+  short_description: "Paid EAS service. Deploy Expo websites and Expo Router API routes to EAS Hosting, with environment secrets, custom domains, and the Cloudflare Workers runtime"
+  default_prompt: "Use $eas-hosting to deploy an Expo web app or Expo Router API routes to EAS Hosting, author +api.ts route handlers, manage hosting environment secrets and custom domains, and work within the Cloudflare Workers runtime."
