@@ -494,7 +494,4 @@ self.ui.radio_button(cx, ids!(option_a))          // -> RadioButtonRef
 
 ### Nested widget access with ids!
 
-## Extended reference
-
-See [references/extended-guide.md](references/extended-guide.md) for the full upstream document.
-
+See [references/extended-guide.md](references/extended-guide.md) for nested access patterns.

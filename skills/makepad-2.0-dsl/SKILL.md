@@ -489,12 +489,4 @@ pub struct MyDrawShader {
 
 ### 10. No Comments Before First Code in script_mod!
 
-Rust proc macro token stream strips comments, which shifts error positions:
-
-```rust
-// WRONG
-
-## Extended reference
-
-See [references/extended-guide.md](references/extended-guide.md) for the full upstream document.
-
+See [references/extended-guide.md](references/extended-guide.md) for comment-order pitfalls and more examples.
