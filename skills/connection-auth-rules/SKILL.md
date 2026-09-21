@@ -10,7 +10,6 @@ source: community
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -185,6 +184,14 @@ Remind the user that validation happens server-side via `validateConnectionCtpCo
 - **Steps are optional.** Most simple connectors use `steps: []`. Only add steps when the user needs credential transformation (e.g. PEM decoding, composite field construction).
 - **Fetch failures are recoverable.** If the GitHub API fetch fails, tell the user exactly what failed and offer to retry. Do not silently fall back to guessed schemas.
 - **Naming:** The user-facing name for this feature is "Connection auth rules". The underlying field and backend model remain `ctp_config` / `CtpConfig`.
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

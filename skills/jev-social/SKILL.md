@@ -13,7 +13,6 @@ tools: [claude, codex]
 license: "MIT"
 license_source: "https://github.com/socai-io/jev-social/blob/794aac59dbef0929ec57f2650504f4231fef598e/LICENSE"
 ---
-
 # Jev Social
 
 ## Overview

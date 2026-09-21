@@ -1,8 +1,6 @@
 ---
+description: Curated upstream guidance for Longbridge Research; use when the workflow matches the user goal.
 name: longbridge-research
-description: Institution ratings, consensus price targets, EPS/revenue forecasts,
-  finance calendar, shareholder data, fund holders, insider trades (SEC Form 4), short
-  interest, industry rankings, peer group analy…
 license: MIT
 metadata:
   author: longbridge
@@ -18,7 +16,6 @@ source: longbridge
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -174,6 +171,14 @@ longbridge-research/
         stock-research.md · competitive-analysis.md · thesis-tracker.md
         post-investment.md · hkipo-analysis.md · financial-planning.md
         defi-yield.md · onchain.md
+```
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
 ```
 
 ## Limitations

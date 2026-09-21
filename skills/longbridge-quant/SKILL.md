@@ -1,8 +1,6 @@
 ---
+description: Curated upstream guidance for Longbridge Quant; use when the workflow matches the user goal.
 name: longbridge-quant
-description: 'Quantitative strategy frameworks: pairs trading/cointegration, volatility
-  regime strategies, seasonality/calendar effects, multi-factor models (IC/IR), factor
-  research and screening, correlation anal…'
 license: MIT
 metadata:
   author: longbridge
@@ -18,7 +16,6 @@ source: longbridge
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -138,6 +135,14 @@ longbridge-quant/
     ├── multifactor.md · factor-research.md · factor-screen.md · correlation.md
     ├── quant-stats.md · strategy-optimizer.md · execution-model.md
     └── hedging.md · ml-strategy.md
+```
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
 ```
 
 ## Limitations

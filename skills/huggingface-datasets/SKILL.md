@@ -9,7 +9,6 @@ source: huggingface
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -115,6 +114,14 @@ Default to private dataset repos because traces can contain prompts, file paths,
 ```bash
 hf repos create <namespace>/<repo> --type dataset --private --exist-ok
 hf upload <namespace>/<repo> ~/.codex/sessions codex/<project-or-cwd> --type dataset
+```
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
 ```
 
 ## Limitations

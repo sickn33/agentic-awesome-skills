@@ -1,8 +1,6 @@
 ---
+description: Curated upstream guidance for Eas Workflows; use when the workflow matches the user goal.
 name: eas-workflows
-description: EAS service (paid). Helps understand and write EAS workflow YAML files
-  for Expo projects. Use this skill when the user asks about CI/CD or workflows in
-  an Expo or EAS context, mentions .eas/workflows…
 allowed-tools: Read,Write,Bash(node:*),Bash(npx *eas-cli@*)
 version: 1.0.0
 license: MIT License
@@ -12,7 +10,6 @@ source: expo
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -108,6 +105,14 @@ npx --yes submit-expo-feedback@latest --category skills --subject "eas-workflows
 ```
 Only submit when you have something specific and actionable to report. Include as much relevant context as possible.
 If an AI agent repeatedly failed or the user had to take over an Expo task, load the expo-skill-feedback skill and follow its eval-candidate flow instead of reusing the command above.
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

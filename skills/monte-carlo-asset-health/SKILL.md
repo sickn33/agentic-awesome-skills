@@ -1,8 +1,6 @@
 ---
+description: Curated upstream guidance for Monte Carlo Asset Health; use when the workflow matches the user goal.
 name: monte-carlo-asset-health
-description: Check the health of a data table/asset using Monte Carlo. Activates on
-  "how is table X", "check health of X", "is X healthy", "status of X", "check on
-  X table", or any health/status question about a…
 risk: critical
 source: https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/asset-health
 source_repo: monte-carlo-data/mc-agent-toolkit
@@ -11,7 +9,6 @@ date_added: 2026-07-01
 license: Apache-2.0
 license_source: https://github.com/monte-carlo-data/mc-agent-toolkit/blob/main/LICENSE
 ---
-
 ## When to Use
 
 - Use when the user goal matches this upstream workflow.
@@ -198,6 +195,14 @@ Only include recommendations derivable from collected data:
 - Upstream health issues that may be root causes
 - Active alerts that need acknowledgment or investigation
 - Do NOT recommend specific monitor types — that is outside this skill's scope
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

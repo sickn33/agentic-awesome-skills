@@ -11,7 +11,6 @@ source: community
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -308,6 +307,14 @@ See the `makepad-2.0-vector` skill for Tween details.
 5. **Set `default: @off`** for states that start inactive
 6. **Label cannot animate** - wrap in View if you need animation on text
 7. **Keep durations short** (0.1-0.3s) for hover, longer (0.5-2.0s) for time-based
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

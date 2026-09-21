@@ -1,8 +1,6 @@
 ---
+description: Curated upstream guidance for Hf Cli; use when the workflow matches the user goal.
 name: hf-cli
-description: 'Hugging Face Hub CLI (`hf`) for downloading, uploading, and managing
-  models, datasets, spaces, buckets, repos, papers, jobs, and more on the Hugging
-  Face Hub. Use when: handling authentication; manag…'
 source_repo: huggingface/skills
 source_type: official
 <!-- security-allowlist: all -->
@@ -11,7 +9,6 @@ source: huggingface
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -251,6 +248,14 @@ Some command examples:
 - Use `hf <command> --help` for full options, descriptions, usage, and real-world examples
 - Authenticate with `HF_TOKEN` env var (recommended) or with `--token`
 - Update the CLI with `hf update` (uses the correct command for the detected install method)
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

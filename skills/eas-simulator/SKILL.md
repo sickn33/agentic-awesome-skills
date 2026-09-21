@@ -1,8 +1,6 @@
 ---
+description: Curated upstream guidance for Eas Simulator; use when the workflow matches the user goal.
 name: eas-simulator
-description: EAS service (paid). Run and control a user's app on a remote iOS/Android
-  simulator hosted on EAS cloud. Read before running any `eas simulator:*` commands
-  - it has the current syntax for this experim…
 version: 1.0.0
 license: MIT
 allowed-tools: Bash(npx *eas-cli@*), Bash(npx *agent-device@*), Bash(npx expo *),
@@ -13,7 +11,6 @@ source: expo
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -239,6 +236,14 @@ npx --yes submit-expo-feedback@latest --category skills --subject "eas-simulator
 ```
 Only submit when you have something specific and actionable to report. Include as much relevant context as possible.
 If an AI agent repeatedly failed or the user had to take over an Expo task, load the expo-skill-feedback skill and follow its eval-candidate flow instead of reusing the command above.
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

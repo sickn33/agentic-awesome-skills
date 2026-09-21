@@ -1,8 +1,6 @@
 ---
+description: Curated upstream guidance for Longbridge Derivatives; use when the workflow matches the user goal.
 name: longbridge-derivatives
-description: Options chains, option quotes, option volume, Greeks (Delta/Gamma/Theta/Vega),
-  implied volatility, and HK warrants (callable bull/bear, call/put warrants, issuer
-  list) for HK/US markets via Longbridg…
 license: MIT
 metadata:
   author: longbridge
@@ -18,7 +16,6 @@ source: longbridge
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -104,6 +101,14 @@ longbridge-derivatives/
     ├── option.md · warrant.md
     ├── options-strategy.md · options-pnl.md
     └── options-volatility.md · options-advanced.md
+```
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
 ```
 
 ## Limitations

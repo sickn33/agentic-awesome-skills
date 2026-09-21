@@ -30,7 +30,6 @@ source: community
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -156,6 +155,14 @@ Based on the combined signals from Steps 1-3:
 If the user is **actively editing** a dbt model file (making code changes, not just viewing or asking about it) and the `prevent` skill's hooks are active, do NOT route to any other skill. Instead respond:
 
 > "The prevent skill will automatically handle impact assessment for dbt model changes via its pre-edit hooks. No additional routing needed."
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

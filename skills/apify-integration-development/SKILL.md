@@ -1,15 +1,12 @@
 ---
+description: Curated upstream guidance for Apify Integration Development; use when the workflow matches the user goal.
 name: apify-integration-development
-description: Design and build an official Apify integration for a company's product
-  - workflow-automation apps (Zapier/n8n-style), AI agent plugins (coding-agent skills+MCP
-  bundles or OpenClaw/Hermes-style harnes…
 source_repo: apify/agent-skills
 source_type: official
 source: apify
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -156,6 +153,14 @@ Real, public integrations per category - read their source when in doubt:
 - Application integration: see `references/sdk-integration.md` for the canonical `apify-client` usage in JS/TS, Python, and over REST.
 
 Support for integration questions: `integrations@apify.com`. Contact us both for design guidance while you build and for review/testing once you publish - we validate the capability surface, cost controls, error handling, and attribution before the integration reaches users.
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

@@ -1,8 +1,6 @@
 ---
+description: Curated upstream guidance for Expo Animation; use when the workflow matches the user goal.
 name: expo-animation
-description: Framework (OSS). Build animations in React Native and Expo, making the
-  decisions in the order that determines whether they feel right — should it animate,
-  which thread it runs on, which properties, s…
 version: 1.0.0
 license: MIT
 source_repo: expo/skills
@@ -11,7 +9,6 @@ source: expo
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -283,6 +280,14 @@ npx --yes submit-expo-feedback@latest --category skills --subject "expo-animatio
 ```
 Only submit when you have something specific and actionable to report. Include as much relevant context as possible.
 If an AI agent repeatedly failed or the user had to take over an Expo task, load the expo-skill-feedback skill and follow its eval-candidate flow instead of reusing the command above.
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

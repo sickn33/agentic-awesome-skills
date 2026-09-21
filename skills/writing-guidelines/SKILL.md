@@ -1,8 +1,6 @@
 ---
+description: Curated upstream guidance for Writing Guidelines; use when the workflow matches the user goal.
 name: writing-guidelines
-description: Review docs/prose for Writing Guidelines compliance. Use when asked to
-  "review my docs", "check writing style", "audit prose", "review docs voice and tone",
-  or "check this page against the writing ha…
 metadata:
   author: vercel
   version: 1.0.0
@@ -13,7 +11,6 @@ source: vercel-labs
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -48,6 +45,14 @@ When a user provides a file or pattern argument:
 4. Output findings using the format specified in the guidelines
 
 If no files specified, ask the user which files to review.
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

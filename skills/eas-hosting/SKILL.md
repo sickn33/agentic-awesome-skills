@@ -1,8 +1,6 @@
 ---
+description: Curated upstream guidance for Eas Hosting; use when the workflow matches the user goal.
 name: eas-hosting
-description: EAS service (paid). Deploy Expo websites and Expo Router API routes to
-  EAS Hosting - export the web bundle, run eas deploy for production and PR preview
-  URLs, manage environment secrets and custom do…
 version: 1.0.0
 license: MIT
 source_repo: expo/skills
@@ -11,7 +9,6 @@ source: expo
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 # EAS Hosting
 
 > **EAS service - costs apply.** EAS Hosting is a paid Expo Application Services product with free-tier limits; production deploys use your plan's request and bandwidth allowance. See https://expo.dev/pricing. Authoring API routes and exporting the web bundle are free and open source, and you can self-host the exported server output instead of EAS Hosting.
@@ -436,6 +433,14 @@ npx --yes submit-expo-feedback@latest --category skills --subject "eas-hosting" 
 ```
 Only submit when you have something specific and actionable to report. Include as much relevant context as possible.
 If an AI agent repeatedly failed or the user had to take over an Expo task, load the expo-skill-feedback skill and follow its eval-candidate flow instead of reusing the command above.
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

@@ -1,15 +1,12 @@
 ---
+description: Curated upstream guidance for Huggingface Community Evals; use when the workflow matches the user goal.
 name: huggingface-community-evals
-description: Run evaluations for Hugging Face Hub models using inspect-ai and lighteval
-  on local hardware. Use for backend selection, local GPU evals, and choosing between
-  vLLM / Transformers / accelerate. Not fo…
 source_repo: huggingface/skills
 source_type: official
 source: huggingface
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -216,6 +213,14 @@ See:
 - `scripts/inspect_eval_uv.py`
 - `scripts/inspect_vllm_uv.py`
 - `scripts/lighteval_vllm_uv.py`
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

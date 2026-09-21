@@ -24,6 +24,14 @@ tools: [claude, cursor, codex, antigravity]
 
 > Create an award-level landing page, marketing page, or creative frontend with cinematic motion.
 
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
+
 ## Limitations
 
 - This skill assumes a frontend project can support GSAP or equivalent animation libraries; check dependencies and performance budgets before implementation.

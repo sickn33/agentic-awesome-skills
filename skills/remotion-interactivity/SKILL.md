@@ -8,7 +8,6 @@ source: remotion-dev
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -256,6 +255,14 @@ To make a custom userland component interactive, use:
 ## Video editing
 
 If a Remotion component mainly consists of video and audio clips, see Video editing for best practices on how to structure Remotion markup so the clips are interactively editable in the timeline.
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 

@@ -8,7 +8,6 @@ source: remotion-dev
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
@@ -43,6 +42,14 @@ To display captions in your video, load the [display-captions.md file for more i
 ## Importing captions
 
 To import captions from a .srt file, load the [import-srt-captions.md file for more instructions.
+
+
+## Examples
+
+```text
+User: Apply this skill to my current task.
+Assistant: Follow the workflow in this skill, cite limitations, and ask before risky steps.
+```
 
 ## Limitations
 
