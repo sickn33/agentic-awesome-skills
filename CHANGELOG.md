@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.1.0] - 2026-09-21 - "Hosted Catalog Save-State Hardening"
+
+> Hardens browser-local “saved skill” state on the hosted catalog so malformed
+> `localStorage` payloads cannot show false positives.
+
+A catalog-surface patch for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It ships the hosted web fix from #1542 while keeping the **2,444**-skill catalog
+on Core. Existing installation interfaces remain supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.1.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Fixed
+
+- **Hosted catalog local saves (#1542)** — accept only boolean entries when parsing
+  `saved_skills` / legacy `user_stars` records; ignore strings, numbers, and
+  array-shaped storage so corrupted browser data cannot mark skills as saved.
+
+### Validation scope
+
+Maintainer attestation on exact merge head, protected source PR #1542,
+repository validation, documentation-security checks, protected CI, CodeQL,
+and release-only Pages deploy from the immutable `v18.1.0` tag.
+
+---
+
 ## [18.0.0] - 2026-09-21 - "Curated Upstream Sync and Jev Social"
 
 > Adds **41** maintainer-reviewed skills from README-credited upstream sources,
