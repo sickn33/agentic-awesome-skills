@@ -1,6 +1,6 @@
 {
   "name": "aasb-aas-automation-builder",
-  "version": "18.0.0",
+  "version": "18.1.0",
   "description": "Install the \"AAS Automation Builder\" workflow plugin from Agentic Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
