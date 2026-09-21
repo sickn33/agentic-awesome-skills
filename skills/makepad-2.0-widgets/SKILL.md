@@ -1,10 +1,6 @@
 ---
 name: makepad-2.0-widgets
-description: 'CRITICAL: Use for Makepad 2.0 widget catalog and usage. Triggers on:
-
-  makepad widget, makepad View, makepad Button, makepad Label, makepad TextInput,
-
-  makepad PortalList, makepad Dock, makepad Modal, m…'
+description: Makepad 2.0 guidance for widgets; use when building or debugging Makepad UI code.
 source_repo: zhanghandong/makepad-skills
 source_type: community
 source: community

@@ -1,10 +1,6 @@
 ---
 name: makepad-2.0-animation
-description: 'CRITICAL: Use for Makepad 2.0 animation system. Triggers on:
-
-  makepad animation, makepad animator, Animator, AnimatorState, hover effect,
-
-  makepad transition, animation state, Forward, Snap, Loop, ease…'
+description: Makepad 2.0 guidance for animation; use when building or debugging Makepad UI code.
 source_repo: zhanghandong/makepad-skills
 source_type: community
 source: community

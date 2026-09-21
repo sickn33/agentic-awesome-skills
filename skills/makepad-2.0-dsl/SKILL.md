@@ -1,17 +1,18 @@
 ---
 name: makepad-2.0-dsl
-description: 'CRITICAL: Use for Makepad 2.0 DSL syntax and property system. Triggers
-  on:
-
-  makepad dsl, script_mod!, makepad syntax, makepad property, makepad 2.0 syntax,
-
-  colon syntax, merge operator, named instance…'
+description: Makepad 2.0 guidance for dsl; use when building or debugging Makepad UI code.
 source_repo: zhanghandong/makepad-skills
 source_type: community
 source: community
 date_added: '2026-09-21'
 risk: unknown
 ---
+
+## Limitations
+
+- Verify against current Makepad 2.0 docs; upstream APIs change frequently.
+- Do not run bundled scripts without explicit user approval.
+
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.

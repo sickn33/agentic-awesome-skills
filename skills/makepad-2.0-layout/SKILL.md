@@ -1,16 +1,18 @@
 ---
 name: makepad-2.0-layout
-description: 'CRITICAL: Use for Makepad 2.0 layout system. Triggers on:
-
-  makepad layout, makepad width, makepad height, makepad flex, makepad flow,
-
-  makepad padding, makepad margin, makepad spacing, makepad align, m…'
+description: Makepad 2.0 guidance for layout; use when building or debugging Makepad UI code.
 source_repo: zhanghandong/makepad-skills
 source_type: community
 source: community
 date_added: '2026-09-21'
 risk: unknown
 ---
+
+## Limitations
+
+- Verify against current Makepad 2.0 docs; upstream APIs change frequently.
+- Do not run bundled scripts without explicit user approval.
+
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.

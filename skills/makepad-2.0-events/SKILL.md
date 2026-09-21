@@ -1,16 +1,18 @@
 ---
 name: makepad-2.0-events
-description: 'CRITICAL: Use for Makepad 2.0 event and action handling. Triggers on:
-
-  makepad event, makepad action, MatchEvent, handle_event, handle_actions,
-
-  on_click, on_render, on_return, on_startup, script_eval!…'
+description: Makepad 2.0 guidance for events; use when building or debugging Makepad UI code.
 source_repo: zhanghandong/makepad-skills
 source_type: community
 source: community
 date_added: '2026-09-21'
 risk: unknown
 ---
+
+## Limitations
+
+- Verify against current Makepad 2.0 docs; upstream APIs change frequently.
+- Do not run bundled scripts without explicit user approval.
+
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
 - Use when the task requires the procedures documented in this skill.
