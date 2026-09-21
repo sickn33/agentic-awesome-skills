@@ -19,6 +19,8 @@ from common import PipelineError, dump_json, load_json, now_iso
 from trusted_search_config import (
     PROVIDER_URL,
     ConfigurationError,
+    emit_public_json,
+    is_trusted_search_configured,
     load_trusted_search_key,
     trusted_search_key_for_execution,
 )
@@ -1052,7 +1054,7 @@ def prepare_authority(args: argparse.Namespace) -> dict:
     request_names = {f"{request_id}.json" for request_id in request_ids} | {"manifest.json"}
     request_hashes = json_file_manifest(run_dir / "authority" / "requests", request_names)
     required_count = sum(not entry.get("officialExempt") for entry in manifest.get("requests") or [])
-    configured = bool(trusted_search_key())
+    configured = is_trusted_search_configured()
     result = {
         "status": "configuration_required" if required_count and not configured else "prepared",
         "taskCount": manifest["taskCount"],
@@ -1099,10 +1101,7 @@ def search_authority(args: argparse.Namespace, skills: dict[str, Path]) -> dict:
         raise PipelineError("权威核验请求在 prepare-authority 后被修改，禁止搜索")
     require_comparison_provenance(run_dir)
     required_count = sum(not entry.get("officialExempt") for entry in requests_manifest.get("requests") or [])
-    key = trusted_search_key()
-    if required_count and not args.fixtures:
-        key = validated_authority_key()
-    configured = bool(key)
+    configured = is_trusted_search_configured()
     if required_count and not configured and not args.fixtures:
         return {
             "status": "configuration_required",
@@ -1123,6 +1122,9 @@ def search_authority(args: argparse.Namespace, skills: dict[str, Path]) -> dict:
             "configuration": trusted_search_configuration(),
             "blockedReason": "配置完成后必须重新执行 prepare-authority，禁止绕过权威核验门禁",
         }
+    key = ""
+    if required_count and not args.fixtures:
+        key = validated_authority_key()
     if authority_gate.get("status") != "prepared":
         raise PipelineError("权威核验门禁状态不允许搜索；请重新执行 prepare-authority")
     command = [
@@ -1819,12 +1821,12 @@ def main() -> int:
             result = reopen_authority(args)
         else:
             result = deliver(args, skills)
-        print(json.dumps(result, ensure_ascii=False))
+        emit_public_json(result)
         if result.get("status") == "configuration_required":
             return 3
         return 0
     except (PipelineError, OSError, ValueError, json.JSONDecodeError) as exc:
-        print(json.dumps({"status": "failed", "error": str(exc)}, ensure_ascii=False))
+        emit_public_json({"status": "failed", "error": str(exc)})
         return 1
 
 

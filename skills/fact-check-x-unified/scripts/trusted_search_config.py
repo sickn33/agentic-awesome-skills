@@ -103,6 +103,60 @@ def key_source() -> str:
     return candidates[0][0] if candidates else "missing"
 
 
+def is_trusted_search_configured() -> bool:
+    return key_source() != "missing"
+
+
+def trusted_search_config_status() -> tuple[str, str]:
+    """Return (source, validation) without exposing secret key material."""
+    transient: tuple[str, str] | None = None
+    for source, key in trusted_search_key_candidates():
+        try:
+            validate_trusted_search_key(key)
+        except ServiceUnavailableError:
+            if transient is None:
+                transient = (source, "service_unavailable")
+            continue
+        except ConfigurationError:
+            continue
+        return source, "valid"
+    if transient is not None:
+        return transient
+    return "missing", "missing"
+
+
+_SENSITIVE_JSON_KEYS = frozenset({
+    "authorization",
+    "token",
+    "access_token",
+    "api_key",
+    "api-key",
+    "apikey",
+    "secret",
+    "password",
+    "trusted_search_key",
+})
+
+
+def redact_sensitive_json(value):
+    """Recursively redact secret-bearing keys before writing JSON to stdout."""
+    if isinstance(value, dict):
+        redacted = {}
+        for key, item in value.items():
+            if str(key).lower() in _SENSITIVE_JSON_KEYS:
+                redacted[key] = "***redacted***"
+            else:
+                redacted[key] = redact_sensitive_json(item)
+        return redacted
+    if isinstance(value, list):
+        return [redact_sensitive_json(item) for item in value]
+    return value
+
+
+def emit_public_json(payload) -> None:
+    print(json.dumps(redact_sensitive_json(payload), ensure_ascii=False))
+
+
 def clear_trusted_search_key() -> bool:
     path = credential_path()
     existed = path.exists()
@@ -264,8 +318,8 @@ def run_onboarding(*, force: bool = False) -> dict:
 
 
 def configure() -> dict:
-    existing, source, validation = trusted_search_key_for_execution()
-    if existing:
+    source, validation = trusted_search_config_status()
+    if source != "missing":
         return {
             "status": "already_configured",
             "providerUrl": PROVIDER_URL,
@@ -295,28 +349,28 @@ def main() -> int:
     args = parser().parse_args()
     try:
         if args.command == "configure":
-            print(json.dumps(configure(), ensure_ascii=False))
+            emit_public_json(configure())
             return 0
         if args.command == "clear":
-            print(json.dumps({
+            emit_public_json({
                 "status": "cleared",
                 "removed": clear_trusted_search_key(),
-            }, ensure_ascii=False))
+            })
             return 0
-        configured = bool(load_trusted_search_key())
-        print(json.dumps({
+        configured = is_trusted_search_configured()
+        emit_public_json({
             "status": "configured" if configured else "configuration_required",
             "configured": configured,
             "source": key_source(),
             "providerUrl": PROVIDER_URL,
-        }, ensure_ascii=False))
+        })
         return 0 if configured else 3
     except (ConfigurationError, OSError) as exc:
-        print(json.dumps({
+        emit_public_json({
             "status": "failed",
             "error": str(exc),
             "providerUrl": PROVIDER_URL,
-        }, ensure_ascii=False))
+        })
         return 1
 
 
