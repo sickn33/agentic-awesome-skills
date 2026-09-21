@@ -9,14 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [18.0.0] - 2026-09-21 - "Curated Upstream Sync and Jev Social"
 
-> Adds **50** maintainer-reviewed skills from README-credited upstream sources,
+> Adds **41** maintainer-reviewed skills from README-credited upstream sources,
 > including `jev-social`, vendor gaps (Apify, Vercel, Expo, Remotion,
-> Browserbase, Hugging Face, Neon, Longbridge), and selected community packs.
+> Hugging Face, Neon, Longbridge, Makepad), and selected community packs.
 
 A major catalog release for Claude Code, Cursor, Codex CLI and Gemini CLI.
 It merges the curated upstream batch (#1539) with per-skill maintainer review
 documented in `docs/maintainers/curated-50-upstream-review-2026-09-21.md`,
-refreshing catalog surfaces for **2,456** skills. Existing installation
+refreshing catalog surfaces for the expanded skill registry. Existing installation
 interfaces remain supported.
 
 ### Start here
@@ -29,7 +29,7 @@ interfaces remain supported.
 
 ### Added
 
-- **50 curated upstream skills (#1539)** — reviewed import from official and
+- **41 curated upstream skills (#1539)** — reviewed import from official and
   community README-credited repositories; ledger in
   `docs/maintainers/curated-50-upstream-review-2026-09-21.md`.
 - **`jev-social`** — read-only Jev/socai social research routing.
