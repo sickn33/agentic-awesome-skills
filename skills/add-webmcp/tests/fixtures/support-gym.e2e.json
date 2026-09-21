@@ -1,0 +1,68 @@
+{
+  "timeoutMs": 5000,
+  "expectedDom": [
+    {
+      "selector": "#last-tool",
+      "text": "saveReplyDraft"
+    },
+    {
+      "selector": "#invocation-count",
+      "text": "2"
+    },
+    {
+      "selector": "#draft-state",
+      "text": "Yes"
+    },
+    {
+      "selector": "#sent-count",
+      "text": "0"
+    }
+  ],
+  "tools": [
+    {
+      "name": "searchSupportTickets",
+      "risk": "read-only",
+      "expectedAnnotations": {
+        "readOnly": true,
+        "untrustedContent": true
+      },
+      "input": {
+        "query": "invoice",
+        "status": "open"
+      },
+      "expectedOutputSubset": {
+        "results": [
+          {
+            "id": "T-101",
+            "status": "open"
+          },
+          {
+            "id": "T-103",
+            "status": "open"
+          }
+        ]
+      }
+    },
+    {
+      "name": "saveReplyDraft",
+      "risk": "reversible",
+      "expectedAnnotations": {
+        "readOnly": false,
+        "untrustedContent": false
+      },
+      "input": {
+        "ticketId": "T-101",
+        "message": "Synthetic draft for Stagehand validation."
+      },
+      "expectedOutputSubset": {
+        "ticketId": "T-101",
+        "message": "Synthetic draft for Stagehand validation.",
+        "saved": true
+      }
+    },
+    {
+      "name": "sendSupportReply",
+      "risk": "consequential"
+    }
+  ]
+}

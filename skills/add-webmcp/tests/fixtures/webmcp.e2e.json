@@ -1,0 +1,33 @@
+{
+  "timeoutMs": 5000,
+  "tools": [
+    {
+      "name": "catalog_lookup",
+      "risk": "read-only",
+      "expectedAnnotations": {
+        "readOnly": true
+      },
+      "input": {
+        "sku": "NOTEBOOK-1"
+      },
+      "expectedOutputSubset": {
+        "sku": "NOTEBOOK-1",
+        "available": true
+      }
+    },
+    {
+      "name": "save_draft",
+      "risk": "reversible",
+      "expectedAnnotations": {
+        "readOnly": false
+      },
+      "input": {
+        "title": "Synthetic draft"
+      },
+      "expectedOutputSubset": {
+        "title": "Synthetic draft",
+        "saved": true
+      }
+    }
+  ]
+}

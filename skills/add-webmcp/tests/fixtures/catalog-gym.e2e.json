@@ -1,0 +1,57 @@
+{
+  "timeoutMs": 5000,
+  "expectedDom": [
+    {
+      "selector": "#last-tool",
+      "text": "getCatalogProduct"
+    },
+    {
+      "selector": "#invocation-count",
+      "text": "2"
+    }
+  ],
+  "tools": [
+    {
+      "name": "searchCatalog",
+      "risk": "read-only",
+      "expectedAnnotations": {
+        "readOnly": true,
+        "untrustedContent": true
+      },
+      "input": {
+        "query": "notebook",
+        "maxPrice": 50
+      },
+      "expectedOutputSubset": {
+        "results": [
+          {
+            "id": "notebook-1",
+            "priceUsd": 14
+          },
+          {
+            "id": "notebook-2",
+            "priceUsd": 18
+          }
+        ]
+      }
+    },
+    {
+      "name": "getCatalogProduct",
+      "risk": "read-only",
+      "expectedAnnotations": {
+        "readOnly": true,
+        "untrustedContent": true
+      },
+      "input": {
+        "productId": "desk-lamp-1"
+      },
+      "expectedOutputSubset": {
+        "found": true,
+        "product": {
+          "id": "desk-lamp-1",
+          "inventory": 7
+        }
+      }
+    }
+  ]
+}

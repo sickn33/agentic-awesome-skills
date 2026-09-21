@@ -1,0 +1,8 @@
+{
+  "tools": [
+    {
+      "name": "missing_tool",
+      "risk": "read-only"
+    }
+  ]
+}

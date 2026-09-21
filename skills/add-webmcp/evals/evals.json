@@ -1,0 +1,36 @@
+{
+  "skill_name": "add-webmcp",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use add-webmcp on this Next.js commerce app. Analyze its routes, forms, server actions, and Zod schemas, then expose product search and checkout features to agents.",
+      "expected_output": "A traced capability inventory, first-party WebMCP integration for safe tasks, and Stagehand discovery/invocation evidence that preserves checkout confirmation.",
+      "assertions": [
+        "The implementation traces UI handlers through validation, authorization, and side effects before choosing tools",
+        "Search is marked read-only while final checkout remains behind an application-enforced confirmation boundary",
+        "The implementation reuses existing schemas and business logic instead of duplicating them in browser code",
+        "Stagehand discovers every expected tool and invokes only safe synthetic fixtures"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Make this Vite React support portal agent-ready with WebMCP. It has a ticket search, a save-draft action, and a send-reply form.",
+      "expected_output": "Tools for search and draft saving plus a guarded reply workflow, integrated at the React root and validated through Stagehand.",
+      "assertions": [
+        "The tool contracts mirror the portal's existing validators and current-user permissions",
+        "Search and draft fixtures are invoked against disposable data",
+        "Sending a reply is not autosubmitted and is discovery-only unless an authorized sandbox exists",
+        "Untrusted ticket or user content is annotated and treated as data"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I only have a live URL and want a standalone webmcp.init.js without modifying source code.",
+      "expected_output": "A routing decision to use webmcp-gen rather than changing an unavailable codebase with add-webmcp.",
+      "assertions": [
+        "The skill does not pretend to analyze source code that was not provided",
+        "The request is routed to the site-specific init-script workflow"
+      ]
+    }
+  ]
+}

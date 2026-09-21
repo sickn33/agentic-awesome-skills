@@ -1,0 +1,50 @@
+{
+  "timeoutMs": 5000,
+  "tools": [
+    {
+      "name": "searchFlights",
+      "risk": "read-only",
+      "input": {
+        "origin": "SFO",
+        "destination": "JFK",
+        "tripType": "round-trip",
+        "outboundDate": "2026-10-05",
+        "inboundDate": "2026-10-12",
+        "passengers": 2
+      },
+      "expectedOutputSubset": {
+        "query": {
+          "origin": "SFO",
+          "destination": "JFK"
+        },
+        "results": [
+          {
+            "id": "SH101",
+            "priceUsd": 836
+          }
+        ]
+      }
+    },
+    {
+      "name": "calculateSum",
+      "risk": "read-only",
+      "input": {
+        "a": 19,
+        "b": 23
+      },
+      "expectedOutputSubset": {
+        "a": 19,
+        "b": 23,
+        "sum": 42
+      }
+    },
+    {
+      "name": "failWithMessage",
+      "risk": "read-only"
+    },
+    {
+      "name": "submitSupportRequest",
+      "risk": "consequential"
+    }
+  ]
+}

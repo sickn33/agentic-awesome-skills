@@ -1,6 +1,8 @@
 ---
 name: monte-carlo-analyze-root-cause
-description: "Investigate data incidents and find root causes using Monte Carlo's observability data. Guides the agent through systematic investigation: alert lookup, lineage tracing, ETL checks, query analysis, and data profiling."
+description: 'Investigate data incidents and find root causes using Monte Carlo''s
+  observability data. Guides the agent through systematic investigation: alert lookup,
+  lineage tracing, ETL checks, query analysis, a…'
 risk: critical
 source: https://github.com/monte-carlo-data/mc-agent-toolkit/tree/main/skills/analyze-root-cause
 source_repo: monte-carlo-data/mc-agent-toolkit
@@ -9,6 +11,10 @@ date_added: 2026-07-01
 license: Apache-2.0
 license_source: https://github.com/monte-carlo-data/mc-agent-toolkit/blob/main/LICENSE
 ---
+
+## When to Use
+
+- Use when the user goal matches this upstream workflow.
 
 # Monte Carlo Root Cause Analysis Skill
 

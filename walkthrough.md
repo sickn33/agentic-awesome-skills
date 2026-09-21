@@ -1,3 +1,10 @@
+# Jev Social skill intake - 2026-09-21
+
+- Added [`skills/jev-social/SKILL.md`](skills/jev-social/SKILL.md), adapted from the MIT-licensed [`socai-io/jev-social`](https://github.com/socai-io/jev-social) Agent Skill.
+- Kept the workflow read-only and capability-gated: it checks local readiness, uses typed Jev routing and the socai CLI, distinguishes search cards from opened evidence, and stops at login, verification, challenge, or rate-limit boundaries.
+- Pinned executable examples to the full commit behind `v0.1.2` (`794aac59dbef0929ec57f2650504f4231fef598e`), excluded its moving `releases/latest` onboarding installer, and documented download approval, credential, browser-session, prompt-injection, and output-redaction requirements.
+- Added the required community source credit in [`README.md`](README.md). Generated catalogs, indexes, plugin mirrors, and marketplace artifacts remain excluded from the contributor diff.
+
 # Full Snyk group reconciliation — 2026-09-06
 
 - Exported all 551 analytics rows and read all live project/issue records; distinguished stale CLI snapshots, mirror copies, and current findings.

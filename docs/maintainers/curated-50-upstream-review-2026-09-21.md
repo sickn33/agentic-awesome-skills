@@ -1,0 +1,52 @@
+# Curated 50 — maintainer review ledger
+Date: 2026-09-21
+- `jev-social` — OK; risk=critical; source_repo=socai-io/jev-social
+- `apify-generate-output-schema` — OK; risk=unknown; source_repo=apify/agent-skills
+- `apify-integration-development` — OK; risk=unknown; source_repo=apify/agent-skills
+- `writing-guidelines` — OK; risk=unknown; source_repo=vercel-labs/agent-skills
+- `vercel-react-view-transitions` — ADJUSTED: missing source_repo; risk=safe; source_repo=?
+- `eas-app-stores` — OK; risk=unknown; source_repo=expo/skills
+- `eas-hosting` — OK; risk=unknown; source_repo=expo/skills
+- `eas-observe` — OK; risk=unknown; source_repo=expo/skills
+- `eas-simulator` — OK; risk=unknown; source_repo=expo/skills
+- `eas-workflows` — OK; risk=unknown; source_repo=expo/skills
+- `expo-animation` — OK; risk=unknown; source_repo=expo/skills
+- `remotion-create` — OK; risk=unknown; source_repo=remotion-dev/skills
+- `remotion-captions` — OK; risk=unknown; source_repo=remotion-dev/skills
+- `remotion-render` — OK; risk=unknown; source_repo=remotion-dev/skills
+- `remotion-best-practices` — ADJUSTED: missing source_repo; risk=safe; source_repo=?
+- `remotion-docs` — OK; risk=unknown; source_repo=remotion-dev/skills
+- `remotion-interactivity` — OK; risk=unknown; source_repo=remotion-dev/skills
+- `add-webmcp` — OK; risk=unknown; source_repo=browserbase/skills
+- `autobrowse` — OK; risk=unknown; source_repo=browserbase/skills
+- `browser-to-api` — OK; risk=unknown; source_repo=browserbase/skills
+- `hf-cli` — OK; risk=unknown; source_repo=huggingface/skills
+- `huggingface-community-evals` — OK; risk=unknown; source_repo=huggingface/skills
+- `huggingface-datasets` — OK; risk=unknown; source_repo=huggingface/skills
+- `score-eval` — OK; risk=unknown; source_repo=neondatabase/agent-skills
+- `longbridge-derivatives` — OK; risk=unknown; source_repo=longbridge/skills
+- `longbridge-research` — OK; risk=unknown; source_repo=longbridge/skills
+- `longbridge-quant` — OK; risk=unknown; source_repo=longbridge/skills
+- `architecture-review` — OK; risk=unknown; source_repo=0xsarwagya/ontoly
+- `dependency-analysis` — OK; risk=unknown; source_repo=0xsarwagya/ontoly
+- `codebase-onboarding` — OK; risk=unknown; source_repo=0xsarwagya/ontoly
+- `makepad-2.0-dsl` — OK; risk=unknown; source_repo=zhanghandong/makepad-skills
+- `makepad-2.0-layout` — OK; risk=unknown; source_repo=zhanghandong/makepad-skills
+- `makepad-2.0-events` — OK; risk=unknown; source_repo=zhanghandong/makepad-skills
+- `makepad-2.0-animation` — OK; risk=unknown; source_repo=zhanghandong/makepad-skills
+- `makepad-2.0-widgets` — OK; risk=unknown; source_repo=zhanghandong/makepad-skills
+- `monte-carlo-analyze-root-cause` — ADJUSTED: when-to-use; risk=critical; source_repo=monte-carlo-data/mc-agent-toolkit
+- `monte-carlo-asset-health` — ADJUSTED: when-to-use; risk=critical; source_repo=monte-carlo-data/mc-agent-toolkit
+- `generate-validation-notebook` — OK; risk=unknown; source_repo=monte-carlo-data/mc-agent-toolkit
+- `connection-auth-rules` — OK; risk=unknown; source_repo=monte-carlo-data/mc-agent-toolkit
+- `monte-carlo-context-detection` — OK; risk=unknown; source_repo=monte-carlo-data/mc-agent-toolkit
+- `API-Integration-Architect` — OK; risk=unknown; source_repo=demo112/yunqu-ai-skills
+- `Code-Review-Sensei` — OK; risk=unknown; source_repo=demo112/yunqu-ai-skills
+- `DevOps-Pipeline-Builder` — OK; risk=unknown; source_repo=demo112/yunqu-ai-skills
+- `Meeting-Distiller-Pro` — OK; risk=unknown; source_repo=demo112/yunqu-ai-skills
+- `SaaS-Pricing-Strategist` — OK; risk=unknown; source_repo=demo112/yunqu-ai-skills
+- `brandkit` — OK; risk=unknown; source_repo=leonxlnx/taste-skill
+- `gpt-taste` — OK; risk=safe; source_repo=Leonxlnx/taste-skill
+- `image-to-code` — OK; risk=unknown; source_repo=leonxlnx/taste-skill
+- `workorai` — OK; risk=critical; source_repo=work0r-ai/agent-kit
+- `fact-check-x-unified` — OK; risk=unknown; source_repo=asi2030/fact-check-x

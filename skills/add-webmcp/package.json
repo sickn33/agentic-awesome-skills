@@ -1,0 +1,18 @@
+{
+  "name": "add-webmcp-skill",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "test:e2e:local": "node scripts/validate-stagehand.mjs --url https://example.com --config tests/fixtures/webmcp.e2e.json --init-script tests/fixtures/webmcp.init.js --local",
+    "test:e2e:browserbase": "node scripts/validate-stagehand.mjs --url https://example.com --config tests/fixtures/webmcp.e2e.json --init-script tests/fixtures/webmcp.init.js --browserbase",
+    "test:e2e:owned": "node scripts/validate-stagehand.mjs --url https://browserbase.github.io/stagehand-eval-sites/sites/webmcp-test/ --config tests/fixtures/browserbase-owned-webmcp.e2e.json --browserbase"
+  },
+  "dependencies": {
+    "@browserbasehq/stagehand": "4.0.2"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "tools": [
+    {
+      "name": "submit_order",
+      "risk": "consequential",
+      "input": {
+        "orderId": "synthetic-order"
+      }
+    }
+  ]
+}

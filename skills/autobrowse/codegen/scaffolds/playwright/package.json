@@ -1,0 +1,15 @@
+{
+  "name": "{{TASK}}-playwright",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx {{SCRIPT}}"
+  },
+  "dependencies": {
+    "dotenv": "{{DOTENV_VERSION}}",
+    "playwright": "{{PLAYWRIGHT_VERSION}}",
+    "tsx": "{{TSX_VERSION}}",
+    "zod": "{{ZOD_VERSION}}"
+  }
+}
