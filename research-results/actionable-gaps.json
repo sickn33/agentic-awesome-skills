@@ -1,0 +1,3533 @@
+[
+  {
+    "repo": "microsoft/skills",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 201,
+    "local_skills": 4,
+    "unmatched": 197,
+    "shallow_unmatched_count": 197,
+    "shallow_unmatched_sample": [
+      "azure-kusto-graph",
+      "azure-kusto-irql",
+      "azure-kusto-irql-graph",
+      "azure-local",
+      "azure-local-multi-rack",
+      "azure-ai-agents-persistent-dotnet",
+      "azure-ai-document-intelligence-dotnet",
+      "azure-ai-openai-dotnet",
+      "azure-ai-projects-dotnet",
+      "azure-ai-voicelive-dotnet",
+      "azure-eventgrid-dotnet",
+      "azure-eventhub-dotnet"
+    ],
+    "local_skill_ids": [
+      "applicationinsights-web-ts",
+      "azure-ai-language-conversations-py",
+      "azure-servicebus-rust",
+      "azure-storage-queue-rust"
+    ],
+    "error": null
+  },
+  {
+    "repo": "nowork-studio/notfair",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 96,
+    "local_skills": 1,
+    "unmatched": 94,
+    "shallow_unmatched_count": 51,
+    "shallow_unmatched_sample": [
+      "gemini",
+      "gohighlevel",
+      "notfair-upgrade-skill",
+      "skills/backlink-audit",
+      "skills/broken-link-checker",
+      "skills/competitor-pages",
+      "skills/content-planner",
+      "skills/content-writer",
+      "skills/ecommerce-seo",
+      "skills/gemini",
+      "skills/geo-optimizer",
+      "skills/gohighlevel"
+    ],
+    "local_skill_ids": [
+      "seo-drift"
+    ],
+    "error": null
+  },
+  {
+    "repo": "anthropics/skills",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 20,
+    "local_skills": 0,
+    "unmatched": 20,
+    "shallow_unmatched_count": 20,
+    "shallow_unmatched_sample": [
+      "skills/academy-guide",
+      "skills/algorithmic-art",
+      "skills/brand-guidelines",
+      "skills/canvas-design",
+      "skills/claude-api",
+      "skills/discernment-nudge",
+      "skills/doc-coauthoring",
+      "skills/docx",
+      "skills/frontend-design",
+      "skills/internal-comms",
+      "skills/mcp-builder",
+      "skills/pdf"
+    ],
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "expo/skills",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 26,
+    "local_skills": 16,
+    "unmatched": 20,
+    "shallow_unmatched_count": 20,
+    "shallow_unmatched_sample": [
+      "expo-skill-eval",
+      "expo-migrate-module",
+      "eas-app-stores",
+      "eas-hosting",
+      "eas-observe",
+      "eas-simulator",
+      "eas-update",
+      "eas-workflows",
+      "expo-animation",
+      "expo-app-clip",
+      "expo-data-fetching",
+      "expo-design-system"
+    ],
+    "local_skill_ids": [
+      "add-app-clip",
+      "building-native-ui",
+      "eas-update-insights",
+      "expo-api-routes",
+      "expo-brownfield",
+      "expo-cicd-workflows",
+      "expo-deployment",
+      "expo-dev-client",
+      "expo-examples",
+      "expo-module",
+      "expo-observe",
+      "expo-tailwind-setup",
+      "expo-ui",
+      "native-data-fetching",
+      "upgrading-expo",
+      "use-dom"
+    ],
+    "error": null
+  },
+  {
+    "repo": "browserbase/skills",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 18,
+    "local_skills": 1,
+    "unmatched": 17,
+    "shallow_unmatched_count": 17,
+    "shallow_unmatched_sample": [
+      "skills/add-webmcp",
+      "skills/agent-experience",
+      "skills/autobrowse",
+      "skills/browser",
+      "skills/browser-to-api",
+      "skills/browser-trace",
+      "skills/browser-use-to-stagehand",
+      "skills/company-research",
+      "skills/cookie-sync",
+      "skills/event-prospecting",
+      "skills/fetch",
+      "skills/functions"
+    ],
+    "local_skill_ids": [
+      "competitor-analysis"
+    ],
+    "error": null
+  },
+  {
+    "repo": "huggingface/skills",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 26,
+    "local_skills": 21,
+    "unmatched": 14,
+    "shallow_unmatched_count": 14,
+    "shallow_unmatched_sample": [
+      "skills/hf-cli",
+      "skills/hf-cloud-python-env-setup",
+      "skills/hf-cloud-sagemaker-deployment-planner",
+      "skills/hf-cloud-sagemaker-iam-preflight",
+      "skills/hf-cloud-sagemaker-production-defaults",
+      "skills/hf-cloud-serving-image-selection",
+      "skills/huggingface-community-evals",
+      "skills/huggingface-datasets",
+      "skills/huggingface-gradio",
+      "skills/huggingface-llm-trainer",
+      "skills/huggingface-paper-publisher",
+      "skills/huggingface-papers"
+    ],
+    "local_skill_ids": [
+      "hf-cloud-aws-context-discovery",
+      "hf-mcp",
+      "hf-mem",
+      "hugging-face-cli",
+      "hugging-face-community-evals",
+      "hugging-face-dataset-viewer",
+      "hugging-face-gradio",
+      "hugging-face-model-trainer",
+      "hugging-face-paper-publisher",
+      "hugging-face-papers",
+      "hugging-face-trackio",
+      "hugging-face-vision-trainer",
+      "huggingface-best",
+      "huggingface-local-models",
+      "huggingface-lora-space-builder",
+      "huggingface-spaces",
+      "huggingface-tool-builder",
+      "huggingface-zerogpu",
+      "train-sentence-transformers",
+      "transformers-js",
+      "trl-training"
+    ],
+    "error": null
+  },
+  {
+    "repo": "orkas-ai/orkas-videostudio",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 14,
+    "local_skills": 1,
+    "unmatched": 13,
+    "shallow_unmatched_count": 13,
+    "shallow_unmatched_sample": [
+      "composition-design-review",
+      "design-system-importer",
+      "frontend-design",
+      "gate-control",
+      "orchestration",
+      "stage-assemble",
+      "stage-compose",
+      "stage-consistency",
+      "stage-decide",
+      "stage-edit",
+      "stage-generate",
+      "stage-plan"
+    ],
+    "local_skill_ids": [
+      "video-router"
+    ],
+    "error": null
+  },
+  {
+    "repo": "remotion-dev/skills",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 12,
+    "local_skills": 0,
+    "unmatched": 12,
+    "shallow_unmatched_count": 12,
+    "shallow_unmatched_sample": [
+      "skills/remotion-best-practices",
+      "skills/remotion-captions",
+      "skills/remotion-create",
+      "skills/remotion-docs",
+      "skills/remotion-interactivity",
+      "skills/remotion-maps",
+      "skills/remotion-markup",
+      "skills/remotion-multimedia",
+      "skills/remotion-render",
+      "skills/remotion-saas",
+      "skills/remotion-studio",
+      "skills/remotion-upgrade"
+    ],
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "longbridge/skills",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 13,
+    "local_skills": 4,
+    "unmatched": 9,
+    "shallow_unmatched_count": 9,
+    "shallow_unmatched_sample": [
+      "skills/longbridge-derivatives",
+      "skills/longbridge-earnings",
+      "skills/longbridge-intel",
+      "skills/longbridge-portfolio",
+      "skills/longbridge-quant",
+      "skills/longbridge-research",
+      "skills/longbridge-technical",
+      "skills/longbridge-value-investing",
+      "skills/longbridge-watchlist"
+    ],
+    "local_skill_ids": [
+      "longbridge",
+      "longbridge-content",
+      "longbridge-fundamentals",
+      "longbridge-market-data"
+    ],
+    "error": null
+  },
+  {
+    "repo": "vercel-labs/agent-skills",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 9,
+    "local_skills": 0,
+    "unmatched": 9,
+    "shallow_unmatched_count": 9,
+    "shallow_unmatched_sample": [
+      "skills/composition-patterns",
+      "skills/deploy-to-vercel",
+      "skills/react-best-practices",
+      "skills/react-native-skills",
+      "skills/react-view-transitions",
+      "skills/vercel-cli-with-tokens",
+      "skills/vercel-optimize",
+      "skills/web-design-guidelines",
+      "skills/writing-guidelines"
+    ],
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "skyvern-ai/skyvern",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 6,
+    "local_skills": 1,
+    "unmatched": 6,
+    "shallow_unmatched_count": 6,
+    "shallow_unmatched_sample": [
+      "bump-version",
+      "skills/skyvern",
+      "qa",
+      "skyvern",
+      "smoke-test",
+      "testing"
+    ],
+    "local_skill_ids": [
+      "skyvern-browser-automation"
+    ],
+    "error": null
+  },
+  {
+    "repo": "apify/agent-skills",
+    "bucket": "official",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 5,
+    "local_skills": 0,
+    "unmatched": 5,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "codeshux/tokenwise",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 5,
+    "local_skills": 1,
+    "unmatched": 5,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "tokenwise"
+    ],
+    "error": null
+  },
+  {
+    "repo": "neondatabase/agent-skills",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 17,
+    "local_skills": 7,
+    "unmatched": 5,
+    "shallow_unmatched_count": 5,
+    "shallow_unmatched_sample": [
+      "score-eval",
+      "neon",
+      "neon-auth",
+      "skills/neon",
+      "skills/neon-auth"
+    ],
+    "local_skill_ids": [
+      "claimable-postgres",
+      "neon-ai-gateway",
+      "neon-functions",
+      "neon-object-storage",
+      "neon-postgres",
+      "neon-postgres-branches",
+      "neon-postgres-egress-optimizer"
+    ],
+    "error": null
+  },
+  {
+    "repo": "uxuiprinciples/agent-skills",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 5,
+    "local_skills": 0,
+    "unmatched": 5,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "agent-frontier/wgm",
+    "bucket": "official",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 4,
+    "local_skills": 1,
+    "unmatched": 4,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "wgm"
+    ],
+    "error": null
+  },
+  {
+    "repo": "anthropics/claude-cookbooks",
+    "bucket": "official",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 4,
+    "local_skills": 0,
+    "unmatched": 4,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "asi2030/fact-check-x",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 7,
+    "local_skills": 1,
+    "unmatched": 6,
+    "shallow_unmatched_count": 4,
+    "shallow_unmatched_sample": [
+      "skills/fact-check-x-authoritative-verify",
+      "skills/fact-check-x-knowledge-compare",
+      "skills/fact-check-x-unified",
+      "skills/llm-answer-reference-compare"
+    ],
+    "local_skill_ids": [
+      "fact-check-x-complete"
+    ],
+    "error": null
+  },
+  {
+    "repo": "ducksss/codex-profiles",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 4,
+    "local_skills": 1,
+    "unmatched": 4,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "codex-profiles"
+    ],
+    "error": null
+  },
+  {
+    "repo": "frmoretto/clarity-gate",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 4,
+    "local_skills": 0,
+    "unmatched": 4,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "uberskillsdev/uberskills",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 4,
+    "local_skills": 0,
+    "unmatched": 4,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "yehudalevy-collab/polis-protocol",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 4,
+    "local_skills": 2,
+    "unmatched": 4,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "polis-protocol",
+      "polis-protocol-a-self-optimizing-city-of-agents"
+    ],
+    "error": null
+  },
+  {
+    "repo": "connerkward/deterministic-design-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 3,
+    "local_skills": 1,
+    "unmatched": 3,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "deterministic-design"
+    ],
+    "error": null
+  },
+  {
+    "repo": "gokapso/agent-skills",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 3,
+    "local_skills": 0,
+    "unmatched": 3,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "maxbaluev/accreted-intelligence",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 3,
+    "local_skills": 3,
+    "unmatched": 3,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "accint-commitments",
+      "accint-frames",
+      "accint-solve"
+    ],
+    "error": null
+  },
+  {
+    "repo": "warmskull/idea-darwin",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 3,
+    "local_skills": 0,
+    "unmatched": 3,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "zenlee123/routerbase-agent-skills",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 3,
+    "local_skills": 1,
+    "unmatched": 3,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "routerbase-model-gateway"
+    ],
+    "error": null
+  },
+  {
+    "repo": "zeropointrepo/zillow-skills",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 3,
+    "local_skills": 1,
+    "unmatched": 3,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "us-property-data"
+    ],
+    "error": null
+  },
+  {
+    "repo": "minimax-ai/cli",
+    "bucket": "official",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 2,
+    "local_skills": 0,
+    "unmatched": 2,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "modellix/modellix-plugin",
+    "bucket": "official",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 2,
+    "local_skills": 1,
+    "unmatched": 2,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "modellix"
+    ],
+    "error": null
+  },
+  {
+    "repo": "sparklingneuronics/sparkling-skills",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 2,
+    "local_skills": 1,
+    "unmatched": 2,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "dispatch"
+    ],
+    "error": null
+  },
+  {
+    "repo": "tsilverberg/webapp-uat",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 2,
+    "local_skills": 0,
+    "unmatched": 2,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "uizze/uizze",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 10,
+    "local_skills": 1,
+    "unmatched": 2,
+    "shallow_unmatched_count": 2,
+    "shallow_unmatched_sample": [
+      "skills/ui-design",
+      "skills/ui-radar"
+    ],
+    "local_skill_ids": [
+      "anti-ui-slop"
+    ],
+    "error": null
+  },
+  {
+    "repo": "zarazhangrui/frontend-slides",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 2,
+    "local_skills": 1,
+    "unmatched": 2,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "frontend-slides-frontend-slides"
+    ],
+    "error": null
+  },
+  {
+    "repo": "2slides/slides-generation-2slides-skills",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "2slides-ppt-generator"
+    ],
+    "error": null
+  },
+  {
+    "repo": "70v-yoyo/md2video-audio-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "md2video-audio"
+    ],
+    "error": null
+  },
+  {
+    "repo": "agentphone-ai/skills",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "antheurus/anywrite",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "anywrite"
+    ],
+    "error": null
+  },
+  {
+    "repo": "antheurus/sshepherd",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "sshepherd"
+    ],
+    "error": null
+  },
+  {
+    "repo": "antoniocardenas/generate-nanobanana",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "generate-nanobanana"
+    ],
+    "error": null
+  },
+  {
+    "repo": "bin1874/before-you-build-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "before-you-build"
+    ],
+    "error": null
+  },
+  {
+    "repo": "browser-act/skills",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 103,
+    "local_skills": 1,
+    "unmatched": 102,
+    "shallow_unmatched_count": 1,
+    "shallow_unmatched_sample": [
+      "browser-act-skill-forge"
+    ],
+    "local_skill_ids": [
+      "browser-act"
+    ],
+    "error": null
+  },
+  {
+    "repo": "christopherlhammer11-ai/recallmax",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "christopherlhammer11-ai/tool-use-guardian",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "cloudflare/security-audit-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "cloudflare-security-audit"
+    ],
+    "error": null
+  },
+  {
+    "repo": "codeshux/mockhunter",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "mock-hunter"
+    ],
+    "error": null
+  },
+  {
+    "repo": "connerkward/lookdev-auto-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "lookdev-auto"
+    ],
+    "error": null
+  },
+  {
+    "repo": "connerkward/lookdev-studio-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "lookdev"
+    ],
+    "error": null
+  },
+  {
+    "repo": "connerkward/macos-screen-recorder-system-audio",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "macos-screen-recorder"
+    ],
+    "error": null
+  },
+  {
+    "repo": "connerkward/screenstudio-alternative-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "screenstudio-alt"
+    ],
+    "error": null
+  },
+  {
+    "repo": "connerkward/web-media-getter-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "web-media-getter"
+    ],
+    "error": null
+  },
+  {
+    "repo": "cruisekkk/time-ledger",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "time-ledger"
+    ],
+    "error": null
+  },
+  {
+    "repo": "cruisekkk/trading-ledger",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "trading-ledger"
+    ],
+    "error": null
+  },
+  {
+    "repo": "cyberzenithx/rich-elicitation-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "dair-ai/dair-academy-plugins",
+    "bucket": "official",
+    "category": "vendor_or_partial",
+    "priority": "high",
+    "upstream_skill_dirs": 8,
+    "local_skills": 7,
+    "unmatched": 1,
+    "shallow_unmatched_count": 1,
+    "shallow_unmatched_sample": [
+      "x-agent-intelligence"
+    ],
+    "local_skill_ids": [
+      "image-generator",
+      "learn",
+      "lesson-generator",
+      "llm-council",
+      "survey-generator",
+      "wiki-builder",
+      "youtube-notetaker"
+    ],
+    "error": null
+  },
+  {
+    "repo": "drogers0/gh-image",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "gh-image"
+    ],
+    "error": null
+  },
+  {
+    "repo": "fruitwyatt/puzzle-activity-planner",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "puzzle-activity-planner"
+    ],
+    "error": null
+  },
+  {
+    "repo": "genefold/arrowspace-skills",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "arrowspace"
+    ],
+    "error": null
+  },
+  {
+    "repo": "ghost011118/project-state-governor",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "project-state-governor"
+    ],
+    "error": null
+  },
+  {
+    "repo": "hanyuyuan6/remote-gpu-trainer",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "remote-gpu-trainer"
+    ],
+    "error": null
+  },
+  {
+    "repo": "heyneuron/flowhunt-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "flowhunt-skill"
+    ],
+    "error": null
+  },
+  {
+    "repo": "janyork/using-lwc",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "using-lwc"
+    ],
+    "error": null
+  },
+  {
+    "repo": "jthack/ffuf_claude_skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "junaid-pk/laravel-development-workflow",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "laravel-development-workflow"
+    ],
+    "error": null
+  },
+  {
+    "repo": "metcalfsolutions/satori",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "satori"
+    ],
+    "error": null
+  },
+  {
+    "repo": "metrox-eth/quit-sponsor",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "quit-sponsor"
+    ],
+    "error": null
+  },
+  {
+    "repo": "mturac/recsys-pipeline-architect",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "recsys-pipeline-architect"
+    ],
+    "error": null
+  },
+  {
+    "repo": "multica-ai/andrej-karpathy-skills",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "andrej-karpathy"
+    ],
+    "error": null
+  },
+  {
+    "repo": "mycelos-ai/bumblebee-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "bumblebee"
+    ],
+    "error": null
+  },
+  {
+    "repo": "njerschow/textme",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "notmyself/claude-win11-speckit-update-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "ojpalenzuela/agents-generator",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "agents-generator"
+    ],
+    "error": null
+  },
+  {
+    "repo": "qinghui316/ecl-harness-engineer",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "ecl-harness-engineer"
+    ],
+    "error": null
+  },
+  {
+    "repo": "rafsilva85/credit-optimizer-v5",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "robzolkos/skill-rails-upgrade",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "sandbaseai/cli",
+    "bucket": "official",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "sandbase-mcp"
+    ],
+    "error": null
+  },
+  {
+    "repo": "scarletkc/vexor",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "scopeblind/scopeblind-gateway",
+    "bucket": "official",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "protect-mcp-governance"
+    ],
+    "error": null
+  },
+  {
+    "repo": "seanzor/claude-speed-reader",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "shadowpr0/beautiful_prose",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "shadowpr0/security-bluebook-builder",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "silverov/yandex-direct-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "slashworks-biz/idea-os",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "idea-os"
+    ],
+    "error": null
+  },
+  {
+    "repo": "sstklen/infinite-gratitude",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "taisly/agent",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "taisly-social-media-posting"
+    ],
+    "error": null
+  },
+  {
+    "repo": "talivia-group/agent",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "talivia-agent-kit"
+    ],
+    "error": null
+  },
+  {
+    "repo": "theadust/lore",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "lore"
+    ],
+    "error": null
+  },
+  {
+    "repo": "thecsdoctor/brendangregg-use-tsa-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "brendangregg-use-tsa"
+    ],
+    "error": null
+  },
+  {
+    "repo": "tubeagentkit/youtube-transcript-skills",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "youtube-transcript-skills"
+    ],
+    "error": null
+  },
+  {
+    "repo": "unslothai/unsloth",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "unsloth-finetuning"
+    ],
+    "error": null
+  },
+  {
+    "repo": "vipin-si/article-illustrations",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "article-illustrations"
+    ],
+    "error": null
+  },
+  {
+    "repo": "webzler/agentmemory",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "agent-memory"
+    ],
+    "error": null
+  },
+  {
+    "repo": "wrsmith108/linear-claude-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "wrsmith108/varlock-claude-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 0,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "xwmxcz/papers-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "papers-skill"
+    ],
+    "error": null
+  },
+  {
+    "repo": "yaojingang/yao-meta-skill",
+    "bucket": "community",
+    "category": "small_repo_gap",
+    "priority": "high",
+    "upstream_skill_dirs": 1,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "yao-meta-skill"
+    ],
+    "error": null
+  },
+  {
+    "repo": "bitjaru/styleseed",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 47,
+    "local_skills": 16,
+    "unmatched": 47,
+    "shallow_unmatched_count": 47,
+    "shallow_unmatched_sample": [
+      "ss-a11y",
+      "ss-audit",
+      "ss-build",
+      "ss-component",
+      "ss-copy",
+      "ss-dial",
+      "ss-feedback",
+      "ss-flow",
+      "ss-lint",
+      "ss-motion",
+      "ss-page",
+      "ss-pattern"
+    ],
+    "local_skill_ids": [
+      "styleseed-design-review",
+      "ui-a11y",
+      "ui-component",
+      "ui-lint",
+      "ui-motion",
+      "ui-page",
+      "ui-pattern",
+      "ui-review",
+      "ui-score",
+      "ui-setup",
+      "ui-tokens",
+      "ui-update",
+      "ux-audit",
+      "ux-copy",
+      "ux-feedback",
+      "ux-flow"
+    ],
+    "error": null
+  },
+  {
+    "repo": "anthony-chaudhary/dos-kernel",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 39,
+    "local_skills": 1,
+    "unmatched": 39,
+    "shallow_unmatched_count": 38,
+    "shallow_unmatched_sample": [
+      "issue-verify",
+      "issue-work",
+      "release",
+      "stable-release",
+      "dos-class-cycle",
+      "dos-dispatch",
+      "dos-dispatch-loop",
+      "dos-enforce-tune",
+      "dos-goal-fleet",
+      "dos-goal-gate",
+      "dos-next-up",
+      "dos-plan-price"
+    ],
+    "local_skill_ids": [
+      "dos-verify-done-claims"
+    ],
+    "error": null
+  },
+  {
+    "repo": "coreyhaines31/marketingskills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 50,
+    "local_skills": 12,
+    "unmatched": 38,
+    "shallow_unmatched_count": 38,
+    "shallow_unmatched_sample": [
+      "skills/ad-creative",
+      "skills/ads",
+      "skills/ai-seo",
+      "skills/aso",
+      "skills/attribution",
+      "skills/churn-prevention",
+      "skills/cold-email",
+      "skills/community-marketing",
+      "skills/competitors",
+      "skills/content-strategy",
+      "skills/copy-editing",
+      "skills/copywriting"
+    ],
+    "local_skill_ids": [
+      "ab-testing",
+      "analytics",
+      "co-marketing",
+      "competitor-profiling",
+      "cro",
+      "customer-research",
+      "marketing-plan",
+      "offers",
+      "onboarding",
+      "pricing",
+      "product-marketing",
+      "public-relations"
+    ],
+    "error": null
+  },
+  {
+    "repo": "timwukp/agent-skills-best-practice",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 39,
+    "local_skills": 1,
+    "unmatched": 38,
+    "shallow_unmatched_count": 38,
+    "shallow_unmatched_sample": [
+      "agentcore-harness-builder",
+      "ai-native-sdlc",
+      "algorithmic-art",
+      "api-design",
+      "aws-well-architected-review",
+      "brand-guidelines",
+      "canvas-design",
+      "cicd-pipeline",
+      "claude-api",
+      "code-review-assistant",
+      "code-standards-adopter",
+      "database-schema-design"
+    ],
+    "local_skill_ids": [
+      "fsi-compliance-checker"
+    ],
+    "error": null
+  },
+  {
+    "repo": "adelaidasofia/ai-brain-starter",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 38,
+    "local_skills": 1,
+    "unmatched": 37,
+    "shallow_unmatched_count": 37,
+    "shallow_unmatched_sample": [
+      ".",
+      "skills/backfill-journal-body-context",
+      "skills/cierre-de-llamada",
+      "skills/coach",
+      "skills/coaching",
+      "skills/daily-journal",
+      "skills/deconstruct",
+      "skills/diagnose",
+      "skills/doubt-driven-development",
+      "skills/evolve",
+      "skills/for-my-team",
+      "skills/graphify"
+    ],
+    "local_skill_ids": [
+      "ingest-youtube"
+    ],
+    "error": null
+  },
+  {
+    "repo": "lambdatest/agent-skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 72,
+    "local_skills": 25,
+    "unmatched": 51,
+    "shallow_unmatched_count": 33,
+    "shallow_unmatched_sample": [
+      "accessibility-skill",
+      "behat-skill",
+      "behave-skill",
+      "capybara-skill",
+      "cicd-pipeline-skill",
+      "codeception-skill",
+      "detox-skill",
+      "espresso-skill",
+      "flutter-testing-skill",
+      "gauge-skill",
+      "geb-skill",
+      "jasmine-skill"
+    ],
+    "local_skill_ids": [
+      "api-analyzer",
+      "api-designer",
+      "api-integration",
+      "api-sdk-generator",
+      "appium-skill",
+      "cucumber-skill",
+      "cypress-skill",
+      "hyperexecute-skill",
+      "jest-skill",
+      "junit-5-skill",
+      "lambdatest-agent-skills",
+      "newman-cicd-integration",
+      "openapi-spec-generator",
+      "postman-collection-generator",
+      "postman-newman-automation",
+      "postman-openapi-converter",
+      "puppeteer-skill",
+      "pytest-skill",
+      "robot-framework-skill",
+      "selenium-skill",
+      "smartui-skill",
+      "test-framework-migration-skill",
+      "testng-skill",
+      "vitest-skill",
+      "webdriverio-skill"
+    ],
+    "error": null
+  },
+  {
+    "repo": "sergebulaev/linkedin-skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 26,
+    "local_skills": 1,
+    "unmatched": 24,
+    "shallow_unmatched_count": 23,
+    "shallow_unmatched_sample": [
+      ".",
+      "linkedin-comment-drafter",
+      "linkedin-content-planner",
+      "linkedin-employee-advocacy",
+      "linkedin-engager-analytics",
+      "linkedin-hook-extractor",
+      "linkedin-humanizer",
+      "linkedin-interviewer",
+      "linkedin-profile-optimizer",
+      "linkedin-reply-handler",
+      "linkedin-repurposer",
+      "linkedin-thread-monitor"
+    ],
+    "local_skill_ids": [
+      "linkedin-post-writer"
+    ],
+    "error": null
+  },
+  {
+    "repo": "sanjay3290/ai-skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 24,
+    "local_skills": 5,
+    "unmatched": 22,
+    "shallow_unmatched_count": 22,
+    "shallow_unmatched_sample": [
+      "skills/atlassian",
+      "skills/azure-devops",
+      "skills/deep-research",
+      "skills/elevenlabs",
+      "skills/gmail",
+      "skills/google-calendar",
+      "skills/google-chat",
+      "skills/google-docs",
+      "skills/google-drive",
+      "skills/google-sheets",
+      "skills/google-slides",
+      "skills/google-tts"
+    ],
+    "local_skill_ids": [
+      "apple-container",
+      "gemini-deep-research",
+      "grok-build",
+      "postgres-readonly-queries",
+      "telegram-bot-messaging"
+    ],
+    "error": null
+  },
+  {
+    "repo": "rainmanjam/poka-yoke",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 20,
+    "local_skills": 1,
+    "unmatched": 19,
+    "shallow_unmatched_count": 19,
+    "shallow_unmatched_sample": [
+      "audit",
+      "authz",
+      "clean-code",
+      "design",
+      "retro",
+      "ux",
+      "audit",
+      "defensive",
+      "design",
+      "agent-guardrails",
+      "audit",
+      "authz"
+    ],
+    "local_skill_ids": [
+      "poka-yoke"
+    ],
+    "error": null
+  },
+  {
+    "repo": "monte-carlo-data/mc-agent-toolkit",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 20,
+    "local_skills": 12,
+    "unmatched": 18,
+    "shallow_unmatched_count": 18,
+    "shallow_unmatched_sample": [
+      "toolkit-skill-author",
+      "skills/analyze-root-cause",
+      "skills/asset-health",
+      "skills/connection-auth-rules",
+      "skills/context-detection",
+      "skills/generate-validation-notebook",
+      "skills/incident-response",
+      "skills/instrument-agent",
+      "skills/manage-mac",
+      "skills/monitoring-advisor",
+      "skills/performance-diagnosis",
+      "skills/prevent"
+    ],
+    "local_skill_ids": [
+      "automated-triage",
+      "monte-carlo-analyze-root-cause",
+      "monte-carlo-asset-health",
+      "monte-carlo-monitor-creation",
+      "monte-carlo-monitoring-advisor",
+      "monte-carlo-performance-diagnosis",
+      "monte-carlo-prevent",
+      "monte-carlo-push-ingestion",
+      "monte-carlo-remediation",
+      "monte-carlo-storage-cost-analysis",
+      "monte-carlo-validation-notebook",
+      "tune-monitor"
+    ],
+    "error": null
+  },
+  {
+    "repo": "demo112/yunqu-ai-skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 15,
+    "local_skills": 3,
+    "unmatched": 15,
+    "shallow_unmatched_count": 15,
+    "shallow_unmatched_sample": [
+      "01-api-integration-architect",
+      "02-code-review-sensei",
+      "03-devops-pipeline-builder",
+      "04-chinese-market-content-engineer",
+      "05-saas-pricing-strategist",
+      "06-meeting-distiller-pro",
+      "07-security-audit-code-reviewer",
+      "08-xiaohongshu-content-strategist",
+      "09-b2b-cold-email-sequence-builder",
+      "10-mcp-tool-developer",
+      "11-solana-agent-builder",
+      "12-technical-documentation-writer"
+    ],
+    "local_skill_ids": [
+      "mcp-tool-developer",
+      "wechat-official-account-strategist",
+      "xiaohongshu-content-strategist"
+    ],
+    "error": null
+  },
+  {
+    "repo": "0xsarwagya/ontoly",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 14,
+    "local_skills": 1,
+    "unmatched": 14,
+    "shallow_unmatched_count": 14,
+    "shallow_unmatched_sample": [
+      "skills/architecture-review",
+      "skills/codebase-onboarding",
+      "skills/configuration-analysis",
+      "skills/dead-code-analysis",
+      "skills/dependency-analysis",
+      "skills/documentation",
+      "skills/framework-analysis",
+      "skills/impact-analysis",
+      "skills/migration-analysis",
+      "skills/performance-analysis",
+      "skills/refactoring",
+      "skills/request-tracing"
+    ],
+    "local_skill_ids": [
+      "ontoly-software-graph"
+    ],
+    "error": null
+  },
+  {
+    "repo": "5dive-ai/skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 14,
+    "local_skills": 1,
+    "unmatched": 13,
+    "shallow_unmatched_count": 13,
+    "shallow_unmatched_sample": [
+      "5dive-cli",
+      "5dive-cli-extras",
+      "ad-creative",
+      "code-review",
+      "copywriting",
+      "deep-research",
+      "diagnose",
+      "find-loops",
+      "loops",
+      "no-ai-slop",
+      "openagent",
+      "playwright-e2e"
+    ],
+    "local_skill_ids": [
+      "compile-knowledge"
+    ],
+    "error": null
+  },
+  {
+    "repo": "dimillian/skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 16,
+    "local_skills": 3,
+    "unmatched": 13,
+    "shallow_unmatched_count": 13,
+    "shallow_unmatched_sample": [
+      "app-store-changelog",
+      "github",
+      "ios-debugger-agent",
+      "macos-menubar-tuist-app",
+      "macos-spm-app-packaging",
+      "orchestrate-batch-refactor",
+      "project-skill-audit",
+      "react-component-performance",
+      "swift-concurrency-expert",
+      "swiftui-liquid-glass",
+      "swiftui-performance-audit",
+      "swiftui-ui-patterns"
+    ],
+    "local_skill_ids": [
+      "bug-hunt-swarm",
+      "review-and-simplify-changes",
+      "review-swarm"
+    ],
+    "error": null
+  },
+  {
+    "repo": "leonxlnx/taste-skill",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 13,
+    "local_skills": 8,
+    "unmatched": 13,
+    "shallow_unmatched_count": 13,
+    "shallow_unmatched_sample": [
+      "skills/brandkit",
+      "skills/brutalist-skill",
+      "skills/gpt-tasteskill",
+      "skills/image-to-code-skill",
+      "skills/imagegen-frontend-mobile",
+      "skills/imagegen-frontend-web",
+      "skills/minimalist-skill",
+      "skills/output-skill",
+      "skills/redesign-skill",
+      "skills/soft-skill",
+      "skills/stitch-skill",
+      "skills/taste-skill"
+    ],
+    "local_skill_ids": [
+      "design-taste-frontend",
+      "full-output-enforcement",
+      "gpt-taste",
+      "high-end-visual-design",
+      "industrial-brutalist-ui",
+      "minimalist-ui",
+      "redesign-existing-projects",
+      "stitch-design-taste"
+    ],
+    "error": null
+  },
+  {
+    "repo": "kimtth/agent-pptify-kit",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 12,
+    "local_skills": 1,
+    "unmatched": 12,
+    "shallow_unmatched_count": 12,
+    "shallow_unmatched_sample": [
+      "pptx-deck-context",
+      "pptx-quality-gates",
+      "pptx-reference-deck-analysis",
+      "pptx-slide-specification",
+      "pptx-visual-assets",
+      "pptx-deck-creation-compact",
+      "pptx-deck-creation-single-file",
+      "pptx-deck-context",
+      "pptx-quality-gates",
+      "pptx-reference-deck-analysis",
+      "pptx-slide-specification",
+      "pptx-visual-assets"
+    ],
+    "local_skill_ids": [
+      "pptx-deck-creation"
+    ],
+    "error": null
+  },
+  {
+    "repo": "pranav-nexus/antigravity-skill-porter",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 13,
+    "local_skills": 1,
+    "unmatched": 12,
+    "shallow_unmatched_count": 12,
+    "shallow_unmatched_sample": [
+      "frontend-design",
+      "llm-council",
+      "company-values",
+      "find-community",
+      "first-customers",
+      "grow-sustainably",
+      "marketing-plan",
+      "minimalist-review",
+      "mvp",
+      "pricing",
+      "processize",
+      "validate-idea"
+    ],
+    "local_skill_ids": [
+      "skill-porter"
+    ],
+    "error": null
+  },
+  {
+    "repo": "tellmefrankie/news-engine",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 13,
+    "local_skills": 1,
+    "unmatched": 12,
+    "shallow_unmatched_count": 12,
+    "shallow_unmatched_sample": [
+      "skills/claude-cost-tracker",
+      "skills/commit-roast",
+      "skills/context-budget",
+      "skills/debug-trail",
+      "skills/env-doctor",
+      "skills/ev-calculator",
+      "skills/git-standup",
+      "skills/investment-briefing-agent",
+      "skills/multi-agent-orchestrator",
+      "skills/options-flow-analyzer",
+      "skills/pr-review-prep",
+      "skills/price-monitor-alert"
+    ],
+    "local_skill_ids": [
+      "news-sentiment-engine"
+    ],
+    "error": null
+  },
+  {
+    "repo": "agentbody/skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 12,
+    "local_skills": 1,
+    "unmatched": 11,
+    "shallow_unmatched_count": 11,
+    "shallow_unmatched_sample": [
+      "skills/agentbody",
+      "skills/document-parsing",
+      "skills/humanize-writing",
+      "skills/instagram-research",
+      "skills/linkedin-research",
+      "skills/reddit-research",
+      "skills/seo-keyword-research",
+      "skills/tiktok-research",
+      "skills/tiktok-transcript",
+      "skills/x-research",
+      "skills/youtube-transcript"
+    ],
+    "local_skill_ids": [
+      "people-data"
+    ],
+    "error": null
+  },
+  {
+    "repo": "aomi-labs/skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 13,
+    "local_skills": 1,
+    "unmatched": 12,
+    "shallow_unmatched_count": 11,
+    "shallow_unmatched_sample": [
+      "brian-api",
+      "coinbase-agentkit",
+      "crypto-skill-creator",
+      "eliza",
+      "goat",
+      "manage-aomi-skill",
+      "solana-agent-kit",
+      "x402",
+      "aomi-build",
+      "build",
+      "transact"
+    ],
+    "local_skill_ids": [
+      "aomi-transact"
+    ],
+    "error": null
+  },
+  {
+    "repo": "emilkowalski/skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 13,
+    "local_skills": 2,
+    "unmatched": 11,
+    "shallow_unmatched_count": 11,
+    "shallow_unmatched_sample": [
+      "skills/animate",
+      "skills/animate-expo",
+      "skills/animation-vocabulary",
+      "skills/apple-design",
+      "skills/ask-sonner",
+      "skills/find-animation-opportunities",
+      "skills/improve-animations",
+      "skills/mobile-native",
+      "skills/pick-ui-library",
+      "skills/prototype",
+      "skills/write-swift"
+    ],
+    "local_skill_ids": [
+      "emil-design-eng",
+      "review-animations"
+    ],
+    "error": null
+  },
+  {
+    "repo": "zeropointrepo/youtube-skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 24,
+    "local_skills": 1,
+    "unmatched": 22,
+    "shallow_unmatched_count": 11,
+    "shallow_unmatched_sample": [
+      "skills/captions",
+      "skills/subtitles",
+      "skills/transcript",
+      "skills/transcriptapi",
+      "skills/video-transcript",
+      "skills/youtube-api",
+      "skills/youtube-channels",
+      "skills/youtube-data",
+      "skills/youtube-playlist",
+      "skills/youtube-search",
+      "skills/yt"
+    ],
+    "local_skill_ids": [
+      "youtube-full"
+    ],
+    "error": null
+  },
+  {
+    "repo": "jonathimer/devmarketing-skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 34,
+    "local_skills": 24,
+    "unmatched": 10,
+    "shallow_unmatched_count": 10,
+    "shallow_unmatched_sample": [
+      "skills/dev-tool-directory-listings",
+      "skills/developer-ads",
+      "skills/developer-email-sequences",
+      "skills/developer-lead-gen",
+      "skills/hackathon-sponsorship",
+      "skills/hacker-news-strategy",
+      "skills/linkedin-technical",
+      "skills/reddit-engagement",
+      "skills/x-devs",
+      "skills/youtube-devrel"
+    ],
+    "local_skill_ids": [
+      "alternatives-pages",
+      "api-onboarding",
+      "changelog-updates",
+      "community-building",
+      "competitor-tracking",
+      "dev-to-hashnode",
+      "developer-advocacy",
+      "developer-audience-context",
+      "developer-churn",
+      "developer-listening",
+      "developer-newsletter",
+      "developer-onboarding",
+      "developer-sandbox",
+      "developer-seo",
+      "developer-signup-flow",
+      "devrel-content",
+      "docs-as-marketing",
+      "free-tier-strategy",
+      "github-presence",
+      "open-source-marketing",
+      "power-user-cultivation",
+      "sdk-dx",
+      "technical-tutorials",
+      "usage-based-pricing"
+    ],
+    "error": null
+  },
+  {
+    "repo": "necmttn/ax",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 11,
+    "local_skills": 1,
+    "unmatched": 10,
+    "shallow_unmatched_count": 10,
+    "shallow_unmatched_sample": [
+      "ax-add-ingest-stage",
+      "skills/ax-repo",
+      "skills/dojo",
+      "skills/efficient-dispatch",
+      "skills/narrate",
+      "skills/release-announcement",
+      "skills/retro",
+      "skills/retro-meta",
+      "skills/setup",
+      "skills/ship-checklist"
+    ],
+    "local_skill_ids": [
+      "ax-extract-workflow"
+    ],
+    "error": null
+  },
+  {
+    "repo": "phelan164/codex-howto",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 11,
+    "local_skills": 1,
+    "unmatched": 10,
+    "shallow_unmatched_count": 10,
+    "shallow_unmatched_sample": [
+      "evidence-review",
+      "choose-engineering-flow",
+      "skills/build-backend",
+      "skills/build-frontend",
+      "skills/engineering-loop",
+      "skills/operate-devops",
+      "skills/orchestrate-engineering",
+      "skills/review-code",
+      "skills/review-security",
+      "skills/test-software"
+    ],
+    "local_skill_ids": [
+      "maintain-codex-wiki"
+    ],
+    "error": null
+  },
+  {
+    "repo": "xi-kari/crossframe-skill",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 34,
+    "local_skills": 12,
+    "unmatched": 10,
+    "shallow_unmatched_count": 10,
+    "shallow_unmatched_sample": [
+      "crossframe-history",
+      "crossframe-inquiry",
+      "crossframe-max",
+      "crossframe-promax",
+      "crossframe-promax",
+      "crossframe-promax",
+      "skills/crossframe-history",
+      "skills/crossframe-inquiry",
+      "skills/crossframe-max",
+      "skills/crossframe-promax"
+    ],
+    "local_skill_ids": [
+      "crossframe",
+      "crossframe-casebook",
+      "crossframe-critical",
+      "crossframe-debate",
+      "crossframe-dialogue",
+      "crossframe-essay",
+      "crossframe-notebook",
+      "crossframe-org",
+      "crossframe-public",
+      "crossframe-review",
+      "crossframe-suite",
+      "crossframe-teach"
+    ],
+    "error": null
+  },
+  {
+    "repo": "suraj1235/open-dynamic-workflows",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 19,
+    "local_skills": 2,
+    "unmatched": 9,
+    "shallow_unmatched_count": 9,
+    "shallow_unmatched_sample": [
+      "ultracode",
+      "ultracode",
+      "ultracode",
+      "ultracode",
+      "ultracode",
+      "ultracode",
+      "ultracode",
+      "ultracode",
+      "ultracode"
+    ],
+    "local_skill_ids": [
+      "odw",
+      "open-dynamic-workflows"
+    ],
+    "error": null
+  },
+  {
+    "repo": "czlonkowski/n8n-skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 15,
+    "local_skills": 7,
+    "unmatched": 8,
+    "shallow_unmatched_count": 8,
+    "shallow_unmatched_sample": [
+      "skills/n8n-code-javascript",
+      "skills/n8n-code-python",
+      "skills/n8n-expression-syntax",
+      "skills/n8n-mcp-tools-expert",
+      "skills/n8n-node-configuration",
+      "skills/n8n-self-hosting",
+      "skills/n8n-validation-expert",
+      "skills/n8n-workflow-patterns"
+    ],
+    "local_skill_ids": [
+      "n8n-agents",
+      "n8n-binary-and-data",
+      "n8n-code-tool",
+      "n8n-error-handling",
+      "n8n-multi-instance",
+      "n8n-subworkflows",
+      "using-n8n-mcp-skills"
+    ],
+    "error": null
+  },
+  {
+    "repo": "jiawood2006/hermes-skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 9,
+    "local_skills": 1,
+    "unmatched": 8,
+    "shallow_unmatched_count": 8,
+    "shallow_unmatched_sample": [
+      "skills/ai-project-advisor",
+      "skills/ai-video-ad-production",
+      "skills/doc-ocr",
+      "skills/ecommerce-material-studio",
+      "skills/memory-graph",
+      "skills/memory-manager",
+      "skills/video-to-text",
+      "skills/voice-persona"
+    ],
+    "local_skill_ids": [
+      "de-ai-writer"
+    ],
+    "error": null
+  },
+  {
+    "repo": "kubestellar/console",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 7,
+    "local_skills": 1,
+    "unmatched": 7,
+    "shallow_unmatched_count": 7,
+    "shallow_unmatched_sample": [
+      "cavecrew",
+      "caveman",
+      "caveman-commit",
+      "caveman-compress",
+      "caveman-help",
+      "caveman-review",
+      "caveman-stats"
+    ],
+    "local_skill_ids": [
+      "kubestellar-console"
+    ],
+    "error": null
+  },
+  {
+    "repo": "sarveshtalele/linkedin-content-skill",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 7,
+    "local_skills": 1,
+    "unmatched": 7,
+    "shallow_unmatched_count": 7,
+    "shallow_unmatched_sample": [
+      "clear-memory",
+      "feedback",
+      "generate-calendar",
+      "generate-carousel",
+      "generate-newsletter",
+      "generate-post",
+      "show-memory"
+    ],
+    "local_skill_ids": [
+      "linkedin-content-generator"
+    ],
+    "error": null
+  },
+  {
+    "repo": "hyhmrright/logic-lens",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 11,
+    "local_skills": 6,
+    "unmatched": 6,
+    "shallow_unmatched_count": 6,
+    "shallow_unmatched_sample": [
+      "bump-version",
+      "iterate-skill",
+      "new-skill",
+      "run-iteration-eval",
+      "sync-skill-cache",
+      "skills/logic-health"
+    ],
+    "local_skill_ids": [
+      "logic-diff",
+      "logic-explain",
+      "logic-fix-all",
+      "logic-lens",
+      "logic-locate",
+      "logic-review"
+    ],
+    "error": null
+  },
+  {
+    "repo": "ohad6k/ditto",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 7,
+    "local_skills": 1,
+    "unmatched": 7,
+    "shallow_unmatched_count": 6,
+    "shallow_unmatched_sample": [
+      "emulo",
+      "skills/design",
+      "skills/mine",
+      "skills/video",
+      "skills/work",
+      "skills/write"
+    ],
+    "local_skill_ids": [
+      "ditto"
+    ],
+    "error": null
+  },
+  {
+    "repo": "zhaoxuya520/reverse-skill",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 89,
+    "local_skills": 41,
+    "unmatched": 49,
+    "shallow_unmatched_count": 5,
+    "shallow_unmatched_sample": [
+      "reverse-skill-router",
+      "skills",
+      "skills/binary-ninja-reverse",
+      "skills/browser-automation",
+      "skills/ctf-sandbox"
+    ],
+    "local_skill_ids": [
+      "api-security",
+      "apk-reverse",
+      "attack-chain",
+      "binary-diff",
+      "browser-extension-reverse",
+      "case-review",
+      "cloud-k8s",
+      "code-audit",
+      "database-security",
+      "diagram-generator",
+      "digital-forensics",
+      "docs-generator",
+      "dotnet-reverse",
+      "edr-bypass-re",
+      "email-security",
+      "firmware-pentest",
+      "ghidra-reverse",
+      "go-rust-reverse",
+      "hardware-security",
+      "ida-reverse",
+      "identity-federation",
+      "js-reverse",
+      "llm-security",
+      "macos-reverse",
+      "malware-analysis",
+      "mobile-reverse",
+      "ot-ics",
+      "patch-diff-exploit",
+      "pentest-tools",
+      "protocol-reverse",
+      "pwn-chain",
+      "radare2",
+      "radio-sdr",
+      "reverse-browser-automation",
+      "reverse-engineering",
+      "supply-chain-security",
+      "thick-client",
+      "threat-hunting",
+      "threat-intelligence",
+      "wifi-wireless",
+      "windows-ad"
+    ],
+    "error": null
+  },
+  {
+    "repo": "addyosmani/agent-skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 25,
+    "local_skills": 21,
+    "unmatched": 4,
+    "shallow_unmatched_count": 4,
+    "shallow_unmatched_sample": [
+      "skills/constraint-driven-development",
+      "skills/interview-me",
+      "skills/test-driven-development",
+      "skills/using-agent-skills"
+    ],
+    "local_skill_ids": [
+      "api-and-interface-design",
+      "browser-testing-with-devtools",
+      "ci-cd-and-automation",
+      "code-review-and-quality",
+      "code-simplification",
+      "context-engineering",
+      "debugging-and-error-recovery",
+      "deprecation-and-migration",
+      "documentation-and-adrs",
+      "doubt-driven-development",
+      "frontend-ui-engineering",
+      "git-workflow-and-versioning",
+      "idea-refine",
+      "incremental-implementation",
+      "observability-and-instrumentation",
+      "performance-optimization",
+      "planning-and-task-breakdown",
+      "security-and-hardening",
+      "shipping-and-launch",
+      "source-driven-development",
+      "spec-driven-development"
+    ],
+    "error": null
+  },
+  {
+    "repo": "chaunsin/agent-skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 10,
+    "local_skills": 6,
+    "unmatched": 4,
+    "shallow_unmatched_count": 4,
+    "shallow_unmatched_sample": [
+      "skills/git-stack",
+      "skills/grill",
+      "skills/prd",
+      "skills/prd-to-spec"
+    ],
+    "local_skill_ids": [
+      "drizzle-migration-conflict",
+      "hugo-to-markdown",
+      "postgresql-cli",
+      "pre-release-review",
+      "rclone-cli",
+      "redis-cli"
+    ],
+    "error": null
+  },
+  {
+    "repo": "chriswiles/claude-code-showcase",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 6,
+    "local_skills": 6,
+    "unmatched": 4,
+    "shallow_unmatched_count": 4,
+    "shallow_unmatched_sample": [
+      "core-components",
+      "react-ui-patterns",
+      "systematic-debugging",
+      "testing-patterns"
+    ],
+    "local_skill_ids": [
+      "code-showcase-core-components",
+      "code-showcase-react-ui-patterns",
+      "code-showcase-systematic-debugging",
+      "code-showcase-testing-patterns",
+      "formik-patterns",
+      "graphql-schema"
+    ],
+    "error": null
+  },
+  {
+    "repo": "mishanefedov/skill-issue",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 13,
+    "local_skills": 1,
+    "unmatched": 12,
+    "shallow_unmatched_count": 4,
+    "shallow_unmatched_sample": [
+      "empty",
+      "good",
+      "no-when",
+      "vague"
+    ],
+    "local_skill_ids": [
+      "skill-issue"
+    ],
+    "error": null
+  },
+  {
+    "repo": "mohamedabdallah-14/unslop",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 15,
+    "local_skills": 4,
+    "unmatched": 4,
+    "shallow_unmatched_count": 4,
+    "shallow_unmatched_sample": [
+      "unslop-help",
+      "unslop-reasoning",
+      "skills/unslop-help",
+      "skills/unslop-reasoning"
+    ],
+    "local_skill_ids": [
+      "unslop",
+      "unslop-commit",
+      "unslop-file",
+      "unslop-review"
+    ],
+    "error": null
+  },
+  {
+    "repo": "sandbaseai/awesome-workbuddy",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 5,
+    "local_skills": 1,
+    "unmatched": 4,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "skill-security-audit"
+    ],
+    "error": null
+  },
+  {
+    "repo": "supernovae-st/nika-agents",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 6,
+    "local_skills": 1,
+    "unmatched": 5,
+    "shallow_unmatched_count": 4,
+    "shallow_unmatched_sample": [
+      "nika-authoring",
+      "nika-debugging",
+      "nika-migration",
+      "nika-operating"
+    ],
+    "local_skill_ids": [
+      "nika"
+    ],
+    "error": null
+  },
+  {
+    "repo": "ejentum/ejentum-mcp",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 4,
+    "local_skills": 2,
+    "unmatched": 3,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "anti-deception",
+      "ejentum-reasoning-harness"
+    ],
+    "error": null
+  },
+  {
+    "repo": "hyhmrright/brooks-lint",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 9,
+    "local_skills": 7,
+    "unmatched": 3,
+    "shallow_unmatched_count": 3,
+    "shallow_unmatched_sample": [
+      "new-skill",
+      "release",
+      "skills/brooks-health"
+    ],
+    "local_skill_ids": [
+      "brooks-audit",
+      "brooks-debt",
+      "brooks-harness",
+      "brooks-lint",
+      "brooks-review",
+      "brooks-sweep",
+      "brooks-test"
+    ],
+    "error": null
+  },
+  {
+    "repo": "chenli-yy/entropy-box-public",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 3,
+    "local_skills": 1,
+    "unmatched": 2,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "entropy-box"
+    ],
+    "error": null
+  },
+  {
+    "repo": "connerkward/ckw-design-skill",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 7,
+    "local_skills": 6,
+    "unmatched": 2,
+    "shallow_unmatched_count": 2,
+    "shallow_unmatched_sample": [
+      ".",
+      "deterministic-design"
+    ],
+    "local_skill_ids": [
+      "ckw-design",
+      "design-philosophy",
+      "design-spatial",
+      "design-system",
+      "design-thinking",
+      "design-ux"
+    ],
+    "error": null
+  },
+  {
+    "repo": "ibelick/ui-skills",
+    "bucket": "community",
+    "category": "vendor_or_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 7,
+    "local_skills": 5,
+    "unmatched": 2,
+    "shallow_unmatched_count": 2,
+    "shallow_unmatched_sample": [
+      "skills/create-design-md",
+      "skills/improve-ui"
+    ],
+    "local_skill_ids": [
+      "baseline-ui",
+      "fixing-accessibility",
+      "fixing-metadata",
+      "fixing-motion-performance",
+      "ui-skills-root"
+    ],
+    "error": null
+  },
+  {
+    "repo": "ndesv21/socialclaw",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 4,
+    "local_skills": 1,
+    "unmatched": 2,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "socialclaw"
+    ],
+    "error": null
+  },
+  {
+    "repo": "romankurnovskii/etemaro",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 3,
+    "local_skills": 1,
+    "unmatched": 2,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "meteora-dlmm-pool-screening"
+    ],
+    "error": null
+  },
+  {
+    "repo": "takeaseatventure/devops-skills",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 3,
+    "local_skills": 1,
+    "unmatched": 2,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "cron-doctor"
+    ],
+    "error": null
+  },
+  {
+    "repo": "xquik-dev/x-twitter-scraper",
+    "bucket": "official",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 3,
+    "local_skills": 1,
+    "unmatched": 2,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "x-twitter-scraper"
+    ],
+    "error": null
+  },
+  {
+    "repo": "263311487-ux/falsify",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 3,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "falsify"
+    ],
+    "error": null
+  },
+  {
+    "repo": "bekservice/famulor-skill",
+    "bucket": "official",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 2,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "famulor-skill"
+    ],
+    "error": null
+  },
+  {
+    "repo": "fullstackcrew-alpha/privacy-mask",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 2,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "privacy-mask"
+    ],
+    "error": null
+  },
+  {
+    "repo": "glukicov/slideops",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 2,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "slideops"
+    ],
+    "error": null
+  },
+  {
+    "repo": "mskadu/opencode-agent-skills",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 5,
+    "local_skills": 4,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "anti-sycophancy",
+      "permission-manager",
+      "skill-suggester",
+      "smart-git-automation"
+    ],
+    "error": null
+  },
+  {
+    "repo": "optim-agent/optim-agent",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 3,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "optim-agent"
+    ],
+    "error": null
+  },
+  {
+    "repo": "riffkit/skill",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 2,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "riffkit"
+    ],
+    "error": null
+  },
+  {
+    "repo": "wwewtech/anti-slop-design",
+    "bucket": "community",
+    "category": "small_repo_partial",
+    "priority": "medium",
+    "upstream_skill_dirs": 2,
+    "local_skills": 1,
+    "unmatched": 1,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "anti-slop-design"
+    ],
+    "error": null
+  },
+  {
+    "repo": "amartelr/antigravity-workspace-manager",
+    "bucket": "community",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "aptratcn/skill-audit",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "skill-audit"
+    ],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "beatra-ai/beatra-skills",
+    "bucket": "official",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "beatra-ai-video-studio"
+    ],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "buywhere/buywhere-mcp",
+    "bucket": "official",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "buywhere-product-catalog"
+    ],
+    "error": null
+  },
+  {
+    "repo": "connerlambden/helium-mcp",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "helium-mcp"
+    ],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "elkidogz/technical-change-skill",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "technical-change-tracker"
+    ],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "hasdata/hasdata-cli",
+    "bucket": "official",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 2,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "hasdata",
+      "hasdata-cli"
+    ],
+    "error": null
+  },
+  {
+    "repo": "jddavenport/context-kit",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "context-kit"
+    ],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "karanb192/awesome-claude-skills",
+    "bucket": "community",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "milkomida77/guardian-agent-prompts",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "multi-agent-task-orchestrator"
+    ],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "morsechimwai/lemmaly",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 5,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "complexity-cuts",
+      "invariant-guard",
+      "lemmaly",
+      "mathguard",
+      "runaway-guard"
+    ],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "mrprewsh/seo-aeo-engine",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "nedcodes-ok/rule-porter",
+    "bucket": "community",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "nickdesi/zipai",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "onkarbadve/agy-auto",
+    "bucket": "community",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "agy-auto"
+    ],
+    "error": null
+  },
+  {
+    "repo": "openclaw/skills",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "daily-gift"
+    ],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "pilot-protocol/pilotprotocol",
+    "bucket": "official",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "pilot-protocol"
+    ],
+    "error": null
+  },
+  {
+    "repo": "pumanitro/global-chat",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "global-chat-agent-discovery"
+    ],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "sendblue-api/sendblue-cli",
+    "bucket": "community",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "sharrmavishal/operating-kit",
+    "bucket": "community",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "pre-ship-gate"
+    ],
+    "error": null
+  },
+  {
+    "repo": "shmlkv/dna-claude-analysis",
+    "bucket": "community",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "shpigford/skills",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "travisvn/awesome-claude-skills",
+    "bucket": "community",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "vibeforge1111/vibeship-spawner-skills",
+    "bucket": "community",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "voidborne-d/humanize-chinese",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "voidborne-d/lambda-lang",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "lambda-lang"
+    ],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "voltagent/awesome-agent-skills",
+    "bucket": "community",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "whoisabhishekadhikari/lovable-cleanup",
+    "bucket": "community",
+    "category": "error",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "lovable-cleanup"
+    ],
+    "error": "gh: Not Found (HTTP 404)"
+  },
+  {
+    "repo": "wittlesus/cursorrules-pro",
+    "bucket": "community",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 0,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [],
+    "error": null
+  },
+  {
+    "repo": "yikuansun/photopeaapi",
+    "bucket": "community",
+    "category": "no_skill_md",
+    "priority": null,
+    "upstream_skill_dirs": 0,
+    "local_skills": 1,
+    "unmatched": 0,
+    "shallow_unmatched_count": null,
+    "shallow_unmatched_sample": null,
+    "local_skill_ids": [
+      "photopea-embedded-editor"
+    ],
+    "error": null
+  }
+]

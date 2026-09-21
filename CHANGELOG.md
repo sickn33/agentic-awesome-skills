@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.0.0] - 2026-09-21 - "Curated Upstream Sync and Jev Social"
+
+> Adds **50** maintainer-reviewed skills from README-credited upstream sources,
+> including `jev-social`, vendor gaps (Apify, Vercel, Expo, Remotion,
+> Browserbase, Hugging Face, Neon, Longbridge), and selected community packs.
+
+A major catalog release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It merges the curated upstream batch (#1539) with per-skill maintainer review
+documented in `docs/maintainers/curated-50-upstream-review-2026-09-21.md`,
+refreshing catalog surfaces for **2,456** skills. Existing installation
+interfaces remain supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.0.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **50 curated upstream skills (#1539)** — reviewed import from official and
+  community README-credited repositories; ledger in
+  `docs/maintainers/curated-50-upstream-review-2026-09-21.md`.
+- **`jev-social`** — read-only Jev/socai social research routing.
+
+### Validation scope
+
+Maintainer attestation on exact merge head, repository validation,
+documentation-security checks, protected CI, CodeQL, canonical synchronization,
+and release-only Pages deploy from the immutable `v18.0.0` tag.
+
+---
+
 ## [17.8.4] - 2026-09-20 - "Core SearchAction for Pages SEO"
 
 > Aligns the Pages SEO verifier SearchAction expectation with `/core` so the

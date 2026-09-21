@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-09-21T05:49:43.528165+00:00",
+  "readme_credit_repos": 260,
+  "status_counts": {
+    "ok": 230,
+    "no_skill_md": 15,
+    "error": 15
+  },
+  "repos_with_upstream_skills": 230,
+  "repos_with_unmatched_upstream": 183,
+  "total_unmatched_upstream_dirs": 16198
+}
