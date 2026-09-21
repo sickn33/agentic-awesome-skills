@@ -59,6 +59,33 @@ describe('useSkillStars', () => {
 
       consoleSpy.mockRestore();
     });
+
+    it('should ignore non-boolean values in stored save records', () => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        'string-false': 'false',
+        'string-true': 'true',
+        'number-one': 1,
+        'real-save': true,
+      }));
+
+      const falseString = renderHook(() => useSkillStars('string-false'));
+      const trueString = renderHook(() => useSkillStars('string-true'));
+      const numberOne = renderHook(() => useSkillStars('number-one'));
+      const realSave = renderHook(() => useSkillStars('real-save'));
+
+      expect(falseString.result.current.hasSaved).toBe(false);
+      expect(trueString.result.current.hasSaved).toBe(false);
+      expect(numberOne.result.current.hasSaved).toBe(false);
+      expect(realSave.result.current.hasSaved).toBe(true);
+    });
+
+    it('should ignore array-shaped stored data', () => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([true]));
+
+      const { result } = renderHook(() => useSkillStars('0'));
+
+      expect(result.current.hasSaved).toBe(false);
+    });
   });
 
   describe('handleSaveClick', () => {

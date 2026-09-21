@@ -20,8 +20,12 @@ function parseStoredStars(storageKey: string): UserStars {
   try {
     const stored = localStorage.getItem(storageKey);
     if (!stored) return {};
-    const parsed = JSON.parse(stored);
-    return typeof parsed === 'object' && parsed !== null ? parsed : {};
+    const parsed: unknown = JSON.parse(stored);
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return {};
+
+    return Object.fromEntries(
+      Object.entries(parsed).filter((entry): entry is [string, boolean] => typeof entry[1] === 'boolean')
+    );
   } catch (error) {
     console.warn(`Failed to parse ${storageKey} from localStorage:`, error);
     return {};
