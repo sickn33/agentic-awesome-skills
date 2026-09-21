@@ -1,5 +1,5 @@
 ---
-name: makepad-2.0-events
+name: makepad-2-0-events
 description: Makepad 2.0 guidance for events; use when building or debugging Makepad UI code.
 source_repo: zhanghandong/makepad-skills
 source_type: community

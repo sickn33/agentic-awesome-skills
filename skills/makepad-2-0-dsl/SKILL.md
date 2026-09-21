@@ -1,5 +1,5 @@
 ---
-name: makepad-2.0-dsl
+name: makepad-2-0-dsl
 description: Makepad 2.0 guidance for dsl; use when building or debugging Makepad UI code.
 source_repo: zhanghandong/makepad-skills
 source_type: community

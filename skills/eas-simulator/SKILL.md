@@ -3,8 +3,8 @@ description: Curated upstream guidance for Eas Simulator; use when the workflow 
 name: eas-simulator
 version: 1.0.0
 license: MIT
-allowed-tools: Bash(npx *eas-cli@*), Bash(npx *agent-device@*), Bash(npx expo *),
-  Bash(eas *), Bash(expo *), Bash(xcodebuild*), Bash(pod*), Bash(argent *), Bash(ffmpeg*)
+allowed-tools: "Bash(npx *eas-cli@*), Bash(npx *agent-device@*), Bash(npx expo *),  Bash(eas *), Bash(expo *), Bash(xcodebuild*), Bash(pod*), Bash(argent *), Bash(ffmpeg*)"
+
 source_repo: expo/skills
 source_type: official
 source: expo
