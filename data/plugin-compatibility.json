@@ -28036,6 +28036,25 @@
       "runtime_files": []
     },
     {
+      "id": "marketing-mindset",
+      "path": "skills/marketing-mindset",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "marketing-plan",
       "path": "skills/marketing-plan",
       "targets": {
@@ -46927,10 +46946,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2444,
+    "total_skills": 2445,
     "supported": {
-      "codex": 2358,
-      "claude": 2383
+      "codex": 2359,
+      "claude": 2384
     },
     "blocked": {
       "codex": 86,

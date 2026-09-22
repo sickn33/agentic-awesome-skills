@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-21T13:07:02.000Z",
-  "total": 2444,
+  "total": 2445,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -37899,7 +37899,7 @@
       "source_type": "community",
       "source_repo": "socai-io/jev-social",
       "license": "MIT",
-      "license_source": "https://github.com/socai-io/jev-social/blob/794aac59dbef0929ec57f2650504f4231fef598e/LICENSE",
+      "license_source": "https://github.com/socai-io/jev-social/blob/05581cac6b8c21c85e54883b5f2b93c16f40f419/LICENSE",
       "tags": [
         "social-media",
         "research",
@@ -42717,6 +42717,41 @@
         "scoring"
       ],
       "path": "skills/marketing-ideas/SKILL.md"
+    },
+    {
+      "id": "marketing-mindset",
+      "canonical_id": "marketing-mindset",
+      "name": "marketing-mindset",
+      "description": "Use when a user asks how to win first customers, whether doing X will produce Y, how to write an ad or judge a marketing test — a marketer's decision framework, not a tactic library.",
+      "category": "marketing",
+      "risk": "safe",
+      "source": "https://github.com/axelfreeman/marketing-mindset",
+      "source_type": "community",
+      "source_repo": "axelfreeman/marketing-mindset",
+      "license": "MIT",
+      "license_source": "https://github.com/axelfreeman/marketing-mindset/blob/master/LICENSE",
+      "tags": [
+        "marketing",
+        "growth",
+        "positioning",
+        "cold-email",
+        "decision-making"
+      ],
+      "triggers": [
+        "marketing",
+        "growth",
+        "positioning",
+        "cold-email",
+        "decision-making",
+        "mindset",
+        "user",
+        "asks",
+        "how",
+        "win",
+        "first",
+        "customers"
+      ],
+      "path": "skills/marketing-mindset/SKILL.md"
     },
     {
       "id": "marketing-plan",

@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-21T13:07:02.000Z
 
-Total skills: 2444
+Total skills: 2445
 
 ## agent-behavior (5)
 
@@ -1671,7 +1671,7 @@ Total skills: 2444
 | `leiloeiro-mercado` | Analise de mercado imobiliario para leiloes. Liquidez, desagio tipico, ROI, estrategias de saida (flip/reforma/renda), Selic 2025 e benchmark CDI/FII. | safe | community | market-analysis, real-estate, roi, brazilian | market-analysis, real-estate, roi, brazilian, leiloeiro, mercado, analise, de, imobiliario, para, leiloes, liquidez |
 | `leiloeiro-risco` | Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco. | safe | community | risk-analysis, scoring, stress-test, brazilian | risk-analysis, scoring, stress-test, brazilian, leiloeiro, risco, analise, de, em, leiloes, imoveis, score |
 
-## marketing (57)
+## marketing (58)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1706,6 +1706,7 @@ Total skills: 2444
 | `local-legal-seo-audit` | Audit and improve local SEO for law firms, attorneys, forensic experts and legal/professional services sites with local presence, focusing on GBP, directorie... | safe | original | local, legal, seo, audit | local, legal, seo, audit, improve, law, firms, attorneys, forensic, experts, professional, sites |
 | `mailchimp-automation` | Automate Mailchimp email marketing including campaigns, audiences, subscribers, segments, and analytics via Rube MCP (Composio). Always search tools first fo... | critical | community | mailchimp | mailchimp, automation, automate, email, marketing, including, campaigns, audiences, subscribers, segments, analytics, via |
 | `marketing-ideas` | Provide proven marketing strategies and growth ideas for SaaS and software products, prioritized using a marketing feasibility scoring system. | safe | community | marketing, ideas | marketing, ideas, provide, proven, growth, saas, software, products, prioritized, feasibility, scoring |
+| `marketing-mindset` | Use when a user asks how to win first customers, whether doing X will produce Y, how to write an ad or judge a marketing test — a marketer's decision framewo... | safe | axelfreeman/marketing-mindset | marketing, growth, positioning, cold-email, decision-making | marketing, growth, positioning, cold-email, decision-making, mindset, user, asks, how, win, first, customers |
 | `marketing-psychology` | Apply behavioral science and mental models to marketing decisions, prioritized using a psychological leverage and feasibility scoring system. | none | community | marketing, psychology | marketing, psychology, apply, behavioral, science, mental, models, decisions, prioritized, psychological, leverage, feasibility |
 | `onboarding-cro` | You are an expert in user onboarding and activation. Your goal is to help users reach their "aha moment" as quickly as possible and establish habits that lea... | critical | community | onboarding, cro | onboarding, cro, user, activation, goal, users, reach, aha, moment, quickly, possible, establish |
 | `outreachagent` | Operate reply-aware cold outbound email workflows for AI agents with inboxes, contacts, templates, pacing, approvals, webhooks, and delivery metrics. | critical | self | email, cold-outreach, sales, ai-agents, workflows, deliverability, webhooks, rest-api | email, cold-outreach, sales, ai-agents, workflows, deliverability, webhooks, rest-api, outreachagent, operate, reply, aware |
