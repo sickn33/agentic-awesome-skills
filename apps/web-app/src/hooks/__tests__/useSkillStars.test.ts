@@ -180,6 +180,35 @@ describe('useSkillStars', () => {
     });
   });
 
+  describe('Cross-tab / cross-hook sync', () => {
+    it('should sync another mounted hook after a local save', async () => {
+      const first = renderHook(() => useSkillStars('shared-skill'));
+      const second = renderHook(() => useSkillStars('shared-skill'));
+
+      await act(async () => {
+        await first.result.current.handleSaveClick();
+      });
+
+      expect(first.result.current.hasSaved).toBe(true);
+      await waitFor(() => expect(second.result.current.hasSaved).toBe(true));
+    });
+
+    it('should sync when another tab updates browser storage', async () => {
+      const { result } = renderHook(() => useSkillStars('external-skill'));
+      const stored = JSON.stringify({ 'external-skill': true });
+
+      act(() => {
+        localStorage.setItem(STORAGE_KEY, stored);
+        window.dispatchEvent(new StorageEvent('storage', {
+          key: STORAGE_KEY,
+          newValue: stored,
+        }));
+      });
+
+      await waitFor(() => expect(result.current.hasSaved).toBe(true));
+    });
+  });
+
   describe('Return values', () => {
     it('should return all expected properties', () => {
       const { result } = renderHook(() => useSkillStars('test'));

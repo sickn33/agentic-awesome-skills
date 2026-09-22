@@ -1,7 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 const STORAGE_KEY = 'saved_skills';
 const LEGACY_STORAGE_KEY = 'user_stars';
+const CHANGE_EVENT = 'aas-saved-skills-change';
 
 interface UserStars {
   [skillId: string]: boolean;
@@ -45,6 +46,7 @@ function getUserStarsFromStorage(): UserStars {
 function saveUserStarsToStorage(stars: UserStars): boolean {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stars));
+    window.dispatchEvent(new Event(CHANGE_EVENT));
     return true;
   } catch (error) {
     console.warn(`Failed to save ${STORAGE_KEY} to localStorage:`, error);
@@ -59,6 +61,23 @@ export function useSkillStars(skillId: string | undefined): UseSkillStarsReturn 
   const [userStars, setUserStars] = useState<UserStars>(() => getUserStarsFromStorage());
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const hasSaved = Boolean(skillId && userStars[skillId]);
+
+  useEffect(() => {
+    const sync = (event: Event) => {
+      if (event.type === 'storage') {
+        const key = (event as StorageEvent).key;
+        if (key && key !== STORAGE_KEY && key !== LEGACY_STORAGE_KEY) return;
+      }
+      setUserStars(getUserStarsFromStorage());
+    };
+
+    window.addEventListener(CHANGE_EVENT, sync);
+    window.addEventListener('storage', sync);
+    return () => {
+      window.removeEventListener(CHANGE_EVENT, sync);
+      window.removeEventListener('storage', sync);
+    };
+  }, []);
 
   /**
    * Save a skill locally in this browser without pretending to update shared metrics.
