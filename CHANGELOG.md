@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.2.0] - 2026-09-22 - "Catalog Skills and Hosted Save Sync"
+
+> Ships one new community skill, refreshes Jev Social, fixes hosted catalog save
+> sync across views, and repairs `ui-ux-pro-max` on Python 3.11.
+
+A catalog patch for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It merges #1551, #1549, #1545, and maintainer lane #1553 while keeping the
+**2,445**-skill catalog on Core. Existing installation interfaces remain supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.2.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **marketing-mindset (#1545)** — marketer decision framework for early-stage B2B/SaaS work (Axel Freeman, MIT).
+
+### Changed
+
+- **Jev Social (#1549)** — refresh skill guidance to upstream `v0.1.4` with explicit TikTok media-download boundaries.
+
+### Fixed
+
+- **Hosted catalog saves (#1551)** — sync local saved-skill state across mounted hooks and cross-tab `storage` events.
+- **ui-ux-pro-max (#1553)** — avoid Python &lt; 3.12 `SyntaxError` in `design_system.py` anti-pattern formatting (maintainer lane for fork-blocked #1550).
+
+### Validation scope
+
+Maintainer attestation on exact merge heads, protected source PRs, repository validation, documentation-security checks, protected CI, CodeQL, and release-only Pages deploy from the immutable `v18.2.0` tag.
+
+---
+
 ## [18.1.0] - 2026-09-21 - "Hosted Catalog Save-State Hardening"
 
 > Hardens browser-local “saved skill” state on the hosted catalog so malformed
