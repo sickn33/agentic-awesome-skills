@@ -68,7 +68,7 @@ const FAQ_ITEMS = [
   },
 ] as const;
 
-function getCatalogCountLabel(skillCount = 0): string {
+export function getCatalogCountLabel(skillCount = 0): string {
   const visibleCount = skillCount > 0 ? skillCount : HOME_CATALOG_COUNT_FALLBACK;
   return `${visibleCount.toLocaleString('en-US')}+`;
 }
@@ -377,10 +377,13 @@ export function isTopSkill(skillId: string, skills: ReadonlyArray<Skill>, limit 
   return selectTopSkills(skills, limit).some((entry) => entry.id === skillId);
 }
 
-export function buildLandingMeta(): SeoMeta {
+export function buildLandingMeta(skillCount = 0): SeoMeta {
+  const visibleCount = Math.max(skillCount, 0);
+  const countLabel = getCatalogCountLabel(visibleCount);
   const title = 'Agentic Awesome Skills | Agent-first skill catalog and AAS Core';
-  const description =
-    'Open-source SKILL.md playbooks for Codex, Claude Code, Cursor, and compatible clients. Explore AAS Core for catalog search, agent-owned selection, validation, and plan preview.';
+  const description = visibleCount > 0
+    ? `Open-source SKILL.md playbooks for Codex, Claude Code, Cursor, and compatible clients, backed by ${countLabel} cataloged skills. Explore AAS Core for search, agent-owned selection, validation, and plan preview.`
+    : 'Open-source SKILL.md playbooks for Codex, Claude Code, Cursor, and compatible clients. Explore AAS Core for catalog search, agent-owned selection, validation, and plan preview.';
   return {
     title,
     description,
@@ -398,11 +401,11 @@ export function buildLandingMeta(): SeoMeta {
         url: canonicalUrl,
         isPartOf: buildWebSiteSchema(canonicalUrl),
         sameAs: REPOSITORY_URL,
-        about: buildSoftwareSourceCodeSchema(canonicalUrl, 0),
+        about: buildSoftwareSourceCodeSchema(canonicalUrl, visibleCount),
       },
       buildOrganizationSchema(),
       buildWebSiteSchema(canonicalUrl),
-      buildSoftwareSourceCodeSchema(canonicalUrl, 0),
+      buildSoftwareSourceCodeSchema(canonicalUrl, visibleCount),
     ],
   };
 }

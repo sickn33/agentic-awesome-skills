@@ -93,8 +93,8 @@ function App(): React.ReactElement {
             }
           >
             <Routes>
-              <Route path="/" element={<Landing />} />
               <Route element={<CatalogRouteProvider />}>
+                <Route path="/" element={<Landing />} />
                 <Route path="/core" element={<Home />} />
                 <Route path="/topics/:slug" element={<TopicLanding />} />
                 <Route path="/skill/:id" element={<SkillDetail />} />

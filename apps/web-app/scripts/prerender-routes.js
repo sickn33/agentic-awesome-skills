@@ -321,17 +321,20 @@ function buildPrerenderFallback({ heading, description, links }) {
   ].join('');
 }
 
-function buildLandingFallback({ siteBaseUrl }) {
+function buildLandingFallback({ siteBaseUrl, catalogCount = 0 }) {
   const links = [
     { href: routeToUrl('/core', siteBaseUrl), label: 'Enter AAS Core catalog' },
     { href: routeToUrl('/workbench', siteBaseUrl), label: 'Review an AAS stack and plan' },
     { href: routeToUrl('/plugins', siteBaseUrl), label: 'Compare specialized plugin packs' },
   ];
+  const countLabel = catalogCount > 0
+    ? `${catalogCount.toLocaleString('en-US')}+`
+    : `${HOME_CATALOG_COUNT_FALLBACK.toLocaleString('en-US')}+`;
 
   return [
     '<main data-prerender-fallback="true">',
     '<h1>Agent-first skills for Codex, Claude Code, and friends</h1>',
-    '<p>An open catalog of reusable SKILL.md playbooks, plus AAS Core for local discovery, agent-owned selection, validation, and plan preview.</p>',
+    `<p>An open catalog of ${countLabel} reusable SKILL.md playbooks, plus AAS Core for local discovery, agent-owned selection, validation, and plan preview.</p>`,
     `<nav aria-label="Product surfaces"><ul>${buildStaticLinkList(links)}</ul></nav>`,
     '</main>',
   ].join('');
@@ -409,10 +412,16 @@ function setRootFallback(html, fallbackHtml) {
   return html.replace(rootPattern, `<div id="root">${fallbackHtml}</div>`);
 }
 
-function buildLandingMeta({ imageUrl, canonicalUrl }) {
+function buildLandingMeta({ catalogCount, imageUrl, canonicalUrl }) {
+  const visibleCount = Math.max(catalogCount, 0);
+  const formattedCount = visibleCount > 0
+    ? visibleCount.toLocaleString('en-US')
+    : HOME_CATALOG_COUNT_FALLBACK.toLocaleString('en-US');
+  const countLabel = `${formattedCount}+`;
   const title = 'Agentic Awesome Skills | Agent-first skill catalog and AAS Core';
-  const description =
-    'Open-source SKILL.md playbooks for Codex, Claude Code, Cursor, and compatible clients. Explore AAS Core for catalog search, agent-owned selection, validation, and plan preview.';
+  const description = visibleCount > 0
+    ? `Open-source SKILL.md playbooks for Codex, Claude Code, Cursor, and compatible clients, backed by ${countLabel} cataloged skills. Explore AAS Core for search, agent-owned selection, validation, and plan preview.`
+    : 'Open-source SKILL.md playbooks for Codex, Claude Code, Cursor, and compatible clients. Explore AAS Core for catalog search, agent-owned selection, validation, and plan preview.';
   const catalogBaseUrl = canonicalUrl.replace(/\/$/, '');
 
   return {
@@ -965,10 +974,11 @@ function main() {
 
   const landingCanonical = routeToUrl('/', siteBaseUrl);
   const landingMeta = buildLandingMeta({
+    catalogCount: skills.length,
     imageUrl: socialImage,
     canonicalUrl: landingCanonical,
   });
-  writePrerenderedRoute('/', template, landingMeta, buildLandingFallback({ siteBaseUrl }));
+  writePrerenderedRoute('/', template, landingMeta, buildLandingFallback({ siteBaseUrl, catalogCount: skills.length }));
 
   const homeCanonical = routeToUrl('/core', siteBaseUrl);
   const homeMeta = buildHomeMeta({

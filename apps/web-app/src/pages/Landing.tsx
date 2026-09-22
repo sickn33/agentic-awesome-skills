@@ -1,16 +1,15 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { Icon } from '../components/ui/Icon';
+import { useSkills } from '../context/SkillContext';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { catalogVersion } from '../utils/catalogRelease';
-import { buildLandingMeta, toIndexableRoutePath } from '../utils/seo';
+import { buildLandingMeta, getCatalogCountLabel, toIndexableRoutePath } from '../utils/seo';
 import './Landing.css';
 
-const INSTALL_COMMAND = 'npx agentic-awesome-skills';
 const REPO_URL = 'https://github.com/sickn33/agentic-awesome-skills';
 const DOCS_ROOT = `${REPO_URL}/blob/main/docs/users`;
 const CORE_GUIDE_URL = `${DOCS_ROOT}/aas-core.md`;
-const CATALOG_SIZE_LABEL = '2,000+';
 
 const agents = [
   { name: 'Codex', flag: '--codex', href: `${DOCS_ROOT}/codex-cli-skills.md` },
@@ -47,25 +46,30 @@ const steps = [
 ] as const;
 
 export function Landing(): React.ReactElement {
+  const { skills } = useSkills();
+  const catalogSizeLabel = useMemo(() => getCatalogCountLabel(skills.length), [skills.length]);
+  const installCommand = useMemo(
+    () => `npx agentic-awesome-skills@${catalogVersion}`,
+    [],
+  );
   const wordmarkSrc = `${import.meta.env.BASE_URL}aas-wordmark-hero.png`;
   const avatarSrc = `${import.meta.env.BASE_URL}maintainer-avatar.jpg`;
   const [copied, setCopied] = useState(false);
 
-  usePageMeta(buildLandingMeta());
+  usePageMeta(buildLandingMeta(skills.length));
 
   const copyInstall = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(INSTALL_COMMAND);
+      await navigator.clipboard.writeText(installCommand);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
     }
-  }, []);
+  }, [installCommand]);
 
   return (
     <div className="landing-page">
-      {/* Hero: brand-first neon sign, then the pitch */}
       <section className="landing-hero" aria-labelledby="landing-hero-title">
         <div className="landing-sign" aria-hidden="true">
           <span className="landing-sign__trace landing-sign__trace--left" />
@@ -84,14 +88,14 @@ export function Landing(): React.ReactElement {
         </h1>
         <p className="landing-hero__punch">Search. Choose. Validate. Preview.</p>
         <p className="landing-hero__lede">
-          {CATALOG_SIZE_LABEL} reusable <code>SKILL.md</code> playbooks for Codex, Claude Code, Cursor,
+          {catalogSizeLabel} reusable <code>SKILL.md</code> playbooks for Codex, Claude Code, Cursor,
           Gemini CLI, and Antigravity. AAS Core lets the agent pick exact skills and preview the
           plan before anything touches your project.
         </p>
 
         <div className="landing-terminal">
           <span className="landing-terminal__prompt" aria-hidden="true">$</span>
-          <code className="landing-terminal__cmd">{INSTALL_COMMAND}</code>
+          <code className="landing-terminal__cmd">{installCommand}</code>
           <button
             type="button"
             className="landing-terminal__copy"
@@ -115,7 +119,6 @@ export function Landing(): React.ReactElement {
         </div>
       </section>
 
-      {/* Agents: intro left, install-flag tiles right */}
       <section className="landing-section landing-agents" aria-labelledby="landing-agents-title">
         <div className="landing-section__intro">
           <p className="landing-kicker">Compatibility</p>
@@ -137,7 +140,6 @@ export function Landing(): React.ReactElement {
         </ul>
       </section>
 
-      {/* Surfaces: bento, Core dominant */}
       <section className="landing-section landing-surfaces" aria-labelledby="landing-surfaces-title">
         <div className="landing-section__intro">
           <p className="landing-kicker">Surfaces</p>
@@ -150,11 +152,11 @@ export function Landing(): React.ReactElement {
             <span className="landing-tile__badge">Catalog</span>
             <span className="landing-tile__title">AAS Core</span>
             <span className="landing-tile__body">
-              Search {CATALOG_SIZE_LABEL} skills by outcome, category, risk, and source. Shortlist
+              Search {catalogSizeLabel} skills by outcome, category, risk, and source. Shortlist
               in the browser, then hand exact IDs to your agent.
             </span>
             <span className="landing-tile__stats" aria-hidden="true">
-              <span><strong>{CATALOG_SIZE_LABEL}</strong>skills</span>
+              <span><strong>{catalogSizeLabel}</strong>skills</span>
               <span><strong>100+</strong>categories</span>
               <span><strong>v{catalogVersion}</strong>current release</span>
             </span>
@@ -189,7 +191,6 @@ export function Landing(): React.ReactElement {
         </div>
       </section>
 
-      {/* How it works: four horizontal steps */}
       <section className="landing-section landing-steps" aria-labelledby="landing-steps-title">
         <div className="landing-section__intro landing-section__intro--wide">
           <p className="landing-kicker">How AAS Core works</p>
@@ -222,7 +223,6 @@ export function Landing(): React.ReactElement {
         </div>
       </section>
 
-      {/* Closing strip */}
       <section className="landing-section landing-strip" aria-labelledby="landing-strip-title">
         <h2 id="landing-strip-title" className="sr-only">Project</h2>
         <a href="https://github.com/sickn33" target="_blank" rel="noreferrer" className="landing-strip__maintainer">

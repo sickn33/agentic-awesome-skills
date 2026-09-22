@@ -48,9 +48,10 @@ describe('SEO helpers', () => {
   });
 
   it('builds intro landing metadata for the site root', () => {
-    const meta = buildLandingMeta();
+    const meta = buildLandingMeta(2445);
 
     expect(meta.title).toContain('Agentic Awesome Skills');
+    expect(meta.description).toContain('2,445+ cataloged skills');
     expect(meta.description).toContain('AAS Core');
     expect(meta.canonicalPath).toBe('/');
     expect(meta.ogImage).toBe(DEFAULT_SOCIAL_IMAGE);
