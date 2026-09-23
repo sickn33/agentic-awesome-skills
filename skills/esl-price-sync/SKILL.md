@@ -201,3 +201,10 @@ Before finalizing any ESL integration, sync workflow, or audit output:
 > 3. Generate idempotent mutation payloads with `UUIDv5` tokens and monotonic timestamp versioning.
 > 4. Verify tag layout: Confirm that promo prices fit within the 2.9-inch 3-color e-paper template without numeric truncation.
 > 5. Queue rate-limited dispatch at 120 tags/min on Base Station 03, logging transmission to physical tag ACK confirmation.
+
+## Limitations
+
+- ESL APIs, radio limits, acknowledgements, battery figures, and rate limits depend on the vendor, firmware, tag model, and local radio rules. Confirm each value in the deployed system's documentation before use.
+- Start with read-only reconciliation and a small authorized pilot. A server acknowledgement does not prove the physical label displayed the intended value; require tag-level confirmation and a rollback plan before wider writes.
+- Protect retail pricing, product, and device identifiers as business data. Do not transmit credentials or customer data in diagnostic logs or reports.
+- The scripts and payloads in this guide are illustrative and are not vendor-certified integrations.
