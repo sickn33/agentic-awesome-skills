@@ -808,6 +808,7 @@
         "linkerd-patterns",
         "linux-troubleshooting",
         "llm-inference-scaling",
+        "marlin-bed-leveling",
         "mesh-memory",
         "microservices-patterns",
         "model-serving-kubernetes",

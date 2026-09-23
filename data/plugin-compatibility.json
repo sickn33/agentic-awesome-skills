@@ -12603,6 +12603,25 @@
       "runtime_files": []
     },
     {
+      "id": "dali-short-address-commissioner",
+      "path": "skills/dali-short-address-commissioner",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "dast-scanning",
       "path": "skills/dast-scanning",
       "targets": {
@@ -16700,6 +16719,25 @@
       "runtime_files": []
     },
     {
+      "id": "eol-resistor-calculator",
+      "path": "skills/eol-resistor-calculator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "error-debugging-error-analysis",
       "path": "skills/error-debugging-error-analysis",
       "targets": {
@@ -16835,6 +16873,25 @@
     {
       "id": "error-handling-patterns",
       "path": "skills/error-handling-patterns",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "esl-price-sync",
+      "path": "skills/esl-price-sync",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -28340,6 +28397,25 @@
       "runtime_files": []
     },
     {
+      "id": "marlin-bed-leveling",
+      "path": "skills/marlin-bed-leveling",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "matematico-tao",
       "path": "skills/matematico-tao",
       "targets": {
@@ -31743,6 +31819,25 @@
     {
       "id": "one-drive-automation",
       "path": "skills/one-drive-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "oneroster-csv-validator",
+      "path": "skills/oneroster-csv-validator",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -46965,10 +47060,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2446,
+    "total_skills": 2451,
     "supported": {
-      "codex": 2360,
-      "claude": 2385
+      "codex": 2365,
+      "claude": 2390
     },
     "blocked": {
       "codex": 86,

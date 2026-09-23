@@ -64,6 +64,7 @@
     "context-management-restore": "context-management-context-restore",
     "context-management-save": "context-management-context-save",
     "cross-platform-audit": "cross-platform-contract-propagation-audit",
+    "dali-short-commissioner": "dali-short-address-commissioner",
     "data-engineering-feature": "data-engineering-data-driven-feature",
     "data-engineering-pipeline": "data-engineering-data-pipeline",
     "database-cloud-optimize": "database-cloud-optimization-cost-optimize",

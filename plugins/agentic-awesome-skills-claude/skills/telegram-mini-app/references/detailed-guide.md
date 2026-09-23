@@ -172,8 +172,34 @@ Making money from Mini Apps
 | TON payments | Premium features | High |
 | In-app purchases | Virtual goods | High |
 | Ads (Telegram Ads) | Display ads | Medium |
+| In-app ad networks (e.g. TADS) | Native / fullscreen / rewarded ads inside the Mini App | Medium |
 | Referral | Share to earn | Medium |
 | NFT sales | Digital collectibles | High |
+
+### In-app ads (rewarded and native)
+
+Ad networks built for Mini Apps serve ads inside the app itself, so you keep the user in the flow and can reward them (extra life, coins) for a click or a full view. Example with [TADS](https://tads.me) (`npm install react-tads-widget`):
+
+```jsx
+import { TadsWidgetProvider, TadsWidget } from 'react-tads-widget';
+
+// wrap the app once
+<TadsWidgetProvider><App /></TadsWidgetProvider>
+
+// native block inside content; onClickReward makes it a rewarded ad
+<TadsWidget id="YOUR_WIDGET_ID" type="static"
+  onClickReward={() => grantBonus()}
+  onAdsNotFound={() => hidePlaceholder()} />
+```
+
+Fullscreen ads work the same way with `type="fullscreen"` and `onShowReward`; show them on a user action, never on load. Agent-readable docs: https://tads.me/llms.txt
+
+#### Advertising safety and limitations
+
+- Confirm the network, widget format, reward rules, Telegram requirements, and applicable privacy obligations for the app and audience before deployment. Tell users when content is an ad and what action earns a reward.
+- Treat click/show callbacks as client-side UI signals only. Do not use them alone to grant transferable or purchasable value; validate reward events with a trusted server-side source where available, and make grants idempotent and abuse-resistant.
+- Keep ad display optional and user-initiated where the format calls for it. Never show a fullscreen ad automatically on app load or make an ad interaction the only way to use a core feature.
+- SDK APIs and publisher terms can change. Check the current TADS documentation and package version before copying examples into production.
 
 ### Telegram Stars (New!)
 ```javascript

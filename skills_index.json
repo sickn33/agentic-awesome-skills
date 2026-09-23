@@ -16455,6 +16455,39 @@
     }
   },
   {
+    "id": "dali-short-address-commissioner",
+    "path": "skills/dali-short-address-commissioner",
+    "category": "architecture",
+    "name": "dali-short-address-commissioner",
+    "description": "Commissions DALI and DALI-2 (IEC 62386) lighting buses: short-address assignment (0-63), 24-bit binary search collision resolution, groups, and DT8 color control. Trigger phrases: commission dali, dali short address, dali collision resolution, dali bus addressing, dali-2 setup.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "wwewtech/dali-short-address-commissioner",
+    "license": "MIT",
+    "tags": [
+      "dali",
+      "dali-2",
+      "lighting-control",
+      "iec-62386",
+      "building-automation",
+      "iot"
+    ]
+  },
+  {
     "id": "dark-mode",
     "path": "skills/design-it/dark-mode",
     "category": "design-it",
@@ -20829,6 +20862,39 @@
     }
   },
   {
+    "id": "eol-resistor-calculator",
+    "path": "skills/eol-resistor-calculator",
+    "category": "architecture",
+    "name": "eol-resistor-calculator",
+    "description": "Calculates and validates end-of-line (EOL, SEOL, DEOL, TEOL) resistor loops for intrusion alarm panels (Honeywell, DSC, Paradox, Bosch) with wire gauge drop and state tables. Trigger phrases: eol resistor, deol wiring, alarm zone resistor, calculate end of line, double eol tamper.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "wwewtech/eol-resistor-calculator",
+    "license": "MIT",
+    "tags": [
+      "security-systems",
+      "hardware",
+      "electronics",
+      "alarm-panel",
+      "circuit-design",
+      "electrical-engineering"
+    ]
+  },
+  {
     "id": "error-debugging-error-analysis",
     "path": "skills/error-debugging-error-analysis",
     "category": "development",
@@ -21003,6 +21069,39 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "esl-price-sync",
+    "path": "skills/esl-price-sync",
+    "category": "architecture",
+    "name": "esl-price-sync",
+    "description": "Synchronizes retail prices between ERP/POS systems and Electronic Shelf Labels (SES-imagotag, ZKONG, Pricer, Hanshow, SOLUM) with delta watermarking, idempotency, and battery modeling. Trigger phrases: esl price sync, electronic shelf labels, zkong sync, ses imagotag price, ghost pricing audit.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "wwewtech/esl-price-sync",
+    "license": "MIT",
+    "tags": [
+      "retail-tech",
+      "esl",
+      "iot",
+      "supply-chain",
+      "systems-integration",
+      "enterprise-software"
+    ]
   },
   {
     "id": "ethical-hacking-methodology",
@@ -36395,6 +36494,39 @@
     ]
   },
   {
+    "id": "marlin-bed-leveling",
+    "path": "skills/marlin-bed-leveling",
+    "category": "development",
+    "name": "marlin-bed-leveling",
+    "description": "Calibrates Marlin 2.x 3D printer firmware bed leveling: Unified Bed Leveling (UBL), Bilinear ABL, M420 S1 post-homing, Z-probe offsets, G26 mesh prints, and EEPROM slots. Trigger phrases: marlin bed leveling, ubl calibration, m420 s1, z probe offset, g29 bed level, first layer adhesion.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "wwewtech/marlin-bed-leveling",
+    "license": "MIT",
+    "tags": [
+      "3d-printing",
+      "marlin-firmware",
+      "gcode",
+      "hardware-calibration",
+      "fdm",
+      "additive-manufacturing"
+    ]
+  },
+  {
     "id": "mason",
     "path": "skills/agent-squad/mason",
     "category": "agent-squad",
@@ -40873,6 +41005,39 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "oneroster-csv-validator",
+    "path": "skills/oneroster-csv-validator",
+    "category": "testing",
+    "name": "oneroster-csv-validator",
+    "description": "Validates 1EdTech / IMS Global OneRoster v1.1 and v1.2 CSV roster sets: manifest integrity, bulk vs delta strictness, foreign key references, and encoding sanitization. Trigger phrases: oneroster csv validator, validate oneroster zip, clever roster error, oneroster sourcedid.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "wwewtech/oneroster-csv-validator",
+    "license": "MIT",
+    "tags": [
+      "edtech",
+      "oneroster",
+      "csv-validation",
+      "ims-global",
+      "1edtech",
+      "data-engineering"
+    ]
   },
   {
     "id": "ontoly-software-graph",
