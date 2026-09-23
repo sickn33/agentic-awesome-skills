@@ -9091,6 +9091,25 @@
       "runtime_files": []
     },
     {
+      "id": "chatexport-need-miner",
+      "path": "skills/chatexport-need-miner",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "check-identity-pack",
       "path": "skills/check-identity-pack",
       "targets": {
@@ -46946,10 +46965,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2445,
+    "total_skills": 2446,
     "supported": {
-      "codex": 2359,
-      "claude": 2384
+      "codex": 2360,
+      "claude": 2385
     },
     "blocked": {
       "codex": 86,

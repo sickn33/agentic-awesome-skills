@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-22T06:31:46.000Z
 
-Total skills: 2445
+Total skills: 2446
 
 ## agent-behavior (5)
 
@@ -1062,7 +1062,7 @@ Total skills: 2445
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (194)
+## development (195)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1085,6 +1085,7 @@ Total skills: 2445
 | `boost-asio-pro` | Use when writing asynchronous C++ networking code with Boost.Asio or standalone Asio — TCP/UDP servers and clients, SSL/TLS, timers, strands, composed async ... | safe | alexprivalov/boost-asio-skill | cpp, boost, asio, async, networking, coroutines | cpp, boost, asio, async, networking, coroutines, pro, writing, asynchronous, code, standalone, tcp |
 | `brooks-lint` | AI code reviewer grounded in classic software engineering books for catching design smells, coupling issues, and architectural risks. | safe | hyhmrright/brooks-lint | code-review, architecture, software-design, refactoring, claude-code | code-review, architecture, software-design, refactoring, claude-code, brooks, lint, ai, code, reviewer, grounded, classic |
 | `busybox-on-windows` | How to use a Win32 build of BusyBox to run many of the standard UNIX command line tools on Windows. | safe | community | busybox, on, windows | busybox, on, windows, how, win32, run, many, standard, unix, command, line |
+| `chatexport-need-miner` | Mines offline Telegram Desktop chat exports (result.json) for unmet market needs and product opportunities using chunked streaming and verbatim quote groundi... | safe | wwewtech/chatexport-need-miner | telegram, market-research, text-mining, offline-analytics, developer-tools | telegram, market-research, text-mining, offline-analytics, developer-tools, chatexport, miner, mines, offline, desktop, chat, exports |
 | `cmux` | Control cmux workspaces, panes, surfaces, and agent sessions safely from macOS terminal workflows. | critical | davidondrej/skills | cmux, terminal, agents, macos | cmux, terminal, agents, macos, control, workspaces, panes, surfaces, agent, sessions, safely |
 | `code-audit` | Authorized source-code security review and SAST workflows: Semgrep and CodeQL pattern hunting, dangerous API identification, and fix verification. | safe | zhaoxuya520/reverse-skill | code, audit | code, audit, authorized, source, security, review, sast, semgrep, codeql, hunting, dangerous, api |
 | `code-documentation-code-explain` | You are a code education expert specializing in explaining complex code through clear narratives, visual diagrams, and step-by-step breakdowns. Transform dif... | safe | community | code, documentation, explain | code, documentation, explain, education, specializing, explaining, complex, through, clear, narratives, visual, diagrams |
