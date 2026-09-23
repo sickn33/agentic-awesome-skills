@@ -131,7 +131,7 @@ assert.match(maintenanceGuide, /hands contributor\/generated drift to the protec
 assert.match(maintenanceGuide, /`npm run chain` already includes catalog generation/);
 assert.doesNotMatch(maintenanceGuide, /npm run chain\n\s+npm run catalog/);
 assert.match(autonomyGuide, /explicitly dispatches main CI and CodeQL/);
-assert.match(autonomyGuide, /Protected pushes to `main` trigger the guarded Pages build automatically/);
+assert.match(autonomyGuide, /Pages is dispatched manually from protected `main` only after source and canonical-sync work is complete/);
 for (const contractText of [maintainerSkill, maintenanceGuide, mergeBatchGuide, autonomyGuide]) {
   assert.match(contractText, /protected[- ]base|protected base/);
   assert.match(contractText, /impact_profile.*shadow|shadow-only.*impact_profile/s);
@@ -163,7 +163,7 @@ assert.match(maintainerSkill, /real MCP `initialize` plus `tools\/list` handshak
 assert.match(maintainerSkill, /Every stable or prerelease version requires full release alignment/);
 assert.match(maintainerSkill, /npm run sync:release-state`, `npm run plugin-compat:check`, and `npm run bundles:check`/);
 assert.match(maintainerSkill, /every published Codex\/Claude plugin mirror, and every eligible Agent Plugins editorial-bundle manifest/);
-assert.match(maintainerSkill, /release-tag Pages build from the exact immutable `vX\.Y\.Z` tag/);
+assert.match(maintainerSkill, /release-tag Pages build from the exact immutable `vX\.Y\.Z` tag using `deployment_target=release`/);
 assert.match(maintainerSkill, /final generator pass must be idempotent/);
 assert.match(agentInstructions, /Every stable or prerelease version must finish with the full-release-alignment gate/);
 assert.match(maintenanceGuide, /Run the mandatory full-release-alignment gate/);
@@ -188,7 +188,8 @@ const pagesWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "pages.yml"),
   "utf8",
 );
-assert.match(pagesWorkflow, /^on:\s*\n\s+push:\s*\n\s+branches:\s*\n\s+- main\s*\n\s+workflow_dispatch:/m);
+assert.match(pagesWorkflow, /^on:\s*\n\s+workflow_dispatch:\s*\n\s+inputs:[\s\S]*?deployment_target:[\s\S]*?options:[\s\S]*?- release[\s\S]*?- main/m);
+assert.doesNotMatch(pagesWorkflow, /^\s+push:/m);
 assert.match(pagesWorkflow, /permissions:\s*\n\s+contents: read\s*\n\s+pages: write\s*\n\s+id-token: write/);
 const pagesCheckoutIndex = pagesWorkflow.indexOf("- name: Checkout");
 const pagesProvenanceIndex = pagesWorkflow.indexOf("- name: Verify deployment provenance");
@@ -199,7 +200,8 @@ assert.ok(
 );
 for (const provenanceContract of [
   /GH_TOKEN: \$\{\{ github\.token \}\}/,
-  /GITHUB_EVENT_NAME.*push/,
+  /DEPLOYMENT_TARGET.*inputs\.deployment_target/,
+  /GITHUB_EVENT_NAME.*workflow_dispatch/,
   /refs\/heads\/main/,
   /commits\/main/,
   /GITHUB_SHA/,
@@ -211,7 +213,7 @@ for (const provenanceContract of [
   /gh api --method GET "repos\/\$\{GITHUB_REPOSITORY\}\/releases\/tags\/\$\{GITHUB_REF_NAME\}"/,
   /\.draft == false/,
   /\.published_at/,
-  /\[skip pages\]/,
+  /deployment_target:[\s\S]*?release/,
   /Verify current main before deployment/,
 ]) {
   assert.match(pagesWorkflow, provenanceContract);

@@ -1,14 +1,20 @@
-# Build and deploy protected main updates, or explicitly dispatched releases, to GitHub Pages.
+# Build and deploy explicitly selected protected-main or release-tag targets to GitHub Pages.
 # Enable in repo: Settings → Pages → Source: GitHub Actions.
 # Site URL: https://asskills.me/
 
 name: Deploy Web App to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: "Deploy the current protected main commit or an exact released tag"
+        required: true
+        type: choice
+        default: release
+        options:
+          - release
+          - main
 
 permissions:
   contents: read
@@ -24,7 +30,6 @@ env:
 
 jobs:
   build:
-    if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip pages]')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,12 +42,18 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          DEPLOYMENT_TARGET: ${{ inputs.deployment_target }}
         run: |
           set -euo pipefail
 
-          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+          if [[ "${GITHUB_EVENT_NAME}" != "workflow_dispatch" ]]; then
+            echo "Pages deployment requires an explicit workflow dispatch." >&2
+            exit 1
+          fi
+
+          if [[ "${DEPLOYMENT_TARGET}" == "main" ]]; then
             if [[ "${GITHUB_REF}" != "refs/heads/main" ]]; then
-              echo "Automatic Pages deployment is only allowed from protected main." >&2
+              echo "Main deployment must be dispatched from protected main." >&2
               exit 1
             fi
             main_commit="$(gh api --method GET "repos/${GITHUB_REPOSITORY}/commits/main" --jq '.sha')"
@@ -53,7 +64,7 @@ jobs:
             exit 0
           fi
 
-          if [[ "${GITHUB_EVENT_NAME}" != "workflow_dispatch" || "${GITHUB_REF_TYPE}" != "tag" ]]; then
+          if [[ "${DEPLOYMENT_TARGET}" != "release" || "${GITHUB_REF_TYPE}" != "tag" ]]; then
             echo "Manual Pages deployment must be dispatched from an immutable release tag." >&2
             exit 1
           fi
@@ -166,7 +177,7 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - name: Verify current main before deployment
-        if: github.event_name == 'push'
+        if: inputs.deployment_target == 'main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

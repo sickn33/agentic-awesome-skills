@@ -242,8 +242,8 @@ assert.match(
 );
 assert.match(
   pagesWorkflow,
-  /Verify deployment provenance[\s\S]*?GITHUB_EVENT_NAME[\s\S]*?refs\/heads\/main[\s\S]*?commits\/main[\s\S]*?GITHUB_REF_TYPE[\s\S]*?expected_tag="v\$\{package_version\}"[\s\S]*?refs\/tags\/\$\{GITHUB_REF_NAME\}\^\{commit\}[\s\S]*?releases\/tags\/\$\{GITHUB_REF_NAME\}[\s\S]*?\.draft == false[\s\S]*?\.published_at/,
-  "Pages should bind automatic deployments to the current protected main SHA and release deployments to the exact published package tag",
+  /deployment_target:[\s\S]*?options:[\s\S]*?- release[\s\S]*?- main[\s\S]*?Verify deployment provenance[\s\S]*?DEPLOYMENT_TARGET[\s\S]*?workflow_dispatch[\s\S]*?refs\/heads\/main[\s\S]*?commits\/main[\s\S]*?GITHUB_REF_TYPE[\s\S]*?expected_tag="v\$\{package_version\}"[\s\S]*?refs\/tags\/\$\{GITHUB_REF_NAME\}\^\{commit\}[\s\S]*?releases\/tags\/\$\{GITHUB_REF_NAME\}[\s\S]*?\.draft == false[\s\S]*?\.published_at[\s\S]*?Verify current main before deployment[\s\S]*?inputs\.deployment_target == 'main'/,
+  "Pages should bind main dispatches to current protected main and release dispatches to the exact published package tag",
 );
 assert.match(
   ciWorkflow,
