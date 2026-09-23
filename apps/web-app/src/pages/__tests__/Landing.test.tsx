@@ -3,6 +3,7 @@ import { describe, expect, it, vi, beforeEach, Mock } from 'vitest';
 import { Landing } from '../Landing';
 import { renderWithRouter } from '../../utils/testUtils';
 import { useSkills } from '../../context/SkillContext';
+import { catalogVersion } from '../../utils/catalogRelease';
 
 vi.mock('../../context/SkillContext', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../../context/SkillContext')>();
@@ -36,7 +37,7 @@ describe('Landing', () => {
     })).toBeInTheDocument();
     expect(screen.getByText('Search. Choose. Validate. Preview.')).toBeInTheDocument();
     expect(screen.getByText('2,445+')).toBeInTheDocument();
-    expect(screen.getByText('npx agentic-awesome-skills@18.2.0')).toBeInTheDocument();
+    expect(screen.getByText(`npx agentic-awesome-skills@${catalogVersion}`)).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: /Works with every agent/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: /Current surfaces/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: /From intent to a reviewable plan/i })).toBeInTheDocument();
@@ -62,7 +63,7 @@ describe('Landing', () => {
     fireEvent.click(screen.getByRole('button', { name: /Copy install command/i }));
 
     await waitFor(() => {
-      expect(writeText).toHaveBeenCalledWith('npx agentic-awesome-skills@18.2.0');
+      expect(writeText).toHaveBeenCalledWith(`npx agentic-awesome-skills@${catalogVersion}`);
       expect(screen.getByRole('button', { name: /Copied/i })).toBeInTheDocument();
     });
 
