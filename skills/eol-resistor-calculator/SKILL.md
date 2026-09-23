@@ -203,3 +203,9 @@ Before emitting any alarm wiring advice, schematic, or resistor calculation:
 >    - Walk-test (Alarm): $11.21\text{k}\ \Omega$.
 >    - Sensor cover removed (Tamper): $\infty\ \Omega$ (Open).
 >    - Crushed wire (Short): $8.5\ \Omega$ (Panel registers Tamper Short).
+
+## Limitations
+
+- EOL values, wiring topologies, and zone states are panel- and detector-specific. Use the installation manual and approved wiring diagram for the exact model; the examples are not universal specifications.
+- Work on alarm systems only with owner authorization and qualified personnel. Do not bypass supervision, disable an active alarm, or leave a protected site without a verified restored state.
+- Cable resistance and resistor tolerances are estimates. Measure the installed loop and confirm the panel's published acceptance ranges before changing configuration.

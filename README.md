@@ -522,6 +522,7 @@ Key source families include:
 
 ### Community Contributors
 
+- **[wwewtech/eol-resistor-calculator](https://github.com/wwewtech/eol-resistor-calculator)**: Source for the `eol-resistor-calculator` skill — community guidance and examples under MIT.
 - **[socai-io/jev-social](https://github.com/socai-io/jev-social)**: Source for the `jev-social` skill — read-only Jev/socai social research routing (MIT).
 - **[work0r-ai/agent-kit](https://github.com/work0r-ai/agent-kit)**: Source for the `workorai` skill — agent kit workflows (MIT).
 
