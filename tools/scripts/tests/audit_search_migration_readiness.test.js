@@ -5,7 +5,13 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const scriptPath = path.resolve(__dirname, '..', 'audit_search_migration_readiness.js');
-const { auditMigrationReadiness } = require(scriptPath);
+const { auditMigrationReadiness, inferLegacyPagesUrl } = require(scriptPath);
+
+assert.strictEqual(
+  inferLegacyPagesUrl('https://asskills.me/'),
+  'https://sickn33.github.io/antigravity-awesome-skills/',
+  'the custom domain must retain the established legacy bridge destination',
+);
 
 function writeJson(filePath, data) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });

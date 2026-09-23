@@ -73,7 +73,7 @@ Each candidate exposes provenance, license, declared risk and setup information,
 
 Workbench downloads the public catalog only after you open discovery. Artifact review does not need that download and never sends imported artifacts or goals. The goal remains in page memory; only explicitly shortlisted IDs use the existing browser-local shortlist. There is no usage measurement, installation diary, or centralized collection.
 
-In the [hosted catalog](https://sickn33.github.io/agentic-awesome-skills/), add candidate skills to your shortlist. Open the comparison above the search results to inspect descriptions, declared risk, manual setup, plugin packaging, source, and license metadata. Missing metadata is shown explicitly; it does not make a skill unavailable to Core.
+In the [hosted catalog](https://asskills.me/), add candidate skills to your shortlist. Open the comparison above the search results to inspect descriptions, declared risk, manual setup, plugin packaging, source, and license metadata. Missing metadata is shown explicitly; it does not make a skill unavailable to Core.
 
 Enter the project outcome and select Codex or Claude as the project target, preview the brief, then copy it into your coding agent with the local AAS MCP configured. The brief includes exact candidate IDs and the catalog version. It asks the agent to inspect the complete catalog and explain its final selection, including any additions or omissions. A shortlist is input to that review, not an approved stack.
 

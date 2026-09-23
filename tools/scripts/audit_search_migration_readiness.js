@@ -12,7 +12,7 @@ const path = require('path');
 
 const DEFAULT_LEGACY_PACKAGE = 'antigravity-awesome-skills';
 const DEFAULT_CURRENT_PACKAGE = 'agentic-awesome-skills';
-const DEFAULT_CURRENT_PAGES_URL = 'https://sickn33.github.io/agentic-awesome-skills/';
+const DEFAULT_CURRENT_PAGES_URL = 'https://asskills.me/';
 const DEFAULT_LEGACY_PAGES_URL = 'https://sickn33.github.io/antigravity-awesome-skills/';
 const SNAPSHOT_DIRECTORY = /^\d{4}-\d{2}-\d{2}$/;
 const DEFAULT_MAX_EVIDENCE_AGE_DAYS = 7;
@@ -104,6 +104,7 @@ function parseSkillUrls(filePath, currentPagesUrl, errors) {
 
 function inferLegacyPagesUrl(currentPagesUrl) {
   if (!currentPagesUrl) return null;
+  if (currentPagesUrl === DEFAULT_CURRENT_PAGES_URL) return DEFAULT_LEGACY_PAGES_URL;
   const inferred = withTrailingSlash(currentPagesUrl.replace('/agentic-awesome-skills/', '/antigravity-awesome-skills/'));
   return inferred && inferred !== currentPagesUrl ? inferred : null;
 }
@@ -429,4 +430,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { auditMigrationReadiness, parseArgs, redirectCoverage, writeJsonAtomically };
+module.exports = { auditMigrationReadiness, inferLegacyPagesUrl, parseArgs, redirectCoverage, writeJsonAtomically };

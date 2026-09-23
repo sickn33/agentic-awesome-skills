@@ -23,7 +23,7 @@ const REPOSITORY_ALIASES = new Map([
   ["sickn33/antigravity-awesome-skills", CURRENT_REPOSITORY],
   [CURRENT_REPOSITORY, CURRENT_REPOSITORY],
 ]);
-const CURRENT_PAGES_PROPERTY = "https://sickn33.github.io/agentic-awesome-skills/";
+const CURRENT_PAGES_PROPERTY = "https://asskills.me/";
 const LEGACY_PAGES_PROPERTY = "https://sickn33.github.io/antigravity-awesome-skills/";
 const LEGACY_PACKAGE = "antigravity-awesome-skills";
 const CURRENT_PACKAGE = "agentic-awesome-skills";

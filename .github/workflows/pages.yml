@@ -1,6 +1,6 @@
 # Build and deploy the web app to GitHub Pages only after an explicit release dispatch.
 # Enable in repo: Settings → Pages → Source: GitHub Actions.
-# Site URL: https://<owner>.github.io/<repo>/
+# Site URL: https://asskills.me/
 
 name: Deploy Web App to GitHub Pages
 
@@ -112,8 +112,8 @@ jobs:
       - name: Build web app for GitHub Pages
         run: cd apps/web-app && npm run build
         env:
-          VITE_BASE_PATH: /${{ github.event.repository.name }}/
-          SEO_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          VITE_BASE_PATH: /
+          SEO_SITE_URL: https://asskills.me
 
       - name: Validate SEO artifact quality
         run: cd apps/web-app && npm run verify:seo -- --require-hosted-url

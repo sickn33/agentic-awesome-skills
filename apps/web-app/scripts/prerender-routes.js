@@ -14,7 +14,7 @@ const HOME_CATALOG_COUNT_FALLBACK = 1969;
 const PRERENDER_SOCIAL_IMAGE = 'social-card.png';
 const SITE_NAME = 'Agentic Awesome Skills';
 const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
-const HOSTED_CATALOG_URL = 'https://sickn33.github.io/agentic-awesome-skills/';
+const HOSTED_CATALOG_URL = 'https://asskills.me/';
 const FAQ_ITEMS = [
   {
     question: 'What is Agentic Awesome Skills?',

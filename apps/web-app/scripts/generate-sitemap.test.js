@@ -2,6 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { buildSitemap, DEFAULT_TOP_SKILL_COUNT, getSeoLandingPaths, selectTopSkillEntries } from './generate-sitemap.js';
 
 describe('sitemap generation script helpers', () => {
+  it('uses the custom AAS domain as the default sitemap origin', () => {
+    expect(buildSitemap([], 0)).toContain('https://asskills.me/</loc>');
+  });
+
   it('builds top skill entries sorted by stars/date/name without duplicates', () => {
     const catalog = [
       { id: 'alpha', stars: 5, date_added: '2026-01-01' },

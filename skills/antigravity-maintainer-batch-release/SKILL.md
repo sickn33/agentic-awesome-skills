@@ -115,7 +115,7 @@ Use `data/specialized-plugin-candidates.json` for specialized-plugin membership 
 
 Treat the current catalog and the legacy user-site bridge as one public system:
 
-- Current catalog: `sickn33/agentic-awesome-skills` at `https://sickn33.github.io/agentic-awesome-skills/`.
+- Current catalog: `sickn33/agentic-awesome-skills` at `https://asskills.me/`.
 - Legacy bridge: `sickn33/sickn33.github.io` at `https://sickn33.github.io/antigravity-awesome-skills/`.
 
 For SEO, indexing, Pages, redirect, or infrastructure changes:

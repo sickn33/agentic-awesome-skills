@@ -2,7 +2,7 @@
 
 Last updated: August 7, 2026
 
-This policy applies to the Agentic Awesome Skills (AAS) open-source repository, its packaged skills and plugins, and the companion catalog at <https://sickn33.github.io/agentic-awesome-skills/>.
+This policy applies to the Agentic Awesome Skills (AAS) open-source repository, its packaged skills and plugins, and the companion catalog at <https://asskills.me/>.
 
 ## AAS plugins
 

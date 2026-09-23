@@ -16,7 +16,7 @@
     "longDescription": "A focused toolkit for designing and reviewing production-minded agent systems. It helps developers turn a workflow into agent roles, MCP tool contracts, RAG architecture, evaluation criteria, observability plans, prompt strategies, and context-management decisions. The plugin produces reviewable designs and implementation plans; it does not deploy infrastructure, access private systems, or provide a hosted MCP service.",
     "categoryRecommendation": "Developer Tools",
     "logoPath": "apps/web-app/public/web-app-manifest-512x512.png",
-    "websiteURL": "https://sickn33.github.io/agentic-awesome-skills/",
+    "websiteURL": "https://asskills.me/",
     "supportURL": "https://github.com/sickn33/agentic-awesome-skills/discussions/new?category=q-a",
     "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
     "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md"

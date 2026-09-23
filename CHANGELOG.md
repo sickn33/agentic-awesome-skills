@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.3.1] - 2026-09-23 - "Custom AAS Domain"
+
+> Moves the hosted catalog to `asskills.me` and keeps its SEO and legacy redirects aligned.
+
+A hosted-catalog maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI. It preserves existing installation interfaces and the catalog contents.
+
+### Changed
+
+- **Hosted catalog domain** — serve the Pages site from `https://asskills.me/`, use root-relative assets, and update canonical metadata, sitemap, repository links, and legacy redirect destinations.
+
+### Validation scope
+
+Protected source PR, repository and web-app validation, documentation-security checks, protected CI and CodeQL, canonical synchronization, exact-release Pages deployment, and live current/legacy route verification.
+
+---
+
 ## [18.3.0] - 2026-09-23 - "Six New Skills and Safer Telegram Ads"
 
 > Adds six community skills for export analysis, DALI, resistor sizing, electronic shelf labels, Marlin, and OneRoster, and tightens Telegram Mini App advertising guidance.

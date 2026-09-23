@@ -96,7 +96,7 @@ Read the [AAS Core guide](https://github.com/sickn33/agentic-awesome-skills/blob
 - **Installable, not just inspirational**: use the compatible legacy installer or plugin distributions when direct delivery is the right path.
 - **Built for major agent workflows**: Claude Code, Cursor, Codex CLI, Autohand Code, Gemini CLI, Antigravity, Kiro, OpenCode, Copilot, and more.
 - **Broad coverage with real utility**: 2,451+ skills across development, testing, security, infrastructure, product, and marketing.
-- **Inspect before installing**: the hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) reviews agent-produced stack manifests and immutable plans without browser-side installation.
+- **Inspect before installing**: the hosted [Skill Workbench](https://asskills.me/workbench) reviews agent-produced stack manifests and immutable plans without browser-side installation.
 - **Focused delivery remains available**: specialized plugins package curated sets for web, security, data, docs, DevOps, QA, OSS, or agent/MCP workflows.
 - **Useful whether you want breadth or curation**: install the full catalog, choose a specialized plugin, start with bundles, or compare alternatives before installing.
 
@@ -256,7 +256,7 @@ Next-wave plugins cover marketing/SEO/growth, automation, observability/incident
 
 - Read the [specialized plugin roadmap](docs/users/specialized-plugin-roadmap.md).
 - Read the [plugin guide for compatible agent clients](docs/users/plugins.md).
-- Compare the hosted [specialized plugin landing page](https://sickn33.github.io/agentic-awesome-skills/plugins).
+- Compare the hosted [specialized plugin landing page](https://asskills.me/plugins).
 - Browse the generated plugin folders in [`plugins/`](plugins/).
 
 ## Choose Your Tool
@@ -328,7 +328,7 @@ Plugins are installable packaging surfaces, bundles are curated skill recommenda
 
 ### Where do I browse plugins, bundles, workflows, and the full catalog?
 
-Start with [Specialized Plugins](#recommended-specialized-plugins) when you want an installable domain pack. Use [Bundles](docs/users/bundles.md) for role-based recommendations, [Workflows](docs/users/workflows.md) for ordered execution playbooks, [CATALOG.md](CATALOG.md) for the full registry, and the hosted [GitHub Pages catalog](https://sickn33.github.io/agentic-awesome-skills/) for searchable browsing.
+Start with [Specialized Plugins](#recommended-specialized-plugins) when you want an installable domain pack. Use [Bundles](docs/users/bundles.md) for role-based recommendations, [Workflows](docs/users/workflows.md) for ordered execution playbooks, [CATALOG.md](CATALOG.md) for the full registry, and the hosted [GitHub Pages catalog](https://asskills.me/) for searchable browsing.
 
 
 ## Bundles & Workflows
@@ -375,7 +375,7 @@ npx agentic-awesome-skills@14.3.0 --codex --release 14.3.0 --skills frontend-des
 
 Remove `--dry-run` only after reviewing the install, update, and removal plan. Unknown or ambiguous skill identifiers fail closed, and metadata filters combine with `--skills` using AND.
 
-The hosted [Skill Workbench](https://sickn33.github.io/agentic-awesome-skills/workbench) imports and reviews AAS Core stack manifests and immutable plans in browser memory. It does not access the filesystem, generate an approved plan, or install skills.
+The hosted [Skill Workbench](https://asskills.me/workbench) imports and reviews AAS Core stack manifests and immutable plans in browser memory. It does not access the filesystem, generate an approved plan, or install skills.
 
 ## Browse 2,451+ Skills
 
@@ -388,7 +388,7 @@ Use the root repo as a landing page, then jump into the deeper surface that matc
 - **Versioned stack and result schemas** in [`schemas/aas-v1`](schemas/aas-v1)
 - **Compatible legacy installer CLI** powered by the npm package in [`package.json`](package.json)
 - **Generated catalog and metadata** in [`CATALOG.md`](CATALOG.md), `skills_index.json`, and [`data/`](data/)
-- **Hosted and local web app** in [`apps/web-app`](apps/web-app) and on [GitHub Pages](https://sickn33.github.io/agentic-awesome-skills/)
+- **Hosted and local web app** in [`apps/web-app`](apps/web-app) and on [GitHub Pages](https://asskills.me/)
 - **Role-based bundles** in [docs/users/bundles.md](docs/users/bundles.md)
 - **Specialized plugin surfaces** in [docs/users/specialized-plugin-roadmap.md](docs/users/specialized-plugin-roadmap.md), [docs/users/plugins.md](docs/users/plugins.md), and [`plugins/`](plugins/)
 - **Execution workflows** in [docs/users/workflows.md](docs/users/workflows.md)
@@ -398,7 +398,7 @@ Use the root repo as a landing page, then jump into the deeper surface that matc
 ### Best ways to explore
 
 - Read the full catalog in [`CATALOG.md`](CATALOG.md).
-- Browse the hosted catalog at [https://sickn33.github.io/agentic-awesome-skills/](https://sickn33.github.io/agentic-awesome-skills/).
+- Browse the hosted catalog at [https://asskills.me/](https://asskills.me/).
 - Start with [Getting Started](docs/users/getting-started.md) and [Usage](docs/users/usage.md) if you are new after installation.
 - Use [Bundles](docs/users/bundles.md) for role-based discovery and [Workflows](docs/users/workflows.md) for step-by-step execution.
 - Use [Plugins for Claude Code and Codex](docs/users/plugins.md) when you care about marketplace-safe distribution, and the [Specialized Plugin Roadmap](docs/users/specialized-plugin-roadmap.md) when you want the best plugin candidates.

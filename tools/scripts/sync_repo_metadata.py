@@ -21,7 +21,7 @@ from update_readme import (
 
 
 ABOUT_DESCRIPTION_RE = re.compile(r'"description"\s*:\s*"([^"]*)"')
-GITHUB_HOMEPAGE_URL = "https://sickn33.github.io/agentic-awesome-skills/"
+GITHUB_HOMEPAGE_URL = "https://asskills.me/"
 RECOMMENDED_TOPICS = [
     "antigravity",
     "antigravity-skills",

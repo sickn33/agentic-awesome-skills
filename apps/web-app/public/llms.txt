@@ -19,16 +19,16 @@
 - Supported real clients include Codex CLI and Claude Code; the catalog also serves Cursor, Gemini CLI, Antigravity, and other compatible hosts.
 - The 2,451+ skill catalog, specialized plugins, bundles, and workflows are supporting discovery and distribution surfaces.
 - Repository: https://github.com/sickn33/agentic-awesome-skills
-- Hosted catalog and companion review surface: https://sickn33.github.io/agentic-awesome-skills/
-- Specialized plugin landing page: https://sickn33.github.io/agentic-awesome-skills/plugins
+- Hosted catalog and companion review surface: https://asskills.me/
+- Specialized plugin landing page: https://asskills.me/plugins
 - License: MIT for code and tooling; CC BY 4.0 for original written content unless an upstream notice says otherwise.
 - Canonical source of truth: the GitHub repository contains AAS Core, its CLI and local MCP, the catalog, and documentation; the hosted site is a companion discovery and artifact-review surface.
 
 ## Main Pages
 
 - Project README: https://github.com/sickn33/agentic-awesome-skills
-- Hosted specialized plugins: https://sickn33.github.io/agentic-awesome-skills/plugins
-- AAS Core Stack Review Workbench: https://sickn33.github.io/agentic-awesome-skills/workbench
+- Hosted specialized plugins: https://asskills.me/plugins
+- AAS Core Stack Review Workbench: https://asskills.me/workbench
 - Full skill catalog: https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md
 - Specialized plugin roadmap: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/specialized-plugin-roadmap.md
 - Plugin install guide: https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/plugins.md

@@ -1,6 +1,6 @@
 # Legacy Redirect Bridge
 
-The compatibility site at `https://sickn33.github.io/antigravity-awesome-skills/` is published from the separate `sickn33/sickn33.github.io` repository. It preserves old indexed URLs while the canonical site lives at `https://sickn33.github.io/agentic-awesome-skills/`.
+The compatibility site at `https://sickn33.github.io/antigravity-awesome-skills/` is published from the separate `sickn33/sickn33.github.io` repository. It preserves old indexed URLs while the canonical site lives at `https://asskills.me/`.
 
 ## Managed deployment surface
 

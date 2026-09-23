@@ -11,7 +11,7 @@ const APP_ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 
 const REPO_ROOT_DIR = path.resolve(APP_ROOT_DIR, '..', '..');
 const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
 const PACKAGE_URL = 'https://www.npmjs.com/package/agentic-awesome-skills';
-const EXPECTED_HOSTED_CATALOG_ROOT = 'https://sickn33.github.io/agentic-awesome-skills/';
+const EXPECTED_HOSTED_CATALOG_ROOT = 'https://asskills.me/';
 
 function safeUserPath(pathValue, baseDir = process.cwd()) {
   const basePath = path.resolve(baseDir);
@@ -1022,7 +1022,7 @@ export function assertLlms(
     'Claude Code',
     'Codex CLI',
     'https://github.com/sickn33/agentic-awesome-skills',
-    'https://sickn33.github.io/agentic-awesome-skills/workbench',
+    'https://asskills.me/workbench',
     'Canonical source of truth',
     expectedCoreIncluded ? 'includes AAS Core' : 'predates AAS Core',
   ];

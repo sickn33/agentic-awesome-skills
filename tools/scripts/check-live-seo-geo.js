@@ -4,7 +4,7 @@ const https = require('node:https');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const DEFAULT_BASE_URL = 'https://sickn33.github.io/agentic-awesome-skills';
+const DEFAULT_BASE_URL = 'https://asskills.me';
 const baseUrl = (process.env.SEO_LIVE_BASE_URL || DEFAULT_BASE_URL).replace(/\/+$/, '');
 const repoRoot = path.resolve(__dirname, '..', '..');
 
