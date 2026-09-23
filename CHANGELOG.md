@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.3.0] - 2026-09-23 - "Six New Skills and Safer Telegram Ads"
+
+> Adds six community skills for export analysis, DALI, resistor sizing, electronic shelf labels, Marlin, and OneRoster, and tightens Telegram Mini App advertising guidance.
+
+A catalog release for Claude Code, Cursor, Codex CLI and Gemini CLI.
+It merges #1558–#1564 and the associated maintainer batch while expanding the **2,451**-skill catalog on Core. Existing installation interfaces remain supported.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.3.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **chatexport-need-miner (#1558)** — analyze a ChatGPT export locally to find recurring needs and organize evidence.
+- **dali-short-address-commissioner (#1559)** — guide DALI short-address commissioning.
+- **eol-resistor-calculator (#1560)** — calculate and check end-of-line resistor configurations.
+- **esl-price-sync (#1561)** — plan and troubleshoot electronic shelf-label price synchronization.
+- **marlin-bed-leveling (#1562)** — guide Marlin bed-leveling setup and troubleshooting.
+- **oneroster-csv-validator (#1563)** — validate and diagnose OneRoster CSV exports.
+
+### Changed
+
+- **Telegram Mini App monetization (#1564)** — add native and rewarded ad guidance with user choice, privacy boundaries, and server-side validation requirements.
+
+### Validation scope
+
+Exact-head maintainer review for changed skill content, protected source PRs, repository validation and tests, docs security, protected CI and CodeQL, canonical synchronization, and release-only Pages deployment from the immutable `v18.3.0` tag.
+
+---
+
 ## [18.2.0] - 2026-09-22 - "Catalog Skills and Hosted Save Sync"
 
 > Ships one new community skill, refreshes Jev Social, fixes hosted catalog save
