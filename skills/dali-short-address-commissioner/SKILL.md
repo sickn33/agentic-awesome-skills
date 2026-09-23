@@ -177,3 +177,9 @@ Before finalizing any DALI commissioning plan or script, check:
 > 3. Transmit `RANDOMISE` [cmd 259] twice within 100ms.
 > 4. Execute 24-bit binary search across `SEARCHADDR` space. For each isolated unit, transmit `PROGRAM SHORT ADDRESS` (slot 0–41) twice within 100ms, immediately followed by `WITHDRAW` [cmd 266].
 > 5. Issue `TERMINATE` [cmd 257] to exit programming mode and physically pulse each luminaire to verify mapping.
+
+## Limitations
+
+- DALI command support, timing, gear limits, and DT8 behavior vary by control gear, device type, and IEC 62386 edition. Confirm commands against the exact gear and gateway manuals before transmission.
+- Commissioning can disrupt occupied lighting and emergency systems. Coordinate an approved outage and have a qualified lighting professional verify any live bus operation; never treat these examples as a substitute for site procedures.
+- Pseudo-code is illustrative and is not a tested gateway driver. Verify address mapping and every fixture physically before saving configuration.
