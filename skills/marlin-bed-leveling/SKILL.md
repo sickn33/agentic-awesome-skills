@@ -173,3 +173,9 @@ Before emitting any Marlin leveling advice, macro, or slicer start code:
 > 3. Verify probe repeatability using `M48 P10` (standard deviation must be $\le 0.005\text{mm}$).
 > 4. Probe grid with `G29 P1`, extrapolate unprobed corners with `G29 P3 T0.0`, save to slot 1 with `G29 S1`, and commit to flash with `M500`.
 > 5. In your slicer start G-code, place `M420 S1 Z10.0` immediately after `G28` to restore the active mesh with a 10mm fade height.
+
+## Limitations
+
+- Marlin commands and mesh behavior vary with firmware version, configuration, probe, bed geometry, and slicer. Check the exact firmware build and printer documentation before applying a macro or offset.
+- G-code can move a hot toolhead and damage equipment or cause burns. Supervise calibration, keep hands clear, use the printer's emergency stop when motion is unsafe, and verify travel limits before running generated sequences.
+- Example coordinates, temperatures, tolerances, and fade values are illustrative; measure the actual printer and follow the manufacturer’s limits.

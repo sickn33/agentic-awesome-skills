@@ -522,6 +522,7 @@ Key source families include:
 
 ### Community Contributors
 
+- **[wwewtech/marlin-bed-leveling](https://github.com/wwewtech/marlin-bed-leveling)**: Source for the `marlin-bed-leveling` skill — community guidance and examples under MIT.
 - **[socai-io/jev-social](https://github.com/socai-io/jev-social)**: Source for the `jev-social` skill — read-only Jev/socai social research routing (MIT).
 - **[work0r-ai/agent-kit](https://github.com/work0r-ai/agent-kit)**: Source for the `workorai` skill — agent kit workflows (MIT).
 
