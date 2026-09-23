@@ -535,6 +535,7 @@ Key source families include:
 - **[wwewtech/esl-price-sync](https://github.com/wwewtech/esl-price-sync)**: Source for the `esl-price-sync` skill — community guidance and examples under MIT.
 - **[Pranav-Nexus/antigravity-skill-porter](https://github.com/Pranav-Nexus/antigravity-skill-porter)**: MIT source for `skill-porter`, adapted for conservative local bundle previews and complete support-file copying.
 - **[70v-Yoyo/md2video-audio-skill](https://github.com/70v-Yoyo/md2video-audio-skill)**: Apache-2.0 community source for `md2video-audio`, converting Markdown into narrated MP4 video with synchronized slides and narration.
+- **[wwewtech/marlin-bed-leveling](https://github.com/wwewtech/marlin-bed-leveling)**: Source for the `marlin-bed-leveling` skill — community guidance and examples under MIT.
 - **[onkarbadve/agy-auto](https://github.com/onkarbadve/agy-auto)**: MIT community source for `agy-auto`, providing guarded Antigravity CLI permission automation with scoped approvals.
 - **[wwewtech/oneroster-csv-validator](https://github.com/wwewtech/oneroster-csv-validator)**: Source for the `oneroster-csv-validator` skill — community guidance and examples under MIT.
 
