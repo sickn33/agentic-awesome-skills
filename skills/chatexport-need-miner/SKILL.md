@@ -187,3 +187,10 @@ Before emitting any market research summary or opportunity report, verify:
 > - **Evidence 2**: *"is there a tool to safely dry-run flyway down migrations before merging to master?"* (2026-08-04T16:21:09, `k8s_ru`).
 > - **Coverage Check**: Flyway Pro provides undo migrations; however, community tier users lack automated sandbox validation without custom Docker scripts.
 > - **Verdict**: Confirmed gap for a lightweight CLI pre-flight validator for open-source Flyway migrations.
+
+## Limitations
+
+- Use only exports you are authorized to analyze. Chat exports can contain personal or sensitive information; minimize copied excerpts, redact identifiers in reports, and follow applicable retention and privacy requirements.
+- Keep raw exports local and offline as described above. Do not upload messages, quotes, or identifiers to external services or include them in public reports without explicit authorization.
+- Keyword counts and clustered themes are exploratory signals, not representative market research. Validate conclusions with independent evidence and do not infer intent from isolated messages.
+- Chunked text scanning is not a complete Telegram JSON parser; malformed exports, escaped content, nested schemas, or encoding issues can affect counts. Verify any quoted excerpt against the original export.
