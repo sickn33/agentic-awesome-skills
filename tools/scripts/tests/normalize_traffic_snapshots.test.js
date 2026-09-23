@@ -82,13 +82,13 @@ try {
   ));
   writeJson("2026-07-02/google-search-console.json", {
     status: "success",
-    dashboard_url: "https://search.google.com/search-console/performance?resource_id=https%3A%2F%2Fasskills.me%2F",
+    dashboard_url: "https://search.google.com/search-console/performance?resource_id=https%3A%2F%2Fwww.asskills.me%2F",
     date_range_visible: "June 1, 2026 to July 10, 2026",
     totals: { clicks: 5, impressions_visible: "2,5K" },
   });
   writeJson("2026-07-02/bing-webmaster-ai-performance.json", {
     status: "success",
-    dashboard_url: "https://www.bing.com/webmasters/aiperformance?siteUrl=https%3A%2F%2Fasskills.me%2F",
+    dashboard_url: "https://www.bing.com/webmasters/aiperformance?siteUrl=https%3A%2F%2Fwww.asskills.me%2F",
     daily_values: [{ date: "June 30, 2026", total_citations: 7, avg_cited_pages: 1 }],
     total_citations: 7,
   });
@@ -164,12 +164,12 @@ try {
     views: [{ timestamp: "2026-99-99T00:00:00Z", count: -4, uniques: 1 }],
   });
   writeJson("2026-07-05/google-search-console.json", {
-    dashboard_url: "https://search.google.com/search-console/performance?resource_id=https%3A%2F%2Fasskills.me%2F",
+    dashboard_url: "https://search.google.com/search-console/performance?resource_id=https%3A%2F%2Fwww.asskills.me%2F",
     totals: { clicks: 1 },
   });
   writeJson("2026-07-05/bing-webmaster-ai-performance.json", {
     status: "success",
-    dashboard_url: "https://www.bing.com/webmasters/aiperformance?siteUrl=https%3A%2F%2Fasskills.me%2F",
+    dashboard_url: "https://www.bing.com/webmasters/aiperformance?siteUrl=https%3A%2F%2Fwww.asskills.me%2F",
     date_range_visible: "2026-99-99 to 2026-99-99",
     total_citations: 5,
   });
@@ -182,13 +182,13 @@ try {
   });
   writeJson("2026-07-06/bing-webmaster-search-performance.json", {
     status: "success",
-    dashboard_url: "https://attacker.example/webmasters/searchperf?siteUrl=https%3A%2F%2Fasskills.me%2F",
+    dashboard_url: "https://attacker.example/webmasters/searchperf?siteUrl=https%3A%2F%2Fwww.asskills.me%2F",
     totals: { clicks: 8, impressions: 80 },
   });
   writeManifest("2026-07-07");
   writeJson("2026-07-07/google-search-console.json", {
     status: "success",
-    dashboard_url: "https://search.google.com/search-console/performance?resource_id=https%3A%2F%2Fasskills.me%2F",
+    dashboard_url: "https://search.google.com/search-console/performance?resource_id=https%3A%2F%2Fwww.asskills.me%2F",
     date_range_visible: "June 1, 2026 to July 10, 2026",
     daily_values: [{ date: "2026-06-29", clicks: 5, impressions: 50 }],
     totals: { clicks: 5, impressions: 50 },
