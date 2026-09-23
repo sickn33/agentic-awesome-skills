@@ -11711,6 +11711,38 @@
     }
   },
   {
+    "id": "chatexport-need-miner",
+    "path": "skills/chatexport-need-miner",
+    "category": "development",
+    "name": "chatexport-need-miner",
+    "description": "Mines offline Telegram Desktop chat exports (result.json) for unmet market needs and product opportunities using chunked streaming and verbatim quote grounding. Trigger phrases: mine chat export, telegram result.json, find unmet needs, analyze telegram chat.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "wwewtech/chatexport-need-miner",
+    "license": "MIT",
+    "tags": [
+      "telegram",
+      "market-research",
+      "text-mining",
+      "offline-analytics",
+      "developer-tools"
+    ]
+  },
+  {
     "id": "check-identity-pack",
     "path": "skills/check-identity-pack",
     "category": "document-verification",
