@@ -197,3 +197,9 @@ Before emitting validation results, CSV transforms, or roster scripts:
 >    - Flag invalid role `"substitute_teacher"` on row 14 of `enrollments.csv` (must map to `"teacher"`).
 > 4. Verify bulk purity: confirm no `dateLastModified` or `tobedeleted` status flags are present in bulk mode.
 > 5. Emit clean, line-numbered pre-flight audit report before committing to SIS ingestion.
+
+## Limitations
+
+- OneRoster version details and required files can differ by exchange profile and vendor implementation. Validate against the exact 1EdTech specification and recipient's current import contract before rejecting or transforming a roster.
+- Student and staff roster files contain sensitive education records. Process only with authorization, minimize retained data, redact identifiers in diagnostics, and do not upload source CSVs to external services.
+- The included snippets are illustrative, not a complete certified validator; for example, large files, namespaces, delta semantics, and vendor extensions require additional handling and tests.
