@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-22T06:31:46.000Z
 
-Total skills: 2446
+Total skills: 2451
 
 ## agent-behavior (5)
 
@@ -304,7 +304,7 @@ Total skills: 2446
 | `frontend-mobile-development-component-scaffold` | You are a React component architecture expert specializing in scaffolding production-ready, accessible, and performant components. Generate complete componen... | critical | community | frontend, mobile, component | frontend, mobile, component, development, scaffold, react, architecture, specializing, scaffolding, accessible, performant, components |
 | `javascript-typescript-typescript-scaffold` | You are a TypeScript project architecture expert specializing in scaffolding production-ready Node.js and frontend applications. Generate complete project st... | critical | community | javascript, typescript | javascript, typescript, scaffold, architecture, specializing, scaffolding, node, js, frontend, applications, generate, complete |
 
-## architecture (28)
+## architecture (31)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -319,12 +319,15 @@ Total skills: 2446
 | `c4-context` | Expert C4 Context-level documentation specialist. Creates high-level system context diagrams, documents personas, user journeys, system features, and externa... | none | community | c4 | c4, context, level, documentation, creates, high, diagrams, documents, personas, user, journeys, features |
 | `codebase-design` | Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a... | safe | mattpocock/skills | architecture, workflow, coding-agents | architecture, workflow, coding-agents, codebase, shared, vocabulary, designing, deep, modules, user, wants, improve |
 | `cqrs-implementation` | Implement Command Query Responsibility Segregation for scalable architectures. Use when separating read and write models, optimizing query performance, or bu... | critical | community | cqrs | cqrs, command, query, responsibility, segregation, scalable, architectures, separating, read, write, models, optimizing |
+| `dali-short-address-commissioner` | Commissions DALI and DALI-2 (IEC 62386) lighting buses: short-address assignment (0-63), 24-bit binary search collision resolution, groups, and DT8 color con... | safe | wwewtech/dali-short-address-commissioner | dali, dali-2, lighting-control, iec-62386, building-automation, iot | dali, dali-2, lighting-control, iec-62386, building-automation, iot, short, address, commissioner, commissions, iec, 62386 |
 | `ddd-context-mapping` | Map relationships between bounded contexts and define integration contracts using DDD context mapping patterns. | safe | self | ddd, context-map, anti-corruption-layer, integration | ddd, context-map, anti-corruption-layer, integration, context, mapping, map, relationships, between, bounded, contexts, define |
 | `ddd-strategic-design` | Design DDD strategic artifacts including subdomains, bounded contexts, and ubiquitous language for complex business domains. | safe | self | ddd, strategic-design, bounded-context, ubiquitous-language | ddd, strategic-design, bounded-context, ubiquitous-language, strategic, artifacts, including, subdomains, bounded, contexts, ubiquitous, language |
 | `ddd-tactical-patterns` | Apply DDD tactical patterns in code using entities, value objects, aggregates, repositories, and domain events with explicit invariants. | safe | self | ddd, tactical, aggregates, value-objects, domain-events | ddd, tactical, aggregates, value-objects, domain-events, apply, code, entities, value, objects, repositories, domain |
 | `docs-architect` | Creates comprehensive technical documentation from existing codebases. Analyzes architecture, design patterns, and implementation details to produce long-for... | safe | community | docs | docs, architect, creates, technical, documentation, existing, codebases, analyzes, architecture, details, produce, long |
 | `domain-driven-design` | Plan and route Domain-Driven Design work from strategic modeling to tactical implementation and evented architecture patterns. | safe | self | ddd, domain, bounded-context, architecture | ddd, domain, bounded-context, architecture, driven, plan, route, work, strategic, modeling, tactical, evented |
 | `domain-modeling` | Build and sharpen a project's domain model. Use when the user wants to pin down domain terminology or a ubiquitous language, record an architectural decision... | safe | mattpocock/skills | architecture, workflow, coding-agents | architecture, workflow, coding-agents, domain, modeling, sharpen, model, user, wants, pin, down, terminology |
+| `eol-resistor-calculator` | Calculates and validates end-of-line (EOL, SEOL, DEOL, TEOL) resistor loops for intrusion alarm panels (Honeywell, DSC, Paradox, Bosch) with wire gauge drop ... | safe | wwewtech/eol-resistor-calculator | security-systems, hardware, electronics, alarm-panel, circuit-design, electrical-engineering | security-systems, hardware, electronics, alarm-panel, circuit-design, electrical-engineering, eol, resistor, calculator, calculates, validates, line |
+| `esl-price-sync` | Synchronizes retail prices between ERP/POS systems and Electronic Shelf Labels (SES-imagotag, ZKONG, Pricer, Hanshow, SOLUM) with delta watermarking, idempot... | safe | wwewtech/esl-price-sync | retail-tech, esl, iot, supply-chain, systems-integration, enterprise-software | retail-tech, esl, iot, supply-chain, systems-integration, enterprise-software, price, sync, synchronizes, retail, prices, between |
 | `event-sourcing-architect` | Expert in event sourcing, CQRS, and event-driven architecture patterns. Masters event store design, projection building, saga orchestration, and eventual con... | critical | community | event, sourcing | event, sourcing, architect, cqrs, driven, architecture, masters, store, projection, building, saga, orchestration |
 | `event-store-design` | Design and implement event stores for event-sourced systems. Use when building event sourcing infrastructure, choosing event store technologies, or implement... | critical | community | event, store | event, store, stores, sourced, building, sourcing, infrastructure, choosing, technologies, implementing, persistence |
 | `graphql-architect` | Master modern GraphQL with federation, performance optimization, and enterprise security. Build scalable schemas, implement advanced caching, and design real... | critical | community | graphql | graphql, architect, federation, performance, optimization, enterprise, security, scalable, schemas, caching, real, time |
@@ -1062,7 +1065,7 @@ Total skills: 2446
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (195)
+## development (196)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1207,6 +1210,7 @@ Total skills: 2446
 | `makepad-skills` | Makepad UI development skills for Rust apps: setup, patterns, shaders, packaging, and troubleshooting. | safe | https://github.com/ZhangHanDong/makepad-skills | makepad, skills | makepad, skills, ui, development, rust, apps, setup, shaders, packaging, troubleshooting |
 | `makepad-splash` | CRITICAL: Use for Makepad Splash scripting language. Triggers on: splash language, makepad script, makepad scripting, script!, cx.eval, makepad dynamic, make... | critical | community | makepad, splash | makepad, splash, critical, scripting, language, triggers, script, cx, eval, dynamic, ai |
 | `makepad-widgets` | Version: makepad-widgets (dev branch) \| Last Updated: 2026-01-19 > > Check for updates: https://crates.io/crates/makepad-widgets | safe | community | makepad, widgets | makepad, widgets, version, dev, branch, last, updated, 2026, 01, 19, check, updates |
+| `marlin-bed-leveling` | Calibrates Marlin 2.x 3D printer firmware bed leveling: Unified Bed Leveling (UBL), Bilinear ABL, M420 S1 post-homing, Z-probe offsets, G26 mesh prints, and ... | safe | wwewtech/marlin-bed-leveling | 3d-printing, marlin-firmware, gcode, hardware-calibration, fdm, additive-manufacturing | 3d-printing, marlin-firmware, gcode, hardware-calibration, fdm, additive-manufacturing, marlin, bed, leveling, calibrates, 3d, printer |
 | `memory-safety-patterns` | Cross-language patterns for memory-safe programming including RAII, ownership, smart pointers, and resource management. | safe | community | memory, safety | memory, safety, cross, language, safe, programming, including, raii, ownership, smart, pointers, resource |
 | `modern-javascript-patterns` | Comprehensive guide for mastering modern JavaScript (ES6+) features, functional programming patterns, and best practices for writing clean, maintainable, and... | safe | community | modern, javascript | modern, javascript, mastering, es6, features, functional, programming, writing, clean, maintainable, performant, code |
 | `monorepo-architect` | Expert in monorepo architecture, build systems, and dependency management at scale. Masters Nx, Turborepo, Bazel, and Lerna for efficient multi-project devel... | safe | community | monorepo | monorepo, architect, architecture, dependency, scale, masters, nx, turborepo, bazel, lerna, efficient, multi |
@@ -2392,7 +2396,7 @@ Total skills: 2446
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | critical | community | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | critical | community | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
 
-## testing (30)
+## testing (31)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2409,6 +2413,7 @@ Total skills: 2446
 | `lambdatest-agent-skills` | Production-grade test automation skills for 46 frameworks across E2E, unit, mobile, BDD, visual, and cloud testing in 15+ languages. | safe | LambdaTest/agent-skills | testing, test-automation, e2e, unit-testing, mobile-testing, bdd, selenium, playwright, cypress, jest, pytest, appium, lambdatest | testing, test-automation, e2e, unit-testing, mobile-testing, bdd, selenium, playwright, cypress, jest, pytest, appium |
 | `mock-hunter` | Audit a live web page in five phases (catalog, click, trace, classify, report) to identify mock data, hardcoded values, LLM-generated metrics, and broken end... | critical | CodeShuX/mockhunter | testing, qa, playwright, mock-detection, web-audit, ai-testing, vibe-coding, claude-code | testing, qa, playwright, mock-detection, web-audit, ai-testing, vibe-coding, claude-code, mock, hunter, audit, live |
 | `network-101` | Configure and test common network services (HTTP, HTTPS, SNMP, SMB) for penetration testing lab environments. Enable hands-on practice with service enumerati... | offensive | community | network, 101 | network, 101, configure, test, common, http, https, snmp, smb, penetration, testing, lab |
+| `oneroster-csv-validator` | Validates 1EdTech / IMS Global OneRoster v1.1 and v1.2 CSV roster sets: manifest integrity, bulk vs delta strictness, foreign key references, and encoding sa... | safe | wwewtech/oneroster-csv-validator | edtech, oneroster, csv-validation, ims-global, 1edtech, data-engineering | edtech, oneroster, csv-validation, ims-global, 1edtech, data-engineering, csv, validator, validates, ims, global, v1 |
 | `pypict-skill` | Pairwise test generation | safe | https://github.com/omkamal/pypict-claude-skill/blob/main/SKILL.md | pypict, skill | pypict, skill, pairwise, test, generation |
 | `pytest-skill` | Generates production-grade pytest tests in Python with fixtures, parametrize, markers, mocking, and conftest patterns. Use when user mentions "pytest", "conf... | critical | LambdaTest/agent-skills | pytest, skill | pytest, skill, generates, grade, tests, python, fixtures, parametrize, markers, mocking, conftest, user |
 | `screen-reader-testing` | Practical guide to testing web applications with screen readers for comprehensive accessibility validation. | safe | community | screen, reader | screen, reader, testing, practical, web, applications, readers, accessibility, validation |
