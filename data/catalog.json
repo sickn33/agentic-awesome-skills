@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-22T06:31:46.000Z",
-  "total": 2445,
+  "total": 2446,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -13936,6 +13936,40 @@
         "live"
       ],
       "path": "skills/chat-widget/SKILL.md"
+    },
+    {
+      "id": "chatexport-need-miner",
+      "canonical_id": "chatexport-need-miner",
+      "name": "chatexport-need-miner",
+      "description": "Mines offline Telegram Desktop chat exports (result.json) for unmet market needs and product opportunities using chunked streaming and verbatim quote grounding. Trigger phrases: mine chat export, telegram result.json, find unmet needs, analyze telegram chat.",
+      "category": "development",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "wwewtech/chatexport-need-miner",
+      "license": "MIT",
+      "tags": [
+        "telegram",
+        "market-research",
+        "text-mining",
+        "offline-analytics",
+        "developer-tools"
+      ],
+      "triggers": [
+        "telegram",
+        "market-research",
+        "text-mining",
+        "offline-analytics",
+        "developer-tools",
+        "chatexport",
+        "miner",
+        "mines",
+        "offline",
+        "desktop",
+        "chat",
+        "exports"
+      ],
+      "path": "skills/chatexport-need-miner/SKILL.md"
     },
     {
       "id": "check-identity-pack",
