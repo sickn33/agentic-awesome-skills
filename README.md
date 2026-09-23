@@ -528,6 +528,7 @@ Key source families include:
 
 - **[shitianfang/jev-use](https://github.com/shitianfang/jev-use)**: Source for the `jev-use` skill - routing an agent loop's no-text judgment steps to the Jev judgment model via the `jev_judge` / `jev_gate` MCP tools, batched per state, with a typed escalation contract that hands writing and low-confidence steps back to the LLM (MIT).
 - **[wwewtech/anti-slop-design](https://github.com/wwewtech/anti-slop-design)**: Source for the `anti-slop-design` skill - anti-AI-slop UI/UX engineering with token archetypes and a seven-axis quality gate (MIT).
+- **[wwewtech/dali-short-address-commissioner](https://github.com/wwewtech/dali-short-address-commissioner)**: Source for the `dali-short-address-commissioner` skill — community guidance and examples under MIT.
 - **[romankurnovskii/etemaro](https://github.com/romankurnovskii/etemaro)**: Source of the `meteora-dlmm-pool-screening` skill - read-only screening and ranking of Meteora DLMM pools from public APIs (MIT).
 - **[tubeagentkit/youtube-transcript-skills](https://github.com/tubeagentkit/youtube-transcript-skills)**: Source for the `youtube-transcript-skills` skill - YouTube transcript fetching, video/channel search, channel browsing, and playlist extraction via the getyoutubetranscript.com API, free tier with no card required (MIT).
 - **[wwewtech/esl-price-sync](https://github.com/wwewtech/esl-price-sync)**: Source for the `esl-price-sync` skill — community guidance and examples under MIT.
