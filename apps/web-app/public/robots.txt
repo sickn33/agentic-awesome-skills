@@ -19,4 +19,4 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-Sitemap: https://asskills.me/sitemap.xml
+Sitemap: https://www.asskills.me/sitemap.xml

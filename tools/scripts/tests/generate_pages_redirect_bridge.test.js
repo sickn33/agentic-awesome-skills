@@ -251,7 +251,7 @@ try {
     assert.strictEqual(productionManifest.current_skill_route_count, productionSkills.length);
     assert.strictEqual(productionManifest.route_count, productionSkills.length + 8);
     assert.strictEqual(productionManifest.legacy_sitemap_route_count, 188);
-    const expectedSkillUrls = new Set(productionSkills.map(({ id }) => `https://asskills.me/skill/${id}/`));
+    const expectedSkillUrls = new Set(productionSkills.map(({ id }) => `https://www.asskills.me/skill/${id}/`));
     const actualSkillUrls = new Set(productionManifest.redirects.map(({ to }) => to).filter((url) => url.includes('/skill/')));
     assert.deepStrictEqual(actualSkillUrls, expectedSkillUrls, 'production bridge must cover exactly every current skill id');
     assert(!productionManifest.redirects.some(({ to }) => to.endsWith('/skill/goldrush-api/')));

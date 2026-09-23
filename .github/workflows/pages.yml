@@ -1,6 +1,6 @@
 # Build and deploy explicitly selected protected-main or release-tag targets to GitHub Pages.
 # Enable in repo: Settings → Pages → Source: GitHub Actions.
-# Site URL: https://asskills.me/
+# Site URL: https://www.asskills.me/
 
 name: Deploy Web App to GitHub Pages
 
@@ -141,7 +141,7 @@ jobs:
         run: cd apps/web-app && npm run build
         env:
           VITE_BASE_PATH: /
-          SEO_SITE_URL: https://asskills.me
+          SEO_SITE_URL: https://www.asskills.me
 
       - name: Validate SEO artifact quality
         run: cd apps/web-app && npm run verify:seo -- --require-hosted-url

@@ -10,7 +10,7 @@ const OUTPUT_PATH = path.join(PUBLIC_DIR, 'sitemap.xml');
 const BASE_PATH =
   (process.env.VITE_BASE_PATH || '/').trim().replace(/\/+$/, '');
 const NORMALIZED_BASE_PATH = BASE_PATH && BASE_PATH !== '/' ? BASE_PATH : '';
-const DEFAULT_SITE_URL = 'https://asskills.me';
+const DEFAULT_SITE_URL = 'https://www.asskills.me';
 
 const SITE_URL = (process.env.SEO_SITE_URL || process.env.WEBSITE_BASE_URL || DEFAULT_SITE_URL).replace(/\/$/, '');
 // Keep this curated: broad enough to form a crawlable catalog, well below the

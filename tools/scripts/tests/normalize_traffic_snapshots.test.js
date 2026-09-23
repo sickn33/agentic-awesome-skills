@@ -77,7 +77,7 @@ try {
     clones: [{ timestamp: "2026-06-30T00:00:00Z", count: 7, uniques: 6 }],
   });
   writeJson("2026-07-02/bing-webmaster-search-performance.json", dashboard(
-    "https://asskills.me/",
+    "https://www.asskills.me/",
     [{ date: "2026-06-30", clicks: 11, impressions: 110 }],
   ));
   writeJson("2026-07-02/google-search-console.json", {
@@ -116,7 +116,7 @@ try {
   fs.writeFileSync(path.join(fixtureRoot, "2026-07-03", "views.json"), "{not json", "utf8");
   writeJson("2026-07-03/clones.json", { clones: [{ timestamp: "2026-06-30T00:00:00Z", count: 99 }] });
   writeJson("2026-07-03/bing-webmaster-search-performance.json", dashboard(
-    "https://asskills.me/",
+    "https://www.asskills.me/",
     [{ date: "2026-06-30", impressions: 999 }],
   ));
 
@@ -176,7 +176,7 @@ try {
   writeManifest("2026-07-06");
   writeJson("2026-07-06/google-search-console.json", {
     status: "success",
-    intended_property: "https://asskills.me/",
+    intended_property: "https://www.asskills.me/",
     dashboard_url: "https://search.google.com/search-console/performance?resource_id=https%3A%2F%2Fsickn33.github.io%2Fantigravity-awesome-skills%2F",
     totals: { clicks: 8, impressions: 80 },
   });
@@ -196,7 +196,7 @@ try {
   writeManifest("2026-07-08");
   writeJson("2026-07-08/google-search-console.json", {
     status: "success",
-    intended_property: "https://asskills.me/",
+    intended_property: "https://www.asskills.me/",
     date_range_visible: "June 1, 2026 to July 10, 2026",
     daily_values: [{ date: "2026-06-29", clicks: 999, impressions: 999 }],
     totals: { clicks: 999, impressions: 999 },

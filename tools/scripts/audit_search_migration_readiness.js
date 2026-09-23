@@ -12,7 +12,7 @@ const path = require('path');
 
 const DEFAULT_LEGACY_PACKAGE = 'antigravity-awesome-skills';
 const DEFAULT_CURRENT_PACKAGE = 'agentic-awesome-skills';
-const DEFAULT_CURRENT_PAGES_URL = 'https://asskills.me/';
+const DEFAULT_CURRENT_PAGES_URL = 'https://www.asskills.me/';
 const DEFAULT_LEGACY_PAGES_URL = 'https://sickn33.github.io/antigravity-awesome-skills/';
 const SNAPSHOT_DIRECTORY = /^\d{4}-\d{2}-\d{2}$/;
 const DEFAULT_MAX_EVIDENCE_AGE_DAYS = 7;

@@ -258,7 +258,7 @@ The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
         self.assertEqual(repo_edit_args[:4], ["gh", "repo", "edit", "sickn33/agentic-awesome-skills"])
         self.assertIn("--description", repo_edit_args)
         self.assertIn("--homepage", repo_edit_args)
-        self.assertIn("https://asskills.me/", repo_edit_args)
+        self.assertIn("https://www.asskills.me/", repo_edit_args)
 
         self.assertEqual(topics_args[:4], ["gh", "api", "repos/sickn33/agentic-awesome-skills/topics", "--method"])
         self.assertIn("PUT", topics_args)

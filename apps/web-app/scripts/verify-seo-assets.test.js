@@ -641,7 +641,7 @@ describe('seo assets verification helpers', () => {
       The published package predates AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
-      https://asskills.me/workbench
+      https://www.asskills.me/workbench
       Canonical source of truth: the GitHub repository is the primary project URL.
     `;
 
@@ -656,7 +656,7 @@ describe('seo assets verification helpers', () => {
       The published package predates AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
-      https://asskills.me/workbench
+      https://www.asskills.me/workbench
       Canonical source of truth: the GitHub repository is the primary project URL.
     `;
 
@@ -671,7 +671,7 @@ describe('seo assets verification helpers', () => {
       This release includes AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
-      https://asskills.me/workbench
+      https://www.asskills.me/workbench
       Canonical source of truth: the GitHub repository is the primary project URL.
     `;
 
@@ -692,7 +692,7 @@ describe('seo assets verification helpers', () => {
       This release includes AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
-      https://asskills.me/workbench
+      https://www.asskills.me/workbench
       Canonical source of truth: the GitHub repository is the primary project URL.
     `;
     expect(() => assertLlms(`${base}\n- Current release: V15.0.0-rc.1.`, {
