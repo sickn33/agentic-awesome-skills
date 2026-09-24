@@ -11,7 +11,7 @@ const APP_ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 
 const REPO_ROOT_DIR = path.resolve(APP_ROOT_DIR, '..', '..');
 const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
 const PACKAGE_URL = 'https://www.npmjs.com/package/agentic-awesome-skills';
-const EXPECTED_HOSTED_CATALOG_ROOT = 'https://asskills.me/';
+const EXPECTED_HOSTED_CATALOG_ROOT = 'https://aaskills.tech/';
 
 function safeUserPath(pathValue, baseDir = process.cwd()) {
   const basePath = path.resolve(baseDir);
@@ -881,8 +881,8 @@ export function assertSocialCardProvenance(cardData, provenanceText) {
   assert(provenance.generator === 'OpenAI ImageGen', 'Social card provenance must identify OpenAI ImageGen.');
   assert(provenance.dimensions?.width === width && provenance.dimensions?.height === height, 'Social card provenance dimensions must match the PNG.');
   assert(provenance.sha256 === digest, 'Social card provenance SHA-256 must match the PNG.');
-  assert(Array.isArray(provenance.visibleCopy) && provenance.visibleCopy.includes('AAS Core'), 'Social card provenance must preserve AAS Core as the primary visible product.');
-  assert(provenance.visibleCopy.includes('profile → stack → plan'), 'Social card provenance must preserve the Core workflow.');
+  assert(Array.isArray(provenance.visibleCopy) && provenance.visibleCopy.includes('AAS'), 'Social card provenance must identify the AAS brand.');
+  assert(provenance.visibleCopy.includes('Search → Choose → Validate → Preview'), 'Social card provenance must preserve the displayed AAS workflow.');
 }
 
 export function assertPluginsDiscoveryMeta(htmlText) {
@@ -1022,7 +1022,7 @@ export function assertLlms(
     'Claude Code',
     'Codex CLI',
     'https://github.com/sickn33/agentic-awesome-skills',
-    'https://asskills.me/workbench',
+    'https://aaskills.tech/workbench',
     'Canonical source of truth',
     expectedCoreIncluded ? 'includes AAS Core' : 'predates AAS Core',
   ];

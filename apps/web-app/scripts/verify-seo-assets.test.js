@@ -641,7 +641,7 @@ describe('seo assets verification helpers', () => {
       The published package predates AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
-      https://asskills.me/workbench
+      https://aaskills.tech/workbench
       Canonical source of truth: the GitHub repository is the primary project URL.
     `;
 
@@ -656,7 +656,7 @@ describe('seo assets verification helpers', () => {
       The published package predates AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
-      https://asskills.me/workbench
+      https://aaskills.tech/workbench
       Canonical source of truth: the GitHub repository is the primary project URL.
     `;
 
@@ -671,7 +671,7 @@ describe('seo assets verification helpers', () => {
       This release includes AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
-      https://asskills.me/workbench
+      https://aaskills.tech/workbench
       Canonical source of truth: the GitHub repository is the primary project URL.
     `;
 
@@ -692,7 +692,7 @@ describe('seo assets verification helpers', () => {
       This release includes AAS Core.
       1,678+ agentic skills with specialized plugins for Claude Code and Codex CLI.
       https://github.com/sickn33/agentic-awesome-skills
-      https://asskills.me/workbench
+      https://aaskills.tech/workbench
       Canonical source of truth: the GitHub repository is the primary project URL.
     `;
     expect(() => assertLlms(`${base}\n- Current release: V15.0.0-rc.1.`, {
@@ -821,7 +821,7 @@ describe('seo assets verification helpers', () => {
       generator: 'OpenAI ImageGen',
       dimensions: { width: 1200, height: 630 },
       sha256: '763d6b5763eb64e1310fc3d6b27291a4c7b3fa6d03e9cb3f71d79ddba25f58fc',
-      visibleCopy: ['AAS Core', 'profile → stack → plan'],
+      visibleCopy: ['AAS', 'Search → Choose → Validate → Preview'],
     });
 
     expect(() => assertSocialCardProvenance(png, provenance)).not.toThrow();

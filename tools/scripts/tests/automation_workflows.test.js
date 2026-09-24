@@ -23,7 +23,7 @@ for (const [name, workflow] of [["main CI", ciWorkflow], ["repo hygiene", hygien
   assert.match(
     workflow,
     /merge_canonical_sync_pr\.cjs[\s\S]*?--head "\$PR_HEAD" \\\n+\s+--skip-pages/,
-    `${name} canonical sync must not dispatch release-only Pages`,
+    `${name} canonical sync must retain the [skip pages] marker`,
   );
 }
 
@@ -237,13 +237,13 @@ assert.match(
 );
 assert.match(
   pagesWorkflow,
-  /- name: Checkout[\s\S]*?- name: Verify release provenance[\s\S]*?- name: Setup Node/,
-  "Pages should verify immutable release provenance before dependency setup or installation",
+  /- name: Checkout[\s\S]*?- name: Verify deployment provenance[\s\S]*?- name: Setup Node/,
+  "Pages should verify deployment provenance before dependency setup or installation",
 );
 assert.match(
   pagesWorkflow,
-  /Verify release provenance[\s\S]*?GH_TOKEN: \$\{\{ github\.token \}\}[\s\S]*?GITHUB_REF_TYPE[\s\S]*?expected_tag="v\$\{package_version\}"[\s\S]*?refs\/tags\/\$\{GITHUB_REF_NAME\}\^\{commit\}[\s\S]*?releases\/tags\/\$\{GITHUB_REF_NAME\}[\s\S]*?\.draft == false[\s\S]*?\.published_at/,
-  "Pages should bind deployment to the exact package tag, commit, and published GitHub Release using the read-only token",
+  /deployment_target:[\s\S]*?options:[\s\S]*?- release[\s\S]*?- main[\s\S]*?Verify deployment provenance[\s\S]*?DEPLOYMENT_TARGET[\s\S]*?workflow_dispatch[\s\S]*?refs\/heads\/main[\s\S]*?commits\/main[\s\S]*?GITHUB_REF_TYPE[\s\S]*?expected_tag="v\$\{package_version\}"[\s\S]*?refs\/tags\/\$\{GITHUB_REF_NAME\}\^\{commit\}[\s\S]*?releases\/tags\/\$\{GITHUB_REF_NAME\}[\s\S]*?\.draft == false[\s\S]*?\.published_at[\s\S]*?Verify current main before deployment[\s\S]*?inputs\.deployment_target == 'main'/,
+  "Pages should bind main dispatches to current protected main and release dispatches to the exact published package tag",
 );
 assert.match(
   ciWorkflow,

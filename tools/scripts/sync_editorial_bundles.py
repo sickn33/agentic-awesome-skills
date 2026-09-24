@@ -55,7 +55,7 @@ FRONTMATTER_BLOCK_RE = re.compile(
     re.DOTALL,
 )
 REPO_URL = "https://github.com/sickn33/agentic-awesome-skills"
-CATALOG_URL = "https://asskills.me/"
+CATALOG_URL = "https://aaskills.tech/"
 PRIVACY_POLICY_URL = f"{REPO_URL}/blob/main/PRIVACY.md"
 TERMS_OF_SERVICE_URL = f"{REPO_URL}/blob/main/TERMS.md"
 FLAGSHIP_BUNDLE_ID = "aas-agent-mcp-builder"

@@ -3,7 +3,7 @@ import { buildSitemap, DEFAULT_TOP_SKILL_COUNT, getSeoLandingPaths, selectTopSki
 
 describe('sitemap generation script helpers', () => {
   it('uses the custom AAS domain as the default sitemap origin', () => {
-    expect(buildSitemap([], 0)).toContain('https://asskills.me/</loc>');
+    expect(buildSitemap([], 0)).toContain('https://aaskills.tech/</loc>');
   });
 
   it('builds top skill entries sorted by stars/date/name without duplicates', () => {

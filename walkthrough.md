@@ -705,3 +705,10 @@ Moved [Support the Project](README.md#support-the-project) directly below the op
 - Require SoupSieve 2.8.4 or newer alongside BeautifulSoup in junta-leiloeiros to exclude CVE-2026-49477.
 - Generated plugin mirrors are validated locally and remain owned by protected canonical synchronization.
 - Validation: repository chain, reference validation and docs security passed; Pillow 12.3.0 GIF creation/reopening and SoupSieve 2.8.4 selector smoke passed. Snyk EU found no security vulnerabilities in either resolved requirements set; junta-leiloeiros retains a certifi MPL-2.0 license-policy finding.
+
+# AAS social preview refresh — 2026-09-24
+
+- Replaced `apps/web-app/public/social-card.png` with the first generated AAS Core social preview, matching the live site's dark and cyan visual identity and current Search → Choose → Validate → Preview flow.
+- Kept the existing Open Graph and Twitter image URL stable so shared links resolve to the refreshed asset after deployment.
+- Resampled the social card to the site's required 1200 × 630 pixel dimensions after the first deployment validation flagged the generated source dimensions.
+- Updated the provenance record and SEO verifier to bind the selected image's actual visible copy and SHA-256.

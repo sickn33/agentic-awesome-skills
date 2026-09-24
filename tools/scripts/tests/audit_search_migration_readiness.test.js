@@ -8,7 +8,7 @@ const scriptPath = path.resolve(__dirname, '..', 'audit_search_migration_readine
 const { auditMigrationReadiness, inferLegacyPagesUrl } = require(scriptPath);
 
 assert.strictEqual(
-  inferLegacyPagesUrl('https://asskills.me/'),
+  inferLegacyPagesUrl('https://aaskills.tech/'),
   'https://sickn33.github.io/antigravity-awesome-skills/',
   'the custom domain must retain the established legacy bridge destination',
 );

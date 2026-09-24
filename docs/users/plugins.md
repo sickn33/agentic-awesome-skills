@@ -186,7 +186,7 @@ Choose a **specialized plugin** if:
 - you want the plugin itself to communicate a clear job, audience, and workflow
 - you want one package directory that compatible Agent Plugins clients can load without host-specific manifest fields
 
-The hosted [specialized plugin landing page](https://asskills.me/plugins) is the quickest way to compare the current AAS plugin packs.
+The hosted [specialized plugin landing page](https://aaskills.tech/plugins) is the quickest way to compare the current AAS plugin packs.
 
 ## Related guides
 

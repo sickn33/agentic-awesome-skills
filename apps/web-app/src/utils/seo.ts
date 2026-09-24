@@ -5,7 +5,7 @@ export const DEFAULT_TOP_SKILL_COUNT = 180;
 export const DEFAULT_SOCIAL_IMAGE = 'social-card.png';
 const SITE_NAME = 'Agentic Awesome Skills';
 const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
-const HOSTED_CATALOG_URL = 'https://asskills.me/';
+const HOSTED_CATALOG_URL = 'https://aaskills.tech/';
 const TOPIC_ROUTE_PREFIX = '/topics';
 const HOME_CATALOG_COUNT_FALLBACK = 1969;
 

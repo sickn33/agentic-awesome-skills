@@ -245,13 +245,23 @@ try {
   const productionOutputRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'pages-redirect-production-'));
   try {
     const productionOutput = path.join(productionOutputRoot, 'bridge');
-    const productionManifest = generateBridge({ outputDirectory: productionOutput });
+    const repoSitemapPath = path.resolve(__dirname, '..', '..', '..', 'apps', 'web-app', 'public', 'sitemap.xml');
+    const normalizedSitemapPath = path.join(fixtureRoot, 'production-sitemap.xml');
+    fs.writeFileSync(
+      normalizedSitemapPath,
+      fs.readFileSync(repoSitemapPath, 'utf8').replace(/asskills\.me|aaskills\.me/g, 'aaskills.tech'),
+      'utf8',
+    );
+    const productionManifest = generateBridge({
+      outputDirectory: productionOutput,
+      sitemapPath: normalizedSitemapPath,
+    });
     const productionSkills = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', '..', '..', 'skills_index.json'), 'utf8'));
     assert.strictEqual(productionManifest.source_sitemap_route_count, 188);
     assert.strictEqual(productionManifest.current_skill_route_count, productionSkills.length);
     assert.strictEqual(productionManifest.route_count, productionSkills.length + 8);
     assert.strictEqual(productionManifest.legacy_sitemap_route_count, 188);
-    const expectedSkillUrls = new Set(productionSkills.map(({ id }) => `https://asskills.me/skill/${id}/`));
+    const expectedSkillUrls = new Set(productionSkills.map(({ id }) => `https://aaskills.tech/skill/${id}/`));
     const actualSkillUrls = new Set(productionManifest.redirects.map(({ to }) => to).filter((url) => url.includes('/skill/')));
     assert.deepStrictEqual(actualSkillUrls, expectedSkillUrls, 'production bridge must cover exactly every current skill id');
     assert(!productionManifest.redirects.some(({ to }) => to.endsWith('/skill/goldrush-api/')));

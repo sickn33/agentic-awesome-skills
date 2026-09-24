@@ -319,7 +319,7 @@ accepts mutable Git refs and prints a warning because it skips that identity che
 
 Remove `--dry-run` only after reviewing the plan.
 
-To review a Core stack manifest or immutable plan visually, use the hosted [Skill Workbench](https://asskills.me/workbench). It imports the JSON in browser memory and checks the supported artifact structure; it does not assemble a stack, generate install commands, access the filesystem, or install skills.
+To review a Core stack manifest or immutable plan visually, use the hosted [Skill Workbench](https://aaskills.tech/workbench). It imports the JSON in browser memory and checks the supported artifact structure; it does not assemble a stack, generate install commands, access the filesystem, or install skills.
 
 The filter rules are:
 

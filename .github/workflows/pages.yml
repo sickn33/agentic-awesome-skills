@@ -1,11 +1,20 @@
-# Build and deploy the web app to GitHub Pages only after an explicit release dispatch.
+# Build and deploy explicitly selected protected-main or release-tag targets to GitHub Pages.
 # Enable in repo: Settings → Pages → Source: GitHub Actions.
-# Site URL: https://asskills.me/
+# Site URL: https://aaskills.tech/
 
 name: Deploy Web App to GitHub Pages
 
 on:
   workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: "Deploy the current protected main commit or an exact released tag"
+        required: true
+        type: choice
+        default: release
+        options:
+          - release
+          - main
 
 permissions:
   contents: read
@@ -29,15 +38,34 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Verify release provenance
+      - name: Verify deployment provenance
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          DEPLOYMENT_TARGET: ${{ inputs.deployment_target }}
         run: |
           set -euo pipefail
 
-          if [[ "${GITHUB_REF_TYPE}" != "tag" ]]; then
-            echo "Pages deployment must be dispatched from an immutable release tag." >&2
+          if [[ "${GITHUB_EVENT_NAME}" != "workflow_dispatch" ]]; then
+            echo "Pages deployment requires an explicit workflow dispatch." >&2
+            exit 1
+          fi
+
+          if [[ "${DEPLOYMENT_TARGET}" == "main" ]]; then
+            if [[ "${GITHUB_REF}" != "refs/heads/main" ]]; then
+              echo "Main deployment must be dispatched from protected main." >&2
+              exit 1
+            fi
+            main_commit="$(gh api --method GET "repos/${GITHUB_REPOSITORY}/commits/main" --jq '.sha')"
+            if [[ "${main_commit}" != "${GITHUB_SHA}" || "$(git rev-parse HEAD)" != "${GITHUB_SHA}" ]]; then
+              echo "Pages deployment must use the exact current main commit." >&2
+              exit 1
+            fi
+            exit 0
+          fi
+
+          if [[ "${DEPLOYMENT_TARGET}" != "release" || "${GITHUB_REF_TYPE}" != "tag" ]]; then
+            echo "Manual Pages deployment must be dispatched from an immutable release tag." >&2
             exit 1
           fi
           if [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -113,7 +141,7 @@ jobs:
         run: cd apps/web-app && npm run build
         env:
           VITE_BASE_PATH: /
-          SEO_SITE_URL: https://asskills.me
+          SEO_SITE_URL: https://aaskills.tech
 
       - name: Validate SEO artifact quality
         run: cd apps/web-app && npm run verify:seo -- --require-hosted-url
@@ -142,11 +170,24 @@ jobs:
 
   deploy:
     needs: build
+    if: needs.build.result == 'success'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
+      - name: Verify current main before deployment
+        if: inputs.deployment_target == 'main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          main_commit="$(gh api --method GET "repos/${GITHUB_REPOSITORY}/commits/main" --jq '.sha')"
+          if [[ "${main_commit}" != "${GITHUB_SHA}" ]]; then
+            echo "A newer main commit exists; refusing to deploy a stale Pages artifact." >&2
+            exit 1
+          fi
+
       - name: Deploy to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5

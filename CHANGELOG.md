@@ -9,13 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [18.3.1] - 2026-09-23 - "Custom AAS Domain"
 
-> Moves the hosted catalog to `asskills.me` and keeps its SEO and legacy redirects aligned.
+> Moves the hosted catalog to `aaskills.tech` and keeps its SEO and legacy redirects aligned.
 
 A hosted-catalog maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI. It preserves existing installation interfaces and the catalog contents.
 
 ### Changed
 
-- **Hosted catalog domain** — serve the Pages site from `https://asskills.me/`, use root-relative assets, and update canonical metadata, sitemap, repository links, and legacy redirect destinations.
+- **Hosted catalog domain** — serve the Pages site from `https://aaskills.tech/`, use root-relative assets, and update canonical metadata, sitemap, repository links, and legacy redirect destinations.
 
 ### Validation scope
 
