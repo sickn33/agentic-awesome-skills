@@ -400,6 +400,28 @@ describe('Home', () => {
       await waitFor(() => expect(screen.getByText('@Frontend A')).toBeInTheDocument());
       expect(screen.queryByText('@Backend A')).not.toBeInTheDocument();
     });
+
+    it('falls back from unsupported URL filters instead of hiding the catalog', async () => {
+      const skill = createMockSkill({
+        id: 'visible-skill',
+        name: 'Visible Skill',
+        category: 'frontend',
+        risk: 'safe',
+        source_type: 'official',
+      });
+
+      renderCatalog([
+        '/?category=not-a-category&risk=not-a-risk&source=not-a-source&scope=not-a-scope&sort=not-a-sort',
+      ], 0, [skill]);
+
+      await waitFor(() => expect(screen.getByText('@Visible Skill')).toBeInTheDocument());
+      expect(screen.getByLabelText('Filter by category')).toHaveValue('all');
+      expect(screen.getByLabelText('Filter by risk')).toHaveValue('all');
+      expect(screen.getByLabelText('Filter by source')).toHaveValue('all');
+      expect(screen.getByLabelText('Filter by shortlist')).toHaveValue('all');
+      expect(screen.getByLabelText('Sort skills')).toHaveValue('default');
+      await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent(/^\/$/));
+    });
   });
 
   describe('Search shortcut hint', () => {
