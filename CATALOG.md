@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-23T14:33:35.000Z
 
-Total skills: 2456
+Total skills: 2457
 
 ## agent-behavior (5)
 
@@ -1775,10 +1775,11 @@ Total skills: 2456
 | --- | --- | --- | --- | --- | --- |
 | `video-content-extractor` | Extract key frames from MP4 videos at configurable intervals, run Tesseract OCR, and generate structured Markdown reports with video metadata and timestamped... | safe | 274326424/video-content-extractor | video, ocr, ffmpeg, tesseract, frame-extraction, media | video, ocr, ffmpeg, tesseract, frame-extraction, media, content, extractor, extract, key, frames, mp4 |
 
-## memory (6)
+## memory (7)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `agent-memory-discipline` | Rules for when an agent should recall from long-term memory before acting and when it should save decisions, corrections and failures afterwards. Works with ... | safe | mnemoverse/agent-memory-discipline | agent-memory, long-term-memory, context-engineering, mcp, agent-skills | agent-memory, long-term-memory, context-engineering, mcp, agent-skills, agent, memory, discipline, rules, should, recall, long |
 | `agent-memory-systems` | Memory is the cornerstone of intelligent agents. Without it, every interaction starts from zero. This skill covers the architecture of agent memory: short-te... | safe | vibeship-spawner-skills (Apache 2.0) | agent, memory | agent, memory, cornerstone, intelligent, agents, without, every, interaction, starts, zero, skill, covers |
 | `context-window-management` | Strategies for managing LLM context windows including summarization, trimming, routing, and avoiding context rot | critical | vibeship-spawner-skills (Apache 2.0) | window | window, context, managing, llm, windows, including, summarization, trimming, routing, avoiding, rot |
 | `conversation-memory` | Persistent memory systems for LLM conversations including short-term, long-term, and entity-based memory | critical | vibeship-spawner-skills (Apache 2.0) | conversation, memory | conversation, memory, persistent, llm, conversations, including, short, term, long, entity |

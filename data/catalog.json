@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-23T14:33:35.000Z",
-  "total": 2456,
+  "total": 2457,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1073,6 +1073,41 @@
         "agents"
       ],
       "path": "skills/agent-memory/SKILL.md"
+    },
+    {
+      "id": "agent-memory-discipline",
+      "canonical_id": "agent-memory-discipline",
+      "name": "agent-memory-discipline",
+      "description": "Rules for when an agent should recall from long-term memory before acting and when it should save decisions, corrections and failures afterwards. Works with any memory backend.",
+      "category": "memory",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "mnemoverse/agent-memory-discipline",
+      "license": "CC0-1.0",
+      "license_source": "https://github.com/mnemoverse/agent-memory-discipline/blob/main/LICENSE",
+      "tags": [
+        "agent-memory",
+        "long-term-memory",
+        "context-engineering",
+        "mcp",
+        "agent-skills"
+      ],
+      "triggers": [
+        "agent-memory",
+        "long-term-memory",
+        "context-engineering",
+        "mcp",
+        "agent-skills",
+        "agent",
+        "memory",
+        "discipline",
+        "rules",
+        "should",
+        "recall",
+        "long"
+      ],
+      "path": "skills/agent-memory-discipline/SKILL.md"
     },
     {
       "id": "agent-memory-mcp",
@@ -38038,7 +38073,7 @@
       "source_type": "community",
       "source_repo": "socai-io/jev-social",
       "license": "MIT",
-      "license_source": "https://github.com/socai-io/jev-social/blob/05581cac6b8c21c85e54883b5f2b93c16f40f419/LICENSE",
+      "license_source": "https://github.com/socai-io/jev-social/blob/782d809c68e2015536359aa7dceede9a3cdbb7f1/LICENSE",
       "tags": [
         "social-media",
         "research",

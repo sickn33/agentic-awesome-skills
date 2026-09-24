@@ -697,6 +697,25 @@
       "runtime_files": []
     },
     {
+      "id": "agent-memory-discipline",
+      "path": "skills/agent-memory-discipline",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "agent-memory-mcp",
       "path": "skills/agent-memory-mcp",
       "targets": {
@@ -47155,10 +47174,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2456,
+    "total_skills": 2457,
     "supported": {
-      "codex": 2370,
-      "claude": 2395
+      "codex": 2371,
+      "claude": 2396
     },
     "blocked": {
       "codex": 86,

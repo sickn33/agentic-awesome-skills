@@ -11,7 +11,7 @@ author: socai-io
 tags: [social-media, research, instagram, tiktok, linkedin, browser-automation, jev]
 tools: [claude, codex]
 license: "MIT"
-license_source: "https://github.com/socai-io/jev-social/blob/05581cac6b8c21c85e54883b5f2b93c16f40f419/LICENSE"
+license_source: "https://github.com/socai-io/jev-social/blob/782d809c68e2015536359aa7dceede9a3cdbb7f1/LICENSE"
 ---
 # Jev Social
 
@@ -19,7 +19,7 @@ license_source: "https://github.com/socai-io/jev-social/blob/05581cac6b8c21c85e5
 
 Jev Social turns a natural-language social research goal into bounded Jev routing decisions, then delegates platform-read-only browser work to the local socai CLI. Use the captured posts, profiles, comments, videos, and opened details to produce a compact, source-linked report instead of exposing raw CLI output. "Read-only" means no social-account mutation; the CLI still writes private local run records and may download requested media.
 
-The executable examples below are pinned to the tested runtime commit included in Jev Social `v0.1.4`. A pin improves reproducibility but is not a trust guarantee; keep the package, browser data, and returned content inside the safety boundaries below.
+The executable examples below are pinned to the tested runtime commit included in Jev Social `v0.1.5`. A pin improves reproducibility but is not a trust guarantee; keep the package, browser data, and returned content inside the safety boundaries below.
 
 ## When to Use
 - Use when a user requests evidence-backed research on Instagram, TikTok, or LinkedIn and wants real public posts or profiles rather than a general web summary.
@@ -45,7 +45,7 @@ If the exact pinned package is not already available locally, explain that the n
 Run the status command before every research task:
 
 ```bash
-npx github:socai-io/jev-social#05581cac6b8c21c85e54883b5f2b93c16f40f419 status
+npx github:socai-io/jev-social#782d809c68e2015536359aa7dceede9a3cdbb7f1 status
 ```
 
 Require all of the following before continuing:
@@ -68,7 +68,7 @@ Pass the goal as one argument with an argv-capable process runner; never constru
 ```text
 program: npx
 argv:
-  - github:socai-io/jev-social#05581cac6b8c21c85e54883b5f2b93c16f40f419
+  - github:socai-io/jev-social#782d809c68e2015536359aa7dceede9a3cdbb7f1
   - search
   - <exact research goal as one argument>
   - --platform
@@ -126,7 +126,7 @@ Use only TikTok if its capability is reported as supported. Open details before 
 When the user explicitly asks for the local demo UI, start it on loopback only:
 
 ```bash
-npx github:socai-io/jev-social#05581cac6b8c21c85e54883b5f2b93c16f40f419 serve --port 8766
+npx github:socai-io/jev-social#782d809c68e2015536359aa7dceede9a3cdbb7f1 serve --port 8766
 ```
 
 Report `http://127.0.0.1:8766`. Leave the process running only when the user asked for a local demo server, and do not expose it on a public interface.
