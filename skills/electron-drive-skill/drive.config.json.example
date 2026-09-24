@@ -1,0 +1,10 @@
+{
+  "build": "pnpm build",
+  "args": ["release/app"],
+  "env": { "APP_DATA_DIR": "{profile}/data" },
+  "logFile": "data/app.log",
+  "dev": {
+    "args": ["."],
+    "url": "http://localhost:1212"
+  }
+}
