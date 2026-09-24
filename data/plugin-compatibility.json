@@ -30739,6 +30739,25 @@
       "runtime_files": []
     },
     {
+      "id": "noaa-radar-satellite-fetching",
+      "path": "skills/noaa-radar-satellite-fetching",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "nodejs-backend-patterns",
       "path": "skills/nodejs-backend-patterns",
       "targets": {
@@ -45324,6 +45343,44 @@
       "runtime_files": []
     },
     {
+      "id": "weather-data-lifecycle-management",
+      "path": "skills/weather-data-lifecycle-management",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "weather-data-reproducibility",
+      "path": "skills/weather-data-reproducibility",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "weather-model-data-fetching",
       "path": "skills/weather-model-data-fetching",
       "targets": {
@@ -45343,8 +45400,46 @@
       "runtime_files": []
     },
     {
+      "id": "weather-model-run-discovery",
+      "path": "skills/weather-model-run-discovery",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "weather-observation-fetching",
       "path": "skills/weather-observation-fetching",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "weather-pipeline-performance-diagnosis",
+      "path": "skills/weather-pipeline-performance-diagnosis",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -47060,10 +47155,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2451,
+    "total_skills": 2456,
     "supported": {
-      "codex": 2365,
-      "claude": 2390
+      "codex": 2370,
+      "claude": 2395
     },
     "blocked": {
       "codex": 86,

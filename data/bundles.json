@@ -1057,7 +1057,10 @@
         "vector-database-ops",
         "vibecode-production-qa-validator",
         "warehouse",
+        "weather-data-lifecycle-management",
+        "weather-data-reproducibility",
         "weather-model-data-fetching",
+        "weather-pipeline-performance-diagnosis",
         "weaviate",
         "weaviate-cookbooks",
         "wellally-tech",
@@ -1245,6 +1248,7 @@
         "using-n8n-mcp-skills",
         "vercel-deployment",
         "vibecode-production-qa-validator",
+        "weather-pipeline-performance-diagnosis",
         "web2-recon"
       ]
     },
