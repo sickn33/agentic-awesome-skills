@@ -1,23 +1,23 @@
 {
   "schemaVersion": 1,
   "generator": "OpenAI ImageGen",
-  "generatedAt": "2026-07-18",
+  "generatedAt": "2026-09-24",
   "dimensions": {
     "width": 1200,
     "height": 630
   },
-  "sha256": "6c51cb201eef2aa43e9d5c4e17efca28d98787634455cfd9e4c26deac7734f39",
+  "sha256": "4702286b3ed204661ddabc601e45ced16f8218826e14dad339a625932d9c092b",
   "visibleCopy": [
-    "AAS Core",
-    "Local. Deterministic. Agent-first.",
-    "profile → stack → plan",
-    "Catalog-backed skill composition"
+    "AAS",
+    "The open skill catalog for coding agents.",
+    "Search \u2192 Choose \u2192 Validate \u2192 Preview",
+    "2,451+ reusable SKILL.md playbooks",
+    "Codex \u00b7 Claude Code \u00b7 Cursor \u00b7 Gemini CLI \u00b7 Antigravity"
   ],
-  "promptSummary": "A dark technical GitHub social preview that presents AAS Core as the single primary product and visualizes the explicit profile-to-stack-to-plan pipeline.",
+  "promptSummary": "A dark, cyan AAS social preview that presents the open skill catalog and illustrates the Search, Choose, Validate, Preview flow.",
   "invariants": [
-    "No catalog count",
-    "No npm or npx call to action",
-    "No vendor logos",
-    "No hosted-cloud implication"
+    "No user project data",
+    "No implied automatic application of changes",
+    "No vendor logos"
   ]
 }

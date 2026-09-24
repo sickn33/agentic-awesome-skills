@@ -821,7 +821,7 @@ describe('seo assets verification helpers', () => {
       generator: 'OpenAI ImageGen',
       dimensions: { width: 1200, height: 630 },
       sha256: '763d6b5763eb64e1310fc3d6b27291a4c7b3fa6d03e9cb3f71d79ddba25f58fc',
-      visibleCopy: ['AAS Core', 'profile → stack → plan'],
+      visibleCopy: ['AAS', 'Search → Choose → Validate → Preview'],
     });
 
     expect(() => assertSocialCardProvenance(png, provenance)).not.toThrow();

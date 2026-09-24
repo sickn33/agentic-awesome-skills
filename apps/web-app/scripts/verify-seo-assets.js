@@ -881,8 +881,8 @@ export function assertSocialCardProvenance(cardData, provenanceText) {
   assert(provenance.generator === 'OpenAI ImageGen', 'Social card provenance must identify OpenAI ImageGen.');
   assert(provenance.dimensions?.width === width && provenance.dimensions?.height === height, 'Social card provenance dimensions must match the PNG.');
   assert(provenance.sha256 === digest, 'Social card provenance SHA-256 must match the PNG.');
-  assert(Array.isArray(provenance.visibleCopy) && provenance.visibleCopy.includes('AAS Core'), 'Social card provenance must preserve AAS Core as the primary visible product.');
-  assert(provenance.visibleCopy.includes('profile → stack → plan'), 'Social card provenance must preserve the Core workflow.');
+  assert(Array.isArray(provenance.visibleCopy) && provenance.visibleCopy.includes('AAS'), 'Social card provenance must identify the AAS brand.');
+  assert(provenance.visibleCopy.includes('Search → Choose → Validate → Preview'), 'Social card provenance must preserve the displayed AAS workflow.');
 }
 
 export function assertPluginsDiscoveryMeta(htmlText) {
