@@ -710,3 +710,4 @@ Moved [Support the Project](README.md#support-the-project) directly below the op
 
 - Replaced `apps/web-app/public/social-card.png` with the first generated AAS Core social preview, matching the live site's dark and cyan visual identity and current Search → Choose → Validate → Preview flow.
 - Kept the existing Open Graph and Twitter image URL stable so shared links resolve to the refreshed asset after deployment.
+- Resampled the social card to the site's required 1200 × 630 pixel dimensions after the first deployment validation flagged the generated source dimensions.
