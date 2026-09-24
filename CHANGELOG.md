@@ -7,19 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [18.3.1] - 2026-09-23 - "Custom AAS Domain"
+## [18.4.0] - 2026-09-24 - "Weather Workflows, Agent Memory, and aaskills.tech"
 
-> Moves the hosted catalog to `aaskills.tech` and keeps its SEO and legacy redirects aligned.
+> Adds five weather-data pipeline skills and an agent memory-discipline skill, refreshes the Jev Social runtime pin, and serves the hosted catalog from `aaskills.tech`.
 
-A hosted-catalog maintenance release for Claude Code, Cursor, Codex CLI and Gemini CLI. It preserves existing installation interfaces and the catalog contents.
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It expands the catalog to **2,457** skills and preserves existing installation interfaces.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.4.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **noaa-radar-satellite-fetching (#1585)** — retrieve NEXRAD and GOES products from public cloud archives with verified site, product, channel, sector, and scan-time selection.
+- **weather-model-run-discovery (#1585)** — resolve the newest complete numerical weather prediction cycle across provider mirrors without downloading full payloads.
+- **weather-pipeline-performance-diagnosis (#1585)** — measure discovery, transfer, parsing, scientific processing, and rendering separately before changing code.
+- **weather-data-reproducibility (#1585)** — record and verify provenance manifests for weather inputs and derived artifacts, including object identity, selections, software versions, and hashes.
+- **weather-data-lifecycle-management (#1585)** — define ownership, retention, and cleanup for temporary files, interactive data, caches, and exports.
+- **agent-memory-discipline (#1572)** — standing rules for when an agent recalls from long-term memory before acting and when it saves decisions, corrections, and failures afterwards, backend-neutral and CC0-1.0.
 
 ### Changed
 
+- **Jev Social runtime pin (#1580)** — move every executable and license reference to the tested `v0.1.5` commit `782d809c68e2015536359aa7dceede9a3cdbb7f1`, keeping the read-only browser boundary and `risk: critical` classification.
 - **Hosted catalog domain** — serve the Pages site from `https://aaskills.tech/`, use root-relative assets, and update canonical metadata, sitemap, repository links, and legacy redirect destinations.
+- **Pages deployment** — deploy the catalog only from protected `main` or an exact immutable release tag.
 
 ### Validation scope
 
-Protected source PR, repository and web-app validation, documentation-security checks, protected CI and CodeQL, canonical synchronization, exact-release Pages deployment, and live current/legacy route verification.
+Exact-head maintainer review for changed skill content, protected source PRs, repository validation and tests, docs security, protected CI and CodeQL, canonical synchronization, exact-release Pages deployment from the immutable `v18.4.0` tag, and live current/legacy route verification.
 
 ---
 
