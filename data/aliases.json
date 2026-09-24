@@ -191,6 +191,7 @@
     "multi-agent-orchestrator": "multi-agent-task-orchestrator",
     "multi-platform-apps": "multi-platform-apps-multi-platform",
     "neon-postgres-optimizer": "neon-postgres-egress-optimizer",
+    "noaa-radar-fetching": "noaa-radar-satellite-fetching",
     "observability-monitoring-setup": "observability-monitoring-monitor-setup",
     "observability-monitoring-implement": "observability-monitoring-slo-implement",
     "obsidian-clipper-creator": "obsidian-clipper-template-creator",
@@ -247,6 +248,8 @@
     "test-framework-skill": "test-framework-migration-skill",
     "vercel-react-transitions": "vercel-react-view-transitions",
     "vibecode-production-validator": "vibecode-production-qa-validator",
+    "weather-data-management": "weather-data-lifecycle-management",
+    "weather-pipeline-diagnosis": "weather-pipeline-performance-diagnosis",
     "wechat-official-strategist": "wechat-official-account-strategist",
     "wordpress-centric-skill": "wordpress-centric-high-seo-optimized-blogwriting-skill",
     "shopify—development": "shopify-development"

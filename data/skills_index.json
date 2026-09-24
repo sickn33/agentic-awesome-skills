@@ -39704,6 +39704,38 @@
     "license_source": "https://github.com/supernovae-st/nika-agents/blob/main/LICENSE"
   },
   {
+    "id": "noaa-radar-satellite-fetching",
+    "path": "skills/noaa-radar-satellite-fetching",
+    "category": "data",
+    "name": "noaa-radar-satellite-fetching",
+    "description": "Retrieve NOAA NEXRAD and GOES products from public cloud archives using verified site, product, channel, sector, and scan-time selection.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "weather",
+      "noaa",
+      "nexrad",
+      "goes",
+      "radar",
+      "satellite",
+      "aws-s3"
+    ]
+  },
+  {
     "id": "nodejs-backend-patterns",
     "path": "skills/nodejs-backend-patterns",
     "category": "backend",
@@ -58797,6 +58829,67 @@
     }
   },
   {
+    "id": "weather-data-lifecycle-management",
+    "path": "skills/weather-data-lifecycle-management",
+    "category": "data",
+    "name": "weather-data-lifecycle-management",
+    "description": "Manage ownership, retention, and cleanup of downloaded weather data across one-shot jobs, interactive viewers, caches, failures, and cancellation.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "weather",
+      "data-lifecycle",
+      "cleanup",
+      "caching",
+      "desktop-apps"
+    ]
+  },
+  {
+    "id": "weather-data-reproducibility",
+    "path": "skills/weather-data-reproducibility",
+    "category": "data",
+    "name": "weather-data-reproducibility",
+    "description": "Record and verify provenance manifests for weather-data inputs and derived artifacts, including object identity, selections, software versions, transformations, and hashes.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "weather",
+      "reproducibility",
+      "provenance",
+      "checksums",
+      "grib2",
+      "netcdf"
+    ]
+  },
+  {
     "id": "weather-model-data-fetching",
     "path": "skills/weather-model-data-fetching",
     "category": "data",
@@ -58828,6 +58921,37 @@
     ]
   },
   {
+    "id": "weather-model-run-discovery",
+    "path": "skills/weather-model-run-discovery",
+    "category": "data",
+    "name": "weather-model-run-discovery",
+    "description": "Resolve the newest complete numerical weather prediction cycle and forecast objects across provider mirrors without downloading full payloads.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "weather",
+      "nwp",
+      "model-cycle",
+      "aws-s3",
+      "nomads",
+      "herbie"
+    ]
+  },
+  {
     "id": "weather-observation-fetching",
     "path": "skills/weather-observation-fetching",
     "category": "data",
@@ -58856,6 +58980,36 @@
       "radiosonde",
       "noaa",
       "quality-control"
+    ]
+  },
+  {
+    "id": "weather-pipeline-performance-diagnosis",
+    "path": "skills/weather-pipeline-performance-diagnosis",
+    "category": "data",
+    "name": "weather-pipeline-performance-diagnosis",
+    "description": "Diagnose slow weather-data workflows by measuring discovery, transfer, parsing, scientific processing, and rendering separately before changing code.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "weather",
+      "performance",
+      "profiling",
+      "diagnostics",
+      "pipelines"
     ]
   },
   {
