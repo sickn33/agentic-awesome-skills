@@ -42,6 +42,12 @@ This is an independent community project. It is not affiliated with, sponsored b
 [![OpenCode](https://img.shields.io/badge/OpenCode-CLI-gray?style=for-the-badge)](https://github.com/opencode-ai/opencode)
 [![Antigravity](https://img.shields.io/badge/Antigravity-AI%20IDE-red?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills)
 
+## Watch the Introduction
+
+A 40-second introduction to Agentic Awesome Skills. Press play to watch it here on GitHub.
+
+https://github.com/user-attachments/assets/02aa20ca-c3bb-4984-807e-7b06ef77e785
+
 ## Support the Project
 
 **We’re looking for sponsors to support Agentic Awesome Skills.** If you or your company would like to support the project, become a sponsor.
@@ -107,6 +113,7 @@ Direct file search can find candidate prose, but it leaves the result in the con
 
 ## Table of Contents
 
+- [Watch the Introduction](#watch-the-introduction)
 - [Support the Project](#support-the-project)
 - [AAS Core: Agent-First Preview](#aas-core-agent-first-preview)
 - [Why This Repo](#why-this-repo)
