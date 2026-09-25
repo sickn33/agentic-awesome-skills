@@ -36846,6 +36846,39 @@
     }
   },
   {
+    "id": "mcp-dependency-drift-audit",
+    "path": "skills/mcp-dependency-drift-audit",
+    "category": "security",
+    "name": "mcp-dependency-drift-audit",
+    "description": "Statically audit MCP configs for mutable npm/npx package references before approval or CI, without executing discovered MCP servers.",
+    "risk": "safe",
+    "source": "https://github.com/tomelias10/mcp-drift-check",
+    "date_added": "2026-09-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "tomelias10/mcp-drift-check",
+    "license": "MIT",
+    "license_source": "https://github.com/tomelias10/mcp-drift-check/blob/v0/LICENSE",
+    "tags": [
+      "mcp",
+      "ai-security",
+      "supply-chain",
+      "devsecops",
+      "sarif"
+    ]
+  },
+  {
     "id": "mcp-server-security",
     "path": "skills/mcp-server-security",
     "category": "security",

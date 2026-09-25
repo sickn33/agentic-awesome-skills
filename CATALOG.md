@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-25T04:54:31.000Z
 
-Total skills: 2464
+Total skills: 2465
 
 ## agent-behavior (5)
 
@@ -2112,7 +2112,7 @@ Total skills: 2464
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | safe | community | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
 | `sympy` | SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations. | safe | https://github.com/sympy/sympy | sympy | sympy, python, library, symbolic, mathematics, enables, exact, computation, mathematical, symbols, rather, than |
 
-## security (222)
+## security (223)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2251,6 +2251,7 @@ Total skills: 2464
 | `m365-entra-attack` | Microsoft 365 / Entra ID red-team attack chain | offensive | elementalsouls/Claude-BugHunter | m365, entra, attack | m365, entra, attack, microsoft, 365, id, red, team, chain |
 | `malware-analyst` | Expert malware analyst specializing in defensive malware research, threat intelligence, and incident response. Masters sandbox analysis, behavioral analysis,... | critical | community | malware, analyst | malware, analyst, specializing, defensive, research, threat, intelligence, incident, response, masters, sandbox, analysis |
 | `marketplace-rbac-audit` | Audit multi-role marketplace authorization across roles, resource ownership, tenant boundaries, and order-state transitions; use when access rules need evide... | safe | self | marketplace, rbac, authorization, access-control, security | marketplace, rbac, authorization, access-control, security, audit, multi, role, roles, resource, ownership, tenant |
+| `mcp-dependency-drift-audit` | Statically audit MCP configs for mutable npm/npx package references before approval or CI, without executing discovered MCP servers. | safe | tomelias10/mcp-drift-check | mcp, ai-security, supply-chain, devsecops, sarif | mcp, ai-security, supply-chain, devsecops, sarif, dependency, drift, audit, statically, configs, mutable, npm |
 | `mcp-server-security` | Secure Model Context Protocol (MCP) servers with transport encryption, tool authorization, input validation, and audit logging for safe AI agent integrations. | safe | BagelHole/DevOps-Security-Agent-Skills | mcp, server, security | mcp, server, security, secure, model, context, protocol, servers, transport, encryption, authorization, input |
 | `meme-coin-audit` | Meme coin and token security audit | offensive | elementalsouls/Claude-BugHunter | meme, coin, audit | meme, coin, audit, token, security |
 | `memory-forensics` | Comprehensive techniques for acquiring, analyzing, and extracting artifacts from memory dumps for incident response and malware analysis. | critical | community | memory, forensics | memory, forensics, techniques, acquiring, analyzing, extracting, artifacts, dumps, incident, response, malware, analysis |

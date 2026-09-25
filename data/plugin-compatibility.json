@@ -28568,6 +28568,25 @@
       "runtime_files": []
     },
     {
+      "id": "mcp-dependency-drift-audit",
+      "path": "skills/mcp-dependency-drift-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "mcp-server-security",
       "path": "skills/mcp-server-security",
       "targets": {
@@ -47307,10 +47326,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2464,
+    "total_skills": 2465,
     "supported": {
-      "codex": 2378,
-      "claude": 2403
+      "codex": 2379,
+      "claude": 2404
     },
     "blocked": {
       "codex": 86,
