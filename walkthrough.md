@@ -717,3 +717,4 @@ Moved [Support the Project](README.md#support-the-project) directly below the op
 
 - Added the 40-second AAS presentation to the README through a GitHub video attachment, rendered inline by GitHub.
 - Added a self-hosted HTML video player to the catalog landing page, with a poster and no automatic download or playback.
+- Added a README link to the site's player as a fallback for GitHub playback stalls.

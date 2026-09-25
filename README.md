@@ -48,6 +48,8 @@ A 40-second introduction to Agentic Awesome Skills. Press play to watch it here 
 
 https://github.com/user-attachments/assets/02aa20ca-c3bb-4984-807e-7b06ef77e785
 
+If GitHub's player stalls, [watch the video on the AAS website](https://aaskills.tech/).
+
 ## Support the Project
 
 **We’re looking for sponsors to support Agentic Awesome Skills.** If you or your company would like to support the project, become a sponsor.
