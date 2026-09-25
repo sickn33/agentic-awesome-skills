@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-25T04:54:31.000Z
 
-Total skills: 2459
+Total skills: 2464
 
 ## agent-behavior (5)
 
@@ -250,6 +250,14 @@ Total skills: 2459
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `bdistill-behavioral-xray` | X-ray any AI model's behavioral patterns — refusal boundaries, hallucination tendencies, reasoning style, formatting defaults. No API key needed. | safe | community | ai, testing, behavioral-analysis, model-evaluation, red-team, compliance, mcp | ai, testing, behavioral-analysis, model-evaluation, red-team, compliance, mcp, bdistill, behavioral, xray, ray, any |
+
+## analysis (3)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `nexrad-mosaic-construction` | Construct a quality-aware NEXRAD multi-radar mosaic from aligned single-site products with explicit coverage, beam geometry, quality weighting, overlap resol... | safe | self | weather, nexrad, mosaic, multi-radar, quality-weighting, coverage, overlap-resolution | weather, nexrad, mosaic, multi-radar, quality-weighting, coverage, overlap-resolution, construction, construct, quality, aware, multi |
+| `nexrad-radar-visualization` | Plot NEXRAD Level II/III site scans and decoded radar mosaics with correct radar geometry, map grids, units, quality masks, timestamps, and provenance. | safe | self | weather, nexrad, radar-plotting, ppi, velocity, dual-pol, cross-section, visualization | weather, nexrad, radar-plotting, ppi, velocity, dual-pol, cross-section, visualization, radar, plot, level, ii |
+| `radar-satellite-analysis` | Interpret weather radar and satellite observations by validating product metadata and geometry, deriving storm and cloud structures, tracking evolution, and ... | safe | self | weather, radar, satellite, nexrad, goes, nowcasting, storm-analysis, remote-sensing, uncertainty | weather, radar, satellite, nexrad, goes, nowcasting, storm-analysis, remote-sensing, uncertainty, analysis, interpret, observations |
 
 ## andruia (3)
 
@@ -864,7 +872,7 @@ Total skills: 2459
 | `liuguang-banlan-ui` | Builds two parameterized UI modes—流光溢彩白 (iridescent white) and 五彩斑斓黑 (colorful black)—with OKLCH, WebGL/CSS fallback, vision gating, screenshot QA, and total... | critical | self | ui, frontend, oklch, webgl, accessibility | ui, frontend, oklch, webgl, accessibility, liuguang, banlan, two, parameterized, modes, iridescent, white |
 | `modellix` | Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download). | critical | Modellix/modellix-plugin | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api, integrate, async, ai |
 
-## data (32)
+## data (34)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -882,6 +890,8 @@ Total skills: 2459
 | `monte-carlo-prevent` | Surfaces Monte Carlo data observability context (table health, alerts, lineage, blast radius) before SQL/dbt edits. | safe | monte-carlo-data/mc-agent-toolkit | data-observability, dbt, schema, monte-carlo, lineage | data-observability, dbt, schema, monte-carlo, lineage, monte, carlo, prevent, surfaces, data, observability, context |
 | `monte-carlo-push-ingestion` | Expert guide for pushing metadata, lineage, and query logs to Monte Carlo from any data warehouse. | safe | monte-carlo-data/mc-agent-toolkit | data-observability, ingestion, monte-carlo, pycarlo, metadata | data-observability, ingestion, monte-carlo, pycarlo, metadata, monte, carlo, push, pushing, lineage, query, logs |
 | `monte-carlo-validation-notebook` | Generates SQL validation notebooks for dbt PR changes with before/after comparison queries. | safe | monte-carlo-data/mc-agent-toolkit | data-observability, validation, dbt, monte-carlo, sql-notebook | data-observability, validation, dbt, monte-carlo, sql-notebook, monte, carlo, notebook, generates, sql, notebooks, pr |
+| `nexrad-mosaic-access` | Access official NOAA/NCEP MRMS radar and multisensor composites for a region and time; validate product, grid, domain, quality, timestamp, and provenance. | safe | self | weather, nexrad, mrms, mosaic, qpe, vil, vii, mesh, composite-products | weather, nexrad, mrms, mosaic, qpe, vil, vii, mesh, composite-products, access, official, noaa |
+| `nexrad-product-access` | Discover and access NEXRAD data for a selected radar site, time, product, or Level II moment using completed archive volumes, real-time chunks, or supported ... | safe | self | weather, nexrad, level-ii, level-iii, radar-products, single-site, aws-s3 | weather, nexrad, level-ii, level-iii, radar-products, single-site, aws-s3, product, access, discover, data, selected |
 | `noaa-radar-satellite-fetching` | Retrieve NOAA NEXRAD and GOES products from public cloud archives using verified site, product, channel, sector, and scan-time selection. | safe | self | weather, noaa, nexrad, goes, radar, satellite, aws-s3 | weather, noaa, nexrad, goes, radar, satellite, aws-s3, fetching, retrieve, products, public, cloud |
 | `optim-agent` | Guide agent-driven parameter optimization for configurable systems with measurable objectives. Use for HPO, inference tuning, simulations, or RL/control expe... | safe | Optim-Agent/optim-agent | optimization, hyperparameter-optimization, experiments, tuning | optimization, hyperparameter-optimization, experiments, tuning, optim, agent, driven, parameter, configurable, measurable, objectives, hpo |
 | `postgres-readonly-queries` | Execute safe read-only SQL queries against PostgreSQL databases with multi-connection support and defense-in-depth write protection. | safe | sanjay3290/ai-skills | postgres, sql, database, read-only | postgres, sql, database, read-only, readonly, queries, execute, safe, read, against, postgresql, databases |

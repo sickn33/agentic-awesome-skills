@@ -30644,6 +30644,82 @@
       "runtime_files": []
     },
     {
+      "id": "nexrad-mosaic-access",
+      "path": "skills/nexrad-mosaic-access",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "nexrad-mosaic-construction",
+      "path": "skills/nexrad-mosaic-construction",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "nexrad-product-access",
+      "path": "skills/nexrad-product-access",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "nexrad-radar-visualization",
+      "path": "skills/nexrad-radar-visualization",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "nextjs-app-router-patterns",
       "path": "skills/nextjs-app-router-patterns",
       "targets": {
@@ -35151,6 +35227,25 @@
     {
       "id": "quit-sponsor",
       "path": "skills/quit-sponsor",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "radar-satellite-analysis",
+      "path": "skills/radar-satellite-analysis",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -47212,10 +47307,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2459,
+    "total_skills": 2464,
     "supported": {
-      "codex": 2373,
-      "claude": 2398
+      "codex": 2378,
+      "claude": 2403
     },
     "blocked": {
       "codex": 86,

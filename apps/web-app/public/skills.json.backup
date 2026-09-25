@@ -39598,6 +39598,137 @@
     ]
   },
   {
+    "id": "nexrad-mosaic-access",
+    "path": "skills/nexrad-mosaic-access",
+    "category": "data",
+    "name": "nexrad-mosaic-access",
+    "description": "Access official NOAA/NCEP MRMS radar and multisensor composites for a region and time; validate product, grid, domain, quality, timestamp, and provenance.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "weather",
+      "nexrad",
+      "mrms",
+      "mosaic",
+      "qpe",
+      "vil",
+      "vii",
+      "mesh",
+      "composite-products"
+    ]
+  },
+  {
+    "id": "nexrad-mosaic-construction",
+    "path": "skills/nexrad-mosaic-construction",
+    "category": "analysis",
+    "name": "nexrad-mosaic-construction",
+    "description": "Construct a quality-aware NEXRAD multi-radar mosaic from aligned single-site products with explicit coverage, beam geometry, quality weighting, overlap resolution, and provenance.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "weather",
+      "nexrad",
+      "mosaic",
+      "multi-radar",
+      "quality-weighting",
+      "coverage",
+      "overlap-resolution"
+    ]
+  },
+  {
+    "id": "nexrad-product-access",
+    "path": "skills/nexrad-product-access",
+    "category": "data",
+    "name": "nexrad-product-access",
+    "description": "Discover and access NEXRAD data for a selected radar site, time, product, or Level II moment using completed archive volumes, real-time chunks, or supported Level III sources with metadata validation.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "weather",
+      "nexrad",
+      "level-ii",
+      "level-iii",
+      "radar-products",
+      "single-site",
+      "aws-s3"
+    ]
+  },
+  {
+    "id": "nexrad-radar-visualization",
+    "path": "skills/nexrad-radar-visualization",
+    "category": "analysis",
+    "name": "nexrad-radar-visualization",
+    "description": "Plot NEXRAD Level II/III site scans and decoded radar mosaics with correct radar geometry, map grids, units, quality masks, timestamps, and provenance.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "weather",
+      "nexrad",
+      "radar-plotting",
+      "ppi",
+      "velocity",
+      "dual-pol",
+      "cross-section",
+      "visualization"
+    ]
+  },
+  {
     "id": "nextjs-app-router-patterns",
     "path": "skills/nextjs-app-router-patterns",
     "category": "framework",
@@ -45561,6 +45692,40 @@
       "addiction-recovery",
       "wellbeing",
       "coaching"
+    ]
+  },
+  {
+    "id": "radar-satellite-analysis",
+    "path": "skills/radar-satellite-analysis",
+    "category": "analysis",
+    "name": "radar-satellite-analysis",
+    "description": "Interpret weather radar and satellite observations by validating product metadata and geometry, deriving storm and cloud structures, tracking evolution, and quantifying uncertainty.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "weather",
+      "radar",
+      "satellite",
+      "nexrad",
+      "goes",
+      "nowcasting",
+      "storm-analysis",
+      "remote-sensing",
+      "uncertainty"
     ]
   },
   {

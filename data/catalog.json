@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-25T04:54:31.000Z",
-  "total": 2459,
+  "total": 2464,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -46846,6 +46846,145 @@
       "path": "skills/news-sentiment-engine/SKILL.md"
     },
     {
+      "id": "nexrad-mosaic-access",
+      "canonical_id": "nexrad-mosaic-access",
+      "name": "nexrad-mosaic-access",
+      "description": "Access official NOAA/NCEP MRMS radar and multisensor composites for a region and time; validate product, grid, domain, quality, timestamp, and provenance.",
+      "category": "data",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "weather",
+        "nexrad",
+        "mrms",
+        "mosaic",
+        "qpe",
+        "vil",
+        "vii",
+        "mesh",
+        "composite-products"
+      ],
+      "triggers": [
+        "weather",
+        "nexrad",
+        "mrms",
+        "mosaic",
+        "qpe",
+        "vil",
+        "vii",
+        "mesh",
+        "composite-products",
+        "access",
+        "official",
+        "noaa"
+      ],
+      "path": "skills/nexrad-mosaic-access/SKILL.md"
+    },
+    {
+      "id": "nexrad-mosaic-construction",
+      "canonical_id": "nexrad-mosaic-construction",
+      "name": "nexrad-mosaic-construction",
+      "description": "Construct a quality-aware NEXRAD multi-radar mosaic from aligned single-site products with explicit coverage, beam geometry, quality weighting, overlap resolution, and provenance.",
+      "category": "analysis",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "weather",
+        "nexrad",
+        "mosaic",
+        "multi-radar",
+        "quality-weighting",
+        "coverage",
+        "overlap-resolution"
+      ],
+      "triggers": [
+        "weather",
+        "nexrad",
+        "mosaic",
+        "multi-radar",
+        "quality-weighting",
+        "coverage",
+        "overlap-resolution",
+        "construction",
+        "construct",
+        "quality",
+        "aware",
+        "multi"
+      ],
+      "path": "skills/nexrad-mosaic-construction/SKILL.md"
+    },
+    {
+      "id": "nexrad-product-access",
+      "canonical_id": "nexrad-product-access",
+      "name": "nexrad-product-access",
+      "description": "Discover and access NEXRAD data for a selected radar site, time, product, or Level II moment using completed archive volumes, real-time chunks, or supported Level III sources with metadata validation.",
+      "category": "data",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "weather",
+        "nexrad",
+        "level-ii",
+        "level-iii",
+        "radar-products",
+        "single-site",
+        "aws-s3"
+      ],
+      "triggers": [
+        "weather",
+        "nexrad",
+        "level-ii",
+        "level-iii",
+        "radar-products",
+        "single-site",
+        "aws-s3",
+        "product",
+        "access",
+        "discover",
+        "data",
+        "selected"
+      ],
+      "path": "skills/nexrad-product-access/SKILL.md"
+    },
+    {
+      "id": "nexrad-radar-visualization",
+      "canonical_id": "nexrad-radar-visualization",
+      "name": "nexrad-radar-visualization",
+      "description": "Plot NEXRAD Level II/III site scans and decoded radar mosaics with correct radar geometry, map grids, units, quality masks, timestamps, and provenance.",
+      "category": "analysis",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "weather",
+        "nexrad",
+        "radar-plotting",
+        "ppi",
+        "velocity",
+        "dual-pol",
+        "cross-section",
+        "visualization"
+      ],
+      "triggers": [
+        "weather",
+        "nexrad",
+        "radar-plotting",
+        "ppi",
+        "velocity",
+        "dual-pol",
+        "cross-section",
+        "visualization",
+        "radar",
+        "plot",
+        "level",
+        "ii"
+      ],
+      "path": "skills/nexrad-radar-visualization/SKILL.md"
+    },
+    {
       "id": "nextjs-app-router-patterns",
       "canonical_id": "nextjs-app-router-patterns",
       "name": "nextjs-app-router-patterns",
@@ -53778,6 +53917,42 @@
         "agent"
       ],
       "path": "skills/quit-sponsor/SKILL.md"
+    },
+    {
+      "id": "radar-satellite-analysis",
+      "canonical_id": "radar-satellite-analysis",
+      "name": "radar-satellite-analysis",
+      "description": "Interpret weather radar and satellite observations by validating product metadata and geometry, deriving storm and cloud structures, tracking evolution, and quantifying uncertainty.",
+      "category": "analysis",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "weather",
+        "radar",
+        "satellite",
+        "nexrad",
+        "goes",
+        "nowcasting",
+        "storm-analysis",
+        "remote-sensing",
+        "uncertainty"
+      ],
+      "triggers": [
+        "weather",
+        "radar",
+        "satellite",
+        "nexrad",
+        "goes",
+        "nowcasting",
+        "storm-analysis",
+        "remote-sensing",
+        "uncertainty",
+        "analysis",
+        "interpret",
+        "observations"
+      ],
+      "path": "skills/radar-satellite-analysis/SKILL.md"
     },
     {
       "id": "radare2",
