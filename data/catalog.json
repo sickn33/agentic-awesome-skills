@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-24T11:19:09.000Z",
-  "total": 2457,
+  "total": 2458,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -64449,6 +64449,41 @@
         "ships"
       ],
       "path": "skills/test-guard/SKILL.md"
+    },
+    {
+      "id": "testdriver-e2e-testing",
+      "canonical_id": "testdriver-e2e-testing",
+      "name": "testdriver-e2e-testing",
+      "description": "Build E2E tests with TestDriver.ai, the AI code reviewer that runs every pull request in a real desktop sandbox, finds bugs, and builds regression tests",
+      "category": "testing",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "testdriverai/testdriverai",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/testdriverai/testdriverai/blob/main/LICENSE",
+      "tags": [
+        "testing",
+        "e2e",
+        "qa",
+        "automation",
+        "computer-use"
+      ],
+      "triggers": [
+        "testing",
+        "e2e",
+        "qa",
+        "automation",
+        "computer-use",
+        "testdriver",
+        "tests",
+        "ai",
+        "code",
+        "reviewer",
+        "runs",
+        "every"
+      ],
+      "path": "skills/testdriver-e2e-testing/SKILL.md"
     },
     {
       "id": "testing-patterns",

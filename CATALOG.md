@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-24T11:19:09.000Z
 
-Total skills: 2457
+Total skills: 2458
 
 ## agent-behavior (5)
 
@@ -2402,7 +2402,7 @@ Total skills: 2457
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | critical | community | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | critical | community | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
 
-## testing (31)
+## testing (32)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2435,6 +2435,7 @@ Total skills: 2457
 | `test-driven-development` | Use a failing behavioral test to guide a feature or bug fix, then implement and refactor with relevant regression checks. | critical | community | driven | driven, test, development, failing, behavioral, feature, bug, fix, then, refactor, relevant, regression |
 | `test-framework-migration-skill` | Migrates and converts test automation scripts between Selenium, Playwright, Puppeteer, and Cypress. | critical | LambdaTest/agent-skills | framework, migration, skill | framework, migration, skill, test, migrates, converts, automation, scripts, between, selenium, playwright, puppeteer |
 | `test-guard` | Review generated or changed test code against universal testing rules before it ships or is presented for approval. | critical | amElnagdy/guard-skills | guard | guard, test, review, generated, changed, code, against, universal, testing, rules, before, ships |
+| `testdriver-e2e-testing` | Build E2E tests with TestDriver.ai, the AI code reviewer that runs every pull request in a real desktop sandbox, finds bugs, and builds regression tests | safe | testdriverai/testdriverai | testing, e2e, qa, automation, computer-use | testing, e2e, qa, automation, computer-use, testdriver, tests, ai, code, reviewer, runs, every |
 | `testing-patterns` | Jest testing patterns, factory functions, mocking strategies, and TDD workflow. Use when writing unit tests, creating test factories, or following TDD red-gr... | critical | community |  | testing, jest, factory, functions, mocking, tdd, writing, unit, tests, creating, test, factories |
 | `unit-testing-test-generate` | Generate comprehensive, maintainable unit tests across languages with strong coverage and edge case focus. | critical | community | unit, generate | unit, generate, testing, test, maintainable, tests, languages, strong, coverage, edge, case |
 

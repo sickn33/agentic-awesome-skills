@@ -1521,6 +1521,7 @@
         "test-automator",
         "test-fixing",
         "test-framework-migration-skill",
+        "testdriver-e2e-testing",
         "testing-patterns",
         "testing-qa",
         "tiktok-automation",

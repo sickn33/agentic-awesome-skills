@@ -42332,6 +42332,25 @@
       "runtime_files": []
     },
     {
+      "id": "testdriver-e2e-testing",
+      "path": "skills/testdriver-e2e-testing",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "testing-patterns",
       "path": "skills/testing-patterns",
       "targets": {
@@ -47174,10 +47193,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2457,
+    "total_skills": 2458,
     "supported": {
-      "codex": 2371,
-      "claude": 2396
+      "codex": 2372,
+      "claude": 2397
     },
     "blocked": {
       "codex": 86,

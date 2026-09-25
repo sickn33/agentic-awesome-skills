@@ -54631,6 +54631,39 @@
     "source_repo": "amElnagdy/guard-skills"
   },
   {
+    "id": "testdriver-e2e-testing",
+    "path": "skills/testdriver-e2e-testing",
+    "category": "testing",
+    "name": "testdriver-e2e-testing",
+    "description": "Build E2E tests with TestDriver.ai, the AI code reviewer that runs every pull request in a real desktop sandbox, finds bugs, and builds regression tests",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "testdriverai/testdriverai",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/testdriverai/testdriverai/blob/main/LICENSE",
+    "tags": [
+      "testing",
+      "e2e",
+      "qa",
+      "automation",
+      "computer-use"
+    ]
+  },
+  {
     "id": "testing-patterns",
     "path": "skills/testing-patterns",
     "category": "testing",
