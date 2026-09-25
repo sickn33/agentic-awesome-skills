@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.5.0] - 2026-09-25 - "Film Crews, TestDriver E2E, and Safer Catalog Filters"
+
+> Adds a film-crew video-planning skill and a TestDriver end-to-end testing skill, and makes the hosted catalog fall back safely on unsupported URL filters.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It expands the catalog to **2,459** skills and preserves existing installation interfaces.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.5.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **film-crew (#1595)** — turn a one-line AI video idea into a shot list with one model-ready prompt per shot by running it past seven film-crew roles, plus prompt fixes and reroll diagnosis for Wan, LTX, Kling, Veo, Seedance, Hailuo, and Runway.
+- **testdriver-e2e-testing (#1592)** — author, run, and debug end-to-end tests that drive browsers and native apps in a real desktop sandbox with AI vision and natural-language element descriptions.
+
+### Changed
+
+- **Hosted catalog URL filters (#1590)** — unsupported `category`, `risk`, `source`, `scope`, and `sort` query values now fall back to their defaults instead of hiding the catalog.
+
+### Validation scope
+
+Exact-head maintainer review for changed skill content, protected source PRs, repository validation and tests, docs security, protected CI and CodeQL, canonical synchronization, exact-release Pages deployment from the immutable `v18.5.0` tag, and live current/legacy route verification.
+
+---
+
 ## [18.4.0] - 2026-09-24 - "Weather Workflows, Agent Memory, and aaskills.tech"
 
 > Adds five weather-data pipeline skills and an agent memory-discipline skill, refreshes the Jev Social runtime pin, and serves the hosted catalog from `aaskills.tech`.
