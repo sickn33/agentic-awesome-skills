@@ -11,7 +11,7 @@ author: tomelias10
 tags: [mcp, ai-security, supply-chain, devsecops, sarif]
 tools: [claude, cursor, gemini, codex, windsurf]
 license: MIT
-license_source: "https://github.com/tomelias10/mcp-drift-check/blob/main/LICENSE"
+license_source: "https://github.com/tomelias10/mcp-drift-check/blob/v0/LICENSE"
 ---
 
 # MCP Dependency Drift Audit
@@ -24,7 +24,7 @@ Dependency mutability is a review-boundary signal, not proof that a package is m
 
 ## When to Use This Skill
 
-- Before approving `.mcp.json`, Cursor, VS Code, Claude, or Windsurf MCP configuration.
+- Before approving `.mcp.json`, Cursor, VS Code, GitHub Copilot, Claude, or Windsurf MCP configuration.
 - When adding an MCP configuration gate to pull requests or CI.
 - During an AI-agent security review where npm/npx-backed MCP servers are configured.
 - When checking whether a previously reviewed MCP config can silently resolve to newer package code.
@@ -33,28 +33,28 @@ Dependency mutability is a review-boundary signal, not proof that a package is m
 
 ### Step 1: Locate and read MCP configs without executing them
 
-Inspect known project paths such as `.mcp.json`, `.cursor/mcp.json`, and `.vscode/mcp.json`, plus any MCP config explicitly supplied by the user.
+Inspect known project paths such as `.mcp.json`, `.github/mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, and `.windsurf/mcp.json`, plus any MCP config explicitly supplied by the user.
 
-Read them as text/JSON only. Never run a discovered `command` or `args` value as part of this audit.
+Read them as text/JSON only. Never run a discovered `command` or `args` value as part of this audit. Stay inside the requested workspace by default; only include user-level/global MCP configuration if the user explicitly asks for machine-wide scope.
 
 ### Step 2: Use MCP Drift Check when already available
 
-If `mcp-drift-check` is already installed, scan each relevant config:
+If `mcp-drift-check` is already installed, use the workspace-scoped mode from the intended repo root:
 
 ```bash
-mcp-drift-check scan .mcp.json --markdown
+mcp-drift-check scan-workspace --markdown
 ```
 
 For CI evidence:
 
 ```bash
-mcp-drift-check scan .mcp.json --sarif mcp-drift.sarif --markdown
+mcp-drift-check scan-workspace --sarif mcp-drift.sarif --markdown
 ```
 
 If the scanner is not installed, explain that the following command fetches the open-source scanner from GitHub and get user approval before running it:
 
 ```bash
-uvx --from git+https://github.com/tomelias10/mcp-drift-check mcp-drift-check scan .mcp.json --markdown
+uvx --from git+https://github.com/tomelias10/mcp-drift-check mcp-drift-check scan-workspace --markdown
 ```
 
 If the user declines network access or installation, continue with the manual rules below.
@@ -119,11 +119,12 @@ For GitHub Actions:
 - uses: tomelias10/mcp-drift-check@v0
 ```
 
-MCP Drift Check can also emit SARIF 2.1.0 for GitHub Code Scanning.
+MCP Drift Check can also emit SARIF 2.1.0 for GitHub Code Scanning. The action defaults to workspace-only discovery; machine-wide user-level scanning remains an explicit `scan-all` choice.
 
 ## Best Practices
 
 - ✅ Read config text only during discovery and classification.
+- ✅ Keep the default scope to the requested workspace/repository.
 - ✅ Separate reproducibility findings from vulnerability or compromise claims.
 - ✅ Pin only a version the team has actually reviewed.
 - ✅ Keep sensitive config values out of reports and public issues.
@@ -139,7 +140,7 @@ MCP Drift Check can also emit SARIF 2.1.0 for GitHub Code Scanning.
 
 ## Security & Safety Notes
 
-- The default workflow is read-only and local.
+- The default workflow is read-only, local, and workspace-scoped.
 - Never execute discovered MCP server commands during this audit.
 - Never include credentials, tokens, private headers, or secret values in the output.
 - The optional `uvx` path makes a network fetch from the declared GitHub source; obtain user approval before running it.
@@ -153,6 +154,8 @@ MCP Drift Check can also emit SARIF 2.1.0 for GitHub Code Scanning.
   **Solution:** Ask for the reviewed version or, with approval, reconstruct relevant package history; do not guess.
 - **Problem:** Treating `-y` as the core finding.
   **Solution:** Report it only as context; the version selector determines the dependency-drift classification.
+- **Problem:** Scanning user-level MCP configs when the user only asked about one repo.
+  **Solution:** Use `scan-workspace` by default; use `scan-all` only when machine-wide scope is explicit.
 
 ## Related Skills
 
@@ -162,5 +165,5 @@ MCP Drift Check can also emit SARIF 2.1.0 for GitHub Code Scanning.
 
 ## Additional Resources
 
-- [MCP Drift Check](https://github.com/tomelias10/mcp-drift-check) - MIT zero-execution scanner, GitHub Action, and SARIF output.
+- [MCP Drift Check stable v0](https://github.com/tomelias10/mcp-drift-check/tree/v0) - MIT zero-execution scanner, GitHub Action, workspace-scoped mode, and SARIF output.
 - [Public MCP dependency drift examples](https://site-creator-vinext-starter.surfaceproof.workers.dev/research/mcp-dependency-drift) - Commit-specific public configuration examples and methodology limitations.
