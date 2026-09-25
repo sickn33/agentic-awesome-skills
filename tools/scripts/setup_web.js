@@ -8,6 +8,42 @@ const { resolveSafeRealPath } = require('../lib/symlink-safety');
 const ROOT_DIR = findProjectRoot(__dirname);
 const WEB_APP_PUBLIC = path.join(ROOT_DIR, 'apps', 'web-app', 'public');
 
+function writePublicInfoApi(catalogFile, packageFile, destinationFile) {
+    const catalog = JSON.parse(fs.readFileSync(catalogFile, 'utf8'));
+    const packageInfo = JSON.parse(fs.readFileSync(packageFile, 'utf8'));
+    if (!Array.isArray(catalog)) {
+        throw new Error(`Expected the canonical skill catalog to be an array: ${catalogFile}`);
+    }
+
+    const skillCount = catalog.length;
+    const formattedSkillCount = new Intl.NumberFormat('en-US').format(skillCount);
+    const info = {
+        name: 'Agentic Awesome Skills',
+        short_name: 'AAS',
+        description: 'Open-source ecosystem of reusable skills for AI agents, with local-first AAS Core.',
+        website: 'https://aaskills.tech',
+        github: 'https://github.com/sickn33/agentic-awesome-skills',
+        x: '@AASkills_',
+        x_url: 'https://x.com/AASkills_',
+        version: packageInfo.version,
+        stats: {
+            skills: skillCount,
+            skills_label: `${formattedSkillCount}+`,
+        },
+        features: [
+            'AAS Core',
+            'local MCP',
+            'CLI',
+            'skill catalog',
+            'plugins',
+            'Workbench',
+        ],
+    };
+
+    fs.mkdirSync(path.dirname(destinationFile), { recursive: true });
+    fs.writeFileSync(destinationFile, `${JSON.stringify(info, null, 2)}\n`);
+}
+
 function copySkillMarkdownFiles(sourceSkills, destinationSkills) {
     for (const skillId of listSkillIdsRecursive(sourceSkills)) {
         const sourceFile = path.join(sourceSkills, skillId, 'SKILL.md');
@@ -71,6 +107,12 @@ function main() {
     const destBackupIndex = path.join(WEB_APP_PUBLIC, 'skills.json.backup');
     copyIndexFiles(sourceIndex, destIndex, destBackupIndex, WEB_APP_PUBLIC);
 
+    writePublicInfoApi(
+        sourceIndex,
+        path.join(ROOT_DIR, 'package.json'),
+        path.join(WEB_APP_PUBLIC, 'api', 'info.json'),
+    );
+
     const sourceSkills = path.join(ROOT_DIR, 'skills');
     const destSkills = path.join(WEB_APP_PUBLIC, 'skills');
 
@@ -90,4 +132,4 @@ if (require.main === module) {
     main();
 }
 
-module.exports = { copyFolderSync, copySkillMarkdownFiles, copyIndexFile, copyIndexFiles, main };
+module.exports = { copyFolderSync, copySkillMarkdownFiles, copyIndexFile, copyIndexFiles, writePublicInfoApi, main };

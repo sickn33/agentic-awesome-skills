@@ -55,6 +55,7 @@ validation-baseline.json
 # Web app generated assets (from npm run app:setup)
 apps/web-app/public/skills/
 apps/web-app/public/skills.json
+apps/web-app/public/api/info.json
 
 skills/spline-3d-integration/*.zip
 

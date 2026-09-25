@@ -1,3 +1,9 @@
+# Public AAS info endpoint - 2026-09-25
+
+- Added a generated `apps/web-app/public/api/info.json` endpoint for public AAS name, links, release version, feature list, and current skill count.
+- Generate the count from the canonical `skills_index.json` during the existing web asset setup, so development and Pages builds use the same current catalog without a manually maintained number.
+- Keep the generated endpoint out of source PRs; the Pages build publishes it at `https://aaskills.tech/api/info.json`.
+
 # Jev Social skill intake - 2026-09-21
 
 - Added [`skills/jev-social/SKILL.md`](skills/jev-social/SKILL.md), adapted from the MIT-licensed [`socai-io/jev-social`](https://github.com/socai-io/jev-social) Agent Skill.
