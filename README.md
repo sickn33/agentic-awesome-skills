@@ -55,7 +55,8 @@ You can also [support AAS on Buy Me a Coffee](https://buymeacoffee.com/sickn33).
 </a>
 
 *Security tooling support: [Snyk](https://snyk.io/).*  
-*AI compute & model credits: [Atlas Cloud](https://atlascloud.ai/) (supporting media generation workflows via [`atlas-cloud-media`](skills/atlas-cloud-media/SKILL.md)).*
+*AI compute & model credits: [Atlas Cloud](https://atlascloud.ai/) (supporting media generation workflows via [`atlas-cloud-media`](skills/atlas-cloud-media/SKILL.md)).*  
+*This project is tested with BrowserStack.*
 
 [![Powered by Atlas Cloud](https://www.atlascloud.ai/oss-program/powered-by-atlas-cloud.svg)](https://www.atlascloud.ai/)
 
