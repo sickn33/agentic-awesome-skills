@@ -49,6 +49,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://aaskills.tech/skill/film-crew/</loc>
+    <lastmod>2026-09-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://aaskills.tech/skill/noaa-radar-satellite-fetching/</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
@@ -1118,12 +1124,6 @@
   </url>
   <url>
     <loc>https://aaskills.tech/skill/hunt-host-header/</loc>
-    <lastmod>2026-09-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://aaskills.tech/skill/hunt-html-injection/</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

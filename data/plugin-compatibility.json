@@ -18049,6 +18049,25 @@
       "runtime_files": []
     },
     {
+      "id": "film-crew",
+      "path": "skills/film-crew",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "find-bugs",
       "path": "skills/find-bugs",
       "targets": {
@@ -47193,10 +47212,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2458,
+    "total_skills": 2459,
     "supported": {
-      "codex": 2372,
-      "claude": 2397
+      "codex": 2373,
+      "claude": 2398
     },
     "blocked": {
       "codex": 86,
