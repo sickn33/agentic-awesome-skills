@@ -1,7 +1,10 @@
 # Jev maintainer hints (optional)
 
 TypeSafe **Jev** supplies fast, structured judgments (probabilities and choices) over skill
-content. In this repository it is an **optional maintainer accelerator**, not a merge gate.
+content. The maintainer helper evaluates the exact skill text, the bounded diff for that skill,
+and the PR's `README.md` source-credit diff. It asks Jev to distinguish concrete evidence from
+uncertainty and from routine review obligations. In this repository it is an **optional
+maintainer accelerator**, not a merge gate.
 
 Official skill review remains **Tessl** (`skill-review` workflow) or a maintainer attestation
 with `--reviewed-head` when the check is `manual-review-required`.
@@ -69,7 +72,11 @@ Flags:
 - `--dry-run` — list targets only.
 - `--json` — machine-readable output (`urgency_score`, `pr_number` when set).
 
-Five parallel questions per skill call (security, provenance, priority, triage bucket, deep review).
+Five structured questions per skill call cover actionable safety, evidence-backed provenance,
+review priority, triage bucket, and unresolved semantic questions. Jev's API returns probabilities
+and choices rather than a textual rationale, so its output is a prioritization signal: confirm any
+suspected issue against the exact files, diff, and repository policy before acting. A high probability
+is not itself proof of a defect, and a low probability is not a clean bill of health.
 
 If `TYPESAFE_API_KEY` is unset, the command exits `0` immediately with a one-line skip message.
 

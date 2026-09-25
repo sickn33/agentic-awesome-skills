@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -27,6 +28,50 @@ class JevMaintainerHintsTest(unittest.TestCase):
             self.assertLessEqual(len(state), hints.MAX_STATE_CHARS)
             self.assertIn("truncated", state)
 
+    def test_build_state_includes_exact_skill_and_readme_diff(self):
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+            subprocess.run(["git", "config", "user.name", "Jev Test"], cwd=repo, check=True)
+            subprocess.run(
+                ["git", "config", "user.email", "jev-test@example.invalid"], cwd=repo, check=True
+            )
+            skill_dir = repo / "skills" / "demo"
+            skill_dir.mkdir(parents=True)
+            (skill_dir / "SKILL.md").write_text(
+                "---\nname: demo\n---\nInitial text\n", encoding="utf-8"
+            )
+            (repo / "README.md").write_text("## Official Sources\n", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=repo, check=True)
+            subprocess.run(["git", "commit", "-qm", "base"], cwd=repo, check=True)
+            base = subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True
+            ).stdout.strip()
+            (skill_dir / "SKILL.md").write_text(
+                "---\nname: demo\nsource_repo: owner/demo\n---\nChanged behavior\n",
+                encoding="utf-8",
+            )
+            (repo / "README.md").write_text(
+                "## Official Sources\n- [owner/demo](https://github.com/owner/demo)\n", encoding="utf-8"
+            )
+            subprocess.run(["git", "add", "."], cwd=repo, check=True)
+            subprocess.run(["git", "commit", "-qm", "change"], cwd=repo, check=True)
+            head = subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=repo, check=True, capture_output=True, text=True
+            ).stdout.strip()
+
+            state = hints.build_state(repo, "skills/demo", base, head)
+
+            self.assertIn("untrusted data", state)
+            self.assertIn("Changed behavior", state)
+            self.assertIn("owner/demo", state)
+            self.assertIn("README source-credit diff", state)
+
+    def test_questions_require_evidence_not_generic_priority(self):
+        self.assertIn("specific evidence", hints.QUESTIONS["maintainer_priority"]["instructions"])
+        self.assertIn("missing context alone", hints.QUESTIONS["triage_bucket"]["instructions"])
+        self.assertIn("Newness or file count alone is not enough", hints.QUESTIONS["deep_semantic_review"]["instructions"])
+
     def test_resolve_api_key_prefers_typesafe_env(self):
         with mock.patch.dict(os.environ, {"TYPESAFE_API_KEY": "ts_test"}, clear=True):
             self.assertEqual(hints.resolve_api_key(), "ts_test")
@@ -46,14 +91,14 @@ class JevMaintainerHintsTest(unittest.TestCase):
                         with mock.patch("sys.argv", ["jev", "--base", "a", "--head", "b"]):
                             self.assertEqual(hints.main(), 0)
 
-    def test_urgency_score_ranks_stop_and_inspect_highest(self):
+    def test_urgency_score_ranks_evidenced_blocker_highest(self):
         low = hints.urgency_score(
-            {"maintainer_priority": {"choice": "routine"}, "triage_bucket": {"choice": "valid_source"}},
+            {"maintainer_priority": {"choice": "routine"}, "triage_bucket": {"choice": "no_evidenced_blocker"}},
         )
         high = hints.urgency_score(
             {
-                "maintainer_priority": {"choice": "stop_and_inspect"},
-                "triage_bucket": {"choice": "policy_blocker"},
+                "maintainer_priority": {"choice": "block_pending_evidence"},
+                "triage_bucket": {"choice": "evidenced_policy_blocker"},
                 "doc_security_red_flags": {"noul": 0.9},
             },
         )
