@@ -534,6 +534,7 @@ Key source families include:
 
 ### Community Contributors
 
+- **[tomelias10/mcp-drift-check](https://github.com/tomelias10/mcp-drift-check)**: MIT source for the `mcp-dependency-drift-audit` skill — zero-execution review of mutable npm/npx package references in MCP configuration, with a manual static fallback and CI/SARIF guidance.
 - **[wwewtech/chatexport-need-miner](https://github.com/wwewtech/chatexport-need-miner)**: Source for the `chatexport-need-miner` skill — community guidance and examples under MIT.
 - **[socai-io/jev-social](https://github.com/socai-io/jev-social)**: Source for the `jev-social` skill — read-only Jev/socai social research routing (MIT).
 - **[work0r-ai/agent-kit](https://github.com/work0r-ai/agent-kit)**: Source for the `workorai` skill — agent kit workflows (MIT).
