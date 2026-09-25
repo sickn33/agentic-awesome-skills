@@ -295,6 +295,16 @@
 
 /* ---------- Sections ---------- */
 
+.landing-video__player {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--landing-line-strong);
+  border-radius: var(--landing-radius);
+  background: var(--landing-panel);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
 .landing-section {
   max-width: var(--landing-max);
   margin: 0 auto;

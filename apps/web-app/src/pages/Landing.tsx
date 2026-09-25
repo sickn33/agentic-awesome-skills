@@ -119,6 +119,25 @@ export function Landing(): React.ReactElement {
         </div>
       </section>
 
+      <section className="landing-section landing-video" aria-labelledby="landing-video-title">
+        <div className="landing-section__intro landing-section__intro--wide">
+          <p className="landing-kicker">AAS in 40 seconds</p>
+          <h2 id="landing-video-title">See how a skill becomes a better starting point.</h2>
+          <p>A short introduction to the open skill catalog and the agent workflow around it.</p>
+        </div>
+        <video
+          className="landing-video__player"
+          controls
+          playsInline
+          preload="none"
+          poster={`${import.meta.env.BASE_URL}videos/aas-onboarding-poster.jpg`}
+          aria-label="AAS introduction video"
+        >
+          <source src={`${import.meta.env.BASE_URL}videos/aas-onboarding.mp4`} type="video/mp4" />
+          Your browser does not support HTML video.
+        </video>
+      </section>
+
       <section className="landing-section landing-agents" aria-labelledby="landing-agents-title">
         <div className="landing-section__intro">
           <p className="landing-kicker">Compatibility</p>

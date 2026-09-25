@@ -712,3 +712,8 @@ Moved [Support the Project](README.md#support-the-project) directly below the op
 - Kept the existing Open Graph and Twitter image URL stable so shared links resolve to the refreshed asset after deployment.
 - Resampled the social card to the site's required 1200 × 630 pixel dimensions after the first deployment validation flagged the generated source dimensions.
 - Updated the provenance record and SEO verifier to bind the selected image's actual visible copy and SHA-256.
+
+# AAS introduction video — 2026-09-25
+
+- Added the 40-second AAS presentation to the README through a GitHub video attachment, rendered inline by GitHub.
+- Added a self-hosted HTML video player to the catalog landing page, with a poster and no automatic download or playback.
