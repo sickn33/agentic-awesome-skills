@@ -4,7 +4,7 @@
 
 ```typescript
 const stream = client.messages.stream({
-  model: "claude-opus-4-6",
+  model: "claude-opus-5",
   max_tokens: 1024,
   messages: [{ role: "user", content: "Write a story" }],
 });
@@ -27,7 +27,7 @@ for await (const event of stream) {
 
 ```typescript
 const stream = client.messages.stream({
-  model: "claude-opus-4-6",
+  model: "claude-opus-5",
   max_tokens: 16000,
   thinking: { type: "adaptive" },
   messages: [{ role: "user", content: "Analyze this problem" }],
@@ -82,7 +82,7 @@ const getWeather = betaZodTool({
 });
 
 const runner = client.beta.messages.toolRunner({
-  model: "claude-opus-4-6",
+  model: "claude-opus-5",
   max_tokens: 4096,
   tools: [getWeather],
   messages: [
@@ -117,7 +117,7 @@ for await (const messageStream of runner) {
 
 ```typescript
 const stream = client.messages.stream({
-  model: "claude-opus-4-6",
+  model: "claude-opus-5",
   max_tokens: 1024,
   messages: [{ role: "user", content: "Hello" }],
 });
