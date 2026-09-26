@@ -66876,7 +66876,7 @@
       "id": "unified-ai-gateway",
       "canonical_id": "unified-ai-gateway",
       "name": "unified-ai-gateway",
-      "description": "Operate and evaluate Unified AI System through nine governed MCP tools, including provider-free prompt enhancement, while preserving fake-provider, authorization, and evidence boundaries.",
+      "description": "Operate and evaluate Unified AI System through fifteen governed MCP tools, including provider-free prompt enhancement, while preserving fake-provider, authorization, and evidence boundaries.",
       "category": "ai-ml",
       "risk": "critical",
       "source": "https://github.com/happy520ai/unified-ai-system/tree/master/skills/unified-ai-gateway",
@@ -66903,7 +66903,7 @@
         "operate",
         "evaluate",
         "through",
-        "nine"
+        "fifteen"
       ],
       "path": "skills/unified-ai-gateway/SKILL.md"
     },

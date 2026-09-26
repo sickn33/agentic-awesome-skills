@@ -1,6 +1,6 @@
 ---
 name: unified-ai-gateway
-description: Operate and evaluate Unified AI System through nine governed MCP tools, including provider-free prompt enhancement, while preserving fake-provider, authorization, and evidence boundaries.
+description: Operate and evaluate Unified AI System through fifteen governed MCP tools, including provider-free prompt enhancement, while preserving fake-provider, authorization, and evidence boundaries.
 category: ai-ml
 risk: critical
 source: https://github.com/happy520ai/unified-ai-system/tree/master/skills/unified-ai-gateway
@@ -35,7 +35,7 @@ review is required before changing this pinned procedure.
 ## Prerequisites And Setup
 
 1. Confirm that Codex CLI and Docker are installed and Docker is running.
-2. If the nine tools are already visible, skip setup and do not register a
+2. If the 15 tools are already visible, skip setup and do not register a
    duplicate server.
 3. Explain the first stage: it downloads one reviewed platform from the
    immutable `0.4.9` multi-platform index into Docker's cache, inspects its
@@ -133,7 +133,7 @@ codex mcp get unified-ai-system --json
 ```
 
 8. Restart Codex or open a new task, then use `/mcp verbose` to confirm that all
-   nine tools are available. Remove the registration when it is no longer
+   15 tools are available. Remove the registration when it is no longer
    wanted:
 
 ```bash
