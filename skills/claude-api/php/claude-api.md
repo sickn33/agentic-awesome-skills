@@ -54,7 +54,7 @@ $client = new FoundryClient(
 
 ```php
 $message = $client->messages->create(
-    model: 'claude-opus-4-6',
+    model: 'claude-opus-5',
     maxTokens: 1024,
     messages: [
         ['role' => 'user', 'content' => 'What is the capital of France?'],
@@ -69,7 +69,7 @@ echo $message->content[0]->text;
 
 ```php
 $stream = $client->messages->createStream(
-    model: 'claude-opus-4-6',
+    model: 'claude-opus-5',
     maxTokens: 1024,
     messages: [
         ['role' => 'user', 'content' => 'Write a haiku'],

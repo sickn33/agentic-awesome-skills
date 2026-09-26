@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.6.0] - 2026-09-26 - "Claude API Skill Refresh"
+
+> Refreshes the Claude API skill from the official Anthropic source, updates current model guidance, and keeps the full bundled documentation aligned.
+
+### Changed
+
+- **claude-api (#1614)** - refresh the canonical skill bundle from anthropics/skills, update model and API guidance, and preserve AAS metadata and safety limits.
+
+### Validation scope
+
+Exact-head maintainer review, canonical bundle inspection, repository validation, reference validation, docs security, protected CI, and canonical plugin synchronization.
+
 ## [18.5.0] - 2026-09-25 - "Film Crews, TestDriver E2E, and Safer Catalog Filters"
 
 > Adds a film-crew video-planning skill and a TestDriver end-to-end testing skill, and makes the hosted catalog fall back safely on unsupported URL filters.

@@ -6,13 +6,13 @@
 
 | Friendly Name     | Alias (use this)    | Full ID                       | Context        | Max Output | Status |
 |-------------------|---------------------|-------------------------------|----------------|------------|--------|
-| Claude Opus 4.6   | `claude-opus-4-6`   | —                             | 200K (1M beta) | 128K       | Active |
+| Claude Opus 5   | `claude-opus-5`   | —                             | 200K (1M beta) | 128K       | Active |
 | Claude Sonnet 4.6 | `claude-sonnet-4-6` | -                             | 200K (1M beta) | 64K        | Active |
 | Claude Haiku 4.5  | `claude-haiku-4-5`  | `claude-haiku-4-5-20251001`   | 200K           | 64K        | Active |
 
 ### Model Descriptions
 
-- **Claude Opus 4.6** — Our most intelligent model for building agents and coding. Supports adaptive thinking (recommended), 128K max output tokens (requires streaming for large outputs). 1M context window available in beta via `context-1m-2025-08-07` header.
+- **Claude Opus 5** — Our most intelligent model for building agents and coding. Supports adaptive thinking (recommended), 128K max output tokens (requires streaming for large outputs). 1M context window available in beta via `context-1m-2025-08-07` header.
 - **Claude Sonnet 4.6** — Our best combination of speed and intelligence. Supports adaptive thinking (recommended). 1M context window available in beta via `context-1m-2025-08-07` header. 64K max output tokens.
 - **Claude Haiku 4.5** — Fastest and most cost-effective model for simple tasks.
 
@@ -51,8 +51,8 @@ When a user asks for a model by name, use this table to find the correct model I
 
 | User says...                              | Use this model ID              |
 |-------------------------------------------|--------------------------------|
-| "opus", "most powerful"                   | `claude-opus-4-6`              |
-| "opus 4.6"                                | `claude-opus-4-6`              |
+| "opus", "most powerful"                   | `claude-opus-5`              |
+| "opus 4.6"                                | `claude-opus-5`              |
 | "opus 4.5"                                | `claude-opus-4-5`              |
 | "opus 4.1"                                | `claude-opus-4-1`              |
 | "opus 4", "opus 4.0"                      | `claude-opus-4-0`              |

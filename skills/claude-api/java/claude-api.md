@@ -107,7 +107,7 @@ static class GetWeather implements Supplier<String> {
 
 BetaToolRunner toolRunner = client.beta().messages().toolRunner(
     MessageCreateParams.builder()
-        .model("claude-opus-4-6")
+        .model("claude-opus-5")
         .maxTokens(1024L)
         .putAdditionalHeader("anthropic-beta", "structured-outputs-2025-11-13")
         .addTool(GetWeather.class)
