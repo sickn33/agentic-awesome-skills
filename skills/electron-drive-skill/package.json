@@ -1,0 +1,28 @@
+{
+  "name": "electron-drive-skill",
+  "version": "1.0.0",
+  "description": "Enable your agents to interact with your Electron application automatically. Start/Stop, screenshot, clicking, filling in text, etc.",
+  "keywords": [
+    "agent",
+    "skill",
+    "electron",
+    "control"
+  ],
+  "homepage": "https://github.com/Search-3D/electron-drive-skill#readme",
+  "bugs": {
+    "url": "https://github.com/Search-3D/electron-drive-skill/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Search-3D/electron-drive-skill.git"
+  },
+  "license": "MIT",
+  "author": "Search3D <github.com/Search-3D>",
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/lib.test.mjs"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
