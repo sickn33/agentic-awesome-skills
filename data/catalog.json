@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-25T04:54:31.000Z",
-  "total": 2471,
+  "total": 2472,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -25009,6 +25009,42 @@
         "architecture"
       ],
       "path": "skills/electron-development/SKILL.md"
+    },
+    {
+      "id": "electron-drive-skill",
+      "canonical_id": "electron-drive-skill",
+      "name": "electron-drive-skill",
+      "description": "Launch the project's Electron app on a scratch profile and drive it: click, type, screenshot, run renderer or main-process code, read logs. Use to verify UI changes end to end.",
+      "category": "testing",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Search-3D/electron-drive-skill",
+      "license": "MIT",
+      "license_source": "https://github.com/Search-3D/electron-drive-skill/blob/main/LICENSE",
+      "tags": [
+        "electron",
+        "playwright",
+        "desktop",
+        "e2e",
+        "testing",
+        "automation"
+      ],
+      "triggers": [
+        "electron",
+        "playwright",
+        "desktop",
+        "e2e",
+        "testing",
+        "automation",
+        "drive",
+        "skill",
+        "launch",
+        "app",
+        "scratch",
+        "profile"
+      ],
+      "path": "skills/electron-drive-skill/SKILL.md"
     },
     {
       "id": "elixir-pro",

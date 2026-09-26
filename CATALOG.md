@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-25T04:54:31.000Z
 
-Total skills: 2471
+Total skills: 2472
 
 ## agent-behavior (5)
 
@@ -2420,7 +2420,7 @@ Total skills: 2471
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | critical | community | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | critical | community | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
 
-## testing (32)
+## testing (33)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2433,6 +2433,7 @@ Total skills: 2471
 | `brooks-test` | Review test-suite quality using established testing literature; identify brittleness, mock abuse, unclear fixtures, weak assertions, slow feedback, and maint... | safe | hyhmrright/brooks-lint | brooks | brooks, test, review, suite, quality, established, testing, literature, identify, brittleness, mock, abuse |
 | `browser-testing-with-devtools` | Test browser apps with Chrome DevTools MCP by inspecting live DOM, console logs, network traffic, screenshots, accessibility, and performance traces. | critical | addyosmani/agent-skills | browser-testing, chrome-devtools, mcp, frontend, performance | browser-testing, chrome-devtools, mcp, frontend, performance, browser, testing, devtools, test, apps, chrome, inspecting |
 | `cypress-skill` | Generates production-grade Cypress E2E and component tests in JavaScript or TypeScript. Supports local execution and TestMu AI cloud. Use when the user asks ... | critical | LambdaTest/agent-skills | cypress, skill | cypress, skill, generates, grade, e2e, component, tests, javascript, typescript, supports, local, execution |
+| `electron-drive-skill` | Launch the project's Electron app on a scratch profile and drive it: click, type, screenshot, run renderer or main-process code, read logs. Use to verify UI ... | critical | Search-3D/electron-drive-skill | electron, playwright, desktop, e2e, testing, automation | electron, playwright, desktop, e2e, testing, automation, drive, skill, launch, app, scratch, profile |
 | `k6-load-testing` | Comprehensive k6 load testing skill for API, browser, and scalability testing. Write realistic load scenarios, analyze results, and integrate with CI/CD. | safe | community | k6, load-testing, performance, api-testing, ci-cd | k6, load-testing, performance, api-testing, ci-cd, load, testing, skill, api, browser, scalability, write |
 | `lambdatest-agent-skills` | Production-grade test automation skills for 46 frameworks across E2E, unit, mobile, BDD, visual, and cloud testing in 15+ languages. | safe | LambdaTest/agent-skills | testing, test-automation, e2e, unit-testing, mobile-testing, bdd, selenium, playwright, cypress, jest, pytest, appium, lambdatest | testing, test-automation, e2e, unit-testing, mobile-testing, bdd, selenium, playwright, cypress, jest, pytest, appium |
 | `mock-hunter` | Audit a live web page in five phases (catalog, click, trace, classify, report) to identify mock data, hardcoded values, LLM-generated metrics, and broken end... | critical | CodeShuX/mockhunter | testing, qa, playwright, mock-detection, web-audit, ai-testing, vibe-coding, claude-code | testing, qa, playwright, mock-detection, web-audit, ai-testing, vibe-coding, claude-code, mock, hunter, audit, live |
