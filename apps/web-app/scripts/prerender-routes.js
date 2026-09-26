@@ -2,6 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { selectTopSkillEntries } from './generate-sitemap.js';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST_DIR = path.join(ROOT_DIR, 'dist');
@@ -971,6 +975,34 @@ function main() {
   const skillMap = new Map(skills.map((skill) => [skill.id, skill]));
   const topSkillSet = new Set(topSkillPaths.map((routePath) => routePath.replace(/^\/skill\//, '')));
   const socialImage = `${siteBaseUrl.replace(/\/+$/, '')}/${PRERENDER_SOCIAL_IMAGE}`;
+  const docs = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, 'src/data/docs.json'), 'utf8'));
+  const docsNavigation = `<nav aria-label="Documentation">${docs.map((doc) => `<p><a href="${escapeHtml(routeToUrl(`/docs/${doc.slug}`, siteBaseUrl))}">${escapeHtml(doc.title)}</a></p>`).join('')}</nav>`;
+  for (const doc of [null, ...docs]) {
+    const routePath = doc ? `/docs/${doc.slug}` : '/docs';
+    const title = `${doc?.title || 'Documentation'} | ${SITE_NAME}`;
+    const content = doc ? fs.readFileSync(path.join(ROOT_DIR, `../../docs/users/${doc.slug}.md`), 'utf8') : '';
+    const repositoryVersion = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, '../../package.json'), 'utf8')).version;
+    const sourceRoot = `${REPOSITORY_URL}/blob/v${repositoryVersion}/`;
+    const fallback = doc ? renderToStaticMarkup(createElement(Markdown, {
+      remarkPlugins: [remarkGfm],
+      urlTransform: (url, key) => {
+        if (/^https?:\/\//i.test(url) || (key === 'href' && /^(#|mailto:)/i.test(url))) return url;
+        if (/^[a-z][a-z0-9+.-]*:/i.test(url) || url.startsWith('//') || url.includes('\\')) return '';
+        const resolved = new URL(url, `${sourceRoot}docs/users/${doc.slug}.md`);
+        if (!resolved.href.startsWith(sourceRoot)) return '';
+        const match = resolved.pathname.match(/\/docs\/users\/([^/]+)\.md$/);
+        if (key === 'href' && match && docs.some((entry) => entry.slug === match[1])) return `${routeToUrl(`/docs/${match[1]}`, siteBaseUrl)}${resolved.hash}`;
+        return key === 'src' ? resolved.href.replace(`${REPOSITORY_URL}/blob/`, 'https://raw.githubusercontent.com/sickn33/agentic-awesome-skills/') : resolved.href;
+      },
+    }, content)) : `<h1>Documentation</h1><p>Start with AAS Core, explore integrations, and put your skills to work.</p>${docsNavigation}`;
+    writePrerenderedRoute(routePath, template, {
+      title,
+      description: doc ? `${doc.title}: guides and reference for Agentic Awesome Skills.` : 'Learn AAS Core, install skills, configure integrations, and follow practical workflows.',
+      canonicalUrl: routeToUrl(routePath, siteBaseUrl),
+      ogImage: socialImage,
+      jsonLd: [],
+    }, `<main><a href="${escapeHtml(routeToUrl('/docs', siteBaseUrl))}">Documentation</a>${fallback}</main>`);
+  }
 
   const landingCanonical = routeToUrl('/', siteBaseUrl);
   const landingMeta = buildLandingMeta({

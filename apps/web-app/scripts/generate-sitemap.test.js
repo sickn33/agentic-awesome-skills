@@ -28,6 +28,9 @@ describe('sitemap generation script helpers', () => {
 
     expect(xml).toContain('https://example.com/</loc>');
     expect(xml).toContain('https://example.com/core/</loc>');
+    expect(xml).toContain('https://example.com/docs/</loc>');
+    expect(xml).toContain('https://example.com/docs/getting-started/</loc>');
+    expect(xml).toContain('https://example.com/docs/aas-core/</loc>');
     expect(xml).toContain('https://example.com/workbench/</loc>');
     expect(xml).toContain('https://example.com/topics/antigravity-cli-skills/</loc>');
     expect(xml).toContain('https://example.com/skill/gamma/</loc>');

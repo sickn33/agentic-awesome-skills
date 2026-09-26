@@ -1,4 +1,5 @@
-import { defineConfig } from 'vite';
+import { defineConfig, searchForWorkspaceRoot } from 'vite';
+import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
 import refreshSkillsPlugin from './refresh-skills-plugin.js';
 
@@ -8,5 +9,13 @@ const base = process.env.VITE_BASE_PATH ?? '/';
 
 export default defineConfig({
   base,
+  server: {
+    fs: {
+      allow: [
+        searchForWorkspaceRoot(process.cwd()),
+        fileURLToPath(new URL('../../docs/users', import.meta.url)),
+      ],
+    },
+  },
   plugins: [react(), refreshSkillsPlugin()],
 });
