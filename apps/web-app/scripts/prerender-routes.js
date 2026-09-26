@@ -1000,7 +1000,14 @@ function main() {
       description: doc ? `${doc.title}: guides and reference for Agentic Awesome Skills.` : 'Learn AAS Core, install skills, configure integrations, and follow practical workflows.',
       canonicalUrl: routeToUrl(routePath, siteBaseUrl),
       ogImage: socialImage,
-      jsonLd: [],
+      jsonLd: [{
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: title,
+        description: doc ? `${doc.title}: guides and reference for Agentic Awesome Skills.` : 'Learn AAS Core, install skills, configure integrations, and follow practical workflows.',
+        url: routeToUrl(routePath, siteBaseUrl),
+        mainEntityOfPage: routeToUrl(routePath, siteBaseUrl),
+      }],
     }, `<main><a href="${escapeHtml(routeToUrl('/docs', siteBaseUrl))}">Documentation</a>${fallback}</main>`);
   }
 
