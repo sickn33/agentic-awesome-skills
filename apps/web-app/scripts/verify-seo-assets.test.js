@@ -135,6 +135,8 @@ describe('seo assets verification helpers', () => {
       <urlset>
         <url><loc>https://owner.github.io/repo/</loc></url>
         <url><loc>https://owner.github.io/repo/plugins/</loc></url>
+        <url><loc>https://owner.github.io/repo/docs/</loc></url>
+        <url><loc>https://owner.github.io/repo/docs/getting-started/</loc></url>
         <url><loc>https://owner.github.io/repo/topics/antigravity-cli-skills/</loc></url>
         <url><loc>https://owner.github.io/repo/skill/agent-a/</loc></url>
         <url><loc>https://owner.github.io/repo/skill/agent-b/</loc></url>

@@ -330,11 +330,17 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = f
     `${normalizedRoot}/core`,
     `${normalizedRoot}/core/`,
   ]);
+  const docsPathVariants = new Set([
+    `${normalizedRoot}/docs`,
+    `${normalizedRoot}/docs/`,
+  ]);
   const allowedExtraPathVariants = new Set([
     ...pluginPathVariants,
     ...workbenchPathVariants,
     ...corePathVariants,
+    ...docsPathVariants,
   ]);
+  const docsPrefix = `${normalizedRoot}/docs/`;
   const topicPathVariants = new Set(
     getSeoLandingPaths().flatMap((topicPath) => [
       `${normalizedRoot}${topicPath}`,
@@ -350,6 +356,7 @@ export function analyzeSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = f
   const unsupportedRoutes = extraRoutes.filter(
     ({ parsed: parsedUrl }) =>
       !parsedUrl.pathname.startsWith(skillPrefix) &&
+      !parsedUrl.pathname.startsWith(docsPrefix) &&
       !allowedExtraPathVariants.has(parsedUrl.pathname) &&
       !topicPathVariants.has(parsedUrl.pathname),
   );
