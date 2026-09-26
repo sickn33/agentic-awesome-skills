@@ -2862,3 +2862,7 @@ samp {
 .not-found-page > a { color: var(--surface-canvas); }
 
 :is(.catalog-hero, .plugins-hero, .workbench-header, .topic-hero, .skill-detail__summary) h1 { font-weight: 800; }
+
+.markdown-body table tr { background: var(--surface-card); }
+.markdown-body table tr:nth-child(2n) { background: var(--surface-elevated); }
+.markdown-body mark { color: var(--text-primary); background: var(--accent-soft); }
