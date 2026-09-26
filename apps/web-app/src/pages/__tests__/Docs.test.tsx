@@ -1,9 +1,11 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 import Docs from '../Docs';
 import docs from '../../data/docs.json';
 import { docsUrl } from '../../utils/docs';
+import DocsCodeBlock from '../../components/DocsCodeBlock';
+import { searchGuides } from '../../utils/docsContent';
 
 function open(path = '/docs/') {
   vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
@@ -16,12 +18,31 @@ describe('Documentation', () => {
     const nav = within(screen.getByRole('navigation', { name: 'Documentation' }));
     expect(nav.getAllByRole('link')).toHaveLength(docs.length + 1);
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'Codex' } });
-    expect(nav.getByRole('link', { name: 'Codex CLI' })).toBeInTheDocument();
-    expect(nav.queryByRole('link', { name: 'Cursor' })).not.toBeInTheDocument();
+    const results = within(await screen.findByRole('region', { name: 'Search results' }));
+    expect(results.getByRole('link', { name: /Codex CLI/ })).toBeInTheDocument();
+    expect(results.getAllByRole('link').length).toBeGreaterThan(1);
     fireEvent.click(screen.getByRole('link', { name: /Start with your first skill stack/ }));
     expect(await screen.findByRole('heading', { name: 'Getting Started with AAS Core' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'AAS Core guide' })).toHaveAttribute('href', '/docs/aas-core/');
     expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toContain('/docs/getting-started/');
+  });
+
+  it('searches body content with all terms and returns the matching excerpt', () => {
+    const corpus = [{ title: 'Setup', group: 'Basics', text: `${'intro '.repeat(50)}unique-value clipboard troubleshooting` }];
+    expect(searchGuides(corpus, 'unique-value clipboard')[0].snippet).toContain('unique-value clipboard');
+    expect(searchGuides(corpus, 'unique-value absent')).toEqual([]);
+    expect(searchGuides(corpus, 'SETUP')).toHaveLength(1);
+  });
+
+  it('copies exact code and announces clipboard failures', async () => {
+    const write = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();
+    render(<DocsCodeBlock><code><span>npm</span>{' run test\n'}</code></DocsCodeBlock>);
+    fireEvent.click(screen.getByRole('button', { name: 'Copy code' }));
+    await waitFor(() => expect(write).toHaveBeenCalledWith('npm run test\n'));
+    expect(await screen.findByText('Code copied.')).toBeInTheDocument();
+    write.mockRejectedValueOnce(new Error('Denied'));
+    fireEvent.click(screen.getByRole('button', { name: 'Copy code' }));
+    expect(await screen.findByText(/Clipboard unavailable/)).toBeInTheDocument();
   });
 
   it('reports an unknown guide', () => {
@@ -31,8 +52,8 @@ describe('Documentation', () => {
 
   it('resolves guides, anchors, images and external references safely', () => {
     expect(docsUrl('aas-core.md#use-the-reviewed-selection', 'getting-started')).toBe('/docs/aas-core/#use-the-reviewed-selection');
-    expect(docsUrl('#install', 'usage')).toBe('#install');
-    expect(docsUrl('../../README.md', 'usage')).toMatch(/\/blob\/v[^/]+\/README.md$/);
+    expect(docsUrl('#install', 'usage')).toBe('/docs/usage/#install');
+    expect(docsUrl('../../README.md', 'usage')).toBe(`https://github.com/sickn33/agentic-awesome-skills/blob/${__DOCS_METADATA__.usage.commit}/README.md`);
     expect(docsUrl('../../assets/banner.png', 'usage', true)).toContain('raw.githubusercontent.com');
     expect(docsUrl('javascript:alert(1)', 'usage')).toBe('');
     expect(docsUrl('//other.test/file', 'usage')).toBe('');

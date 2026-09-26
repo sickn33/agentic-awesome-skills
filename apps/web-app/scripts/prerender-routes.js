@@ -5,6 +5,8 @@ import { selectTopSkillEntries } from './generate-sitemap.js';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import Markdown from 'react-markdown';
+import { getDocsMetadata } from './docs-metadata.js';
+import { remarkHeadings } from '../src/utils/markdownHeadings.js';
 import remarkGfm from 'remark-gfm';
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -976,17 +978,20 @@ function main() {
   const topSkillSet = new Set(topSkillPaths.map((routePath) => routePath.replace(/^\/skill\//, '')));
   const socialImage = `${siteBaseUrl.replace(/\/+$/, '')}/${PRERENDER_SOCIAL_IMAGE}`;
   const docs = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, 'src/data/docs.json'), 'utf8'));
+  const docsMetadata = getDocsMetadata();
+  const socialGuides = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, 'src/data/docs-social.json'), 'utf8'));
   const docsNavigation = `<nav aria-label="Documentation">${docs.map((doc) => `<p><a href="${escapeHtml(routeToUrl(`/docs/${doc.slug}`, siteBaseUrl))}">${escapeHtml(doc.title)}</a></p>`).join('')}</nav>`;
   for (const doc of [null, ...docs]) {
+    const metadata = doc ? docsMetadata[doc.slug] : null;
     const routePath = doc ? `/docs/${doc.slug}` : '/docs';
     const title = `${doc?.title || 'Documentation'} | ${SITE_NAME}`;
     const content = doc ? fs.readFileSync(path.join(ROOT_DIR, `../../docs/users/${doc.slug}.md`), 'utf8') : '';
-    const repositoryVersion = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, '../../package.json'), 'utf8')).version;
-    const sourceRoot = `${REPOSITORY_URL}/blob/v${repositoryVersion}/`;
+    const sourceRoot = `${REPOSITORY_URL}/blob/${metadata?.commit || 'main'}/`;
     const fallback = doc ? renderToStaticMarkup(createElement(Markdown, {
-      remarkPlugins: [remarkGfm],
+      remarkPlugins: [remarkGfm, remarkHeadings],
       urlTransform: (url, key) => {
-        if (/^https?:\/\//i.test(url) || (key === 'href' && /^(#|mailto:)/i.test(url))) return url;
+        if (key === 'href' && url.startsWith('#')) return `${routeToUrl(routePath, siteBaseUrl)}${url}`;
+        if (/^https?:\/\//i.test(url) || (key === 'href' && /^mailto:/i.test(url))) return url;
         if (/^[a-z][a-z0-9+.-]*:/i.test(url) || url.startsWith('//') || url.includes('\\')) return '';
         const resolved = new URL(url, `${sourceRoot}docs/users/${doc.slug}.md`);
         if (!resolved.href.startsWith(sourceRoot)) return '';
@@ -999,14 +1004,24 @@ function main() {
       title,
       description: doc ? `${doc.title}: guides and reference for Agentic Awesome Skills.` : 'Learn AAS Core, install skills, configure integrations, and follow practical workflows.',
       canonicalUrl: routeToUrl(routePath, siteBaseUrl),
-      ogImage: socialImage,
+      ogImage: doc && socialGuides.includes(doc.slug) ? `${siteBaseUrl.replace(/\/+$/, '')}/social/docs/${doc.slug}.png` : socialImage,
       jsonLd: [{
         '@context': 'https://schema.org',
-        '@type': 'WebPage',
+        '@type': doc ? ['WebPage', 'TechArticle'] : 'WebPage',
         name: title,
+        headline: title,
+        ...(metadata ? { dateModified: metadata.modified, version: metadata.commit } : {}),
         description: doc ? `${doc.title}: guides and reference for Agentic Awesome Skills.` : 'Learn AAS Core, install skills, configure integrations, and follow practical workflows.',
         url: routeToUrl(routePath, siteBaseUrl),
         mainEntityOfPage: routeToUrl(routePath, siteBaseUrl),
+      }, {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: routeToUrl('/', siteBaseUrl) },
+          { '@type': 'ListItem', position: 2, name: 'Documentation', item: routeToUrl('/docs', siteBaseUrl) },
+          ...(doc ? [{ '@type': 'ListItem', position: 3, name: doc.title, item: routeToUrl(routePath, siteBaseUrl) }] : []),
+        ],
       }],
     }, `<main><a href="${escapeHtml(routeToUrl('/docs', siteBaseUrl))}">Documentation</a>${fallback}</main>`);
   }

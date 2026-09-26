@@ -1,3 +1,12 @@
+# Documentation experience — 2026-09-26
+
+- Added full-text guide search with highlighted excerpts, individual guide loading, clipboard feedback, accessible code scrolling, breadcrumbs, an active outline, and contextual next steps.
+- Exposed Git-derived dates and exact source links, plus paths for users, contributors, maintainers, Core reference, and troubleshooting.
+- Added article/breadcrumb structured data, real guide sitemap dates, and social images for Getting Started, AAS Core, and FAQ.
+- Made local Markdown targets, images, heading anchors, static route content, and social image checks part of the web build.
+- See the [verification record](docs/maintainers/site-documentation-experience-2026-09-26.md) for checks, accessibility scope, and the external Mintlify limitation.
+- This change does not change the package version or create a release.
+
 # Public AAS info endpoint - 2026-09-25
 
 - Added a generated `apps/web-app/public/api/info.json` endpoint for public AAS name, links, release version, feature list, and current skill count.

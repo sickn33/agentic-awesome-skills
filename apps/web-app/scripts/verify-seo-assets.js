@@ -8,6 +8,7 @@ import sanitizeFilename from 'sanitize-filename';
 import { getSeoLandingPaths } from './generate-sitemap.js';
 
 const APP_ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const DOCS_SOCIAL_GUIDES = JSON.parse(fs.readFileSync(path.join(APP_ROOT_DIR, 'src/data/docs-social.json'), 'utf8'));
 const REPO_ROOT_DIR = path.resolve(APP_ROOT_DIR, '..', '..');
 const REPOSITORY_URL = 'https://github.com/sickn33/agentic-awesome-skills';
 const PACKAGE_URL = 'https://www.npmjs.com/package/agentic-awesome-skills';
@@ -699,8 +700,12 @@ export function assertPrerenderedRouteIdentities(routeUrls, distDir = 'dist', no
       `${routeUrl} must set rel="canonical" to exactly ${routeUrl}; got ${canonical || 'missing'}.`,
     );
     assertExactMetaContent(html, 'property', 'og:url', routeUrl, routeUrl);
-    assertExactMetaContent(html, 'property', 'og:image', identityContext.socialImageUrl, routeUrl);
-    assertExactMetaContent(html, 'name', 'twitter:image', identityContext.socialImageUrl, routeUrl);
+    const docsSlug = parsed.pathname.slice(expectedRootPath.length).match(/^docs\/([^/]+)\/$/)?.[1];
+    const socialImageUrl = docsSlug && DOCS_SOCIAL_GUIDES.includes(docsSlug)
+      ? `${identityContext.catalogBaseUrl}/social/docs/${docsSlug}.png`
+      : identityContext.socialImageUrl;
+    assertExactMetaContent(html, 'property', 'og:image', socialImageUrl, routeUrl);
+    assertExactMetaContent(html, 'name', 'twitter:image', socialImageUrl, routeUrl);
     assertPrimaryRouteJsonLdIdentity(html, routeUrl);
     assertJsonLdIdentityUrls(html, identityContext, routeUrl);
   }

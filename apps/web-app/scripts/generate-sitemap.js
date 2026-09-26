@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { getDocsMetadata } from './docs-metadata.js';
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
@@ -113,14 +114,14 @@ export function getSeoLandingPaths() {
     .map((slug) => toIndexableRoutePath(`/topics/${encodeURIComponent(slug)}`));
 }
 
-export function generateSitemapXml({ baseUrl, paths, lastmod = DEFAULT_LASTMOD }) {
+export function generateSitemapXml({ baseUrl, paths, lastmod = DEFAULT_LASTMOD, modifiedByPath = {} }) {
   const normalizedBase = String(baseUrl).replace(/\/$/, '');
   const uniquePaths = [...new Set(paths.map(toIndexableRoutePath))];
 
   const urlsXml = uniquePaths
     .map((pathName) => {
       const href = `${normalizedBase}${pathName}`;
-      return `  <url>\n    <loc>${escapeXml(href)}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${pathName === '/' ? 'daily' : 'weekly'}</changefreq>\n    <priority>${pathName === '/' ? '1.0' : '0.7'}</priority>\n  </url>`;
+      return `  <url>\n    <loc>${escapeXml(href)}</loc>\n    <lastmod>${escapeXml(modifiedByPath[pathName] || lastmod)}</lastmod>\n    <changefreq>${pathName === '/' ? 'daily' : 'weekly'}</changefreq>\n    <priority>${pathName === '/' ? '1.0' : '0.7'}</priority>\n  </url>`;
     })
     .join('\n');
 
@@ -141,6 +142,7 @@ export function buildSitemap(skills, topCount = TOP_SKILL_COUNT, baseUrl = SITE_
   const landingPaths = getSeoLandingPaths();
   return generateSitemapXml({
     baseUrl,
+    modifiedByPath: Object.fromEntries(Object.entries(getDocsMetadata()).map(([slug, meta]) => [toIndexableRoutePath(`/docs/${slug}/`), meta.modified.slice(0, 10)])),
     paths: [
       '/',
       toIndexableRoutePath('/core'),

@@ -635,6 +635,22 @@ describe('seo assets verification helpers', () => {
     expect(() => assertPrerenderedRouteIdentities(routes, distDir, '/repo', FIXTURE_ROOT_URL)).not.toThrow();
   });
 
+  it('requires the exact guide social card and rejects a stale default or another guide image', () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'seo-docs-social-'));
+    const distDir = path.join(tmpDir, 'dist');
+    const routeUrl = `${FIXTURE_ROOT_URL}docs/getting-started/`;
+    try {
+      for (const image of [FIXTURE_SOCIAL_IMAGE_URL, `${FIXTURE_ROOT_URL}social/docs/faq.png`, `${FIXTURE_ROOT_URL}social/docs/getting-started.png`]) {
+        writeRouteIdentityFixture(distDir, routeUrl, buildRouteIdentityHtml({ routeUrl, socialImageUrl: image, jsonLd: currentIdentityJsonLd(routeUrl) }));
+        const verify = () => assertPrerenderedRouteIdentities([routeUrl], distDir, '/repo', FIXTURE_ROOT_URL);
+        if (image.endsWith('/getting-started.png')) expect(verify).not.toThrow();
+        else expect(verify).toThrow('og:image');
+      }
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
   it('requires llms.txt discovery signals', () => {
     const llms = `
       # Agentic Awesome Skills
