@@ -55803,6 +55803,204 @@
     }
   },
   {
+    "id": "traderspy-market-briefing",
+    "path": "skills/traderspy-market-briefing",
+    "category": "finance",
+    "name": "traderspy-market-briefing",
+    "description": "Crypto market briefing from live TraderSpy data: majors, funding, open interest, top-trader lean, fresh AI signals and screener movers. Use for \"what's happening in crypto\" or a recap.",
+    "risk": "safe",
+    "source": "https://github.com/target1m/traderspy-mcp/tree/069aae5a84640d671f92705a2e3bc0b62efca1e0/skills/market-briefing",
+    "date_added": "2026-09-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "target1m/traderspy-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/target1m/traderspy-mcp/blob/069aae5a84640d671f92705a2e3bc0b62efca1e0/LICENSE",
+    "tags": [
+      "traderspy",
+      "crypto",
+      "market-briefing",
+      "derivatives",
+      "mcp"
+    ]
+  },
+  {
+    "id": "traderspy-market-screener",
+    "path": "skills/traderspy-market-screener",
+    "category": "finance",
+    "name": "traderspy-market-screener",
+    "description": "Scan the most-traded crypto futures pairs for up to 3 technical conditions in one TraderSpy call, compare coins, and backtest what followed a condition. Use for \"which coins are oversold\".",
+    "risk": "safe",
+    "source": "https://github.com/target1m/traderspy-mcp/tree/069aae5a84640d671f92705a2e3bc0b62efca1e0/skills/market-screener",
+    "date_added": "2026-09-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "target1m/traderspy-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/target1m/traderspy-mcp/blob/069aae5a84640d671f92705a2e3bc0b62efca1e0/LICENSE",
+    "tags": [
+      "traderspy",
+      "crypto",
+      "screener",
+      "backtesting",
+      "mcp"
+    ]
+  },
+  {
+    "id": "traderspy-position-check",
+    "path": "skills/traderspy-position-check",
+    "category": "finance",
+    "name": "traderspy-position-check",
+    "description": "Health-check crypto futures positions the user describes, with TraderSpy data: liquidation and stop distance, multi-timeframe read, funding and top-trader side. Reports only; never tells the user to close or add.",
+    "risk": "safe",
+    "source": "https://github.com/target1m/traderspy-mcp/tree/069aae5a84640d671f92705a2e3bc0b62efca1e0/skills/position-check",
+    "date_added": "2026-09-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "target1m/traderspy-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/target1m/traderspy-mcp/blob/069aae5a84640d671f92705a2e3bc0b62efca1e0/LICENSE",
+    "tags": [
+      "traderspy",
+      "crypto",
+      "risk-management",
+      "futures",
+      "mcp"
+    ]
+  },
+  {
+    "id": "traderspy-smart-money",
+    "path": "skills/traderspy-smart-money",
+    "category": "finance",
+    "name": "traderspy-smart-money",
+    "description": "Track what top crypto futures traders hold on Binance, Hyperliquid, Bybit and OKX with TraderSpy: elite leaderboard, positions, trader profiles and history. Use for \"what are whales doing\".",
+    "risk": "safe",
+    "source": "https://github.com/target1m/traderspy-mcp/tree/069aae5a84640d671f92705a2e3bc0b62efca1e0/skills/smart-money",
+    "date_added": "2026-09-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "target1m/traderspy-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/target1m/traderspy-mcp/blob/069aae5a84640d671f92705a2e3bc0b62efca1e0/LICENSE",
+    "tags": [
+      "traderspy",
+      "crypto",
+      "smart-money",
+      "whale-tracking",
+      "mcp"
+    ]
+  },
+  {
+    "id": "traderspy-technical-analysis",
+    "path": "skills/traderspy-technical-analysis",
+    "category": "finance",
+    "name": "traderspy-technical-analysis",
+    "description": "Read one crypto futures pair with TraderSpy: 19 indicators on up to 3 timeframes in one call, key levels, funding, open interest and positioning. Use for \"analyse BTC\" or \"is SOL oversold\".",
+    "risk": "safe",
+    "source": "https://github.com/target1m/traderspy-mcp/tree/069aae5a84640d671f92705a2e3bc0b62efca1e0/skills/technical-analysis",
+    "date_added": "2026-09-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "target1m/traderspy-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/target1m/traderspy-mcp/blob/069aae5a84640d671f92705a2e3bc0b62efca1e0/LICENSE",
+    "tags": [
+      "traderspy",
+      "crypto",
+      "technical-analysis",
+      "indicators",
+      "mcp"
+    ]
+  },
+  {
+    "id": "traderspy-trading-signals",
+    "path": "skills/traderspy-trading-signals",
+    "category": "finance",
+    "name": "traderspy-trading-signals",
+    "description": "Fetch and explain TraderSpy's AI crypto futures signals: entry, take-profit ladder, stop, triggers, status against the live price, and how recent signals resolved. Use for \"latest signals\".",
+    "risk": "safe",
+    "source": "https://github.com/target1m/traderspy-mcp/tree/069aae5a84640d671f92705a2e3bc0b62efca1e0/skills/trading-signals",
+    "date_added": "2026-09-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "target1m/traderspy-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/target1m/traderspy-mcp/blob/069aae5a84640d671f92705a2e3bc0b62efca1e0/LICENSE",
+    "tags": [
+      "traderspy",
+      "crypto",
+      "trading-signals",
+      "futures",
+      "mcp"
+    ]
+  },
+  {
     "id": "trading-ledger",
     "path": "skills/trading-ledger",
     "category": "productivity",

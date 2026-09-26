@@ -43142,6 +43142,120 @@
       "runtime_files": []
     },
     {
+      "id": "traderspy-market-briefing",
+      "path": "skills/traderspy-market-briefing",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "traderspy-market-screener",
+      "path": "skills/traderspy-market-screener",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "traderspy-position-check",
+      "path": "skills/traderspy-position-check",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "traderspy-smart-money",
+      "path": "skills/traderspy-smart-money",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "traderspy-technical-analysis",
+      "path": "skills/traderspy-technical-analysis",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "traderspy-trading-signals",
+      "path": "skills/traderspy-trading-signals",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "trading-ledger",
       "path": "skills/trading-ledger",
       "targets": {
@@ -47326,10 +47440,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2465,
+    "total_skills": 2471,
     "supported": {
-      "codex": 2379,
-      "claude": 2404
+      "codex": 2385,
+      "claude": 2410
     },
     "blocked": {
       "codex": 86,
