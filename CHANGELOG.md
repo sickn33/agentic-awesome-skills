@@ -7,17 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [18.6.0] - 2026-09-26 - "Claude API Skill Refresh"
+## [18.6.0] - 2026-09-26 - "Radar & Crypto Intelligence, Electron E2E, and Claude API Refresh"
 
-> Refreshes the Claude API skill from the official Anthropic source, updates current model guidance, and keeps the full bundled documentation aligned.
+> Adds 13 reviewed skills across weather radar, crypto research, MCP supply-chain safety, and Electron end-to-end testing; refreshes Claude API model guidance; and ships the hosted catalog and plugin surfaces at **2,472** skills.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the complete protected maintainer batch merged after `18.5.0`, with existing installation interfaces preserved.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.6.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **NEXRAD and radar analysis (#1602)** — `nexrad-mosaic-access`, `nexrad-mosaic-construction`, `nexrad-product-access`, `nexrad-radar-visualization`, and `radar-satellite-analysis` for validated NOAA/NCEP retrieval, quality-aware mosaics, geometry-correct visualization, and uncertainty-aware interpretation.
+- **TraderSpy crypto research (#1610)** — `traderspy-market-briefing`, `traderspy-market-screener`, `traderspy-position-check`, `traderspy-smart-money`, `traderspy-technical-analysis`, and `traderspy-trading-signals` for read-only market, derivatives, position, whale, technical, and signal analysis.
+- **MCP dependency drift audit (#1607)** — statically detect mutable npm/npx references in MCP configurations before review or CI, without executing discovered servers.
+- **Electron Drive (#1593, maintainer repair #1621)** — drive an Electron app on a scratch profile with Playwright for snapshots, screenshots, interaction, logs, renderer evaluation, and main-process checks.
 
 ### Changed
 
-- **claude-api (#1614)** - refresh the canonical skill bundle from anthropics/skills, update model and API guidance, and preserve AAS metadata and safety limits.
+- **Claude API (#1614, merged as #1618)** — update Claude model defaults and current API guidance across the canonical skill and its language references.
+- **Unified AI Gateway (#1616)** — align the skill with the published server's fifteen governed MCP tools and preserve its provider-free, read-only safety boundaries.
+- **Maintainer tooling (#1613)** — improve Jev maintainer triage evidence and keep it advisory rather than a merge gate.
+- **Hosted catalog and web experience (#1606, #1608, #1609)** — add the public AAS info API, improve GitHub video playback fallback, and ship the AAS introduction video assets and landing updates.
+- **Release surfaces** — regenerate the catalog, offline AAS Core assets, Codex/Claude plugin mirrors, editorial bundles, marketplace manifests, compatibility reports, and web assets for 2,472 skills.
+
+### Documentation and community
+
+- Added the WordCamp Kathmandu 2026 "Prompt Smarter, Not Harder" showcase (#1605).
+- Preserved contributor credit for the TraderSpy, NEXRAD, MCP drift-audit, and Electron Drive contributions.
 
 ### Validation scope
 
-Exact-head maintainer review, canonical bundle inspection, repository validation, reference validation, docs security, protected CI, and canonical plugin synchronization.
+Exact-head maintainer review for changed skill content, protected source and maintainer repair PRs, repository validation and tests, reference validation, docs security, protected CI and CodeQL, dependency review, canonical synchronization, release preflight, Linux/Windows preview checks, npm publication, and release provenance verification.
 
 ## [18.5.0] - 2026-09-25 - "Film Crews, TestDriver E2E, and Safer Catalog Filters"
 
