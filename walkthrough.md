@@ -1,3 +1,37 @@
+# Top skills contributors - 2026-09-27
+
+- Added a second Top Contributors ranking for canonical skills introduced, alongside the existing commit ranking.
+- Counted each current `skills/**/SKILL.md` once at its first introduction in repository history, resolved commit authors to GitHub accounts, and excluded the requested accounts.
+
+# README structure refresh - 2026-09-27
+
+- Shortened the README entry path while retaining the introduction video, dynamic skill count, sponsors, source credits, top contributors, repository contributors, and star history.
+- Preserved the existing installation anchors used by user guides and updated README metadata sync to keep the new release copy and examples current.
+- Verified heading hierarchy, table-of-contents anchors, repository documentation links, source-credit preservation, validation, docs security, consistency, and the full test suite.
+
+# README Top Contributors - 2026-09-27
+
+- Added a Top Contributors section beside the repository contributor gallery, with linked GitHub avatars and profiles.
+- Ranked the ten eligible accounts by GitHub contributor commit counts observed on September 27, 2026.
+- Simplified the section introduction after feedback so the README focuses on thanking contributors.
+
+# Catalog category completion - 2026-09-27
+
+- Audited the exact `main` catalog at commit `c6c0677`; it contains 2,472 skills, including 359 `uncategorized` entries.
+- Used Jev as an advisory structured classifier with a closed vocabulary of existing catalog categories, then manually reviewed low-confidence and placeholder-description cases.
+- Added `data/category-overrides.json` with 359 maintainer-reviewed assignments and applied it during index generation.
+- Regenerated the index/catalog validation snapshot: 2,472 records and 0 `uncategorized` entries.
+- Passed `npm run validate`, `npm run validate:references`, `npm run security:docs`, and `npm run check:aas-v1-catalog`.
+
+# Documentation experience — 2026-09-26
+
+- Added full-text guide search with highlighted excerpts, individual guide loading, clipboard feedback, accessible code scrolling, breadcrumbs, an active outline, and contextual next steps.
+- Exposed Git-derived dates and exact source links, plus paths for users, contributors, maintainers, Core reference, and troubleshooting.
+- Added article/breadcrumb structured data, real guide sitemap dates, and social images for Getting Started, AAS Core, and FAQ.
+- Made local Markdown targets, images, heading anchors, static route content, and social image checks part of the web build.
+- See the [verification record](docs/maintainers/site-documentation-experience-2026-09-26.md) for checks, accessibility scope, and the external Mintlify limitation.
+- This change does not change the package version or create a release.
+
 # Public AAS info endpoint - 2026-09-25
 
 - Added a generated `apps/web-app/public/api/info.json` endpoint for public AAS name, links, release version, feature list, and current skill count.
@@ -724,3 +758,13 @@ Moved [Support the Project](README.md#support-the-project) directly below the op
 - Added the 40-second AAS presentation to the README through a GitHub video attachment, rendered inline by GitHub.
 - Added a self-hosted HTML video player to the catalog landing page, with a poster and no automatic download or playback.
 - Added a README link to the site's player as a fallback for GitHub playback stalls.
+
+
+## Homepage outage repair (2026-09-27)
+
+The landing route used useSkills outside CatalogRouteProvider, crashing the deployed homepage. Move it inside the existing provider route and exercise the real App homepage without mocking the context.
+
+
+## Shared site style (2026-09-27)
+
+Use the landing black/cyan palette on every route, share Outfit/JetBrains Mono with Tailwind and Markdown, load the title weight, unify responsive page headings, and keep header/footer appearance stable across navigation.

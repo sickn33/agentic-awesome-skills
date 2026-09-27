@@ -239,9 +239,6 @@ function generateBridge(options) {
   }
   const locations = parseSitemap(sitemapSource);
   const skillIds = parseSkillIds(skillsIndexSource);
-  if (locations.length !== expectedRoutes) {
-    throw new Error(`sitemap route count ${locations.length} does not match locked expectation ${expectedRoutes}`);
-  }
   if (expectedSkills != null && skillIds.length !== expectedSkills) {
     throw new Error(`skills index count ${skillIds.length} does not match locked expectation ${expectedSkills}`);
   }
@@ -256,11 +253,18 @@ function generateBridge(options) {
     }
     return { currentUrl, relativeRoute };
   });
+  // First-party docs belong to the current site and must not be copied into the separate legacy bridge.
+  const bridgeSitemapRoutes = sitemapRoutes.filter(
+    ({ relativeRoute }) => relativeRoute !== 'docs' && !relativeRoute.startsWith('docs/'),
+  );
+  if (bridgeSitemapRoutes.length !== expectedRoutes) {
+    throw new Error(`sitemap route count ${bridgeSitemapRoutes.length} does not match locked expectation ${expectedRoutes}`);
+  }
   const normalisedSitemapUrls = sitemapRoutes.map(({ currentUrl }) => currentUrl.toString());
   if (new Set(normalisedSitemapUrls).size !== normalisedSitemapUrls.length) {
     throw new Error('sitemap contains duplicate URLs after normalization');
   }
-  const allRoutes = new Map(sitemapRoutes.map(({ currentUrl, relativeRoute }) => [currentUrl.toString(), { currentUrl, relativeRoute }]));
+  const allRoutes = new Map(bridgeSitemapRoutes.map(({ currentUrl, relativeRoute }) => [currentUrl.toString(), { currentUrl, relativeRoute }]));
   for (const id of skillIds) {
     const currentUrl = new URL(`skill/${id}/`, currentBase);
     allRoutes.set(currentUrl.toString(), { currentUrl, relativeRoute: `skill/${id}` });
@@ -276,7 +280,7 @@ function generateBridge(options) {
     };
   };
   const redirects = [...allRoutes.values()].map(toRedirect);
-  const sitemapRedirects = sitemapRoutes.map(toRedirect).sort((left, right) => left.from.localeCompare(right.from));
+  const sitemapRedirects = bridgeSitemapRoutes.map(toRedirect).sort((left, right) => left.from.localeCompare(right.from));
   if (!redirects.some(({ to }) => to === currentBase.toString())) throw new Error('sitemap does not contain the current root route');
   if (new Set(redirects.map(({ from }) => from)).size !== redirects.length) throw new Error('legacy mapping is not one-to-one');
   if (new Set(redirects.map(({ output_file }) => output_file)).size !== redirects.length) throw new Error('multiple routes map to the same output file');
@@ -303,7 +307,7 @@ function generateBridge(options) {
     source_skills_index_sha256: sha256(skillsIndexSource),
     current_base: currentBase.toString(),
     legacy_base: legacyBase.toString(),
-    source_sitemap_route_count: locations.length,
+    source_sitemap_route_count: bridgeSitemapRoutes.length,
     current_skill_route_count: skillIds.length,
     route_count: redirects.length,
     legacy_sitemap_route_count: sitemapRedirects.length,

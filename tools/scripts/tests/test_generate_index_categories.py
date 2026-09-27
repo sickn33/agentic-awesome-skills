@@ -66,6 +66,34 @@ class GenerateIndexCategoryTests(unittest.TestCase):
         )
         self.assertEqual(inferred, "development")
 
+    def test_generate_index_applies_reviewed_category_overrides(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            base = pathlib.Path(temp_dir)
+            skills_dir = base / "skills"
+            output_file = base / "skills_index.json"
+            skill_dir = skills_dir / "override-demo"
+            skill_dir.mkdir(parents=True)
+            (skill_dir / "SKILL.md").write_text(
+                "---\nname: override-demo\ndescription: Example\n---\nbody\n",
+                encoding="utf-8",
+            )
+            original_find_repo_root = generate_index.find_repo_root
+            try:
+                generate_index.find_repo_root = lambda _path: REPO_ROOT
+                overrides_path = REPO_ROOT / "data" / "category-overrides.json"
+                original = overrides_path.read_text(encoding="utf-8")
+                try:
+                    overrides_path.write_text(
+                        '{"schemaVersion": 1, "overrides": {"override-demo": "testing"}}\n',
+                        encoding="utf-8",
+                    )
+                    skills = generate_index.generate_index(str(skills_dir), str(output_file))
+                finally:
+                    overrides_path.write_text(original, encoding="utf-8")
+            finally:
+                generate_index.find_repo_root = original_find_repo_root
+            self.assertEqual(skills[0]["category"], "testing")
+
     def test_generate_index_prefers_frontmatter_then_parent_then_inference(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             base = pathlib.Path(temp_dir)

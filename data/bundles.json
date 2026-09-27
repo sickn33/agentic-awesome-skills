@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-26T11:02:22.000Z",
+  "generatedAt": "2026-09-27T09:49:22.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -305,6 +305,7 @@
         "landing-page-generator",
         "langgraph",
         "laravel-development-workflow",
+        "lintlang-audit",
         "liuguang-banlan-ui",
         "llm-cost-optimization",
         "llm-gateway",
@@ -591,7 +592,6 @@
         "email-security",
         "ethical-hacking-methodology",
         "event-staffing-compliance",
-        "event-staffing-ordering",
         "fda-food-safety-auditor",
         "fda-medtech-compliance-auditor",
         "fedramp-compliance",
@@ -1967,6 +1967,7 @@
         "social-metadata-hardening",
         "social-post-writer-seo",
         "supabase-postgres-best-practices",
+        "system-prompt-lookup",
         "tools-page-seo-optimizer",
         "ui-motion",
         "using-agent-skills",

@@ -361,7 +361,7 @@
   {
     "id": "accesslint-diff",
     "path": "skills/accesslint-diff",
-    "category": "uncategorized",
+    "category": "design",
     "name": "accesslint-diff",
     "description": "Diff a live page's accessibility violations against a baseline \u2014 by default compares uncommitted changes (stash-based), or pass --branch [<name>] to diff against a branch. Reports only new violations introduced, violations fixed, and pre-existing count. Use `scan` for a full audit with no diffing.",
     "risk": "safe",
@@ -383,7 +383,7 @@
   {
     "id": "accesslint-scan",
     "path": "skills/accesslint-scan",
-    "category": "uncategorized",
+    "category": "design",
     "name": "accesslint-scan",
     "description": "Audit a live page for accessibility issues, locate each WCAG violation precisely, and return a selector-grounded fix worklist without editing.",
     "risk": "safe",
@@ -405,7 +405,7 @@
   {
     "id": "accint-commitments",
     "path": "skills/accint-commitments",
-    "category": "uncategorized",
+    "category": "project-management",
     "name": "accint-commitments",
     "description": "Triage acc's open promises and close them with honest real-world verdicts via acc_act(runtime=\"outcome\").",
     "risk": "critical",
@@ -431,7 +431,7 @@
   {
     "id": "accint-frames",
     "path": "skills/accint-frames",
-    "category": "uncategorized",
+    "category": "ai-agents",
     "name": "accint-frames",
     "description": "Drain acc's deliberation queue \u2014 open/waiting brain_frames checkpointed by headless runs \u2014 via acc_act(runtime=\"continue\").",
     "risk": "critical",
@@ -457,7 +457,7 @@
   {
     "id": "accint-solve",
     "path": "skills/accint-solve",
-    "category": "uncategorized",
+    "category": "ai-agents",
     "name": "accint-solve",
     "description": "Route a goal through acc's scored-memory loop via acc_act(runtime=\"solve\"); deliberate any returned brain_frame and submit via continue.",
     "risk": "critical",
@@ -560,7 +560,7 @@
   {
     "id": "ad-creative",
     "path": "skills/ad-creative",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "ad-creative",
     "description": "Create, iterate, and scale paid ad creative for Google Ads, Meta, LinkedIn, TikTok, and similar platforms. Use when generating headlines, descriptions, primary text, or large sets of ad variations for testing and performance optimization.",
     "risk": "critical",
@@ -630,7 +630,7 @@
   {
     "id": "adhx",
     "path": "skills/adhx",
-    "category": "uncategorized",
+    "category": "api-integration",
     "name": "adhx",
     "description": "Fetch any X/Twitter post as clean LLM-friendly JSON. Converts x.com, twitter.com, or adhx.com links into structured data with full article content, author info, and engagement metrics. No scraping or browser required.",
     "risk": "safe",
@@ -1307,7 +1307,7 @@
   {
     "id": "agentflow",
     "path": "skills/agentflow",
-    "category": "uncategorized",
+    "category": "agent-orchestration",
     "name": "agentflow",
     "description": "Orchestrate autonomous AI development pipelines through your Kanban board (Asana, GitHub Projects, Linear). Manages multi-worker Claude Code dispatch, deterministic quality gates, adversarial review, per-task cost tracking, and crash-proof pipeline execution.",
     "risk": "safe",
@@ -2210,7 +2210,7 @@
   {
     "id": "akf-trust-metadata",
     "path": "skills/akf-trust-metadata",
-    "category": "uncategorized",
+    "category": "security",
     "name": "akf-trust-metadata",
     "description": "The AI native file format. EXIF for AI \u2014 stamps every file with trust scores, source provenance, and compliance metadata. Embeds into 20+ formats (DOCX, PDF, images, code). EU AI Act, SOX, HIPAA auditing.",
     "risk": "safe",
@@ -2354,7 +2354,7 @@
   {
     "id": "alternatives-pages",
     "path": "skills/alternatives-pages",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "alternatives-pages",
     "description": "Create \"[Competitor] alternative\" and comparison pages for developer tools. Build honest, high-converting comparison content that ranks for competitive search terms.",
     "risk": "critical",
@@ -2431,7 +2431,7 @@
   {
     "id": "analytics",
     "path": "skills/analytics",
-    "category": "uncategorized",
+    "category": "data",
     "name": "analytics",
     "description": "When the user wants to set up, improve, or audit analytics tracking and measurement.",
     "risk": "critical",
@@ -2540,7 +2540,7 @@
   {
     "id": "andrej-karpathy",
     "path": "skills/andrej-karpathy",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "andrej-karpathy",
     "description": "Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria.",
     "risk": "safe",
@@ -2834,7 +2834,7 @@
   {
     "id": "anti-deception",
     "path": "skills/anti-deception",
-    "category": "uncategorized",
+    "category": "meta",
     "name": "anti-deception",
     "description": "Use before responding to pressure for agreement, manufactured urgency, authority appeals, or requests to certify unsupported claims; separate evidence from persuasion and state uncertainty.",
     "risk": "critical",
@@ -2953,7 +2953,7 @@
   {
     "id": "anti-sycophancy",
     "path": "skills/anti-sycophancy",
-    "category": "uncategorized",
+    "category": "meta",
     "name": "anti-sycophancy",
     "description": "Eliminate sycophantic agreement patterns in AI responses. Load via /skill anti-sycophancy.",
     "risk": "safe",
@@ -3065,7 +3065,7 @@
   {
     "id": "antigravity-maintainer-batch-release",
     "path": "skills/antigravity-maintainer-batch-release",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "antigravity-maintainer-batch-release",
     "description": "Run protected AAS maintainer sweeps, PR merge batches, canonical sync, Core preview checks, and scripted releases. Use for repository maintenance, main alignment, CLI/MCP/Workbench changes, or release work; not ordinary contribution tasks.",
     "risk": "critical",
@@ -4017,7 +4017,7 @@
   {
     "id": "apk-reverse",
     "path": "skills/apk-reverse",
-    "category": "uncategorized",
+    "category": "security",
     "name": "apk-reverse",
     "description": "Android APK reverse engineering: unpacking, Java decompilation, smali modification, repacking and signing, Frida dynamic hooking, and native .so analysis with jadx, apktool, adb, and related tools.",
     "risk": "offensive",
@@ -4065,7 +4065,7 @@
   {
     "id": "app-store-changelog",
     "path": "skills/app-store-changelog",
-    "category": "uncategorized",
+    "category": "content",
     "name": "app-store-changelog",
     "description": "Generate user-facing App Store release notes from git history since the last tag.",
     "risk": "safe",
@@ -4189,7 +4189,7 @@
   {
     "id": "apple-notes-search",
     "path": "skills/apple-notes-search",
-    "category": "uncategorized",
+    "category": "productivity",
     "name": "apple-notes-search",
     "description": "Semantic + keyword search and connection-discovery across the user's own Apple Notes via the apple-notes MCP server. Use when the user wants to find, recall, or synthesize something from their notes, or surface non-obvious bridges/related notes. macOS, on-device.",
     "risk": "critical",
@@ -4362,7 +4362,7 @@
   {
     "id": "architecture-review",
     "path": "skills/architecture-review",
-    "category": "uncategorized",
+    "category": "architecture",
     "name": "architecture-review",
     "description": "Review repository architecture using Ontoly Software Graph and MCP capabilities. Use when asked to explain architecture, module boundaries, package topology, service ownership, or architectural risk.",
     "risk": "unknown",
@@ -4841,7 +4841,7 @@
   {
     "id": "atlas-ledger",
     "path": "skills/atlas-ledger",
-    "category": "uncategorized",
+    "category": "workflow",
     "name": "atlas-ledger",
     "description": "Companion to atlas-contract. Auto-invoked by its Final Audit on caught drift; also use after Post Reviews or user requests to record a mistake. Distills drift into WHEN/DON'T/INSTEAD clauses, writes to Atlas.md after confirmation.",
     "risk": "critical",
@@ -4869,7 +4869,7 @@
   {
     "id": "attack-chain",
     "path": "skills/attack-chain",
-    "category": "uncategorized",
+    "category": "security",
     "name": "attack-chain",
     "description": "Authorized multi-stage attack-path planning and orchestration spanning reconnaissance, initial access, privilege escalation, lateral movement, and reporting. Entry point for full engagements and cross-phase operations.",
     "risk": "offensive",
@@ -4946,7 +4946,7 @@
   {
     "id": "audit-agent-run-evidence",
     "path": "skills/audit-agent-run-evidence",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "audit-agent-run-evidence",
     "description": "Use when an agent, harness, gateway, MCP workflow, or multi-step automation claims completion and the available traces, checkpoints, approvals, tool calls, or deployment records must be judged without trusting self-reported success.",
     "risk": "safe",
@@ -5154,7 +5154,7 @@
   {
     "id": "automated-triage",
     "path": "skills/automated-triage",
-    "category": "uncategorized",
+    "category": "reliability",
     "name": "automated-triage",
     "description": "Triage Monte Carlo alerts interactively or build an automated workflow. Fetch, score, and troubleshoot alerts using MCP tools now, or design a reusable workflow that runs on a schedule.",
     "risk": "critical",
@@ -5312,7 +5312,7 @@
   {
     "id": "awareness-stage-mapper",
     "path": "skills/awareness-stage-mapper",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "awareness-stage-mapper",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -6035,7 +6035,7 @@
   {
     "id": "axiom",
     "path": "skills/axiom",
-    "category": "uncategorized",
+    "category": "reasoning",
     "name": "axiom",
     "description": "First-principles assumption auditor. Classifies each hidden assumption (fact / convention / belief / interest-driven), ranks by fragility \u00d7 impact, and rebuilds conclusions from verified premises. Bilingual: auto-detects Chinese or English.",
     "risk": "safe",
@@ -9145,7 +9145,7 @@
   {
     "id": "baseline-ui",
     "path": "skills/baseline-ui",
-    "category": "uncategorized",
+    "category": "design",
     "name": "baseline-ui",
     "description": "Quickly deslop UI code by fixing spacing, hierarchy, typography, and small layout issues. Use when the interface needs a fast cleanup or polish pass.",
     "risk": "critical",
@@ -9568,7 +9568,7 @@
   {
     "id": "bevy-ecs-expert",
     "path": "skills/bevy-ecs-expert",
-    "category": "uncategorized",
+    "category": "game-development",
     "name": "bevy-ecs-expert",
     "description": "Master Bevy's Entity Component System (ECS) in Rust, covering Systems, Queries, Resources, and parallel scheduling.",
     "risk": "safe",
@@ -9621,7 +9621,7 @@
   {
     "id": "bill-gates",
     "path": "skills/bill-gates",
-    "category": "uncategorized",
+    "category": "agent-persona",
     "name": "bill-gates",
     "description": "Agente que simula Bill Gates \u2014 cofundador da Microsoft, arquiteto da industria de software comercial, estrategista tecnologico global, investidor sistemico e filantropo baseado em dados.",
     "risk": "safe",
@@ -9649,7 +9649,7 @@
   {
     "id": "billing-automation",
     "path": "skills/billing-automation",
-    "category": "uncategorized",
+    "category": "automation",
     "name": "billing-automation",
     "description": "Master automated billing systems including recurring billing, invoice generation, dunning management, proration, and tax calculation.",
     "risk": "safe",
@@ -9693,7 +9693,7 @@
   {
     "id": "binary-diff",
     "path": "skills/binary-diff",
-    "category": "uncategorized",
+    "category": "security",
     "name": "binary-diff",
     "description": "Cross-version binary symbol migration: diff updated binaries, recover function names without PDBs, and propagate annotations after software updates using BinDiff-style tooling.",
     "risk": "safe",
@@ -9812,7 +9812,7 @@
   {
     "id": "blockrun",
     "path": "skills/blockrun",
-    "category": "uncategorized",
+    "category": "ai-agents",
     "name": "blockrun",
     "description": "BlockRun works with Claude Code and Google Antigravity.",
     "risk": "critical",
@@ -9993,7 +9993,7 @@
   {
     "id": "brainstorming",
     "path": "skills/brainstorming",
-    "category": "uncategorized",
+    "category": "workflow",
     "name": "brainstorming",
     "description": "Use before creative or constructive work (features, architecture, behavior). Transforms vague ideas into validated designs through disciplined reasoning and collaboration.",
     "risk": "critical",
@@ -10081,7 +10081,7 @@
   {
     "id": "brand-perception-psychologist",
     "path": "skills/brand-perception-psychologist",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "brand-perception-psychologist",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -10237,7 +10237,7 @@
   {
     "id": "brooks-audit",
     "path": "skills/brooks-audit",
-    "category": "uncategorized",
+    "category": "architecture",
     "name": "brooks-audit",
     "description": "Architecture audit that maps module dependencies, checks layering integrity, and flags structural decay across a codebase, drawing on twelve classic engineering books.",
     "risk": "safe",
@@ -10263,7 +10263,7 @@
   {
     "id": "brooks-debt",
     "path": "skills/brooks-debt",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "brooks-debt",
     "description": "Tech debt assessment that identifies, classifies, and prioritizes maintainability problems \u2014 helping teams build a refactoring roadmap \u2014 drawing on twelve classic engineering books.",
     "risk": "safe",
@@ -10289,7 +10289,7 @@
   {
     "id": "brooks-harness",
     "path": "skills/brooks-harness",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "brooks-harness",
     "description": "Maintenance orchestrator for the brooks-lint plugin itself.",
     "risk": "critical",
@@ -10348,7 +10348,7 @@
   {
     "id": "brooks-review",
     "path": "skills/brooks-review",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "brooks-review",
     "description": "PR code review that surfaces decay risks, design smells, and maintainability issues with concrete Symptom \u2192 Source \u2192 Consequence \u2192 Remedy findings, drawing on twelve classic engineering books.",
     "risk": "safe",
@@ -10374,7 +10374,7 @@
   {
     "id": "brooks-sweep",
     "path": "skills/brooks-sweep",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "brooks-sweep",
     "description": "Full-sweep mode: runs a unified analysis across all quality dimensions \u2014 code decay, architecture, tech debt, and test quality \u2014 then applies fixes directly to the codebase. Safe changes are auto-applied; risky changes are confirmed before execution.",
     "risk": "critical",
@@ -10666,7 +10666,7 @@
   {
     "id": "bug-hunt-swarm",
     "path": "skills/bug-hunt-swarm",
-    "category": "uncategorized",
+    "category": "debugging",
     "name": "bug-hunt-swarm",
     "description": "Parallel read-only multi-agent root-cause investigation for bugs, regressions, crashes, flaky behavior, or unexplained failures.",
     "risk": "safe",
@@ -10740,7 +10740,7 @@
   {
     "id": "bugs-are-annoying",
     "path": "skills/bugs-are-annoying",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "bugs-are-annoying",
     "description": "Adversarial code auditor that hunts down bugs, logic errors, and security flaws. Use for deep correctness passes, not style reviews.",
     "risk": "critical",
@@ -11400,7 +11400,7 @@
   {
     "id": "case-review",
     "path": "skills/case-review",
-    "category": "uncategorized",
+    "category": "security",
     "name": "case-review",
     "description": "Quality-gate review of a reverse-engineering or assessment case package: scope readiness, Evidence-to-Finding-to-Path traceability, work-item coverage, timeline consistency, and artifact hashes.",
     "risk": "safe",
@@ -11698,7 +11698,7 @@
   {
     "id": "changelog-updates",
     "path": "skills/changelog-updates",
-    "category": "uncategorized",
+    "category": "content",
     "name": "changelog-updates",
     "description": "Create release notes and product updates that developers actually read and care about. This skill covers changelog formatting, versioning communication, breaking change announcements, deprecation notices, and building anticipation for new features.",
     "risk": "critical",
@@ -11832,7 +11832,7 @@
   {
     "id": "churn-prevention",
     "path": "skills/churn-prevention",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "churn-prevention",
     "description": "Reduce voluntary and involuntary churn with cancel flows, save offers, dunning, win-back tactics, and retention strategy. Use when users are cancelling, failed payments are rising, or subscription retention needs improvement.",
     "risk": "critical",
@@ -11854,7 +11854,7 @@
   {
     "id": "ci-cd-and-automation",
     "path": "skills/ci-cd-and-automation",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "ci-cd-and-automation",
     "description": "Automates CI/CD pipeline setup. Use when setting up or modifying build and deployment pipelines. Use when you need to automate quality gates, configure test runners in CI, or establish deployment strategies.",
     "risk": "critical",
@@ -12055,7 +12055,7 @@
   {
     "id": "claimable-postgres",
     "path": "skills/claimable-postgres",
-    "category": "uncategorized",
+    "category": "database",
     "name": "claimable-postgres",
     "description": "Provision instant temporary Postgres databases via Claimable Postgres by Neon (neon.new) with no login, signup, or credit card. Supports REST API, CLI, and SDK.",
     "risk": "critical",
@@ -12468,7 +12468,7 @@
   {
     "id": "clean-code-guard",
     "path": "skills/clean-code-guard",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "clean-code-guard",
     "description": "Review generated or changed production code with Clean Code, SOLID, DRY, KISS, YAGNI, and LLM-specific failure-mode checks.",
     "risk": "critical",
@@ -12492,7 +12492,7 @@
   {
     "id": "clerk-auth",
     "path": "skills/clerk-auth",
-    "category": "uncategorized",
+    "category": "security",
     "name": "clerk-auth",
     "description": "Expert patterns for Clerk auth implementation, middleware, organizations, webhooks, and user sync",
     "risk": "safe",
@@ -12593,7 +12593,7 @@
   {
     "id": "close-automation",
     "path": "skills/close-automation",
-    "category": "uncategorized",
+    "category": "automation",
     "name": "close-automation",
     "description": "Automate Close CRM tasks via Rube MCP (Composio): create leads, manage calls/SMS, handle tasks, and track notes. Always search tools first for current schemas.",
     "risk": "critical",
@@ -12707,7 +12707,7 @@
   {
     "id": "cloud-k8s",
     "path": "skills/cloud-k8s",
-    "category": "uncategorized",
+    "category": "security",
     "name": "cloud-k8s",
     "description": "Authorized cloud, container, and Kubernetes security assessment: metadata SSRF, IAM misconfiguration, container escape paths, and cluster RBAC review.",
     "risk": "offensive",
@@ -12807,7 +12807,7 @@
   {
     "id": "cloudflare-security-audit",
     "path": "skills/cloudflare-security-audit",
-    "category": "uncategorized",
+    "category": "security",
     "name": "cloudflare-security-audit",
     "description": "Audit authorized codebases for exploitable vulnerabilities using scoped reconnaissance, adversarial review, validation, and structured reporting.",
     "risk": "offensive",
@@ -12985,7 +12985,7 @@
   {
     "id": "co-marketing",
     "path": "skills/co-marketing",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "co-marketing",
     "description": "When the user wants to find co-marketing partners, plan joint campaigns, or brainstorm partnership opportunities.",
     "risk": "safe",
@@ -13011,7 +13011,7 @@
   {
     "id": "coda-automation",
     "path": "skills/coda-automation",
-    "category": "uncategorized",
+    "category": "automation",
     "name": "coda-automation",
     "description": "Automate Coda tasks via Rube MCP (Composio): manage docs, pages, tables, rows, formulas, permissions, and publishing. Always search tools first for current schemas.",
     "risk": "critical",
@@ -13837,7 +13837,7 @@
   {
     "id": "cold-email",
     "path": "skills/cold-email",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "cold-email",
     "description": "Write B2B cold emails and follow-up sequences that earn replies. Use when creating outbound prospecting emails, SDR outreach, personalized opening lines, subject lines, CTAs, and multi-touch follow-up sequences.",
     "risk": "safe",
@@ -13981,7 +13981,7 @@
   {
     "id": "community-building",
     "path": "skills/community-building",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "community-building",
     "description": "When the user wants to build, grow, or improve a developer community on Discord, Slack, or forums.",
     "risk": "critical",
@@ -14118,7 +14118,7 @@
   {
     "id": "competitor-profiling",
     "path": "skills/competitor-profiling",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "competitor-profiling",
     "description": "When the user wants to research, profile, or analyze competitors from their URLs.",
     "risk": "critical",
@@ -14144,7 +14144,7 @@
   {
     "id": "competitor-tracking",
     "path": "skills/competitor-tracking",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "competitor-tracking",
     "description": "Systematic competitor analysis for developer tools. Track features, pricing, positioning, content strategy, and community sentiment for direct and indirect competitors.",
     "risk": "critical",
@@ -14203,7 +14203,7 @@
   {
     "id": "complexity-cuts",
     "path": "skills/complexity-cuts",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "complexity-cuts",
     "description": "Lower Big-O on existing code via a one-transformation-at-a-time playbook with verify-revert-stop. For new code use lemmaly; for math-level wins escalate to mathguard.",
     "risk": "safe",
@@ -14237,7 +14237,7 @@
   {
     "id": "composition-patterns",
     "path": "skills/composition-patterns",
-    "category": "uncategorized",
+    "category": "architecture",
     "name": "composition-patterns",
     "description": "Use when working with composition-patterns tasks or workflows",
     "risk": "safe",
@@ -14545,7 +14545,7 @@
   {
     "id": "connection-auth-rules",
     "path": "skills/connection-auth-rules",
-    "category": "uncategorized",
+    "category": "api-integration",
     "name": "connection-auth-rules",
     "description": "Build a Connection Auth Rules for a Monte Carlo connection type. Fetches live connector schemas and transform steps from the apollo-agent repo.",
     "risk": "unknown",
@@ -14761,7 +14761,7 @@
   {
     "id": "content-strategy",
     "path": "skills/content-strategy",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "content-strategy",
     "description": "Plan a content strategy, topic clusters, editorial roadmap, and content mix for traffic, authority, and lead generation. Use when deciding what to publish, what topics to prioritize, or how to structure a content program.",
     "risk": "critical",
@@ -15368,7 +15368,7 @@
   {
     "id": "cowork-to-code-bridge",
     "path": "skills/cowork-to-code-bridge",
-    "category": "uncategorized",
+    "category": "mcp",
     "name": "cowork-to-code-bridge",
     "description": "Use an already-installed, independently verified cowork-to-code bridge to run narrowly approved actions on the user's own macOS, Linux, or WSL2 machine through a local file queue.",
     "risk": "critical",
@@ -15557,7 +15557,7 @@
   {
     "id": "crewai",
     "path": "skills/crewai",
-    "category": "uncategorized",
+    "category": "agent-orchestration",
     "name": "crewai",
     "description": "Expert in CrewAI - the leading role-based multi-agent framework used by 60% of Fortune 500 companies.",
     "risk": "critical",
@@ -15579,7 +15579,7 @@
   {
     "id": "cro",
     "path": "skills/cro",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "cro",
     "description": "When the user wants to optimize, improve, or increase conversions on any marketing page or form \u2014 including homepage, landing pages, pricing pages, feature pages, lead capture forms, or contact forms.",
     "risk": "safe",
@@ -16132,7 +16132,7 @@
   {
     "id": "cucumber-skill",
     "path": "skills/cucumber-skill",
-    "category": "uncategorized",
+    "category": "testing",
     "name": "cucumber-skill",
     "description": "Generates Cucumber BDD tests with Gherkin feature files and step definitions in Java, JavaScript, or Ruby. Use when user mentions \"Cucumber\", \"Gherkin\", \"Feature/Scenario\", \"Given/When/Then\", \"BDD\".",
     "risk": "critical",
@@ -16186,7 +16186,7 @@
   {
     "id": "customer-psychographic-profiler",
     "path": "skills/customer-psychographic-profiler",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "customer-psychographic-profiler",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -16208,7 +16208,7 @@
   {
     "id": "customer-research",
     "path": "skills/customer-research",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "customer-research",
     "description": "When the user wants to conduct, analyze, or synthesize customer research.",
     "risk": "critical",
@@ -16411,7 +16411,7 @@
   {
     "id": "daily",
     "path": "skills/daily",
-    "category": "uncategorized",
+    "category": "api-integration",
     "name": "daily",
     "description": "Documentation and capabilities reference for Daily",
     "risk": "safe",
@@ -17336,7 +17336,7 @@
   {
     "id": "debug-buttercup",
     "path": "skills/debug-buttercup",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "debug-buttercup",
     "description": "All pods run in namespace crs. Use when pods in the crs namespace are in CrashLoopBackOff, OOMKilled, or restarting, multiple services restart simultaneously (cascade failure), or redis is unresponsive or showing AOF warnings.",
     "risk": "critical",
@@ -17700,7 +17700,7 @@
   {
     "id": "dependency-analysis",
     "path": "skills/dependency-analysis",
-    "category": "uncategorized",
+    "category": "architecture",
     "name": "dependency-analysis",
     "description": "Analyze internal and package dependencies using Ontoly graph traversal. Use when asked which modules, packages, services, or files depend on each other.",
     "risk": "unknown",
@@ -17907,7 +17907,7 @@
   {
     "id": "deprecation-and-migration",
     "path": "skills/deprecation-and-migration",
-    "category": "uncategorized",
+    "category": "workflow",
     "name": "deprecation-and-migration",
     "description": "Manages deprecation and migration. Use when removing old systems, APIs, or features. Use when migrating users from one implementation to another. Use when deciding whether to maintain or sunset existing code.",
     "risk": "critical",
@@ -18005,7 +18005,7 @@
   {
     "id": "design-philosophy",
     "path": "skills/design-philosophy",
-    "category": "uncategorized",
+    "category": "design",
     "name": "design-philosophy",
     "description": "Visual philosophy and art-direction for frontend. Use when creating high-concept work, campaigns, or when the user asks for a visual philosophy, manifesto, or unmistakable art-like aesthetic.",
     "risk": "none",
@@ -18031,7 +18031,7 @@
   {
     "id": "design-spatial",
     "path": "skills/design-spatial",
-    "category": "uncategorized",
+    "category": "design",
     "name": "design-spatial",
     "description": "Design \u2014 spatial composition",
     "risk": "critical",
@@ -18137,7 +18137,7 @@
   {
     "id": "design-thinking",
     "path": "skills/design-thinking",
-    "category": "uncategorized",
+    "category": "design",
     "name": "design-thinking",
     "description": "Direction and intent for frontend design. Use with design when defining purpose, tone, domain, color world, and review bar; includes cross-domain lens from cinema, architecture, marketing, UX, automotive, industrial design.",
     "risk": "critical",
@@ -18221,7 +18221,7 @@
   {
     "id": "deterministic-design",
     "path": "skills/deterministic-design",
-    "category": "uncategorized",
+    "category": "design",
     "name": "deterministic-design",
     "description": "Render the UI and prove it's balanced + usable: a deterministic layout audit (centroid / optical-center / pixel-oracle balance via explicit math + annotated screenshot) plus a vision-judged Nielsen usability audit by a separate fresh-eyes judge. The measurement layer taste-only design skills lack.",
     "risk": "safe",
@@ -18328,7 +18328,7 @@
   {
     "id": "developer-advocacy",
     "path": "skills/developer-advocacy",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "developer-advocacy",
     "description": "When the user wants to do developer advocacy activities including conference talks, live coding, podcasts, and building in public.",
     "risk": "critical",
@@ -18354,7 +18354,7 @@
   {
     "id": "developer-audience-context",
     "path": "skills/developer-audience-context",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "developer-audience-context",
     "description": "When the user wants to establish or update their developer audience context. Also use when starting any other developer marketing skill to ensure foundational context is loaded.",
     "risk": "critical",
@@ -18380,7 +18380,7 @@
   {
     "id": "developer-churn",
     "path": "skills/developer-churn",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "developer-churn",
     "description": "When the user wants to understand, reduce, or recover from developer churn. Trigger phrases include \"why developers leave,\" \"churn rate,\" \"win-back campaign,\" \"at-risk users,\" \"developer retention,\" \"preventing churn,\" or \"competitor switching.\"",
     "risk": "critical",
@@ -18406,7 +18406,7 @@
   {
     "id": "developer-listening",
     "path": "skills/developer-listening",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "developer-listening",
     "description": "Monitor what developers say about your brand, competitors, and the problems they're solving. Track mentions and conversations across GitHub, Hacker News, Reddit, Stack Overflow, Twitter, and Discord.",
     "risk": "critical",
@@ -18432,7 +18432,7 @@
   {
     "id": "developer-newsletter",
     "path": "skills/developer-newsletter",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "developer-newsletter",
     "description": "When the user wants to create, write, or improve a newsletter for developer audiences. Trigger phrases include \"newsletter,\" \"email marketing,\" \"developer email,\" \"weekly digest,\" \"dev newsletter,\" \"email subscribers,\" \"newsletter growth,\" or \"email list.\"",
     "risk": "critical",
@@ -18458,7 +18458,7 @@
   {
     "id": "developer-onboarding",
     "path": "skills/developer-onboarding",
-    "category": "uncategorized",
+    "category": "content",
     "name": "developer-onboarding",
     "description": "Get developers to \"Hello World\" fast with optimized quickstarts, tutorials, and sample apps.",
     "risk": "critical",
@@ -18484,7 +18484,7 @@
   {
     "id": "developer-sandbox",
     "path": "skills/developer-sandbox",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "developer-sandbox",
     "description": "Design and build interactive playgrounds that let developers experience your product without commitment. This skill covers playground architecture, pre-populated examples, embedding strategies, gating decisions, and converting playground users to signups.",
     "risk": "critical",
@@ -18536,7 +18536,7 @@
   {
     "id": "developer-signup-flow",
     "path": "skills/developer-signup-flow",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "developer-signup-flow",
     "description": "Design frictionless signup experiences for developers including GitHub OAuth, API key generation, and onboarding personalization.",
     "risk": "critical",
@@ -18756,7 +18756,7 @@
   {
     "id": "diagram-generator",
     "path": "skills/diagram-generator",
-    "category": "uncategorized",
+    "category": "design",
     "name": "diagram-generator",
     "description": "Generate, refine, validate, and render diagrams from natural language, notes, code, schemas, or existing diagram sources: flowcharts, swimlanes, attack-path graphs, data-flow diagrams, architecture, and state machines.",
     "risk": "safe",
@@ -18828,7 +18828,7 @@
   {
     "id": "digital-forensics",
     "path": "skills/digital-forensics",
-    "category": "uncategorized",
+    "category": "security",
     "name": "digital-forensics",
     "description": "Authorized digital forensics: memory dumps, disk timelines, PCAP investigation, artifact triage, and incident-response evidence preservation.",
     "risk": "safe",
@@ -19207,7 +19207,7 @@
   {
     "id": "doc2math",
     "path": "skills/doc2math",
-    "category": "uncategorized",
+    "category": "science",
     "name": "doc2math",
     "description": "Convert narrative technical documents into grounded Mathematical Problem Specifications with variables, constraints, objectives, and uncertainty.",
     "risk": "safe",
@@ -19325,7 +19325,7 @@
   {
     "id": "docs-as-marketing",
     "path": "skills/docs-as-marketing",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "docs-as-marketing",
     "description": "Transform documentation into a powerful marketing channel that attracts, converts, and retains developers.",
     "risk": "critical",
@@ -19351,7 +19351,7 @@
   {
     "id": "docs-generator",
     "path": "skills/docs-generator",
-    "category": "uncategorized",
+    "category": "content",
     "name": "docs-generator",
     "description": "Generate technical deliverables from completed analysis: reverse-engineering reports, penetration-test reports, CTF write-ups, and signature-analysis documentation with evidence-backed structure.",
     "risk": "safe",
@@ -19377,7 +19377,7 @@
   {
     "id": "docs-guard",
     "path": "skills/docs-guard",
-    "category": "uncategorized",
+    "category": "content",
     "name": "docs-guard",
     "description": "Review generated or changed documentation before it ships, including READMEs, API references, docstrings, changelogs, tutorials, and documentation sites.",
     "risk": "critical",
@@ -19697,7 +19697,7 @@
   {
     "id": "dotnet-reverse",
     "path": "skills/dotnet-reverse",
-    "category": "uncategorized",
+    "category": "security",
     "name": "dotnet-reverse",
     "description": ".NET/C# binary reverse engineering: managed PE analysis, dnSpyEx debugging, de4dot deobfuscation (ConfuserEx/SmartAssembly/Babel), IL patching, NativeAOT targets, and analysis of red-team Sharp* tooling.",
     "risk": "safe",
@@ -19723,7 +19723,7 @@
   {
     "id": "doubt-driven-development",
     "path": "skills/doubt-driven-development",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "doubt-driven-development",
     "description": "Subjects every non-trivial decision to a fresh-context adversarial review before it stands.",
     "risk": "critical",
@@ -20020,7 +20020,7 @@
   {
     "id": "earllm-build",
     "path": "skills/earllm-build",
-    "category": "uncategorized",
+    "category": "mobile",
     "name": "earllm-build",
     "description": "Build, maintain, and extend the EarLLM One Android project \u2014 a Kotlin/Compose app that connects Bluetooth earbuds to an LLM via voice pipeline.",
     "risk": "safe",
@@ -20049,7 +20049,7 @@
   {
     "id": "eas-app-stores",
     "path": "skills/eas-app-stores",
-    "category": "uncategorized",
+    "category": "mobile",
     "name": "eas-app-stores",
     "description": "Curated upstream guidance for Eas App Stores; use when the workflow matches the user goal.",
     "risk": "unknown",
@@ -20074,7 +20074,7 @@
   {
     "id": "eas-hosting",
     "path": "skills/eas-hosting",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "eas-hosting",
     "description": "Curated upstream guidance for Eas Hosting; use when the workflow matches the user goal.",
     "risk": "unknown",
@@ -20099,7 +20099,7 @@
   {
     "id": "eas-observe",
     "path": "skills/eas-observe",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "eas-observe",
     "description": "Curated upstream guidance for Eas Observe; use when the workflow matches the user goal.",
     "risk": "unknown",
@@ -20124,7 +20124,7 @@
   {
     "id": "eas-simulator",
     "path": "skills/eas-simulator",
-    "category": "uncategorized",
+    "category": "mobile",
     "name": "eas-simulator",
     "description": "Curated upstream guidance for Eas Simulator; use when the workflow matches the user goal.",
     "risk": "unknown",
@@ -20149,7 +20149,7 @@
   {
     "id": "eas-update-insights",
     "path": "skills/eas-update-insights",
-    "category": "uncategorized",
+    "category": "mobile",
     "name": "eas-update-insights",
     "description": "Check the health of published EAS Updates: crash rates, install/launch counts, unique users, payload size, and the split between embedded and OTA users per channel.",
     "risk": "critical",
@@ -20175,7 +20175,7 @@
   {
     "id": "eas-workflows",
     "path": "skills/eas-workflows",
-    "category": "uncategorized",
+    "category": "mobile",
     "name": "eas-workflows",
     "description": "Curated upstream guidance for Eas Workflows; use when the workflow matches the user goal.",
     "risk": "unknown",
@@ -20281,7 +20281,7 @@
   {
     "id": "edr-bypass-re",
     "path": "skills/edr-bypass-re",
-    "category": "uncategorized",
+    "category": "security",
     "name": "edr-bypass-re",
     "description": "Reverse engineer EDR internals (user-mode hook tables, ETW, AMSI) and study bypass techniques such as direct syscalls, Hell's Gate, and call-stack spoofing. Lab-only red-team research.",
     "risk": "offensive",
@@ -20338,7 +20338,7 @@
   {
     "id": "efficient-web-research",
     "path": "skills/efficient-web-research",
-    "category": "uncategorized",
+    "category": "research",
     "name": "efficient-web-research",
     "description": "Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste.",
     "risk": "safe",
@@ -20516,7 +20516,7 @@
   {
     "id": "elon-musk",
     "path": "skills/elon-musk",
-    "category": "uncategorized",
+    "category": "agent-persona",
     "name": "elon-musk",
     "description": "Agente que simula Elon Musk com profundidade psicologica e comunicacional de alta fidelidade. Ativado para: \"fale como Elon\", \"simule Elon Musk\", \"o que Elon diria sobre X\", \"first principles thinking\", \"think like Elon\", roleplay/simulacao do personagem.",
     "risk": "safe",
@@ -20621,7 +20621,7 @@
   {
     "id": "email-systems",
     "path": "skills/email-systems",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "email-systems",
     "description": "Email has the highest ROI of any marketing channel. $36 for every $1 spent. Yet most startups treat it as an afterthought - bulk blasts, no personalization, landing in spam folders.",
     "risk": "none",
@@ -20665,7 +20665,7 @@
   {
     "id": "emblemai-crypto-wallet",
     "path": "skills/emblemai-crypto-wallet",
-    "category": "uncategorized",
+    "category": "blockchain",
     "name": "emblemai-crypto-wallet",
     "description": "Crypto wallet management across 7 blockchains via EmblemAI Agent Hustle API. Balance checks, token swaps, portfolio analysis, and transaction execution for Solana, Ethereum, Base, BSC, Polygon, Hedera, and Bitcoin.",
     "risk": "critical",
@@ -20742,7 +20742,7 @@
   {
     "id": "emotional-arc-designer",
     "path": "skills/emotional-arc-designer",
-    "category": "uncategorized",
+    "category": "content",
     "name": "emotional-arc-designer",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -21241,7 +21241,7 @@
   {
     "id": "event-staffing-compliance",
     "path": "skills/event-staffing-compliance",
-    "category": "uncategorized",
+    "category": "legal",
     "name": "event-staffing-compliance",
     "description": "Assess worker-classification and compliance risk for temporary event staffing in the US and Canada \u2014 W-2 vs 1099, misclassification penalties, joint-employer liability, COI, and wage/hour rules. Includes live state-by-state lookups via MCP.",
     "risk": "safe",
@@ -21263,7 +21263,7 @@
   {
     "id": "event-staffing-ordering",
     "path": "skills/event-staffing-ordering",
-    "category": "uncategorized",
+    "category": "business",
     "name": "event-staffing-ordering",
     "description": "Order W-2 compliant temporary event staff for conventions, trade shows, festivals, concerts, sporting events, and brand activations across 300+ US and Canadian markets via TempGuru. Covers city coverage, role pricing, availability, state compliance lookups via MCP, and request submission.",
     "risk": "safe",
@@ -21333,7 +21333,7 @@
   {
     "id": "evolution",
     "path": "skills/evolution",
-    "category": "uncategorized",
+    "category": "meta",
     "name": "evolution",
     "description": "This skill enables makepad-skills to self-improve continuously during development.",
     "risk": "critical",
@@ -21876,7 +21876,7 @@
   {
     "id": "fact-check-x-unified",
     "path": "skills/fact-check-x-unified",
-    "category": "uncategorized",
+    "category": "agent-orchestration",
     "name": "fact-check-x-unified",
     "description": "Fact-Check-X \u6d41\u7a0b\u7f16\u6392\u80fd\u529b\uff0c\u4f9d\u6b21\u7ec4\u7ec7\u5404\u65b9\u7b54\u6848\u6c47\u603b\u3001\u5404\u65b9\u7b54\u6848\u805a\u5408\uff08\u672a\u6838\u9a8c\uff09\u3001\u6743\u5a01\u6838\u9a8c\u540e\u7684\u6700\u7ec8\u7b54\u6848\u548c\u5404\u65b9\u7b54\u6848\u6d4b\u8bc4\uff0c\u751f\u6210\u53ef\u6253\u5f00\u3001\u53ef\u5ba1\u8ba1\u3001\u53ef\u8fc1\u79fb\u7684\u9636\u6bb5\u4ea7\u7269\u4e0e\u5b8c\u6574\u62a5\u544a\u5305\u3002",
     "risk": "unknown",
@@ -21901,7 +21901,7 @@
   {
     "id": "faf-context",
     "path": "skills/faf-context",
-    "category": "uncategorized",
+    "category": "meta",
     "name": "faf-context",
     "description": "Get your project to 100% \u272a AI-readiness, fast \u2014 the AI auto-detects your stack and only asks for what it can't know (your goal and the human \"why\"). Least typing, maximum context. For time-conscious builders; feeds into faf-expert for depth.",
     "risk": "critical",
@@ -22302,7 +22302,7 @@
   {
     "id": "favicon",
     "path": "skills/favicon",
-    "category": "uncategorized",
+    "category": "design",
     "name": "favicon",
     "description": "Generate favicons from a source image",
     "risk": "critical",
@@ -22899,7 +22899,7 @@
   {
     "id": "firmware-pentest",
     "path": "skills/firmware-pentest",
-    "category": "uncategorized",
+    "category": "security",
     "name": "firmware-pentest",
     "description": "Firmware penetration testing following the OWASP FSTM nine-stage flow: extraction, EMBA automation, Firmadyne/QEMU emulation, AFL++ fuzzing, and hands-on exploitation in authorized labs.",
     "risk": "offensive",
@@ -23257,7 +23257,7 @@
   {
     "id": "formik-patterns",
     "path": "skills/formik-patterns",
-    "category": "uncategorized",
+    "category": "web-development",
     "name": "formik-patterns",
     "description": "Formik form handling with validation patterns. Use when building forms, implementing validation, or handling form submission.",
     "risk": "critical",
@@ -23787,7 +23787,7 @@
   {
     "id": "free-tier-strategy",
     "path": "skills/free-tier-strategy",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "free-tier-strategy",
     "description": "Design free tiers that convert to paid without creating resentment or abuse. Trigger phrases: free tier design, freemium model, free trial strategy, free tier limits, developer free plan, open source commercial, feature gating, upgrade triggers, free tier conversion",
     "risk": "none",
@@ -23934,7 +23934,7 @@
   {
     "id": "frontend-data-contracts",
     "path": "skills/frontend-data-contracts",
-    "category": "uncategorized",
+    "category": "frontend",
     "name": "frontend-data-contracts",
     "description": "A portable, framework-agnostic discipline for type safety at the network edge of any React or React Native app.",
     "risk": "critical",
@@ -24103,7 +24103,7 @@
   {
     "id": "frontend-observability",
     "path": "skills/frontend-observability",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "frontend-observability",
     "description": "A portable, framework-agnostic field-side observability system for any React or React Native app.",
     "risk": "critical",
@@ -24129,7 +24129,7 @@
   {
     "id": "frontend-optimistic-mutations",
     "path": "skills/frontend-optimistic-mutations",
-    "category": "uncategorized",
+    "category": "frontend",
     "name": "frontend-optimistic-mutations",
     "description": "A portable, framework-agnostic discipline for the write path of any React or React Native app using a query/cache layer.",
     "risk": "critical",
@@ -24863,7 +24863,7 @@
   {
     "id": "gemini-interactions-api",
     "path": "skills/gemini-interactions-api",
-    "category": "uncategorized",
+    "category": "api-integration",
     "name": "gemini-interactions-api",
     "description": "Build with the Gemini Interactions API for text, chat, multimodal generation, streaming, managed or background agents, function calling, structured output, and generateContent migrations.",
     "risk": "critical",
@@ -24889,7 +24889,7 @@
   {
     "id": "gemini-live-api-dev",
     "path": "skills/gemini-live-api-dev",
-    "category": "uncategorized",
+    "category": "api-integration",
     "name": "gemini-live-api-dev",
     "description": "Use this skill when building real-time, bidirectional streaming applications with the Gemini Live API.",
     "risk": "critical",
@@ -24915,7 +24915,7 @@
   {
     "id": "gemini-omni-flash-api",
     "path": "skills/gemini-omni-flash-api",
-    "category": "uncategorized",
+    "category": "media",
     "name": "gemini-omni-flash-api",
     "description": "Use this skill for generative video editing, text-to-video, image-referenced video generation, and first-frame-to-video transition animations using the official google-genai SDK.",
     "risk": "critical",
@@ -25469,7 +25469,7 @@
   {
     "id": "geoffrey-hinton",
     "path": "skills/geoffrey-hinton",
-    "category": "uncategorized",
+    "category": "ai-ml",
     "name": "geoffrey-hinton",
     "description": "Agente que simula Geoffrey Hinton \u2014 Godfather of Deep Learning, Pr\u00eamio Turing 2018, criador do backpropagation e das Deep Belief Networks.",
     "risk": "safe",
@@ -25611,7 +25611,7 @@
   {
     "id": "ghidra-reverse",
     "path": "skills/ghidra-reverse",
-    "category": "uncategorized",
+    "category": "security",
     "name": "ghidra-reverse",
     "description": "Free/open reverse engineering with Ghidra (headless or GUI): decompilation, cross-references, scripting, and optional Ghidra MCP workflows when IDA is unavailable.",
     "risk": "safe",
@@ -25844,7 +25844,7 @@
   {
     "id": "github",
     "path": "skills/github",
-    "category": "uncategorized",
+    "category": "developer-tools",
     "name": "github",
     "description": "Use the `gh` CLI for issues, pull requests, Actions runs, and GitHub API queries.",
     "risk": "safe",
@@ -26910,7 +26910,7 @@
   {
     "id": "graphql-schema",
     "path": "skills/graphql-schema",
-    "category": "uncategorized",
+    "category": "backend",
     "name": "graphql-schema",
     "description": "GraphQL queries, mutations, and code generation patterns. Use when creating GraphQL operations, working with Apollo Client, or generating types.",
     "risk": "critical",
@@ -27169,7 +27169,7 @@
   {
     "id": "hardware-security",
     "path": "skills/hardware-security",
-    "category": "uncategorized",
+    "category": "security",
     "name": "hardware-security",
     "description": "Authorized hardware and embedded interface security research: UART/JTAG discovery, debug-pad triage, secure-boot overview, and offline firmware analysis.",
     "risk": "offensive",
@@ -27195,7 +27195,7 @@
   {
     "id": "hasdata",
     "path": "skills/hasdata",
-    "category": "uncategorized",
+    "category": "browser-automation",
     "name": "hasdata",
     "description": "Use HasData APIs for web scraping and structured web data extraction.",
     "risk": "safe",
@@ -27221,7 +27221,7 @@
   {
     "id": "hasdata-cli",
     "path": "skills/hasdata-cli",
-    "category": "uncategorized",
+    "category": "browser-automation",
     "name": "hasdata-cli",
     "description": "Command-line access to search, scraping, and structured web data.",
     "risk": "safe",
@@ -27295,7 +27295,7 @@
   {
     "id": "headline-psychologist",
     "path": "skills/headline-psychologist",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "headline-psychologist",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -27339,7 +27339,7 @@
   {
     "id": "helium-mcp",
     "path": "skills/helium-mcp",
-    "category": "uncategorized",
+    "category": "research",
     "name": "helium-mcp",
     "description": "Connect to Helium's MCP server for news research, media bias analysis, balanced perspectives, stock/options data, and semantic meme search across 3.2M+ articles and 5,000+ sources",
     "risk": "safe",
@@ -27442,7 +27442,7 @@
   {
     "id": "hf-cli",
     "path": "skills/hf-cli",
-    "category": "uncategorized",
+    "category": "ai-ml",
     "name": "hf-cli",
     "description": "Curated upstream guidance for Hf Cli; use when the workflow matches the user goal.",
     "risk": "unknown",
@@ -28500,7 +28500,7 @@
   {
     "id": "huggingface-community-evals",
     "path": "skills/huggingface-community-evals",
-    "category": "uncategorized",
+    "category": "testing",
     "name": "huggingface-community-evals",
     "description": "Curated upstream guidance for Huggingface Community Evals; use when the workflow matches the user goal.",
     "risk": "unknown",
@@ -28524,7 +28524,7 @@
   {
     "id": "huggingface-datasets",
     "path": "skills/huggingface-datasets",
-    "category": "uncategorized",
+    "category": "data",
     "name": "huggingface-datasets",
     "description": "Use this skill for Hugging Face Dataset Viewer API workflows that fetch subset/split metadata, paginate rows, search text, apply filters, download parquet URLs, and read size or statistics.",
     "risk": "unknown",
@@ -28576,7 +28576,7 @@
   {
     "id": "huggingface-lora-space-builder",
     "path": "skills/huggingface-lora-space-builder",
-    "category": "uncategorized",
+    "category": "ai-ml",
     "name": "huggingface-lora-space-builder",
     "description": "Build and publish a Gradio demo on Hugging Face Spaces for a user-provided LoRA.",
     "risk": "critical",
@@ -28628,7 +28628,7 @@
   {
     "id": "huggingface-tool-builder",
     "path": "skills/huggingface-tool-builder",
-    "category": "uncategorized",
+    "category": "api-integration",
     "name": "huggingface-tool-builder",
     "description": "Use this skill when the user wants to build tool/scripts or achieve a task where using data from the Hugging Face API would help. This is especially useful when chaining or combining API calls or the task will be repeated/automated.",
     "risk": "critical",
@@ -30310,7 +30310,7 @@
   {
     "id": "hyperexecute-skill",
     "path": "skills/hyperexecute-skill",
-    "category": "uncategorized",
+    "category": "testing",
     "name": "hyperexecute-skill",
     "description": "Operates HyperExecute end-to-end for TestMu AI/LambdaTest cloud test execution: analyze projects, create YAML, validate locally, run CLI jobs, debug failures, and wire CI.",
     "risk": "critical",
@@ -30412,7 +30412,7 @@
   {
     "id": "ida-reverse",
     "path": "skills/ida-reverse",
-    "category": "uncategorized",
+    "category": "security",
     "name": "ida-reverse",
     "description": "Reverse engineer binaries with IDA Pro: decompilation, disassembly, data-flow tracking, cross-references, and IDA MCP automation for deep static analysis of PE/ELF/Mach-O targets.",
     "risk": "safe",
@@ -30471,7 +30471,7 @@
   {
     "id": "idea-darwin",
     "path": "skills/idea-darwin",
-    "category": "uncategorized",
+    "category": "workflow",
     "name": "idea-darwin",
     "description": "Darwinian idea evolution engine \u2014 toss rough ideas onto an evolution island, let them compete, crossbreed, and mutate through structured rounds to surface your strongest concepts.",
     "risk": "safe",
@@ -30618,7 +30618,7 @@
   {
     "id": "idea-refine",
     "path": "skills/idea-refine",
-    "category": "uncategorized",
+    "category": "planning",
     "name": "idea-refine",
     "description": "Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one.",
     "risk": "critical",
@@ -30670,7 +30670,7 @@
   {
     "id": "identity-federation",
     "path": "skills/identity-federation",
-    "category": "uncategorized",
+    "category": "security",
     "name": "identity-federation",
     "description": "Authorized assessment of federated identity systems: SAML, OIDC, OAuth2 flows, SSO misconfiguration, and token-confusion issues.",
     "risk": "offensive",
@@ -30696,7 +30696,7 @@
   {
     "id": "identity-mirror",
     "path": "skills/identity-mirror",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "identity-mirror",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -30886,7 +30886,7 @@
   {
     "id": "implement",
     "path": "skills/implement",
-    "category": "uncategorized",
+    "category": "development",
     "name": "implement",
     "description": "Implement a piece of work based on a PRD or set of issues.",
     "risk": "critical",
@@ -31105,7 +31105,7 @@
   {
     "id": "incremental-implementation",
     "path": "skills/incremental-implementation",
-    "category": "uncategorized",
+    "category": "development",
     "name": "incremental-implementation",
     "description": "Delivers changes incrementally. Use when implementing any feature or change that touches more than one file. Use when you're about to write a large amount of code at once, or when a task feels too big to land in one step.",
     "risk": "critical",
@@ -31213,7 +31213,7 @@
   {
     "id": "infinity",
     "path": "skills/infinity",
-    "category": "uncategorized",
+    "category": "security",
     "name": "infinity",
     "description": "Enforces a strict input boundary protocol (detect, classify, filter, verify) to ensure untrusted data never reaches business logic raw.",
     "risk": "safe",
@@ -31235,7 +31235,7 @@
   {
     "id": "ingest-youtube",
     "path": "skills/ingest-youtube",
-    "category": "uncategorized",
+    "category": "media",
     "name": "ingest-youtube",
     "description": "Pull a YouTube video transcript into a queryable markdown vault with yt-dlp subtitle discovery, VTT cleanup, metadata frontmatter, and capture-seed stubs.",
     "risk": "safe",
@@ -31409,7 +31409,7 @@
   {
     "id": "internal-comms",
     "path": "skills/internal-comms",
-    "category": "uncategorized",
+    "category": "content",
     "name": "internal-comms",
     "description": "Write internal communications such as status reports, leadership updates, 3P updates, newsletters, FAQs, incident reports, and project updates using repeatable internal formats.",
     "risk": "safe",
@@ -31563,7 +31563,7 @@
   {
     "id": "invariant-guard",
     "path": "skills/invariant-guard",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "invariant-guard",
     "description": "Correctness-first: forces writing the function contract, loop invariant, termination argument, and edge cases BEFORE code. Catches Boyer-Moore, leftmost binary search, QuickSelect traps.",
     "risk": "safe",
@@ -31782,7 +31782,7 @@
   {
     "id": "it-manager-hospital",
     "path": "skills/it-manager-hospital",
-    "category": "uncategorized",
+    "category": "operations",
     "name": "it-manager-hospital",
     "description": "World-class Hospital IT Management Advisor specializing in clinical safety, digital maturity (HIMSS/ONA/JCI), and HIS/PEP ecosystems.",
     "risk": "safe",
@@ -31804,7 +31804,7 @@
   {
     "id": "it-manager-pro",
     "path": "skills/it-manager-pro",
-    "category": "uncategorized",
+    "category": "business",
     "name": "it-manager-pro",
     "description": "Elite IT Management Advisor specializing in data-driven strategy, executive communication, and human-centric leadership for the 2026 digital era.",
     "risk": "safe",
@@ -31848,7 +31848,7 @@
   {
     "id": "itil-expert",
     "path": "skills/itil-expert",
-    "category": "uncategorized",
+    "category": "operations",
     "name": "itil-expert",
     "description": "Expert advisor for ITIL 4 and ITIL 5 (2026 digital product paradigm), specialized in AI-native governance, sustainability, and value co-creation.",
     "risk": "safe",
@@ -32075,7 +32075,7 @@
     "source_type": "community",
     "source_repo": "socai-io/jev-social",
     "license": "MIT",
-    "license_source": "https://github.com/socai-io/jev-social/blob/782d809c68e2015536359aa7dceede9a3cdbb7f1/LICENSE",
+    "license_source": "https://github.com/socai-io/jev-social/blob/5270e23cfd27aace9055669ee396926973baa241/LICENSE",
     "tags": [
       "social-media",
       "research",
@@ -32144,7 +32144,7 @@
   {
     "id": "jobgpt",
     "path": "skills/jobgpt",
-    "category": "uncategorized",
+    "category": "productivity",
     "name": "jobgpt",
     "description": "Job search automation, auto apply, resume generation, application tracking, salary intelligence, and recruiter outreach using the JobGPT MCP server.",
     "risk": "safe",
@@ -32166,7 +32166,7 @@
   {
     "id": "jobs-to-be-done-analyst",
     "path": "skills/jobs-to-be-done-analyst",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "jobs-to-be-done-analyst",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -32218,7 +32218,7 @@
   {
     "id": "js-reverse",
     "path": "skills/js-reverse",
-    "category": "uncategorized",
+    "category": "security",
     "name": "js-reverse",
     "description": "Front-end JavaScript reverse engineering: locate signature chains, analyze encrypted request parameters, sample runtime behavior, and reproduce logic locally in Node for evidence-based output.",
     "risk": "offensive",
@@ -32244,7 +32244,7 @@
   {
     "id": "json-canvas",
     "path": "skills/json-canvas",
-    "category": "uncategorized",
+    "category": "productivity",
     "name": "json-canvas",
     "description": "Create and edit JSON Canvas files (.canvas) with nodes, edges, groups, and connections. Use when working with .canvas files, creating visual canvases, mind maps, flowcharts, or when the user mentions Canvas files in Obsidian.",
     "risk": "critical",
@@ -32288,7 +32288,7 @@
   {
     "id": "junit-5-skill",
     "path": "skills/junit-5-skill",
-    "category": "uncategorized",
+    "category": "testing",
     "name": "junit-5-skill",
     "description": "Generates production-grade JUnit 5 unit and integration tests in Java. Covers assertions, parameterized tests, lifecycle hooks, mocking with Mockito, and nested tests. Use when user mentions \"JUnit\", \"JUnit 5\", \"@Test\", \"assertEquals\", \"Assertions\", \"Java unit test\".",
     "risk": "critical",
@@ -32885,7 +32885,7 @@
   {
     "id": "langfuse",
     "path": "skills/langfuse",
-    "category": "uncategorized",
+    "category": "ai-ml",
     "name": "langfuse",
     "description": "Expert in Langfuse - the open-source LLM observability platform. Covers tracing, prompt management, evaluation, datasets, and integration with LangChain, LlamaIndex, and OpenAI. Essential for debugging, monitoring, and improving LLM applications in production.",
     "risk": "critical",
@@ -33006,7 +33006,7 @@
   {
     "id": "last30days",
     "path": "skills/last30days",
-    "category": "uncategorized",
+    "category": "research",
     "name": "last30days",
     "description": "Research a topic from the last 30 days on Reddit + X + Web, become an expert, and write copy-paste-ready prompts for the user's target tool.",
     "risk": "critical",
@@ -33030,7 +33030,7 @@
   {
     "id": "latex-paper-conversion",
     "path": "skills/latex-paper-conversion",
-    "category": "uncategorized",
+    "category": "document-processing",
     "name": "latex-paper-conversion",
     "description": "This skill should be used when the user asks to convert an academic paper in LaTeX from one format (e.g., Springer, IPOL) to another format (e.g., MDPI, IEEE, Nature). It automates extraction, injection, fixing formatting, and compiling.",
     "risk": "safe",
@@ -33097,7 +33097,7 @@
   {
     "id": "lead-magnets",
     "path": "skills/lead-magnets",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "lead-magnets",
     "description": "Plan and optimize lead magnets for email capture and lead generation. Use when designing gated content, checklists, templates, downloadable resources, or other offers that convert visitors into subscribers.",
     "risk": "safe",
@@ -33388,7 +33388,7 @@
   {
     "id": "lemmaly",
     "path": "skills/lemmaly",
-    "category": "uncategorized",
+    "category": "development",
     "name": "lemmaly",
     "description": "Algorithm-first discipline: state Big-O, data structure, and algorithm family BEFORE writing loops, queries, or recursion. Catches O(n^2), N+1, and brute-force defaults.",
     "risk": "safe",
@@ -33742,7 +33742,7 @@
   {
     "id": "linkerd-patterns",
     "path": "skills/linkerd-patterns",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "linkerd-patterns",
     "description": "Production patterns for Linkerd service mesh - the lightweight, security-first service mesh for Kubernetes.",
     "risk": "critical",
@@ -33782,6 +33782,38 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "lintlang-audit",
+    "path": "skills/lintlang-audit",
+    "category": "development",
+    "name": "lintlang-audit",
+    "description": "Audit named agent instructions, tool definitions, and supported Python prompts with local LintLang checks; return finding codes and locations without changing files.",
+    "risk": "safe",
+    "source": "https://github.com/hermes-labs-ai/lintlang/tree/c0cab00048220286858f227aaf4b13cc043f718b/integrations/claude-code/skills/lintlang-audit",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "hermes-labs-ai/lintlang",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/hermes-labs-ai/lintlang/blob/c0cab00048220286858f227aaf4b13cc043f718b/LICENSE",
+    "tags": [
+      "ai-agents",
+      "linting",
+      "prompts",
+      "static-analysis"
+    ]
   },
   {
     "id": "linux-administration",
@@ -34426,7 +34458,7 @@
   {
     "id": "logic-diff",
     "path": "skills/logic-diff",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "logic-diff",
     "description": "Compare two code versions for semantic equivalence via semi-formal tracing of both versions side-by-side.",
     "risk": "safe",
@@ -34452,7 +34484,7 @@
   {
     "id": "logic-explain",
     "path": "skills/logic-explain",
-    "category": "uncategorized",
+    "category": "development",
     "name": "logic-explain",
     "description": "Explain what a specific piece of code actually does for a given input by producing a step-by-step execution trace (interprocedural, with name resolution and type transitions).",
     "risk": "safe",
@@ -34478,7 +34510,7 @@
   {
     "id": "logic-fix-all",
     "path": "skills/logic-fix-all",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "logic-fix-all",
     "description": "Autonomous repository-wide audit-and-fix pipeline: health \u2192 review \u2192 locate/explain \u2192 fix \u2192 diff-verify \u2192 iterate until clean. Starts with a mandatory consent prompt (token-intensive); after consent runs hands-free.",
     "risk": "critical",
@@ -34537,7 +34569,7 @@
   {
     "id": "logic-locate",
     "path": "skills/logic-locate",
-    "category": "uncategorized",
+    "category": "debugging",
     "name": "logic-locate",
     "description": "Locate the root cause of a CONFIRMED failure via backward-then-forward semi-formal tracing.",
     "risk": "safe",
@@ -34563,7 +34595,7 @@
   {
     "id": "logic-review",
     "path": "skills/logic-review",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "logic-review",
     "description": "Find logic bugs in a single file or function via semi-formal execution tracing (Premises \u2192 Trace \u2192 Divergence \u2192 Trigger \u2192 Remedy).",
     "risk": "critical",
@@ -34589,7 +34621,7 @@
   {
     "id": "logistics-exception-management",
     "path": "skills/logistics-exception-management",
-    "category": "uncategorized",
+    "category": "business",
     "name": "logistics-exception-management",
     "description": "Codified expertise for handling freight exceptions, shipment delays, damages, losses, and carrier disputes. Informed by logistics professionals with 15+ years operational experience.",
     "risk": "safe",
@@ -34696,7 +34728,7 @@
   {
     "id": "longbridge-content",
     "path": "skills/longbridge-content",
-    "category": "uncategorized",
+    "category": "finance",
     "name": "longbridge-content",
     "description": "Latest news articles, regulatory filings, community discussion topics for listed stocks, and SEC EDGAR filing analysis (10-K/10-Q/8-K/proxy/Form 4) via Longbridge.",
     "risk": "critical",
@@ -34722,7 +34754,7 @@
   {
     "id": "longbridge-derivatives",
     "path": "skills/longbridge-derivatives",
-    "category": "uncategorized",
+    "category": "finance",
     "name": "longbridge-derivatives",
     "description": "Curated upstream guidance for Longbridge Derivatives; use when the workflow matches the user goal.",
     "risk": "unknown",
@@ -34747,7 +34779,7 @@
   {
     "id": "longbridge-fundamentals",
     "path": "skills/longbridge-fundamentals",
-    "category": "uncategorized",
+    "category": "finance",
     "name": "longbridge-fundamentals",
     "description": "Financial statements, business segments, dividends, valuation multiples (PE/PB/PS), industry comparison, operating data, corporate actions, company and executive profiles, cross-stock comparison, and valuation ranking via Longbridge.",
     "risk": "critical",
@@ -34773,7 +34805,7 @@
   {
     "id": "longbridge-market-data",
     "path": "skills/longbridge-market-data",
-    "category": "uncategorized",
+    "category": "finance",
     "name": "longbridge-market-data",
     "description": "Real-time quotes, K-line charts, order book, trade ticks, intraday capital flow, market sentiment temperature, trading session schedule, security lists, exchange rates, and IPO calendar for HK/US/A-share/SG via Longbridge. Also covers ADR premium and FX carry frameworks.",
     "risk": "critical",
@@ -34799,7 +34831,7 @@
   {
     "id": "longbridge-quant",
     "path": "skills/longbridge-quant",
-    "category": "uncategorized",
+    "category": "finance",
     "name": "longbridge-quant",
     "description": "Curated upstream guidance for Longbridge Quant; use when the workflow matches the user goal.",
     "risk": "unknown",
@@ -34824,7 +34856,7 @@
   {
     "id": "longbridge-research",
     "path": "skills/longbridge-research",
-    "category": "uncategorized",
+    "category": "research",
     "name": "longbridge-research",
     "description": "Curated upstream guidance for Longbridge Research; use when the workflow matches the user goal.",
     "risk": "unknown",
@@ -34849,7 +34881,7 @@
   {
     "id": "lookdev",
     "path": "skills/lookdev",
-    "category": "uncategorized",
+    "category": "design",
     "name": "lookdev",
     "description": "Human-in-the-loop web studio to tune AI-generated output by eye. Stand up a local interactive studio (sliders, pickers, drag handles) or an inline edit/highlight/comment annotation studio for prose & media, instead of guessing values or shipping a static comparison grid.",
     "risk": "safe",
@@ -34883,7 +34915,7 @@
   {
     "id": "lookdev-auto",
     "path": "skills/lookdev-auto",
-    "category": "uncategorized",
+    "category": "design",
     "name": "lookdev-auto",
     "description": "Automated visual tuning: a vision or video model rates rendered variants in a loop. Render several labeled variants into one artifact, ask the model to rate them and suggest better values, render the suggestions, ask it to pick the best, repeat until good \u2014 the model is the eye, you run the loop.",
     "risk": "safe",
@@ -35010,7 +35042,7 @@
   {
     "id": "loss-aversion-designer",
     "path": "skills/loss-aversion-designer",
-    "category": "uncategorized",
+    "category": "design",
     "name": "loss-aversion-designer",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -35032,7 +35064,7 @@
   {
     "id": "lovable-cleanup",
     "path": "skills/lovable-cleanup",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "lovable-cleanup",
     "description": "Audits and strips Lovable scaffolding from Vite + React projects \u2014 removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, cleans generated docs, and neutralizes stale favicon/CDN caching so the codebase ships as yours.",
     "risk": "safe",
@@ -35206,7 +35238,7 @@
   {
     "id": "machine-learning-ops-ml-pipeline",
     "path": "skills/machine-learning-ops-ml-pipeline",
-    "category": "uncategorized",
+    "category": "ai-ml",
     "name": "machine-learning-ops-ml-pipeline",
     "description": "Design and implement a complete ML pipeline for: $ARGUMENTS",
     "risk": "critical",
@@ -35228,7 +35260,7 @@
   {
     "id": "macos-menubar-tuist-app",
     "path": "skills/macos-menubar-tuist-app",
-    "category": "uncategorized",
+    "category": "development",
     "name": "macos-menubar-tuist-app",
     "description": "Build, refactor, or review SwiftUI macOS menubar apps that use Tuist.",
     "risk": "safe",
@@ -35250,7 +35282,7 @@
   {
     "id": "macos-reverse",
     "path": "skills/macos-reverse",
-    "category": "uncategorized",
+    "category": "security",
     "name": "macos-reverse",
     "description": "Authorized macOS and Mach-O reverse engineering: codesign inspection, Objective-C/Swift recovery, endpoint-security surfaces, and Apple-platform malware analysis.",
     "risk": "safe",
@@ -35276,7 +35308,7 @@
   {
     "id": "macos-screen-recorder",
     "path": "skills/macos-screen-recorder",
-    "category": "uncategorized",
+    "category": "media",
     "name": "macos-screen-recorder",
     "description": "macOS screen recorder that captures the main display PLUS system audio via ScreenCaptureKit \u2014 no BlackHole/loopback driver, no sudo, just the standard Screen Recording permission. CLI-driven; fills the headless-screen-recording-with-system-sound gap QuickTime and `screencapture -v` can't.",
     "risk": "critical",
@@ -35311,7 +35343,7 @@
   {
     "id": "macos-spm-app-packaging",
     "path": "skills/macos-spm-app-packaging",
-    "category": "uncategorized",
+    "category": "development",
     "name": "macos-spm-app-packaging",
     "description": "Scaffold, build, sign, and package SwiftPM macOS apps without Xcode projects.",
     "risk": "safe",
@@ -35333,7 +35365,7 @@
   {
     "id": "magic-animator",
     "path": "skills/magic-animator",
-    "category": "uncategorized",
+    "category": "media",
     "name": "magic-animator",
     "description": "AI-powered animation tool for creating motion in logos, UI, icons, and social media assets.",
     "risk": "safe",
@@ -35399,7 +35431,7 @@
   {
     "id": "mailtrap-managing-contacts",
     "path": "skills/mailtrap-managing-contacts",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "mailtrap-managing-contacts",
     "description": "Manage Mailtrap contacts, lists, segments, custom fields, imports, CRM syncs, and campaign audiences through the UI or API.",
     "risk": "critical",
@@ -35421,7 +35453,7 @@
   {
     "id": "mailtrap-sending-emails",
     "path": "skills/mailtrap-sending-emails",
-    "category": "uncategorized",
+    "category": "api-integration",
     "name": "mailtrap-sending-emails",
     "description": "Configure or troubleshoot Mailtrap live email sending with Email API, SMTP, transactional streams, bulk streams, or batches.",
     "risk": "critical",
@@ -35443,7 +35475,7 @@
   {
     "id": "mailtrap-setting-up-sending-domain",
     "path": "skills/mailtrap-setting-up-sending-domain",
-    "category": "uncategorized",
+    "category": "operations",
     "name": "mailtrap-setting-up-sending-domain",
     "description": "Add or verify a Mailtrap sending domain, troubleshoot DNS propagation, publish SPF/DKIM/DMARC records, and complete compliance.",
     "risk": "critical",
@@ -35465,7 +35497,7 @@
   {
     "id": "mailtrap-testing-with-sandbox",
     "path": "skills/mailtrap-testing-with-sandbox",
-    "category": "uncategorized",
+    "category": "testing",
     "name": "mailtrap-testing-with-sandbox",
     "description": "Capture outbound email in Mailtrap Email Sandbox for development, staging, CI, HTML inspection, spam checks, and fake inbox tests.",
     "risk": "safe",
@@ -35948,7 +35980,7 @@
   {
     "id": "malware-analysis",
     "path": "skills/malware-analysis",
-    "category": "uncategorized",
+    "category": "security",
     "name": "malware-analysis",
     "description": "Analyze suspected malware through static, dynamic, and behavioral techniques: IOC extraction, YARA/Sigma rule authoring, sandbox orchestration, and anti-analysis detection.",
     "risk": "safe",
@@ -36022,7 +36054,7 @@
   {
     "id": "manifest",
     "path": "skills/manifest",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "manifest",
     "description": "Install and configure the Manifest observability plugin for your agents. Use when setting up telemetry, configuring API keys, or troubleshooting the plugin.",
     "risk": "critical",
@@ -36154,7 +36186,7 @@
   {
     "id": "marketing-plan",
     "path": "skills/marketing-plan",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "marketing-plan",
     "description": "When the user needs a comprehensive marketing plan for a client, a company they advise, or their own product.",
     "risk": "critical",
@@ -36653,7 +36685,7 @@
   {
     "id": "matematico-tao",
     "path": "skills/matematico-tao",
-    "category": "uncategorized",
+    "category": "science",
     "name": "matematico-tao",
     "description": "Matem\u00e1tico ultra-avan\u00e7ado inspirado em Terence Tao. An\u00e1lise rigorosa de c\u00f3digo e arquitetura com teoria matem\u00e1tica profunda: teoria da informa\u00e7\u00e3o, teoria dos grafos, complexidade computacional, \u00e1lgebra linear, an\u00e1lise estoc\u00e1stica, teoria das categorias, probabilidade bayesiana e l\u00f3gica formal.",
     "risk": "none",
@@ -36704,7 +36736,7 @@
   {
     "id": "mathguard",
     "path": "skills/mathguard",
-    "category": "uncategorized",
+    "category": "science",
     "name": "mathguard",
     "description": "Math-heavy escalation for n >= 10^6 \u2014 Bloom, HyperLogLog, Count-Min, MinHash/LSH, FFT, JL projection, sweep line. Use when classical O(n log n) is the floor and approximate or math wins.",
     "risk": "safe",
@@ -36784,7 +36816,7 @@
   {
     "id": "maxia",
     "path": "skills/maxia",
-    "category": "uncategorized",
+    "category": "blockchain",
     "name": "maxia",
     "description": "Connect to MAXIA AI-to-AI marketplace on Solana. Discover, buy, sell AI services. Earn USDC. 13 MCP tools, A2A protocol, DeFi yields, sentiment analysis, rug detection.",
     "risk": "critical",
@@ -37071,7 +37103,7 @@
   {
     "id": "meeting-distiller-pro",
     "path": "skills/meeting-distiller-pro",
-    "category": "uncategorized",
+    "category": "productivity",
     "name": "meeting-distiller-pro",
     "description": "Transform messy meeting notes and transcripts into structured action items, decisions, and follow-ups. Never lose a meeting insight again.",
     "risk": "unknown",
@@ -37217,7 +37249,7 @@
   {
     "id": "mercury-mcp",
     "path": "skills/mercury-mcp",
-    "category": "uncategorized",
+    "category": "mcp",
     "name": "mercury-mcp",
     "description": "Cheatsheet for the Mercury (proton) MCP tools. Use when connected to the Mercury MCP server to look up which mercury_* tool to call for messaging teammates, threads, tasks, automations, or admin team-graph edits.",
     "risk": "critical",
@@ -37307,7 +37339,7 @@
   {
     "id": "meteora-dlmm-pool-screening",
     "path": "skills/meteora-dlmm-pool-screening",
-    "category": "uncategorized",
+    "category": "blockchain",
     "name": "meteora-dlmm-pool-screening",
     "description": "Screen and rank Meteora DLMM pools for LP quality using public Meteora APIs (fee/TVL, bin step, organic score). Read-only: never deploys, swaps, or signs.\n",
     "risk": "safe",
@@ -37662,7 +37694,7 @@
   {
     "id": "mmx-cli",
     "path": "skills/mmx-cli",
-    "category": "uncategorized",
+    "category": "ai-ml",
     "name": "mmx-cli",
     "description": "Use mmx to generate text, images, video, speech, and music via the MiniMax AI platform. Use when the user wants to create media content, chat with MiniMax models, perform web search, or manage MiniMax API resources from the terminal.",
     "risk": "safe",
@@ -38185,7 +38217,7 @@
   {
     "id": "monte-carlo-analyze-root-cause",
     "path": "skills/monte-carlo-analyze-root-cause",
-    "category": "uncategorized",
+    "category": "reliability",
     "name": "monte-carlo-analyze-root-cause",
     "description": "Curated upstream guidance for Monte Carlo Analyze Root Cause; use when the workflow matches the user goal.",
     "risk": "critical",
@@ -38211,7 +38243,7 @@
   {
     "id": "monte-carlo-asset-health",
     "path": "skills/monte-carlo-asset-health",
-    "category": "uncategorized",
+    "category": "data",
     "name": "monte-carlo-asset-health",
     "description": "Curated upstream guidance for Monte Carlo Asset Health; use when the workflow matches the user goal.",
     "risk": "critical",
@@ -38237,7 +38269,7 @@
   {
     "id": "monte-carlo-context-detection",
     "path": "skills/monte-carlo-context-detection",
-    "category": "uncategorized",
+    "category": "data",
     "name": "monte-carlo-context-detection",
     "description": "Route data-related requests to the right Monte Carlo skill or workflow. USE WHEN alerts, incidents, data broken, stale, coverage gaps, data quality, or any ambiguous data observability request.",
     "risk": "unknown",
@@ -38317,7 +38349,7 @@
   {
     "id": "monte-carlo-performance-diagnosis",
     "path": "skills/monte-carlo-performance-diagnosis",
-    "category": "uncategorized",
+    "category": "data",
     "name": "monte-carlo-performance-diagnosis",
     "description": "Diagnoses pipeline performance issues -- slow jobs, expensive queries, latency trends -- using Monte Carlo's cross-platform observability. Uses a tiered investigation approach: discover problems, bridge to affected tables, then drill into root causes.",
     "risk": "critical",
@@ -38405,7 +38437,7 @@
   {
     "id": "monte-carlo-remediation",
     "path": "skills/monte-carlo-remediation",
-    "category": "uncategorized",
+    "category": "data",
     "name": "monte-carlo-remediation",
     "description": "Investigate and remediate data quality alerts using Monte Carlo MCP tools. Runs root cause analysis, assesses blast radius, discovers available tools (MCP/CLI/API), proposes and executes fixes, or escalates with full context when uncertain.",
     "risk": "critical",
@@ -38431,7 +38463,7 @@
   {
     "id": "monte-carlo-storage-cost-analysis",
     "path": "skills/monte-carlo-storage-cost-analysis",
-    "category": "uncategorized",
+    "category": "data",
     "name": "monte-carlo-storage-cost-analysis",
     "description": "Analyze a warehouse for stale, unused, or redundant tables via the analyze_storage_costs MCP tool. Classifies waste patterns and table categories, computes safety tiers, and handles category drill-downs and lineage follow-ups.",
     "risk": "critical",
@@ -39250,7 +39282,7 @@
   {
     "id": "neon-ai-gateway",
     "path": "skills/neon-ai-gateway",
-    "category": "uncategorized",
+    "category": "ai-ml",
     "name": "neon-ai-gateway",
     "description": "One API and one credential for frontier and open-source LLMs, built into your Neon branch and powered by Databricks.",
     "risk": "critical",
@@ -39276,7 +39308,7 @@
   {
     "id": "neon-functions",
     "path": "skills/neon-functions",
-    "category": "uncategorized",
+    "category": "backend",
     "name": "neon-functions",
     "description": "Long-running, serverless Node.js HTTP functions deployed onto your Neon branch, with DATABASE_URL injected automatically and compute that runs next to your data.",
     "risk": "critical",
@@ -39302,7 +39334,7 @@
   {
     "id": "neon-object-storage",
     "path": "skills/neon-object-storage",
-    "category": "uncategorized",
+    "category": "cloud",
     "name": "neon-object-storage",
     "description": "S3-compatible object storage that branches with your Neon project, so files and the database stay in sync across every branch.",
     "risk": "critical",
@@ -39380,7 +39412,7 @@
   {
     "id": "neon-postgres-egress-optimizer",
     "path": "skills/neon-postgres-egress-optimizer",
-    "category": "uncategorized",
+    "category": "database",
     "name": "neon-postgres-egress-optimizer",
     "description": "Diagnose and fix excessive Postgres egress (network data transfer) in a codebase.",
     "risk": "critical",
@@ -39406,7 +39438,7 @@
   {
     "id": "nerdzao-elite",
     "path": "skills/nerdzao-elite",
-    "category": "uncategorized",
+    "category": "development",
     "name": "nerdzao-elite",
     "description": "Senior Elite Software Engineer (15+) and Senior Product Designer. Full workflow with planning, architecture, TDD, clean code, and pixel-perfect UX validation.",
     "risk": "safe",
@@ -39428,7 +39460,7 @@
   {
     "id": "nerdzao-elite-gemini-high",
     "path": "skills/nerdzao-elite-gemini-high",
-    "category": "uncategorized",
+    "category": "development",
     "name": "nerdzao-elite-gemini-high",
     "description": "Modo Elite Coder + UX Pixel-Perfect otimizado especificamente para Gemini 3.1 Pro High. Workflow completo com foco em qualidade m\u00e1xima e efici\u00eancia de tokens.",
     "risk": "safe",
@@ -39494,7 +39526,7 @@
   {
     "id": "network-engineer",
     "path": "skills/network-engineer",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "network-engineer",
     "description": "Expert network engineer specializing in modern cloud networking, security architectures, and performance optimization.",
     "risk": "safe",
@@ -39562,7 +39594,7 @@
   {
     "id": "new-rails-project",
     "path": "skills/new-rails-project",
-    "category": "uncategorized",
+    "category": "backend",
     "name": "new-rails-project",
     "description": "Create a new Rails project",
     "risk": "critical",
@@ -39610,7 +39642,7 @@
   {
     "id": "newman-cicd-integration",
     "path": "skills/newman-cicd-integration",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "newman-cicd-integration",
     "description": "Generate ready-to-use CI/CD pipeline configurations that install and run Newman for automated API testing.",
     "risk": "critical",
@@ -39876,7 +39908,7 @@
   {
     "id": "nextjs-supabase-auth",
     "path": "skills/nextjs-supabase-auth",
-    "category": "uncategorized",
+    "category": "security",
     "name": "nextjs-supabase-auth",
     "description": "Expert integration of Supabase Auth with Next.js App Router",
     "risk": "none",
@@ -39924,7 +39956,7 @@
   {
     "id": "nft-standards",
     "path": "skills/nft-standards",
-    "category": "uncategorized",
+    "category": "blockchain",
     "name": "nft-standards",
     "description": "Master ERC-721 and ERC-1155 NFT standards, metadata best practices, and advanced NFT features.",
     "risk": "critical",
@@ -39946,7 +39978,7 @@
   {
     "id": "nika",
     "path": "skills/nika",
-    "category": "uncategorized",
+    "category": "workflow",
     "name": "nika",
     "description": "Runs repeatable AI work as checked, budgeted workflow files.",
     "risk": "critical",
@@ -40070,7 +40102,7 @@
   {
     "id": "not-a-vibe-coder",
     "path": "skills/not-a-vibe-coder",
-    "category": "uncategorized",
+    "category": "planning",
     "name": "not-a-vibe-coder",
     "description": "Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases.",
     "risk": "critical",
@@ -40261,7 +40293,7 @@
   {
     "id": "objection-preemptor",
     "path": "skills/objection-preemptor",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "objection-preemptor",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -40375,7 +40407,7 @@
   {
     "id": "obsidian-bases",
     "path": "skills/obsidian-bases",
-    "category": "uncategorized",
+    "category": "productivity",
     "name": "obsidian-bases",
     "description": "Create and edit Obsidian Bases (.base files) with views, filters, formulas, and summaries. Use when working with .base files, creating database-like views of notes, or when the user mentions Bases, table views, card views, filters, or formulas in Obsidian.",
     "risk": "critical",
@@ -40397,7 +40429,7 @@
   {
     "id": "obsidian-cli",
     "path": "skills/obsidian-cli",
-    "category": "uncategorized",
+    "category": "productivity",
     "name": "obsidian-cli",
     "description": "Use the Obsidian CLI to read, create, search, and manage vault content, or to develop and debug Obsidian plugins and themes from the command line.",
     "risk": "critical",
@@ -40419,7 +40451,7 @@
   {
     "id": "obsidian-clipper-template-creator",
     "path": "skills/obsidian-clipper-template-creator",
-    "category": "uncategorized",
+    "category": "productivity",
     "name": "obsidian-clipper-template-creator",
     "description": "Guide for creating templates for the Obsidian Web Clipper. Use when you want to create a new clipping template, understand available variables, or format clipped content.",
     "risk": "safe",
@@ -40441,7 +40473,7 @@
   {
     "id": "obsidian-markdown",
     "path": "skills/obsidian-markdown",
-    "category": "uncategorized",
+    "category": "productivity",
     "name": "obsidian-markdown",
     "description": "Create and edit Obsidian Flavored Markdown with wikilinks, embeds, callouts, properties, and other Obsidian-specific syntax. Use when working with .md files in Obsidian, or when the user mentions wikilinks, callouts, frontmatter, tags, embeds, or Obsidian notes.",
     "risk": "critical",
@@ -41067,7 +41099,7 @@
   {
     "id": "offers",
     "path": "skills/offers",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "offers",
     "description": "When the user wants to design, construct, or improve an offer \u2014 the thing they actually sell \u2014 including value framing, bonus stacking, guarantee design, scarcity/urgency, naming, and payment structure.",
     "risk": "safe",
@@ -41215,7 +41247,7 @@
   {
     "id": "onboarding",
     "path": "skills/onboarding",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "onboarding",
     "description": "When the user wants to optimize post-signup onboarding, user activation, first-run experience, or time-to-value.",
     "risk": "safe",
@@ -41263,7 +41295,7 @@
   {
     "id": "onboarding-psychologist",
     "path": "skills/onboarding-psychologist",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "onboarding-psychologist",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -41407,7 +41439,7 @@
   {
     "id": "open-source-marketing",
     "path": "skills/open-source-marketing",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "open-source-marketing",
     "description": "When the user wants to market an open source project authentically. Trigger phrases include \"open source marketing,\" \"OSS marketing,\" \"GitHub marketing,\" \"promote my library,\" \"grow stars,\" \"launch open source,\" \"open source growth,\" or \"contributor marketing.\"",
     "risk": "critical",
@@ -41455,7 +41487,7 @@
   {
     "id": "openapi-spec-generator",
     "path": "skills/openapi-spec-generator",
-    "category": "uncategorized",
+    "category": "backend",
     "name": "openapi-spec-generator",
     "description": "Generate complete, production-ready OpenAPI 3.x and Swagger 2.0 specifications from natural language descriptions, code, or partial specs.",
     "risk": "critical",
@@ -41850,7 +41882,7 @@
   {
     "id": "orchestrate-batch-refactor",
     "path": "skills/orchestrate-batch-refactor",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "orchestrate-batch-refactor",
     "description": "Plan and execute large refactors with dependency-aware work packets and parallel analysis.",
     "risk": "safe",
@@ -41920,7 +41952,7 @@
   {
     "id": "oss-hunter",
     "path": "skills/oss-hunter",
-    "category": "uncategorized",
+    "category": "research",
     "name": "oss-hunter",
     "description": "Automatically hunt for high-impact OSS contribution opportunities in trending repositories.",
     "risk": "safe",
@@ -41971,7 +42003,7 @@
   {
     "id": "ot-ics",
     "path": "skills/ot-ics",
-    "category": "uncategorized",
+    "category": "security",
     "name": "ot-ics",
     "description": "Authorized OT/ICS security assessment: Purdue-model zoning review, PLC/SCADA exposure, industrial protocol discovery, and passive-first evaluation discipline.",
     "risk": "offensive",
@@ -42118,7 +42150,7 @@
   {
     "id": "pagespeed-enhancer",
     "path": "skills/pagespeed-enhancer",
-    "category": "uncategorized",
+    "category": "web-development",
     "name": "pagespeed-enhancer",
     "description": "Scan, audit, and fix web performance issues across all four Lighthouse/PageSpeed Insights pillars \u2014 Performance, Accessibility, Best Practices, and SEO \u2014 in structured batches.",
     "risk": "safe",
@@ -42279,7 +42311,7 @@
   {
     "id": "patch-diff-exploit",
     "path": "skills/patch-diff-exploit",
-    "category": "uncategorized",
+    "category": "security",
     "name": "patch-diff-exploit",
     "description": "Locate vulnerability fixes in vendor patches, diff binaries across versions, and build N-day PoCs. Attack-side complement to binary-diff for authorized research.",
     "risk": "offensive",
@@ -42463,7 +42495,7 @@
   {
     "id": "pdf-conversion-router",
     "path": "skills/pdf-conversion-router",
-    "category": "uncategorized",
+    "category": "document-processing",
     "name": "pdf-conversion-router",
     "description": "Use when converting a PDF into another format such as Markdown, HTML, text, JSON, DOCX, or structured notes and the agent must choose the best extraction route, settings, and cleanup strategy for maximum fidelity and readability.",
     "risk": "safe",
@@ -42577,7 +42609,7 @@
   {
     "id": "pentest-tools",
     "path": "skills/pentest-tools",
-    "category": "uncategorized",
+    "category": "security",
     "name": "pentest-tools",
     "description": "Operate 20+ penetration-testing tools (Nmap, Nuclei, SQLMap, FFUF, Hashcat, and more) through structured workflows with consistent output handling.",
     "risk": "offensive",
@@ -42798,7 +42830,7 @@
   {
     "id": "permission-manager",
     "path": "skills/permission-manager",
-    "category": "uncategorized",
+    "category": "security",
     "name": "permission-manager",
     "description": "Manage opencode permissions: review always-allow lists, suggest safe read-only commands, configure permission patterns",
     "risk": "critical",
@@ -42824,7 +42856,7 @@
   {
     "id": "personal-tool-builder",
     "path": "skills/personal-tool-builder",
-    "category": "uncategorized",
+    "category": "development",
     "name": "personal-tool-builder",
     "description": "Expert in building custom tools that solve your own problems first. The best products often start as personal tools - scratch your own itch, build for yourself, then discover others have the same itch.",
     "risk": "critical",
@@ -42846,7 +42878,7 @@
   {
     "id": "phase-gated-debugging",
     "path": "skills/phase-gated-debugging",
-    "category": "uncategorized",
+    "category": "debugging",
     "name": "phase-gated-debugging",
     "description": "Use when debugging any bug. Enforces a 5-phase protocol where code edits are blocked until root cause is confirmed. Prevents premature fix attempts.",
     "risk": "safe",
@@ -42868,7 +42900,7 @@
   {
     "id": "photopea-embedded-editor",
     "path": "skills/photopea-embedded-editor",
-    "category": "uncategorized",
+    "category": "web-development",
     "name": "photopea-embedded-editor",
     "description": "Embed Photopea in web apps using photopea.js. Covers embedding, file I/O, scripting, exporting, layers, text, filters, and the full Photoshop-compatible API.",
     "risk": "safe",
@@ -43110,7 +43142,7 @@
   {
     "id": "pitch-psychologist",
     "path": "skills/pitch-psychologist",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "pitch-psychologist",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -43228,7 +43260,7 @@
   {
     "id": "planning-and-task-breakdown",
     "path": "skills/planning-and-task-breakdown",
-    "category": "uncategorized",
+    "category": "planning",
     "name": "planning-and-task-breakdown",
     "description": "Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too large to start, when you need to estimate scope, or when parallel work is possible.",
     "risk": "none",
@@ -43378,7 +43410,7 @@
   {
     "id": "podcast-generation",
     "path": "skills/podcast-generation",
-    "category": "uncategorized",
+    "category": "media",
     "name": "podcast-generation",
     "description": "Generate real audio narratives from text content using Azure OpenAI's Realtime API.",
     "risk": "critical",
@@ -43544,7 +43576,7 @@
   {
     "id": "polis-protocol-a-self-optimizing-city-of-agents",
     "path": "skills/polis-protocol-a-self-optimizing-city-of-agents",
-    "category": "uncategorized",
+    "category": "agent-orchestration",
     "name": "polis-protocol-a-self-optimizing-city-of-agents",
     "description": "Polis Protocol: A Self-Optimizing City of Agents",
     "risk": "critical",
@@ -43592,7 +43624,7 @@
   {
     "id": "posix-shell-pro",
     "path": "skills/posix-shell-pro",
-    "category": "uncategorized",
+    "category": "development",
     "name": "posix-shell-pro",
     "description": "Expert in strict POSIX sh scripting for maximum portability across Unix-like systems. Specializes in shell scripts that run on any POSIX-compliant shell (dash, ash, sh, bash --posix).",
     "risk": "critical",
@@ -43788,7 +43820,7 @@
   {
     "id": "postman-collection-generator",
     "path": "skills/postman-collection-generator",
-    "category": "uncategorized",
+    "category": "api-integration",
     "name": "postman-collection-generator",
     "description": "Generate complete, import-ready Postman Collection v2.1 JSON files from natural language API descriptions or cURL commands.",
     "risk": "critical",
@@ -43814,7 +43846,7 @@
   {
     "id": "postman-newman-automation",
     "path": "skills/postman-newman-automation",
-    "category": "uncategorized",
+    "category": "testing",
     "name": "postman-newman-automation",
     "description": "Generate Newman CLI commands, configuration files, Jenkins pipeline scripts, and shell automation for running Postman collections in CI/CD or local environments.",
     "risk": "critical",
@@ -43840,7 +43872,7 @@
   {
     "id": "postman-openapi-converter",
     "path": "skills/postman-openapi-converter",
-    "category": "uncategorized",
+    "category": "api-integration",
     "name": "postman-openapi-converter",
     "description": "Convert OpenAPI 3.x or Swagger 2.0 specs (YAML or JSON) into complete, import-ready Postman Collection v2.1 JSON files.",
     "risk": "critical",
@@ -43910,7 +43942,7 @@
   {
     "id": "power-user-cultivation",
     "path": "skills/power-user-cultivation",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "power-user-cultivation",
     "description": "When the user wants to identify and nurture developer advocates, build champion programs, or turn active users into contributors and evangelists.",
     "risk": "safe",
@@ -43936,7 +43968,7 @@
   {
     "id": "powershell-windows",
     "path": "skills/powershell-windows",
-    "category": "uncategorized",
+    "category": "operations",
     "name": "powershell-windows",
     "description": "PowerShell Windows patterns. Critical pitfalls, operator syntax, error handling.",
     "risk": "critical",
@@ -44162,7 +44194,7 @@
   {
     "id": "price-psychology-strategist",
     "path": "skills/price-psychology-strategist",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "price-psychology-strategist",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -44184,7 +44216,7 @@
   {
     "id": "pricing",
     "path": "skills/pricing",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "pricing",
     "description": "When the user wants help with pricing decisions, packaging, or monetization strategy.",
     "risk": "safe",
@@ -44276,7 +44308,7 @@
   {
     "id": "privacy-mask",
     "path": "skills/privacy-mask",
-    "category": "uncategorized",
+    "category": "security",
     "name": "privacy-mask",
     "description": "Mask, redact, anonymize and censor sensitive information (PII) in screenshots and images \u2014 phone numbers, emails, IDs, API keys, crypto wallets, credit cards, passwords, and more.",
     "risk": "critical",
@@ -44749,7 +44781,7 @@
   {
     "id": "project-skill-audit",
     "path": "skills/project-skill-audit",
-    "category": "uncategorized",
+    "category": "project-management",
     "name": "project-skill-audit",
     "description": "Audit a project and recommend the highest-value skills to add or update.",
     "risk": "safe",
@@ -44829,7 +44861,7 @@
   {
     "id": "prometheus-configuration",
     "path": "skills/prometheus-configuration",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "prometheus-configuration",
     "description": "Complete guide to Prometheus setup, metric collection, scrape configuration, and recording rules.",
     "risk": "critical",
@@ -45019,7 +45051,7 @@
   {
     "id": "protect-mcp-governance",
     "path": "skills/protect-mcp-governance",
-    "category": "uncategorized",
+    "category": "mcp",
     "name": "protect-mcp-governance",
     "description": "Agent governance skill for MCP tool calls \u2014 Cedar policy authoring, shadow-to-enforce rollout, and Ed25519 receipt verification.",
     "risk": "safe",
@@ -45043,7 +45075,7 @@
   {
     "id": "protocol-reverse",
     "path": "skills/protocol-reverse",
-    "category": "uncategorized",
+    "category": "security",
     "name": "protocol-reverse",
     "description": "Authorized reverse engineering of custom binary protocols, Protobuf/gRPC schemas, WebSocket frames, and PCAP-driven protocol recovery.",
     "risk": "safe",
@@ -45122,7 +45154,7 @@
   {
     "id": "public-relations",
     "path": "skills/public-relations",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "public-relations",
     "description": "When the user wants help with public relations, earned media, press coverage, journalist outreach, or media strategy (not pull requests).",
     "risk": "critical",
@@ -45171,7 +45203,7 @@
   {
     "id": "puppeteer-skill",
     "path": "skills/puppeteer-skill",
-    "category": "uncategorized",
+    "category": "browser-automation",
     "name": "puppeteer-skill",
     "description": "Generates Puppeteer scripts for browser automation, scraping, and PDF generation. Triggers on: \"Puppeteer\", \"headless Chrome\", \"page.goto\", \"scrape\", \"PDF generation\".",
     "risk": "critical",
@@ -45259,7 +45291,7 @@
   {
     "id": "pwn-chain",
     "path": "skills/pwn-chain",
-    "category": "uncategorized",
+    "category": "security",
     "name": "pwn-chain",
     "description": "Go from reverse engineering to a working exploit: stack/heap/kernel pwn workflows with pwntools, libc-database, ROP, and stabilization from CTF to authorized remote targets.",
     "risk": "offensive",
@@ -45800,7 +45832,7 @@
   {
     "id": "radare2",
     "path": "skills/radare2",
-    "category": "uncategorized",
+    "category": "security",
     "name": "radare2",
     "description": "Drive the radare2 CLI for binary reconnaissance, disassembly, analysis, function locating, export, and lightweight patching (r2/rabin2/rasm2/radiff2) without a GUI.",
     "risk": "safe",
@@ -45826,7 +45858,7 @@
   {
     "id": "radio-sdr",
     "path": "skills/radio-sdr",
-    "category": "uncategorized",
+    "category": "security",
     "name": "radio-sdr",
     "description": "Authorized RF/SDR security research: signal identification, replay-feasibility study in shielded labs, and wireless protocol analysis outside regulated bands.",
     "risk": "offensive",
@@ -46088,7 +46120,7 @@
   {
     "id": "re-create",
     "path": "skills/re-create",
-    "category": "uncategorized",
+    "category": "development",
     "name": "re-create",
     "description": "Completely delete and rewrite a file or module from scratch when structural rot makes patching impossible.",
     "risk": "critical",
@@ -46672,7 +46704,7 @@
   {
     "id": "redis-cli",
     "path": "skills/redis-cli",
-    "category": "uncategorized",
+    "category": "database",
     "name": "redis-cli",
     "description": "Redis command-line interface (redis-cli) reference and usage guide. Use this skill whenever the user mentions redis-cli, Redis CLI, or any task involving querying, inspecting, debugging, or managing Redis from the command line.",
     "risk": "critical",
@@ -46895,7 +46927,7 @@
   {
     "id": "remotion-captions",
     "path": "skills/remotion-captions",
-    "category": "uncategorized",
+    "category": "media",
     "name": "remotion-captions",
     "description": "Transcribing, displaying and animating captions",
     "risk": "unknown",
@@ -46919,7 +46951,7 @@
   {
     "id": "remotion-create",
     "path": "skills/remotion-create",
-    "category": "uncategorized",
+    "category": "media",
     "name": "remotion-create",
     "description": "Create a new Remotion video",
     "risk": "unknown",
@@ -46943,7 +46975,7 @@
   {
     "id": "remotion-docs",
     "path": "skills/remotion-docs",
-    "category": "uncategorized",
+    "category": "media",
     "name": "remotion-docs",
     "description": "Search Remotion documentation",
     "risk": "unknown",
@@ -46967,7 +46999,7 @@
   {
     "id": "remotion-interactivity",
     "path": "skills/remotion-interactivity",
-    "category": "uncategorized",
+    "category": "media",
     "name": "remotion-interactivity",
     "description": "Structure Remotion markup for interactivity",
     "risk": "unknown",
@@ -46991,7 +47023,7 @@
   {
     "id": "remotion-render",
     "path": "skills/remotion-render",
-    "category": "uncategorized",
+    "category": "media",
     "name": "remotion-render",
     "description": "Export a Remotion video",
     "risk": "unknown",
@@ -47037,7 +47069,7 @@
   {
     "id": "repo-maintainer",
     "path": "skills/repo-maintainer",
-    "category": "uncategorized",
+    "category": "workflow",
     "name": "repo-maintainer",
     "description": "Audit and repair repository hygiene across artifacts, dependencies, CI, docs, Git state, and code-quality signals. Use for repository maintenance, cleanup, health checks, or pre-release hardening.",
     "risk": "critical",
@@ -47142,7 +47174,7 @@
   {
     "id": "resolving-merge-conflicts",
     "path": "skills/resolving-merge-conflicts",
-    "category": "uncategorized",
+    "category": "development",
     "name": "resolving-merge-conflicts",
     "description": "Use when you need to resolve an in-progress git merge/rebase conflict.",
     "risk": "critical",
@@ -47266,7 +47298,7 @@
   {
     "id": "reverse-browser-automation",
     "path": "skills/reverse-browser-automation",
-    "category": "uncategorized",
+    "category": "browser-automation",
     "name": "reverse-browser-automation",
     "description": "Automate browsers (Playwright) and Windows desktop applications (UI automation) for reverse-engineering evidence collection, UI-driven workflows, and network observation during analysis.",
     "risk": "safe",
@@ -47314,7 +47346,7 @@
   {
     "id": "reverse-engineering",
     "path": "skills/reverse-engineering",
-    "category": "uncategorized",
+    "category": "security",
     "name": "reverse-engineering",
     "description": "General reverse-engineering methodology for compiled, obfuscated, packed, or virtualized targets: GDB, Frida, angr, Unicorn, and Qiling workflows across languages and platforms, with anti-analysis countermeasures.",
     "risk": "safe",
@@ -47366,7 +47398,7 @@
   {
     "id": "review-and-simplify-changes",
     "path": "skills/review-and-simplify-changes",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "review-and-simplify-changes",
     "description": "Review a git diff or explicit file scope for reuse, code quality, efficiency, clarity, and standards issues, then optionally apply safe Codex-driven fixes.",
     "risk": "critical",
@@ -47425,7 +47457,7 @@
   {
     "id": "review-multi-agent-orchestration",
     "path": "skills/review-multi-agent-orchestration",
-    "category": "uncategorized",
+    "category": "agent-orchestration",
     "name": "review-multi-agent-orchestration",
     "description": "Use when a supervisor, swarm, graph, planner-worker system, or parallel agent workflow needs review for task boundaries, shared state, branch joins, retries, cancellation, context handoffs, budgets, deadlocks, or human escalation before implementation or production rollout.",
     "risk": "safe",
@@ -47447,7 +47479,7 @@
   {
     "id": "review-swarm",
     "path": "skills/review-swarm",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "review-swarm",
     "description": "Parallel read-only multi-agent review of a current git diff or explicit file scope to find behavioral regressions, security or privacy risks, performance or reliability issues, and contract or test coverage gaps.",
     "risk": "safe",
@@ -47737,7 +47769,7 @@
   {
     "id": "robot-framework-skill",
     "path": "skills/robot-framework-skill",
-    "category": "uncategorized",
+    "category": "testing",
     "name": "robot-framework-skill",
     "description": "Generates Robot Framework tests in keyword-driven syntax with Python. Supports SeleniumLibrary, RequestsLibrary, and custom keywords. Use when user mentions \"Robot Framework\", \"*** Test Cases ***\", \"SeleniumLibrary\", \".robot file\".",
     "risk": "critical",
@@ -48187,7 +48219,7 @@
   {
     "id": "sales-enablement",
     "path": "skills/sales-enablement",
-    "category": "uncategorized",
+    "category": "business",
     "name": "sales-enablement",
     "description": "Create sales collateral such as decks, one-pagers, objection docs, demo scripts, playbooks, and proposal templates. Use when a sales team needs assets that help reps move deals forward and close.",
     "risk": "safe",
@@ -48564,7 +48596,7 @@
   {
     "id": "scarcity-urgency-psychologist",
     "path": "skills/scarcity-urgency-psychologist",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "scarcity-urgency-psychologist",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -48709,7 +48741,7 @@
   {
     "id": "score-eval",
     "path": "skills/score-eval",
-    "category": "uncategorized",
+    "category": "testing",
     "name": "score-eval",
     "description": "Imported skill `score-eval` from upstream source.",
     "risk": "unknown",
@@ -48809,7 +48841,7 @@
   {
     "id": "screenstudio-alt",
     "path": "skills/screenstudio-alt",
-    "category": "uncategorized",
+    "category": "media",
     "name": "screenstudio-alt",
     "description": "Open-source headless Screen Studio alternative: auto speed-up of idle, auto-zoom on click clusters, keystroke overlay chips, smoothed synthetic cursor, and 9:16 vertical export that follows the action \u2014 post-production for screen recordings from the CLI.",
     "risk": "critical",
@@ -48866,7 +48898,7 @@
   {
     "id": "sdk-dx",
     "path": "skills/sdk-dx",
-    "category": "uncategorized",
+    "category": "api-integration",
     "name": "sdk-dx",
     "description": "Design SDKs that developers love to use\u2014APIs that feel native, error messages that guide, and experiences that reduce friction. This skill covers creating SDKs that drive adoption through exceptional developer experience rather than aggressive marketing.",
     "risk": "critical",
@@ -49708,7 +49740,7 @@
   {
     "id": "seo-aeo-internal-linking",
     "path": "skills/seo-aeo-internal-linking",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-aeo-internal-linking",
     "description": "Maps internal link opportunities between pages with relevant anchor text, placement instructions, orphan-page detection, and cannibalisation checks.",
     "risk": "safe",
@@ -49752,7 +49784,7 @@
   {
     "id": "seo-aeo-landing-page-writer",
     "path": "skills/seo-aeo-landing-page-writer",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-aeo-landing-page-writer",
     "description": "Writes or improves conversion-focused landing pages for products, services, and offers with practical SEO and AEO structure.",
     "risk": "safe",
@@ -49774,7 +49806,7 @@
   {
     "id": "seo-aeo-meta-description-generator",
     "path": "skills/seo-aeo-meta-description-generator",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-aeo-meta-description-generator",
     "description": "Writes title tags, meta descriptions, Open Graph tags, and Twitter Card tags aligned to page intent and conversion goals.",
     "risk": "safe",
@@ -49796,7 +49828,7 @@
   {
     "id": "seo-aeo-orchestrator",
     "path": "skills/seo-aeo-orchestrator",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-aeo-orchestrator",
     "description": "Runs an audit-first SEO/AEO growth workflow from project discovery through implementation, foundational content, measurement setup, deployment verification, and optional weekly monitoring.",
     "risk": "critical",
@@ -49819,7 +49851,7 @@
   {
     "id": "seo-aeo-schema-generator",
     "path": "skills/seo-aeo-schema-generator",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-aeo-schema-generator",
     "description": "Generates and validates implementation-ready JSON-LD structured data for relevant page types and rich-result eligibility.",
     "risk": "safe",
@@ -49907,7 +49939,7 @@
   {
     "id": "seo-competitor-pages",
     "path": "skills/seo-competitor-pages",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-competitor-pages",
     "description": "Generate SEO-optimized competitor comparison and alternatives pages. Covers \"X vs Y\" layouts, \"alternatives to X\" pages, feature matrices, schema markup, and conversion optimization. Use when user says \"comparison page\", \"vs page\", \"alternatives page\", \"competitor comparison\", or \"X vs Y\".\n",
     "risk": "critical",
@@ -50039,7 +50071,7 @@
   {
     "id": "seo-dataforseo",
     "path": "skills/seo-dataforseo",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-dataforseo",
     "description": "Use DataForSEO for live SERPs, keyword metrics, backlinks, competitor analysis, on-page checks, and AI visibility data. Trigger when the user needs real SEO data rather than static guidance.",
     "risk": "critical",
@@ -50138,7 +50170,7 @@
   {
     "id": "seo-geo",
     "path": "skills/seo-geo",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-geo",
     "description": "Optimize content for AI Overviews, ChatGPT, Perplexity, and other AI search systems. Use when improving GEO, AI citations, llms.txt readiness, crawler accessibility, and passage-level citability.",
     "risk": "critical",
@@ -50160,7 +50192,7 @@
   {
     "id": "seo-hreflang",
     "path": "skills/seo-hreflang",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-hreflang",
     "description": "Hreflang and international SEO audit, validation, and generation. Detects common mistakes, validates language/region codes, and generates correct hreflang implementations. Use when user says \"hreflang\", \"i18n SEO\", \"international SEO\", \"multi-language\", \"multi-region\", or \"language tags\".\n",
     "risk": "critical",
@@ -50206,7 +50238,7 @@
   {
     "id": "seo-images",
     "path": "skills/seo-images",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-images",
     "description": "Image optimization analysis for SEO and performance. Checks alt text, file sizes, formats, responsive images, lazy loading, and CLS prevention. Use when user says \"image optimization\", \"alt text\", \"image SEO\", \"image size\", or \"image audit\".\n",
     "risk": "safe",
@@ -50272,7 +50304,7 @@
   {
     "id": "seo-page",
     "path": "skills/seo-page",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-page",
     "description": "Deep single-page SEO analysis covering on-page elements, content quality, technical meta tags, schema, images, and performance. Use when user says \"analyze this page\", \"check page SEO\", or provides a single URL for review.\n",
     "risk": "safe",
@@ -50316,7 +50348,7 @@
   {
     "id": "seo-programmatic",
     "path": "skills/seo-programmatic",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-programmatic",
     "description": "Plan and audit programmatic SEO pages generated at scale from structured data. Use when designing templates, URL systems, internal linking, quality gates, and index-bloat safeguards for pages at scale.",
     "risk": "critical",
@@ -50338,7 +50370,7 @@
   {
     "id": "seo-schema",
     "path": "skills/seo-schema",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-schema",
     "description": "Detect, validate, and generate Schema.org structured data. JSON-LD format preferred. Use when user says \"schema\", \"structured data\", \"rich results\", \"JSON-LD\", or \"markup\".\n",
     "risk": "critical",
@@ -50360,7 +50392,7 @@
   {
     "id": "seo-sitemap",
     "path": "skills/seo-sitemap",
-    "category": "uncategorized",
+    "category": "seo",
     "name": "seo-sitemap",
     "description": "Analyze existing XML sitemaps or generate new ones with industry templates. Validates format, URLs, and structure. Use when user says \"sitemap\", \"generate sitemap\", \"sitemap issues\", or \"XML sitemap\".\n",
     "risk": "critical",
@@ -50448,7 +50480,7 @@
   {
     "id": "sequence-psychologist",
     "path": "skills/sequence-psychologist",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "sequence-psychologist",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -50668,7 +50700,7 @@
   {
     "id": "shader-programming-glsl",
     "path": "skills/shader-programming-glsl",
-    "category": "uncategorized",
+    "category": "game-development",
     "name": "shader-programming-glsl",
     "description": "Expert guide for writing efficient GLSL shaders (Vertex/Fragment) for web and game engines, covering syntax, uniforms, and common effects.",
     "risk": "safe",
@@ -50690,7 +50722,7 @@
   {
     "id": "sharp-coder",
     "path": "skills/sharp-coder",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "sharp-coder",
     "description": "Two-layer performance skill combining disciplined THINK layer (surgical edits, simplicity) and terse SPEAK layer (caveman compression). Triggers on requests for brevity, token efficiency, or disciplined coding.\n",
     "risk": "safe",
@@ -50713,7 +50745,7 @@
   {
     "id": "sharp-edges",
     "path": "skills/sharp-edges",
-    "category": "uncategorized",
+    "category": "security",
     "name": "sharp-edges",
     "description": "sharp-edges",
     "risk": "critical",
@@ -50980,7 +51012,7 @@
   {
     "id": "simplify-code",
     "path": "skills/simplify-code",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "simplify-code",
     "description": "Review a diff for clarity and safe simplifications, then optionally apply low-risk fixes.",
     "risk": "safe",
@@ -51625,7 +51657,7 @@
   {
     "id": "slack-gif-creator",
     "path": "skills/slack-gif-creator",
-    "category": "uncategorized",
+    "category": "media",
     "name": "slack-gif-creator",
     "description": "A toolkit providing utilities and knowledge for creating animated GIFs optimized for Slack.",
     "risk": "critical",
@@ -51964,7 +51996,7 @@
   {
     "id": "social-proof-architect",
     "path": "skills/social-proof-architect",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "social-proof-architect",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -52122,7 +52154,7 @@
   {
     "id": "source-driven-development",
     "path": "skills/source-driven-development",
-    "category": "uncategorized",
+    "category": "development",
     "name": "source-driven-development",
     "description": "Grounds every implementation decision in official documentation. Use when you want authoritative, source-cited code free from outdated patterns. Use when building with any framework or library where correctness matters.",
     "risk": "critical",
@@ -52216,7 +52248,7 @@
   {
     "id": "spec-driven-development",
     "path": "skills/spec-driven-development",
-    "category": "uncategorized",
+    "category": "planning",
     "name": "spec-driven-development",
     "description": "Creates specs before coding. Use when starting a new project, feature, or significant change and no specification exists yet. Use when requirements are unclear, ambiguous, or only exist as a vague idea.",
     "risk": "critical",
@@ -52297,7 +52329,7 @@
   {
     "id": "speckit-updater",
     "path": "skills/speckit-updater",
-    "category": "uncategorized",
+    "category": "development",
     "name": "speckit-updater",
     "description": "SpecKit Safe Update",
     "risk": "critical",
@@ -52319,7 +52351,7 @@
   {
     "id": "speed",
     "path": "skills/speed",
-    "category": "uncategorized",
+    "category": "productivity",
     "name": "speed",
     "description": "Launch RSVP speed reader for text",
     "risk": "critical",
@@ -52965,7 +52997,7 @@
   {
     "id": "steve-jobs",
     "path": "skills/steve-jobs",
-    "category": "uncategorized",
+    "category": "agent-persona",
     "name": "steve-jobs",
     "description": "Agente que simula Steve Jobs \u2014 cofundador da Apple, CEO da Pixar, fundador da NeXT, o maior designer de produtos tecnologicos da historia e o mais influente apresentador de produtos do mundo.",
     "risk": "safe",
@@ -53023,7 +53055,7 @@
   {
     "id": "stitch-loop",
     "path": "skills/stitch-loop",
-    "category": "uncategorized",
+    "category": "agent-orchestration",
     "name": "stitch-loop",
     "description": "Teaches agents to iteratively build websites using Stitch with an autonomous baton-passing loop pattern",
     "risk": "critical",
@@ -53181,7 +53213,7 @@
   {
     "id": "subagent-orchestrator",
     "path": "skills/subagent-orchestrator",
-    "category": "uncategorized",
+    "category": "agent-orchestration",
     "name": "subagent-orchestrator",
     "description": "Coordinate quota-aware parallel subagents for large, multi-file Antigravity tasks.",
     "risk": "safe",
@@ -53210,7 +53242,7 @@
   {
     "id": "subject-line-psychologist",
     "path": "skills/subject-line-psychologist",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "subject-line-psychologist",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -53232,7 +53264,7 @@
   {
     "id": "supabase",
     "path": "skills/supabase",
-    "category": "uncategorized",
+    "category": "backend",
     "name": "supabase",
     "description": "Use when doing ANY task involving Supabase.",
     "risk": "critical",
@@ -53258,7 +53290,7 @@
   {
     "id": "supabase-automation",
     "path": "skills/supabase-automation",
-    "category": "uncategorized",
+    "category": "automation",
     "name": "supabase-automation",
     "description": "Automate Supabase database queries, table management, project administration, storage, edge functions, and SQL execution via Rube MCP (Composio). Always search tools first for current schemas.",
     "risk": "critical",
@@ -53306,7 +53338,7 @@
   {
     "id": "super-code",
     "path": "skills/super-code",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "super-code",
     "description": "Standing house style to enforce dense, correct, and idiomatic code on all coding tasks. Minimizes code bloat and agent operation overhead.",
     "risk": "safe",
@@ -53328,7 +53360,7 @@
   {
     "id": "superpowers-lab",
     "path": "skills/superpowers-lab",
-    "category": "uncategorized",
+    "category": "ai-agents",
     "name": "superpowers-lab",
     "description": "Lab environment for Claude superpowers",
     "risk": "safe",
@@ -53402,7 +53434,7 @@
   {
     "id": "supply-chain-risk-auditor",
     "path": "skills/supply-chain-risk-auditor",
-    "category": "uncategorized",
+    "category": "security",
     "name": "supply-chain-risk-auditor",
     "description": "Identifies dependencies at heightened risk of exploitation or takeover. Use when assessing supply chain attack surface, evaluating dependency health, or scoping security engagements.",
     "risk": "critical",
@@ -53533,7 +53565,7 @@
   {
     "id": "swift-concurrency-expert",
     "path": "skills/swift-concurrency-expert",
-    "category": "uncategorized",
+    "category": "development",
     "name": "swift-concurrency-expert",
     "description": "Review and fix Swift concurrency issues such as actor isolation and Sendable violations.",
     "risk": "safe",
@@ -53734,6 +53766,39 @@
       "reasons": []
     },
     "source_type": "self"
+  },
+  {
+    "id": "system-prompt-lookup",
+    "path": "skills/system-prompt-lookup",
+    "category": "research",
+    "name": "system-prompt-lookup",
+    "description": "Checks what a shipped AI product's system prompt and tool schema actually say, by reading a dated archive of captured prompts instead of recalling them. Use before asserting or accepting any claim about an agent's instructions.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-09-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "Continuum-AI-Corp/OrcaPromptVault",
+    "license": "AGPL-3.0",
+    "license_source": "https://github.com/Continuum-AI-Corp/OrcaPromptVault/blob/main/LICENSE",
+    "tags": [
+      "system-prompts",
+      "tool-schemas",
+      "provenance",
+      "verification",
+      "agent-behaviour"
+    ]
   },
   {
     "id": "systematic-debugging",
@@ -54354,7 +54419,7 @@
   {
     "id": "technical-tutorials",
     "path": "skills/technical-tutorials",
-    "category": "uncategorized",
+    "category": "content",
     "name": "technical-tutorials",
     "description": "When the user wants to create step-by-step technical tutorials, quickstarts, or code walkthroughs. Trigger phrases include \"tutorial,\" \"quickstart,\" \"getting started guide,\" \"walkthrough,\" \"step by step,\" \"how to guide,\" \"hands-on guide,\" or \"code tutorial.\"",
     "risk": "critical",
@@ -54486,7 +54551,7 @@
   {
     "id": "telegram-mini-app",
     "path": "skills/telegram-mini-app",
-    "category": "uncategorized",
+    "category": "web-development",
     "name": "telegram-mini-app",
     "description": "Expert in building Telegram Mini Apps (TWA) - web apps that run inside Telegram with native-like experience. Covers the TON ecosystem, Telegram Web App API, payments, user authentication, and building viral mini apps that monetize.",
     "risk": "critical",
@@ -54977,7 +55042,7 @@
   {
     "id": "testng-skill",
     "path": "skills/testng-skill",
-    "category": "uncategorized",
+    "category": "testing",
     "name": "testng-skill",
     "description": "Generates TestNG tests in Java with groups, data providers, parallel execution, XML suite configuration, and listeners. Use when user mentions \"TestNG\", \"@DataProvider\", \"testng.xml\", \"groups\". Triggers on: \"TestNG\", \"@DataProvider\", \"testng.xml\", \"TestNG suite\", \"parallel tests Java\".",
     "risk": "critical",
@@ -55041,7 +55106,7 @@
   {
     "id": "the-honoured-one",
     "path": "skills/the-honoured-one",
-    "category": "uncategorized",
+    "category": "meta",
     "name": "the-honoured-one",
     "description": "Forces the AI to fully load context and read relevant files before performing complex, multi-file tasks, architectural changes, or debugging. Prevents acting on assumptions.",
     "risk": "safe",
@@ -55085,7 +55150,7 @@
   {
     "id": "thick-client",
     "path": "skills/thick-client",
-    "category": "uncategorized",
+    "category": "security",
     "name": "thick-client",
     "description": "Authorized security testing of desktop thick clients: local storage, update channels, IPC, traffic interception, and client-side trust-boundary review.",
     "risk": "offensive",
@@ -55111,7 +55176,7 @@
   {
     "id": "threat-hunting",
     "path": "skills/threat-hunting",
-    "category": "uncategorized",
+    "category": "security",
     "name": "threat-hunting",
     "description": "Blue-team threat hunting: detection engineering with Sigma/YARA, SIEM query design, and validation of incident detections against known technique patterns.",
     "risk": "safe",
@@ -55137,7 +55202,7 @@
   {
     "id": "threat-intelligence",
     "path": "skills/threat-intelligence",
-    "category": "uncategorized",
+    "category": "security",
     "name": "threat-intelligence",
     "description": "Authorized OSINT and cyber threat intelligence: enriching IOCs, campaigns, impersonation, scams, and threat-actor profiles from public sources with defined boundaries.",
     "risk": "safe",
@@ -56372,7 +56437,7 @@
   {
     "id": "trust-calibrator",
     "path": "skills/trust-calibrator",
-    "category": "uncategorized",
+    "category": "marketing",
     "name": "trust-calibrator",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -56394,7 +56459,7 @@
   {
     "id": "tune-monitor",
     "path": "skills/tune-monitor",
-    "category": "uncategorized",
+    "category": "reliability",
     "name": "tune-monitor",
     "description": "Analyze a Monte Carlo monitor and recommend config changes to reduce alert noise. Supports metric, custom SQL, validation, and table monitors. Fetches the report, identifies patterns, and suggests tuning.",
     "risk": "critical",
@@ -56671,7 +56736,7 @@
   {
     "id": "ui-lint",
     "path": "skills/ui-lint",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "ui-lint",
     "description": "Quick automated lint \u2014 detects common design system violations in seconds",
     "risk": "safe",
@@ -56723,7 +56788,7 @@
   {
     "id": "ui-page",
     "path": "skills/ui-page",
-    "category": "uncategorized",
+    "category": "design",
     "name": "ui-page",
     "description": "Scaffold a new mobile page/screen using the StyleSeed layout patterns",
     "risk": "critical",
@@ -56749,7 +56814,7 @@
   {
     "id": "ui-pattern",
     "path": "skills/ui-pattern",
-    "category": "uncategorized",
+    "category": "design",
     "name": "ui-pattern",
     "description": "Generate a composed UI pattern (card layout, list, form section, grid, etc.) using design system primitives",
     "risk": "critical",
@@ -56775,7 +56840,7 @@
   {
     "id": "ui-review",
     "path": "skills/ui-review",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "ui-review",
     "description": "Review UI code for design system compliance, accessibility, and best practices",
     "risk": "safe",
@@ -56801,7 +56866,7 @@
   {
     "id": "ui-score",
     "path": "skills/ui-score",
-    "category": "uncategorized",
+    "category": "design",
     "name": "ui-score",
     "description": "Score a UI file's design quality 0-100 against StyleSeed's design language \u2014 per-category breakdown, the worst offenders, and a prioritized fix list. A quantified version of /ss-review.",
     "risk": "critical",
@@ -56827,7 +56892,7 @@
   {
     "id": "ui-setup",
     "path": "skills/ui-setup",
-    "category": "uncategorized",
+    "category": "design",
     "name": "ui-setup",
     "description": "Interactive setup wizard \u2014 guides you step-by-step to configure the design system for your project",
     "risk": "critical",
@@ -56875,7 +56940,7 @@
   {
     "id": "ui-skills-root",
     "path": "skills/ui-skills-root",
-    "category": "uncategorized",
+    "category": "design",
     "name": "ui-skills-root",
     "description": "Use before UI-related work to select the smallest useful UI Skills context through the ui-skills CLI.",
     "risk": "critical",
@@ -56901,7 +56966,7 @@
   {
     "id": "ui-tokens",
     "path": "skills/ui-tokens",
-    "category": "uncategorized",
+    "category": "design",
     "name": "ui-tokens",
     "description": "View, add, or modify design tokens in the StyleSeed design system",
     "risk": "critical",
@@ -56927,7 +56992,7 @@
   {
     "id": "ui-update",
     "path": "skills/ui-update",
-    "category": "uncategorized",
+    "category": "development",
     "name": "ui-update",
     "description": "Update StyleSeed engine in your project \u2014 analyzes what's outdated and updates safely",
     "risk": "critical",
@@ -57345,7 +57410,7 @@
   {
     "id": "unslop-file",
     "path": "skills/unslop-file",
-    "category": "uncategorized",
+    "category": "content",
     "name": "unslop-file",
     "description": "Humanize natural-language memory files (CLAUDE.md, todos, preferences, docs) by removing AI-isms and adding burstiness while preserving every code block, URL, path, command, and heading exactly.",
     "risk": "critical",
@@ -57371,7 +57436,7 @@
   {
     "id": "unslop-review",
     "path": "skills/unslop-review",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "unslop-review",
     "description": "Rewrites code review comments so they read like a human teammate wrote them. Cuts corporate-AI throat-clearing (\"I noticed...\", \"I was wondering if perhaps...\", \"It might be worth considering...\"). Each comment is direct: location, the issue, a concrete fix.",
     "risk": "critical",
@@ -57454,7 +57519,7 @@
   {
     "id": "update-swiftui-apis",
     "path": "skills/update-swiftui-apis",
-    "category": "uncategorized",
+    "category": "mobile",
     "name": "update-swiftui-apis",
     "description": "Scan Apple's SwiftUI documentation for deprecated APIs and update the SwiftUI Expert Skill with modern replacements.",
     "risk": "critical",
@@ -57649,7 +57714,7 @@
   {
     "id": "use-dom",
     "path": "skills/use-dom",
-    "category": "uncategorized",
+    "category": "mobile",
     "name": "use-dom",
     "description": "Use Expo DOM components to run web code in a webview on native and as-is on web. Migrate web code to native incrementally.",
     "risk": "critical",
@@ -57815,7 +57880,7 @@
   {
     "id": "using-n8n-mcp-skills",
     "path": "skills/using-n8n-mcp-skills",
-    "category": "uncategorized",
+    "category": "automation",
     "name": "using-n8n-mcp-skills",
     "description": "Route n8n MCP workflow design, editing, validation, testing, deployment, credential, execution, and debugging tasks to specialist guidance.",
     "risk": "critical",
@@ -57907,7 +57972,7 @@
   {
     "id": "ux-audit",
     "path": "skills/ux-audit",
-    "category": "uncategorized",
+    "category": "design",
     "name": "ux-audit",
     "description": "Audit screens for UX issues using Nielsen's heuristics and modern mobile UX best practices",
     "risk": "safe",
@@ -57933,7 +57998,7 @@
   {
     "id": "ux-copy",
     "path": "skills/ux-copy",
-    "category": "uncategorized",
+    "category": "design",
     "name": "ux-copy",
     "description": "Generate UX microcopy (button labels, error messages, empty states, toasts) following a casual-but-polite voice and tone",
     "risk": "critical",
@@ -57985,7 +58050,7 @@
   {
     "id": "ux-flow",
     "path": "skills/ux-flow",
-    "category": "uncategorized",
+    "category": "design",
     "name": "ux-flow",
     "description": "Design user flows and navigation structure following proven UX patterns",
     "risk": "critical",
@@ -58011,7 +58076,7 @@
   {
     "id": "ux-persuasion-engineer",
     "path": "skills/ux-persuasion-engineer",
-    "category": "uncategorized",
+    "category": "design",
     "name": "ux-persuasion-engineer",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -58087,7 +58152,7 @@
   {
     "id": "variant-analysis",
     "path": "skills/variant-analysis",
-    "category": "uncategorized",
+    "category": "security",
     "name": "variant-analysis",
     "description": "Find similar vulnerabilities and bugs across codebases using pattern-based analysis. Use when hunting bug variants, building CodeQL/Semgrep queries, analyzing security vulnerabilities, or performing systematic code audits after finding an initial issue.",
     "risk": "offensive",
@@ -58273,7 +58338,7 @@
   {
     "id": "vercel-automation",
     "path": "skills/vercel-automation",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "vercel-automation",
     "description": "Automate Vercel tasks via Rube MCP (Composio): manage deployments, domains, DNS, env vars, projects, and teams. Always search tools first for current schemas.",
     "risk": "critical",
@@ -58295,7 +58360,7 @@
   {
     "id": "vercel-cli-with-tokens",
     "path": "skills/vercel-cli-with-tokens",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "vercel-cli-with-tokens",
     "description": "Deploy and manage projects on Vercel using token-based authentication. Use when working with Vercel CLI using access tokens rather than interactive login \u2014 e.g. \"deploy to vercel\", \"set up vercel\", \"add environment variables to vercel\".",
     "risk": "safe",
@@ -58317,7 +58382,7 @@
   {
     "id": "vercel-deployment",
     "path": "skills/vercel-deployment",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "vercel-deployment",
     "description": "Expert knowledge for deploying to Vercel with Next.js",
     "risk": "safe",
@@ -58365,7 +58430,7 @@
   {
     "id": "vercel-optimize",
     "path": "skills/vercel-optimize",
-    "category": "uncategorized",
+    "category": "devops",
     "name": "vercel-optimize",
     "description": "Audit deployed Vercel apps for cost and performance issues using metrics, project config, code scans, and version-aware recommendations.",
     "risk": "safe",
@@ -58885,7 +58950,7 @@
   {
     "id": "visual-emotion-engineer",
     "path": "skills/visual-emotion-engineer",
-    "category": "uncategorized",
+    "category": "design",
     "name": "visual-emotion-engineer",
     "description": "One sentence - what this skill does and when to invoke it",
     "risk": "safe",
@@ -58907,7 +58972,7 @@
   {
     "id": "vitest-skill",
     "path": "skills/vitest-skill",
-    "category": "uncategorized",
+    "category": "testing",
     "name": "vitest-skill",
     "description": "Generates Vitest tests in JavaScript/TypeScript with Vite-native speed. Jest-compatible API with ESM support and HMR. Use when user mentions \"Vitest\", \"vi.mock\", \"vitest.config\". Triggers on: \"Vitest\", \"vi.mock\", \"vi.fn\", \"Vite test\", \"vitest config\".",
     "risk": "critical",
@@ -59312,7 +59377,7 @@
   {
     "id": "warren-buffett",
     "path": "skills/warren-buffett",
-    "category": "uncategorized",
+    "category": "finance",
     "name": "warren-buffett",
     "description": "Agente que simula Warren Buffett \u2014 o maior investidor do seculo XX e XXI, CEO da Berkshire Hathaway, discipulo de Benjamin Graham e socio intelectual de Charlie Munger.",
     "risk": "safe",
@@ -59678,7 +59743,7 @@
   {
     "id": "web-media-getter",
     "path": "skills/web-media-getter",
-    "category": "uncategorized",
+    "category": "media",
     "name": "web-media-getter",
     "description": "One query across free image / video / GIF APIs (stock + historical/archival + GIF engines), returning normalized, license-tagged results with optional top-K download + attribution sidecar. The retrieval peer to local semantic search and generative media.",
     "risk": "safe",
@@ -60013,7 +60078,7 @@
   {
     "id": "wellally-tech",
     "path": "skills/wellally-tech",
-    "category": "uncategorized",
+    "category": "health",
     "name": "wellally-tech",
     "description": "Integrate multiple digital health data sources, connect to [WellAlly.tech](https://www.wellally.tech/) knowledge base, providing data import and knowledge reference for personal health management systems.",
     "risk": "critical",
@@ -60142,7 +60207,7 @@
   {
     "id": "wifi-wireless",
     "path": "skills/wifi-wireless",
-    "category": "uncategorized",
+    "category": "security",
     "name": "wifi-wireless",
     "description": "Authorized wireless security assessment: Wi-Fi capture, WPA handshake analysis, rogue AP detection research, and lab-only deauthentication testing.",
     "risk": "offensive",
@@ -60379,7 +60444,7 @@
   {
     "id": "windows-ad",
     "path": "skills/windows-ad",
-    "category": "uncategorized",
+    "category": "security",
     "name": "windows-ad",
     "description": "Authorized Active Directory and Windows identity attacks: Kerberos abuse, AD CS escalation, BloodHound path analysis, NTLM relay, and domain privilege-escalation research.",
     "risk": "offensive",
@@ -60479,7 +60544,7 @@
   {
     "id": "windows-shell-reliability",
     "path": "skills/windows-shell-reliability",
-    "category": "uncategorized",
+    "category": "reliability",
     "name": "windows-shell-reliability",
     "description": "Reliable command execution on Windows: paths, encoding, and common binary pitfalls.",
     "risk": "safe",
@@ -60523,7 +60588,7 @@
   {
     "id": "wjttc-builder",
     "path": "skills/wjttc-builder",
-    "category": "uncategorized",
+    "category": "testing",
     "name": "wjttc-builder",
     "description": "PLAN and GENERATE WJTTC (Championship-Grade) test suites for any project. Analyzes the codebase, classifies components across the WJTTC five tiers (Brake \u00b7 Engine \u00b7 Aero \u00b7 Tyre \u00b7 Pit), writes a tiered test plan, and scaffolds executable test files.",
     "risk": "critical",
@@ -60549,7 +60614,7 @@
   {
     "id": "wjttc-tester",
     "path": "skills/wjttc-tester",
-    "category": "uncategorized",
+    "category": "testing",
     "name": "wjttc-tester",
     "description": "F1-inspired test EXECUTOR + reporter. Runs a test plan, finds and reproduces bugs, audits suite signal integrity, then files a WJTTC report (Brake/Engine/Aero/Tyre/Pit) with a tier verdict.",
     "risk": "critical",
@@ -60575,7 +60640,7 @@
   {
     "id": "woo-guard",
     "path": "skills/woo-guard",
-    "category": "uncategorized",
+    "category": "ecommerce",
     "name": "woo-guard",
     "description": "Review generated or changed WooCommerce extensions, payment and shipping integrations, checkout customizations, and order or product logic.",
     "risk": "critical",
@@ -60864,7 +60929,7 @@
   {
     "id": "wp-guard",
     "path": "skills/wp-guard",
-    "category": "uncategorized",
+    "category": "code-quality",
     "name": "wp-guard",
     "description": "Review generated or changed WordPress plugins, themes, and blocks for security, internationalization, performance, and API correctness.",
     "risk": "offensive",
@@ -60995,7 +61060,7 @@
   {
     "id": "writing-guidelines",
     "path": "skills/writing-guidelines",
-    "category": "uncategorized",
+    "category": "content",
     "name": "writing-guidelines",
     "description": "Curated upstream guidance for Writing Guidelines; use when the workflow matches the user goal.",
     "risk": "unknown",
@@ -61231,7 +61296,7 @@
   {
     "id": "xvary-stock-research",
     "path": "skills/xvary-stock-research",
-    "category": "uncategorized",
+    "category": "finance",
     "name": "xvary-stock-research",
     "description": "Thesis-driven equity analysis from public SEC EDGAR and market data; /analyze, /score, /compare workflows with bundled Python tools (Claude Code, Cursor, Codex).",
     "risk": "safe",
@@ -61422,7 +61487,7 @@
   {
     "id": "yes-md",
     "path": "skills/yes-md",
-    "category": "uncategorized",
+    "category": "security",
     "name": "yes-md",
     "description": "6-layer AI governance: safety gates, evidence-based debugging, anti-slack detection, and machine-enforced hooks. Makes AI safe, thorough, and honest.",
     "risk": "safe",
@@ -61444,7 +61509,7 @@
   {
     "id": "yield-intelligence",
     "path": "skills/yield-intelligence",
-    "category": "uncategorized",
+    "category": "finance",
     "name": "yield-intelligence",
     "description": "Passive income portfolio analysis \u2014 activate when user asks about dividend yields, Treasury rates, REIT income, monthly passive income goals, or portfolio yield optimization. Scans 4 asset classes, ranks by risk-adjusted return, and builds allocations targeting a specific monthly income.",
     "risk": "safe",
