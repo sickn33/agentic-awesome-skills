@@ -176,8 +176,16 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
         (
             README_RELEASE_RE,
             (
-                f"**Current release: V{version}.** {release_status}Apply and recovery remain experimental "
-                "and outside the supported preview path."
+                f"**Current release: V{version}.** AAS Core supports local catalog inspection, "
+                "agent-owned selection, stack validation, and plan preview. Apply and recovery remain "
+                "experimental. [Read the AAS Core preview guide]"
+                f"(https://github.com/sickn33/agentic-awesome-skills/blob/v{version}/docs/users/aas-core.md) "
+                "for setup and exact trust boundaries."
+                if re.search(r"^Agentic Awesome Skills is a library of \d[\d,]*\+", content, re.MULTILINE)
+                else (
+                    f"**Current release: V{version}.** {release_status}Apply and recovery remain experimental "
+                    "and outside the supported preview path."
+                )
             ),
         ),
         (
@@ -237,6 +245,19 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
 
     for pattern, replacement in replacements:
         content, _ = replace_if_present(content, pattern, replacement)
+
+    compact_readme = re.search(r"^Agentic Awesome Skills is a library of \d[\d,]*\+", content, re.MULTILINE)
+    if compact_readme:
+        content = re.sub(
+            r"(--package=agentic-awesome-skills@)" + VERSION_TOKEN_PATTERN,
+            rf"\g<1>{version}",
+            content,
+        )
+        content = re.sub(
+            r"(--release )" + VERSION_TOKEN_PATTERN,
+            rf"\g<1>{version}",
+            content,
+        )
 
     core_guide_url = (
         "https://github.com/sickn33/agentic-awesome-skills/"

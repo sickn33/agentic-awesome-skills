@@ -1,3 +1,9 @@
+# README structure refresh - 2026-09-27
+
+- Shortened the README entry path while retaining the introduction video, dynamic skill count, sponsors, source credits, top contributors, repository contributors, and star history.
+- Preserved the existing installation anchors used by user guides and updated README metadata sync to keep the new release copy and examples current.
+- Verified heading hierarchy, table-of-contents anchors, repository documentation links, source-credit preservation, validation, docs security, consistency, and the full test suite.
+
 # README Top Contributors - 2026-09-27
 
 - Added a Top Contributors section beside the repository contributor gallery, with linked GitHub avatars and profiles.
