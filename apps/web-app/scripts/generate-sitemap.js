@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getDocsMetadata } from './docs-metadata.js';
+import { getDocsMetadata, readReproducibleLastmod } from './docs-metadata.js';
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
@@ -18,7 +18,9 @@ const SITE_URL = (process.env.SEO_SITE_URL || process.env.WEBSITE_BASE_URL || DE
 // full library so thin/low-signal detail pages are not mass-submitted.
 export const DEFAULT_TOP_SKILL_COUNT = 180;
 const TOP_SKILL_COUNT = Number.parseInt(process.env.TOP_SKILL_COUNT || String(DEFAULT_TOP_SKILL_COUNT), 10);
-const DEFAULT_LASTMOD = new Date().toISOString().slice(0, 10);
+// Derived from repository history rather than the wall clock: a wall-clock date
+// makes every canonical-sync PR drift when the preview job runs on a later day.
+const DEFAULT_LASTMOD = readReproducibleLastmod();
 
 function getTopSkillCount() {
   return Number.isFinite(TOP_SKILL_COUNT) ? Math.max(TOP_SKILL_COUNT, 0) : DEFAULT_TOP_SKILL_COUNT;
