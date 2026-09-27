@@ -130,6 +130,7 @@ Direct file search can find candidate prose, but it leaves the result in the con
 - [Contributing](#contributing)
 - [Community](#community)
 - [Credits & Sources](#credits--sources)
+- [Top Contributors](#top-contributors)
 - [Repo Contributors](#repo-contributors)
 - [Star History](#star-history)
 - [License](#license)
@@ -803,6 +804,23 @@ Key source families include:
 </details>
 
 Catalog dashboard search, filters, shortlist, and discovery were originally contributed by [@zinzied](https://github.com/zinzied) in [#1111](https://github.com/sickn33/agentic-awesome-skills/pull/1111), then repaired and integrated through [#1118](https://github.com/sickn33/agentic-awesome-skills/pull/1118) under the repository's fork-safety policy.
+
+## Top Contributors
+
+Thank you to the people who have contributed the most commits to this repository. This is a snapshot of [GitHub's contributor count](https://github.com/sickn33/agentic-awesome-skills/graphs/contributors) on September 27, 2026, excluding `sickn33`, `github-actions[bot]`, `sck000`, Claude, and Cursor Agent. Contributors tied on commit count follow GitHub's displayed order.
+
+| # | Contributor | Commits |
+| ---: | --- | ---: |
+| 1 | <a href="https://github.com/munir-abbasi"><img src="https://github.com/munir-abbasi.png?size=48" width="32" height="32" alt="" /></a> [@munir-abbasi](https://github.com/munir-abbasi) | 34 |
+| 2 | <a href="https://github.com/Mohammad-Faiz-Cloud-Engineer"><img src="https://github.com/Mohammad-Faiz-Cloud-Engineer.png?size=48" width="32" height="32" alt="" /></a> [@Mohammad-Faiz-Cloud-Engineer](https://github.com/Mohammad-Faiz-Cloud-Engineer) | 33 |
+| 3 | <a href="https://github.com/WHOISABHISHEKADHIKARI"><img src="https://github.com/WHOISABHISHEKADHIKARI.png?size=48" width="32" height="32" alt="" /></a> [@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI) | 24 |
+| 4 | <a href="https://github.com/zinzied"><img src="https://github.com/zinzied.png?size=48" width="32" height="32" alt="" /></a> [@zinzied](https://github.com/zinzied) | 24 |
+| 5 | <a href="https://github.com/Prince-1652"><img src="https://github.com/Prince-1652.png?size=48" width="32" height="32" alt="" /></a> [@Prince-1652](https://github.com/Prince-1652) | 17 |
+| 6 | <a href="https://github.com/ssumanbiswas"><img src="https://github.com/ssumanbiswas.png?size=48" width="32" height="32" alt="" /></a> [@ssumanbiswas](https://github.com/ssumanbiswas) | 15 |
+| 7 | <a href="https://github.com/FrancoStino"><img src="https://github.com/FrancoStino.png?size=48" width="32" height="32" alt="" /></a> [@FrancoStino](https://github.com/FrancoStino) | 13 |
+| 8 | <a href="https://github.com/Champbreed"><img src="https://github.com/Champbreed.png?size=48" width="32" height="32" alt="" /></a> [@Champbreed](https://github.com/Champbreed) | 10 |
+| 9 | <a href="https://github.com/Dokhacgiakhoa"><img src="https://github.com/Dokhacgiakhoa.png?size=48" width="32" height="32" alt="" /></a> [@Dokhacgiakhoa](https://github.com/Dokhacgiakhoa) | 10 |
+| 10 | <a href="https://github.com/sx4im"><img src="https://github.com/sx4im.png?size=48" width="32" height="32" alt="" /></a> [@sx4im](https://github.com/sx4im) | 10 |
 
 ## Repo Contributors
 
