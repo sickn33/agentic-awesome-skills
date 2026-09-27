@@ -1,3 +1,11 @@
+# Catalog category completion - 2026-09-27
+
+- Audited the exact `main` catalog at commit `c6c0677`; it contains 2,472 skills, including 359 `uncategorized` entries.
+- Used Jev as an advisory structured classifier with a closed vocabulary of existing catalog categories, then manually reviewed low-confidence and placeholder-description cases.
+- Added `data/category-overrides.json` with 359 maintainer-reviewed assignments and applied it during index generation.
+- Regenerated the index/catalog validation snapshot: 2,472 records and 0 `uncategorized` entries.
+- Passed `npm run validate`, `npm run validate:references`, `npm run security:docs`, and `npm run check:aas-v1-catalog`.
+
 # Public AAS info endpoint - 2026-09-25
 
 - Added a generated `apps/web-app/public/api/info.json` endpoint for public AAS name, links, release version, feature list, and current skill count.
