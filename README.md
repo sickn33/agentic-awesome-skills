@@ -534,12 +534,20 @@ Key source families include:
 
 Catalog dashboard search, filters, shortlist, and discovery were originally contributed by [@zinzied](https://github.com/zinzied) in [#1111](https://github.com/sickn33/agentic-awesome-skills/pull/1111), then repaired and integrated through [#1118](https://github.com/sickn33/agentic-awesome-skills/pull/1118) under the repository's fork-safety policy.
 
-## Top Contributors
+ ## Top Contributors
 
 Thanks to everyone who has helped build this project—especially the contributors below.
 
+<table>
+<tr>
+<td valign="top" width="50%">
+
+### Most Commits
+
+Contributors ranked by the number of commits.
+
 | # | Contributor | Commits |
-| ---: | --- | ---: |
+|---:|---|---:|
 | 1 | <a href="https://github.com/munir-abbasi"><img src="https://github.com/munir-abbasi.png?size=48" width="32" height="32" alt="" /></a> [@munir-abbasi](https://github.com/munir-abbasi) | 34 |
 | 2 | <a href="https://github.com/Mohammad-Faiz-Cloud-Engineer"><img src="https://github.com/Mohammad-Faiz-Cloud-Engineer.png?size=48" width="32" height="32" alt="" /></a> [@Mohammad-Faiz-Cloud-Engineer](https://github.com/Mohammad-Faiz-Cloud-Engineer) | 33 |
 | 3 | <a href="https://github.com/WHOISABHISHEKADHIKARI"><img src="https://github.com/WHOISABHISHEKADHIKARI.png?size=48" width="32" height="32" alt="" /></a> [@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI) | 24 |
@@ -551,12 +559,15 @@ Thanks to everyone who has helped build this project—especially the contributo
 | 9 | <a href="https://github.com/Dokhacgiakhoa"><img src="https://github.com/Dokhacgiakhoa.png?size=48" width="32" height="32" alt="" /></a> [@Dokhacgiakhoa](https://github.com/Dokhacgiakhoa) | 10 |
 | 10 | <a href="https://github.com/sx4im"><img src="https://github.com/sx4im.png?size=48" width="32" height="32" alt="" /></a> [@sx4im](https://github.com/sx4im) | 10 |
 
+</td>
+<td valign="top" width="50%">
+
 ### Most Skills Added
 
 Contributors ranked by the number of skills they added.
 
 | # | Contributor | Skills added |
-| ---: | --- | ---: |
+|---:|---|---:|
 | 1 | <a href="https://github.com/Prince-1652"><img src="https://github.com/Prince-1652.png?size=48" width="32" height="32" alt="" /></a> [@Prince-1652](https://github.com/Prince-1652) | 92 |
 | 2 | <a href="https://github.com/sohamganatra"><img src="https://github.com/sohamganatra.png?size=48" width="32" height="32" alt="" /></a> [@sohamganatra](https://github.com/sohamganatra) | 78 |
 | 3 | <a href="https://github.com/FrancoStino"><img src="https://github.com/FrancoStino.png?size=48" width="32" height="32" alt="" /></a> [@FrancoStino](https://github.com/FrancoStino) | 61 |
@@ -567,6 +578,10 @@ Contributors ranked by the number of skills they added.
 | 8 | <a href="https://github.com/WHOISABHISHEKADHIKARI"><img src="https://github.com/WHOISABHISHEKADHIKARI.png?size=48" width="32" height="32" alt="" /></a> [@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI) | 19 |
 | 9 | <a href="https://github.com/ar27111994"><img src="https://github.com/ar27111994.png?size=48" width="32" height="32" alt="" /></a> [@ar27111994](https://github.com/ar27111994) | 13 |
 | 10 | <a href="https://github.com/xi-kari"><img src="https://github.com/xi-kari.png?size=48" width="32" height="32" alt="" /></a> [@xi-kari](https://github.com/xi-kari) | 12 |
+
+</td>
+</tr>
+</table>
 
 ## Repo Contributors
 
