@@ -449,7 +449,7 @@ export function Workbench(): React.ReactElement {
           <li>Give the brief to your coding agent with AAS MCP configured. Let it inspect your project and select exact IDs; review its choices before saving <code>aas-stack.json</code>.</li>
           <li>Validate the manifest and generate a preview plan with the CLI, then import both files and optional <code>aas-selection-evidence.json</code> below.</li>
         </ol>
-        <a href={releaseFileUrl('docs/users/aas-core.md')}>Configuration and preview commands</a>
+        <a href={`${import.meta.env.BASE_URL}docs/aas-core/`}>Configuration and preview commands</a>
       </section>
 
       <section className="workbench-boundary workbench-example" aria-labelledby="workbench-example-title">

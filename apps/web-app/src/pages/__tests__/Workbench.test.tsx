@@ -138,7 +138,7 @@ describe('Workbench review UI', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Review what your agent selected.' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Need a stack to review?' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Compare skills in the catalog' })).toHaveAttribute('href', '/core');
-    expect(screen.getByRole('link', { name: 'Configuration and preview commands' })).toHaveAttribute('href', expect.stringMatching(/\/blob\/v[^/]+\/docs\/users\/aas-core\.md$/));
+    expect(screen.getByRole('link', { name: 'Configuration and preview commands' })).toHaveAttribute('href', '/docs/aas-core/');
 
     paste('Paste JSON', stackFixture());
     fireEvent.click(screen.getByRole('button', { name: 'Review pasted stack' }));

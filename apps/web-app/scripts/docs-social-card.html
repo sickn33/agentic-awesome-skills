@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>AAS documentation social card template</title>
+  <style>
+    @font-face { font-family: Outfit; src: url('/node_modules/@fontsource/outfit/files/outfit-latin-700-normal.woff2'); font-weight: 700; }
+    @font-face { font-family: Outfit; src: url('/node_modules/@fontsource/outfit/files/outfit-latin-400-normal.woff2'); font-weight: 400; }
+    * { box-sizing: border-box; }
+    body { margin: 0; width: 1200px; height: 630px; background: #0b0d10; color: #e2e8f0; font-family: Outfit, sans-serif; }
+    main { height: 100%; padding: 64px 76px; border-top: 8px solid #38bdf8; display: flex; flex-direction: column; }
+    header { display: flex; align-items: center; gap: 20px; font-size: 26px; }
+    img { width: 146px; height: 60px; object-fit: contain; }
+    .label { color: #38bdf8; font-size: 18px; letter-spacing: .12em; margin-top: 54px; }
+    h1 { font-size: 76px; line-height: 1.06; letter-spacing: -.04em; margin: 20px 0; max-width: 1000px; }
+    p { font-size: 28px; color: #c5d0dd; margin: 0; max-width: 900px; }
+    footer { margin-top: auto; font-size: 22px; color: #9ba9be; display: flex; justify-content: space-between; border-top: 1px solid #30363d; padding-top: 24px; }
+  </style>
+</head>
+<body>
+  <main>
+    <header><img src="/aas-wordmark.png" alt=""><span>Agentic Awesome Skills</span></header>
+    <div class="label">DOCUMENTATION</div>
+    <h1></h1><p></p>
+    <footer><span>aaskills.tech</span><span>Discover · Review · Build</span></footer>
+  </main>
+  <script>
+    const cards = {
+      'getting-started': ['Your first skill stack.', 'Set up AAS Core and review the skills selected for your project.'],
+      'aas-core': ['AAS Core, explained.', 'Local discovery, agent-owned selection, and reproducible stacks.'],
+      'faq': ['Answers. Next steps.', 'Installation help, practical guidance, and troubleshooting.'],
+    };
+    const card = cards[new URLSearchParams(location.search).get('guide')] || cards['getting-started'];
+    document.querySelector('h1').textContent = card[0];
+    document.querySelector('main > p').textContent = card[1];
+  </script>
+</body>
+</html>

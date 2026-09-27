@@ -3,17 +3,17 @@
    "Current surfaces", § steps) rendered in the AAS dark/cyan brand, not a cream clone. */
 
 .landing-page {
-  --landing-bg: #000000;
-  --landing-panel: #07090d;
-  --landing-panel-2: #0b0f14;
-  --landing-cyan: #00e5ff;
+  --landing-bg: var(--surface-canvas);
+  --landing-panel: var(--surface-card);
+  --landing-panel-2: var(--surface-elevated);
+  --landing-cyan: var(--accent-solid);
   --landing-cyan-dim: rgba(0, 229, 255, 0.6);
-  --landing-cyan-soft: rgba(0, 229, 255, 0.1);
+  --landing-cyan-soft: var(--accent-soft);
   --landing-cyan-glow: rgba(0, 229, 255, 0.42);
-  --landing-text: #f2f8fc;
-  --landing-muted: #8d9cad;
-  --landing-line: rgba(0, 229, 255, 0.2);
-  --landing-line-strong: rgba(0, 229, 255, 0.45);
+  --landing-text: var(--text-primary);
+  --landing-muted: var(--text-muted);
+  --landing-line: var(--stroke-subtle);
+  --landing-line-strong: var(--stroke-strong);
   --landing-radius: 0.9rem;
   --landing-max: 1120px;
 
@@ -29,49 +29,12 @@
   font-size: 0.92em;
 }
 
-/* App shell overrides while the landing is mounted */
-
-.app-shell:has(.landing-page) {
-  --surface-canvas: #000000;
-  --surface-card: #07090d;
-  --text-primary: #f2f8fc;
-  --text-secondary: #c5d0dc;
-  --text-muted: #8d9cad;
-  --stroke-subtle: rgba(0, 229, 255, 0.16);
-  --accent-solid: #00e5ff;
-  --accent-border: #00e5ff;
-  --accent-soft: rgba(0, 229, 255, 0.1);
-  --accent-ring: #00e5ff;
-}
-
+/* Only the landing layout differs; brand chrome is shared globally. */
 .app-shell:has(.landing-page) .app-main {
   width: 100%;
   max-width: none;
   min-height: 0;
   overflow: visible;
-}
-
-.app-shell:has(.landing-page) .app-header {
-  border-bottom-color: rgba(0, 229, 255, 0.14);
-  background: color-mix(in oklab, #000 88%, transparent);
-}
-
-.app-shell:has(.landing-page) .brand-link__name {
-  display: none;
-}
-
-.app-shell:has(.landing-page) .brand-link__logo {
-  width: auto;
-  height: 30px;
-  max-width: 6rem;
-  object-fit: contain;
-  filter: drop-shadow(0 0 8px var(--landing-cyan-glow));
-}
-
-.app-shell:has(.landing-page) .app-footer {
-  border-top-color: rgba(0, 229, 255, 0.14);
-  background: #000;
-  color: var(--landing-muted);
 }
 
 /* ---------- Hero ---------- */
@@ -148,7 +111,7 @@
   border: 1px solid var(--landing-line);
   border-radius: 999px;
   font-size: 0.76rem;
-  font-weight: 650;
+  font-weight: 600;
   color: var(--landing-cyan);
   text-decoration: none;
   background: var(--landing-cyan-soft);
@@ -170,10 +133,10 @@
 .landing-hero__title {
   margin: 0.9rem 0 0;
   max-width: 17ch;
-  font-size: clamp(2rem, 5vw, 3.4rem);
-  font-weight: 780;
-  letter-spacing: -0.045em;
-  line-height: 1.02;
+  font-size: var(--page-title-size);
+  font-weight: 800;
+  letter-spacing: var(--page-title-tracking);
+  line-height: var(--page-title-leading);
 }
 
 .landing-hero__punch {
@@ -233,7 +196,7 @@
   border-radius: 0.5rem;
   padding: 0.45rem 0.7rem;
   font-size: 0.74rem;
-  font-weight: 750;
+  font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #001018;
@@ -261,7 +224,7 @@
   padding: 0.55rem 1rem;
   border-radius: 0.65rem;
   font-size: 0.92rem;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -0.015em;
   text-decoration: none;
   transition:
@@ -332,7 +295,7 @@
 .landing-section__intro h2 {
   margin: 0;
   font-size: clamp(1.45rem, 2.6vw, 2rem);
-  font-weight: 750;
+  font-weight: 800;
   letter-spacing: -0.035em;
   line-height: 1.12;
 }
@@ -402,7 +365,7 @@
 
 .landing-agent__name {
   font-size: 0.92rem;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -0.015em;
 }
 
@@ -497,7 +460,7 @@
 
 .landing-tile__title {
   font-size: 1.15rem;
-  font-weight: 740;
+  font-weight: 700;
   letter-spacing: -0.025em;
 }
 
@@ -532,7 +495,7 @@
 .landing-tile__stats strong {
   color: var(--landing-text);
   font-size: 1.55rem;
-  font-weight: 760;
+  font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1;
   text-transform: none;
@@ -546,7 +509,7 @@
   margin-top: auto;
   padding-top: 0.6rem;
   font-size: 0.88rem;
-  font-weight: 650;
+  font-weight: 600;
   color: var(--landing-cyan);
 }
 
@@ -598,14 +561,14 @@
   display: block;
   font-family: var(--font-mono);
   font-size: 0.74rem;
-  font-weight: 650;
+  font-weight: 600;
   color: var(--landing-cyan);
 }
 
 .landing-step h3 {
   margin: 0.3rem 0 0.3rem;
   font-size: 1.05rem;
-  font-weight: 720;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
