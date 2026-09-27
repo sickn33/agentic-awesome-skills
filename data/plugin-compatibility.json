@@ -26384,6 +26384,25 @@
       "runtime_files": []
     },
     {
+      "id": "lintlang-audit",
+      "path": "skills/lintlang-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "linux-administration",
       "path": "skills/linux-administration",
       "targets": {
@@ -41614,6 +41633,25 @@
       "runtime_files": []
     },
     {
+      "id": "system-prompt-lookup",
+      "path": "skills/system-prompt-lookup",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "systematic-debugging",
       "path": "skills/systematic-debugging",
       "targets": {
@@ -47467,10 +47505,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2472,
+    "total_skills": 2474,
     "supported": {
-      "codex": 2385,
-      "claude": 2410
+      "codex": 2387,
+      "claude": 2412
     },
     "blocked": {
       "codex": 87,
