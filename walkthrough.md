@@ -1,3 +1,8 @@
+# Top skills contributors - 2026-09-27
+
+- Added a second Top Contributors ranking for canonical skills introduced, alongside the existing commit ranking.
+- Counted each current `skills/**/SKILL.md` once at its first introduction in repository history, resolved commit authors to GitHub accounts, and excluded the requested accounts.
+
 # README structure refresh - 2026-09-27
 
 - Shortened the README entry path while retaining the introduction video, dynamic skill count, sponsors, source credits, top contributors, repository contributors, and star history.

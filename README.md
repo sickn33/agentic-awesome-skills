@@ -551,6 +551,23 @@ Thanks to everyone who has helped build this project—especially the contributo
 | 9 | <a href="https://github.com/Dokhacgiakhoa"><img src="https://github.com/Dokhacgiakhoa.png?size=48" width="32" height="32" alt="" /></a> [@Dokhacgiakhoa](https://github.com/Dokhacgiakhoa) | 10 |
 | 10 | <a href="https://github.com/sx4im"><img src="https://github.com/sx4im.png?size=48" width="32" height="32" alt="" /></a> [@sx4im](https://github.com/sx4im) | 10 |
 
+### Most Skills Added
+
+Ranked by the number of canonical `skills/**/SKILL.md` files each GitHub account introduced in the current repository history. Each skill is counted once at its first introduction; renames and duplicate copies are not counted. Excluded accounts are omitted.
+
+| # | Contributor | Skills added |
+| ---: | --- | ---: |
+| 1 | <a href="https://github.com/Prince-1652"><img src="https://github.com/Prince-1652.png?size=48" width="32" height="32" alt="" /></a> [@Prince-1652](https://github.com/Prince-1652) | 92 |
+| 2 | <a href="https://github.com/sohamganatra"><img src="https://github.com/sohamganatra.png?size=48" width="32" height="32" alt="" /></a> [@sohamganatra](https://github.com/sohamganatra) | 78 |
+| 3 | <a href="https://github.com/FrancoStino"><img src="https://github.com/FrancoStino.png?size=48" width="32" height="32" alt="" /></a> [@FrancoStino](https://github.com/FrancoStino) | 61 |
+| 4 | <a href="https://github.com/ProgramadorBrasil"><img src="https://github.com/ProgramadorBrasil.png?size=48" width="32" height="32" alt="" /></a> [@ProgramadorBrasil](https://github.com/ProgramadorBrasil) | 52 |
+| 5 | <a href="https://github.com/nikolasdehor"><img src="https://github.com/nikolasdehor.png?size=48" width="32" height="32" alt="" /></a> [@nikolasdehor](https://github.com/nikolasdehor) | 35 |
+| 6 | <a href="https://github.com/RamonRiosJr"><img src="https://github.com/RamonRiosJr.png?size=48" width="32" height="32" alt="" /></a> [@RamonRiosJr](https://github.com/RamonRiosJr) | 26 |
+| 7 | <a href="https://github.com/MMEHDI0606"><img src="https://github.com/MMEHDI0606.png?size=48" width="32" height="32" alt="" /></a> [@MMEHDI0606](https://github.com/MMEHDI0606) | 20 |
+| 8 | <a href="https://github.com/WHOISABHISHEKADHIKARI"><img src="https://github.com/WHOISABHISHEKADHIKARI.png?size=48" width="32" height="32" alt="" /></a> [@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI) | 19 |
+| 9 | <a href="https://github.com/ar27111994"><img src="https://github.com/ar27111994.png?size=48" width="32" height="32" alt="" /></a> [@ar27111994](https://github.com/ar27111994) | 13 |
+| 10 | <a href="https://github.com/xi-kari"><img src="https://github.com/xi-kari.png?size=48" width="32" height="32" alt="" /></a> [@xi-kari](https://github.com/xi-kari) | 12 |
+
 ## Repo Contributors
 
 <a href="https://github.com/sickn33/agentic-awesome-skills/graphs/contributors">
