@@ -553,7 +553,7 @@ Thanks to everyone who has helped build this project—especially the contributo
 
 ### Most Skills Added
 
-Ranked by the number of canonical `skills/**/SKILL.md` files each GitHub account introduced in the current repository history. Each skill is counted once at its first introduction; renames and duplicate copies are not counted. Excluded accounts are omitted.
+Contributors ranked by the number of skills they added.
 
 | # | Contributor | Skills added |
 | ---: | --- | ---: |
