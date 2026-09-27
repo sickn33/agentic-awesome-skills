@@ -52,7 +52,14 @@ function readTree(root) {
 }
 
 try {
-  const locations = [current, `${current}plugins/`, `${current}topics/github-ai-skills-repository/`, `${current}skill/brainstorming/`];
+  const locations = [
+    current,
+    `${current}plugins/`,
+    `${current}topics/github-ai-skills-repository/`,
+    `${current}skill/brainstorming/`,
+    `${current}docs/`,
+    `${current}docs/getting-started/`,
+  ];
   fs.writeFileSync(sitemapPath, sitemap(locations), 'utf8');
   writeSkills(skillsIndexPath, ['brainstorming', 'catalog-only']);
   fs.writeFileSync(googleVerificationPath, googleVerificationBody, 'utf8');
@@ -105,6 +112,7 @@ try {
   const legacySitemapSource = fs.readFileSync(path.join(outputOne, 'antigravity-awesome-skills/sitemap.xml'), 'utf8');
   assert.strictEqual((legacySitemapSource.match(/<loc>/g) || []).length, 4, 'legacy sitemap stays on the curated source sitemap');
   assert(!legacySitemapSource.includes('/skill/catalog-only/'), 'catalog-only redirects must not expand crawler discovery');
+  assert(!legacySitemapSource.includes('/docs/'), 'first-party docs must stay out of the legacy bridge');
 
   const outputTwo = path.join(fixtureRoot, '.codex', 'bridge-two');
   generateBridge(bridgeOptions(outputTwo));

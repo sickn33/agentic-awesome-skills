@@ -64,7 +64,7 @@
       },
       {
         "label": "Read AAS Core usage",
-        "href": "https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/usage.md"
+        "href": "/docs/usage/"
       },
       {
         "label": "Compare specialized plugins",
@@ -137,7 +137,7 @@
       },
       {
         "label": "Read the AAS Core guide",
-        "href": "https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/aas-core.md"
+        "href": "/docs/aas-core/"
       },
       {
         "label": "Browse all skills",
@@ -222,7 +222,7 @@
       },
       {
         "label": "Read plugin docs",
-        "href": "https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/plugins.md"
+        "href": "/docs/plugins/"
       }
     ]
   },

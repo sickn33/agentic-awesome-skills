@@ -1,3 +1,12 @@
+# Documentation experience — 2026-09-26
+
+- Added full-text guide search with highlighted excerpts, individual guide loading, clipboard feedback, accessible code scrolling, breadcrumbs, an active outline, and contextual next steps.
+- Exposed Git-derived dates and exact source links, plus paths for users, contributors, maintainers, Core reference, and troubleshooting.
+- Added article/breadcrumb structured data, real guide sitemap dates, and social images for Getting Started, AAS Core, and FAQ.
+- Made local Markdown targets, images, heading anchors, static route content, and social image checks part of the web build.
+- See the [verification record](docs/maintainers/site-documentation-experience-2026-09-26.md) for checks, accessibility scope, and the external Mintlify limitation.
+- This change does not change the package version or create a release.
+
 # Public AAS info endpoint - 2026-09-25
 
 - Added a generated `apps/web-app/public/api/info.json` endpoint for public AAS name, links, release version, feature list, and current skill count.
@@ -724,3 +733,13 @@ Moved [Support the Project](README.md#support-the-project) directly below the op
 - Added the 40-second AAS presentation to the README through a GitHub video attachment, rendered inline by GitHub.
 - Added a self-hosted HTML video player to the catalog landing page, with a poster and no automatic download or playback.
 - Added a README link to the site's player as a fallback for GitHub playback stalls.
+
+
+## Homepage outage repair (2026-09-27)
+
+The landing route used useSkills outside CatalogRouteProvider, crashing the deployed homepage. Move it inside the existing provider route and exercise the real App homepage without mocking the context.
+
+
+## Shared site style (2026-09-27)
+
+Use the landing black/cyan palette on every route, share Outfit/JetBrains Mono with Tailwind and Markdown, load the title weight, unify responsive page headings, and keep header/footer appearance stable across navigation.
