@@ -1,7 +1,8 @@
 # README Top Contributors - 2026-09-27
 
 - Added a Top Contributors section beside the repository contributor gallery, with linked GitHub avatars and profiles.
-- Ranked the ten eligible accounts by GitHub contributor commit counts observed on September 27, 2026; the README records exclusions and tie order.
+- Ranked the ten eligible accounts by GitHub contributor commit counts observed on September 27, 2026.
+- Simplified the section introduction after feedback so the README focuses on thanking contributors.
 
 # Catalog category completion - 2026-09-27
 

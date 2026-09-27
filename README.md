@@ -807,7 +807,7 @@ Catalog dashboard search, filters, shortlist, and discovery were originally cont
 
 ## Top Contributors
 
-Thank you to the people who have contributed the most commits to this repository. This is a snapshot of [GitHub's contributor count](https://github.com/sickn33/agentic-awesome-skills/graphs/contributors) on September 27, 2026, excluding `sickn33`, `github-actions[bot]`, `sck000`, Claude, and Cursor Agent. Contributors tied on commit count follow GitHub's displayed order.
+Thanks to everyone who has helped build this project—especially the contributors below.
 
 | # | Contributor | Commits |
 | ---: | --- | ---: |
