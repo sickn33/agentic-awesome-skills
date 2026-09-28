@@ -172,6 +172,35 @@ The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
             self.assertIn("1,304+ skill", jetski_cortex)
             self.assertNotIn("1,1", jetski_cortex)
 
+    def test_compact_readme_sync_keeps_video_and_updates_all_counts(self):
+        current = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        metadata = {
+            "version": "19.1.0",
+            "core_included": True,
+            "core_included_from_major": 15,
+            "total_skills": 2500,
+            "total_skills_label": "2,500+",
+            "star_badge_count": "47%2C000%2B",
+            "star_milestone": "47,000+",
+            "star_celebration": "47k",
+            "stars": 46975,
+            "updated_at": "2026-09-27T09:49:22+00:00",
+        }
+        once = sync_repo_metadata.sync_readme_copy(update_readme.apply_metadata(current, metadata), metadata)
+        twice = sync_repo_metadata.sync_readme_copy(update_readme.apply_metadata(once, metadata), metadata)
+        self.assertEqual(once, twice)
+        self.assertIn("## Watch the Introduction", once)
+        self.assertIn("https://github.com/user-attachments/assets/02aa20ca-c3bb-4984-807e-7b06ef77e785", once)
+        self.assertIn("library of 2,500+ installable", once)
+        self.assertIn("## Browse 2,500+ Skills", once)
+        self.assertIn("[Browse 2,500+ Skills](#browse-2500-skills)", once)
+        self.assertIn("--package=agentic-awesome-skills@19.1.0", once)
+        self.assertIn("--release 19.1.0", once)
+        self.assertIn("## Top Contributors", once)
+        self.assertIn("## Repo Contributors", once)
+        self.assertNotIn("## Quick FAQ", once)
+        self.assertNotIn("## Why This Repo", once)
+
     def test_build_about_description_uses_live_skill_count(self):
         description = sync_repo_metadata.build_about_description(
             {"total_skills_label": "1,304+"}

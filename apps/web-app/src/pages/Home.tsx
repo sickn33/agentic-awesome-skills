@@ -5,6 +5,7 @@ import { categoryFacet, matchCatalogSkill, searchMode, type SearchMode } from '.
 import { SkillCard } from '../components/SkillCard';
 import { ShortlistReview } from '../components/ShortlistReview';
 import OutcomeExplorer from '../components/OutcomeExplorer';
+import WorkflowExplorer from '../components/WorkflowExplorer';
 import { Icon } from '../components/ui/Icon';
 import { useSkills } from '../context/SkillContext';
 import { seoLandingPages } from '../data/seoLandingPages';
@@ -22,10 +23,10 @@ const conceptCards = [
 ] as const;
 
 const integrationGuides = [
-  { name: 'Claude Code', href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/claude-code-skills.md' },
-  { name: 'Cursor', href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/cursor-skills.md' },
-  { name: 'Codex CLI', href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/codex-cli-skills.md' },
-  { name: 'Gemini CLI', href: 'https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/gemini-cli-skills.md' },
+  { name: 'Claude Code', href: `${import.meta.env.BASE_URL}docs/claude-code-skills/` },
+  { name: 'Cursor', href: `${import.meta.env.BASE_URL}docs/cursor-skills/` },
+  { name: 'Codex CLI', href: `${import.meta.env.BASE_URL}docs/codex-cli-skills/` },
+  { name: 'Gemini CLI', href: `${import.meta.env.BASE_URL}docs/gemini-cli-skills/` },
   { name: 'Antigravity', href: 'https://github.com/sickn33/agentic-awesome-skills#choose-your-tool' },
 ] as const;
 
@@ -355,6 +356,7 @@ export function Home(): React.ReactElement {
         </section>
 
         <OutcomeExplorer catalog={skills} onGoalChange={setDiscoveryGoal} />
+        <WorkflowExplorer catalog={skills} shortlistIds={shortlistIds} onToggleShortlist={toggleShortlist} />
         <ShortlistReview suggestedGoal={discoveryGoal} skills={shortlistSkills} onRemove={toggleShortlist} onClear={clearShortlist} />
 
         <section className="catalog-results" aria-labelledby="catalog-results-title">

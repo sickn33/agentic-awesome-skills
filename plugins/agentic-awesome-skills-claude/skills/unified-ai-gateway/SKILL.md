@@ -26,16 +26,28 @@ installations require the manual setup below.
 
 ## Version Note
 
-The current public project release and latest reviewed immutable MCP image are
-both `v0.4.9`. The inspection procedure below pins its recorded digests; those
-values must not be silently replaced with a mutable tag. Use only the reviewed,
-digest-pinned procedure below, including for a provider-free demo. A new content
-review is required before changing this pinned procedure.
+These are two different things and they are not equal today:
+
+- **Current release: `v0.8.0`.** It declares and ships fifteen tool names, and the
+  [60-second demo command](https://github.com/happy520ai/unified-ai-system#try-it-in-60-seconds)
+  in the README names that version. Read it live with
+  `node tools/verify-image-roster.mjs 0.8.0`, which reports the roster from the
+  image bytes rather than from this file.
+- **Reviewed and pinned below: `0.4.9`.** The inspection procedure in this file
+  pins that image's recorded digests because `0.4.9` is the newest version with a
+  completed [content review](https://github.com/happy520ai/unified-ai-system/blob/8561ec5c9e9d1ecf499c1be5aba0ba3720219074/docs/security/mcp-image-review-0.4.9.md).
+  It carries 9 of the fifteen names: the model-backed enhancement, knowledge
+  retrieval and workflow execution tools arrived at 0.5.0, and the three
+  governance tools at 0.8.0.
+
+Do not substitute a mutable tag for a pinned digest, and do not move the pin to a
+newer version just because this file looks out of date: a new content review is
+required first, and the pinned identity is only as good as the review that backs it.
 
 ## Prerequisites And Setup
 
 1. Confirm that Codex CLI and Docker are installed and Docker is running.
-2. If the 15 tools are already visible, skip setup and do not register a
+2. If the nine tools are already visible, skip setup and do not register a
    duplicate server.
 3. Explain the first stage: it downloads one reviewed platform from the
    immutable `0.4.9` multi-platform index into Docker's cache, inspects its
@@ -133,7 +145,8 @@ codex mcp get unified-ai-system --json
 ```
 
 8. Restart Codex or open a new task, then use `/mcp verbose` to confirm that all
-   15 tools are available. Remove the registration when it is no longer
+   nine tools are available - the pinned `0.4.9` image ships nine of the fifteen
+   names the current release declares. Remove the registration when it is no longer
    wanted:
 
 ```bash
@@ -169,15 +182,44 @@ deploying a production gateway.
 
 ## Tool Map
 
-- `gateway_health`: managed gateway status and provider mode
-- `gateway_readiness`: chat-path readiness and blockers
-- `gateway_prompt_enhance`: local prompt structuring without a provider call
-- `gateway_chat`: deterministic credential-free chat proof
-- `knowledge_readiness`: knowledge subsystem readiness
-- `workflow_health`: workflow subsystem status
-- `workflow_actions`: available workflow actions
-- `workforce_health`: workforce subsystem status
-- `workforce_agents`: available workforce agents
+Nine of these ship in the reviewed `0.4.9` image below; the six marked 0.5.0 and
+0.8.0 are in the current release and are absent from that older image.
+
+Status and boundaries:
+
+- `gateway_health`: gateway health, provider mode, and the real-provider safety flag
+- `gateway_readiness`: first-run readiness for chat and the local gateway runtime
+- `knowledge_readiness`: knowledge infrastructure without loading or changing data
+- `workflow_health`: the governed workflow subsystem without starting a workflow
+- `workflow_actions`: workflow action definitions without invoking any action
+- `workforce_health`: the workforce subsystem without planning or executing work
+- `workforce_agents`: configured workforce agent descriptors without dispatching them
+
+Doing work locally, still with no provider call:
+
+- `gateway_prompt_enhance`: structures a plain-language request into a prompt
+  locally, without provider credentials or provider calls
+- `gateway_prompt_enhance_llm` *(0.5.0)*: semantic rewriting through a provider
+  when one is configured, falling back to the deterministic local engine when none is
+- `knowledge_retrieve` *(0.5.0)*: keyword search over the local knowledge base,
+  returning ranked chunks with citations; calls no provider
+- `workflow_run` *(0.5.0)*: the 3-step local workflow - retrieve knowledge, compose
+  a Markdown report, write a controlled artifact; calls no provider
+- `gateway_chat`: one chat request, accepted only when the gateway proves real
+  providers are disabled
+
+The governed Agent surface, read-only *(0.8.0)*:
+
+- `agent_governance_status`: governance status through the authenticated Gateway
+  identity; no tenant override is accepted and it fails closed when that identity is
+  not authorized for platform status
+- `agent_governance_list`: only the governed Agents visible to that tenant, with no
+  tenant or owner override argument
+- `agent_governance_describe` (takes `agentId`): one Agent as seen by that tenant;
+  cross-tenant and missing identifiers stay indistinguishable on purpose
+
+Creating, executing, revoking, approving or activating anything in that surface
+remains a human REST/SDK/CLI operation and is not exposed to the model at all.
 
 ## Example
 

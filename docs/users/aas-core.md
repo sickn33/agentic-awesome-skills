@@ -31,7 +31,7 @@ AAS MCP does not scan the repository and does not decide which skills are best. 
 > **Release boundary:** AAS Core landed after release 14.6.0. Use an exact Core-capable release rather than an unreviewed moving tag.
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@18.6.0 -- aas mcp configure \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@18.8.0 -- aas mcp configure \
   --host codex \
   --scope user \
   --config /absolute/path/to/codex/config.toml \
@@ -80,6 +80,21 @@ Enter the project outcome and select Codex or Claude as the project target, prev
 The catalog stores shortlisted IDs in browser-local storage. The goal and brief remain in page memory until copied. Workbench does not consume the brief: after the agent returns a manifest and you review it, persist and validate the manifest, generate the immutable CLI plan, then explicitly import those two artifacts into Workbench. If clipboard access is unavailable, select the brief text from its preview.
 
 ### Start directly in the coding agent
+
+When a Core session starts, the agent must explicitly offer an optional guided
+intake and say that you can skip the questions and let it work autonomously.
+If you explicitly choose autonomy, the agent skips the introductory questions
+and begins its normal project inspection. If you accept the guided intake, it
+should ask a short set of questions about the desired outcome, whether you are
+starting from scratch, adding a feature, or fixing a problem, your languages or
+frameworks, important constraints, and how you will recognize success. The
+agent may ask additional focused questions when the answers and project
+evidence leave a material ambiguity; it should explain why the question matters
+and stop once it has enough context.
+
+Guided answers provide context for project understanding and the eventual
+profile. They do not select skills automatically and do not replace repository
+inspection or the capability-coverage contract below.
 
 When a Core session starts, the agent must explicitly offer an optional guided
 intake and say that you can skip the questions and let it work autonomously.

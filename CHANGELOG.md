@@ -7,6 +7,74 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.8.0] - 2026-09-28 - "Serply Search, NSFW AI SpicyAPI, and the Jev Social v0.1.10 Pin"
+
+> Adds 2 reviewed skills for Google/News/Scholar search via MCP and for adult media generation with spend gates and consent rules, refreshes the Jev Social runtime pin, and improves the README contributor layout for **2,476** skills.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the complete protected maintainer batch merged after `18.7.0`, with existing installation interfaces preserved.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.8.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **Serply Search MCP (#1655)** — `serply-search-mcp` covers Google, Google News, Google Scholar, Bing, and public page reading through the Serply MCP server. Provider-chosen, no default changes, credential handling via the host's secret mechanism, and untrusted-content guidance included.
+- **NSFW AI SpicyAPI (#1649)** — `nsfw-ai-spicyapi` generates adult images, image-to-video clips and edits through the SpicyAPI API with hard refusal rules, quote-before-spend gates, and explicit consent boundaries. `risk: critical`.
+
+### Changed
+
+- **Jev Social (#1656)** — refresh the pinned runtime from `v0.1.8` (`5270e23cfd27aace9055669ee396926973baa241`) to `v0.1.10` (`baf3cd6aa4f9c881665c29ed29a10391f761760b`), with explicit decision-provider boundaries, telemetry default off for spawned `socai` children, and the automatic installer still excluded.
+- **README (#1653)** — improve the Top Contributors section layout with side-by-side ranking tables and a repaired anchor.
+
+### Documentation and community
+
+Thanks to [@googio](https://github.com/googio) for `serply-search-mcp`, [@spicyapi-owner](https://github.com/spicyapi-owner) for `nsfw-ai-spicyapi`, [@IRONICBo](https://github.com/IRONICBo) for the Jev Social runtime refresh, and [@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI) for the contributor layout repair.
+
+### Validation scope
+
+Exact-head maintainer review for changed skill content, protected source PRs, repository validation and tests, reference validation, docs security, protected CI and CodeQL, dependency review, canonical synchronization, release preflight, npm publication, and release provenance verification.
+
+## [18.7.0] - 2026-09-27 - "Prompt Provenance, LintLang Audits, and a Fully Categorized Catalog"
+
+> Adds 2 reviewed skills for verifying what a shipped AI product was actually told and for static auditing of agent instructions, refreshes the Jev Social and Unified AI Gateway runtime references, and classifies every remaining catalog entry for **2,474** skills with zero `uncategorized` records.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the complete protected maintainer batch merged after `18.6.0`, with existing installation interfaces preserved.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.7.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **System Prompt Lookup (#1628)** — `system-prompt-lookup` answers "what is this product actually told?" from a dated archive of captured prompts and tool schemas instead of a fluent recollection. Requires quoting only what was fetched in the session, labels captured versus vendor-reported artifacts, and treats fetched prompts as data rather than instructions.
+- **LintLang Audit (#1638)** — `lintlang-audit` runs the pinned LintLang 0.8.0 static checks over a named agent instruction file, tool definition, or supported Python prompt, and reports per-file verdicts, severity counts, finding codes, and locations without editing files or calling a model. Read-only, `risk: safe`, with the Apache-2.0 notice linked at its pinned upstream revision.
+
+### Changed
+
+- **Jev Social (#1637)** — refresh the pinned runtime from `v0.1.5` to `v0.1.8` (`5270e23cfd27aace9055669ee396926973baa241`); the read-only browser boundary and explicit-media intent are unchanged.
+- **Unified AI Gateway (#1627)** — revendor the skill so the current `v0.8.0` release and its fifteen tool names are distinguished from the digest-pinned, content-reviewed `0.4.9` image that ships nine. The pin and digests are unchanged, and the content-review links stay on the immutable `8561ec5` revision.
+- **Catalog categorization (#1641)** — add a reviewed, source-controlled override map that classifies the 359 remaining `uncategorized` entries, so the catalog now reports **0** `uncategorized` skills.
+- **Release reproducibility (#1642)** — derive guide sitemap dates from the last substantive change rather than the canonical-sync commit or the wall clock, so canonical-sync PRs are byte-for-byte reproducible.
+- **Hosted catalog and documentation (#1629, #1631, #1632, #1633, #1635, #1636)** — publish the user guides in the catalog site with full-text search, Git-derived dates, article and breadcrumb structured data, and real sitemap dates; restore the homepage catalog provider; and unify the site theme and typography across routes.
+- **Release surfaces** — regenerate the catalog, offline AAS Core assets, Codex/Claude plugin mirrors, editorial bundles, marketplace manifests, compatibility reports, and web assets for 2,474 skills.
+
+### Documentation and community
+
+- Added the `hermes-labs-ai/lintlang` and `Continuum-AI-Corp/OrcaPromptVault` source credits to the README.
+- Thanks to [@xizhuomengcontin](https://github.com/xizhuomengcontin) for `system-prompt-lookup`, [@roli-lpci](https://github.com/roli-lpci) and Hermes Labs for `lintlang-audit`, [@FrancoStino](https://github.com/FrancoStino) for the Unified AI Gateway revendor, and [@IRONICBo](https://github.com/IRONICBo) for the Jev Social runtime refresh.
+
+### Validation scope
+
+Exact-head maintainer review for changed skill content, protected source PRs, repository validation and tests, reference validation, docs security, protected CI and CodeQL, dependency review, canonical synchronization, release preflight, Linux/Windows preview checks, npm publication, and release provenance verification.
+
 ## [18.6.0] - 2026-09-26 - "Radar & Crypto Intelligence, Electron E2E, and Claude API Refresh"
 
 > Adds 13 reviewed skills across weather radar, crypto research, MCP supply-chain safety, and Electron end-to-end testing; refreshes Claude API model guidance; and ships the hosted catalog and plugin surfaces at **2,472** skills.

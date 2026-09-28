@@ -21,7 +21,7 @@ describe('Plugins', () => {
       expect(screen.queryByText(/1,550\+/i)).not.toBeInTheDocument();
       expect(screen.getByRole('link', { name: /Install one skill with GitHub CLI/i })).toHaveAttribute(
         'href',
-        expect.stringContaining('docs/users/getting-started.md'),
+        '/docs/getting-started/',
       );
       expect(screen.getByText(/Plugins, bundles, and workflows serve different decisions/i)).toBeInTheDocument();
       expect(screen.getByRole('link', { name: '@frontend-developer' })).toHaveAttribute(

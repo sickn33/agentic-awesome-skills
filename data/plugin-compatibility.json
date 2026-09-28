@@ -26384,6 +26384,25 @@
       "runtime_files": []
     },
     {
+      "id": "lintlang-audit",
+      "path": "skills/lintlang-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "linux-administration",
       "path": "skills/linux-administration",
       "targets": {
@@ -31061,6 +31080,25 @@
     {
       "id": "notion-template-business",
       "path": "skills/notion-template-business",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "nsfw-ai-spicyapi",
+      "path": "skills/nsfw-ai-spicyapi",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -38919,6 +38957,25 @@
       "runtime_files": []
     },
     {
+      "id": "serply-search-mcp",
+      "path": "skills/serply-search-mcp",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "server-management",
       "path": "skills/server-management",
       "targets": {
@@ -41597,6 +41654,25 @@
     {
       "id": "sympy",
       "path": "skills/sympy",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "system-prompt-lookup",
+      "path": "skills/system-prompt-lookup",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -47467,10 +47543,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2472,
+    "total_skills": 2476,
     "supported": {
-      "codex": 2385,
-      "claude": 2410
+      "codex": 2389,
+      "claude": 2414
     },
     "blocked": {
       "codex": 87,

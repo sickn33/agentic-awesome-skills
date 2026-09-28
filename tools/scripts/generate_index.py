@@ -882,9 +882,36 @@ def parse_frontmatter(content):
         print(f"⚠️ YAML parsing error: {e}")
         return {}
 
+def load_category_overrides() -> dict[str, str]:
+    """Load maintainer-reviewed category assignments kept outside generated indexes."""
+    root = pathlib.Path(find_repo_root(__file__))
+    overrides_path = root / "data" / "category-overrides.json"
+    if not overrides_path.is_file():
+        return {}
+    try:
+        with overrides_path.open("r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"Invalid category overrides file: {overrides_path}: {exc}") from exc
+    overrides = payload.get("overrides", payload) if isinstance(payload, Mapping) else None
+    if not isinstance(overrides, Mapping):
+        raise ValueError(f"Category overrides must contain an object at {overrides_path}")
+    normalized: dict[str, str] = {}
+    for skill_id, category in overrides.items():
+        if not isinstance(skill_id, str) or not isinstance(category, str):
+            raise ValueError(f"Category overrides must map string IDs to string categories: {skill_id!r}")
+        skill_id = skill_id.strip()
+        category = normalize_category(category)
+        if not skill_id or not category:
+            raise ValueError("Category overrides cannot contain empty IDs or categories")
+        normalized[skill_id] = category
+    return normalized
+
+
 def generate_index(skills_dir, output_file, compatibility_report=None):
     print(f"🏗️ Generating index from: {skills_dir}")
     skills = []
+    category_overrides = load_category_overrides()
     if compatibility_report is None:
         compatibility_report = build_plugin_compatibility_report(pathlib.Path(skills_dir))
     compatibility_lookup = plugin_compatibility_by_path(compatibility_report)
@@ -987,6 +1014,8 @@ def generate_index(skills_dir, output_file, compatibility_report=None):
                 skill_info["category"] = inferred_category or "uncategorized"
             if skill_info["id"] in CURATED_CATEGORY_OVERRIDES:
                 skill_info["category"] = CURATED_CATEGORY_OVERRIDES[skill_info["id"]]
+            if skill_info["id"] in category_overrides:
+                skill_info["category"] = category_overrides[skill_info["id"]]
             skill_info["category"] = normalize_category(skill_info["category"])
 
             plugin_info = compatibility_lookup.get(skill_info["path"])
