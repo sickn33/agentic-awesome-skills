@@ -534,7 +534,7 @@ Key source families include:
 
 Catalog dashboard search, filters, shortlist, and discovery were originally contributed by [@zinzied](https://github.com/zinzied) in [#1111](https://github.com/sickn33/agentic-awesome-skills/pull/1111), then repaired and integrated through [#1118](https://github.com/sickn33/agentic-awesome-skills/pull/1118) under the repository's fork-safety policy.
 
- ## Top Contributors
+## Top Contributors
 
 Thanks to everyone who has helped build this project—especially the contributors below.
 
