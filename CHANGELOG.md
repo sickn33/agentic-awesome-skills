@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.8.0] - 2026-09-28 - "Serply Search, NSFW AI SpicyAPI, and the Jev Social v0.1.10 Pin"
+
+> Adds 2 reviewed skills for Google/News/Scholar search via MCP and for adult media generation with spend gates and consent rules, refreshes the Jev Social runtime pin, and improves the README contributor layout for **2,476** skills.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the complete protected maintainer batch merged after `18.7.0`, with existing installation interfaces preserved.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.8.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **Serply Search MCP (#1655)** — `serply-search-mcp` covers Google, Google News, Google Scholar, Bing, and public page reading through the Serply MCP server. Provider-chosen, no default changes, credential handling via the host's secret mechanism, and untrusted-content guidance included.
+- **NSFW AI SpicyAPI (#1649)** — `nsfw-ai-spicyapi` generates adult images, image-to-video clips and edits through the SpicyAPI API with hard refusal rules, quote-before-spend gates, and explicit consent boundaries. `risk: critical`.
+
+### Changed
+
+- **Jev Social (#1656)** — refresh the pinned runtime from `v0.1.8` (`5270e23cfd27aace9055669ee396926973baa241`) to `v0.1.10` (`baf3cd6aa4f9c881665c29ed29a10391f761760b`), with explicit decision-provider boundaries, telemetry default off for spawned `socai` children, and the automatic installer still excluded.
+- **README (#1653)** — improve the Top Contributors section layout with side-by-side ranking tables and a repaired anchor.
+
+### Documentation and community
+
+Thanks to [@googio](https://github.com/googio) for `serply-search-mcp`, [@spicyapi-owner](https://github.com/spicyapi-owner) for `nsfw-ai-spicyapi`, [@IRONICBo](https://github.com/IRONICBo) for the Jev Social runtime refresh, and [@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI) for the contributor layout repair.
+
+### Validation scope
+
+Exact-head maintainer review for changed skill content, protected source PRs, repository validation and tests, reference validation, docs security, protected CI and CodeQL, dependency review, canonical synchronization, release preflight, npm publication, and release provenance verification.
+
 ## [18.7.0] - 2026-09-27 - "Prompt Provenance, LintLang Audits, and a Fully Categorized Catalog"
 
 > Adds 2 reviewed skills for verifying what a shipped AI product was actually told and for static auditing of agent instructions, refreshes the Jev Social and Unified AI Gateway runtime references, and classifies every remaining catalog entry for **2,474** skills with zero `uncategorized` records.
