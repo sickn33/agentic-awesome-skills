@@ -81,6 +81,21 @@ The catalog stores shortlisted IDs in browser-local storage. The goal and brief 
 
 ### Start directly in the coding agent
 
+When a Core session starts, the agent must explicitly offer an optional guided
+intake and say that you can skip the questions and let it work autonomously.
+If you explicitly choose autonomy, the agent skips the introductory questions
+and begins its normal project inspection. If you accept the guided intake, it
+should ask a short set of questions about the desired outcome, whether you are
+starting from scratch, adding a feature, or fixing a problem, your languages or
+frameworks, important constraints, and how you will recognize success. The
+agent may ask additional focused questions when the answers and project
+evidence leave a material ambiguity; it should explain why the question matters
+and stop once it has enough context.
+
+Guided answers provide context for project understanding and the eventual
+profile. They do not select skills automatically and do not replace repository
+inspection or the capability-coverage contract below.
+
 Give the agent the desired outcome and constraints, and leave selection judgment with the agent:
 
 ```text

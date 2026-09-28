@@ -210,6 +210,11 @@ const READ_ONLY_TOOL_ANNOTATIONS = Object.freeze({
 });
 
 const AGENT_SELECTION_CONTRACT = [
+  "At the start of the session, explicitly offer the user an optional guided intake: explain that you can ask a few short questions to understand what they want to accomplish, and explicitly tell them they may skip the questions and let you work autonomously.",
+  "If the user explicitly asks you to work autonomously, skip the guided questions and begin the normal project inspection; do not ask the introductory questions again.",
+  "If the user accepts the guided intake, ask the short canonical questions: what outcome they want, whether they are starting from scratch, adding a feature, or fixing a problem, which languages or frameworks they use or prefer, which important constraints apply, and how they will recognize success.",
+  "After the canonical questions, you may ask additional focused questions only when the answers and project evidence leave a material ambiguity; explain briefly why each extra question matters, avoid asking for facts already available from the project, and stop once you have enough context.",
+  "Treat guided-intake answers as context for project understanding and the eventual profile, not as automatic skill selections or a replacement for repository inspection.",
   "Before composing a stack, inspect the project and enumerate its primary capability areas.",
   "Evaluate architecture and runtime, languages and frameworks, domain behavior, data and storage, external integrations, testing and quality, security and privacy, user experience and accessibility when user-facing, deployment and operations, and maintenance workflow; mark a dimension not applicable instead of silently omitting it.",
   "Run at least one focused search per capability area; paginate or refine the query until plausible candidates are found or the catalog is exhausted for that need.",
