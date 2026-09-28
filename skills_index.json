@@ -40221,6 +40221,39 @@
     }
   },
   {
+    "id": "nsfw-ai-spicyapi",
+    "path": "skills/nsfw-ai-spicyapi",
+    "category": "media",
+    "name": "nsfw-ai-spicyapi",
+    "description": "Generate adult (18+) images, image-to-video clips and image edits through the SpicyAPI API, with a cost quote before every paid run and adults-only / consent rules.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Spicy-API/nsfw-ai-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/Spicy-API/nsfw-ai-skill/blob/main/LICENSE",
+    "tags": [
+      "image-generation",
+      "video-generation",
+      "image-to-video",
+      "adult-content",
+      "api"
+    ]
+  },
+  {
     "id": "nutrition-analyzer",
     "path": "skills/nutrition-analyzer",
     "category": "health",
@@ -50498,6 +50531,37 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "serply-search-mcp",
+    "path": "skills/serply-search-mcp",
+    "category": "mcp",
+    "name": "serply-search-mcp",
+    "description": "Search Google, Bing, Google News and Google Scholar, and read public pages, with the Serply MCP server. Use when the user chooses Serply or its connected tools for current information and source verification.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "mcp",
+      "web-search",
+      "news",
+      "scholar",
+      "research",
+      "citations"
+    ]
   },
   {
     "id": "server-management",

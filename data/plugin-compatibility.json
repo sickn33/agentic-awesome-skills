@@ -31097,6 +31097,25 @@
       "runtime_files": []
     },
     {
+      "id": "nsfw-ai-spicyapi",
+      "path": "skills/nsfw-ai-spicyapi",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "nutrition-analyzer",
       "path": "skills/nutrition-analyzer",
       "targets": {
@@ -38921,6 +38940,25 @@
     {
       "id": "sequence-psychologist",
       "path": "skills/sequence-psychologist",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "serply-search-mcp",
+      "path": "skills/serply-search-mcp",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -47505,10 +47543,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2474,
+    "total_skills": 2476,
     "supported": {
-      "codex": 2387,
-      "claude": 2412
+      "codex": 2389,
+      "claude": 2414
     },
     "blocked": {
       "codex": 87,

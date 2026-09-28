@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-27T09:49:22.000Z",
-  "total": 2474,
+  "total": 2476,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -47551,6 +47551,41 @@
       "path": "skills/notion-template-business/SKILL.md"
     },
     {
+      "id": "nsfw-ai-spicyapi",
+      "canonical_id": "nsfw-ai-spicyapi",
+      "name": "nsfw-ai-spicyapi",
+      "description": "Generate adult (18+) images, image-to-video clips and image edits through the SpicyAPI API, with a cost quote before every paid run and adults-only / consent rules.",
+      "category": "media",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "Spicy-API/nsfw-ai-skill",
+      "license": "MIT",
+      "license_source": "https://github.com/Spicy-API/nsfw-ai-skill/blob/main/LICENSE",
+      "tags": [
+        "image-generation",
+        "video-generation",
+        "image-to-video",
+        "adult-content",
+        "api"
+      ],
+      "triggers": [
+        "image-generation",
+        "video-generation",
+        "image-to-video",
+        "adult-content",
+        "api",
+        "nsfw",
+        "ai",
+        "spicyapi",
+        "generate",
+        "adult",
+        "18",
+        "images"
+      ],
+      "path": "skills/nsfw-ai-spicyapi/SKILL.md"
+    },
+    {
       "id": "nutrition-analyzer",
       "canonical_id": "nutrition-analyzer",
       "name": "nutrition-analyzer",
@@ -59539,6 +59574,39 @@
         "invoke"
       ],
       "path": "skills/sequence-psychologist/SKILL.md"
+    },
+    {
+      "id": "serply-search-mcp",
+      "canonical_id": "serply-search-mcp",
+      "name": "serply-search-mcp",
+      "description": "Search Google, Bing, Google News and Google Scholar, and read public pages, with the Serply MCP server. Use when the user chooses Serply or its connected tools for current information and source verification.",
+      "category": "mcp",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "mcp",
+        "web-search",
+        "news",
+        "scholar",
+        "research",
+        "citations"
+      ],
+      "triggers": [
+        "mcp",
+        "web-search",
+        "news",
+        "scholar",
+        "research",
+        "citations",
+        "serply",
+        "search",
+        "google",
+        "bing",
+        "read",
+        "public"
+      ],
+      "path": "skills/serply-search-mcp/SKILL.md"
     },
     {
       "id": "server-management",
