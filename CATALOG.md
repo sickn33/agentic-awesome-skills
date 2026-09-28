@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-28T06:59:25.000Z
 
-Total skills: 2476
+Total skills: 2477
 
 ## agent-behavior (5)
 
@@ -1210,7 +1210,7 @@ Total skills: 2476
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (213)
+## development (214)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1406,6 +1406,7 @@ Total skills: 2476
 | `senior-architect` | Complete toolkit for senior architect with modern tools and best practices. | critical | community | senior | senior, architect, complete, toolkit |
 | `senior-fullstack` | Complete toolkit for senior fullstack with modern tools and best practices. | critical | community | senior, fullstack | senior, fullstack, complete, toolkit |
 | `setup-matt-pocock-skills` | Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the o... | safe | mattpocock/skills | engineering, workflow, coding-agents | engineering, workflow, coding-agents, setup, matt, pocock, skills, configure, repo, set, up, issue |
+| `since-cutoff` | Find which APIs of a project's pinned Python dependencies changed after the model's training cutoff, where the code uses them, and write short AGENTS.md or C... | safe | MohammadHijjawi97/since-cutoff | python, dependencies, api-changes, knowledge-cutoff, agents-md, static-analysis | python, dependencies, api-changes, knowledge-cutoff, agents-md, static-analysis, since, cutoff, find, which, apis, pinned |
 | `skill-check` | Validate Claude Code skills against the agentskills specification. Catches structural, semantic, and naming issues before users do. | safe | https://github.com/olgasafonova/SkillCheck-Free | validation, linter, agentskills, skill-authoring, code-quality | validation, linter, agentskills, skill-authoring, code-quality, skill, check, validate, claude, code, skills, against |
 | `source-driven-development` | Grounds every implementation decision in official documentation. Use when you want authoritative, source-cited code free from outdated patterns. Use when bui... | critical | addyosmani/agent-skills | source, driven | source, driven, development, grounds, every, decision, official, documentation, want, authoritative, cited, code |
 | `spec-driven-loop` | Freeze PRD, technical design, and acceptance criteria before medium-to-large Codex work; coordinate agents with explicit ownership, then judge delivery from ... | safe | Linji-x/spec-driven-loop | codex, spec-driven-development, multi-agent, agent-orchestration, acceptance-testing | codex, spec-driven-development, multi-agent, agent-orchestration, acceptance-testing, spec, driven, loop, freeze, prd, technical, acceptance |
