@@ -27,7 +27,15 @@ function syncExclusionArgs() {
 }
 
 function readLog(args, options) {
-  return execFileSync('git', args, options).trim();
+  return execFileSync('git', args, { ...options, stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+}
+
+function readPublishedDocDates() {
+  const sitemap = path.join(root, 'apps/web-app/public/sitemap.xml');
+  if (!fs.existsSync(sitemap)) return new Map();
+  const xml = fs.readFileSync(sitemap, 'utf8');
+  return new Map([...xml.matchAll(/<loc>https:\/\/aaskills\.tech\/docs\/([^<]+)\/<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
+    .map(([, slug, date]) => [slug, date]));
 }
 
 export function readLastModifiedDate(sourcePath, options = {}) {
@@ -64,10 +72,21 @@ export function readReproducibleLastmod(options = {}) {
 
 export function getDocsMetadata() {
   const docs = JSON.parse(fs.readFileSync(path.join(root, 'apps/web-app/src/data/docs.json'), 'utf8'));
-  const commit = readLog(['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' });
+  let commit = process.env.VERCEL_GIT_COMMIT_SHA || process.env.AAS_SOURCE_COMMIT;
+  try {
+    commit = readLog(['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' });
+  } catch {
+    if (!commit) throw new Error('Missing Git commit identity for Docs metadata');
+  }
+  const publishedDates = readPublishedDocDates();
   return Object.fromEntries(docs.map((doc) => {
     const sourcePath = `docs/users/${doc.slug}.md`;
-    const modified = readLastModifiedDate(sourcePath, { cwd: root });
+    let modified;
+    try {
+      modified = readLastModifiedDate(sourcePath, { cwd: root });
+    } catch {
+      modified = publishedDates.get(doc.slug);
+    }
     if (!modified || Number.isNaN(Date.parse(modified))) {
       throw new Error(`Missing Git history for ${sourcePath}`);
     }
