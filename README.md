@@ -11,8 +11,6 @@ This README tracks `main`. Features listed under [Unreleased](CHANGELOG.md#unrel
 
 This is an independent community project, not affiliated with or endorsed by Google. Google, Antigravity, Gemini, and related names describe compatibility and install targets. The GitHub repository is canonical; the [hosted catalog](https://aaskills.tech/) and browser-local Workbench are companion discovery and review surfaces.
 
-<a href="https://vercel.com/open-source-program"><img alt="Vercel OSS Program" src="https://vercel.com/oss/program-badge-2026.svg" /></a>
-
 [![GitHub stars](https://img.shields.io/badge/⭐%2047%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/stargazers)
 [![Follow @AASkills_ on X](https://img.shields.io/badge/Follow-%40AASkills__-black?style=for-the-badge&logo=x)](https://x.com/AASkills_)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -58,11 +56,16 @@ If GitHub's player stalls, [watch the video on the AAS website](https://aaskills
 
 ## Support the Project
 
-**We’re looking for sponsors to support Agentic Awesome Skills.** If you or your company would like to support the project, become a sponsor.
+Help keep the catalog open, maintained, and available to the builders who use it.
 
-### [♥ Sponsor AAS →](https://github.com/sponsors/sickn33)
+<a href="https://vercel.com/open-source-program"><img alt="Vercel OSS Program" src="https://vercel.com/oss/program-badge-2026.svg" /></a>
 
-You can also [support AAS on Buy Me a Coffee](https://buymeacoffee.com/sickn33).
+| Support AAS | What it helps fund |
+| --- | --- |
+| [♥ Sponsor AAS](https://github.com/sponsors/sickn33) | Ongoing maintenance, reviews, and release work |
+| [Buy Me a Coffee](https://buymeacoffee.com/sickn33) | Small, direct contributions from the community |
+
+Every contribution helps us keep the skills curated, the tooling tested, and the catalog useful for the next project.
 
 <a href="https://buymeacoffee.com/sickn33">
   <img src="assets/buy-me-a-coffee-banner.png" alt="Support Agentic Awesome Skills on Buy Me a Coffee" width="420" />
