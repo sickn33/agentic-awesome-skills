@@ -61,3 +61,4 @@ skills/spline-3d-integration/*.zip
 
 # Temporary plugin staging directories
 plugins/.antigravity-awesome-skills.staging-*/
+.vercel

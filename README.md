@@ -56,11 +56,16 @@ If GitHub's player stalls, [watch the video on the AAS website](https://aaskills
 
 ## Support the Project
 
-**We’re looking for sponsors to support Agentic Awesome Skills.** If you or your company would like to support the project, become a sponsor.
+Help keep the catalog open, maintained, and available to the builders who use it.
 
-### [♥ Sponsor AAS →](https://github.com/sponsors/sickn33)
+<a href="https://vercel.com/open-source-program"><img alt="Vercel OSS Program" src="https://vercel.com/oss/program-badge-2026.svg" /></a>
 
-You can also [support AAS on Buy Me a Coffee](https://buymeacoffee.com/sickn33).
+| Support AAS | What it helps fund |
+| --- | --- |
+| [♥ Sponsor AAS](https://github.com/sponsors/sickn33) | Ongoing maintenance, reviews, and release work |
+| [Buy Me a Coffee](https://buymeacoffee.com/sickn33) | Small, direct contributions from the community |
+
+Every contribution helps us keep the skills curated, the tooling tested, and the catalog useful for the next project.
 
 <a href="https://buymeacoffee.com/sickn33">
   <img src="assets/buy-me-a-coffee-banner.png" alt="Support Agentic Awesome Skills on Buy Me a Coffee" width="420" />

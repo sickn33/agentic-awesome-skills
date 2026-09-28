@@ -252,6 +252,14 @@ test("MCP initialization imposes the agent-owned capability coverage contract", 
   });
 
   assert.equal(response.result.instructions.includes(AGENT_SELECTION_CONTRACT), true);
+  assert.match(response.result.instructions, /optional guided intake/i);
+  assert.match(response.result.instructions, /may skip the questions and let you work autonomously/i);
+  assert.match(response.result.instructions, /starting from scratch, adding a feature, or fixing a problem/i);
+  assert.match(response.result.instructions, /which languages or frameworks/i);
+  assert.match(response.result.instructions, /which important constraints apply/i);
+  assert.match(response.result.instructions, /how they will recognize success/i);
+  assert.match(response.result.instructions, /additional focused questions only when/i);
+  assert.match(response.result.instructions, /not as automatic skill selections/i);
   assert.match(response.result.instructions, /enumerate its primary capability areas/i);
   for (const dimension of [
     "architecture and runtime",

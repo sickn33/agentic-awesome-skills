@@ -768,3 +768,18 @@ The landing route used useSkills outside CatalogRouteProvider, crashing the depl
 ## Shared site style (2026-09-27)
 
 Use the landing black/cyan palette on every route, share Outfit/JetBrains Mono with Tailwind and Markdown, load the title weight, unify responsive page headings, and keep header/footer appearance stable across navigation.
+
+## Vercel OSS site migration (2026-09-28)
+
+Configure the repository root as the Vercel project root. `vercel.json` installs both
+package trees, runs the existing web asset setup and build, serves the generated
+`apps/web-app/dist` directory, and falls back to the SPA entry for routes that
+are not prerendered. The Vercel Open Source Program badge is in the README.
+
+Keep `https://aaskills.tech/` as the public canonical URL. Deploy and check a
+Vercel preview first, attach the domain to the Vercel project, then update its
+DNS records. Keep the existing GitHub Pages custom-domain setting and verify
+that `https://sickn33.github.io/agentic-awesome-skills/` and representative
+deep links still redirect to the canonical URL after the DNS change. If GitHub
+Pages stops redirecting them, publish a dedicated redirect artifact there
+before considering the migration complete.

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm ci && npm ci --prefix apps/web-app",
+  "buildCommand": "npm run app:build",
+  "outputDirectory": "apps/web-app/dist",
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
