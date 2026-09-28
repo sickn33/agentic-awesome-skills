@@ -38,6 +38,23 @@ assert.throws(
 
 const version = spawnSync(process.execPath, [installerPath, '--version'], { encoding: 'utf8' });
 assert.strictEqual(version.status, 0, version.stderr);
+
+// Regression: a relative --path must resolve against the current working
+// directory exactly once. It previously extracted segments from the already
+// resolved path and then prefixed cwd again, doubling the install directory.
+assert.strictEqual(installer.resolveDir('.agents/skills'), path.resolve('.agents/skills'));
+assert.strictEqual(installer.resolveDir('project/.agents/skills'), path.resolve('project/.agents/skills'));
+assert.notStrictEqual(
+  installer.resolveDir('.agents/skills'),
+  path.resolve(process.cwd(), process.cwd().slice(1), '.agents', 'skills'),
+);
+assert.strictEqual(installer.resolveDir('/tmp/aas-absolute-target'), path.resolve('/tmp/aas-absolute-target'));
+assert.strictEqual(installer.resolveDir(null), null);
+assert.strictEqual(installer.resolveDir(''), null);
+// Traversal is normalized away instead of being re-joined against cwd.
+assert.strictEqual(installer.resolveDir('.agents/../skills'), path.resolve('skills'));
+// Segment sanitization still fails closed on characters it would strip.
+assert.throws(() => installer.resolveDir('agents/ba*d'), /Unsafe path segment/i);
 assert.strictEqual(version.stdout.trim(), packageVersion);
 assert.doesNotMatch(version.stdout, /Cloning repository/i);
 

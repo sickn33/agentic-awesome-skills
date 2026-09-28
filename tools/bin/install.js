@@ -21,10 +21,13 @@ const EXACT_VERSION_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9
 function resolveDir(p) {
   if (!p) return null;
   const s = p.replace(/^~($|\/)/, HOME + "$1");
-  const root = path.isAbsolute(s) ? path.parse(path.resolve(s)).root : process.cwd();
-  const sanitizedSegments = path
-    .resolve(s)
-    .slice(path.parse(path.resolve(s)).root.length)
+  // Resolve the path exactly once. For relative input the resolved path
+  // already contains the working directory, so joining the extracted
+  // segments against cwd again would duplicate it.
+  const resolved = path.resolve(s);
+  const root = path.parse(resolved).root;
+  const sanitizedSegments = resolved
+    .slice(root.length)
     .split(path.sep)
     .filter(Boolean)
     .map((segment) => {
@@ -1403,6 +1406,7 @@ module.exports = {
   buildAntigravitySelectionMessage,
   printDryRunPlan,
   parseArgs,
+  resolveDir,
   printImplicitFullInstallWarning,
   printAuditReport,
   pruneRemovedEntries,
