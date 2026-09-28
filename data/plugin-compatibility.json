@@ -31939,6 +31939,25 @@
       "runtime_files": []
     },
     {
+      "id": "omentir-linkedin-outreach",
+      "path": "skills/omentir-linkedin-outreach",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "omp-delegate",
       "path": "skills/omp-delegate",
       "targets": {
@@ -47562,10 +47581,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2477,
+    "total_skills": 2478,
     "supported": {
-      "codex": 2390,
-      "claude": 2415
+      "codex": 2391,
+      "claude": 2416
     },
     "blocked": {
       "codex": 87,

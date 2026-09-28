@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-28T06:59:25.000Z",
-  "total": 2477,
+  "total": 2478,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -48806,6 +48806,42 @@
         "private"
       ],
       "path": "skills/ollama-stack/SKILL.md"
+    },
+    {
+      "id": "omentir-linkedin-outreach",
+      "canonical_id": "omentir-linkedin-outreach",
+      "name": "omentir-linkedin-outreach",
+      "description": "Run LinkedIn prospecting and outreach through the Omentir MCP server: find people, score fit, draft messages, and check campaigns. Never signs into LinkedIn.",
+      "category": "marketing",
+      "risk": "critical",
+      "source": "https://github.com/vanshyadav1408/Omentir/tree/main/plugins/omentir/skills/linkedin-outreach",
+      "source_type": "official",
+      "source_repo": "vanshyadav1408/Omentir",
+      "license": "MIT",
+      "license_source": "https://github.com/vanshyadav1408/Omentir/blob/main/LICENSE",
+      "tags": [
+        "linkedin",
+        "sales",
+        "outreach",
+        "lead-generation",
+        "prospecting",
+        "mcp"
+      ],
+      "triggers": [
+        "linkedin",
+        "sales",
+        "outreach",
+        "lead-generation",
+        "prospecting",
+        "mcp",
+        "omentir",
+        "run",
+        "through",
+        "server",
+        "find",
+        "people"
+      ],
+      "path": "skills/omentir-linkedin-outreach/SKILL.md"
     },
     {
       "id": "omp-delegate",

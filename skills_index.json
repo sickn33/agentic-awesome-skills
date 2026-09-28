@@ -41230,6 +41230,40 @@
     "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
+    "id": "omentir-linkedin-outreach",
+    "path": "skills/omentir-linkedin-outreach",
+    "category": "marketing",
+    "name": "omentir-linkedin-outreach",
+    "description": "Run LinkedIn prospecting and outreach through the Omentir MCP server: find people, score fit, draft messages, and check campaigns. Never signs into LinkedIn.",
+    "risk": "critical",
+    "source": "https://github.com/vanshyadav1408/Omentir/tree/main/plugins/omentir/skills/linkedin-outreach",
+    "date_added": "2026-09-28",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "vanshyadav1408/Omentir",
+    "license": "MIT",
+    "license_source": "https://github.com/vanshyadav1408/Omentir/blob/main/LICENSE",
+    "tags": [
+      "linkedin",
+      "sales",
+      "outreach",
+      "lead-generation",
+      "prospecting",
+      "mcp"
+    ]
+  },
+  {
     "id": "omp-delegate",
     "path": "skills/omp-delegate",
     "category": "agent-orchestration",

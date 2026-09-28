@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-28T06:59:25.000Z
 
-Total skills: 2477
+Total skills: 2478
 
 ## agent-behavior (5)
 
@@ -1877,7 +1877,7 @@ Total skills: 2477
 | `leiloeiro-mercado` | Analise de mercado imobiliario para leiloes. Liquidez, desagio tipico, ROI, estrategias de saida (flip/reforma/renda), Selic 2025 e benchmark CDI/FII. | safe | community | market-analysis, real-estate, roi, brazilian | market-analysis, real-estate, roi, brazilian, leiloeiro, mercado, analise, de, imobiliario, para, leiloes, liquidez |
 | `leiloeiro-risco` | Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco. | safe | community | risk-analysis, scoring, stress-test, brazilian | risk-analysis, scoring, stress-test, brazilian, leiloeiro, risco, analise, de, em, leiloes, imoveis, score |
 
-## marketing (103)
+## marketing (104)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1946,6 +1946,7 @@ Total skills: 2477
 | `marketing-psychology` | Apply behavioral science and mental models to marketing decisions, prioritized using a psychological leverage and feasibility scoring system. | none | community | marketing, psychology | marketing, psychology, apply, behavioral, science, mental, models, decisions, prioritized, psychological, leverage, feasibility |
 | `objection-preemptor` | One sentence - what this skill does and when to invoke it | safe | community | objection, preemptor | objection, preemptor, one, sentence, what, skill, does, invoke |
 | `offers` | When the user wants to design, construct, or improve an offer — the thing they actually sell — including value framing, bonus stacking, guarantee design, sca... | safe | coreyhaines31/marketingskills | offers | offers, user, wants, construct, improve, offer, thing, actually, sell, including, value, framing |
+| `omentir-linkedin-outreach` | Run LinkedIn prospecting and outreach through the Omentir MCP server: find people, score fit, draft messages, and check campaigns. Never signs into LinkedIn. | critical | vanshyadav1408/Omentir | linkedin, sales, outreach, lead-generation, prospecting, mcp | linkedin, sales, outreach, lead-generation, prospecting, mcp, omentir, run, through, server, find, people |
 | `onboarding` | When the user wants to optimize post-signup onboarding, user activation, first-run experience, or time-to-value. | safe | coreyhaines31/marketingskills | onboarding | onboarding, user, wants, optimize, post, signup, activation, first, run, experience, time, value |
 | `onboarding-cro` | You are an expert in user onboarding and activation. Your goal is to help users reach their "aha moment" as quickly as possible and establish habits that lea... | critical | community | onboarding, cro | onboarding, cro, user, activation, goal, users, reach, aha, moment, quickly, possible, establish |
 | `onboarding-psychologist` | One sentence - what this skill does and when to invoke it | safe | community | onboarding, psychologist | onboarding, psychologist, one, sentence, what, skill, does, invoke |
