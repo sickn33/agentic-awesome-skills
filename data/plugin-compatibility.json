@@ -39394,6 +39394,25 @@
       "runtime_files": []
     },
     {
+      "id": "since-cutoff",
+      "path": "skills/since-cutoff",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "site-architecture",
       "path": "skills/site-architecture",
       "targets": {
@@ -47543,10 +47562,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2476,
+    "total_skills": 2477,
     "supported": {
-      "codex": 2389,
-      "claude": 2414
+      "codex": 2390,
+      "claude": 2415
     },
     "blocked": {
       "codex": 87,

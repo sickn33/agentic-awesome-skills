@@ -1,0 +1,4 @@
+node_modules
+apps/web-app/node_modules
+apps/web-app/dist
+.git

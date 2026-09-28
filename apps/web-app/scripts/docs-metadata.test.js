@@ -8,6 +8,7 @@ import {
   isCanonicalSyncSubject,
   readLastModifiedDate,
   readReproducibleLastmod,
+  getDocsMetadata,
 } from './docs-metadata.js';
 
 function git(cwd, args, env = {}) {
@@ -43,6 +44,22 @@ function commitFile(dir, relativePath, contents, subject, date) {
 }
 
 describe('canonical-sync version metadata', () => {
+  it('uses versioned sitemap dates when Vercel has no Git checkout', () => {
+    const previousGitDir = process.env.GIT_DIR;
+    const previousCommit = process.env.VERCEL_GIT_COMMIT_SHA;
+    try {
+      process.env.GIT_DIR = '/nonexistent';
+      process.env.VERCEL_GIT_COMMIT_SHA = '0123456789abcdef0123456789abcdef01234567';
+      const metadata = getDocsMetadata();
+      expect(metadata['getting-started'].commit).toBe(process.env.VERCEL_GIT_COMMIT_SHA);
+      expect(metadata['getting-started'].modified).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    } finally {
+      if (previousGitDir === undefined) delete process.env.GIT_DIR;
+      else process.env.GIT_DIR = previousGitDir;
+      if (previousCommit === undefined) delete process.env.VERCEL_GIT_COMMIT_SHA;
+      else process.env.VERCEL_GIT_COMMIT_SHA = previousCommit;
+    }
+  });
   it('classifies canonical-sync commit subjects', () => {
     expect(isCanonicalSyncSubject('chore: synchronize canonical repository state')).toBe(true);
     expect(isCanonicalSyncSubject('[skip pages] chore: synchronize canonical repository state')).toBe(true);
