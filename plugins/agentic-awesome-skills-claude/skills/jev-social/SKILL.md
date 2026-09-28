@@ -11,7 +11,7 @@ author: socai-io
 tags: [social-media, research, instagram, tiktok, linkedin, browser-automation, jev]
 tools: [claude, codex]
 license: "MIT"
-license_source: "https://github.com/socai-io/jev-social/blob/5270e23cfd27aace9055669ee396926973baa241/LICENSE"
+license_source: "https://github.com/socai-io/jev-social/blob/baf3cd6aa4f9c881665c29ed29a10391f761760b/LICENSE"
 ---
 # Jev Social
 
@@ -19,7 +19,7 @@ license_source: "https://github.com/socai-io/jev-social/blob/5270e23cfd27aace905
 
 Jev Social turns a natural-language social research goal into bounded Jev routing decisions, then delegates platform-read-only browser work to the local socai CLI. Use the captured posts, profiles, comments, videos, and opened details to produce a compact, source-linked report instead of exposing raw CLI output. "Read-only" means no social-account mutation; the CLI still writes private local run records and may download requested media.
 
-The executable examples below are pinned to the tested runtime commit included in Jev Social `v0.1.8`. A pin improves reproducibility but is not a trust guarantee; keep the package, browser data, and returned content inside the safety boundaries below.
+The executable examples below are pinned to the tested runtime commit included in Jev Social `v0.1.10`. A pin improves reproducibility but is not a trust guarantee; keep the package, browser data, and returned content inside the safety boundaries below.
 
 ## When to Use
 - Use when a user requests evidence-backed research on Instagram, TikTok, or LinkedIn and wants real public posts or profiles rather than a general web summary.
@@ -32,7 +32,7 @@ The executable examples below are pinned to the tested runtime commit included i
 The workflow requires:
 
 1. Node.js and `npx`.
-2. A configured Jev provider key in the user's approved local environment.
+2. A configured decision provider: either a user-provided OpenRouter API key with Jev access or a user-started TypeSafe-compatible server on the exact loopback `/v1/systemone` endpoint. OpenRouter calls may incur provider charges; the loopback provider does not require or receive the OpenRouter key. Set `OPENROUTER_REPORT_MODEL=off` when report generation must stay on the deterministic evidence path.
 3. An installed socai CLI with support for the requested platform.
 4. A Chrome session the user is already authorized to use.
 
@@ -45,19 +45,19 @@ If the exact pinned package is not already available locally, explain that the n
 Run the status command before every research task:
 
 ```bash
-npx github:socai-io/jev-social#5270e23cfd27aace9055669ee396926973baa241 status
+npx github:socai-io/jev-social#baf3cd6aa4f9c881665c29ed29a10391f761760b status
 ```
 
 Require all of the following before continuing:
 
-- Jev is configured without revealing the provider key.
+- The selected decision provider is configured without revealing its key or loopback endpoint. A configured local provider does not require an OpenRouter key. The status command does not probe provider connectivity; if the later research call cannot reach the provider, stop and report that runtime gate without exposing connection details.
 - socai is installed and executable.
 - The requested platform reports supported.
 - The browser boundary matches the user's existing authorized local session.
 
 Treat status output as local diagnostics. Never reproduce configuration paths, executable paths, environment values, credentials, CDP endpoints, or browser-profile details in the answer.
 
-If setup is missing, identify only the missing prerequisite and stop. Do not run this release's automatic onboarding or installer from the catalog skill: its optional socai installation path follows a moving `releases/latest` URL. Have the user configure the key and install a separately reviewed, pinned socai release outside this workflow. Never place an API key in a command, transcript, report, issue, or committed file.
+If setup is missing, identify only the missing prerequisite and stop. Do not run this release's automatic onboarding or installer from the catalog skill: its optional socai installation path follows a moving `releases/latest` URL. Have the user configure the selected provider and install a separately reviewed, pinned socai release outside this workflow. Never place an API key in a command, transcript, report, issue, or committed file.
 
 ### Step 2: Run bounded research
 
@@ -68,7 +68,7 @@ Pass the goal as one argument with an argv-capable process runner; never constru
 ```text
 program: npx
 argv:
-  - github:socai-io/jev-social#5270e23cfd27aace9055669ee396926973baa241
+  - github:socai-io/jev-social#baf3cd6aa4f9c881665c29ed29a10391f761760b
   - search
   - <exact research goal as one argument>
   - --platform
@@ -126,7 +126,7 @@ Use only TikTok if its capability is reported as supported. Open details before 
 When the user explicitly asks for the local demo UI, start it on loopback only:
 
 ```bash
-npx github:socai-io/jev-social#5270e23cfd27aace9055669ee396926973baa241 serve --port 8766
+npx github:socai-io/jev-social#baf3cd6aa4f9c881665c29ed29a10391f761760b serve --port 8766
 ```
 
 Report `http://127.0.0.1:8766`. Leave the process running only when the user asked for a local demo server, and do not expose it on a public interface.
@@ -146,7 +146,9 @@ Complete the readiness check before starting the UI, and do not use its onboardi
 
 - **Remote execution:** the `npx` examples fetch and execute a fixed external Git commit. Review the pinned source and obtain approval before the first download; upgrading requires a new review.
 - **Automatic installer excluded:** do not invoke `onboard` from the pinned release because its optional socai installer downloads from a moving `releases/latest` URL.
-- **Credentials:** provider keys stay in the approved local environment. Never print, commit, or embed them in prompts or reports, and do not transmit them anywhere except the provider's authenticated HTTPS authorization request performed by the reviewed client.
+- **Credentials:** provider keys stay in the approved local environment. Never print, commit, or embed them in prompts or reports. The reviewed client sends the OpenRouter key only to OpenRouter's authenticated HTTPS endpoints; it never forwards that key to a loopback decision provider or the spawned socai process.
+- **Provider traffic:** OpenRouter decisions contain the research goal plus bounded observed evidence. A loopback decision provider has its own model, logging, and retention behavior and is never started or downloaded automatically. Report synthesis still uses OpenRouter by default when a key is configured; set `OPENROUTER_REPORT_MODEL=off` to prevent that second provider call.
+- **socai telemetry:** Jev Social starts every socai child with `SOCAI_TELEMETRY=0` unless the user explicitly sets `SOCAI_TELEMETRY=1`. This default does not reconfigure an independently running socai desktop process.
 - **Browser access:** local browser content may include private session data. Do not switch profiles, create a remote browser, read cookies, or attach to an arbitrary CDP endpoint.
 - **Read-only boundary:** never post, comment, like, follow, message, upload, delete, or otherwise alter an account through this skill.
 - **Explicit media intent:** never infer permission to download TikTok media from a generic research request or from requests for evidence, notes, captions, metadata, or comments.

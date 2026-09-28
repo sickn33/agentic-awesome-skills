@@ -5,6 +5,7 @@ import { categoryFacet, matchCatalogSkill, searchMode, type SearchMode } from '.
 import { SkillCard } from '../components/SkillCard';
 import { ShortlistReview } from '../components/ShortlistReview';
 import OutcomeExplorer from '../components/OutcomeExplorer';
+import WorkflowExplorer from '../components/WorkflowExplorer';
 import { Icon } from '../components/ui/Icon';
 import { useSkills } from '../context/SkillContext';
 import { seoLandingPages } from '../data/seoLandingPages';
@@ -355,6 +356,7 @@ export function Home(): React.ReactElement {
         </section>
 
         <OutcomeExplorer catalog={skills} onGoalChange={setDiscoveryGoal} />
+        <WorkflowExplorer catalog={skills} shortlistIds={shortlistIds} onToggleShortlist={toggleShortlist} />
         <ShortlistReview suggestedGoal={discoveryGoal} skills={shortlistSkills} onRemove={toggleShortlist} onClear={clearShortlist} />
 
         <section className="catalog-results" aria-labelledby="catalog-results-title">

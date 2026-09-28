@@ -264,14 +264,25 @@ def apply_metadata(content: str, metadata: dict) -> str:
         content,
         count=1,
     )
+    release_line = (
+        f"**Current release: V{version}.** {release_status}Apply and recovery remain experimental "
+        "and outside the supported preview path."
+    )
+    if re.search(r"^Agentic Awesome Skills is a library of \d[\d,]*\+", content, re.MULTILINE):
+        release_line = (
+            f"**Current release: V{version}.** AAS Core supports local catalog inspection, "
+            "agent-owned selection, stack validation, and plan preview. Apply and recovery remain "
+            "experimental. [Read the AAS Core preview guide]"
+            f"(https://github.com/sickn33/agentic-awesome-skills/blob/v{version}/docs/users/aas-core.md) "
+            "for setup and exact trust boundaries."
+        )
+    content = re.sub(CURRENT_RELEASE_LINE_RE, release_line, content, count=1)
     content = re.sub(
-        CURRENT_RELEASE_LINE_RE,
-        (
-            f"**Current release: V{version}.** {release_status}Apply and recovery remain experimental "
-            "and outside the supported preview path."
-        ),
+        r"^(Agentic Awesome Skills is a library of )\d[\d,]*\+",
+        rf"\g<1>{total_skills_label}",
         content,
         count=1,
+        flags=re.MULTILINE,
     )
     content = re.sub(
         r"^\*\*Agentic Awesome Skills\*\* is a curated, battle-tested library of \*\*.*?\*\* designed",
