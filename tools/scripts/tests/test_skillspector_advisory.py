@@ -120,6 +120,8 @@ class AdvisoryTest(unittest.TestCase):
                          'c7958a3268d9498644b22edb75d0f051bbc8cbfc']:
             self.assertIn(contract, job)
         self.assertNotIn('secrets.', job)
+        self.assertNotIn('requires_references', job)
+        self.assertIn("steps.plan.outputs.count != '0'", job)
 
 
 if __name__ == '__main__':

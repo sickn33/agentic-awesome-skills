@@ -359,7 +359,7 @@ jobs:
         run: echo "Canonical-sync content is verified by managed-path and reproducibility gates."
 
   skillspector-advisory:
-    if: github.event_name == 'pull_request' && needs.pr-policy.outputs.requires_references == 'true'
+    if: github.event_name == 'pull_request'
     needs: [pr-policy, pr-evidence]
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -381,8 +381,24 @@ jobs:
           else
             echo "SkillSpector bootstrap: trusted base does not yet contain the scanner wrapper." >> "$GITHUB_STEP_SUMMARY"
           fi
-      - name: Check out pinned SkillSpector
+      - name: Fetch immutable PR head
         if: steps.tooling.outputs.available == 'true'
+        env:
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: git fetch origin "$PR_HEAD"
+      - name: Plan changed canonical skill directories
+        id: plan
+        if: steps.tooling.outputs.available == 'true'
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python3 tools/scripts/skillspector_advisory.py \
+            --base "$PR_BASE" --head "$PR_HEAD" \
+            --output "$PWD/.tmp/skillspector-advisory"
+          python3 -c 'import json; p=json.load(open(".tmp/skillspector-advisory/manifest.json")); print("count=" + str(len(p["skills"])))' >> "$GITHUB_OUTPUT"
+      - name: Check out pinned SkillSpector
+        if: steps.tooling.outputs.available == 'true' && steps.plan.outputs.count != '0'
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           repository: NVIDIA/SkillSpector
@@ -390,22 +406,17 @@ jobs:
           path: .tmp/skillspector-upstream
           persist-credentials: false
       - name: Set up Python
-        if: steps.tooling.outputs.available == 'true'
+        if: steps.tooling.outputs.available == 'true' && steps.plan.outputs.count != '0'
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.12"
       - name: Install locked scanner dependencies
-        if: steps.tooling.outputs.available == 'true'
+        if: steps.tooling.outputs.available == 'true' && steps.plan.outputs.count != '0'
         run: |
           python -m pip install uv==0.8.22
           uv sync --frozen --no-dev --project .tmp/skillspector-upstream
-      - name: Fetch immutable PR head
-        if: steps.tooling.outputs.available == 'true'
-        env:
-          PR_HEAD: ${{ github.event.pull_request.head.sha }}
-        run: git fetch origin "$PR_HEAD"
       - name: Scan inert skill snapshots without network
-        if: steps.tooling.outputs.available == 'true'
+        if: steps.tooling.outputs.available == 'true' && steps.plan.outputs.count != '0'
         env:
           PR_BASE: ${{ github.event.pull_request.base.sha }}
           PR_HEAD: ${{ github.event.pull_request.head.sha }}
