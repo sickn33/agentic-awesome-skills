@@ -3,7 +3,7 @@ const { assertLiveSeoDocuments } = require('../check-live-seo-geo');
 
 const expected = { countLabel: '1,987+', releaseLabel: 'V15.3.0', pluginCount: 21 };
 const documents = {
-  home: 'AAS Core Preview | Agent-first stacks backed by 1,987+ skills SoftwareSourceCode FAQPage specialized plugins',
+  home: 'Agentic Awesome Skills | Agent-first skill catalog and AAS Core backed by 1,987+ cataloged skills SoftwareSourceCode FAQ specialized plugin',
   plugins: 'AAS Specialized Plugins | 21 AI coding workflow packs specialized plugin packs numberOfItems',
   sitemap: 'https://aaskills.tech/plugins',
   llms: 'https://aaskills.tech/plugins Current release: V15.3.0. 1,987+',
@@ -14,9 +14,9 @@ assert.doesNotThrow(() => assertLiveSeoDocuments(documents, expected));
 assert.throws(
   () => assertLiveSeoDocuments({
     ...documents,
-    home: 'Agentic Awesome Skills GitHub | 1,987+ AI coding skills SoftwareSourceCode FAQPage specialized plugins',
+    home: 'Agentic Awesome Skills GitHub | 1,987+ AI coding skills SoftwareSourceCode FAQ specialized plugin',
   }, expected),
-  /AAS Core Preview/,
+  /home title/,
 );
 assert.throws(
   () => assertLiveSeoDocuments({ ...documents, home: `${documents.home} prompt templates` }, expected),

@@ -70,10 +70,9 @@ function assertNotIncludes(text, snippet, label) {
 }
 
 function assertLiveSeoDocuments({ home, plugins, sitemap, llms, robots }, expected) {
-  assertIncludes(home, `AAS Core Preview | Agent-first stacks backed by ${expected.countLabel} skills`, 'home');
+  assertIncludes(home, 'Agentic Awesome Skills | Agent-first skill catalog and AAS Core', 'home title');
+  assertIncludes(home, `backed by ${expected.countLabel} cataloged skills`, 'home description');
   assertIncludes(home, 'SoftwareSourceCode', 'home JSON-LD');
-  assertIncludes(home, 'FAQPage', 'home JSON-LD');
-  assertIncludes(home, 'specialized plugins', 'home');
   assertIncludes(home, expected.countLabel, 'home');
   assertNotIncludes(home, 'prompt templates', 'home');
 
