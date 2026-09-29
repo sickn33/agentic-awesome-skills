@@ -54108,6 +54108,39 @@
     }
   },
   {
+    "id": "suno-lyrics-to-song",
+    "path": "skills/suno-lyrics-to-song",
+    "category": "media",
+    "name": "suno-lyrics-to-song",
+    "description": "Install and use the official Lyrics to Song package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/lyrics-to-song-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/lyrics-to-song-skill/blob/2facaacd68cee88a73847be8563895535c48cd47/LICENSE",
+    "tags": [
+      "lyrics-to-song",
+      "music-generation",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
+  },
+  {
     "id": "supabase",
     "path": "skills/supabase",
     "category": "backend",

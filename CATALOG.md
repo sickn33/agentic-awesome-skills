@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-29T09:21:51.000Z
 
-Total skills: 2499
+Total skills: 2500
 
 ## agent-behavior (5)
 
@@ -2018,7 +2018,7 @@ Total skills: 2499
 | `protect-mcp-governance` | Agent governance skill for MCP tool calls — Cedar policy authoring, shadow-to-enforce rollout, and Ed25519 receipt verification. | safe | scopeblind/scopeblind-gateway | protect, mcp, governance | protect, mcp, governance, agent, skill, calls, cedar, policy, authoring, shadow, enforce, rollout |
 | `serply-search-mcp` | Search Google, Bing, Google News and Google Scholar, and read public pages, with the Serply MCP server. Use when the user chooses Serply or its connected too... | safe | self | mcp, web-search, news, scholar, research, citations | mcp, web-search, news, scholar, research, citations, serply, search, google, bing, read, public |
 
-## media (28)
+## media (29)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2045,6 +2045,7 @@ Total skills: 2499
 | `screenstudio-alt` | Open-source headless Screen Studio alternative: auto speed-up of idle, auto-zoom on click clusters, keystroke overlay chips, smoothed synthetic cursor, and 9... | critical | connerkward/screenstudio-alternative-skill | screen-recording, video, post-production, auto-zoom, vertical-video, ffmpeg | screen-recording, video, post-production, auto-zoom, vertical-video, ffmpeg, screenstudio, alt, open, source, headless, screen |
 | `slack-gif-creator` | A toolkit providing utilities and knowledge for creating animated GIFs optimized for Slack. | critical | community | slack, gif, creator | slack, gif, creator, toolkit, providing, utilities, knowledge, creating, animated, gifs, optimized |
 | `stability-ai` | Geracao de imagens via Stability AI (SD3.5, Ultra, Core). Text-to-image, img2img, inpainting, upscale, remove-bg, search-replace. 15 estilos artisticos. | safe | community | image-generation, stable-diffusion, ai-art, api | image-generation, stable-diffusion, ai-art, api, stability, ai, geracao, de, imagens, via, sd3, ultra |
+| `suno-lyrics-to-song` | Install and use the official Lyrics to Song package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/lyrics-to-song-skill | lyrics-to-song, music-generation, mcp, paid-api, beatra | lyrics-to-song, music-generation, mcp, paid-api, beatra, suno, lyrics, song, install, official, package, pinned |
 | `talking-avatar-video` | Install and use the official Talking Avatar Video package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/talking-avatar-video-skill | talking-avatar, talking-head, text-to-video, mcp, paid-api, beatra | talking-avatar, talking-head, text-to-video, mcp, paid-api, beatra, talking, avatar, video, install, official, package |
 | `video-router` | Route a video-production brief to generation, deterministic composition, supplied-footage editing, or an automatic cross-modal plan before production begins. | none | Orkas-AI/Orkas-VideoStudio | video, routing, editing, composition, generation | video, routing, editing, composition, generation, router, route, brief, deterministic, supplied, footage, automatic |
 | `videodb` | Video and audio perception, indexing, and editing. Ingest files/URLs/live streams, build visual/spoken indexes, search with timestamps, edit timelines, add o... | safe | community | video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture | video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture, videodb, audio |

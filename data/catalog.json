@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-29T09:21:51.000Z",
-  "total": 2499,
+  "total": 2500,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -63496,6 +63496,41 @@
         "invoke"
       ],
       "path": "skills/subject-line-psychologist/SKILL.md"
+    },
+    {
+      "id": "suno-lyrics-to-song",
+      "canonical_id": "suno-lyrics-to-song",
+      "name": "suno-lyrics-to-song",
+      "description": "Install and use the official Lyrics to Song package, pinned by digest, for paid hosted work on the Beatra service.",
+      "category": "media",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "beatra-ai/lyrics-to-song-skill",
+      "license": "MIT-0",
+      "license_source": "https://github.com/beatra-ai/lyrics-to-song-skill/blob/2facaacd68cee88a73847be8563895535c48cd47/LICENSE",
+      "tags": [
+        "lyrics-to-song",
+        "music-generation",
+        "mcp",
+        "paid-api",
+        "beatra"
+      ],
+      "triggers": [
+        "lyrics-to-song",
+        "music-generation",
+        "mcp",
+        "paid-api",
+        "beatra",
+        "suno",
+        "lyrics",
+        "song",
+        "install",
+        "official",
+        "package",
+        "pinned"
+      ],
+      "path": "skills/suno-lyrics-to-song/SKILL.md"
     },
     {
       "id": "supabase",

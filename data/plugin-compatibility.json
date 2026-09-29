@@ -41443,6 +41443,25 @@
       "runtime_files": []
     },
     {
+      "id": "suno-lyrics-to-song",
+      "path": "skills/suno-lyrics-to-song",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "supabase",
       "path": "skills/supabase",
       "targets": {
@@ -47980,10 +47999,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2499,
+    "total_skills": 2500,
     "supported": {
-      "codex": 2412,
-      "claude": 2437
+      "codex": 2413,
+      "claude": 2438
     },
     "blocked": {
       "codex": 87,
