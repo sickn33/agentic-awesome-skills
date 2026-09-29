@@ -1999,6 +1999,39 @@
     ]
   },
   {
+    "id": "ai-image-generation-studio",
+    "path": "skills/ai-image-generation-studio",
+    "category": "media",
+    "name": "ai-image-generation-studio",
+    "description": "Install and use the official AI Image Generator package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/ai-image-generator-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/ai-image-generator-skill/blob/13c7b9b2a2197fb91deb6a3a1466124db620c3d1/LICENSE",
+    "tags": [
+      "image-generation",
+      "text-to-image",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
+  },
+  {
     "id": "ai-inference-service-mesh",
     "path": "skills/ai-inference-service-mesh",
     "category": "devops",
@@ -2135,6 +2168,40 @@
     }
   },
   {
+    "id": "ai-multilingual-dubbing",
+    "path": "skills/ai-multilingual-dubbing",
+    "category": "media",
+    "name": "ai-multilingual-dubbing",
+    "description": "Install and use the official Multilingual Voiceover package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/multilingual-voiceover-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/multilingual-voiceover-skill/blob/030ec84801fec544bc8be4e1d4ff7333bee7cf0d/LICENSE",
+    "tags": [
+      "tts",
+      "multilingual",
+      "voiceover",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
+  },
+  {
     "id": "ai-native-cli",
     "path": "skills/ai-native-cli",
     "category": "ai-ml",
@@ -2180,6 +2247,39 @@
     "source_type": "self"
   },
   {
+    "id": "ai-photo-restyler",
+    "path": "skills/ai-photo-restyler",
+    "category": "media",
+    "name": "ai-photo-restyler",
+    "description": "Install and use the official Photo to Anime package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/photo-to-anime-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/photo-to-anime-skill/blob/87bc4c4e993e1ab49ded9e065087c1796cb7cbe4/LICENSE",
+    "tags": [
+      "photo-to-anime",
+      "image-stylization",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
+  },
+  {
     "id": "ai-pipeline-orchestration",
     "path": "skills/ai-pipeline-orchestration",
     "category": "devops",
@@ -2204,6 +2304,40 @@
     "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
     "license": "MIT",
     "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
+    "id": "ai-podcast-voiceover",
+    "path": "skills/ai-podcast-voiceover",
+    "category": "media",
+    "name": "ai-podcast-voiceover",
+    "description": "Install and use the official AI Podcast Voiceover package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/ai-podcast-voiceover-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/ai-podcast-voiceover-skill/blob/ddca11ec6853184468eab57a5b4b3649e5293f4d/LICENSE",
+    "tags": [
+      "podcast",
+      "tts",
+      "voiceover",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
   },
   {
     "id": "ai-product",
@@ -9874,6 +10008,42 @@
       "data-moat",
       "mcp",
       "reference-data"
+    ]
+  },
+  {
+    "id": "beatra",
+    "path": "skills/beatra",
+    "category": "media",
+    "name": "beatra",
+    "description": "Install and use the official AI Media Generator package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/ai-media-generator-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/ai-media-generator-skill/blob/69afbfe9fc5be318279656311225c09f7ae03f97/LICENSE",
+    "tags": [
+      "ai-media",
+      "image-generation",
+      "video-generation",
+      "music-generation",
+      "tts",
+      "mcp",
+      "paid-api",
+      "beatra"
     ]
   },
   {
@@ -21001,6 +21171,40 @@
       "ecl",
       "workflow",
       "ci"
+    ]
+  },
+  {
+    "id": "ecommerce-listing-image-set",
+    "path": "skills/ecommerce-listing-image-set",
+    "category": "media",
+    "name": "ecommerce-listing-image-set",
+    "description": "Install and use the official Ecommerce Product Images package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/ecommerce-product-images-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/ecommerce-product-images-skill/blob/ef9056dcb0d886ad8eb1e3a49803c1143598506c/LICENSE",
+    "tags": [
+      "ecommerce",
+      "product-images",
+      "text-to-image",
+      "mcp",
+      "paid-api",
+      "beatra"
     ]
   },
   {
@@ -39621,6 +39825,39 @@
     }
   },
   {
+    "id": "music-generation-studio",
+    "path": "skills/music-generation-studio",
+    "category": "media",
+    "name": "music-generation-studio",
+    "description": "Install and use the official AI Music Generator package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/ai-music-generator-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/ai-music-generator-skill/blob/fee8fbf3dcd8a723bee1e372915c6f78593f9b35/LICENSE",
+    "tags": [
+      "music-generation",
+      "text-to-music",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
+  },
+  {
     "id": "mysql",
     "path": "skills/mysql",
     "category": "devops",
@@ -44457,6 +44694,39 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "poster-design-studio",
+    "path": "skills/poster-design-studio",
+    "category": "media",
+    "name": "poster-design-studio",
+    "description": "Install and use the official AI Poster Maker package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/ai-poster-maker-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/ai-poster-maker-skill/blob/7a6337f7b976a3d433fb415cc4e595307860f613/LICENSE",
+    "tags": [
+      "poster-design",
+      "text-to-image",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
   },
   {
     "id": "postgres-best-practices",
@@ -59929,6 +60199,39 @@
     }
   },
   {
+    "id": "viral-video-teardown-remake",
+    "path": "skills/viral-video-teardown-remake",
+    "category": "media",
+    "name": "viral-video-teardown-remake",
+    "description": "Install and use the official Viral Video Remake package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/viral-video-remake-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/viral-video-remake-skill/blob/46f78753183ce9bd35574cdef7f57f811f468794/LICENSE",
+    "tags": [
+      "short-video",
+      "video-generation",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
+  },
+  {
     "id": "visual-emotion-engineer",
     "path": "skills/visual-emotion-engineer",
     "category": "design",
@@ -60115,6 +60418,73 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "voice-cloning-studio",
+    "path": "skills/voice-cloning-studio",
+    "category": "media",
+    "name": "voice-cloning-studio",
+    "description": "Install and use the official AI Voice Cloning package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/ai-voice-cloning-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/ai-voice-cloning-skill/blob/64923d96ecdd1adce28ad4ad264b3808dda0ce2d/LICENSE",
+    "tags": [
+      "voice-cloning",
+      "custom-voice",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
+  },
+  {
+    "id": "voiceover-narration-studio",
+    "path": "skills/voiceover-narration-studio",
+    "category": "media",
+    "name": "voiceover-narration-studio",
+    "description": "Install and use the official AI Voiceover Generator package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/ai-voiceover-generator-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/ai-voiceover-generator-skill/blob/0c44adfad72422e6619f72d0fa91d4bbefac9592/LICENSE",
+    "tags": [
+      "tts",
+      "voiceover",
+      "narration",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
   },
   {
     "id": "vpn-setup",

@@ -1585,6 +1585,25 @@
       "runtime_files": []
     },
     {
+      "id": "ai-image-generation-studio",
+      "path": "skills/ai-image-generation-studio",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ai-inference-service-mesh",
       "path": "skills/ai-inference-service-mesh",
       "targets": {
@@ -1684,6 +1703,25 @@
       "runtime_files": []
     },
     {
+      "id": "ai-multilingual-dubbing",
+      "path": "skills/ai-multilingual-dubbing",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ai-native-cli",
       "path": "skills/ai-native-cli",
       "targets": {
@@ -1703,8 +1741,46 @@
       "runtime_files": []
     },
     {
+      "id": "ai-photo-restyler",
+      "path": "skills/ai-photo-restyler",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ai-pipeline-orchestration",
       "path": "skills/ai-pipeline-orchestration",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ai-podcast-voiceover",
+      "path": "skills/ai-podcast-voiceover",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -7656,6 +7732,25 @@
     {
       "id": "bdistill-knowledge-extraction",
       "path": "skills/bdistill-knowledge-extraction",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "beatra",
+      "path": "skills/beatra",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -16677,6 +16772,25 @@
     {
       "id": "ecl-harness-engineer",
       "path": "skills/ecl-harness-engineer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ecommerce-listing-image-set",
+      "path": "skills/ecommerce-listing-image-set",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -30494,6 +30608,25 @@
       "runtime_files": []
     },
     {
+      "id": "music-generation-studio",
+      "path": "skills/music-generation-studio",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "mysql",
       "path": "skills/mysql",
       "targets": {
@@ -34140,6 +34273,25 @@
     {
       "id": "posix-shell-pro",
       "path": "skills/posix-shell-pro",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "poster-design-studio",
+      "path": "skills/poster-design-studio",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -45883,6 +46035,25 @@
       "runtime_files": []
     },
     {
+      "id": "viral-video-teardown-remake",
+      "path": "skills/viral-video-teardown-remake",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "visual-emotion-engineer",
       "path": "skills/visual-emotion-engineer",
       "targets": {
@@ -46018,6 +46189,44 @@
     {
       "id": "voice-ai-engine-development",
       "path": "skills/voice-ai-engine-development",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "voice-cloning-studio",
+      "path": "skills/voice-cloning-studio",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "voiceover-narration-studio",
+      "path": "skills/voiceover-narration-studio",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -48037,10 +48246,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2502,
+    "total_skills": 2513,
     "supported": {
-      "codex": 2415,
-      "claude": 2440
+      "codex": 2426,
+      "claude": 2451
     },
     "blocked": {
       "codex": 87,
