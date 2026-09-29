@@ -595,7 +595,7 @@ Contributors ranked by the number of skills they added.
 ## Repo Contributors
 
 <a href="https://github.com/sickn33/agentic-awesome-skills/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=sickn33/agentic-awesome-skills&max=500" alt="Repository contributors" />
+  <img src="https://contrib.rocks/image?repo=sickn33/agentic-awesome-skills&max=2000" alt="Repository contributors" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks). *(Image may be cached; [view live contributors](https://github.com/sickn33/agentic-awesome-skills/graphs/contributors) on GitHub.)*
