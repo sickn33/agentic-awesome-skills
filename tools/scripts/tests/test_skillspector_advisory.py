@@ -97,6 +97,19 @@ class AdvisoryTest(unittest.TestCase):
             report = advisory.run(self.repo, self.base, head, Path(self.temp.name) / 'reports', '/scanner')
         self.assertEqual(report['skills'][0]['state'], 'partial')
 
+    def test_malformed_scanner_report_is_incomplete(self):
+        self.write('skills/example/SKILL.md', '# Changed\n')
+        head = self.commit()
+        original_run = subprocess.run
+        def malformed(*args, **kwargs):
+            if args[0][0] != '/scanner':
+                return original_run(*args, **kwargs)
+            Path(args[0][-1]).write_text('[]')
+            return subprocess.CompletedProcess(args[0], 0)
+        with patch.object(advisory.subprocess, 'run', side_effect=malformed):
+            report = advisory.run(self.repo, self.base, head, Path(self.temp.name) / 'reports', '/scanner')
+        self.assertEqual(report['skills'][0]['state'], 'incomplete')
+
     def test_workflow_uses_trusted_base_and_network_isolation(self):
         root = Path(__file__).resolve().parents[3]
         workflow = (root / '.github/workflows/ci.yml').read_text()

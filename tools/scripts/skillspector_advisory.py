@@ -94,6 +94,8 @@ def run(repo, base, head, output, scanner=None):
                         result_path.unlink()
                         raise ValueError('scanner report exceeds 8 MiB')
                     payload = json.loads(result_path.read_text())
+                    if not isinstance(payload, dict) or not isinstance(payload.get('analysis_completeness'), dict) or not isinstance(payload.get('issues'), list):
+                        raise ValueError('scanner report has an invalid schema')
                     item['report'] = result_path.name
                     completeness = payload.get('analysis_completeness', {})
                     item['analysis_complete'] = completeness.get('is_complete', False)
