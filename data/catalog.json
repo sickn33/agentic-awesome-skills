@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-29T09:21:51.000Z",
-  "total": 2513,
+  "total": 2523,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -14450,6 +14450,42 @@
       "path": "skills/canvas-design/SKILL.md"
     },
     {
+      "id": "capacity-workload-planner",
+      "canonical_id": "capacity-workload-planner",
+      "name": "capacity-workload-planner",
+      "description": "Weekly capacity and workload register: available and allocated hours, utilisation percentage, over-allocation check and leave days. Use for resource planning.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage",
+        "capacity",
+        "workload",
+        "planner",
+        "weekly"
+      ],
+      "path": "skills/capacity-workload-planner/SKILL.md"
+    },
+    {
       "id": "career-ops",
       "canonical_id": "career-ops",
       "name": "career-ops",
@@ -15869,6 +15905,42 @@
       "path": "skills/client-secret-exposure-audit/SKILL.md"
     },
     {
+      "id": "clients-accounts",
+      "canonical_id": "clients-accounts",
+      "name": "clients-accounts",
+      "description": "Client and account register: contacts, billing address, tax ID and basis, payment terms, invoice totals, amounts paid and outstanding balance. Use for account tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "operate"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "operate",
+        "clients",
+        "accounts",
+        "client",
+        "account"
+      ],
+      "path": "skills/clients-accounts/SKILL.md"
+    },
+    {
       "id": "cline-delegate",
       "canonical_id": "cline-delegate",
       "name": "cline-delegate",
@@ -16526,6 +16598,47 @@
         "user"
       ],
       "path": "skills/code-documentation-doc-generate/SKILL.md"
+    },
+    {
+      "id": "code-of-conduct",
+      "canonical_id": "code-of-conduct",
+      "name": "code-of-conduct",
+      "description": "Build a human-reviewed conduct register after context-first intake. Use when an SME needs policy acknowledgements, complaint handling, and breach follow-up.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "code-of-conduct",
+        "policy",
+        "ethics",
+        "workplace",
+        "grievance",
+        "disciplinary",
+        "acknowledgement",
+        "training",
+        "compliance",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "code-of-conduct",
+        "policy",
+        "ethics",
+        "workplace",
+        "grievance",
+        "disciplinary",
+        "acknowledgement",
+        "training",
+        "compliance",
+        "csv",
+        "sql"
+      ],
+      "path": "skills/code-of-conduct/SKILL.md"
     },
     {
       "id": "code-polish",
@@ -17558,6 +17671,78 @@
         "forums"
       ],
       "path": "skills/community-building/SKILL.md"
+    },
+    {
+      "id": "company-email-accounts",
+      "canonical_id": "company-email-accounts",
+      "name": "company-email-accounts",
+      "description": "Mailbox and licence register: employee, account type, aliases, groups, tool, licence cost, 2FA and password policy state, and access-review dates. Use for account provisioning.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard",
+        "company",
+        "email",
+        "accounts",
+        "mailbox"
+      ],
+      "path": "skills/company-email-accounts/SKILL.md"
+    },
+    {
+      "id": "competency-matrix",
+      "canonical_id": "competency-matrix",
+      "name": "competency-matrix",
+      "description": "Competency matrix of expected proficiency by job title and grade, with assessment method and linked skill area. Use for role frameworks and hiring bars.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop",
+        "competency",
+        "matrix",
+        "expected",
+        "proficiency"
+      ],
+      "path": "skills/competency-matrix/SKILL.md"
     },
     {
       "id": "competitive-landscape",
@@ -18834,6 +19019,42 @@
       "path": "skills/context7-auto-research/SKILL.md"
     },
     {
+      "id": "contract-document-renewal",
+      "canonical_id": "contract-document-renewal",
+      "name": "contract-document-renewal",
+      "description": "Contract register: counterparty, owner, start and end dates, auto-renewal flag, renewal notice deadline, value and tax basis. Use for renewal tracking and notice deadlines.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect",
+        "contract",
+        "document",
+        "renewal",
+        "register"
+      ],
+      "path": "skills/contract-document-renewal/SKILL.md"
+    },
+    {
       "id": "conversation-memory",
       "canonical_id": "conversation-memory",
       "name": "conversation-memory",
@@ -19133,6 +19354,42 @@
       "path": "skills/cost-optimization/SKILL.md"
     },
     {
+      "id": "course-upskilling-requests",
+      "canonical_id": "course-upskilling-requests",
+      "name": "course-upskilling-requests",
+      "description": "Training request register: course, provider, cost, duration, budget line, the three approval steps, service bond and completion evidence. Use for upskilling approvals.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop",
+        "course",
+        "upskilling",
+        "requests",
+        "training"
+      ],
+      "path": "skills/course-upskilling-requests/SKILL.md"
+    },
+    {
       "id": "cowork-to-code-bridge",
       "canonical_id": "cowork-to-code-bridge",
       "name": "cowork-to-code-bridge",
@@ -19335,6 +19592,46 @@
         "gestao"
       ],
       "path": "skills/cred-omega/SKILL.md"
+    },
+    {
+      "id": "credit-cycle-analysis",
+      "canonical_id": "credit-cycle-analysis",
+      "name": "credit-cycle-analysis",
+      "description": "Debtor and creditor credit-cycle analysis: weighted collection or payment days, ageing buckets, credit limit utilisation and gap against benchmark. Use for working-capital review.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "working-capital",
+        "receivables",
+        "payables",
+        "aging"
+      ],
+      "triggers": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "working-capital",
+        "receivables",
+        "payables",
+        "aging"
+      ],
+      "path": "skills/credit-cycle-analysis/SKILL.md"
     },
     {
       "id": "crewai",
@@ -19939,6 +20236,41 @@
       "path": "skills/csharp-pro/SKILL.md"
     },
     {
+      "id": "csv-manual-export",
+      "canonical_id": "csv-manual-export",
+      "name": "csv-manual-export",
+      "description": "CSV Manual Export: a UTF-8 CSV template from a confirmed field list, empty by default, with no invented columns or values. Use for an import, staging or handoff file.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "csv",
+        "export",
+        "import",
+        "template",
+        "operations",
+        "data",
+        "helper"
+      ],
+      "triggers": [
+        "csv",
+        "export",
+        "import",
+        "template",
+        "operations",
+        "data",
+        "helper",
+        "manual",
+        "utf",
+        "confirmed",
+        "field",
+        "list"
+      ],
+      "path": "skills/csv-manual-export/SKILL.md"
+    },
+    {
       "id": "cucumber-skill",
       "canonical_id": "cucumber-skill",
       "name": "cucumber-skill",
@@ -19969,6 +20301,42 @@
         "javascript"
       ],
       "path": "skills/cucumber-skill/SKILL.md"
+    },
+    {
+      "id": "culture-retention",
+      "canonical_id": "culture-retention",
+      "name": "culture-retention",
+      "description": "Employee survey and retention register: engagement, growth, happiness, work-life balance and manager-relationship scores, key concern and retention risk. Use for culture surveys.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "engage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "engage",
+        "culture",
+        "retention",
+        "employee",
+        "survey"
+      ],
+      "path": "skills/culture-retention/SKILL.md"
     },
     {
       "id": "cursor-delegate",

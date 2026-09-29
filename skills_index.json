@@ -12245,6 +12245,40 @@
     }
   },
   {
+    "id": "capacity-workload-planner",
+    "path": "skills/capacity-workload-planner",
+    "category": "business",
+    "name": "capacity-workload-planner",
+    "description": "Weekly capacity and workload register: available and allocated hours, utilisation percentage, over-allocation check and leave days. Use for resource planning.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "manage"
+    ]
+  },
+  {
     "id": "card-based-design",
     "path": "skills/design-it/card-based-design",
     "category": "design-it",
@@ -13483,6 +13517,40 @@
     ]
   },
   {
+    "id": "clients-accounts",
+    "path": "skills/clients-accounts",
+    "category": "business",
+    "name": "clients-accounts",
+    "description": "Client and account register: contacts, billing address, tax ID and basis, payment terms, invoice totals, amounts paid and outstanding balance. Use for account tracking.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "operate"
+    ]
+  },
+  {
     "id": "cline-delegate",
     "path": "skills/cline-delegate",
     "category": "agent-orchestration",
@@ -14017,6 +14085,45 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "code-of-conduct",
+    "path": "skills/code-of-conduct",
+    "category": "business",
+    "name": "code-of-conduct",
+    "description": "Build a human-reviewed conduct register after context-first intake. Use when an SME needs policy acknowledgements, complaint handling, and breach follow-up.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "code-of-conduct",
+      "policy",
+      "ethics",
+      "workplace",
+      "grievance",
+      "disciplinary",
+      "acknowledgement",
+      "training",
+      "compliance",
+      "csv",
+      "sql",
+      "notion"
+    ]
   },
   {
     "id": "code-polish",
@@ -14921,6 +15028,74 @@
     "source_repo": "jonathimer/devmarketing-skills",
     "license": "MIT",
     "license_source": "https://github.com/jonathimer/devmarketing-skills/blob/main/LICENSE"
+  },
+  {
+    "id": "company-email-accounts",
+    "path": "skills/company-email-accounts",
+    "category": "business",
+    "name": "company-email-accounts",
+    "description": "Mailbox and licence register: employee, account type, aliases, groups, tool, licence cost, 2FA and password policy state, and access-review dates. Use for account provisioning.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "onboard"
+    ]
+  },
+  {
+    "id": "competency-matrix",
+    "path": "skills/competency-matrix",
+    "category": "business",
+    "name": "competency-matrix",
+    "description": "Competency matrix of expected proficiency by job title and grade, with assessment method and linked skill area. Use for role frameworks and hiring bars.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "develop"
+    ]
   },
   {
     "id": "competitive-landscape",
@@ -16034,6 +16209,40 @@
     }
   },
   {
+    "id": "contract-document-renewal",
+    "path": "skills/contract-document-renewal",
+    "category": "business",
+    "name": "contract-document-renewal",
+    "description": "Contract register: counterparty, owner, start and end dates, auto-renewal flag, renewal notice deadline, value and tax basis. Use for renewal tracking and notice deadlines.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "protect"
+    ]
+  },
+  {
     "id": "conversation-memory",
     "path": "skills/conversation-memory",
     "category": "memory",
@@ -16284,6 +16493,40 @@
     }
   },
   {
+    "id": "course-upskilling-requests",
+    "path": "skills/course-upskilling-requests",
+    "category": "business",
+    "name": "course-upskilling-requests",
+    "description": "Training request register: course, provider, cost, duration, budget line, the three approval steps, service bond and completion evidence. Use for upskilling approvals.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "develop"
+    ]
+  },
+  {
     "id": "cowork-to-code-bridge",
     "path": "skills/cowork-to-code-bridge",
     "category": "mcp",
@@ -16470,6 +16713,44 @@
       "security",
       "api-keys",
       "vault"
+    ]
+  },
+  {
+    "id": "credit-cycle-analysis",
+    "path": "skills/credit-cycle-analysis",
+    "category": "business",
+    "name": "credit-cycle-analysis",
+    "description": "Debtor and creditor credit-cycle analysis: weighted collection or payment days, ageing buckets, credit limit utilisation and gap against benchmark. Use for working-capital review.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "accounting",
+      "audit",
+      "finance",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "working-capital",
+      "receivables",
+      "payables",
+      "aging"
     ]
   },
   {
@@ -17048,6 +17329,39 @@
     }
   },
   {
+    "id": "csv-manual-export",
+    "path": "skills/csv-manual-export",
+    "category": "business",
+    "name": "csv-manual-export",
+    "description": "CSV Manual Export: a UTF-8 CSV template from a confirmed field list, empty by default, with no invented columns or values. Use for an import, staging or handoff file.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-28",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "csv",
+      "export",
+      "import",
+      "template",
+      "operations",
+      "data",
+      "helper"
+    ]
+  },
+  {
     "id": "cucumber-skill",
     "path": "skills/cucumber-skill",
     "category": "testing",
@@ -17072,6 +17386,40 @@
     "source_repo": "LambdaTest/agent-skills",
     "license": "MIT",
     "license_source": "https://github.com/LambdaTest/agent-skills/blob/main/LICENSE"
+  },
+  {
+    "id": "culture-retention",
+    "path": "skills/culture-retention",
+    "category": "business",
+    "name": "culture-retention",
+    "description": "Employee survey and retention register: engagement, growth, happiness, work-life balance and manager-relationship scores, key concern and retention risk. Use for culture surveys.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "engage"
+    ]
   },
   {
     "id": "cursor-delegate",

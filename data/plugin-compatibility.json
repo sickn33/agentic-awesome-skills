@@ -9281,6 +9281,25 @@
       "runtime_files": []
     },
     {
+      "id": "capacity-workload-planner",
+      "path": "skills/capacity-workload-planner",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "career-ops",
       "path": "skills/career-ops",
       "targets": {
@@ -10234,6 +10253,25 @@
       "runtime_files": []
     },
     {
+      "id": "clients-accounts",
+      "path": "skills/clients-accounts",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "cline-delegate",
       "path": "skills/cline-delegate",
       "targets": {
@@ -10635,6 +10673,25 @@
     {
       "id": "code-documentation-doc-generate",
       "path": "skills/code-documentation-doc-generate",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "code-of-conduct",
+      "path": "skills/code-of-conduct",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -11293,6 +11350,44 @@
     {
       "id": "community-building",
       "path": "skills/community-building",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "company-email-accounts",
+      "path": "skills/company-email-accounts",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "competency-matrix",
+      "path": "skills/competency-matrix",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -12192,6 +12287,25 @@
       "runtime_files": []
     },
     {
+      "id": "contract-document-renewal",
+      "path": "skills/contract-document-renewal",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "conversation-memory",
       "path": "skills/conversation-memory",
       "targets": {
@@ -12401,6 +12515,25 @@
       "runtime_files": []
     },
     {
+      "id": "course-upskilling-requests",
+      "path": "skills/course-upskilling-requests",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "cowork-to-code-bridge",
       "path": "skills/cowork-to-code-bridge",
       "targets": {
@@ -12523,6 +12656,25 @@
     {
       "id": "cred-omega",
       "path": "skills/cred-omega",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "credit-cycle-analysis",
+      "path": "skills/credit-cycle-analysis",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -12882,8 +13034,46 @@
       "runtime_files": []
     },
     {
+      "id": "csv-manual-export",
+      "path": "skills/csv-manual-export",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "cucumber-skill",
       "path": "skills/cucumber-skill",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "culture-retention",
+      "path": "skills/culture-retention",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -48246,10 +48436,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2513,
+    "total_skills": 2523,
     "supported": {
-      "codex": 2426,
-      "claude": 2451
+      "codex": 2436,
+      "claude": 2461
     },
     "blocked": {
       "codex": 87,
