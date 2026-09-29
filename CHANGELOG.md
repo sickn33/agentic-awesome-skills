@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.9.0] - 2026-09-29 - "Vercel Hosting, Guided Skill Intake, and Two New Reviewed Skills"
+
+> Adds 2 reviewed skills for dependency-API drift knowledge and LinkedIn prospecting through an MCP server, adds optional guided skill intake to AAS Core, prepares the catalog for sponsored Vercel hosting on the canonical `aaskills.tech` domain, and ships **2,478** skills.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the complete protected maintainer batch merged after `18.8.0`, with existing installation interfaces preserved.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.9.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **since-cutoff (#1663)** — `since-cutoff` lists which APIs of a project's pinned Python dependencies changed after the model's training cutoff, shows where the code uses them, and can write short `AGENTS.md` or `CLAUDE.md` notes. The comparison is a static `griffe` diff pinned to `uvx since-cutoff@0.4.1`; `scan` makes no model calls, writes only to its own git-ignored folder, and asks before the first download. `risk: safe`.
+- **Omentir LinkedIn outreach (#1662)** — `omentir-linkedin-outreach` runs LinkedIn prospecting and outreach through the hosted Omentir MCP server: find people, score fit from evidence, draft messages, and check campaigns. Research and drafts only by default, never sends unless asked in the session, never signs into LinkedIn, and never asks for the user's LinkedIn credentials. `risk: critical`.
+- **Guided skill intake (#1664)** — AAS Core's MCP `initialize` contract now offers an optional guided intake for users who want help explaining their goal before skill selection. It stays advisory: the agent still owns project analysis and the exact skill choice.
+
+### Changed
+
+- **Vercel OSS hosting (#1667, #1669)** — prepare the catalog for hosting on the sponsored Vercel team while retaining `https://aaskills.tech/` as the canonical public URL. Adds `vercel.json`, a `.vercelignore`, build-time docs metadata that does not depend on Git, and the Vercel OSS Program badge in the README support section.
+- **Live SEO checks (#1677, #1678)** — align the live SEO contract with the title, description, and structured metadata the catalog actually renders, drop the stale FAQPage and homepage wording requirements, and shorten the homepage meta description flagged by Bing Webmaster Tools.
+- **TraderSpy source credit (#1661)** — restore the `target1m/traderspy-mcp` entry under Official Sources that #1610 added and #1621 accidentally overwrote, so the six `traderspy-*` skills are credited again.
+- **Installer path resolution (#1673)** — fix a bug where a relative `--path` was resolved against the working directory twice, so the README's documented OpenCode command installed to a doubled directory, never created `.agents/skills`, and still exited 0. Absolute and `~`-prefixed paths were already correct and are unchanged.
+- **Dependency advisories (#1675)** — override `ip-address` in the `loki-mode` example backend, clearing two moderate advisories that reached the project through `express-rate-limit`.
+- **Dependency refreshes (#1665, #1666)** — update `@supabase/supabase-js` to 2.116.0 and `react-virtuoso` to 4.18.13 in the catalog web app.
+
+### Documentation and community
+
+- Added the `MohammadHijjawi97/since-cutoff` and `vanshyadav1408/Omentir` source credits to the README.
+- Thanks to [@MohammadHijjawi97](https://github.com/MohammadHijjawi97) for `since-cutoff`, [@vanshyadav1408](https://github.com/vanshyadav1408) for `omentir-linkedin-outreach`, and [@MuratKaragozgil](https://github.com/MuratKaragozgil) for restoring the TraderSpy credit.
+
+### Validation scope
+
+Exact-head maintainer review for changed skill content, protected source PRs, repository validation and tests, reference validation, docs security, protected CI and CodeQL, dependency review, canonical synchronization, release preflight, npm publication, and release provenance verification.
+
 ## [18.8.0] - 2026-09-28 - "Serply Search, NSFW AI SpicyAPI, and the Jev Social v0.1.10 Pin"
 
 > Adds 2 reviewed skills for Google/News/Scholar search via MCP and for adult media generation with spend gates and consent rules, refreshes the Jev Social runtime pin, and improves the README contributor layout for **2,476** skills.
