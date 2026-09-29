@@ -14,7 +14,13 @@ from update_readme import configure_utf8_output, load_metadata
 
 CONTRIBUTOR_SECTION_HEADING = "## Repo Contributors"
 CONTRIBUTOR_SECTION_START = "We officially thank the following contributors for their help in making this repository awesome!\n\n"
-CONTRIB_ROCKS_MAX = 500
+# contrib.rocks serves a cached image per exact URL for up to three days
+# (cache-control: max-age=259200). A low `max` therefore pins the README to a
+# stale avatar count: at max=500 the image kept showing 362 avatars and omitted
+# the two most recent contributors after they were credited. Keep enough
+# headroom that the rendered grid is not the limiting factor as contributors
+# are added between cache refreshes.
+CONTRIB_ROCKS_MAX = 2000
 SPECIAL_LINK_OVERRIDES = {
     "Copilot": "https://github.com/apps/copilot-swe-agent",
     "github-actions[bot]": "https://github.com/apps/github-actions",

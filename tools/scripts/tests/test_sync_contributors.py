@@ -62,7 +62,10 @@ We officially thank the following contributors for their help in making this rep
             ["alice", "github-actions[bot]", "Copilot", "new-user"],
         )
 
-        self.assertIn("https://contrib.rocks/image?repo=sickn33/agentic-awesome-skills&max=500", updated)
+        self.assertIn(
+            f"https://contrib.rocks/image?repo=sickn33/agentic-awesome-skills&max={sync_contributors.CONTRIB_ROCKS_MAX}",
+            updated,
+        )
         self.assertIn("https://github.com/sickn33/agentic-awesome-skills/graphs/contributors", updated)
         self.assertNotIn("- [@alice]", updated)
         self.assertNotIn("- [@new-user]", updated)
@@ -121,6 +124,18 @@ We officially thank the following contributors for their help in making this rep
         contributors = sync_contributors.parse_contributors_response(payload)
 
         self.assertEqual(contributors, ["alice", "bob", "github-actions[bot]"])
+
+    def test_contrib_rocks_max_keeps_headroom_over_stale_cache(self):
+        # contrib.rocks caches each exact URL for up to three days. A low max
+        # pinned the README image to a stale avatar count that omitted the two
+        # most recent contributors, so keep clear headroom above any currently
+        # plausible contributor total.
+        self.assertGreaterEqual(sync_contributors.CONTRIB_ROCKS_MAX, 1000)
+        rendered = sync_contributors.render_repo_contributors_section(
+            "sickn33/agentic-awesome-skills"
+        )
+        self.assertNotIn("max=500", rendered)
+        self.assertIn(f"max={sync_contributors.CONTRIB_ROCKS_MAX}", rendered)
 
 
 if __name__ == "__main__":
