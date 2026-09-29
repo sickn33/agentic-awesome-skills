@@ -207,3 +207,9 @@ Run the same command without `--dry-run` only after every required check passes 
 - This skill orchestrates the repository's existing scripts and protected workflows; it does not grant GitHub, npm, Pages, or local-client permissions.
 - Stop at the exact approval or credential boundary when publication, authenticated configuration, or another externally visible action was not authorized.
 - Re-read the current repository policy and `package.json` on every run because branch protection, checks, and supported preview commands may change.
+
+## SkillSpector advisory CI
+
+The `skillspector-advisory` CI job follows successful `pr-evidence` on reference-relevant source PRs. It uses protected-base tooling, immutable PR refs, NVIDIA SkillSpector v2.12.0 pinned to full commit `c7958a3268d9498644b22edb75d0f051bbc8cbfc`, and its frozen dependency lock. Full changed canonical skill directories are copied from Git as inert private data, including executable blobs; links and gitlinks are rejected. Scans use `--no-llm` in a Linux network namespace with no scanner credentials or tracing. No contributed baseline is applied. Limits are 50 skills, 1,000 files and 16 MiB per skill, 60 seconds per scan and 15 minutes per job; exceeded limits and scanner failures are reported as incomplete. Reports bind the base and head SHA and remain advisory: they neither replace deterministic checks nor satisfy Tessl/exact-head maintainer review, and do not alter branch protection or `merge:batch`. The first integration PR reports a bootstrap skip because its protected base lacks the wrapper.
+
+Review findings individually during the pilot. Do not bulk-accept existing findings or interpret missing `allowed-tools`, a network call, a low score, or an incomplete static scan as an automatic verdict. Any later suppression policy or blocking rules require a separately reviewed workflow-contract change.
