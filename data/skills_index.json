@@ -2025,6 +2025,40 @@
     "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
+    "id": "ai-logo-maker",
+    "path": "skills/ai-logo-maker",
+    "category": "media",
+    "name": "ai-logo-maker",
+    "description": "Install and use the official AI Logo Maker package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/ai-logo-maker-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/ai-logo-maker-skill/blob/89bf762b964f67b77eb0af34d832aab19188f557/LICENSE",
+    "tags": [
+      "logo-design",
+      "brand-identity",
+      "text-to-image",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
+  },
+  {
     "id": "ai-loop",
     "path": "skills/ai-loop",
     "category": "workflow",
@@ -45322,6 +45356,40 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "product-photo-studio",
+    "path": "skills/product-photo-studio",
+    "category": "media",
+    "name": "product-photo-studio",
+    "description": "Install and use the official AI Product Photography package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/ai-product-photography-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/ai-product-photography-skill/blob/1490364794606dfbedd629cb3ab886271b5829e4/LICENSE",
+    "tags": [
+      "product-photography",
+      "ecommerce",
+      "text-to-image",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
   },
   {
     "id": "production-audit",

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-29T09:21:51.000Z",
-  "total": 2500,
+  "total": 2502,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -2493,6 +2493,42 @@
         "cluster"
       ],
       "path": "skills/ai-inference-service-mesh/SKILL.md"
+    },
+    {
+      "id": "ai-logo-maker",
+      "canonical_id": "ai-logo-maker",
+      "name": "ai-logo-maker",
+      "description": "Install and use the official AI Logo Maker package, pinned by digest, for paid hosted work on the Beatra service.",
+      "category": "media",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "beatra-ai/ai-logo-maker-skill",
+      "license": "MIT-0",
+      "license_source": "https://github.com/beatra-ai/ai-logo-maker-skill/blob/89bf762b964f67b77eb0af34d832aab19188f557/LICENSE",
+      "tags": [
+        "logo-design",
+        "brand-identity",
+        "text-to-image",
+        "mcp",
+        "paid-api",
+        "beatra"
+      ],
+      "triggers": [
+        "logo-design",
+        "brand-identity",
+        "text-to-image",
+        "mcp",
+        "paid-api",
+        "beatra",
+        "ai",
+        "logo",
+        "maker",
+        "install",
+        "official",
+        "package"
+      ],
+      "path": "skills/ai-logo-maker/SKILL.md"
     },
     {
       "id": "ai-loop",
@@ -53439,6 +53475,42 @@
         "start"
       ],
       "path": "skills/product-marketing-context/SKILL.md"
+    },
+    {
+      "id": "product-photo-studio",
+      "canonical_id": "product-photo-studio",
+      "name": "product-photo-studio",
+      "description": "Install and use the official AI Product Photography package, pinned by digest, for paid hosted work on the Beatra service.",
+      "category": "media",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "beatra-ai/ai-product-photography-skill",
+      "license": "MIT-0",
+      "license_source": "https://github.com/beatra-ai/ai-product-photography-skill/blob/1490364794606dfbedd629cb3ab886271b5829e4/LICENSE",
+      "tags": [
+        "product-photography",
+        "ecommerce",
+        "text-to-image",
+        "mcp",
+        "paid-api",
+        "beatra"
+      ],
+      "triggers": [
+        "product-photography",
+        "ecommerce",
+        "text-to-image",
+        "mcp",
+        "paid-api",
+        "beatra",
+        "product",
+        "photo",
+        "studio",
+        "install",
+        "official",
+        "ai"
+      ],
+      "path": "skills/product-photo-studio/SKILL.md"
     },
     {
       "id": "production-audit",

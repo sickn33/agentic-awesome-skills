@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-29T09:21:51.000Z
 
-Total skills: 2500
+Total skills: 2502
 
 ## agent-behavior (5)
 
@@ -2018,10 +2018,11 @@ Total skills: 2500
 | `protect-mcp-governance` | Agent governance skill for MCP tool calls — Cedar policy authoring, shadow-to-enforce rollout, and Ed25519 receipt verification. | safe | scopeblind/scopeblind-gateway | protect, mcp, governance | protect, mcp, governance, agent, skill, calls, cedar, policy, authoring, shadow, enforce, rollout |
 | `serply-search-mcp` | Search Google, Bing, Google News and Google Scholar, and read public pages, with the Serply MCP server. Use when the user chooses Serply or its connected too... | safe | self | mcp, web-search, news, scholar, research, citations | mcp, web-search, news, scholar, research, citations, serply, search, google, bing, read, public |
 
-## media (29)
+## media (31)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `ai-logo-maker` | Install and use the official AI Logo Maker package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/ai-logo-maker-skill | logo-design, brand-identity, text-to-image, mcp, paid-api, beatra | logo-design, brand-identity, text-to-image, mcp, paid-api, beatra, ai, logo, maker, install, official, package |
 | `atlas-cloud-media` | Generate Atlas Cloud images and videos through its asynchronous media API with schema-first model selection and credential-safe polling. | critical | self | atlas-cloud, image-generation, video-generation, media-api | atlas-cloud, image-generation, video-generation, media-api, atlas, cloud, media, generate, images, videos, through, asynchronous |
 | `beatra-ai-video-studio` | Install and use the official Beatra AI Video Studio package, pinned by digest, for paid text-to-video, image-to-video, and video edit or extend jobs on the h... | critical | beatra-ai/beatra-skills | video-generation, text-to-video, image-to-video, video-editing, mcp, paid-api, beatra | video-generation, text-to-video, image-to-video, video-editing, mcp, paid-api, beatra, ai, video, studio, install, official |
 | `film-crew` | Turn a one-line AI video idea into a shot list and per-shot, model-ready prompts via a film crew (director, DP, gaffer, editor, script supervisor). Also fixe... | safe | HEOJUNFO/ai-film-crew | video, text-to-video, shot-list, prompting, film | video, text-to-video, shot-list, prompting, film, crew, turn, one, line, ai, idea, shot |
@@ -2035,6 +2036,7 @@ Total skills: 2500
 | `muapi-media` | Generate images and videos with MuAPI's schema-driven asynchronous media API while protecting keys, polling, and output downloads. | critical | self | muapi, image-generation, video-generation, media-api | muapi, image-generation, video-generation, media-api, media, generate, images, videos, schema, driven, asynchronous, api |
 | `nsfw-ai-spicyapi` | Generate adult (18+) images, image-to-video clips and image edits through the SpicyAPI API, with a cost quote before every paid run and adults-only / consent... | critical | Spicy-API/nsfw-ai-skill | image-generation, video-generation, image-to-video, adult-content, api | image-generation, video-generation, image-to-video, adult-content, api, nsfw, ai, spicyapi, generate, adult, 18, images |
 | `podcast-generation` | Generate real audio narratives from text content using Azure OpenAI's Realtime API. | critical | community | podcast, generation | podcast, generation, generate, real, audio, narratives, text, content, azure, openai, realtime, api |
+| `product-photo-studio` | Install and use the official AI Product Photography package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/ai-product-photography-skill | product-photography, ecommerce, text-to-image, mcp, paid-api, beatra | product-photography, ecommerce, text-to-image, mcp, paid-api, beatra, product, photo, studio, install, official, ai |
 | `remotion` | Generate walkthrough videos from Stitch projects using Remotion with smooth transitions, zooming, and text overlays | critical | community | remotion | remotion, generate, walkthrough, videos, stitch, smooth, transitions, zooming, text, overlays |
 | `remotion-best-practices` | Best practices for Remotion - Video creation in React | safe | community | remotion, video, react, animation, composition | remotion, video, react, animation, composition, creation |
 | `remotion-captions` | Transcribing, displaying and animating captions | unknown | remotion-dev/skills | remotion, captions | remotion, captions, transcribing, displaying, animating |

@@ -1604,6 +1604,25 @@
       "runtime_files": []
     },
     {
+      "id": "ai-logo-maker",
+      "path": "skills/ai-logo-maker",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ai-loop",
       "path": "skills/ai-loop",
       "targets": {
@@ -34811,6 +34830,25 @@
       "runtime_files": []
     },
     {
+      "id": "product-photo-studio",
+      "path": "skills/product-photo-studio",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "production-audit",
       "path": "skills/production-audit",
       "targets": {
@@ -47999,10 +48037,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2500,
+    "total_skills": 2502,
     "supported": {
-      "codex": 2413,
-      "claude": 2438
+      "codex": 2415,
+      "claude": 2440
     },
     "blocked": {
       "codex": 87,

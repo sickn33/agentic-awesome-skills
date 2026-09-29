@@ -768,6 +768,7 @@
       "skills": [
         "aegisops-ai",
         "ai-inference-service-mesh",
+        "ai-logo-maker",
         "architecture-review",
         "argocd-gitops",
         "aws-agentic-ai",
@@ -821,6 +822,7 @@
         "nexrad-mosaic-access",
         "observability-monitoring-slo-implement",
         "platform-engineering",
+        "product-photo-studio",
         "production-runtime-certification",
         "progressive-web-app",
         "pubmed-database",
@@ -1815,6 +1817,7 @@
         "plaid-fintech",
         "pricing",
         "pricing-strategy",
+        "product-photo-studio",
         "production-audit",
         "remote-gpu-trainer",
         "revops",
