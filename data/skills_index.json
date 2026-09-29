@@ -152,6 +152,40 @@
     ]
   },
   {
+    "id": "360-feedback-system",
+    "path": "skills/360-feedback-system",
+    "category": "business",
+    "name": "360-feedback-system",
+    "description": "360 feedback register: reviewer, subject, review cycle, visibility, due date and score, as CSV, SQL, JSON Schema or Notion on request. Use for 360 reviews or peer feedback cycles.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "manage"
+    ]
+  },
+  {
     "id": "3d-games",
     "path": "skills/game-development/3d-games",
     "category": "game-development",
@@ -287,6 +321,40 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "access-matrix",
+    "path": "skills/access-matrix",
+    "category": "business",
+    "name": "access-matrix",
+    "description": "Access matrix of role-by-module permissions, with per-role scope, confidentiality level and SME tier, as CSV, SQL, JSON Schema or Notion on request. Use for access reviews.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "foundation"
+    ]
   },
   {
     "id": "access-review",
@@ -481,6 +549,76 @@
     "license_source": "https://github.com/maxbaluev/accreted-intelligence/blob/main/LICENSE"
   },
   {
+    "id": "accounting-audit-system-builder",
+    "path": "skills/accounting-audit-system-builder",
+    "category": "business",
+    "name": "accounting-audit-system-builder",
+    "description": "Routes an accounting or audit request to the right module skill, from software selection through monthly closing, asking only what is missing. Use for books of accounts or audit files.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "accounting",
+      "audit",
+      "bookkeeping",
+      "finance",
+      "database",
+      "csv",
+      "sql",
+      "router"
+    ]
+  },
+  {
+    "id": "accounting-software-selection",
+    "path": "skills/accounting-software-selection",
+    "category": "business",
+    "name": "accounting-software-selection",
+    "description": "Scores shortlisted accounting packages against 57 evidence-backed fields, emitted as CSV, SQL, JSON Schema or Notion on request. Use for choosing accounting software.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "accounting",
+      "audit",
+      "finance",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "evaluation"
+    ]
+  },
+  {
     "id": "active-directory-attacks",
     "path": "skills/active-directory-attacks",
     "category": "security",
@@ -650,6 +788,74 @@
         "target_specific_home_path"
       ]
     }
+  },
+  {
+    "id": "admin-access-register",
+    "path": "skills/admin-access-register",
+    "category": "business",
+    "name": "admin-access-register",
+    "description": "Admin account register: system, main and backup admin, seats, plan, 2FA, shared logins and access-review dates, as CSV, SQL, JSON Schema or Notion on request. Use for access reviews.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "protect"
+    ]
+  },
+  {
+    "id": "advanced-analytics-dashboard",
+    "path": "skills/advanced-analytics-dashboard",
+    "category": "business",
+    "name": "advanced-analytics-dashboard",
+    "description": "Dashboard metric register: metric, source module, formula, period, value, target, trend, owner and last-updated, as CSV, SQL, JSON Schema or Notion on request. Use for KPI dashboards.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "analyze"
+    ]
   },
   {
     "id": "advanced-evaluation",
@@ -2378,6 +2584,40 @@
     "license_source": "https://github.com/jonathimer/devmarketing-skills/blob/main/LICENSE"
   },
   {
+    "id": "alumni-re-hire-tracker",
+    "path": "skills/alumni-re-hire-tracker",
+    "category": "business",
+    "name": "alumni-re-hire-tracker",
+    "description": "Alumni and re-hire register: former role, last working day, re-hire eligibility, current employer and re-engagement date, as CSV, SQL, JSON Schema or Notion on request. Use for alumni outreach.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "exit"
+    ]
+  },
+  {
     "id": "amazon-alexa",
     "path": "skills/amazon-alexa",
     "category": "cloud",
@@ -2830,6 +3070,40 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "announcement-board",
+    "path": "skills/announcement-board",
+    "category": "business",
+    "name": "announcement-board",
+    "description": "Announcement board: author, category, department, priority, audience, publish and expiry dates, status and acknowledgements, as CSV, SQL, JSON Schema or Notion on request. Use for internal notices.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "engage"
+    ]
   },
   {
     "id": "anti-deception",
@@ -4705,6 +4979,40 @@
     "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
+    "id": "asset-it-management",
+    "path": "skills/asset-it-management",
+    "category": "business",
+    "name": "asset-it-management",
+    "description": "Asset and IT register: serial, model, condition, assignee, location, purchase value, warranty expiry and return date, as CSV, SQL, JSON Schema or Notion on request. Use for asset audits.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "onboard"
+    ]
+  },
+  {
     "id": "astro",
     "path": "skills/astro",
     "category": "frontend",
@@ -4913,6 +5221,40 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "attendance",
+    "path": "skills/attendance",
+    "category": "business",
+    "name": "attendance",
+    "description": "Daily attendance register: check-in and check-out, hours worked, work mode, late minutes, leave and regularisation flags, as CSV, SQL, JSON Schema or Notion on request. Use for payroll input.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "manage"
+    ]
   },
   {
     "id": "audio-transcriber",

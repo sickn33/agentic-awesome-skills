@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-29T09:21:51.000Z
 
-Total skills: 2478
+Total skills: 2488
 
 ## agent-behavior (5)
 
@@ -530,10 +530,20 @@ Total skills: 2478
 | `reverse-browser-automation` | Automate browsers (Playwright) and Windows desktop applications (UI automation) for reverse-engineering evidence collection, UI-driven workflows, and network... | safe | zhaoxuya520/reverse-skill | reverse, browser | reverse, browser, automation, automate, browsers, playwright, windows, desktop, applications, ui, engineering, evidence |
 | `skyvern-browser-automation` | AI-powered browser automation — navigate sites, fill forms, extract structured data, log in with stored credentials, and build reusable workflows. | safe | Skyvern-AI/skyvern | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation, skyvern, browser, automation, ai, powered, navigate |
 
-## business (72)
+## business (82)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `360-feedback-system` | 360 feedback register: reviewer, subject, review cycle, visibility, due date and score, as CSV, SQL, JSON Schema or Notion on request. Use for 360 reviews or... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, manage | sme, business, operations, database, csv, notion, sql, manage, 360, feedback, register, reviewer |
+| `access-matrix` | Access matrix of role-by-module permissions, with per-role scope, confidentiality level and SME tier, as CSV, SQL, JSON Schema or Notion on request. Use for ... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, foundation | sme, business, operations, database, csv, notion, sql, foundation, access, matrix, role, module |
+| `accounting-audit-system-builder` | Routes an accounting or audit request to the right module skill, from software selection through monthly closing, asking only what is missing. Use for books ... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, accounting, audit, bookkeeping, finance, database, csv, sql, router | sme, accounting, audit, bookkeeping, finance, database, csv, sql, router, builder, routes, request |
+| `accounting-software-selection` | Scores shortlisted accounting packages against 57 evidence-backed fields, emitted as CSV, SQL, JSON Schema or Notion on request. Use for choosing accounting ... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, accounting, audit, finance, database, csv, notion, sql, evaluation | sme, accounting, audit, finance, database, csv, notion, sql, evaluation, software, selection, scores |
+| `admin-access-register` | Admin account register: system, main and backup admin, seats, plan, 2FA, shared logins and access-review dates, as CSV, SQL, JSON Schema or Notion on request... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, protect | sme, business, operations, database, csv, notion, sql, protect, admin, access, register, account |
+| `advanced-analytics-dashboard` | Dashboard metric register: metric, source module, formula, period, value, target, trend, owner and last-updated, as CSV, SQL, JSON Schema or Notion on reques... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, analyze | sme, business, operations, database, csv, notion, sql, analyze, analytics, dashboard, metric, register |
+| `alumni-re-hire-tracker` | Alumni and re-hire register: former role, last working day, re-hire eligibility, current employer and re-engagement date, as CSV, SQL, JSON Schema or Notion ... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, exit | sme, business, operations, database, csv, notion, sql, exit, alumni, re, hire, tracker |
+| `announcement-board` | Announcement board: author, category, department, priority, audience, publish and expiry dates, status and acknowledgements, as CSV, SQL, JSON Schema or Noti... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, engage | sme, business, operations, database, csv, notion, sql, engage, announcement, board, author, category |
+| `asset-it-management` | Asset and IT register: serial, model, condition, assignee, location, purchase value, warranty expiry and return date, as CSV, SQL, JSON Schema or Notion on r... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, onboard | sme, business, operations, database, csv, notion, sql, onboard, asset, register, serial, model |
+| `attendance` | Daily attendance register: check-in and check-out, hours worked, work mode, late minutes, leave and regularisation flags, as CSV, SQL, JSON Schema or Notion ... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, manage | sme, business, operations, database, csv, notion, sql, manage, attendance, daily, register, check |
 | `backtesting-frameworks` | Build robust, production-grade backtesting systems that avoid common pitfalls and produce reliable strategy performance estimates. | safe | community | backtesting, frameworks | backtesting, frameworks, robust, grade, avoid, common, pitfalls, produce, reliable, performance, estimates |
 | `bamboohr-automation` | Automate BambooHR tasks via Rube MCP (Composio): employees, time-off, benefits, dependents, employee updates. Always search tools first for current schemas. | critical | community | bamboohr | bamboohr, automation, automate, tasks, via, rube, mcp, composio, employees, time, off, benefits |
 | `business-analyst` | Master modern business analysis with AI-powered analytics, real-time dashboards, and data-driven insights. Build comprehensive KPI frameworks, predictive mod... | safe | community | business, analyst | business, analyst, analysis, ai, powered, analytics, real, time, dashboards, data, driven, insights |
