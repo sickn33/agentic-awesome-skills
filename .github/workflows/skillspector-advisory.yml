@@ -118,4 +118,3 @@ jobs:
           path: .tmp/skillspector-advisory/
           if-no-files-found: warn
           retention-days: 14
-
