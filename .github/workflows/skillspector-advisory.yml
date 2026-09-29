@@ -1,0 +1,120 @@
+name: SkillSpector Advisory
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  checks: read
+
+concurrency:
+  group: skillspector-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  evidence-ready:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Wait for exact-head PR evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          for attempt in $(seq 1 60); do
+            checks=$(gh api "repos/$GITHUB_REPOSITORY/commits/$PR_HEAD/check-runs?per_page=100" \
+              --jq '[.check_runs[] | select(.name == "pr-evidence" and .app.id == 15368) | select(any(.pull_requests[]; .number == (env.PR_NUMBER | tonumber)))] | sort_by(.id) | last | {status, conclusion}')
+            status=$(printf '%s' "$checks" | jq -r '.status')
+            conclusion=$(printf '%s' "$checks" | jq -r '.conclusion')
+            if [ "$status" = "completed" ]; then
+              if [ "$conclusion" = "success" ]; then
+                echo "Exact-head pr-evidence passed; advisory scanning may start." >> "$GITHUB_STEP_SUMMARY"
+                exit 0
+              fi
+              echo "PR evidence did not pass; advisory scanning is skipped." >> "$GITHUB_STEP_SUMMARY"
+              exit 1
+            fi
+            sleep 10
+          done
+          echo "Timed out waiting for exact-head PR evidence; no scan ran." >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+  skillspector-advisory:
+    needs: evidence-ready
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    permissions:
+      contents: read
+    steps:
+      - name: Check out trusted base tooling
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Detect advisory tooling
+        id: tooling
+        run: |
+          if [ -f tools/scripts/skillspector_advisory.py ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "SkillSpector bootstrap: trusted base does not yet contain the scanner wrapper." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Fetch immutable PR head
+        if: steps.tooling.outputs.available == 'true'
+        env:
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: git fetch origin "$PR_HEAD"
+      - name: Plan changed canonical skill directories
+        id: plan
+        if: steps.tooling.outputs.available == 'true'
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python3 tools/scripts/skillspector_advisory.py \
+            --base "$PR_BASE" --head "$PR_HEAD" \
+            --output "$PWD/.tmp/skillspector-advisory"
+          python3 -c 'import json; p=json.load(open(".tmp/skillspector-advisory/manifest.json")); print("count=" + str(len(p["skills"])))' >> "$GITHUB_OUTPUT"
+      - name: Check out pinned SkillSpector
+        if: steps.tooling.outputs.available == 'true' && steps.plan.outputs.count != '0'
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          repository: NVIDIA/SkillSpector
+          ref: c7958a3268d9498644b22edb75d0f051bbc8cbfc # v2.12.0
+          path: .tmp/skillspector-upstream
+          persist-credentials: false
+      - name: Set up Python
+        if: steps.tooling.outputs.available == 'true' && steps.plan.outputs.count != '0'
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - name: Install locked scanner dependencies
+        if: steps.tooling.outputs.available == 'true' && steps.plan.outputs.count != '0'
+        run: |
+          python -m pip install uv==0.8.22
+          uv sync --frozen --no-dev --project .tmp/skillspector-upstream
+      - name: Scan inert skill snapshots without network
+        if: steps.tooling.outputs.available == 'true' && steps.plan.outputs.count != '0'
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          mkdir -p .tmp/skillspector-advisory
+          sudo --preserve-env=GITHUB_STEP_SUMMARY unshare --net --setgid "$(id -g)" --setuid "$(id -u)" -- \
+            "$(command -v python)" tools/scripts/skillspector_advisory.py \
+            --base "$PR_BASE" --head "$PR_HEAD" \
+            --output "$PWD/.tmp/skillspector-advisory" \
+            --scanner "$PWD/.tmp/skillspector-upstream/.venv/bin/skillspector"
+      - name: Upload static advisory reports
+        if: always() && steps.tooling.outputs.available == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: skillspector-advisory-${{ github.event.pull_request.number }}
+          path: .tmp/skillspector-advisory/
+          if-no-files-found: warn
+          retention-days: 14
+

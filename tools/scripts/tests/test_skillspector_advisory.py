@@ -112,14 +112,19 @@ class AdvisoryTest(unittest.TestCase):
 
     def test_workflow_uses_trusted_base_and_network_isolation(self):
         root = Path(__file__).resolve().parents[3]
-        workflow = (root / '.github/workflows/ci.yml').read_text()
-        job = workflow.split('  skillspector-advisory:\n')[1].split('  artifact-preview:\n')[0]
-        for contract in ['needs: [pr-policy, pr-evidence]', 'continue-on-error: true',
+        workflow = (root / '.github/workflows/skillspector-advisory.yml').read_text()
+        job = workflow.split('  skillspector-advisory:\n')[1]
+        for contract in ['needs: evidence-ready', 'continue-on-error: true',
                          'github.event.pull_request.base.sha', 'unshare --net',
                          'uv sync --frozen --no-dev', 'persist-credentials: false',
                          'c7958a3268d9498644b22edb75d0f051bbc8cbfc']:
             self.assertIn(contract, job)
         self.assertNotIn('secrets.', job)
+        self.assertNotIn('workflow_dispatch', workflow)
+        self.assertNotIn('pull_request_target', workflow)
+        self.assertIn('.app.id == 15368', workflow)
+        self.assertIn('commits/$PR_HEAD/check-runs', workflow)
+        self.assertIn('env.PR_NUMBER | tonumber', workflow)
         self.assertNotIn('requires_references', job)
         self.assertIn("steps.plan.outputs.count != '0'", job)
 
