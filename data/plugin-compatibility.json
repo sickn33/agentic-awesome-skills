@@ -4089,8 +4089,46 @@
       "runtime_files": []
     },
     {
+      "id": "audit-log",
+      "path": "skills/audit-log",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "audit-logging",
       "path": "skills/audit-logging",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "audit-preparation",
+      "path": "skills/audit-preparation",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -7970,6 +8008,25 @@
       "runtime_files": []
     },
     {
+      "id": "board-governance",
+      "path": "skills/board-governance",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "boost-asio-pro",
       "path": "skills/boost-asio-pro",
       "targets": {
@@ -8046,6 +8103,25 @@
       "runtime_files": []
     },
     {
+      "id": "brand-growth-system-builder",
+      "path": "skills/brand-growth-system-builder",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "brand-guidelines",
       "path": "skills/brand-guidelines",
       "targets": {
@@ -8086,6 +8162,25 @@
     {
       "id": "brand-guidelines-community",
       "path": "skills/brand-guidelines-community",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "brand-kit-print-collateral",
+      "path": "skills/brand-kit-print-collateral",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -8464,6 +8559,44 @@
       "runtime_files": []
     },
     {
+      "id": "buddy-program-manager",
+      "path": "skills/buddy-program-manager",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "budget-cash-flow",
+      "path": "skills/budget-cash-flow",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "bug-bounty",
       "path": "skills/bug-bounty",
       "targets": {
@@ -8749,6 +8882,44 @@
       "runtime_files": []
     },
     {
+      "id": "business-email-template",
+      "path": "skills/business-email-template",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "business-website-setup",
+      "path": "skills/business-website-setup",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "busybox-on-windows",
       "path": "skills/busybox-on-windows",
       "targets": {
@@ -8922,6 +9093,25 @@
     {
       "id": "calendly-automation",
       "path": "skills/calendly-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "candidate-talent-pool",
+      "path": "skills/candidate-talent-pool",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -47771,10 +47961,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2488,
+    "total_skills": 2498,
     "supported": {
-      "codex": 2401,
-      "claude": 2426
+      "codex": 2411,
+      "claude": 2436
     },
     "blocked": {
       "codex": 87,

@@ -5330,6 +5330,40 @@
     }
   },
   {
+    "id": "audit-log",
+    "path": "skills/audit-log",
+    "category": "business",
+    "name": "audit-log",
+    "description": "Audit trail register: timestamp, user, module, record, action, field changed, old and new value, and the reason for the change. Use for change history and control evidence.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "protect"
+    ]
+  },
+  {
     "id": "audit-logging",
     "path": "skills/audit-logging",
     "category": "security",
@@ -5354,6 +5388,41 @@
     "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
     "license": "MIT",
     "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
+  },
+  {
+    "id": "audit-preparation",
+    "path": "skills/audit-preparation",
+    "category": "business",
+    "name": "audit-preparation",
+    "description": "Audit preparation register: required document, period covered, request and receipt dates, preparer and reviewer, auditor queries and adjustments. Use for assembling an audit file.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "accounting",
+      "audit",
+      "finance",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "audit-file"
+    ]
   },
   {
     "id": "audit-skills",
@@ -10246,6 +10315,40 @@
     }
   },
   {
+    "id": "board-governance",
+    "path": "skills/board-governance",
+    "category": "business",
+    "name": "board-governance",
+    "description": "Board and governance register: meeting date, agenda, decision, resolution number, vote result, action owner and due date. Use for board packs and action tracking.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "protect"
+    ]
+  },
+  {
     "id": "boost-asio-pro",
     "path": "skills/boost-asio-pro",
     "category": "development",
@@ -10355,6 +10458,50 @@
     }
   },
   {
+    "id": "brand-growth-system-builder",
+    "path": "skills/brand-growth-system-builder",
+    "category": "business",
+    "name": "brand-growth-system-builder",
+    "description": "Route requests across 13 brand and growth modules. Use when an SME needs help choosing branding, website, local SEO, content, or cloud-planning workflows.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "brand",
+      "design-system",
+      "logo",
+      "print",
+      "website",
+      "gbp",
+      "local-seo",
+      "backlinks",
+      "citations",
+      "email",
+      "deck",
+      "social-media",
+      "code-of-conduct",
+      "observability",
+      "cloud",
+      "wcag",
+      "seo"
+    ]
+  },
+  {
     "id": "brand-guidelines",
     "path": "skills/brand-guidelines",
     "category": "marketing",
@@ -10419,6 +10566,49 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "brand-kit-print-collateral",
+    "path": "skills/brand-kit-print-collateral",
+    "category": "business",
+    "name": "brand-kit-print-collateral",
+    "description": "Print collateral spec: item, finished and trim size, bleed, colour mode, stock and GSM, finish, safe margin, print method, quantity and unit cost. Use for cards and letterhead.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "brand-kit",
+      "letterhead",
+      "visiting-card",
+      "business-card",
+      "employee-card",
+      "id-card",
+      "print",
+      "bleed",
+      "cmyk",
+      "stationery",
+      "folder",
+      "invoice",
+      "email-signature",
+      "csv",
+      "sql",
+      "notion"
+    ]
   },
   {
     "id": "brand-perception-psychologist",
@@ -10980,6 +11170,74 @@
     "source_type": "self"
   },
   {
+    "id": "buddy-program-manager",
+    "path": "skills/buddy-program-manager",
+    "category": "business",
+    "name": "buddy-program-manager",
+    "description": "Buddy programme register: new hire, assigned buddy, department, start and end dates, check-ins planned and done, and feedback score. Use for onboarding buddy schemes.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "onboard"
+    ]
+  },
+  {
+    "id": "budget-cash-flow",
+    "path": "skills/budget-cash-flow",
+    "category": "business",
+    "name": "budget-cash-flow",
+    "description": "Budget against actual by department, category and period, with budget and actual amounts, variance, percentage used and linked expenses. Use for budget tracking or cash-flow reviews.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "operate"
+    ]
+  },
+  {
     "id": "bug-bounty",
     "path": "skills/bug-bounty",
     "category": "security",
@@ -11349,6 +11607,86 @@
     "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
+    "id": "business-email-template",
+    "path": "skills/business-email-template",
+    "category": "business",
+    "name": "business-email-template",
+    "description": "Business email template register: trigger, sender and recipient type, subject pattern, body structure, personalisation tokens and send checks. Use for repeatable outbound email.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "email",
+      "templates",
+      "spf",
+      "dkim",
+      "dmarc",
+      "deliverability",
+      "spam",
+      "accessibility",
+      "plain-text",
+      "mjml",
+      "csv",
+      "sql",
+      "notion"
+    ]
+  },
+  {
+    "id": "business-website-setup",
+    "path": "skills/business-website-setup",
+    "category": "business",
+    "name": "business-website-setup",
+    "description": "Website page register: URL, title, meta description, search intent, NAP block, schema type, canonical, indexability and Core Web Vitals target. Use for site builds and SEO reviews.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "website",
+      "seo",
+      "page-map",
+      "nap",
+      "schema",
+      "structured-data",
+      "core-web-vitals",
+      "performance",
+      "local-seo",
+      "sitemap",
+      "csv",
+      "sql",
+      "notion"
+    ]
+  },
+  {
     "id": "busybox-on-windows",
     "path": "skills/busybox-on-windows",
     "category": "development",
@@ -11623,6 +11961,40 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "candidate-talent-pool",
+    "path": "skills/candidate-talent-pool",
+    "category": "business",
+    "name": "candidate-talent-pool",
+    "description": "Candidate and prospect pool: contact details, experience, skills, consent status and date, referral source and last contact. Use for talent pipelines and re-engagement.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+    "tags": [
+      "sme",
+      "business",
+      "operations",
+      "database",
+      "csv",
+      "notion",
+      "sql",
+      "acquire"
+    ]
   },
   {
     "id": "canva-automation",

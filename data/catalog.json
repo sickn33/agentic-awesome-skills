@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-29T09:21:51.000Z",
-  "total": 2488,
+  "total": 2498,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -6339,6 +6339,42 @@
       "path": "skills/audit-context-building/SKILL.md"
     },
     {
+      "id": "audit-log",
+      "canonical_id": "audit-log",
+      "name": "audit-log",
+      "description": "Audit trail register: timestamp, user, module, record, action, field changed, old and new value, and the reason for the change. Use for change history and control evidence.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect",
+        "audit",
+        "log",
+        "trail",
+        "register"
+      ],
+      "path": "skills/audit-log/SKILL.md"
+    },
+    {
       "id": "audit-logging",
       "canonical_id": "audit-logging",
       "name": "audit-logging",
@@ -6369,6 +6405,43 @@
         "trail"
       ],
       "path": "skills/audit-logging/SKILL.md"
+    },
+    {
+      "id": "audit-preparation",
+      "canonical_id": "audit-preparation",
+      "name": "audit-preparation",
+      "description": "Audit preparation register: required document, period covered, request and receipt dates, preparer and reviewer, auditor queries and adjustments. Use for assembling an audit file.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "audit-file"
+      ],
+      "triggers": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "audit-file",
+        "preparation",
+        "register",
+        "required"
+      ],
+      "path": "skills/audit-preparation/SKILL.md"
     },
     {
       "id": "audit-skills",
@@ -12294,6 +12367,42 @@
       "path": "skills/blueprint/SKILL.md"
     },
     {
+      "id": "board-governance",
+      "canonical_id": "board-governance",
+      "name": "board-governance",
+      "description": "Board and governance register: meeting date, agenda, decision, resolution number, vote result, action owner and due date. Use for board packs and action tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect",
+        "board",
+        "governance",
+        "register",
+        "meeting"
+      ],
+      "path": "skills/board-governance/SKILL.md"
+    },
+    {
       "id": "boost-asio-pro",
       "canonical_id": "boost-asio-pro",
       "name": "boost-asio-pro",
@@ -12416,6 +12525,52 @@
       "path": "skills/brainstorming/SKILL.md"
     },
     {
+      "id": "brand-growth-system-builder",
+      "canonical_id": "brand-growth-system-builder",
+      "name": "brand-growth-system-builder",
+      "description": "Route requests across 13 brand and growth modules. Use when an SME needs help choosing branding, website, local SEO, content, or cloud-planning workflows.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "brand",
+        "design-system",
+        "logo",
+        "print",
+        "website",
+        "gbp",
+        "local-seo",
+        "backlinks",
+        "citations",
+        "email",
+        "deck",
+        "social-media",
+        "code-of-conduct",
+        "observability",
+        "cloud",
+        "wcag",
+        "seo"
+      ],
+      "triggers": [
+        "sme",
+        "brand",
+        "design-system",
+        "logo",
+        "print",
+        "website",
+        "gbp",
+        "local-seo",
+        "backlinks",
+        "citations",
+        "email",
+        "deck"
+      ],
+      "path": "skills/brand-growth-system-builder/SKILL.md"
+    },
+    {
       "id": "brand-guidelines",
       "canonical_id": "brand-guidelines",
       "name": "brand-guidelines",
@@ -12495,6 +12650,51 @@
         "skill"
       ],
       "path": "skills/brand-guidelines-community/SKILL.md"
+    },
+    {
+      "id": "brand-kit-print-collateral",
+      "canonical_id": "brand-kit-print-collateral",
+      "name": "brand-kit-print-collateral",
+      "description": "Print collateral spec: item, finished and trim size, bleed, colour mode, stock and GSM, finish, safe margin, print method, quantity and unit cost. Use for cards and letterhead.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "brand-kit",
+        "letterhead",
+        "visiting-card",
+        "business-card",
+        "employee-card",
+        "id-card",
+        "print",
+        "bleed",
+        "cmyk",
+        "stationery",
+        "folder",
+        "invoice",
+        "email-signature",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "brand-kit",
+        "letterhead",
+        "visiting-card",
+        "business-card",
+        "employee-card",
+        "id-card",
+        "print",
+        "bleed",
+        "cmyk",
+        "stationery",
+        "folder"
+      ],
+      "path": "skills/brand-kit-print-collateral/SKILL.md"
     },
     {
       "id": "brand-perception-psychologist",
@@ -13091,6 +13291,78 @@
       "path": "skills/browser-testing-with-devtools/SKILL.md"
     },
     {
+      "id": "buddy-program-manager",
+      "canonical_id": "buddy-program-manager",
+      "name": "buddy-program-manager",
+      "description": "Buddy programme register: new hire, assigned buddy, department, start and end dates, check-ins planned and done, and feedback score. Use for onboarding buddy schemes.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard",
+        "buddy",
+        "program",
+        "manager",
+        "programme"
+      ],
+      "path": "skills/buddy-program-manager/SKILL.md"
+    },
+    {
+      "id": "budget-cash-flow",
+      "canonical_id": "budget-cash-flow",
+      "name": "budget-cash-flow",
+      "description": "Budget against actual by department, category and period, with budget and actual amounts, variance, percentage used and linked expenses. Use for budget tracking or cash-flow reviews.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "operate"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "operate",
+        "budget",
+        "cash",
+        "flow",
+        "against"
+      ],
+      "path": "skills/budget-cash-flow/SKILL.md"
+    },
+    {
       "id": "bug-bounty",
       "canonical_id": "bug-bounty",
       "name": "bug-bounty",
@@ -13517,6 +13789,90 @@
       "path": "skills/business-continuity/SKILL.md"
     },
     {
+      "id": "business-email-template",
+      "canonical_id": "business-email-template",
+      "name": "business-email-template",
+      "description": "Business email template register: trigger, sender and recipient type, subject pattern, body structure, personalisation tokens and send checks. Use for repeatable outbound email.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "email",
+        "templates",
+        "spf",
+        "dkim",
+        "dmarc",
+        "deliverability",
+        "spam",
+        "accessibility",
+        "plain-text",
+        "mjml",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "email",
+        "templates",
+        "spf",
+        "dkim",
+        "dmarc",
+        "deliverability",
+        "spam",
+        "accessibility",
+        "plain-text",
+        "mjml",
+        "csv"
+      ],
+      "path": "skills/business-email-template/SKILL.md"
+    },
+    {
+      "id": "business-website-setup",
+      "canonical_id": "business-website-setup",
+      "name": "business-website-setup",
+      "description": "Website page register: URL, title, meta description, search intent, NAP block, schema type, canonical, indexability and Core Web Vitals target. Use for site builds and SEO reviews.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "website",
+        "seo",
+        "page-map",
+        "nap",
+        "schema",
+        "structured-data",
+        "core-web-vitals",
+        "performance",
+        "local-seo",
+        "sitemap",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "website",
+        "seo",
+        "page-map",
+        "nap",
+        "schema",
+        "structured-data",
+        "core-web-vitals",
+        "performance",
+        "local-seo",
+        "sitemap",
+        "csv"
+      ],
+      "path": "skills/business-website-setup/SKILL.md"
+    },
+    {
       "id": "busybox-on-windows",
       "canonical_id": "busybox-on-windows",
       "name": "busybox-on-windows",
@@ -13786,6 +14142,42 @@
         "via"
       ],
       "path": "skills/calendly-automation/SKILL.md"
+    },
+    {
+      "id": "candidate-talent-pool",
+      "canonical_id": "candidate-talent-pool",
+      "name": "candidate-talent-pool",
+      "description": "Candidate and prospect pool: contact details, experience, skills, consent status and date, referral source and last contact. Use for talent pipelines and re-engagement.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "acquire"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "acquire",
+        "candidate",
+        "talent",
+        "pool",
+        "prospect"
+      ],
+      "path": "skills/candidate-talent-pool/SKILL.md"
     },
     {
       "id": "canva-automation",
