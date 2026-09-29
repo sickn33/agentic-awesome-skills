@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-29T09:21:51.000Z",
-  "total": 2498,
+  "total": 2499,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -64621,6 +64621,42 @@
         "through"
       ],
       "path": "skills/talivia-agent-kit/SKILL.md"
+    },
+    {
+      "id": "talking-avatar-video",
+      "canonical_id": "talking-avatar-video",
+      "name": "talking-avatar-video",
+      "description": "Install and use the official Talking Avatar Video package, pinned by digest, for paid hosted work on the Beatra service.",
+      "category": "media",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "beatra-ai/talking-avatar-video-skill",
+      "license": "MIT-0",
+      "license_source": "https://github.com/beatra-ai/talking-avatar-video-skill/blob/251c968deebb1c8f1dbfd0a8404e8e1be1528ac6/LICENSE",
+      "tags": [
+        "talking-avatar",
+        "talking-head",
+        "text-to-video",
+        "mcp",
+        "paid-api",
+        "beatra"
+      ],
+      "triggers": [
+        "talking-avatar",
+        "talking-head",
+        "text-to-video",
+        "mcp",
+        "paid-api",
+        "beatra",
+        "talking",
+        "avatar",
+        "video",
+        "install",
+        "official",
+        "package"
+      ],
+      "path": "skills/talking-avatar-video/SKILL.md"
     },
     {
       "id": "tanstack-query-expert",

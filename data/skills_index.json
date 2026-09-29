@@ -54834,6 +54834,40 @@
     ]
   },
   {
+    "id": "talking-avatar-video",
+    "path": "skills/talking-avatar-video",
+    "category": "media",
+    "name": "talking-avatar-video",
+    "description": "Install and use the official Talking Avatar Video package, pinned by digest, for paid hosted work on the Beatra service.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-09-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "beatra-ai/talking-avatar-video-skill",
+    "license": "MIT-0",
+    "license_source": "https://github.com/beatra-ai/talking-avatar-video-skill/blob/251c968deebb1c8f1dbfd0a8404e8e1be1528ac6/LICENSE",
+    "tags": [
+      "talking-avatar",
+      "talking-head",
+      "text-to-video",
+      "mcp",
+      "paid-api",
+      "beatra"
+    ]
+  },
+  {
     "id": "tanstack-query-expert",
     "path": "skills/tanstack-query-expert",
     "category": "framework",

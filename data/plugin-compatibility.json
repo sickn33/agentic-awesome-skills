@@ -42241,6 +42241,25 @@
       "runtime_files": []
     },
     {
+      "id": "talking-avatar-video",
+      "path": "skills/talking-avatar-video",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "tanstack-query-expert",
       "path": "skills/tanstack-query-expert",
       "targets": {
@@ -47961,10 +47980,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2498,
+    "total_skills": 2499,
     "supported": {
-      "codex": 2411,
-      "claude": 2436
+      "codex": 2412,
+      "claude": 2437
     },
     "blocked": {
       "codex": 87,
