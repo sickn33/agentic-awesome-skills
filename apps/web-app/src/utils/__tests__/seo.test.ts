@@ -51,8 +51,10 @@ describe('SEO helpers', () => {
     const meta = buildLandingMeta(2445);
 
     expect(meta.title).toContain('Agentic Awesome Skills');
-    expect(meta.description).toContain('2,445+ cataloged skills');
+    expect(meta.description).toContain('2,445+ playbooks');
     expect(meta.description).toContain('AAS Core');
+    expect(meta.description).toContain('plan preview');
+    expect(meta.description.length).toBeLessThanOrEqual(160);
     expect(meta.canonicalPath).toBe('/');
     expect(meta.ogImage).toBe(DEFAULT_SOCIAL_IMAGE);
     expect(typeof meta.jsonLd).toBe('function');

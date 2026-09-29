@@ -382,8 +382,8 @@ export function buildLandingMeta(skillCount = 0): SeoMeta {
   const countLabel = getCatalogCountLabel(visibleCount);
   const title = 'Agentic Awesome Skills | Agent-first skill catalog and AAS Core';
   const description = visibleCount > 0
-    ? `Open-source SKILL.md playbooks for Codex, Claude Code, Cursor, and compatible clients, backed by ${countLabel} cataloged skills. Explore AAS Core for search, agent-owned selection, validation, and plan preview.`
-    : 'Open-source SKILL.md playbooks for Codex, Claude Code, Cursor, and compatible clients. Explore AAS Core for catalog search, agent-owned selection, validation, and plan preview.';
+    ? `Open-source AI coding skills for Codex, Claude Code, Cursor, and more. Explore ${countLabel} playbooks and AAS Core catalog search, selection, and plan preview.`
+    : 'Open-source AI coding skills for Codex, Claude Code, Cursor, and more. Explore AAS Core catalog search, selection, and plan preview.';
   return {
     title,
     description,
