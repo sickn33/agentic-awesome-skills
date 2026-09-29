@@ -572,6 +572,79 @@ for (const [filePath, reason] of [
 }
 
 {
+  // Git pairs a copy by similarity against any path already present in the base
+  // tree, so the same new canonical SKILL.md can be reported as a copy of a
+  // canonical skill, of a generated plugin mirror, or of nothing at all. The
+  // read-only origin must be accepted in every case; the destination still
+  // carries the reviewed change. Observed on the Beatra skill PRs #1473-#1487.
+  const canonicalCopy = {
+    status: "C",
+    old_path: "skills/suno-lyrics-to-song/SKILL.md",
+    new_path: "skills/example/SKILL.md",
+    old_mode: "100644",
+    new_mode: "100644",
+    old_oid: OLD_OID,
+    new_oid: NEW_OID,
+    old_size: 100,
+    new_size: 100,
+  };
+  const pluginCopy = {
+    ...canonicalCopy,
+    old_path: "plugins/agentic-awesome-skills/skills/suno-lyrics-to-song/SKILL.md",
+  };
+  for (const [label, record] of [
+    ["canonical origin", canonicalCopy],
+    ["generated mirror origin", pluginCopy],
+  ]) {
+    const policy = classifyChangeRecords([record]);
+    assert.strictEqual(policy.approvalSafe, true, label);
+    assert.strictEqual(policy.requiresHumanReview, true, label);
+    assert.deepStrictEqual(policy.canonicalSkillChanges, ["skills/example/SKILL.md"], label);
+    const origin = policy.paths.find((entry) => entry.side === "old");
+    assert.strictEqual(origin.approvalSafe, true, label);
+    assert.strictEqual(origin.kind, "copy_origin", label);
+    assert.ok(!policy.reasons.some((entry) => entry.includes("old_unapproved_path")), label);
+  }
+
+  // A rename modifies the origin, and deleting or editing an unapproved path
+  // stays a definite failure: only the copy origin is read-only.
+  for (const [label, record, reason] of [
+    ["unapproved origin rename", { ...pluginCopy, status: "R" }, "old_unapproved_path"],
+    ["unapproved origin deletion", {
+      status: "D",
+      old_path: pluginCopy.old_path,
+      new_path: null,
+      old_mode: "100644",
+      new_mode: "000000",
+      old_oid: OLD_OID,
+      new_oid: ZERO_OID,
+      old_size: 100,
+    }, "old_unapproved_path"],
+    ["unapproved origin modification", {
+      status: "M",
+      old_path: pluginCopy.old_path,
+      new_path: pluginCopy.old_path,
+      old_mode: "100644",
+      new_mode: "100644",
+      old_oid: OLD_OID,
+      new_oid: NEW_OID,
+      old_size: 100,
+      new_size: 100,
+    }, "old_unapproved_path"],
+    ["copy origin executable mode", { ...pluginCopy, old_mode: "100755" }, "old_executable_mode"],
+    ["copy origin symlink mode", { ...pluginCopy, old_mode: "120000" }, "old_symlink_mode"],
+    ["copy origin unapproved destination", {
+      ...pluginCopy,
+      new_path: "plugins/agentic-awesome-skills/skills/other/SKILL.md",
+    }, "new_unapproved_path"],
+  ]) {
+    const policy = classifyChangeRecords([record]);
+    assert.strictEqual(policy.approvalSafe, false, label);
+    assert.ok(policy.reasons.some((entry) => entry.includes(reason)), `${label}: ${policy.reasons.join(",")}`);
+  }
+}
+
+{
   const policy = classifyChangeRecords([{
     status: "R",
     old_path: "skills/design-it/old-style/SKILL.md",

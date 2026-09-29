@@ -256,13 +256,16 @@ function classifyChangeRecords(records, options = {}) {
       let pathPolicy = classifyPathPolicy(filePath);
       const reviewedRoots = options.reviewedSkillRoots || [];
       const reviewedSupport = isReviewedSupportPath(filePath, reviewedRoots);
-      // A Git copy reads its origin; only its destination changes. The original
-      // side still passes raw-path, mode, object, size and total-budget checks.
-      const reviewedCopyOrigin = status === "C" && side === "old"
-        && isReviewedSupportPath(record.new_path || "", reviewedRoots);
-      if ((reviewedSupport || reviewedCopyOrigin) && validateRawRepoPath(filePath).safe) {
+      // A Git copy reads its origin; only its destination changes. Git pairs a
+      // copy by similarity against any path that already exists in the base
+      // tree, so the origin's own path class is not author-controlled and the
+      // pull request cannot mutate it. The original side still passes
+      // raw-path, mode, object, size and total-budget checks, and a matching
+      // deletion of that origin still fails closed through its own record.
+      const copyOrigin = status === "C" && side === "old";
+      if ((reviewedSupport || copyOrigin) && validateRawRepoPath(filePath).safe) {
         pathPolicy = { safe: true, sensitive: false, approvalSafe: true,
-          kind: reviewedSupport ? "skill_support" : "reviewed_copy_origin", reasons: [] };
+          kind: reviewedSupport ? "skill_support" : "copy_origin", reasons: [] };
       }
       paths.push({ record: index, side, path: filePath, ...pathPolicy });
       if (!pathPolicy.approvalSafe) {
