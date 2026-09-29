@@ -113,7 +113,7 @@ class AdvisoryTest(unittest.TestCase):
     def test_workflow_uses_trusted_base_and_network_isolation(self):
         root = Path(__file__).resolve().parents[3]
         workflow = (root / '.github/workflows/ci.yml').read_text()
-        job = workflow.split('  skillspector-advisory:\n')[1].split('  pr-evidence:\n')[0]
+        job = workflow.split('  skillspector-advisory:\n')[1].split('  artifact-preview:\n')[0]
         for contract in ['needs: [pr-policy, pr-evidence]', 'continue-on-error: true',
                          'github.event.pull_request.base.sha', 'unshare --net',
                          'uv sync --frozen --no-dev', 'persist-credentials: false',

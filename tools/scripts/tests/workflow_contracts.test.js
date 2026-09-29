@@ -286,7 +286,7 @@ assert.doesNotMatch(
 assert.match(ciWorkflow, /name: pr-evidence-/);
 assert.doesNotMatch(ciWorkflow, /pull_request_target:/);
 assert.match(ciWorkflow, /actions\/download-artifact@[0-9a-f]{40}/);
-const prEvidenceJob = ciWorkflow.match(/^  pr-evidence:\n([\s\S]*?)(?=^  artifact-preview:)/m)?.[0] || "";
+const prEvidenceJob = ciWorkflow.match(/^  pr-evidence:\n([\s\S]*?)(?=^  [a-z][a-z0-9-]*:)/m)?.[0] || "";
 assert.ok(prEvidenceJob, "pr-evidence job must exist");
 assert.doesNotMatch(prEvidenceJob, /(?:contents|pull-requests|actions): write/);
 assert.doesNotMatch(prEvidenceJob, /secrets\./);
@@ -308,7 +308,7 @@ assert.match(
   "canonical-sync evidence must retain its explicit successful boundary record",
 );
 
-const sourceValidationJob = ciWorkflow.match(/^  source-validation:\n([\s\S]*?)(?=^  pr-evidence:)/m)?.[0] || "";
+const sourceValidationJob = ciWorkflow.match(/^  source-validation:\n([\s\S]*?)(?=^  [a-z][a-z0-9-]*:)/m)?.[0] || "";
 assert.match(sourceValidationJob, /needs: pr-policy/, "source validation should not wait for independent PR evidence");
 assert.doesNotMatch(sourceValidationJob, /needs:.*pr-evidence/);
 const sourceRefreshIndex = sourceValidationJob.indexOf("- name: Refresh ephemeral derived sources for tests");
@@ -332,7 +332,7 @@ assert.match(
   /- name: Record canonical source-validation boundary\n\s+if: env\.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'/,
   "canonical source validation should become a lightweight boundary record after pr-policy exact-tree reproduction",
 );
-const artifactPreviewJob = ciWorkflow.match(/^  artifact-preview:\n([\s\S]*?)(?=^  main-validation-and-sync:)/m)?.[0] || "";
+const artifactPreviewJob = ciWorkflow.match(/^  artifact-preview:\n([\s\S]*?)(?=^  [a-z][a-z0-9-]*:)/m)?.[0] || "";
 assert.match(artifactPreviewJob, /needs: \[pr-policy, source-validation\]/);
 assert.match(artifactPreviewJob, /ref: \$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/);
 assert.match(
