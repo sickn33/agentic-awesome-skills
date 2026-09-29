@@ -173,6 +173,8 @@ Changed-skill evidence resolves canonical ownership from the changed path's ance
 
 **Required-CI execution contract:**
 
+The canonical maintainer skill contains the full [Current CI workflow](../skills/antigravity-maintainer-batch-release/SKILL.md#current-ci-workflow) and [SkillSpector report interpretation](../skills/antigravity-maintainer-batch-release/SKILL.md#skillspector-advisory-ci). `pr-policy` starts `source-validation` and `pr-evidence` in parallel; `artifact-preview` depends on `source-validation`, while the separate PR-only SkillSpector workflow waits for the same PR's exact-head `pr-evidence` result. Semantic review is a separate workflow. SkillSpector remains advisory, including for skill-only PRs; do not infer a complete scan from a green job, bootstrap, empty plan, or zero exit. A nonzero scanner exit can report findings rather than a scanner failure.
+
 - Source-only classification counts the destination of a Git copy as changed; its unchanged origin is not a generated-file mutation. Renames still count both paths. Raw records, blob safety, fork classification and exact-head review remain enforced independently.
 
 - `pr-policy` executes the fork-safety intake with code and dependencies materialized from the exact protected base before the dependent required jobs start. The classifier's `NODE_PATH` must point only at that protected-base worktree, never at pull-request-controlled `node_modules`. This is an early, unprivileged rejection of unsafe fork diffs; `merge:batch` still recomputes the trusted decision and remains the only fork-run approval and merge authority. The allowlist also covers browser source under `apps/web-app/src/**` (`.css`, `.ts`, `.tsx`), which cannot change dependencies, lockfiles, build configuration or generated assets: those fork runs may be approved, but the merge still requires an exact-head maintainer attestation.
@@ -675,9 +677,3 @@ If a skill is found to be harmful or broken:
 ## 6. 📁 Data directory note
 
 `data/package.json` exists for historical reasons; the build and catalog scripts run from the repo root and use root `node_modules`. You can ignore or remove `data/package.json` and `data/node_modules` if present.
-
-## SkillSpector advisory CI
-
-The PR-only `skillspector-advisory.yml` workflow waits for a successful GitHub Actions `pr-evidence` check bound to the same PR and exact head SHA before its advisory job starts; it skips scanner installation when no canonical skill directories changed. It has no manual, push, or privileged trigger. It uses protected-base tooling, immutable PR refs, NVIDIA SkillSpector v2.12.0 pinned to full commit `c7958a3268d9498644b22edb75d0f051bbc8cbfc`, and its frozen dependency lock. Full changed canonical skill directories are copied from Git as inert private data, including executable blobs; links and gitlinks are rejected. Scans use `--no-llm` in a Linux network namespace with no scanner credentials or tracing. No contributed baseline is applied. Limits are 50 skills, 1,000 files and 16 MiB per skill, 60 seconds per scan and 15 minutes per job; exceeded limits and scanner failures are reported as incomplete. Reports bind the base and head SHA and remain advisory: they neither replace deterministic checks nor satisfy Tessl/exact-head maintainer review, and do not alter branch protection or `merge:batch`. The first integration PR reports a bootstrap skip because its protected base lacks the wrapper.
-
-Review findings individually during the pilot. Do not bulk-accept existing findings or interpret missing `allowed-tools`, a network call, a low score, or an incomplete static scan as an automatic verdict. Any later suppression policy or blocking rules require a separately reviewed workflow-contract change.

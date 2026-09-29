@@ -5,6 +5,8 @@ from pathlib import Path
 import re
 import unittest
 import unicodedata
+
+import yaml
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -94,6 +96,38 @@ class DocumentationConsistency(unittest.TestCase):
             missing = commands - scripts - SCRIPT_EXCEPTIONS.get(relative, set())
             failures.extend(f'{relative}: {command}' for command in sorted(missing))
         self.assertEqual(failures, [])
+
+    def test_maintainer_ci_sequence_matches_workflows(self):
+        skill = (ROOT / 'skills/antigravity-maintainer-batch-release/SKILL.md').read_text()
+        ci = yaml.load((ROOT / '.github/workflows/ci.yml').read_text(), Loader=yaml.BaseLoader)
+        advisory = yaml.load((ROOT / '.github/workflows/skillspector-advisory.yml').read_text(), Loader=yaml.BaseLoader)
+        expected = {
+            'source-validation': ['pr-policy'],
+            'pr-evidence': ['pr-policy'],
+            'artifact-preview': ['pr-policy', 'source-validation'],
+        }
+        for job, needs in expected.items():
+            actual = ci['jobs'][job]['needs']
+            self.assertEqual(actual if isinstance(actual, list) else [actual], needs, job)
+        self.assertIn('`pr-evidence` runs in parallel with `source-validation`', skill)
+        self.assertIn('It does not wait for `pr-evidence`', skill)
+        self.assertEqual(list(advisory['on']), ['pull_request'])
+        self.assertEqual(advisory['on']['pull_request']['branches'], ['main'])
+        scan = advisory['jobs']['skillspector-advisory']
+        self.assertEqual(scan['needs'], 'evidence-ready')
+        self.assertEqual(scan['continue-on-error'], 'true')
+        self.assertIn('green overall result alone is not a scanner pass', skill)
+        self.assertIn('a nonzero exit may report findings', skill)
+        self.assertIn('empty list with `errors`', skill)
+        # Every documented state must be a real wrapper state, so renaming one
+        # cannot silently leave the operational guide stale.
+        wrapper = (ROOT / 'tools/scripts/skillspector_advisory.py').read_text()
+        section = skill.split('Interpret manifest states', 1)[1].split('Review findings', 1)[0]
+        states = re.findall(r'^\| `([^`]+)` \|', section, re.M)
+        self.assertEqual(len(states), 6)
+        for state in states:
+            self.assertRegex(wrapper, r'[\"\']' + re.escape(state) + r'[\"\']')
+        self.assertEqual(broken_links(ROOT / 'skills/antigravity-maintainer-batch-release/SKILL.md'), [])
 
     def test_operational_contracts(self):
         agents = (ROOT / 'AGENTS.md').read_text()
