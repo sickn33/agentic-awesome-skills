@@ -36,6 +36,7 @@ jobs:
               echo "PR evidence did not pass; advisory scanning is skipped." >> "$GITHUB_STEP_SUMMARY"
               exit 1
             fi
+            echo "Waiting for exact-head pr-evidence ($attempt/60)."
             sleep 10
           done
           echo "Timed out waiting for exact-head PR evidence; no scan ran." >> "$GITHUB_STEP_SUMMARY"
