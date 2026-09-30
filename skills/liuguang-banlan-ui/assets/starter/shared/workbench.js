@@ -128,6 +128,8 @@
 
   function setPanel(open) {
     panel.dataset.open = String(open);
+    panel.toggleAttribute("inert", !open);
+    panel.inert = !open;
     panel.setAttribute("aria-hidden", String(!open));
     panel.toggleAttribute("inert", !open);
     panel.inert = !open;
