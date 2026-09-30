@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-29T09:21:51.000Z
 
-Total skills: 2601
+Total skills: 2602
 
 ## agent-behavior (5)
 
@@ -2355,7 +2355,7 @@ Total skills: 2601
 | --- | --- | --- | --- | --- | --- |
 | `idea-os` | Five-phase pipeline (triage → clarify → research → PRD → plan) that turns a raw idea into four linked files: clarifying questions, deep research, a PRD with ... | safe | Slashworks-biz/idea-os | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical, idea, os |
 
-## productivity (45)
+## productivity (46)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2364,6 +2364,7 @@ Total skills: 2601
 | `ask-matt` | Ask which skill or flow fits your situation. A router over the user-invoked skills in this repo. | safe | mattpocock/skills | productivity, workflow, coding-agents | productivity, workflow, coding-agents, ask, matt, which, skill, flow, fits, situation, router, user |
 | `box-automation` | Automate Box operations including file upload/download, content search, folder management, collaboration, metadata queries, and sign requests through Composi... | critical | community | box | box, automation, automate, operations, including, file, upload, download, content, search, folder, collaboration |
 | `brain-to-docs` | Interview the user to turn project vision and decisions into README and ADR documentation. | critical | davidondrej/skills | documentation, adr, planning | documentation, adr, planning, brain, docs, interview, user, turn, vision, decisions, readme |
+| `busabase` | Use when managing Busabase workspace records, knowledge, apps, or skills through permission-aware ChangeRequests with auditable history. | critical | busabase/skills | busabase, workspace, database, change-requests, mcp | busabase, workspace, database, change-requests, mcp, managing, records, knowledge, apps, skills, through, permission |
 | `cal-com-automation` | Automate Cal.com tasks via Rube MCP (Composio): manage bookings, check availability, configure webhooks, and handle teams. Always search tools first for curr... | critical | community | cal, com | cal, com, automation, automate, tasks, via, rube, mcp, composio, bookings, check, availability |
 | `calendly-automation` | Automate Calendly scheduling, event management, invitee tracking, availability checks, and organization administration via Rube MCP (Composio). Always search... | critical | community | calendly | calendly, automation, automate, scheduling, event, invitee, tracking, availability, checks, organization, administration, via |
 | `career-ops` | Multi-CLI job-search command center: evaluate offers, scan portals, tailor CVs, track applications, prep interviews. Invoke per mode. | safe | career-ops-hq/career-ops | career, ops | career, ops, multi, cli, job, search, command, center, evaluate, offers, scan, portals |

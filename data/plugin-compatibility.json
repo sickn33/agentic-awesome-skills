@@ -8958,6 +8958,25 @@
       "runtime_files": []
     },
     {
+      "id": "busabase",
+      "path": "skills/busabase",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "business-analyst",
       "path": "skills/business-analyst",
       "targets": {
@@ -49918,10 +49937,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2601,
+    "total_skills": 2602,
     "supported": {
-      "codex": 2514,
-      "claude": 2539
+      "codex": 2515,
+      "claude": 2540
     },
     "blocked": {
       "codex": 87,

@@ -11763,6 +11763,39 @@
     }
   },
   {
+    "id": "busabase",
+    "path": "skills/busabase",
+    "category": "productivity",
+    "name": "busabase",
+    "description": "Use when managing Busabase workspace records, knowledge, apps, or skills through permission-aware ChangeRequests with auditable history.",
+    "risk": "critical",
+    "source": "https://github.com/busabase/skills/tree/main/skills/busabase",
+    "date_added": "2026-09-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "busabase/skills",
+    "license": "MIT",
+    "license_source": "https://github.com/busabase/skills/blob/f44e1124e7b6a5ab9c50931173bc52eed82bd429/skills/busabase/LICENSE",
+    "tags": [
+      "busabase",
+      "workspace",
+      "database",
+      "change-requests",
+      "mcp"
+    ]
+  },
+  {
     "id": "business-analyst",
     "path": "skills/business-analyst",
     "category": "business",

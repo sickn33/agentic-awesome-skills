@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-29T09:21:51.000Z",
-  "total": 2601,
+  "total": 2602,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -13943,6 +13943,41 @@
         "headers"
       ],
       "path": "skills/burpsuite-project-parser/SKILL.md"
+    },
+    {
+      "id": "busabase",
+      "canonical_id": "busabase",
+      "name": "busabase",
+      "description": "Use when managing Busabase workspace records, knowledge, apps, or skills through permission-aware ChangeRequests with auditable history.",
+      "category": "productivity",
+      "risk": "critical",
+      "source": "https://github.com/busabase/skills/tree/main/skills/busabase",
+      "source_type": "official",
+      "source_repo": "busabase/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/busabase/skills/blob/f44e1124e7b6a5ab9c50931173bc52eed82bd429/skills/busabase/LICENSE",
+      "tags": [
+        "busabase",
+        "workspace",
+        "database",
+        "change-requests",
+        "mcp"
+      ],
+      "triggers": [
+        "busabase",
+        "workspace",
+        "database",
+        "change-requests",
+        "mcp",
+        "managing",
+        "records",
+        "knowledge",
+        "apps",
+        "skills",
+        "through",
+        "permission"
+      ],
+      "path": "skills/busabase/SKILL.md"
     },
     {
       "id": "business-analyst",
