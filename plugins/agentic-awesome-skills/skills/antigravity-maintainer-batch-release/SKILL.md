@@ -20,7 +20,7 @@ Treat the repository root containing this skill as pull-request-only:
 - Never commit or push directly to `main`, even when the user says “push to main.” That phrase names the final target state.
 - Preserve unrelated dirty work. Use a clean temporary clone or a topic branch for maintainer changes.
 - Use `npm run merge:batch` for accepted source PRs. Do not substitute a raw merge API, generic GitHub skill, or generic push helper.
-- Let `automation/canonical-repo-state` own generated artifacts and contributor-credit convergence after the source batch.
+- Let `automation/canonical-repo-state` own generated artifacts and contributor-credit convergence after the source batch. That lane runs `sync:repo-state`, which now also recomputes the README `## Top Contributors` leaderboards through `sync:top-contributors`: never hand-edit those tables, and treat a stale ranking as a generator or exclusion-list defect instead.
 - Use `release:prepare` and `release:publish` for releases. They never authorize a direct `main` push.
 
 ## Source Checks
