@@ -30387,6 +30387,25 @@
       "runtime_files": []
     },
     {
+      "id": "mirrord",
+      "path": "skills/mirrord",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "mise-configurator",
       "path": "skills/mise-configurator",
       "targets": {
@@ -49899,10 +49918,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2600,
+    "total_skills": 2601,
     "supported": {
-      "codex": 2513,
-      "claude": 2538
+      "codex": 2514,
+      "claude": 2539
     },
     "blocked": {
       "codex": 87,

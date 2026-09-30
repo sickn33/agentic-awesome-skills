@@ -39957,6 +39957,39 @@
     }
   },
   {
+    "id": "mirrord",
+    "path": "skills/mirrord",
+    "category": "devops",
+    "name": "mirrord",
+    "description": "Run a local process inside a live Kubernetes cluster's network, env and traffic with mirrord, so changes are tested against real services without deploying.",
+    "risk": "safe",
+    "source": "https://github.com/metalbear-co/skills",
+    "date_added": "2026-09-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "metalbear-co/skills",
+    "license": "MIT",
+    "license_source": "https://github.com/metalbear-co/skills/blob/main/LICENSE",
+    "tags": [
+      "kubernetes",
+      "k8s",
+      "testing",
+      "local-development",
+      "microservices"
+    ]
+  },
+  {
     "id": "mise-configurator",
     "path": "skills/mise-configurator",
     "category": "devops",

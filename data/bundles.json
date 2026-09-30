@@ -825,6 +825,7 @@
         "marlin-bed-leveling",
         "mesh-memory",
         "microservices-patterns",
+        "mirrord",
         "model-serving-kubernetes",
         "moodle-external-api-development",
         "mtls-configuration",

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-29T09:21:51.000Z",
-  "total": 2600,
+  "total": 2601,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -46989,6 +46989,41 @@
         "notes"
       ],
       "path": "skills/miro-automation/SKILL.md"
+    },
+    {
+      "id": "mirrord",
+      "canonical_id": "mirrord",
+      "name": "mirrord",
+      "description": "Run a local process inside a live Kubernetes cluster's network, env and traffic with mirrord, so changes are tested against real services without deploying.",
+      "category": "devops",
+      "risk": "safe",
+      "source": "https://github.com/metalbear-co/skills",
+      "source_type": "official",
+      "source_repo": "metalbear-co/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/metalbear-co/skills/blob/main/LICENSE",
+      "tags": [
+        "kubernetes",
+        "k8s",
+        "testing",
+        "local-development",
+        "microservices"
+      ],
+      "triggers": [
+        "kubernetes",
+        "k8s",
+        "testing",
+        "local-development",
+        "microservices",
+        "mirrord",
+        "run",
+        "local",
+        "process",
+        "inside",
+        "live",
+        "cluster"
+      ],
+      "path": "skills/mirrord/SKILL.md"
     },
     {
       "id": "mise-configurator",

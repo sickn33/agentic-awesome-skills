@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-29T09:21:51.000Z
 
-Total skills: 2600
+Total skills: 2601
 
 ## agent-behavior (5)
 
@@ -1545,7 +1545,7 @@ Total skills: 2600
 | `systematic-debugging` | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes | critical | community | systematic, debugging | systematic, debugging, encountering, any, bug, test, failure, unexpected, behavior, before, proposing, fixes |
 | `test-fixing` | Systematically identify and fix all failing tests using smart grouping strategies. Use when explicitly asks to fix tests ("fix these tests", "make tests pass... | safe | community | fixing | fixing, test, systematically, identify, fix, all, failing, tests, smart, grouping, explicitly, asks |
 
-## devops (163)
+## devops (164)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1653,6 +1653,7 @@ Total skills: 2600
 | `mac-mini-llm-lab` | Configure a Mac mini as a reliable local LLM server with remote access, observability, and power-safe operation. Use when building an always-on private AI in... | critical | BagelHole/DevOps-Security-Agent-Skills | mac, mini, llm, lab | mac, mini, llm, lab, configure, reliable, local, server, remote, access, observability, power |
 | `manifest` | Install and configure the Manifest observability plugin for your agents. Use when setting up telemetry, configuring API keys, or troubleshooting the plugin. | critical | community | manifest | manifest, install, configure, observability, plugin, agents, setting, up, telemetry, configuring, api, keys |
 | `mdm-device-management` | Manage and secure company devices with MDM solutions | critical | BagelHole/DevOps-Security-Agent-Skills | mdm, device | mdm, device, secure, company, devices, solutions |
+| `mirrord` | Run a local process inside a live Kubernetes cluster's network, env and traffic with mirrord, so changes are tested against real services without deploying. | safe | metalbear-co/skills | kubernetes, k8s, testing, local-development, microservices | kubernetes, k8s, testing, local-development, microservices, mirrord, run, local, process, inside, live, cluster |
 | `mise-configurator` | Generate production-ready mise.toml setups for local development, CI/CD pipelines, and toolchain standardization. | safe | self | mise, devops, ci-cd, toolchain, runtimes, automation | mise, devops, ci-cd, toolchain, runtimes, automation, configurator, generate, toml, setups, local, development |
 | `model-registry-governance` | Establish model registry standards, governance controls, metadata schemas, approvals, and lifecycle policies for enterprise AI deployments. | critical | BagelHole/DevOps-Security-Agent-Skills | model, registry, governance | model, registry, governance, establish, standards, controls, metadata, schemas, approvals, lifecycle, policies, enterprise |
 | `model-serving-kubernetes` | Deploy ML models on Kubernetes with KServe (formerly KFServing) and NVIDIA Triton Inference Server. | critical | BagelHole/DevOps-Security-Agent-Skills | model, serving, kubernetes | model, serving, kubernetes, deploy, ml, models, kserve, formerly, kfserving, nvidia, triton, inference |
