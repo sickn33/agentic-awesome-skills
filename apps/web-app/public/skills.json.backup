@@ -12648,6 +12648,35 @@
     }
   },
   {
+    "id": "changelog-entry",
+    "path": "skills/changelog-entry",
+    "category": "uncategorized",
+    "name": "changelog-entry",
+    "description": "Generate a properly formatted CHANGELOG.md entry in Keep a Changelog format from a commit range or PR. Groups changes into Added/Changed/Deprecated/Removed/Fixed/Security categories and outputs a ready-to-paste block.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-29",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "git",
+      "changelog",
+      "developer-workflow",
+      "documentation"
+    ]
+  },
+  {
     "id": "changelog-updates",
     "path": "skills/changelog-updates",
     "category": "content",

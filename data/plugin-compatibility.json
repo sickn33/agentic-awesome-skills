@@ -9585,6 +9585,25 @@
       "runtime_files": []
     },
     {
+      "id": "changelog-entry",
+      "path": "skills/changelog-entry",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "changelog-updates",
       "path": "skills/changelog-updates",
       "targets": {
@@ -49880,10 +49899,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2599,
+    "total_skills": 2600,
     "supported": {
-      "codex": 2512,
-      "claude": 2537
+      "codex": 2513,
+      "claude": 2538
     },
     "blocked": {
       "codex": 87,

@@ -562,6 +562,7 @@
         "burp-suite-testing",
         "burpsuite-project-parser",
         "cc-skill-security-review",
+        "changelog-entry",
         "cicd-automation-workflow-automate",
         "clerk-auth",
         "client-secret-exposure-audit",

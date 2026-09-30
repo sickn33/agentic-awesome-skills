@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-29T09:21:51.000Z",
-  "total": 2599,
+  "total": 2600,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -14917,6 +14917,37 @@
         "up"
       ],
       "path": "skills/changelog-automation/SKILL.md"
+    },
+    {
+      "id": "changelog-entry",
+      "canonical_id": "changelog-entry",
+      "name": "changelog-entry",
+      "description": "Generate a properly formatted CHANGELOG.md entry in Keep a Changelog format from a commit range or PR. Groups changes into Added/Changed/Deprecated/Removed/Fixed/Security categories and outputs a ready-to-paste block.",
+      "category": "uncategorized",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "git",
+        "changelog",
+        "developer-workflow",
+        "documentation"
+      ],
+      "triggers": [
+        "git",
+        "changelog",
+        "developer-workflow",
+        "documentation",
+        "entry",
+        "generate",
+        "properly",
+        "formatted",
+        "md",
+        "keep",
+        "format",
+        "commit"
+      ],
+      "path": "skills/changelog-entry/SKILL.md"
     },
     {
       "id": "changelog-updates",
