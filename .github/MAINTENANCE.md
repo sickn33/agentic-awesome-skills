@@ -118,7 +118,7 @@ Before ANY commit that adds/modifies skills, run the chain:
     ```bash
     npm run sync:repo-state
     ```
-    This wraps `chain + sync:web-assets + sync:contributors + audit:consistency` for a full local repo-state refresh; `chain` already generates the catalog.
+    This wraps `chain + sync:web-assets + sync:contributors + sync:top-contributors + audit:consistency` for a full local repo-state refresh; `chain` already generates the catalog.
     The scheduled GitHub Actions workflow `Repo Hygiene` runs this same sweep weekly to catch slow drift on `main`.
     It also enforces the frozen validation warning budget using the current maximum in `tools/config/validation-budget.json` (currently zero).
 
@@ -291,6 +291,7 @@ After every source batch, including a one-PR batch, verify that both README cred
 
 - `### Community Contributors` / `## Credits & Sources` for external repositories referenced by the merged work
 - `## Repo Contributors` for the human contributor list
+- `## Top Contributors` for the two ranked leaderboards, recomputed by `sync:top-contributors`
 
 Do not run a local generator after every individual merge. The trusted `main` workflow coalesces contributor and generated drift in the protected canonical-sync PR after the source batch.
 
@@ -301,7 +302,7 @@ Do not run a local generator after every individual merge. The trusted `main` wo
     ```
 
 2.  **Verify the canonical-sync handoff**:
-    - Let the trusted workflow run `sync:repo-state`, which includes `sync:contributors`, and open or update `automation/canonical-repo-state` when drift exists.
+    - Let the trusted workflow run `sync:repo-state`, which includes `sync:contributors` and `sync:top-contributors`, and open or update `automation/canonical-repo-state` when drift exists.
     - Verify that the protected canonical PR contains the expected `## Repo Contributors` update while preserving custom bot/app links.
     - Do not commit generated or contributor drift to an ordinary source PR and do not push it directly to `main`.
 
@@ -370,6 +371,8 @@ Locations to check:
 - **Credits & Sources**: This whole area is for **external repos and upstream sources**, split into Official vs Community.
 - **Repo Contributors**: Use this for **Pull Requests**.
   - _Rule_: "This user sent a PR." -> Add to `## Repo Contributors`.
+- **Top Contributors**: Two generated leaderboards: commit count and canonical skills introduced per contributor, both recomputed by `sync:top-contributors` and published through the canonical-sync PR.
+  - _Rule_: never hand-edit these tables; fix the generator or its excluded-account list instead.
 
 **Merge rule:** after every PR merge, check **both** `### Community Contributors` and `## Repo Contributors`. A merge is not fully done until both sections are either confirmed unchanged or updated and pushed.
 
