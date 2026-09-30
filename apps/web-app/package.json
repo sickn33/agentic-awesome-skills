@@ -61,7 +61,10 @@
     "vitest": "^5.0.0"
   },
   "overrides": {
-    "flatted": "^3.4.0"
+    "brace-expansion": "^5.0.12",
+    "fast-uri": "^3.1.8",
+    "flatted": "^3.4.0",
+    "ip-address": "^10.7.1"
   },
   "engines": {
     "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
