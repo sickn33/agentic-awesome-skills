@@ -10,21 +10,42 @@ import os
 import json
 from pathlib import Path
 
-def run_cmd(cmd: str) -> str:
-    """Run shell command and return output."""
+def run_cmd(args):
+    """Run a command as an argument list (no shell) and return its output."""
     try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        result = subprocess.run(args, capture_output=True, text=True)
         return result.stdout + result.stderr
     except Exception as e:
         return str(e)
+
+def grep_source_count(pattern: str, exclude: str | None = None) -> tuple[int, list[str]]:
+    """Count and sample lines containing ``pattern`` under ``src/``.
+
+    Pure-Python replacement for ``grep -r ... src/`` so no shell is involved.
+    """
+    root = Path("src")
+    if not root.is_dir():
+        return 0, []
+    matches: list[str] = []
+    for path in sorted(root.rglob("*")):
+        if path.suffix not in (".ts", ".tsx") or not path.is_file():
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        for lineno, line in enumerate(text.splitlines(), start=1):
+            if pattern in line and (exclude is None or exclude not in line):
+                matches.append(f"{path}:{lineno}:{line}")
+    return len(matches), matches
 
 def check_versions():
     """Check TypeScript and Node versions."""
     print("\n📦 Versions:")
     print("-" * 40)
     
-    ts_version = run_cmd("npx tsc --version 2>/dev/null").strip()
-    node_version = run_cmd("node -v 2>/dev/null").strip()
+    ts_version = run_cmd(["npx", "tsc", "--version"]).strip()
+    node_version = run_cmd(["node", "-v"]).strip()
     
     print(f"  TypeScript: {ts_version or 'Not found'}")
     print(f"  Node.js: {node_version or 'Not found'}")
@@ -134,11 +155,12 @@ def check_type_errors():
     print("\n🔍 Type Check:")
     print("-" * 40)
     
-    result = run_cmd("npx tsc --noEmit 2>&1 | head -20")
+    result = run_cmd(["npx", "tsc", "--noEmit"])
+    lines = result.splitlines()
     if "error TS" in result:
         errors = result.count("error TS")
         print(f"  ❌ {errors}+ type errors found")
-        print(result[:500])
+        print("\n".join(lines[:20])[:500])
     else:
         print("  ✅ No type errors")
 
@@ -147,13 +169,11 @@ def check_any_usage():
     print("\n⚠️ 'any' Type Usage:")
     print("-" * 40)
     
-    result = run_cmd("grep -r ': any' --include='*.ts' --include='*.tsx' src/ 2>/dev/null | wc -l")
-    count = result.strip()
-    if count and count != "0":
+    count, matches = grep_source_count(": any")
+    if count:
         print(f"  ⚠️ Found {count} occurrences of ': any'")
-        sample = run_cmd("grep -rn ': any' --include='*.ts' --include='*.tsx' src/ 2>/dev/null | head -5")
-        if sample:
-            print(sample)
+        if matches:
+            print("\n".join(matches[:5]))
     else:
         print("  ✅ No explicit 'any' types found")
 
@@ -162,9 +182,8 @@ def check_type_assertions():
     print("\n⚠️ Type Assertions (as):")
     print("-" * 40)
     
-    result = run_cmd("grep -r ' as ' --include='*.ts' --include='*.tsx' src/ 2>/dev/null | grep -v 'import' | wc -l")
-    count = result.strip()
-    if count and count != "0":
+    count, _ = grep_source_count(" as ", exclude="import")
+    if count:
         print(f"  ⚠️ Found {count} type assertions")
     else:
         print("  ✅ No type assertions found")
@@ -174,9 +193,11 @@ def check_performance():
     print("\n⏱️ Type Check Performance:")
     print("-" * 40)
     
-    result = run_cmd("npx tsc --extendedDiagnostics --noEmit 2>&1 | grep -E 'Check time|Files:|Lines:|Nodes:'")
-    if result.strip():
-        for line in result.strip().split('\n'):
+    result = run_cmd(["npx", "tsc", "--extendedDiagnostics", "--noEmit"])
+    keys = ("Check time", "Files:", "Lines:", "Nodes:")
+    lines = [line for line in result.splitlines() if any(k in line for k in keys)]
+    if lines:
+        for line in lines:
             print(f"  {line}")
     else:
         print("  ⚠️ Could not measure performance")
