@@ -219,6 +219,8 @@ Key source families include:
 
 ### Official Sources
 
+- **[nirholas/three.ws](https://github.com/nirholas/three.ws/tree/main/public/skills/3d-studio)**: MIT source for the `threews-3d-studio` skill: text or image to textured GLB models, one-call rigged avatars, and auto-rigging through the three.ws 3D Studio MCP endpoint.
+
 - **[busabase/skills](https://github.com/busabase/skills)**: MIT source for the `busabase` skill — authorized MCP workspace operations, permission-aware ChangeRequests, and canonical-versus-pending readback.
 
 - **[metalbear-co/skills](https://github.com/metalbear-co/skills)**: Official mirrord skills source for the `mirrord` skill - run a local process inside a live Kubernetes pod's network, env and traffic, with confirmation before traffic-stealing or cluster-modifying steps (MIT).
