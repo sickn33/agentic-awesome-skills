@@ -49,6 +49,12 @@ const APPROVAL_WORKFLOW_PATHS = new Set([
   // preview lane for `apps/web-app/**` PRs and must be approvable for fork
   // web-app source contributions alongside ci.yml.
   ".github/workflows/aas-agent-first-preview.yml",
+  // PR-only advisory scanner. It has no manual, push or privileged trigger,
+  // declares only `contents: read` and `checks: read`, uses no secrets, and
+  // pins every action to a full SHA. Its first job only waits for the
+  // exact-head `pr-evidence` result, so it must be approvable for fork PRs
+  // alongside the required workflows.
+  ".github/workflows/skillspector-advisory.yml",
   ".github/workflows/skill-review.yml",
 ]);
 

@@ -266,6 +266,10 @@ function runFixture(overrides = {}) {
     mergeBatch.approvalWorkflowPaths.has(".github/workflows/aas-agent-first-preview.yml"),
     "the pinned read-only AAS agent-first preview workflow must be approvable for fork web-app PRs",
   );
+  assert.ok(
+    mergeBatch.approvalWorkflowPaths.has(".github/workflows/skillspector-advisory.yml"),
+    "the pinned read-only SkillSpector advisory workflow must be approvable for fork skill PRs",
+  );
   const previewValid = mergeBatch.validateActionRequiredRuns(
     [runFixture({ path: ".github/workflows/aas-agent-first-preview.yml", workflow_id: 102 })],
     [workflowFixture({ id: 102, path: ".github/workflows/aas-agent-first-preview.yml" })],

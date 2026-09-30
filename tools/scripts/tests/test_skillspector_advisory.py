@@ -128,6 +128,19 @@ class AdvisoryTest(unittest.TestCase):
         self.assertNotIn('requires_references', job)
         self.assertIn("steps.plan.outputs.count != '0'", job)
 
+    def test_workflow_is_approvable_for_fork_pull_requests(self):
+        # A read-only PR-only workflow that is missing from the merge:batch
+        # allowlist leaves every fork skill PR stuck on action_required with no
+        # required check able to run, so the allowlist and this workflow must
+        # stay aligned.
+        root = Path(__file__).resolve().parents[3]
+        merge_batch = (root / 'tools/scripts/merge_batch.cjs').read_text()
+        self.assertIn('".github/workflows/skillspector-advisory.yml"', merge_batch)
+        workflow = (root / '.github/workflows/skillspector-advisory.yml').read_text()
+        self.assertNotIn('secrets.', workflow)
+        self.assertNotIn('pull_request_target', workflow)
+        self.assertNotIn('workflow_run', workflow)
+
 
 if __name__ == '__main__':
     unittest.main()
