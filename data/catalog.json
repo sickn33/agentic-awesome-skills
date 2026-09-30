@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-29T09:21:51.000Z",
-  "total": 2539,
+  "total": 2599,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -20815,6 +20815,78 @@
       "path": "skills/data-engineering-data-pipeline/SKILL.md"
     },
     {
+      "id": "data-export-engine",
+      "canonical_id": "data-export-engine",
+      "name": "data-export-engine",
+      "description": "Data export log: source module, purpose, format, requester and approver, delivery dates, personal-data flag and status. Use for export audit trails.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "analyze"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "analyze",
+        "data",
+        "export",
+        "engine",
+        "log"
+      ],
+      "path": "skills/data-export-engine/SKILL.md"
+    },
+    {
+      "id": "data-privacy-controls",
+      "canonical_id": "data-privacy-controls",
+      "name": "data-privacy-controls",
+      "description": "Data privacy control register: data category, lawful basis, retention period, access roles, encryption and consent requirement per module. Use for GDPR compliance.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect",
+        "data",
+        "privacy",
+        "controls",
+        "control"
+      ],
+      "path": "skills/data-privacy-controls/SKILL.md"
+    },
+    {
       "id": "data-quality-frameworks",
       "canonical_id": "data-quality-frameworks",
       "name": "data-quality-frameworks",
@@ -21285,6 +21357,46 @@
         "logs"
       ],
       "path": "skills/datadog-automation/SKILL.md"
+    },
+    {
+      "id": "day-book",
+      "canonical_id": "day-book",
+      "name": "day-book",
+      "description": "Daily cash, bank and digital day book: opening and closing balances per book, in/out movements, debit/credit presentation and reconciliation status. Use for daily bookkeeping.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "day-book",
+        "cash-book",
+        "bank-book",
+        "reconciliation"
+      ],
+      "triggers": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "day-book",
+        "cash-book",
+        "bank-book",
+        "reconciliation"
+      ],
+      "path": "skills/day-book/SKILL.md"
     },
     {
       "id": "dbos-golang",
@@ -21887,6 +21999,42 @@
         "save"
       ],
       "path": "skills/defuddle/SKILL.md"
+    },
+    {
+      "id": "dei-dashboard",
+      "canonical_id": "dei-dashboard",
+      "name": "dei-dashboard",
+      "description": "Diversity, equity and inclusion dashboard: metric by department and period, value against target, group size and minimum-threshold flag. Use for DEI reporting.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "engage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "engage",
+        "dei",
+        "dashboard",
+        "diversity",
+        "equity"
+      ],
+      "path": "skills/dei-dashboard/SKILL.md"
     },
     {
       "id": "delegate-setup",
@@ -23826,6 +23974,49 @@
       "path": "skills/design-taste-frontend/SKILL.md"
     },
     {
+      "id": "design-theme-guide",
+      "canonical_id": "design-theme-guide",
+      "name": "design-theme-guide",
+      "description": "Design-token register: colour, typography, spacing and radius tokens with light and dark values, contrast ratio and WCAG level. Use for design system documentation.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "brand",
+        "design-system",
+        "design-tokens",
+        "theme",
+        "colour",
+        "typography",
+        "spacing",
+        "wcag",
+        "accessibility",
+        "contrast",
+        "css",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "brand",
+        "design-system",
+        "design-tokens",
+        "theme",
+        "colour",
+        "typography",
+        "spacing",
+        "wcag",
+        "accessibility",
+        "contrast",
+        "css"
+      ],
+      "path": "skills/design-theme-guide/SKILL.md"
+    },
+    {
       "id": "design-thinking",
       "canonical_id": "design-thinking",
       "name": "design-thinking",
@@ -24682,6 +24873,42 @@
       "path": "skills/disaster-recovery/SKILL.md"
     },
     {
+      "id": "disciplinary-pip-tracker",
+      "canonical_id": "disciplinary-pip-tracker",
+      "name": "disciplinary-pip-tracker",
+      "description": "Disciplinary and performance-improvement case register: case type, linked review or issue, improvement goals, review dates, outcome and confidentiality. Use for PIP tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage",
+        "disciplinary",
+        "pip",
+        "tracker",
+        "performance"
+      ],
+      "path": "skills/disciplinary-pip-tracker/SKILL.md"
+    },
+    {
       "id": "discord-automation",
       "canonical_id": "discord-automation",
       "name": "discord-automation",
@@ -25281,6 +25508,42 @@
         "references"
       ],
       "path": "skills/docs-guard/SKILL.md"
+    },
+    {
+      "id": "document-management-system",
+      "canonical_id": "document-management-system",
+      "name": "document-management-system",
+      "description": "Document register: type, owner, upload and signed dates, version, storage link, confidentiality and signature-required flag. Use for document control.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect",
+        "document",
+        "register",
+        "type",
+        "owner"
+      ],
+      "path": "skills/document-management-system/SKILL.md"
     },
     {
       "id": "documentation",
@@ -26758,6 +27021,42 @@
       "path": "skills/emotional-arc-designer/SKILL.md"
     },
     {
+      "id": "employee-suggestion-hub",
+      "canonical_id": "employee-suggestion-hub",
+      "name": "employee-suggestion-hub",
+      "description": "Suggestion register: submitter or anonymous flag, category, votes, reviewer, decision and response status. Use for employee feedback programs.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "engage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "engage",
+        "employee",
+        "suggestion",
+        "hub",
+        "register"
+      ],
+      "path": "skills/employee-suggestion-hub/SKILL.md"
+    },
+    {
       "id": "employment-contract-templates",
       "canonical_id": "employment-contract-templates",
       "name": "employment-contract-templates",
@@ -27219,6 +27518,42 @@
       "path": "skills/esl-price-sync/SKILL.md"
     },
     {
+      "id": "esop-equity-tracker",
+      "canonical_id": "esop-equity-tracker",
+      "name": "esop-equity-tracker",
+      "description": "ESOP and equity grant register: grant date, shares granted, strike price, vesting start, schedule and cliff, plus vested and exercised shares. Use for equity tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect",
+        "esop",
+        "equity",
+        "tracker",
+        "grant"
+      ],
+      "path": "skills/esop-equity-tracker/SKILL.md"
+    },
+    {
       "id": "ethical-hacking-methodology",
       "canonical_id": "ethical-hacking-methodology",
       "name": "ethical-hacking-methodology",
@@ -27388,6 +27723,42 @@
       "path": "skills/event-store-design/SKILL.md"
     },
     {
+      "id": "events-activities",
+      "canonical_id": "events-activities",
+      "name": "events-activities",
+      "description": "Event register: type, date and time, venue, organizer, audience, budget against actual cost, RSVP and attendance counts and feedback score. Use for event tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "engage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "engage",
+        "events",
+        "activities",
+        "event",
+        "register"
+      ],
+      "path": "skills/events-activities/SKILL.md"
+    },
+    {
       "id": "evidence-hygiene",
       "canonical_id": "evidence-hygiene",
       "name": "evidence-hygiene",
@@ -27526,6 +27897,79 @@
         "checkpoints"
       ],
       "path": "skills/executing-plans/SKILL.md"
+    },
+    {
+      "id": "expense-accounting",
+      "canonical_id": "expense-accounting",
+      "name": "expense-accounting",
+      "description": "Expense accounting register: expense number and date, payee with PAN and VAT, bill reference, document type, amount with VAT, ledger account, approver and status. Use for expense bookkeeping.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "expenses"
+      ],
+      "triggers": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "expenses",
+        "expense",
+        "register",
+        "number"
+      ],
+      "path": "skills/expense-accounting/SKILL.md"
+    },
+    {
+      "id": "expense-management",
+      "canonical_id": "expense-management",
+      "name": "expense-management",
+      "description": "Expense claim register: claim id, employee and department, amount and tax, approver and level, category, cost centre, budget line, receipt flag and status. Use for claim approvals.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage",
+        "expense",
+        "claim",
+        "register",
+        "id"
+      ],
+      "path": "skills/expense-management/SKILL.md"
     },
     {
       "id": "explain-like-socrates",
@@ -30129,6 +30573,46 @@
       "path": "skills/framework-migration-legacy-modernize/SKILL.md"
     },
     {
+      "id": "free-design-resources",
+      "canonical_id": "free-design-resources",
+      "name": "free-design-resources",
+      "description": "Design resource register: resource and provider, licence type, commercial-use and attribution rules, export format, lock-in risk, free tier limit and accessibility notes. Use for tool vetting.",
+      "category": "design",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "design-tools",
+        "free-licences",
+        "fonts",
+        "icons",
+        "images",
+        "templates",
+        "accessibility",
+        "cost",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "design-tools",
+        "free-licences",
+        "fonts",
+        "icons",
+        "images",
+        "templates",
+        "accessibility",
+        "cost",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "path": "skills/free-design-resources/SKILL.md"
+    },
+    {
       "id": "free-tier-strategy",
       "canonical_id": "free-tier-strategy",
       "name": "free-tier-strategy",
@@ -31173,6 +31657,86 @@
         "canvas"
       ],
       "path": "skills/game-development/web-games/SKILL.md"
+    },
+    {
+      "id": "gamification-engine",
+      "canonical_id": "gamification-engine",
+      "name": "gamification-engine",
+      "description": "Gamification points register: player and department, points balance and points earned this month, level, badges, source module and last-updated date. Use for points and badge tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop",
+        "gamification",
+        "engine",
+        "points",
+        "register"
+      ],
+      "path": "skills/gamification-engine/SKILL.md"
+    },
+    {
+      "id": "gbp-local-seo-intent",
+      "canonical_id": "gbp-local-seo-intent",
+      "name": "gbp-local-seo-intent",
+      "description": "Google Business Profile register: element, primary and supporting keywords, search intent, landing page, post dates, review rating and reply status, visibility and status. Use for local SEO.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "gbp",
+        "google-business-profile",
+        "local-seo",
+        "local-pack",
+        "map-pack",
+        "intent",
+        "categories",
+        "services",
+        "reviews",
+        "posts",
+        "photos",
+        "attributes",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "gbp",
+        "google-business-profile",
+        "local-seo",
+        "local-pack",
+        "map-pack",
+        "intent",
+        "categories",
+        "services",
+        "reviews",
+        "posts",
+        "photos"
+      ],
+      "path": "skills/gbp-local-seo-intent/SKILL.md"
     },
     {
       "id": "gcp-audit-logs",
@@ -34334,6 +34898,42 @@
         "echarts"
       ],
       "path": "skills/health-trend-analyzer/SKILL.md"
+    },
+    {
+      "id": "health-wellness",
+      "canonical_id": "health-wellness",
+      "name": "health-wellness",
+      "description": "Wellbeing check-in register: anonymous flag, department, check-in date, wellbeing score, stress and energy levels, support and resource flags, confidentiality and status. Use for wellness programmes.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "engage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "engage",
+        "health",
+        "wellness",
+        "wellbeing",
+        "check"
+      ],
+      "path": "skills/health-wellness/SKILL.md"
     },
     {
       "id": "helium-mcp",
@@ -38806,6 +39406,42 @@
       "path": "skills/intercom-automation/SKILL.md"
     },
     {
+      "id": "intern-program",
+      "canonical_id": "intern-program",
+      "name": "intern-program",
+      "description": "Internship register: intern and department, supervisor and mentor, institution, start and end dates, stipend, learning goals, mid-term and final scores, conversion flags. Use for intern tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard",
+        "intern",
+        "program",
+        "internship",
+        "register"
+      ],
+      "path": "skills/intern-program/SKILL.md"
+    },
+    {
       "id": "internal-comms",
       "canonical_id": "internal-comms",
       "name": "internal-comms",
@@ -38891,6 +39527,42 @@
         "sources"
       ],
       "path": "skills/internal-comms-community/SKILL.md"
+    },
+    {
+      "id": "internal-communication",
+      "canonical_id": "internal-communication",
+      "name": "internal-communication",
+      "description": "Internal communication log: title, type, date, department, host and attendees, agenda, action items, follow-up date, meeting link and delivery status. Use for internal comms tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "engage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "engage",
+        "internal",
+        "communication",
+        "log",
+        "title"
+      ],
+      "path": "skills/internal-communication/SKILL.md"
     },
     {
       "id": "interview-coach",
@@ -39055,6 +39727,79 @@
       "path": "skills/inventory-demand-planning/SKILL.md"
     },
     {
+      "id": "inventory-stock-reconciliation",
+      "canonical_id": "inventory-stock-reconciliation",
+      "name": "inventory-stock-reconciliation",
+      "description": "Stock reconciliation register: count date, item, warehouse, book vs physical quantity, variance quantity and value, variance reason, damage and expiry, adjustment and approval. Use for stock counts.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "reconciliation"
+      ],
+      "triggers": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "reconciliation",
+        "inventory",
+        "stock",
+        "register"
+      ],
+      "path": "skills/inventory-stock-reconciliation/SKILL.md"
+    },
+    {
+      "id": "invoices-billing",
+      "canonical_id": "invoices-billing",
+      "name": "invoices-billing",
+      "description": "Invoice and billing register: invoice number, client, project, issue and due dates, subtotal, discount, tax and withholding, total, payments, balance and aging. Use for billing follow-up.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "operate"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "operate",
+        "invoices",
+        "billing",
+        "invoice",
+        "register"
+      ],
+      "path": "skills/invoices-billing/SKILL.md"
+    },
+    {
       "id": "ios-debugger-agent",
       "canonical_id": "ios-debugger-agent",
       "name": "ios-debugger-agent",
@@ -39163,6 +39908,42 @@
         "enterprise"
       ],
       "path": "skills/iso27001-compliance/SKILL.md"
+    },
+    {
+      "id": "issue-grievance-tracker",
+      "canonical_id": "issue-grievance-tracker",
+      "name": "issue-grievance-tracker",
+      "description": "Grievance register: issue type, raised by or anonymous, person or team concerned, department, date raised, policy reference, severity, assignee, action taken and status. Use for complaint handling.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage",
+        "issue",
+        "grievance",
+        "tracker",
+        "register"
+      ],
+      "path": "skills/issue-grievance-tracker/SKILL.md"
     },
     {
       "id": "issues",
@@ -39756,6 +40537,41 @@
       "path": "skills/json-canvas/SKILL.md"
     },
     {
+      "id": "json-schema-manual",
+      "canonical_id": "json-schema-manual",
+      "name": "json-schema-manual",
+      "description": "JSON Schema Manual: draft 2020-12 validation schema from a confirmed field list, with required and enum values only where confirmed. Use for an API or import contract.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "json",
+        "json-schema",
+        "validation",
+        "schema",
+        "operations",
+        "data",
+        "helper"
+      ],
+      "triggers": [
+        "json",
+        "json-schema",
+        "validation",
+        "schema",
+        "operations",
+        "data",
+        "helper",
+        "manual",
+        "draft",
+        "2020",
+        "12",
+        "confirmed"
+      ],
+      "path": "skills/json-schema-manual/SKILL.md"
+    },
+    {
       "id": "julia-pro",
       "canonical_id": "julia-pro",
       "name": "julia-pro",
@@ -40043,6 +40859,42 @@
       "path": "skills/klaviyo-automation/SKILL.md"
     },
     {
+      "id": "knowledge-base",
+      "canonical_id": "knowledge-base",
+      "name": "knowledge-base",
+      "description": "Knowledge base register: article title, category, department, owner, tags, summary, linked SOP, audience, last and next review dates and status. Use for documentation management.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop",
+        "knowledge",
+        "base",
+        "register",
+        "article"
+      ],
+      "path": "skills/knowledge-base/SKILL.md"
+    },
+    {
       "id": "kotler-macro-analyzer",
       "canonical_id": "kotler-macro-analyzer",
       "name": "kotler-macro-analyzer",
@@ -40125,6 +40977,42 @@
         "decisions"
       ],
       "path": "skills/kpi-dashboard-design/SKILL.md"
+    },
+    {
+      "id": "kpi-tracker",
+      "canonical_id": "kpi-tracker",
+      "name": "kpi-tracker",
+      "description": "KPI register: metric by level, department, job title and employee, linked OKR, unit and direction, target against actual, achievement and weight percentages, period and owner. Use for scorecards.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage",
+        "kpi",
+        "tracker",
+        "register",
+        "metric"
+      ],
+      "path": "skills/kpi-tracker/SKILL.md"
     },
     {
       "id": "kubernetes-architect",
@@ -40719,6 +41607,78 @@
       "path": "skills/learn/SKILL.md"
     },
     {
+      "id": "learning-career-development",
+      "canonical_id": "learning-career-development",
+      "name": "learning-career-development",
+      "description": "Training register: course, provider, delivery method, department, employee, duration, progress percentage, score, mandatory flag, certificate earned and skills gained. Use for learning records.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop",
+        "learning",
+        "career",
+        "development",
+        "training"
+      ],
+      "path": "skills/learning-career-development/SKILL.md"
+    },
+    {
+      "id": "leave-management",
+      "canonical_id": "leave-management",
+      "name": "leave-management",
+      "description": "Leave register: request, leave type, employee and department, manager and approver, start and end dates, days requested, leave balances, handover notes and status. Use for leave tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage",
+        "leave",
+        "register",
+        "request",
+        "type"
+      ],
+      "path": "skills/leave-management/SKILL.md"
+    },
+    {
       "id": "ledger-tasks-yylo",
       "canonical_id": "ledger-tasks-yylo",
       "name": "ledger-tasks-yylo",
@@ -40806,6 +41766,42 @@
         "texts"
       ],
       "path": "skills/legal-advisor/SKILL.md"
+    },
+    {
+      "id": "legal-compliance-vault",
+      "canonical_id": "legal-compliance-vault",
+      "name": "legal-compliance-vault",
+      "description": "Legal and compliance document vault: document type, framework, owner and department, effective and expiry dates, renewal flag, storage link, confidentiality and status. Use for policy tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "protect",
+        "legal",
+        "compliance",
+        "vault",
+        "document"
+      ],
+      "path": "skills/legal-compliance-vault/SKILL.md"
     },
     {
       "id": "leiloeiro-avaliacao",
@@ -41536,6 +42532,46 @@
         "kubernetes"
       ],
       "path": "skills/linkerd-patterns/SKILL.md"
+    },
+    {
+      "id": "linktree-link-hub",
+      "canonical_id": "linktree-link-hub",
+      "name": "linktree-link-hub",
+      "description": "Link-in-bio register: label, destination URL, link type, priority order, audience, click tracking, UTM source, schedule, click count and status. Use for link hub tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "brand",
+        "linktree",
+        "link-in-bio",
+        "social",
+        "tracking",
+        "utm",
+        "call-to-action",
+        "qr",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "brand",
+        "linktree",
+        "link-in-bio",
+        "social",
+        "tracking",
+        "utm",
+        "call-to-action",
+        "qr",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "path": "skills/linktree-link-hub/SKILL.md"
     },
     {
       "id": "lint-and-validate",
@@ -42601,6 +43637,49 @@
         "carrier"
       ],
       "path": "skills/logistics-exception-management/SKILL.md"
+    },
+    {
+      "id": "logo-image-design",
+      "canonical_id": "logo-image-design",
+      "name": "logo-image-design",
+      "description": "Brand asset register: asset type, format, dimensions and aspect ratio, colour mode, background variant, clear space, approved and prohibited uses, rights owner and licence. Use for brand control.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "brand",
+        "logo",
+        "mark",
+        "imagery",
+        "photography",
+        "stock",
+        "icon",
+        "trademark",
+        "licence",
+        "rights",
+        "brand-guidelines",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "brand",
+        "logo",
+        "mark",
+        "imagery",
+        "photography",
+        "stock",
+        "icon",
+        "trademark",
+        "licence",
+        "rights",
+        "brand-guidelines"
+      ],
+      "path": "skills/logo-image-design/SKILL.md"
     },
     {
       "id": "loki-logging",
@@ -45468,6 +46547,42 @@
       "path": "skills/mental-health-analyzer/SKILL.md"
     },
     {
+      "id": "mentorship-program",
+      "canonical_id": "mentorship-program",
+      "name": "mentorship-program",
+      "description": "Mentorship register: mentor and mentee pair, department, focus area, mentee goal, session counts, last and next session, overall rating, progress notes and status. Use for mentorship tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop",
+        "mentorship",
+        "program",
+        "register",
+        "mentor"
+      ],
+      "path": "skills/mentorship-program/SKILL.md"
+    },
+    {
       "id": "mercury-mcp",
       "canonical_id": "mercury-mcp",
       "name": "mercury-mcp",
@@ -46990,6 +48105,43 @@
         "pr"
       ],
       "path": "skills/monte-carlo-validation-notebook/SKILL.md"
+    },
+    {
+      "id": "monthly-closing-statements",
+      "canonical_id": "monthly-closing-statements",
+      "name": "monthly-closing-statements",
+      "description": "Monthly closing register: period dates, cash/bank/party/inventory/TDS reconciliation flags, profit, receivables, payables, working capital, open adjustments and reviewer. Use for period close.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "closing"
+      ],
+      "triggers": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "closing",
+        "monthly",
+        "statements",
+        "register"
+      ],
+      "path": "skills/monthly-closing-statements/SKILL.md"
     },
     {
       "id": "moodle-external-api-development",
@@ -48905,6 +50057,42 @@
       "path": "skills/notebooklm/SKILL.md"
     },
     {
+      "id": "notification-reminder-hub",
+      "canonical_id": "notification-reminder-hub",
+      "name": "notification-reminder-hub",
+      "description": "Notification register: title, type, priority, recipient and department, message, linked record, trigger module, scheduled and sent dates and status. Use for reminder tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "analyze"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "analyze",
+        "notification",
+        "reminder",
+        "hub",
+        "register"
+      ],
+      "path": "skills/notification-reminder-hub/SKILL.md"
+    },
+    {
       "id": "notion-automation",
       "canonical_id": "notion-automation",
       "name": "notion-automation",
@@ -48930,6 +50118,41 @@
         "comments"
       ],
       "path": "skills/notion-automation/SKILL.md"
+    },
+    {
+      "id": "notion-manual-import",
+      "canonical_id": "notion-manual-import",
+      "name": "notion-manual-import",
+      "description": "Notion Manual Import: the Notion step for any module - CSV, property mapping, import steps and verification for the field list the active module confirmed. Use whenever the user picks Notion.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "notion",
+        "csv",
+        "import",
+        "manual",
+        "operations",
+        "template",
+        "helper"
+      ],
+      "triggers": [
+        "notion",
+        "csv",
+        "import",
+        "manual",
+        "operations",
+        "template",
+        "helper",
+        "step",
+        "any",
+        "module",
+        "property",
+        "mapping"
+      ],
+      "path": "skills/notion-manual-import/SKILL.md"
     },
     {
       "id": "notion-template-business",
@@ -49127,6 +50350,47 @@
         "metrics"
       ],
       "path": "skills/observability-and-instrumentation/SKILL.md"
+    },
+    {
+      "id": "observability-cloud-planning",
+      "canonical_id": "observability-cloud-planning",
+      "name": "observability-cloud-planning",
+      "description": "Build a cloud, SLO, and incident-readiness register after intake. Use when an SME needs monitoring scope, alert ownership, cost limits, or service planning.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "observability",
+        "monitoring",
+        "slo",
+        "sli",
+        "alerting",
+        "cloud-cost",
+        "uptime",
+        "incident",
+        "reliability",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "observability",
+        "monitoring",
+        "slo",
+        "sli",
+        "alerting",
+        "cloud-cost",
+        "uptime",
+        "incident",
+        "reliability",
+        "csv",
+        "sql"
+      ],
+      "path": "skills/observability-cloud-planning/SKILL.md"
     },
     {
       "id": "observability-engineer",
@@ -50069,6 +51333,42 @@
       "path": "skills/odw/SKILL.md"
     },
     {
+      "id": "offboarding-exit",
+      "canonical_id": "offboarding-exit",
+      "name": "offboarding-exit",
+      "description": "Offboarding register: exit type, employee and manager, notice and final day, reason, handover owner, and done flags for knowledge transfer, assets, access and settlement. Use for exit tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "exit"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "exit",
+        "offboarding",
+        "register",
+        "type",
+        "employee"
+      ],
+      "path": "skills/offboarding-exit/SKILL.md"
+    },
+    {
       "id": "offensive-osint",
       "canonical_id": "offensive-osint",
       "name": "offensive-osint",
@@ -50098,6 +51398,42 @@
         "recon"
       ],
       "path": "skills/offensive-osint/SKILL.md"
+    },
+    {
+      "id": "offer-appointment",
+      "canonical_id": "offer-appointment",
+      "name": "offer-appointment",
+      "description": "Offer register: candidate, position, department, employment type, offered salary and currency, offer date and expiry, joining date, probation, approver and sign-off. Use for offer tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard",
+        "offer",
+        "appointment",
+        "register",
+        "candidate"
+      ],
+      "path": "skills/offer-appointment/SKILL.md"
     },
     {
       "id": "offers",
@@ -50157,6 +51493,42 @@
         "microsoft"
       ],
       "path": "skills/office-productivity/SKILL.md"
+    },
+    {
+      "id": "okr-system",
+      "canonical_id": "okr-system",
+      "name": "okr-system",
+      "description": "OKR register: objective, owner and level, department, quarter and year, up to three key results with progress percentages, parent OKR and overall progress. Use for objective tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage",
+        "okr",
+        "register",
+        "objective",
+        "owner"
+      ],
+      "path": "skills/okr-system/SKILL.md"
     },
     {
       "id": "okta-attack",
@@ -50371,6 +51743,42 @@
         "establish"
       ],
       "path": "skills/onboarding-cro/SKILL.md"
+    },
+    {
+      "id": "onboarding-playbook",
+      "canonical_id": "onboarding-playbook",
+      "name": "onboarding-playbook",
+      "description": "Onboarding checklist: step, phase and order, department, owner, linked SOP and required flag. Use for joiner onboarding.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard",
+        "onboarding",
+        "playbook",
+        "checklist",
+        "step"
+      ],
+      "path": "skills/onboarding-playbook/SKILL.md"
     },
     {
       "id": "onboarding-psychologist",
@@ -51063,6 +52471,42 @@
       "path": "skills/orchestrate-batch-refactor/SKILL.md"
     },
     {
+      "id": "organization-design",
+      "canonical_id": "organization-design",
+      "name": "organization-design",
+      "description": "Org structure register: department, type, parent, head, location, approved against actual headcount, annual budget, cost centre code and establishment date. Use for org design.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "foundation"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "foundation",
+        "organization",
+        "org",
+        "structure",
+        "register"
+      ],
+      "path": "skills/organization-design/SKILL.md"
+    },
+    {
       "id": "os-scripting",
       "canonical_id": "os-scripting",
       "name": "os-scripting",
@@ -51536,6 +52980,43 @@
       "path": "skills/parallel-search-mcp/SKILL.md"
     },
     {
+      "id": "party-ledger-reconciliation",
+      "canonical_id": "party-ledger-reconciliation",
+      "name": "party-ledger-reconciliation",
+      "description": "Party ledger reconciliation: party type, name and PAN/VAT, ledger against statement balance, difference and reason, duplicates, confirmation status and adjustment. Use for balance checks.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "reconciliation"
+      ],
+      "triggers": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "reconciliation",
+        "party",
+        "ledger",
+        "type"
+      ],
+      "path": "skills/party-ledger-reconciliation/SKILL.md"
+    },
+    {
       "id": "patch-diff-exploit",
       "canonical_id": "patch-diff-exploit",
       "name": "patch-diff-exploit",
@@ -51569,6 +53050,44 @@
       "path": "skills/patch-diff-exploit/SKILL.md"
     },
     {
+      "id": "payment-accounting",
+      "canonical_id": "payment-accounting",
+      "name": "payment-accounting",
+      "description": "Payment voucher register: payment number and date, paid to and purpose, mode, gross amount, TDS rate and deducted, net paid, invoice allocation, ledger and reconciliation status. Use for vouchers.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "payments",
+        "tds"
+      ],
+      "triggers": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "payments",
+        "tds",
+        "payment",
+        "voucher"
+      ],
+      "path": "skills/payment-accounting/SKILL.md"
+    },
+    {
       "id": "payment-integration",
       "canonical_id": "payment-integration",
       "name": "payment-integration",
@@ -51597,6 +53116,42 @@
       "path": "skills/payment-integration/SKILL.md"
     },
     {
+      "id": "payments-received",
+      "canonical_id": "payments-received",
+      "name": "payments-received",
+      "description": "Payments received log: reference, client and invoice, amount and currency, payment date and method, withholding tax, bank account, received-by and receipt-sent status. Use for incoming payments.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "operate"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "operate",
+        "payments",
+        "received",
+        "log",
+        "reference"
+      ],
+      "path": "skills/payments-received/SKILL.md"
+    },
+    {
       "id": "paypal-integration",
       "canonical_id": "paypal-integration",
       "name": "paypal-integration",
@@ -51622,6 +53177,42 @@
         "refund"
       ],
       "path": "skills/paypal-integration/SKILL.md"
+    },
+    {
+      "id": "payroll-finance",
+      "canonical_id": "payroll-finance",
+      "name": "payroll-finance",
+      "description": "Payroll register: employee, department and month, basic, DA, HRA and TA, bonus, deductions, net pay, pay period, payment date and method. Use for payroll records.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage",
+        "payroll",
+        "finance",
+        "register",
+        "employee"
+      ],
+      "path": "skills/payroll-finance/SKILL.md"
     },
     {
       "id": "paywall-upgrade-cro",
@@ -51951,6 +53542,42 @@
       "path": "skills/people-data/SKILL.md"
     },
     {
+      "id": "people-directory",
+      "canonical_id": "people-directory",
+      "name": "people-directory",
+      "description": "Employee master record: name, employee id, department, job title, grade, manager, employment type, contact and emergency details, access role, start and end dates, status. Use for people records.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard",
+        "people",
+        "directory",
+        "employee",
+        "record"
+      ],
+      "path": "skills/people-directory/SKILL.md"
+    },
+    {
       "id": "performance-engineer",
       "canonical_id": "performance-engineer",
       "name": "performance-engineer",
@@ -51968,6 +53595,42 @@
         "observability"
       ],
       "path": "skills/performance-engineer/SKILL.md"
+    },
+    {
+      "id": "performance-management",
+      "canonical_id": "performance-management",
+      "name": "performance-management",
+      "description": "Performance review register: review type, period, employee and reviewer, KPI, OKR and behaviour scores, overall rating, PIP and promotion flags, development plan. Use for performance reviews.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "manage",
+        "performance",
+        "review",
+        "register",
+        "type"
+      ],
+      "path": "skills/performance-management/SKILL.md"
     },
     {
       "id": "performance-optimization",
@@ -52194,6 +53857,44 @@
         "scratch"
       ],
       "path": "skills/personal-tool-builder/SKILL.md"
+    },
+    {
+      "id": "petty-cash-management",
+      "canonical_id": "petty-cash-management",
+      "name": "petty-cash-management",
+      "description": "Petty cash register: entry number, date and type, payee and purpose, cash in and out, running balance, cash limit flag, custodian, physical count and variance. Use for petty cash.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "petty-cash",
+        "cash-control"
+      ],
+      "triggers": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "petty-cash",
+        "cash-control",
+        "petty",
+        "cash"
+      ],
+      "path": "skills/petty-cash-management/SKILL.md"
     },
     {
       "id": "phase-gated-debugging",
@@ -52916,6 +54617,42 @@
       "path": "skills/polars/SKILL.md"
     },
     {
+      "id": "policy-acknowledgement",
+      "canonical_id": "policy-acknowledgement",
+      "name": "policy-acknowledgement",
+      "description": "Policy acknowledgement register: employee, policy and version, sent and due dates, acknowledged date and flag, days overdue, reminder sent and status. Use for policy sign-off tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "foundation"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "foundation",
+        "policy",
+        "acknowledgement",
+        "register",
+        "employee"
+      ],
+      "path": "skills/policy-acknowledgement/SKILL.md"
+    },
+    {
       "id": "policy-as-code",
       "canonical_id": "policy-as-code",
       "name": "policy-as-code",
@@ -52947,6 +54684,42 @@
         "enforcing"
       ],
       "path": "skills/policy-as-code/SKILL.md"
+    },
+    {
+      "id": "policy-library",
+      "canonical_id": "policy-library",
+      "name": "policy-library",
+      "description": "Policy register: name, version, category, owner and approver, applies to, compliance framework, acknowledgement requirement, effective date and next review. Use for policy management.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "foundation"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "foundation",
+        "policy",
+        "library",
+        "register",
+        "name"
+      ],
+      "path": "skills/policy-library/SKILL.md"
     },
     {
       "id": "polis-protocol",
@@ -53634,6 +55407,42 @@
       "path": "skills/pr-writer/SKILL.md"
     },
     {
+      "id": "pre-boarding",
+      "canonical_id": "pre-boarding",
+      "name": "pre-boarding",
+      "description": "Pre-boarding checklist: task, employee and department, owner, category, joining and due dates, documents received, laptop, email and account-record readiness, status. Use for pre-boarding.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "onboard",
+        "pre",
+        "boarding",
+        "checklist",
+        "task"
+      ],
+      "path": "skills/pre-boarding/SKILL.md"
+    },
+    {
       "id": "pre-release-review",
       "canonical_id": "pre-release-review",
       "name": "pre-release-review",
@@ -53735,6 +55544,46 @@
         "websites"
       ],
       "path": "skills/premium-3d-website/SKILL.md"
+    },
+    {
+      "id": "presentation-deck",
+      "canonical_id": "presentation-deck",
+      "name": "presentation-deck",
+      "description": "Build an evidence-linked slide register after context-first intake. Use when an SME needs a presentation deck, speaker notes, or a structured business story.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "presentation",
+        "deck",
+        "pitch",
+        "slides",
+        "storytelling",
+        "speaker-notes",
+        "data-source",
+        "brand-kit",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "presentation",
+        "deck",
+        "pitch",
+        "slides",
+        "storytelling",
+        "speaker-notes",
+        "data-source",
+        "brand-kit",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "path": "skills/presentation-deck/SKILL.md"
     },
     {
       "id": "price-psychology-strategist",
@@ -58605,6 +60454,116 @@
       "path": "skills/saga-orchestration/SKILL.md"
     },
     {
+      "id": "salary-benchmarking",
+      "canonical_id": "salary-benchmarking",
+      "name": "salary-benchmarking",
+      "description": "Salary benchmark register: role, department and grade against market and internal minimum, median and maximum. Use for compensation review.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "acquire"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "acquire",
+        "salary",
+        "benchmarking",
+        "benchmark",
+        "register"
+      ],
+      "path": "skills/salary-benchmarking/SKILL.md"
+    },
+    {
+      "id": "salary-wage-accounting",
+      "canonical_id": "salary-wage-accounting",
+      "name": "salary-wage-accounting",
+      "description": "Payroll register: gross, allowances, TDS and provident fund deductions, net pay, payment date and statutory reconciliation. Use for salary accounting.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "payroll"
+      ],
+      "triggers": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "payroll",
+        "salary",
+        "wage",
+        "register"
+      ],
+      "path": "skills/salary-wage-accounting/SKILL.md"
+    },
+    {
+      "id": "sales-accounting",
+      "canonical_id": "sales-accounting",
+      "name": "sales-accounting",
+      "description": "Sales register: customer, invoice, gross amount, discount, VAT and TDS, net receivable, credit terms and balance. Use for sales accounting.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "sales"
+      ],
+      "triggers": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "sales",
+        "register",
+        "customer",
+        "invoice"
+      ],
+      "path": "skills/sales-accounting/SKILL.md"
+    },
+    {
       "id": "sales-automator",
       "canonical_id": "sales-automator",
       "name": "sales-automator",
@@ -60942,6 +62901,47 @@
       "path": "skills/seo-dataforseo/SKILL.md"
     },
     {
+      "id": "seo-directory-backlinks",
+      "canonical_id": "seo-directory-backlinks",
+      "name": "seo-directory-backlinks",
+      "description": "Directory and backlink register: platform, domain, target URL, follow attribute, authority and spam scores, approval and NAP-match status. Use for SEO citation tracking.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "seo",
+        "backlinks",
+        "citations",
+        "directories",
+        "local-seo",
+        "nap-consistency",
+        "link-building",
+        "spam",
+        "digital-pr",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "seo",
+        "backlinks",
+        "citations",
+        "directories",
+        "local-seo",
+        "nap-consistency",
+        "link-building",
+        "spam",
+        "digital-pr",
+        "csv",
+        "sql"
+      ],
+      "path": "skills/seo-directory-backlinks/SKILL.md"
+    },
+    {
       "id": "seo-drift",
       "canonical_id": "seo-drift",
       "name": "seo-drift",
@@ -62323,6 +64323,42 @@
       "path": "skills/skill-developer/SKILL.md"
     },
     {
+      "id": "skill-gap-analysis",
+      "canonical_id": "skill-gap-analysis",
+      "name": "skill-gap-analysis",
+      "description": "Skill gap register: employee, skill area, current against required level, gap severity and recommended training. Use for capability planning.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "develop",
+        "skill",
+        "gap",
+        "analysis",
+        "register"
+      ],
+      "path": "skills/skill-gap-analysis/SKILL.md"
+    },
+    {
       "id": "skill-improver",
       "canonical_id": "skill-improver",
       "name": "skill-improver",
@@ -63117,6 +65153,47 @@
       "path": "skills/social-content/SKILL.md"
     },
     {
+      "id": "social-media-setup",
+      "canonical_id": "social-media-setup",
+      "name": "social-media-setup",
+      "description": "Social media register: platforms and handles, post captions and hashtags, publishing cadence, approval status and profile checklist. Use for social account setup.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "social-media",
+        "facebook",
+        "linkedin",
+        "tiktok",
+        "facebook-page",
+        "content-calendar",
+        "profile",
+        "cadence",
+        "brand-voice",
+        "csv",
+        "sql",
+        "notion"
+      ],
+      "triggers": [
+        "sme",
+        "social-media",
+        "facebook",
+        "linkedin",
+        "tiktok",
+        "facebook-page",
+        "content-calendar",
+        "profile",
+        "cadence",
+        "brand-voice",
+        "csv",
+        "sql"
+      ],
+      "path": "skills/social-media-setup/SKILL.md"
+    },
+    {
       "id": "social-metadata-hardening",
       "canonical_id": "social-metadata-hardening",
       "name": "social-metadata-hardening",
@@ -63333,6 +65410,42 @@
       "path": "skills/solidity-security/SKILL.md"
     },
     {
+      "id": "sop-company-wiki",
+      "canonical_id": "sop-company-wiki",
+      "name": "sop-company-wiki",
+      "description": "SOP and company wiki register: title, category, department, owner, version, priority and review dates. Use for process documentation.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "foundation"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "foundation",
+        "sop",
+        "company",
+        "wiki",
+        "register"
+      ],
+      "path": "skills/sop-company-wiki/SKILL.md"
+    },
+    {
       "id": "sops-encryption",
       "canonical_id": "sops-encryption",
       "name": "sops-encryption",
@@ -63357,6 +65470,43 @@
         "mozilla"
       ],
       "path": "skills/sops-encryption/SKILL.md"
+    },
+    {
+      "id": "source-document-filing",
+      "canonical_id": "source-document-filing",
+      "name": "source-document-filing",
+      "description": "Source document register: document type and number, party, amount, index key, storage location, retention period and verification. Use for document filing.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "filing"
+      ],
+      "triggers": [
+        "sme",
+        "accounting",
+        "audit",
+        "finance",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "filing",
+        "source",
+        "document",
+        "register"
+      ],
+      "path": "skills/source-document-filing/SKILL.md"
     },
     {
       "id": "source-driven-development",
@@ -63583,6 +65733,42 @@
         "control"
       ],
       "path": "skills/spline-3d-integration/SKILL.md"
+    },
+    {
+      "id": "spreadsheet-manual-build",
+      "canonical_id": "spreadsheet-manual-build",
+      "name": "spreadsheet-manual-build",
+      "description": "Spreadsheet Manual Build: an empty Excel workbook or CSV from a confirmed field list, formatted and validated. Use for an xlsx template or a manual register.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "spreadsheet",
+        "excel",
+        "xlsx",
+        "workbook",
+        "manual",
+        "operations",
+        "template",
+        "helper"
+      ],
+      "triggers": [
+        "spreadsheet",
+        "excel",
+        "xlsx",
+        "workbook",
+        "manual",
+        "operations",
+        "template",
+        "helper",
+        "empty",
+        "csv",
+        "confirmed",
+        "field"
+      ],
+      "path": "skills/spreadsheet-manual-build/SKILL.md"
     },
     {
       "id": "sql-injection-testing",
@@ -64041,6 +66227,42 @@
         "ultra"
       ],
       "path": "skills/stability-ai/SKILL.md"
+    },
+    {
+      "id": "stakeholder-investor-reports",
+      "canonical_id": "stakeholder-investor-reports",
+      "name": "stakeholder-investor-reports",
+      "description": "Stakeholder report register: stakeholder, period, key metrics, preparer, approver, send date and report link. Use for investor and board reporting.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/sme-ops-system-builder",
+      "tags": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "analyze"
+      ],
+      "triggers": [
+        "sme",
+        "business",
+        "operations",
+        "database",
+        "csv",
+        "notion",
+        "sql",
+        "analyze",
+        "stakeholder",
+        "investor",
+        "reports",
+        "report"
+      ],
+      "path": "skills/stakeholder-investor-reports/SKILL.md"
     },
     {
       "id": "startup-analyst",
