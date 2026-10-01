@@ -126,7 +126,7 @@ def validate(config: dict) -> list[str]:
     if not isinstance(field, dict):
         errors.append("field must be an object")
         field = {}
-    for key in ("scale", "octaves", "warpStrength", "motionSpeed", "staticTime", "ditherStrength", "luminanceCap"):
+    for key in ("scale", "octaves", "warpStrength", "motionSpeed", "staticTime", "ditherStrength"):
         require(key in field, f"field missing {key}", errors)
     check_range(field.get("scale"), 0, float("inf"), "field.scale must be positive", errors, lower_inclusive=False)
     octaves = field.get("octaves")
@@ -139,8 +139,35 @@ def validate(config: dict) -> list[str]:
     check_range(field.get("motionSpeed"), 0, float("inf"), "field.motionSpeed must be finite and nonnegative", errors)
     check_finite(field.get("staticTime"), "field.staticTime must be a finite number", errors)
     check_range(field.get("ditherStrength"), 0, 1, "field.ditherStrength must be in [0, 1]", errors)
-    check_range(field.get("luminanceCap"), 0, 1, "field.luminanceCap must be in (0, 1]", errors, lower_inclusive=False)
+    if config["mode"] == "obsidian" or "luminanceCap" in field:
+        check_range(field.get("luminanceCap"), 0, 1, "field.luminanceCap must be in (0, 1]", errors, lower_inclusive=False)
     return errors
+
+
+def hue_travel(hues: list[float]) -> float:
+    steps = (abs(a - b) % 360 for a, b in zip(hues, hues[1:] + hues[:1]))
+    return sum(min(step, 360 - step) for step in steps)
+
+
+def best_hue_travel(hues: list[float]) -> float:
+    ordered = sorted(h % 360 for h in hues)
+    widest = max([b - a for a, b in zip(ordered, ordered[1:])] + [ordered[0] + 360 - ordered[-1]])
+    return 360.0 if widest <= 180 else 2 * (360 - widest)
+
+
+def collect_warnings(config: dict) -> list[str]:
+    notes: list[str] = []
+    colors = config.get("colors", [])
+    hues = [float(color.get("oklch", {}).get("h", 0)) for color in colors]
+    if len(hues) >= 3:
+        travel, best = hue_travel(hues), best_hue_travel(hues)
+        if travel > best * 1.1:
+            notes.append(
+                f"colors are not in hue order: neighbor hue steps add up to {travel:.0f} degrees, "
+                f"the best order gives {best:.0f}. The renderer mixes each color with its array "
+                "neighbors, and near-complementary neighbors mix toward gray."
+            )
+    return notes
 
 
 def main() -> None:
@@ -162,7 +189,11 @@ def main() -> None:
     if errors:
         print(json.dumps({"status": "invalid", "errors": errors}, ensure_ascii=False, indent=2))
         sys.exit(1)
-    print(json.dumps({"status": "valid", "mode": config["mode"], "preset": config["preset"], "colors": len(config["colors"])}, ensure_ascii=False, indent=2))
+    report = {"status": "valid", "mode": config["mode"], "preset": config["preset"], "colors": len(config["colors"])}
+    notes = collect_warnings(config)
+    if notes:
+        report["warnings"] = notes
+    print(json.dumps(report, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
