@@ -44,7 +44,7 @@ Read [style-contract.md](references/style-contract.md) before choosing a mode or
 
 - Choose a neutral, information-dense workbench domain such as field research, inventory, monitoring, or operations.
 - Use a continuous three-pane or similarly coherent workspace: navigation, queue/list, detail, metadata, and one signature observation band.
-- Keep color in the field, ribbon, markers, and state accents; keep text, controls, boundaries, and semantic hierarchy stable.
+- Keep color in the field, map markers, and state accents. Keep the logo, avatar, rules, text, controls, boundaries, and semantic hierarchy neutral; do not paint them with palette gradients.
 - Prefer restrained surfaces and weak fills. Avoid turning every region into a floating card.
 
 ### 4. Implement the parameter contract
@@ -58,16 +58,18 @@ Maintain a serializable manifest with these top-level fields:
   base: { oklch },
   colors: [{
     id, label, oklch, srgbFallback,
-    intensity, peakOpacity, lightnessBias,
+    intensity, peakOpacity,
     fieldScale, phase,
     measuredCoverage, effectiveShare
   }],
   field: { scale, octaves, warpStrength, motionSpeed, staticTime, ditherStrength, luminanceCap },
-  output: { colorSpace, p3Enhancement, reducedMotion }
+  output: { colorSpace, reducedMotion }
 }
 ```
 
-- Keep every intensity in `[0, 1]`; make `overallColorIntensity` the global budget and `colors[].intensity` the per-color budget.
+- Keep every intensity in `[0, 1]`; make `overallColorIntensity` the global budget and `colors[].intensity` the per-color budget. The renderer multiplies `intensity` by `peakOpacity`, so treat `peakOpacity` as the calibrated strength at full intensity.
+- Order `colors` by hue. The renderer draws six hue stops around a loop and mixes each color with its array neighbors; near-complementary neighbors mix toward gray.
+- `luminanceCap` applies only in `obsidian`. `ditherStrength` is the dither amplitude in output codes; `1` removes quantization bias.
 - Use OKLCH as the authoring space and provide an sRGB fallback for non-OKLCH contexts.
 - Keep the seed, static frame, phases, and field scales deterministic; do not use random per render.
 - Expose sliders for the global intensity and every configured color. Make reset, JSON export, and copy actions available.
@@ -77,8 +79,10 @@ Maintain a serializable manifest with these top-level fields:
 - Use a procedural fBm/domain-warp field or an equivalent continuous field; keep it behind the interface with `pointer-events: none`.
 - Use broad flowing hue regions or ribbons, not obvious radial blobs, spotlight circles, or hard rainbow bands.
 - Upload the complete palette and per-color field scales to the renderer. Apply the dark-mode luminance cap after palette mixing.
-- Provide a CSS fallback with comparable visual intent when WebGL is unavailable.
-- Pause or freeze motion when the document is hidden or `prefers-reduced-motion` is active.
+- Encode output with the sRGB transfer function, dither in output codes, and quantize in the shader. A power-curve encode or a weak linear-light dither biases the output, most visibly in low-intensity fields and near black.
+- Provide a CSS fallback with comparable visual intent when WebGL is unavailable, such as one soft hue-ordered sweep calibrated against the WebGL field; do not use fixed radial spots.
+- Pause or freeze motion when the document is hidden or `prefers-reduced-motion` is active, and keep field time continuous so pausing and resuming do not jump.
+- Repaint after every resize. Resizing clears the canvas, and a paused field has no next frame to redraw it.
 - Keep the renderer local and dependency-light; do not require remote fonts, images, or APIs for the starter.
 
 ### 6. Preserve interaction and accessibility
@@ -90,13 +94,10 @@ Maintain a serializable manifest with these top-level fields:
 ### 7. Validate and report
 
 - Scaffold a clean starter with `scripts/scaffold_template.py` when a neutral implementation is needed.
-- The bundled helpers parse only the restricted data-literal assignment used by
-  the starter. They reject expressions, function calls, duplicate keys,
-  unsupported syntax, trailing statements, and oversized manifests without
-  executing JavaScript. Keep runtime theme configs data-only as well.
-- Run `scripts/validate_manifest.py` on each theme config before rendering.
-- Capture desktop and mobile screenshots with a real browser. Inspect them directly if visual capability is available.
-- Run `scripts/measure_preview.py` on the pure field screenshot and retain measured chromatic ratio, luminance statistics, per-color coverage, and effective share.
+- Keep theme configs as data-only assignments. The bundled parser rejects expressions, function calls, duplicate keys, trailing statements, and oversized manifests without executing JavaScript.
+- Run `scripts/validate_manifest.py` on each theme config before rendering, and resolve its warnings.
+- Serve previews with `scripts/serve_preview.py`, which disables caching, then capture desktop and mobile screenshots with a real browser. Inspect them directly if visual capability is available.
+- Run `scripts/measure_preview.py` on the pure field screenshot and retain measured chromatic ratio, tint, lightness shift, gray ratio, per-color coverage, and effective share.
 - Report configured parameters separately from measured values; do not imply that pixel attribution is an exact shader contribution.
 - Use `partial`, `visual-unverified`, or `blocked` when a required capability or native check is unavailable.
 
@@ -123,14 +124,17 @@ Use the bundled starter under `assets/starter/` as a neutral base. Copy only the
 ### scripts/
 
 - `scaffold_template.py`: copy the neutral starter for `opal`, `obsidian`, or both.
-- `manifest_parser.py`: statically parse the restricted data-only manifest grammar without executing JavaScript.
-- `validate_manifest.py`: validate required manifest fields and ranges.
-- `measure_preview.py`: measure a rendered pure-field PNG against the configured OKLCH palette.
+- `manifest_parser.py`: statically parse the restricted data-only theme manifest without executing JavaScript.
+- `validate_manifest.py`: validate required fields and ranges, and warn about hue order.
+- `measure_preview.py`: measure a rendered pure-field PNG as OKLab deviation from the configured base, including lightness shift and gray ratio. Install optional dependencies from `scripts/requirements.txt` when needed.
+- `serve_preview.py`: serve a directory locally with caching disabled.
+
+Run `python -m unittest discover -s tests` after changing a script.
 
 ### references/
 
-- `style-contract.md`: mode-specific visual rules and recommended parameter ranges.
-- `verification.md`: visual-capability gate, browser QA, pixel measurement, and report schema.
+- `style-contract.md`: mode-specific visual rules, recommended parameter ranges, and calibration for pages where no panel covers the field.
+- `verification.md`: visual-capability gate, browser QA, pixel measurement, darkening check, and report schema.
 
 ### assets/
 

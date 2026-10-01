@@ -1,0 +1,14 @@
+# DECISIONS — {{PRODUCT_NAME}}
+
+> One entry per decision, newest last. Blueprint decision records are copied here in E00 so this is the single place to look.
+> Format: context → options → decision → consequences. Keep each under 15 lines.
+
+## DR-01 — {{Title, e.g. "Stack: <language/framework>"}}
+- Date: {{YYYY-MM-DD}} · Epic: E00 · Source: BLUEPRINT §4 / §13
+- Context: 
+- Options considered: 
+- Decision: 
+- Consequences / follow-ups: 
+- Evidence: [VERIFIED — S-nn, date]
+
+## DR-02 — 
