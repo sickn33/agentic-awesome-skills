@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.11.0] - 2026-10-01 - "Repository Engineering, Blueprint Planning, and a Cleaner Contributor Pipeline"
+
+> Adds **8** reviewed skills - repository-native engineering, evidence-backed blueprint planning, and a five-skill English productivity pack - refreshes the spectral-field skill and the hosted catalog, and closes every open dependency advisory. Ships **2,610** skills.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the complete protected maintainer batch merged after `18.10.0`, with existing installation interfaces preserved.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.11.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **Repository engineering pair (#1727)** - `repo-foundation` implements features, fixes, and authorized contract migrations inside a repository's existing conventions, preserving user edits and establishing failure invariants before persisted-state changes. `repo-native-refactor` reviews a diff without editing, or performs evidence-based cleanup bounded by risk band R0-R4. Both are `risk: critical` and carry explicit stop conditions for unresolved ownership or contract consequences. MIT, adapted from [Natchannnn/repository-engineering-skills](https://github.com/Natchannnn/repository-engineering-skills).
+- **idea-to-blueprint (#1742)** - turns a raw product idea into one evidence-backed Markdown build blueprint: intake questions, a tiered research protocol, ranked architecture drivers, a version-pinned stack, personas and flows, epics with Given/When/Then acceptance criteria, and a session protocol that lets a coding agent build one epic per fresh session. Ships a stdlib-only `lint_blueprint.py` that validates the finished document without executing it. `risk: safe`, MIT, authored by [@iniesohidham](https://github.com/iniesohidham).
+- **English productivity pack (#1741)** - five focused English skills from [alapha888/agent-skills-en](https://github.com/alapha888/agent-skills-en) (MIT): `deep-research-framework` tiers sources and cross-verifies before writing conclusion-first reports with explicit uncertainty; `five-axis-code-review` walks correctness, security, readability, performance, and test coverage and returns actionable comments instead of style nitpicks; `git-commit-message` writes conventional commits from the staged diff; `meeting-notes` turns raw notes into decisions, owned action items, and open questions; `tech-writing-proofread` returns an Original -> Suggestion -> Reason checklist without rewriting the document. All `risk: safe`.
+
+### Changed
+
+- **liuguang-banlan-ui spectral field (#1743)** - refreshes the two parameterized UI modes with a calibrated palette contract, an sRGB-encoded shader with output-code dithering, a CSS fallback that stays hue-ordered instead of using fixed radial spots, continuous field time across pause/resume, and a repaint on resize. Adds a data-only manifest parser and validator, a deterministic measurement helper reporting OKLab deviation, lightness shift, and gray ratio, a caching-disabled preview server, and focused Python tests. `risk: critical`.
+- **Hosted catalog analytics (#1744)** - installs `@vercel/analytics` and mounts `<Analytics />` inside the router so page views are tracked across the catalog routes.
+- **youtube-summarizer output template (#1722)** - switches the remaining Portuguese labels in the summary template to English, matching the rest of the template.
+- **React 19.3.0 (#1738, #1746)** - aligns `react` and `react-dom` at 19.3.0 in the catalog web app and in the `loki-mode` example frontend, so both packages always share the same version.
+- **Top Contributor rankings (#1724)** - adds `npm run sync:top-contributors` and its regression test, so the README ranking is recomputed from git history instead of being hand-maintained.
+- **Maintainer SkillSpector guidance (#1732)** - calibrates how SkillSpector advisory findings are triaged in the canonical maintainer skill.
+
+### Fixed
+
+- **typescript-expert diagnostic script (#1730)** - removes `shell=True` from `ts_diagnostic.py`, so TypeScript project paths are passed as arguments rather than interpolated into a shell command.
+
+### Documentation and community
+
+- Added the `Natchannnn/repository-engineering-skills`, `iniesohidham/idea-to-blueprint`, and `alapha888/agent-skills-en` source credits to the README.
+- Thanks to [@iniesohidham](https://github.com/iniesohidham) for `idea-to-blueprint`, [@Natchannnn](https://github.com/Natchannnn) for the repository-engineering pair, [@alapha888](https://github.com/alapha888) for the English productivity pack, [@3516027002att-ui](https://github.com/3516027002att-ui) for the `liuguang-banlan-ui` spectral-field refresh, and [@ManiShah7](https://github.com/ManiShah7) for the `youtube-summarizer` template cleanup.
+- Closed every open dependency-upgrade proposal as either merged or superseded, and the repository now reports zero open Dependabot alerts.
+
+### Validation scope
+
+Exact-head maintainer review for changed skill content, protected source PRs, repository validation and tests, reference validation, docs security, protected CI and CodeQL, dependency review, canonical synchronization, release preflight, npm publication, and release provenance verification.
+
 ## [18.10.0] - 2026-09-30 - "SME Operations, 15 Official Beatra Skills, and Four New Advisories Closed"
 
 > Adds **124** reviewed skills - a complete SME operations catalog and fifteen official Beatra media skills - hardens the protected maintainer gates, closes ten Dependabot advisories, and ships **2,602** skills.
