@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-30T03:52:46.000Z
 
-Total skills: 2604
+Total skills: 2605
 
 ## agent-behavior (5)
 
@@ -2316,7 +2316,7 @@ Total skills: 2604
 | `quit-sponsor` | Helps an AI agent provide non-judgmental, evidence-informed quit-smoking support with user-consented tracking, craving check-ins, and escalation to human or ... | safe | metrox-eth/quit-sponsor | quit-smoking, smoking-cessation, health, habits, addiction-recovery, wellbeing, coaching | quit-smoking, smoking-cessation, health, habits, addiction-recovery, wellbeing, coaching, quit, sponsor, helps, ai, agent |
 | `satori` | Clinically informed wisdom companion blending psychology and philosophy into a structured thinking partner | safe | MetcalfSolutions/Satori | mental-health, psychology, wisdom, philosophy, ifs, stoicism, jungian, conversation | mental-health, psychology, wisdom, philosophy, ifs, stoicism, jungian, conversation, satori, clinically, informed, companion |
 
-## planning (11)
+## planning (12)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2324,6 +2324,7 @@ Total skills: 2604
 | `concise-planning` | Use when a user asks for a plan for a coding task, to generate a clear, actionable, and atomic checklist. | safe | community | concise, planning | concise, planning, user, asks, plan, coding, task, generate, clear, actionable, atomic, checklist |
 | `decision-navigator` | Guide stuck or overwhelmed users through targeted branching questions until they reach concrete next steps. | safe | community | decision, navigator | decision, navigator, stuck, overwhelmed, users, through, targeted, branching, questions, until, reach, concrete |
 | `idea-refine` | Refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to str... | critical | addyosmani/agent-skills | idea, refine | idea, refine, refines, raw, ideas, sharp, actionable, concepts, through, structured, divergent, convergent |
+| `idea-to-blueprint` | Turn a raw product, app, bot or feature idea into one evidence-backed build blueprint (researched stack, epics, Given/When/Then criteria, tests) that coding ... | safe | iniesohidham/idea-to-blueprint | prd, specification, product-planning, user-stories, acceptance-criteria, tech-stack, agentic-engineering | prd, specification, product-planning, user-stories, acceptance-criteria, tech-stack, agentic-engineering, idea, blueprint, turn, raw, product |
 | `not-a-vibe-coder` | Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases. | critical | community | not, a, vibe, coder | not, a, vibe, coder, turns, vague, prompts, structured, planning, files, brand, new |
 | `plan-writing` | Structured task planning with clear breakdowns, dependencies, and verification criteria. Use when implementing features, refactoring, or any multi-step work. | critical | community | plan, writing | plan, writing, structured, task, planning, clear, breakdowns, dependencies, verification, criteria, implementing, features |
 | `planning-and-task-breakdown` | Breaks work into ordered tasks. Use when you have a spec or clear requirements and need to break work into implementable tasks. Use when a task feels too lar... | none | addyosmani/agent-skills | planning, and, task, breakdown | planning, and, task, breakdown, breaks, work, ordered, tasks, spec, clear, requirements, break |
