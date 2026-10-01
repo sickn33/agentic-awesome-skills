@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Link, NavLink, Route, Routes } from 'react-router';
+import { Analytics } from '@vercel/analytics/react';
 import { Icon } from './components/ui/Icon';
 import { toIndexableRoutePath } from './utils/seo';
 
@@ -123,6 +124,7 @@ function App(): React.ReactElement {
           </nav>
         </footer>
       </div>
+      <Analytics />
     </Router>
   );
 }
