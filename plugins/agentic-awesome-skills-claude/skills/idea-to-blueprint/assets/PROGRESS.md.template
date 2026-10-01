@@ -1,0 +1,47 @@
+# PROGRESS — {{PRODUCT_NAME}}
+
+> State file, not a diary. The agent reads this first in every session and updates it before handoff.
+> Source of truth for *what* to build: `docs/BLUEPRINT.md`. For *why*: `docs/DECISIONS.md`.
+
+## Current position
+- Active epic: E00 — Foundation
+- Last green `check` commit: (none yet)
+- Staging URL: (set in E00)
+- Blockers: none
+
+## Epic status
+| Epic | Title | Status | Started | Done | Notes |
+|---|---|---|---|---|---|
+| E00 | Foundation | NOT STARTED | | | |
+| E01 | {{EPIC_01_TITLE}} | NOT STARTED | | | |
+<!-- one row per epic from BLUEPRINT §16. Status values: NOT STARTED · IN PROGRESS · DONE · BLOCKED -->
+
+## Story status and AC evidence
+<!-- For each story: status + one evidence line per AC. Evidence = passing test name in `check`, or manual check with date and observation. -->
+### E00
+- E00-S01 — NOT STARTED
+  - AC-1: —
+  - AC-2: —
+
+## VERIFY-AT-BUILD results
+| Item | Needed by | Checked (date) | Result | Notes |
+|---|---|---|---|---|
+| {{e.g. INT-sms sandbox reachable}} | E02 | | | |
+
+## Deviations and amendments
+| # | Date | Epic/Story | What changed | Why | Amendment ID (BLUEPRINT §18) |
+|---|---|---|---|---|---|
+
+## Accepted risks (skipped edge cases / tests) — each needs an owner and a revisit trigger
+| # | Story | Edge case / test | Reason | Owner | Revisit when |
+|---|---|---|---|---|---|
+
+## Parking lot (ideas out of scope — do NOT build)
+- 
+
+## Preconditions for the next epic
+- (filled by the agent at handoff: env vars, accounts, credentials, manual steps the user must do)
+
+## Session log (one line per session)
+| Date | Epic | Outcome | Final commit |
+|---|---|---|---|

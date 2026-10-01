@@ -32572,6 +32572,41 @@
     "license_source": "https://github.com/addyosmani/agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "idea-to-blueprint",
+    "path": "skills/idea-to-blueprint",
+    "category": "planning",
+    "name": "idea-to-blueprint",
+    "description": "Turn a raw product, app, bot or feature idea into one evidence-backed build blueprint (researched stack, epics, Given/When/Then criteria, tests) that coding agents build one epic per session.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-09-30",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "source_repo": "iniesohidham/idea-to-blueprint",
+    "license": "MIT",
+    "license_source": "https://github.com/iniesohidham/idea-to-blueprint/blob/main/LICENSE",
+    "tags": [
+      "prd",
+      "specification",
+      "product-planning",
+      "user-stories",
+      "acceptance-criteria",
+      "tech-stack",
+      "agentic-engineering"
+    ]
+  },
+  {
     "id": "identity-access-management",
     "path": "skills/identity-access-management",
     "category": "devops",
