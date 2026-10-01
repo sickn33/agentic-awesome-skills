@@ -18975,6 +18975,37 @@
     }
   },
   {
+    "id": "deep-research-framework",
+    "path": "skills/deep-research-framework",
+    "category": "research",
+    "name": "deep-research-framework",
+    "description": "Framework for deep research reports: define the question and tier sources first, cross-verify, then write conclusion-first reports with explicit uncertainty statements. Use when the user asks for a research report, topic investigation, or competitive analysis.",
+    "risk": "safe",
+    "source": "https://github.com/alapha888/agent-skills-en",
+    "date_added": "2026-10-01",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "alapha888/agent-skills-en",
+    "license": "MIT",
+    "license_source": "https://github.com/alapha888/agent-skills-en/blob/main/LICENSE",
+    "tags": [
+      "research-reports",
+      "source-verification",
+      "analysis"
+    ]
+  },
+  {
     "id": "deepapi",
     "path": "skills/deepapi",
     "category": "research",
@@ -24727,6 +24758,37 @@
     }
   },
   {
+    "id": "five-axis-code-review",
+    "path": "skills/five-axis-code-review",
+    "category": "development",
+    "name": "five-axis-code-review",
+    "description": "Five-axis code review checklist (correctness, security, readability, performance, test coverage) producing actionable comments instead of style nitpicks. Use when the user asks to review code, a diff, or a pull request.",
+    "risk": "safe",
+    "source": "https://github.com/alapha888/agent-skills-en",
+    "date_added": "2026-10-01",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "alapha888/agent-skills-en",
+    "license": "MIT",
+    "license_source": "https://github.com/alapha888/agent-skills-en/blob/main/LICENSE",
+    "tags": [
+      "code-review",
+      "code-quality",
+      "pull-requests"
+    ]
+  },
+  {
     "id": "fix-review",
     "path": "skills/fix-review",
     "category": "code-quality",
@@ -27551,6 +27613,37 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "git-commit-message",
+    "path": "skills/git-commit-message",
+    "category": "development",
+    "name": "git-commit-message",
+    "description": "Generates conventional-commit messages from staged changes: type prefix + English imperative subject (\u226450 chars) + optional body explaining why. Use when the user asks to write, generate, or polish a git commit message.",
+    "risk": "safe",
+    "source": "https://github.com/alapha888/agent-skills-en",
+    "date_added": "2026-10-01",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "alapha888/agent-skills-en",
+    "license": "MIT",
+    "license_source": "https://github.com/alapha888/agent-skills-en/blob/main/LICENSE",
+    "tags": [
+      "git",
+      "commit-messages",
+      "conventional-commits"
+    ]
   },
   {
     "id": "git-hooks-automation",
@@ -39548,6 +39641,37 @@
       "action-items",
       "summary",
       "corporate"
+    ]
+  },
+  {
+    "id": "meeting-notes",
+    "path": "skills/meeting-notes",
+    "category": "productivity",
+    "name": "meeting-notes",
+    "description": "Turns raw meeting notes into structured minutes: conclusion first, then decisions / action items / open questions; every action item must have an owner and a deadline. Use when the user pastes meeting transcripts or rough notes and asks for minutes or a summary.",
+    "risk": "safe",
+    "source": "https://github.com/alapha888/agent-skills-en",
+    "date_added": "2026-10-01",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "alapha888/agent-skills-en",
+    "license": "MIT",
+    "license_source": "https://github.com/alapha888/agent-skills-en/blob/main/LICENSE",
+    "tags": [
+      "meetings",
+      "minutes",
+      "action-items"
     ]
   },
   {
@@ -58725,6 +58849,37 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "tech-writing-proofread",
+    "path": "skills/tech-writing-proofread",
+    "category": "writing",
+    "name": "tech-writing-proofread",
+    "description": "Proofreads English technical writing for typos, grammar, punctuation, terminology consistency, jargon, and structure; returns an itemized Original \u2192 Suggestion \u2192 Reason list without rewriting the document. Use when asked to proofread or polish a technical doc, README, or blog draft.",
+    "risk": "safe",
+    "source": "https://github.com/alapha888/agent-skills-en",
+    "date_added": "2026-10-01",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "alapha888/agent-skills-en",
+    "license": "MIT",
+    "license_source": "https://github.com/alapha888/agent-skills-en/blob/main/LICENSE",
+    "tags": [
+      "proofreading",
+      "technical-writing",
+      "editing"
+    ]
   },
   {
     "id": "technical-change-tracker",

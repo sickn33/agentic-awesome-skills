@@ -14161,6 +14161,25 @@
       "runtime_files": []
     },
     {
+      "id": "deep-research-framework",
+      "path": "skills/deep-research-framework",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "deepapi",
       "path": "skills/deepapi",
       "targets": {
@@ -19273,6 +19292,25 @@
       "runtime_files": []
     },
     {
+      "id": "five-axis-code-review",
+      "path": "skills/five-axis-code-review",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "fix-review",
       "path": "skills/fix-review",
       "targets": {
@@ -21342,6 +21380,25 @@
     {
       "id": "git-advanced-workflows",
       "path": "skills/git-advanced-workflows",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "git-commit-message",
+      "path": "skills/git-commit-message",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -30041,6 +30098,25 @@
     {
       "id": "meeting-distiller-pro",
       "path": "skills/meeting-distiller-pro",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "meeting-notes",
+      "path": "skills/meeting-notes",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -44464,6 +44540,25 @@
       "runtime_files": []
     },
     {
+      "id": "tech-writing-proofread",
+      "path": "skills/tech-writing-proofread",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "technical-change-tracker",
       "path": "skills/technical-change-tracker",
       "targets": {
@@ -49994,10 +50089,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2605,
+    "total_skills": 2610,
     "supported": {
-      "codex": 2518,
-      "claude": 2543
+      "codex": 2523,
+      "claude": 2548
     },
     "blocked": {
       "codex": 87,

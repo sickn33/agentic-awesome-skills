@@ -2,7 +2,7 @@
 
 Generated at: 2026-09-30T03:52:46.000Z
 
-Total skills: 2605
+Total skills: 2610
 
 ## agent-behavior (5)
 
@@ -1315,7 +1315,7 @@ Total skills: 2605
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (216)
+## development (218)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1389,6 +1389,7 @@ Total skills: 2605
 | `error-diagnostics-error-trace` | You are an error tracking and observability expert specializing in implementing comprehensive error monitoring solutions. Set up error tracking systems, conf... | safe | community | error, diagnostics, trace | error, diagnostics, trace, tracking, observability, specializing, implementing, monitoring, solutions, set, up, configure |
 | `error-diagnostics-smart-debug` | Use when working with error diagnostics smart debug | critical | community | error, diagnostics, debug | error, diagnostics, debug, smart, working |
 | `error-handling-patterns` | Build resilient applications with robust error handling strategies that gracefully handle failures and provide excellent debugging experiences. | safe | community | error, handling | error, handling, resilient, applications, robust, gracefully, handle, failures, provide, excellent, debugging, experiences |
+| `five-axis-code-review` | Five-axis code review checklist (correctness, security, readability, performance, test coverage) producing actionable comments instead of style nitpicks. Use... | safe | alapha888/agent-skills-en | code-review, code-quality, pull-requests | code-review, code-quality, pull-requests, five, axis, code, review, checklist, correctness, security, readability, performance |
 | `folder-specific-claude-and-agents-md` | Create folder-scoped CLAUDE.md and AGENTS.md guidance for future agents working in that area. | critical | davidondrej/skills | agents-md, claude-md, documentation | agents-md, claude-md, documentation, folder, specific, claude, agents, md, scoped, guidance, future, working |
 | `fp-async` | Practical async patterns using TaskEither - clean pipelines instead of try/catch hell, with real API examples | critical | community | fp-ts, typescript, async, error-handling, practical, promises, api, fetch | fp-ts, typescript, async, error-handling, practical, promises, api, fetch, fp, taskeither, clean, pipelines |
 | `fp-backend` | Functional programming patterns for Node.js/Deno backend development using fp-ts, ReaderTaskEither, and functional dependency injection | critical | community | fp-ts, typescript, backend, functional-programming, node, deno, dependency-injection, reader-task-either | fp-ts, typescript, backend, functional-programming, node, deno, dependency-injection, reader-task-either, fp, functional, programming, js |
@@ -1409,6 +1410,7 @@ Total skills: 2605
 | `framework-migration-deps-upgrade` | You are a dependency management expert specializing in safe, incremental upgrades of project dependencies. Plan and execute dependency updates with minimal r... | critical | community | framework, migration, deps, upgrade | framework, migration, deps, upgrade, dependency, specializing, safe, incremental, upgrades, dependencies, plan, execute |
 | `framework-migration-legacy-modernize` | Orchestrate a comprehensive legacy system modernization using the strangler fig pattern, enabling gradual replacement of outdated components while maintainin... | critical | community | framework, migration, legacy, modernize | framework, migration, legacy, modernize, orchestrate, modernization, strangler, fig, enabling, gradual, replacement, outdated |
 | `gdb-cli` | GDB debugging assistant for AI agents - analyze core dumps, debug live processes, investigate crashes and deadlocks with source code correlation | critical | community | debugging, gdb, core-dump, crash-analysis, c++, c | debugging, gdb, core-dump, crash-analysis, c++, c, cli, assistant, ai, agents, analyze, core |
+| `git-commit-message` | Generates conventional-commit messages from staged changes: type prefix + English imperative subject (≤50 chars) + optional body explaining why. Use when the... | safe | alapha888/agent-skills-en | git, commit-messages, conventional-commits | git, commit-messages, conventional-commits, commit, message, generates, conventional, messages, staged, changes, type, prefix |
 | `global-chat-agent-discovery` | Discover and search 18K+ MCP servers and AI agents across 6+ registries using Global Chat's cross-protocol directory and MCP server. | safe | pumanitro/global-chat | mcp, ai-agents, agent-discovery, agents-txt, a2a, developer-tools | mcp, ai-agents, agent-discovery, agents-txt, a2a, developer-tools, global, chat, agent, discovery, discover, search |
 | `go-concurrency-patterns` | Master Go concurrency with goroutines, channels, sync primitives, and context. Use when building concurrent Go applications, implementing worker pools, or de... | safe | community | go, concurrency | go, concurrency, goroutines, channels, sync, primitives, context, building, concurrent, applications, implementing, worker |
 | `go-in-depth` | Go in depth harness — fan-out web searches, fetch sources, adversarially verify claims, synthesize a cited report. | safe | self | go, in, depth | go, in, depth, harness, fan, web, searches, fetch, sources, adversarially, verify, claims |
@@ -2358,7 +2360,7 @@ Total skills: 2605
 | --- | --- | --- | --- | --- | --- |
 | `idea-os` | Five-phase pipeline (triage → clarify → research → PRD → plan) that turns a raw idea into four linked files: clarifying questions, deep research, a PRD with ... | safe | Slashworks-biz/idea-os | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical, idea, os |
 
-## productivity (46)
+## productivity (47)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2394,6 +2396,7 @@ Total skills: 2605
 | `markdown-rendering` | Open Markdown reliably in cmux panes and recover from blank rendered surfaces. | safe | davidondrej/skills | markdown, cmux, rendering | markdown, cmux, rendering, open, reliably, panes, recover, blank, rendered, surfaces |
 | `mdpr-skill` | Review MDPR Markdown presentation workflows with semantic hints, visual checks, and deterministic renderer boundaries. | safe | ch040602/mdpr-skill | mdpr, presentations, markdown, powerpoint, codex, visual-review, agent-hints | mdpr, presentations, markdown, powerpoint, codex, visual-review, agent-hints, skill, review, presentation, semantic, hints |
 | `meeting-distiller-pro` | Transform messy meeting notes and transcripts into structured action items, decisions, and follow-ups. Never lose a meeting insight again. | unknown | demo112/yunqu-ai-skills | meeting, productivity, notes, action-items, summary, corporate | meeting, productivity, notes, action-items, summary, corporate, distiller, pro, transform, messy, transcripts, structured |
+| `meeting-notes` | Turns raw meeting notes into structured minutes: conclusion first, then decisions / action items / open questions; every action item must have an owner and a... | safe | alapha888/agent-skills-en | meetings, minutes, action-items | meetings, minutes, action-items, meeting, notes, turns, raw, structured, conclusion, first, then, decisions |
 | `obsidian-bases` | Create and edit Obsidian Bases (.base files) with views, filters, formulas, and summaries. Use when working with .base files, creating database-like views of... | critical | https://github.com/kepano/obsidian-skills | obsidian, bases | obsidian, bases, edit, base, files, views, filters, formulas, summaries, working, creating, database |
 | `obsidian-cli` | Use the Obsidian CLI to read, create, search, and manage vault content, or to develop and debug Obsidian plugins and themes from the command line. | critical | https://github.com/kepano/obsidian-skills | obsidian, cli | obsidian, cli, read, search, vault, content, develop, debug, plugins, themes, command, line |
 | `obsidian-clipper-template-creator` | Guide for creating templates for the Obsidian Web Clipper. Use when you want to create a new clipping template, understand available variables, or format cli... | safe | community | obsidian, clipper, creator | obsidian, clipper, creator, creating, web, want, new, clipping, understand, available, variables, format |
@@ -2488,10 +2491,11 @@ Total skills: 2605
 | `tune-monitor` | Analyze a Monte Carlo monitor and recommend config changes to reduce alert noise. Supports metric, custom SQL, validation, and table monitors. Fetches the re... | critical | monte-carlo-data/mc-agent-toolkit | tune, monitor | tune, monitor, analyze, monte, carlo, recommend, config, changes, reduce, alert, noise, supports |
 | `windows-shell-reliability` | Reliable command execution on Windows: paths, encoding, and common binary pitfalls. | safe | community | windows, shell, reliability | windows, shell, reliability, reliable, command, execution, paths, encoding, common, binary, pitfalls |
 
-## research (21)
+## research (22)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `deep-research-framework` | Framework for deep research reports: define the question and tier sources first, cross-verify, then write conclusion-first reports with explicit uncertainty ... | safe | alapha888/agent-skills-en | research-reports, source-verification, analysis | research-reports, source-verification, analysis, deep, research, framework, reports, define, question, tier, sources, first |
 | `deepapi` | Use DeepAPI for supported scraping, research, and email workflows with explicit credentials and approval. | critical | davidondrej/skills | deepapi, scraping, email, api | deepapi, scraping, email, api, supported, research, explicit, credentials, approval |
 | `dsh-deepread` | Use for evidence-first reading of articles, books, PDFs, web pages, or document sets, with knowledge maps and Feynman checks. | safe | xiehuan123/dsh-deepread | deep-reading, evidence, knowledge-map, feynman, document-analysis | deep-reading, evidence, knowledge-map, feynman, document-analysis, dsh, deepread, first, reading, articles, books, pdfs |
 | `efficient-web-research` | Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste. | safe | community | efficient, web, research | efficient, web, research, protocol, token, accessing, urls, github, repos, running, search, queries |
@@ -3145,11 +3149,12 @@ Total skills: 2605
 | `testing-qa` | Comprehensive testing and QA workflow covering unit testing, integration testing, E2E testing, browser automation, and quality assurance. | safe | personal | qa | qa, testing, covering, unit, integration, e2e, browser, automation, quality, assurance |
 | `wordpress` | Complete WordPress development workflow covering theme development, plugin creation, WooCommerce integration, performance optimization, and security hardenin... | safe | personal | wordpress | wordpress, complete, development, covering, theme, plugin, creation, woocommerce, integration, performance, optimization, security |
 
-## writing (4)
+## writing (5)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `bulletmind` | Convert input into clean, structured, hierarchical bullet points for summarization, note-taking, and structured thinking. | safe | community | writing, summarization, note-taking, formatting, structured-output | writing, summarization, note-taking, formatting, structured-output, bulletmind, convert, input, clean, structured, hierarchical, bullet |
 | `email-issue-fixer` | Fix small email mistakes without touching the writer's voice, and strip tracking parameters from links on request. Always returns the corrected draft plus a ... | safe | self | email, proofreading, grammar, links | email, proofreading, grammar, links, issue, fixer, fix, small, mistakes, without, touching, writer |
 | `short` | Rewrite the previous response more briefly while preserving the substance. | safe | davidondrej/skills | writing, editing, concise | writing, editing, concise, short, rewrite, previous, response, briefly, while, preserving, substance |
+| `tech-writing-proofread` | Proofreads English technical writing for typos, grammar, punctuation, terminology consistency, jargon, and structure; returns an itemized Original → Suggesti... | safe | alapha888/agent-skills-en | proofreading, technical-writing, editing | proofreading, technical-writing, editing, tech, writing, proofread, proofreads, english, technical, typos, grammar, punctuation |
 | `unslop` | Post-process AI-generated text through the unslop CLI to strip AI writing patterns before publishing | safe | MohamedAbdallah-14/unslop | writing, content-quality, ai-writing, text-processing, cli, publishing | writing, content-quality, ai-writing, text-processing, cli, publishing, unslop, post, process, ai, generated, text |

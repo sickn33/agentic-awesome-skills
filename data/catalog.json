@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-30T03:52:46.000Z",
-  "total": 2605,
+  "total": 2610,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -21981,6 +21981,39 @@
       "path": "skills/deep-research/SKILL.md"
     },
     {
+      "id": "deep-research-framework",
+      "canonical_id": "deep-research-framework",
+      "name": "deep-research-framework",
+      "description": "Framework for deep research reports: define the question and tier sources first, cross-verify, then write conclusion-first reports with explicit uncertainty statements. Use when the user asks for a research report, topic investigation, or competitive analysis.",
+      "category": "research",
+      "risk": "safe",
+      "source": "https://github.com/alapha888/agent-skills-en",
+      "source_type": "community",
+      "source_repo": "alapha888/agent-skills-en",
+      "license": "MIT",
+      "license_source": "https://github.com/alapha888/agent-skills-en/blob/main/LICENSE",
+      "tags": [
+        "research-reports",
+        "source-verification",
+        "analysis"
+      ],
+      "triggers": [
+        "research-reports",
+        "source-verification",
+        "analysis",
+        "deep",
+        "research",
+        "framework",
+        "reports",
+        "define",
+        "question",
+        "tier",
+        "sources",
+        "first"
+      ],
+      "path": "skills/deep-research-framework/SKILL.md"
+    },
+    {
       "id": "deepapi",
       "canonical_id": "deepapi",
       "name": "deepapi",
@@ -29768,6 +29801,39 @@
       "path": "skills/fitness-analyzer/SKILL.md"
     },
     {
+      "id": "five-axis-code-review",
+      "canonical_id": "five-axis-code-review",
+      "name": "five-axis-code-review",
+      "description": "Five-axis code review checklist (correctness, security, readability, performance, test coverage) producing actionable comments instead of style nitpicks. Use when the user asks to review code, a diff, or a pull request.",
+      "category": "development",
+      "risk": "safe",
+      "source": "https://github.com/alapha888/agent-skills-en",
+      "source_type": "community",
+      "source_repo": "alapha888/agent-skills-en",
+      "license": "MIT",
+      "license_source": "https://github.com/alapha888/agent-skills-en/blob/main/LICENSE",
+      "tags": [
+        "code-review",
+        "code-quality",
+        "pull-requests"
+      ],
+      "triggers": [
+        "code-review",
+        "code-quality",
+        "pull-requests",
+        "five",
+        "axis",
+        "code",
+        "review",
+        "checklist",
+        "correctness",
+        "security",
+        "readability",
+        "performance"
+      ],
+      "path": "skills/five-axis-code-review/SKILL.md"
+    },
+    {
       "id": "fix-review",
       "canonical_id": "fix-review",
       "name": "fix-review",
@@ -33116,6 +33182,39 @@
         "confidence"
       ],
       "path": "skills/git-advanced-workflows/SKILL.md"
+    },
+    {
+      "id": "git-commit-message",
+      "canonical_id": "git-commit-message",
+      "name": "git-commit-message",
+      "description": "Generates conventional-commit messages from staged changes: type prefix + English imperative subject (≤50 chars) + optional body explaining why. Use when the user asks to write, generate, or polish a git commit message.",
+      "category": "development",
+      "risk": "safe",
+      "source": "https://github.com/alapha888/agent-skills-en",
+      "source_type": "community",
+      "source_repo": "alapha888/agent-skills-en",
+      "license": "MIT",
+      "license_source": "https://github.com/alapha888/agent-skills-en/blob/main/LICENSE",
+      "tags": [
+        "git",
+        "commit-messages",
+        "conventional-commits"
+      ],
+      "triggers": [
+        "git",
+        "commit-messages",
+        "conventional-commits",
+        "commit",
+        "message",
+        "generates",
+        "conventional",
+        "messages",
+        "staged",
+        "changes",
+        "type",
+        "prefix"
+      ],
+      "path": "skills/git-commit-message/SKILL.md"
     },
     {
       "id": "git-hooks-automation",
@@ -46519,6 +46618,39 @@
         "structured"
       ],
       "path": "skills/meeting-distiller-pro/SKILL.md"
+    },
+    {
+      "id": "meeting-notes",
+      "canonical_id": "meeting-notes",
+      "name": "meeting-notes",
+      "description": "Turns raw meeting notes into structured minutes: conclusion first, then decisions / action items / open questions; every action item must have an owner and a deadline. Use when the user pastes meeting transcripts or rough notes and asks for minutes or a summary.",
+      "category": "productivity",
+      "risk": "safe",
+      "source": "https://github.com/alapha888/agent-skills-en",
+      "source_type": "community",
+      "source_repo": "alapha888/agent-skills-en",
+      "license": "MIT",
+      "license_source": "https://github.com/alapha888/agent-skills-en/blob/main/LICENSE",
+      "tags": [
+        "meetings",
+        "minutes",
+        "action-items"
+      ],
+      "triggers": [
+        "meetings",
+        "minutes",
+        "action-items",
+        "meeting",
+        "notes",
+        "turns",
+        "raw",
+        "structured",
+        "conclusion",
+        "first",
+        "then",
+        "decisions"
+      ],
+      "path": "skills/meeting-notes/SKILL.md"
     },
     {
       "id": "meme-coin-audit",
@@ -68736,6 +68868,39 @@
         "stage"
       ],
       "path": "skills/team-composition-analysis/SKILL.md"
+    },
+    {
+      "id": "tech-writing-proofread",
+      "canonical_id": "tech-writing-proofread",
+      "name": "tech-writing-proofread",
+      "description": "Proofreads English technical writing for typos, grammar, punctuation, terminology consistency, jargon, and structure; returns an itemized Original → Suggestion → Reason list without rewriting the document. Use when asked to proofread or polish a technical doc, README, or blog draft.",
+      "category": "writing",
+      "risk": "safe",
+      "source": "https://github.com/alapha888/agent-skills-en",
+      "source_type": "community",
+      "source_repo": "alapha888/agent-skills-en",
+      "license": "MIT",
+      "license_source": "https://github.com/alapha888/agent-skills-en/blob/main/LICENSE",
+      "tags": [
+        "proofreading",
+        "technical-writing",
+        "editing"
+      ],
+      "triggers": [
+        "proofreading",
+        "technical-writing",
+        "editing",
+        "tech",
+        "writing",
+        "proofread",
+        "proofreads",
+        "english",
+        "technical",
+        "typos",
+        "grammar",
+        "punctuation"
+      ],
+      "path": "skills/tech-writing-proofread/SKILL.md"
     },
     {
       "id": "technical-change-tracker",
