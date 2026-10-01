@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-09-30T03:52:46.000Z",
-  "total": 2604,
+  "total": 2605,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -38627,6 +38627,43 @@
         "convergent"
       ],
       "path": "skills/idea-refine/SKILL.md"
+    },
+    {
+      "id": "idea-to-blueprint",
+      "canonical_id": "idea-to-blueprint",
+      "name": "idea-to-blueprint",
+      "description": "Turn a raw product, app, bot or feature idea into one evidence-backed build blueprint (researched stack, epics, Given/When/Then criteria, tests) that coding agents build one epic per session.",
+      "category": "planning",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "iniesohidham/idea-to-blueprint",
+      "license": "MIT",
+      "license_source": "https://github.com/iniesohidham/idea-to-blueprint/blob/main/LICENSE",
+      "tags": [
+        "prd",
+        "specification",
+        "product-planning",
+        "user-stories",
+        "acceptance-criteria",
+        "tech-stack",
+        "agentic-engineering"
+      ],
+      "triggers": [
+        "prd",
+        "specification",
+        "product-planning",
+        "user-stories",
+        "acceptance-criteria",
+        "tech-stack",
+        "agentic-engineering",
+        "idea",
+        "blueprint",
+        "turn",
+        "raw",
+        "product"
+      ],
+      "path": "skills/idea-to-blueprint/SKILL.md"
     },
     {
       "id": "identity-access-management",

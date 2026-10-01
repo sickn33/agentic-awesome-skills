@@ -25061,6 +25061,25 @@
       "runtime_files": []
     },
     {
+      "id": "idea-to-blueprint",
+      "path": "skills/idea-to-blueprint",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "identity-access-management",
       "path": "skills/identity-access-management",
       "targets": {
@@ -49975,10 +49994,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2604,
+    "total_skills": 2605,
     "supported": {
-      "codex": 2517,
-      "claude": 2542
+      "codex": 2518,
+      "claude": 2543
     },
     "blocked": {
       "codex": 87,
