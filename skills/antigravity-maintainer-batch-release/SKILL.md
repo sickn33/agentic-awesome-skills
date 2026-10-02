@@ -141,13 +141,17 @@ The official skill-content review remains Tessl or exact-head maintainer attesta
 
 ### Reviewed fork bundle exceptions
 
-`tools/config/reviewed-fork-skills.json` is a protected-base ledger for the two
-explicitly reviewed fork contributions #1337 and #1413. Each entry binds the
-base repository, fork repository, PR number, original full reviewed head and
-complete Git skill-tree object. It permits only Python files under that skill's
-`scripts/` subtree and its root `LICENSE`, with a read-only Git copy origin when
-needed. It does not allow workflows, arbitrary script types, generated-file
-mutations, unsafe modes, links, invalid paths/objects or oversized content.
+`tools/config/reviewed-fork-skills.json` is a protected-base ledger for the
+explicitly reviewed fork contributions. Each entry binds the base repository,
+fork repository, PR number, original full reviewed head and complete Git
+skill-tree object. The baseline rule permits only Markdown/assets/references
+support files, Python files under that skill's `scripts/` subtree and its root
+`LICENSE`, with a read-only Git copy origin when needed. An entry may opt in to
+at most 16 extra exact paths inside its own skill root; the validator can only
+represent root manifest files (`.gitignore`, `README.md`, `LICENSE`) and
+`scripts/*.py`, so it can never become a general extension allowlist. It does not
+allow workflows, arbitrary script types, generated-file mutations, unsafe modes,
+links, invalid paths/objects or oversized content.
 
 Both CI intake and `merge:batch` load the ledger from their trusted evaluator
 checkout, never the PR's repository directory. Any change anywhere in the skill

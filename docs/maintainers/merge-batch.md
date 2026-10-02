@@ -58,13 +58,18 @@ Use `--dry-run` to exercise local classification without approving a run or merg
 
 ### Reviewed fork bundle exceptions
 
-`tools/config/reviewed-fork-skills.json` is a protected-base ledger for the two
-explicitly reviewed fork contributions #1337 and #1413. Each entry binds the
-base repository, fork repository, PR number, original full reviewed head and
-complete Git skill-tree object. It permits only Python files under that skill's
-`scripts/` subtree and its root `LICENSE`, with a read-only Git copy origin when
-needed. It does not allow workflows, arbitrary script types, generated-file
-mutations, unsafe modes, links, invalid paths/objects or oversized content.
+`tools/config/reviewed-fork-skills.json` is a protected-base ledger for the
+explicitly reviewed fork contributions. Each entry binds the base repository,
+fork repository, PR number, original full reviewed head and complete Git
+skill-tree object. The baseline rule permits only Markdown/assets/references
+support files, Python files under that skill's `scripts/` subtree, and its root
+`LICENSE`, with a read-only Git copy origin when needed. An entry may additionally
+opt in to at most 16 extra exact paths inside its own skill root; only root
+manifest files (`.gitignore`, `README.md`, `LICENSE`) and `scripts/*.py` are
+representable, so this is never a general extension allowlist and does not permit
+`.sh`, `.js`, `.ts`, or any other script type. The ledger does not allow
+workflows, generated-file mutations, unsafe modes, links, invalid
+paths/objects or oversized content.
 
 Both CI intake and `merge:batch` load the ledger from their trusted evaluator
 checkout, never the PR's repository directory. Any change anywhere in the skill
