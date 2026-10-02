@@ -16,6 +16,18 @@
       "skill_root": "skills/skill-porter",
       "reviewed_head": "43b06dfdf31482297fc140a8cf7adc31194adc33",
       "tree_oid": "accbfb34570362bb4422985bd487f22d2f2c7acb"
+    },
+    {
+      "pr": 1756,
+      "base_repository": "sickn33/agentic-awesome-skills",
+      "head_repository": "gongdear/agentic-awesome-skills",
+      "skill_root": "skills/cline-pilot",
+      "reviewed_head": "8010a79f20b923504002c44dc3dcd974624cfe30",
+      "tree_oid": "33d10138e8346e45611671fe2d2f1f033ca5a15b",
+      "reviewed_support_paths": [
+        "skills/cline-pilot/.gitignore",
+        "skills/cline-pilot/README.md"
+      ]
     }
   ]
 }

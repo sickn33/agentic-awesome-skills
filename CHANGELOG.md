@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.12.0] - 2026-10-02 - "Cline Orchestration, Web3 Engineering, and Safer Release Pipelines"
+
+> Adds **13** reviewed skills for Cline CLI orchestration, Web3 and DeFi engineering, AI agent operations, and secure publishing - tightens reviewed fork bundle handling and removes an obsolete Syria block from a WAF example. Ships **2,632** skills.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the complete protected maintainer batch merged after `18.11.0`, with existing installation interfaces preserved.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.12.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **cline-pilot (#1756)** - orchestrates focused Cline CLI coding tasks, monitors long runs against repository and test evidence, relays decision points in a fixed format, and checks results against explicit acceptance criteria. `risk: critical`, MIT, from [gongdear/cline-pilot](https://github.com/gongdear/cline-pilot).
+- **Web3 and AI agent engineering batches (#1752, #1753)** - add 20 skills across decentralized application engineering, DeFi, blockchain operations, and AI agent development. The skills provide task-specific implementation and operational guidance with declared risk and safety limits.
+- **dropthehassle-publish (#1754)** - adds the official DropTheHassle publishing skill for its documented publishing workflow.
+
+### Changed
+
+- **Reviewed fork bundle paths (#1760)** - permit only exact, protected-ledger support paths for previously reviewed fork skill bundles, including root README and `.gitignore`; all other path, content, and exact-head review gates remain in force.
+- **waf-setup (#1755)** - removes Syria from the example geo-block rule after the cited sanctions program ended, avoiding an obsolete production block example.
+
+### Documentation and community
+
+- Credits for new external skill sources are recorded in the README and source PRs.
+- Thanks to the contributors to #1752, #1753, #1754, #1755, #1756, and #1760.
+
+### Validation scope
+
+Exact-head maintainer review for changed skill content, protected source PRs, repository validation and tests, reference validation, docs security, protected CI and CodeQL, dependency review, canonical synchronization, release preflight, npm publication, and release provenance verification.
+
 ## [18.11.0] - 2026-10-01 - "Repository Engineering, Blueprint Planning, and a Cleaner Contributor Pipeline"
 
 > Adds **8** reviewed skills - repository-native engineering, evidence-backed blueprint planning, and a five-skill English productivity pack - refreshes the spectral-field skill and the hosted catalog, and closes every open dependency advisory. Ships **2,610** skills.

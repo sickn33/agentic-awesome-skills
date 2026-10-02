@@ -1,0 +1,32 @@
+# Private runtime state — must never be committed (mirrors cline-pilot upstream .gitignore)
+# See: https://github.com/gongdear/cline-pilot/blob/main/.gitignore
+
+# Skill-private runtime archives (per-device, learned prefs, scratch state)
+references/local-config.md
+references/project-profiles.md
+references/decision-log.md
+scratch/
+*.local.md
+
+# OS / editor cruft
+.DS_Store
+.DS_Store.*
+._*
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python runtime
+__pycache__/
+*.pyc
+*.pyo
+
+# Node
+node_modules/
+
+# Env / secrets
+.env
+*.key

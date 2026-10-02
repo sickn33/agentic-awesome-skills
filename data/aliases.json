@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-01T06:44:01.000Z",
+  "generatedAt": "2026-10-02T09:47:34.000Z",
   "aliases": {
     "20-andruia-intelligence": "20-andruia-niche-intelligence",
     "accessibility-compliance-audit": "accessibility-compliance-accessibility-audit",
@@ -15,6 +15,9 @@
     "max": "agent-squad/max",
     "quinn": "agent-squad/quinn",
     "rex": "agent-squad/rex",
+    "ai-agent-benchmarking": "ai-agent-evaluation-benchmarking",
+    "ai-code-guardrails": "ai-code-generation-guardrails",
+    "ai-prompt-testing": "ai-prompt-regression-testing",
     "android-jetpack-expert": "android-jetpack-compose-expert",
     "antigravity-maintainer-release": "antigravity-maintainer-batch-release",
     "api-testing-mock": "api-testing-observability-api-mock",
@@ -73,6 +76,7 @@
     "database-migrations-sql": "database-migrations-sql-migrations",
     "debugging-and-recovery": "debugging-and-error-recovery",
     "debugging-toolkit-debug": "debugging-toolkit-smart-debug",
+    "defi-yield-allocator": "defi-yield-strategy-allocator",
     "dependency-management-audit": "dependency-management-deps-audit",
     "deployment-validation-validate": "deployment-validation-config-validate",
     "3d-ui": "design-it/3d-ui",
@@ -223,9 +227,15 @@
     "seo-aeo-auditor": "seo-aeo-content-quality-auditor",
     "seo-aeo-generator": "seo-aeo-meta-description-generator",
     "seo-forensic-response": "seo-forensic-incident-response",
+    "smart-contract-verification": "smart-contract-formal-verification",
+    "smart-contract-governance": "smart-contract-upgrade-governance",
+    "soroban-oracle-audit": "soroban-oracle-data-feed-audit",
+    "soroban-storage-lifecycle": "soroban-storage-ttl-lifecycle",
     "startup-business-case": "startup-business-analyst-business-case",
     "startup-business-projections": "startup-business-analyst-financial-projections",
     "startup-business-opportunity": "startup-business-analyst-market-opportunity",
+    "stellar-asset-compliance": "stellar-asset-clawback-compliance",
+    "stellar-multisig-coordinator": "stellar-multisig-threshold-coordinator",
     "supabase-postgres-practices": "supabase-postgres-best-practices",
     "bash": "super-code/bash",
     "c": "super-code/c",
@@ -251,8 +261,11 @@
     "vibecode-production-validator": "vibecode-production-qa-validator",
     "weather-data-management": "weather-data-lifecycle-management",
     "weather-pipeline-diagnosis": "weather-pipeline-performance-diagnosis",
+    "web3-rate-breaker": "web3-rate-limiting-circuit-breaker",
+    "web3-transaction-pool": "web3-transaction-relayer-pool",
     "wechat-official-strategist": "wechat-official-account-strategist",
     "wordpress-centric-skill": "wordpress-centric-high-seo-optimized-blogwriting-skill",
+    "zk-proof-pipeline": "zk-proof-verification-pipeline",
     "shopify—development": "shopify-development"
   }
 }

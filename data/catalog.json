@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-01T06:44:01.000Z",
-  "total": 2610,
+  "generatedAt": "2026-10-02T09:47:34.000Z",
+  "total": 2632,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -2255,6 +2255,41 @@
       "path": "skills/ai-agent-development/SKILL.md"
     },
     {
+      "id": "ai-agent-evaluation-benchmarking",
+      "canonical_id": "ai-agent-evaluation-benchmarking",
+      "name": "ai-agent-evaluation-benchmarking",
+      "description": "Autonomous AI agent benchmark evaluation register: task completion rates, planning accuracy, tool invocation precision, and cost benchmarks.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "ai",
+        "agents",
+        "evaluation",
+        "benchmarks",
+        "llm",
+        "automation",
+        "quality"
+      ],
+      "triggers": [
+        "ai",
+        "agents",
+        "evaluation",
+        "benchmarks",
+        "llm",
+        "automation",
+        "quality",
+        "agent",
+        "benchmarking",
+        "autonomous",
+        "benchmark",
+        "register"
+      ],
+      "path": "skills/ai-agent-evaluation-benchmarking/SKILL.md"
+    },
+    {
       "id": "ai-agent-security",
       "canonical_id": "ai-agent-security",
       "name": "ai-agent-security",
@@ -2286,6 +2321,41 @@
         "defense"
       ],
       "path": "skills/ai-agent-security/SKILL.md"
+    },
+    {
+      "id": "ai-agent-tool-routing",
+      "canonical_id": "ai-agent-tool-routing",
+      "name": "ai-agent-tool-routing",
+      "description": "Autonomous AI agent tool router register: schema registration, runtime parameter coercion, idempotency keys, and error recovery policies.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "ai",
+        "agents",
+        "tool-use",
+        "mcp",
+        "llm",
+        "automation",
+        "python"
+      ],
+      "triggers": [
+        "ai",
+        "agents",
+        "tool-use",
+        "mcp",
+        "llm",
+        "automation",
+        "python",
+        "agent",
+        "routing",
+        "autonomous",
+        "router",
+        "register"
+      ],
+      "path": "skills/ai-agent-tool-routing/SKILL.md"
     },
     {
       "id": "ai-agents-architect",
@@ -2332,6 +2402,40 @@
         "analyzer"
       ],
       "path": "skills/ai-analyzer/SKILL.md"
+    },
+    {
+      "id": "ai-code-generation-guardrails",
+      "canonical_id": "ai-code-generation-guardrails",
+      "name": "ai-code-generation-guardrails",
+      "description": "Autonomous AI code generation safety guardrail register: static AST analysis, forbidden import filters, and zero-day vulnerability checks.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "ai",
+        "security",
+        "guardrails",
+        "ast",
+        "code-quality",
+        "devsecops"
+      ],
+      "triggers": [
+        "ai",
+        "security",
+        "guardrails",
+        "ast",
+        "code-quality",
+        "devsecops",
+        "code",
+        "generation",
+        "autonomous",
+        "safety",
+        "guardrail",
+        "register"
+      ],
+      "path": "skills/ai-code-generation-guardrails/SKILL.md"
     },
     {
       "id": "ai-coding-agent-guardrails",
@@ -2848,6 +2952,40 @@
         "apart"
       ],
       "path": "skills/ai-product/SKILL.md"
+    },
+    {
+      "id": "ai-prompt-regression-testing",
+      "canonical_id": "ai-prompt-regression-testing",
+      "name": "ai-prompt-regression-testing",
+      "description": "Prompt engineering regression test matrix register: baseline outputs, semantic drift thresholds, judge evaluations, and golden dataset.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "ai",
+        "prompt-engineering",
+        "testing",
+        "evaluation",
+        "llm",
+        "benchmarking"
+      ],
+      "triggers": [
+        "ai",
+        "prompt-engineering",
+        "testing",
+        "evaluation",
+        "llm",
+        "benchmarking",
+        "prompt",
+        "regression",
+        "engineering",
+        "test",
+        "matrix",
+        "register"
+      ],
+      "path": "skills/ai-prompt-regression-testing/SKILL.md"
     },
     {
       "id": "ai-red-teaming",
@@ -16039,6 +16177,42 @@
       "path": "skills/cline-delegate/SKILL.md"
     },
     {
+      "id": "cline-pilot",
+      "canonical_id": "cline-pilot",
+      "name": "cline-pilot",
+      "description": "Proxy Cline CLI coding tasks: dispatch, monitor background runs via hard evidence, relay decision points in a fixed format, verify against a checklist, and learn per-tag preferences over time.",
+      "category": "agent-orchestration",
+      "risk": "critical",
+      "source": "https://github.com/gongdear/cline-pilot",
+      "source_type": "official",
+      "source_repo": "gongdear/cline-pilot",
+      "license": "MIT",
+      "license_source": "https://github.com/gongdear/cline-pilot/blob/main/LICENSE",
+      "tags": [
+        "coding-agent",
+        "cline",
+        "orchestration",
+        "multi-agent",
+        "memory-bank",
+        "automation"
+      ],
+      "triggers": [
+        "coding-agent",
+        "cline",
+        "orchestration",
+        "multi-agent",
+        "memory-bank",
+        "automation",
+        "pilot",
+        "proxy",
+        "cli",
+        "coding",
+        "tasks",
+        "dispatch"
+      ],
+      "path": "skills/cline-pilot/SKILL.md"
+    },
+    {
       "id": "close-automation",
       "canonical_id": "close-automation",
       "name": "close-automation",
@@ -19794,6 +19968,41 @@
       "path": "skills/cron-doctor/SKILL.md"
     },
     {
+      "id": "cross-chain-relayer-audit",
+      "canonical_id": "cross-chain-relayer-audit",
+      "name": "cross-chain-relayer-audit",
+      "description": "Cross-chain relayer bridge audit register: message hash verifications, replay protection nonces, validator quorum, and withdrawal proofs.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "cross-chain",
+        "bridge",
+        "relayer",
+        "security",
+        "cryptography",
+        "web3",
+        "stellar"
+      ],
+      "triggers": [
+        "cross-chain",
+        "bridge",
+        "relayer",
+        "security",
+        "cryptography",
+        "web3",
+        "stellar",
+        "cross",
+        "chain",
+        "audit",
+        "register",
+        "message"
+      ],
+      "path": "skills/cross-chain-relayer-audit/SKILL.md"
+    },
+    {
       "id": "cross-platform-contract-propagation-audit",
       "canonical_id": "cross-platform-contract-propagation-audit",
       "name": "cross-platform-contract-propagation-audit",
@@ -22071,6 +22280,41 @@
         "smart"
       ],
       "path": "skills/defi-protocol-templates/SKILL.md"
+    },
+    {
+      "id": "defi-yield-strategy-allocator",
+      "canonical_id": "defi-yield-strategy-allocator",
+      "name": "defi-yield-strategy-allocator",
+      "description": "Multi-vault automated yield strategy allocation register: APY benchmarks, impermanent loss risk tiers, and rebalancing triggers.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "defi",
+        "yield",
+        "soroban",
+        "vault",
+        "liquidity",
+        "finance",
+        "stellar"
+      ],
+      "triggers": [
+        "defi",
+        "yield",
+        "soroban",
+        "vault",
+        "liquidity",
+        "finance",
+        "stellar",
+        "allocator",
+        "multi",
+        "automated",
+        "allocation",
+        "register"
+      ],
+      "path": "skills/defi-yield-strategy-allocator/SKILL.md"
     },
     {
       "id": "defuddle",
@@ -26146,6 +26390,41 @@
         "rube"
       ],
       "path": "skills/dropbox-automation/SKILL.md"
+    },
+    {
+      "id": "dropthehassle-publish",
+      "canonical_id": "dropthehassle-publish",
+      "name": "dropthehassle-publish",
+      "description": "Publish a finished static site to a free HTTPS link with DropTheHassle: build it if needed, deploy, hand over the claim link, verify it is live, never spend money.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/bosmdavid-gif/dropthehassle-skill",
+      "source_type": "official",
+      "source_repo": "bosmdavid-gif/dropthehassle-skill",
+      "license": "MIT",
+      "license_source": "https://github.com/bosmdavid-gif/dropthehassle-skill/blob/main/LICENSE",
+      "tags": [
+        "deploy",
+        "static-site",
+        "hosting",
+        "domain",
+        "mcp"
+      ],
+      "triggers": [
+        "deploy",
+        "static-site",
+        "hosting",
+        "domain",
+        "mcp",
+        "dropthehassle",
+        "publish",
+        "finished",
+        "static",
+        "site",
+        "free",
+        "https"
+      ],
+      "path": "skills/dropthehassle-publish/SKILL.md"
     },
     {
       "id": "dsh-deepread",
@@ -65314,6 +65593,74 @@
       "path": "skills/slo-implementation/SKILL.md"
     },
     {
+      "id": "smart-contract-formal-verification",
+      "canonical_id": "smart-contract-formal-verification",
+      "name": "smart-contract-formal-verification",
+      "description": "Foundry and Soroban formal invariant verification register: state transition rules, boundary invariant properties, and symbolic execution checks.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "formal-verification",
+        "invariants",
+        "foundry",
+        "soroban",
+        "security",
+        "math"
+      ],
+      "triggers": [
+        "formal-verification",
+        "invariants",
+        "foundry",
+        "soroban",
+        "security",
+        "math",
+        "smart",
+        "contract",
+        "formal",
+        "verification",
+        "invariant",
+        "register"
+      ],
+      "path": "skills/smart-contract-formal-verification/SKILL.md"
+    },
+    {
+      "id": "smart-contract-upgrade-governance",
+      "canonical_id": "smart-contract-upgrade-governance",
+      "name": "smart-contract-upgrade-governance",
+      "description": "Soroban WASM upgrade governance register: executable bytecode hash, timelocked migration delays, and multi-sig authorization quorum.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "soroban",
+        "upgrade",
+        "governance",
+        "security",
+        "wasm",
+        "stellar"
+      ],
+      "triggers": [
+        "soroban",
+        "upgrade",
+        "governance",
+        "security",
+        "wasm",
+        "stellar",
+        "smart",
+        "contract",
+        "register",
+        "executable",
+        "bytecode",
+        "hash"
+      ],
+      "path": "skills/smart-contract-upgrade-governance/SKILL.md"
+    },
+    {
       "id": "smart-git-automation",
       "canonical_id": "smart-git-automation",
       "name": "smart-git-automation",
@@ -65808,6 +66155,181 @@
         "mozilla"
       ],
       "path": "skills/sops-encryption/SKILL.md"
+    },
+    {
+      "id": "soroban-contract-audit",
+      "canonical_id": "soroban-contract-audit",
+      "name": "soroban-contract-audit",
+      "description": "Soroban smart contract security audit register: authorization checks, panic pathways, integer overflows, and storage footprint verification for Stellar.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "stellar",
+        "soroban",
+        "rust",
+        "smart-contracts",
+        "security",
+        "audit",
+        "web3"
+      ],
+      "triggers": [
+        "stellar",
+        "soroban",
+        "rust",
+        "smart-contracts",
+        "security",
+        "audit",
+        "web3",
+        "contract",
+        "smart",
+        "register",
+        "authorization",
+        "checks"
+      ],
+      "path": "skills/soroban-contract-audit/SKILL.md"
+    },
+    {
+      "id": "soroban-liquidity-pool",
+      "canonical_id": "soroban-liquidity-pool",
+      "name": "soroban-liquidity-pool",
+      "description": "Automated market maker liquidity pool register: constant-product invariant curves, swap fee tiers, and LP token shares for Soroban DeFi.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "soroban",
+        "amm",
+        "liquidity",
+        "stellar",
+        "dex",
+        "defi",
+        "rust"
+      ],
+      "triggers": [
+        "soroban",
+        "amm",
+        "liquidity",
+        "stellar",
+        "dex",
+        "defi",
+        "rust",
+        "pool",
+        "automated",
+        "market",
+        "maker",
+        "register"
+      ],
+      "path": "skills/soroban-liquidity-pool/SKILL.md"
+    },
+    {
+      "id": "soroban-oracle-data-feed-audit",
+      "canonical_id": "soroban-oracle-data-feed-audit",
+      "name": "soroban-oracle-data-feed-audit",
+      "description": "DeFi price oracle integration and safety audit register: heartbeat bounds, stale price threshold reversion, and TWAP medianizer validation.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "soroban",
+        "oracle",
+        "defi",
+        "pricing",
+        "stellar",
+        "security",
+        "web3"
+      ],
+      "triggers": [
+        "soroban",
+        "oracle",
+        "defi",
+        "pricing",
+        "stellar",
+        "security",
+        "web3",
+        "data",
+        "feed",
+        "audit",
+        "price",
+        "integration"
+      ],
+      "path": "skills/soroban-oracle-data-feed-audit/SKILL.md"
+    },
+    {
+      "id": "soroban-storage-ttl-lifecycle",
+      "canonical_id": "soroban-storage-ttl-lifecycle",
+      "name": "soroban-storage-ttl-lifecycle",
+      "description": "Soroban ledger state rent and TTL extension register: live state tracking, bump thresholds, rent fee reserves, and archive boundaries.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "soroban",
+        "storage",
+        "ttl",
+        "state-archival",
+        "stellar",
+        "gas",
+        "rust"
+      ],
+      "triggers": [
+        "soroban",
+        "storage",
+        "ttl",
+        "state-archival",
+        "stellar",
+        "gas",
+        "rust",
+        "lifecycle",
+        "ledger",
+        "state",
+        "rent",
+        "extension"
+      ],
+      "path": "skills/soroban-storage-ttl-lifecycle/SKILL.md"
+    },
+    {
+      "id": "soroban-token-minter",
+      "canonical_id": "soroban-token-minter",
+      "name": "soroban-token-minter",
+      "description": "Soroban SEP-41 token contract architecture register: admin control, supply caps, metadata standard, and transfer event emissions on Stellar.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "stellar",
+        "soroban",
+        "token",
+        "sep-41",
+        "defi",
+        "web3",
+        "rust"
+      ],
+      "triggers": [
+        "stellar",
+        "soroban",
+        "token",
+        "sep-41",
+        "defi",
+        "web3",
+        "rust",
+        "minter",
+        "sep",
+        "41",
+        "contract",
+        "architecture"
+      ],
+      "path": "skills/soroban-token-minter/SKILL.md"
     },
     {
       "id": "source-document-filing",
@@ -66835,6 +67357,143 @@
         "range"
       ],
       "path": "skills/statsmodels/SKILL.md"
+    },
+    {
+      "id": "stellar-anchor-integration",
+      "canonical_id": "stellar-anchor-integration",
+      "name": "stellar-anchor-integration",
+      "description": "Stellar anchor protocol compliance register: SEP-10 web authentication, SEP-24 interactive deposit and withdrawal, and KYC lifecycle.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "stellar",
+        "sep-10",
+        "sep-24",
+        "anchor",
+        "on-ramp",
+        "off-ramp",
+        "fintech"
+      ],
+      "triggers": [
+        "stellar",
+        "sep-10",
+        "sep-24",
+        "anchor",
+        "on-ramp",
+        "off-ramp",
+        "fintech",
+        "integration",
+        "protocol",
+        "compliance",
+        "register",
+        "sep"
+      ],
+      "path": "skills/stellar-anchor-integration/SKILL.md"
+    },
+    {
+      "id": "stellar-asset-clawback-compliance",
+      "canonical_id": "stellar-asset-clawback-compliance",
+      "name": "stellar-asset-clawback-compliance",
+      "description": "Regulated Stellar asset clawback architecture register: issuer authorization flags, claimable balance revocations, and regulatory audit trail.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "stellar",
+        "clawback",
+        "compliance",
+        "fintech",
+        "regtech",
+        "security"
+      ],
+      "triggers": [
+        "stellar",
+        "clawback",
+        "compliance",
+        "fintech",
+        "regtech",
+        "security",
+        "asset",
+        "regulated",
+        "architecture",
+        "register",
+        "issuer",
+        "authorization"
+      ],
+      "path": "skills/stellar-asset-clawback-compliance/SKILL.md"
+    },
+    {
+      "id": "stellar-escrow-timelock",
+      "canonical_id": "stellar-escrow-timelock",
+      "name": "stellar-escrow-timelock",
+      "description": "Decentralized conditional escrow and timelock contract register: multi-signature release conditions, clawback expiry, and settlement triggers.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "stellar",
+        "escrow",
+        "timelock",
+        "soroban",
+        "multisig",
+        "settlement"
+      ],
+      "triggers": [
+        "stellar",
+        "escrow",
+        "timelock",
+        "soroban",
+        "multisig",
+        "settlement",
+        "decentralized",
+        "conditional",
+        "contract",
+        "register",
+        "multi",
+        "signature"
+      ],
+      "path": "skills/stellar-escrow-timelock/SKILL.md"
+    },
+    {
+      "id": "stellar-multisig-threshold-coordinator",
+      "canonical_id": "stellar-multisig-threshold-coordinator",
+      "name": "stellar-multisig-threshold-coordinator",
+      "description": "Multi-signature signer and threshold coordination register: weight configurations, master key locks, and cosigner quorum thresholds for Stellar.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "stellar",
+        "multisig",
+        "security",
+        "governance",
+        "web3",
+        "auth"
+      ],
+      "triggers": [
+        "stellar",
+        "multisig",
+        "security",
+        "governance",
+        "web3",
+        "auth",
+        "threshold",
+        "coordinator",
+        "multi",
+        "signature",
+        "signer",
+        "coordination"
+      ],
+      "path": "skills/stellar-multisig-threshold-coordinator/SKILL.md"
     },
     {
       "id": "steve-jobs",
@@ -75247,6 +75906,40 @@
       "path": "skills/web3-audit/SKILL.md"
     },
     {
+      "id": "web3-rate-limiting-circuit-breaker",
+      "canonical_id": "web3-rate-limiting-circuit-breaker",
+      "name": "web3-rate-limiting-circuit-breaker",
+      "description": "On-chain and relayer rate-limiting circuit breaker register: throughput thresholds, emergency pause triggers, and multi-sig recovery.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "security",
+        "rate-limiting",
+        "circuit-breaker",
+        "defi",
+        "infrastructure",
+        "web3"
+      ],
+      "triggers": [
+        "security",
+        "rate-limiting",
+        "circuit-breaker",
+        "defi",
+        "infrastructure",
+        "web3",
+        "rate",
+        "limiting",
+        "circuit",
+        "breaker",
+        "chain",
+        "relayer"
+      ],
+      "path": "skills/web3-rate-limiting-circuit-breaker/SKILL.md"
+    },
+    {
       "id": "web3-testing",
       "canonical_id": "web3-testing",
       "name": "web3-testing",
@@ -75266,6 +75959,40 @@
         "foundry"
       ],
       "path": "skills/web3-testing/SKILL.md"
+    },
+    {
+      "id": "web3-transaction-relayer-pool",
+      "canonical_id": "web3-transaction-relayer-pool",
+      "name": "web3-transaction-relayer-pool",
+      "description": "Gasless transaction relayer node pool register: fee sponsorship limits, nonce synchronization, and balance replenishment alerts.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "web3",
+        "relayer",
+        "gasless",
+        "meta-transactions",
+        "stellar",
+        "infrastructure"
+      ],
+      "triggers": [
+        "web3",
+        "relayer",
+        "gasless",
+        "meta-transactions",
+        "stellar",
+        "infrastructure",
+        "transaction",
+        "pool",
+        "node",
+        "register",
+        "fee",
+        "sponsorship"
+      ],
+      "path": "skills/web3-transaction-relayer-pool/SKILL.md"
     },
     {
       "id": "webapp-testing",
@@ -77416,6 +78143,41 @@
         "inspection"
       ],
       "path": "skills/zipai-optimizer/SKILL.md"
+    },
+    {
+      "id": "zk-proof-verification-pipeline",
+      "canonical_id": "zk-proof-verification-pipeline",
+      "name": "zk-proof-verification-pipeline",
+      "description": "Zero-knowledge cryptographic verification pipeline register: proving system, circuit verification keys, public inputs, and gas costs.",
+      "category": "engineering",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "Ranjeet2063/agentic-awesome-skills",
+      "tags": [
+        "zk",
+        "zero-knowledge",
+        "snark",
+        "cryptography",
+        "privacy",
+        "soroban",
+        "web3"
+      ],
+      "triggers": [
+        "zk",
+        "zero-knowledge",
+        "snark",
+        "cryptography",
+        "privacy",
+        "soroban",
+        "web3",
+        "proof",
+        "verification",
+        "pipeline",
+        "zero",
+        "knowledge"
+      ],
+      "path": "skills/zk-proof-verification-pipeline/SKILL.md"
     },
     {
       "id": "zod-validation-expert",
