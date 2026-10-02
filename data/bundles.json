@@ -2056,6 +2056,7 @@
     "mobile-core": {
       "description": "Mobile app development across native and cross-platform stacks.",
       "skills": [
+        "aas-compose-stack",
         "add-app-clip",
         "android-cli",
         "android-dev",

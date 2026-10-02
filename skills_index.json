@@ -253,6 +253,93 @@
     }
   },
   {
+    "id": "aas-compose-stack",
+    "path": "skills/aas-compose-stack",
+    "category": "agent-tooling",
+    "name": "aas-compose-stack",
+    "description": "Preserve the coding agent's explicit AAS skill selection as a validated stack and optional evidence.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-10-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "aas",
+      "skills",
+      "mcp",
+      "stack-review"
+    ]
+  },
+  {
+    "id": "aas-discover",
+    "path": "skills/aas-discover",
+    "category": "agent-tooling",
+    "name": "aas-discover",
+    "description": "Discover AAS skills for an explicit task and compare their complete instructions without installing them.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-10-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "aas",
+      "skills",
+      "mcp",
+      "stack-review"
+    ]
+  },
+  {
+    "id": "aas-review-stack",
+    "path": "skills/aas-review-stack",
+    "category": "agent-tooling",
+    "name": "aas-review-stack",
+    "description": "Review AAS stack manifests, preview plans and selection evidence in Workbench without applying changes.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-10-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "aas",
+      "skills",
+      "mcp",
+      "stack-review"
+    ]
+  },
+  {
     "id": "ab-test-setup",
     "path": "skills/ab-test-setup",
     "category": "marketing",

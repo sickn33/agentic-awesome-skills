@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-02T09:47:34.000Z",
-  "total": 2632,
+  "total": 2635,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -223,6 +223,99 @@
         "interactive"
       ],
       "path": "skills/3d-web-experience/SKILL.md"
+    },
+    {
+      "id": "aas-compose-stack",
+      "canonical_id": "aas-compose-stack",
+      "name": "aas-compose-stack",
+      "description": "Preserve the coding agent's explicit AAS skill selection as a validated stack and optional evidence.",
+      "category": "agent-tooling",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "aas",
+        "skills",
+        "mcp",
+        "stack-review"
+      ],
+      "triggers": [
+        "aas",
+        "skills",
+        "mcp",
+        "stack-review",
+        "compose",
+        "stack",
+        "preserve",
+        "coding",
+        "agent",
+        "explicit",
+        "skill",
+        "selection"
+      ],
+      "path": "skills/aas-compose-stack/SKILL.md"
+    },
+    {
+      "id": "aas-discover",
+      "canonical_id": "aas-discover",
+      "name": "aas-discover",
+      "description": "Discover AAS skills for an explicit task and compare their complete instructions without installing them.",
+      "category": "agent-tooling",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "aas",
+        "skills",
+        "mcp",
+        "stack-review"
+      ],
+      "triggers": [
+        "aas",
+        "skills",
+        "mcp",
+        "stack-review",
+        "discover",
+        "explicit",
+        "task",
+        "compare",
+        "complete",
+        "instructions",
+        "without",
+        "installing"
+      ],
+      "path": "skills/aas-discover/SKILL.md"
+    },
+    {
+      "id": "aas-review-stack",
+      "canonical_id": "aas-review-stack",
+      "name": "aas-review-stack",
+      "description": "Review AAS stack manifests, preview plans and selection evidence in Workbench without applying changes.",
+      "category": "agent-tooling",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "aas",
+        "skills",
+        "mcp",
+        "stack-review"
+      ],
+      "triggers": [
+        "aas",
+        "skills",
+        "mcp",
+        "stack-review",
+        "review",
+        "stack",
+        "manifests",
+        "preview",
+        "plans",
+        "selection",
+        "evidence",
+        "workbench"
+      ],
+      "path": "skills/aas-review-stack/SKILL.md"
     },
     {
       "id": "ab-test-setup",

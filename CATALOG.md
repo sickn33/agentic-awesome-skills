@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-02T09:47:34.000Z
 
-Total skills: 2632
+Total skills: 2635
 
 ## agent-behavior (5)
 
@@ -84,6 +84,14 @@ Total skills: 2632
 | `agent-squad/max` | Cleans up and improves existing code without changing behavior. | safe | community | agent, squad/max | agent, squad/max, max, cleans, up, improves, existing, code, without, changing, behavior |
 | `agent-squad/quinn` | Proves the system works by writing and executing comprehensive test suites. | safe | community | agent, squad/quinn | agent, squad/quinn, quinn, proves, works, writing, executing, test, suites |
 | `agent-squad/rex` | Translates user intent into a precise, unambiguous specification and requirements. | safe | community | agent, squad/rex | agent, squad/rex, rex, translates, user, intent, precise, unambiguous, specification, requirements |
+
+## agent-tooling (3)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `aas-compose-stack` | Preserve the coding agent's explicit AAS skill selection as a validated stack and optional evidence. | safe | self | aas, skills, mcp, stack-review | aas, skills, mcp, stack-review, compose, stack, preserve, coding, agent, explicit, skill, selection |
+| `aas-discover` | Discover AAS skills for an explicit task and compare their complete instructions without installing them. | safe | self | aas, skills, mcp, stack-review | aas, skills, mcp, stack-review, discover, explicit, task, compare, complete, instructions, without, installing |
+| `aas-review-stack` | Review AAS stack manifests, preview plans and selection evidence in Workbench without applying changes. | safe | self | aas, skills, mcp, stack-review | aas, skills, mcp, stack-review, review, stack, manifests, preview, plans, selection, evidence, workbench |
 
 ## ai (1)
 

@@ -136,6 +136,63 @@
       "runtime_files": []
     },
     {
+      "id": "aas-compose-stack",
+      "path": "skills/aas-compose-stack",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "aas-discover",
+      "path": "skills/aas-discover",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "aas-review-stack",
+      "path": "skills/aas-review-stack",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ab-test-setup",
       "path": "skills/ab-test-setup",
       "targets": {
@@ -50507,10 +50564,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2632,
+    "total_skills": 2635,
     "supported": {
-      "codex": 2545,
-      "claude": 2570
+      "codex": 2548,
+      "claude": 2573
     },
     "blocked": {
       "codex": 87,
