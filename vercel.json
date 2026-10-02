@@ -1,13 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm ci && npm ci --prefix apps/web-app && npm run plugin:install",
-  "buildCommand": "npm run app:build && npm run plugin:build",
+  "installCommand": "npm ci && npm ci --prefix apps/web-app",
+  "buildCommand": "npm run app:build",
   "outputDirectory": "apps/web-app/dist",
   "routes": [
-    {
-      "src": "/mcp",
-      "dest": "/api/aas-mcp"
-    },
     {
       "src": "/(.*)",
       "headers": {
@@ -34,11 +30,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "functions": {
-    "api/aas-mcp.mjs": {
-      "maxDuration": 60,
-      "includeFiles": "{.tmp/aas-plugin/workbench.html,data/aas-v1/**,data/catalog.json,skills/**,tools/lib/aas-v1/**,tools/config/aas-v1/**,schemas/aas-v1/**,package.json}"
-    }
-  }
+  ]
 }

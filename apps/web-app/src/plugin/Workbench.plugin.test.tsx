@@ -13,6 +13,7 @@ describe('plugin Workbench boundary', () => {
     await screen.findByRole('heading', { name: 'Selection evidence' });
     expect(screen.queryByText('Explore skills by outcome')).not.toBeInTheDocument();
     expect(fetchSpy).not.toHaveBeenCalled();
+    expect(screen.queryByText('Prepare installation preview')).not.toBeInTheDocument();
     rerender(<MemoryRouter><Workbench embedded hostArtifacts={{ manifest: { invalid: true } }} /></MemoryRouter>);
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'evidence-test' })).not.toBeInTheDocument());
     expect(screen.getAllByRole('alert').length).toBeGreaterThan(0);

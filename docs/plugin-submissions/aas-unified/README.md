@@ -1,94 +1,70 @@
-# Unified AAS plugin: submission preparation
+# Unified AAS local plugin: distribution preparation
 
-This dossier prepares an independently published AAS plugin for the OpenAI plugin
-directory. Directory acceptance and publisher verification have not been obtained.
-The existing Codex and Claude catalog mirrors remain separate distributions.
+This package combines catalog discovery, local Core, and Workbench. Runtime
+operations run on the user's computer. The publisher pays for no shared plugin
+runtime, database, inference service, or per-user request processing. Existing
+website hosting is independent of plugin use.
 
 ## Publisher decisions
 
-The maintainer specified **Agentic Awesome Skills (AAS)** as the business publisher,
-worldwide availability, and a completely free product with no purchases or payments.
-These are declared decisions, not evidence of a verified legal entity. Verification
-must use the actual entity accepted by the publisher portal; do not invent company
-registration details or represent OpenAI as the publisher.
+The maintainer specified Agentic Awesome Skills (AAS) as the business publisher,
+worldwide availability, a completely free product, and fully local operation.
+These are declared decisions, not evidence of a verified legal entity or directory
+approval. Verification must use the actual entity accepted by the portal.
 
-## Package architecture
+## Self-contained package
 
-The portable root manifest uses `extensions["com.openai"]`. It contains three small
-workflow skills: discovery, agent-owned composition, and artifact review. A single
-HTTPS MCP exposes the existing nine read-only Core tools plus `open_workbench`.
-The full release-pinned catalog and support files are read through MCP, rather than
-installed as thousands of native skills. Local Core/CLI remain open source and
-support offline use. Hosted filesystem inspection and installation are unavailable.
+The portable manifest uses extensions["com.openai"]; the package also includes a
+Codex compatibility overlay and repo marketplace. Three native workflows guide
+discovery, agent-owned composition, and review. A bundled stdio MCP exposes the
+existing nine read-only Core tools plus open_workbench. The complete catalog,
+supporting files, schemas, dependencies, license notices, offline CLI, and
+single-file Workbench are included. Node.js 22 or later must already be installed;
+no npm install occurs at runtime.
 
-Workbench is the existing React artifact reviewer packaged as a self-contained MCP
-Apps resource. It consumes tool results and validates explicit file/paste imports
-in browser memory. Imports are not sent back to MCP. Unsupported UI hosts receive
-structured results and a link to the public Workbench. Native Codex UI compatibility
-must be tested separately; SDK and browser tests do not prove native rendering.
-No app bindings or lifecycle hooks are included in the public design.
+Catalog assets and supporting file digests are verified during packaging.
+Dependencies are compiled into runtime files without shipping node_modules.
+State is process-local and disappears when the session closes. The plugin has no
+endpoint, cloud credentials, telemetry, database, background service, or hosted
+fallback. Static publisher/support/legal links are listing metadata, not runtime
+requests. Catalog content remains untrusted; retrieving it does not authorize
+executing scripts or downloading declared prerequisites.
 
-## Vercel deployment preparation
+Workbench validates host results or explicit local imports in browser memory.
+Its resource declares no external connection or resource domains. Embedded mode
+disables feedback, catalog downloads, and the npm installer handoff. Clients
+without MCP Apps can open the bundled HTML locally. Core inspection, browser
+consistency checks, and semantic judgment remain distinct.
 
-The existing repository-root Vercel project can serve `/mcp` through
-`api/aas-mcp.mjs`. The function uses a fresh protocol server for each invocation and
-persists bounded session snapshots in Redis. A response is returned only after its
-snapshot is committed. Per-session leases reject concurrent mutation; idle snapshots
-expire after 15 minutes. Limits are 32 active sessions and 4 MiB per snapshot. These
-initial bounds require load testing before broad distribution.
+The offline CLI supports stack init/create/audit/plan/doctor. Project inspection,
+artifact saving, and native skill installation remain authorized client operations.
+The plugin neither requires nor configures owner infrastructure.
 
-Required secrets are `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` (the Marketplace-provisioned
-`KV_REST_API_URL` and `KV_REST_API_TOKEN` are also supported), stored
-in Vercel environment settings, never in Git or the plugin ZIP. Required configuration
-is `AAS_ALLOWED_HOSTS`, containing exact approved hostnames. Preview hosts are accepted
-from `VERCEL_URL`; production custom hosts must be explicit. Optional
-`AAS_ALLOWED_ORIGINS` contains exact origins only. `AAS_SESSION_NAMESPACE` should be
-different for preview and production so their quotas and snapshots are isolated.
-An unconfigured function returns 503; it never silently uses process memory.
+## Review and publication evidence
 
-Use a preview deployment first. Test the complete initialize/discovery/read/compose/
-inspect/evidence/delete flow across separate Function instances. Verify deployment
-bundle size, execution duration, Redis lease operations and retention, infrastructure
-logging, and the installed native client's Workbench. Then assign an approved stable
-hostname such as `mcp.aaskills.tech`, verify DNS/TLS, and repeat the live checks there.
-The current source branch must pass protected source review and canonical sync before
-production publication. Generated catalog artifacts belong to canonical sync.
+apps/aas-plugin/plugin-source.json contains positive and negative review cases.
+Local integration tests use an SDK client against a relocated self-contained
+package with networking denied. Codex CLI marketplace registration and plugin
+installation also passed using an isolated temporary CODEX_HOME, without changing
+the maintainer configuration. Native UI rendering, public directory acceptance,
+and submission remain unverified.
 
-The maintainer authorized a free Upstash resource for preview on 2026-10-02.
-`aas-plugin-sessions` was provisioned in the AAS OSS team, region `fra1`,
-with `autoUpgrade=false`, `prodPack=false`, and eviction disabled. It is connected
-to Preview only. No production deployment or DNS update has been performed.
-A protected preview was tested on 2026-10-02 at
-`https://agentic-awesome-skills-er5v1tnsb-aas-oss-program.vercel.app/mcp`.
-An actual SDK client, authenticated through the existing Vercel CLI preview access,
-verified initialize, ten-tool discovery, catalog search/full content reading, stack
-composition/inspection, evidence export/inspection with preserved client identity,
-Workbench artifacts/resource reading and explicit session deletion. This candidate
-uses locally regenerated catalog artifacts (2,613 skills); source commits exclude
-those artifacts. Public unauthenticated access remains protected. This test does
-not prove installed native UI rendering or a public submission endpoint.
+Complete supported-client installation and UI verification, exact-head source
+review, protected canonical synchronization, publisher verification, applicable
+local-plugin directory eligibility, policy/link checks, and an accessible demo
+before claiming official publication. Do not introduce hosting to meet another
+client's requirements: the maintainer's local-only constraint is binding.
+Worldwide availability and no commerce must be confirmed by the actual portal.
+No application has been submitted.
 
-## Review materials and outstanding evidence
+## Infrastructure cleanup
 
-`apps/aas-plugin/plugin-source.json` includes five positive and three negative review
-cases. Execute and record them using reviewer-owned, non-secret sample data. AAS
-exports factual session traces only; absent/expired traces cannot be reconstructed.
-Record a publicly accessible demo showing installation, catalog reading, stack
-composition, Workbench and clear failure behavior. There is no demo URL yet.
-
-Before producing the public ZIP, verify:
-
-- A stable live HTTPS endpoint, supported-client installation, and actual UI rendering.
-- The business publisher and domain using the portal's verification procedure.
-- Privacy/terms/support URLs and their coverage of remote hosting, Redis session
-  retention, project metadata explicitly submitted to evidence tools, infrastructure
-  logs, deletion and support. Existing local-only documentation is insufficient.
-- Actual worldwide eligibility in the portal, with no commerce declaration.
-- The accessible demo, all positive/negative cases, and the exact package contents.
-
-The exporter currently produces an explicitly local development ZIP only, checking
-live tool discovery and catalog identity first. It refuses public output while the
-above evidence is absent. Preparing a manifest or ZIP does not submit or publish it.
+The experimental Upstash resource, two manually created Vercel previews, and the
+automatic PR preview containing the MCP were removed on 2026-10-02. Redis resources and associated Preview environment variables
+were confirmed absent. The Function, container, Redis adapter, hosted startup
+entrypoint, and deployment instructions were removed. Production and DNS were
+never changed. The existing website project is retained; its build previews do
+not provide a plugin endpoint.
 
 ## Official references
 
@@ -97,4 +73,3 @@ above evidence is absent. Preparing a manifest or ZIP does not submit or publish
 - [MCP Apps UI](https://developers.openai.com/plugins/build/chatgpt-ui)
 - [Submission](https://developers.openai.com/plugins/deploy/submission)
 - [Plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines)
-- [Vercel MCP deployment](https://vercel.com/docs/mcp/deploy-mcp-servers-to-vercel)

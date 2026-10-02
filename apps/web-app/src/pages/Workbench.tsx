@@ -514,8 +514,8 @@ export function Workbench({ embedded = false, hostArtifacts }: { embedded?: bool
       </div>}
 
       <section className="workbench-review-area" aria-label="Imported artifact review">
-        {stack.value && (plan.value || evidence.value) ? <PairReview allowInstallation={!plan.error && !evidence.error} stack={stack.value} plan={plan.value} evidence={evidence.value} /> : null}
-        {stack.value && !plan.value && !plan.error && !evidence.value && !evidence.error ? <InstallationHandoff key={JSON.stringify(stack.value)} ids={stack.value.skills.map((skill) => skill.id)} version={stack.value.catalog.version} packageName={stack.value.catalog.package} /> : null}
+        {stack.value && (plan.value || evidence.value) ? <PairReview allowInstallation={!embedded && !plan.error && !evidence.error} stack={stack.value} plan={plan.value} evidence={evidence.value} /> : null}
+        {!embedded && stack.value && !plan.value && !plan.error && !evidence.value && !evidence.error ? <InstallationHandoff key={JSON.stringify(stack.value)} ids={stack.value.skills.map((skill) => skill.id)} version={stack.value.catalog.version} packageName={stack.value.catalog.package} /> : null}
         {stack.value ? <StackReview stack={stack.value} /> : null}
         {plan.value ? <PlanReviewView plan={plan.value} /> : null}
         {evidence.value ? <EvidenceReview evidence={evidence.value} /> : null}

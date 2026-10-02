@@ -7,11 +7,13 @@
     "node": ">=22"
   },
   "scripts": {
-    "start": "node src/start.mjs",
     "test": "node --test tests/*.test.mjs",
     "package": "node scripts/package.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.31.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
   }
 }

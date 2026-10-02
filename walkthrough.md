@@ -784,21 +784,22 @@ deep links still redirect to the canonical URL after the DNS change. If GitHub
 Pages stops redirecting them, publish a dedicated redirect artifact there
 before considering the migration complete.
 
-## Unified AAS plugin preparation (2026-10-02)
+## Unified AAS local plugin preparation (2026-10-02)
 
-Add three canonical workflow skills, a portable development-package exporter, and
-an HTTP adapter preserving existing Core results. Package Workbench as a standalone
-MCP Apps resource with browser-local imports and structured-result fallback. Prepare
-the existing Vercel project to serve `/mcp` using external Redis session snapshots;
-return responses only after durable commit. Keep publisher identity, worldwide/free
-decisions and outstanding live/demo/legal checks in the submission dossier. No public
-submission, production deployment or DNS update is performed. A free Upstash resource
-was authorized and provisioned for Preview with automatic paid upgrades disabled.
+Bundle three native workflow skills, the complete catalog and supporting files,
+read-only stdio Core, an offline artifact CLI, and single-file Workbench. Runtime
+requires only Node.js 22 or later on the user computer. No endpoint, cloud database,
+credentials, npm download, or hosted fallback is used. Local runtime identities
+bind bundled bytes; they do not assert verification of an npm release tarball.
 
-Validation: root script suite, Core suite, schema/reference/security validation,
-web build, focused Workbench tests and real HTTP SDK tests. Function integration tests
-recreate the handler for each request and verify session continuity/isolation, storage
-failure and expiry. A real cloud Redis flow also verifies lease operations, session continuity and
-evidence export/inspection. Container execution and native UI rendering remain
-unverified. The full web suite passes with a 30-second test timeout; the default
-5-second timeout hits existing Git-history sitemap tests in this worktree. Generated catalog changes are excluded from this source PR.
+The experimental Upstash resource and all three previews containing the hosted
+MCP were removed. Production and DNS were never changed. Source configuration
+returns the existing website to its baseline build without a plugin Function.
+
+Validation includes a relocated package with networking denied: real SDK stdio
+catalog reading, composition/inspection, evidence, process isolation, Workbench
+resource, offline planning and audit. Focused Workbench browser tests pass with
+no fetch and no installer handoff. Root validation, references, documentation
+security, warning budget and full repository tests pass. Codex CLI installation passed with a temporary isolated configuration; native
+UI rendering remains unverified. Generated outputs stay excluded from
+this source PR and belong to protected canonical synchronization.

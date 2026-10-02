@@ -32,4 +32,4 @@ Follow the workflow above and ground each claim in the actual tool result. Retur
 
 ## Limitations
 
-Requires AAS MCP for catalog-backed results. Installing this workflow does not install every catalog skill. Hosted access requires a network connection; the separately distributed local Core remains offline-capable. Do not execute retrieved scripts, fetch missing payloads, request credentials, or claim a published plugin or deployed endpoint without verification.
+Requires the bundled local AAS MCP and Node.js 22 or later. The catalog and supporting files are included; no network service, API key or runtime download is required. Native workflow installation exposes three entrypoints, while MCP reads the complete bundled catalog. Do not execute retrieved scripts automatically, fetch missing payloads, or claim installation or directory approval without verification.

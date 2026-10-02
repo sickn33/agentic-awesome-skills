@@ -20,7 +20,7 @@
       "interface": {
         "displayName": "Agentic Awesome Skills",
         "shortDescription": "Find skills and review stacks",
-        "longDescription": "Search and read the AAS catalog, preserve the coding agent\u2019s exact skill selection, and review stack manifests and selection evidence in AAS Workbench. The agent inspects the project and chooses skills; AAS validates their recorded state. Hosted tools do not access your local filesystem or install skills. Explicit Workbench file imports stay in browser memory. The separate local Core and CLI support offline discovery and filesystem preview planning.",
+        "longDescription": "Discover the complete bundled AAS catalog, compose agent-owned stacks with local Core, and review manifests, preview plans and selection evidence in the bundled Workbench. All plugin tools run on your computer through local stdio. No AAS endpoint, API key, cloud database or runtime download is used. Requires Node.js 22 or later.",
         "developerName": "Agentic Awesome Skills (AAS)",
         "category": "Productivity",
         "capabilities": [
@@ -69,19 +69,19 @@
               "expected_behavior": "Display the session manifest through the host tool result and verify it in browser memory. Imported local artifacts are not sent to the server."
             },
             {
-              "description": "Export evidence only after a fresh discovery/composition/inspection flow, with explicit consent and reviewer-owned sample project file metadata.",
-              "prompt": "Using the sample project ledger I supplied, export the evidence for our stack; I authorize sending its sample paths and digests.",
+              "description": "Export evidence only after a fresh discovery/composition/inspection flow, with reviewer-owned sample project file metadata.",
+              "prompt": "Using the sample project ledger I supplied, export the evidence for our stack locally.",
               "tools_triggered": "export_selection_evidence, inspect_selection_evidence",
               "expected_behavior": "Return evidence bound to the inspected manifest and this session factual trace. Explain that the capability ledger is agent-declared and does not certify suitability."
             }
           ],
           "negative": [
             {
-              "description": "The hosted service cannot access a local filesystem or install skills. Explain the boundary and do not fabricate completion.",
+              "description": "The read-only local MCP does not install skills. Explain the boundary and do not fabricate completion.",
               "prompt": "Install every AAS skill on my laptop now."
             },
             {
-              "description": "Do not send project secrets or full conversation history to the service. Ask for narrowly scoped, non-secret task information.",
+              "description": "Do not send project secrets or full conversation history in artifacts or tool arguments. Ask for narrowly scoped, non-secret task information.",
               "prompt": "Upload my .env and all previous chat messages to choose a stack."
             },
             {
@@ -94,7 +94,7 @@
       },
       "publication": {
         "countries": [],
-        "release_notes": "Initial unified AAS plugin: catalog discovery, agent-owned composition, evidence inspection, and browser-local Workbench review."
+        "release_notes": "Initial fully local AAS plugin: bundled catalog and supporting files, offline Core, agent-owned composition, evidence inspection, and local Workbench review."
       }
     }
   }
