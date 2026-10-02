@@ -27,6 +27,32 @@ assert.throws(() => resolve(identity, entry.tree_oid, {schema_version:1,entries:
 const record = { status:'A', old_path:null, new_path:root+'/scripts/check.py', old_mode:'000000',
   new_mode:'100644', old_oid:'0'.repeat(40), new_oid:'5'.repeat(40), new_size:100 };
 const classify = (r=record, opts={}) => classifyChangeRecords([r], {reviewedSkillRoots:[root],...opts});
+const { resolveReviewedSupportPaths } = require('../../lib/reviewed-fork-skills');
+const supportEntry = {...entry, reviewed_support_paths:[root+'/README.md', root+'/.gitignore', root+'/scripts/report.py']};
+const supportLedger = {schema_version:1, entries:[supportEntry]};
+const resolveSupport = (custom=supportLedger, tree=entry.tree_oid) =>
+  resolveReviewedSupportPaths('.', identity, {ledger:custom, resolveTree:()=>tree});
+assert.deepEqual(resolveSupport(), [root+'/README.md', root+'/.gitignore', root+'/scripts/report.py']);
+assert.deepEqual(resolveReviewedSkillRoots('.', identity, {ledger:supportLedger, resolveTree:()=>entry.tree_oid}), [root]);
+for (const bad of [
+  [root+'/../outside.md'], [root+'/assets/tool.sh'], [root+'/scripts/tool.sh'],
+  [root+'/scripts/../../outside.py'], [root+'/scripts/report.py', root+'/scripts/report.py'],
+  ['skills/other/README.md'], ['/absolute/README.md'], [root+'/'], [root+'/scripts/report.js'],
+  Array.from({length:17},(_,i)=>`${root}/scripts/s${i}.py`),
+]) assert.throws(() => resolveSupport({schema_version:1, entries:[{...supportEntry, reviewed_support_paths:bad}]}),
+  /Invalid/, `rejects ${JSON.stringify(bad).slice(0,60)}`);
+assert.throws(() => resolveSupport({schema_version:1, entries:[{...supportEntry, reviewed_support_paths:'README.md'}]}), /Invalid/);
+const { isReviewedSupportPath: checkSupport } = require('../../lib/reviewed-fork-skills');
+assert.equal(checkSupport(root+'/README.md', [root], [root+'/README.md']), true);
+assert.equal(checkSupport(root+'/README.md', [root]), false, 'extra path only applies when opted in');
+assert.equal(checkSupport(root+'/scripts/other.py', [root], [root+'/README.md']), true, 'baseline Python scripts stay permitted');
+assert.equal(checkSupport(root+'/scripts/other.sh', [root], [root+'/README.md']), false);
+assert.equal(classifyChangeRecords([{...record, new_path:root+'/README.md'}],
+  {reviewedSkillRoots:[root], reviewedSupportPaths:[root+'/README.md']}).approvalSafe, true);
+assert.equal(classifyChangeRecords([{...record, new_path:root+'/README.md'}], {reviewedSkillRoots:[root]}).approvalSafe, false);
+assert.equal(classifyChangeRecords([{...record, new_path:root+'/scripts/check.py', new_mode:'100755'}],
+  {reviewedSkillRoots:[root], reviewedSupportPaths:[root+'/README.md']}).approvalSafe, false, 'mode gate still applies');
+
 assert.equal(classifyChangeRecords([record]).approvalSafe, false, 'no global Python allowlist');
 assert.equal(classify().approvalSafe, true);
 assert.equal(classify().requiresHumanReview, true);

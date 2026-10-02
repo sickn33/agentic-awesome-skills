@@ -255,7 +255,8 @@ function classifyChangeRecords(records, options = {}) {
 
       let pathPolicy = classifyPathPolicy(filePath);
       const reviewedRoots = options.reviewedSkillRoots || [];
-      const reviewedSupport = isReviewedSupportPath(filePath, reviewedRoots);
+      const reviewedExtraPaths = options.reviewedSupportPaths || [];
+      const reviewedSupport = isReviewedSupportPath(filePath, reviewedRoots, reviewedExtraPaths);
       // A Git copy reads its origin; only its destination changes. Git pairs a
       // copy by similarity against any path that already exists in the base
       // tree, so the origin's own path class is not author-controlled and the
