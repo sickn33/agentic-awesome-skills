@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-01T06:44:01.000Z
 
-Total skills: 2631
+Total skills: 2632
 
 ## agent-behavior (5)
 
@@ -21,7 +21,7 @@ Total skills: 2631
 | `agent-evaluation-reporting` | Use when summarizing agent evaluations where autonomous, assisted, failed, timed-out, or invalid outcomes must remain distinct and comparable. | none | self | agent-evaluation, metrics, reporting, reliability, benchmarking | agent-evaluation, metrics, reporting, reliability, benchmarking, agent, evaluation, summarizing, evaluations, where, autonomous, assisted |
 | `run-deep-swe` | Run reproducible DeepSWE coding-agent benchmark evaluations through OpenRouter and mini-swe-agent. | critical | davidondrej/skills | benchmark, deepswe, openrouter, evaluation | benchmark, deepswe, openrouter, evaluation, run, deep, swe, reproducible, coding, agent, evaluations, through |
 
-## agent-orchestration (35)
+## agent-orchestration (36)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -31,6 +31,7 @@ Total skills: 2631
 | `aider-delegate` | Delegate coding tasks to Aider (`aider`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | critical | amElnagdy/delegate-skills | aider, delegate | aider, delegate, coding, tasks, user, explicitly, requests, while, orchestrator, retains, review, landing |
 | `claude-delegate` | Delegate coding tasks to a separate Claude Code CLI process or Claude session only when the user explicitly requests it, while the orchestrator retains revie... | critical | amElnagdy/delegate-skills | claude, delegate | claude, delegate, coding, tasks, separate, code, cli, process, session, user, explicitly, requests |
 | `cline-delegate` | Delegate coding tasks to the Cline CLI (`cline`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | critical | amElnagdy/delegate-skills | cline, delegate | cline, delegate, coding, tasks, cli, user, explicitly, requests, while, orchestrator, retains, review |
+| `cline-pilot` | Proxy Cline CLI coding tasks: dispatch, monitor background runs via hard evidence, relay decision points in a fixed format, verify against a checklist, and l... | critical | gongdear/cline-pilot | coding-agent, cline, orchestration, multi-agent, memory-bank, automation | coding-agent, cline, orchestration, multi-agent, memory-bank, automation, pilot, proxy, cli, coding, tasks, dispatch |
 | `codex-delegate` | Delegate coding tasks to the OpenAI Codex CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | critical | amElnagdy/delegate-skills | codex, delegate | codex, delegate, coding, tasks, openai, cli, user, explicitly, requests, while, orchestrator, retains |
 | `codex-subagent` | Launch Codex CLI as an isolated subagent for bounded coding, review, or verification tasks. | critical | davidondrej/skills | codex, subagents, delegation | codex, subagents, delegation, subagent, launch, cli, isolated, bounded, coding, review, verification, tasks |
 | `commandcode-delegate` | Delegate coding tasks to the Command Code CLI (`cmd`) only when the user explicitly requests it, while the orchestrator retains review and landing responsibi... | critical | amElnagdy/delegate-skills | commandcode, delegate | commandcode, delegate, coding, tasks, command, code, cli, cmd, user, explicitly, requests, while |

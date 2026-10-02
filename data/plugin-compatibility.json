@@ -10405,6 +10405,25 @@
       "runtime_files": []
     },
     {
+      "id": "cline-pilot",
+      "path": "skills/cline-pilot",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "close-automation",
       "path": "skills/close-automation",
       "targets": {
@@ -50488,10 +50507,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2631,
+    "total_skills": 2632,
     "supported": {
-      "codex": 2544,
-      "claude": 2569
+      "codex": 2545,
+      "claude": 2570
     },
     "blocked": {
       "codex": 87,

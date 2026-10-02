@@ -13769,6 +13769,40 @@
     "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE"
   },
   {
+    "id": "cline-pilot",
+    "path": "skills/cline-pilot",
+    "category": "agent-orchestration",
+    "name": "cline-pilot",
+    "description": "Proxy Cline CLI coding tasks: dispatch, monitor background runs via hard evidence, relay decision points in a fixed format, verify against a checklist, and learn per-tag preferences over time.",
+    "risk": "critical",
+    "source": "https://github.com/gongdear/cline-pilot",
+    "date_added": "2026-10-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "gongdear/cline-pilot",
+    "license": "MIT",
+    "license_source": "https://github.com/gongdear/cline-pilot/blob/main/LICENSE",
+    "tags": [
+      "coding-agent",
+      "cline",
+      "orchestration",
+      "multi-agent",
+      "memory-bank",
+      "automation"
+    ]
+  },
+  {
     "id": "close-automation",
     "path": "skills/close-automation",
     "category": "automation",

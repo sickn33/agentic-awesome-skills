@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-01T06:44:01.000Z",
-  "total": 2631,
+  "total": 2632,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -16175,6 +16175,42 @@
         "review"
       ],
       "path": "skills/cline-delegate/SKILL.md"
+    },
+    {
+      "id": "cline-pilot",
+      "canonical_id": "cline-pilot",
+      "name": "cline-pilot",
+      "description": "Proxy Cline CLI coding tasks: dispatch, monitor background runs via hard evidence, relay decision points in a fixed format, verify against a checklist, and learn per-tag preferences over time.",
+      "category": "agent-orchestration",
+      "risk": "critical",
+      "source": "https://github.com/gongdear/cline-pilot",
+      "source_type": "official",
+      "source_repo": "gongdear/cline-pilot",
+      "license": "MIT",
+      "license_source": "https://github.com/gongdear/cline-pilot/blob/main/LICENSE",
+      "tags": [
+        "coding-agent",
+        "cline",
+        "orchestration",
+        "multi-agent",
+        "memory-bank",
+        "automation"
+      ],
+      "triggers": [
+        "coding-agent",
+        "cline",
+        "orchestration",
+        "multi-agent",
+        "memory-bank",
+        "automation",
+        "pilot",
+        "proxy",
+        "cli",
+        "coding",
+        "tasks",
+        "dispatch"
+      ],
+      "path": "skills/cline-pilot/SKILL.md"
     },
     {
       "id": "close-automation",
