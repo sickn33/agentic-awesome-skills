@@ -1,9 +1,9 @@
-<!-- registry-sync: version=18.11.0; skills=2610; stars=47134; updated_at=2026-10-01T06:44:01+00:00 -->
+<!-- registry-sync: version=18.11.0; skills=2631; stars=47134; updated_at=2026-10-01T06:44:01+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **Find reusable instructions for your project, inspect their complete files, and keep an exact skill set you can review and reuse.**
 
-Agentic Awesome Skills is a library of 2,610+ installable `SKILL.md` playbooks. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
+Agentic Awesome Skills is a library of 2,631+ installable `SKILL.md` playbooks. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
 
 **Current release: V18.11.0.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v18.11.0/docs/users/aas-core.md) for setup and exact trust boundaries.
 
@@ -35,7 +35,7 @@ This is an independent community project, not affiliated with or endorsed by Goo
 - [Choose Your Tool](#choose-your-tool)
 - [Recommended Specialized Plugins](#recommended-specialized-plugins)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 2,610+ Skills](#browse-2610-skills)
+- [Browse 2,631+ Skills](#browse-2631-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Contributing](#contributing)
@@ -168,7 +168,7 @@ Bundles suggest related skills; workflows describe the order to use them. They a
 - [Workflows](docs/users/workflows.md) give ordered playbooks for planning, shipping, testing, and auditing; [workflow metadata](data/workflows.json) is available for integrations.
 - If too many installed skills overload Antigravity, follow the [selective activation guide](docs/users/agent-overload-recovery.md). For other hosts, preview a smaller exact install or use the installer's `--risk`, `--category`, and `--tags` filters.
 
-## Browse 2,610+ Skills
+## Browse 2,631+ Skills
 
 Explore the complete library in the [hosted catalog](https://aaskills.tech/) or [`CATALOG.md`](CATALOG.md). The canonical playbooks live in [`skills/`](skills/); [`skills_index.json`](skills_index.json) provides machine-readable discovery. Use [Getting Started](docs/users/getting-started.md) and [Usage](docs/users/usage.md) for first steps, or the [Workbench](https://aaskills.tech/workbench) to inspect a saved Core stack and plan in your browser.
 
@@ -620,10 +620,10 @@ Contributors ranked by the number of skills they added.
 | 4 | <a href="https://github.com/sohamganatra"><img src="https://github.com/sohamganatra.png?size=48" width="32" height="32" alt="" /></a> [@sohamganatra](https://github.com/sohamganatra) | 78 |
 | 5 | <a href="https://github.com/ProgramadorBrasil"><img src="https://github.com/ProgramadorBrasil.png?size=48" width="32" height="32" alt="" /></a> [@ProgramadorBrasil](https://github.com/ProgramadorBrasil) | 52 |
 | 6 | <a href="https://github.com/nikolasdehor"><img src="https://github.com/nikolasdehor.png?size=48" width="32" height="32" alt="" /></a> [@nikolasdehor](https://github.com/nikolasdehor) | 35 |
-| 7 | <a href="https://github.com/MMEHDI0606"><img src="https://github.com/MMEHDI0606.png?size=48" width="32" height="32" alt="" /></a> [@MMEHDI0606](https://github.com/MMEHDI0606) | 20 |
-| 8 | <a href="https://github.com/beatra-ai"><img src="https://github.com/beatra-ai.png?size=48" width="32" height="32" alt="" /></a> [@beatra-ai](https://github.com/beatra-ai) | 16 |
-| 9 | <a href="https://github.com/ShianMike"><img src="https://github.com/ShianMike.png?size=48" width="32" height="32" alt="" /></a> [@ShianMike](https://github.com/ShianMike) | 13 |
-| 10 | <a href="https://github.com/ar27111994"><img src="https://github.com/ar27111994.png?size=48" width="32" height="32" alt="" /></a> [@ar27111994](https://github.com/ar27111994) | 12 |
+| 7 | <a href="https://github.com/Ranjeet2063"><img src="https://github.com/Ranjeet2063.png?size=48" width="32" height="32" alt="" /></a> [@Ranjeet2063](https://github.com/Ranjeet2063) | 20 |
+| 8 | <a href="https://github.com/MMEHDI0606"><img src="https://github.com/MMEHDI0606.png?size=48" width="32" height="32" alt="" /></a> [@MMEHDI0606](https://github.com/MMEHDI0606) | 20 |
+| 9 | <a href="https://github.com/beatra-ai"><img src="https://github.com/beatra-ai.png?size=48" width="32" height="32" alt="" /></a> [@beatra-ai](https://github.com/beatra-ai) | 16 |
+| 10 | <a href="https://github.com/ShianMike"><img src="https://github.com/ShianMike.png?size=48" width="32" height="32" alt="" /></a> [@ShianMike](https://github.com/ShianMike) | 13 |
 
 </td>
 </tr>

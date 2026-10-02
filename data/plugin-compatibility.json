@@ -1448,8 +1448,46 @@
       "runtime_files": []
     },
     {
+      "id": "ai-agent-evaluation-benchmarking",
+      "path": "skills/ai-agent-evaluation-benchmarking",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ai-agent-security",
       "path": "skills/ai-agent-security",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ai-agent-tool-routing",
+      "path": "skills/ai-agent-tool-routing",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -1488,6 +1526,25 @@
     {
       "id": "ai-analyzer",
       "path": "skills/ai-analyzer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ai-code-generation-guardrails",
+      "path": "skills/ai-code-generation-guardrails",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -1800,6 +1857,25 @@
     {
       "id": "ai-product",
       "path": "skills/ai-product",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ai-prompt-regression-testing",
+      "path": "skills/ai-prompt-regression-testing",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -12787,6 +12863,25 @@
       "runtime_files": []
     },
     {
+      "id": "cross-chain-relayer-audit",
+      "path": "skills/cross-chain-relayer-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "cross-platform-contract-propagation-audit",
       "path": "skills/cross-platform-contract-propagation-audit",
       "targets": {
@@ -14201,6 +14296,25 @@
     {
       "id": "defi-protocol-templates",
       "path": "skills/defi-protocol-templates",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "defi-yield-strategy-allocator",
+      "path": "skills/defi-yield-strategy-allocator",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -16886,6 +17000,25 @@
     {
       "id": "dropbox-automation",
       "path": "skills/dropbox-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "dropthehassle-publish",
+      "path": "skills/dropthehassle-publish",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -42162,6 +42295,44 @@
       "runtime_files": []
     },
     {
+      "id": "smart-contract-formal-verification",
+      "path": "skills/smart-contract-formal-verification",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "smart-contract-upgrade-governance",
+      "path": "skills/smart-contract-upgrade-governance",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "smart-git-automation",
       "path": "skills/smart-git-automation",
       "targets": {
@@ -42455,6 +42626,101 @@
     {
       "id": "sops-encryption",
       "path": "skills/sops-encryption",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "soroban-contract-audit",
+      "path": "skills/soroban-contract-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "soroban-liquidity-pool",
+      "path": "skills/soroban-liquidity-pool",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "soroban-oracle-data-feed-audit",
+      "path": "skills/soroban-oracle-data-feed-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "soroban-storage-ttl-lifecycle",
+      "path": "skills/soroban-storage-ttl-lifecycle",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "soroban-token-minter",
+      "path": "skills/soroban-token-minter",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -43117,6 +43383,82 @@
     {
       "id": "statsmodels",
       "path": "skills/statsmodels",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "stellar-anchor-integration",
+      "path": "skills/stellar-anchor-integration",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "stellar-asset-clawback-compliance",
+      "path": "skills/stellar-asset-clawback-compliance",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "stellar-escrow-timelock",
+      "path": "skills/stellar-escrow-timelock",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "stellar-multisig-threshold-coordinator",
+      "path": "skills/stellar-multisig-threshold-coordinator",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -48600,8 +48942,46 @@
       "runtime_files": []
     },
     {
+      "id": "web3-rate-limiting-circuit-breaker",
+      "path": "skills/web3-rate-limiting-circuit-breaker",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "web3-testing",
       "path": "skills/web3-testing",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "web3-transaction-relayer-pool",
+      "path": "skills/web3-transaction-relayer-pool",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -50012,6 +50392,25 @@
       "runtime_files": []
     },
     {
+      "id": "zk-proof-verification-pipeline",
+      "path": "skills/zk-proof-verification-pipeline",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "zod-validation-expert",
       "path": "skills/zod-validation-expert",
       "targets": {
@@ -50089,10 +50488,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2610,
+    "total_skills": 2631,
     "supported": {
-      "codex": 2523,
-      "claude": 2548
+      "codex": 2544,
+      "claude": 2569
     },
     "blocked": {
       "codex": 87,
