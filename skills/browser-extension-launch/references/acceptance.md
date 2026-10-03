@@ -74,14 +74,7 @@ ID: AC-01
 
 ## 机器门禁与真实证据
 
-以下由 AI 在技能目录之外保存证据，并使用当前候选运行目录执行；输出报告必须使用新路径，不能覆盖旧证据。
-
-```text
-python3 <skill-dir>/scripts/acceptance_gate.py fingerprint <build-dir>
-python3 <skill-dir>/scripts/acceptance_gate.py check <build-dir> --evidence <真实验收JSON路径> --report <新的gate-report.json路径>
-```
-
-`fingerprint` 输出对象原样放入真实验收 JSON 的 `candidate` 字段，只计算文件指纹，不生成通过记录。真实验收 JSON 使用以下契约，操作未发生时不得预填 `passed`：
+以下由 AI 使用宿主文件、哈希和浏览器工具完成，并在技能目录之外保存证据；输出报告必须使用新路径，不能覆盖旧证据。递归列出当前候选运行目录中的文件，按稳定的相对路径顺序记录每个文件的 SHA-256、字节数以及候选目录整体摘要。该指纹对象原样放入真实验收 JSON 的 `candidate` 字段，只表示文件身份，不生成通过记录。真实验收 JSON 使用以下契约，操作未发生时不得预填 `passed`：
 
 | 字段 | 内容 |
 | --- | --- |

@@ -38,7 +38,7 @@ Chrome 官方注册说明要求注册及一次性费用；2026-04-28 的官方�
 
 ## 包和素材
 
-`release_bundle.py check` 后处理错误及警告，`pack` 生成新 ZIP；更新传 `--previous-version`。静态脚本覆盖有限，结合代码、依赖、实际浏览器检查补全，解压最终 ZIP 加载并让证据关联同一哈希。
+使用当前宿主可用的压缩与哈希工具检查错误及警告并生成新 ZIP；更新版本还须与上一版本比较。静态检查覆盖有限，结合代码、依赖、实际浏览器检查补全，解压最终 ZIP 加载并让证据关联同一哈希。
 
 Chrome 基线为 Manifest V3，ZIP 根直接有 manifest.json；版本依官方整数格式递增，改显示版名不足以升级。正式目录排除开发服务器依赖、依赖源码目录、私钥和环境文件，核对运行引用。[准备上传](https://developer.chrome.com/docs/webstore/prepare)、[版本规则](https://developer.chrome.com/docs/extensions/reference/manifest/version)
 

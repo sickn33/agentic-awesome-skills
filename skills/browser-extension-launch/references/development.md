@@ -29,7 +29,7 @@
 
 循环：读取真实实施票 → 执行 chrome-extensions（复杂项目同时执行 implement）→ 实现完整小功能并正式构建 → 默认 Playwright MCP 加载当前产物并核对 ID/版本 → 原生入口端到端核心操作及适用关闭重开 → 故障执行 diagnosing-bugs 并复验 → 执行 code-review 双轴审查 → 保存版本和调用证据 → 验收门禁通过 → 关闭实施票。Playwright MCP 不支持时必须先取得用户安装/启用或替代选择，不能自行换工具。
 
-按真实风险验证存储、权限、异步消息和迁移，不为微小可逆文案写镜像测试。逐票真实使用检查不推迟到发布前；模拟 API、单独打开弹窗页面及静态检查不能替代。新示例遵循同一循环。必需真实检查尚未通过时，实施票保持进行中或因明确外部依赖而 `blocked`。按 `acceptance.md` 先执行 `acceptance_gate.py fingerprint BUILD_DIR`，将实际证据写成 JSON，再执行 `check BUILD_DIR --evidence JSON --report NEW_PATH`，保存 `gate_passed: true` 的报告及路径。
+按真实风险验证存储、权限、异步消息和迁移，不为微小可逆文案写镜像测试。逐票真实使用检查不推迟到发布前；模拟 API、单独打开弹窗页面及静态检查不能替代。新示例遵循同一循环。必需真实检查尚未通过时，实施票保持进行中或因明确外部依赖而 `blocked`。按 `acceptance.md` 先为 `BUILD_DIR` 生成稳定候选指纹，将实际证据写成 JSON，再以宿主文件工具生成新的门禁报告，保存 `gate_passed: true` 的报告及路径。
 
 ## 首次试用及排错
 

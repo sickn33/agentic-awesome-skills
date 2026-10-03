@@ -16,7 +16,7 @@
 
 ## 文件和权威来源
 
-`project.py init` 建立 `state.json`（机器索引）、`progress.md`（简短进度）、`spec.md`、`decisions.md`、`tasks/`、`evidence/`。按目标传 `--goal local|materials|live`；先自用或只要材料时，其余发布模板标为范围外，不阻止当前主任务收口。模板须细化后执行；本地任务本身是正式依据，无需转成远程工单。
+使用宿主文件工具建立 `state.json`（机器索引）、`progress.md`（简短进度）、`spec.md`、`decisions.md`、`tasks/`、`evidence/`。在 `state.json` 中记录 `goal: local|materials|live`；先自用或只要材料时，其余发布模板标为范围外，不阻止当前主任务收口。模板须细化后执行；本地任务本身是正式依据，无需转成远程工单。
 
 简单项目的任务正文承载范围和逐条证据。复杂项目由 to-spec/to-tickets 在 tracker 中生成真正的规格和单票文件，`.extension-launch/` 仅记录调度索引，不能把初始化模板当成已发布的技能产物。`state.json` 不能覆盖权威正文；规格保留产品承诺。主代理汇总状态，并行代理仅写各自任务、实现及证据，避免并发覆盖。
 
@@ -38,7 +38,7 @@
 
 模拟测试或包检查通过不能把实施票推进为完成。必须默认使用 Playwright MCP 加载实际产物并完成原生入口端到端验证；环境不支持时按依赖参考询问安装/启用或替代选择，未取得选择不能跳过或静默换工具。真实功能失败则必须执行 diagnosing-bugs 复现、诊断、修复及复验；受控加载工具未就绪则将验收关卡及依赖交付设为 `blocked` 并继续修通，未经用户选择不切换日常 Chrome。本人仅处理确实无法自动化的原生环节，给出当前一步后核实结果并接回验证，不能仅转交人工清单就关闭主任务。已有测试授权持续有效，不增加常规批准票。
 
-任务证据须链接当前 `candidate` 指纹、真实验收 JSON 和新的 `gate-report.json`。验收 JSON 至少覆盖 `install`、`native_entry`、`primary_flow`、`reopen`、`repeat_use`；按 [验收参考](acceptance.md) 执行 `acceptance_gate.py check BUILD_DIR --evidence JSON --report NEW_PATH`。仅返回 `gate_passed: true` 可满足门禁条件，静态包报告不充当该报告；该命令不代替主代理回填任务状态。
+任务证据须链接当前 `candidate` 指纹、真实验收 JSON 和新的 `gate-report.json`。验收 JSON 至少覆盖 `install`、`native_entry`、`primary_flow`、`reopen`、`repeat_use`；按 [验收参考](acceptance.md) 校验构建指纹与证据，并用宿主文件工具写入新报告。仅 `gate_passed: true` 可满足门禁条件，静态包报告不充当该报告；生成报告不代替主代理回填任务状态。
 
 ## 版本与审查
 

@@ -63,9 +63,9 @@ license_source: "https://github.com/xiehuan123/browser-extension-launch/blob/mai
 
 ## 从当前项目继续
 
-1. 确定项目目录；已有 `.extension-launch/` 时先运行 `project.py status`，再读规格、任务和证据。已有其他任务系统则从那里恢复。不要凭聊天回忆重建或覆盖任务。
+1. 确定项目目录；已有 `.extension-launch/` 时先读其中的状态、规格、任务和证据。已有其他任务系统则从那里恢复。不要凭聊天回忆重建或覆盖任务。
 2. 按 [Agent 兼容说明](references/host-compatibility.md) 和 [依赖准备](references/dependencies.md) 检测必需技能、受控浏览器工具和开发软件，分别记录检测、读取及执行状态；缺什么补什么，不把文件存在当作能力已就绪。
-3. 主代理自行判断复杂度并写明理由。简单插件走最小本地记录；复杂插件必须走 [复杂插件编排](references/complex-workflow.md)，由 AI 发布规格工单、拆票和分配独立模块。`project.py init --complexity simple|complex --complexity-reason <理由>` 建立调度记录，按 [任务与恢复](references/workflow.md) 关联真正的规格和工单。依据用户指定终点传 `--goal local`（先自己用）、`--goal materials`（仅材料）或 `--goal live`（上线）；默认值不当用户已确认。范围外发布任务保持不适用，不列为本人待办。草拟内容必须补实，不是已确认需求。
+3. 主代理自行判断复杂度并写明理由。简单插件走最小本地记录；复杂插件必须走 [复杂插件编排](references/complex-workflow.md)，由 AI 发布规格工单、拆票和分配独立模块。按 [任务与恢复](references/workflow.md) 建立状态、规格、决策、任务和证据记录，并关联真正的规格和工单。依据用户指定终点记录 `local`（先自己用）、`materials`（仅材料）或 `live`（上线）；默认值不当用户已确认。范围外发布任务保持不适用，不列为本人待办。草拟内容必须补实，不是已确认需求。
 4. 按下表选择下一步；每阶段结束由主代理汇总进度、证据、未解决问题和下一动作。不要把整张表抛给新手。
 
 | 当前需要 | 读取并执行 | 前进依据 |
@@ -75,25 +75,9 @@ license_source: "https://github.com/xiehuan123/browser-extension-launch/blob/mai
 | 整体检查、准备新版本 | [独立验收](references/acceptance.md) | 当前候选包必需真实场景通过，失败已修复复验，验收门禁通过 |
 | 上架、被拒、上线或更新 | [发布与维护](references/publishing.md) | 实际后台记录及商店安装结果 |
 
-## 本地辅助工具
+## 本地记录与门禁
 
-路径相对本技能目录解析。以下供 AI 执行，替换占位参数并按宿主正确引用路径，不让用户拼命令。脚本需 Python 3.9+、标准库，无需第三方 Python 包。没有 Python 时依对应参考用宿主文件工具建立相同记录或检查，不能声称脚本已运行。
-
-```text
-python3 <skill-dir>/scripts/project.py doctor <project-dir>
-python3 <skill-dir>/scripts/project.py init <project-dir> --name <项目名> --idea <用户原话>
-python3 <skill-dir>/scripts/project.py status <project-dir>
-python3 <skill-dir>/scripts/release_bundle.py check <build-dir> --report <新报告路径>
-python3 <skill-dir>/scripts/release_bundle.py pack <build-dir> --output <新ZIP路径> --report <新报告路径>
-python3 <skill-dir>/scripts/acceptance_gate.py fingerprint <build-dir>
-python3 <skill-dir>/scripts/acceptance_gate.py check <build-dir> --evidence <真实验收JSON路径> --report <新的gate-report.json路径>
-```
-
-`doctor` 只证明检测到文件或软件，不能证明浏览器已连接。`check` / `pack` 只检查 Chrome 包的静态结构及部分风险；警告需逐项复核，成功退出不等于真实验收或商店批准。用 `--previous-version` 检查更新版本；报告及 ZIP 放在构建目录外，不覆盖旧成果。
-
-交付前先用 `fingerprint` 取得当前构建的 `candidate` 指纹，再据实际操作填写真实验收 JSON，最后执行门禁 `check` 并在任务中保存新生成的 `gate-report.json` 路径。只有 `gate_passed: true` 且有可核对的真实操作记录才可关闭依赖交付；指纹计算和机器检查本身不证明操作发生。证据字段与调用方式见 [验收参考](references/acceptance.md)。
-
-内置 [参考模板](assets/starter/chrome-mv3/manifest.json) 用于阅读或接手已有样例，不替代新建项目必须执行的 `extension-create`。已有项目不复制覆盖。
+按 [任务与恢复](references/workflow.md) 使用宿主文件工具建立并维护 `.extension-launch/` 状态、规格、决策、任务和证据。按 [独立验收](references/acceptance.md) 对当前构建生成稳定指纹，记录真实浏览器操作证据并输出新的门禁报告。静态结构检查、打包和报告必须写到构建目录外，不覆盖旧成果；机器检查本身不证明真实操作发生。
 
 ## 按上下文触发发布协助
 
