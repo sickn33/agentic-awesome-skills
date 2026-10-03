@@ -35384,6 +35384,25 @@
       "runtime_files": []
     },
     {
+      "id": "placecall",
+      "path": "skills/placecall",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "plaid-fintech",
       "path": "skills/plaid-fintech",
       "targets": {
@@ -50602,10 +50621,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2637,
+    "total_skills": 2638,
     "supported": {
-      "codex": 2550,
-      "claude": 2575
+      "codex": 2551,
+      "claude": 2576
     },
     "blocked": {
       "codex": 87,

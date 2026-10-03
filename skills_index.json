@@ -46838,6 +46838,41 @@
     }
   },
   {
+    "id": "placecall",
+    "path": "skills/placecall",
+    "category": "api-integration",
+    "name": "placecall",
+    "description": "Place real outbound phone calls to US businesses through the PlaceCall API: book, ask, get quotes, then read the outcome and transcript.",
+    "risk": "critical",
+    "source": "https://github.com/voygr-tech/placecall",
+    "date_added": "2026-10-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "voygr-tech/placecall",
+    "license": "MIT",
+    "license_source": "https://github.com/voygr-tech/placecall/blob/main/LICENSE",
+    "tags": [
+      "phone",
+      "calls",
+      "voice",
+      "telephony",
+      "reservations",
+      "rest-api",
+      "paid-api"
+    ]
+  },
+  {
     "id": "plaid-fintech",
     "path": "skills/plaid-fintech",
     "category": "api-integration",

@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-02T09:47:34.000Z
 
-Total skills: 2637
+Total skills: 2638
 
 ## agent-behavior (5)
 
@@ -297,7 +297,7 @@ Total skills: 2637
 | `10-andruia-skill-smith` | Ingeniero de Sistemas de Andru.ia. Diseña, redacta y despliega nuevas habilidades (skills) dentro del repositorio siguiendo el Estándar de Diamante. | safe | personal | 10, andruia, skill, smith | 10, andruia, skill, smith, ingeniero, de, sistemas, andru, ia, dise, redacta, despliega |
 | `20-andruia-niche-intelligence` | Estratega de Inteligencia de Dominio de Andru.ia. Analiza el nicho específico de un proyecto para inyectar conocimientos, regulaciones y estándares únicos de... | safe | personal | 20, andruia, niche, intelligence | 20, andruia, niche, intelligence, estratega, de, inteligencia, dominio, andru, ia, analiza, el |
 
-## api-integration (41)
+## api-integration (42)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -319,6 +319,7 @@ Total skills: 2637
 | `pakistan-payments-stack` | Design and implement production-grade Pakistani payment integrations (JazzCash, Easypaisa, bank/PSP rails, optional Raast) for SaaS with PKR billing, webhook... | safe | community | saas, payments, pakistan, nextjs, b2b, pkr, reconciliation | saas, payments, pakistan, nextjs, b2b, pkr, reconciliation, stack, grade, pakistani, payment, integrations |
 | `payment-integration` | Integrate Stripe, PayPal, and payment processors. Handles checkout flows, subscriptions, webhooks, and PCI compliance. Use PROACTIVELY when implementing paym... | critical | community | payment, integration | payment, integration, integrate, stripe, paypal, processors, checkout, flows, subscriptions, webhooks, pci, compliance |
 | `paypal-integration` | Master PayPal payment integration including Express Checkout, IPN handling, recurring billing, and refund workflows. | critical | community | paypal, integration | paypal, integration, payment, including, express, checkout, ipn, handling, recurring, billing, refund |
+| `placecall` | Place real outbound phone calls to US businesses through the PlaceCall API: book, ask, get quotes, then read the outcome and transcript. | critical | voygr-tech/placecall | phone, calls, voice, telephony, reservations, rest-api, paid-api | phone, calls, voice, telephony, reservations, rest-api, paid-api, placecall, place, real, outbound, us |
 | `plaid-fintech` | Expert patterns for Plaid API integration including Link token flows, transactions sync, identity verification, Auth for ACH, balance checks, webhook handlin... | critical | vibeship-spawner-skills (Apache 2.0) | plaid, fintech | plaid, fintech, api, integration, including, link, token, flows, transactions, sync, identity, verification |
 | `postman-collection-generator` | Generate complete, import-ready Postman Collection v2.1 JSON files from natural language API descriptions or cURL commands. | critical | LambdaTest/agent-skills | postman, collection, generator | postman, collection, generator, generate, complete, import, v2, json, files, natural, language, api |
 | `postman-openapi-converter` | Convert OpenAPI 3.x or Swagger 2.0 specs (YAML or JSON) into complete, import-ready Postman Collection v2.1 JSON files. | critical | LambdaTest/agent-skills | postman, openapi, converter | postman, openapi, converter, convert, swagger, specs, yaml, json, complete, import, collection, v2 |

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-02T09:47:34.000Z",
-  "total": 2637,
+  "total": 2638,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -54908,6 +54908,43 @@
         "invoke"
       ],
       "path": "skills/pitch-psychologist/SKILL.md"
+    },
+    {
+      "id": "placecall",
+      "canonical_id": "placecall",
+      "name": "placecall",
+      "description": "Place real outbound phone calls to US businesses through the PlaceCall API: book, ask, get quotes, then read the outcome and transcript.",
+      "category": "api-integration",
+      "risk": "critical",
+      "source": "https://github.com/voygr-tech/placecall",
+      "source_type": "official",
+      "source_repo": "voygr-tech/placecall",
+      "license": "MIT",
+      "license_source": "https://github.com/voygr-tech/placecall/blob/main/LICENSE",
+      "tags": [
+        "phone",
+        "calls",
+        "voice",
+        "telephony",
+        "reservations",
+        "rest-api",
+        "paid-api"
+      ],
+      "triggers": [
+        "phone",
+        "calls",
+        "voice",
+        "telephony",
+        "reservations",
+        "rest-api",
+        "paid-api",
+        "placecall",
+        "place",
+        "real",
+        "outbound",
+        "us"
+      ],
+      "path": "skills/placecall/SKILL.md"
     },
     {
       "id": "plaid-fintech",
