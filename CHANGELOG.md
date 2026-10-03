@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.13.0] - 2026-10-03 - "Etsy Market Intelligence and Real Phone-Call Automation"
+
+> Adds **3** reviewed skills for Etsy marketplace intelligence and real outbound phone-call automation - live Apify Actor search rows, shop sales-velocity panels, and the official PlaceCall voice API workflow. Ships **2,638** skills.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the complete protected maintainer batch merged after `18.12.0`, with existing installation interfaces preserved.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.13.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **etsy-search-listings (#1767)** - fetch live Etsy search listing rows for a keyword, market phrase, or category through the Apify Actor `publicrecords/etsy-search-scraper`, with rank, price, badge, and shop fields for marketplace research. `risk: critical`, paid API, requires an Apify token.
+- **etsy-shop-sales-history (#1767)** - read Etsy shop sales counters, deltas, and breakout flags from the Apify Actor `publicrecords/etsy-shop-velocity` panel snapshot for growth comparisons across a shop watch list. `risk: critical`, paid API, requires an Apify token.
+- **placecall (#1765)** - drive the official PlaceCall API to place real outbound calls to US businesses, follow the live event stream, answer mid-call questions, and read the structured outcome and transcript. `risk: critical`, MIT, from [voygr-tech/placecall](https://github.com/voygr-tech/placecall).
+
+### Documentation and community
+
+- Credits for the new external PlaceCall source are recorded in the README under **Official Sources**.
+- Thanks to the contributors to #1765 and #1767.
+
+### Validation scope
+
+Exact-head maintainer review for changed skill content, protected source PRs, repository validation and tests, reference validation, docs security, protected CI and CodeQL, dependency review, canonical synchronization, release preflight, npm publication, and release provenance verification.
+
 ## [18.12.0] - 2026-10-02 - "Cline Orchestration, Web3 Engineering, and Safer Release Pipelines"
 
 > Adds **13** reviewed skills for Cline CLI orchestration, Web3 and DeFi engineering, AI agent operations, and secure publishing - tightens reviewed fork bundle handling and removes an obsolete Syria block from a WAF example. Ships **2,632** skills.
