@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-02T09:47:34.000Z
 
-Total skills: 2635
+Total skills: 2637
 
 ## agent-behavior (5)
 
@@ -1751,11 +1751,13 @@ Total skills: 2635
 | `verify-citations` | Verify citations and references in a document, report, or article against real sources. Use when the user asks to fact-check, verify references, check citati... | critical | Sketchjar/stipple-agent-skills | document-verification, fact-checking, stipple, authenticity | document-verification, fact-checking, stipple, authenticity, verify, citations, references, document, report, article, against, real |
 | `verify-document` | Check whether a document (PDF or image) shows signs of tampering or forgery before you rely on it. Use when the user asks to verify a payslip, invoice, bank ... | critical | Sketchjar/stipple-agent-skills | document-verification, fact-checking, stipple, authenticity | document-verification, fact-checking, stipple, authenticity, verify, document, check, whether, pdf, image, shows, signs |
 
-## ecommerce (2)
+## ecommerce (4)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `buywhere-product-catalog` | Use BuyWhere's MCP and API surfaces to add product search, price comparison, and deal discovery to AI shopping agents. | safe | BuyWhere/buywhere-mcp | buywhere, ecommerce, shopping, mcp, api, product-catalog | buywhere, ecommerce, shopping, mcp, api, product-catalog, product, catalog, surfaces, add, search, price |
+| `etsy-search-listings` | Fetch live Etsy search listing rows for a keyword, market phrase, or category via Apify Actor publicrecords/etsy-search-scraper (MCP). Needs an Apify token; ... | critical | self | etsy, ecommerce, search, listings, apify, mcp | etsy, ecommerce, search, listings, apify, mcp, fetch, live, listing, rows, keyword, market |
+| `etsy-shop-sales-history` | Read Etsy shop sales counters, deltas, and breakout flags from Apify Actor publicrecords/etsy-shop-velocity (MCP panel snapshot). Needs an Apify token; Actor... | critical | self | etsy, ecommerce, shop, sales, velocity, apify, mcp | etsy, ecommerce, shop, sales, velocity, apify, mcp, history, read, counters, deltas, breakout |
 | `woo-guard` | Review generated or changed WooCommerce extensions, payment and shipping integrations, checkout customizations, and order or product logic. | critical | amElnagdy/guard-skills | woo, guard | woo, guard, review, generated, changed, woocommerce, extensions, payment, shipping, integrations, checkout, customizations |
 
 ## education (5)

@@ -23255,6 +23255,69 @@
     }
   },
   {
+    "id": "etsy-search-listings",
+    "path": "skills/etsy-search-listings",
+    "category": "ecommerce",
+    "name": "etsy-search-listings",
+    "description": "Fetch live Etsy search listing rows for a keyword, market phrase, or category via Apify Actor publicrecords/etsy-search-scraper (MCP). Needs an Apify token; Actor run is billed.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-10-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "etsy",
+      "ecommerce",
+      "search",
+      "listings",
+      "apify",
+      "mcp"
+    ]
+  },
+  {
+    "id": "etsy-shop-sales-history",
+    "path": "skills/etsy-shop-sales-history",
+    "category": "ecommerce",
+    "name": "etsy-shop-sales-history",
+    "description": "Read Etsy shop sales counters, deltas, and breakout flags from Apify Actor publicrecords/etsy-shop-velocity (MCP panel snapshot). Needs an Apify token; Actor run is billed.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-10-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "etsy",
+      "ecommerce",
+      "shop",
+      "sales",
+      "velocity",
+      "apify",
+      "mcp"
+    ]
+  },
+  {
     "id": "evaluation",
     "path": "skills/evaluation",
     "category": "ai-ml",

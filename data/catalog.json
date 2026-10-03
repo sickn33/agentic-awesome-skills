@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-02T09:47:34.000Z",
-  "total": 2635,
+  "total": 2637,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -28052,6 +28052,73 @@
         "covers"
       ],
       "path": "skills/ethical-hacking-methodology/SKILL.md"
+    },
+    {
+      "id": "etsy-search-listings",
+      "canonical_id": "etsy-search-listings",
+      "name": "etsy-search-listings",
+      "description": "Fetch live Etsy search listing rows for a keyword, market phrase, or category via Apify Actor publicrecords/etsy-search-scraper (MCP). Needs an Apify token; Actor run is billed.",
+      "category": "ecommerce",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "etsy",
+        "ecommerce",
+        "search",
+        "listings",
+        "apify",
+        "mcp"
+      ],
+      "triggers": [
+        "etsy",
+        "ecommerce",
+        "search",
+        "listings",
+        "apify",
+        "mcp",
+        "fetch",
+        "live",
+        "listing",
+        "rows",
+        "keyword",
+        "market"
+      ],
+      "path": "skills/etsy-search-listings/SKILL.md"
+    },
+    {
+      "id": "etsy-shop-sales-history",
+      "canonical_id": "etsy-shop-sales-history",
+      "name": "etsy-shop-sales-history",
+      "description": "Read Etsy shop sales counters, deltas, and breakout flags from Apify Actor publicrecords/etsy-shop-velocity (MCP panel snapshot). Needs an Apify token; Actor run is billed.",
+      "category": "ecommerce",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "etsy",
+        "ecommerce",
+        "shop",
+        "sales",
+        "velocity",
+        "apify",
+        "mcp"
+      ],
+      "triggers": [
+        "etsy",
+        "ecommerce",
+        "shop",
+        "sales",
+        "velocity",
+        "apify",
+        "mcp",
+        "history",
+        "read",
+        "counters",
+        "deltas",
+        "breakout"
+      ],
+      "path": "skills/etsy-shop-sales-history/SKILL.md"
     },
     {
       "id": "evaluation",

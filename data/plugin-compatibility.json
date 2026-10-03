@@ -18114,6 +18114,44 @@
       "runtime_files": []
     },
     {
+      "id": "etsy-search-listings",
+      "path": "skills/etsy-search-listings",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "etsy-shop-sales-history",
+      "path": "skills/etsy-shop-sales-history",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "evaluation",
       "path": "skills/evaluation",
       "targets": {
@@ -50564,10 +50602,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2635,
+    "total_skills": 2637,
     "supported": {
-      "codex": 2548,
-      "claude": 2573
+      "codex": 2550,
+      "claude": 2575
     },
     "blocked": {
       "codex": 87,
