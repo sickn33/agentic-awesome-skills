@@ -343,6 +343,7 @@ Key source families include:
 - **[sandbaseai/awesome-workbuddy](https://github.com/sandbaseai/awesome-workbuddy)**: Source for the `skill-security-audit` skill - read-only-by-default review of Agent Skills, MCP servers, connectors, and extensions across permissions, provenance, credentials, data flow, and irreversible actions (CC0-1.0).
 - **[alexprivalov/boost-asio-skill](https://github.com/alexprivalov/boost-asio-skill)**: Source for the `boost-asio-pro` skill - version-aware async C++ networking with Boost.Asio and standalone Asio across coroutine, callback, and classic `io_service` styles (MIT).
 - **[xiehuan123/dsh-deepread](https://github.com/xiehuan123/dsh-deepread)**: Source for the `dsh-deepread` skill - evidence-first analysis of articles, books, PDFs, and document sets with claim tracing, knowledge maps, and Feynman checks (MIT).
+- **[xiehuan123/browser-extension-launch](https://github.com/xiehuan123/browser-extension-launch)**: Source for the `browser-extension-launch` skill - end-to-end Chrome extension product design, implementation, real-browser acceptance, packaging, and store-launch workflow (MIT).
 - **[riffkit/skill](https://github.com/riffkit/skill)**: Official upstream source for the `riffkit` skill - short-form video riffing and UGC ad generation in nine natively generated languages (MIT).
 - **[5dive-ai/skills](https://github.com/5dive-ai/skills)**: Source for the `compile-knowledge` skill - durable, atomic, interlinked knowledge stores with explicit hygiene, provenance, expiry, and secret-handling boundaries (MIT).
 - **[JanYork/using-lwc](https://github.com/JanYork/using-lwc)**: Source for the `using-lwc` skill - durable, source-grounded project memory with independently verified document and code graphs (Apache-2.0).
@@ -674,5 +675,4 @@ Original code and tooling are licensed under the MIT License. See [LICENSE](LICE
 Original documentation and other non-code written content are licensed under [CC BY 4.0](LICENSE-CONTENT), unless a more specific upstream notice says otherwise. See [docs/sources/sources.md](docs/sources/sources.md) for attributions and third-party license details.
 
 ---
-
 
