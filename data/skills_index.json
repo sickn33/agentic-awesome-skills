@@ -12230,6 +12230,40 @@
     ]
   },
   {
+    "id": "byagent",
+    "path": "skills/byagent",
+    "category": "productivity",
+    "name": "byagent",
+    "description": "Publish agent-written Markdown or HTML as a shareable link with the byagent CLI, then read readers' line comments back, edit, republish to the same link and resolve them.",
+    "risk": "critical",
+    "source": "https://github.com/anup-a/agent-artifacts",
+    "date_added": "2026-10-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "anup-a/agent-artifacts",
+    "license": "MIT",
+    "license_source": "https://github.com/anup-a/agent-artifacts/blob/main/LICENSE",
+    "tags": [
+      "publish",
+      "markdown",
+      "html",
+      "share",
+      "comments",
+      "review"
+    ]
+  },
+  {
     "id": "c",
     "path": "skills/super-code/c",
     "category": "super-code",
