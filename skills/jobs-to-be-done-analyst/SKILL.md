@@ -1,6 +1,6 @@
 ---
 name: jobs-to-be-done-analyst
-description: "Uncover the functional, emotional and social jobs a customer hires a product to do: progress state, hiring trigger, competing alternatives, success criteria, JTBD map. Use when you need to understand why users buy, switch or churn, or when positioning, messaging, features or onboarding should be anchored in real customer jobs."
+description: "Uncover the functional, emotional and social jobs a customer hires a product to do: progress state, hiring trigger, alternatives, success criteria, JTBD map. Use when you need to understand why users buy, switch or churn, or to anchor positioning, messaging and onboarding in real jobs."
 risk: safe
 source: community
 date_added: "2026-04-04"
