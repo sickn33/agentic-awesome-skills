@@ -14465,6 +14465,25 @@
       "runtime_files": []
     },
     {
+      "id": "define-my-content-pillars",
+      "path": "skills/define-my-content-pillars",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "defuddle",
       "path": "skills/defuddle",
       "targets": {
@@ -17072,6 +17091,25 @@
     {
       "id": "doubt-driven-development",
       "path": "skills/doubt-driven-development",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "draft-my-comments",
+      "path": "skills/draft-my-comments",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -20628,6 +20666,25 @@
       "runtime_files": []
     },
     {
+      "id": "fxmacrodata",
+      "path": "skills/fxmacrodata",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "game-development",
       "path": "skills/game-development",
       "targets": {
@@ -21558,6 +21615,25 @@
     {
       "id": "geoffrey-hinton",
       "path": "skills/geoffrey-hinton",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "get-seen-in-replies",
+      "path": "skills/get-seen-in-replies",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -38771,6 +38847,25 @@
       "runtime_files": []
     },
     {
+      "id": "repurpose-into-a-post",
+      "path": "skills/repurpose-into-a-post",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "requesting-code-review",
       "path": "skills/requesting-code-review",
       "targets": {
@@ -39628,6 +39723,25 @@
     {
       "id": "sam-altman",
       "path": "skills/sam-altman",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "same-idea-both-platforms",
+      "path": "skills/same-idea-both-platforms",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -44274,6 +44388,25 @@
       "runtime_files": []
     },
     {
+      "id": "supercov",
+      "path": "skills/supercov",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "superpowers-lab",
       "path": "skills/superpowers-lab",
       "targets": {
@@ -46629,6 +46762,25 @@
     {
       "id": "turborepo-caching",
       "path": "skills/turborepo-caching",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "turn-this-into-a-thread",
+      "path": "skills/turn-this-into-a-thread",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -49360,6 +49512,25 @@
       "runtime_files": []
     },
     {
+      "id": "why-did-this-post-flop",
+      "path": "skills/why-did-this-post-flop",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "wifi-wireless",
       "path": "skills/wifi-wireless",
       "targets": {
@@ -49970,6 +50141,25 @@
     {
       "id": "wrike-automation",
       "path": "skills/wrike-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "write-in-my-voice",
+      "path": "skills/write-in-my-voice",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -50678,10 +50868,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2641,
+    "total_skills": 2651,
     "supported": {
-      "codex": 2554,
-      "claude": 2579
+      "codex": 2564,
+      "claude": 2589
     },
     "blocked": {
       "codex": 87,

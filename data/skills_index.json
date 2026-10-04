@@ -19477,6 +19477,39 @@
     ]
   },
   {
+    "id": "define-my-content-pillars",
+    "path": "skills/define-my-content-pillars",
+    "category": "marketing",
+    "name": "define-my-content-pillars",
+    "description": "Find the three to five subjects someone can post about repeatedly, from what they have published and know first-hand. Use when someone asks what to post about or has run out of ideas.",
+    "risk": "safe",
+    "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/define-my-content-pillars",
+    "date_added": "2026-10-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "prateeks367/voicemoat-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/prateeks367/voicemoat-skills/blob/7623a3effbee426554e8c5df55e77f3479fd0ec0/LICENSE",
+    "tags": [
+      "linkedin",
+      "twitter",
+      "content-strategy",
+      "personal-brand",
+      "social-media"
+    ]
+  },
+  {
     "id": "defuddle",
     "path": "skills/defuddle",
     "category": "content",
@@ -21770,6 +21803,38 @@
     "source_repo": "addyosmani/agent-skills",
     "license": "MIT",
     "license_source": "https://github.com/addyosmani/agent-skills/blob/main/LICENSE"
+  },
+  {
+    "id": "draft-my-comments",
+    "path": "skills/draft-my-comments",
+    "category": "marketing",
+    "name": "draft-my-comments",
+    "description": "Write a LinkedIn comment that adds something the post did not have, not agreement. Use when someone asks what to comment, wants to engage with creators, or says their comments go nowhere.",
+    "risk": "safe",
+    "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/draft-my-comments",
+    "date_added": "2026-10-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "prateeks367/voicemoat-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/prateeks367/voicemoat-skills/blob/7623a3effbee426554e8c5df55e77f3479fd0ec0/LICENSE",
+    "tags": [
+      "linkedin",
+      "comments",
+      "engagement",
+      "social-media"
+    ]
   },
   {
     "id": "draw",
@@ -26804,6 +26869,37 @@
     }
   },
   {
+    "id": "fxmacrodata",
+    "path": "skills/fxmacrodata",
+    "category": "finance",
+    "name": "fxmacrodata",
+    "description": "Query FXMacroData for official-source macro indicators, release calendars, central-bank policy rates, FX rates and CFTC positioning across 22 currencies.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-10-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "macroeconomics",
+      "forex",
+      "central-banks",
+      "economic-calendar",
+      "cot",
+      "rest-api"
+    ]
+  },
+  {
     "id": "game-art",
     "path": "skills/game-development/game-art",
     "category": "game-development",
@@ -27963,6 +28059,38 @@
       "deep-learning",
       "ai-safety",
       "neural-networks"
+    ]
+  },
+  {
+    "id": "get-seen-in-replies",
+    "path": "skills/get-seen-in-replies",
+    "category": "marketing",
+    "name": "get-seen-in-replies",
+    "description": "Write a reply to someone else's tweet that is worth reading on its own. Use when someone asks what to reply, wants to grow by replying on Twitter/X, or says their replies go nowhere.",
+    "risk": "safe",
+    "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/get-seen-in-replies",
+    "date_added": "2026-10-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "prateeks367/voicemoat-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/prateeks367/voicemoat-skills/blob/7623a3effbee426554e8c5df55e77f3479fd0ec0/LICENSE",
+    "tags": [
+      "twitter",
+      "replies",
+      "engagement",
+      "social-media"
     ]
   },
   {
@@ -34910,7 +35038,7 @@
     "path": "skills/jobs-to-be-done-analyst",
     "category": "marketing",
     "name": "jobs-to-be-done-analyst",
-    "description": "One sentence - what this skill does and when to invoke it",
+    "description": "Uncover the functional, emotional and social jobs a customer hires a product to do: progress state, hiring trigger, alternatives, success criteria, JTBD map. Use when you need to understand why users buy, switch or churn, or to anchor positioning, messaging and onboarding in real jobs.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-04-04",
@@ -44796,7 +44924,7 @@
     "path": "skills/onboarding-psychologist",
     "category": "marketing",
     "name": "onboarding-psychologist",
-    "description": "One sentence - what this skill does and when to invoke it",
+    "description": "Design first-use and onboarding experiences that bring an early win, cut setup friction, build ownership and form habits through stable cues. Use when onboarding loses users early, time-to-value is long, or the first session should build confidence, momentum and a lasting habit.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-04-04",
@@ -51544,6 +51672,39 @@
     ]
   },
   {
+    "id": "repurpose-into-a-post",
+    "path": "skills/repurpose-into-a-post",
+    "category": "marketing",
+    "name": "repurpose-into-a-post",
+    "description": "Turn an article, newsletter, transcript or video into a Twitter/X or LinkedIn post that stands on its own. Use when someone wants to repurpose, share or promote content they already made.",
+    "risk": "critical",
+    "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/repurpose-into-a-post",
+    "date_added": "2026-10-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "prateeks367/voicemoat-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/prateeks367/voicemoat-skills/blob/7623a3effbee426554e8c5df55e77f3479fd0ec0/LICENSE",
+    "tags": [
+      "linkedin",
+      "twitter",
+      "repurposing",
+      "content",
+      "social-media"
+    ]
+  },
+  {
     "id": "requesting-code-review",
     "path": "skills/requesting-code-review",
     "category": "workflow",
@@ -52838,6 +52999,39 @@
       "agi",
       "yc",
       "fundraising"
+    ]
+  },
+  {
+    "id": "same-idea-both-platforms",
+    "path": "skills/same-idea-both-platforms",
+    "category": "marketing",
+    "name": "same-idea-both-platforms",
+    "description": "Write one idea as a Twitter/X post and a LinkedIn post that read as written separately, not pasted twice. Use when someone wants to cross-post or adapt a post for the other platform.",
+    "risk": "critical",
+    "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/same-idea-both-platforms",
+    "date_added": "2026-10-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "prateeks367/voicemoat-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/prateeks367/voicemoat-skills/blob/7623a3effbee426554e8c5df55e77f3479fd0ec0/LICENSE",
+    "tags": [
+      "linkedin",
+      "twitter",
+      "cross-posting",
+      "writing",
+      "social-media"
     ]
   },
   {
@@ -58592,6 +58786,38 @@
     }
   },
   {
+    "id": "supercov",
+    "path": "skills/supercov",
+    "category": "testing",
+    "name": "supercov",
+    "description": "Measure line, branch and MC/DC coverage of a project's existing tests with the supercov CLI, then write small, focused tests for the code no test reaches.",
+    "risk": "critical",
+    "source": "https://github.com/supercorp-ai/supercov/tree/main/plugins/supercov/skills/supercov",
+    "date_added": "2026-10-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "supercorp-ai/supercov",
+    "license": "MIT",
+    "license_source": "https://github.com/supercorp-ai/supercov/blob/main/LICENSE",
+    "tags": [
+      "testing",
+      "coverage",
+      "mcdc",
+      "test-generation"
+    ]
+  },
+  {
     "id": "superpowers-lab",
     "path": "skills/superpowers-lab",
     "category": "ai-agents",
@@ -61973,6 +62199,38 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "turn-this-into-a-thread",
+    "path": "skills/turn-this-into-a-thread",
+    "category": "marketing",
+    "name": "turn-this-into-a-thread",
+    "description": "Turn a long idea, transcript, article or draft into a Twitter/X thread where every tweet stands alone. Use when someone asks for a thread or to break long writing into tweets.",
+    "risk": "critical",
+    "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/turn-this-into-a-thread",
+    "date_added": "2026-10-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "prateeks367/voicemoat-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/prateeks367/voicemoat-skills/blob/7623a3effbee426554e8c5df55e77f3479fd0ec0/LICENSE",
+    "tags": [
+      "twitter",
+      "threads",
+      "writing",
+      "social-media"
+    ]
   },
   {
     "id": "tutorial-engineer",
@@ -65850,6 +66108,39 @@
     ]
   },
   {
+    "id": "why-did-this-post-flop",
+    "path": "skills/why-did-this-post-flop",
+    "category": "marketing",
+    "name": "why-did-this-post-flop",
+    "description": "Diagnose why one Twitter/X or LinkedIn post underperformed: not seen, seen and skipped, or read and ignored. Use when someone asks why a post did badly or got no engagement.",
+    "risk": "safe",
+    "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/why-did-this-post-flop",
+    "date_added": "2026-10-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "prateeks367/voicemoat-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/prateeks367/voicemoat-skills/blob/7623a3effbee426554e8c5df55e77f3479fd0ec0/LICENSE",
+    "tags": [
+      "linkedin",
+      "twitter",
+      "analytics",
+      "post-review",
+      "social-media"
+    ]
+  },
+  {
     "id": "widget-based-design",
     "path": "skills/design-it/widget-based-design",
     "category": "design-it",
@@ -66671,6 +66962,39 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "write-in-my-voice",
+    "path": "skills/write-in-my-voice",
+    "category": "marketing",
+    "name": "write-in-my-voice",
+    "description": "Draft a Twitter/X or LinkedIn post that sounds like the person asking, from posts they already wrote. Use when someone asks for a post or rewrite in their voice, or asks if text sounds like them.",
+    "risk": "critical",
+    "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/write-in-my-voice",
+    "date_added": "2026-10-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "prateeks367/voicemoat-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/prateeks367/voicemoat-skills/blob/7623a3effbee426554e8c5df55e77f3479fd0ec0/LICENSE",
+    "tags": [
+      "linkedin",
+      "twitter",
+      "writing",
+      "voice",
+      "social-media"
+    ]
   },
   {
     "id": "writer",

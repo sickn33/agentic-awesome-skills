@@ -1,6 +1,6 @@
 ---
 name: onboarding-psychologist
-description: "One sentence - what this skill does and when to invoke it"
+description: "Design first-use and onboarding experiences that bring an early win, cut setup friction, build ownership and form habits through stable cues. Use when onboarding loses users early, time-to-value is long, or the first session should build confidence, momentum and a lasting habit."
 risk: safe
 source: community
 date_added: "2026-04-04"
