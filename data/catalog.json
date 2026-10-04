@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-04T06:56:41.000Z",
-  "total": 2651,
+  "total": 2652,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -7918,6 +7918,40 @@
         "interest"
       ],
       "path": "skills/axiom/SKILL.md"
+    },
+    {
+      "id": "axonx",
+      "canonical_id": "axonx",
+      "name": "axonx",
+      "description": "Develop AxonX research plugins and operate quantitative research tasks through CLI or MCP, inspecting execution status, logs, artifacts, and lineage.",
+      "category": "finance",
+      "risk": "critical",
+      "source": "https://github.com/FlowLLM-AI/AxonX/tree/862b90da9c49c3bdee4c2ab9ef896c415aee9f45/skills/axonx",
+      "source_type": "community",
+      "source_repo": "FlowLLM-AI/AxonX",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/FlowLLM-AI/AxonX/blob/862b90da9c49c3bdee4c2ab9ef896c415aee9f45/LICENSE",
+      "tags": [
+        "quantitative-research",
+        "mcp",
+        "backtesting",
+        "python"
+      ],
+      "triggers": [
+        "quantitative-research",
+        "mcp",
+        "backtesting",
+        "python",
+        "axonx",
+        "develop",
+        "research",
+        "plugins",
+        "operate",
+        "quantitative",
+        "tasks",
+        "through"
+      ],
+      "path": "skills/axonx/SKILL.md"
     },
     {
       "id": "azd-deployment",

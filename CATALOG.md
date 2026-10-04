@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-04T06:56:41.000Z
 
-Total skills: 2651
+Total skills: 2652
 
 ## agent-behavior (5)
 
@@ -1799,10 +1799,11 @@ Total skills: 2651
 | `web3-transaction-relayer-pool` | Gasless transaction relayer node pool register: fee sponsorship limits, nonce synchronization, and balance replenishment alerts. | safe | Ranjeet2063/agentic-awesome-skills | web3, relayer, gasless, meta-transactions, stellar, infrastructure | web3, relayer, gasless, meta-transactions, stellar, infrastructure, transaction, pool, node, register, fee, sponsorship |
 | `zk-proof-verification-pipeline` | Zero-knowledge cryptographic verification pipeline register: proving system, circuit verification keys, public inputs, and gas costs. | safe | Ranjeet2063/agentic-awesome-skills | zk, zero-knowledge, snark, cryptography, privacy, soroban, web3 | zk, zero-knowledge, snark, cryptography, privacy, soroban, web3, proof, verification, pipeline, zero, knowledge |
 
-## finance (17)
+## finance (18)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `axonx` | Develop AxonX research plugins and operate quantitative research tasks through CLI or MCP, inspecting execution status, logs, artifacts, and lineage. | critical | FlowLLM-AI/AxonX | quantitative-research, mcp, backtesting, python | quantitative-research, mcp, backtesting, python, axonx, develop, research, plugins, operate, quantitative, tasks, through |
 | `fxmacrodata` | Query FXMacroData for official-source macro indicators, release calendars, central-bank policy rates, FX rates and CFTC positioning across 22 currencies. | safe | self | macroeconomics, forex, central-banks, economic-calendar, cot, rest-api | macroeconomics, forex, central-banks, economic-calendar, cot, rest-api, fxmacrodata, query, official, source, macro, indicators |
 | `longbridge` | 125+ agent skills for Longbridge Securities — real-time quotes, charts, fundamentals, portfolio analysis, options, and more for HK/US/A-share/SG markets. Tri... | critical | longbridge/skills | finance, stocks, trading, portfolio, market-data | finance, stocks, trading, portfolio, market-data, longbridge, 125, agent, skills, securities, real, time |
 | `longbridge-content` | Latest news articles, regulatory filings, community discussion topics for listed stocks, and SEC EDGAR filing analysis (10-K/10-Q/8-K/proxy/Form 4) via Longb... | critical | longbridge/skills | longbridge, content | longbridge, content, latest, news, articles, regulatory, filings, community, discussion, topics, listed, stocks |

@@ -59,6 +59,7 @@
         "aws-mcp-setup",
         "aws-serverless",
         "awt-e2e-testing",
+        "axonx",
         "azd-deployment",
         "azure-ai-agents-persistent-java",
         "azure-ai-anomalydetector-java",
