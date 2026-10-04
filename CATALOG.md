@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-10-02T09:47:34.000Z
+Generated at: 2026-10-03T08:30:43.000Z
 
-Total skills: 2635
+Total skills: 2638
 
 ## agent-behavior (5)
 
@@ -297,7 +297,7 @@ Total skills: 2635
 | `10-andruia-skill-smith` | Ingeniero de Sistemas de Andru.ia. Diseña, redacta y despliega nuevas habilidades (skills) dentro del repositorio siguiendo el Estándar de Diamante. | safe | personal | 10, andruia, skill, smith | 10, andruia, skill, smith, ingeniero, de, sistemas, andru, ia, dise, redacta, despliega |
 | `20-andruia-niche-intelligence` | Estratega de Inteligencia de Dominio de Andru.ia. Analiza el nicho específico de un proyecto para inyectar conocimientos, regulaciones y estándares únicos de... | safe | personal | 20, andruia, niche, intelligence | 20, andruia, niche, intelligence, estratega, de, inteligencia, dominio, andru, ia, analiza, el |
 
-## api-integration (41)
+## api-integration (42)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -319,6 +319,7 @@ Total skills: 2635
 | `pakistan-payments-stack` | Design and implement production-grade Pakistani payment integrations (JazzCash, Easypaisa, bank/PSP rails, optional Raast) for SaaS with PKR billing, webhook... | safe | community | saas, payments, pakistan, nextjs, b2b, pkr, reconciliation | saas, payments, pakistan, nextjs, b2b, pkr, reconciliation, stack, grade, pakistani, payment, integrations |
 | `payment-integration` | Integrate Stripe, PayPal, and payment processors. Handles checkout flows, subscriptions, webhooks, and PCI compliance. Use PROACTIVELY when implementing paym... | critical | community | payment, integration | payment, integration, integrate, stripe, paypal, processors, checkout, flows, subscriptions, webhooks, pci, compliance |
 | `paypal-integration` | Master PayPal payment integration including Express Checkout, IPN handling, recurring billing, and refund workflows. | critical | community | paypal, integration | paypal, integration, payment, including, express, checkout, ipn, handling, recurring, billing, refund |
+| `placecall` | Place real outbound phone calls to US businesses through the PlaceCall API: book, ask, get quotes, then read the outcome and transcript. | critical | voygr-tech/placecall | phone, calls, voice, telephony, reservations, rest-api, paid-api | phone, calls, voice, telephony, reservations, rest-api, paid-api, placecall, place, real, outbound, us |
 | `plaid-fintech` | Expert patterns for Plaid API integration including Link token flows, transactions sync, identity verification, Auth for ACH, balance checks, webhook handlin... | critical | vibeship-spawner-skills (Apache 2.0) | plaid, fintech | plaid, fintech, api, integration, including, link, token, flows, transactions, sync, identity, verification |
 | `postman-collection-generator` | Generate complete, import-ready Postman Collection v2.1 JSON files from natural language API descriptions or cURL commands. | critical | LambdaTest/agent-skills | postman, collection, generator | postman, collection, generator, generate, complete, import, v2, json, files, natural, language, api |
 | `postman-openapi-converter` | Convert OpenAPI 3.x or Swagger 2.0 specs (YAML or JSON) into complete, import-ready Postman Collection v2.1 JSON files. | critical | LambdaTest/agent-skills | postman, openapi, converter | postman, openapi, converter, convert, swagger, specs, yaml, json, complete, import, collection, v2 |
@@ -1751,11 +1752,13 @@ Total skills: 2635
 | `verify-citations` | Verify citations and references in a document, report, or article against real sources. Use when the user asks to fact-check, verify references, check citati... | critical | Sketchjar/stipple-agent-skills | document-verification, fact-checking, stipple, authenticity | document-verification, fact-checking, stipple, authenticity, verify, citations, references, document, report, article, against, real |
 | `verify-document` | Check whether a document (PDF or image) shows signs of tampering or forgery before you rely on it. Use when the user asks to verify a payslip, invoice, bank ... | critical | Sketchjar/stipple-agent-skills | document-verification, fact-checking, stipple, authenticity | document-verification, fact-checking, stipple, authenticity, verify, document, check, whether, pdf, image, shows, signs |
 
-## ecommerce (2)
+## ecommerce (4)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `buywhere-product-catalog` | Use BuyWhere's MCP and API surfaces to add product search, price comparison, and deal discovery to AI shopping agents. | safe | BuyWhere/buywhere-mcp | buywhere, ecommerce, shopping, mcp, api, product-catalog | buywhere, ecommerce, shopping, mcp, api, product-catalog, product, catalog, surfaces, add, search, price |
+| `etsy-search-listings` | Fetch live Etsy search listing rows for a keyword, market phrase, or category via Apify Actor publicrecords/etsy-search-scraper (MCP). Needs an Apify token; ... | critical | self | etsy, ecommerce, search, listings, apify, mcp | etsy, ecommerce, search, listings, apify, mcp, fetch, live, listing, rows, keyword, market |
+| `etsy-shop-sales-history` | Read Etsy shop sales counters, deltas, and breakout flags from Apify Actor publicrecords/etsy-shop-velocity (MCP panel snapshot). Needs an Apify token; Actor... | critical | self | etsy, ecommerce, shop, sales, velocity, apify, mcp | etsy, ecommerce, shop, sales, velocity, apify, mcp, history, read, counters, deltas, breakout |
 | `woo-guard` | Review generated or changed WooCommerce extensions, payment and shipping integrations, checkout customizations, and order or product logic. | critical | amElnagdy/guard-skills | woo, guard | woo, guard, review, generated, changed, woocommerce, extensions, payment, shipping, integrations, checkout, customizations |
 
 ## education (5)

@@ -16,7 +16,7 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.node.json --noEmit",
-    "build:plugin-ui": "vite build --config vite.plugin.config.ts"
+    "build:plugin-ui": "vite build --config vite.plugin.config.ts && node scripts/inline-single-file.js ../../.tmp/aas-plugin/workbench.html"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.3.0",
@@ -61,8 +61,7 @@
     "typescript-eslint": "^8.65.0",
     "vite": "^8.0.16",
     "vitest": "^5.0.0",
-    "@modelcontextprotocol/ext-apps": "2.0.3",
-    "vite-plugin-singlefile": "2.3.3"
+    "@modelcontextprotocol/ext-apps": "2.0.3"
   },
   "overrides": {
     "brace-expansion": "^5.0.12",

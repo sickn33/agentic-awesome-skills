@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-02T09:47:34.000Z",
+  "generatedAt": "2026-10-03T08:30:43.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -374,6 +374,7 @@
         "photopea-embedded-editor",
         "php-pro",
         "pipecat-friday-agent",
+        "placecall",
         "plaid-fintech",
         "playwright-java",
         "podcast-generation",
@@ -1991,6 +1992,8 @@
         "clients-accounts",
         "close-automation",
         "ecommerce-listing-image-set",
+        "etsy-search-listings",
+        "etsy-shop-sales-history",
         "expo-examples",
         "geo-prospect",
         "growth-engine",
@@ -2164,6 +2167,7 @@
         "database-migration",
         "developer-seo",
         "drizzle-orm-expert",
+        "etsy-search-listings",
         "fixing-metadata",
         "frontend-seo",
         "gbp-local-seo-intent",
