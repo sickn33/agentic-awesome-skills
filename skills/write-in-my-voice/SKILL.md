@@ -3,12 +3,12 @@ name: write-in-my-voice
 description: "Draft a Twitter/X or LinkedIn post that sounds like the person asking, from posts they already wrote. Use when someone asks for a post or rewrite in their voice, or asks if text sounds like them."
 category: marketing
 risk: critical
-source: "https://github.com/prateeks367/voicemoat-skills/tree/840c5e84c4c1cae22b43bb626b68e02b853e6081/skills/write-in-my-voice"
+source: "https://github.com/prateeks367/voicemoat-skills/tree/d066fb4bca8ddef50fc745d63e4b4bfc3a1894c2/skills/write-in-my-voice"
 source_repo: prateeks367/voicemoat-skills
 source_type: official
 date_added: "2026-10-04"
 license: MIT
-license_source: "https://github.com/prateeks367/voicemoat-skills/blob/840c5e84c4c1cae22b43bb626b68e02b853e6081/LICENSE"
+license_source: "https://github.com/prateeks367/voicemoat-skills/blob/d066fb4bca8ddef50fc745d63e4b4bfc3a1894c2/LICENSE"
 author: prateeks367
 tags: [linkedin, twitter, writing, voice, social-media]
 tools: [claude, cursor, gemini, codex]
@@ -132,5 +132,9 @@ connected, the guesswork in steps 1, 2 and 4 is replaced with real data:
 - `publish_post` and `schedule_post` put the finished post on Twitter or
   LinkedIn, behind a preview and a one-time confirmation so nothing goes out
   that you have not read.
+
+Never make the second call on your own. Show the person the exact preview the
+first call returns and wait for a clear yes before you send the one-time code
+back. Never make both calls in one step.
 
 VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan.

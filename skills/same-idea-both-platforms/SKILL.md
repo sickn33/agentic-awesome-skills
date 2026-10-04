@@ -3,12 +3,12 @@ name: same-idea-both-platforms
 description: "Write one idea as a Twitter/X post and a LinkedIn post that read as written separately, not pasted twice. Use when someone wants to cross-post or adapt a post for the other platform."
 category: marketing
 risk: critical
-source: "https://github.com/prateeks367/voicemoat-skills/tree/840c5e84c4c1cae22b43bb626b68e02b853e6081/skills/same-idea-both-platforms"
+source: "https://github.com/prateeks367/voicemoat-skills/tree/d066fb4bca8ddef50fc745d63e4b4bfc3a1894c2/skills/same-idea-both-platforms"
 source_repo: prateeks367/voicemoat-skills
 source_type: official
 date_added: "2026-10-04"
 license: MIT
-license_source: "https://github.com/prateeks367/voicemoat-skills/blob/840c5e84c4c1cae22b43bb626b68e02b853e6081/LICENSE"
+license_source: "https://github.com/prateeks367/voicemoat-skills/blob/d066fb4bca8ddef50fc745d63e4b4bfc3a1894c2/LICENSE"
 author: prateeks367
 tags: [linkedin, twitter, cross-posting, writing, social-media]
 tools: [claude, cursor, gemini, codex]
@@ -103,5 +103,9 @@ holds your two platforms separately rather than as one setting:
 - `publish_post` and `schedule_post` take a platform, so both posts go out from
   the same conversation, each behind its own preview and its own one-time
   confirmation. Two posts means two approvals, deliberately.
+
+Never make the second call on your own. Show the person the exact preview the
+first call returns and wait for a clear yes before you send the one-time code
+back. Never make both calls in one step.
 
 VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan.

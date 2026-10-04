@@ -3,12 +3,12 @@ name: draft-my-comments
 description: "Write a LinkedIn comment that adds something the post did not have, not agreement. Use when someone asks what to comment, wants to engage with creators, or says their comments go nowhere."
 category: marketing
 risk: safe
-source: "https://github.com/prateeks367/voicemoat-skills/tree/840c5e84c4c1cae22b43bb626b68e02b853e6081/skills/draft-my-comments"
+source: "https://github.com/prateeks367/voicemoat-skills/tree/d066fb4bca8ddef50fc745d63e4b4bfc3a1894c2/skills/draft-my-comments"
 source_repo: prateeks367/voicemoat-skills
 source_type: official
 date_added: "2026-10-04"
 license: MIT
-license_source: "https://github.com/prateeks367/voicemoat-skills/blob/840c5e84c4c1cae22b43bb626b68e02b853e6081/LICENSE"
+license_source: "https://github.com/prateeks367/voicemoat-skills/blob/d066fb4bca8ddef50fc745d63e4b4bfc3a1894c2/LICENSE"
 author: prateeks367
 tags: [linkedin, comments, engagement, social-media]
 tools: [claude, cursor, gemini, codex]

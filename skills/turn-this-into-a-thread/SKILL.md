@@ -3,12 +3,12 @@ name: turn-this-into-a-thread
 description: "Turn a long idea, transcript, article or draft into a Twitter/X thread where every tweet stands alone. Use when someone asks for a thread or to break long writing into tweets."
 category: marketing
 risk: critical
-source: "https://github.com/prateeks367/voicemoat-skills/tree/840c5e84c4c1cae22b43bb626b68e02b853e6081/skills/turn-this-into-a-thread"
+source: "https://github.com/prateeks367/voicemoat-skills/tree/d066fb4bca8ddef50fc745d63e4b4bfc3a1894c2/skills/turn-this-into-a-thread"
 source_repo: prateeks367/voicemoat-skills
 source_type: official
 date_added: "2026-10-04"
 license: MIT
-license_source: "https://github.com/prateeks367/voicemoat-skills/blob/840c5e84c4c1cae22b43bb626b68e02b853e6081/LICENSE"
+license_source: "https://github.com/prateeks367/voicemoat-skills/blob/d066fb4bca8ddef50fc745d63e4b4bfc3a1894c2/LICENSE"
 author: prateeks367
 tags: [twitter, threads, writing, social-media]
 tools: [claude, cursor, gemini, codex]
@@ -122,5 +122,9 @@ Agent:
 - `publish_post` posts the thread as a genuinely chained thread, splitting on
   that three-dash separator and replying each part to the one before, behind a
   preview and a one-time confirmation. `schedule_post` queues it the same way.
+
+Never make the second call on your own. Show the person the exact preview the
+first call returns and wait for a clear yes before you send the one-time code
+back. Never make both calls in one step.
 
 VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan.
