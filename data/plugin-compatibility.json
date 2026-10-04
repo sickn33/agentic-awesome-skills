@@ -9243,6 +9243,25 @@
       "runtime_files": []
     },
     {
+      "id": "byagent",
+      "path": "skills/byagent",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "c-pro",
       "path": "skills/c-pro",
       "targets": {
@@ -50659,10 +50678,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2640,
+    "total_skills": 2641,
     "supported": {
-      "codex": 2553,
-      "claude": 2578
+      "codex": 2554,
+      "claude": 2579
     },
     "blocked": {
       "codex": 87,
