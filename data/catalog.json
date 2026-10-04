@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-04T06:56:41.000Z",
-  "total": 2640,
+  "total": 2641,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -14452,6 +14452,42 @@
         "price"
       ],
       "path": "skills/buywhere-product-catalog/SKILL.md"
+    },
+    {
+      "id": "byagent",
+      "canonical_id": "byagent",
+      "name": "byagent",
+      "description": "Publish agent-written Markdown or HTML as a shareable link with the byagent CLI, then read readers' line comments back, edit, republish to the same link and resolve them.",
+      "category": "productivity",
+      "risk": "critical",
+      "source": "https://github.com/anup-a/agent-artifacts",
+      "source_type": "official",
+      "source_repo": "anup-a/agent-artifacts",
+      "license": "MIT",
+      "license_source": "https://github.com/anup-a/agent-artifacts/blob/main/LICENSE",
+      "tags": [
+        "publish",
+        "markdown",
+        "html",
+        "share",
+        "comments",
+        "review"
+      ],
+      "triggers": [
+        "publish",
+        "markdown",
+        "html",
+        "share",
+        "comments",
+        "review",
+        "byagent",
+        "agent",
+        "written",
+        "shareable",
+        "link",
+        "cli"
+      ],
+      "path": "skills/byagent/SKILL.md"
     },
     {
       "id": "c-pro",
