@@ -8749,6 +8749,25 @@
       "runtime_files": []
     },
     {
+      "id": "browser-extension-launch",
+      "path": "skills/browser-extension-launch",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "browser-extension-reverse",
       "path": "skills/browser-extension-reverse",
       "targets": {
@@ -10749,6 +10768,25 @@
     {
       "id": "cloudformation-best-practices",
       "path": "skills/cloudformation-best-practices",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "cloudish",
+      "path": "skills/cloudish",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -50621,10 +50659,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2638,
+    "total_skills": 2640,
     "supported": {
-      "codex": 2551,
-      "claude": 2576
+      "codex": 2553,
+      "claude": 2578
     },
     "blocked": {
       "codex": 87,

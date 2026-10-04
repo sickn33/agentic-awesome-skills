@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-03T08:30:43.000Z
 
-Total skills: 2638
+Total skills: 2640
 
 ## agent-behavior (5)
 
@@ -1325,7 +1325,7 @@ Total skills: 2638
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (218)
+## development (219)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1347,6 +1347,7 @@ Total skills: 2638
 | `bazel-build-optimization` | Optimize Bazel builds for large-scale monorepos. Use when configuring Bazel, implementing remote execution, or optimizing build performance for enterprise co... | critical | community | bazel, build, optimization | bazel, build, optimization, optimize, large, scale, monorepos, configuring, implementing, remote, execution, optimizing |
 | `boost-asio-pro` | Use when writing asynchronous C++ networking code with Boost.Asio or standalone Asio — TCP/UDP servers and clients, SSL/TLS, timers, strands, composed async ... | safe | alexprivalov/boost-asio-skill | cpp, boost, asio, async, networking, coroutines | cpp, boost, asio, async, networking, coroutines, pro, writing, asynchronous, code, standalone, tcp |
 | `brooks-lint` | AI code reviewer grounded in classic software engineering books for catching design smells, coupling issues, and architectural risks. | safe | hyhmrright/brooks-lint | code-review, architecture, software-design, refactoring, claude-code | code-review, architecture, software-design, refactoring, claude-code, brooks, lint, ai, code, reviewer, grounded, classic |
+| `browser-extension-launch` | Builds, tests, packages, and prepares Chrome extensions for store launch from a plain-language idea; use for new extensions, fixes, releases, and submission ... | critical | xiehuan123/browser-extension-launch | browser-extension, chrome-extension, manifest-v3, testing, publishing | browser-extension, chrome-extension, manifest-v3, testing, publishing, browser, extension, launch, tests, packages, prepares, chrome |
 | `busybox-on-windows` | How to use a Win32 build of BusyBox to run many of the standard UNIX command line tools on Windows. | safe | community | busybox, on, windows | busybox, on, windows, how, win32, run, many, standard, unix, command, line |
 | `chatexport-need-miner` | Mines offline Telegram Desktop chat exports (result.json) for unmet market needs and product opportunities using chunked streaming and verbatim quote groundi... | safe | wwewtech/chatexport-need-miner | telegram, market-research, text-mining, offline-analytics, developer-tools | telegram, market-research, text-mining, offline-analytics, developer-tools, chatexport, miner, mines, offline, desktop, chat, exports |
 | `cmux` | Control cmux workspaces, panes, surfaces, and agent sessions safely from macOS terminal workflows. | critical | davidondrej/skills | cmux, terminal, agents, macos | cmux, terminal, agents, macos, control, workspaces, panes, surfaces, agent, sessions, safely |
@@ -1559,7 +1560,7 @@ Total skills: 2638
 | `systematic-debugging` | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes | critical | community | systematic, debugging | systematic, debugging, encountering, any, bug, test, failure, unexpected, behavior, before, proposing, fixes |
 | `test-fixing` | Systematically identify and fix all failing tests using smart grouping strategies. Use when explicitly asks to fix tests ("fix these tests", "make tests pass... | safe | community | fixing | fixing, test, systematically, identify, fix, all, failing, tests, smart, grouping, explicitly, asks |
 
-## devops (165)
+## devops (166)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1600,6 +1601,7 @@ Total skills: 2638
 | `cloudflare-workers` | Build and deploy edge functions with Cloudflare Workers and Wrangler. Use for APIs, cron jobs, and edge middleware. | critical | BagelHole/DevOps-Security-Agent-Skills | cloudflare, workers | cloudflare, workers, deploy, edge, functions, wrangler, apis, cron, jobs, middleware |
 | `cloudflare-zero-trust` | Protect internal apps with Cloudflare Access, device posture, and Zero Trust policies. | critical | BagelHole/DevOps-Security-Agent-Skills | cloudflare, zero, trust | cloudflare, zero, trust, protect, internal, apps, access, device, posture, policies |
 | `cloudformation` | Deploy AWS resources with CloudFormation templates. Create stacks, use nested stacks, and implement drift detection. Use when deploying AWS-native IaC. | critical | BagelHole/DevOps-Security-Agent-Skills | cloudformation | cloudformation, deploy, aws, resources, stacks, nested, drift, detection, deploying, native, iac |
+| `cloudish` | Deploy a Dockerfile, source folder, or existing image to Cloudish as a running container at a live URL, built server-side with no local Docker, with confirma... | critical | cloudishai/skills | deploy, docker, containers, hosting, persistent-storage | deploy, docker, containers, hosting, persistent-storage, cloudish, dockerfile, source, folder, existing, image, running |
 | `container-registries` | Manage container registries including ECR, ACR, GCR, and Docker Hub. | critical | BagelHole/DevOps-Security-Agent-Skills | container, registries | container, registries, including, ecr, acr, gcr, docker, hub |
 | `convex-backend` | Build reactive backends with Convex functions, schema validation, auth integration, and deployment workflows. Use when building real-time apps with type-safe... | critical | BagelHole/DevOps-Security-Agent-Skills | convex, backend | convex, backend, reactive, backends, functions, schema, validation, auth, integration, deployment, building, real |
 | `cron-doctor` | Diagnose and validate cron expressions before they ship. Catches the five silent death-traps: impossible dates that never fire, OR-semantics that fire too of... | safe | takeaseatventure/devops-skills | cron, crontab, scheduling, devops, debugging, kubernetes, validation | cron, crontab, scheduling, devops, debugging, kubernetes, validation, doctor, diagnose, validate, expressions, before |

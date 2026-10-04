@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-03T08:30:43.000Z",
-  "total": 2638,
+  "total": 2640,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -13636,6 +13636,41 @@
       "path": "skills/browser-extension-builder/SKILL.md"
     },
     {
+      "id": "browser-extension-launch",
+      "canonical_id": "browser-extension-launch",
+      "name": "browser-extension-launch",
+      "description": "Builds, tests, packages, and prepares Chrome extensions for store launch from a plain-language idea; use for new extensions, fixes, releases, and submission recovery.",
+      "category": "development",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "xiehuan123/browser-extension-launch",
+      "license": "MIT",
+      "license_source": "https://github.com/xiehuan123/browser-extension-launch/blob/main/LICENSE",
+      "tags": [
+        "browser-extension",
+        "chrome-extension",
+        "manifest-v3",
+        "testing",
+        "publishing"
+      ],
+      "triggers": [
+        "browser-extension",
+        "chrome-extension",
+        "manifest-v3",
+        "testing",
+        "publishing",
+        "browser",
+        "extension",
+        "launch",
+        "tests",
+        "packages",
+        "prepares",
+        "chrome"
+      ],
+      "path": "skills/browser-extension-launch/SKILL.md"
+    },
+    {
       "id": "browser-extension-reverse",
       "canonical_id": "browser-extension-reverse",
       "name": "browser-extension-reverse",
@@ -16748,6 +16783,41 @@
         "cf"
       ],
       "path": "skills/cloudformation-best-practices/SKILL.md"
+    },
+    {
+      "id": "cloudish",
+      "canonical_id": "cloudish",
+      "name": "cloudish",
+      "description": "Deploy a Dockerfile, source folder, or existing image to Cloudish as a running container at a live URL, built server-side with no local Docker, with confirmation before spending credits.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/cloudishai/skills",
+      "source_type": "official",
+      "source_repo": "cloudishai/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/cloudishai/skills/blob/main/LICENSE",
+      "tags": [
+        "deploy",
+        "docker",
+        "containers",
+        "hosting",
+        "persistent-storage"
+      ],
+      "triggers": [
+        "deploy",
+        "docker",
+        "containers",
+        "hosting",
+        "persistent-storage",
+        "cloudish",
+        "dockerfile",
+        "source",
+        "folder",
+        "existing",
+        "image",
+        "running"
+      ],
+      "path": "skills/cloudish/SKILL.md"
     },
     {
       "id": "cmux",
