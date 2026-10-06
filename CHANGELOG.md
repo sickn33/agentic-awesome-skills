@@ -7,6 +7,73 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [18.15.0] - 2026-10-05 - "Agent Publishing, Coverage Gaps, and Social Writing"
+
+> Adds **12** reviewed skills for agent-page publishing, coverage-driven test writing, macro/FX data, quantitative research, and Twitter/X and LinkedIn writing. Ships **2,652** skills.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the complete protected maintainer batch merged after `18.14.0`, with existing installation interfaces preserved.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.15.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **byagent (#1788)** - publish agent-written Markdown or HTML as a shareable link with the `byagent` CLI, read readers' line comments back, edit, republish to the same link and resolve them. `risk: critical`, MIT, from [anup-a/agent-artifacts](https://github.com/anup-a/agent-artifacts).
+- **supercov (#1787)** - measure line, branch and MC/DC coverage of a project's existing tests with the `supercov` CLI, then write small, focused tests for the code no test reaches. `risk: critical`, MIT, from [supercorp-ai/supercov](https://github.com/supercorp-ai/supercov).
+- **fxmacrodata (#1786)** - query FXMacroData for official-source macro indicators, release calendars, central-bank policy rates, FX rates and CFTC positioning across 22 currencies. `risk: safe`, official-source REST data.
+- **axonx (#1784)** - develop AxonX research plugins and operate quantitative research tasks through CLI or MCP, inspecting execution status, logs, artifacts and lineage. `risk: critical`, Apache-2.0, from [FlowLLM-AI/AxonX](https://github.com/FlowLLM-AI/AxonX).
+- **write-in-my-voice**, **turn-this-into-a-thread**, **same-idea-both-platforms**, **repurpose-into-a-post**, **define-my-content-pillars**, **why-did-this-post-flop**, **get-seen-in-replies**, **draft-my-comments (#1783)** - eight Twitter/X and LinkedIn writing skills: draft in your own voice, write threads, cross-post, repurpose long content, pick content pillars, diagnose a post that underperformed, and write replies and comments worth reading. An optional paid VoiceMoat connector adds voice scoring and preview-gated publishing. MIT, from [prateeks367/voicemoat-skills](https://github.com/prateeks367/voicemoat-skills).
+
+### Fixed
+
+- **jobs-to-be-done-analyst**, **onboarding-psychologist (#1785)** - replace the placeholder descriptions with real trigger guidance, within the description length limit.
+
+### Documentation and community
+
+- Credits for the new external skill sources are recorded in the README.
+- Thanks to the contributors to #1783, #1784, #1785, #1786, #1787, and #1788.
+
+### Validation scope
+
+Exact-head maintainer review for changed skill content, protected source PRs, repository validation and tests, reference validation, docs security, protected CI and CodeQL, dependency review, canonical synchronization, release preflight, npm publication, and release provenance verification.
+
+## [18.14.0] - 2026-10-04 - "Container Deploys, Browser-Extension Launch, and a Cleaner Web Build"
+
+> Adds **2** reviewed skills for container deployment and end-to-end browser-extension delivery, and replaces a vulnerable web-app build dependency. Ships **2,640** skills.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the complete protected maintainer batch merged after `18.13.0`, with existing installation interfaces preserved.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@18.14.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **cloudish (#1776)** - deploy a Dockerfile, source folder, or existing image to Cloudish as a running container at a live URL, built server-side with no local Docker, with confirmation before spending credits. `risk: critical`, MIT, from [cloudishai/skills](https://github.com/cloudishai/skills).
+- **browser-extension-launch (#1768)** - turn a plain-language idea into a shipped Chrome Manifest V3 extension: product loop, implementation, diagnosis, real-browser acceptance, packaging, store materials, and submission recovery. `risk: critical`, MIT, from [xiehuan123/browser-extension-launch](https://github.com/xiehuan123/browser-extension-launch).
+
+### Changed
+
+- **Web-app build dependency (#1775)** - removes the vulnerable `vite-plugin-singlefile` (transitively pulling `braces`, which is unpatched) and inlines the Workbench build with a small dependency-free script plus a regression test. The web-app audit is clean again.
+
+### Documentation and community
+
+- Credits for the new external skill sources are recorded in the README.
+- Thanks to the contributors to #1768, #1775, and #1776.
+
+### Validation scope
+
+Exact-head maintainer review for changed skill content, protected source PRs, repository validation and tests, reference validation, docs security, protected CI and CodeQL, dependency review, canonical synchronization, release preflight, npm publication, and release provenance verification.
+
 ## [18.13.0] - 2026-10-03 - "Etsy Market Intelligence and Real Phone-Call Automation"
 
 > Adds **3** reviewed skills for Etsy marketplace intelligence and real outbound phone-call automation - live Apify Actor search rows, shop sales-velocity panels, and the official PlaceCall voice API workflow. Ships **2,638** skills.

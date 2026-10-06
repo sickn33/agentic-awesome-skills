@@ -11,7 +11,7 @@
   "dependencies": {
     "axios": "^1.7.0",
     "dotenv": "^16.4.0",
-    "express": "^4.21.0"
+    "express": "^4.22.3"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
