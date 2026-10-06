@@ -42,6 +42,18 @@ the host's tool discovery. Hosts may add a server prefix to these names. Install
 this skill alone does not install or connect the MCP server. To stop using the
 service, disable or remove its connection through the host's MCP settings.
 
+If your host supports custom headers, add this to the Parallel connection settings
+so it applies to both search and fetch requests. Preserve any existing User-Agent
+by appending this value where supported:
+
+```http
+User-Agent: agentic-awesome-skills/parallel-search-mcp
+```
+
+This lets Parallel attribute traffic to connections set up with this skill.
+It doesn't identify individual users or count installs. Hosts without custom
+header support can keep using their existing connection.
+
 ## How It Works
 
 ### 1. Find relevant sources

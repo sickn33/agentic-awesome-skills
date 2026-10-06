@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-04T23:13:54.000Z
 
-Total skills: 2652
+Total skills: 2654
 
 ## agent-behavior (5)
 
@@ -2405,7 +2405,7 @@ Total skills: 2652
 | --- | --- | --- | --- | --- | --- |
 | `idea-os` | Five-phase pipeline (triage → clarify → research → PRD → plan) that turns a raw idea into four linked files: clarifying questions, deep research, a PRD with ... | safe | Slashworks-biz/idea-os | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical, idea, os |
 
-## productivity (48)
+## productivity (49)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2451,6 +2451,7 @@ Total skills: 2652
 | `one-drive-automation` | Automate OneDrive file management, search, uploads, downloads, sharing, permissions, and folder operations via Rube MCP (Composio). Always search tools first... | critical | community | one, drive | one, drive, automation, automate, onedrive, file, search, uploads, downloads, sharing, permissions, folder |
 | `read-all-adrs` | Read every ADR in a project before summarizing architectural context or decisions. | safe | davidondrej/skills | adr, documentation, architecture | adr, documentation, architecture, read, all, adrs, every, before, summarizing, architectural, context, decisions |
 | `rich-elicitation` | Asks clarifying questions in multiple rounds before starting ambiguous tasks. Fires when 2+ task dimensions each have 3+ viable answers. | none | self | elicitation, clarifying-questions, ambiguity, multi-round, prompt-engineering | elicitation, clarifying-questions, ambiguity, multi-round, prompt-engineering, rich, asks, clarifying, questions, multiple, rounds, before |
+| `session-handoff` | Use when context approaches capacity, before /clear or /compact, when switching tasks, or when ending a coding session: produces a structured handoff artifac... | safe | alapha888/session-handoff-kit | context-management, session-handoff, coding-agents, workflow | context-management, session-handoff, coding-agents, workflow, session, handoff, context, approaches, capacity, before, clear, compact |
 | `setup-help` | Walk a user through setup or installation one step at a time with the remaining steps visible. | safe | davidondrej/skills | setup, onboarding, installation | setup, onboarding, installation, walk, user, through, one, step, time, remaining, steps, visible |
 | `speed` | Launch RSVP speed reader for text | critical | community | speed | speed, launch, rsvp, reader, text |
 | `telegram-bot-messaging` | Send Telegram messages, files, and alerts via bot API; ask questions with inline buttons and wait for the answer. Supports multiple bots, named chat targets,... | critical | sanjay3290/ai-skills | telegram, notifications, bots, approvals | telegram, notifications, bots, approvals, bot, messaging, send, messages, files, alerts, via, api |
@@ -2588,7 +2589,7 @@ Total skills: 2652
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | safe | community | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
 | `sympy` | SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations. | safe | https://github.com/sympy/sympy | sympy | sympy, python, library, symbolic, mathematics, enables, exact, computation, mathematical, symbols, rather, than |
 
-## security (263)
+## security (264)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2638,6 +2639,7 @@ Total skills: 2652
 | `container-security-hardening` | Harden Docker/container images and runtime deployments with secure base images, non-root users, CVE scanning, SBOM/signing, seccomp/AppArmor, and Kubernetes ... | safe | community | container, security, hardening | container, security, hardening, harden, docker, images, runtime, deployments, secure, base, non, root |
 | `cred-omega` | CISO operacional enterprise para gestao total de credenciais e segredos. | critical | community | credentials, secrets, security, api-keys, vault | credentials, secrets, security, api-keys, vault, cred, omega, ciso, operacional, enterprise, para, gestao |
 | `cyber-audit` | Run read-only exposure checks for security advisories and write a structured local audit report. | safe | davidondrej/skills | security, audit, read-only | security, audit, read-only, cyber, run, read, exposure, checks, advisories, write, structured, local |
+| `darkmoon-pentest` | Start, follow and triage authorized autonomous AI pentest runs on a self-hosted Darkmoon Pro instance through its MCP server. | offensive | ASCIT31/darkmoon-mcp-server | pentest, security, mcp, vulnerability-triage, darkmoon | pentest, security, mcp, vulnerability-triage, darkmoon, start, follow, triage, authorized, autonomous, ai, runs |
 | `dast-scanning` | Perform dynamic application security testing with OWASP ZAP, Burp Suite, and Nikto. | offensive | BagelHole/DevOps-Security-Agent-Skills | dast, scanning | dast, scanning, perform, dynamic, application, security, testing, owasp, zap, burp, suite, nikto |
 | `dependency-management-deps-audit` | You are a dependency security expert specializing in vulnerability scanning, license compliance, and supply chain security. Analyze project dependencies for ... | critical | community | dependency, deps, audit | dependency, deps, audit, security, specializing, vulnerability, scanning, license, compliance, supply, chain, analyze |
 | `dependency-scanning` | Scan package dependencies for known vulnerabilities using Snyk, Dependabot, and OWASP Dependency-Check. | safe | BagelHole/DevOps-Security-Agent-Skills | dependency, scanning | dependency, scanning, scan, package, dependencies, known, vulnerabilities, snyk, dependabot, owasp, check |

@@ -18288,6 +18288,39 @@
     "source_type": "self"
   },
   {
+    "id": "darkmoon-pentest",
+    "path": "skills/darkmoon-pentest",
+    "category": "security",
+    "name": "darkmoon-pentest",
+    "description": "Start, follow and triage authorized autonomous AI pentest runs on a self-hosted Darkmoon Pro instance through its MCP server.",
+    "risk": "offensive",
+    "source": "https://github.com/ASCIT31/darkmoon-mcp-server/tree/main/plugins/darkmoon/skills/darkmoon-pentest",
+    "date_added": "2026-10-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "ASCIT31/darkmoon-mcp-server",
+    "license": "GPL-3.0-only",
+    "license_source": "https://github.com/ASCIT31/darkmoon-mcp-server/blob/main/LICENSE",
+    "tags": [
+      "pentest",
+      "security",
+      "mcp",
+      "vulnerability-triage",
+      "darkmoon"
+    ]
+  },
+  {
     "id": "dart",
     "path": "skills/super-code/dart",
     "category": "super-code",
@@ -55415,6 +55448,38 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "session-handoff",
+    "path": "skills/session-handoff",
+    "category": "productivity",
+    "name": "session-handoff",
+    "description": "Use when context approaches capacity, before /clear or /compact, when switching tasks, or when ending a coding session: produces a structured handoff artifact for the next session.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-10-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "alapha888/session-handoff-kit",
+    "license": "MIT",
+    "license_source": "https://github.com/alapha888/session-handoff-kit/blob/main/LICENSE",
+    "tags": [
+      "context-management",
+      "session-handoff",
+      "coding-agents",
+      "workflow"
+    ]
   },
   {
     "id": "setup-help",

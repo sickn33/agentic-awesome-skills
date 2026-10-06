@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-04T23:13:54.000Z",
-  "total": 2652,
+  "total": 2654,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -21204,6 +21204,41 @@
         "62386"
       ],
       "path": "skills/dali-short-address-commissioner/SKILL.md"
+    },
+    {
+      "id": "darkmoon-pentest",
+      "canonical_id": "darkmoon-pentest",
+      "name": "darkmoon-pentest",
+      "description": "Start, follow and triage authorized autonomous AI pentest runs on a self-hosted Darkmoon Pro instance through its MCP server.",
+      "category": "security",
+      "risk": "offensive",
+      "source": "https://github.com/ASCIT31/darkmoon-mcp-server/tree/main/plugins/darkmoon/skills/darkmoon-pentest",
+      "source_type": "community",
+      "source_repo": "ASCIT31/darkmoon-mcp-server",
+      "license": "GPL-3.0-only",
+      "license_source": "https://github.com/ASCIT31/darkmoon-mcp-server/blob/main/LICENSE",
+      "tags": [
+        "pentest",
+        "security",
+        "mcp",
+        "vulnerability-triage",
+        "darkmoon"
+      ],
+      "triggers": [
+        "pentest",
+        "security",
+        "mcp",
+        "vulnerability-triage",
+        "darkmoon",
+        "start",
+        "follow",
+        "triage",
+        "authorized",
+        "autonomous",
+        "ai",
+        "runs"
+      ],
+      "path": "skills/darkmoon-pentest/SKILL.md"
     },
     {
       "id": "dast-scanning",
@@ -64761,6 +64796,40 @@
         "deployments"
       ],
       "path": "skills/service-mesh-observability/SKILL.md"
+    },
+    {
+      "id": "session-handoff",
+      "canonical_id": "session-handoff",
+      "name": "session-handoff",
+      "description": "Use when context approaches capacity, before /clear or /compact, when switching tasks, or when ending a coding session: produces a structured handoff artifact for the next session.",
+      "category": "productivity",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "alapha888/session-handoff-kit",
+      "license": "MIT",
+      "license_source": "https://github.com/alapha888/session-handoff-kit/blob/main/LICENSE",
+      "tags": [
+        "context-management",
+        "session-handoff",
+        "coding-agents",
+        "workflow"
+      ],
+      "triggers": [
+        "context-management",
+        "session-handoff",
+        "coding-agents",
+        "workflow",
+        "session",
+        "handoff",
+        "context",
+        "approaches",
+        "capacity",
+        "before",
+        "clear",
+        "compact"
+      ],
+      "path": "skills/session-handoff/SKILL.md"
     },
     {
       "id": "setup-help",
