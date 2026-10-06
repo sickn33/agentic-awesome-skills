@@ -24,6 +24,7 @@
   },
   "overrides": {
     "picomatch": "4.0.4",
-    "rollup": "^4.59.0"
+    "rollup": "^4.59.0",
+    "source-map-js": "^1.2.2"
   }
 }

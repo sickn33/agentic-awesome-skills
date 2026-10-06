@@ -26,6 +26,7 @@
     "diff": "4.0.4",
     "path-to-regexp": "0.1.13",
     "qs": "^6.16.0",
-    "ip-address": "^10.5.1"
+    "ip-address": "^10.5.1",
+    "proxy-addr": "^2.0.8"
   }
 }
