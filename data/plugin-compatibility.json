@@ -13610,6 +13610,25 @@
       "runtime_files": []
     },
     {
+      "id": "darkmoon-pentest",
+      "path": "skills/darkmoon-pentest",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "dast-scanning",
       "path": "skills/dast-scanning",
       "targets": {
@@ -41693,6 +41712,25 @@
       "runtime_files": []
     },
     {
+      "id": "session-handoff",
+      "path": "skills/session-handoff",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "setup-help",
       "path": "skills/setup-help",
       "targets": {
@@ -50887,10 +50925,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2652,
+    "total_skills": 2654,
     "supported": {
-      "codex": 2565,
-      "claude": 2590
+      "codex": 2567,
+      "claude": 2592
     },
     "blocked": {
       "codex": 87,
