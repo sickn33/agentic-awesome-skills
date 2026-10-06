@@ -803,3 +803,14 @@ no fetch and no installer handoff. Root validation, references, documentation
 security, warning budget and full repository tests pass. Codex CLI installation passed with a temporary isolated configuration; native
 UI rendering remains unverified. Generated outputs stay excluded from
 this source PR and belong to protected canonical synchronization.
+
+
+## Shipvela publishing contributor skill - 2026-10-06
+
+Added [shipvela-publish](skills/shipvela-publish/SKILL.md), adapted from Content Petit LLC's public MIT client workflow, with the original license and README source credit. The hosted runtime is proprietary and account/plan-limited. This source proposal adds no scripts, hooks, dependencies or authentication grants.
+
+Publishing is classified critical because it can replace a live site and consume allowance. The workflow requires explicit intent and confirmation, public files only, owner browser approval for staged static uploads, stable request IDs and an exact successful provider job. Quota failures, missing connections and uncertain jobs remain bounded failures; the skill cannot bypass host permissions, read secrets or change billing.
+
+Local validation: `npm run chain` succeeded for 2,659 skills; `npm run validate:references`, `npm run security:docs` and `npm run check:warning-budget` passed with 0/0 warnings. `npm test` passed all 132 local test files (network integration tests skipped by default). Root tooling used Node 22.20.0 and an isolated Python 3.12 environment with PyYAML 6.0.3. Generated registry, count and mirror deltas were inspected but excluded from this source commit; canonical synchronization remains upstream-owned.
+
+Runtime evidence is limited to the source workflow's owner-confirmed Codex publishing demo: exact first-launch job 7 succeeded and the expected public content was inspected on 5 October. No fresh native deployment in every AAS host or automated semantic-review approval is claimed. Exact-head upstream skill review remains required before merge.
