@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [19.0.1] - 2026-10-06 - "Pages Surface Repair"
+
+> Patch release. Clears two web-app dependency advisories that blocked the `v19.0.0` release-tag Pages deployment. No catalog or skill changes.
+
+### Fixed
+
+- **apps/web-app** - pin `proxy-addr` to `^2.0.8` (critical: IP spoofing via IPv4-mapped IPv6 trust subnet, GHSA-jqcg-44mw-7w3h) and `source-map-js` to `^1.2.2` (high: event-loop denial of service via indexed source-map section offsets, GHSA-68fv-2mgg-jv7q). `npm --prefix apps/web-app audit --audit-level=high` now reports 0 vulnerabilities, and 268 web-app tests pass.
+
 ## [19.0.0] - 2026-10-06 - "Security And Community Signals"
 
 > Adds **6** reviewed skills for security triage, single-cell analysis, SEO/AI visibility, session handoff, and structured decision-making. Advances the fourth bundled dependency to the current patch line. Ships **2,658** skills.
