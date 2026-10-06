@@ -16972,6 +16972,39 @@
     ]
   },
   {
+    "id": "court",
+    "path": "skills/court",
+    "category": "productivity",
+    "name": "court",
+    "description": "Put an idea on trial: a prosecutor and a defense Claude argue, 12 juror sub-agents vote independently, and a judge reads the verdict and the changes that would flip it.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-10-03",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "alexyc9381/court-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/alexyc9381/court-skill/blob/main/LICENSE",
+    "tags": [
+      "decision-making",
+      "critical-thinking",
+      "feedback",
+      "subagents",
+      "multi-agent"
+    ]
+  },
+  {
     "id": "cowork-to-code-bridge",
     "path": "skills/cowork-to-code-bridge",
     "category": "mcp",
@@ -37817,6 +37850,40 @@
     }
   },
   {
+    "id": "lognorm",
+    "path": "skills/lognorm",
+    "category": "seo",
+    "name": "lognorm",
+    "description": "Work a site's SEO and AI-visibility (GEO) backlog through the hosted LogNorm MCP server: audits, fixes, content, AI-answer tracking.",
+    "risk": "safe",
+    "source": "https://github.com/lognorm/lognorm-mcp/tree/main/skills/lognorm",
+    "date_added": "2026-10-03",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "lognorm/lognorm-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/lognorm/lognorm-mcp/blob/main/LICENSE",
+    "tags": [
+      "seo",
+      "geo",
+      "ai-visibility",
+      "mcp",
+      "content",
+      "growth"
+    ]
+  },
+  {
     "id": "logo-image-design",
     "path": "skills/logo-image-design",
     "category": "business",
@@ -53404,6 +53471,41 @@
     }
   },
   {
+    "id": "scarf-single-cell",
+    "path": "skills/scarf-single-cell",
+    "category": "science",
+    "name": "scarf-single-cell",
+    "description": "Analyze single-cell RNA-seq at million-cell scale with Scarf: out-of-core Zarr stores on disk or object storage, provenance-tracked artifacts, audited QC, clustering, markers and donor comparisons.",
+    "risk": "critical",
+    "source": "https://github.com/NygenAnalytics/scarf/tree/master/skills/scarf-single-cell",
+    "date_added": "2026-10-05",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "NygenAnalytics/scarf",
+    "license": "BSD-3-Clause",
+    "license_source": "https://github.com/NygenAnalytics/scarf/blob/master/LICENSE",
+    "tags": [
+      "single-cell",
+      "scrna-seq",
+      "bioinformatics",
+      "genomics",
+      "zarr",
+      "out-of-core",
+      "python"
+    ]
+  },
+  {
     "id": "schema-markup",
     "path": "skills/schema-markup",
     "category": "marketing",
@@ -55608,6 +55710,40 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "shark",
+    "path": "skills/shark",
+    "category": "business",
+    "name": "shark",
+    "description": "Pitch a business idea to a Shark Tank-style panel of Claude sub-agent investors who grill it, hear a founder agent answer, and each go IN or OUT with a practice offer.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-10-03",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "alexyc9381/shark-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/alexyc9381/shark-skill/blob/main/LICENSE",
+    "tags": [
+      "business",
+      "startup",
+      "pitch",
+      "investors",
+      "subagents",
+      "feedback"
+    ]
   },
   {
     "id": "sharp-coder",

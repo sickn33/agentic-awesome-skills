@@ -12800,6 +12800,25 @@
       "runtime_files": []
     },
     {
+      "id": "court",
+      "path": "skills/court",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "cowork-to-code-bridge",
       "path": "skills/cowork-to-code-bridge",
       "targets": {
@@ -28797,6 +28816,25 @@
       "runtime_files": []
     },
     {
+      "id": "lognorm",
+      "path": "skills/lognorm",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "logo-image-design",
       "path": "skills/logo-image-design",
       "targets": {
@@ -39987,6 +40025,25 @@
       "runtime_files": []
     },
     {
+      "id": "scarf-single-cell",
+      "path": "skills/scarf-single-cell",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "schema-markup",
       "path": "skills/schema-markup",
       "targets": {
@@ -41809,6 +41866,25 @@
     {
       "id": "shader-programming-glsl",
       "path": "skills/shader-programming-glsl",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "shark",
+      "path": "skills/shark",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -50925,10 +51001,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2654,
+    "total_skills": 2658,
     "supported": {
-      "codex": 2567,
-      "claude": 2592
+      "codex": 2571,
+      "claude": 2596
     },
     "blocked": {
       "codex": 87,

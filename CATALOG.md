@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-04T23:13:54.000Z
 
-Total skills: 2654
+Total skills: 2658
 
 ## agent-behavior (5)
 
@@ -540,7 +540,7 @@ Total skills: 2654
 | `reverse-browser-automation` | Automate browsers (Playwright) and Windows desktop applications (UI automation) for reverse-engineering evidence collection, UI-driven workflows, and network... | safe | zhaoxuya520/reverse-skill | reverse, browser | reverse, browser, automation, automate, browsers, playwright, windows, desktop, applications, ui, engineering, evidence |
 | `skyvern-browser-automation` | AI-powered browser automation — navigate sites, fill forms, extract structured data, log in with stored credentials, and build reusable workflows. | safe | Skyvern-AI/skyvern | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation, skyvern, browser, automation, ai, powered, navigate |
 
-## business (176)
+## business (177)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -699,6 +699,7 @@ Total skills: 2654
 | `sales-automator` | Draft cold emails, follow-ups, and proposal templates. Creates pricing pages, case studies, and sales scripts. Use PROACTIVELY for sales outreach or lead nur... | none | community | sales, automator | sales, automator, draft, cold, emails, follow, ups, proposal, creates, pricing, pages, case |
 | `sales-enablement` | Create sales collateral such as decks, one-pagers, objection docs, demo scripts, playbooks, and proposal templates. Use when a sales team needs assets that h... | safe | https://github.com/coreyhaines31/marketingskills | sales, enablement | sales, enablement, collateral, such, decks, one, pagers, objection, docs, demo, scripts, playbooks |
 | `seo-directory-backlinks` | Directory and backlink register: platform, domain, target URL, follow attribute, authority and spam scores, approval and NAP-match status. Use for SEO citati... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, seo, backlinks, citations, directories, local-seo, nap-consistency, link-building, spam, digital-pr, csv, sql, notion | sme, seo, backlinks, citations, directories, local-seo, nap-consistency, link-building, spam, digital-pr, csv, sql |
+| `shark` | Pitch a business idea to a Shark Tank-style panel of Claude sub-agent investors who grill it, hear a founder agent answer, and each go IN or OUT with a pract... | safe | alexyc9381/shark-skill | business, startup, pitch, investors, subagents, feedback | business, startup, pitch, investors, subagents, feedback, shark, idea, tank, style, panel, claude |
 | `skill-gap-analysis` | Skill gap register: employee, skill area, current against required level, gap severity and recommended training. Use for capability planning. | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, develop | sme, business, operations, database, csv, notion, sql, develop, skill, gap, analysis, register |
 | `social-media-setup` | Social media register: platforms and handles, post captions and hashtags, publishing cadence, approval status and profile checklist. Use for social account s... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, social-media, facebook, linkedin, tiktok, facebook-page, content-calendar, profile, cadence, brand-voice, csv, sql, notion | sme, social-media, facebook, linkedin, tiktok, facebook-page, content-calendar, profile, cadence, brand-voice, csv, sql |
 | `sop-company-wiki` | SOP and company wiki register: title, category, department, owner, version, priority and review dates. Use for process documentation. | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, foundation | sme, business, operations, database, csv, notion, sql, foundation, sop, company, wiki, register |
@@ -2405,7 +2406,7 @@ Total skills: 2654
 | --- | --- | --- | --- | --- | --- |
 | `idea-os` | Five-phase pipeline (triage → clarify → research → PRD → plan) that turns a raw idea into four linked files: clarifying questions, deep research, a PRD with ... | safe | Slashworks-biz/idea-os | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical, idea, os |
 
-## productivity (49)
+## productivity (50)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2422,6 +2423,7 @@ Total skills: 2654
 | `codex-profiles` | Use codex-profiles to run Codex CLI or Codex Desktop with isolated CODEX_HOME profiles for separate accounts, projects, and local state. | critical | Ducksss/codex-profiles | codex, codex-cli, profiles, code-home, account-isolation, desktop | codex, codex-cli, profiles, code-home, account-isolation, desktop, run, cli, isolated, home, separate, accounts |
 | `compile-knowledge` | Compile durable, non-obvious findings into an interlinked markdown knowledge store — atomic files, [[wiki-links]], a maintained index — so an agent gets smar... | safe | 5dive-ai/skills | knowledge-management, memory, documentation, wiki, notes | knowledge-management, memory, documentation, wiki, notes, compile, knowledge, durable, non, obvious, findings, interlinked |
 | `context-kit` | Evaluate, adapt, and safely install Context Kit personal context artifacts for Claude Code or adjacent agent workflows. | critical | JDDavenport/context-kit | personal-context, claude-code, memory, knowledge-management, agent-workflows | personal-context, claude-code, memory, knowledge-management, agent-workflows, context, kit, evaluate, adapt, safely, install, personal |
+| `court` | Put an idea on trial: a prosecutor and a defense Claude argue, 12 juror sub-agents vote independently, and a judge reads the verdict and the changes that wou... | safe | alexyc9381/court-skill | decision-making, critical-thinking, feedback, subagents, multi-agent | decision-making, critical-thinking, feedback, subagents, multi-agent, court, put, idea, trial, prosecutor, defense, claude |
 | `daily-gift` | Relationship-aware daily gift engine with five-stage creative pipeline — editorial judgment, synthesis, concept generation, visual strategy, and rendering in... | critical | openclaw/skills | creative, gift, personalization, h5, image-generation, video-generation, relationship | creative, gift, personalization, h5, image-generation, video-generation, relationship, daily, aware, engine, five, stage |
 | `docusign-automation` | Automate DocuSign tasks via Rube MCP (Composio): templates, envelopes, signatures, document management. Always search tools first for current schemas. | critical | community | docusign | docusign, automation, automate, tasks, via, rube, mcp, composio, envelopes, signatures, document, always |
 | `dropbox-automation` | Automate Dropbox file management, sharing, search, uploads, downloads, and folder operations via Rube MCP (Composio). Always search tools first for current s... | critical | community | dropbox | dropbox, automation, automate, file, sharing, search, uploads, downloads, folder, operations, via, rube |
@@ -2571,7 +2573,7 @@ Total skills: 2654
 | --- | --- | --- | --- | --- | --- |
 | `reverse-engineering/dsl-vm-reverse` | Reverse JavaScript-based custom DSL/VM interpreters and risk-control engines: identify IIFE/switch-based opcode dispatch, extract opcode tables, and capture ... | safe | zhaoxuya520/reverse-skill | reverse, engineering/dsl, vm | reverse, engineering/dsl, vm, dsl, javascript, custom, interpreters, risk, control, engines, identify, iife |
 
-## science (13)
+## science (14)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2585,6 +2587,7 @@ Total skills: 2654
 | `networkx` | NetworkX is a Python package for creating, manipulating, and analyzing complex networks and graphs. | critical | https://github.com/networkx/networkx | networkx | networkx, python, package, creating, manipulating, analyzing, complex, networks, graphs |
 | `qiskit` | Qiskit is the world's most popular open-source quantum computing framework with 13M+ downloads. Build quantum circuits, optimize for hardware, execute on sim... | critical | community | qiskit | qiskit, world, most, popular, open, source, quantum, computing, framework, 13m, downloads, circuits |
 | `scanpy` | Scanpy is a scalable Python toolkit for analyzing single-cell RNA-seq data, built on AnnData. Apply this skill for complete single-cell workflows including q... | critical | community | scanpy | scanpy, scalable, python, toolkit, analyzing, single, cell, rna, seq, data, built, anndata |
+| `scarf-single-cell` | Analyze single-cell RNA-seq at million-cell scale with Scarf: out-of-core Zarr stores on disk or object storage, provenance-tracked artifacts, audited QC, cl... | critical | NygenAnalytics/scarf | single-cell, scrna-seq, bioinformatics, genomics, zarr, out-of-core, python | single-cell, scrna-seq, bioinformatics, genomics, zarr, out-of-core, python, scarf, single, cell, analyze, rna |
 | `seaborn` | Seaborn is a Python visualization library for creating publication-quality statistical graphics. Use this skill for dataset-oriented plotting, multivariate a... | critical | community | seaborn | seaborn, python, visualization, library, creating, publication, quality, statistical, graphics, skill, dataset, oriented |
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | safe | community | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
 | `sympy` | SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations. | safe | https://github.com/sympy/sympy | sympy | sympy, python, library, symbolic, mathematics, enables, exact, computation, mathematical, symbols, rather, than |
@@ -2858,7 +2861,7 @@ Total skills: 2654
 | `zero-trust` | Implement zero-trust network architecture. Configure identity-based access, micro-segmentation, and continuous verification. Use when implementing modern sec... | critical | BagelHole/DevOps-Security-Agent-Skills | zero, trust | zero, trust, network, architecture, configure, identity, access, micro, segmentation, continuous, verification, implementing |
 | `zeroize-audit` | Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and ... | offensive | community | zeroize, audit | zeroize, audit, detects, missing, zeroization, sensitive, data, source, code, identifies, removed, compiler |
 
-## seo (32)
+## seo (33)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2876,6 +2879,7 @@ Total skills: 2654
 | `geo-report-pdf` | Generate a professional PDF report from a GEO audit using pandoc + Chrome headless. | safe | zubair-trabzada/geo-seo-claude | geo, pdf, report, client-deliverable, professional | geo, pdf, report, client-deliverable, professional, generate, audit, pandoc, chrome, headless |
 | `geo-schema` | Schema.org structured data audit and generation optimized for AI discoverability — detect, validate, and generate JSON-LD markup | safe | zubair-trabzada/geo-seo-claude | geo, schema, structured-data, json-ld, entity-recognition, ai-discoverability | geo, schema, structured-data, json-ld, entity-recognition, ai-discoverability, org, structured, data, audit, generation, optimized |
 | `geo-technical` | Technical SEO audit with GEO-specific checks — crawlability, indexability, security, performance, SSR, and AI crawler access | safe | zubair-trabzada/geo-seo-claude | geo, technical-seo, core-web-vitals, ssr, crawlability, security, performance | geo, technical-seo, core-web-vitals, ssr, crawlability, security, performance, technical, seo, audit, specific, checks |
+| `lognorm` | Work a site's SEO and AI-visibility (GEO) backlog through the hosted LogNorm MCP server: audits, fixes, content, AI-answer tracking. | safe | lognorm/lognorm-mcp | seo, geo, ai-visibility, mcp, content, growth | seo, geo, ai-visibility, mcp, content, growth, lognorm, work, site, ai, visibility, backlog |
 | `nextjs-seo-indexing` | Fix SEO indexing issues, crawl budget problems, and Search Console coverage errors for Next.js apps. Covers canonical tags, noindex audits, sitemap health, s... | safe | self | seo, indexing, nextjs, search-console, crawl-budget, canonical, sitemap | seo, indexing, nextjs, search-console, crawl-budget, canonical, sitemap, fix, issues, crawl, budget, problems |
 | `schema-markup-generator` | Generate and implement JSON-LD structured data for web apps, blogs, FAQs, and SaaS sites. Supports WebSite, SoftwareApplication, BlogPosting, FAQPage, HowTo,... | safe | self | seo, schema, json-ld, structured-data, rich-results, nextjs, technical-seo | seo, schema, json-ld, structured-data, rich-results, nextjs, technical-seo, markup, generator, generate, json, ld |
 | `seo-aeo-internal-linking` | Maps internal link opportunities between pages with relevant anchor text, placement instructions, orphan-page detection, and cannibalisation checks. | safe | community | seo, aeo, internal, linking | seo, aeo, internal, linking, maps, link, opportunities, between, pages, relevant, anchor, text |
