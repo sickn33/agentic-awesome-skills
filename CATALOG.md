@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-06T12:45:21.000Z
 
-Total skills: 2660
+Total skills: 2662
 
 ## agent-behavior (5)
 
@@ -1215,7 +1215,7 @@ Total skills: 2660
 | `logic-locate` | Locate the root cause of a CONFIRMED failure via backward-then-forward semi-formal tracing. | safe | hyhmrright/logic-lens | logic, locate | logic, locate, root, cause, confirmed, failure, via, backward, then, forward, semi, formal |
 | `phase-gated-debugging` | Use when debugging any bug. Enforces a 5-phase protocol where code edits are blocked until root cause is confirmed. Prevents premature fix attempts. | safe | community | phase, gated, debugging | phase, gated, debugging, any, bug, enforces, protocol, where, code, edits, blocked, until |
 
-## design (41)
+## design (42)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1223,6 +1223,7 @@ Total skills: 2660
 | `accessibility-compliance-accessibility-audit` | You are an accessibility expert specializing in WCAG compliance, inclusive design, and assistive technology compatibility. Conduct audits, identify barriers,... | safe | community | accessibility, compliance, audit | accessibility, compliance, audit, specializing, wcag, inclusive, assistive, technology, compatibility, conduct, audits, identify |
 | `accesslint-diff` | Diff a live page's accessibility violations against a baseline — by default compares uncommitted changes (stash-based), or pass --branch [<name>] to diff aga... | safe | https://github.com/AccessLint/skills | accesslint, diff | accesslint, diff, live, page, accessibility, violations, against, baseline, default, compares, uncommitted, changes |
 | `accesslint-scan` | Audit a live page for accessibility issues, locate each WCAG violation precisely, and return a selector-grounded fix worklist without editing. | safe | https://github.com/AccessLint/skills | accesslint, scan | accesslint, scan, audit, live, page, accessibility, issues, locate, each, wcag, violation, precisely |
+| `agent-reels` | Find animation and video references on 1human, consult a human-agent shared library, and contribute public creations only with prior owner permission. | critical | mdagnolops/1human-reels | animation, motion-design, ai-agents, references | animation, motion-design, ai-agents, references, agent, reels, find, video, 1human, consult, human, shared |
 | `antigravity-design-expert` | Core UI/UX engineering skill for building highly interactive, spatial, weightless, and glassmorphism-based web interfaces using GSAP and 3D CSS. | safe | community | antigravity | antigravity, core, ui, ux, engineering, skill, building, highly, interactive, spatial, weightless, glassmorphism |
 | `baseline-ui` | Quickly deslop UI code by fixing spacing, hierarchy, typography, and small layout issues. Use when the interface needs a fast cleanup or polish pass. | critical | ibelick/ui-skills | baseline, ui | baseline, ui, quickly, deslop, code, fixing, spacing, hierarchy, typography, small, layout, issues |
 | `canva-automation` | Automate Canva tasks via Rube MCP (Composio): designs, exports, folders, brand templates, autofill. Always search tools first for current schemas. | critical | community | canva | canva, automation, automate, tasks, via, rube, mcp, composio, designs, exports, folders, brand |
@@ -1326,7 +1327,7 @@ Total skills: 2660
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (219)
+## development (220)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1527,6 +1528,7 @@ Total skills: 2660
 | `senior-architect` | Complete toolkit for senior architect with modern tools and best practices. | critical | community | senior | senior, architect, complete, toolkit |
 | `senior-fullstack` | Complete toolkit for senior fullstack with modern tools and best practices. | critical | community | senior, fullstack | senior, fullstack, complete, toolkit |
 | `setup-matt-pocock-skills` | Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the o... | safe | mattpocock/skills | engineering, workflow, coding-agents | engineering, workflow, coding-agents, setup, matt, pocock, skills, configure, repo, set, up, issue |
+| `shipvela-publish` | Publish an explicitly selected website through the user's connected Shipvela MCP account, track the exact deployment, and return its live HTTPS URL after suc... | critical | stefanautomateed/shipvela-codex | deployment, hosting, mcp, static-websites | deployment, hosting, mcp, static-websites, shipvela, publish, explicitly, selected, website, through, user, connected |
 | `since-cutoff` | Find which APIs of a project's pinned Python dependencies changed after the model's training cutoff, where the code uses them, and write short AGENTS.md or C... | safe | MohammadHijjawi97/since-cutoff | python, dependencies, api-changes, knowledge-cutoff, agents-md, static-analysis | python, dependencies, api-changes, knowledge-cutoff, agents-md, static-analysis, since, cutoff, find, which, apis, pinned |
 | `skill-check` | Validate Claude Code skills against the agentskills specification. Catches structural, semantic, and naming issues before users do. | safe | https://github.com/olgasafonova/SkillCheck-Free | validation, linter, agentskills, skill-authoring, code-quality | validation, linter, agentskills, skill-authoring, code-quality, skill, check, validate, claude, code, skills, against |
 | `source-driven-development` | Grounds every implementation decision in official documentation. Use when you want authoritative, source-cited code free from outdated patterns. Use when bui... | critical | addyosmani/agent-skills | source, driven | source, driven, development, grounds, every, decision, official, documentation, want, authoritative, cited, code |

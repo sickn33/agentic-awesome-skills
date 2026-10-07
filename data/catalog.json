@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-06T12:45:21.000Z",
-  "total": 2660,
+  "total": 2662,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1700,6 +1700,40 @@
         "logs"
       ],
       "path": "skills/agent-qa-result-triage/SKILL.md"
+    },
+    {
+      "id": "agent-reels",
+      "canonical_id": "agent-reels",
+      "name": "agent-reels",
+      "description": "Find animation and video references on 1human, consult a human-agent shared library, and contribute public creations only with prior owner permission.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/mdagnolops/1human-reels",
+      "source_type": "community",
+      "source_repo": "mdagnolops/1human-reels",
+      "license": "MIT",
+      "license_source": "https://github.com/mdagnolops/1human-reels/blob/717c0a28d9b62182854f832fd1a63dc32775a701/LICENSE",
+      "tags": [
+        "animation",
+        "motion-design",
+        "ai-agents",
+        "references"
+      ],
+      "triggers": [
+        "animation",
+        "motion-design",
+        "ai-agents",
+        "references",
+        "agent",
+        "reels",
+        "find",
+        "video",
+        "1human",
+        "consult",
+        "human",
+        "shared"
+      ],
+      "path": "skills/agent-reels/SKILL.md"
     },
     {
       "id": "agent-self-scheduling",
@@ -65301,6 +65335,40 @@
         "monitoring"
       ],
       "path": "skills/shipping-and-launch/SKILL.md"
+    },
+    {
+      "id": "shipvela-publish",
+      "canonical_id": "shipvela-publish",
+      "name": "shipvela-publish",
+      "description": "Publish an explicitly selected website through the user's connected Shipvela MCP account, track the exact deployment, and return its live HTTPS URL after success.",
+      "category": "development",
+      "risk": "critical",
+      "source": "https://github.com/stefanautomateed/shipvela-codex/tree/main/skills/shipvela-publish",
+      "source_type": "community",
+      "source_repo": "stefanautomateed/shipvela-codex",
+      "license": "MIT",
+      "license_source": "https://github.com/stefanautomateed/shipvela-codex/blob/main/LICENSE",
+      "tags": [
+        "deployment",
+        "hosting",
+        "mcp",
+        "static-websites"
+      ],
+      "triggers": [
+        "deployment",
+        "hosting",
+        "mcp",
+        "static-websites",
+        "shipvela",
+        "publish",
+        "explicitly",
+        "selected",
+        "website",
+        "through",
+        "user",
+        "connected"
+      ],
+      "path": "skills/shipvela-publish/SKILL.md"
     },
     {
       "id": "shodan-reconnaissance",

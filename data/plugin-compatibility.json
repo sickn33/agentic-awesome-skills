@@ -1058,6 +1058,25 @@
       "runtime_files": []
     },
     {
+      "id": "agent-reels",
+      "path": "skills/agent-reels",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "agent-self-scheduling",
       "path": "skills/agent-self-scheduling",
       "targets": {
@@ -42016,6 +42035,25 @@
       "runtime_files": []
     },
     {
+      "id": "shipvela-publish",
+      "path": "skills/shipvela-publish",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "shodan-reconnaissance",
       "path": "skills/shodan-reconnaissance",
       "targets": {
@@ -51039,10 +51077,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2660,
+    "total_skills": 2662,
     "supported": {
-      "codex": 2573,
-      "claude": 2598
+      "codex": 2575,
+      "claude": 2600
     },
     "blocked": {
       "codex": 87,
