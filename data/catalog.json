@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-06T12:45:21.000Z",
-  "total": 2658,
+  "total": 2659,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -43336,6 +43336,47 @@
         "teams"
       ],
       "path": "skills/linear-claude-skill/SKILL.md"
+    },
+    {
+      "id": "linkdigest-social-link-reader",
+      "canonical_id": "linkdigest-social-link-reader",
+      "name": "linkdigest-social-link-reader",
+      "description": "Read one public Xiaohongshu, Douyin, TikTok, YouTube, X or WeChat article link into text an agent can use (transcript, image text, key points) via the LinkDigest API or MCP server.",
+      "category": "research",
+      "risk": "safe",
+      "source": "https://github.com/jcaiagent7143-ui/linkdigest-mcp",
+      "source_type": "official",
+      "source_repo": "jcaiagent7143-ui/linkdigest-mcp",
+      "license": "MIT",
+      "license_source": "https://github.com/jcaiagent7143-ui/linkdigest-mcp/blob/main/LICENSE",
+      "tags": [
+        "xiaohongshu",
+        "rednote",
+        "douyin",
+        "tiktok",
+        "youtube",
+        "wechat",
+        "transcript",
+        "ocr",
+        "mcp",
+        "api-integration",
+        "research"
+      ],
+      "triggers": [
+        "xiaohongshu",
+        "rednote",
+        "douyin",
+        "tiktok",
+        "youtube",
+        "wechat",
+        "transcript",
+        "ocr",
+        "mcp",
+        "api-integration",
+        "research",
+        "linkdigest"
+      ],
+      "path": "skills/linkdigest-social-link-reader/SKILL.md"
     },
     {
       "id": "linkedin-automation",

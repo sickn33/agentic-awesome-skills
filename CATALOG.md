@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-06T12:45:21.000Z
 
-Total skills: 2658
+Total skills: 2659
 
 ## agent-behavior (5)
 
@@ -2540,7 +2540,7 @@ Total skills: 2658
 | `tune-monitor` | Analyze a Monte Carlo monitor and recommend config changes to reduce alert noise. Supports metric, custom SQL, validation, and table monitors. Fetches the re... | critical | monte-carlo-data/mc-agent-toolkit | tune, monitor | tune, monitor, analyze, monte, carlo, recommend, config, changes, reduce, alert, noise, supports |
 | `windows-shell-reliability` | Reliable command execution on Windows: paths, encoding, and common binary pitfalls. | safe | community | windows, shell, reliability | windows, shell, reliability, reliable, command, execution, paths, encoding, common, binary, pitfalls |
 
-## research (22)
+## research (23)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2555,6 +2555,7 @@ Total skills: 2658
 | `ii-commons` | Deterministic search across arXiv, PubMed/PMC, and US policy corpora with daily freshness cutoffs. | safe | Intelligent-Internet/II-Commons-Skills | research, arxiv, pubmed, pmc, policy, retrieval, cli, codex | research, arxiv, pubmed, pmc, policy, retrieval, cli, codex, ii, commons, deterministic, search |
 | `jev-social` | Run read-only, browser-grounded Instagram, TikTok, or LinkedIn research through Jev routing and socai CLI, returning source-linked evidence and reports. | critical | socai-io/jev-social | social-media, research, instagram, tiktok, linkedin, browser-automation, jev | social-media, research, instagram, tiktok, linkedin, browser-automation, jev, social, run, read, browser, grounded |
 | `last30days` | Research a topic from the last 30 days on Reddit + X + Web, become an expert, and write copy-paste-ready prompts for the user's target tool. | critical | community | last30days | last30days, research, topic, last, 30, days, reddit, web, become, write, copy, paste |
+| `linkdigest-social-link-reader` | Read one public Xiaohongshu, Douyin, TikTok, YouTube, X or WeChat article link into text an agent can use (transcript, image text, key points) via the LinkDi... | safe | jcaiagent7143-ui/linkdigest-mcp | xiaohongshu, rednote, douyin, tiktok, youtube, wechat, transcript, ocr, mcp, api-integration, research | xiaohongshu, rednote, douyin, tiktok, youtube, wechat, transcript, ocr, mcp, api-integration, research, linkdigest |
 | `longbridge-research` | Curated upstream guidance for Longbridge Research; use when the workflow matches the user goal. | unknown | longbridge/skills | longbridge, research | longbridge, research, curated, upstream, guidance, matches, user, goal |
 | `multi-source-search` | Cross-validate web research and produce an offline-checkable evidence ledger with explicit source diversity, confidence, conflicts, and gaps. | safe | sandbaseai/sandbase-skills | research, fact-checking, citations, evidence, verification | research, fact-checking, citations, evidence, verification, multi, source, search, cross, validate, web, produce |
 | `news-sentiment-engine` | Multi-source RSS news aggregation with Claude-powered sentiment analysis and structured briefing output | critical | tellmefrankie/news-engine | news, rss, sentiment-analysis, briefing, research | news, rss, sentiment-analysis, briefing, research, sentiment, engine, multi, source, aggregation, claude, powered |

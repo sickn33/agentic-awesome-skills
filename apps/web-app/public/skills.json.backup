@@ -36763,6 +36763,45 @@
     }
   },
   {
+    "id": "linkdigest-social-link-reader",
+    "path": "skills/linkdigest-social-link-reader",
+    "category": "research",
+    "name": "linkdigest-social-link-reader",
+    "description": "Read one public Xiaohongshu, Douyin, TikTok, YouTube, X or WeChat article link into text an agent can use (transcript, image text, key points) via the LinkDigest API or MCP server.",
+    "risk": "safe",
+    "source": "https://github.com/jcaiagent7143-ui/linkdigest-mcp",
+    "date_added": "2026-10-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "jcaiagent7143-ui/linkdigest-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/jcaiagent7143-ui/linkdigest-mcp/blob/main/LICENSE",
+    "tags": [
+      "xiaohongshu",
+      "rednote",
+      "douyin",
+      "tiktok",
+      "youtube",
+      "wechat",
+      "transcript",
+      "ocr",
+      "mcp",
+      "api-integration",
+      "research"
+    ]
+  },
+  {
     "id": "linkedin-automation",
     "path": "skills/linkedin-automation",
     "category": "marketing",
