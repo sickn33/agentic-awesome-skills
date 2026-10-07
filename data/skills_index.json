@@ -22826,6 +22826,43 @@
     ]
   },
   {
+    "id": "email-marketing-bible",
+    "path": "skills/email-marketing-bible",
+    "category": "marketing",
+    "name": "email-marketing-bible",
+    "description": "Data-backed email marketing for AI agents: automation flows, deliverability triage, copy de-slopping, AI email design, ESP control via MCP with send gates and compliance.",
+    "risk": "critical",
+    "source": "https://github.com/CosmoBlk/email-marketing-bible",
+    "date_added": "2026-10-06",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "CosmoBlk/email-marketing-bible",
+    "license": "MIT",
+    "license_source": "https://github.com/CosmoBlk/email-marketing-bible/blob/main/LICENSE",
+    "tags": [
+      "email-marketing",
+      "deliverability",
+      "copywriting",
+      "marketing-automation",
+      "email-design",
+      "ecommerce",
+      "saas",
+      "cold-email",
+      "mcp"
+    ]
+  },
+  {
     "id": "email-security",
     "path": "skills/email-security",
     "category": "security",
