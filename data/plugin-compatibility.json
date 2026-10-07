@@ -17753,6 +17753,25 @@
       "runtime_files": []
     },
     {
+      "id": "email-marketing-bible",
+      "path": "skills/email-marketing-bible",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "email-security",
       "path": "skills/email-security",
       "targets": {
@@ -51020,10 +51039,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2659,
+    "total_skills": 2660,
     "supported": {
-      "codex": 2572,
-      "claude": 2597
+      "codex": 2573,
+      "claude": 2598
     },
     "blocked": {
       "codex": 87,
