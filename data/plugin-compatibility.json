@@ -28014,6 +28014,25 @@
       "runtime_files": []
     },
     {
+      "id": "linkdigest-social-link-reader",
+      "path": "skills/linkdigest-social-link-reader",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "linkedin-automation",
       "path": "skills/linkedin-automation",
       "targets": {
@@ -51001,10 +51020,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2658,
+    "total_skills": 2659,
     "supported": {
-      "codex": 2571,
-      "claude": 2596
+      "codex": 2572,
+      "claude": 2597
     },
     "blocked": {
       "codex": 87,
