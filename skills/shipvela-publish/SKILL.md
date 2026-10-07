@@ -77,4 +77,4 @@ This workflow is maintained by Shipvela's team for its production hosting servic
 
 ## Provenance
 
-Adapted from the public Shipvela MIT skill maintained by Content Petit LLC. Adaptations add AAS metadata, explicit triggers and limitations; the publishing approval, quota, idempotency and secret-handling boundaries are preserved. See the bundled `LICENSE` for the original notice. This is an affiliated contribution, not an AAS endorsement.
+Adapted from the public Shipvela MIT skill maintained by Content Petit LLC. Adaptations add AAS metadata, explicit triggers and limitations; the publishing approval, quota, idempotency and secret-handling boundaries are preserved. See `references/LICENSE.md` for the original notice. This is an affiliated contribution, not an AAS endorsement.
