@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-06T12:45:21.000Z",
-  "total": 2662,
+  "total": 2665,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -6341,6 +6341,42 @@
         "arise"
       ],
       "path": "skills/ask-questions-if-underspecified/SKILL.md"
+    },
+    {
+      "id": "assay",
+      "canonical_id": "assay",
+      "name": "assay",
+      "description": "Run assay on a web page you just wrote or changed. It opens the page in a real browser, drives every control, and reports where the page contradicts itself. Deterministic, no API key, no network.",
+      "category": "testing",
+      "risk": "safe",
+      "source": "https://github.com/awss1i/assay",
+      "source_type": "community",
+      "source_repo": "awss1i/assay",
+      "license": "MIT",
+      "license_source": "https://github.com/awss1i/assay/blob/main/LICENSE",
+      "tags": [
+        "testing",
+        "qa",
+        "web",
+        "browser",
+        "playwright",
+        "html"
+      ],
+      "triggers": [
+        "testing",
+        "qa",
+        "web",
+        "browser",
+        "playwright",
+        "html",
+        "assay",
+        "run",
+        "page",
+        "just",
+        "wrote",
+        "changed"
+      ],
+      "path": "skills/assay/SKILL.md"
     },
     {
       "id": "asset-inventory",
@@ -45158,6 +45194,41 @@
       "path": "skills/lookdev-auto/SKILL.md"
     },
     {
+      "id": "looot",
+      "canonical_id": "looot",
+      "name": "looot",
+      "description": "Search, price and run 2,500+ data API endpoints (work emails, company search, SERP, web pages) from one prepaid balance via the looot MCP server.",
+      "category": "data",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "loootai/looot-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/loootai/looot-skills/blob/main/LICENSE",
+      "tags": [
+        "data-api",
+        "enrichment",
+        "email-finder",
+        "seo",
+        "mcp"
+      ],
+      "triggers": [
+        "data-api",
+        "enrichment",
+        "email-finder",
+        "seo",
+        "mcp",
+        "looot",
+        "search",
+        "price",
+        "run",
+        "500",
+        "data",
+        "api"
+      ],
+      "path": "skills/looot/SKILL.md"
+    },
+    {
       "id": "loop-library",
       "canonical_id": "loop-library",
       "name": "loop-library",
@@ -70688,6 +70759,39 @@
         "api"
       ],
       "path": "skills/telegram-bot-messaging/SKILL.md"
+    },
+    {
+      "id": "telegram-channel-ads",
+      "canonical_id": "telegram-channel-ads",
+      "name": "telegram-channel-ads",
+      "description": "Vet and price ad posts in Telegram channels: reach benchmarks by size, topic and language, ad-network and channel-age checks, CPM and deletion-window math.",
+      "category": "marketing",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "telegram",
+        "advertising",
+        "influencer-marketing",
+        "media-buying",
+        "cpm",
+        "marketing"
+      ],
+      "triggers": [
+        "telegram",
+        "advertising",
+        "influencer-marketing",
+        "media-buying",
+        "cpm",
+        "marketing",
+        "channel",
+        "ads",
+        "vet",
+        "price",
+        "ad",
+        "posts"
+      ],
+      "path": "skills/telegram-channel-ads/SKILL.md"
     },
     {
       "id": "telegram-mini-app",

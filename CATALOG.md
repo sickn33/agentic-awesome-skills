@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-06T12:45:21.000Z
 
-Total skills: 2662
+Total skills: 2665
 
 ## agent-behavior (5)
 
@@ -1080,7 +1080,7 @@ Total skills: 2662
 | `liuguang-banlan-ui` | Builds two parameterized UI modes—流光溢彩白 (iridescent white) and 五彩斑斓黑 (colorful black)—with OKLCH, WebGL/CSS fallback, vision gating, screenshot QA, and total... | critical | self | ui, frontend, oklch, webgl, accessibility | ui, frontend, oklch, webgl, accessibility, liuguang, banlan, two, parameterized, modes, iridescent, white |
 | `modellix` | Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download). | critical | Modellix/modellix-plugin | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api, integrate, async, ai |
 
-## data (41)
+## data (42)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1095,6 +1095,7 @@ Total skills: 2662
 | `firecrawl-scraper` | Deep web scraping, screenshots, PDF parsing, and website crawling using Firecrawl API. Use when you need deep content extraction from web pages, page interac... | critical | community | firecrawl, scraper | firecrawl, scraper, deep, web, scraping, screenshots, pdf, parsing, website, crawling, api, content |
 | `glasser` | Search, inspect, and run third-party data APIs through one CLI when the environment has no suitable integration. | critical | self | api, data, search, enrichment, marketing, research, cli | api, data, search, enrichment, marketing, research, cli, glasser, inspect, run, third, party |
 | `huggingface-datasets` | Use this skill for Hugging Face Dataset Viewer API workflows that fetch subset/split metadata, paginate rows, search text, apply filters, download parquet UR... | unknown | huggingface/skills | huggingface, datasets | huggingface, datasets, skill, hugging, face, dataset, viewer, api, fetch, subset, split, metadata |
+| `looot` | Search, price and run 2,500+ data API endpoints (work emails, company search, SERP, web pages) from one prepaid balance via the looot MCP server. | critical | loootai/looot-skills | data-api, enrichment, email-finder, seo, mcp | data-api, enrichment, email-finder, seo, mcp, looot, search, price, run, 500, data, api |
 | `mixpanel-automation` | Automate Mixpanel tasks via Rube MCP (Composio): events, segmentation, funnels, cohorts, user profiles, JQL queries. Always search tools first for current sc... | critical | community | mixpanel | mixpanel, automation, automate, tasks, via, rube, mcp, composio, events, segmentation, funnels, cohorts |
 | `monte-carlo-asset-health` | Curated upstream guidance for Monte Carlo Asset Health; use when the workflow matches the user goal. | critical | monte-carlo-data/mc-agent-toolkit | monte, carlo, asset, health | monte, carlo, asset, health, curated, upstream, guidance, matches, user, goal |
 | `monte-carlo-context-detection` | Route data-related requests to the right Monte Carlo skill or workflow. USE WHEN alerts, incidents, data broken, stale, coverage gaps, data quality, or any a... | unknown | monte-carlo-data/mc-agent-toolkit | monte, carlo, detection | monte, carlo, detection, context, route, data, related, requests, right, skill, alerts, incidents |
@@ -2033,7 +2034,7 @@ Total skills: 2662
 | `leiloeiro-mercado` | Analise de mercado imobiliario para leiloes. Liquidez, desagio tipico, ROI, estrategias de saida (flip/reforma/renda), Selic 2025 e benchmark CDI/FII. | safe | community | market-analysis, real-estate, roi, brazilian | market-analysis, real-estate, roi, brazilian, leiloeiro, mercado, analise, de, imobiliario, para, leiloes, liquidez |
 | `leiloeiro-risco` | Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco. | safe | community | risk-analysis, scoring, stress-test, brazilian | risk-analysis, scoring, stress-test, brazilian, leiloeiro, risco, analise, de, em, leiloes, imoveis, score |
 
-## marketing (113)
+## marketing (114)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2139,6 +2140,7 @@ Total skills: 2662
 | `subject-line-psychologist` | One sentence - what this skill does and when to invoke it | safe | community | subject, line, psychologist | subject, line, psychologist, one, sentence, what, skill, does, invoke |
 | `taisly-social-media-posting` | Use Taisly Agent Kit to prepare and publish approved short-form video posts across TikTok, Instagram Reels, YouTube Shorts, X, and Facebook. | critical | taisly/agent | social-media, video, publishing, mcp, cli, sdk, tiktok, instagram, youtube-shorts, x, facebook | social-media, video, publishing, mcp, cli, sdk, tiktok, instagram, youtube-shorts, x, facebook, taisly |
 | `talivia-agent-kit` | Set up and verify Talivia revenue analytics through MCP, with explicit confirmation for website changes and payment attribution. | critical | talivia-group/agent | analytics, revenue, attribution, mcp, talivia, marketing | analytics, revenue, attribution, mcp, talivia, marketing, agent, kit, set, up, verify, through |
+| `telegram-channel-ads` | Vet and price ad posts in Telegram channels: reach benchmarks by size, topic and language, ad-network and channel-age checks, CPM and deletion-window math. | safe | self | telegram, advertising, influencer-marketing, media-buying, cpm, marketing | telegram, advertising, influencer-marketing, media-buying, cpm, marketing, channel, ads, vet, price, ad, posts |
 | `tiktok-automation` | Automate TikTok tasks via Rube MCP (Composio): upload/publish videos, post photos, manage content, and view user profiles/stats. Always search tools first fo... | critical | community | tiktok | tiktok, automation, automate, tasks, via, rube, mcp, composio, upload, publish, videos, post |
 | `trust-calibrator` | One sentence - what this skill does and when to invoke it | safe | community | trust, calibrator | trust, calibrator, one, sentence, what, skill, does, invoke |
 | `turn-this-into-a-thread` | Turn a long idea, transcript, article or draft into a Twitter/X thread where every tweet stands alone. Use when someone asks for a thread or to break long wr... | critical | prateeks367/voicemoat-skills | twitter, threads, writing, social-media | twitter, threads, writing, social-media, turn, thread, long, idea, transcript, article, draft, where |
@@ -2954,7 +2956,7 @@ Total skills: 2662
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | critical | community | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | critical | community | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
 
-## testing (46)
+## testing (47)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2963,6 +2965,7 @@ Total skills: 2662
 | `agent-qa-debug-fix` | Debug, patch, and verify failed Agent QA runs from MCP evidence, artifacts, logs, and local code without hiding product or infrastructure defects. | critical | vostride/agent-qa | testing, qa, debugging, mcp, self-healing | testing, qa, debugging, mcp, self-healing, agent, debug, fix, patch, verify, failed, runs |
 | `agent-qa-result-triage` | Triage failed Agent QA runs with MCP evidence, artifacts, logs, fixed failure categories, confidence, and actionable next steps. | safe | vostride/agent-qa | testing, qa, triage, mcp, debugging | testing, qa, triage, mcp, debugging, agent, result, failed, runs, evidence, artifacts, logs |
 | `android-ui-journey-testing` | XML-specified Android UI journey testing, interactive step execution, assertion verification, and JSON outcome reporting. | critical | self | android, journey-testing, ui-verification, testing, adb, automation | android, journey-testing, ui-verification, testing, adb, automation, ui, journey, xml, specified, interactive, step |
+| `assay` | Run assay on a web page you just wrote or changed. It opens the page in a real browser, drives every control, and reports where the page contradicts itself. ... | safe | awss1i/assay | testing, qa, web, browser, playwright, html | testing, qa, web, browser, playwright, html, assay, run, page, just, wrote, changed |
 | `bats-testing-patterns` | Master Bash Automated Testing System (Bats) for comprehensive shell script testing. Use when writing tests for shell scripts, CI/CD pipelines, or requiring t... | critical | community | bats | bats, testing, bash, automated, shell, script, writing, tests, scripts, ci, cd, pipelines |
 | `brooks-test` | Review test-suite quality using established testing literature; identify brittleness, mock abuse, unclear fixtures, weak assertions, slow feedback, and maint... | safe | hyhmrright/brooks-lint | brooks | brooks, test, review, suite, quality, established, testing, literature, identify, brittleness, mock, abuse |
 | `browser-testing-with-devtools` | Test browser apps with Chrome DevTools MCP by inspecting live DOM, console logs, network traffic, screenshots, accessibility, and performance traces. | critical | addyosmani/agent-skills | browser-testing, chrome-devtools, mcp, frontend, performance | browser-testing, chrome-devtools, mcp, frontend, performance, browser, testing, devtools, test, apps, chrome, inspecting |
