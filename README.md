@@ -219,6 +219,7 @@ Key source families include:
 
 ### Official Sources
 
+- **[loootai/looot-skills](https://github.com/loootai/looot-skills)**: Official looot skills - search, price and run 2,500+ data API endpoints (work emails, company search, SERP, web pages) from one prepaid balance.
 - **[CosmoBlk/email-marketing-bible](https://github.com/CosmoBlk/email-marketing-bible)**: Official Email Marketing Bible source for the `email-marketing-bible` skill - data-backed email marketing for agents: automation flows, deliverability triage, copy de-slopping, AI email design, compliance and 19 industry playbooks, with ESP control via MCP behind explicit send-approval gates (MIT).
 - **[lognorm/lognorm-mcp](https://github.com/lognorm/lognorm-mcp)**: MIT official source for the `lognorm` skill — work a site's SEO and AI-visibility (GEO) backlog through the hosted LogNorm MCP server: audits, fixes, content and AI-answer tracking.
 - **[NygenAnalytics/scarf](https://github.com/NygenAnalytics/scarf)**: Official Scarf source for the `scarf-single-cell` skill - out-of-core single-cell RNA-seq analysis with Scarf's Zarr DataStore on local disk or object storage, immutable provenance-tracked artifacts, audited QC, clustering, markers and comparisons (BSD-3-Clause).
