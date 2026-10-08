@@ -1,6 +1,6 @@
 {
   "name": "aasb-aas-python-api-builder",
-  "version": "19.0.1",
+  "version": "19.1.0",
   "description": "Install the \"AAS Python API Builder\" workflow plugin from Agentic Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
