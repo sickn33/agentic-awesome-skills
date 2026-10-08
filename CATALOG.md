@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-06T12:45:21.000Z
 
-Total skills: 2658
+Total skills: 2662
 
 ## agent-behavior (5)
 
@@ -1215,7 +1215,7 @@ Total skills: 2658
 | `logic-locate` | Locate the root cause of a CONFIRMED failure via backward-then-forward semi-formal tracing. | safe | hyhmrright/logic-lens | logic, locate | logic, locate, root, cause, confirmed, failure, via, backward, then, forward, semi, formal |
 | `phase-gated-debugging` | Use when debugging any bug. Enforces a 5-phase protocol where code edits are blocked until root cause is confirmed. Prevents premature fix attempts. | safe | community | phase, gated, debugging | phase, gated, debugging, any, bug, enforces, protocol, where, code, edits, blocked, until |
 
-## design (41)
+## design (42)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1223,6 +1223,7 @@ Total skills: 2658
 | `accessibility-compliance-accessibility-audit` | You are an accessibility expert specializing in WCAG compliance, inclusive design, and assistive technology compatibility. Conduct audits, identify barriers,... | safe | community | accessibility, compliance, audit | accessibility, compliance, audit, specializing, wcag, inclusive, assistive, technology, compatibility, conduct, audits, identify |
 | `accesslint-diff` | Diff a live page's accessibility violations against a baseline — by default compares uncommitted changes (stash-based), or pass --branch [<name>] to diff aga... | safe | https://github.com/AccessLint/skills | accesslint, diff | accesslint, diff, live, page, accessibility, violations, against, baseline, default, compares, uncommitted, changes |
 | `accesslint-scan` | Audit a live page for accessibility issues, locate each WCAG violation precisely, and return a selector-grounded fix worklist without editing. | safe | https://github.com/AccessLint/skills | accesslint, scan | accesslint, scan, audit, live, page, accessibility, issues, locate, each, wcag, violation, precisely |
+| `agent-reels` | Find animation and video references on 1human, consult a human-agent shared library, and contribute public creations only with prior owner permission. | critical | mdagnolops/1human-reels | animation, motion-design, ai-agents, references | animation, motion-design, ai-agents, references, agent, reels, find, video, 1human, consult, human, shared |
 | `antigravity-design-expert` | Core UI/UX engineering skill for building highly interactive, spatial, weightless, and glassmorphism-based web interfaces using GSAP and 3D CSS. | safe | community | antigravity | antigravity, core, ui, ux, engineering, skill, building, highly, interactive, spatial, weightless, glassmorphism |
 | `baseline-ui` | Quickly deslop UI code by fixing spacing, hierarchy, typography, and small layout issues. Use when the interface needs a fast cleanup or polish pass. | critical | ibelick/ui-skills | baseline, ui | baseline, ui, quickly, deslop, code, fixing, spacing, hierarchy, typography, small, layout, issues |
 | `canva-automation` | Automate Canva tasks via Rube MCP (Composio): designs, exports, folders, brand templates, autofill. Always search tools first for current schemas. | critical | community | canva | canva, automation, automate, tasks, via, rube, mcp, composio, designs, exports, folders, brand |
@@ -1326,7 +1327,7 @@ Total skills: 2658
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (219)
+## development (220)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1527,6 +1528,7 @@ Total skills: 2658
 | `senior-architect` | Complete toolkit for senior architect with modern tools and best practices. | critical | community | senior | senior, architect, complete, toolkit |
 | `senior-fullstack` | Complete toolkit for senior fullstack with modern tools and best practices. | critical | community | senior, fullstack | senior, fullstack, complete, toolkit |
 | `setup-matt-pocock-skills` | Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the o... | safe | mattpocock/skills | engineering, workflow, coding-agents | engineering, workflow, coding-agents, setup, matt, pocock, skills, configure, repo, set, up, issue |
+| `shipvela-publish` | Publish an explicitly selected website through the user's connected Shipvela MCP account, track the exact deployment, and return its live HTTPS URL after suc... | critical | stefanautomateed/shipvela-codex | deployment, hosting, mcp, static-websites | deployment, hosting, mcp, static-websites, shipvela, publish, explicitly, selected, website, through, user, connected |
 | `since-cutoff` | Find which APIs of a project's pinned Python dependencies changed after the model's training cutoff, where the code uses them, and write short AGENTS.md or C... | safe | MohammadHijjawi97/since-cutoff | python, dependencies, api-changes, knowledge-cutoff, agents-md, static-analysis | python, dependencies, api-changes, knowledge-cutoff, agents-md, static-analysis, since, cutoff, find, which, apis, pinned |
 | `skill-check` | Validate Claude Code skills against the agentskills specification. Catches structural, semantic, and naming issues before users do. | safe | https://github.com/olgasafonova/SkillCheck-Free | validation, linter, agentskills, skill-authoring, code-quality | validation, linter, agentskills, skill-authoring, code-quality, skill, check, validate, claude, code, skills, against |
 | `source-driven-development` | Grounds every implementation decision in official documentation. Use when you want authoritative, source-cited code free from outdated patterns. Use when bui... | critical | addyosmani/agent-skills | source, driven | source, driven, development, grounds, every, decision, official, documentation, want, authoritative, cited, code |
@@ -2031,7 +2033,7 @@ Total skills: 2658
 | `leiloeiro-mercado` | Analise de mercado imobiliario para leiloes. Liquidez, desagio tipico, ROI, estrategias de saida (flip/reforma/renda), Selic 2025 e benchmark CDI/FII. | safe | community | market-analysis, real-estate, roi, brazilian | market-analysis, real-estate, roi, brazilian, leiloeiro, mercado, analise, de, imobiliario, para, leiloes, liquidez |
 | `leiloeiro-risco` | Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco. | safe | community | risk-analysis, scoring, stress-test, brazilian | risk-analysis, scoring, stress-test, brazilian, leiloeiro, risco, analise, de, em, leiloes, imoveis, score |
 
-## marketing (112)
+## marketing (113)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2073,6 +2075,7 @@ Total skills: 2658
 | `developer-signup-flow` | Design frictionless signup experiences for developers including GitHub OAuth, API key generation, and onboarding personalization. | critical | jonathimer/devmarketing-skills | signup, flow | signup, flow, developer, frictionless, experiences, developers, including, github, oauth, api, key, generation |
 | `docs-as-marketing` | Transform documentation into a powerful marketing channel that attracts, converts, and retains developers. | critical | jonathimer/devmarketing-skills | docs, as, marketing | docs, as, marketing, transform, documentation, powerful, channel, attracts, converts, retains, developers |
 | `draft-my-comments` | Write a LinkedIn comment that adds something the post did not have, not agreement. Use when someone asks what to comment, wants to engage with creators, or s... | safe | prateeks367/voicemoat-skills | linkedin, comments, engagement, social-media | linkedin, comments, engagement, social-media, draft, my, write, comment, adds, something, post, did |
+| `email-marketing-bible` | Data-backed email marketing for AI agents: automation flows, deliverability triage, copy de-slopping, AI email design, ESP control via MCP with send gates an... | critical | CosmoBlk/email-marketing-bible | email-marketing, deliverability, copywriting, marketing-automation, email-design, ecommerce, saas, cold-email, mcp | email-marketing, deliverability, copywriting, marketing-automation, email-design, ecommerce, saas, cold-email, mcp, email, marketing, bible |
 | `email-sequence` | You are an expert in email marketing and automation. Your goal is to create email sequences that nurture relationships, drive action, and move people toward ... | none | community | email, sequence | email, sequence, marketing, automation, goal, sequences, nurture, relationships, drive, action, move, people |
 | `email-systems` | Email has the highest ROI of any marketing channel. $36 for every $1 spent. Yet most startups treat it as an afterthought - bulk blasts, no personalization, ... | none | vibeship-spawner-skills (Apache 2.0) | email | email, highest, roi, any, marketing, channel, 36, every, spent, yet, most, startups |
 | `form-cro` | Optimize any form that is NOT signup or account registration — including lead capture, contact, demo request, application, survey, quote, and checkout forms. | critical | community | form, cro | form, cro, optimize, any, signup, account, registration, including, lead, capture, contact, demo |
@@ -2540,7 +2543,7 @@ Total skills: 2658
 | `tune-monitor` | Analyze a Monte Carlo monitor and recommend config changes to reduce alert noise. Supports metric, custom SQL, validation, and table monitors. Fetches the re... | critical | monte-carlo-data/mc-agent-toolkit | tune, monitor | tune, monitor, analyze, monte, carlo, recommend, config, changes, reduce, alert, noise, supports |
 | `windows-shell-reliability` | Reliable command execution on Windows: paths, encoding, and common binary pitfalls. | safe | community | windows, shell, reliability | windows, shell, reliability, reliable, command, execution, paths, encoding, common, binary, pitfalls |
 
-## research (22)
+## research (23)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2555,6 +2558,7 @@ Total skills: 2658
 | `ii-commons` | Deterministic search across arXiv, PubMed/PMC, and US policy corpora with daily freshness cutoffs. | safe | Intelligent-Internet/II-Commons-Skills | research, arxiv, pubmed, pmc, policy, retrieval, cli, codex | research, arxiv, pubmed, pmc, policy, retrieval, cli, codex, ii, commons, deterministic, search |
 | `jev-social` | Run read-only, browser-grounded Instagram, TikTok, or LinkedIn research through Jev routing and socai CLI, returning source-linked evidence and reports. | critical | socai-io/jev-social | social-media, research, instagram, tiktok, linkedin, browser-automation, jev | social-media, research, instagram, tiktok, linkedin, browser-automation, jev, social, run, read, browser, grounded |
 | `last30days` | Research a topic from the last 30 days on Reddit + X + Web, become an expert, and write copy-paste-ready prompts for the user's target tool. | critical | community | last30days | last30days, research, topic, last, 30, days, reddit, web, become, write, copy, paste |
+| `linkdigest-social-link-reader` | Read one public Xiaohongshu, Douyin, TikTok, YouTube, X or WeChat article link into text an agent can use (transcript, image text, key points) via the LinkDi... | safe | jcaiagent7143-ui/linkdigest-mcp | xiaohongshu, rednote, douyin, tiktok, youtube, wechat, transcript, ocr, mcp, api-integration, research | xiaohongshu, rednote, douyin, tiktok, youtube, wechat, transcript, ocr, mcp, api-integration, research, linkdigest |
 | `longbridge-research` | Curated upstream guidance for Longbridge Research; use when the workflow matches the user goal. | unknown | longbridge/skills | longbridge, research | longbridge, research, curated, upstream, guidance, matches, user, goal |
 | `multi-source-search` | Cross-validate web research and produce an offline-checkable evidence ledger with explicit source diversity, confidence, conflicts, and gaps. | safe | sandbaseai/sandbase-skills | research, fact-checking, citations, evidence, verification | research, fact-checking, citations, evidence, verification, multi, source, search, cross, validate, web, produce |
 | `news-sentiment-engine` | Multi-source RSS news aggregation with Claude-powered sentiment analysis and structured briefing output | critical | tellmefrankie/news-engine | news, rss, sentiment-analysis, briefing, research | news, rss, sentiment-analysis, briefing, research, sentiment, engine, multi, source, aggregation, claude, powered |

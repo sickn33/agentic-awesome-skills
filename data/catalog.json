@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-06T12:45:21.000Z",
-  "total": 2658,
+  "total": 2662,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1700,6 +1700,40 @@
         "logs"
       ],
       "path": "skills/agent-qa-result-triage/SKILL.md"
+    },
+    {
+      "id": "agent-reels",
+      "canonical_id": "agent-reels",
+      "name": "agent-reels",
+      "description": "Find animation and video references on 1human, consult a human-agent shared library, and contribute public creations only with prior owner permission.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/mdagnolops/1human-reels",
+      "source_type": "community",
+      "source_repo": "mdagnolops/1human-reels",
+      "license": "MIT",
+      "license_source": "https://github.com/mdagnolops/1human-reels/blob/717c0a28d9b62182854f832fd1a63dc32775a701/LICENSE",
+      "tags": [
+        "animation",
+        "motion-design",
+        "ai-agents",
+        "references"
+      ],
+      "triggers": [
+        "animation",
+        "motion-design",
+        "ai-agents",
+        "references",
+        "agent",
+        "reels",
+        "find",
+        "video",
+        "1human",
+        "consult",
+        "human",
+        "shared"
+      ],
+      "path": "skills/agent-reels/SKILL.md"
     },
     {
       "id": "agent-self-scheduling",
@@ -27551,6 +27585,45 @@
       "path": "skills/email-issue-fixer/SKILL.md"
     },
     {
+      "id": "email-marketing-bible",
+      "canonical_id": "email-marketing-bible",
+      "name": "email-marketing-bible",
+      "description": "Data-backed email marketing for AI agents: automation flows, deliverability triage, copy de-slopping, AI email design, ESP control via MCP with send gates and compliance.",
+      "category": "marketing",
+      "risk": "critical",
+      "source": "https://github.com/CosmoBlk/email-marketing-bible",
+      "source_type": "official",
+      "source_repo": "CosmoBlk/email-marketing-bible",
+      "license": "MIT",
+      "license_source": "https://github.com/CosmoBlk/email-marketing-bible/blob/main/LICENSE",
+      "tags": [
+        "email-marketing",
+        "deliverability",
+        "copywriting",
+        "marketing-automation",
+        "email-design",
+        "ecommerce",
+        "saas",
+        "cold-email",
+        "mcp"
+      ],
+      "triggers": [
+        "email-marketing",
+        "deliverability",
+        "copywriting",
+        "marketing-automation",
+        "email-design",
+        "ecommerce",
+        "saas",
+        "cold-email",
+        "mcp",
+        "email",
+        "marketing",
+        "bible"
+      ],
+      "path": "skills/email-marketing-bible/SKILL.md"
+    },
+    {
       "id": "email-security",
       "canonical_id": "email-security",
       "name": "email-security",
@@ -43336,6 +43409,47 @@
         "teams"
       ],
       "path": "skills/linear-claude-skill/SKILL.md"
+    },
+    {
+      "id": "linkdigest-social-link-reader",
+      "canonical_id": "linkdigest-social-link-reader",
+      "name": "linkdigest-social-link-reader",
+      "description": "Read one public Xiaohongshu, Douyin, TikTok, YouTube, X or WeChat article link into text an agent can use (transcript, image text, key points) via the LinkDigest API or MCP server.",
+      "category": "research",
+      "risk": "safe",
+      "source": "https://github.com/jcaiagent7143-ui/linkdigest-mcp",
+      "source_type": "official",
+      "source_repo": "jcaiagent7143-ui/linkdigest-mcp",
+      "license": "MIT",
+      "license_source": "https://github.com/jcaiagent7143-ui/linkdigest-mcp/blob/main/LICENSE",
+      "tags": [
+        "xiaohongshu",
+        "rednote",
+        "douyin",
+        "tiktok",
+        "youtube",
+        "wechat",
+        "transcript",
+        "ocr",
+        "mcp",
+        "api-integration",
+        "research"
+      ],
+      "triggers": [
+        "xiaohongshu",
+        "rednote",
+        "douyin",
+        "tiktok",
+        "youtube",
+        "wechat",
+        "transcript",
+        "ocr",
+        "mcp",
+        "api-integration",
+        "research",
+        "linkdigest"
+      ],
+      "path": "skills/linkdigest-social-link-reader/SKILL.md"
     },
     {
       "id": "linkedin-automation",
@@ -65221,6 +65335,40 @@
         "monitoring"
       ],
       "path": "skills/shipping-and-launch/SKILL.md"
+    },
+    {
+      "id": "shipvela-publish",
+      "canonical_id": "shipvela-publish",
+      "name": "shipvela-publish",
+      "description": "Publish an explicitly selected website through the user's connected Shipvela MCP account, track the exact deployment, and return its live HTTPS URL after success.",
+      "category": "development",
+      "risk": "critical",
+      "source": "https://github.com/stefanautomateed/shipvela-codex/tree/main/skills/shipvela-publish",
+      "source_type": "community",
+      "source_repo": "stefanautomateed/shipvela-codex",
+      "license": "MIT",
+      "license_source": "https://github.com/stefanautomateed/shipvela-codex/blob/main/LICENSE",
+      "tags": [
+        "deployment",
+        "hosting",
+        "mcp",
+        "static-websites"
+      ],
+      "triggers": [
+        "deployment",
+        "hosting",
+        "mcp",
+        "static-websites",
+        "shipvela",
+        "publish",
+        "explicitly",
+        "selected",
+        "website",
+        "through",
+        "user",
+        "connected"
+      ],
+      "path": "skills/shipvela-publish/SKILL.md"
     },
     {
       "id": "shodan-reconnaissance",
