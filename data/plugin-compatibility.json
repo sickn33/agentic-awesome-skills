@@ -4058,6 +4058,25 @@
       "runtime_files": []
     },
     {
+      "id": "assay",
+      "path": "skills/assay",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "asset-inventory",
       "path": "skills/asset-inventory",
       "targets": {
@@ -29130,6 +29149,25 @@
       "runtime_files": []
     },
     {
+      "id": "looot",
+      "path": "skills/looot",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "loop-library",
       "path": "skills/loop-library",
       "targets": {
@@ -45551,6 +45589,25 @@
       "runtime_files": []
     },
     {
+      "id": "telegram-channel-ads",
+      "path": "skills/telegram-channel-ads",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "telegram-mini-app",
       "path": "skills/telegram-mini-app",
       "targets": {
@@ -51077,10 +51134,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2662,
+    "total_skills": 2665,
     "supported": {
-      "codex": 2575,
-      "claude": 2600
+      "codex": 2578,
+      "claude": 2603
     },
     "blocked": {
       "codex": 87,

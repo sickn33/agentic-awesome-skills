@@ -5370,6 +5370,40 @@
     }
   },
   {
+    "id": "assay",
+    "path": "skills/assay",
+    "category": "testing",
+    "name": "assay",
+    "description": "Run assay on a web page you just wrote or changed. It opens the page in a real browser, drives every control, and reports where the page contradicts itself. Deterministic, no API key, no network.",
+    "risk": "safe",
+    "source": "https://github.com/awss1i/assay",
+    "date_added": "2026-10-08",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "awss1i/assay",
+    "license": "MIT",
+    "license_source": "https://github.com/awss1i/assay/blob/main/LICENSE",
+    "tags": [
+      "testing",
+      "qa",
+      "web",
+      "browser",
+      "playwright",
+      "html"
+    ]
+  },
+  {
     "id": "asset-inventory",
     "path": "skills/asset-inventory",
     "category": "security",
@@ -38337,6 +38371,39 @@
     ]
   },
   {
+    "id": "looot",
+    "path": "skills/looot",
+    "category": "data",
+    "name": "looot",
+    "description": "Search, price and run 2,500+ data API endpoints (work emails, company search, SERP, web pages) from one prepaid balance via the looot MCP server.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-10-08",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "loootai/looot-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/loootai/looot-skills/blob/main/LICENSE",
+    "tags": [
+      "data-api",
+      "enrichment",
+      "email-finder",
+      "seo",
+      "mcp"
+    ]
+  },
+  {
     "id": "loop-library",
     "path": "skills/loop-library",
     "category": "ai-agents",
@@ -60547,6 +60614,37 @@
       "notifications",
       "bots",
       "approvals"
+    ]
+  },
+  {
+    "id": "telegram-channel-ads",
+    "path": "skills/telegram-channel-ads",
+    "category": "marketing",
+    "name": "telegram-channel-ads",
+    "description": "Vet and price ad posts in Telegram channels: reach benchmarks by size, topic and language, ad-network and channel-age checks, CPM and deletion-window math.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-10-07",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "telegram",
+      "advertising",
+      "influencer-marketing",
+      "media-buying",
+      "cpm",
+      "marketing"
     ]
   },
   {
