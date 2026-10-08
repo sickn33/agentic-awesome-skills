@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [19.1.0] - 2026-10-08 - "Publishing, Data And QA Skills"
+
+> Adds **7** reviewed skills for website publishing, paid data APIs, social-link reading, email marketing, Telegram ad buying, motion references and local web-page QA. Ships **2,665** skills.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the protected maintainer batch merged after `19.0.1`, plus a web-app dependency upgrade.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@19.1.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **shipvela-publish** - publish an explicitly selected website through a connected Shipvela MCP account: stage only public build files, hand manifest approval to the owner, track the exact deployment and return the live URL. `risk: critical`, MIT, community source [stefanautomateed/shipvela-codex](https://github.com/stefanautomateed/shipvela-codex).
+- **looot** - search, price and run 2,500+ data API endpoints (work emails, company search, SERP, web pages) from one prepaid balance through the looot MCP server. `risk: critical`, MIT, official source [loootai/looot-skills](https://github.com/loootai/looot-skills).
+- **linkdigest-social-link-reader** - read a public Xiaohongshu, Douyin, TikTok, YouTube, X or WeChat link into text (caption, transcript, image text, key points) through the LinkDigest REST API or MCP server. `risk: safe`, MIT, official source [jcaiagent7143-ui/linkdigest-mcp](https://github.com/jcaiagent7143-ui/linkdigest-mcp).
+- **email-marketing-bible** - data-backed email marketing for agents: automation flows, deliverability triage, copy de-slopping and design direction, with ESP control behind explicit send-approval gates and compliance coverage. `risk: critical`, MIT, official source [CosmoBlk/email-marketing-bible](https://github.com/CosmoBlk/email-marketing-bible).
+- **telegram-channel-ads** - vet and price Telegram channel posts on real views instead of subscriber count, with reach benchmarks by size, topic and language, ad-network checks and CPM math. `risk: safe`, self-authored source.
+- **agent-reels** - find credited animation and video references on 1human and consult a private library shared by a human and their creative agent; publishing and social actions require prior owner authorization. `risk: critical`, MIT, community source [mdagnolops/1human-reels](https://github.com/mdagnolops/1human-reels).
+- **assay** - deterministic local QA for a web page you just wrote: opens it in a real browser, drives every control and reports where the page contradicts itself, with no API key and no network. `risk: safe`, MIT, community source [awss1i/assay](https://github.com/awss1i/assay).
+
+### Changed
+
+- **apps/web-app** - upgrade `react-router` to `8.4.0`. The web-app audit reports 0 vulnerabilities and all 268 web-app tests pass.
+- **Dependencies** - refresh bundled Node example dependency manifests under `skills/loki-mode`, `skills/telegram` and `skills/whatsapp-cloud-api`.
+
+### Credits
+
+- **@stefanautomateed** for `shipvela-publish`
+- **@walidboulanouar** for `looot`
+- **@jcaiagent7143-ui** for `linkdigest-social-link-reader`
+- **@CosmoBlk** for `email-marketing-bible`
+- **@Courier-Britva** for `telegram-channel-ads`
+- **@mdagnolops** for `agent-reels`
+- **@awss1i** for `assay`
+
 ## [19.0.1] - 2026-10-06 - "Pages Surface Repair"
 
 > Patch release. Clears two web-app dependency advisories that blocked the `v19.0.0` release-tag Pages deployment. No catalog or skill changes.
