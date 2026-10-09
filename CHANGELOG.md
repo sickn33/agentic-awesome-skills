@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [19.2.0] - 2026-10-09 - "Market Data And Change-Safety Skills"
+
+> Adds **6** reviewed skills for US stock-market data, change-impact proof, frontend visual gating, human-expert asks, browser-runtime verification and URL-to-Markdown fetching. Ships **2,671** skills.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the protected maintainer batch merged after `19.1.0`, with existing installation interfaces preserved.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@19.2.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **equibles** - query US stock-market data (SEC filing search, XBRL statements, earnings-call transcripts, insider and 13F holdings, congressional trades, short interest and daily prices) through the Equibles MCP server or REST API. `risk: safe`, self-authored source.
+- **what-could-break** - find what a change breaks outside its own diff and prove the one fact that makes it safe by running real code. `risk: safe`, MIT, community source [stas4000/what-could-break](https://github.com/stas4000/what-could-break), includes material adapted from pstack by Lauren Tan.
+- **tastegate** - build or fix a frontend so it looks designed, then prove it in a real browser: renders at phone and desktop width and fails on overlap, sideways scroll, low contrast and AI-slop defaults. `risk: safe`, MIT, community source [stas4000/tastegate](https://github.com/stas4000/tastegate); direction rules derive from taste-skill (MIT) and the craft floor from impeccable (Apache-2.0).
+- **url-to-markdown** - fetch a public webpage as clean Markdown for reading, summarizing, quoting, or citing while preserving the source URL. `risk: safe`, MIT, official source [replynodes/replynodes-agent-skills](https://github.com/replynodes/replynodes-agent-skills).
+- **ask-human-expert** - ask real executives, operators and domain experts a question through Instant Expert for a written answer, voice note or a short call, with a free test mode and explicit approval before any paid order. `risk: critical`, MIT-0, official source [Instant-Expert/skills](https://github.com/Instant-Expert/skills).
+- **jet-browser** - verify or integrate Jet Browser for isolated WPE WebKit browser sessions with native input, semantic DOM inspection, ordered JSONL automation and screenshots, pinned to a reviewed commit. `risk: critical`, Apache-2.0, official source [masakaai/jet-browser](https://github.com/masakaai/jet-browser).
+
+### Credits
+
+- **@daniel3303** for `equibles`
+- **@stas4000** for `what-could-break` and `tastegate`
+- **@replynodes-ai** for `url-to-markdown`
+- **@maxko87** for `ask-human-expert`
+- **@IRONICBo** for `jet-browser`
+- **@makeev** for the AlphAI official-source credit
+
 ## [19.1.0] - 2026-10-08 - "Publishing, Data And QA Skills"
 
 > Adds **7** reviewed skills for website publishing, paid data APIs, social-link reading, email marketing, Telegram ad buying, motion references and local web-page QA. Ships **2,665** skills.
