@@ -4020,6 +4020,25 @@
       "runtime_files": []
     },
     {
+      "id": "ask-human-expert",
+      "path": "skills/ask-human-expert",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ask-matt",
       "path": "skills/ask-matt",
       "targets": {
@@ -18114,6 +18133,25 @@
       "runtime_files": []
     },
     {
+      "id": "equibles",
+      "path": "skills/equibles",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "error-debugging-error-analysis",
       "path": "skills/error-debugging-error-analysis",
       "targets": {
@@ -26735,6 +26773,25 @@
     {
       "id": "jest-skill",
       "path": "skills/jest-skill",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "jet-browser",
+      "path": "skills/jet-browser",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -45129,6 +45186,25 @@
       "runtime_files": []
     },
     {
+      "id": "tastegate",
+      "path": "skills/tastegate",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "tavily-web",
       "path": "skills/tavily-web",
       "targets": {
@@ -47887,6 +47963,25 @@
       "runtime_files": []
     },
     {
+      "id": "url-to-markdown",
+      "path": "skills/url-to-markdown",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "us-property-data",
       "path": "skills/us-property-data",
       "targets": {
@@ -49740,6 +49835,25 @@
       "runtime_files": []
     },
     {
+      "id": "what-could-break",
+      "path": "skills/what-could-break",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "whatsapp-automation",
       "path": "skills/whatsapp-automation",
       "targets": {
@@ -51134,10 +51248,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2665,
+    "total_skills": 2671,
     "supported": {
-      "codex": 2578,
-      "claude": 2603
+      "codex": 2584,
+      "claude": 2609
     },
     "blocked": {
       "codex": 87,

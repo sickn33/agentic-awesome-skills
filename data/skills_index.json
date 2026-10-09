@@ -5317,6 +5317,42 @@
     ]
   },
   {
+    "id": "ask-human-expert",
+    "path": "skills/ask-human-expert",
+    "category": "research",
+    "name": "ask-human-expert",
+    "description": "Ask real executives and domain experts a question through Instant Expert for a written answer or short call: practitioner knowledge, customer discovery. Free test mode; live sends need approval.",
+    "risk": "critical",
+    "source": "https://github.com/Instant-Expert/skills",
+    "date_added": "2026-10-08",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Instant-Expert/skills",
+    "license": "MIT-0",
+    "license_source": "https://github.com/Instant-Expert/skills/blob/main/LICENSE",
+    "tags": [
+      "experts",
+      "expert-network",
+      "human-in-the-loop",
+      "customer-discovery",
+      "user-research",
+      "interviews",
+      "mcp",
+      "paid-api"
+    ]
+  },
+  {
     "id": "ask-matt",
     "path": "skills/ask-matt",
     "category": "productivity",
@@ -23356,6 +23392,39 @@
     ]
   },
   {
+    "id": "equibles",
+    "path": "skills/equibles",
+    "category": "finance",
+    "name": "equibles",
+    "description": "Query Equibles for US stock market data: SEC filing search, XBRL financial statements, earnings call transcripts, insider and 13F holdings, and daily prices.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-10-08",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "finance",
+      "stocks",
+      "sec-filings",
+      "earnings-calls",
+      "insider-trading",
+      "13f",
+      "rest-api",
+      "mcp"
+    ]
+  },
+  {
     "id": "error-debugging-error-analysis",
     "path": "skills/error-debugging-error-analysis",
     "category": "development",
@@ -35121,6 +35190,40 @@
     "source_repo": "LambdaTest/agent-skills",
     "license": "MIT",
     "license_source": "https://github.com/LambdaTest/agent-skills/blob/main/LICENSE"
+  },
+  {
+    "id": "jet-browser",
+    "path": "skills/jet-browser",
+    "category": "browser-automation",
+    "name": "jet-browser",
+    "description": "Verify or integrate Jet Browser when a project needs isolated WPE WebKit sessions, native input, screenshots, ordered JSONL automation, or reproducible runtime checks.",
+    "risk": "critical",
+    "source": "https://github.com/masakaai/jet-browser",
+    "date_added": "2026-10-09",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "masakaai/jet-browser",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/masakaai/jet-browser/blob/v0.6.7/LICENSE",
+    "tags": [
+      "browser",
+      "wpe-webkit",
+      "automation",
+      "docker",
+      "jsonl",
+      "testing"
+    ]
   },
   {
     "id": "jev-social",
@@ -59972,6 +60075,39 @@
     ]
   },
   {
+    "id": "tastegate",
+    "path": "skills/tastegate",
+    "category": "frontend",
+    "name": "tastegate",
+    "description": "Build or fix a frontend so it looks designed, not AI-generated, then prove it in a real browser: renders at phone and desktop width and fails on overlap, low contrast and AI-slop defaults.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-10-08",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "stas4000/tastegate",
+    "license": "MIT",
+    "license_source": "https://github.com/stas4000/tastegate/blob/main/LICENSE",
+    "tags": [
+      "frontend",
+      "design",
+      "ui",
+      "browser-testing",
+      "quality-gate"
+    ]
+  },
+  {
     "id": "tavily-web",
     "path": "skills/tavily-web",
     "category": "data-ai",
@@ -63853,6 +63989,36 @@
     ]
   },
   {
+    "id": "url-to-markdown",
+    "path": "skills/url-to-markdown",
+    "category": "web",
+    "name": "url-to-markdown",
+    "description": "Fetch a public webpage as clean Markdown for an agent: read, summarize, quote, or cite the page while preserving its source URL.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-10-09",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "replynodes/replynodes-agent-skills",
+    "license": "MIT",
+    "tags": [
+      "web",
+      "markdown",
+      "read-only"
+    ]
+  },
+  {
     "id": "us-property-data",
     "path": "skills/us-property-data",
     "category": "api-integration",
@@ -66526,6 +66692,39 @@
       "self-improving",
       "agentic-development",
       "methodology"
+    ]
+  },
+  {
+    "id": "what-could-break",
+    "path": "skills/what-could-break",
+    "category": "development",
+    "name": "what-could-break",
+    "description": "Find what a change breaks outside its own diff, then prove the one fact that makes it safe by running real code. Use before any multi-file edit or an edit to a shared path.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-10-08",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "stas4000/what-could-break",
+    "license": "MIT",
+    "license_source": "https://github.com/stas4000/what-could-break/blob/main/LICENSE",
+    "tags": [
+      "code-review",
+      "refactoring",
+      "testing",
+      "blast-radius",
+      "verification"
     ]
   },
   {

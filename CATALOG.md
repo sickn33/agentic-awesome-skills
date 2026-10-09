@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-08T14:20:45.000Z
 
-Total skills: 2665
+Total skills: 2671
 
 ## agent-behavior (5)
 
@@ -528,7 +528,7 @@ Total skills: 2665
 | `nft-standards` | Master ERC-721 and ERC-1155 NFT standards, metadata best practices, and advanced NFT features. | critical | community | nft, standards | nft, standards, erc, 721, 1155, metadata, features |
 | `web3-testing` | Master comprehensive testing strategies for smart contracts using Hardhat, Foundry, and advanced testing patterns. | critical | community | web3 | web3, testing, smart, contracts, hardhat, foundry |
 
-## browser-automation (7)
+## browser-automation (8)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -536,6 +536,7 @@ Total skills: 2665
 | `browser-harness` | Drive an existing browser through CDP for authenticated, visual, or interactive web automation. | critical | davidondrej/skills | browser, cdp, automation, scraping | browser, cdp, automation, scraping, harness, drive, existing, through, authenticated, visual, interactive, web |
 | `hasdata` | Use HasData APIs for web scraping and structured web data extraction. | safe | HasData/hasdata-cli | hasdata | hasdata, apis, web, scraping, structured, data, extraction |
 | `hasdata-cli` | Command-line access to search, scraping, and structured web data. | safe | HasData/hasdata-cli | hasdata, cli | hasdata, cli, command, line, access, search, scraping, structured, web, data |
+| `jet-browser` | Verify or integrate Jet Browser when a project needs isolated WPE WebKit sessions, native input, screenshots, ordered JSONL automation, or reproducible runti... | critical | masakaai/jet-browser | browser, wpe-webkit, automation, docker, jsonl, testing | browser, wpe-webkit, automation, docker, jsonl, testing, jet, verify, integrate, isolated, wpe, webkit |
 | `puppeteer-skill` | Generates Puppeteer scripts for browser automation, scraping, and PDF generation. Triggers on: "Puppeteer", "headless Chrome", "page.goto", "scrape", "PDF ge... | critical | LambdaTest/agent-skills | puppeteer, skill | puppeteer, skill, generates, scripts, browser, automation, scraping, pdf, generation, triggers, headless, chrome |
 | `reverse-browser-automation` | Automate browsers (Playwright) and Windows desktop applications (UI automation) for reverse-engineering evidence collection, UI-driven workflows, and network... | safe | zhaoxuya520/reverse-skill | reverse, browser | reverse, browser, automation, automate, browsers, playwright, windows, desktop, applications, ui, engineering, evidence |
 | `skyvern-browser-automation` | AI-powered browser automation — navigate sites, fill forms, extract structured data, log in with stored credentials, and build reusable workflows. | safe | Skyvern-AI/skyvern | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation, skyvern, browser, automation, ai, powered, navigate |
@@ -1328,7 +1329,7 @@ Total skills: 2665
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (220)
+## development (221)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1551,6 +1552,7 @@ Total skills: 2665
 | `uv-package-manager` | Comprehensive guide to using uv, an extremely fast Python package installer and resolver written in Rust, for modern Python project management and dependency... | safe | community | uv, package, manager | uv, package, manager, extremely, fast, python, installer, resolver, written, rust, dependency |
 | `vexor` | Vector-powered CLI for semantic file search with a Claude/Codex skill | safe | https://github.com/scarletkc/vexor | vexor | vexor, vector, powered, cli, semantic, file, search, claude, codex, skill |
 | `vexor-cli` | Semantic file discovery via `vexor`. Use whenever locating where something is implemented/loaded/defined in a medium or large repo, or when the file location... | critical | community | vexor, cli | vexor, cli, semantic, file, discovery, via, whenever, locating, where, something, implemented, loaded |
+| `what-could-break` | Find what a change breaks outside its own diff, then prove the one fact that makes it safe by running real code. Use before any multi-file edit or an edit to... | safe | stas4000/what-could-break | code-review, refactoring, testing, blast-radius, verification | code-review, refactoring, testing, blast-radius, verification, what, could, break, find, change, breaks, outside |
 | `wp-site-health-auditor` | Turns a WordPress Site Health report into a risk-tiered, backup-first fix plan with exact WP-CLI/PHP snippets. Use for site health, recommended improvements,... | critical | self | wordpress, site-health, wp-cli, seo, performance, security, hardening | wordpress, site-health, wp-cli, seo, performance, security, hardening, wp, site, health, auditor, turns |
 
 ## development-and-testing (6)
@@ -1803,11 +1805,12 @@ Total skills: 2665
 | `web3-transaction-relayer-pool` | Gasless transaction relayer node pool register: fee sponsorship limits, nonce synchronization, and balance replenishment alerts. | safe | Ranjeet2063/agentic-awesome-skills | web3, relayer, gasless, meta-transactions, stellar, infrastructure | web3, relayer, gasless, meta-transactions, stellar, infrastructure, transaction, pool, node, register, fee, sponsorship |
 | `zk-proof-verification-pipeline` | Zero-knowledge cryptographic verification pipeline register: proving system, circuit verification keys, public inputs, and gas costs. | safe | Ranjeet2063/agentic-awesome-skills | zk, zero-knowledge, snark, cryptography, privacy, soroban, web3 | zk, zero-knowledge, snark, cryptography, privacy, soroban, web3, proof, verification, pipeline, zero, knowledge |
 
-## finance (18)
+## finance (19)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `axonx` | Develop AxonX research plugins and operate quantitative research tasks through CLI or MCP, inspecting execution status, logs, artifacts, and lineage. | critical | FlowLLM-AI/AxonX | quantitative-research, mcp, backtesting, python | quantitative-research, mcp, backtesting, python, axonx, develop, research, plugins, operate, quantitative, tasks, through |
+| `equibles` | Query Equibles for US stock market data: SEC filing search, XBRL financial statements, earnings call transcripts, insider and 13F holdings, and daily prices. | safe | self | finance, stocks, sec-filings, earnings-calls, insider-trading, 13f, rest-api, mcp | finance, stocks, sec-filings, earnings-calls, insider-trading, 13f, rest-api, mcp, equibles, query, us, stock |
 | `fxmacrodata` | Query FXMacroData for official-source macro indicators, release calendars, central-bank policy rates, FX rates and CFTC positioning across 22 currencies. | safe | self | macroeconomics, forex, central-banks, economic-calendar, cot, rest-api | macroeconomics, forex, central-banks, economic-calendar, cot, rest-api, fxmacrodata, query, official, source, macro, indicators |
 | `longbridge` | 125+ agent skills for Longbridge Securities — real-time quotes, charts, fundamentals, portfolio analysis, options, and more for HK/US/A-share/SG markets. Tri... | critical | longbridge/skills | finance, stocks, trading, portfolio, market-data | finance, stocks, trading, portfolio, market-data, longbridge, 125, agent, skills, securities, real, time |
 | `longbridge-content` | Latest news articles, regulatory filings, community discussion topics for listed stocks, and SEC EDGAR filing analysis (10-K/10-Q/8-K/proxy/Form 4) via Longb... | critical | longbridge/skills | longbridge, content | longbridge, content, latest, news, articles, regulatory, filings, community, discussion, topics, listed, stocks |
@@ -1863,7 +1866,7 @@ Total skills: 2665
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | critical | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | critical | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (35)
+## frontend (36)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1901,6 +1904,7 @@ Total skills: 2665
 | `stitch-design-taste` | Use when generating Google Stitch DESIGN.md systems for premium typography, color, layout, motion intent, and anti-generic UI rules. | safe | Leonxlnx/taste-skill | stitch, design-system, frontend, ui | stitch, design-system, frontend, ui, taste, generating, google, md, premium, typography, color, layout |
 | `sveltekit` | Build full-stack web applications with SvelteKit — file-based routing, SSR, SSG, API routes, and form actions in one framework. | safe | community | svelte, sveltekit, fullstack, ssr, ssg, typescript | svelte, sveltekit, fullstack, ssr, ssg, typescript, full, stack, web, applications, file, routing |
 | `tailwind-patterns` | Tailwind CSS v4 principles. CSS-first configuration, container queries, modern patterns, design token architecture. | none | community | tailwind | tailwind, css, v4, principles, first, configuration, container, queries, token, architecture |
+| `tastegate` | Build or fix a frontend so it looks designed, not AI-generated, then prove it in a real browser: renders at phone and desktop width and fails on overlap, low... | safe | stas4000/tastegate | frontend, design, ui, browser-testing, quality-gate | frontend, design, ui, browser-testing, quality-gate, tastegate, fix, so, looks, designed, ai, generated |
 | `zustand-store-ts` | Create Zustand stores following established patterns with proper TypeScript types and middleware. | critical | community | zustand, store, ts | zustand, store, ts, stores, following, established, proper, typescript, types, middleware |
 
 ## fullstack (1)
@@ -2545,10 +2549,11 @@ Total skills: 2665
 | `tune-monitor` | Analyze a Monte Carlo monitor and recommend config changes to reduce alert noise. Supports metric, custom SQL, validation, and table monitors. Fetches the re... | critical | monte-carlo-data/mc-agent-toolkit | tune, monitor | tune, monitor, analyze, monte, carlo, recommend, config, changes, reduce, alert, noise, supports |
 | `windows-shell-reliability` | Reliable command execution on Windows: paths, encoding, and common binary pitfalls. | safe | community | windows, shell, reliability | windows, shell, reliability, reliable, command, execution, paths, encoding, common, binary, pitfalls |
 
-## research (23)
+## research (24)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `ask-human-expert` | Ask real executives and domain experts a question through Instant Expert for a written answer or short call: practitioner knowledge, customer discovery. Free... | critical | Instant-Expert/skills | experts, expert-network, human-in-the-loop, customer-discovery, user-research, interviews, mcp, paid-api | experts, expert-network, human-in-the-loop, customer-discovery, user-research, interviews, mcp, paid-api, ask, human, real, executives |
 | `deep-research-framework` | Framework for deep research reports: define the question and tier sources first, cross-verify, then write conclusion-first reports with explicit uncertainty ... | safe | alapha888/agent-skills-en | research-reports, source-verification, analysis | research-reports, source-verification, analysis, deep, research, framework, reports, define, question, tier, sources, first |
 | `deepapi` | Use DeepAPI for supported scraping, research, and email workflows with explicit credentials and approval. | critical | davidondrej/skills | deepapi, scraping, email, api | deepapi, scraping, email, api, supported, research, explicit, credentials, approval |
 | `dsh-deepread` | Use for evidence-first reading of articles, books, PDFs, web pages, or document sets, with knowledge maps and Feynman checks. | safe | xiehuan123/dsh-deepread | deep-reading, evidence, knowledge-map, feynman, document-analysis | deep-reading, evidence, knowledge-map, feynman, document-analysis, dsh, deepread, first, reading, articles, books, pdfs |
@@ -3047,6 +3052,12 @@ Total skills: 2665
 | `fal-audio` | Text-to-speech and speech-to-text using fal.ai audio models | safe | https://github.com/fal-ai-community/skills/blob/main/skills/claude.ai/fal-audio/SKILL.md | fal, audio | fal, audio, text, speech, ai, models |
 | `pipecat-friday-agent` | Build a low-latency, Iron Man-inspired tactical voice assistant (F.R.I.D.A.Y.) using Pipecat, Gemini, and OpenAI. | safe | community | pipecat, voice, gemini, openai, python | pipecat, voice, gemini, openai, python, friday, agent, low, latency, iron, man, inspired |
 | `voice-ai-development` | Expert in building voice AI applications - from real-time voice agents to voice-enabled apps. Covers OpenAI Realtime API, Vapi for voice agents, Deepgram for... | critical | vibeship-spawner-skills (Apache 2.0) | voice, ai | voice, ai, development, building, applications, real, time, agents, enabled, apps, covers, openai |
+
+## web (1)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `url-to-markdown` | Fetch a public webpage as clean Markdown for an agent: read, summarize, quote, or cite the page while preserving its source URL. | safe | replynodes/replynodes-agent-skills | web, markdown, read-only | web, markdown, read-only, url, fetch, public, webpage, clean, agent, read, summarize, quote |
 
 ## web-development (69)
 
