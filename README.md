@@ -324,6 +324,8 @@ Key source families include:
 
 ### Community Contributors
 
+- **[stas4000/what-could-break](https://github.com/stas4000/what-could-break)**: MIT source for the `what-could-break` skill - find what a change breaks outside its own diff and prove the one fact that makes it safe by running real code. Includes material adapted from pstack by Lauren Tan (MIT).
+- **[stas4000/tastegate](https://github.com/stas4000/tastegate)**: MIT source for the `tastegate` skill - pick a design direction, build on a craft floor, then render the page in headless Chromium at phone and desktop width and fail on overlap, sideways scroll, low contrast and AI-slop defaults. Direction rules derive from taste-skill (MIT) and the craft floor from impeccable (Apache-2.0).
 - **[stefanautomateed/shipvela-codex](https://github.com/stefanautomateed/shipvela-codex)**: MIT source for `shipvela-publish` — owner-confirmed website publishing and exact deployment tracking through an already connected Shipvela account. The hosted service is proprietary and plan-limited.
 - **[mdagnolops/1human-reels](https://github.com/mdagnolops/1human-reels)**: MIT source for the `agent-reels` skill - find credited animation and video references on 1human and consult a private library shared by a human and their creative agent; registration, saves, likes, comments and publication are state-changing and require prior owner authorization.
 - **[alexyc9381/shark-skill](https://github.com/alexyc9381/shark-skill)** and **[alexyc9381/court-skill](https://github.com/alexyc9381/court-skill)**: MIT sources for the `shark` and `court` skills by Alex Chen (@nocodealex). Each is a panel of Claude sub-agents (investors, or a jury) that stress-tests an idea.
