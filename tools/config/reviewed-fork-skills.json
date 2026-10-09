@@ -28,6 +28,22 @@
         "skills/cline-pilot/.gitignore",
         "skills/cline-pilot/README.md"
       ]
+    },
+    {
+      "pr": 1838,
+      "base_repository": "sickn33/agentic-awesome-skills",
+      "head_repository": "stas4000/agentic-awesome-skills",
+      "skill_root": "skills/tastegate",
+      "reviewed_head": "6c644174654c778e4ccaefc29124515189ab422e",
+      "tree_oid": "a0c276935ee6b3f608d22a663a83ce0fd2b91702"
+    },
+    {
+      "pr": 1838,
+      "base_repository": "sickn33/agentic-awesome-skills",
+      "head_repository": "stas4000/agentic-awesome-skills",
+      "skill_root": "skills/what-could-break",
+      "reviewed_head": "6c644174654c778e4ccaefc29124515189ab422e",
+      "tree_oid": "42db8ca5bd1cd664b4bdf3908205f554d20fd0c3"
     }
   ]
 }
