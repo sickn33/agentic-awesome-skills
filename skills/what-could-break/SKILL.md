@@ -125,4 +125,4 @@ is false and the design changes before any code is written.
 
 Adapted from [stas4000/what-could-break](https://github.com/stas4000/what-could-break) (MIT).
 Includes material adapted from pstack by Lauren Tan (MIT); its notice ships here in
-[LICENSE-pstack.txt](LICENSE-pstack.txt).
+[references/LICENSE-pstack.txt](references/LICENSE-pstack.txt).

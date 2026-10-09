@@ -125,5 +125,5 @@ is a line item to fix, not a matter of opinion.
 
 Adapted from [stas4000/tastegate](https://github.com/stas4000/tastegate) (MIT). The direction
 rules derive from taste-skill (MIT) and the craft floor from impeccable (Apache-2.0); both
-notices ship here in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) with their full licenses
-under `licenses/`.
+notices ship here in [references/THIRD_PARTY_NOTICES.md](references/THIRD_PARTY_NOTICES.md) with their
+full licenses under `references/`.
