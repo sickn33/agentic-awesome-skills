@@ -319,6 +319,7 @@ Key source families include:
 - **[hermes-labs-ai/lintlang](https://github.com/hermes-labs-ai/lintlang)**: Official source for the `lintlang-audit` skill - deterministic, zero-LLM static auditing of agent instructions, tool definitions, and embedded Python prompts, reporting finding codes and locations without editing files or calling a model (Apache-2.0).
 - **[target1m/traderspy-mcp](https://github.com/target1m/traderspy-mcp)**: Official TraderSpy source for six crypto market research skills (`traderspy-*`) - market briefings, technical analysis, screening and backtests, AI signals, top-trader positioning, and position checks through the hosted, read-only TraderSpy MCP server (MIT).
 - **[MohammadHijjawi97/since-cutoff](https://github.com/MohammadHijjawi97/since-cutoff)**: Official source for the `since-cutoff` skill - lists which APIs of a project's pinned Python dependencies changed after the model's training cutoff, from a static diff of the two releases with no model calls, shows where the code uses them, and writes short AGENTS.md or CLAUDE.md notes (MIT).
+- **[qrxcodes/qrx-mcp](https://github.com/qrxcodes/qrx-mcp)**: Official QRX skill - turn a text prompt and a link into an artistic, branded QR code through the hosted QRX MCP server, checked to scan before it is returned (MIT).
 
 </details>
 
