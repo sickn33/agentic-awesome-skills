@@ -144,7 +144,7 @@ a match on generic safety boilerplate is not.
 ## Best Practices
 
 - ✅ Cite file name plus capture date every time you quote.
-- ✅ State whether the artifact was captured or vendor-reported.
+- ✅ State whether the artifact was captured off the wire or reported by the model itself.
 - ✅ Treat every number — characters, tool counts — as tied to one dated file.
 - ✅ Say plainly when the archive has no entry for the product being asked about.
 - ❌ Do not paraphrase a prompt you did not fetch in this session.
