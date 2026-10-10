@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [19.3.0] - 2026-10-10 - "Design Research, Reverse Engineering And Art QR Codes"
+
+> Adds **4** reviewed skills for real-product design research, evidence-led reverse engineering of shipped software, paid LinkedIn profile lookups with per-call consent, and branded art QR codes; it also refreshes the 1human motion skill for the current human-controlled onboarding. Ships **2,675** skills.
+
+A catalog release for Claude Code, Cursor, Codex CLI, Gemini CLI, and related AI coding assistants. It includes the protected maintainer batch merged after `19.2.0`, with existing installation interfaces preserved.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@19.3.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **uxkin-research** - research how real products handle a screen, flow or visual style before designing it: search UXKIN's library of real iOS screens, user journeys and website design systems, compare several and report the shared pattern. `risk: safe`, MIT, official source [uxkin/agent](https://github.com/uxkin/agent).
+- **reverse-engineer-anything** - investigate shipped apps, binaries, packages and runtimes with evidence-first routing: ASAR/Electron, archives, Android, managed assemblies, firmware, native targets and passive runtime observation, with provider limits and unknowns kept explicit. `risk: safe`, MIT, community source [morluto/rea](https://github.com/morluto/rea).
+- **datacircle** - look up LinkedIn profiles by URL through Datacircle (Up2Data or HarvestAPI, no markup) over its hosted MCP server or REST API, stating the cost and waiting for the user's yes before every paid lookup. `risk: critical`, self-authored source.
+- **qrx** - make branded, print-ready art QR codes that always scan through the hosted QRX MCP server or REST API, plus list, check and re-point existing codes; never asks for a Wi-Fi password and never prints the API key. `risk: critical`, MIT, official source [qrxcodes/qrx-mcp](https://github.com/qrxcodes/qrx-mcp).
+
+### Changed
+
+- **agent-reels** - refresh the 1human motion skill for the current human-controlled onboarding: discovery-only invitations, explicit workspace-install and upload-scope approval, reserved runtime identities, and separate private password setup. `risk: critical` is preserved; no account, billing or background automation was added.
+
+### Credits
+
+- **@UXKIN** for `uxkin-research`
+- **@morluto** for `reverse-engineer-anything`
+- **@waynehamadi** for `datacircle`
+- **@MattDavies** for the `qrx` official source and credit
+- **@mdagnolops** for the `agent-reels` refresh
+
 ## [19.2.0] - 2026-10-09 - "Market Data And Change-Safety Skills"
 
 > Adds **6** reviewed skills for US stock-market data, change-impact proof, frontend visual gating, human-expert asks, browser-runtime verification and URL-to-Markdown fetching. Ships **2,671** skills.
