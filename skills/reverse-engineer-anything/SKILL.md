@@ -2,7 +2,7 @@
 name: reverse-engineer-anything
 description: Use REA to investigate shipped apps, binaries, packages, and runtimes; trace features with evidence, compare versions, or guide reconstruction. Skip ordinary source-code analysis.
 risk: safe
-source: "https://github.com/morluto/rea/tree/main/skill-src/reverse-engineer-anything"
+source: "https://github.com/morluto/rea/tree/main/.agents/skills/reverse-engineer-anything"
 source_repo: "morluto/rea"
 source_type: community
 date_added: "2026-10-10"
