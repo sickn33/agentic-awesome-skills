@@ -40,7 +40,7 @@ claude mcp add --transport http datacircle https://api.datacircle.dev/mcp \
   --header "Authorization: Bearer $DATACIRCLE_API_KEY"
 ```
 
-- If the client already has it connected, prefer its tools over raw HTTP: `get_linkedin_profile` (`url`, and `provider`: `up2data`, the default, `harvestapi` or `fetchin`) and `get_balance` (free). It also has `list_files`, `get_download_link`, `get_invite_link` and `add_funds`.
+- If the client already has it connected, prefer its tools over raw HTTP: `get_linkedin_profile` (`url`, and `provider`: `up2data`, the default, `harvestapi` or `fetchin`) and `get_balance` (free). It also has `list_files`, `get_download_link` and `add_funds`.
 
 ### REST API
 
