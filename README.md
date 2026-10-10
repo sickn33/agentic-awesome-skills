@@ -329,6 +329,8 @@ Key source families include:
 
 ### Community Contributors
 
+- **[morluto/rea](https://github.com/morluto/rea)**: MIT source for the `reverse-engineer-anything` skill - evidence-led native, managed, JavaScript/Electron, packaged, and browser investigations with explicit provider limits.
+
 - **[stas4000/what-could-break](https://github.com/stas4000/what-could-break)**: MIT source for the `what-could-break` skill - find what a change breaks outside its own diff and prove the one fact that makes it safe by running real code. Includes material adapted from pstack by Lauren Tan (MIT).
 - **[stas4000/tastegate](https://github.com/stas4000/tastegate)**: MIT source for the `tastegate` skill - pick a design direction, build on a craft floor, then render the page in headless Chromium at phone and desktop width and fail on overlap, sideways scroll, low contrast and AI-slop defaults. Direction rules derive from taste-skill (MIT) and the craft floor from impeccable (Apache-2.0).
 - **[stefanautomateed/shipvela-codex](https://github.com/stefanautomateed/shipvela-codex)**: MIT source for `shipvela-publish` — owner-confirmed website publishing and exact deployment tracking through an already connected Shipvela account. The hosted service is proprietary and plan-limited.
