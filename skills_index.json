@@ -19031,6 +19031,36 @@
     "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
   },
   {
+    "id": "datacircle",
+    "path": "skills/datacircle",
+    "category": "data",
+    "name": "datacircle",
+    "description": "Look up LinkedIn profiles by URL through Datacircle (Up2Data or HarvestAPI, no markup), over its hosted MCP server or REST API, with the user's yes before each paid call.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-10-10",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "b2b-data",
+      "linkedin",
+      "enrichment",
+      "rest-api",
+      "mcp"
+    ]
+  },
+  {
     "id": "datadog",
     "path": "skills/datadog",
     "category": "devops",

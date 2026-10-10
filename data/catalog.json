@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-09T08:09:47.000Z",
-  "total": 2673,
+  "total": 2674,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -21992,6 +21992,38 @@
         "gaps"
       ],
       "path": "skills/database-security/SKILL.md"
+    },
+    {
+      "id": "datacircle",
+      "canonical_id": "datacircle",
+      "name": "datacircle",
+      "description": "Look up LinkedIn profiles by URL through Datacircle (Up2Data or HarvestAPI, no markup), over its hosted MCP server or REST API, with the user's yes before each paid call.",
+      "category": "data",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "b2b-data",
+        "linkedin",
+        "enrichment",
+        "rest-api",
+        "mcp"
+      ],
+      "triggers": [
+        "b2b-data",
+        "linkedin",
+        "enrichment",
+        "rest-api",
+        "mcp",
+        "datacircle",
+        "look",
+        "up",
+        "profiles",
+        "url",
+        "through",
+        "up2data"
+      ],
+      "path": "skills/datacircle/SKILL.md"
     },
     {
       "id": "datadog",

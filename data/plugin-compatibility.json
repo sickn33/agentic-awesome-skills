@@ -14104,6 +14104,25 @@
       "runtime_files": []
     },
     {
+      "id": "datacircle",
+      "path": "skills/datacircle",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "datadog",
       "path": "skills/datadog",
       "targets": {
@@ -51286,10 +51305,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2673,
+    "total_skills": 2674,
     "supported": {
-      "codex": 2586,
-      "claude": 2611
+      "codex": 2587,
+      "claude": 2612
     },
     "blocked": {
       "codex": 87,

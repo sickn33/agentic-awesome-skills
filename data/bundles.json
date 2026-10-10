@@ -176,6 +176,7 @@
         "cross-platform-contract-propagation-audit",
         "cucumber-skill",
         "cypress-skill",
+        "datacircle",
         "dbos-golang",
         "dbos-python",
         "dbos-typescript",

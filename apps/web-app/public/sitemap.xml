@@ -217,6 +217,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://aaskills.tech/skill/datacircle/</loc>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://aaskills.tech/skill/reverse-engineer-anything/</loc>
     <lastmod>2026-10-10</lastmod>
     <changefreq>weekly</changefreq>
@@ -1286,12 +1292,6 @@
   </url>
   <url>
     <loc>https://aaskills.tech/skill/source-document-filing/</loc>
-    <lastmod>2026-10-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://aaskills.tech/skill/stakeholder-investor-reports/</loc>
     <lastmod>2026-10-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
