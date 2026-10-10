@@ -50,9 +50,9 @@ claude mcp add --transport http datacircle https://api.datacircle.dev/mcp \
 
 ### Prices and limits
 
-- Sign up at datacircle.dev with your work email: a $5 credit, that's 4,000 LinkedIn profiles at $1.25 per 1,000.
-- $1.25 per 1,000 through Up2Data (a profile it can't find is free), $3.70 per 1,000 through HarvestAPI.
-- Up2Data takes $1 a day per account (800 profiles), with a shared daily limit for all customers, then answers 429 until 00:00 UTC; HarvestAPI has no daily limit.
+- Sign up at datacircle.dev with your work email: a $5 credit, that's 2,105 LinkedIn profiles at $2.375 per 1,000.
+- $2.375 per 1,000 through Up2Data (a profile it can't find is free), $3.70 per 1,000 through HarvestAPI.
+- Up2Data takes $1 a day per account (421 profiles), with a shared daily limit for all customers, then answers 429 until 00:00 UTC; HarvestAPI has no daily limit.
 - A call your balance can't cover answers 402. Add funds, from $5, on your dashboard.
 
 ## How It Works
