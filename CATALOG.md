@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-09T08:09:47.000Z
 
-Total skills: 2671
+Total skills: 2673
 
 ## agent-behavior (5)
 
@@ -1866,7 +1866,7 @@ Total skills: 2671
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | critical | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | critical | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (36)
+## frontend (37)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1905,6 +1905,7 @@ Total skills: 2671
 | `sveltekit` | Build full-stack web applications with SvelteKit — file-based routing, SSR, SSG, API routes, and form actions in one framework. | safe | community | svelte, sveltekit, fullstack, ssr, ssg, typescript | svelte, sveltekit, fullstack, ssr, ssg, typescript, full, stack, web, applications, file, routing |
 | `tailwind-patterns` | Tailwind CSS v4 principles. CSS-first configuration, container queries, modern patterns, design token architecture. | none | community | tailwind | tailwind, css, v4, principles, first, configuration, container, queries, token, architecture |
 | `tastegate` | Build or fix a frontend so it looks designed, not AI-generated, then prove it in a real browser: renders at phone and desktop width and fails on overlap, low... | safe | stas4000/tastegate | frontend, design, ui, browser-testing, quality-gate | frontend, design, ui, browser-testing, quality-gate, tastegate, fix, so, looks, designed, ai, generated |
+| `uxkin-research` | Research how real products handle a screen, flow or visual style before designing it: search UXKIN's real iOS screens, user journeys and website design syste... | safe | uxkin/agent | ui, ux, design, research, mcp, design-system | ui, ux, design, research, mcp, design-system, uxkin, how, real, products, handle, screen |
 | `zustand-store-ts` | Create Zustand stores following established patterns with proper TypeScript types and middleware. | critical | community | zustand, store, ts | zustand, store, ts, stores, following, established, proper, typescript, types, middleware |
 
 ## fullstack (1)
@@ -3031,11 +3032,12 @@ Total skills: 2671
 | --- | --- | --- | --- | --- | --- |
 | `travel-planner` | 旅行/行程规划需求时使用:规划去某地旅行、X天X城、带老人孩子、自驾、假期安排等。产出逐日行程表、预算估算(经济/舒适/奢华三档)、交通住宿建议、景点美食清单。必须先问预算,预算未确认只输出问题清单;事实数据带来源和查询日期。 | safe | saudademjj/luopan | travel, itinerary, planning, trip, chinese | travel, itinerary, planning, trip, chinese, planner |
 
-## uncategorized (1)
+## uncategorized (2)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `changelog-entry` | Generate a properly formatted CHANGELOG.md entry in Keep a Changelog format from a commit range or PR. Groups changes into Added/Changed/Deprecated/Removed/F... | safe | self | git, changelog, developer-workflow, documentation | git, changelog, developer-workflow, documentation, entry, generate, properly, formatted, md, keep, format, commit |
+| `reverse-engineer-anything` | Use REA to investigate shipped apps, binaries, packages, and runtimes; trace features with evidence, compare versions, or guide reconstruction. Skip ordinary... | safe | morluto/rea | reverse, anything | reverse, anything, engineer, rea, investigate, shipped, apps, binaries, packages, runtimes, trace, features |
 
 ## video (1)
 

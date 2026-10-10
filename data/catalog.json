@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-09T08:09:47.000Z",
-  "total": 2671,
+  "total": 2673,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -61033,6 +61033,38 @@
       "path": "skills/reverse-engineer/SKILL.md"
     },
     {
+      "id": "reverse-engineer-anything",
+      "canonical_id": "reverse-engineer-anything",
+      "name": "reverse-engineer-anything",
+      "description": "Use REA to investigate shipped apps, binaries, packages, and runtimes; trace features with evidence, compare versions, or guide reconstruction. Skip ordinary source-code analysis.",
+      "category": "uncategorized",
+      "risk": "safe",
+      "source": "https://github.com/morluto/rea/tree/main/skill-src/reverse-engineer-anything",
+      "source_type": "community",
+      "source_repo": "morluto/rea",
+      "license": "MIT",
+      "license_source": "https://github.com/morluto/rea/blob/main/LICENSE",
+      "tags": [
+        "reverse",
+        "anything"
+      ],
+      "triggers": [
+        "reverse",
+        "anything",
+        "engineer",
+        "rea",
+        "investigate",
+        "shipped",
+        "apps",
+        "binaries",
+        "packages",
+        "runtimes",
+        "trace",
+        "features"
+      ],
+      "path": "skills/reverse-engineer-anything/SKILL.md"
+    },
+    {
       "id": "reverse-engineering",
       "canonical_id": "reverse-engineering",
       "name": "reverse-engineering",
@@ -75036,6 +75068,42 @@
         "invoke"
       ],
       "path": "skills/ux-persuasion-engineer/SKILL.md"
+    },
+    {
+      "id": "uxkin-research",
+      "canonical_id": "uxkin-research",
+      "name": "uxkin-research",
+      "description": "Research how real products handle a screen, flow or visual style before designing it: search UXKIN's real iOS screens, user journeys and website design systems, compare several and report what they share.",
+      "category": "frontend",
+      "risk": "safe",
+      "source": "https://github.com/uxkin/agent/tree/main/skills/uxkin-research",
+      "source_type": "official",
+      "source_repo": "uxkin/agent",
+      "license": "MIT",
+      "license_source": "https://github.com/uxkin/agent/blob/main/LICENSE",
+      "tags": [
+        "ui",
+        "ux",
+        "design",
+        "research",
+        "mcp",
+        "design-system"
+      ],
+      "triggers": [
+        "ui",
+        "ux",
+        "design",
+        "research",
+        "mcp",
+        "design-system",
+        "uxkin",
+        "how",
+        "real",
+        "products",
+        "handle",
+        "screen"
+      ],
+      "path": "skills/uxkin-research/SKILL.md"
     },
     {
       "id": "uxui-principles",

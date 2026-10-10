@@ -52340,6 +52340,32 @@
     }
   },
   {
+    "id": "reverse-engineer-anything",
+    "path": "skills/reverse-engineer-anything",
+    "category": "uncategorized",
+    "name": "reverse-engineer-anything",
+    "description": "Use REA to investigate shipped apps, binaries, packages, and runtimes; trace features with evidence, compare versions, or guide reconstruction. Skip ordinary source-code analysis.",
+    "risk": "safe",
+    "source": "https://github.com/morluto/rea/tree/main/skill-src/reverse-engineer-anything",
+    "date_added": "2026-10-10",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "morluto/rea",
+    "license": "MIT",
+    "license_source": "https://github.com/morluto/rea/blob/main/LICENSE"
+  },
+  {
     "id": "reverse-engineering",
     "path": "skills/reverse-engineering",
     "category": "security",
@@ -64459,6 +64485,40 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "uxkin-research",
+    "path": "skills/uxkin-research",
+    "category": "frontend",
+    "name": "uxkin-research",
+    "description": "Research how real products handle a screen, flow or visual style before designing it: search UXKIN's real iOS screens, user journeys and website design systems, compare several and report what they share.",
+    "risk": "safe",
+    "source": "https://github.com/uxkin/agent/tree/main/skills/uxkin-research",
+    "date_added": "2026-10-09",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "uxkin/agent",
+    "license": "MIT",
+    "license_source": "https://github.com/uxkin/agent/blob/main/LICENSE",
+    "tags": [
+      "ui",
+      "ux",
+      "design",
+      "research",
+      "mcp",
+      "design-system"
+    ]
   },
   {
     "id": "uxui-principles",
