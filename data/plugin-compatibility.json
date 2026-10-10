@@ -37893,6 +37893,25 @@
       "runtime_files": []
     },
     {
+      "id": "qrx",
+      "path": "skills/qrx",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "quality-nonconformance",
       "path": "skills/quality-nonconformance",
       "targets": {
@@ -51305,10 +51324,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2674,
+    "total_skills": 2675,
     "supported": {
-      "codex": 2587,
-      "claude": 2612
+      "codex": 2588,
+      "claude": 2613
     },
     "blocked": {
       "codex": 87,

@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-10-09T08:09:47.000Z",
-  "total": 2674,
+  "total": 2675,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -58969,6 +58969,42 @@
         "retains"
       ],
       "path": "skills/qoder-delegate/SKILL.md"
+    },
+    {
+      "id": "qrx",
+      "canonical_id": "qrx",
+      "name": "qrx",
+      "description": "Make branded, print-ready art QR codes that always scan with QRX (qrx.codes). Use when a link needs a QR code that looks like artwork or matches a brand for print, packaging, signs, slides or event badges, and to list or re-point QRX codes. Not for plain QR codes the agent makes locally.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/qrxcodes/qrx-mcp/tree/main/skills/qrx",
+      "source_type": "official",
+      "source_repo": "qrxcodes/qrx-mcp",
+      "license": "MIT",
+      "license_source": "https://github.com/qrxcodes/qrx-mcp/blob/main/LICENSE",
+      "tags": [
+        "qr-code",
+        "design",
+        "branding",
+        "mcp",
+        "rest-api",
+        "print"
+      ],
+      "triggers": [
+        "qr-code",
+        "design",
+        "branding",
+        "mcp",
+        "rest-api",
+        "print",
+        "qrx",
+        "branded",
+        "art",
+        "qr",
+        "codes",
+        "always"
+      ],
+      "path": "skills/qrx/SKILL.md"
     },
     {
       "id": "quality-nonconformance",

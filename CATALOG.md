@@ -2,7 +2,7 @@
 
 Generated at: 2026-10-09T08:09:47.000Z
 
-Total skills: 2674
+Total skills: 2675
 
 ## agent-behavior (5)
 
@@ -1218,7 +1218,7 @@ Total skills: 2674
 | `logic-locate` | Locate the root cause of a CONFIRMED failure via backward-then-forward semi-formal tracing. | safe | hyhmrright/logic-lens | logic, locate | logic, locate, root, cause, confirmed, failure, via, backward, then, forward, semi, formal |
 | `phase-gated-debugging` | Use when debugging any bug. Enforces a 5-phase protocol where code edits are blocked until root cause is confirmed. Prevents premature fix attempts. | safe | community | phase, gated, debugging | phase, gated, debugging, any, bug, enforces, protocol, where, code, edits, blocked, until |
 
-## design (42)
+## design (43)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1244,6 +1244,7 @@ Total skills: 2674
 | `lookdev` | Human-in-the-loop web studio to tune AI-generated output by eye. Stand up a local interactive studio (sliders, pickers, drag handles) or an inline edit/highl... | safe | connerkward/lookdev-studio-skill | lookdev, design, ui, tuning, studio, visual-eval, annotation | lookdev, design, ui, tuning, studio, visual-eval, annotation, human, loop, web, tune, ai |
 | `lookdev-auto` | Automated visual tuning: a vision or video model rates rendered variants in a loop. Render several labeled variants into one artifact, ask the model to rate ... | safe | connerkward/lookdev-auto-skill | visual-eval, vision-model, tuning, automation, render-loop | visual-eval, vision-model, tuning, automation, render-loop, lookdev, auto, automated, visual, vision, video, model |
 | `loss-aversion-designer` | One sentence - what this skill does and when to invoke it | safe | community | loss, aversion, designer | loss, aversion, designer, one, sentence, what, skill, does, invoke |
+| `qrx` | Make branded, print-ready art QR codes that always scan with QRX (qrx.codes). Use when a link needs a QR code that looks like artwork or matches a brand for ... | critical | qrxcodes/qrx-mcp | qr-code, design, branding, mcp, rest-api, print | qr-code, design, branding, mcp, rest-api, print, qrx, branded, art, qr, codes, always |
 | `rayden-use` | Build and maintain Rayden UI components and screens in Figma via Figma MCP with full design token enforcement | safe | https://github.com/playbookTV/rayden-ui-design-skill | figma, design-system, ui, components, mcp, rayden, rayna-ui | figma, design-system, ui, components, mcp, rayden, rayna-ui, maintain, screens, via, full, token |
 | `stitch-ui-design` | Expert guidance for crafting effective prompts in Google Stitch, the AI-powered UI design tool by Google Labs. This skill helps create precise, actionable pr... | safe | self | stitch, ui | stitch, ui, guidance, crafting, effective, prompts, google, ai, powered, labs, skill, helps |
 | `theme-factory` | This skill provides a curated collection of professional font and color themes themes, each with carefully selected color palettes and font pairings. Once a ... | critical | community | theme, factory | theme, factory, skill, provides, curated, collection, professional, font, color, themes, each, carefully |
