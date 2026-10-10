@@ -39227,6 +39227,25 @@
       "runtime_files": []
     },
     {
+      "id": "reverse-engineer-anything",
+      "path": "skills/reverse-engineer-anything",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "reverse-engineering",
       "path": "skills/reverse-engineering",
       "targets": {
@@ -48311,6 +48330,25 @@
       "runtime_files": []
     },
     {
+      "id": "uxkin-research",
+      "path": "skills/uxkin-research",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "uxui-principles",
       "path": "skills/uxui-principles",
       "targets": {
@@ -51248,10 +51286,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2671,
+    "total_skills": 2673,
     "supported": {
-      "codex": 2584,
-      "claude": 2609
+      "codex": 2586,
+      "claude": 2611
     },
     "blocked": {
       "codex": 87,
