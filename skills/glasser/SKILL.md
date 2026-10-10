@@ -41,7 +41,7 @@ This skill was contributed by a member of the Glasser team.
 Use the CLI only if it is already installed or the user has approved its
 installation under the host environment's software-installation policy.
 Installation instructions are maintained at
-<https://glasser.ai/SKILL.md>. Do not download or install executable code
+<https://glasser.ai/SKILL.md?utm_source=agentic-awesome-skills&utm_medium=skill>. Do not download or install executable code
 without the review and approval required by the current environment.
 
 Check the CLI and account:
