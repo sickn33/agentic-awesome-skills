@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "source_kind": "fictional_fixture",
+  "captured_at": "2026-10-16T00:00:00Z",
+  "workspace_id": "00000000-0000-4000-8000-000000000001",
+  "flow_id": "00000000-0000-4000-8000-000000000002",
+  "selected_list_ids": [
+    "00000000-0000-4000-8000-000000000011",
+    "00000000-0000-4000-8000-000000000012"
+  ],
+  "calls": [
+    {
+      "tool": "get_workspace_context",
+      "arguments": {},
+      "result": {
+        "workspace": {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "name": "Fictional audit workspace"
+        },
+        "available_workspaces": []
+      }
+    },
+    {
+      "tool": "get_flow",
+      "arguments": {
+        "flow_id": "00000000-0000-4000-8000-000000000002"
+      },
+      "result": {
+        "id": "00000000-0000-4000-8000-000000000002",
+        "name": "Fictional flow",
+        "active_campaign_count": 0,
+        "nodes": [
+          {
+            "id": "invite-demo",
+            "type": "action",
+            "data": {
+              "actionKey": "send_connection_request",
+              "config": {
+                "invite_note": "Hi {{first_name}} — interested in {{topic}}?"
+              }
+            }
+          },
+          {
+            "id": "message-demo",
+            "type": "action",
+            "data": {
+              "actionKey": "send_message",
+              "config": {
+                "message": "{{custom_fields.topic}}"
+              }
+            }
+          },
+          {
+            "id": "sequence-demo",
+            "type": "action",
+            "data": {
+              "actionKey": "message_sequence",
+              "config": {
+                "messages": [
+                  {
+                    "id": "step-1",
+                    "message": "Hi {{first_name}}",
+                    "delaySeconds": 0
+                  },
+                  {
+                    "id": "step-2",
+                    "message": "Following up on {{topic}}",
+                    "delaySeconds": 86400
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "id": "reply-demo",
+            "type": "action",
+            "data": {
+              "actionKey": "check_reply",
+              "config": {}
+            }
+          }
+        ],
+        "edges": []
+      }
+    },
+    {
+      "tool": "list_flow_template_fields",
+      "arguments": {},
+      "result": {
+        "built_in_fields": [
+          {
+            "key": "first_name",
+            "label": "First Name"
+          },
+          {
+            "key": "last_name",
+            "label": "Last Name"
+          },
+          {
+            "key": "company",
+            "label": "Company"
+          },
+          {
+            "key": "title",
+            "label": "Title"
+          },
+          {
+            "key": "email",
+            "label": "Email"
+          },
+          {
+            "key": "phone",
+            "label": "Phone"
+          },
+          {
+            "key": "linkedin_url",
+            "label": "Linkedin Url"
+          }
+        ],
+        "custom_fields": [
+          {
+            "key": "topic",
+            "label": "Topic"
+          }
+        ]
+      }
+    },
+    {
+      "tool": "get_prospect_list",
+      "arguments": {
+        "list_id": "00000000-0000-4000-8000-000000000011"
+      },
+      "result": {
+        "id": "00000000-0000-4000-8000-000000000011",
+        "name": "Fictional selected list",
+        "prospect_count": 2,
+        "custom_field_metadata": [
+          {
+            "key": "topic",
+            "label": "Topic"
+          }
+        ],
+        "active_campaign_count": 0
+      }
+    },
+    {
+      "tool": "list_prospects_in_list",
+      "arguments": {
+        "list_id": "00000000-0000-4000-8000-000000000011",
+        "query": {
+          "page": 1,
+          "page_size": 100
+        }
+      },
+      "result": {
+        "items": [
+          {
+            "id": "00000000-0000-4000-8000-000000000101",
+            "first_name": "Demo A",
+            "last_name": "Synthetic",
+            "company": "Fictional Example Co",
+            "title": "Demonstration record",
+            "email": "",
+            "phone": "",
+            "linkedin_url": "",
+            "custom_fields": {
+              "topic": "A fictional conversation starter"
+            }
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000102",
+            "first_name": "",
+            "last_name": "Synthetic",
+            "company": "Fictional Example Co",
+            "title": "Demonstration record",
+            "email": "",
+            "phone": "",
+            "linkedin_url": "",
+            "custom_fields": {
+              "topic": ""
+            }
+          }
+        ],
+        "pagination": {
+          "total": 2,
+          "page": 1,
+          "page_size": 100,
+          "has_more": false,
+          "next_page": null,
+          "previous_page": null
+        }
+      }
+    },
+    {
+      "tool": "get_prospect_list",
+      "arguments": {
+        "list_id": "00000000-0000-4000-8000-000000000012"
+      },
+      "result": {
+        "id": "00000000-0000-4000-8000-000000000012",
+        "name": "Fictional selected list",
+        "prospect_count": 2,
+        "custom_field_metadata": [],
+        "active_campaign_count": 1
+      }
+    },
+    {
+      "tool": "list_prospects_in_list",
+      "arguments": {
+        "list_id": "00000000-0000-4000-8000-000000000012",
+        "query": {
+          "page": 1,
+          "page_size": 100
+        }
+      },
+      "result": {
+        "items": [
+          {
+            "id": "00000000-0000-4000-8000-000000000101",
+            "first_name": "Demo A",
+            "last_name": "Synthetic",
+            "company": "Fictional Example Co",
+            "title": "Demonstration record",
+            "email": "",
+            "phone": "",
+            "linkedin_url": "",
+            "custom_fields": {
+              "topic": "A fictional conversation starter"
+            }
+          },
+          {
+            "id": "00000000-0000-4000-8000-000000000103",
+            "first_name": "Demo C",
+            "last_name": "Synthetic",
+            "company": "Fictional Example Co",
+            "title": "Demonstration record",
+            "email": "",
+            "phone": "",
+            "linkedin_url": "",
+            "custom_fields": {
+              "topic": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            }
+          }
+        ],
+        "pagination": {
+          "total": 2,
+          "page": 1,
+          "page_size": 100,
+          "has_more": false,
+          "next_page": null,
+          "previous_page": null
+        }
+      }
+    }
+  ]
+}
