@@ -22,7 +22,7 @@
     "@fontsource/jetbrains-mono": "^5.3.0",
     "@fontsource/outfit": "^5.3.0",
     "@phosphor-icons/react": "^2.1.10",
-    "@supabase/supabase-js": "^2.117.1",
+    "@supabase/supabase-js": "^2.117.2",
     "@vercel/analytics": "^2.0.1",
     "ajv": "^8.20.0",
     "github-markdown-css": "^5.9.0",
