@@ -225,6 +225,8 @@ Key source families include:
 
 - **[getchordlabs/chord](https://github.com/getchordlabs/chord/tree/main/skills/chord)**: MIT official source for the `chord-onchain-trading` skill - DEX market data, best-route swap quotes and unsigned swap transactions on eight EVM chains through the Chord API; the skill never signs or sends. The hosted API and server have separate licensing.
 
+- **[Krexa-xyz/skills](https://github.com/Krexa-xyz/skills/tree/main/skills/krexa)**: MIT-0 official source for the `krexa` skill - turn a trading idea, post or video into fixed rules, backtest and paper-trade them, and request a user-approved live trading agent through Krexa's hosted MCP server.
+
 - **[tuantqse90/moltnode-mcp](https://github.com/tuantqse90/moltnode-mcp/tree/main/skills/moltnode)**: MIT official source for the `moltnode-chain-reader` skill - keyless JSON-RPC reads on 31 blockchains through MoltNode by Chord, plus Chord swap quotes with an unsigned transaction and simulation. The hosted gateway and server have separate licensing.
 
 - **[arcmira/mcp](https://github.com/arcmira/mcp/tree/v0.10.6/plugins/arcmira)**: Apache-2.0 plugin source for `arcmira-find-quotes`, YouTube and podcast quote research with timestamped sources. The hosted service and server have separate licensing.
