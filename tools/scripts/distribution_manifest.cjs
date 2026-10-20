@@ -21,12 +21,15 @@ function main(argv, env = process.env) {
     workflow: ".github/workflows/distribution-candidate.yml",
     lockfileDigest: lockfileDigest(root),
   };
+  const manifestPath = path.join(directory, "distribution.json");
+  // Preserve structural/digest validation before reading any archive contents.
+  const manifest = mode === "create" ? createManifest(directory, expected)
+    : JSON.parse(fs.readFileSync(manifestPath));
+  if (mode === "verify") verifyManifest(directory, manifest, expected);
   // Digest equality alone does not prove the npm installer can resolve this release.
   if (readTarballGitHead(path.join(directory, "package.tgz")) !== expected.commit)
     throw new Error("Candidate gitHead is missing or differs from the immutable release commit");
-  const manifestPath = path.join(directory, "distribution.json");
-  if (mode === "create") fs.writeFileSync(manifestPath, JSON.stringify(createManifest(directory, expected), null, 2) + "\n", { flag: "wx" });
-  else verifyManifest(directory, JSON.parse(fs.readFileSync(manifestPath)), expected);
+  if (mode === "create") fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n", { flag: "wx" });
 }
 if (require.main === module) { try { main(process.argv.slice(2)); } catch (error) { console.error(error.message); process.exitCode = 1; } }
 module.exports = { main, lockfileDigest };
