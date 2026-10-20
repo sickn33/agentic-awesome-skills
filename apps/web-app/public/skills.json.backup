@@ -2302,7 +2302,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/ai-headshot-generator-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/ai-headshot-generator-skill/blob/a8818c3568f5c3fe3c0ef65d68498c1ce2e81b3a/LICENSE",
+    "license_source": "https://github.com/beatra-ai/ai-headshot-generator-skill/blob/c5a2ab9483f81b36b501a16868516f960ec84ede/LICENSE",
     "tags": [
       "headshot",
       "text-to-image",
@@ -2335,7 +2335,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/ai-image-generator-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/ai-image-generator-skill/blob/13c7b9b2a2197fb91deb6a3a1466124db620c3d1/LICENSE",
+    "license_source": "https://github.com/beatra-ai/ai-image-generator-skill/blob/8e1b53d105701194f03a8d4566a37b33fc7560b9/LICENSE",
     "tags": [
       "image-generation",
       "text-to-image",
@@ -2394,7 +2394,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/ai-logo-maker-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/ai-logo-maker-skill/blob/89bf762b964f67b77eb0af34d832aab19188f557/LICENSE",
+    "license_source": "https://github.com/beatra-ai/ai-logo-maker-skill/blob/50d2353e6d878980f06a4d89bbd0996f8ac3776c/LICENSE",
     "tags": [
       "logo-design",
       "brand-identity",
@@ -2504,7 +2504,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/multilingual-voiceover-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/multilingual-voiceover-skill/blob/030ec84801fec544bc8be4e1d4ff7333bee7cf0d/LICENSE",
+    "license_source": "https://github.com/beatra-ai/multilingual-voiceover-skill/blob/bcd5d938b872bb50b421f752e1acba29d07965e5/LICENSE",
     "tags": [
       "tts",
       "multilingual",
@@ -2583,7 +2583,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/photo-to-anime-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/photo-to-anime-skill/blob/87bc4c4e993e1ab49ded9e065087c1796cb7cbe4/LICENSE",
+    "license_source": "https://github.com/beatra-ai/photo-to-anime-skill/blob/c2d3fbfffd9c0a04de5672ff8764f88fb13904ea/LICENSE",
     "tags": [
       "photo-to-anime",
       "image-stylization",
@@ -2642,7 +2642,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/ai-podcast-voiceover-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/ai-podcast-voiceover-skill/blob/ddca11ec6853184468eab57a5b4b3649e5293f4d/LICENSE",
+    "license_source": "https://github.com/beatra-ai/ai-podcast-voiceover-skill/blob/0fe5c523fc42754ba8d328e2db4df895a6276ee3/LICENSE",
     "tags": [
       "podcast",
       "tts",
@@ -4716,6 +4716,39 @@
     }
   },
   {
+    "id": "apify-facebook-ads-library-scraper",
+    "path": "skills/apify-facebook-ads-library-scraper",
+    "category": "data",
+    "name": "apify-facebook-ads-library-scraper",
+    "description": "Research Meta Ad Library ads by advertiser or keyword with creative links, dates and disclosed reach or spend through the harshmaur/facebook-ads-library-scraper Apify Actor.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-10-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "harshmaur/apify-facebook-ads-library-scraper",
+    "license": "MIT",
+    "license_source": "https://github.com/harshmaur/apify-facebook-ads-library-scraper/blob/main/LICENSE.txt",
+    "tags": [
+      "facebook",
+      "meta-ad-library",
+      "apify",
+      "ad-transparency",
+      "research"
+    ]
+  },
+  {
     "id": "apify-generate-output-schema",
     "path": "skills/apify-generate-output-schema",
     "category": "automation",
@@ -4808,6 +4841,39 @@
     }
   },
   {
+    "id": "apify-linkedin-jobs-scraper",
+    "path": "skills/apify-linkedin-jobs-scraper",
+    "category": "data",
+    "name": "apify-linkedin-jobs-scraper",
+    "description": "Search and export LinkedIn job postings with salary, seniority, recruiter and company fields using the harshmaur/linkedin-jobs-scraper Apify Actor. No LinkedIn login.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-10-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "harshmaur/apify-linkedin-jobs-scraper",
+    "license": "MIT",
+    "license_source": "https://github.com/harshmaur/apify-linkedin-jobs-scraper/blob/main/LICENSE.txt",
+    "tags": [
+      "linkedin",
+      "jobs",
+      "apify",
+      "salary-data",
+      "recruiting"
+    ]
+  },
+  {
     "id": "apify-market-research",
     "path": "skills/apify-market-research",
     "category": "automation",
@@ -4862,6 +4928,39 @@
       "brand-monitoring",
       "subreddit",
       "comments"
+    ]
+  },
+  {
+    "id": "apify-tiktok-scraper",
+    "path": "skills/apify-tiktok-scraper",
+    "category": "data",
+    "name": "apify-tiktok-scraper",
+    "description": "Research TikTok videos, profiles, hashtags, comments and followers with engagement statistics through the harshmaur/tiktok-scraper Apify Actor. No TikTok login.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-10-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "harshmaur/apify-tiktok-scraper",
+    "license": "MIT",
+    "license_source": "https://github.com/harshmaur/apify-tiktok-scraper/blob/main/LICENSE.txt",
+    "tags": [
+      "tiktok",
+      "apify",
+      "videos",
+      "comments",
+      "creator-research"
     ]
   },
   {
@@ -5319,9 +5418,9 @@
         "claude": "supported"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Requires an existing authorized Arcmira MCP connection; the skill never installs or reconfigures it.",
+        "docs": "https://arcmira.com/docs/mcp-server"
       },
       "reasons": []
     },
@@ -10647,7 +10746,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/ai-media-generator-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/ai-media-generator-skill/blob/69afbfe9fc5be318279656311225c09f7ae03f97/LICENSE",
+    "license_source": "https://github.com/beatra-ai/ai-media-generator-skill/blob/26a5f7963aca434c2cbced911a2914e3224c2107/LICENSE",
     "tags": [
       "ai-media",
       "image-generation",
@@ -10683,7 +10782,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/beatra-skills",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/beatra-skills/blob/95d662f7aeddd6e2aa6da9e14f9c985e3f6b914d/LICENSE",
+    "license_source": "https://github.com/beatra-ai/beatra-skills/blob/b7ab8ed02980ee44b6dac62633f8d79daf0809ab/LICENSE",
     "tags": [
       "video-generation",
       "text-to-video",
@@ -19466,7 +19565,7 @@
     "path": "skills/datacircle",
     "category": "data",
     "name": "datacircle",
-    "description": "Look up LinkedIn profiles by URL through Datacircle (Up2Data, HarvestAPI or Fetchin, no markup), over its hosted MCP server or REST API, with the user's yes before each paid call.",
+    "description": "Every GTM API plan on datacircle.dev, as one file you download and query. Use it to compare or price a GTM data API.",
     "risk": "critical",
     "source": "self",
     "date_added": "2026-10-10",
@@ -19487,8 +19586,8 @@
       "b2b-data",
       "linkedin",
       "enrichment",
-      "rest-api",
-      "mcp"
+      "gtm",
+      "api-pricing"
     ]
   },
   {
@@ -19996,6 +20095,40 @@
       "reasons": []
     },
     "source_type": "community"
+  },
+  {
+    "id": "deed-page",
+    "path": "skills/deed-page",
+    "category": "devops",
+    "name": "deed-page",
+    "description": "Publish an HTML file or static folder to a permanent public https://<slug>.deed.page/ URL with one curl request. No account; the first publish returns a token for updates.",
+    "risk": "critical",
+    "source": "https://github.com/f-o-x11/deed-page-skill",
+    "date_added": "2026-10-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "f-o-x11/deed-page-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/f-o-x11/deed-page-skill/blob/main/LICENSE",
+    "tags": [
+      "deploy",
+      "static-site",
+      "hosting",
+      "publish",
+      "html",
+      "curl"
+    ]
   },
   {
     "id": "deep-research",
@@ -20814,6 +20947,40 @@
     "source_repo": "connerkward/ckw-design-skill",
     "license": "MIT",
     "license_source": "https://github.com/connerkward/ckw-design-skill/blob/main/LICENSE"
+  },
+  {
+    "id": "design-token-contrast",
+    "path": "skills/design-token-contrast",
+    "category": "frontend",
+    "name": "design-token-contrast",
+    "description": "Checks WCAG 2.2 contrast between the color tokens of a project (light and dark theme) and suggests the closest passing color that keeps the hue.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-10-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "Clagoss/claude-code-para-disenadores",
+    "license": "MIT",
+    "license_source": "https://github.com/Clagoss/claude-code-para-disenadores/blob/main/LICENSE",
+    "tags": [
+      "accessibility",
+      "wcag",
+      "contrast",
+      "design-tokens",
+      "css",
+      "dark-mode"
+    ]
   },
   {
     "id": "design-ux",
@@ -23068,7 +23235,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/ecommerce-product-images-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/ecommerce-product-images-skill/blob/ef9056dcb0d886ad8eb1e3a49803c1143598506c/LICENSE",
+    "license_source": "https://github.com/beatra-ai/ecommerce-product-images-skill/blob/c70a939466ce192fa15eb60a46e83980def6c938/LICENSE",
     "tags": [
       "ecommerce",
       "product-images",
@@ -29781,6 +29948,38 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "goal-instruction-writer",
+    "path": "skills/goal-instruction-writer",
+    "category": "agent-orchestration",
+    "name": "goal-instruction-writer",
+    "description": "Preview, draft, refine, or audit durable agent Goals with acceptance evidence, drift controls, proportional verification, and bounded waiting. Use for multi-stage work, not one-shot prompts.",
+    "risk": "safe",
+    "source": "https://github.com/wu736139669/goal-instruction-writer",
+    "date_added": "2026-10-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "wu736139669/goal-instruction-writer",
+    "license": "MIT",
+    "license_source": "https://github.com/wu736139669/goal-instruction-writer/blob/1e5d106a2092c1ab8ab4f2f5836cf85167d1b3e7/LICENSE",
+    "tags": [
+      "goals",
+      "planning",
+      "drift-control",
+      "verification"
+    ]
   },
   {
     "id": "goal-loop",
@@ -36511,7 +36710,7 @@
     "name": "krexa",
     "description": "Turn a trading idea, post or video into fixed rules, backtest and paper-trade them, and request a user-approved live agent through Krexa's MCP server. Cannot move funds.",
     "risk": "critical",
-    "source": "https://github.com/Krexa-xyz/skills/tree/1d1b688a0adf6049ae921c992f9eab8f3618e521/skills/krexa",
+    "source": "https://github.com/Krexa-xyz/skills/tree/4a757951918c1a393d7840f2401f2d2f0b5afb3c/skills/krexa",
     "date_added": "2026-10-17",
     "plugin": {
       "targets": {
@@ -36528,7 +36727,7 @@
     "source_type": "official",
     "source_repo": "Krexa-xyz/skills",
     "license": "MIT-0",
-    "license_source": "https://github.com/Krexa-xyz/skills/blob/1d1b688a0adf6049ae921c992f9eab8f3618e521/LICENSE",
+    "license_source": "https://github.com/Krexa-xyz/skills/blob/4a757951918c1a393d7840f2401f2d2f0b5afb3c/LICENSE",
     "tags": [
       "krexa",
       "crypto",
@@ -43387,7 +43586,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/ai-music-generator-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/ai-music-generator-skill/blob/fee8fbf3dcd8a723bee1e372915c6f78593f9b35/LICENSE",
+    "license_source": "https://github.com/beatra-ai/ai-music-generator-skill/blob/98e8aa2f079867eb682b09048e555e224879f55f/LICENSE",
     "tags": [
       "music-generation",
       "text-to-music",
@@ -49074,7 +49273,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/ai-poster-maker-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/ai-poster-maker-skill/blob/7a6337f7b976a3d433fb415cc4e595307860f613/LICENSE",
+    "license_source": "https://github.com/beatra-ai/ai-poster-maker-skill/blob/c2c81e2f6b41691c9da65e71b4350f59cb6eace5/LICENSE",
     "tags": [
       "poster-design",
       "text-to-image",
@@ -50141,7 +50340,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/ai-product-photography-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/ai-product-photography-skill/blob/1490364794606dfbedd629cb3ab886271b5829e4/LICENSE",
+    "license_source": "https://github.com/beatra-ai/ai-product-photography-skill/blob/5c64090847d96830e49927924281f04bd576253d/LICENSE",
     "tags": [
       "product-photography",
       "ecommerce",
@@ -60433,7 +60632,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/lyrics-to-song-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/lyrics-to-song-skill/blob/2facaacd68cee88a73847be8563895535c48cd47/LICENSE",
+    "license_source": "https://github.com/beatra-ai/lyrics-to-song-skill/blob/36aeadd001574361b4375b0c977639c0d3a57ec8/LICENSE",
     "tags": [
       "lyrics-to-song",
       "music-generation",
@@ -61084,6 +61283,40 @@
     }
   },
   {
+    "id": "taasky",
+    "path": "skills/taasky",
+    "category": "productivity",
+    "name": "taasky",
+    "description": "Negotiate terms with another person or their agent through the hosted Taasky MCP server: meeting times, prices, dates. The human confirms every accept, reject or withdraw.",
+    "risk": "critical",
+    "source": "https://docs.taasky.ai/.well-known/agent-skills/default/skill.md",
+    "date_added": "2026-10-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "license": "MIT-0",
+    "license_source": "https://docs.taasky.ai/.well-known/agent-skills/default/skill.md",
+    "tags": [
+      "taasky",
+      "negotiation",
+      "scheduling",
+      "meetings",
+      "mcp",
+      "agent-to-agent",
+      "telegram"
+    ]
+  },
+  {
     "id": "tailwind-design-system",
     "path": "skills/tailwind-design-system",
     "category": "web-development",
@@ -61255,7 +61488,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/talking-avatar-video-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/talking-avatar-video-skill/blob/251c968deebb1c8f1dbfd0a8404e8e1be1528ac6/LICENSE",
+    "license_source": "https://github.com/beatra-ai/talking-avatar-video-skill/blob/03e427c1220ef7efcfee083b37f4f31aa98311ab/LICENSE",
     "tags": [
       "talking-avatar",
       "talking-head",
@@ -64790,6 +65023,41 @@
     }
   },
   {
+    "id": "uiverify-triage-visual-changes",
+    "path": "skills/uiverify-triage-visual-changes",
+    "category": "testing",
+    "name": "uiverify-triage-visual-changes",
+    "description": "Triage a UI Verify visual regression build from your coding agent over MCP: sort changed screenshots into regressions, intended changes and noise, then accept baselines.",
+    "risk": "critical",
+    "source": "https://github.com/uiverify/uiverify/tree/main/packages/skills/skills/triage-visual-changes",
+    "date_added": "2026-10-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "uiverify/uiverify",
+    "license": "MIT",
+    "license_source": "https://github.com/uiverify/uiverify/blob/main/LICENSE",
+    "tags": [
+      "visual-testing",
+      "visual-regression",
+      "screenshot-testing",
+      "mcp",
+      "storybook",
+      "playwright",
+      "vitest"
+    ]
+  },
+  {
     "id": "uncle-bob-craft",
     "path": "skills/uncle-bob-craft",
     "category": "code-quality",
@@ -64998,6 +65266,41 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "unpaid-intern",
+    "path": "skills/unpaid-intern",
+    "category": "productivity",
+    "name": "unpaid-intern",
+    "description": "A free second brain for work in plain markdown files the user owns. Turns transcripts, docs, and tickets into briefings, meeting prep, debriefs, follow-ups, and status tables.",
+    "risk": "critical",
+    "source": "https://github.com/kevinmmiddleton/unpaid-intern/tree/main/skills/unpaid-intern",
+    "date_added": "2026-10-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "kevinmmiddleton/unpaid-intern",
+    "license": "MIT",
+    "license_source": "https://github.com/kevinmmiddleton/unpaid-intern/blob/main/LICENSE",
+    "tags": [
+      "second-brain",
+      "knowledge-work",
+      "meetings",
+      "follow-ups",
+      "project-status",
+      "markdown",
+      "productivity"
+    ]
   },
   {
     "id": "unreal-engine-cpp-pro",
@@ -66777,7 +67080,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/viral-video-remake-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/viral-video-remake-skill/blob/46f78753183ce9bd35574cdef7f57f811f468794/LICENSE",
+    "license_source": "https://github.com/beatra-ai/viral-video-remake-skill/blob/6a1491a1f0739fe0dc0ebdf717602b52cbd99c3f/LICENSE",
     "tags": [
       "short-video",
       "video-generation",
@@ -66998,7 +67301,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/ai-voice-cloning-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/ai-voice-cloning-skill/blob/64923d96ecdd1adce28ad4ad264b3808dda0ce2d/LICENSE",
+    "license_source": "https://github.com/beatra-ai/ai-voice-cloning-skill/blob/96df577b88e66fd49cc31ce1b290b2eae87fae53/LICENSE",
     "tags": [
       "voice-cloning",
       "custom-voice",
@@ -67031,7 +67334,7 @@
     "source_type": "official",
     "source_repo": "beatra-ai/ai-voiceover-generator-skill",
     "license": "MIT-0",
-    "license_source": "https://github.com/beatra-ai/ai-voiceover-generator-skill/blob/0c44adfad72422e6619f72d0fa91d4bbefac9592/LICENSE",
+    "license_source": "https://github.com/beatra-ai/ai-voiceover-generator-skill/blob/2db317f5ed2fefae69f4a2cbc4b9bcf54c974d62/LICENSE",
     "tags": [
       "tts",
       "voiceover",

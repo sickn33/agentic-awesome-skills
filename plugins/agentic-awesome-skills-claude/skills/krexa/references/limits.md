@@ -14,13 +14,20 @@ Krexa checks these in code on its servers. A prompt cannot change them.
 
 ## Limits Krexa sets
 
-- MCP deploys are Solana spot only for now. Perps and prediction markets
-  return `not_supported`.
-- A deploy needs a finished deep test (paper trading needs one too).
-- Leverage is always 1 for Solana spot.
+- MCP deploys cover Solana spot, Hyperliquid, Jupiter Perps and Polymarket
+  Perps. Plain Polymarket (yes/no markets) returns `not_supported`.
+- A deploy needs a finished deep test (paper trading needs one too), or a
+  paper run, on the same venue. A Solana test does not open a perps deploy. A
+  paper run must be at least as leveraged as the deploy.
+- Perps have no per-trade or per-day dollar cap. The size is the money in the
+  agent's account times `maxLeverage`; the daily loss cap still applies.
+- Leverage is always 1 for Solana spot. On the three perps venues set
+  `maxLeverage` (1 to 10, default 2). The approval page shows it, and the
+  owner's deploy cannot use more.
 - Krexa has a ceiling on max per trade and leverage for MCP deploys. A request
   above it returns `limit_exceeded` with the ceiling.
-- The strategy code is frozen at deploy. The agent cannot rewrite its own rule.
+- The strategy is fixed when the user approves the deploy. Only the owner can
+  change it, in the Krexa app.
 - Only markets Krexa lists can be traded. Others are refused.
 
 ## What the MCP key cannot do

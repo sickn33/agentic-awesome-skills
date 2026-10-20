@@ -24,7 +24,7 @@ Host many teams/customers on shared inference infrastructure without sacrificing
 ## Prerequisites
 
 - Kubernetes cluster with GPU node pools
-- API gateway or LLM gateway (LiteLLM, Envoy, Kong)
+- API gateway or LLM gateway (LiteLLM, Bifrost, Envoy, Kong)
 - Prometheus + Grafana for per-tenant observability
 - Redis or equivalent for rate limiting state
 - Billing system or cost attribution database

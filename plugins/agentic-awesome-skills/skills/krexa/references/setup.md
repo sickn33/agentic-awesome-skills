@@ -6,7 +6,10 @@ URL `https://api.krexa.xyz/api/v1/mcp` still works.
 Auth: `Authorization: Bearer <kxm_ key>`. Get the key at
 `https://krexa.xyz/mcp/link?client=<your client name>`.
 
-Keep the key in an env var (`KREXA_AGENT_KEY`), not in a config file as text.
+Keep the key in an env var (`KREXA_AGENT_KEY`) or your secret store, not in a
+config file as text. The configs below only name the variable; the client fills
+it in when it connects. Revoke the key at once if it is pasted into a shared
+chat, committed, or shown on screen.
 
 ## OpenClaw
 
@@ -18,8 +21,10 @@ openclaw mcp doctor krexa --probe
 - `transport` must be set. OpenClaw uses `sse` when it is missing, and that
   fails.
 - Keep the single quotes. OpenClaw fills `${KREXA_AGENT_KEY}` from the env.
-- Put the key in `openclaw.json` under `skills.entries.krexa.apiKey`, or export
-  `KREXA_AGENT_KEY`.
+- Export `KREXA_AGENT_KEY` in the shell or service that runs OpenClaw.
+  `skills.entries.krexa.apiKey` in `openclaw.json` also works, but it keeps the
+  key as plain text on disk: if you use it, make the file private
+  (`chmod 600 ~/.openclaw/openclaw.json`) and never commit or share it.
 
 ## Hermes
 
@@ -32,7 +37,8 @@ mcp_servers:
       Authorization: "Bearer ${KREXA_AGENT_KEY}"
 ```
 
-- Put `KREXA_AGENT_KEY=kxm_...` in `~/.hermes/.env`.
+- Put `KREXA_AGENT_KEY=kxm_...` in `~/.hermes/.env`, and make it private:
+  `chmod 600 ~/.hermes/.env`.
 - Run `/reload-mcp`. Tools show as `mcp_krexa_<tool>`.
 - Do not set `timeout` below the default (300 s).
 
@@ -43,8 +49,9 @@ mcp_servers:
   "headers": { "Authorization": "Bearer ${KREXA_AGENT_KEY}" } } } }
 ```
 
-Or: `claude mcp add --transport http krexa https://www.krexa.xyz/mcp --header "Authorization: Bearer $KREXA_AGENT_KEY"`
-(the shell writes the key into the config as text).
+Use your client's supported environment/secret reference mechanism. Verify
+that it resolves the variable without writing its value into shared config;
+do not substitute the secret into command-line arguments.
 
 ## Revoke a key
 

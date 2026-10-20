@@ -3509,6 +3509,25 @@
       "runtime_files": []
     },
     {
+      "id": "apify-facebook-ads-library-scraper",
+      "path": "skills/apify-facebook-ads-library-scraper",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "apify-generate-output-schema",
       "path": "skills/apify-generate-output-schema",
       "targets": {
@@ -3585,6 +3604,25 @@
       "runtime_files": []
     },
     {
+      "id": "apify-linkedin-jobs-scraper",
+      "path": "skills/apify-linkedin-jobs-scraper",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "apify-market-research",
       "path": "skills/apify-market-research",
       "targets": {
@@ -3606,6 +3644,25 @@
     {
       "id": "apify-reddit-scraper",
       "path": "skills/apify-reddit-scraper",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "apify-tiktok-scraper",
+      "path": "skills/apify-tiktok-scraper",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -4000,9 +4057,9 @@
         "claude": "supported"
       },
       "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
+        "type": "manual",
+        "summary": "Requires an existing authorized Arcmira MCP connection; the skill never installs or reconfigures it.",
+        "docs": "https://arcmira.com/docs/mcp-server"
       },
       "reasons": [],
       "blocked_reasons": {
@@ -14742,6 +14799,25 @@
       "runtime_files": []
     },
     {
+      "id": "deed-page",
+      "path": "skills/deed-page",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "deep-research",
       "path": "skills/deep-research",
       "targets": {
@@ -16231,6 +16307,25 @@
     {
       "id": "design-thinking",
       "path": "skills/design-thinking",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "design-token-contrast",
+      "path": "skills/design-token-contrast",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -22767,6 +22862,25 @@
     {
       "id": "goal-analyzer",
       "path": "skills/goal-analyzer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "goal-instruction-writer",
+      "path": "skills/goal-instruction-writer",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -45752,6 +45866,25 @@
       "runtime_files": []
     },
     {
+      "id": "taasky",
+      "path": "skills/taasky",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "tailwind-design-system",
       "path": "skills/tailwind-design-system",
       "targets": {
@@ -48352,6 +48485,25 @@
       "runtime_files": []
     },
     {
+      "id": "uiverify-triage-visual-changes",
+      "path": "skills/uiverify-triage-visual-changes",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "uncle-bob-craft",
       "path": "skills/uncle-bob-craft",
       "targets": {
@@ -48487,6 +48639,25 @@
     {
       "id": "unity-ecs-patterns",
       "path": "skills/unity-ecs-patterns",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "unpaid-intern",
+      "path": "skills/unpaid-intern",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -52080,15 +52251,15 @@
     }
   ],
   "summary": {
-    "total_skills": 2715,
+    "total_skills": 2724,
     "supported": {
-      "codex": 2630,
-      "claude": 2652
+      "codex": 2639,
+      "claude": 2661
     },
     "blocked": {
       "codex": 85,
       "claude": 63
     },
-    "manual_setup": 21
+    "manual_setup": 22
   }
 }

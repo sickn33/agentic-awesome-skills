@@ -12,6 +12,11 @@ tags: [youtube, transcripts, quotes, research, timestamps]
 tools: [claude, codex, cursor, gemini]
 license: Apache-2.0
 license_source: https://github.com/arcmira/mcp/blob/v0.10.6/plugins/arcmira/LICENSE
+plugin:
+  setup:
+    type: manual
+    summary: "Requires an existing authorized Arcmira MCP connection; the skill never installs or reconfigures it."
+    docs: https://arcmira.com/docs/mcp-server
 ---
 
 # Arcmira: YouTube Transcript Search

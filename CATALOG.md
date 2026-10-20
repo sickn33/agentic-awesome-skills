@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-10-19T08:27:36.000Z
+Generated at: 2026-10-20T16:53:52.000Z
 
-Total skills: 2715
+Total skills: 2724
 
 ## agent-behavior (5)
 
@@ -21,7 +21,7 @@ Total skills: 2715
 | `agent-evaluation-reporting` | Use when summarizing agent evaluations where autonomous, assisted, failed, timed-out, or invalid outcomes must remain distinct and comparable. | none | self | agent-evaluation, metrics, reporting, reliability, benchmarking | agent-evaluation, metrics, reporting, reliability, benchmarking, agent, evaluation, summarizing, evaluations, where, autonomous, assisted |
 | `run-deep-swe` | Run reproducible DeepSWE coding-agent benchmark evaluations through OpenRouter and mini-swe-agent. | critical | davidondrej/skills | benchmark, deepswe, openrouter, evaluation | benchmark, deepswe, openrouter, evaluation, run, deep, swe, reproducible, coding, agent, evaluations, through |
 
-## agent-orchestration (36)
+## agent-orchestration (37)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -41,6 +41,7 @@ Total skills: 2715
 | `delegate-setup` | Configure approved delegation lanes across installed implementer CLIs, including optional model and effort choices, then write global or project config only ... | safe | amElnagdy/delegate-skills | delegate, setup | delegate, setup, configure, approved, delegation, lanes, installed, implementer, clis, including, optional, model |
 | `delegating-to-agents` | Delegate bounded work to other AI agents while preserving context, ownership, and progress checks. | critical | davidondrej/skills | agents, delegation, orchestration | agents, delegation, orchestration, delegating, delegate, bounded, work, other, ai, while, preserving, context |
 | `fact-check-x-unified` | Fact-Check-X 流程编排能力，依次组织各方答案汇总、各方答案聚合（未核验）、权威核验后的最终答案和各方答案测评，生成可打开、可审计、可迁移的阶段产物与完整报告包。 | critical | asi2030/fact-check-x | fact, check, x, unified | fact, check, x, unified |
+| `goal-instruction-writer` | Preview, draft, refine, or audit durable agent Goals with acceptance evidence, drift controls, proportional verification, and bounded waiting. Use for multi-... | safe | wu736139669/goal-instruction-writer | goals, planning, drift-control, verification | goals, planning, drift-control, verification, goal, instruction, writer, preview, draft, refine, audit, durable |
 | `goal-loop` | Draft and explain persistent goal-loop prompts for long-running agent work with clear stop conditions. | safe | davidondrej/skills | goals, autonomy, planning | goals, autonomy, planning, goal, loop, draft, explain, persistent, prompts, long, running, agent |
 | `grok-build` | Delegate well-specified implementation tasks to xAI's Grok Build CLI running headlessly while the orchestrating agent plans, writes task specs, reviews every... | critical | sanjay3290/ai-skills | grok, delegation, code-generation, xai | grok, delegation, code-generation, xai, delegate, well, specified, tasks, cli, running, headlessly, while |
 | `grok-delegate` | Delegate coding tasks to the Grok Build CLI only when the user explicitly requests it, while the orchestrator retains review and landing responsibility. | critical | amElnagdy/delegate-skills | grok, delegate | grok, delegate, coding, tasks, cli, user, explicitly, requests, while, orchestrator, retains, review |
@@ -1093,7 +1094,7 @@ Total skills: 2715
 | `liuguang-banlan-ui` | Builds two parameterized UI modes—流光溢彩白 (iridescent white) and 五彩斑斓黑 (colorful black)—with OKLCH, WebGL/CSS fallback, vision gating, screenshot QA, and total... | critical | self | ui, frontend, oklch, webgl, accessibility | ui, frontend, oklch, webgl, accessibility, liuguang, banlan, two, parameterized, modes, iridescent, white |
 | `modellix` | Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download). | critical | Modellix/modellix-plugin | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api, integrate, async, ai |
 
-## data (46)
+## data (49)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1102,10 +1103,13 @@ Total skills: 2715
 | `analytics` | When the user wants to set up, improve, or audit analytics tracking and measurement. | critical | coreyhaines31/marketingskills | analytics | analytics, user, wants, set, up, improve, audit, tracking, measurement |
 | `analytics-product` | Analytics de produto — PostHog, Mixpanel, eventos, funnels, cohorts, retencao, north star metric, OKRs e dashboards de produto. | none | community | analytics, product, metrics, posthog, mixpanel | analytics, product, metrics, posthog, mixpanel, de, produto, eventos, funnels, cohorts, retencao, north |
 | `analytics-tracking` | Design, audit, and improve analytics tracking systems that produce reliable, decision-ready data. | critical | community | analytics, tracking | analytics, tracking, audit, improve, produce, reliable, decision, data |
+| `apify-facebook-ads-library-scraper` | Research Meta Ad Library ads by advertiser or keyword with creative links, dates and disclosed reach or spend through the harshmaur/facebook-ads-library-scra... | critical | harshmaur/apify-facebook-ads-library-scraper | facebook, meta-ad-library, apify, ad-transparency, research | facebook, meta-ad-library, apify, ad-transparency, research, ads, library, scraper, meta, ad, advertiser, keyword |
+| `apify-linkedin-jobs-scraper` | Search and export LinkedIn job postings with salary, seniority, recruiter and company fields using the harshmaur/linkedin-jobs-scraper Apify Actor. No Linked... | critical | harshmaur/apify-linkedin-jobs-scraper | linkedin, jobs, apify, salary-data, recruiting | linkedin, jobs, apify, salary-data, recruiting, scraper, search, export, job, postings, salary, seniority |
 | `apify-reddit-scraper` | Scrape Reddit posts, comments, subreddits and users with the harshmaur/reddit-scraper Apify Actor. No Reddit API key. Keyword search, date windows, full thre... | critical | harshmaur/apify-reddit-scraper-skill | reddit, apify, scraping, social-listening, brand-monitoring, subreddit, comments | reddit, apify, scraping, social-listening, brand-monitoring, subreddit, comments, scraper, scrape, posts, subreddits, users |
+| `apify-tiktok-scraper` | Research TikTok videos, profiles, hashtags, comments and followers with engagement statistics through the harshmaur/tiktok-scraper Apify Actor. No TikTok login. | critical | harshmaur/apify-tiktok-scraper | tiktok, apify, videos, comments, creator-research | tiktok, apify, videos, comments, creator-research, scraper, research, profiles, hashtags, followers, engagement, statistics |
 | `arrowspace` | Spectral vector search using graph Laplacian eigenstructure. Use when cosine/L2 similarity misses latent structure in your embeddings. | safe | Genefold/arrowspace-skills | vector-search, spectral-analysis, graph-laplacian, embeddings, lambda-tau | vector-search, spectral-analysis, graph-laplacian, embeddings, lambda-tau, arrowspace, spectral, vector, search, graph, laplacian, eigenstructure |
 | `data-engineer` | Build scalable data pipelines, modern data warehouses, and real-time streaming architectures. Implements Apache Spark, dbt, Airflow, and cloud-native data pl... | critical | community | data | data, engineer, scalable, pipelines, warehouses, real, time, streaming, architectures, implements, apache, spark |
-| `datacircle` | Look up LinkedIn profiles by URL through Datacircle (Up2Data, HarvestAPI or Fetchin, no markup), over its hosted MCP server or REST API, with the user's yes ... | critical | self | b2b-data, linkedin, enrichment, rest-api, mcp | b2b-data, linkedin, enrichment, rest-api, mcp, datacircle, look, up, profiles, url, through, up2data |
+| `datacircle` | Every GTM API plan on datacircle.dev, as one file you download and query. Use it to compare or price a GTM data API. | critical | self | b2b-data, linkedin, enrichment, gtm, api-pricing | b2b-data, linkedin, enrichment, gtm, api-pricing, datacircle, every, api, plan, dev, one, file |
 | `dbt-transformation-patterns` | Production-ready patterns for dbt (data build tool) including model organization, testing strategies, documentation, and incremental processing. | none | community | dbt, transformation | dbt, transformation, data, including, model, organization, testing, documentation, incremental, processing |
 | `firecrawl-scraper` | Deep web scraping, screenshots, PDF parsing, and website crawling using Firecrawl API. Use when you need deep content extraction from web pages, page interac... | critical | community | firecrawl, scraper | firecrawl, scraper, deep, web, scraping, screenshots, pdf, parsing, website, crawling, api, content |
 | `glasser` | Search, inspect, and run third-party data APIs through one CLI when the environment has no suitable integration. | critical | self | api, data, search, enrichment, marketing, research, cli | api, data, search, enrichment, marketing, research, cli, glasser, inspect, run, third, party |
@@ -1589,7 +1593,7 @@ Total skills: 2715
 | `systematic-debugging` | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes | critical | community | systematic, debugging | systematic, debugging, encountering, any, bug, test, failure, unexpected, behavior, before, proposing, fixes |
 | `test-fixing` | Systematically identify and fix all failing tests using smart grouping strategies. Use when explicitly asks to fix tests ("fix these tests", "make tests pass... | safe | community | fixing | fixing, test, systematically, identify, fix, all, failing, tests, smart, grouping, explicitly, asks |
 
-## devops (166)
+## devops (167)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1636,6 +1640,7 @@ Total skills: 2715
 | `database-backups` | Implement database backup strategies. Configure automated backups, retention, and recovery testing. Use when designing backup and recovery procedures. | critical | BagelHole/DevOps-Security-Agent-Skills | database, backups | database, backups, backup, configure, automated, retention, recovery, testing, designing, procedures |
 | `datadog` | Implement Datadog monitoring and APM for infrastructure and applications. | critical | BagelHole/DevOps-Security-Agent-Skills | datadog | datadog, monitoring, apm, infrastructure, applications |
 | `debug-buttercup` | All pods run in namespace crs. Use when pods in the crs namespace are in CrashLoopBackOff, OOMKilled, or restarting, multiple services restart simultaneously... | critical | community | debug, buttercup | debug, buttercup, all, pods, run, namespace, crs, crashloopbackoff, oomkilled, restarting, multiple, restart |
+| `deed-page` | Publish an HTML file or static folder to a permanent public https://<slug>.deed.page/ URL with one curl request. No account; the first publish returns a toke... | critical | f-o-x11/deed-page-skill | deploy, static-site, hosting, publish, html, curl | deploy, static-site, hosting, publish, html, curl, deed, page, file, static, folder, permanent |
 | `deploy-to-vercel` | Deploy applications and websites to Vercel. Use when the user requests deployment actions like "deploy my app", "deploy and give me the link", "push this liv... | safe | https://github.com/vercel-labs/agent-skills | deploy, to, vercel | deploy, to, vercel, applications, websites, user, requests, deployment, actions, like, my, app |
 | `deployment-engineer` | Expert deployment engineer specializing in modern CI/CD pipelines, GitOps workflows, and advanced deployment automation. | critical | community | deployment | deployment, engineer, specializing, ci, cd, pipelines, gitops, automation |
 | `deployment-pipeline-design` | Architecture patterns for multi-stage CI/CD pipelines with approval gates and deployment strategies. | critical | community | deployment, pipeline | deployment, pipeline, architecture, multi, stage, ci, cd, pipelines, approval, gates |
@@ -1890,7 +1895,7 @@ Total skills: 2715
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | critical | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | critical | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (42)
+## frontend (43)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1900,6 +1905,7 @@ Total skills: 2715
 | `build-ui` | Step-by-step workflow for UI work: read the project, follow the plan for the job (new screen, dashboard, polish, simplify, review), then render, fix and chec... | safe | uxkin/agent | ui, ux, frontend, design, workflow, review | ui, ux, frontend, design, workflow, review, step, work, read, follow, plan, job |
 | `design-it` | Routes frontend design tasks to 48 specific UI styles. Triggers for websites, app screens, or UI components requesting a specific aesthetic. | safe | self | design, ui, frontend | design, ui, frontend, routes, tasks, 48, specific, styles, triggers, websites, app, screens |
 | `design-taste-frontend` | Use when building high-agency frontend interfaces with strict design taste, calibrated color, responsive layout, and motion rules. | safe | Leonxlnx/taste-skill | frontend, design, ui, react | frontend, design, ui, react, taste, building, high, agency, interfaces, strict, calibrated, color |
+| `design-token-contrast` | Checks WCAG 2.2 contrast between the color tokens of a project (light and dark theme) and suggests the closest passing color that keeps the hue. | safe | Clagoss/claude-code-para-disenadores | accessibility, wcag, contrast, design-tokens, css, dark-mode | accessibility, wcag, contrast, design-tokens, css, dark-mode, token, checks, between, color, tokens, light |
 | `emil-design-eng` | Use when designing or reviewing polished product UI with Emil Kowalski-inspired animation, interaction, and component craft guidance. | safe | emilkowalski/skills | frontend, design, ui, animation, motion | frontend, design, ui, animation, motion, emil, eng, designing, reviewing, polished, product, kowalski |
 | `frontend-api-integration-patterns` | Production-ready patterns for integrating frontend applications with backend APIs, including race condition handling, request cancellation, retry strategies,... | safe | community | frontend, api-integration, javascript, react, async | frontend, api-integration, javascript, react, async, api, integration, integrating, applications, backend, apis, including |
 | `frontend-data-contracts` | A portable, framework-agnostic discipline for type safety at the network edge of any React or React Native app. | critical | stareezy-1/frontend-architecture-skill | frontend, data, contracts | frontend, data, contracts, portable, framework, agnostic, discipline, type, safety, network, edge, any |
@@ -2447,7 +2453,7 @@ Total skills: 2715
 | --- | --- | --- | --- | --- | --- |
 | `idea-os` | Five-phase pipeline (triage → clarify → research → PRD → plan) that turns a raw idea into four linked files: clarifying questions, deep research, a PRD with ... | safe | Slashworks-biz/idea-os | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical, idea, os |
 
-## productivity (54)
+## productivity (56)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2501,9 +2507,11 @@ Total skills: 2715
 | `session-handoff` | Use when context approaches capacity, before /clear or /compact, when switching tasks, or when ending a coding session: produces a structured handoff artifac... | safe | alapha888/session-handoff-kit | context-management, session-handoff, coding-agents, workflow | context-management, session-handoff, coding-agents, workflow, session, handoff, context, approaches, capacity, before, clear, compact |
 | `setup-help` | Walk a user through setup or installation one step at a time with the remaining steps visible. | safe | davidondrej/skills | setup, onboarding, installation | setup, onboarding, installation, walk, user, through, one, step, time, remaining, steps, visible |
 | `speed` | Launch RSVP speed reader for text | critical | community | speed | speed, launch, rsvp, reader, text |
+| `taasky` | Negotiate terms with another person or their agent through the hosted Taasky MCP server: meeting times, prices, dates. The human confirms every accept, rejec... | critical | https://docs.taasky.ai/.well-known/agent-skills/default/skill.md | taasky, negotiation, scheduling, meetings, mcp, agent-to-agent, telegram | taasky, negotiation, scheduling, meetings, mcp, agent-to-agent, telegram, negotiate, terms, another, person, agent |
 | `telegram-bot-messaging` | Send Telegram messages, files, and alerts via bot API; ask questions with inline buttons and wait for the answer. Supports multiple bots, named chat targets,... | critical | sanjay3290/ai-skills | telegram, notifications, bots, approvals | telegram, notifications, bots, approvals, bot, messaging, send, messages, files, alerts, via, api |
 | `time-ledger` | Natural-language time tracking: parse what the user says they did into Activity/Minutes/Date rows in their own Notion database — asking instead of guessing w... | critical | cruisekkk/time-ledger | time-tracking, notion, quantified-self, productivity, journaling | time-tracking, notion, quantified-self, productivity, journaling, time, ledger, natural, language, tracking, parse, what |
 | `trading-ledger` | A trading journal that captures the decision, not just the fill: thesis, plan, and emotion at the moment of entry, written to the user's own Notion database;... | critical | cruisekkk/trading-ledger | trading-journal, notion, journaling, market-wizards, decision-making | trading-journal, notion, journaling, market-wizards, decision-making, trading, ledger, journal, captures, decision, just, fill |
+| `unpaid-intern` | A free second brain for work in plain markdown files the user owns. Turns transcripts, docs, and tickets into briefings, meeting prep, debriefs, follow-ups, ... | critical | kevinmmiddleton/unpaid-intern | second-brain, knowledge-work, meetings, follow-ups, project-status, markdown, productivity | second-brain, knowledge-work, meetings, follow-ups, project-status, markdown, productivity, unpaid, intern, free, second, brain |
 | `workorai` | WorkorAI talent-marketplace skill: candidates search jobs and manage applications; employers run the job lifecycle and get ranked candidate matches with whit... | critical | work0r-ai/agent-kit | job-search, hiring, recruiting, talent-marketplace, mcp | job-search, hiring, recruiting, talent-marketplace, mcp, workorai, talent, marketplace, skill, candidates, search, jobs |
 
 ## project-management (31)
@@ -3010,7 +3018,7 @@ Total skills: 2715
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | critical | community | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | critical | community | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
 
-## testing (49)
+## testing (50)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -3059,6 +3067,7 @@ Total skills: 2715
 | `testdriver-e2e-testing` | Build E2E tests with TestDriver.ai, the AI code reviewer that runs every pull request in a real desktop sandbox, finds bugs, and builds regression tests | safe | testdriverai/testdriverai | testing, e2e, qa, automation, computer-use | testing, e2e, qa, automation, computer-use, testdriver, tests, ai, code, reviewer, runs, every |
 | `testing-patterns` | Jest testing patterns, factory functions, mocking strategies, and TDD workflow. Use when writing unit tests, creating test factories, or following TDD red-gr... | critical | community |  | testing, jest, factory, functions, mocking, tdd, writing, unit, tests, creating, test, factories |
 | `testng-skill` | Generates TestNG tests in Java with groups, data providers, parallel execution, XML suite configuration, and listeners. Use when user mentions "TestNG", "@Da... | critical | LambdaTest/agent-skills | testng, skill | testng, skill, generates, tests, java, groups, data, providers, parallel, execution, xml, suite |
+| `uiverify-triage-visual-changes` | Triage a UI Verify visual regression build from your coding agent over MCP: sort changed screenshots into regressions, intended changes and noise, then accep... | critical | uiverify/uiverify | visual-testing, visual-regression, screenshot-testing, mcp, storybook, playwright, vitest | visual-testing, visual-regression, screenshot-testing, mcp, storybook, playwright, vitest, uiverify, triage, visual, changes, ui |
 | `unit-testing-test-generate` | Generate comprehensive, maintainable unit tests across languages with strong coverage and edge case focus. | critical | community | unit, generate | unit, generate, testing, test, maintainable, tests, languages, strong, coverage, edge, case |
 | `vitest-skill` | Generates Vitest tests in JavaScript/TypeScript with Vite-native speed. Jest-compatible API with ESM support and HMR. Use when user mentions "Vitest", "vi.mo... | critical | LambdaTest/agent-skills | vitest, skill | vitest, skill, generates, tests, javascript, typescript, vite, native, speed, jest, compatible, api |
 | `wjttc-builder` | PLAN and GENERATE WJTTC (Championship-Grade) test suites for any project. Analyzes the codebase, classifies components across the WJTTC five tiers (Brake · E... | critical | Wolfe-Jam/faf-skills | wjttc, builder | wjttc, builder, plan, generate, championship, grade, test, suites, any, analyzes, codebase, classifies |

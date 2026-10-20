@@ -11,7 +11,7 @@ author: beatra-ai
 tags: [video-generation, text-to-video, image-to-video, video-editing, mcp, paid-api, beatra]
 tools: [claude, codex, cursor, gemini]
 license: "MIT-0"
-license_source: "https://github.com/beatra-ai/beatra-skills/blob/95d662f7aeddd6e2aa6da9e14f9c985e3f6b914d/LICENSE"
+license_source: "https://github.com/beatra-ai/beatra-skills/blob/b7ab8ed02980ee44b6dac62633f8d79daf0809ab/LICENSE"
 ---
 
 # Beatra AI Video Studio
@@ -26,20 +26,20 @@ video is produced on the hosted, paid Beatra service (`mcp.beatra.ai`).
 This catalog entry is a **reviewed pointer, not the executable package**. It
 contains no client code and performs no Beatra operation by itself. The package
 it points to bundles three standard-library Python scripts that make network
-calls, store a credential, and can replace their own files. Read
+calls and store a credential. It has no self-updater: it never downloads
+code and never changes its own files. Read
 [Install](#install-pinned-verified-approved-twice) and
 [Security & Safety Notes](#security--safety-notes) before activating it.
 
 | Pinned identity | Value |
 | --- | --- |
-| Package | `beatra-ai-video-studio` `1.2.5` |
-| Archive | `https://cdn.beatra.ai/agent-packages/beatra-ai-video-studio/v1.2.5/beatra-ai-video-studio-skill-1.2.5.zip` |
-| Archive SHA-256 | `679a3ddc06c7be631ef31f002f918465a26f17a189ffac723f45dfd348e1fc4a` |
-| Source tree | [`beatra-ai/beatra-skills@95d662f`](https://github.com/beatra-ai/beatra-skills/tree/95d662f7aeddd6e2aa6da9e14f9c985e3f6b914d/skills/beatra-ai-video-studio) (full SHA `95d662f7aeddd6e2aa6da9e14f9c985e3f6b914d`) |
+| Package | `beatra-ai-video-studio` `1.3.5` |
+| Source commit | [`beatra-ai/beatra-skills@b7ab8ed`](https://github.com/beatra-ai/beatra-skills/tree/b7ab8ed02980ee44b6dac62633f8d79daf0809ab/skills/beatra-ai-video-studio) (full SHA `b7ab8ed02980ee44b6dac62633f8d79daf0809ab`) |
+| Package tree | `5183c76c894e650691c8bb638257dd202b23e66c` (Git tree ID of `skills/beatra-ai-video-studio` at that commit) |
 | License | MIT No Attribution (MIT-0) |
 
-The archive holds 17 regular files (no symlinks, no executable bits, no
-binaries), and every file is byte-identical to the source tree at that commit.
+The pinned tree holds regular files only (no symlinks, no executable bits, no
+binaries). Confirm that with the inspect commands below.
 
 ## When to Use This Skill
 
@@ -52,72 +52,55 @@ binaries), and every file is byte-identical to the source tree at that commit.
 
 ## Install (pinned, verified, approved twice)
 
-### Step 1: Download and verify into a review directory
+### Step 1: Fetch the pinned tree into a review directory
 
-Explain that this downloads an external package from `cdn.beatra.ai`, then ask
+Explain that this fetches an external package from `github.com`, then ask
 for approval. Only after approval:
 
 ```bash
 umask 077
 review_dir="$(mktemp -d)"
 cd "$review_dir" || exit 1
-curl -fsSLO "https://cdn.beatra.ai/agent-packages/beatra-ai-video-studio/v1.2.5/beatra-ai-video-studio-skill-1.2.5.zip"
-printf '%s  %s\n' \
-  '679a3ddc06c7be631ef31f002f918465a26f17a189ffac723f45dfd348e1fc4a' \
-  'beatra-ai-video-studio-skill-1.2.5.zip' | shasum -a 256 -c -
+git clone --quiet --filter=blob:none --no-checkout https://github.com/beatra-ai/beatra-skills.git src
+git -C src checkout --quiet b7ab8ed02980ee44b6dac62633f8d79daf0809ab -- skills/beatra-ai-video-studio
+test "$(git -C src rev-parse 'b7ab8ed02980ee44b6dac62633f8d79daf0809ab:skills/beatra-ai-video-studio')" = '5183c76c894e650691c8bb638257dd202b23e66c' && echo TREE-OK
 ```
 
-Stop if the check does not print `OK`. The expected digest comes from this
-catalog entry, not from a file on the same CDN.
+Stop if the last command does not print `TREE-OK`. The expected commit and
+tree IDs come from this catalog entry, not from the package or its website,
+and Git addresses every fetched object by its hash.
 
 ### Step 2: Inspect before activation
 
 ```bash
-unzip -l beatra-ai-video-studio-skill-1.2.5.zip
-unzip -q beatra-ai-video-studio-skill-1.2.5.zip
-find beatra-ai-video-studio -type l -print            # expect no output
-find beatra-ai-video-studio -type f -perm -111 -print # expect no output
-grep -n '"auto_update": True' beatra-ai-video-studio/scripts/mcp_client.py
+git -C src ls-tree -r b7ab8ed02980ee44b6dac62633f8d79daf0809ab -- skills/beatra-ai-video-studio | awk '$1 != "100644"'  # expect no output
+grep -n -E 'maybe_auto_update|download_update|_apply_update' src/skills/beatra-ai-video-studio/scripts/mcp_client.py  # expect no output
 ```
 
-Optionally confirm byte identity with the public source tree (a second,
-independent host):
+The first check lists any symlink, executable, or submodule entry; the second
+finds the entry points of the self-updater that earlier versions shipped.
 
-```bash
-git clone --quiet --filter=blob:none --no-checkout https://github.com/beatra-ai/beatra-skills.git src
-git -C src checkout --quiet 95d662f7aeddd6e2aa6da9e14f9c985e3f6b914d -- skills/beatra-ai-video-studio
-(cd beatra-ai-video-studio && find . -type f | LC_ALL=C sort | xargs shasum -a 256) > archive.sha
-(cd src/skills/beatra-ai-video-studio && find . -type f | LC_ALL=C sort | xargs shasum -a 256) > tree.sha
-cmp archive.sha tree.sha && echo IDENTICAL
-```
+Report to the user what the review found: `SKILL.md`, `manifest.json`,
+`install-source.json` (the one-line marker `{"schema_version":1,"source":"github"}`),
+the bundled Markdown references, and `scripts/authorize.py`,
+`scripts/mcp_client.py`, `scripts/uninstall.py` (Python 3.10+, standard
+library only, no dependency installation, no lifecycle hooks). Summarize the
+network, credential, local-state, telemetry, and version-notice behavior
+listed under [Security & Safety Notes](#security--safety-notes).
 
-Report to the user what the review found: `SKILL.md`, `manifest.json`, 12
-Markdown references, and `scripts/authorize.py`, `scripts/mcp_client.py`,
-`scripts/uninstall.py` (Python 3.10+, standard library only, no dependency
-installation, no lifecycle hooks). Summarize the network, credential,
-local-state, telemetry, and self-update behavior listed under
-[Security & Safety Notes](#security--safety-notes).
-
-### Step 3: Copy in and disable self-update before any other command
+### Step 3: Copy in
 
 Ask for a **second, separate** approval, because this changes agent
 configuration. Then copy the reviewed tree to the host's skills directory
-(Claude Code shown; use the equivalent path for other hosts) and immediately
-turn off silent self-update for that exact path:
+(Claude Code shown; use the equivalent path for other hosts):
 
 ```bash
 dest="$HOME/.claude/skills/beatra-ai-video-studio"
-test ! -e "$dest" || { echo "destination exists; stop and ask the user"; exit 1; }
-cp -R beatra-ai-video-studio "$dest"
-python3 "$dest/scripts/mcp_client.py" update --auto off
+test ! -e "$dest" && test ! -L "$dest" || { echo "destination exists; stop and ask the user"; exit 1; }
+cp -R "src/skills/beatra-ai-video-studio" "$dest"
 ```
 
-The last command must print
-`Automatic Beatra package updates are disabled.` It writes only
-`~/.beatra/updates/<id>/state.json` and makes no network request. Run it
-before `authorize.py`, `verify`, `tools`, `upload`, or `call`: in version 1.2.5
-self-update is **on by default** (see below). The setting is keyed to the
-resolved install path, so repeat it after moving or re-copying the directory.
+There is no update switch to turn off in this version.
 
 ### Step 4: Authorize as its own decision
 
@@ -165,16 +148,17 @@ identical arguments; never submit a replacement while the task is running.
 
 ## Update
 
-This entry does not endorse the package's silent self-update. Keep
-`update --auto off` in place and do not run `update --auto on` or a bare
-`update` without explicit approval.
+This pinned version cannot update itself: it has no code that downloads or
+replaces package files. `update` only reports what the store or tool that
+installed the copy offers; for a copy installed by the steps above it finds
+no such record and says to update the way you installed it. See the version
+notice under [Security & Safety Notes](#security--safety-notes).
 
-To move to a newer version, repeat Steps 1 to 3 for that version in a new
-review directory, verify its digest against the matching tree in
-`beatra-ai/beatra-skills` (a version not listed in this entry has not been
-reviewed here), show the user the file-level changes against the installed
-copy, and replace the directory only after approval. `update --check` reports
-the available version from `beatra.ai` without changing files.
+To move to a newer version, repeat Steps 1 to 3 for that commit in a new
+review directory, show the user the file-level changes against the installed
+copy (for example `git -C src diff --stat b7ab8ed <new-commit> -- skills/beatra-ai-video-studio`),
+and replace the directory only after approval. A version not listed in this
+entry has not been reviewed here.
 
 ## Uninstall
 
@@ -186,22 +170,26 @@ python3 "$dest/scripts/uninstall.py"
 
 Read the JSON decision. `disconnected` means this was the last Beatra skill on
 the device: the token was revoked (when `revoked` is `true`) and the files
-`credentials.json`, `installation.json`, `host.json`, `skills.json`, and
-`registrations.json` under `~/.beatra` were removed. `keep_connection` means
-another Beatra skill still uses the shared token, which stays. Then, after
-confirming the path with the user, delete `$dest`.
+`credentials.json`, `installation.json`, `host.json`, `skills.json`,
+`network.json`, `balance-holds.json`, `pending_authorization.json`, and
+`.authorize.lock` under `~/.beatra` were removed. `keep_connection` means
+another Beatra skill still uses the shared token, which stays.
+`revoke_retry` means the server refused the revocation and nothing changed;
+run it again shortly. The script never deletes the package directory: after
+confirming the path it prints with the user, delete `$dest`.
 
 `uninstall.py` does not remove `~/.beatra/updates/`. When the decision is
 `disconnected` and no other Beatra skill is installed, remove that directory
-too; otherwise leave it. A token that could not be revoked expires after 15
-days idle and can be revoked at once in the Beatra Console under Agents.
+and then the empty `~/.beatra`; otherwise leave them. A token that could not
+be revoked expires after 15 days idle and can be revoked at once in the
+Beatra Console under Agents.
 
 ## Best Practices
 
 - ✅ Keep one approval per paid call, per upload set, and per install step.
 - ✅ Start with the shortest duration and lowest resolution the model admits.
 - ✅ Report net charged credits from the terminal task, not the estimate.
-- ❌ Do not re-enable self-update or install an unreviewed version silently.
+- ❌ Do not replace the installed copy with an unreviewed version silently.
 - ❌ Do not print, paste, or move the token out of `~/.beatra/credentials.json`.
 - ❌ Do not retry a paid call with a new request ID after an uncertain response.
 
@@ -222,40 +210,72 @@ days idle and can be revoked at once in the Beatra Console under Agents.
 
 `risk: critical` is deliberate.
 
-- **Network.** Authorization uses `api.beatra.ai`; every tool call and upload
-  goes to `mcp.beatra.ai`. With self-update left on, the client also fetches
-  `https://beatra.ai/skills/beatra-ai-video-studio/install.json` and archives
-  from `cdn.beatra.ai`.
-- **Self-update (on by default in 1.2.5).** Before `verify`, `tools`, `upload`,
-  or `call`, the client checks for a newer release at most once every 24 hours
-  and, if one exists, replaces package-owned files without per-update preview
-  or approval. It pins host and path, verifies checksums from Beatra's own
-  discovery document and CDN, and rolls back on failure, but those digests are
-  not independently anchored. This entry therefore requires
-  `update --auto off` before first use, as in Step 3.
+- **Network.** Every request is HTTPS and refuses redirects. Authorization
+  uses `api.beatra.ai` and tool calls go to `mcp.beatra.ai`; an upload is a
+  `PUT` of the approved file to the HTTPS address the server returns, without
+  the bearer token. Unless a cached decision is still valid (10 minutes to 7
+  days), each run first asks `https://api.beatra.ai/skill-route`, and also
+  `https://api.beatra.cn/skill-route` when the first is slow or answers `cn`,
+  which network to use. These probes carry no credential or package identity.
+  When the answer is `cn`, authorization and tool calls go to `api.beatra.cn`
+  and `mcp.beatra.cn` with the same bearer token, and the version notice
+  reads from `www.beatra.cn`; Beatra serves these `.cn` hosts from mainland
+  China.
+  `python3 "$dest/scripts/mcp_client.py" network --use ai` pins the `.ai`
+  hosts and stops the probes; a failed version-notice read can still retry
+  once on the other network.
+- **Version notice, no self-update.** This version has no code that downloads
+  or replaces package files and writes nothing inside the install directory.
+  Before `verify`, `tools`, `upload`, or `call`, at most once every 24 hours
+  per install path, it records the check time and looks, read-only, for
+  records another installer left beside the package (ClawHub `origin.json`,
+  SkillHub or `skills` CLI lock entries, `gh skill` frontmatter). A copy
+  installed by the steps above normally has none and makes no request. When
+  one is found, it reads `https://beatra.ai/skills/beatra-ai-video-studio/sources.json`
+  (no credential, 3-second timeout, 64 KiB cap) and, if that installer offers a
+  newer version, prints one line to stderr with the installer's own update
+  command. It never runs the command.
 - **Uploads and third parties.** Prompts and uploaded media are sent to Beatra
   and forwarded to the third-party model provider executing the task. Beatra
-  is hosted outside mainland China. See the
+  runs the service outside mainland China; on the `cn` route (see Network)
+  requests reach it through Beatra's hosts in mainland China. See the
   [privacy policy](https://beatra.ai/en/privacy).
 - **Billing.** Paid tools consume prepaid credits. Credits for tasks that fail
   for reasons attributable to Beatra or the upstream model are returned
   automatically; otherwise purchases are non-refundable, and actual usage can
   exceed the estimate and leave a negative balance. See the
   [terms](https://beatra.ai/en/terms).
-- **Credentials.** `authorize.py` runs an OAuth device flow, opens the browser,
-  and stores one bearer token in `~/.beatra/credentials.json` (directory
-  `0700`, file `0600`). The token never goes into argv, environment variables,
-  or output. It carries full Beatra scope, including `wallet:spend`, has a
-  sliding 15-day idle lifetime, and is shared by every Beatra skill on the
-  device.
+- **Credentials.** `authorize.py` runs an OAuth device flow, opens the browser
+  on the approval page, and stores one bearer token in
+  `~/.beatra/credentials.json` (directory `0700`, file `0600`). The token never
+  goes into argv, environment variables, or output. It carries full Beatra
+  scope, including `wallet:spend`, has a sliding 15-day idle lifetime, and is
+  shared by every Beatra skill on the device. While the user has not yet
+  selected Allow, the pending device code is kept in
+  `~/.beatra/pending_authorization.json` (`0600`) so a rerun finishes the same
+  approval instead of opening a new one. When `verify`, `tools`, `upload`, or
+  `call` finds no working token, the client makes one check of that saved
+  approval and stores the token if the user has already selected Allow; it
+  never starts a new authorization or opens a browser.
 - **Local state.** `~/.beatra/` also holds `installation.json` (random
   installation reference), `host.json` (agent platform and hostname),
-  `skills.json` (installed Beatra skill paths), `registrations.json`, and
-  `updates/<id>/state.json` plus update backups when updates run.
-- **Telemetry.** The device flow sends the hostname as the device name, the
-  package slug and version, and the detected agent platform (for example
-  `claude-code`, from environment variables). On first use the client makes a
-  non-billable `beatra.installations.register` call, and every tool call adds
+  `skills.json` (installed Beatra skill paths), `network.json` (route
+  decision, with a country code when the route answer includes one),
+  `balance-holds.json` (after an insufficient-credit refusal, that tool is
+  answered locally for up to 30 minutes; `call --recheck-balance` sends one
+  call), a short-lived `.authorize.lock`, and, per install path,
+  `updates/<id>/state.json` (last version check), `source.json` (install
+  source), and `registration.json` (last registration). Files are `0600`
+  except `host.json`, which follows the umask.
+- **Telemetry.** Authorization sends the hostname as the device name, the
+  package slug and version, the detected agent platform (for example
+  `claude-code`, from environment variables), and the installation reference.
+  After connecting, at most once a day unless the version, platform, route, or
+  install source changes, the client makes a non-billable
+  `beatra.installations.register` call with those package and platform
+  fields, the release channel, the network route, the install source
+  (`github` for this tree), and coarse runtime facts: OS and OS version, CPU
+  architecture, Python version, locale, and UTC offset. Every tool call adds
   `source_package_slug` and `source_platform`. There is no opt-out for these
   fields.
 - **Retention.** Account data is kept for the life of the account. Task
@@ -267,6 +287,6 @@ days idle and can be revoked at once in the Beatra Console under Agents.
 
 ## Additional Resources
 
-- [Source tree at the pinned commit](https://github.com/beatra-ai/beatra-skills/tree/95d662f7aeddd6e2aa6da9e14f9c985e3f6b914d/skills/beatra-ai-video-studio)
+- [Source tree at the pinned commit](https://github.com/beatra-ai/beatra-skills/tree/b7ab8ed02980ee44b6dac62633f8d79daf0809ab/skills/beatra-ai-video-studio)
 - [Product page](https://beatra.ai/skills/beatra-ai-video-studio)
 - [Terms](https://beatra.ai/en/terms) and [privacy policy](https://beatra.ai/en/privacy)

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-19T08:27:36.000Z",
+  "generatedAt": "2026-10-20T16:53:52.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -1022,6 +1022,7 @@
         "database-migrations-sql-migrations",
         "database-optimizer",
         "database-security",
+        "datacircle",
         "day-book",
         "dbt-transformation-patterns",
         "dei-dashboard",
@@ -2210,6 +2211,7 @@
         "antigravity-skill-orchestrator",
         "api-contract-testing",
         "apify-actor-development",
+        "apify-facebook-ads-library-scraper",
         "apify-generate-output-schema",
         "apify-reddit-scraper",
         "apple-notes-search",
@@ -2346,6 +2348,7 @@
         "frontend-slides",
         "frontend-slides-frontend-slides",
         "geo-report-pdf",
+        "goal-instruction-writer",
         "google-no-code",
         "google-slides-automation",
         "libreoffice/base",

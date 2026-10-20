@@ -6,7 +6,7 @@ This is the detailed operating contract. Start with the short canonical maintain
 
 Preserve dirty checkouts. Fetch protected main into an isolated clone; read its AGENTS.md, MAINTENANCE.md, canonical skill and package.json before mutation. Mandatory commands must exist on that base. Never import a retired helper from another branch, worktree, stash, installed copy, or historical commit. Inspect removal history if instructions conflict.
 
-Main is PR-only, with strict up-to-date protection and administrator enforcement. `merge:batch` is the only fork-run approval and merge authority. No direct main pushes, admin bypass, deferred GitHub auto-merge, raw merge helper, or local-integration exception. The helper does not rewrite PR metadata and does not retry base drift automatically. Repair conflicts on the source branch, rerun invalidated checks, then resume deliberately.
+Main is PR-only, with strict up-to-date protection and administrator enforcement. `merge:batch` is the only fork-run approval and merge authority. No direct main pushes, admin bypass, deferred GitHub auto-merge, raw merge helper, or local-integration exception. The guided `maintenance:cycle merge` delegates to this same helper; it is not a second authority. The helper does not rewrite PR metadata and does not retry base drift automatically. Repair conflicts on the source branch, rerun invalidated checks, then resume deliberately.
 
 Triage all PRs/issues in the requested scope; inspect live Actions, security alerts and advisories. Repair mergeable source PRs on their branches and retain unrelated changes. Use the default PR template and Quality Bar Checklist. Do not close unrelated issues or publish releases just because a sweep is requested. Jev and SkillSpector are advisory, never required protection or substitutes for review. Jev defaults to five skills; keep keys only in ignored `.env.local` and never print them.
 
@@ -39,6 +39,10 @@ Safe, unprivileged analysis can start before review. Sensitive workflow/code cha
 For persistent review reuse, create a private mode-0700 state directory outside every source checkout. Pass `--state-dir`, `--reviewer`, `--review-evidence`, and the explicitly reviewed `--reviewed-head FULL_SHA`. The evidence must describe an actual completed review, not a tool score. The helper signs a receipt with a locally generated private 256-bit key. Never copy receipts or the key into a PR.
 
 Reuse is limited to skill-only changes with identical complete skill trees and identical protected/head evaluator, schemas, dependency and operational context. Changes to any bound content or mode invalidate reuse. A base-only update can reuse content review, but the helper still authorizes only the exact current full SHA and requires current checks/protection. Missing or invalid receipts cannot authorize merge. Deterministic evidence is also authenticated and reusable only for the same repository, evaluator, merge base, head and raw diff. A valid receipt never authorizes new unrelated web/runtime changes.
+
+## Guided complete cycle
+
+Follow [the complete cycle](maintenance-cycle.md) for source PR batches from timed start through final exact-main verification. Complete that no-release cycle before preparing a release, and keep a separate overall timer for combined publication work. Record blockers once and continue independent PRs; no repeated history investigation without changed evidence. Reuse the supplied host verifier, never ad-hoc MCP scripts.
 
 ## Resumable batch
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-19T08:27:36.000Z",
+  "generatedAt": "2026-10-20T16:53:52.000Z",
   "aliases": {
     "20-andruia-intelligence": "20-andruia-niche-intelligence",
     "accessibility-compliance-audit": "accessibility-compliance-accessibility-audit",
@@ -22,6 +22,7 @@
     "antigravity-maintainer-release": "antigravity-maintainer-batch-release",
     "api-testing-mock": "api-testing-observability-api-mock",
     "apify-brand-monitoring": "apify-brand-reputation-monitoring",
+    "apify-facebook-scraper": "apify-facebook-ads-library-scraper",
     "apify-generate-schema": "apify-generate-output-schema",
     "templates": "app-builder/templates",
     "application-performance-optimization": "application-performance-performance-optimization",
@@ -259,6 +260,7 @@
     "systems-programming-project": "systems-programming-rust-project",
     "team-collaboration-notes": "team-collaboration-standup-notes",
     "test-framework-skill": "test-framework-migration-skill",
+    "uiverify-triage-changes": "uiverify-triage-visual-changes",
     "vercel-react-transitions": "vercel-react-view-transitions",
     "vibecode-production-validator": "vibecode-production-qa-validator",
     "weather-data-management": "weather-data-lifecycle-management",
