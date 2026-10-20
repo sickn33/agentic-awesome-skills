@@ -7,6 +7,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [19.12.0] - 2026-10-20 - "Nine Reviewed Additions And A Pointer Repin"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants. Adds **9** catalog skills and ships **2,724** skills.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@19.12.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **apify-linkedin-jobs-scraper** - search and export LinkedIn job postings with salary, seniority, recruiter and company fields through the author's Apify Actor, with a cost estimate and an explicit yes before a large paid run. `risk: critical` because runs spend the user's Apify credit.
+- **apify-tiktok-scraper** - collect TikTok videos, profiles, hashtags, comments and followers with engagement statistics through the author's Apify Actor, keeping paid AI add-ons off unless the user asks. `risk: critical` for the same paid-run reason.
+- **apify-facebook-ads-library-scraper** - research public Meta Ad Library ads by advertiser or keyword, and state plainly that spend and impressions exist only for political and social-issue ads and reach only for EU/UK ads. `risk: critical` for the same paid-run reason.
+- **deed-page** - publish an HTML file or static folder to a permanent public `https://<slug>.deed.page/` URL with one curl request, confirming first that no secret or personal data goes public and keeping the returned token out of commits. `risk: critical` because publishing is public and the token can delete the site.
+- **design-token-contrast** - measure WCAG 2.2 contrast between a project's color tokens in the light theme and dark mode, and propose the nearest passing color that keeps the hue, with the checker shipped as reviewable source.
+- **taasky** - negotiate meeting times, prices and dates with another person or their agent through the hosted Taasky MCP server, where the human confirms every accept, reject or withdraw in Telegram. `risk: critical` because it acts toward another party.
+- **uiverify-triage-visual-changes** - triage a UI Verify visual-regression build over the hosted MCP server: read the judge and the reviewers' comments, compare before and after, and only then accept baselines. `risk: critical` because accepting rewrites the project's baselines.
+- **unpaid-intern** - keep a plain-markdown second brain for work and turn transcripts, docs and tickets into briefings, meeting prep, debriefs and status tables, with drafts only and grading of guesses. `risk: critical` because it stores work records.
+- **goal-instruction-writer** - preview, draft, refine or audit durable agent Goals with acceptance evidence, drift controls, proportional verification and bounded waiting.
+
+### Changed
+
+- **17 official Beatra pointers repinned** - `ai-headshot-studio`, `ai-image-generation-studio`, `ai-logo-maker`, `ai-multilingual-dubbing`, `ai-photo-restyler`, `ai-podcast-voiceover`, `beatra-ai-video-studio`, `beatra`, `ecommerce-listing-image-set`, `music-generation-studio`, `poster-design-studio`, `product-photo-studio`, `suno-lyrics-to-song`, `talking-avatar-video`, `viral-video-teardown-remake`, `voice-cloning-studio` and `voiceover-narration-studio` now pin a source commit and a Git tree ID and fetch through `git clone --filter=blob:none` with a `TREE-OK` check, replacing the CDN zip download and the self-updater it carried.
+- **datacircle** - rewritten from a paid-lookup REST/MCP guide into a description of the plan-pricing dataset the site publishes, so the skill downloads `datacircle.json`/`.csv` and queries it instead of describing per-call pricing.
+- **krexa** and **arcmira-find-quotes** - upstream pin refreshed to 1.3.3 and the MCP connection requirement declared in the skill setup metadata.
+- **llm-cost-optimization**, **llmops-platform-engineering** and **multi-tenant-llm-hosting** - name Bifrost beside LiteLLM in the gateway, cost and multi-tenant guidance.
+
+### Merge batch
+
+- Ten open PRs were triaged, all of them touching catalog skills. All ten merged: the nine additions above plus the Beatra repin, each refreshed onto current `main` after review.
+- `design-token-contrast` shipped its checker as `skills/design-token-contrast/scripts/contraste.mjs`, which the fork intake classifies as `new_unapproved_path`/`new_unknown_extension`. The maintainer repair moved it to `references/contraste-checker.md` as reviewable source, matching how `story-bible-continuity` ships its checker; behaviour is unchanged and the extracted block was run against a fixture.
+- Where the automated review did not produce a passing result, approval used the exact-head maintainer attestation path, bound to the full 40-character head SHA. `manual-review-required` is recorded as such and is not a Tessl pass.
+
+### Review scope
+
+Every addition was reviewed in full at its exact submitted bytes, including bundled references. The extracted `design-token-contrast` checker was run on a two-token fixture (reported 3.54:1 as failing, exit 1). All 17 Beatra source-commit/tree-ID pairs were verified live against their upstream repositories before merge. The paid Apify skills were reviewed statically; none was run against a live Apify account during review. The broader catalog audit remains unfinished.
+
+### Thanks
+
+Thanks to **@harshmaur** for the three Apify Actor skills, **@marina-aronchik** for `taasky`, **@wu736139669** for `goal-instruction-writer`, **@f-o-x11** for `deed-page`, **@igrlk** for `uiverify-triage-visual-changes`, **@kevinmmiddleton** for `unpaid-intern`, **@Clagoss** for `design-token-contrast`, **@beatra-ai** for the pointer repin, **@waynehamadi** for the `datacircle` update and **@Swpn0neel** for the gateway wording, and to the upstream authors whose licensed material is included.
+
+
 ## [19.11.0] - 2026-10-19 - "Three Reviewed Additions And A Continuity Checker"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants. Adds **3** catalog skills and ships **2,715** skills.
