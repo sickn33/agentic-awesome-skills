@@ -3,6 +3,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
+const { readTarballGitHead } = require("./distribution_pack.cjs");
 const { digest, createManifest, verifyManifest } = require("../lib/distribution-artifact");
 function lockfileDigest(root) {
   // Bind the immutable Git bytes, independent of checkout line-ending conversion.
@@ -20,6 +21,9 @@ function main(argv, env = process.env) {
     workflow: ".github/workflows/distribution-candidate.yml",
     lockfileDigest: lockfileDigest(root),
   };
+  // Digest equality alone does not prove the npm installer can resolve this release.
+  if (readTarballGitHead(path.join(directory, "package.tgz")) !== expected.commit)
+    throw new Error("Candidate gitHead is missing or differs from the immutable release commit");
   const manifestPath = path.join(directory, "distribution.json");
   if (mode === "create") fs.writeFileSync(manifestPath, JSON.stringify(createManifest(directory, expected), null, 2) + "\n", { flag: "wx" });
   else verifyManifest(directory, JSON.parse(fs.readFileSync(manifestPath)), expected);

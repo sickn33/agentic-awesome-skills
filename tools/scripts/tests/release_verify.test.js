@@ -30,6 +30,7 @@ const manifest = {
     },
   ],
 };
+let npmHead = sha;
 let badNpm = false,
   drift = false,
   configured = false,
@@ -109,7 +110,7 @@ const deps = {
       return JSON.stringify({
         "dist-tags": { latest: badNpm ? "1.2.2" : version },
         versions: {
-          [version]: { version, gitHead: sha, dist: { integrity: "fixture" } },
+          [version]: { version, gitHead: npmHead, dist: { integrity: "fixture" } },
         },
       });
     if (url.endsWith("redirect-manifest.json")) return JSON.stringify(manifest);
@@ -149,6 +150,13 @@ assert.equal(verifyTagExecutionProvenance("owner/repo", version, sha, endpoint =
 (async () => {
   let result = await verifyRelease({ version, hosts: [] }, deps);
   assert.equal(result.complete, true, JSON.stringify(result));
+  for (const badHead of [undefined, null, "", "short", "2".repeat(40)]) {
+    npmHead=badHead;
+    result=await verifyRelease({version,hosts:[]},deps);
+    assert.equal(result.complete,false,'missing or wrong registry gitHead cannot certify an installable release');
+    assert.equal(result.checks.find(c=>c.component==='npm').status,'blocked');
+  }
+  npmHead=sha;
   deferredCi = true;
   result = await verifyRelease({ version, hosts: [] }, deps);
   assert.equal(

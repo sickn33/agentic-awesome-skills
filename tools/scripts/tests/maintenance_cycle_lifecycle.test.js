@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const {main} = require('../maintenance_cycle.cjs');
 const sha = 'a'.repeat(40);
-let saved, pending = false, trusted = true, rerun = false, newRun = false, collected = false, alignment = false, writes = 0, incomplete = false;
+let saved, pending = false, trusted = true, rerun = false, newRun = false, collected = false, alignment = false, writes = 0, incomplete = false, validation = "success";
 const store = {readBatch: () => saved && structuredClone(saved), writeBatch: (_, state) => {saved=structuredClone(state);}};
 const dependencies = {
   openStore: () => store, readVersion: () => '19.11.0', run: () => '',
@@ -16,7 +16,7 @@ const dependencies = {
     if(alignment && args.includes('--method')) {writes++;if(incomplete)return null;throw Error('ECONNRESET');}
     if(alignment && endpoint.endsWith('/pulls/1')) return {state:'open',base:{ref:'main'},head:{sha}};
     if (endpoint.endsWith('/pulls/1')) return {number:1, merged:true, base:{ref:'main'}, head:{sha}, merge_commit_sha:sha};
-    if (endpoint.includes('/jobs?')) {collected=true;return [{jobs:[]}];}
+    if (endpoint.includes('/jobs?')) {collected=true;return [{jobs:[{name:"main-validation-and-sync",status:"completed",conclusion:"success",steps:[{name:"Validate protected source diff with ephemeral snapshots",conclusion:validation}]}]}];}
     const rows=[{workflow_runs:['ci.yml','codeql.yml'].map((name,i)=>({id:i+1+(newRun&&collected?10:0),path:'.github/workflows/'+name,head_sha:sha,head_branch:'main',event:'push',status:pending?'in_progress':'completed',conclusion:pending?null:'success'}))}];
     if(/\/runs\/\d+$/.test(endpoint)) return {...rows[0].workflow_runs.find(r=>r.id===Number(endpoint.split('/').at(-1))), ...(rerun?{run_attempt:2}: {})};
     return rows;
@@ -53,6 +53,14 @@ const dependencies = {
     assert.equal(saved.startedAt,start,'never reset the original timer');
     assert.equal(saved.attempts[0].success,true,'retain historical proof');
     assert.equal(saved.attempts[1].success,false);
+    pending=false;
+    for(const outcome of [undefined,'skipped','failure']) {
+      validation=outcome;
+      await main(['verify','--state-dir','/unused'],dependencies);
+      assert.equal(saved.completedAt,undefined,'green workflow without executed source validation cannot complete maintenance');
+      assert.equal(saved.attempts.at(-1).success,false);
+    }
+    validation='success';
     alignment=true;
     await main(['align','--state-dir','/unused','--prs','1','--expected-head',sha],dependencies);
     assert.equal(saved.attempts.at(-1).failureCode,'WRITE_UNCERTAIN');

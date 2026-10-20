@@ -55,7 +55,7 @@ npm run maintenance:cycle -- status --state-dir /absolute/private/state
 
 Verification fetches current protection, proves every merge reachable from main,
 requires successful latest push CI/CodeQL on that exact SHA, and confirms the
-runtime version is unchanged. Pending/failed/missing runs are not completion.
+runtime version is unchanged. Pending/failed/missing runs are not completion. The CI attempt must also contain a successful `main-validation-and-sync` job and its executed `Validate protected source diff with ephemeral snapshots` step; an overall green workflow with missing, skipped or failed source validation cannot close the cycle.
 The report includes original start, elapsed wall time, blocked attempts, explicit
 branch updates and raw final job timings. Keep agent review gaps and retries in
 elapsed time. A no-release source batch is not comparable to a full release.

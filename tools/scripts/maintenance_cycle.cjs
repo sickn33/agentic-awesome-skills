@@ -105,7 +105,11 @@ async function mainUnlocked(argv, dependencies = {}) {
       }
       const runs=gh(['api','--paginate','--slurp',`repos/${REPO}/actions/runs?head_sha=${sha}&per_page=100`]).flatMap(p=>p.workflow_runs);
       const proofs=proofForRuns(runs,sha);
-      const raw=proofs.map(r=>({run:r,jobs:gh(['api','--paginate','--slurp',`repos/${REPO}/actions/runs/${r.id}/jobs?per_page=100`]).flatMap(p=>p.jobs)}));
+      const raw=proofs.map(r=>({run:r,jobs:gh(['api','--paginate','--slurp',`repos/${REPO}/actions/runs/${r.id}/attempts/${r.run_attempt || 1}/jobs?per_page=100`]).flatMap(p=>p.jobs)}));
+      const ci=raw.find(proof=>proof.run.path==='.github/workflows/ci.yml');
+      const source=ci.jobs.find(job=>job.name==='main-validation-and-sync');
+      if(source?.conclusion!=='success' || !source.steps?.some(step=>step.name==='Validate protected source diff with ephemeral snapshots' && step.conclusion==='success'))
+        throw failure('CI_FAILED','Exact main CI did not execute successful protected source validation; a green workflow alone cannot complete maintenance');
       // Re-read after collecting jobs: a rerun can invalidate a previously green run.
       for(const proof of proofs) {
         const current=gh(['api',`repos/${REPO}/actions/runs/${proof.id}`]);

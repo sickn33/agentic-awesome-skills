@@ -584,10 +584,9 @@ async function verifyRelease(options, dependencies = {}) {
         )
           throw new Error("npm package or intended dist-tag mismatch");
         if (
-          metadata.versions[version].gitHead &&
           metadata.versions[version].gitHead !== sha
         )
-          throw new Error("npm gitHead differs from released SHA");
+          throw new Error("npm gitHead is missing or differs from released SHA");
         return {
           version,
           distTag,
