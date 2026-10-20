@@ -433,7 +433,7 @@ spec:
 |-------|-------|
 | Orchestration | Argo Workflows, GitHub Actions, Airflow |
 | Model Registry | MLflow, custom metadata DB |
-| Gateway | LiteLLM, Envoy-based API gateway |
+| Gateway | LiteLLM, Bifrost, Envoy-based API gateway |
 | Observability | OpenTelemetry + Prometheus + Grafana + Langfuse |
 | Policy | OPA/Rego for deployment and runtime checks |
 | Evaluation | RAGAS, custom eval harness, Promptfoo |

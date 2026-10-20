@@ -286,7 +286,7 @@ def track_call(model, team, task_type, response):
 - Use `gpt-4o-mini` or `claude-haiku` for 80% of tasks — they're 10–30× cheaper.
 - Enable prompt caching for system prompts >1,024 tokens (Anthropic) or >1,024 tokens (OpenAI).
 - Audit your top 5 prompts by token count — compress or cache them.
-- Set hard budget limits with LiteLLM virtual keys before costs spiral.
+- Set hard budget limits with LiteLLM or Bifrost virtual keys before costs spiral.
 - Self-host 7B–8B models when monthly API spend exceeds $2k/month.
 
 ## Related Skills
