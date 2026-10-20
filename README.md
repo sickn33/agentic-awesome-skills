@@ -221,6 +221,8 @@ Key source families include:
 
 ### Official Sources
 
+- **[kasovy/neverapply-mcp](https://github.com/kasovy/neverapply-mcp)**: MIT official source for the `neverapply` skill - job matches, job search, tailored resumes, interview preparation and job applications through NeverApply's hosted MCP server (OAuth sign-in), with every application approved by the person first.
+
 - **[fclairamb/solidping-plugin](https://github.com/fclairamb/solidping-plugin/tree/main/skills/solidping-monitoring)**: MIT official source for the `solidping` skill - uptime checks across 40+ types, results, incidents, diagnosis and status pages through the hosted SolidPing MCP server, with every write confirmed by the person first. SolidPing itself is AGPL-3.0.
 
 - **[Outreachgenie/outreachgenie-linkedin-mcp](https://github.com/Outreachgenie/outreachgenie-linkedin-mcp)**: MIT source for `outreachgenie-list-audit`, a read-only saved-list and template audit with local Python reports. Connected use requires an OutreachGenie workspace and compatible MCP host.
