@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [19.12.1] - 2026-10-20 - "Direct Installer Release Identity"
+
+> The catalog stays at **2,724 skills**. This patch fixes the direct installer failing against any release published from the pre-built candidate tarball.
+
+### Fixed
+
+- **Direct installer `--release` installs no longer fail with "invalid registry response".** Since 19.10.0 the release pipeline publishes the pre-built candidate tarball, and `npm publish <file>.tgz` does not record `gitHead` in the registry metadata, so the installer's release-identity lookup received an empty response. The candidate packer now records the release commit in the packed manifest the way `npm publish` from a Git checkout does, so `agentic-awesome-skills --release X.Y.Z` installs again from 19.12.1 on.
+- **A release without `gitHead` names the missing field** instead of blaming the registry, and points at the issue tracker. Releases published before this patch (19.10.1, 19.11.0, 19.12.0) stay as they are; use `--tag vX.Y.Z` only if you accept an unverifiable ref.
+
+### Review scope
+
+The packer was exercised end-to-end on a fixture: it records the release commit, keeps the artifact name `package.tgz`, restores `package.json` byte-for-byte, and fails closed on modified or untracked source. The absence of `gitHead` for a pre-built tarball was reproduced against a local registry stub, and the reverse (a directory publish records it) was reproduced as well. No live npm publication or host configuration was changed by this patch.
+
+
 ## [19.12.0] - 2026-10-20 - "Nine Reviewed Additions And A Pointer Repin"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants. Adds **9** catalog skills and ships **2,724** skills.

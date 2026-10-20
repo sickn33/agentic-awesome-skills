@@ -318,6 +318,10 @@ npx agentic-awesome-skills@14.3.0 --path .agents/skills --release 14.3.0 --skill
 Default and `--release` installs fail closed unless the cloned Git commit matches
 the immutable `gitHead` recorded for that exact npm version. `--tag` intentionally
 accepts mutable Git refs and prints a warning because it skips that identity check.
+If a published version has no `gitHead` in its npm metadata, the installer names
+that missing field and links the issue tracker instead of reporting a generic
+registry error; use `--tag` only when you accept an unverifiable ref, or wait for a
+release whose candidate recorded the commit.
 
 Remove `--dry-run` only after reviewing the plan.
 
