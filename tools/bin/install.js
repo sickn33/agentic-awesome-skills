@@ -950,8 +950,17 @@ function resolvePublishedGitHead(version, spawn = spawnSync, runtime = {}) {
   }
 
   let gitHead;
+  const rawGitHead = String(result.stdout || "").trim();
+  if (!rawGitHead) {
+    throw new Error(
+      `Unable to resolve npm release identity for ${exactVersion}: `
+      + `the published metadata has no gitHead. This release cannot verify --release installs; `
+      + `use --tag v${exactVersion} only if you accept an unverifiable ref, or report it at `
+      + `${REPO.replace(/\.git$/, "")}/issues.`,
+    );
+  }
   try {
-    gitHead = JSON.parse(result.stdout);
+    gitHead = JSON.parse(rawGitHead);
   } catch {
     throw new Error(`Unable to resolve npm release identity for ${exactVersion}: invalid registry response`);
   }

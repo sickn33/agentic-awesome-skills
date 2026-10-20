@@ -54,8 +54,7 @@ jobs:
       - name: Pack the runtime candidate once
         run: |
           mkdir -p "$RUNNER_TEMP/distribution"
-          npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP/distribution"
-          mv "$RUNNER_TEMP"/distribution/agentic-awesome-skills-*.tgz "$RUNNER_TEMP/distribution/package.tgz"
+          node tools/scripts/distribution_pack.cjs "$RUNNER_TEMP/distribution"
       - name: Run complete suite against candidate bytes
         env:
           AAS_TEST_CANDIDATE_TARBALL: ${{ runner.temp }}/distribution/package.tgz

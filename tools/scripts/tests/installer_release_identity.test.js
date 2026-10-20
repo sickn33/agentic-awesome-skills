@@ -95,6 +95,20 @@ assert.throws(
   "an empty array response must fail closed",
 );
 
+// A release published from a pre-built tarball has no `gitHead` at all and
+// `npm view` prints nothing. Name the missing field instead of blaming the
+// registry response, and point the user at the issue tracker.
+assert.throws(
+  () => installer.resolvePublishedGitHead("15.12.0", () => npmResult({ stdout: "\n" })),
+  /no gitHead/,
+  "an empty npm view response must name the missing gitHead field",
+);
+assert.throws(
+  () => installer.resolvePublishedGitHead("15.12.0", () => npmResult({ stdout: "\n" })),
+  /issues/,
+  "a release without gitHead must tell the user where to report it",
+);
+
 assert.throws(
   () => installer.resolvePublishedGitHead("15.12.0", () => npmResult({
     stdout: `["${publishedHead}", "${movedTagHead}"]\n`,

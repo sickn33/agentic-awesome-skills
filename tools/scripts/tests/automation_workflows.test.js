@@ -21,6 +21,8 @@ assert.deepEqual(hygiene.permissions,{contents:"read"});
 for (const command of ["distribution:verify","sync:release-state","validate:strict","validate:glossary","validate:references","security:docs","security:scan:strict","plugin-compat:check","bundles:check","test","app:test:coverage","app:build"])
   assert.ok(commands(candidate.jobs.build).includes(`npm run ${command}`),`candidate must execute ${command}`);
 assert.match(commands(candidate.jobs.build),/git merge-base --is-ancestor HEAD origin\/main/);
+assert.match(commands(candidate.jobs.build),/distribution_pack\.cjs/,"the candidate must pack through the release-identity-aware packer");
+assert.doesNotMatch(commands(candidate.jobs.build),/npm pack/,"the candidate must not pack a tarball without recording gitHead");
 assert.match(commands(candidate.jobs.build),/distribution_manifest\.cjs create/);
 assert.deepEqual([...new Set(candidate.jobs.functional.strategy.matrix.include.map(job => job.os))],["ubuntu-24.04","windows-2025"]);
 assert.deepEqual([...new Set(candidate.jobs.functional.strategy.matrix.include.map(job => job.node))],["22.23.1","24"]);
