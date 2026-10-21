@@ -45,15 +45,13 @@ unmet criterion from the evidence.
 
 ## Limits and no-op rule
 Use at most four hypothesis iterations. Do not repeat a failed parser change
-without new evidence; after two equivalent failures, change the hypothesis and
-report a blocker only when a named dependency is the actual cause.
+without new evidence; after two equivalent failures, report the blocker.
 
 ## Termination
 Emit `GOAL COMPLETE` only when all three criteria are verified. Emit
-`GOAL BLOCKED: <reason>` only when the fixture or a required dependency is
-unavailable and no alternative approach can proceed, naming the attempts made,
-the dependency, and the exact unblock condition. Emit `GOAL TIMEBOXED: <state>`
-after the fourth iteration if the criteria remain open.
+`GOAL BLOCKED: <reason>` if the fixture or required dependency is unavailable,
+including the exact unblock needed. Emit `GOAL TIMEBOXED: <state>` after the
+fourth iteration if the criteria remain open.
 
 ## Reporting
 Return the revision, commands and results, changed files, remaining gap, and
@@ -112,9 +110,7 @@ recommendation is stable and all criteria are sourced.
 ## Termination
 Emit `GOAL COMPLETE` when the table, citations, and conditional recommendation
 are complete. Emit `GOAL BLOCKED: <missing constraint or source>` when a decision
-depends on an owner answer or inaccessible evidence, naming the attempts made
-and the exact unblock condition. Uncertainty about which source to prefer is a
-scoped question, not a blocker.
+depends on an owner answer or inaccessible evidence.
 
 ## Reporting
 Return the comparison, recommendation, uncertainty, sources, and terminal
@@ -200,8 +196,7 @@ Repeat one bounded work unit at a time:
   threshold are verified.
 - `GOAL BLOCKED: upstream maintainer review required` when only the external
   merge remains, the submission is clean, and no supported resume trigger is
-  available; name the attempts made (submission, status check) and the unblock
-  condition (maintainer merge), and honor the host's blocked-status rules.
+  available; honor the host's blocked-status rules.
 - `GOAL TIMEBOXED: awaiting first external feedback` when the feedback window
   closes before the required non-author response arrives.
 - `GOAL TIMEBOXED: <state>` when the launch window ends with the verified
