@@ -99,6 +99,15 @@ def validate_oneroster_archive(zip_path: str) -> dict:
     warnings = []
 
     with zipfile.ZipFile(zip_path, 'r') as z:
+        infos = z.infolist()
+        if len(infos) > 100 or len({i.filename for i in infos}) != len(infos):
+            raise ValueError("Too many or duplicate ZIP members")
+        maximum = 4 * 1024 * 1024
+        if sum(i.file_size for i in infos) > 16 * 1024 * 1024:
+            raise ValueError("Archive expansion limit exceeded")
+        for info in infos:
+            if info.file_size > maximum or info.file_size / max(1, info.compress_size) > 100:
+                raise ValueError("ZIP expansion or compression-ratio limit exceeded")
         names = z.namelist()
 
         # 1. Manifest Root Check
@@ -111,14 +120,21 @@ def validate_oneroster_archive(zip_path: str) -> dict:
 
         for filename in CORE_FILES:
             if filename in names:
-                raw_bytes = z.read(filename)
+                with z.open(filename) as member:
+                    raw_bytes = member.read(maximum + 1)
+                if len(raw_bytes) > maximum:
+                    raise ValueError("Expanded member exceeds limit")
                 # Strip UTF-8 BOM if present
                 if raw_bytes.startswith(b'\xef\xbb\xbf'):
                     warnings.append(f"{filename} contains UTF-8 BOM; stripped automatically.")
                     raw_bytes = raw_bytes[3:]
 
                 reader = csv.DictReader(io.StringIO(raw_bytes.decode('utf-8', errors='replace')))
-                rows = list(reader)
+                rows = []
+                for row in reader:
+                    if len(rows) >= 10000:
+                        raise ValueError("CSV row limit exceeded")
+                    rows.append(row)
                 data[filename] = rows
                 if rows and "sourcedId" in rows[0]:
                     keys[filename] = {r["sourcedId"] for r in rows if "sourcedId" in r}

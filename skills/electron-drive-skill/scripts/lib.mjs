@@ -4,8 +4,8 @@
  * tested without launching anything (`node --test scripts/`).
  */
 import { createHash } from 'node:crypto'
-import { existsSync, readFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { existsSync, readFileSync, mkdirSync, lstatSync } from 'node:fs'
+import { homedir } from 'node:os'
 import path from 'node:path'
 
 /** The nearest directory at or above `from` with a package.json. */
@@ -55,9 +55,21 @@ export const loadConfig = (root = PROJECT_ROOT) => {
  * directory per project, so two apps never share a scratch profile.
  */
 export const driveRoot = (root = PROJECT_ROOT) => {
-  if (process.env.DRIVE_ROOT) return process.env.DRIVE_ROOT
-  const hash = createHash('sha256').update(root).digest('hex').slice(0, 8)
-  return path.join(tmpdir(), 'electron-drive', `${path.basename(root)}-${hash}`)
+  const hash = createHash('sha256').update(root).digest('hex').slice(0, 16)
+  const target = path.resolve(process.env.DRIVE_ROOT || path.join(homedir(), '.electron-drive', hash))
+  // Refuse pre-existing redirected or shared state before reading/writing tokens.
+  let current = path.parse(target).root
+  for (const part of target.slice(current.length).split(path.sep)) {
+    current = path.join(current, part)
+    try { if (lstatSync(current).isSymbolicLink()) throw new Error('Driver state symlink') }
+    catch (error) { if (error.code !== 'ENOENT') throw error }
+  }
+  mkdirSync(target, { recursive: true, mode: 0o700 })
+  const stat = lstatSync(target)
+  if (!stat.isDirectory() || (process.getuid && stat.uid !== process.getuid()) || (stat.mode & 0o077)) {
+    throw new Error('Driver state must be an owned private directory (0700)')
+  }
+  return target
 }
 
 export const statePath = () => path.join(driveRoot(), 'daemon.json')
@@ -79,6 +91,8 @@ export const readState = () => {
   const file = statePath()
   if (!existsSync(file)) return null
   try {
+    const stat = lstatSync(file)
+    if (!stat.isFile() || stat.isSymbolicLink() || (stat.mode & 0o077) || (process.getuid && stat.uid !== process.getuid())) throw new Error('Unsafe daemon state')
     return JSON.parse(readFileSync(file, 'utf8'))
   } catch {
     return null

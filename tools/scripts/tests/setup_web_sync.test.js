@@ -53,3 +53,19 @@ async function main() {
 }
 
 main();
+{
+ const {writePublicInfoApi}=require('../setup_web.js');
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'info-boundary-'));
+ try {
+  const publicRoot=path.join(root,'public');fs.mkdirSync(publicRoot);
+  const catalog=path.join(root,'catalog.json'),pkg=path.join(root,'package.json'),outside=path.join(root,'secret');
+  fs.writeFileSync(catalog,'[]');fs.writeFileSync(pkg,'{"version":"1.0.0"}');fs.writeFileSync(outside,'canary');
+  fs.symlinkSync(root,path.join(publicRoot,'api'),'dir');
+  assert.throws(()=>writePublicInfoApi(catalog,pkg,path.join(publicRoot,'api','secret'),publicRoot),/symlink/);
+  assert.equal(fs.readFileSync(outside,'utf8'),'canary');
+  fs.unlinkSync(path.join(publicRoot,'api'));fs.mkdirSync(path.join(publicRoot,'api'));
+  fs.symlinkSync(outside,path.join(publicRoot,'api','info.json'));
+  assert.throws(()=>writePublicInfoApi(catalog,pkg,path.join(publicRoot,'api','info.json'),publicRoot),/symlink/);
+  assert.equal(fs.readFileSync(outside,'utf8'),'canary');
+ } finally {fs.rmSync(root,{recursive:true,force:true});}
+}

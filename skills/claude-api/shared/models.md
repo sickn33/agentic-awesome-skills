@@ -52,7 +52,7 @@ When a user asks for a model by name, use this table to find the correct model I
 | User says...                              | Use this model ID              |
 |-------------------------------------------|--------------------------------|
 | "opus", "most powerful"                   | `claude-opus-5`              |
-| "opus 4.6"                                | `claude-opus-5`              |
+| "opus 4.6"                                | `claude-opus-4-6`              |
 | "opus 4.5"                                | `claude-opus-4-5`              |
 | "opus 4.1"                                | `claude-opus-4-1`              |
 | "opus 4", "opus 4.0"                      | `claude-opus-4-0`              |

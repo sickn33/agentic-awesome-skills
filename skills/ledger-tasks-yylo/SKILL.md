@@ -3,7 +3,7 @@ name: ledger-tasks-yylo
 description: 'Use YYLO Ledger task management: create, list, search, get, mark, update,
   archive, deps, ready, order and merge with dependencies.'
 category: project-management
-risk: safe
+risk: critical
 source: https://github.com/yylo-dev/yylo-skills
 source_repo: yylo-dev/yylo-skills
 source_type: community

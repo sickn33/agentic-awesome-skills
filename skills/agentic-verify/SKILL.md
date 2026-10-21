@@ -44,7 +44,7 @@ that looked well tested.
 ### Runner
 
 ```bash
-AV='uvx --from git+https://github.com/timini/agentic-verification@v0.3.0#subdirectory=runner agentic-verification'
+AV='uvx --from git+https://github.com/timini/agentic-verification@07608b3b9e4e359bc0b93b3eca94bb78d67e369e#subdirectory=runner agentic-verification'
 $AV verify <project-root> --base <rev> [--budget-minutes N]
 $AV replay --run <run-dir> --mutant <id> --all
 $AV base-check <project-root> --base <rev> [tests...]
@@ -125,7 +125,7 @@ For the meaning of statuses and labels, see [reading the report](https://github.
 ### Example 1: Check uncommitted work
 
 ```bash
-AV='uvx --from git+https://github.com/timini/agentic-verification@v0.3.0#subdirectory=runner agentic-verification'
+AV='uvx --from git+https://github.com/timini/agentic-verification@07608b3b9e4e359bc0b93b3eca94bb78d67e369e#subdirectory=runner agentic-verification'
 $AV verify . --base HEAD --budget-minutes 10
 ```
 

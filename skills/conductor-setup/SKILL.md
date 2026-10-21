@@ -5,7 +5,7 @@ allowed-tools: Read, Write, Edit, Bash(chmod *), Bash(bundle *), Bash(npm *), Ba
 context: fork
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-01-28"
 metadata:
   author: Shpigford
   version: "1.0"

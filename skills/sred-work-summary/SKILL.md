@@ -3,7 +3,7 @@ name: sred-work-summary
 description: Go back through the previous year of work and create a Notion doc that groups relevant links into projects that can then be documented as SRED projects.
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 
 # SRED Work Summary

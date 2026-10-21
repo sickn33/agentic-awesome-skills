@@ -292,10 +292,10 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     environment:
       POSTGRES_USER: myapp
-      POSTGRES_PASSWORD: secret
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a unique local password}
       POSTGRES_DB: mydb
     volumes:
       - pg_data:/var/lib/postgresql/data
@@ -317,9 +317,9 @@ services:
     image: edoburu/pgbouncer:latest
     restart: unless-stopped
     ports:
-      - "6432:6432"
+      - "127.0.0.1:6432:6432"
     environment:
-      DATABASE_URL: postgres://myapp:secret@postgres:5432/mydb
+      DATABASE_URL: postgres://myapp:${POSTGRES_PASSWORD:?Set a unique URL-encoded password}@postgres:5432/mydb
       POOL_MODE: transaction
       MAX_CLIENT_CONN: 500
       DEFAULT_POOL_SIZE: 40

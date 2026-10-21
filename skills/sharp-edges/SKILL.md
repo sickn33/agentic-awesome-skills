@@ -3,7 +3,7 @@ name: sharp-edges
 description: sharp-edges
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-01-30"
 ---
 ## Bundled upstream support
 

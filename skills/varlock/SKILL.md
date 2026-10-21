@@ -3,7 +3,7 @@ name: varlock
 description: "Secure-by-default environment variable management for Claude Code sessions."
 risk: critical
 source: "https://github.com/dmno-dev/varlock"
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 version: 1.0.0
 ---
 

@@ -2,7 +2,7 @@
 name: md2video-audio
 description: "Convert Markdown documents into narrated MP4 videos with synchronized visuals and voice narration."
 category: media
-risk: safe
+risk: critical
 source: community
 source_repo: 70v-Yoyo/md2video-audio-skill
 source_type: community
@@ -15,6 +15,10 @@ license_source: "https://github.com/70v-Yoyo/md2video-audio-skill/blob/main/LICE
 ---
 
 # Md2video-audio
+
+## Missing bundled runtime — stop before execution
+
+This entry bundles no conversion scripts. The historical command names below describe upstream interfaces only; do not execute them relative to the working directory or substitute project files. Until a separately reviewed complete runtime is installed at a verified absolute path, return a conversion plan and report the missing runtime. Do not download or execute helpers as part of a conversion request.
 
 ## Overview
 
@@ -63,7 +67,7 @@ Remove visual-only characters that should not be spoken and verify that slide se
 Run the provided video-generation script with the presentation and narration files:
 
 ```
-python ai-2md2marp2av.py presentation.md narration.md
+# Historical interface only (unbundled): ai-2md2marp2av.py presentation.md narration.md
 ```
 
 The script renders Marp slides, generates speech with Edge-TTS, and combines them into an MP4 video.
@@ -75,13 +79,13 @@ Ask the user to complete any interactive input required by the script.
 If the primary workflow fails, try the included fallback scripts in order:
 
 ```
-python md2marp2av.py
+# Historical interface only (unbundled): md2marp2av.py
 ```
 
 Then:
 
 ```
-python md2video.py
+# Historical interface only (unbundled): md2video.py
 ```
 
 ## Examples

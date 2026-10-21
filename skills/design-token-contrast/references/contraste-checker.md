@@ -108,10 +108,10 @@ function hslARgb(h, s, l) {
   return [f(0), f(8), f(4)];
 }
 const num = (t, escala = 1) => (t.trim().endsWith('%') ? parseFloat(t) / 100 : parseFloat(t) / escala);
-// Ángulos de CSS en grados: deg (o sin unidad), rad, grad y turn. «none» vale 0.
+// Ángulos de CSS en grados: deg (o sin unidad), rad, grad y turn. Los componentes no finitos se rechazan.
 function angulo(t) {
   const x = parseFloat(t);
-  if (Number.isNaN(x)) return 0;
+  if (!Number.isFinite(x)) return NaN;
   if (/grad$/.test(t)) return x * 0.9;
   if (/rad$/.test(t)) return x * 180 / Math.PI;
   if (/turn$/.test(t)) return x * 360;
@@ -120,6 +120,12 @@ function angulo(t) {
 
 // Devuelve { r, g, b, a } en 0..1 o null si no se puede interpretar.
 function parsearColor(valor, vars, profundidad = 0) {
+  try {
+    const c = parsearColorInterno(valor, vars, profundidad);
+    return c && [c.r, c.g, c.b, c.a].every(Number.isFinite) ? c : null;
+  } catch { return null; }
+}
+function parsearColorInterno(valor, vars, profundidad = 0) {
   if (!valor || profundidad > 10) return null;
   // El nombre dentro de var() distingue mayúsculas, como en el navegador: se busca tal cual.
   const alias = valor.trim().match(/^var\(\s*(--[\w-]+)\s*(?:,\s*(.+))?\)$/i);
@@ -178,12 +184,13 @@ const aHex = ({ r, g, b }) => '#' + [r, g, b].map((x) => Math.round(clamp(x) * 2
 // Busca la luminosidad OKLCH más cercana a la original que cumpla el mínimo contra TODOS los fondos
 // dados, manteniendo tono y croma.
 function sugerirTodos(frente, fondos, minimo) {
+  if (![frente, ...fondos].every(c => [c.r, c.g, c.b, c.a].every(Number.isFinite)) || !Number.isFinite(minimo)) return null;
   const [L, a, b] = rgbAOklab(frente.r, frente.g, frente.b);
   const C = Math.hypot(a, b);
   const H = Math.atan2(b, a);
   let mejor = null;
   for (const dir of [-1, 1]) {
-    for (let paso = 1; ; paso++) { // recorre todo el rango hasta 0 o 1
+    for (let paso = 1; paso <= 400; paso++) { // recorre todo el rango hasta 0 o 1
       const L2 = L + dir * paso * 0.0025;
       if (L2 < 0 || L2 > 1) break;
       let c = C;
@@ -201,12 +208,13 @@ function sugerirTodos(frente, fondos, minimo) {
 
 // Busca la luminosidad OKLCH más cercana a la original que cumpla el mínimo, manteniendo tono y croma.
 function sugerir(frente, fondo, minimo) {
+  if (![frente, fondo].every(c => [c.r, c.g, c.b, c.a].every(Number.isFinite)) || !Number.isFinite(minimo)) return null;
   const [L, a, b] = rgbAOklab(frente.r, frente.g, frente.b);
   const C = Math.hypot(a, b);
   const H = Math.atan2(b, a);
   let mejor = null;
   for (const dir of [-1, 1]) {
-    for (let paso = 1; ; paso++) { // recorre todo el rango hasta 0 o 1
+    for (let paso = 1; paso <= 400; paso++) { // recorre todo el rango hasta 0 o 1
       const L2 = L + dir * paso * 0.005;
       if (L2 < 0 || L2 > 1) break;
       let c = C;

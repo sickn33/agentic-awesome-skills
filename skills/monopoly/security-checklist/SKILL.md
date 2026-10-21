@@ -2,7 +2,7 @@
 name: security-checklist
 description: Review a scoped architecture against evidence-based network, identity, data, secrets, dependency and incident-response controls.
 source: community
-date_added: "2026-09-04"
+date_added: "2026-06-14"
 risk: safe
 reports-to: monopoly
 ---

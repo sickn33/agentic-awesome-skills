@@ -25,7 +25,8 @@ Deploy Azure infrastructure with ARM templates and Bicep. Bicep is the recommend
 
 ```bash
 # Install Azure CLI
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+# Prerequisite: organization-approved Azure CLI installed from a verified signed package.
+az version
 
 # Install Bicep CLI (bundled with Azure CLI 2.20+)
 az bicep install

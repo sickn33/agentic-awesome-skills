@@ -4,7 +4,7 @@ description: 整理家族病史和已知健康记录，识别需要医生或遗�
 allowed-tools: Read, Write, Grep, Glob
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 
 # 家庭健康分析技能

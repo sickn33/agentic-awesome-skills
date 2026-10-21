@@ -5,7 +5,7 @@ description: Django performance code review. Use when asked to "review Django pe
 allowed-tools: Read, Grep, Glob, Bash, Task
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 
 # Django Performance Review

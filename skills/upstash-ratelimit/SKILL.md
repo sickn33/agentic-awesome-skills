@@ -87,8 +87,10 @@ const ratelimit = new Ratelimit({
 });
 
 export async function middleware(request: NextRequest) {
-  const ip = request.headers.get("x-forwarded-for") ?? "anonymous";
-  const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+  // Conservative shared bucket until an authenticated principal or a platform-verified
+  // client address adapter is integrated. Never trust a caller-supplied forwarding header.
+  const identifier = "anonymous-global";
+  const { success, limit, remaining, reset } = await ratelimit.limit(identifier);
 
   if (!success) {
     return new NextResponse("Too Many Requests", {
@@ -106,6 +108,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = { matcher: "/api/:path*" };
 ```
+
+The shared anonymous bucket protects against spoofed identifiers but shares quota among callers. For per-user limits, use a server-verified session identity; for per-IP limits, use the deployment platform's trusted address API after verifying proxy overwrite and direct-origin restrictions.
 
 ### Example 2: Token bucket with per-plan limits
 

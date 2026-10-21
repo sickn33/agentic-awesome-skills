@@ -6,7 +6,7 @@ metadata:
     skill-author: K-Dense Inc.
 risk: critical
 source: "https://github.com/biopython/biopython"
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 ## Bundled upstream support
 

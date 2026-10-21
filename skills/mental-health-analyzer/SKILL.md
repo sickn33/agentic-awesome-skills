@@ -4,7 +4,7 @@ description: 分析心理健康数据、识别心理模式、评估心理健康�
 allowed-tools: Read, Grep, Glob, Write, Edit
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 
 # 心理健康分析技能

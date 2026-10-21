@@ -139,9 +139,10 @@ The output gives `status` and the dataset ID at `storage.defaultDatasetId`. Smal
 ### Step 4 — Fetch and report
 
 ```bash
+EXPORT_DIR="$(mktemp -d)" || exit 1
 apify datasets get-items "DATASET_ID" --format json \
   --user-agent apify-awesome-skills/apify-tiktok-scraper \
-  2>/dev/null > /tmp/tiktok.json
+  2>/dev/null > "$EXPORT_DIR/tiktok.json"
 ```
 
 Every row has `dataType`:

@@ -127,3 +127,5 @@ Adapted from [stas4000/tastegate](https://github.com/stas4000/tastegate) (MIT). 
 rules derive from taste-skill (MIT) and the craft floor from impeccable (Apache-2.0); both
 notices ship here in [references/THIRD_PARTY_NOTICES.md](references/THIRD_PARTY_NOTICES.md) with their
 full licenses under `references/`.
+
+Output must be a new directory with a non-symlink parent; existing output directories are rejected. Choose a fresh `--out` path for each run.

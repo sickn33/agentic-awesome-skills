@@ -25,7 +25,8 @@ Design and implement Azure network infrastructure including VNets, subnets, NSGs
 
 ```bash
 # Install Azure CLI
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+# Prerequisite: organization-approved Azure CLI installed from a verified signed package.
+az version
 
 # Login and set subscription
 az login

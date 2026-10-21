@@ -131,7 +131,7 @@ def port(source, destination=None, dry_run=True):
         for line in difflib.unified_diff(original.decode('utf-8').splitlines(True),
                                         files[Path('SKILL.md')].decode('utf-8').splitlines(True),
                                         fromfile=name + '/original', tofile=name + '/preview'):
-            sys.stdout.write(line)
+            sys.stdout.write(terminal_safe(line))
     if dry_run:
         print('Preview only. No files written; support bytes are preserved.')
         return bundles
@@ -168,6 +168,15 @@ def main(argv=None):
         return 2
     return 0
 
+
+
+def terminal_safe(value):
+    import unicodedata
+    return ''.join(f"\\u{ord(c):04x}" if unicodedata.category(c) in {'Cc', 'Cf'} and c not in '\n\t' else c for c in str(value))
+
+_raw_print = print
+def print(*values, **kwargs):
+    _raw_print(*(terminal_safe(value) for value in values), **kwargs)
 
 if __name__ == '__main__':
     raise SystemExit(main())

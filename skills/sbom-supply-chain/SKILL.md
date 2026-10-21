@@ -242,7 +242,8 @@ cosign attest --predicate provenance.json \
 
 ## CI/CD Pipeline Integration
 
-```yaml
+```text
+NON-EXECUTABLE CI DESIGN: before adoption, use least-privilege jobs, pin every action to a reviewed full SHA, and provision verified fixed-version tools in a digest-pinned runner image. Never expose credentials during tool provisioning.
 # .github/workflows/sbom-supply-chain.yml
 name: Build with SBOM and Signing
 on:
@@ -279,8 +280,8 @@ jobs:
 
       - name: Install tools
         run: |
-          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh -o /tmp/install-syft.sh && sh /tmp/install-syft.sh && rm /tmp/install-syft.sh -s -- -b /usr/local/bin
-          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh -o /tmp/install-grype.sh && sh /tmp/install-grype.sh && rm /tmp/install-grype.sh -s -- -b /usr/local/bin
+# Tool prerequisite: use a verified preinstalled binary; no network installer runs here.
+# Tool prerequisite: use a verified preinstalled binary; no network installer runs here.
 
       - name: Generate SBOM
         run: |

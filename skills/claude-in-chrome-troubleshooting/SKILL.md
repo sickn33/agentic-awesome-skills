@@ -3,7 +3,7 @@ name: claude-in-chrome-troubleshooting
 description: Diagnose and fix Claude in Chrome MCP extension connectivity issues. Use when mcp__claude-in-chrome__* tools fail, return "Browser extension is not connected", or behave erratically.
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 
 # Claude in Chrome MCP Troubleshooting

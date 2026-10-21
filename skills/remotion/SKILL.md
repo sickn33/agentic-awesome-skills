@@ -10,7 +10,7 @@ allowed-tools:
   - "web_fetch"
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 
 # Stitch to Remotion Walkthrough Videos

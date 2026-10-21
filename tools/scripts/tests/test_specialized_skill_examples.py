@@ -8,11 +8,13 @@ import sqlite3
 import unittest
 from pathlib import Path
 
+from fixtures.reviewed_examples import reviewed_source
+
 ROOT = Path(__file__).resolve().parents[3]
 
 
 def example_definitions():
-    text = (ROOT / 'skills/embedding-strategies/SKILL.md').read_text()
+    text = reviewed_source('skills/embedding-strategies/SKILL.md')
     selected = []
     for block in re.findall(r'```python\n(.*?)```', text, re.S):
         tree = ast.parse(block)
@@ -82,7 +84,7 @@ class Examples(unittest.TestCase):
         self.assertEqual(db.execute(queries['growth']).fetchall(), [(0,0.0,None),(1,100.0,None),(2,150.0,50.0)])
 
     def test_llm_agreement_ranges_and_zero_baseline_regression(self):
-        source = (ROOT / 'skills/llm-evaluation/SKILL.md').read_text()
+        source = reviewed_source('skills/llm-evaluation/SKILL.md')
         definitions = []
         for block in re.findall(r'```python\n(.*?)```', source, re.S):
             definitions.extend(node for node in ast.parse(block).body
@@ -113,7 +115,7 @@ class Examples(unittest.TestCase):
                 self.assertEqual(list(Path(directory).iterdir()), [])
 
     def test_azure_hook_requires_all_resource_inputs_before_role_mutation(self):
-        source = (ROOT / 'skills/azd-deployment/SKILL.md').read_text()
+        source = reviewed_source('skills/azd-deployment/SKILL.md')
         section = source.split('### Post-Provision RBAC Assignment', 1)[1].split('## Common Commands', 1)[0]
         import yaml
         hook = yaml.safe_load(re.search(r'```yaml\n(.*?)```', section, re.S).group(1))['hooks']['postprovision']['run']

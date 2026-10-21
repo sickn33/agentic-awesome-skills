@@ -24,7 +24,7 @@ BUILTINS = {
     "linkedin_url",
 }
 PRIVATE_FIELDS = {"email", "phone"}
-TOKEN = re.compile(r"{{\s*([^{}]+?)\s*}}")
+TOKEN = re.compile(r"{{([^{}]*)}}")
 ALLOWED_TOOLS = {
     "get_workspace_context",
     "get_flow",

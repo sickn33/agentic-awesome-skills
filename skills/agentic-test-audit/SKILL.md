@@ -44,7 +44,7 @@ to run on every change, and which tests cost time without adding detection.
 ### Runner
 
 ```bash
-AV='uvx --from git+https://github.com/timini/agentic-verification@v0.3.0#subdirectory=runner agentic-verification'
+AV='uvx --from git+https://github.com/timini/agentic-verification@07608b3b9e4e359bc0b93b3eca94bb78d67e369e#subdirectory=runner agentic-verification'
 $AV quick|deep <path> [--budget-minutes N]
 $AV prune-check <path> --tests-file <file> --from-run <run-dir>
 $AV replay --run <run-dir> --mutant <id>
@@ -114,7 +114,7 @@ If the run is partial (budget or interruption), say so first and explain which s
 ### Example 1: Quick audit
 
 ```bash
-AV='uvx --from git+https://github.com/timini/agentic-verification@v0.3.0#subdirectory=runner agentic-verification'
+AV='uvx --from git+https://github.com/timini/agentic-verification@07608b3b9e4e359bc0b93b3eca94bb78d67e369e#subdirectory=runner agentic-verification'
 $AV quick . --budget-minutes 5
 ```
 

@@ -3,7 +3,7 @@ name: odoo-ecommerce-configurator
 description: "Expert guide for Odoo eCommerce and Website: product catalog, payment providers, shipping methods, SEO, and order-to-fulfillment workflow."
 risk: safe
 source: "self"
-date_added: "2026-09-04"
+date_added: "2026-03-04"
 ---
 
 # Odoo eCommerce Configurator

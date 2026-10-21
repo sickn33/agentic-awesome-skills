@@ -127,12 +127,18 @@ def discovery_filters(p: dict[str, Any]) -> str:
     return "&&".join(parts)
 
 
+def display_text(value):
+    import unicodedata
+    text = ''.join(' ' if unicodedata.category(c).startswith('C') or c in '|`<>[]' else c for c in str(value or ''))
+    return ' '.join(text.split())[:120]
+
+
 def reject_reason(row: dict[str, Any], p: dict[str, Any]) -> str | None:
     fee = row.get("fee_tvl")
     vol = row.get("volume")
     if (fee is None or fee <= 0) and (vol is None or vol <= 0):
         return "dead pool (zero volume and fee/TVL)"
-    if p["hard_warnings"] and row.get("critical"):
+    if row.get("critical"):
         return "critical token warning"
     bin_step = row.get("bin_step")
     tvl = row.get("tvl")
@@ -177,7 +183,7 @@ def from_discovery(raw: dict[str, Any], timeframe: str) -> dict[str, Any]:
     )
     bin_step = num((raw.get("dlmm_params") or {}).get("bin_step"))
     return {
-        "name": raw.get("name"),
+        "name": display_text(raw.get("name")),
         "pool": raw.get("pool_address"),
         "bin_step": bin_step,
         "fee_tvl": num(raw.get("fee_active_tvl_ratio")),
@@ -200,7 +206,7 @@ def from_dlmm(raw: dict[str, Any], timeframe: str) -> dict[str, Any]:
     token_x = raw.get("token_x") or {}
     cfg = raw.get("pool_config") or {}
     return {
-        "name": raw.get("name"),
+        "name": display_text(raw.get("name")),
         "pool": raw.get("address"),
         "bin_step": num(cfg.get("bin_step")),
         "fee_tvl": bucket(raw.get("fee_tvl_ratio"), timeframe),

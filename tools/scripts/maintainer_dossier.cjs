@@ -43,7 +43,9 @@ function collectSkillTrees(ref, records, run, readBlob = oid => {
     });
   const roots = [...new Set(records.flatMap(record => record.status === "C" ? [record.new_path] : [record.old_path, record.new_path])
     .filter(file => /^skills\/[^/]+\//.test(file || ""))
-    .map(file => file.split("/").slice(0,2).join("/")))];
+    .flatMap(file => files.filter(entry => entry.path.endsWith("/SKILL.md"))
+      .map(entry => entry.path.slice(0, -9))
+      .filter(root => file.startsWith(root + "/"))))];
   return roots.filter(root => files.some(file => file.path === root + "/SKILL.md")).map((root) => ({
     root,
     tree: run("git", ["rev-parse", `${ref}:${root}`]).trim(),

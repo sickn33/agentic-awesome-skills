@@ -80,19 +80,9 @@ grep -ioE '<script[^>]+src="[^"]+"'   body.html   # enumerate JS bundles
 Secrets hide in `data-*` attributes, `<meta>` tags, `hidden` `<div>`s, and
 `<!-- comments -->` at least as often as in scripts.
 
-### Step 3: Pull every JavaScript bundle and scan it
+### Step 3: Validate discovered scripts before fetching
 
-```bash
-# extract script srcs, resolve relative paths against $BASE, fetch and scan
-grep -ioE 'src="[^"]+\.js"' body.html | sed -E 's/^src="//; s/"$//' \
- | while read -r p; do
-     u="$p"; case "$p" in http*) ;; /*) u="$BASE$p";; *) u="$BASE/$p";; esac
-     f="js_$(echo "$p" | tr '/:' '__')"
-     curl -s "$u" -o "$f" && echo "== $u =="
-   done
-grep -rinE "secret|password|api[_-]?key|token|bearer|sk_(live|test)|pk_(live|test)|\
-whsec_|akia|aiza|jwt|signing[_-]?key|admin[_-]?token|mongodb|redis://" js_* 2>/dev/null
-```
+Do not automatically fetch discovered URLs. Extract candidates as inert data with an HTML parser and URL parser, resolve against the authorized base, and reject any scheme other than HTTPS, embedded credentials, unexpected ports or origins. Before a request, verify all resolved destination addresses are public (not loopback, link-local, private, multicast, reserved or unspecified), pin the approved address for that connection to prevent DNS rebinding, and disable redirects. A redirect or additional origin requires separate scope validation. Use a trusted network client that enforces these checks, or stop at an inventory of candidate scripts. Never follow `require`/`import` paths or sourcemaps without the same validation. Store responses privately and redact secret values before terminal or model output.
 
 Also scan any sourcemaps (`*.js.map`) — they can rebuild original source with
 comments intact.

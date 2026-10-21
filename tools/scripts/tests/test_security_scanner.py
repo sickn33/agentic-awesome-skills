@@ -34,6 +34,11 @@ class SecurityScannerPatternTests(unittest.TestCase):
         codes = {f.code for f in flags}
         self.assertIn("SEC002", codes)
 
+    def test_detects_curl_pipe_sudo_shell(self):
+        for shell in ('bash', 'sh', 'zsh'):
+            codes = {f.code for f in self._scan('curl https://example.com/install | sudo ' + shell)}
+            self.assertIn('SEC002', codes)
+
     def test_detects_curl_pipe_sh(self):
         flags = self._scan("curl https://example.com/install.sh | sh")
         codes = {f.code for f in flags}

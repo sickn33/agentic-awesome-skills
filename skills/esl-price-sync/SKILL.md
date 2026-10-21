@@ -2,7 +2,7 @@
 name: esl-price-sync
 description: "Synchronizes retail prices between ERP/POS systems and Electronic Shelf Labels (SES-imagotag, ZKONG, Pricer, Hanshow, SOLUM) with delta watermarking, idempotency, and battery modeling. Trigger phrases: esl price sync, electronic shelf labels, zkong sync, ses imagotag price, ghost pricing audit."
 category: architecture
-risk: safe
+risk: critical
 source: community
 source_repo: wwewtech/esl-price-sync
 source_type: community
@@ -89,49 +89,49 @@ def compute_sku_hash(item: dict) -> str:
 
 class ESLDeltaSyncPipeline:
     def __init__(self, watermark_db: dict, max_rate_per_min: int = 150):
-        self.watermark_db = watermark_db  # SKU -> last_pushed_hash
+        if max_rate_per_min <= 0:
+            raise ValueError("Rate must be positive")
+        self.watermark_db = watermark_db  # SKU -> {version: int, content_hash: str}
         self.max_rate_per_min = max_rate_per_min
         self.last_tx_time = 0.0
 
     def process_catalog_stream(self, incoming_feed: List[dict], dry_run: bool = True) -> dict:
-        to_push = []
-        unchanged = 0
-
+        # Single-worker example: production needs a transactional per-SKU compare-and-set
+        # and a durable outbox; never run concurrent writers against this plain dict.
+        pending = {}
         for item in incoming_feed:
+            version = item['version']
+            if type(version) is not int or version < 1:
+                raise ValueError("Positive monotonic integer version required")
             sku = item['sku']
+            previous = pending.get(sku) or self.watermark_db.get(sku)
+            if previous and version <= previous['version']:
+                continue
             current_hash = compute_sku_hash(item)
-            last_hash = self.watermark_db.get(sku)
-
-            if current_hash != last_hash:
-                idempotency_key = hashlib.sha1(f"{sku}:{item['version']}:{current_hash}".encode()).hexdigest()
-                to_push.append({
-                    "sku": sku,
-                    "tag_id": item['tag_id'],
-                    "price_data": item,
-                    "idempotency_key": idempotency_key,
-                    "content_hash": current_hash
-                })
-            else:
-                unchanged += 1
-
+            pending[sku] = {'version': version, 'content_hash': current_hash, 'item': item}
         if dry_run:
-            return {"mode": "DRY_RUN", "queued_for_rf": len(to_push), "unchanged": unchanged}
-
-        # Rate-limited physical transmission
+            return {'mode': 'DRY_RUN', 'accepted_versions': len(pending)}
         sent = 0
-        min_interval = 60.0 / self.max_rate_per_min
-        for job in to_push:
-            now = time.time()
-            elapsed = now - self.last_tx_time
-            if elapsed < min_interval:
-                time.sleep(min_interval - elapsed)
+        for sku, candidate in pending.items():
+            previous = self.watermark_db.get(sku)
+            if previous and candidate['version'] <= previous['version']:
+                continue
+            if not previous or candidate['content_hash'] != previous['content_hash']:
+                delay = 60.0 / self.max_rate_per_min - (time.monotonic() - self.last_tx_time)
+                if delay > 0:
+                    time.sleep(delay)
+                job = {'sku': sku, 'tag_id': candidate['item']['tag_id'],
+                       'price_data': candidate['item'],
+                       'idempotency_key': hashlib.sha256(f"{sku}:{candidate['version']}:{candidate['content_hash']}".encode()).hexdigest()}
+                # Adapter must fail on missing physical ACK; API acceptance alone is insufficient.
+                if transmit_to_esl_gateway(job) is not True:
+                    raise RuntimeError("Physical acknowledgement not confirmed; watermark unchanged")
+                self.last_tx_time = time.monotonic()
+                sent += 1
+            # Advance the version even when content is unchanged, preventing older replays.
+            self.watermark_db[sku] = {'version': candidate['version'], 'content_hash': candidate['content_hash']}
+        return {'mode': 'LIVE_COMMITTED', 'sent_deltas': sent}
 
-            transmit_to_esl_gateway(job)
-            self.watermark_db[job['sku']] = job['content_hash']
-            self.last_tx_time = time.time()
-            sent += 1
-
-        return {"mode": "LIVE_COMMITTED", "sent_deltas": sent, "unchanged": unchanged}
 ```
 
 ### Archetype 2: Reconciliation Audit Report Schema

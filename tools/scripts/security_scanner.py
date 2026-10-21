@@ -42,7 +42,7 @@ SECURITY_PATTERNS: list[SecurityPattern] = [
     ),
     SecurityPattern(
         code="SEC002",
-        regex=r"curl\b[^\n]*\|\s*(?:bash|sh|zsh)|(?:bash|sh|zsh)\s+<\s*\(\s*curl\b",
+        regex=r"curl\b[^\n]*\|\s*(?:sudo\s+)?(?:bash|sh|zsh)|(?:bash|sh|zsh)\s+<\s*\(\s*curl\b",
         severity="error",
         description="Remote code execution: curl piped to shell",
         rationale="Pipes untrusted remote content directly into a shell without integrity verification.",

@@ -614,5 +614,14 @@ def main() -> int:
     return 0
 
 
+
+def terminal_safe(value):
+    import unicodedata
+    return ''.join(f"\\u{ord(c):04x}" if unicodedata.category(c) in {'Cc', 'Cf'} and c not in '\n\t' else c for c in str(value))
+
+_raw_print = print
+def print(*values, **kwargs):
+    _raw_print(*(terminal_safe(value) for value in values), **kwargs)
+
 if __name__ == "__main__":
     raise SystemExit(main())

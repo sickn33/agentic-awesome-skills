@@ -3,7 +3,7 @@ name: agentmail
 description: Email infrastructure for AI agents. Create accounts, send/receive emails, manage webhooks, and inspect billing balance via the AgentMail API.
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-03"
 ---
 
 # AgentMail — Email for AI Agents

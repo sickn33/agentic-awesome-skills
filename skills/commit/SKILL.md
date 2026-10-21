@@ -3,7 +3,7 @@ name: commit
 description: "Prepare or create commits using Sentry-style message conventions when the repository requests them; inspect staged scope and honor its protected branch workflow."
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-01-30"
 ---
 
 # Sentry Commit Messages

@@ -28,7 +28,7 @@ SolidPing (https://www.solidping.io) is an open source (AGPL-3.0) uptime monitor
 
 If the `solidping` tools are missing, tell the user:
 - Claude Code: `claude mcp add --transport http solidping https://solidping.io/api/v1/mcp`, then `/mcp` → solidping → Authenticate (OAuth in the browser)
-- Claude Code plugin (bundles a skill and the server): `/plugin marketplace add fclairamb/solidping-plugin`, then `/plugin install solidping@solidping`
+- Optional plugin: use an already reviewed local plugin. If unavailable, stop and report the missing prerequisite; this skill does not install external plugins.
 - Codex: `codex mcp add solidping --url https://solidping.io/api/v1/mcp`, then `codex mcp login solidping`
 - Other MCP clients: add a Streamable HTTP server at `https://solidping.io/api/v1/mcp` and sign in with OAuth. Self-hosted instances use `https://<their-host>/api/v1/mcp`.
 

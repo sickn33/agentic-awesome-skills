@@ -55,20 +55,21 @@ milliseconds to run.
 
 ### Step 1: Install from the canonical repo
 
-In Claude Code, as a plugin (both skills, background updates):
+In Claude Code, as a plugin (both skills, explicitly reviewed updates):
 
-```text
-/plugin marketplace add glukicov/slideops
-/plugin install slideops@slideops
-```
+## External tool prerequisite
+
+Use only an already installed tool whose exact version, complete dependency tree and integrity have been reviewed. This skill does not bootstrap tools or activate external plugins. If the prerequisite is missing, stop that executable path and report it; continue with static analysis when possible. A separate installation task must pin immutable artifacts, stage them outside active agent directories with lifecycle scripts disabled, inspect every bundled file and executable entry point (including tests and hooks), and obtain approval before activation or host configuration changes. Do not substitute a same-named workspace script or fetch a moving branch.
+
+
 
 Or for Codex CLI, Copilot CLI, and OpenCode, one installer covers all of them:
 
-```bash
-git clone https://github.com/glukicov/slideops && cd slideops
-git checkout ba43e89bc7936649be36a1796a62203f704f8c60   # the v1.0.0 release commit
-./install.sh
-```
+## External tool prerequisite
+
+Use only an already installed tool whose exact version, complete dependency tree and integrity have been reviewed. This skill does not bootstrap tools or activate external plugins. If the prerequisite is missing, stop that executable path and report it; continue with static analysis when possible. A separate installation task must pin immutable artifacts, stage them outside active agent directories with lifecycle scripts disabled, inspect every bundled file and executable entry point (including tests and hooks), and obtain approval before activation or host configuration changes. Do not substitute a same-named workspace script or fetch a moving branch.
+
+
 
 The checkout pins the exact commit this catalog copy froze at, which is what a reader
 can verify independently. (The canonical repo also blocks retargeting of `v*` tags with

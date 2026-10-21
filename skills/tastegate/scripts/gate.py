@@ -315,7 +315,7 @@ def run(target: str, out_dir: Path, wait_ms: int = 900) -> dict:
     from playwright.sync_api import sync_playwright
 
     url = target_url(target)
-    out_dir.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents=False, mode=0o700, exist_ok=False)
     report = {"target": target, "url": url, "findings": [], "screenshots": {}, "console_errors": []}
     with sync_playwright() as pw:
         browser = pw.chromium.launch()

@@ -6,7 +6,7 @@
  */
 import { execFileSync } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync, renameSync } from 'node:fs'
 import http from 'node:http'
 import { createRequire } from 'node:module'
 import path from 'node:path'
@@ -335,7 +335,9 @@ const main = async () => {
       electronPid,
       startedAt: new Date().toISOString()
     }
-    writeFileSync(statePath(), JSON.stringify(state, null, 2), { mode: 0o600 })
+    const temporaryState = `${statePath()}.${randomBytes(16).toString('hex')}`
+    writeFileSync(temporaryState, JSON.stringify(state, null, 2), { mode: 0o600, flag: 'wx' })
+    renameSync(temporaryState, statePath())
     log(`Listening on 127.0.0.1:${state.port}`)
   })
 

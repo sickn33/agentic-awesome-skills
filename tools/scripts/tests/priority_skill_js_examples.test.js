@@ -2,13 +2,15 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const fixtures = require('./fixtures/reviewed_examples/javascript.cjs');
 const root = path.resolve(__dirname, '../../..');
 function example(skill, symbol, context = {}) {
   const source = fs.readFileSync(path.join(root, 'skills', skill, 'SKILL.md'), 'utf8');
-  const blocks = [...source.matchAll(/```javascript\n([\s\S]*?)\n```/g)].map(match => match[1]);
+  assert.equal(source, fixtures[skill], 'Changed documentation requires fixture review before evaluation');
+  const blocks = [...fixtures[skill].matchAll(/```javascript\n([\s\S]*?)\n```/g)].map(match => match[1]);
   const block = blocks.find(code => code.includes(`function ${symbol}(`));
   assert.ok(block, `published example ${symbol} missing`);
-  return vm.runInNewContext(`${block}\n${symbol}`, context);
+  return vm.runInNewContext(`${block}\n${symbol}`, context, { timeout: 1000 });
 }
 const interval = example('agent-evaluation', 'wilson95');
 assert.ok(Math.abs(interval(10, 10)[0] - 0.7224672) < 0.000001);

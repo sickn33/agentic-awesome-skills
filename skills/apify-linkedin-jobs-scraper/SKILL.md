@@ -116,9 +116,10 @@ The JSON output gives `status` and the dataset ID at `storage.defaultDatasetId`.
 ### Step 4 — Fetch and report
 
 ```bash
+EXPORT_DIR="$(mktemp -d)" || exit 1
 apify datasets get-items "DATASET_ID" --format json \
   --user-agent apify-awesome-skills/apify-linkedin-jobs-scraper \
-  2>/dev/null > /tmp/linkedin-jobs.json
+  2>/dev/null > "$EXPORT_DIR/linkedin-jobs.json"
 ```
 
 Each row has `dataType: "job"`. The fields you use most:

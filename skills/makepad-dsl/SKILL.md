@@ -7,7 +7,7 @@ description: |
   makepad DSL 语法, makepad 继承, makepad 原型, 如何定义 makepad 组件
 risk: safe
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 ## Supporting material availability
 

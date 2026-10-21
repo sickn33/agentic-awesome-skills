@@ -10,6 +10,15 @@ import pathlib
 # python -m http.server sends Last-Modified without Cache-Control, so browsers keep
 # serving a stale theme-config.js after an edit and screenshots measure the old field.
 class NoStoreHandler(http.server.SimpleHTTPRequestHandler):
+    def send_head(self):
+        root = pathlib.Path(self.directory).resolve()
+        target = pathlib.Path(self.translate_path(self.path))
+        if (not target.resolve().is_relative_to(root)
+                or any(p.is_symlink() for p in [target, *target.parents] if p != root)):
+            self.send_error(403, "Symlink resources are not served")
+            return None
+        return super().send_head()
+
     def end_headers(self):
         self.send_header("Cache-Control", "no-store")
         super().end_headers()

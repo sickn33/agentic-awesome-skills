@@ -166,7 +166,7 @@ If VLD is unavailable, the analyzer falls back to OPcache debug output:
 
 ```bash
 # Manually test OPcache output
-php -d opcache.enable_cli=1 -d opcache.opt_debug_level=0x10000 crypto.php 2>&1
+# No OPcache fallback: these flags execute the target. Stop if VLD with vld.execute=0 is unavailable.
 ```
 
 OPcache provides less detailed output than VLD but still detects division/modulo opcodes.

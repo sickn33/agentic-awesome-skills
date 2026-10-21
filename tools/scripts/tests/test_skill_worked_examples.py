@@ -8,6 +8,8 @@ import sys
 import tempfile
 import unittest
 
+from fixtures.reviewed_examples import reviewed_source
+
 ROOT = Path(__file__).resolve().parents[3]
 LINT = ROOT / 'skills/lint-and-validate/scripts'
 PLAYBOOK = ROOT / 'skills/sql-optimization-patterns/resources/implementation-playbook.md'
@@ -53,7 +55,7 @@ class WorkedExamples(unittest.TestCase):
             self.assertEqual(len(checker.check_python_coverage(root)['errors']), 1)
 
     def test_published_batch_loading_preserves_values_and_empty_case(self):
-        code = next(code for code in re.findall(r'```python\n(.*?)```', PLAYBOOK.read_text(), re.S) if '# batch-loading-example' in code)
+        code = next(code for code in re.findall(r'```python\n(.*?)```', reviewed_source('skills/sql-optimization-patterns/resources/implementation-playbook.md'), re.S) if '# batch-loading-example' in code)
         namespace = {}
         exec(compile(code, str(PLAYBOOK), 'exec'), namespace)
         with sqlite3.connect(':memory:') as connection:
@@ -66,14 +68,14 @@ class WorkedExamples(unittest.TestCase):
                 load(connection, list(range(501)))
 
     def test_published_cursor_handles_equal_timestamps(self):
-        text = PLAYBOOK.read_text()
+        text = reviewed_source('skills/sql-optimization-patterns/resources/implementation-playbook.md')
         query = re.search(r'SELECT \* FROM users\nWHERE \(created_at, id\).*?LIMIT 20;', text, re.S).group()
         with sqlite3.connect(':memory:') as connection:
             connection.executescript("CREATE TABLE users(id INTEGER, created_at TEXT); INSERT INTO users VALUES (12346,'2024-01-15 10:30:00'),(12345,'2024-01-15 10:30:00'),(12344,'2024-01-15 10:30:00'),(1,'2024-01-14 10:30:00');")
             self.assertEqual([row[0] for row in connection.execute(query)], [12344, 1])
 
     def test_published_join_aggregation_preserves_zero_and_multiple_orders(self):
-        text = PLAYBOOK.read_text()
+        text = reviewed_source('skills/sql-optimization-patterns/resources/implementation-playbook.md')
         correlated = re.search(r'SELECT u.name, u.email,\n    \(SELECT COUNT\(\*\).*?FROM users u;', text, re.S).group()
         joined = re.search(r'SELECT u.name, u.email, COUNT\(o.id\).*?GROUP BY u.id, u.name, u.email;', text, re.S).group()
         with sqlite3.connect(':memory:') as connection:

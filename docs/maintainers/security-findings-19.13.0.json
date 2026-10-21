@@ -1,0 +1,1018 @@
+{
+  "source": "user-provided security-findings.csv, treated as untrusted evidence",
+  "baseline": "32b8ad933cfb84065a4ce5304c2557c9e39b25fa",
+  "findings": [
+    {
+      "findingId": "commit:a902fb57dff08191b1d13652850ec18a",
+      "title": "SQL example test executes untrusted Markdown as Python",
+      "severity": "high",
+      "status": "corrected",
+      "canonicalPaths": [
+        ".github/workflows/ci.yml",
+        "tools/scripts/tests/run-test-suite.js",
+        "tools/scripts/tests/test_skill_worked_examples.py"
+      ],
+      "evidence": "Canonical correction: tools/scripts/tests/test_skill_worked_examples.py"
+    },
+    {
+      "findingId": "commit:8c43fc1d9044819189516fa0881370c9",
+      "title": "Unpinned Unpaid Intern bootstrap bypasses content review",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/unpaid-intern/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/unpaid-intern/SKILL.md"
+    },
+    {
+      "findingId": "commit:0626e0a8d10c8191afdd7d662ff80a69",
+      "title": "SlideOps citations disclose files outside the repository",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/slideops/references/automation.md",
+        "skills/slideops/scripts/check.py"
+      ],
+      "evidence": "Canonical correction: skills/slideops/scripts/check.py"
+    },
+    {
+      "findingId": "commit:f9f5ba4160888191bd0c97cb78effee8",
+      "title": "SlideOps citations disclose files outside the selected repository",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/slideops/references/automation.md",
+        "skills/slideops/scripts/check.py"
+      ],
+      "evidence": "Canonical correction: skills/slideops/scripts/check.py"
+    },
+    {
+      "findingId": "commit:ba71de084b448191a775263b25a8bcb8",
+      "title": "PHP opcode-inspection fallback executes the audited file",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/constant-time-analysis/SKILL.md",
+        "skills/constant-time-analysis/references/php.md"
+      ],
+      "evidence": "Canonical correction: skills/constant-time-analysis/SKILL.md, skills/constant-time-analysis/references/php.md"
+    },
+    {
+      "findingId": "commit:7475335854208191b583a2dd0eae7798",
+      "title": "REA diagnostics execute unpinned npm code before approval",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/reverse-engineer-anything/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/reverse-engineer-anything/SKILL.md"
+    },
+    {
+      "findingId": "commit:305cdb9096b08191a4bb6aac4c3de077",
+      "title": "Tastegate follows output symlinks and overwrites unrelated files",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/tastegate/scripts/gate.py"
+      ],
+      "evidence": "Canonical correction: skills/tastegate/scripts/gate.py"
+    },
+    {
+      "findingId": "commit:57e1df576dc4819184e0b35c94cce960",
+      "title": "Plugin skill installs unreviewed code from a moving Git branch",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/plugin-compatibility.json",
+        "skills/linkdigest-social-link-reader/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/plugin-compatibility.json, skills/linkdigest-social-link-reader/SKILL.md"
+    },
+    {
+      "findingId": "commit:791de7a2b8548191a0e238f552c245e7",
+      "title": "Court plugin initialization can overwrite files through symlinks",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/court/SKILL.md",
+        "skills/court/scripts/court.py"
+      ],
+      "evidence": "Canonical correction: skills/court/scripts/court.py"
+    },
+    {
+      "findingId": "commit:3ab59a1ac2b88191a11269452b398630",
+      "title": "Session monitor follows report symlinks outside the repository",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/cline-pilot/SKILL.md",
+        "skills/cline-pilot/scripts/session_report.py"
+      ],
+      "evidence": "Canonical correction: skills/cline-pilot/scripts/session_report.py"
+    },
+    {
+      "findingId": "commit:21d49c4dcc8481919c31c4002662e2f5",
+      "title": "Pre-created temp state file exposes the daemon control token",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/electron-drive-skill/scripts/daemon.mjs",
+        "skills/electron-drive-skill/scripts/drive.mjs",
+        "skills/electron-drive-skill/scripts/lib.mjs"
+      ],
+      "evidence": "Canonical correction: skills/electron-drive-skill/scripts/daemon.mjs, skills/electron-drive-skill/scripts/lib.mjs"
+    },
+    {
+      "findingId": "commit:96ebfe03a9848191a405fc6c2d3ab5fd",
+      "title": "Generated info endpoint follows destination symlinks",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "tools/scripts/setup_web.js"
+      ],
+      "evidence": "Canonical correction: tools/scripts/setup_web.js"
+    },
+    {
+      "findingId": "commit:b8c9e74624708191bf905e5a6216eef0",
+      "title": "Unpinned npx setup enables supply-chain code execution",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/testdriver-e2e-testing/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/testdriver-e2e-testing/SKILL.md"
+    },
+    {
+      "findingId": "commit:1efe4aa6b4f481919ab9dca00d1c200e",
+      "title": "Chat samples can indirectly prompt-inject the coding agent",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/chatexport-need-miner/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/chatexport-need-miner/SKILL.md"
+    },
+    {
+      "findingId": "commit:2b4ea6bc334c819187f503b97e427030",
+      "title": "Unpinned Hugging Face model code executes with user secrets",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/huggingface-community-evals/SKILL.md",
+        "skills/huggingface-community-evals/scripts/inspect_vllm_uv.py",
+        "skills/huggingface-community-evals/scripts/lighteval_vllm_uv.py"
+      ],
+      "evidence": "Canonical correction: skills/huggingface-community-evals/SKILL.md, skills/huggingface-community-evals/scripts/inspect_vllm_uv.py, skills/huggingface-community-evals/scripts/lighteval_vllm_uv.py"
+    },
+    {
+      "findingId": "commit:5374c65a4338819190cacbb36e5fe1f5",
+      "title": "Knowledge-point IDs allow arbitrary JSON file overwrite",
+      "severity": "medium",
+      "status": "already-corrected",
+      "canonicalPaths": [
+        "data/plugin-compatibility.json",
+        "skills/fact-check-x-unified/scripts/fact_check_x.py"
+      ],
+      "evidence": "build_requests already calls expected_request_ids before mkdir/write and rejects traversal, absolute and duplicate IDs."
+    },
+    {
+      "findingId": "commit:c84b128cad8c8191bc19998f5bcd5976",
+      "title": "Safe plugin skill executes an unpinned npm package",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/plugin-compatibility.json",
+        "skills/jev-use/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/plugin-compatibility.json, skills/jev-use/SKILL.md"
+    },
+    {
+      "findingId": "commit:2999288ad1748191aefe510b14143994",
+      "title": "Unpinned npx install exposes agents to supply-chain RCE",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/jev-use/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/jev-use/SKILL.md"
+    },
+    {
+      "findingId": "commit:7c945af14304819198a01c9e07a8acbe",
+      "title": "Loki recipe exposes logs to unauthenticated network users",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/loki-logging/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/loki-logging/SKILL.md"
+    },
+    {
+      "findingId": "commit:0b38501c3d2881918ca1699a4b8f8a82",
+      "title": "Plugin skill exposes PostgreSQL with a known superuser password",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/plugin-compatibility.json",
+        "skills/postgresql-devsec/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/plugin-compatibility.json, skills/postgresql-devsec/SKILL.md"
+    },
+    {
+      "findingId": "commit:860fdf9e62c081919a35b15aedbb9406",
+      "title": "Unpinned download overwrites an active Claude skill",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "docs/contributors/security-guardrails.md",
+        "skills/bug-bounty/SKILL.md",
+        "skills/bug-bounty/references/details.md"
+      ],
+      "evidence": "Canonical correction: skills/bug-bounty/references/details.md"
+    },
+    {
+      "findingId": "commit:54979fb3cfb4819181915fa6de1af551",
+      "title": "New skills execute mutable, unverified upstream tooling",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/aas-v1/skill-content.v1.ndjson",
+        "skills/bug-bounty/references/details.md",
+        "skills/hunt-deserialization/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/aas-v1/skill-content.v1.ndjson, skills/bug-bounty/references/details.md, skills/hunt-deserialization/SKILL.md"
+    },
+    {
+      "findingId": "commit:14e651e07a848191a437e9740877ba40",
+      "title": "Plugin skills execute mutable upstream installer code",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/plugin-compatibility.json",
+        "skills/container-scanning/SKILL.md",
+        "skills/dependency-scanning/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/plugin-compatibility.json, skills/container-scanning/SKILL.md, skills/dependency-scanning/SKILL.md"
+    },
+    {
+      "findingId": "commit:3dd8ab3aa7d08191870b5d043926bcaa",
+      "title": "PDF skill injects untrusted metadata into a shell command",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/plugin-compatibility.json",
+        "skills/geo-audit/SKILL.md",
+        "skills/geo-report-pdf/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/plugin-compatibility.json, skills/geo-report-pdf/SKILL.md"
+    },
+    {
+      "findingId": "commit:89318d02e5d48191829d4e6810edb160",
+      "title": "Brand name interpolation enables shell command injection",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/geo-brand-mentions/SKILL.md",
+        "skills/geo-brand-mentions/references/details.md"
+      ],
+      "evidence": "Canonical correction: skills/geo-brand-mentions/references/details.md"
+    },
+    {
+      "findingId": "commit:bdc71bef0d8881919c7c1b7d2c0691f0",
+      "title": "Plugin skill turns public Google Forms into an email relay",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/skills_index.json",
+        "skills/google-no-code/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/skills_index.json, skills/google-no-code/SKILL.md"
+    },
+    {
+      "findingId": "commit:04c5e0324e1881918e03dd8c39710ab3",
+      "title": "Blacklisted pools can receive a pass verdict",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/meteora-dlmm-pool-screening/SKILL.md",
+        "skills/meteora-dlmm-pool-screening/references/meteora-screener.md"
+      ],
+      "evidence": "Canonical correction: skills/meteora-dlmm-pool-screening/SKILL.md, skills/meteora-dlmm-pool-screening/references/meteora-screener.md"
+    },
+    {
+      "findingId": "commit:bd76895cf8888191bf1b115c70d45c99",
+      "title": "Untrusted web content can steer repository deployment",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/plugin-compatibility.json",
+        "skills/seo-aeo-orchestrator/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/plugin-compatibility.json, skills/seo-aeo-orchestrator/SKILL.md"
+    },
+    {
+      "findingId": "commit:dec1e9a14a408191879de68ed642e618",
+      "title": "Orchestrator runs untrusted project scripts without approval",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/seo-aeo-content-quality-auditor/SKILL.md",
+        "skills/seo-aeo-orchestrator/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/seo-aeo-content-quality-auditor/SKILL.md, skills/seo-aeo-orchestrator/SKILL.md"
+    },
+    {
+      "findingId": "commit:356c35c7a8e88191b254aab33e7c9229",
+      "title": "Unescaped video inputs can become shell commands",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/youtube-transcript-skills/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/youtube-transcript-skills/SKILL.md"
+    },
+    {
+      "findingId": "commit:677e64314368819198e9cc3499c64496",
+      "title": "Mutable install guidance permits supply-chain code execution",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/glasser/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/glasser/SKILL.md"
+    },
+    {
+      "findingId": "commit:6f1474655b808191a494533d135abbb5",
+      "title": "Skill fetches attacker-supplied URLs outside the audit scope",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/skills_index.json",
+        "skills/client-secret-exposure-audit/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/skills_index.json, skills/client-secret-exposure-audit/SKILL.md"
+    },
+    {
+      "findingId": "commit:90b1a2cbb9608191a455ed54c3710ae2",
+      "title": "Plugin executes attacker-controlled workspace scripts",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/plugin-compatibility.json",
+        "data/skills_index.json",
+        "skills/md2video-audio/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/plugin-compatibility.json, data/skills_index.json, skills/md2video-audio/SKILL.md"
+    },
+    {
+      "findingId": "commit:c91c46308c508191b34eea612dafd555",
+      "title": "Setup executes unreviewed code from the upstream checkout",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/agy-auto/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/agy-auto/SKILL.md"
+    },
+    {
+      "findingId": "commit:27ba69fb1e4c81918a5e45d6d38002ee",
+      "title": "Unbundled relative scripts enable workspace code execution",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/md2video-audio/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/md2video-audio/SKILL.md"
+    },
+    {
+      "findingId": "commit:e265ad4b1b408191bbca617f9b7320b9",
+      "title": "Untrusted script URLs can trigger internal-network requests",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/client-secret-exposure-audit/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/client-secret-exposure-audit/SKILL.md"
+    },
+    {
+      "findingId": "commit:3c27a0e057088191b5f2bd3b366df5bb",
+      "title": "Raw preview output permits terminal escape-sequence injection",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/skill-porter/scripts/port_skill.py"
+      ],
+      "evidence": "Canonical correction: skills/skill-porter/scripts/port_skill.py"
+    },
+    {
+      "findingId": "commit:ca93f63b8e1c819197f933527ec3df97",
+      "title": "Markdown example test executes attacker-controlled Python",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        ".github/workflows/ci.yml",
+        "package.json",
+        "tools/scripts/tests/run-test-suite.js",
+        "tools/scripts/tests/test_specialized_skill_examples.py"
+      ],
+      "evidence": "Canonical correction: package.json, tools/scripts/tests/test_specialized_skill_examples.py"
+    },
+    {
+      "findingId": "commit:1b79d16836b08191ac281bac27b84776",
+      "title": "Regression tests execute attacker-controlled skill Markdown",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        ".github/workflows/ci.yml",
+        "tools/scripts/tests/priority_skill_js_examples.test.js",
+        "tools/scripts/tests/run-test-suite.js",
+        "tools/scripts/tests/test_priority_skill_examples.py"
+      ],
+      "evidence": "Canonical correction: tools/scripts/tests/priority_skill_js_examples.test.js, tools/scripts/tests/test_priority_skill_examples.py"
+    },
+    {
+      "findingId": "commit:7fa725b5cbb081919c40b92dd6679a57",
+      "title": "Surface scan precedes execution of untrusted npm code",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "docs/contributors/security-guardrails.md",
+        "skills/orca-replay/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/orca-replay/SKILL.md"
+    },
+    {
+      "findingId": "commit:021c9d068660819181a252b51a3b7e7f",
+      "title": "SlideOps skill can run unpinned upstream installer",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/skills_index.json",
+        "skills/slideops/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/skills_index.json, skills/slideops/SKILL.md"
+    },
+    {
+      "findingId": "commit:2de29bc0a9a081919fe0fc90487087a7",
+      "title": "Unpinned external plugin install enables supply-chain takeover",
+      "severity": "medium",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/slideops/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/slideops/SKILL.md"
+    },
+    {
+      "findingId": "commit:cb218bb458d88191bcec95b61eab3095",
+      "title": "Non-finite color values cause an infinite loop in the checker",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/design-token-contrast/SKILL.md",
+        "skills/design-token-contrast/references/contraste-checker.md"
+      ],
+      "evidence": "Canonical correction: skills/design-token-contrast/references/contraste-checker.md"
+    },
+    {
+      "findingId": "commit:db6480e013288191969a0361fae3ff19",
+      "title": "Predictable temporary export path permits symlink clobbering",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/apify-linkedin-jobs-scraper/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/apify-linkedin-jobs-scraper/SKILL.md"
+    },
+    {
+      "findingId": "commit:994add9f5adc8191a26c16910d54a274",
+      "title": "Predictable temporary export path permits symlink clobbering",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/apify-facebook-ads-library-scraper/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/apify-facebook-ads-library-scraper/SKILL.md"
+    },
+    {
+      "findingId": "commit:d2fe984688f48191b1dd0b3b1226bcd9",
+      "title": "Predictable archive path permits attacker-controlled site uploads",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/deed-page/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/deed-page/SKILL.md"
+    },
+    {
+      "findingId": "commit:ccc5aa5e68a08191a95b945cbac63e24",
+      "title": "SolidPing setup activates an unreviewed, unpinned plugin",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/solidping/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/solidping/SKILL.md"
+    },
+    {
+      "findingId": "commit:abfb5e6c25f08191939b9f7ad5870f8a",
+      "title": "Malformed templates cause CPU denial of service in audit helper",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/outreachgenie-list-audit/scripts/audit.py"
+      ],
+      "evidence": "Canonical correction: skills/outreachgenie-list-audit/scripts/audit.py"
+    },
+    {
+      "findingId": "commit:4be17917d81c8191b87849021ad7c9d0",
+      "title": "Predictable temporary output permits local symlink file clobbering",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/apify-reddit-scraper/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/apify-reddit-scraper/SKILL.md"
+    },
+    {
+      "findingId": "commit:85a02c79781c8191a00c923e93e95e69",
+      "title": "Predictable temporary log permits symlink-based file clobbering",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/tokenleak/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/tokenleak/SKILL.md"
+    },
+    {
+      "findingId": "commit:9015611bbc388191b2d6b2256a46de4b",
+      "title": "Skill initialization follows symlinks and overwrites outside files",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/court/scripts/court.py",
+        "skills/shark/scripts/shark.py"
+      ],
+      "evidence": "Canonical correction: skills/court/scripts/court.py, skills/shark/scripts/shark.py"
+    },
+    {
+      "findingId": "commit:6f118e770dd0819198ae29a0ac857d96",
+      "title": "Mutable upstream install bypasses the skill review boundary",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/browser-extension-launch/SKILL.md",
+        "skills/browser-extension-launch/references/host-compatibility.md"
+      ],
+      "evidence": "Canonical correction: skills/browser-extension-launch/references/host-compatibility.md"
+    },
+    {
+      "findingId": "commit:c713459f07c481918b32644505846d21",
+      "title": "Preview server follows symlinks outside its document root",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/liuguang-banlan-ui/scripts/serve_preview.py"
+      ],
+      "evidence": "Canonical correction: skills/liuguang-banlan-ui/scripts/serve_preview.py"
+    },
+    {
+      "findingId": "commit:7eeb3fd00ed88191808130e6afae55cf",
+      "title": "Predictable temporary files permit symlink-based file clobbering",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/system-prompt-lookup/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/system-prompt-lookup/SKILL.md"
+    },
+    {
+      "findingId": "commit:3019d52462cc819198d0e1400892200a",
+      "title": "DALI state-mutating skill is mislabeled as safe",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/dali-short-address-commissioner/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/dali-short-address-commissioner/SKILL.md"
+    },
+    {
+      "findingId": "commit:b12f613f186c8191bba4879a89686449",
+      "title": "Chat messages can inject instructions into tool-enabled agents",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/plugin-compatibility.json",
+        "skills/chatexport-need-miner/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/plugin-compatibility.json, skills/chatexport-need-miner/SKILL.md"
+    },
+    {
+      "findingId": "commit:f7bb5c14fb4881918727ee30ac3efa69",
+      "title": "Unpinned install scripts run with release workflow credentials",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/sbom-supply-chain/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/sbom-supply-chain/SKILL.md"
+    },
+    {
+      "findingId": "commit:5290dc51a7208191a4f8a89c61749f16",
+      "title": "Unpinned Kyverno download enables CI supply-chain execution",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/policy-as-code/references/details.md"
+      ],
+      "evidence": "Canonical correction: skills/policy-as-code/references/details.md"
+    },
+    {
+      "findingId": "commit:6049d68a103c81918c7fd99560e7bf23",
+      "title": "Maintainer sweep emits untrusted terminal control sequences",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "tools/scripts/ci_pr_evidence.py",
+        "tools/scripts/maintainer_sweep.py"
+      ],
+      "evidence": "Canonical correction: tools/scripts/maintainer_sweep.py"
+    },
+    {
+      "findingId": "commit:75032b25bbe88191b31449bf8875d700",
+      "title": "Raw form answers become executable Google Sheets formulas",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/google-no-code/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/google-no-code/SKILL.md"
+    },
+    {
+      "findingId": "commit:a87fc4713c8c8191ab5166b04bd8d94a",
+      "title": "Unsanitized pool names enable indirect prompt injection",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/meteora-dlmm-pool-screening/SKILL.md",
+        "skills/meteora-dlmm-pool-screening/references/meteora-screener.md"
+      ],
+      "evidence": "Canonical correction: skills/meteora-dlmm-pool-screening/SKILL.md, skills/meteora-dlmm-pool-screening/references/meteora-screener.md"
+    },
+    {
+      "findingId": "commit:5ab6875481408191a82fb440a05495e7",
+      "title": "API keys are exposed in curl process arguments",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/youtube-transcript-skills/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/youtube-transcript-skills/SKILL.md"
+    },
+    {
+      "findingId": "commit:28f60ace83a88191a8411e769c372539",
+      "title": "Raw skill text enables terminal escape injection in previews",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/skill-porter/scripts/port_skill.py"
+      ],
+      "evidence": "Canonical correction: skills/skill-porter/scripts/port_skill.py"
+    },
+    {
+      "findingId": "commit:ff45413a4d5081919f8be600a9885a42",
+      "title": "Rate-limit skill trusts spoofable X-Forwarded-For",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/upstash-ratelimit/SKILL.md",
+        "skills_index.json"
+      ],
+      "evidence": "Canonical correction: skills/upstash-ratelimit/SKILL.md, skills_index.json"
+    },
+    {
+      "findingId": "commit:62375880db28819199d29f2836f749ee",
+      "title": "Rate limit example trusts spoofable X-Forwarded-For",
+      "severity": "low",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/upstash-ratelimit/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/upstash-ratelimit/SKILL.md"
+    },
+    {
+      "findingId": "commit:7fbe775fdcf4819194a6137bc91458c7",
+      "title": "Mutable npm execution bypasses external-source review",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "docs/contributors/security-guardrails.md",
+        "skills/agy-powerline/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/agy-powerline/SKILL.md"
+    },
+    {
+      "findingId": "commit:d2708a7f75a48191af3c9108576c050f",
+      "title": "Unpinned external installation skips required source review",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/unpaid-intern/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/unpaid-intern/SKILL.md"
+    },
+    {
+      "findingId": "commit:bf844bcb63cc81919fe35b7685f690b3",
+      "title": "Review dossiers omit supported nested skill trees",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "tools/scripts/maintainer_dossier.cjs"
+      ],
+      "evidence": "Canonical correction: tools/scripts/maintainer_dossier.cjs"
+    },
+    {
+      "findingId": "commit:c3db1ede6614819191719a4536da9c57",
+      "title": "Unpinned AltoRank plugin setup bypasses pre-activation review",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/altorank/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/altorank/SKILL.md"
+    },
+    {
+      "findingId": "commit:7d65d76b40f48191a03261deb6e89c07",
+      "title": "Runner commands do not enforce the documented commit pin",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/agentic-test-audit/SKILL.md",
+        "skills/agentic-verify/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/agentic-test-audit/SKILL.md, skills/agentic-verify/SKILL.md"
+    },
+    {
+      "findingId": "commit:718797a19bc8819184dfa53d2406b9b1",
+      "title": "Unpinned fallback installation bypasses reviewed skill content",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/obsess/references/integrations/cline/obsess.md",
+        "skills/obsess/references/integrations/codex/obsess.md",
+        "skills/obsess/references/integrations/copilot/obsess.prompt.md",
+        "skills/obsess/references/integrations/cursor/obsess.md",
+        "skills/obsess/references/integrations/gemini/obsess-command.md",
+        "skills/obsess/references/integrations/windsurf/obsess.md"
+      ],
+      "evidence": "Canonical correction: skills/obsess/references/integrations/cline/obsess.md, skills/obsess/references/integrations/codex/obsess.md, skills/obsess/references/integrations/copilot/obsess.prompt.md, skills/obsess/references/integrations/cursor/obsess.md, skills/obsess/references/integrations/gemini/obsess-command.md, skills/obsess/references/integrations/windsurf/obsess.md"
+    },
+    {
+      "findingId": "commit:e0c3d9ccba5c8191b532da035c2bb194",
+      "title": "Coupon fetchers allow terminal escape injection from API data",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/movie-coupon/scripts/fetch_coupons.py",
+        "skills/obtain-coupons-all-in-one/scripts/fetch_coupons.py",
+        "skills/parcel-coupon/scripts/fetch_coupons.py",
+        "skills/takeout-coupon/scripts/fetch_coupons.py",
+        "skills/trip-coupon/scripts/fetch_coupons.py"
+      ],
+      "evidence": "Canonical correction: skills/movie-coupon/scripts/fetch_coupons.py, skills/obtain-coupons-all-in-one/scripts/fetch_coupons.py, skills/parcel-coupon/scripts/fetch_coupons.py, skills/takeout-coupon/scripts/fetch_coupons.py, skills/trip-coupon/scripts/fetch_coupons.py"
+    },
+    {
+      "findingId": "commit:af931afa9e14819182de384eef77abeb",
+      "title": "REA plugin runs unreviewed npm code before setup approval",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/reverse-engineer-anything/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/reverse-engineer-anything/SKILL.md"
+    },
+    {
+      "findingId": "commit:de7778b421a08191ab3000babff5a832",
+      "title": "Unpinned SDK installation executes unreviewed upstream code",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/linkdigest-social-link-reader/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/linkdigest-social-link-reader/SKILL.md"
+    },
+    {
+      "findingId": "commit:b7d46cf021e08191805c550e1c7968f5",
+      "title": "AxonX setup installs unreviewed code from a moving Git branch",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/axonx/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/axonx/SKILL.md"
+    },
+    {
+      "findingId": "commit:2074d4a875cc8191a5c2e1468f2018ec",
+      "title": "Unpinned npm commands activate unreviewed external code",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/dropthehassle-publish/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/dropthehassle-publish/SKILL.md"
+    },
+    {
+      "findingId": "commit:363eeef98a988191af0cd58f2d51e7e8",
+      "title": "Explicit Opus 4.6 requests are mapped to Opus 5",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/claude-api/shared/models.md"
+      ],
+      "evidence": "Canonical correction: skills/claude-api/shared/models.md"
+    },
+    {
+      "findingId": "commit:721fd02da41481918651a536d18e6912",
+      "title": "Plugin-safe skill executes an unpinned npm package",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/plugin-compatibility.json",
+        "docs/contributors/security-guardrails.md",
+        "skills/testdriver-e2e-testing/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/plugin-compatibility.json, skills/testdriver-e2e-testing/SKILL.md"
+    },
+    {
+      "findingId": "commit:2a4b34d859c481919d9a344ba998f252",
+      "title": "Predictable manifest temp file enables symlink overwrite",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/weather-data-reproducibility/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/weather-data-reproducibility/SKILL.md"
+    },
+    {
+      "findingId": "commit:aabf25a86480819185df7439f9f32d8c",
+      "title": "Memory-writing skill is mislabeled as safe",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "docs/contributors/skill-anatomy.md",
+        "skills/agent-memory-discipline/SKILL.md",
+        "tools/bin/install.js"
+      ],
+      "evidence": "Canonical correction: skills/agent-memory-discipline/SKILL.md"
+    },
+    {
+      "findingId": "commit:2c061e24b17881918d6d0cbee204017b",
+      "title": "Predictable manifest temp file permits symlink overwrite",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/weather-data-reproducibility/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/weather-data-reproducibility/SKILL.md"
+    },
+    {
+      "findingId": "commit:45f20b9f01a88191b28bd1a584ed866b",
+      "title": "[skip pages] successors can suppress pending security deploys",
+      "severity": "informational",
+      "status": "retired-path",
+      "canonicalPaths": [
+        ".github/workflows/pages.yml",
+        "tools/scripts/merge_batch.cjs",
+        "tools/scripts/merge_canonical_sync_pr.cjs"
+      ],
+      "evidence": "Current pages.yml is release-only workflow_dispatch and immutable candidate based; push skip-pages predicate is absent."
+    },
+    {
+      "findingId": "commit:f6ff6501a57c8191a166521f5767ae01",
+      "title": "DALI commissioning skill is misclassified as safe",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/skills_index.json",
+        "docs/contributors/quality-bar.md",
+        "skills/dali-short-address-commissioner/SKILL.md",
+        "tools/bin/install.js"
+      ],
+      "evidence": "Canonical correction: data/skills_index.json, skills/dali-short-address-commissioner/SKILL.md"
+    },
+    {
+      "findingId": "commit:85b581949ac08191958c5ab35c169699",
+      "title": "Printer-mutating skill bypasses the safe-risk filter",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/marlin-bed-leveling/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/marlin-bed-leveling/SKILL.md"
+    },
+    {
+      "findingId": "commit:5c37589cd984819183d3494026123acb",
+      "title": "ZIP validation example is vulnerable to decompression bombs",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/oneroster-csv-validator/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/oneroster-csv-validator/SKILL.md"
+    },
+    {
+      "findingId": "commit:1ab5e72831dc81919f8e5228cbea42cd",
+      "title": "Delta synchronizer accepts stale replayed price updates",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/esl-price-sync/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/esl-price-sync/SKILL.md"
+    },
+    {
+      "findingId": "commit:456c7b4f71f88191ba28c407cd893bf9",
+      "title": "Generic redaction corrupts required checkpoint tokens",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/fact-check-x-unified/scripts/fact_check_x.py",
+        "skills/fact-check-x-unified/scripts/trusted_search_config.py"
+      ],
+      "evidence": "Canonical correction: skills/fact-check-x-unified/scripts/trusted_search_config.py"
+    },
+    {
+      "findingId": "commit:289303f93e308191b9c48f2c6b55c8e1",
+      "title": "Global redaction corrupts stage acknowledgement tokens",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/fact-check-x-unified/scripts/fact_check_x.py",
+        "skills/fact-check-x-unified/scripts/trusted_search_config.py",
+        "skills/fact-check-x-unified/tests/stage_checkpoint_test.py"
+      ],
+      "evidence": "Canonical correction: skills/fact-check-x-unified/scripts/trusted_search_config.py"
+    },
+    {
+      "findingId": "commit:dd1ed4cb8ac081918f454709d73bdc40",
+      "title": "PII redactor exports the original unredacted span",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/plugin-compatibility.json",
+        "skills/agent-observability/references/details.md"
+      ],
+      "evidence": "Canonical correction: data/plugin-compatibility.json, skills/agent-observability/references/details.md"
+    },
+    {
+      "findingId": "commit:7a41326aee6081919999863c1ff075f5",
+      "title": "Azure skills pipe a mutable installer into a root shell",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/arm-templates/SKILL.md",
+        "skills/azure-aks/SKILL.md",
+        "skills/azure-functions-devsec/SKILL.md",
+        "skills/azure-networking/SKILL.md",
+        "skills/azure-sql/SKILL.md",
+        "skills/azure-vms/SKILL.md",
+        "skills/terraform-azure/SKILL.md"
+      ],
+      "evidence": "Canonical correction: skills/arm-templates/SKILL.md, skills/azure-aks/SKILL.md, skills/azure-functions-devsec/SKILL.md, skills/azure-networking/SKILL.md, skills/azure-sql/SKILL.md, skills/azure-vms/SKILL.md, skills/terraform-azure/SKILL.md"
+    },
+    {
+      "findingId": "commit:eae6aeeb59ec8191a7bb9d5f95fd6f08",
+      "title": "Policy skill executes an unverified mutable CI binary",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/skills_index.json",
+        "skills/policy-as-code/SKILL.md",
+        "skills/policy-as-code/references/details.md"
+      ],
+      "evidence": "Canonical correction: data/skills_index.json, skills/policy-as-code/SKILL.md, skills/policy-as-code/references/details.md"
+    },
+    {
+      "findingId": "commit:3aeb965afe248191abfb95eb886ce79e",
+      "title": "Mutating Ledger skill is published as safe",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "data/skills_index.json",
+        "skills/ledger-tasks-yylo/SKILL.md"
+      ],
+      "evidence": "Canonical correction: data/skills_index.json, skills/ledger-tasks-yylo/SKILL.md"
+    },
+    {
+      "findingId": "commit:0a1f9bf9149c819184577f9c860c448d",
+      "title": "All 216 skills receive incorrect introduction dates",
+      "severity": "informational",
+      "status": "corrected",
+      "canonicalPaths": [
+        "skills/agent-squad/SKILL.md",
+        "skills/astropy/SKILL.md",
+        "skills/zipai-optimizer/SKILL.md",
+        "walkthrough.md"
+      ],
+      "evidence": "Canonical correction: skills/agent-squad/SKILL.md, skills/astropy/SKILL.md, skills/zipai-optimizer/SKILL.md"
+    }
+  ]
+}

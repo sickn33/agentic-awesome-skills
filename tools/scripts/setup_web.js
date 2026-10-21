@@ -8,7 +8,7 @@ const { resolveSafeRealPath } = require('../lib/symlink-safety');
 const ROOT_DIR = findProjectRoot(__dirname);
 const WEB_APP_PUBLIC = path.join(ROOT_DIR, 'apps', 'web-app', 'public');
 
-function writePublicInfoApi(catalogFile, packageFile, destinationFile) {
+function writePublicInfoApi(catalogFile, packageFile, destinationFile, publicRoot = path.dirname(path.dirname(destinationFile))) {
     const catalog = JSON.parse(fs.readFileSync(catalogFile, 'utf8'));
     const packageInfo = JSON.parse(fs.readFileSync(packageFile, 'utf8'));
     if (!Array.isArray(catalog)) {
@@ -40,6 +40,15 @@ function writePublicInfoApi(catalogFile, packageFile, destinationFile) {
         ],
     };
 
+    const root = fs.realpathSync(publicRoot);
+    const relative = path.relative(path.resolve(publicRoot), path.resolve(destinationFile));
+    if (relative.startsWith('..') || path.isAbsolute(relative)) throw new Error('Info destination outside public root');
+    let current = root;
+    for (const part of relative.split(path.sep)) {
+        current = path.join(current, part);
+        try { if (fs.lstatSync(current).isSymbolicLink()) throw new Error('Info destination symlink'); }
+        catch (error) { if (error.code !== 'ENOENT') throw error; }
+    }
     fs.mkdirSync(path.dirname(destinationFile), { recursive: true });
     fs.writeFileSync(destinationFile, `${JSON.stringify(info, null, 2)}\n`);
 }
