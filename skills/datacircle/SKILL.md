@@ -108,7 +108,7 @@ One row is one plan of one call. A provider's plan that covers two calls is two 
 | `send` | text | What you give the call: a profile URL, a person's name and company, a person's ID, an email, a phone number, a company's LinkedIn URL, domain, name or ID, a post's URL or ID, or search filters. The call needs the inputs before "Optional:". The optional ones come after it, or after a semicolon in the CSV and the JSON. |
 | `call` | text, or empty | The call's name, as the provider's docs title it, when the provider sells more than one call for the API, like LinkFinder AI's lead_full_name_to_email and linkedin_profile_to_email, both POST /. Blank (`null` in the JSON) when it sells one. |
 | `method` | text | The call's HTTP method. |
-| `path` | text | The call's path, as in the provider's docs: the same on each plan of a call, unless the provider serves a plan at its own address. |
+| `path` | text | We give the path from the provider's docs. When that path fails, we give the path that works. Each plan of a call has the same path. A plan the provider serves at its own address has its own path. |
 | `docs` | text | The provider's page for the call. |
 | `readFrom` | list | The pages we read the row's values from. They are the sheet's last column: click a cell to see each page, or press ⌘C to copy them all. |
 | `checked` | text | The day we last read every value on those pages, California time. |
