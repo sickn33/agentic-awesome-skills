@@ -4,6 +4,7 @@
  * tested without launching anything (`node --test scripts/`).
  */
 import { createHash } from 'node:crypto'
+import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, mkdirSync, lstatSync } from 'node:fs'
 import { homedir } from 'node:os'
 import path from 'node:path'
@@ -54,6 +55,21 @@ export const loadConfig = (root = PROJECT_ROOT) => {
  * Everything the driver owns lives under here, never in the real profile. One
  * directory per project, so two apps never share a scratch profile.
  */
+const assertPrivateStatePath = (target) => {
+  const stat = lstatSync(target)
+  if (stat.isSymbolicLink()) throw new Error('Driver state symlink')
+  if (process.platform === 'win32') {
+    // Query Windows ACLs, not POSIX mode bits (which do not enforce privacy there).
+    const powershell = path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe')
+    const script = "$ErrorActionPreference='Stop'; $sid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value; $allowed=@($sid,'S-1-5-18','S-1-5-32-544'); $acl=Get-Acl -LiteralPath $env:AAS_DRIVER_STATE_PATH; if ($allowed -notcontains $acl.GetOwner([Security.Principal.SecurityIdentifier]).Value) { throw 'Untrusted state owner' }; foreach ($rule in $acl.Access) { if ($rule.AccessControlType -eq 'Allow' -and ($rule.PropagationFlags -band [Security.AccessControl.PropagationFlags]::InheritOnly) -eq 0 -and $allowed -notcontains $rule.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value) { throw 'Shared state ACL' } }"
+    execFileSync(powershell, ['-NoProfile', '-NonInteractive', '-Command', script], {
+      env: { ...process.env, AAS_DRIVER_STATE_PATH: target }, timeout: 10000, stdio: 'pipe'
+    })
+  } else if ((stat.mode & 0o077) || (process.getuid && stat.uid !== process.getuid())) {
+    throw new Error('Driver state must be owned and private')
+  }
+}
+
 export const driveRoot = (root = PROJECT_ROOT) => {
   const hash = createHash('sha256').update(root).digest('hex').slice(0, 16)
   const target = path.resolve(process.env.DRIVE_ROOT || path.join(homedir(), '.electron-drive', hash))
@@ -66,9 +82,8 @@ export const driveRoot = (root = PROJECT_ROOT) => {
   }
   mkdirSync(target, { recursive: true, mode: 0o700 })
   const stat = lstatSync(target)
-  if (!stat.isDirectory() || (process.getuid && stat.uid !== process.getuid()) || (stat.mode & 0o077)) {
-    throw new Error('Driver state must be an owned private directory (0700)')
-  }
+  if (!stat.isDirectory()) throw new Error('Driver state must be a directory')
+  assertPrivateStatePath(target)
   return target
 }
 
@@ -92,7 +107,8 @@ export const readState = () => {
   if (!existsSync(file)) return null
   try {
     const stat = lstatSync(file)
-    if (!stat.isFile() || stat.isSymbolicLink() || (stat.mode & 0o077) || (process.getuid && stat.uid !== process.getuid())) throw new Error('Unsafe daemon state')
+    if (!stat.isFile()) throw new Error('Unsafe daemon state')
+    assertPrivateStatePath(file)
     return JSON.parse(readFileSync(file, 'utf8'))
   } catch {
     return null

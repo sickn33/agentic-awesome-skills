@@ -235,3 +235,5 @@ $DR main "electron.BrowserWindow.getAllWindows().length"
   itself; use this skill to verify the result in the running app.
 - `@systematic-debugging` - Pair with this skill to reproduce and narrow down
   a bug in the real app.
+
+State and control tokens live in a private per-project directory under the user profile, not a shared temporary directory. POSIX ownership/modes and Windows owner/ACLs are checked before access. A shared or redirected `DRIVE_ROOT` is rejected; on Windows, ACL inspection requires the built-in Windows PowerShell.

@@ -1014,5 +1014,8 @@
       ],
       "evidence": "Canonical correction: skills/agent-squad/SKILL.md, skills/astropy/SKILL.md, skills/zipai-optimizer/SKILL.md"
     }
+  ],
+  "additionalScannerCorrections": [
+    "SEC002 now detects sudo-shell pipelines; six additional matches in gitlab-ci and rclone-cli were removed. The unverified bundled rclone installer now fails closed."
   ]
 }
