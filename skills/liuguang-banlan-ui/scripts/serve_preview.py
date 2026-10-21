@@ -11,14 +11,22 @@ import pathlib
 # serving a stale theme-config.js after an edit and screenshots measure the old field.
 class NoStoreHandler(http.server.SimpleHTTPRequestHandler):
     def send_head(self):
-        root = pathlib.Path(self.directory).resolve()
-        target = pathlib.Path(self.translate_path(self.path))
+        lexical_root = pathlib.Path(self.directory).absolute()
+        root = lexical_root.resolve()
+        translated = pathlib.Path(self.translate_path(self.path)).absolute()
+        try:
+            relative = translated.relative_to(lexical_root)
+        except ValueError:
+            self.send_error(403, "Resource outside preview root")
+            return None
+        target = root / relative
         candidates = [target]
         if target.is_dir():
             candidates.extend(target / name for name in ("index.html", "index.htm"))
         for candidate in candidates:
+            parts = candidate.relative_to(root).parts
             if (not candidate.resolve().is_relative_to(root)
-                    or any(p.is_symlink() for p in [candidate, *candidate.parents] if p != root)):
+                    or any(root.joinpath(*parts[:i]).is_symlink() for i in range(1, len(parts) + 1))):
                 self.send_error(403, "Symlink resources are not served")
                 return None
         return super().send_head()

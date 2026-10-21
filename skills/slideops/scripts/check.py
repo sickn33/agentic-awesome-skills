@@ -194,6 +194,7 @@ def check_citation(citation: Citation, repo: Path, build_commit: str | None) -> 
     if (candidate.is_absolute() or '..' in candidate.parts
             or any(part in sensitive or part.startswith('.env.') for part in candidate.parts)
             or not file_path.resolve().is_relative_to(root)
+            or any((root.joinpath(*candidate.parts[:i])).is_symlink() for i in range(1, len(candidate.parts) + 1))
             or not git(root, 'ls-files', '--error-unmatch', '--', citation.path)):
         citation.status = "UNVERIFIED"
         citation.detail = "citation source is outside approved tracked repository files"

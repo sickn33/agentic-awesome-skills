@@ -26,8 +26,9 @@ class Boundaries(unittest.TestCase):
             (root / 'safe.txt').write_text('approved source')
             (root / '.env').write_text('PRIVATE_CANARY')
             (root / 'link.txt').symlink_to(outside)
-            subprocess.run(['git', '-C', str(root), 'add', 'safe.txt', '.env', 'link.txt'], check=True)
-            for name in [str(outside), '../private', 'link.txt', '.env', 'unknown.txt']:
+            (root / 'inside.txt').symlink_to(root / '.env')
+            subprocess.run(['git', '-C', str(root), 'add', 'safe.txt', '.env', 'link.txt', 'inside.txt'], check=True)
+            for name in [str(outside), '../private', 'link.txt', 'inside.txt', '.env', 'unknown.txt']:
                 citation = checker.find_citations(f'<pre data-src="{name}:1-1" data-sha256="000000000000">x</pre>')[0]
                 checker.check_citation(citation, root, None)
                 self.assertEqual(citation.status, 'UNVERIFIED')
@@ -72,6 +73,12 @@ class Boundaries(unittest.TestCase):
             handler.path = '/'; statuses.clear()
             self.assertIsNone(handler.send_head())
             self.assertEqual(statuses, [403], 'Directory index links must not bypass containment')
+            (root / 'index.html').unlink()
+            alias = root.parent / 'alias'; alias.symlink_to(root, target_is_directory=True)
+            handler.directory = str(alias); handler.path = '/'; statuses.clear()
+            with patch.object(preview.http.server.SimpleHTTPRequestHandler, 'send_head', return_value='safe'):
+                self.assertEqual(handler.send_head(), 'safe', 'An explicitly selected root alias must remain usable')
+            self.assertEqual(statuses, [])
 
     def test_document_edits_never_execute_before_fixture_review(self):
         from fixtures.reviewed_examples import reviewed_source
