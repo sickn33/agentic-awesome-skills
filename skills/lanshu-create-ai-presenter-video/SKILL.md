@@ -230,3 +230,11 @@ outputs/
 - Read [generation.md](references/generation.md) for intake, content, voice, tool selection, presenter prompts, paid generation, or provider changes.
 - Read [editing.md](references/editing.md) for timeline construction, screen-demo layouts, openings, closes, captions, keyword callouts, previews, and exports.
 - Read [qa-recovery.md](references/qa-recovery.md) before accepting media or delivery, and whenever lip sync, identity, hands, exposure, freezes, captions, audio, or remote jobs fail.
+
+## Limitations
+
+- Makes explainers only, not promos, ads, or footage montages.
+- Presenter route needs an authorized adult presenter image; the styled route is 16:9 only.
+- Needs Python 3.9+, FFmpeg with ffprobe, bash and jq; the styled route also needs Node.js (npx) and rsync.
+- Voice and presenter generation call remote providers and need network access, provider credentials and paid usage. Confirm cost with the user before generating.
+- Output quality depends on the chosen providers; verify the final render before delivery.
