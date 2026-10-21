@@ -19,6 +19,7 @@ If you recognize your work here and it is not properly attributed, please open a
 | `browser-testing-with-devtools` | [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)  | MIT            | Chrome DevTools MCP browser verification and security-boundary guidance. |
 | `langgraph`                 | [LangGraph](https://github.com/langchain-ai/langgraph)                     | MIT            | Framework guides.             |
 | `react-patterns`            | [React Docs](https://react.dev/)                                           | CC-BY          | Official patterns.            |
+| `apify-youtube-transcript-scraper` | [harshmaur/apify-youtube-transcript-scraper](https://github.com/harshmaur/apify-youtube-transcript-scraper) | MIT | Community skill by the Actor author for YouTube captions, timestamped quotations and transcript research. |
 | `apify-facebook-ads-library-scraper` | [harshmaur/apify-facebook-ads-library-scraper](https://github.com/harshmaur/apify-facebook-ads-library-scraper) | MIT | Community skill by the Actor author for Meta ad copy, creative and transparency research. |
 | `apify-tiktok-scraper` | [harshmaur/apify-tiktok-scraper](https://github.com/harshmaur/apify-tiktok-scraper) | MIT | Community skill by the Actor author for TikTok video, profile and comment research. |
 | `apify-linkedin-jobs-scraper` | [harshmaur/apify-linkedin-jobs-scraper](https://github.com/harshmaur/apify-linkedin-jobs-scraper) | MIT | Community skill by the Actor author for LinkedIn job searches, salary and recruiter data. |
