@@ -107,7 +107,8 @@ Run a phase gate every 3–5 iterations by default, at each milestone, and befor
 an irreversible or high-cost action. A phase gate should:
 
 1. Re-read the Goal Anchor and compare it with the current state.
-2. Mark each criterion `open`, `verified`, or `blocked` with evidence.
+2. Mark each criterion `open`, `verified`, or `blocked` with evidence; a blocked
+   mark needs a named dependency and an unblock condition.
 3. Review the diff or artifact list against Allowed and Frozen scope.
 4. Move side quests to the deferred list with a reason and revisit condition.
 5. Record one justified next action, its target criterion, and expected delta.
@@ -115,6 +116,12 @@ an irreversible or high-cost action. A phase gate should:
 If all criteria are verified, finish as complete. If only a scheduled external
 wait remains, preserve its checkpoint and yield; otherwise report the named
 blocker under host rules. Do not invent work to keep the loop alive.
+
+A criterion is blocked only by a named, verifiable dependency the agent cannot
+resolve without new input or permission. Difficulty, slowness, uncertainty, and
+failures another approach could resolve are approach changes or scoped
+questions, not blockers. When several criteria remain, keep working the ones
+that are still actionable and record the blocked criterion on its own.
 
 ## Recover from drift
 
