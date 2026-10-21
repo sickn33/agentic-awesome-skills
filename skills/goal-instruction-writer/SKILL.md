@@ -200,8 +200,10 @@ Make the terminal states explicit and mutually understandable:
 
 - **Complete:** every acceptance criterion is verified and the deliverable is
   available.
-- **Blocked:** a named dependency, missing authority, or unresolved failure
-  prevents the next meaningful action; report the exact unblock needed.
+- **Blocked:** a named, verifiable dependency, missing authority, or owner
+  decision prevents the next meaningful action and cannot be resolved without
+  new input or permission; report the attempts made, the dependency, and the
+  exact unblock condition.
 - **Paused:** the owner explicitly asks to pause; preserve the cursor and do
   not resume without authorization.
 - **Timeboxed/Budgeted:** the limit is reached before completion; report the
@@ -211,6 +213,16 @@ Make the terminal states explicit and mutually understandable:
 - **Realignment required:** a drift check fails; stop the current loop, preserve
   the checkpoint, and resume only after the next action is re-anchored. Use
   `GOAL REALIGNMENT REQUIRED` when a local terminal label is needed.
+
+Blocked is a claim about the world, not a way to end a hard turn. It qualifies
+only when all three hold: the dependency is named and verifiable, the agent
+cannot resolve it without new input or permission, and the report states what
+would unblock it. Difficulty, slowness, uncertainty, an ambiguous requirement,
+a failure a different approach could resolve, and a preference the agent could
+ask about are not blockers. Change approach, ask one scoped question, or
+realign instead. If another criterion is still actionable, keep working it and
+record the blocked criterion separately. A blocked claim that turns out to be
+false is a defect in the report, not a neutral stop.
 
 Do not use “continue until satisfied,” “try indefinitely,” or a success claim
 based only on effort. If the task has a local convention for terminal strings,

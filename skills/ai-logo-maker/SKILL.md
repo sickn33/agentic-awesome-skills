@@ -53,6 +53,7 @@ Explain that this fetches an external package from `github.com`, then ask
 for approval. Only after approval:
 
 ```bash
+set -e
 umask 077
 review_dir="$(mktemp -d)"
 cd "$review_dir" || exit 1
@@ -82,6 +83,8 @@ the bundled Markdown references, and `scripts/authorize.py`,
 library only, no dependency installation, no lifecycle hooks). Summarize the
 network, credential, local-state, telemetry, and version-notice behavior
 listed under [Security & Safety Notes](#security--safety-notes).
+
+The manifest and pattern scans above are only inventory aids. Before activation, read every file in the pinned tree, including each script, reference and hook, and inspect all dependency and network behavior. Do not claim source review from grep output. If complete review cannot be performed, stop before copying or executing; ask for a separate review rather than treating a digest as evidence of safety.
 
 ### Step 3: Copy in
 
