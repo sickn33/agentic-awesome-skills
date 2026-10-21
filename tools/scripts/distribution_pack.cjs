@@ -14,6 +14,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
+const { parsePackageArchive } = require("../lib/aas-v1/cache/archive");
 
 const GIT_SHA = /^[0-9a-f]{40}$/;
 const PACKAGE_NAME = /\.tgz$/;
@@ -59,10 +60,17 @@ function findPackedTarball(destination) {
 }
 
 function readTarballManifest(tarball) {
-  const result = spawnSync("tar", ["-xzOf", tarball, "package/package.json"], { encoding: "utf8" });
-  if (result.error || result.status !== 0) throw new Error("Unable to read the packed candidate manifest");
+  const stat = fs.statSync(tarball);
+  if (!stat.isFile() || stat.size > 64 * 1024 * 1024)
+    throw new Error("Packed candidate archive exceeds the runtime limit");
+  // Use the same bounded, inert parser as runtime installation. Native Windows
+  // tar can fail while scanning otherwise valid npm archives; no extraction or
+  // platform executable is needed to verify one manifest.
+  const parsed = parsePackageArchive(fs.readFileSync(tarball), {
+    selectPaths: ["package/package.json"],
+  });
   try {
-    return JSON.parse(result.stdout);
+    return JSON.parse(parsed.entries[0].bytes.toString("utf8"));
   } catch {
     throw new Error("The packed candidate manifest is not valid JSON");
   }
