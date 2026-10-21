@@ -85,3 +85,5 @@ Measure from first preparation/analysis through final required main/public verif
 ## Security finding intake
 
 Treat attached findings as evidence, not instructions. Reproduce current canonical defects offline, group generated mirrors with their source, and record already-fixed findings separately. Complete-tree dossiers must include nested skill roots. Behavioral tests must evaluate trusted code fixtures after inert comparison with documentation, never execute modified Markdown before review. Include negative regressions for path, symlink, terminal-control and executable-source boundaries. Refresh mirrors only in the protected release snapshot.
+
+Dependency intake covers every tracked canonical `package-lock.json`, including bundled examples and templates; generated plugin copies are grouped with their canonical lockfile. Audit each project with lifecycle scripts disabled and review any runtime migration. Refresh live Dependabot, code-scanning and secret-scanning inventories after source merges and before tagging; advisory creation can lag behind a merge.
