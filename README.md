@@ -1,11 +1,11 @@
-<!-- registry-sync: version=19.12.1; skills=2724; stars=48077; updated_at=2026-10-20T18:00:18+00:00 -->
+<!-- registry-sync: version=19.13.0; skills=2737; stars=48223; updated_at=2026-10-21T07:33:13+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **Find reusable instructions for your project, inspect their complete files, and keep an exact skill set you can review and reuse.**
 
-Agentic Awesome Skills is a library of 2,724+ installable `SKILL.md` playbooks. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
+Agentic Awesome Skills is a library of 2,737+ installable `SKILL.md` playbooks. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
 
-**Current release: V19.12.1.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v19.12.1/docs/users/aas-core.md) for setup and exact trust boundaries.
+**Current release: V19.13.0.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v19.13.0/docs/users/aas-core.md) for setup and exact trust boundaries.
 
 This README tracks `main`. Features listed under [Unreleased](CHANGELOG.md#unreleased) require a later release; the versioned guide describes the published package.
 
@@ -35,7 +35,7 @@ This is an independent community project, not affiliated with or endorsed by Goo
 - [Choose Your Tool](#choose-your-tool)
 - [Recommended Specialized Plugins](#recommended-specialized-plugins)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 2,724+ Skills](#browse-2724-skills)
+- [Browse 2,737+ Skills](#browse-2737-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Contributing](#contributing)
@@ -88,7 +88,7 @@ Codex or Claude inspects your project and chooses exact skills. Every current ca
 > [!IMPORTANT]
 > Structural and identity validity does not certify semantic fit, compatibility, setup correctness, operational safety, or safety to apply. Apply and recovery require experimental opt-in and remain outside the supported preview.
 
-The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifacts in browser memory without accessing your filesystem. See the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v19.12.1/docs/users/aas-core.md) for tool contracts, capability coverage, and limits.
+The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifacts in browser memory without accessing your filesystem. See the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v19.13.0/docs/users/aas-core.md) for tool contracts, capability coverage, and limits.
 
 ## Installation
 
@@ -97,22 +97,22 @@ The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifact
 Start with AAS Core in Codex or Claude. Configure the local MCP using the [Codex](docs/users/codex-cli-skills.md) or [Claude](docs/users/claude-code-skills.md) guide. With the MCP available, ask the agent to inspect your project, compare relevant skills, and save the exact selection. Then validate its manifest and review the resulting plan before any installation. The first configuration command previews a change and returns an approval digest:
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@19.12.1 -- aas mcp configure \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@19.13.0 -- aas mcp configure \
   --host codex \
   --scope user \
   --config /absolute/path/to/codex/config.toml \
   --cache-root /absolute/path/to/aas-cache
 ```
 
-Use `--host claude` and its configuration path for Claude. The [Core setup guide](https://github.com/sickn33/agentic-awesome-skills/blob/v19.12.1/docs/users/aas-core.md#configure-the-local-mcp) explains approval, reconnection, validation, and planning. To hand the reviewed IDs to the direct installer, use `aas stack install-preview` as described in the [manifest handoff](docs/users/aas-core.md#use-the-reviewed-selection); that command only prepares a `--dry-run` preview and does not apply a Core plan.
+Use `--host claude` and its configuration path for Claude. The [Core setup guide](https://github.com/sickn33/agentic-awesome-skills/blob/v19.13.0/docs/users/aas-core.md#configure-the-local-mcp) explains approval, reconnection, validation, and planning. To hand the reviewed IDs to the direct installer, use `aas stack install-preview` as described in the [manifest handoff](docs/users/aas-core.md#use-the-reviewed-selection); that command only prepares a `--dry-run` preview and does not apply a Core plan.
 
 ### Install selected skills directly
 
 If you already know the IDs, preview a focused install into your host's skill directory:
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@19.12.1 -- \
-  agentic-awesome-skills --release 19.12.1 --path .agents/skills \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@19.13.0 -- \
+  agentic-awesome-skills --release 19.13.0 --path .agents/skills \
   --skills brainstorming,systematic-debugging --dry-run
 ```
 
@@ -170,7 +170,7 @@ Bundles suggest related skills; workflows describe the order to use them. They a
 - [Workflows](docs/users/workflows.md) give ordered playbooks for planning, shipping, testing, and auditing; [workflow metadata](data/workflows.json) is available for integrations.
 - If too many installed skills overload Antigravity, follow the [selective activation guide](docs/users/agent-overload-recovery.md). For other hosts, preview a smaller exact install or use the installer's `--risk`, `--category`, and `--tags` filters.
 
-## Browse 2,724+ Skills
+## Browse 2,737+ Skills
 
 Explore the complete library in the [hosted catalog](https://aaskills.tech/) or [`CATALOG.md`](CATALOG.md). The canonical playbooks live in [`skills/`](skills/); [`skills_index.json`](skills_index.json) provides machine-readable discovery. Use [Getting Started](docs/users/getting-started.md) and [Usage](docs/users/usage.md) for first steps, or the [Workbench](https://aaskills.tech/workbench) to inspect a saved Core stack and plan in your browser.
 
@@ -178,7 +178,7 @@ For narrower comparisons, see [Claude Code skills](docs/users/best-claude-code-s
 
 ## Troubleshooting
 
-- [Core setup and trust boundaries](https://github.com/sickn33/agentic-awesome-skills/blob/v19.12.1/docs/users/aas-core.md)
+- [Core setup and trust boundaries](https://github.com/sickn33/agentic-awesome-skills/blob/v19.13.0/docs/users/aas-core.md)
 - [Installation and everyday use](docs/users/usage.md)
 - [Windows context and truncation recovery](docs/users/windows-truncation-recovery.md)
 - [Linux/macOS overload and selective activation](docs/users/agent-overload-recovery.md)
@@ -221,8 +221,6 @@ Key source families include:
 
 ### Official Sources
 
-- **[kasovy/neverapply-mcp](https://github.com/kasovy/neverapply-mcp)**: MIT official source for the `neverapply` skill - job matches, job search, tailored resumes, interview preparation and job applications through NeverApply's hosted MCP server (OAuth sign-in), with every application approved by the person first.
-
 - **[fclairamb/solidping-plugin](https://github.com/fclairamb/solidping-plugin/tree/main/skills/solidping-monitoring)**: MIT official source for the `solidping` skill - uptime checks across 40+ types, results, incidents, diagnosis and status pages through the hosted SolidPing MCP server, with every write confirmed by the person first. SolidPing itself is AGPL-3.0.
 
 - **[Outreachgenie/outreachgenie-linkedin-mcp](https://github.com/Outreachgenie/outreachgenie-linkedin-mcp)**: MIT source for `outreachgenie-list-audit`, a read-only saved-list and template audit with local Python reports. Connected use requires an OutreachGenie workspace and compatible MCP host.
@@ -242,13 +240,7 @@ Key source families include:
 - **[arcmira/mcp](https://github.com/arcmira/mcp/tree/v0.10.6/plugins/arcmira)**: Apache-2.0 plugin source for `arcmira-find-quotes`, YouTube and podcast quote research with timestamped sources. The hosted service and server have separate licensing.
 
 - **[Pazificateur69/tokenleak](https://github.com/Pazificateur69/tokenleak)**: Official tokenleak source for the [`tokenleak`](skills/tokenleak/SKILL.md) skill - token-lean working rules that cut the context a coding agent re-sends on every call (big reads, noisy logs, re-reads, serial calls), with a published A/B benchmark (MIT).
-- **[beatra-ai/ai-headshot-generator-skill](https://github.com/beatra-ai/ai-headshot-generator-skill)**: Official Beatra source for the `ai-headshot-studio` skill - paid, hosted work installed from the 0.2.2 package tree at commit `c5a2ab9`, checked against its Git tree ID (MIT-0).
-- **[beatra-ai/ai-audiobook-generator-skill](https://github.com/beatra-ai/ai-audiobook-generator-skill)**: Official Beatra source for the `ai-audiobook-narration` skill - paid, hosted work installed from the 0.3.1 package tree at commit `4f5f6b5`, checked against its Git tree ID (MIT-0).
-- **[beatra-ai/ai-image-realism-skill](https://github.com/beatra-ai/ai-image-realism-skill)**: Official Beatra source for the `ai-image-realism` skill - paid, hosted work installed from the 0.3.6 package tree at commit `0b29222`, checked against its Git tree ID (MIT-0).
-- **[beatra-ai/ai-storyboard-generator-skill](https://github.com/beatra-ai/ai-storyboard-generator-skill)**: Official Beatra source for the `ai-storyboard-generator` skill - paid, hosted work installed from the 0.2.6 package tree at commit `4736c45`, checked against its Git tree ID (MIT-0).
-- **[beatra-ai/wechat-article-cover-skill](https://github.com/beatra-ai/wechat-article-cover-skill)**: Official Beatra source for the `wechat-cover-maker` skill - paid, hosted work installed from the 0.3.1 package tree at commit `8441e17`, checked against its Git tree ID (MIT-0).
-- **[beatra-ai/xiaohongshu-cover-maker-skill](https://github.com/beatra-ai/xiaohongshu-cover-maker-skill)**: Official Beatra source for the `zhongcao-cover-maker` skill - paid, hosted work installed from the 0.2.7 package tree at commit `cb25a69`, checked against its Git tree ID (MIT-0).
-- **[beatra-ai/xiaohongshu-copywriter-skill](https://github.com/beatra-ai/xiaohongshu-copywriter-skill)**: Official Beatra source for the `zhongcao-note-copywriter` skill - paid, hosted work installed from the 0.2.6 package tree at commit `3133588`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/ai-headshot-generator-skill](https://github.com/beatra-ai/ai-headshot-generator-skill)**: Official Beatra source for the `ai-headshot-studio` skill - paid, hosted work installed from a digest-pinned 0.1.7 archive byte-identical to commit `a8818c3` with self-update disabled before first use (MIT-0).
 - **[uxkin/agent](https://github.com/uxkin/agent)**: Official UXKIN source for the free [`uxkin-research`](skills/uxkin-research/SKILL.md) skill — research real iOS app screens, user journeys and website design systems before designing UI (MIT).
 - **[loootai/looot-skills](https://github.com/loootai/looot-skills)**: Official looot skills - search, price and run 2,500+ data API endpoints (work emails, company search, SERP, web pages) from one prepaid balance.
 - **[CosmoBlk/email-marketing-bible](https://github.com/CosmoBlk/email-marketing-bible)**: Official Email Marketing Bible source for the `email-marketing-bible` skill - data-backed email marketing for agents: automation flows, deliverability triage, copy de-slopping, AI email design, compliance and 19 industry playbooks, with ESP control via MCP behind explicit send-approval gates (MIT).
@@ -269,33 +261,33 @@ Key source families include:
 
 - **[metalbear-co/skills](https://github.com/metalbear-co/skills)**: Official mirrord skills source for the `mirrord` skill - run a local process inside a live Kubernetes pod's network, env and traffic, with confirmation before traffic-stealing or cluster-modifying steps (MIT).
 
-- **[beatra-ai/viral-video-remake-skill](https://github.com/beatra-ai/viral-video-remake-skill)**: Official Beatra source for the `viral-video-teardown-remake` skill - paid, hosted work installed from the 0.4.0 package tree at commit `6a1491a`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/viral-video-remake-skill](https://github.com/beatra-ai/viral-video-remake-skill)**: Official Beatra source for the `viral-video-teardown-remake` skill - paid, hosted work installed from a digest-pinned 0.3.1 archive byte-identical to commit `46f7875` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/photo-to-anime-skill](https://github.com/beatra-ai/photo-to-anime-skill)**: Official Beatra source for the `ai-photo-restyler` skill - paid, hosted work installed from the 0.2.2 package tree at commit `c2d3fbf`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/photo-to-anime-skill](https://github.com/beatra-ai/photo-to-anime-skill)**: Official Beatra source for the `ai-photo-restyler` skill - paid, hosted work installed from a digest-pinned 0.1.4 archive byte-identical to commit `87bc4c4` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/ai-voice-cloning-skill](https://github.com/beatra-ai/ai-voice-cloning-skill)**: Official Beatra source for the `voice-cloning-studio` skill - paid, hosted work installed from the 0.2.9 package tree at commit `96df577`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/ai-voice-cloning-skill](https://github.com/beatra-ai/ai-voice-cloning-skill)**: Official Beatra source for the `voice-cloning-studio` skill - paid, hosted work installed from a digest-pinned 0.2.1 archive byte-identical to commit `64923d9` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/multilingual-voiceover-skill](https://github.com/beatra-ai/multilingual-voiceover-skill)**: Official Beatra source for the `ai-multilingual-dubbing` skill - paid, hosted work installed from the 0.2.7 package tree at commit `bcd5d93`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/multilingual-voiceover-skill](https://github.com/beatra-ai/multilingual-voiceover-skill)**: Official Beatra source for the `ai-multilingual-dubbing` skill - paid, hosted work installed from a digest-pinned 0.1.9 archive byte-identical to commit `030ec84` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/ai-voiceover-generator-skill](https://github.com/beatra-ai/ai-voiceover-generator-skill)**: Official Beatra source for the `voiceover-narration-studio` skill - paid, hosted work installed from the 0.2.7 package tree at commit `2db317f`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/ai-voiceover-generator-skill](https://github.com/beatra-ai/ai-voiceover-generator-skill)**: Official Beatra source for the `voiceover-narration-studio` skill - paid, hosted work installed from a digest-pinned 0.1.9 archive byte-identical to commit `0c44adf` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/ai-podcast-voiceover-skill](https://github.com/beatra-ai/ai-podcast-voiceover-skill)**: Official Beatra source for the `ai-podcast-voiceover` skill - paid, hosted work installed from the 0.2.5 package tree at commit `0fe5c52`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/ai-podcast-voiceover-skill](https://github.com/beatra-ai/ai-podcast-voiceover-skill)**: Official Beatra source for the `ai-podcast-voiceover` skill - paid, hosted work installed from a digest-pinned 0.1.7 archive byte-identical to commit `ddca11e` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/ai-image-generator-skill](https://github.com/beatra-ai/ai-image-generator-skill)**: Official Beatra source for the `ai-image-generation-studio` skill - paid, hosted work installed from the 0.2.3 package tree at commit `8e1b53d`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/ai-image-generator-skill](https://github.com/beatra-ai/ai-image-generator-skill)**: Official Beatra source for the `ai-image-generation-studio` skill - paid, hosted work installed from a digest-pinned 0.1.4 archive byte-identical to commit `13c7b9b` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/ecommerce-product-images-skill](https://github.com/beatra-ai/ecommerce-product-images-skill)**: Official Beatra source for the `ecommerce-listing-image-set` skill - paid, hosted work installed from the 0.2.8 package tree at commit `c70a939`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/ecommerce-product-images-skill](https://github.com/beatra-ai/ecommerce-product-images-skill)**: Official Beatra source for the `ecommerce-listing-image-set` skill - paid, hosted work installed from a digest-pinned 0.2.0 archive byte-identical to commit `ef9056d` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/ai-poster-maker-skill](https://github.com/beatra-ai/ai-poster-maker-skill)**: Official Beatra source for the `poster-design-studio` skill - paid, hosted work installed from the 0.2.2 package tree at commit `c2c81e2`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/ai-poster-maker-skill](https://github.com/beatra-ai/ai-poster-maker-skill)**: Official Beatra source for the `poster-design-studio` skill - paid, hosted work installed from a digest-pinned 0.1.3 archive byte-identical to commit `7a6337f` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/ai-music-generator-skill](https://github.com/beatra-ai/ai-music-generator-skill)**: Official Beatra source for the `music-generation-studio` skill - paid, hosted work installed from the 0.2.6 package tree at commit `98e8aa2`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/ai-music-generator-skill](https://github.com/beatra-ai/ai-music-generator-skill)**: Official Beatra source for the `music-generation-studio` skill - paid, hosted work installed from a digest-pinned 0.1.8 archive byte-identical to commit `fee8fbf` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/ai-media-generator-skill](https://github.com/beatra-ai/ai-media-generator-skill)**: Official Beatra source for the `beatra` skill - paid, hosted work installed from the 2.9.7 package tree at commit `26a5f79`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/ai-media-generator-skill](https://github.com/beatra-ai/ai-media-generator-skill)**: Official Beatra source for the `beatra` skill - paid, hosted work installed from a digest-pinned 2.8.8 archive byte-identical to commit `69afbfe` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/ai-product-photography-skill](https://github.com/beatra-ai/ai-product-photography-skill)**: Official Beatra source for the `product-photo-studio` skill - paid, hosted work installed from the 0.2.8 package tree at commit `5c64090`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/ai-product-photography-skill](https://github.com/beatra-ai/ai-product-photography-skill)**: Official Beatra source for the `product-photo-studio` skill - paid, hosted work installed from a digest-pinned 0.2.0 archive byte-identical to commit `1490364` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/ai-logo-maker-skill](https://github.com/beatra-ai/ai-logo-maker-skill)**: Official Beatra source for the `ai-logo-maker` skill - paid, hosted work installed from the 0.2.6 package tree at commit `50d2353`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/ai-logo-maker-skill](https://github.com/beatra-ai/ai-logo-maker-skill)**: Official Beatra source for the `ai-logo-maker` skill - paid, hosted work installed from a digest-pinned 0.1.7 archive byte-identical to commit `89bf762` with self-update disabled before first use (MIT-0).
 
-- **[beatra-ai/lyrics-to-song-skill](https://github.com/beatra-ai/lyrics-to-song-skill)**: Official Beatra source for the `suno-lyrics-to-song` skill - paid, hosted work installed from the 0.2.8 package tree at commit `36aeadd`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/lyrics-to-song-skill](https://github.com/beatra-ai/lyrics-to-song-skill)**: Official Beatra source for the `suno-lyrics-to-song` skill - paid, hosted work installed from a digest-pinned 0.2.0 archive byte-identical to commit `2facaac` with self-update disabled before first use (MIT-0).
 
 - **[vanshyadav1408/Omentir](https://github.com/vanshyadav1408/Omentir)**: Official Omentir source for the [`omentir-linkedin-outreach`](skills/omentir-linkedin-outreach/SKILL.md) skill - LinkedIn prospecting and outreach through the hosted Omentir MCP server (OAuth): find and score leads, draft messages, and check campaigns, research and drafts only by default, never signs into LinkedIn (MIT).
 - **[Spicy-API/nsfw-ai-skill](https://github.com/Spicy-API/nsfw-ai-skill)**: Official SpicyAPI source for the [`nsfw-ai-spicyapi`](skills/nsfw-ai-spicyapi/SKILL.md) skill — adult (18+) image, image-to-video and image-edit generation through the SpicyAPI API with quote-before-spend and adults-only / consent rules (MIT).
@@ -340,8 +332,8 @@ Key source families include:
 - **[Xquik-dev/x-twitter-scraper](https://github.com/Xquik-dev/x-twitter-scraper)**: Official Xquik skill for X data workflows - tweet search, user lookup, follower export, media downloads, MCP, webhooks, OpenAPI, and SDK setup (MIT).
 - **[Modellix/modellix-plugin](https://github.com/Modellix/modellix-plugin)**: Official Modellix skill - authenticated, paid AI image and video generation through the Modellix CLI (MIT).
 - **[replynodes/replynodes-agent-skills](https://github.com/replynodes/replynodes-agent-skills)**: Official ReplyNodes source for the `url-to-markdown` skill - fetch a public webpage as clean Markdown for reading, summarizing, quoting, or citing while preserving the source URL (MIT).
-- **[beatra-ai/talking-avatar-video-skill](https://github.com/beatra-ai/talking-avatar-video-skill)**: Official Beatra source for the `talking-avatar-video` skill - paid, hosted work installed from the 0.3.0 package tree at commit `03e427c`, checked against its Git tree ID (MIT-0).
-- **[beatra-ai/beatra-skills](https://github.com/beatra-ai/beatra-skills)**: Official Beatra source for the `beatra-ai-video-studio` skill - paid, hosted AI video generation, editing, and extension, installed from the 1.3.5 package tree at commit `b7ab8ed`, checked against its Git tree ID (MIT-0).
+- **[beatra-ai/talking-avatar-video-skill](https://github.com/beatra-ai/talking-avatar-video-skill)**: Official Beatra source for the `talking-avatar-video` skill - paid, hosted work installed from a digest-pinned 0.2.1 archive byte-identical to commit `251c968` with self-update disabled before first use (MIT-0).
+- **[beatra-ai/beatra-skills](https://github.com/beatra-ai/beatra-skills)**: Official Beatra source for the `beatra-ai-video-studio` skill - paid, hosted AI video generation, editing, and extension, installed from a digest-pinned 1.2.5 archive byte-identical to commit `95d662f` with self-update disabled before first use (MIT-0).
 - **[cohesivity-org/cohesivity-skill](https://github.com/cohesivity-org/cohesivity-skill)**: Official Cohesivity skill - agent provisioned backend infrastructure covering Postgres, hosting, auth, realtime, storage, cron, email, and AI model APIs over one HTTP API (MIT).
 - **[ASI2030/Fact-Check-X](https://github.com/ASI2030/Fact-Check-X)**: Source for the `fact-check-x-complete` workflow - claim-level AI answer comparison, citation-fidelity review, and public primary-source verification without bundled browser automation (Apache-2.0).
 - **[happy520ai/unified-ai-system](https://github.com/happy520ai/unified-ai-system)**: Official source for the `unified-ai-gateway` skill - governed Codex MCP tools for provider-free prompt enhancement, credential-free gateway health, readiness, fake-provider chat, knowledge, workflow, and workforce evidence (Apache-2.0).
@@ -353,10 +345,19 @@ Key source families include:
 - **[qrxcodes/qrx-mcp](https://github.com/qrxcodes/qrx-mcp)**: Official QRX skill - turn a text prompt and a link into an artistic, branded QR code through the hosted QRX MCP server, checked to scan before it is returned (MIT).
 - **[opencanviz/opencanviz-skills-repo](https://github.com/opencanviz/opencanviz-skills-repo)**: Official openCanviz source for the `opencanviz-json` skill - write an openCanviz video project as JSON with a standard-library Python builder and validator (text entrances, 22 scene transitions, motion presets, LaTeX math, plots, tables, rings, 22 example projects), then import it at opencanviz.com/create, where a free account builds and plays it as a narrated, animated explainer and the MP4 download needs a plan or a one-time export purchase (MIT).
 
+- **[beatra-ai/ai-audiobook-generator-skill](https://github.com/beatra-ai/ai-audiobook-generator-skill)**: Source for `ai-audiobook-narration`.
+- **[beatra-ai/ai-image-realism-skill](https://github.com/beatra-ai/ai-image-realism-skill)**: Source for `ai-image-realism`.
+- **[beatra-ai/ai-storyboard-generator-skill](https://github.com/beatra-ai/ai-storyboard-generator-skill)**: Source for `ai-storyboard-generator`.
+- **[beatra-ai/wechat-article-cover-skill](https://github.com/beatra-ai/wechat-article-cover-skill)**: Source for `wechat-cover-maker`.
+- **[beatra-ai/xiaohongshu-copywriter-skill](https://github.com/beatra-ai/xiaohongshu-copywriter-skill)**: Source for `zhongcao-note-copywriter`.
+- **[beatra-ai/xiaohongshu-cover-maker-skill](https://github.com/beatra-ai/xiaohongshu-cover-maker-skill)**: Source for `zhongcao-cover-maker`.
 - **[f-o-x11/deed-page-skill](https://github.com/f-o-x11/deed-page-skill)**: Source for `deed-page`.
+- **[kasovy/neverapply-mcp](https://github.com/kasovy/neverapply-mcp)**: Source for `neverapply`.
 - **[pangolin-spg/openclaw-skills](https://github.com/pangolin-spg/openclaw-skills)**: Source for `pangolinfo-amazon-data-research`.
+- **[pixeltable/pixeltable-skill](https://github.com/pixeltable/pixeltable-skill)**: Source for `pixeltable`.
 - **[sendblue-api/sendblue-cli](https://github.com/sendblue-api/sendblue-cli)**: Source for `sendblue/sendblue-cli`.
 - **[uiverify/uiverify](https://github.com/uiverify/uiverify)**: Source for `uiverify-triage-visual-changes`.
+- **[wassim-azi/agy-powerline](https://github.com/wassim-azi/agy-powerline)**: Source for `agy-powerline`.
 
 </details>
 
@@ -651,10 +652,13 @@ Key source families include:
 - **[Search-3D/electron-drive-skill](https://github.com/Search-3D/electron-drive-skill)**: Source for the `electron-drive-skill` skill - launching and driving Electron apps under Playwright on a scratch profile (MIT).
 - **[codegiveness/kernel-prompt](https://github.com/codegiveness/kernel-prompt)**: MIT source for the `kernel-prompt` skill - harness-neutral prompt design that asks one round of user-only decisions, then returns an improved prompt for another agent without performing the task.
 
+- **[assaylabdesk-sudo/assay-lite](https://github.com/assaylabdesk-sudo/assay-lite)**: Source for `calibrate-first`.
+- **[cclank/lanshu-create-ai-presenter-video](https://github.com/cclank/lanshu-create-ai-presenter-video)**: Source for `lanshu-create-ai-presenter-video`.
 - **[clagoss/claude-code-para-disenadores](https://github.com/clagoss/claude-code-para-disenadores)**: Source for `design-token-contrast`.
 - **[harshmaur/apify-facebook-ads-library-scraper](https://github.com/harshmaur/apify-facebook-ads-library-scraper)**: Source for `apify-facebook-ads-library-scraper`.
 - **[harshmaur/apify-linkedin-jobs-scraper](https://github.com/harshmaur/apify-linkedin-jobs-scraper)**: Source for `apify-linkedin-jobs-scraper`.
 - **[harshmaur/apify-tiktok-scraper](https://github.com/harshmaur/apify-tiktok-scraper)**: Source for `apify-tiktok-scraper`.
+- **[harshmaur/apify-youtube-transcript-scraper](https://github.com/harshmaur/apify-youtube-transcript-scraper)**: Source for `apify-youtube-transcript-scraper`.
 - **[kevinmmiddleton/unpaid-intern](https://github.com/kevinmmiddleton/unpaid-intern)**: Source for `unpaid-intern`.
 - **[wu736139669/goal-instruction-writer](https://github.com/wu736139669/goal-instruction-writer)**: Source for `goal-instruction-writer`.
 
@@ -716,9 +720,9 @@ Contributors ranked by the number of skills they added.
 | 4 | <a href="https://github.com/sohamganatra"><img src="https://github.com/sohamganatra.png?size=48" width="32" height="32" alt="" /></a> [@sohamganatra](https://github.com/sohamganatra) | 78 |
 | 5 | <a href="https://github.com/ProgramadorBrasil"><img src="https://github.com/ProgramadorBrasil.png?size=48" width="32" height="32" alt="" /></a> [@ProgramadorBrasil](https://github.com/ProgramadorBrasil) | 52 |
 | 6 | <a href="https://github.com/nikolasdehor"><img src="https://github.com/nikolasdehor.png?size=48" width="32" height="32" alt="" /></a> [@nikolasdehor](https://github.com/nikolasdehor) | 35 |
-| 7 | <a href="https://github.com/Ranjeet2063"><img src="https://github.com/Ranjeet2063.png?size=48" width="32" height="32" alt="" /></a> [@Ranjeet2063](https://github.com/Ranjeet2063) | 20 |
-| 8 | <a href="https://github.com/MMEHDI0606"><img src="https://github.com/MMEHDI0606.png?size=48" width="32" height="32" alt="" /></a> [@MMEHDI0606](https://github.com/MMEHDI0606) | 20 |
-| 9 | <a href="https://github.com/beatra-ai"><img src="https://github.com/beatra-ai.png?size=48" width="32" height="32" alt="" /></a> [@beatra-ai](https://github.com/beatra-ai) | 17 |
+| 7 | <a href="https://github.com/beatra-ai"><img src="https://github.com/beatra-ai.png?size=48" width="32" height="32" alt="" /></a> [@beatra-ai](https://github.com/beatra-ai) | 23 |
+| 8 | <a href="https://github.com/Ranjeet2063"><img src="https://github.com/Ranjeet2063.png?size=48" width="32" height="32" alt="" /></a> [@Ranjeet2063](https://github.com/Ranjeet2063) | 20 |
+| 9 | <a href="https://github.com/MMEHDI0606"><img src="https://github.com/MMEHDI0606.png?size=48" width="32" height="32" alt="" /></a> [@MMEHDI0606](https://github.com/MMEHDI0606) | 20 |
 | 10 | <a href="https://github.com/ShianMike"><img src="https://github.com/ShianMike.png?size=48" width="32" height="32" alt="" /></a> [@ShianMike](https://github.com/ShianMike) | 13 |
 
 </td>

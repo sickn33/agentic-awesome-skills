@@ -4,7 +4,7 @@ description: "Read and edit Google Docs through an available authenticated conne
 license: Apache-2.0
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 metadata:
   author: sanjay3290
   version: "1.0"

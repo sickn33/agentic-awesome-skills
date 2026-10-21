@@ -4,7 +4,8 @@
 
 ## CI/CD Pipeline Integration
 
-```yaml
+```text
+NON-EXECUTABLE CI DESIGN: before adoption, use least-privilege jobs, pin every action to a reviewed full SHA, and provision verified fixed-version tools in a digest-pinned runner image. Never expose credentials during tool provisioning.
 # GitHub Actions - Policy enforcement in PR workflow
 name: Policy Checks
 on:
@@ -32,7 +33,7 @@ jobs:
       - name: OPA Policy Check
         uses: open-policy-agent/setup-opa@v2
         with:
-          version: latest
+          version: EXACT_REVIEWED_VERSION_REQUIRED
       - run: |
           RESULTS=$(opa eval \
             --data policies/ \
@@ -69,9 +70,9 @@ jobs:
 
       - name: Install Kyverno CLI
         run: |
-          curl -LO https://github.com/kyverno/kyverno/releases/latest/download/kyverno-cli_linux_amd64.tar.gz
-          tar -xzf kyverno-cli_linux_amd64.tar.gz
-          sudo mv kyverno /usr/local/bin/
+# Tool prerequisite: use a verified preinstalled binary; no network installer runs here.
+
+
 
       - name: Test Kyverno Policies
         run: |

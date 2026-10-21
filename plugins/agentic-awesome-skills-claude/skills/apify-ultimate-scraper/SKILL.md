@@ -3,7 +3,7 @@ name: apify-ultimate-scraper
 description: "AI-driven data extraction from 55+ Actors across all major platforms. This skill automatically selects the best Actor for your task."
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-01"
 ---
 
 # Universal Web Scraper

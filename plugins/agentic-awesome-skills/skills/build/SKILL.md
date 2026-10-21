@@ -7,7 +7,7 @@ metadata:
 description: "Use when developing a major feature: research the project, create a phased implementation plan, track progress and verify phase outcomes before declaring completion."
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 
 

@@ -19,7 +19,7 @@ npm run maintenance:cycle -- intake --state-dir /absolute/private/state
 ```
 
 Intake returns every PR, including each blocker and the required next action.
-A blocked first PR does not suppress the rest. Read the complete changed skill
+A blocked first PR does not suppress the rest. Intake requires an OPEN PR; closed, already-merged or unknown states stop before analysis or workflow approval and never return `prepared`. Exclude closed PRs; for a merged PR, use merge resume to verify ancestry without another write or repeated content review. Read the complete changed skill
 trees once; `npm run maintainer:dossier -- --prs 123,124 --output /absolute/private/dossier.json`
 provides immutable file inventories. `skills` describes current trees;
 `previousSkills` describes changed trees at the merge base, including deletions
@@ -55,7 +55,7 @@ npm run maintenance:cycle -- status --state-dir /absolute/private/state
 
 Verification fetches current protection, proves every merge reachable from main,
 requires successful latest push CI/CodeQL on that exact SHA, and confirms the
-runtime version is unchanged. Pending/failed/missing runs are not completion.
+runtime version is unchanged. Pending/failed/missing runs are not completion. The CI attempt must also contain a successful `main-validation-and-sync` job and its executed `Validate protected source diff with ephemeral snapshots` step; an overall green workflow with missing, skipped or failed source validation cannot close the cycle.
 The report includes original start, elapsed wall time, blocked attempts, explicit
 branch updates and raw final job timings. Keep agent review gaps and retries in
 elapsed time. A no-release source batch is not comparable to a full release.

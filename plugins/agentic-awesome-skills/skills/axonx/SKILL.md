@@ -14,6 +14,11 @@ tags: [quantitative-research, mcp, backtesting, python]
 
 # AxonX Development and Operations Guide
 
+## External tool prerequisite
+
+Use only an already installed tool whose exact version, complete dependency tree and integrity have been reviewed. This skill does not bootstrap tools or activate external plugins. If the prerequisite is missing, stop that executable path and report it; continue with static analysis when possible. A separate installation task must pin immutable artifacts, stage them outside active agent directories with lifecycle scripts disabled, inspect every bundled file and executable entry point (including tests and hooks), and obtain approval before activation or host configuration changes. Do not substitute a same-named workspace script or fetch a moving branch.
+
+
 This guide can be read independently or installed as an Agent skill. Documentation and source links use absolute URLs, so copying this file does not depend on its original directory. The maintained project is [FlowLLM-AI/AxonX](https://github.com/FlowLLM-AI/AxonX).
 
 Source paths such as `plugins/a158/...` are relative to the root of an AxonX source checkout, not to this document or the Agent workspace. Run source development and plugin build commands from that checkout. Workspace paths passed to Jobs such as `preview_file` are relative to the selected service's workspace. Package installation alone does not provide the example plugin sources.
@@ -32,20 +37,11 @@ This skill is labeled `critical` because it documents package installation, task
 
 Use Python 3.12+ on macOS or Linux for local Task execution. In your chosen working directory, create and activate a virtual environment, then install the core:
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install axonx
-axonx help
-```
+The runtime must already be installed and reviewed. Report a missing runtime instead of installing it.
 
 For the prebuilt Studio UI, install `axonx[studio]` instead. Research plugins are installed separately. For source development, clone the project, enter its root, and install it in an activated virtual environment:
 
-```bash
-git clone https://github.com/FlowLLM-AI/AxonX.git
-cd AxonX
-pip install -e .
-```
+The runtime must already be installed and reviewed. Report a missing runtime instead of installing it.
 
 Configure credentials through environment variables or a `.env` file discovered from the process working directory or its parents. Before starting a local service, replace the token placeholder with your own value:
 

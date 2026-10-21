@@ -223,19 +223,23 @@ For each platform, use WebFetch to search and assess presence:
 **Wikipedia Check (IMPORTANT — use BOTH methods to avoid false negatives):**
 
 **Method 1 — Python API check (MOST RELIABLE, do this FIRST):**
-```bash
-python3 -c "
+Write the exact brand as a JSON string field `brand` in `brand-input.json` using a structured file writer. Never paste report or website content into command source. Run this as a reviewed Python file, without a shell:
+
+```python
 import requests, json
 from urllib.parse import quote_plus
-brand = '[Brand_Name]'
+from pathlib import Path
+brand = json.loads(Path('brand-input.json').read_text())['brand']
+if not isinstance(brand, str) or len(brand) > 200:
+    raise ValueError('Invalid brand')
 # Check Wikipedia API directly
 api_url = f'https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={quote_plus(brand)}&format=json'
 r = requests.get(api_url, headers={'User-Agent': 'GEO-Audit/1.0'}, timeout=15)
 data = r.json()
 results = data.get('query', {}).get('search', [])
 if results and brand.lower() in results[0].get('title', '').lower():
-    print(f'WIKIPEDIA PAGE EXISTS: {results[0][\"title\"]}')
-    print(f'URL: https://en.wikipedia.org/wiki/{results[0][\"title\"].replace(\" \", \"_\")}')
+    print(f'WIKIPEDIA PAGE EXISTS: {results[0]["title"]}')
+    print(f'URL: https://en.wikipedia.org/wiki/{results[0]["title"].replace(" ", "_")}')
 else:
     print('No direct Wikipedia page found')
 # Check Wikidata
@@ -244,8 +248,7 @@ r2 = requests.get(wd_url, headers={'User-Agent': 'GEO-Audit/1.0'}, timeout=15)
 wd = r2.json()
 entities = wd.get('search', [])
 if entities:
-    print(f'WIKIDATA ENTRY: {entities[0].get(\"id\", \"\")} — {entities[0].get(\"description\", \"\")}')
-"
+    print(f'WIKIDATA ENTRY: {entities[0].get("id", "")} — {entities[0].get("description", "")}')
 ```
 
 **Method 2 — Direct URL check (backup verification):**

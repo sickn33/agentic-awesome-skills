@@ -3,7 +3,7 @@ name: sred-project-organizer
 description: Take a list of projects and their related documentation, and organize them into the SRED format for submission.
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 ## Supporting material availability
 

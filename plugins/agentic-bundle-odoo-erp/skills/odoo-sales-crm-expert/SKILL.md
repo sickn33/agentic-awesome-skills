@@ -4,7 +4,7 @@ description: 'Expert guide for Odoo Sales and CRM: pipeline stages, quotation te
 metadata:
   aas-risk: safe
   aas-source: self
-  aas-date-added: '2026-09-04'
+  aas-date-added: '2026-03-04'
 ---
 
 # Odoo Sales & CRM Expert

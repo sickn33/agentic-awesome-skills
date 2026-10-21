@@ -3,7 +3,7 @@ name: google-sheets-automation
 description: "Read and edit Google Sheets through an available authenticated connector or reviewed API integration, with scoped changes and read-back verification."
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 license: Apache-2.0
 metadata:
   author: sanjay3290

@@ -6,7 +6,7 @@ allowed-tools: Bash(rails *), Bash(bundle *), Bash(bin/*), Bash(npm *), Bash(yar
 context: fork
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 metadata:
   author: Shpigford
   version: "1.0"

@@ -2,7 +2,7 @@
 name: jev-use
 description: "Route enumerable judgment steps - did it work, which option, how risky, is this safe to run - to the Jev judgment model through the jev_judge and jev_gate MCP tools, batched into one call per state."
 category: agent-orchestration
-risk: safe
+risk: critical
 source: community
 source_repo: shitianfang/jev-use
 source_type: community
@@ -15,6 +15,11 @@ license_source: "https://github.com/shitianfang/jev-use/blob/main/LICENSE"
 ---
 
 # Jev Use
+
+## External tool prerequisite
+
+Use only an already installed tool whose exact version, complete dependency tree and integrity have been reviewed. This skill does not bootstrap tools or activate external plugins. If the prerequisite is missing, stop that executable path and report it; continue with static analysis when possible. A separate installation task must pin immutable artifacts, stage them outside active agent directories with lifecycle scripts disabled, inspect every bundled file and executable entry point (including tests and hooks), and obtain approval before activation or host configuration changes. Do not substitute a same-named workspace script or fetch a moving branch.
+
 
 ## Overview
 
@@ -34,10 +39,10 @@ Everything Jev should not decide comes back under a typed escalation contract, s
 ### Step 1: Install and wire the server
 
 ```bash
-npx -y jev-use install
+jev-use install
 ```
 
-`install` wires the stdio MCP server into Claude Code, Codex and pi through each harness's own CLI - whichever it finds - and `npx -y jev-use doctor` verifies backend resolution with one live round trip. Set a provider credential in the environment the agent runs in (`TYPESAFE_API_KEY`, `OPENROUTER_API_KEY` or `AI_GATEWAY_API_KEY`, auto-detected in that order), or set `JEV_BACKEND=mock` to run keyless with no network calls.
+`install` wires the stdio MCP server into Claude Code, Codex and pi through each harness's own CLI - whichever it finds - and `jev-use doctor` verifies backend resolution with one live round trip. Set a provider credential in the environment the agent runs in (`TYPESAFE_API_KEY`, `OPENROUTER_API_KEY` or `AI_GATEWAY_API_KEY`, auto-detected in that order), or set `JEV_BACKEND=mock` to run keyless with no network calls.
 
 ### Step 2: Route each step before working on it
 
@@ -146,7 +151,7 @@ A `score` answer is the expected position on your own levels: `0.8` means "betwe
 - **Data egress:** whatever you put in `state` is sent to the provider you configure. Keep secrets, credentials and customer data out of it, or set `JEV_BACKEND=mock`, which judges locally with no key and no network call.
 - **Credentials:** the provider key is read from the environment (`TYPESAFE_API_KEY`, `OPENROUTER_API_KEY`, `AI_GATEWAY_API_KEY`). Never paste a key into a `state` string, a prompt, or a committed file.
 - **`jev_gate` is not a permission system.** It can deny or ask; it cannot grant. Keep your harness's own approval rules in place, and expect the gate to step aside if the backend is down.
-- `npx -y jev-use install` edits local harness configuration through each harness's own CLI. Run it on a machine you control and re-run `npx -y jev-use doctor` afterwards to see what resolved.
+- `jev-use install` edits local harness configuration through each harness's own CLI. Run it on a machine you control and re-run `jev-use doctor` afterwards to see what resolved.
 
 ## Common Pitfalls
 

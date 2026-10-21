@@ -16,3 +16,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `references/javascript.md` | `plugins/constant-time-analysis/skills/constant-time-analysis/references/javascript.md` | `f8454c778831bb8c951bc7f32105fa618fcd6134` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/python.md` | `plugins/constant-time-analysis/skills/constant-time-analysis/references/python.md` | `6530be6202601e2c3ae32db44d4153a1d2f98e28` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/ruby.md` | `plugins/constant-time-analysis/skills/constant-time-analysis/references/ruby.md` | `6e462470f4ed02882b77a5aaacf733154a4a8de0` | text-only trailing whitespace and EOF blank lines normalized |
+
+Maintainer safety changes for 19.13.0: the PHP guide requires an existing reviewed VLD toolchain and removes the executing OPcache fallback and mutable installer commands. The JavaScript guide rejects automatic `npx` fallback. Original blob identities above describe upstream provenance, not current local byte equality.

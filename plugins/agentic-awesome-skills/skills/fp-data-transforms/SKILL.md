@@ -3,7 +3,7 @@ name: fp-data-transforms
 description: Everyday data transformations using functional patterns - arrays, objects, grouping, aggregation, and null-safe access
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 version: 1.0.0
 author: Claude
 tags:

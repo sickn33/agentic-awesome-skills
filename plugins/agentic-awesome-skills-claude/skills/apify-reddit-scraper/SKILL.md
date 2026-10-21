@@ -139,9 +139,10 @@ The JSON output reports `run.status` and the dataset id at `storage.defaultDatas
 ### Step 4 — Fetch and deliver
 
 ```bash
+EXPORT_DIR="$(mktemp -d)" || exit 1
 apify datasets get-items "DATASET_ID" --format json \
   --user-agent apify-awesome-skills/apify-reddit-scraper \
-  2>/dev/null > /tmp/reddit.json
+  2>/dev/null > "$EXPORT_DIR/reddit.json"
 ```
 
 Every row carries `dataType` (`post` | `comment` | `community` | `user_profile`). Key fields:

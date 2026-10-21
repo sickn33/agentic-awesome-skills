@@ -3,7 +3,7 @@ name: skill-scanner
 description: "Scan agent skills for security issues before adoption. Detects prompt injection, malicious code, excessive permissions, secret exposure, and supply chain risks."
 risk: safe
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 ## Bundled upstream support
 

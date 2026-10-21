@@ -4,7 +4,7 @@ description: Expert guide for creating custom Odoo modules. Covers __manifest__.
 metadata:
   aas-risk: safe
   aas-source: self
-  aas-date-added: '2026-09-04'
+  aas-date-added: '2026-03-04'
 ---
 
 # Odoo Module Developer

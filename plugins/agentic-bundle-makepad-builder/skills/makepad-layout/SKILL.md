@@ -14,7 +14,7 @@ description: 'CRITICAL: Use for Makepad layout system. Triggers on:
 metadata:
   aas-risk: safe
   aas-source: community
-  aas-date-added: '2026-09-04'
+  aas-date-added: '2026-03-06'
 ---
 
 ## Supporting material availability

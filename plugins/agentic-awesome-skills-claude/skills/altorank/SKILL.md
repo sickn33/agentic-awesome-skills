@@ -35,7 +35,7 @@ re-runs a failed publish of an article a person already approved.
 
 If the `altorank` tools are missing, tell the user:
 - Claude Code: `claude mcp add --transport http altorank https://app.altorank.co/api/mcp`, then `/mcp` → altorank → Authenticate (OAuth in the browser)
-- Claude Code plugin (bundles this skill and the server): `claude plugin marketplace add AltoRank/altorank`, then `claude plugin install altorank@altorank`
+- Optional plugin: use an already reviewed local plugin. If unavailable, stop and report the missing prerequisite; this skill does not install external plugins.
 - Other MCP clients: add a Streamable HTTP server at `https://app.altorank.co/api/mcp` and sign in with OAuth. Self-hosted installs use their own origin.
 
 ## Two kinds of tools

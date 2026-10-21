@@ -7,7 +7,7 @@ description: |
   Matrix 集成, 聊天客户端
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 ## Supporting material availability
 

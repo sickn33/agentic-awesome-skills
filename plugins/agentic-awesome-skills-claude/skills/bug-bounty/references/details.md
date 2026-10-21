@@ -1243,16 +1243,11 @@ When payout is being downgraded, use these counters:
 
 To use this as a Claude Code skill, copy this file to your skills directory:
 
-```bash
-# Option A: Clone the repo and link the skill
-git clone https://github.com/shuvonsec/claude-bug-bounty.git ~/.claude/skills/bug-bounty
-ln -s ~/.claude/skills/bug-bounty/SKILL.md ~/.claude/skills/bug-bounty/SKILL.md
+## External tool prerequisite
 
-# Option B: Direct copy
-mkdir -p ~/.claude/skills/bug-bounty
-curl -s https://raw.githubusercontent.com/shuvonsec/claude-bug-bounty/main/SKILL.md \
-  -o ~/.claude/skills/bug-bounty/SKILL.md
-```
+Use only an already installed tool whose exact version, complete dependency tree and integrity have been reviewed. This skill does not bootstrap tools or activate external plugins. If the prerequisite is missing, stop that executable path and report it; continue with static analysis when possible. A separate installation task must pin immutable artifacts, stage them outside active agent directories with lifecycle scripts disabled, inspect every bundled file and executable entry point (including tests and hooks), and obtain approval before activation or host configuration changes. Do not substitute a same-named workspace script or fetch a moving branch.
+
+
 
 Then in Claude Code, this skill loads automatically when you ask about bug bounty, recon, or vulnerability hunting.
 

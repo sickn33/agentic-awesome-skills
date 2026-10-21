@@ -3,7 +3,7 @@ name: filesystem-context
 description: Use for file-based context management, dynamic context discovery, and reducing context window bloat. Offload context to files for just-in-time loading.
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 
 # Filesystem-Based Context Engineering

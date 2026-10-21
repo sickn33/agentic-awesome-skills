@@ -12,7 +12,7 @@ description: 'CRITICAL: Use for Makepad getting started and app structure. Trigg
 metadata:
   aas-risk: critical
   aas-source: https://github.com/makepad/makepad
-  aas-date-added: '2026-09-04'
+  aas-date-added: '2026-03-06'
 ---
 
 ## Supporting material availability

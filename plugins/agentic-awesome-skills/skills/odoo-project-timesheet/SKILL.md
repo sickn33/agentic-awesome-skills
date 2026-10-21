@@ -3,7 +3,7 @@ name: odoo-project-timesheet
 description: "Expert guide for Odoo Project and Timesheets: task stages, billable time tracking, timesheet approval, budget alerts, and invoicing from timesheets."
 risk: safe
 source: "self"
-date_added: "2026-09-04"
+date_added: "2026-03-04"
 ---
 
 # Odoo Project & Timesheet

@@ -20,7 +20,8 @@ Show these elements in order:
    which changes trigger a rerun. Include bounds for expensive checks.
 6. **Drift gates:** when the Anchor is re-read and what triggers realignment.
 7. **Terminal states:** exact complete, blocked, paused, timeboxed, and stopped
-   conditions.
+   conditions. A blocked condition names the dependency and its unblock
+   condition; difficulty, slowness, and uncertainty are not blockers.
 8. **Decisions to confirm:** only the choices that could materially change the
    loop, scope, evidence, or terminal rules. For feedback, adoption, pilot,
    launch, or validation work, confirm the evidence threshold, what counts, and
@@ -94,7 +95,9 @@ focused change → run the fixture test → record the diff and result.
 - Test passes: mark C1 verified and select the next open criterion.
 - Test fails with new evidence: revise the hypothesis and try one different
   focused change.
-- Same failure twice: stop as `GOAL BLOCKED` with the exact missing evidence.
+- Same failure twice: change the hypothesis. Report `GOAL BLOCKED` only when a
+  named dependency is the actual cause, with the attempts made and the unblock
+  condition.
 - Useful unrelated cleanup: mark `SIDE_QUEST` and defer it.
 - No criterion moves or scope expands: pause as
   `GOAL REALIGNMENT REQUIRED`.

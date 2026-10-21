@@ -4,7 +4,7 @@ description: Add and manage evaluation results in Hugging Face model cards. Supp
 metadata:
   aas-risk: critical
   aas-source: community
-  aas-date-added: '2026-09-04'
+  aas-date-added: '2026-03-06'
 ---
 
 # Overview

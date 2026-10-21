@@ -685,7 +685,7 @@ def redact_string(text: str) -> str:
 
 
 class PIIRedactingSpanProcessor(SpanProcessor):
-    """Wraps an exporter and redacts PII from span attributes before export."""
+    """Drops spans containing detectable PII before export. Pattern detection is incomplete; do not record secrets."""
 
     def __init__(self, exporter: SpanExporter):
         self._exporter = exporter
@@ -694,18 +694,12 @@ class PIIRedactingSpanProcessor(SpanProcessor):
         pass
 
     def on_end(self, span: ReadableSpan):
-        # ReadableSpan attributes are immutable, so we build a sanitised copy
-        sanitised_attrs = {}
-        for key, value in span.attributes.items():
-            if isinstance(value, str):
-                sanitised_attrs[key] = redact_string(value)
-            else:
-                sanitised_attrs[key] = value
-
-        # Export the span with redacted attributes
-        # In practice, you would use a custom exporter wrapper or
-        # monkey-patch the span. Here is a pragmatic approach using
-        # the BatchSpanProcessor pattern:
+        # Fail closed: inspect the complete serialized span (events, status,
+        # resource and links included). Do not export the original if a match exists.
+        # This example drops contaminated spans; it does not mutate ReadableSpan.
+        serialized = span.to_json()
+        if redact_string(serialized) != serialized:
+            return
         self._exporter.export([span])
 
     def shutdown(self):

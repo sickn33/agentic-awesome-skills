@@ -82,7 +82,8 @@ snyk ignore --id=SNYK-JS-LODASH-567746 --expiry=2024-12-31 --reason="No exploit 
 
 ### CI Integration
 
-```yaml
+```text
+NON-EXECUTABLE CI DESIGN: before adoption, use least-privilege jobs, pin every action to a reviewed full SHA, and provision verified fixed-version tools in a digest-pinned runner image. Never expose credentials during tool provisioning.
 # .github/workflows/snyk.yml
 name: Snyk Security
 
@@ -98,7 +99,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
+        step: Run the preinstalled reviewed Snyk binary
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
@@ -362,7 +363,7 @@ cyclonedx-gomod mod -json > sbom.json
 
 ```bash
 # Install
-curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh -o /tmp/install-syft.sh && sh /tmp/install-syft.sh && rm /tmp/install-syft.sh -s
+# Tool prerequisite: use a verified preinstalled binary; no network installer runs here.
 
 # Generate SBOM
 syft dir:/path/to/project -o cyclonedx-json > sbom.json
@@ -374,7 +375,8 @@ syft myimage:latest -o cyclonedx-json > sbom.json
 
 ## CI/CD Pipeline
 
-```yaml
+```text
+NON-EXECUTABLE CI DESIGN: before adoption, use least-privilege jobs, pin every action to a reviewed full SHA, and provision verified fixed-version tools in a digest-pinned runner image. Never expose credentials during tool provisioning.
 # Comprehensive dependency scanning
 name: Dependency Security
 
@@ -395,7 +397,7 @@ jobs:
         run: npm audit --audit-level=high
 
       - name: Snyk scan
-        uses: snyk/actions/node@master
+        step: Run the preinstalled reviewed Snyk binary
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:

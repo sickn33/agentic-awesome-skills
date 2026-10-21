@@ -2,7 +2,7 @@
 name: google-no-code
 description: "Design Google Forms and wire Apps Script triggers (onFormSubmit) for email alerts, spreadsheet logging, and dynamic questions — no code editor required."
 category: automation
-risk: safe
+risk: critical
 source: self
 source_type: self
 date_added: "2026-09-19"
@@ -62,13 +62,25 @@ function onFormSubmit(e) {
 }
 
 function getEmail(response) {
-  const items = response.getItemResponses();
-  for (const item of items) {
-    if (item.getItem().getTitle().toLowerCase().includes("email")) {
-      return item.getResponse();
-    }
+  // Requires Forms' VERIFIED email collection, not an email question or responder input.
+  const form = FormApp.getActiveForm();
+  if (!form.collectsEmail()) throw new Error("Verified email collection is required");
+  // Configure the form to Verified in the UI; Apps Script's boolean alone does not prove it.
+  if (PropertiesService.getScriptProperties().getProperty("VERIFIED_EMAIL_COLLECTION_APPROVED") !== "yes") {
+    throw new Error("Owner must verify and approve the form's email-collection mode");
   }
-  return Session.getActiveUser().getEmail();
+  const email = response.getRespondentEmail();
+  if (!email || !/^[^\s,@]+@[^\s,@]+\.[^\s,@]+$/.test(email)) throw new Error("Missing verified recipient");
+  // Limit one receipt per verified address per six hours under an atomic script lock.
+  const lock = LockService.getScriptLock();
+  lock.waitLock(5000);
+  try {
+    const cache = CacheService.getScriptCache();
+    if (cache.get(email)) throw new Error("Receipt already sent");
+    if (MailApp.getRemainingDailyQuota() < 20) throw new Error("Mail quota reserve reached");
+    cache.put(email, "sent", 21600);
+  } finally { lock.releaseLock(); }
+  return email;
 }
 ```
 
@@ -78,7 +90,11 @@ function getEmail(response) {
 function onFormSubmit(e) {
   const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName("Responses");
   const itemResponses = e.response.getItemResponses();
-  const row = [new Date()].concat(itemResponses.map(r => r.getResponse()));
+  const asText = value => {
+    const text = Array.isArray(value) ? value.join(", ") : String(value ?? "");
+    return /^[\s\u0000-\u001f]*[=+@-]/.test(text) ? "'" + text : text;
+  };
+  const row = [new Date()].concat(itemResponses.map(r => asText(r.getResponse())));
   sheet.appendRow(row);
 }
 ```

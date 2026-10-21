@@ -4,7 +4,7 @@ description: Prepare or create commits using Sentry-style message conventions wh
 metadata:
   aas-risk: critical
   aas-source: community
-  aas-date-added: '2026-09-04'
+  aas-date-added: '2026-01-30'
 ---
 
 # Sentry Commit Messages

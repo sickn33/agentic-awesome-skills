@@ -3,7 +3,7 @@ name: ask-questions-if-underspecified
 description: Clarify requirements before implementing. Use when serious doubts arise.
 risk: safe
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 
 # Ask Questions If Underspecified

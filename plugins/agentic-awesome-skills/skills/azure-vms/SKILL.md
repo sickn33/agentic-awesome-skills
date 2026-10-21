@@ -25,7 +25,8 @@ Deploy and manage Azure VMs, availability sets, scale sets, custom images, and m
 
 ```bash
 # Install Azure CLI
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+# Prerequisite: organization-approved Azure CLI installed from a verified signed package.
+az version
 
 # Login and set subscription
 az login

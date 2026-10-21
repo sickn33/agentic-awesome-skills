@@ -3,7 +3,7 @@ name: constant-time-analysis
 description: "Analyze cryptographic code to detect operations that leak secret data through execution timing variations."
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 ## Bundled upstream support
 
@@ -65,6 +65,22 @@ Based on the file extension or language context, refer to the appropriate guide:
 | TypeScript | `.ts`, `.tsx`                     | references/javascript.md     |
 | Python     | `.py`                             | references/python.md             |
 | Ruby       | `.rb`                             | references/ruby.md                 |
+
+## Runtime prerequisite and execution boundary
+
+This catalog bundles documentation only; `ct_analyzer/analyzer.py` is not included.
+The commands below and in the language references are illustrative upstream usage,
+not an instruction to resolve or execute missing code. Stop if a separately installed,
+reviewed analyzer is unavailable. Record its immutable source identity and inspect its
+complete runtime and locked dependencies before any separately authorized setup.
+Use only existing approved language tools; do not let `uv`, `npx`, PECL or a guide's
+bootstrap commands fetch a moving dependency. Review the selected analyzer's command
+construction and target-execution behavior before using it on untrusted code.
+
+For PHP, require VLD with `vld.execute=0`; refuse any analyzer that falls back to
+OPcache target execution. For compilation, bytecode inspection and all other language
+backends, use an isolated environment without unrelated credentials or network access.
+Do not treat disassembly as proof that a tool cannot execute target code.
 
 ## Quick Start
 

@@ -59,7 +59,7 @@ services:
   loki:
     image: grafana/loki:2.9.0
     ports:
-      - "3100:3100"
+      - "127.0.0.1:3100:3100"
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yaml
       - loki-data:/loki
@@ -76,13 +76,13 @@ services:
   grafana:
     image: grafana/grafana:10.2.0
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
     environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:?Set a unique Grafana password}
 
 volumes:
   loki-data:

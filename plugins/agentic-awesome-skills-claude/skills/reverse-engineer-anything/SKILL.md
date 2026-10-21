@@ -1,7 +1,7 @@
 ---
 name: reverse-engineer-anything
 description: Use REA to investigate shipped apps, binaries, packages, and runtimes; trace features with evidence, compare versions, or guide reconstruction. Skip ordinary source-code analysis.
-risk: safe
+risk: critical
 source: "https://github.com/morluto/rea/tree/main/skill-src/reverse-engineer-anything"
 source_repo: "morluto/rea"
 source_type: community
@@ -13,6 +13,11 @@ metadata:
 ---
 
 # REA
+
+## External tool prerequisite
+
+Use only an already installed tool whose exact version, complete dependency tree and integrity have been reviewed. This skill does not bootstrap tools or activate external plugins. If the prerequisite is missing, stop that executable path and report it; continue with static analysis when possible. A separate installation task must pin immutable artifacts, stage them outside active agent directories with lifecycle scripts disabled, inspect every bundled file and executable entry point (including tests and hooks), and obtain approval before activation or host configuration changes. Do not substitute a same-named workspace script or fetch a moving branch.
+
 
 ## Current upstream location
 
@@ -52,7 +57,7 @@ advertise retained references.
 When tools are absent or registration is stale:
 
 1. Diagnose without changing files. For Codex, run
-   `npx -y rea-agents@latest doctor --client codex --json`. Substitute the current
+   `rea-agents doctor --client codex --json`. Substitute the current
    supported client: `claude_code`, `claude_desktop`, `codex`, `cursor`,
    `gemini_cli`, `windsurf`, `devin`, `opencode`, `antigravity`, `copilot_cli`,
    `commandcode`, `vscode`, `grok_build`, `omp`, or `grok_bot`. `grok_bot` has no local
@@ -66,12 +71,12 @@ When tools are absent or registration is stale:
    that provider: static JavaScript inspection needs neither Hopper nor Ghidra,
    and Android inspection has separate bring-your-own JADX/Java prerequisites.
 3. For a configuration repair, prepare the read-only plan:
-   `npx -y rea-agents@latest setup --client codex --dry-run --json`.
+   `rea-agents setup --client codex --dry-run --json`.
    Use the current client's ID, show its exact proposed paths, backups, and
    changes, and obtain approval before setup writes configuration or installs
    Hopper. Setup normally installs the matching bundled skill too; include that
    replacement in the reviewed plan. After approval, apply the same scope with
-   `npx -y rea-agents@latest setup --client codex --yes`. Add `--install-hopper`
+   `rea-agents setup --client codex --yes`. Add `--install-hopper`
    only if that separate installation was needed and explicitly approved.
 4. Restart/reconnect the affected agent. Verify that REA tools actually appear
    in the session, then resume the original investigation. If they remain
@@ -86,7 +91,7 @@ with a version-pinned `rea-agents` package or continue through the CLI.
 A concrete CLI fallback for an operator-supplied JavaScript tree or ASAR is:
 
 ```bash
-npx -y rea-agents@latest analyze-javascript-application /absolute/path/to/app --json
+rea-agents analyze-javascript-application /absolute/path/to/app --json
 ```
 
 No MCP registration or native engine is required. Read the returned Evidence,

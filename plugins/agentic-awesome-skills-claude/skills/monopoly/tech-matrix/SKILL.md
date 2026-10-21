@@ -2,7 +2,7 @@
 name: tech-matrix
 description: Reference document for monopoly tech-matrix.
 source: community
-date_added: "2026-09-04"
+date_added: "2026-06-14"
 risk: safe
 reports-to: monopoly
 ---

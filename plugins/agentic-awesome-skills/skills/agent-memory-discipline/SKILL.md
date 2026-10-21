@@ -2,7 +2,7 @@
 name: agent-memory-discipline
 description: "Rules for when an agent should recall from long-term memory before acting and when it should save decisions, corrections and failures afterwards. Works with any memory backend."
 category: memory
-risk: safe
+risk: critical
 source: community
 source_repo: mnemoverse/agent-memory-discipline
 source_type: community

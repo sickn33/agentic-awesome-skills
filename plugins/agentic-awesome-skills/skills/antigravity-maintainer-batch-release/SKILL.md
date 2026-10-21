@@ -50,3 +50,5 @@ This skill grants no additional publication or messaging authority. Tessl unavai
 Consult [scanner interpretation](references/skillspector.md) when triaging SkillSpector and [Core preview acceptance](references/core-preview.md) for runtime changes.
 
 Follow [public surface verification](references/public-surfaces.md) for catalog, Pages and legacy redirect changes.
+
+For CSV security intake, distinguish historical/generated duplicates from current canonical defects. Never execute skill Markdown or external setup as a triage shortcut. Dossiers must include containing nested skill trees; use reviewed test fixtures and inert source comparisons for executable documentation examples. Record each finding disposition and its evidence before release.

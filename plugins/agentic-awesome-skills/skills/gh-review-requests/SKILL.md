@@ -4,7 +4,7 @@ description: Fetch unread GitHub notifications for open PRs where review is requ
 allowed-tools: Bash
 risk: safe
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 
 # GitHub Review Requests

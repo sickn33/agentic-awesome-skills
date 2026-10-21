@@ -7,7 +7,7 @@ metadata:
   version: '1.0'
   aas-risk: critical
   aas-source: community
-  aas-date-added: '2026-09-04'
+  aas-date-added: '2026-03-06'
 ---
 
 # Google Slides Automation

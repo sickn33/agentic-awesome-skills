@@ -154,18 +154,18 @@ _SENSITIVE_JSON_KEYS = frozenset({
 })
 
 
-def redact_sensitive_json(value):
+def redact_sensitive_json(value, path=()):
     """Recursively redact secret-bearing keys before writing JSON to stdout."""
     if isinstance(value, dict):
         redacted = {}
         for key, item in value.items():
-            if str(key).lower() in _SENSITIVE_JSON_KEYS:
+            if str(key).lower() in _SENSITIVE_JSON_KEYS and not (path == ("checkpoint", "acknowledgement") and key == "token" and isinstance(item, str) and item.startswith("fcx_")):
                 redacted[key] = "***redacted***"
             else:
-                redacted[key] = redact_sensitive_json(item)
+                redacted[key] = redact_sensitive_json(item, path + (str(key),))
         return redacted
     if isinstance(value, list):
-        return [redact_sensitive_json(item) for item in value]
+        return [redact_sensitive_json(item, path + ("[]",)) for item in value]
     return value
 
 

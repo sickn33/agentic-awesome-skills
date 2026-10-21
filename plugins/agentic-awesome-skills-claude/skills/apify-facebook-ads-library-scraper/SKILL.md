@@ -131,9 +131,10 @@ The output gives `status` and the dataset ID at `storage.defaultDatasetId`. A me
 ### Step 4 — Fetch and report
 
 ```bash
+EXPORT_DIR="$(mktemp -d)" || exit 1
 apify datasets get-items "DATASET_ID" --format json \
   --user-agent apify-awesome-skills/apify-facebook-ads-library-scraper \
-  2>/dev/null > /tmp/fb-ads.json
+  2>/dev/null > "$EXPORT_DIR/fb-ads.json"
 ```
 
 Each row is one ad. The fields you use most:

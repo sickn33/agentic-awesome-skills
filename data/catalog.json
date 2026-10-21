@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-20T18:00:18.000Z",
-  "total": 2724,
+  "generatedAt": "2026-10-21T07:33:13.000Z",
+  "total": 2737,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1391,7 +1391,7 @@
       "name": "agent-memory-discipline",
       "description": "Rules for when an agent should recall from long-term memory before acting and when it should save decisions, corrections and failures afterwards. Works with any memory backend.",
       "category": "memory",
-      "risk": "safe",
+      "risk": "critical",
       "source": "community",
       "source_type": "community",
       "source_repo": "mnemoverse/agent-memory-discipline",
@@ -2429,6 +2429,42 @@
       "path": "skills/agy-delegate/SKILL.md"
     },
     {
+      "id": "agy-powerline",
+      "canonical_id": "agy-powerline",
+      "name": "agy-powerline",
+      "description": "Install, check and restyle the agy-powerline statusline for Antigravity CLI (agy): quotas, model, context window and git on agy's status bar.",
+      "category": "developer-tools",
+      "risk": "critical",
+      "source": "https://github.com/wassim-azi/agy-powerline",
+      "source_type": "official",
+      "source_repo": "wassim-azi/agy-powerline",
+      "license": "MIT",
+      "license_source": "https://github.com/wassim-azi/agy-powerline/blob/main/LICENSE",
+      "tags": [
+        "antigravity",
+        "agy",
+        "statusline",
+        "terminal",
+        "quota",
+        "cli"
+      ],
+      "triggers": [
+        "antigravity",
+        "agy",
+        "statusline",
+        "terminal",
+        "quota",
+        "cli",
+        "powerline",
+        "install",
+        "check",
+        "restyle",
+        "quotas",
+        "model"
+      ],
+      "path": "skills/agy-powerline/SKILL.md"
+    },
+    {
       "id": "ai-agent-development",
       "canonical_id": "ai-agent-development",
       "name": "ai-agent-development",
@@ -2603,6 +2639,43 @@
         "analyzer"
       ],
       "path": "skills/ai-analyzer/SKILL.md"
+    },
+    {
+      "id": "ai-audiobook-narration",
+      "canonical_id": "ai-audiobook-narration",
+      "name": "ai-audiobook-narration",
+      "description": "Install and use the official AI Audiobook Generator package, pinned by digest, for paid hosted work on the Beatra service.",
+      "category": "media",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "beatra-ai/ai-audiobook-generator-skill",
+      "license": "MIT-0",
+      "license_source": "https://github.com/beatra-ai/ai-audiobook-generator-skill/blob/4f5f6b5ec10ee989be010c4990a7a087cc3c721c/LICENSE",
+      "tags": [
+        "audiobook",
+        "tts",
+        "narration",
+        "voice-cloning",
+        "mcp",
+        "paid-api",
+        "beatra"
+      ],
+      "triggers": [
+        "audiobook",
+        "tts",
+        "narration",
+        "voice-cloning",
+        "mcp",
+        "paid-api",
+        "beatra",
+        "ai",
+        "install",
+        "official",
+        "generator",
+        "package"
+      ],
+      "path": "skills/ai-audiobook-narration/SKILL.md"
     },
     {
       "id": "ai-code-generation-guardrails",
@@ -2834,6 +2907,42 @@
         "generator"
       ],
       "path": "skills/ai-image-generation-studio/SKILL.md"
+    },
+    {
+      "id": "ai-image-realism",
+      "canonical_id": "ai-image-realism",
+      "name": "ai-image-realism",
+      "description": "Install and use the official AI Image Realism package, pinned by digest, for paid hosted work on the Beatra service.",
+      "category": "media",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "beatra-ai/ai-image-realism-skill",
+      "license": "MIT-0",
+      "license_source": "https://github.com/beatra-ai/ai-image-realism-skill/blob/0b29222a61c52917887efa40d39e100683b03625/LICENSE",
+      "tags": [
+        "image-editing",
+        "retouching",
+        "ai-artifacts",
+        "mcp",
+        "paid-api",
+        "beatra"
+      ],
+      "triggers": [
+        "image-editing",
+        "retouching",
+        "ai-artifacts",
+        "mcp",
+        "paid-api",
+        "beatra",
+        "ai",
+        "image",
+        "realism",
+        "install",
+        "official",
+        "package"
+      ],
+      "path": "skills/ai-image-realism/SKILL.md"
     },
     {
       "id": "ai-inference-service-mesh",
@@ -3350,6 +3459,42 @@
         "safety"
       ],
       "path": "skills/ai-sre-incident-response/SKILL.md"
+    },
+    {
+      "id": "ai-storyboard-generator",
+      "canonical_id": "ai-storyboard-generator",
+      "name": "ai-storyboard-generator",
+      "description": "Install and use the official AI Storyboard Generator package, pinned by digest, for paid hosted work on the Beatra service.",
+      "category": "media",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "beatra-ai/ai-storyboard-generator-skill",
+      "license": "MIT-0",
+      "license_source": "https://github.com/beatra-ai/ai-storyboard-generator-skill/blob/4736c45d40bb0823385c1eae407aa2886cd2ff1c/LICENSE",
+      "tags": [
+        "storyboard",
+        "shot-list",
+        "image-generation",
+        "mcp",
+        "paid-api",
+        "beatra"
+      ],
+      "triggers": [
+        "storyboard",
+        "shot-list",
+        "image-generation",
+        "mcp",
+        "paid-api",
+        "beatra",
+        "ai",
+        "generator",
+        "install",
+        "official",
+        "package",
+        "pinned"
+      ],
+      "path": "skills/ai-storyboard-generator/SKILL.md"
     },
     {
       "id": "ai-studio-image",
@@ -5897,6 +6042,41 @@
         "platforms"
       ],
       "path": "skills/apify-ultimate-scraper/SKILL.md"
+    },
+    {
+      "id": "apify-youtube-transcript-scraper",
+      "canonical_id": "apify-youtube-transcript-scraper",
+      "name": "apify-youtube-transcript-scraper",
+      "description": "Get YouTube captions, timestamped quotations, SRT/VTT and translated transcripts for videos, channels and playlists through the harshmaur/youtube-transcript-scraper Apify Actor.",
+      "category": "data",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "harshmaur/apify-youtube-transcript-scraper",
+      "license": "MIT",
+      "license_source": "https://github.com/harshmaur/apify-youtube-transcript-scraper/blob/main/LICENSE.txt",
+      "tags": [
+        "youtube",
+        "captions",
+        "transcripts",
+        "apify",
+        "research"
+      ],
+      "triggers": [
+        "youtube",
+        "captions",
+        "transcripts",
+        "apify",
+        "research",
+        "transcript",
+        "scraper",
+        "get",
+        "timestamped",
+        "quotations",
+        "srt",
+        "vtt"
+      ],
+      "path": "skills/apify-youtube-transcript-scraper/SKILL.md"
     },
     {
       "id": "apk-redteam-pipeline",
@@ -15327,6 +15507,41 @@
       "path": "skills/calendly-automation/SKILL.md"
     },
     {
+      "id": "calibrate-first",
+      "canonical_id": "calibrate-first",
+      "name": "calibrate-first",
+      "description": "Measure a dataset's detection floor before reading any trading-signal result, pre-register every test, and report too-small-to-see as UNDECIDABLE, not 'no effect'.",
+      "category": "finance",
+      "risk": "critical",
+      "source": "https://github.com/assaylabdesk-sudo/assay-lite",
+      "source_type": "community",
+      "source_repo": "assaylabdesk-sudo/assay-lite",
+      "license": "MIT",
+      "license_source": "https://github.com/assaylabdesk-sudo/assay-lite/blob/main/LICENSE",
+      "tags": [
+        "quant",
+        "backtesting",
+        "statistics",
+        "multiple-testing",
+        "factor-research"
+      ],
+      "triggers": [
+        "quant",
+        "backtesting",
+        "statistics",
+        "multiple-testing",
+        "factor-research",
+        "calibrate",
+        "first",
+        "measure",
+        "dataset",
+        "detection",
+        "floor",
+        "before"
+      ],
+      "path": "skills/calibrate-first/SKILL.md"
+    },
+    {
       "id": "candidate-talent-pool",
       "canonical_id": "candidate-talent-pool",
       "name": "candidate-talent-pool",
@@ -19656,7 +19871,7 @@
       "name": "container-scanning",
       "description": "Scan container images for vulnerabilities using Trivy, Grype, and cloud-native tools.",
       "category": "security",
-      "risk": "safe",
+      "risk": "critical",
       "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
       "source_type": "community",
       "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
@@ -21940,7 +22155,7 @@
       "name": "dali-short-address-commissioner",
       "description": "Commissions DALI and DALI-2 (IEC 62386) lighting buses: short-address assignment (0-63), 24-bit binary search collision resolution, groups, and DT8 color control. Trigger phrases: commission dali, dali short address, dali collision resolution, dali bus addressing, dali-2 setup.",
       "category": "architecture",
-      "risk": "safe",
+      "risk": "critical",
       "source": "community",
       "source_type": "community",
       "source_repo": "wwewtech/dali-short-address-commissioner",
@@ -29185,7 +29400,7 @@
       "name": "esl-price-sync",
       "description": "Synchronizes retail prices between ERP/POS systems and Electronic Shelf Labels (SES-imagotag, ZKONG, Pricer, Hanshow, SOLUM) with delta watermarking, idempotency, and battery modeling. Trigger phrases: esl price sync, electronic shelf labels, zkong sync, ses imagotag price, ghost pricing audit.",
       "category": "architecture",
-      "risk": "safe",
+      "risk": "critical",
       "source": "community",
       "source_type": "community",
       "source_repo": "wwewtech/esl-price-sync",
@@ -34584,7 +34799,7 @@
       "name": "geo-report-pdf",
       "description": "Generate a professional PDF report from a GEO audit using pandoc + Chrome headless.",
       "category": "seo",
-      "risk": "safe",
+      "risk": "critical",
       "source": "https://github.com/zubair-trabzada/geo-seo-claude",
       "source_type": "community",
       "source_repo": "zubair-trabzada/geo-seo-claude",
@@ -36070,7 +36285,7 @@
       "name": "google-no-code",
       "description": "Design Google Forms and wire Apps Script triggers (onFormSubmit) for email alerts, spreadsheet logging, and dynamic questions — no code editor required.",
       "category": "automation",
-      "risk": "safe",
+      "risk": "critical",
       "source": "self",
       "source_type": "self",
       "tags": [
@@ -42473,7 +42688,7 @@
       "name": "jev-use",
       "description": "Route enumerable judgment steps - did it work, which option, how risky, is this safe to run - to the Jev judgment model through the jev_judge and jev_gate MCP tools, batched into one call per state.",
       "category": "agent-orchestration",
-      "risk": "safe",
+      "risk": "critical",
       "source": "community",
       "source_type": "community",
       "source_repo": "shitianfang/jev-use",
@@ -43619,6 +43834,41 @@
       "path": "skills/langgraph/SKILL.md"
     },
     {
+      "id": "lanshu-create-ai-presenter-video",
+      "canonical_id": "lanshu-create-ai-presenter-video",
+      "name": "lanshu-create-ai-presenter-video",
+      "description": "Turn a topic or script into a publish-ready explainer video, led by an AI presenter or performed in one of twelve styled explainer looks.",
+      "category": "media",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "cclank/lanshu-create-ai-presenter-video",
+      "license": "MIT",
+      "license_source": "https://github.com/cclank/lanshu-create-ai-presenter-video/blob/main/LICENSE",
+      "tags": [
+        "video",
+        "explainer",
+        "ai-presenter",
+        "ffmpeg",
+        "narration"
+      ],
+      "triggers": [
+        "video",
+        "explainer",
+        "ai-presenter",
+        "ffmpeg",
+        "narration",
+        "lanshu",
+        "ai",
+        "presenter",
+        "turn",
+        "topic",
+        "script",
+        "publish"
+      ],
+      "path": "skills/lanshu-create-ai-presenter-video/SKILL.md"
+    },
+    {
       "id": "laravel-development-workflow",
       "canonical_id": "laravel-development-workflow",
       "name": "laravel-development-workflow",
@@ -43931,7 +44181,7 @@
       "name": "ledger-tasks-yylo",
       "description": "Use YYLO Ledger task management: create, list, search, get, mark, update, archive, deps, ready, order and merge with dependencies.",
       "category": "project-management",
-      "risk": "safe",
+      "risk": "critical",
       "source": "https://github.com/yylo-dev/yylo-skills",
       "source_type": "community",
       "source_repo": "yylo-dev/yylo-skills",
@@ -48364,7 +48614,7 @@
       "name": "marlin-bed-leveling",
       "description": "Calibrates Marlin 2.x 3D printer firmware bed leveling: Unified Bed Leveling (UBL), Bilinear ABL, M420 S1 post-homing, Z-probe offsets, G26 mesh prints, and EEPROM slots. Trigger phrases: marlin bed leveling, ubl calibration, m420 s1, z probe offset, g29 bed level, first layer adhesion.",
       "category": "development",
-      "risk": "safe",
+      "risk": "critical",
       "source": "community",
       "source_type": "community",
       "source_repo": "wwewtech/marlin-bed-leveling",
@@ -48725,7 +48975,7 @@
       "name": "md2video-audio",
       "description": "Convert Markdown documents into narrated MP4 videos with synchronized visuals and voice narration.",
       "category": "media",
-      "risk": "safe",
+      "risk": "critical",
       "source": "community",
       "source_type": "community",
       "source_repo": "70v-Yoyo/md2video-audio-skill",
@@ -51975,6 +52225,43 @@
         "graphs"
       ],
       "path": "skills/networkx/SKILL.md"
+    },
+    {
+      "id": "neverapply",
+      "canonical_id": "neverapply",
+      "name": "neverapply",
+      "description": "Find matching jobs, tailor resumes, prepare for interviews and apply to jobs with the user's approval through NeverApply's hosted MCP server (OAuth sign-in).",
+      "category": "career-jobs",
+      "risk": "critical",
+      "source": "https://github.com/kasovy/neverapply-mcp",
+      "source_type": "official",
+      "source_repo": "kasovy/neverapply-mcp",
+      "license": "MIT",
+      "license_source": "https://github.com/kasovy/neverapply-mcp/blob/main/LICENSE",
+      "tags": [
+        "neverapply",
+        "jobs",
+        "job-search",
+        "resume",
+        "interview",
+        "applications",
+        "mcp"
+      ],
+      "triggers": [
+        "neverapply",
+        "jobs",
+        "job-search",
+        "resume",
+        "interview",
+        "applications",
+        "mcp",
+        "find",
+        "matching",
+        "tailor",
+        "resumes",
+        "prepare"
+      ],
+      "path": "skills/neverapply/SKILL.md"
     },
     {
       "id": "new-rails-project",
@@ -55808,6 +56095,35 @@
       "path": "skills/party-ledger-reconciliation/SKILL.md"
     },
     {
+      "id": "party-planning",
+      "canonical_id": "party-planning",
+      "name": "party-planning",
+      "description": "Estimate party food and drink quantities, select games, and draft hosting timelines using HostPartyPlay's published planning heuristics.",
+      "category": "lifestyle",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "party",
+        "planning"
+      ],
+      "triggers": [
+        "party",
+        "planning",
+        "estimate",
+        "food",
+        "drink",
+        "quantities",
+        "select",
+        "games",
+        "draft",
+        "hosting",
+        "timelines",
+        "hostpartyplay"
+      ],
+      "path": "skills/party-planning/SKILL.md"
+    },
+    {
       "id": "patch-diff-exploit",
       "canonical_id": "patch-diff-exploit",
       "name": "patch-diff-exploit",
@@ -57010,6 +57326,42 @@
       "path": "skills/pitch-psychologist/SKILL.md"
     },
     {
+      "id": "pixeltable",
+      "canonical_id": "pixeltable",
+      "name": "pixeltable",
+      "description": "Build Pixeltable apps in app.py with tables, computed columns, embedding search, and HTTP routes. Use for RAG, media pipelines, and tool-calling agents.",
+      "category": "databases",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "pixeltable/pixeltable-skill",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/pixeltable/pixeltable-skill/blob/main/LICENSE",
+      "tags": [
+        "pixeltable",
+        "multimodal",
+        "embeddings",
+        "rag",
+        "computed-columns",
+        "vector-search"
+      ],
+      "triggers": [
+        "pixeltable",
+        "multimodal",
+        "embeddings",
+        "rag",
+        "computed-columns",
+        "vector-search",
+        "apps",
+        "app",
+        "py",
+        "tables",
+        "computed",
+        "columns"
+      ],
+      "path": "skills/pixeltable/SKILL.md"
+    },
+    {
       "id": "placecall",
       "canonical_id": "placecall",
       "name": "placecall",
@@ -57504,7 +57856,7 @@
       "name": "policy-as-code",
       "description": "Implement policy as code with OPA, Sentinel, and Kyverno. Automate policy enforcement in CI/CD and infrastructure. Use when enforcing compliance through automation.",
       "category": "security",
-      "risk": "safe",
+      "risk": "critical",
       "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
       "source_type": "community",
       "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
@@ -62559,7 +62911,7 @@
       "name": "reverse-engineer-anything",
       "description": "Use REA to investigate shipped apps, binaries, packages, and runtimes; trace features with evidence, compare versions, or guide reconstruction. Skip ordinary source-code analysis.",
       "category": "uncategorized",
-      "risk": "safe",
+      "risk": "critical",
       "source": "https://github.com/morluto/rea/tree/main/skill-src/reverse-engineer-anything",
       "source_type": "community",
       "source_repo": "morluto/rea",
@@ -73212,7 +73564,7 @@
       "name": "testdriver-e2e-testing",
       "description": "Build E2E tests with TestDriver.ai, the AI code reviewer that runs every pull request in a real desktop sandbox, finds bugs, and builds regression tests",
       "category": "testing",
-      "risk": "safe",
+      "risk": "critical",
       "source": "community",
       "source_type": "official",
       "source_repo": "testdriverai/testdriverai",
@@ -79361,6 +79713,42 @@
       "path": "skills/webflow-automation/SKILL.md"
     },
     {
+      "id": "wechat-cover-maker",
+      "canonical_id": "wechat-cover-maker",
+      "name": "wechat-cover-maker",
+      "description": "Install and use the official WeChat Article Cover package, pinned by digest, for paid hosted work on the Beatra service.",
+      "category": "media",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "beatra-ai/wechat-article-cover-skill",
+      "license": "MIT-0",
+      "license_source": "https://github.com/beatra-ai/wechat-article-cover-skill/blob/8441e17291a2c4313223d0d74d4c18eeb14904f0/LICENSE",
+      "tags": [
+        "wechat",
+        "article-cover",
+        "image-generation",
+        "mcp",
+        "paid-api",
+        "beatra"
+      ],
+      "triggers": [
+        "wechat",
+        "article-cover",
+        "image-generation",
+        "mcp",
+        "paid-api",
+        "beatra",
+        "cover",
+        "maker",
+        "install",
+        "official",
+        "article",
+        "package"
+      ],
+      "path": "skills/wechat-cover-maker/SKILL.md"
+    },
+    {
       "id": "wechat-official-account-strategist",
       "canonical_id": "wechat-official-account-strategist",
       "name": "wechat-official-account-strategist",
@@ -81536,6 +81924,82 @@
         "compiler"
       ],
       "path": "skills/zeroize-audit/SKILL.md"
+    },
+    {
+      "id": "zhongcao-cover-maker",
+      "canonical_id": "zhongcao-cover-maker",
+      "name": "zhongcao-cover-maker",
+      "description": "Install and use the official Xiaohongshu Cover Maker package, pinned by digest, for paid hosted work on the Beatra service.",
+      "category": "media",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "beatra-ai/xiaohongshu-cover-maker-skill",
+      "license": "MIT-0",
+      "license_source": "https://github.com/beatra-ai/xiaohongshu-cover-maker-skill/blob/cb25a69b5d044f76230c759cf3c4b43f57905924/LICENSE",
+      "tags": [
+        "xiaohongshu",
+        "rednote",
+        "cover-design",
+        "image-generation",
+        "social-data",
+        "mcp",
+        "paid-api",
+        "beatra"
+      ],
+      "triggers": [
+        "xiaohongshu",
+        "rednote",
+        "cover-design",
+        "image-generation",
+        "social-data",
+        "mcp",
+        "paid-api",
+        "beatra",
+        "zhongcao",
+        "cover",
+        "maker",
+        "install"
+      ],
+      "path": "skills/zhongcao-cover-maker/SKILL.md"
+    },
+    {
+      "id": "zhongcao-note-copywriter",
+      "canonical_id": "zhongcao-note-copywriter",
+      "name": "zhongcao-note-copywriter",
+      "description": "Install and use the official Xiaohongshu Copywriter package, pinned by digest, for paid hosted work on the Beatra service.",
+      "category": "marketing",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "official",
+      "source_repo": "beatra-ai/xiaohongshu-copywriter-skill",
+      "license": "MIT-0",
+      "license_source": "https://github.com/beatra-ai/xiaohongshu-copywriter-skill/blob/313358800e2c5abc992fffb27b6ba66192a771eb/LICENSE",
+      "tags": [
+        "xiaohongshu",
+        "rednote",
+        "copywriting",
+        "social-media",
+        "social-data",
+        "mcp",
+        "paid-api",
+        "beatra"
+      ],
+      "triggers": [
+        "xiaohongshu",
+        "rednote",
+        "copywriting",
+        "social-media",
+        "social-data",
+        "mcp",
+        "paid-api",
+        "beatra",
+        "zhongcao",
+        "note",
+        "copywriter",
+        "install"
+      ],
+      "path": "skills/zhongcao-note-copywriter/SKILL.md"
     },
     {
       "id": "zipai-optimizer",

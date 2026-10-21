@@ -1,7 +1,7 @@
 ---
 name: efficient-web-research
 source: community
-date_added: "2026-09-04"
+date_added: "2026-06-15"
 risk: safe
 description: >
   Protocol for token-efficient web research. Use when accessing URLs, GitHub repos, or running search queries. Prevents full-page fetching waste.

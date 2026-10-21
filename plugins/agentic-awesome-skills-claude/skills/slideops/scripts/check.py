@@ -187,7 +187,18 @@ def commits_since(repo: Path, path: str, build_commit: str | None) -> list[str]:
 
 
 def check_citation(citation: Citation, repo: Path, build_commit: str | None) -> None:
-    file_path = repo / citation.path
+    root = repo.resolve()
+    candidate = Path(citation.path)
+    file_path = root / candidate
+    sensitive = {'.git', '.env', '.npmrc', '.pypirc', '.ssh', '.aws', '.azure'}
+    if (candidate.is_absolute() or '..' in candidate.parts
+            or any(part in sensitive or part.startswith('.env.') for part in candidate.parts)
+            or not file_path.resolve().is_relative_to(root)
+            or any((root.joinpath(*candidate.parts[:i])).is_symlink() for i in range(1, len(candidate.parts) + 1))
+            or not git(root, 'ls-files', '--error-unmatch', '--', citation.path)):
+        citation.status = "UNVERIFIED"
+        citation.detail = "citation source is outside approved tracked repository files"
+        return
     if not file_path.is_file():
         citation.status = "MISSING"
         citation.detail = "file no longer exists"

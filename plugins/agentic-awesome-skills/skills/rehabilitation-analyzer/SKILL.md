@@ -4,7 +4,7 @@ description: 分析康复训练数据、识别康复模式、评估康复进展�
 allowed-tools: Read, Grep, Glob, Write, Edit
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-03-06"
 ---
 
 # 康复训练分析技能

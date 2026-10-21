@@ -2,7 +2,7 @@
 name: not-a-vibe-coder
 description: Turns vague prompts into 8 structured planning files for brand new projects. DO NOT use on existing codebases.
 source: community
-date_added: "2026-09-04"
+date_added: "2026-06-12"
 risk: critical
 ---
 

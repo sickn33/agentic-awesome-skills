@@ -4,7 +4,7 @@ description: 'Master Odoo ORM patterns: search, browse, create, write, domain fi
 metadata:
   aas-risk: safe
   aas-source: self
-  aas-date-added: '2026-09-04'
+  aas-date-added: '2026-03-04'
 ---
 
 # Odoo ORM Expert

@@ -209,6 +209,14 @@ def cmd_plan(args):
 
 
 def cmd_init(args):
+    import pathlib
+    import tempfile
+    root_path = pathlib.Path(ROOT).absolute()
+    if any(part.is_symlink() for part in [root_path, *root_path.parents]):
+        raise ValueError("State directory must not contain symlinks")
+    root_path.mkdir(mode=0o700, exist_ok=True)
+    if pathlib.Path(LATEST).is_symlink():
+        raise ValueError("LATEST must not be a symlink")
     n = panel_size(args)
     if not os.path.exists(args.pitch_file):
         sys.exit("shark: pitch file not found: %s" % args.pitch_file)
@@ -219,15 +227,21 @@ def cmd_init(args):
     investors = load_investors()
     panel = investors[:n] if args.seed is None and n == DEFAULT_INVESTORS else \
         random.Random(seed).sample(investors, n)
-    rd = os.path.join(ROOT, time.strftime("%Y%m%d-%H%M%S"))
+    rd = tempfile.mkdtemp(prefix=time.strftime("%Y%m%d-%H%M%S-"), dir=ROOT)
     for sub in ("briefs", "grill", "answers", "decide"):
         os.makedirs(os.path.join(rd, sub), exist_ok=True)
     with open(os.path.join(rd, "pitch.md"), "w") as f:
         f.write(pitch + "\n")
     state = {"dir": rd, "seed": seed, "panel": panel, "created": time.strftime("%Y-%m-%dT%H:%M:%S")}
     save_state(state)
-    with open(LATEST, "w") as f:
-        f.write(rd)
+    fd, pointer = tempfile.mkstemp(prefix=".latest-", dir=ROOT)
+    try:
+        with os.fdopen(fd, "w") as f:
+            f.write(rd)
+        os.replace(pointer, LATEST)
+    finally:
+        if os.path.exists(pointer):
+            os.unlink(pointer)
     print("shark: session opened in %s (%d investors, seed %d)" % (rd, n, seed))
     print("next: python3 scripts/shark.py prompts grill")
 

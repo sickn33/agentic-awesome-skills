@@ -1539,6 +1539,31 @@
       "runtime_files": []
     },
     {
+      "id": "agy-powerline",
+      "path": "skills/agy-powerline",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": [
+          "target_specific_home_path"
+        ]
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ai-agent-development",
       "path": "skills/ai-agent-development",
       "targets": {
@@ -1636,6 +1661,25 @@
     {
       "id": "ai-analyzer",
       "path": "skills/ai-analyzer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ai-audiobook-narration",
+      "path": "skills/ai-audiobook-narration",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -1769,6 +1813,25 @@
     {
       "id": "ai-image-generation-studio",
       "path": "skills/ai-image-generation-studio",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ai-image-realism",
+      "path": "skills/ai-image-realism",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -2077,6 +2140,25 @@
     {
       "id": "ai-sre-incident-response",
       "path": "skills/ai-sre-incident-response",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ai-storyboard-generator",
+      "path": "skills/ai-storyboard-generator",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -3701,6 +3783,25 @@
     {
       "id": "apify-ultimate-scraper",
       "path": "skills/apify-ultimate-scraper",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "apify-youtube-transcript-scraper",
+      "path": "skills/apify-youtube-transcript-scraper",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -9712,6 +9813,25 @@
     {
       "id": "calendly-automation",
       "path": "skills/calendly-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "calibrate-first",
+      "path": "skills/calibrate-first",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -22064,7 +22184,7 @@
       "id": "geo-report-pdf",
       "path": "skills/geo-report-pdf",
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -22072,13 +22192,9 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ],
+      "reasons": [],
       "blocked_reasons": {
-        "codex": [
-          "target_specific_home_path"
-        ],
+        "codex": [],
         "claude": []
       },
       "runtime_files": []
@@ -27987,6 +28103,25 @@
       "runtime_files": []
     },
     {
+      "id": "lanshu-create-ai-presenter-video",
+      "path": "skills/lanshu-create-ai-presenter-video",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "laravel-development-workflow",
       "path": "skills/laravel-development-workflow",
       "targets": {
@@ -33264,6 +33399,25 @@
       "runtime_files": []
     },
     {
+      "id": "neverapply",
+      "path": "skills/neverapply",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "new-rails-project",
       "path": "skills/new-rails-project",
       "targets": {
@@ -35684,6 +35838,25 @@
       "runtime_files": []
     },
     {
+      "id": "party-planning",
+      "path": "skills/party-planning",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "patch-diff-exploit",
       "path": "skills/patch-diff-exploit",
       "targets": {
@@ -36408,6 +36581,25 @@
     {
       "id": "pitch-psychologist",
       "path": "skills/pitch-psychologist",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "pixeltable",
+      "path": "skills/pixeltable",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -50743,6 +50935,25 @@
       "runtime_files": []
     },
     {
+      "id": "wechat-cover-maker",
+      "path": "skills/wechat-cover-maker",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "wechat-official-account-strategist",
       "path": "skills/wechat-official-account-strategist",
       "targets": {
@@ -52136,6 +52347,44 @@
       "runtime_files": []
     },
     {
+      "id": "zhongcao-cover-maker",
+      "path": "skills/zhongcao-cover-maker",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "zhongcao-note-copywriter",
+      "path": "skills/zhongcao-note-copywriter",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "zipai-optimizer",
       "path": "skills/zipai-optimizer",
       "targets": {
@@ -52251,14 +52500,14 @@
     }
   ],
   "summary": {
-    "total_skills": 2724,
+    "total_skills": 2737,
     "supported": {
-      "codex": 2639,
-      "claude": 2661
+      "codex": 2652,
+      "claude": 2673
     },
     "blocked": {
       "codex": 85,
-      "claude": 63
+      "claude": 64
     },
     "manual_setup": 22
   }

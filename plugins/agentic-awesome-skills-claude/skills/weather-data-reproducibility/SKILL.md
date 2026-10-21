@@ -182,6 +182,7 @@ canonical, atomically replaced JSON manifest:
 import hashlib
 import json
 import os
+import tempfile
 from pathlib import Path
 
 
@@ -195,12 +196,23 @@ def sha256_file(path, chunk_size=1024 * 1024):
 
 def write_manifest(path, manifest):
     path = Path(path)
-    temporary = path.with_suffix(path.suffix + ".tmp")
     payload = json.dumps(
         manifest, ensure_ascii=False, sort_keys=True, separators=(",", ":")
     ) + "\n"
-    temporary.write_text(payload, encoding="utf-8", newline="\n")
-    os.replace(temporary, path)
+    # Destination parent must be an owned, trusted directory, without symlink components.
+    parent = path.absolute().parent
+    if any(p.is_symlink() for p in [parent, *parent.parents]):
+        raise ValueError("Symlinked manifest parent")
+    fd, temporary = tempfile.mkstemp(prefix=".manifest-", dir=parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
 ```
 
 Hash artifacts only after their writers are closed. If the manifest itself must

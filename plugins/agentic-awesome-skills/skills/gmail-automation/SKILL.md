@@ -4,7 +4,7 @@ description: "Lightweight Gmail integration with standalone OAuth authentication
 license: Apache-2.0
 risk: critical
 source: community
-date_added: "2026-09-04"
+date_added: "2026-02-05"
 metadata:
   author: sanjay3290
   version: "1.0"

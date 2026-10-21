@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20T18:00:18.000Z",
+  "generatedAt": "2026-10-21T07:33:13.000Z",
   "aliases": {
     "20-andruia-intelligence": "20-andruia-niche-intelligence",
     "accessibility-compliance-audit": "accessibility-compliance-accessibility-audit",
@@ -24,6 +24,7 @@
     "apify-brand-monitoring": "apify-brand-reputation-monitoring",
     "apify-facebook-scraper": "apify-facebook-ads-library-scraper",
     "apify-generate-schema": "apify-generate-output-schema",
+    "apify-youtube-scraper": "apify-youtube-transcript-scraper",
     "templates": "app-builder/templates",
     "application-performance-optimization": "application-performance-performance-optimization",
     "ask-questions-underspecified": "ask-questions-if-underspecified",
@@ -170,6 +171,7 @@
     "idea-evaluator/idea-pro": "idea-evaluator/idea-evaluator-pro",
     "interview-style-building": "interview-style-doc-building",
     "javascript-typescript-scaffold": "javascript-typescript-typescript-scaffold",
+    "lanshu-create-video": "lanshu-create-ai-presenter-video",
     "base": "libreoffice/base",
     "calc": "libreoffice/calc",
     "draw": "libreoffice/draw",

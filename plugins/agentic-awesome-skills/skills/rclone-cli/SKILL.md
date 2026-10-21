@@ -24,21 +24,13 @@ Rclone has powerful cloud equivalents to the unix commands rsync, cp, mv, mount,
 
 ## Prerequisites
 
-Before using rclone, verify it is installed:
+Use only a previously installed and reviewed rclone binary. Check its version:
 
 ```bash
-# Check if rclone is installed
 rclone --version
-
-# If not found, run the install script:
-# See scripts/install.sh in this skill's directory
-sudo -v ; curl https://rclone.org/install.sh | sudo bash
-
-# Or for beta version:
-sudo -v ; curl https://rclone.org/install.sh | sudo bash -s beta
 ```
 
-For offline/manual installation, use the bundled script at `scripts/install.sh`.
+If missing, stop the executable workflow and report the prerequisite. A separate installation task must select an immutable signed release, verify its checksum/signature, stage and inspect it, and obtain approval before installation. Do not pipe a vendor installer to a privileged shell. The historical bundled installer is disabled and does not download or modify anything.
 
 ## Security Warnings
 

@@ -50,7 +50,7 @@ Docs: `https://linkdigest.dev/docs` (English) and `https://linkdigest.dev/zh/doc
 
 - **REST API**: one `curl` or one `urllib` call. Use it from scripts and from agents without MCP.
 - **MCP server**: add the remote server once and the agent calls `digest_url` itself when it meets a link it cannot read. Streamable HTTP, header `Authorization: Bearer <key>`.
-- **Python SDK / CLI** (`pip install "git+https://github.com/jcaiagent7143-ui/linkdigest-mcp#subdirectory=python"`, standard library only) if the user prefers a typed client. It also ships `linkdigest-mcp`, a stdio MCP server that forwards to the hosted endpoint.
+- **Python SDK / CLI** (a separately reviewed SDK installation (not installed by this skill), standard library only) if the user prefers a typed client. It also ships `linkdigest-mcp`, a stdio MCP server that forwards to the hosted endpoint.
 
 ### Step 2: Read the link (REST)
 

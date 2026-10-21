@@ -4,7 +4,7 @@ description: Production-ready Docker and docker-compose setup for Odoo with Post
 metadata:
   aas-risk: safe
   aas-source: self
-  aas-date-added: '2026-09-04'
+  aas-date-added: '2026-03-04'
 ---
 
 # Odoo Docker Deployment

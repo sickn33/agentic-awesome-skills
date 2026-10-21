@@ -247,6 +247,14 @@ def cmd_plan(args):
 
 
 def cmd_init(args):
+    import pathlib
+    import tempfile
+    root_path = pathlib.Path(ROOT).absolute()
+    if any(part.is_symlink() for part in [root_path, *root_path.parents]):
+        raise ValueError("State directory must not contain symlinks")
+    root_path.mkdir(mode=0o700, exist_ok=True)
+    if pathlib.Path(LATEST).is_symlink():
+        raise ValueError("LATEST must not be a symlink")
     n = jury_size(args)
     if not os.path.exists(args.case_file):
         sys.exit("court: case file not found: %s" % args.case_file)
@@ -257,15 +265,21 @@ def cmd_init(args):
     jurors = load_jurors()
     rng = random.Random(seed)
     jury = jurors[:] if n == len(jurors) else rng.sample(jurors, n)
-    rd = os.path.join(ROOT, time.strftime("%Y%m%d-%H%M%S"))
+    rd = tempfile.mkdtemp(prefix=time.strftime("%Y%m%d-%H%M%S-"), dir=ROOT)
     for sub in ("briefs", "opening", "rebuttal", "jury", "judge"):
         os.makedirs(os.path.join(rd, sub), exist_ok=True)
     with open(os.path.join(rd, "case.md"), "w") as f:
         f.write(case + "\n")
     state = {"dir": rd, "seed": seed, "jury": jury, "created": time.strftime("%Y-%m-%dT%H:%M:%S")}
     save_state(state)
-    with open(LATEST, "w") as f:
-        f.write(rd)
+    fd, pointer = tempfile.mkstemp(prefix=".latest-", dir=ROOT)
+    try:
+        with os.fdopen(fd, "w") as f:
+            f.write(rd)
+        os.replace(pointer, LATEST)
+    finally:
+        if os.path.exists(pointer):
+            os.unlink(pointer)
     print("court: trial opened in %s (jury of %d, seed %d)" % (rd, n, seed))
     print("next: python3 scripts/court.py prompts opening")
 

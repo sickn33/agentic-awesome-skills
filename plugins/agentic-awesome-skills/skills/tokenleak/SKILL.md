@@ -32,7 +32,7 @@ Every tool result an agent pulls into context is re-sent on every later call unt
 2. **Compute, don't read.** For questions about data (counts, totals, filters, lookups in big data files, CSV, JSON, logs), run a short script or one-liner that prints only the answer. Never pull the data itself into context.
 3. **Bound every command.** Never let tests, builds, installs or logs stream into context unbounded.
    - Quiet or failures-only modes: `pytest -q -x`, `vitest run --reporter=dot`, `go test ./... 2>&1 | grep -v '^ok'`, `cargo test -q`, `npm ci --silent`, `make -s`.
-   - Long jobs: `L="${TMPDIR:-/tmp}/out.log"; cmd > "$L" 2>&1; echo "exit=$?"; tail -n 40 "$L"`. Need more? `grep -n -m 20 -E 'error|FAIL|panic' "$L"` on the saved log. Never re-run a job just to see more of its output.
+   - Long jobs: `L="$(mktemp)" || exit 1; cmd > "$L" 2>&1; echo "exit=$?"; tail -n 40 "$L"`. Need more? `grep -n -m 20 -E 'error|FAIL|panic' "$L"` on the saved log. Never re-run a job just to see more of its output.
    - Iterate on the one failing test, not the whole suite. Run the full suite once at the end, quietly.
 4. **Never re-read what you have.** A file you read or wrote is still in context. Re-read only after compaction or after something else changed it.
 5. **Batch independent calls.** Reads and searches that don't depend on each other go in one turn (parallel tool calls), and shell steps that need no judgment in between go in one command (`wc -l a b; grep -n x a | head`). Each extra round-trip re-sends everything.
@@ -68,7 +68,7 @@ sed -n '120,180p' app/service.py
 Bound a noisy build and keep the failure visible:
 
 ```bash
-L="${TMPDIR:-/tmp}/out.log"; npm test > "$L" 2>&1; echo "exit=$?"; tail -n 40 "$L"
+L="$(mktemp)" || exit 1; npm test > "$L" 2>&1; echo "exit=$?"; tail -n 40 "$L"
 grep -n -m 20 -E 'error|FAIL' "$L"
 ```
 

@@ -4,7 +4,7 @@ description: Alias for pr-writer. Use when users explicitly ask for "create-pr" 
 metadata:
   aas-risk: critical
   aas-source: community
-  aas-date-added: '2026-09-04'
+  aas-date-added: '2026-01-30'
 ---
 
 # Alias: create-pr

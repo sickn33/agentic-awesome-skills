@@ -33,7 +33,8 @@ sudo apt update && sudo apt install terraform
 terraform version
 
 # Install Azure CLI and login
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+# Prerequisite: organization-approved Azure CLI installed from a verified signed package.
+az version
 az login
 az account set --subscription "my-subscription-id"
 

@@ -45,6 +45,8 @@ random suffix so the name is unlikely to be taken. `hello`, `my-page`, `my-app` 
 reserved.
 
 ```bash
+set -e
+UPLOAD_DIR="$(mktemp -d)" || exit 1
 SLUG="report-$(head -c4 /dev/urandom | od -An -tx1 | tr -d ' \n')"
 REF="${DEED_REF:-skill-agentic-awesome-skills}"
 ```
@@ -70,8 +72,8 @@ curl -sS -T report.html "https://deed.page/v1/sites?slug=$SLUG&ref=$REF" \
 A folder: its contents go to the site root, so it should contain `index.html`:
 
 ```bash
-tar -C ./site -czf /tmp/site.tar.gz .
-curl -sS -T /tmp/site.tar.gz "https://deed.page/v1/sites?slug=$SLUG&ref=$REF" \
+tar -C ./site -czf "$UPLOAD_DIR/site.tar.gz" . &&
+curl -sS -T "$UPLOAD_DIR/site.tar.gz" "https://deed.page/v1/sites?slug=$SLUG&ref=$REF" \
   -H "X-Client: <agent name>" \
   ${DEEDPAGE_TOKEN:+-H "Authorization: Bearer $DEEDPAGE_TOKEN"}
 ```

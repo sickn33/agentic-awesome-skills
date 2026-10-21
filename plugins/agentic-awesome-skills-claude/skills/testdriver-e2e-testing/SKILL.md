@@ -2,7 +2,7 @@
 name: testdriver-e2e-testing
 description: "Build E2E tests with TestDriver.ai, the AI code reviewer that runs every pull request in a real desktop sandbox, finds bugs, and builds regression tests"
 category: testing
-risk: safe
+risk: critical
 source: community
 source_repo: testdriverai/testdriverai
 source_type: official
@@ -15,6 +15,11 @@ license_source: "https://github.com/testdriverai/testdriverai/blob/main/LICENSE"
 ---
 
 # TestDriver End-to-End Testing
+
+## External tool prerequisite
+
+Use only an already installed tool whose exact version, complete dependency tree and integrity have been reviewed. This skill does not bootstrap tools or activate external plugins. If the prerequisite is missing, stop that executable path and report it; continue with static analysis when possible. A separate installation task must pin immutable artifacts, stage them outside active agent directories with lifecycle scripts disabled, inspect every bundled file and executable entry point (including tests and hooks), and obtain approval before activation or host configuration changes. Do not substitute a same-named workspace script or fetch a moving branch.
+
 
 ## Overview
 
@@ -32,7 +37,7 @@ license_source: "https://github.com/testdriverai/testdriverai/blob/main/LICENSE"
 ### Step 1: Set up the project
 
 ```bash
-npx testdriverai init
+testdriverai init
 ```
 
 This scaffolds `package.json`, example tests, `vitest.config.mjs`, and a GitHub Actions workflow. The user must set `TD_API_KEY` in `.env` (get a key at https://console.testdriver.ai/team).
@@ -105,7 +110,7 @@ await done.click();
 
 ## Security & Safety Notes
 
-- `npx testdriverai init` writes project files to the current directory; run it only in a project you intend to modify.
+- `testdriverai init` writes project files to the current directory; run it only in a project you intend to modify.
 - The `TD_API_KEY` credential belongs in `.env` (gitignored by the scaffold). Never commit it.
 - Tests execute inside an isolated remote sandbox, not on the local machine.
 

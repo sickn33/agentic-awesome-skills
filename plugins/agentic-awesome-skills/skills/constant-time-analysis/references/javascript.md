@@ -5,7 +5,7 @@ Analysis guidance for JavaScript and TypeScript. Uses V8 bytecode output from No
 ## Prerequisites
 
 - **Node.js** (v14+) - for JavaScript analysis
-- **TypeScript compiler** (tsc) - for TypeScript files (optional, uses npx fallback)
+- **TypeScript compiler** (tsc) - for TypeScript files (existing reviewed installation required for TypeScript)
 
 ## Running the Analyzer
 
@@ -106,7 +106,7 @@ The analyzer:
 3. Analyzes the transpiled JavaScript
 4. Reports violations against the original TypeScript file
 
-If tsc is not installed, the analyzer tries `npx tsc` as a fallback.
+If `tsc` is not installed, stop. Do not allow an analyzer to fall back to `npx tsc` or another network-resolved compiler.
 
 ## Limitations
 

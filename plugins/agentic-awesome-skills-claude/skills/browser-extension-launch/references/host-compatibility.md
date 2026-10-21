@@ -16,11 +16,7 @@ The public repository root contains one valid `SKILL.md`. Skill CLI 1.7.0 discov
 
 Install for all five:
 
-```bash
-npx skills add xiehuan123/browser-extension-launch \
-  --skill browser-extension-launch \
-  --agent codex claude-code cursor github-copilot opencode
-```
+Use the reviewed bundled catalog copy. This reference does not install an external skill.
 
 Use `-g` for user-level installation. Current Skill CLI 1.7.0 requires Node.js 22.20+. Other supported agents can use `--agent '*'`; do not claim a host is verified until its installation and required runtime capabilities have been exercised.
 

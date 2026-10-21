@@ -3,7 +3,7 @@ name: policy-as-code
 description: Implement policy as code with OPA, Sentinel, and Kyverno. Automate policy
   enforcement in CI/CD and infrastructure. Use when enforcing compliance through automation.
 category: security
-risk: safe
+risk: critical
 source: https://github.com/BagelHole/DevOps-Security-Agent-Skills
 source_repo: BagelHole/DevOps-Security-Agent-Skills
 source_type: community

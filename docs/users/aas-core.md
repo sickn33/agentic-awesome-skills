@@ -33,7 +33,7 @@ For independent catalog updates, explicit offline pins and rollback, see [catalo
 > **Release boundary:** AAS Core landed after release 14.6.0. Use an exact Core-capable release rather than an unreviewed moving tag.
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@19.12.1 -- aas mcp configure \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@19.13.0 -- aas mcp configure \
   --host codex \
   --scope user \
   --config /absolute/path/to/codex/config.toml \

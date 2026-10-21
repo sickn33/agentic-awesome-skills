@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20T18:00:18.000Z",
+  "generatedAt": "2026-10-21T07:33:13.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -817,13 +817,16 @@
       "description": "Kubernetes and service mesh essentials.",
       "skills": [
         "aegisops-ai",
+        "ai-audiobook-narration",
         "ai-headshot-studio",
         "ai-image-generation-studio",
+        "ai-image-realism",
         "ai-inference-service-mesh",
         "ai-logo-maker",
         "ai-multilingual-dubbing",
         "ai-photo-restyler",
         "ai-podcast-voiceover",
+        "ai-storyboard-generator",
         "architecture-review",
         "argocd-gitops",
         "aws-agentic-ai",
@@ -902,7 +905,10 @@
         "vibers-code-review",
         "viral-video-teardown-remake",
         "voice-cloning-studio",
-        "voiceover-narration-studio"
+        "voiceover-narration-studio",
+        "wechat-cover-maker",
+        "zhongcao-cover-maker",
+        "zhongcao-note-copywriter"
       ]
     },
     "data-core": {

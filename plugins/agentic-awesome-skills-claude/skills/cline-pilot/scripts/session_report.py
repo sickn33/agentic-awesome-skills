@@ -106,6 +106,11 @@ def repo_evidence(root):
         if hits:
             recent.extend(hits)
             break
+    from pathlib import Path
+    boundary = Path(root).resolve()
+    recent = [p for p in recent if Path(p).is_file()
+              and Path(p).resolve().is_relative_to(boundary)
+              and not any(q.is_symlink() for q in [Path(p), *Path(p).parents])]
     recent = sorted(recent, key=lambda p: os.path.getmtime(p), reverse=True)[:6]
     for f in recent:
         try:
