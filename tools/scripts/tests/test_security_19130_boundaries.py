@@ -68,6 +68,10 @@ class Boundaries(unittest.TestCase):
             statuses = []; handler.send_error = lambda status, message: statuses.append(status)
             self.assertIsNone(handler.send_head())
             self.assertEqual(statuses, [403])
+            (root / 'index.html').symlink_to(Path(temp) / 'secret')
+            handler.path = '/'; statuses.clear()
+            self.assertIsNone(handler.send_head())
+            self.assertEqual(statuses, [403], 'Directory index links must not bypass containment')
 
     def test_document_edits_never_execute_before_fixture_review(self):
         from fixtures.reviewed_examples import reviewed_source

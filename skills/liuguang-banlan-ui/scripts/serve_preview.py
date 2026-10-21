@@ -13,10 +13,14 @@ class NoStoreHandler(http.server.SimpleHTTPRequestHandler):
     def send_head(self):
         root = pathlib.Path(self.directory).resolve()
         target = pathlib.Path(self.translate_path(self.path))
-        if (not target.resolve().is_relative_to(root)
-                or any(p.is_symlink() for p in [target, *target.parents] if p != root)):
-            self.send_error(403, "Symlink resources are not served")
-            return None
+        candidates = [target]
+        if target.is_dir():
+            candidates.extend(target / name for name in ("index.html", "index.htm"))
+        for candidate in candidates:
+            if (not candidate.resolve().is_relative_to(root)
+                    or any(p.is_symlink() for p in [candidate, *candidate.parents] if p != root)):
+                self.send_error(403, "Symlink resources are not served")
+                return None
         return super().send_head()
 
     def end_headers(self):
