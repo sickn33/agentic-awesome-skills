@@ -118,14 +118,19 @@ Repeat one bounded work unit at a time:
 ## Limits and no-op rule
 - Limit: <timebox, budget, attempt cap, or finite work-unit list>.
 - Do not repeat an action without new information. After <N> materially
-  equivalent failures, change the hypothesis or terminate as blocked.
+  equivalent failures, change the hypothesis; terminate as blocked only when a
+  named dependency is the actual cause.
 
 ## Termination
 - `GOAL COMPLETE` when all acceptance criteria are verified and the deliverable
   is available. Stop; further checking requires invalidated evidence or a
   concrete unresolved concern about a criterion.
-- `GOAL BLOCKED: <reason>` when the next meaningful action needs a named
-  dependency, owner decision, or unresolved failure; include the unblock needed.
+- `GOAL BLOCKED: <reason>` only when a named, verifiable dependency, missing
+  authority, or owner decision blocks the next meaningful action. The report
+  names the attempts made, the dependency, and the exact unblock condition.
+  Difficulty, slowness, uncertainty, or a failure another approach could
+  resolve are not blockers; change approach, ask one scoped question, or
+  realign instead.
 - `GOAL PAUSED: <reason>` only after an explicit owner pause; preserve the
   cursor.
 - `GOAL REALIGNMENT REQUIRED` when a drift check fails; preserve the checkpoint
@@ -164,6 +169,8 @@ Before returning a Goal, check:
 - The loop has a progress signal, a limit, a no-op rule, and a drift trigger.
 - Phase gates and a decision log make long runs resumable and auditable.
 - Complete, blocked, pause, and budget endings are distinguishable.
+- Every blocked claim names a verifiable dependency, the attempts made, and the
+  unblock condition, and no independently actionable criterion is left idle.
 - The instruction does not grant new access or external side effects that the
   user did not authorize.
 - The final report leaves a durable cursor another agent could resume.
