@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* fonts:begin */
+/* fonts:end */
+    </style>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--kit-bg); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--kit-bg); color: var(--kit-ink); font-family: var(--kit-font-body); }
+      #stage { position: absolute; inset: 0; overflow: hidden; }
+      #world { position: absolute; left: 0; top: 0; width: 2000px; height: 1125px; transform-origin: 0 0; }
+      #caps, #recap, #draft { position: absolute; inset: 0; pointer-events: none; } /* #chap is the kit's chip itself (top-left) */
+      .abs { position: absolute; white-space: nowrap; line-height: 1.15; }
+      /* captions: a long line wraps into two balanced lines inside the paper strip */
+      #caps .kit-cap { white-space: normal; text-wrap: balance; max-width: 1640px; }
+
+      /* one station per chapter: a screen-sized region of the page; placeholder cards sit in its slots */
+      .sb-station, .sb-slot { position: absolute; }
+      .sb-slot { display: flex; align-items: center; justify-content: center; }
+      /* a storyboard card (same family as the recap's index cards): red line number, ruled lines, the beat written on it */
+      .sb-card {
+        position: relative;
+        min-width: 560px;
+        max-width: 100%;
+        padding: 26px 44px 30px 106px;
+        background-color: var(--kit-surface);
+        box-shadow: 0 14px 22px rgba(42, 35, 32, 0.16), 0 1px 2px rgba(42, 35, 32, 0.1);
+      }
+      .sb-card::before { content: ""; position: absolute; left: 86px; top: 0; bottom: 0; width: 2px; background: rgba(198, 61, 47, 0.42); }
+      .sb-n { position: absolute; left: 14px; top: 22px; width: 60px; text-align: center; font-family: var(--kit-font-mono); font-weight: 700; font-size: 60px; line-height: 1; color: var(--kit-accent); }
+      .sb-hero { position: relative; color: var(--kit-ink); }
+      .sb-row { position: relative; display: block; white-space: nowrap; }
+      .sb-ghost { position: absolute; left: 0; top: 0; color: var(--kit-muted); }
+      .sb-ink { position: relative; }
+      /* the draft flag: a small pink index tab stuck over the card's corner */
+      .sb-flag {
+        position: absolute;
+        right: -22px;
+        top: -32px;
+        padding: 5px 20px 7px;
+        background: #f6c6bb;
+        color: var(--kit-ink);
+        font-family: var(--kit-font-display);
+        font-size: 34px;
+        line-height: 1.2;
+        white-space: nowrap;
+        box-shadow: 0 5px 9px rgba(42, 35, 32, 0.16);
+        transform: rotate(3.5deg);
+      }
+      /* closing line on the page, above the storyboard; the storyboard is washed back while it is written */
+      .sb-title { position: absolute; display: flex; justify-content: center; }
+      .sb-title .kit-title { position: relative; }
+      .sb-wash { position: absolute; background: rgba(244, 237, 224, 0.64); pointer-events: none; }
+      .sb-clear { position: absolute; border-radius: 50%; background: radial-gradient(closest-side, rgba(244, 237, 224, 0.94) 58%, rgba(244, 237, 224, 0) 100%); pointer-events: none; }
+      .sb-draft {
+        position: absolute;
+        right: 64px;
+        top: 40px;
+        padding: 6px 18px 8px;
+        border: 2px dashed var(--kit-muted);
+        border-radius: 4px;
+        background: var(--kit-surface);
+        font-family: var(--kit-font-display);
+        font-size: 30px;
+        line-height: 1.2;
+        color: var(--kit-muted);
+        transform: rotate(-2deg);
+      }
+    </style>
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script src="beats.js"></script>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-stamp="story" data-width="1920" data-height="1080">
+      <div id="stage" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="1">
+        <div id="world" data-layout-allow-overflow=""></div>
+      </div>
+      <div id="chap" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="2"></div>
+      <div id="caps" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="3"></div>
+      <div id="recap" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="4"></div>
+      <div id="draft" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="5"></div>
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40.32" data-stamp="narration" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-stamp="story" data-track-index="11"></audio>
+    </div>
+
+    <script>
+      /* V3 notebook starter — the film minus the topic. One sheet of grid paper, one station (a screen-sized region)
+       * per chapter, a live pen, a camera that follows it, the chip, captions, the closing line written on the page
+       * and the turned-page mind-map recap — all driven by window.STORY. The topic lives in beats.js:
+       * window.Beats(api) is called once after the page is built; its render(t) runs every frame.
+       * Every time comes from the story (story.at / phrase / span / line(i).start); nothing is hard-coded. */
+      (function () {
+        "use strict";
+        window.__timelines = window.__timelines || {};
+        const C = window.ExplainerCore, K = window.Kit;
+        const { pr, E, clamp01 } = C;
+        const story = new C.Story(window.STORY);
+        const D = Math.max(story.duration, (story.recap && story.recap.end) || 0); // = tools/stamp.py's length
+        const $ = (id) => document.getElementById(id);
+        const g = K.geo;
+        const f1 = (n) => n.toFixed(1);
+        const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const clampN = (x, a, b) => (x < a ? a : x > b ? b : x);
+        const union = (a, b) => { const x = Math.min(a.x, b.x), y = Math.min(a.y, b.y); return { x, y, w: Math.max(a.x + a.w, b.x + b.w) - x, h: Math.max(a.y + a.h, b.y + b.h) - y }; };
+        const WORLD = $("world");
+        const S = K.scene();
+
+        // ================= the plan: chapters → stations on one page =================
+        // A station is one screen of page at scale 0.96 (2000 × 1125 page px). Its usable area USE keeps clear of the
+        // chip (top), the caption band (bottom, two-line captions included) and the page's margin line (left).
+        // SAFE is the screen area the camera keeps a station's content inside (chip above, captions below).
+        const SW = 2000, SH = 1125, GX = 240, GY = 120, S_ST = 1920 / SW;
+        const USE = { x: 150, y: 150, w: 1770, h: 765 };
+        const SAFE = { x0: 72, x1: 1848, y0: 150, y1: 876 };
+        const SCREEN = { x: SAFE.x0, y: SAFE.y0, w: SAFE.x1 - SAFE.x0, h: SAFE.y1 - SAFE.y0 };
+        const chapters = story.chapters.length ? story.chapters : [{ n: 1, key: "_all", title: story.title || "", start: 0, end: D }];
+        const endLine = story.end ? story.end.line : null;
+        const isEnd = (i) => i === endLine;
+        const chapOf = (i) => { const s = story.line(i).start; let k = 0; chapters.forEach((c, j) => { if (s + 0.05 >= c.start) k = j; }); return k; };
+        const linesOf = chapters.map(() => []);
+        story.lines.forEach((L) => { if (!isEnd(L.i)) linesOf[chapOf(L.i)].push(L.i); });
+        const NCH = chapters.length;
+        // grid: one row up to two stations, then two rows (3 → 2 × 2, 5–6 → 3 × 2, 7–8 → 4 × 2), read as a snake
+        const COLS = NCH <= 2 ? NCH : Math.ceil(NCH / 2), ROWS = Math.ceil(NCH / COLS);
+        const cell = (k) => { const r = Math.floor(k / COLS), c0 = k % COLS, c = r % 2 ? COLS - 1 - c0 : c0; return { x: c * (SW + GX), y: r * (SH + GY) }; };
+        const useAt = (p) => ({ x: p.x + USE.x, y: p.y + USE.y, w: USE.w, h: USE.h });
+
+        const CJK = /[\u2E80-\u9FFF\uF900-\uFAFF\uFF00-\uFFEF\u3000-\u303F]/, LAT = /[A-Za-z0-9]/;
+        const emOf = (s) => [...s].reduce((a, ch) => a + (CJK.test(ch) ? 1 : ch === " " ? 0.3 : 0.55), 0);
+        const PUNCT = /^[，。；：、！？,.;:!?…—「」『』（）()“”‘’"'《》〈〉【】]+$/;
+
+        // ---------- the closing view: the camera pulls back over the page (to scale 0.4 at least, keeping the closing
+        // line in frame) and the pen writes the closing line ≈ 100 px a character on screen — centred on the grid's free
+        // cell (3, 5, 7 chapters), in a band above a wide storyboard (1, 2, 6, 8) or across the middle of a squarer one (4);
+        // over the storyboard it sits on a paper clearing, and the storyboard is washed back
+        let END = null;
+        if (story.end) {
+          const L = story.line(story.end.line), rows = [""];
+          L.words.forEach(([u], k) => {
+            const nx = L.words[k + 1];
+            rows[rows.length - 1] += u + (/[A-Za-z\d]$/.test(u) && nx && /^[A-Za-z\d]/.test(nx[0]) ? " " : "");
+            if (/^[，；]$/.test(u) && nx) rows.push("");
+          });
+          const maxEm = Math.max(1, ...rows.map(emOf)), nR = rows.length, FW = 1800, FH = 990, gap = 40;
+          let all = useAt(cell(0)), fc = null;
+          for (let k = 1; k < NCH; k++) all = union(all, useAt(cell(k)));
+          for (let k = NCH; k < COLS * ROWS; k++) fc = fc ? union(fc, useAt(cell(k))) : useAt(cell(k));
+          if (fc) all = union(all, fc);
+          const mode = fc ? "cell" : all.w / all.h >= 2.2 ? "band" : "over";
+          const Fs = Math.min(100, 1600 / maxEm), tH = nR * 1.18 * Fs;
+          const s = clampN(mode === "band" ? Math.min(FW / all.w, (FH - tH - gap) / all.h) : Math.min(FW / all.w, FH / all.h), 0.4, 0.9);
+          const Fp = Fs / s, tw = maxEm * Fp, th = nR * 1.18 * Fp, an = fc || all;
+          const tr = mode === "band" ? { x: all.x + all.w / 2 - tw / 2, y: all.y - gap / s - th, w: tw, h: th }
+            : { x: clampN(an.x + an.w / 2 - tw / 2, all.x, all.x + all.w - tw), y: an.y + an.h / 2 - th / 2, w: tw, h: th }; // a long line slides off the cell, never off the page
+          const m = 70 / s, b0 = union(all, tr), box = { x: b0.x - m, y: b0.y - m, w: b0.w + 2 * m, h: b0.h + 2 * m }, vw = 1920 / s, vh = 1080 / s;
+          const cx = vw >= box.w ? box.x + box.w / 2 : clampN(tr.x + tr.w / 2, box.x + vw / 2, box.x + box.w - vw / 2);
+          const cy = vh >= box.h ? box.y + box.h / 2 : clampN(tr.y + tr.h / 2, box.y + vh / 2, box.y + box.h - vh / 2);
+          END = { at: story.end.start, mode, s, Fp, title: tr, box, view: K.view(cx, cy, s) };
+        }
+
+        // ================= the page =================
+        let blk = { x: 0, y: 0, w: SW, h: SH };
+        for (let k = 1; k < Math.max(NCH, COLS * ROWS); k++) blk = union(blk, { x: cell(k).x, y: cell(k).y, w: SW, h: SH });
+        const ext = { x0: -600, y0: -600, x1: blk.w + 600, y1: blk.h + 600 };
+        if (END) {
+          const v = END.view;
+          ext.x0 = Math.min(ext.x0, v.x - 300); ext.y0 = Math.min(ext.y0, v.y - 300);
+          ext.x1 = Math.max(ext.x1, v.x + 1920 / v.s + 300); ext.y1 = Math.max(ext.y1, v.y + 1080 / v.s + 300);
+        }
+        const holes = [];
+        for (let y = 160 + 800 * Math.ceil((ext.y0 + 100 - 160) / 800); y < ext.y1 - 100; y += 800) holes.push(y - ext.y0 - 22);
+        K.page(WORLD, { x: ext.x0, y: ext.y0, w: ext.x1 - ext.x0, h: ext.y1 - ext.y0, margin: 110 - ext.x0, holeX: 34 - ext.x0, holes });
+        WORLD.style.width = blk.w + "px";
+        WORLD.style.height = blk.h + "px";
+        const ink = K.svg(WORLD, ext.x0, ext.y0, ext.x1 - ext.x0, ext.y1 - ext.y0); // page coordinates, under the paper props
+
+        // slots for m cards inside a station's usable area (station-local px): 1–2 stacked (cards are wide and short),
+        // 3–4 in two rows of two, 5+ in rows of three
+        function slotsFor(m) {
+          if (!m) return [];
+          const cols = m <= 2 ? 1 : m <= 4 ? 2 : 3, rows = Math.ceil(m / cols), gap = 56;
+          const sh = Math.min(560, (USE.h - (rows - 1) * gap) / rows);
+          const top = USE.y + (USE.h - (rows * sh + (rows - 1) * gap)) / 2;
+          const out = [];
+          for (let r = 0; r < rows; r++) {
+            const inRow = Math.min(cols, m - r * cols);
+            const sw = Math.min(1300, (USE.w - (inRow - 1) * gap) / inRow);
+            const left = USE.x + (USE.w - (inRow * sw + (inRow - 1) * gap)) / 2;
+            for (let c = 0; c < inRow; c++) out.push({ x: left + c * (sw + gap), y: top + r * (sh + gap), w: sw, h: sh });
+          }
+          return out;
+        }
+        const stations = chapters.map((ch, k) => {
+          const { x, y } = cell(k);
+          const el = K.el("div", "sb-station", WORLD, { left: x, top: y, width: SW, height: SH });
+          el.setAttribute("data-layout-allow-overflow", "");
+          const svg = K.svg(el, 0, 0, SW, SH);
+          svg.setAttribute("data-layout-allow-overflow", "");
+          const lines = linesOf[k], local = slotsFor(lines.length);
+          return {
+            k: k + 1, chapter: ch, x, y, w: SW, h: SH, el, svg, lines, local,
+            slots: local.map((s) => ({ x: x + s.x, y: y + s.y, w: s.w, h: s.h })),
+            use: useAt({ x, y }),
+            view: K.view(x + SW / 2, y + SH / 2, S_ST),
+          };
+        });
+
+        // ================= the pen, the eraser, the top ink layer =================
+        const st0 = stations[0];
+        const pen = K.pen(WORLD, { enter: { x: st0.x + SW * 0.74, y: st0.y + SH * 0.92 } });
+        const eraser = K.eraser(WORLD, { home: { x: st0.x + SW / 2, y: st0.y + SH / 2 } });
+        const inkTop = K.svg(WORLD, ext.x0, ext.y0, ext.x1 - ext.x0, ext.y1 - ext.y0); // re-appended above the closing wash
+
+        // KV-film helpers (page coordinates): text, pen writes, pen strokes, put, sticky note, envelope
+        const W = (cls, x, y, size, html) => K.el("div", "abs " + (cls || ""), WORLD, { left: x, top: y, fontSize: size }, html);
+        const write = (el, at, dur, color, o) => S.add(K.write(el, Object.assign({ at, dur, pen: color === null ? null : pen, color: color || "ink" }, o || {})));
+        const draw = (d, at, dur, color, width, o) => S.add(K.stroke((o && o.layer) || ink, d, Object.assign({ at, dur, color, width, pen: o && o.nopen ? null : pen }, o || {})));
+        const put = (el, x, y, parent) => { (parent || WORLD).appendChild(el); el.style.left = x + "px"; el.style.top = y + "px"; return el; };
+        const note = (text, x, y, o) => { const n = K.note(text, Object.assign({ pen, speed: 0.04 }, o)); put(n.el, x, y); S.add(n); return n; };
+        const up = (t, a, d, e) => (e || E.io2)(pr(t, a, d));
+
+        // ================= camera: shots (focus requests) → eased moves + slow drifts =================
+        const shots = [];
+        const centerOf = (v) => ({ x: v.x + 960 / v.s, y: v.y + 540 / v.s });
+        // the view that shows page rect r inside SAFE (fill < 1 leaves room for the drift)
+        function fit(r, o = {}) {
+          const s = Math.max(o.min ?? 0.2, Math.min(o.max ?? 1.3, (o.fill ?? 0.86) * Math.min(SCREEN.w / r.w, SCREEN.h / r.h)));
+          return K.view(r.x + r.w / 2 - (SCREEN.x + SCREEN.w / 2 - 960) / s, r.y + r.h / 2 - (SCREEN.y + SCREEN.h / 2 - 540) / s, s);
+        }
+        // the view that shows box b whole inside SAFE while leaning toward rect r (the camera follows the pen
+        // inside a station without pushing the station's other content under the chip or the captions)
+        function lean(b, r, o = {}) {
+          const s = Math.min(o.max ?? 1.3, (o.fill ?? 0.92) * Math.min(SCREEN.w / b.w, SCREEN.h / b.h));
+          const k = o.lean ?? 0.22, bc = { x: b.x + b.w / 2, y: b.y + b.h / 2 }, rc = r ? { x: r.x + r.w / 2, y: r.y + r.h / 2 } : bc;
+          const cx = clampN(bc.x + k * (rc.x - bc.x), b.x + b.w - (SAFE.x1 - 960) / s, b.x + (960 - SAFE.x0) / s);
+          const cy = clampN(bc.y + k * (rc.y - bc.y), b.y + b.h - (SAFE.y1 - 540) / s, b.y + (540 - SAFE.y0) / s);
+          return K.view(cx, cy, s);
+        }
+        function toView(target, o) {
+          if (typeof target === "number") return stations[clampN(target, 1, NCH) - 1].view;
+          if (target && target.w == null && target.s != null) return target.cx != null ? K.view(target.cx, target.cy, target.s) : target;
+          return fit(target, o);
+        }
+        /* focus(at, target, o): the camera starts moving at `at` to target = a station number | a page rect {x,y,w,h}
+         * | a view {x,y,s} / {cx,cy,s}. o: { dur, ease, fill, min, max, weak }. Moves far across the page lift the camera
+         * (a short zoom-out arc); between shots it drifts (a slow push toward the next shot) so it never parks. */
+        function focus(at, target, o = {}) {
+          const s = { at, view: toView(target, o), dur: o.dur, ease: o.ease, weak: !!o.weak, closing: !!o.closing };
+          shots.push(s);
+          return s;
+        }
+
+        // ================= placeholders: one storyboard card per narration line =================
+        function beatNote(i) {
+          const k = chapOf(i), notes = story.data.notes && story.data.notes[chapters[k].key];
+          if (!notes || !notes.length) return null;
+          const j = linesOf[k].indexOf(i);
+          return j >= 0 && j < notes.length ? String(notes[j]) : null;
+        }
+        // the line's key phrase: the whole line when short, else its weightiest clause (terms and numbers count extra);
+        // returns the unit range [a, b) in line.words
+        function keyRange(i) {
+          const Ws = story.line(i).words, cl = [];
+          let cur = null;
+          Ws.forEach(([u], k) => {
+            if (PUNCT.test(u)) { cur = null; return; }
+            if (!cur) { cur = { a: k, b: k + 1 }; cl.push(cur); }
+            cur.b = k + 1;
+          });
+          if (!cl.length) return { a: 0, b: Ws.length };
+          const em = (r) => emOf(Ws.slice(r.a, r.b).map((w) => w[0]).join(""));
+          const all = { a: cl[0].a, b: cl[cl.length - 1].b };
+          if (em(all) <= 16) return all;
+          let best = cl[0], bs = -1;
+          for (const r of cl) { const sc = Math.min(em(r), 16) + (Ws.slice(r.a, r.b).some((w) => LAT.test(w[0])) ? 3 : 0); if (sc > bs) { bs = sc; best = r; } }
+          return best;
+        }
+        const keyPhrase = (i) => { const r = keyRange(i), Ws = story.line(i).words; return Ws.slice(r.a, r.b).map((w, k, a) => w[0] + (LAT.test(w[0].slice(-1)) && a[k + 1] && LAT.test(a[k + 1][0][0]) ? " " : "")).join(""); };
+
+        // units of a free text: CJK one by one, Latin / number runs whole, punctuation on its own (written without the pen)
+        function unitsOfText(text) {
+          const toks = text.match(/[A-Za-z0-9][A-Za-z0-9.%+\-/×÷≈:]*|\s+|./gu) || [];
+          const out = [];
+          let sp = false;
+          for (const tk of toks) {
+            if (/^\s+$/.test(tk)) { sp = true; continue; }
+            out.push({ u: tk, sp, latin: /[A-Za-z0-9≈×÷·%]/.test(tk), punct: PUNCT.test(tk) }); // symbols are lettered in Caveat too
+            sp = false;
+          }
+          return out;
+        }
+        function unitsOfWords(i, r) {
+          return story.line(i).words.slice(r.a, r.b).map(([u, t], k, a) => ({
+            u, t, latin: LAT.test(u) && !CJK.test(u), punct: PUNCT.test(u),
+            sp: k > 0 && LAT.test(u[0]) && LAT.test(a[k - 1][0].slice(-1)),
+          }));
+        }
+        // greedy rows of at most maxEm; punctuation never starts a row; prefer breaking after punctuation
+        function rowsOf(units, maxEm) {
+          const out = [[]];
+          let w = 0;
+          for (const x of units) {
+            const ew = emOf(x.u) + (x.sp ? 0.3 : 0), row = out[out.length - 1];
+            if (w + ew > maxEm && row.length && !x.punct) {
+              let cut = -1;
+              for (let k = row.length - 1; k > 0; k--) if (row[k].punct) { cut = k + 1; break; }
+              const head = cut > 0 ? emOf(row.slice(0, cut).map((r) => r.u).join("")) : 0;
+              if (cut > 0 && cut < row.length && head > maxEm * 0.4) { const rest = row.splice(cut); out.push(rest); w = rest.reduce((a, r) => a + emOf(r.u), 0); }
+              else { out.push([]); w = 0; }
+            }
+            out[out.length - 1].push(x);
+            w += ew;
+          }
+          return out.filter((r) => r.length);
+        }
+        // a card's layout, computed before any DOM (fonts are not measured): text, size, rows, its page rect
+        const plans = {};
+        function cardPlan(i) {
+          if (plans[i]) return plans[i];
+          const k = chapOf(i), st = stations[k];
+          const j = Math.max(0, st.lines.indexOf(i));
+          const slot = st.local[j] || { x: USE.x, y: USE.y, w: USE.w, h: USE.h };
+          const nb = beatNote(i), mode = nb ? "note" : "key";
+          const units = nb ? unitsOfText(nb) : unitsOfWords(i, keyRange(i));
+          // the largest size whose rows fit the slot (Long Cang draws small, so the hand size runs larger)
+          const sizes = mode === "note" ? [64, 58, 52, 46, 40] : [60, 54, 48, 44, 40];
+          let F = sizes[sizes.length - 1], rows = null, lh = Math.round(F * 1.4);
+          for (const s of sizes) {
+            const r = rowsOf(units, Math.max(4, Math.floor((slot.w - 170) / s))), h = Math.round(s * 1.4);
+            if (r.length * h + 56 + 24 <= slot.h && r.length <= 4) { F = s; rows = r; lh = h; break; }
+          }
+          if (!rows) rows = rowsOf(units, Math.max(4, Math.floor((slot.w - 170) / F)));
+          const maxRowEm = Math.max(...rows.map((r) => r.reduce((a, x) => a + emOf(x.u) + (x.sp ? 0.3 : 0), 0)));
+          const cw = Math.min(slot.w, Math.max(560, maxRowEm * F * (mode === "note" ? 1.04 : 1) + 170)), ch = rows.length * lh + 56;
+          // the card is centred in its slot; the 「待演绎」 tab sticks out 32 px above and 22 px right
+          const rect = { x: st.x + slot.x + (slot.w - cw) / 2, y: st.y + slot.y + (slot.h - ch) / 2 - 32, w: cw + 22, h: ch + 32 };
+          return (plans[i] = { i, k, st, slot, mode, units, F, rows, lh, rect });
+        }
+        // a station's content box so far: its cards up to line `upTo` (all when omitted; its usable area when it has none),
+        // so the camera pulls back as the cards accumulate
+        function stationBox(st, upTo) {
+          let b = null;
+          for (const i of st.lines) {
+            if (upTo != null && i > upTo) break;
+            b = b ? union(b, cardPlan(i).rect) : Object.assign({}, cardPlan(i).rect);
+          }
+          return b || Object.assign({}, st.use);
+        }
+
+        const ROT = [-0.8, 0.6, -0.5, 0.9, -0.6, 0.4];
+        const placed = {};
+        /* placeholder(i): a storyboard card for narration line i in its chapter's station — slapped on just before the
+         * line, its line number in red, the beat note (story.notes, handwritten) or the line's key phrase (serif) written
+         * by the pen as the line is spoken, a 「待演绎」 tab on its corner; the camera leans toward it. */
+        function placeholder(i) {
+          if (isEnd(i) || placed[i]) return placed[i] || null;
+          const L = story.line(i), P = cardPlan(i), st = P.st, slot = P.slot, units = P.units, mode = P.mode, lh = P.lh;
+          const slotEl = K.el("div", "sb-slot", st.el, { left: slot.x, top: slot.y, width: slot.w, height: slot.h });
+          slotEl.setAttribute("data-layout-allow-overflow", "");
+          const card = K.el("div", "sb-card", slotEl);
+          card.style.backgroundImage = `repeating-linear-gradient(180deg, rgba(0, 0, 0, 0) 0 ${lh - 2}px, rgba(46, 90, 156, 0.2) ${lh - 2}px ${lh}px)`;
+          card.style.backgroundPosition = "0 30px";
+          K.el("span", "sb-n", card, null, String(i));
+          const hero = K.el("div", "sb-hero " + (mode === "note" ? "kit-hand" : "kit-serif"), card, { fontSize: P.F, lineHeight: lh + "px" });
+          // a key phrase (spoken words) is pre-printed in graphite and inked as it is spoken; a beat note is written fresh
+          const ghost = mode === "key";
+          P.rows.forEach((row) => {
+            const r = K.el("div", "sb-row", hero);
+            const layers = ghost ? [K.el("div", "sb-ghost", r), K.el("div", "sb-ink", r)] : [r];
+            layers.forEach((holder, li) => {
+              row.forEach((x, q) => {
+                if (x.sp && q) holder.appendChild(document.createTextNode(" "));
+                const sp = K.el("span", x.latin && mode === "note" ? "kit-cv" : "", holder, null, esc(x.u));
+                const p = row[q - 1];
+                if (p && !x.sp && !x.punct && !p.punct && x.latin !== p.latin) sp.style.marginLeft = "0.06em"; // air between CJK and Latin
+                if (ghost && li === 0) { K.writable(sp); sp.style.visibility = "visible"; sp.__inner.setAttribute("data-layout-allow-overlap", ""); }
+                else x.el = sp;
+              });
+            });
+          });
+          K.el("span", "sb-flag", card, null, "待演绎");
+
+          // timing: the card lands just before the line; the pen writes each unit as it is spoken
+          S.add(K.slap(card, { at: L.start - 0.24, rot: ROT[(i - 1) % ROT.length] }));
+          const items = [];
+          let free = L.start - 0.06;
+          if (mode === "key") {
+            units.forEach((x, q) => {
+              const nx = units[q + 1];
+              if (x.punct) { const a = Math.max(x.t, free); items.push(K.write(x.el, { at: a, dur: 0.05, sound: false })); free = a + 0.05; return; }
+              const at = Math.max(x.t - 0.02, free + 0.01);
+              const dur = Math.max(0.08, Math.min(0.24, ((nx ? nx.t : L.end) - x.t) * 0.85, 0.05 * [...x.u].length + 0.07));
+              items.push(K.write(x.el, { at, dur, pen, color: "ink" }));
+              free = at + dur;
+            });
+          } else {
+            // a beat note is not in the narration: spread its units over the spoken units, never past the line's end
+            const sp = story.spoken(i), M = sp.length, wr = units.filter((x) => !x.punct), N = Math.max(1, wr.length);
+            const nat = (x) => Math.min(0.3, Math.max(0.08, 0.045 * [...x.u].length + 0.05));
+            const lim = Math.max(L.end + 0.1, L.start + 0.5);
+            const total = wr.reduce((a, x) => a + nat(x) + 0.012, 0), squeeze = Math.min(1, (lim - L.start) / Math.max(0.01, total));
+            wr.forEach((x, q) => { x.t = M ? sp[Math.min(M - 1, Math.floor((q * M) / N))][1] : L.start + q * 0.12; x.d = nat(x) * squeeze; });
+            const rem = new Array(wr.length + 1).fill(0);
+            for (let q = wr.length - 1; q >= 0; q--) rem[q] = rem[q + 1] + wr[q].d + 0.012;
+            let q = 0;
+            units.forEach((x) => {
+              if (x.punct) { items.push(K.write(x.el, { at: Math.max(free, L.start), dur: 0.04, sound: false })); return; }
+              const at = Math.max(free + 0.012, Math.min(x.t - 0.02, lim - rem[q]));
+              items.push(K.write(x.el, { at, dur: x.d, pen, color: "ink" }));
+              free = at + x.d;
+              q++;
+            });
+          }
+          items.forEach((it) => S.add(it));
+          if (ghost) units.forEach((x) => x.el.__inner && x.el.__inner.setAttribute("data-layout-allow-overlap", ""));
+
+          // the camera leans toward this card as the line begins (a lone card is framed closer)
+          const sofar = stationBox(st, i);
+          focus(L.start - 0.34, lean(sofar, P.rect, { max: sofar === P.rect || st.lines[0] === i ? 1.4 : 1.3 }));
+          return (placed[i] = { line: i, mode, card, slot: slotEl, hero, rect: P.rect, items });
+        }
+
+        // ================= the topic =================
+        let camRef = null;
+        const api = {
+          story, C, Kit: K, K, E, pr, clamp01, geo: g, D,
+          at: (l, u, n) => story.at(l, u, n), phrase: (l, s) => story.phrase(l, s), span: (l, s) => story.span(l, s),
+          world: WORLD, ink, inkTop, pen, eraser, scene: S,
+          add: (...xs) => S.add(...xs), fn: (r) => S.fn(r),
+          W, write, draw, put, note, up,
+          station: (k) => stations[clampN(k, 1, NCH) - 1], stations,
+          chapterOf: (i) => chapOf(i) + 1, lines: (k) => stations[clampN(k, 1, NCH) - 1].lines.slice(), isEnd,
+          beatNote, keyPhrase, cardPlan,
+          focus, fit, lean, view: K.view, screen: SCREEN, camAt: (t) => (camRef ? camRef(t) : null),
+          closing: END ? { at: END.at, view: END.view, title: END.title, wash: true } : null,
+          placeholder,
+        };
+        const beats = window.Beats ? window.Beats(api) || {} : {};
+
+        // ================= the closing line, written on the page; the storyboard washed back =================
+        let closing = null, wash = null;
+        if (END) {
+          if (api.closing.wash !== false && beats.closingWash !== false) wash = K.el("div", "sb-wash", WORLD, { left: blk.x - 80, top: blk.y - 80, width: blk.w + 160, height: blk.h + 160 });
+          const tr = END.title, half = Math.max(tr.w, 4000);
+          const clear = wash && END.mode !== "band" ? K.el("div", "sb-clear", WORLD, { left: tr.x - tr.w * 0.22, top: tr.y - tr.h * 0.6, width: tr.w * 1.44, height: tr.h * 2.2 }) : null;
+          if (clear) wash.__clear = clear;
+          const holder = K.el("div", "sb-title", WORLD, { left: tr.x + tr.w / 2 - half, top: tr.y, width: 2 * half });
+          holder.setAttribute("data-layout-allow-overflow", "");
+          closing = K.title(story, { pen });
+          closing.el.style.fontSize = f1(END.Fp) + "px";
+          holder.appendChild(closing.el);
+          S.add(closing);
+        }
+        WORLD.appendChild(inkTop);
+
+        // ================= camera plan =================
+        stations.forEach((st) => {
+          const first = st.lines.length ? story.line(st.lines[0]).start : st.chapter.start + 0.2;
+          focus(first - 0.55, st.k, { weak: true });
+        });
+        if (END) focus(END.at - 0.42, END.view, { dur: 1.15, ease: "io3", closing: true });
+        const startV = K.view(st0.x + SW / 2, st0.y + SH / 2, S_ST * 0.94);
+        const plan = [];
+        const timeFor = (s, pv) => {
+          const a = centerOf(pv), b = centerOf(s.view);
+          s.travel = !s.closing && Math.hypot(b.x - a.x, b.y - a.y) * Math.min(pv.s, s.view.s) > 1500;
+          s.d = s.dur ?? (s.closing ? 1.15 : s.travel ? 1.1 : 0.58);
+        };
+        shots.slice().sort((a, b) => a.at - b.at || a.weak - b.weak).forEach((s0) => {
+          let s = s0;
+          s.at = Math.max(0, s.at);
+          for (;;) {
+            const p = plan[plan.length - 1];
+            timeFor(s, p ? p.view : startV);
+            if (!p || s.at >= p.at + p.d - 0.02) break;
+            if (s.weak) { s = null; break; }
+            if (p.weak) { plan.pop(); s.at = Math.min(s.at, p.at); continue; }
+            s.at = p.at + p.d;
+            break;
+          }
+          if (s) plan.push(s);
+        });
+        // a drift: a slow push-in (≤ 2.5 %) that leans toward where the camera goes next (≤ 20 px)
+        function drift(v, dt, toward) {
+          const c = centerOf(v), z = 1 + Math.min(0.025, 0.008 * dt), pan = Math.min(20, 5 * dt) / v.s;
+          let dx = 0.97, dy = -0.24;
+          if (toward) { const b = centerOf(toward), l = Math.hypot(b.x - c.x, b.y - c.y); if (l > 1) { dx = (b.x - c.x) / l; dy = (b.y - c.y) / l; } }
+          return K.view(c.x + dx * pan, c.y + dy * pan, v.s * z);
+        }
+        const cam = K.camera(WORLD, startV);
+        const hops = [];
+        let last = startV, tEnd = 0;
+        plan.forEach((s) => {
+          if (s.at > tEnd + 0.02) { const dv = drift(last, s.at - tEnd, s.view); cam.move(dv, tEnd, s.at - tEnd, "linear", { sound: false }); last = dv; }
+          cam.move(s.view, s.at, s.d, s.ease || (s.travel || s.closing ? "io3" : "io2"), { sound: false });
+          if (s.travel) hops.push({ t0: s.at, t1: s.at + s.d, depth: 0.2 });
+          if (s.travel || s.closing || s.d >= 0.8) K.event("cam", s.at, s.d);
+          last = s.view;
+          tEnd = s.at + s.d;
+        });
+        {
+          const tail = Math.max(0.6, D + 0.5 - tEnd);
+          const toward = END && last === END.view ? K.view(END.title.x + END.title.w / 2, END.title.y + END.title.h / 2, END.s) : null;
+          cam.move(drift(last, tail, toward), tEnd, tail, "linear", { sound: false });
+        }
+        function camAt(t) {
+          let v = cam.at(t);
+          for (const h of hops) {
+            if (t <= h.t0 || t >= h.t1) continue;
+            const c = centerOf(v);
+            v = K.view(c.x, c.y, v.s * (1 - h.depth * Math.sin((Math.PI * (t - h.t0)) / (h.t1 - h.t0))));
+          }
+          return v;
+        }
+        camRef = camAt;
+
+        // ================= recap: a fresh page turned in, one mind map =================
+        let recap = null;
+        const R = story.recap;
+        if (R && R.start < D - 0.6) {
+          recap = K.recap(story, { covers: [WORLD], end: Math.min(R.end ?? D, D) });
+          $("recap").appendChild(recap.el);
+          pen.away(R.start - 0.15, D + 10);
+        }
+
+        // ================= screen chrome: chapter chip, captions (the closing line is written on the page), draft tag =================
+        const chips = new C.Chapters($("chap"), story);
+        const captions = new C.Captions($("caps"), story, { skipEnd: !!END, air: 0.2, clamp: true });
+        if (story.data.draft) K.el("div", "sb-draft", $("draft"), null, '草稿 <span class="kit-cv">·</span> 无配音');
+
+        // the pen and the eraser are always on top of the page
+        WORLD.appendChild(eraser.el);
+        WORLD.appendChild(pen.el);
+
+        function frame(t) {
+          const v = camAt(t);
+          WORLD.style.transform = `translate(${(-v.x * v.s).toFixed(2)}px,${(-v.y * v.s).toFixed(2)}px) scale(${v.s.toFixed(4)})`;
+          pen.scale = 0.86 * Math.max(1, 0.62 / v.s); // the pen stays a pen when the camera pulls back
+          S.render(t);
+          if (beats.render) beats.render(t);
+          if (wash) {
+            const u = 0.78 * up(t, END.at + 0.45, 0.5);
+            wash.style.opacity = u.toFixed(3);
+            wash.style.visibility = u > 0 ? "visible" : "hidden";
+            if (wash.__clear) { wash.__clear.style.opacity = (u / 0.78).toFixed(3); wash.__clear.style.visibility = wash.style.visibility; }
+          }
+          eraser.render(t);
+          pen.render(t);
+          chips.render(t);
+          captions.render(t);
+          if (recap) recap.render(t);
+        }
+        const tl = gsap.timeline({ paused: true });
+        const drive = { v: 0 };
+        tl.fromTo(drive, { v: 0 }, { v: 1, duration: D, ease: "none", onUpdate: () => frame(tl.time()) }, 0);
+        frame(0);
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

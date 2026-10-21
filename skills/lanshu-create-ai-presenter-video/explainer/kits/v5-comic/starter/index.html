@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/noto-sans-sc-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/noto-sans-sc-900.woff2") format("woff2"); font-weight: 900; font-style: normal; font-display: block; }
+@font-face { font-family: "Bangers"; src: url("assets/fonts/bangers.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+/* fonts:end */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #fff6e0; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--kit-bg); color: var(--kit-ink);
+        font-family: var(--kit-font-body); font-weight: 900; }
+      #stage { position: absolute; inset: 0; overflow: hidden; background: var(--kit-bg); }
+      #shake { position: absolute; inset: 0; }
+      #bg { overflow: hidden; background: var(--kit-bg); }
+      #bg .kit-dots { opacity: 0; }
+      #view { position: absolute; inset: 0; clip-path: inset(30px 40px 42px 32px); }
+      #world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+      .station { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: none; }
+      .station > * { position: absolute; left: 0; top: 0; }
+      #hud { position: absolute; inset: 0; }
+      .full { width: 1920px; height: 1080px; overflow: visible; }
+      .a { position: absolute; left: 0; top: 0; }
+
+      /* ---- the draft beat: one comic panel per narration line ---- */
+      .ph-frame { width: 1720px; height: 740px; background: #ffffff; border: 8px solid var(--kit-ink); box-shadow: 12px 12px 0 var(--kit-ink); }
+      .ph-frame > * { position: absolute; }
+      .ph-ht { left: 0; top: 0; width: 100%; height: 100%; background-size: 20px 20px;
+        -webkit-mask-image: radial-gradient(ellipse 60% 70% at 100% 100%, #000 0%, rgba(0, 0, 0, 0) 100%);
+        mask-image: radial-gradient(ellipse 60% 70% at 100% 100%, #000 0%, rgba(0, 0, 0, 0) 100%); }
+      .ph-ht.pink { background-image: radial-gradient(circle, rgba(255, 79, 163, 0.34) 4px, rgba(255, 79, 163, 0) 4.8px); }
+      .ph-ht.blue { background-image: radial-gradient(circle, rgba(28, 123, 209, 0.3) 4px, rgba(28, 123, 209, 0) 4.8px); }
+      .ph-ht.yellow { background-image: radial-gradient(circle, rgba(242, 182, 0, 0.5) 4px, rgba(242, 182, 0, 0) 4.8px); }
+      .ph-n { left: 22px; top: 22px; width: 72px; height: 72px; border-radius: 50%; background: var(--kit-yellow); border: 6px solid var(--kit-ink);
+        box-shadow: 5px 5px 0 var(--kit-ink); display: flex; align-items: center; justify-content: center; padding-top: 5px;
+        font-family: var(--kit-font-display); font-weight: 400; font-size: 46px; line-height: 1; color: var(--kit-ink); }
+      .ph-todo { right: 34px; top: 30px; padding: 2px 16px 5px; background: #ffffff; border: 4px dashed var(--kit-ink);
+        font-family: var(--kit-font-body); font-weight: 900; font-size: 28px; line-height: 1.3; color: var(--kit-ink); white-space: nowrap;
+        transform-origin: 100% 0%; }
+      .ph-balloon { left: 0; top: 0; }
+      .ph-balloon svg { position: absolute; left: 0; top: 0; overflow: visible; }
+      .ph-say { position: absolute; display: flex; align-items: center; justify-content: center; }
+      .ph-say-t { font-family: var(--kit-font-body); font-weight: 900; line-height: 1.2; text-align: center; color: var(--kit-ink); text-wrap: balance; }
+      .ph-u { display: inline-block; white-space: pre; transform-origin: 50% 80%; color: var(--kit-muted); }
+      .ph-u.lit { color: var(--kit-ink); }
+      .ph-g { display: inline-block; white-space: nowrap; }
+      .ph-term { left: 0; top: 0; padding: 7px 22px 2px; background: var(--kit-yellow); border: 5px solid var(--kit-ink); box-shadow: 6px 6px 0 var(--kit-ink);
+        font-family: var(--kit-font-display); font-weight: 400; font-size: 52px; line-height: 1.1; letter-spacing: 0.03em; white-space: nowrap;
+        color: var(--kit-ink); transform-origin: 30% 50%; }
+      .ph-term.pink { background: var(--kit-accent); }
+      .ph-strip { display: flex; align-items: center; }
+      .ph-dot { flex: none; border-radius: 50%; background: #ffffff; border: 4px solid var(--kit-ink); }
+      .ph-dot.on { background: var(--kit-ink); }
+      .ph-dot.now { background: var(--kit-accent); }
+
+      /* ---- closing station ---- */
+      .end-title { width: 1920px; height: 1000px; display: flex; align-items: center; justify-content: center; }
+      .end-title .kit-title { position: relative; }
+
+      /* ---- draft marker (story.draft: silent estimated narration) ---- */
+      .draft-tag { position: absolute; right: 64px; top: 16px; padding: 4px 18px 6px; background: #ffffff; border: 4px dashed var(--kit-ink);
+        box-shadow: 5px 5px 0 var(--kit-ink); font-family: var(--kit-font-body); font-weight: 900; font-size: 28px; line-height: 1.3;
+        color: var(--kit-ink); white-space: nowrap; transform: rotate(1.5deg); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-stamp="story" data-width="1920" data-height="1080">
+      <div id="stage" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="1">
+        <div id="shake">
+          <div id="bg" class="kit-page"></div>
+          <div id="view">
+            <svg id="rays" class="kit-rays"></svg>
+            <div id="world" data-layout-allow-overflow=""></div>
+            <svg id="whip" class="kit-speed" viewBox="0 0 1920 1080"></svg>
+          </div>
+          <div class="kit-page kit-page-frame"></div>
+          <div id="hud"></div>
+        </div>
+      </div>
+
+      <!-- chapter chip (core.Chapters, styled by the kit) -->
+      <div id="chap" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="2"></div>
+
+      <!-- the one-frame recap (Kit.recap) -->
+      <div id="recap-layer" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="5" style="position: absolute; inset: 0"></div>
+
+      <!-- halftone dot wipe at every station seam -->
+      <div id="wipe-layer" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="6" data-layout-allow-occlusion="" style="position: absolute; inset: 0; pointer-events: none">
+        <canvas id="wipe" class="kit-wipe" width="1920" height="1080" data-layout-allow-occlusion=""></canvas>
+      </div>
+
+      <!-- captions (core.Captions, word-timed; Kit.wrapCaptions lets a long line wrap) -->
+      <div id="caps" class="clip kit-caps" data-start="0" data-duration="45" data-stamp="story" data-track-index="3"></div>
+
+      <!-- 「草稿 · 无配音」 when story.draft -->
+      <div id="draft" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="7" style="position: absolute; inset: 0; pointer-events: none"></div>
+
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40.32" data-stamp="narration" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-stamp="story" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script src="beats.js"></script>
+    <script>
+      /* V5 comic starter — the film minus the topic. Everything here is driven by window.STORY:
+       *   stations   one comic page per chapter (+ a closing page for story.end); a station is a horizontal strip of
+       *              panels, one 1720×740 panel per narration line, 1920 px apart
+       *   camera     whips panel to panel at each line start, cuts station to station under the halftone dot wipe at
+       *              each chapter start, and always drifts (slow push-in) so it never parks
+       *   chrome     word-timed captions, chapter chip, closing line (Kit.title), one-frame recap (Kit.recap), draft tag
+       *   beats.js   the only topic file: window.Beats(api) → { render(t) } (see STARTER.md for the api)
+       */
+      (function () {
+        "use strict";
+        window.__timelines = window.__timelines || {};
+        var tl = gsap.timeline({ paused: true });
+        var C = window.ExplainerCore, K = window.Kit, S = new C.Story(window.STORY);
+        var clamp01 = C.clamp01, lerp = C.lerp, E = C.E, hash = C.hash, track = C.track;
+        var INK = "#141414", PINK = "#ff4fa3", BLUE = "#1c7bd1", YEL = "#ffe14d";
+        function $(id) { return document.getElementById(id); }
+
+        // ================= helpers (the KV film's vocabulary) =================
+        function el(cls, parent, text, css) {
+          var e = document.createElement("div");
+          if (cls) e.className = cls;
+          if (text != null) e.textContent = text;
+          if (css) Object.assign(e.style, css);
+          if (parent) parent.appendChild(e);
+          return e;
+        }
+        function fullSvg(parent, cls) { return K.svgEl("svg", { viewBox: "0 0 1920 1080", class: "full a" + (cls ? " " + cls : "") }, parent); }
+        function off(e) { if (e.style.visibility !== "hidden") { e.style.visibility = "hidden"; e.style.opacity = "0"; } }
+        // put(e, x, y, sx, sy, r, o): top-left at (x, y), scale, rotation (deg), opacity — one transform write
+        function put(e, x, y, sx, sy, r, o) {
+          if (sx == null) sx = 1;
+          if (sy == null) sy = sx;
+          if (o == null) o = 1;
+          if (o <= 0.002) { off(e); return false; }
+          e.style.visibility = "visible";
+          e.style.opacity = o > 0.998 ? "1" : o.toFixed(3);
+          e.style.transform = "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px) rotate(" + (r || 0).toFixed(2) + "deg) scale(" + sx.toFixed(3) + "," + sy.toFixed(3) + ")";
+          return true;
+        }
+        // enter(e, t, at, end, x, y, o): a kit entry (o.kind slam | pop | rise) and an exit, written at top-left (x, y)
+        function enter(e, t, at, end, x, y, o) {
+          o = o || {};
+          var a = K[o.kind || "slam"](t, at, o), g = K.gone(t, end, o.dOut == null ? 0.14 : o.dOut);
+          if (!a || g <= 0) { off(e); return false; }
+          var s = (o.s == null ? 1 : o.s) * ((o.sOut == null ? 0.4 : o.sOut) + (1 - (o.sOut == null ? 0.4 : o.sOut)) * g);
+          return put(e, x + a.x, y + a.y, a.sx * s, a.sy * s, a.r, a.o * g);
+        }
+        function cls(e, c, on) { if (e.classList.contains(c) !== on) e.classList.toggle(c, on); }
+        function bump(t, at, d) { var u = (t - at) / d; return u > 0 && u < 1 ? Math.sin(Math.PI * u) : 0; }
+        function land(t, at) { // squash on landing → [sx, sy]
+          var q = t - at;
+          if (q < 0) return [1, 1];
+          if (q < 0.05) { var a = q / 0.05; return [1 + 0.22 * a, 1 - 0.22 * a]; }
+          if (q < 0.25) { var b = K.backOut((q - 0.05) / 0.2); return [1.22 - 0.22 * b, 0.78 + 0.22 * b]; }
+          return [1, 1];
+        }
+        function place(comp, parent, x, y) { comp.el.style.left = x + "px"; comp.el.style.top = y + "px"; parent.appendChild(comp.el); return comp; }
+        function sfxAt(text, parent, x, y, o) { return place(K.sfx(text, o), parent, x, y); }
+
+        // ================= story shape → stations =================
+        var D = S.duration, END = S.end, RC = S.recap, DRAFT = !!S.data.draft;
+        var endLine = END ? END.line : null;
+        var LINES = S.lines.filter(function (L) { return L.i !== endLine; });
+        var CH = S.chapters.length ? S.chapters : [{ n: 1, key: "all", title: S.title || "", start: 0, end: END ? END.start - 0.2 : RC ? RC.start : D }];
+        var lastEnd = CH[CH.length - 1].end;
+        var endStart = END ? (lastEnd <= END.start + 0.05 ? Math.min(lastEnd, END.start) : END.start - 0.2) : null;
+        var DOTC = ["pink", "blue", "yellow"];
+        var W = $("world"), HUD = $("hud");
+        var PW = 1720, PH = 740, PX = 100, PY = 110, STEP = 1920, IN = 8; // panel size, first panel's top-left, panel pitch, border
+
+        var ST = CH.map(function (c, k) {
+          return { k: k, kind: "chapter", n: c.n, key: c.key, title: c.title, chapter: c, start: k === 0 ? 0 : c.start, end: null, lines: [],
+            el: el("station", W), color: DOTC[k % 3], panels: [] };
+        });
+        LINES.forEach(function (L) {
+          var k = -1;
+          CH.forEach(function (c, i) { if (L.start >= c.start - 0.25) k = i; });
+          ST[Math.max(0, k)].lines.push(L);
+        });
+        var ENDST = END ? { k: ST.length, kind: "end", n: null, key: "end", title: "", start: endStart, end: null, lines: [], el: el("station", W),
+          color: DOTC[ST.length % 3], panels: [] } : null;
+        var ALL = ENDST ? ST.concat([ENDST]) : ST.slice();
+        ALL.forEach(function (s, i) { s.end = i + 1 < ALL.length ? ALL[i + 1].start : RC ? RC.start : D; });
+        // panels: line j of a station sits at x = PX + j * STEP (station coordinates); the camera centre for it is (PX + PW/2 + j*STEP, 540)
+        ST.forEach(function (s) {
+          var n = Math.max(1, s.lines.length);
+          for (var j = 0; j < n; j++) s.panels.push({ x: PX + j * STEP, y: PY, w: PW, h: PH, cx: PX + PW / 2 + j * STEP, cy: PY + PH / 2, line: s.lines[j] || null });
+        });
+        if (ENDST) ENDST.panels.push({ x: PX, y: PY, w: PW, h: PH, cx: 960, cy: 480, line: S.line(endLine) });
+        var LINE_ST = {};
+        ST.forEach(function (s) { s.lines.forEach(function (L, j) { LINE_ST[L.i] = { st: s, j: j }; }); });
+        function lineOf(x) { return typeof x === "number" ? S.line(x) : x; }
+        function stationOf(line) { var L = lineOf(line); return L.i === endLine ? ENDST : LINE_ST[L.i].st; }
+        function panelOf(line) { var L = lineOf(line); if (L.i === endLine) return ENDST.panels[0]; var p = LINE_ST[L.i]; return p.st.panels[p.j]; }
+        function noteOf(line) {
+          var L = lineOf(line), p = LINE_ST[L.i], N = S.data.notes;
+          if (!p || !N || !N[p.st.key]) return null;
+          return N[p.st.key][p.j] || null;
+        }
+
+        // halftone ground: one layer per station, colour cycling pink / blue / yellow
+        var DOTS = ALL.map(function (s) { return el("kit-dots kit-dots-" + s.color, $("bg")); });
+
+        // ================= fx =================
+        var SPD = K.Speed(fullSvg(W, "kit-speed"), 64);      // world-space speed lines (api.trail)
+        var WHIPS = K.Speed($("whip"), 14);                    // screen-space streaks during a camera whip
+        var SHK = K.Shake(30), RAYS = K.Rays($("rays"));
+        function boom(at, amp, d, rx, ry) { SHK.add(at, amp, d || 0.24); if (rx != null) RAYS.add(at, rx, ry); return at; }
+        var WC = [[1600, 640, 960, 430], [260, 820, 1600, 520], [1600, 560, 420, 420], [1560, 520, 520, 420], [300, 300, 1500, 700]];
+        var WIPES = ALL.slice(1).map(function (s, i) { var w = WC[i % WC.length]; return { s: s.start, col: i % 2 ? BLUE : PINK, c: [w[0], w[1]], r: [w[2], w[3]] }; });
+        if (RC) WIPES.push({ s: RC.start, col: PINK, c: [1400, 760], r: [960, 470] });
+        var WIPE = K.Wipe($("wipe"), WIPES);
+
+        // ================= camera: per-station keys [t, x, y, zoom] (station coords at the screen centre) + a drift =================
+        var CAM = ALL.map(function (s) {
+          if (s.kind === "end") return [[s.start, 960, 540, 1], [s.end, 960, 540, 1]];
+          var keys = [[s.start, s.panels[0].cx, 540, 1]], last = s.start;
+          for (var j = 1; j < s.lines.length; j++) {
+            var L = s.lines[j], w0 = Math.max(L.start - 0.42, last + 0.1), w1 = Math.max(L.start + 0.06, w0 + 0.3);
+            keys.push([w0, s.panels[j - 1].cx, 540, 1], [w1, s.panels[j].cx, 540, 1]);
+            last = w1;
+          }
+          if (s.end > last + 0.05) keys.push([s.end, s.panels[s.panels.length - 1].cx, 540, 1]);
+          return keys;
+        });
+        var DRIFT = ALL.map(function () { return { z: 0.05, x: 34, y: 0 }; });
+        var camera = {
+          keys: function (k) { return CAM[k.k != null ? k.k : k]; },
+          set: function (k, keys) { CAM[k.k != null ? k.k : k] = keys.slice().sort(function (a, b) { return a[0] - b[0]; }); },
+          add: function (k, key) { var kk = k.k != null ? k.k : k; CAM[kk] = CAM[kk].concat([key]).sort(function (a, b) { return a[0] - b[0]; }); },
+          drift: function (k, d) { Object.assign(DRIFT[k.k != null ? k.k : k], d); },
+          now: [960, 540, 1], // set every frame: [x, y, zoom] of the active station
+          at: function (t, k) {
+            var c = track(CAM[k], t), s = ALL[k], d = DRIFT[k], u = clamp01((t - s.start) / Math.max(0.1, s.end - s.start));
+            return [c[0] + d.x * (u - 0.5), c[1] + d.y * (u - 0.5), c[2] * (1 + d.z * u)];
+          },
+          // visible x-range of station k's world at t (for culling off-camera panels)
+          sees: function (x0, x1) { var c = camera.now, hw = 1000 / c[2]; return x1 > c[0] - hw && x0 < c[0] + hw; },
+        };
+        var CUR = 0;
+        function stationAt(t) { for (var k = ALL.length - 1; k >= 0; k--) if (t >= ALL[k].start) return k; return 0; }
+
+        // ================= the draft beat (api.placeholder) =================
+        var SPLIT = /^[，。：；！？,;:!?]$/, PUNCT = /^[，。：；、！？,.;:!?…—–\-（）()「」『』《》“”"'‘’·]+$/;
+        var TERMU = /^[A-Za-z0-9.%+–\-\/]+$/, ALNUM = /[A-Za-z0-9]/, LATIN = /^[A-Za-z0-9.%+–\-\/]+$/;
+        // the line's key phrase: split at ，。：；！？, trim punctuation, take the LAST clause at least 0.6× as wide as the widest
+        // (tools/sfx.py mirrors this so the bed slams with the lettering)
+        function keyPhrase(L) {
+          var cl = [], cur = [];
+          L.words.forEach(function (w, k) { if (SPLIT.test(w[0])) { if (cur.length) cl.push(cur); cur = []; } else cur.push(k); });
+          if (cur.length) cl.push(cur);
+          cl = cl.map(function (c) {
+            c = c.slice();
+            while (c.length && PUNCT.test(L.words[c[0]][0])) c.shift();
+            while (c.length && PUNCT.test(L.words[c[c.length - 1]][0])) c.pop();
+            return c;
+          }).filter(function (c) { return c.length; });
+          if (!cl.length) return [];
+          var ws = cl.map(function (c) { return c.reduce(function (a, k) { return a + K.emWidth(L.words[k][0]); }, 0); });
+          var mx = Math.max.apply(null, ws), pick = 0;
+          ws.forEach(function (w, i) { if (w >= 0.6 * mx) pick = i; });
+          return cl[pick];
+        }
+        // real terms: runs of Latin / number units ("Llama 2 7B", "128 GB", "8–12"); single letters dropped; ≤ 4, numbers first;
+        // the last numeric one is the pink sticker (the result)
+        function termsOf(L) {
+          var runs = [], cur = null, out = [], seen = {};
+          L.words.forEach(function (w, k) { if (TERMU.test(w[0])) { if (!cur) { cur = []; runs.push(cur); } cur.push(k); } else cur = null; });
+          runs.forEach(function (r) {
+            while (r.length && !ALNUM.test(L.words[r[0]][0])) r.shift();
+            while (r.length && !ALNUM.test(L.words[r[r.length - 1]][0])) r.pop();
+            if (!r.length) return;
+            var text = "";
+            r.forEach(function (k, i) { var u = L.words[k][0]; if (i && ALNUM.test(text.slice(-1)) && ALNUM.test(u.charAt(0))) text += " "; text += u; });
+            var num = /\d/.test(text);
+            if (text.replace(/\s/g, "").length < 2 || (!num && text.replace(/[^A-Za-z]/g, "").length < 2)) return;
+            if (seen[text]) return;
+            seen[text] = 1;
+            out.push({ text: text, t: L.words[r[0]][1], num: num, k: r[0] });
+          });
+          if (out.length > 4) out = out.filter(function (o) { return o.num; }).concat(out.filter(function (o) { return !o.num; })).slice(0, 4).sort(function (a, b) { return a.k - b.k; });
+          var pk = -1;
+          out.forEach(function (o, i) { if (o.num) pk = i; });
+          out.forEach(function (o, i) { o.pink = i === pk; });
+          return out;
+        }
+        function bangersW(s) { var w = 0; for (var i = 0; i < s.length; i++) w += s[i] === " " ? 0.25 : 0.46; return w; }
+
+        // frame(line): the line's comic panel (white, ink border, hard shadow, number disc, halftone corner) — {el, inner, rect}
+        var FRAMES = {};
+        function frame(line) {
+          var L = lineOf(line);
+          if (FRAMES[L.i]) return FRAMES[L.i];
+          var st = stationOf(L), R = panelOf(L);
+          var f = el("ph-frame a", st.el);
+          f.style.transform = "translate(" + R.x + "px," + R.y + "px)";
+          el("ph-ht " + st.color, f);
+          el("ph-n", f, String(L.i));
+          return (FRAMES[L.i] = { el: f, st: st, rect: R, w: PW - 2 * IN, h: PH - 2 * IN,
+            // hide the whole panel (display: none) while it is off camera; returns true when it is on camera
+            cull: function () { var on = CUR === st.k && camera.sees(R.x, R.x + R.w); var d = on ? "" : "none"; if (f.style.display !== d) f.style.display = d; return on; } });
+        }
+
+        function placeholder(line) {
+          var L = lineOf(line), F = frame(L), f = F.el, IW = F.w, IH = F.h;
+          var note = noteOf(L), kp = keyPhrase(L), terms = termsOf(L), spoken = S.spoken(L.i);
+          var t0 = L.start;
+          // 待演绎: the draft marker
+          var todo = el("ph-todo", f, "待演绎");
+          // the beat note in the yellow narration box ("分镜")
+          var noteC = null, y0 = 52;
+          if (note) {
+            noteC = K.note(note, { tag: "分镜" });
+            noteC.el.style.left = "122px"; noteC.el.style.top = "30px"; noteC.el.style.maxWidth = "1180px";
+            f.appendChild(noteC.el);
+            y0 = K.emWidth(note) * 30 > 1040 ? 172 : 136;
+          }
+          // real terms: stickers in a right-hand column sized to the terms (fewer terms → bigger), each slams on its word
+          var TFS = [0, 76, 66, 58, 52][terms.length] || 52, tcol = 0;
+          var tEls = terms.map(function (o, i) {
+            var e = el("ph-term" + (o.pink ? " pink" : ""), f, o.text);
+            var tfs = Math.min(TFS, Math.floor(430 / Math.max(1, bangersW(o.text))));
+            e.style.fontSize = tfs + "px";
+            tcol = Math.max(tcol, Math.round(bangersW(o.text) * tfs) + 54 + (i % 2) * 34);
+            return { e: e, o: o, fs: tfs, h: Math.round(tfs * 1.1) + 19, dx: (i % 2) * 34, r: i % 2 ? 2.5 : -2.5 };
+          });
+          var tx = IW - 56 - tcol;
+          // the key phrase in a shout balloon: shown muted from the line start, each unit lights (ink) and stamps as it is spoken
+          var bx = terms.length ? 26 : 170, bw = terms.length ? Math.min(1300, tx - 44 - bx) : IW - 340, by = y0, bh = 616 - y0;
+          var bal = el("ph-balloon", f, null, { left: bx + "px", top: by + "px", width: bw + "px", height: bh + "px", transformOrigin: "50% 50%" });
+          K.shout(K.svgEl("svg", { width: bw, height: bh }, bal), bw, bh, { seed: 40 + L.i * 7, n: 26, inner: 0.88, sw: 7 });
+          var tw = Math.round(bw * 0.6), th = Math.round(bh * 0.56);
+          var say = el("ph-say", bal, null, { left: Math.round((bw - tw) / 2) + "px", top: Math.round((bh - th) / 2 - 4) + "px", width: tw + "px", height: th + "px" });
+          var sayT = el("ph-say-t", say, null, { maxWidth: tw + "px" });
+          var units = kp.map(function (k, i) {
+            var u = L.words[k][0], nx = kp[i + 1] != null ? L.words[kp[i + 1]][0] : null;
+            var latin = ALNUM.test(u.slice(-1)) && nx && ALNUM.test(nx.charAt(0));
+            var s = el("ph-u", sayT, latin ? u + " " : u);
+            var pv = i ? L.words[kp[i - 1]][0] : null;
+            if (LATIN.test(u) && pv && !LATIN.test(pv) && !PUNCT.test(pv)) s.style.marginLeft = "0.2em";
+            if (LATIN.test(u) && nx && !LATIN.test(nx) && !PUNCT.test(nx)) s.style.marginRight = "0.2em";
+            return { s: s, t: L.words[k][1] };
+          });
+          K.glue(units.map(function (x) { return x.s; }), "ph-g", { latin: false }); // a long Latin run may break between words
+          // font size: the largest that fits 1–4 balanced rows, and never lets an unbreakable group (a Latin word) overflow
+          // (Latin in Noto 900 is wider than K.emWidth's 0.58 em, and Latin next to CJK gets 0.2 em of air on each side)
+          function emB(u) { var n = (u.match(/[A-Za-z0-9]/g) || []).length; return K.emWidth(u) + 0.07 * n + (n ? 0.4 : 0); }
+          var em = kp.reduce(function (a, k) { return a + emB(L.words[k][0]); }, 0) || 1, maxG = 1, fs = 0;
+          Array.prototype.forEach.call(sayT.children, function (c) { maxG = Math.max(maxG, emB(c.textContent.trim()) + 0.1); });
+          [[1, 1.06], [2, 1.2], [3, 1.26], [4, 1.3]].forEach(function (r) {
+            var f1 = Math.min(112, Math.floor(r[0] * tw / (em * r[1])), Math.floor(th / (r[0] * 1.24)));
+            if (f1 > fs) fs = f1;
+          });
+          fs = Math.max(40, Math.min(fs, Math.floor(tw / (maxG * 1.04))));
+          sayT.style.fontSize = fs + "px";
+          var tot = tEls.reduce(function (a, x) { return a + x.h; }, 0) + Math.max(0, tEls.length - 1) * 30, ty = by + bh / 2 - tot / 2;
+          tEls.forEach(function (x) { x.x = tx + x.dx; x.y = ty; ty += x.h + 30; });
+          // the timing strip: one halftone dot per spoken unit, filled as it is spoken (the newest one pink)
+          var nd = Math.max(1, spoken.length), dd = Math.max(12, Math.min(30, Math.floor((IW - 180) / nd) - 10)), dg = Math.round(dd * 0.42);
+          var sw = nd * dd + (nd - 1) * dg;
+          var strip = el("ph-strip", f, null, { left: Math.round((IW - sw) / 2) + "px", top: (652 - dd / 2) + "px", gap: dg + "px" });
+          var dots = spoken.map(function (w) { return { e: el("ph-dot", strip, null, { width: dd + "px", height: dd + "px" }), t: w[1] }; });
+          var pinkTerm = terms.filter(function (o) { return o.pink; })[0];
+          if (pinkTerm) SHK.add(pinkTerm.t + 0.08, 4, 0.18);
+
+          return {
+            el: f, line: L, frame: F, note: note, keyPhrase: kp.map(function (k) { return L.words[k][0]; }).join(""), terms: terms,
+            render: function (t) {
+              if (!F.cull()) return;
+              enter(todo, t, t0 - 0.1, null, 0, 0, { kind: "pop", s0: 0.3, r0: 8, r: 3, d: 0.22 });
+              if (noteC) noteC.render(t, t0 + 0.02, null, { s0: 1.6, r0: -6, r: -1.2, d: 0.14 });
+              K.show(bal, t, t0 - 0.08, null, { kind: "pop", s0: 0.3, r0: -5, r: 0, d: 0.26 });
+              units.forEach(function (x) {
+                var u = (t - (x.t - 0.04)) / 0.2, lit = u >= 0;
+                cls(x.s, "lit", lit);
+                var k = lit && u < 1 ? 1 - E.o3(u) : 0;
+                x.s.style.transform = k > 0 ? "scale(" + (1 + 0.42 * k).toFixed(3) + "," + (1 + 0.3 * k).toFixed(3) + ") rotate(" + (-6 * k).toFixed(2) + "deg)" : "";
+              });
+              tEls.forEach(function (x) { enter(x.e, t, x.o.t - 0.06, null, x.x, x.y, { s0: x.o.pink ? 2.4 : 2, r0: x.r * 5, r: x.r, d: 0.14 }); });
+              var stripOn = enter(strip, t, t0 - 0.1, null, 0, 0, { kind: "pop", s0: 0.6, d: 0.2 });
+              if (stripOn) {
+                var lastOn = -1;
+                dots.forEach(function (d, i) { if (t >= d.t) lastOn = i; });
+                dots.forEach(function (d, i) {
+                  cls(d.e, "on", i <= lastOn);
+                  cls(d.e, "now", i === lastOn && t < L.end + 0.2);
+                  var b = bump(t, d.t, 0.24);
+                  d.e.style.transform = b > 0 ? "scale(" + (1 + 0.45 * b).toFixed(3) + ")" : "";
+                });
+              }
+            },
+          };
+        }
+
+        // ================= the closing station: Kit.title over a splash burst =================
+        var TITLE = null, ENDB = null, EMPH = [];
+        if (ENDST) {
+          TITLE = K.title(S, { maxWidth: 1300 });
+          // a short closing line letters bigger (up to 104 px); the splash burst is sized to the title it carries
+          var rowsT = TITLE.rows.filter(function (r) { return !r.lead; });
+          var maxEm = Math.max.apply(null, rowsT.map(function (r) { return r.spans.reduce(function (a, x) { return a + K.emWidth(x.s.textContent); }, 0); }).concat([1]));
+          var tfs = maxEm * 84 + 80 <= 1300 ? Math.max(84, Math.min(104, Math.floor(1220 / maxEm))) : 0;
+          if (tfs) rowsT.forEach(function (r) { r.box.style.fontSize = tfs + "px"; });
+          var fsE = tfs || 84, TWd = Math.min(1300, maxEm * fsE + 80), THd = (TITLE.rows.length - rowsT.length) * 82 + rowsT.length * (fsE * 1.2 + 50);
+          var BW = Math.round(Math.max(1100, Math.min(1640, TWd + 600))), BH = Math.round(Math.max(640, Math.min(860, THd + 420)));
+          var rays = K.svgEl("svg", { viewBox: "0 0 1920 1080", class: "full a" }, ENDST.el), rd = "";
+          for (var ri = 0; ri < 26; ri++) {
+            var ra = (ri / 26) * Math.PI * 2 + (hash(ri * 4.1 + 30) - 0.5) * 0.08, rw = 0.05 + hash(ri * 2.7 + 31) * 0.04;
+            rd += "M960 500 L" + (960 + Math.cos(ra - rw) * 1500).toFixed(1) + " " + (500 + Math.sin(ra - rw) * 1500).toFixed(1) + " L" + (960 + Math.cos(ra + rw) * 1500).toFixed(1) + " " + (500 + Math.sin(ra + rw) * 1500).toFixed(1) + " Z ";
+          }
+          K.svgEl("path", { d: rd, fill: "#ffffff", "fill-opacity": "0.6" }, rays);
+          ENDB = el("a", ENDST.el, null, { width: BW + "px", height: BH + "px", left: (960 - BW / 2) + "px", top: (500 - BH / 2) + "px", transformOrigin: "50% 50%" });
+          K.makeBurst(ENDB, BW, BH, { n: 18, inner: 0.8, seed: 21, fill: "#ffffff", sw: 9, shadow: 12 });
+          var tw2 = el("end-title", ENDST.el);
+          tw2.appendChild(TITLE.el);
+          (END.emphasis || []).forEach(function (e) { try { EMPH.push(S.phrase(endLine, e)); } catch (err) { /* emphasis not in the line */ } });
+          EMPH.sort(function (a, b) { return a - b; });
+          EMPH.forEach(function (x, i) { SHK.add(x + 0.06, i === EMPH.length - 1 ? 8 : 3, i === EMPH.length - 1 ? 0.26 : 0.14); });
+          if (EMPH.length) RAYS.add(EMPH[EMPH.length - 1] + 0.06, 960, 500);
+        }
+        function renderEnd(t) {
+          if (!ENDST) return;
+          var b = 0;
+          EMPH.forEach(function (x) { b = Math.max(b, bump(t, x, 0.3)); });
+          K.show(ENDB, t, ENDST.start + 0.1, null, { kind: "pop", s0: 0.15, r0: -18, r: 0, d: 0.32, base: "scale(" + (1 + 0.04 * b).toFixed(3) + ")" });
+          TITLE.render(t);
+        }
+
+        // ================= chrome: captions, chapter chip, recap, draft tag =================
+        var caps = K.wrapCaptions(new C.Captions($("caps"), S, { skipEnd: !!END, air: 0.22, clamp: true }));
+        var chaps = new C.Chapters($("chap"), S);
+        var RECAP = RC ? K.recap(S) : null;
+        if (RECAP) $("recap-layer").appendChild(RECAP.el);
+        if (DRAFT) el("draft-tag", $("draft"), "草稿 · 无配音");
+        var stage = $("stage"), shakeEl = $("shake");
+
+        // ================= the api handed to beats.js =================
+        var SEGS = [], WSEGS = [];
+        var api = {
+          story: S, C: C, Kit: K,
+          stations: ST, end: ENDST, all: ALL,
+          station: function (k) { return k === "end" ? ENDST : ALL[k]; },
+          stationOf: stationOf, panel: panelOf, note: noteOf, frame: frame, placeholder: placeholder,
+          keyPhrase: keyPhrase, terms: termsOf,
+          active: function (s) { return CUR === (s && s.k != null ? s.k : s); },
+          world: W, hud: HUD, camera: camera,
+          shake: SHK, rays: RAYS, boom: boom,
+          trail: function (ax, ay, bx, by, u, o) { o = o || {}; SPD.trail(SEGS, [ax, ay], [bx, by], u, o); },
+          streak: function (seg) { SEGS.push(seg); },
+          el: el, svg: fullSvg, put: put, enter: enter, off: off, cls: cls, bump: bump, land: land, place: place, sfx: sfxAt,
+          colors: { ink: INK, pink: PINK, blue: BLUE, yellow: YEL, warn: "#ff5a36", ok: "#2fbf5a" },
+        };
+        var BEATS = window.Beats ? window.Beats(api) : { render: function () {} };
+
+        // whip streaks: screen-space ink lines while the camera whips between panels
+        var WHIPT = [];
+        ALL.forEach(function (s, k) {
+          var keys = CAM[k];
+          for (var i = 1; i < keys.length; i++) if (Math.abs(keys[i][1] - keys[i - 1][1]) > 600) WHIPT.push({ k: k, a: keys[i - 1][0], b: keys[i][0], dir: Math.sign(keys[i][1] - keys[i - 1][1]) });
+        });
+        function whipStreaks(t, k) {
+          WHIPT.forEach(function (w, n) {
+            if (w.k !== k || t <= w.a || t >= w.b) return;
+            var u = (t - w.a) / (w.b - w.a), on = Math.sin(Math.PI * u);
+            if (on < 0.25) return;
+            for (var i = 0; i < 12; i++) {
+              var y = 130 + (i + hash(n * 13 + i * 3.7) * 0.8) * 62, len = (380 + hash(n * 7 + i * 5.3) * 640) * on, x = 80 + hash(n * 5 + i * 9.1) * 1300 - w.dir * u * 360;
+              WSEGS.push([x, y, x + len, y, [7, 4, 10, 5][i % 4]]);
+            }
+          });
+        }
+
+        // ================= the one per-frame writer =================
+        var last = -1;
+        function frameAt() {
+          var t = tl.time(), k = stationAt(t);
+          CUR = k;
+          if (k !== last) {
+            ALL.forEach(function (s, i) { s.el.style.display = i === k ? "block" : "none"; });
+            DOTS.forEach(function (d, i) { d.style.opacity = i === k ? "1" : "0"; });
+            last = k;
+          }
+          var c = camera.at(t, k);
+          camera.now = c;
+          W.style.transform = "translate(" + (960 - c[0] * c[2]).toFixed(2) + "px," + (540 - c[1] * c[2]).toFixed(2) + "px) scale(" + c[2].toFixed(4) + ")";
+          var sh = SHK.offset(t);
+          shakeEl.style.transform = "translate(" + sh[0].toFixed(2) + "px," + sh[1].toFixed(2) + "px)";
+          SEGS.length = 0;
+          WSEGS.length = 0;
+          BEATS.render(t);
+          if (ENDST) { if (k === ENDST.k) renderEnd(t); else TITLE.render(-1); }
+          whipStreaks(t, k);
+          SPD.flush(SEGS);
+          WHIPS.flush(WSEGS);
+          RAYS.render(t);
+          WIPE.render(t);
+          caps.render(t);
+          chaps.render(t);
+          if (RECAP) RECAP.render(t);
+          var under = RC && t >= RC.start + 0.02;
+          if (stage.style.display !== (under ? "none" : "")) stage.style.display = under ? "none" : "";
+        }
+
+        var drive = { t: 0 };
+        tl.fromTo(drive, { t: 0 }, { t: D, duration: D, ease: "none", onUpdate: frameAt }, 0);
+        frameAt();
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

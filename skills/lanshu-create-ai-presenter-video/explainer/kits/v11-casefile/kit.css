@@ -1,0 +1,257 @@
+/* V11 casefile kit — 案卷: a cork investigation board under a desk lamp. Cards are pinned with glossy push pins,
+ * red string runs pin to pin, rubber stamps thump down, a typewriter fills the forms, yellow sticky notes carry the
+ * handwriting, and the captions are punched on a black label-maker strip.
+ * Tokens + component styles. Sizes are px at 1080p; anything on the board (world layer) is in board px and is scaled
+ * by the camera, so keep size × camera scale above the baseline (KIT.md).
+ * Fonts (subset per project by tools/fonts.py): Noto Serif SC 900 (display) + 500 (typed CJK), Special Elite (typed
+ * Latin), Long Cang (handwriting), Noto Sans SC 700 (tags, chip, captions), JetBrains Mono 700 (real terms). */
+:root {
+  --kit-bg: #b5844f; /* the cork board */
+  --kit-surface: #fbf6ea; /* paper: exhibits, index cards, report */
+  --kit-ink: #2b211a; /* typed ink */
+  --kit-muted: #5e4c3a; /* secondary text (7.6:1 on paper, 5.5:1 on manila) */
+  --kit-accent: #c8352b; /* red: THE finding / the culprit (red pin, red string, 已证实, the closing emphasis) */
+  --kit-accent-2: #2f5d8a; /* blue: a hypothesis / under investigation (blue pin, 推测 / 调查中 / 排除) */
+  --kit-warn: #a24a10; /* rust: waste / cost (recomputed rows, memory) */
+  --kit-ok: #2f6b43; /* green: solved / included (use rarely) */
+  --kit-hl: rgba(255, 214, 51, 0.74); /* yellow highlighter, multiply: the evidence that matters */
+  --kit-sticky: #ffe873;
+  --kit-manila: #e9d29c;
+  --kit-photo: #fdfdfb;
+  --kit-tape: rgba(234, 222, 188, 0.94);
+  --kit-string: #b3241b;
+  --kit-walnut: #3b2414;
+  --kit-label-bg: #161514; /* label-maker tape */
+  --kit-label-ink: #f3f1ec;
+  --kit-label-off: #7b766d; /* unspoken caption units (3.9:1 on the strip, large text) */
+  --kit-label-key: #ffd84d; /* the caption's key span */
+
+  --kit-font-display: "Noto Serif SC", serif; /* 900 */
+  --kit-font-body: "Special Elite", "Noto Serif SC", serif; /* typed: typewriter Latin, serif CJK (500) */
+  --kit-font-hand: "Long Cang", cursive;
+  --kit-font-label: "Noto Sans SC", sans-serif; /* 700: tags, chip, captions */
+  --kit-font-mono: "JetBrains Mono", monospace; /* 700: real terms (K1, V1, 4K) */
+
+  --kit-t-display: 120px; /* the closing line on screen */
+  --kit-t-h1: 88px; /* hero numbers */
+  --kit-t-h2: 60px; /* card titles */
+  --kit-t-body: 40px; /* typed body */
+  --kit-t-label: 34px;
+  --kit-t-note: 50px; /* Long Cang draws small: 50 px reads like a ~36 px sans */
+  --kit-t-cap: 40px;
+}
+
+/* ---------- the desk: board (cork + walnut frame) → lamp (screen) → world (cards, wash, strings, pins, top) ---------- */
+.kit-stage { position: absolute; inset: 0; overflow: hidden; background: var(--kit-walnut); }
+.kit-board, .kit-world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+.kit-layer { position: absolute; left: 0; top: 0; width: 1px; height: 1px; }
+.kit-cork { position: absolute; background-color: var(--kit-bg); background-image: url("cork.svg"); background-size: 384px 384px; }
+.kit-frame {
+  position: absolute;
+  box-sizing: border-box;
+  border-style: solid;
+  border-color: #3f2716 #351f10 #2a170b #331d0f;
+  box-shadow: inset 0 0 0 6px rgba(20, 10, 3, 0.55), inset 0 14px 26px rgba(20, 10, 3, 0.5), 0 0 0 3px #24130a;
+}
+.kit-lamp {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 105% 95% at 32% 24%, rgba(255, 241, 208, 0.34) 0%, rgba(255, 241, 208, 0) 52%, rgba(26, 12, 3, 0.56) 100%);
+}
+.kit-wash { position: absolute; background: rgba(28, 14, 5, 0.5); pointer-events: none; visibility: hidden; }
+svg.kit-ink { position: absolute; overflow: visible; pointer-events: none; }
+svg.kit-ink path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+/* hush: the cards' contents fade out (paper, pins and strings stay) so a closing sheet or the recap can sit over the
+ * board without covering any text; !important beats the inline opacity / visibility the components animate */
+.kit-world { --kit-hush: 0; }
+.kit-world[data-hushing] .kit-cards .kit-card > *, .kit-world[data-hushing] .kit-cards > :not(.kit-card):not(.kit-tl), .kit-world[data-hushing] .kit-tl > .kit-tl-m { opacity: calc(1 - var(--kit-hush)) !important; }
+.kit-world[data-hushed] .kit-cards .kit-card *, .kit-world[data-hushed] .kit-cards > :not(.kit-card):not(.kit-tl), .kit-world[data-hushed] .kit-cards > :not(.kit-card):not(.kit-tl) *, .kit-world[data-hushed] .kit-tl > :not(.kit-tl-tape), .kit-world[data-hushed] .kit-tl > :not(.kit-tl-tape) * { visibility: hidden !important; }
+
+/* ---------- cards ---------- */
+.kit-card {
+  --lift: 0;
+  position: absolute;
+  box-sizing: border-box;
+  background-color: var(--kit-surface);
+  color: var(--kit-ink);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.06), 0 calc(14px + 34px * var(--lift)) calc(26px + 30px * var(--lift)) rgba(40, 20, 5, calc(0.46 - 0.18 * var(--lift)));
+}
+.kit-card.kit-lined, .kit-card.kit-index {
+  background-image: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0) 0 calc(var(--rule, 48px) - 2px), rgba(70, 120, 170, 0.2) calc(var(--rule, 48px) - 2px) var(--rule, 48px));
+  background-position: 0 var(--rule-top, 70px);
+}
+.kit-card.kit-index::before { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--rule-top, 70px) - 6px); height: 2px; background: rgba(200, 53, 43, 0.5); }
+.kit-card.kit-manila { background-color: var(--kit-manila); }
+.kit-card.kit-sticky { background-color: var(--kit-sticky); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05), 0 calc(16px + 30px * var(--lift)) calc(22px + 30px * var(--lift)) rgba(40, 20, 5, 0.4); }
+.kit-card.kit-photo { background-color: var(--kit-photo); }
+.kit-photo-img { position: relative; overflow: hidden; background: linear-gradient(160deg, #3a3f46, #22262b); }
+/* the folder tab (案卷 07) */
+.kit-tab {
+  position: absolute; left: 30px; top: -38px; height: 42px; padding: 3px 24px 0 22px;
+  background: var(--kit-manila); border-radius: 12px 12px 0 0;
+  font-family: var(--kit-font-label); font-weight: 700; font-size: 28px; line-height: 38px; letter-spacing: 2px; color: var(--kit-ink); white-space: nowrap;
+}
+/* the dark exhibit tag (证物 A · 生成日志) sticking out over the top-left edge */
+.kit-tag {
+  position: absolute; left: 22px; top: -22px; padding: 4px 16px 6px;
+  background: var(--kit-ink); color: #fbf6ea;
+  font-family: var(--kit-font-label); font-weight: 700; font-size: 30px; line-height: 38px; letter-spacing: 2px; white-space: nowrap;
+}
+.kit-tag.kit-tag-accent { background: var(--kit-accent); }
+.kit-tag.kit-tag-accent-2 { background: var(--kit-accent-2); }
+
+/* ---------- push pins (glossy heads, a shadow that shrinks as the pin goes in) ---------- */
+.kit-pin {
+  --pin-lift: 0;
+  position: absolute; width: 32px; height: 32px; margin: -16px 0 0 -16px; border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #ffb3a8 0%, #ff7a68 18%, #c8352b 55%, #8e1f17 100%);
+  box-shadow: calc(3px + 14px * var(--pin-lift)) calc(5px + 22px * var(--pin-lift)) calc(3px + 8px * var(--pin-lift)) rgba(42, 18, 5, calc(0.55 - 0.3 * var(--pin-lift)));
+}
+.kit-pin::after { content: ""; position: absolute; left: 8px; top: 6px; width: 9px; height: 6px; border-radius: 50%; background: rgba(255, 255, 255, 0.75); transform: rotate(-30deg); }
+.kit-pin.kit-pin-yellow { background: radial-gradient(circle at 34% 30%, #fff3c0 0%, #ffd95a 20%, #d39a14 58%, #94660a 100%); }
+.kit-pin.kit-pin-blue { background: radial-gradient(circle at 34% 30%, #d6ebff 0%, #8fc1f0 20%, #2f5d8a 60%, #1c3c5c 100%); }
+.kit-pin.kit-pin-white { background: radial-gradient(circle at 34% 30%, #ffffff 0%, #f1ece2 30%, #c9bfae 70%, #9a8f7e 100%); }
+
+/* ---------- writing: typed (per character), handwriting (a window slides open at marker speed) ---------- */
+.kit-typed { font-family: var(--kit-font-body); font-weight: 500; }
+.kit-ch, .kit-type-rest { visibility: hidden; }
+.kit-display { font-family: var(--kit-font-display); font-weight: 900; }
+.kit-hand { font-family: var(--kit-font-hand); font-weight: 400; }
+.kit-mono { font-family: var(--kit-font-mono); font-weight: 700; }
+.kit-sans { font-family: var(--kit-font-label); font-weight: 700; }
+.kit-w { display: inline-block; white-space: nowrap; line-height: 1.2; overflow: hidden; margin: -0.2em -0.14em; vertical-align: baseline; }
+.kit-wx { display: block; padding: 0.2em 0.14em; }
+.kit-tone-ink, .kit-tone-default { color: var(--kit-ink); }
+.kit-tone-accent { color: var(--kit-accent); }
+.kit-tone-accent-2 { color: var(--kit-accent-2); }
+.kit-tone-warn { color: var(--kit-warn); }
+.kit-tone-ok { color: var(--kit-ok); }
+.kit-tone-muted { color: var(--kit-muted); }
+.kit-abs { position: absolute; white-space: nowrap; line-height: 1.2; }
+
+/* highlighter (multiply) and masking tape */
+.kit-hl { position: absolute; background: var(--kit-hl); mix-blend-mode: multiply; border-radius: 6px 12px 8px 14px; transform-origin: 0% 50%; }
+.kit-hl.kit-tone-warn { background: rgba(240, 132, 52, 0.42); }
+.kit-tape {
+  position: absolute; background: var(--kit-tape); box-shadow: 0 2px 4px rgba(40, 20, 5, 0.18);
+  clip-path: polygon(0% 8%, 3% 0%, 6% 10%, 9% 2%, 100% 0%, 97% 12%, 100% 26%, 96% 44%, 100% 62%, 97% 80%, 100% 100%, 4% 100%, 0% 88%, 3% 70%, 0% 52%, 4% 34%, 0% 18%);
+}
+
+/* ---------- rubber stamps: thump down, multiply, worn ink ---------- */
+.kit-stamp {
+  position: absolute; box-sizing: border-box; padding: 0.06em 0.36em 0.12em 0.46em;
+  border: 0.13em solid currentColor; border-radius: 0.18em;
+  font-family: var(--kit-font-display); font-weight: 900; font-size: 64px; line-height: 1.12; letter-spacing: 0.12em; white-space: nowrap;
+  color: var(--kit-accent); mix-blend-mode: multiply; transform-origin: 50% 50%;
+  -webkit-mask-image: url("stamp-ink.svg"); mask-image: url("stamp-ink.svg"); -webkit-mask-size: 220px 220px; mask-size: 220px 220px;
+}
+.kit-stamp.kit-tone-accent-2 { color: var(--kit-accent-2); }
+.kit-stamp.kit-tone-ink { color: var(--kit-ink); }
+.kit-stamp-t { display: block; }
+
+/* ---------- the timeline tape (T1 … Tn) ---------- */
+.kit-tl { position: absolute; transform-origin: 0 50%; }
+.kit-tl-tape { position: absolute; inset: 0; }
+.kit-tl-m { position: absolute; top: 0; height: 100%; }
+.kit-tl-tick { position: absolute; left: 0; top: 0; width: 3px; height: 34%; background: #6b5a44; }
+.kit-tl-l {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-46%);
+  font-family: var(--kit-font-label); font-weight: 700; font-size: 32px; line-height: 1; white-space: nowrap; color: var(--kit-muted);
+}
+.kit-tl-l b { font-family: var(--kit-font-mono); font-weight: 700; margin-right: 0.3em; }
+.kit-tl-dot { position: absolute; left: -10px; top: -24px; width: 22px; height: 22px; border-radius: 50%; background: var(--kit-accent); box-shadow: 1px 3px 2px rgba(42, 18, 5, 0.45); transform: scale(0); }
+.kit-tl-head { position: absolute; top: -30px; width: 0; height: 0; border-left: 13px solid transparent; border-right: 13px solid transparent; border-top: 20px solid var(--kit-accent); margin-left: -13px; }
+
+/* ---------- captions: a black label-maker strip; each wrapped row is its own strip; the key span lights yellow ---------- */
+.kit-caps { position: absolute; inset: 0; pointer-events: none; }
+.kit-cap {
+  position: absolute; left: 50%; bottom: 46px; width: max-content; max-width: 1740px;
+  transform: translateX(-50%) rotate(-0.35deg);
+  font-family: var(--kit-font-label); font-weight: 700; font-size: var(--kit-t-cap); line-height: 1.68; letter-spacing: 3px;
+  text-align: center; white-space: nowrap; color: var(--kit-label-off);
+  padding: 9px 30px 11px; background-color: var(--kit-label-bg); border-radius: 6px; box-shadow: 0 10px 18px rgba(0, 0, 0, 0.45);
+}
+/* Kit.captions() wraps the units in .kit-cap-in so every wrapped row becomes its own strip */
+.kit-cap:has(> .kit-cap-in) { padding: 0; background: none; box-shadow: none; }
+.kit-cap-in {
+  padding: 9px 30px 11px; background-color: var(--kit-label-bg);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, 0.28));
+  border-radius: 6px; box-shadow: 0 10px 18px rgba(0, 0, 0, 0.45);
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+.kit-cap > span, .kit-cap-in > span {
+  color: color-mix(in srgb, var(--kit-label-ink) calc(var(--lit, 0) * 100%), var(--kit-label-off));
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.85), 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.kit-cap > span.kit-cap-key, .kit-cap-in > span.kit-cap-key { color: color-mix(in srgb, var(--kit-label-key) calc(var(--lit, 0) * 100%), var(--kit-label-off)); }
+
+/* ---------- chapter chip: a manila index tab — the number on a label strip, the title typed ---------- */
+.kit-chap {
+  position: absolute; left: 64px; top: 34px; display: flex; align-items: center; gap: 16px; padding: 10px 26px 12px 12px;
+  background: var(--kit-manila); border-radius: 4px 14px 4px 4px; white-space: nowrap;
+  box-shadow: 0 10px 20px rgba(40, 20, 5, 0.42);
+  clip-path: inset(-30px calc((1 - var(--in, 1)) * 100%) -40px -30px);
+}
+.kit-chap-n {
+  padding: 2px 14px 4px; background: var(--kit-label-bg); border-radius: 4px; color: var(--kit-label-ink);
+  font-family: var(--kit-font-mono); font-weight: 700; font-size: 34px; line-height: 1.2; letter-spacing: 2px;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.85), 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.kit-chap-t { font-family: var(--kit-font-display); font-weight: 900; font-size: 38px; line-height: 1.2; color: var(--kit-ink); }
+
+/* a paper slip under number / bars / formula, so they read anywhere on the cork (paper: false drops it on a card) */
+.kit-slip { padding: 22px 30px 24px; background-color: var(--kit-surface); box-shadow: 0 10px 18px rgba(40, 20, 5, 0.38); }
+
+/* ---------- label: an evidence slip, typed, with the real term under it ---------- */
+.kit-label { position: absolute; padding: 12px 22px 14px; background: var(--kit-surface); white-space: nowrap; box-shadow: 0 8px 16px rgba(40, 20, 5, 0.35); }
+.kit-label-t { display: block; font-family: var(--kit-font-body); font-weight: 500; font-size: var(--kit-t-label); line-height: 1.25; }
+.kit-label-sub { display: block; margin-top: 4px; font-family: var(--kit-font-mono); font-weight: 700; font-size: 28px; line-height: 1.2; color: var(--kit-muted); }
+
+/* ---------- note: a yellow sticky note, the plain-language sentence handwritten ---------- */
+.kit-note { padding: 26px 30px 30px; font-family: var(--kit-font-hand); font-size: var(--kit-t-note); line-height: 1.3; color: var(--kit-ink); }
+.kit-note-line { display: block; white-space: nowrap; }
+.kit-note .kit-mono { font-size: 0.82em; }
+
+/* ---------- number: a typed count-up ---------- */
+.kit-num { position: absolute; white-space: nowrap; color: var(--kit-ink); }
+.kit-num-v { font-family: var(--kit-font-body); font-weight: 500; font-size: var(--kit-t-h1); line-height: 1; }
+.kit-num-u { font-family: var(--kit-font-body); font-weight: 500; font-size: calc(var(--kit-t-h1) * 0.5); margin-left: 12px; }
+.kit-num-c { display: block; margin-top: 6px; font-family: var(--kit-font-hand); font-size: 44px; line-height: 1.2; color: var(--kit-muted); }
+
+/* ---------- bars: marker-hatched bars on paper, values typed ---------- */
+.kit-bars { position: absolute; }
+.kit-bar { position: relative; display: flex; align-items: center; white-space: nowrap; }
+.kit-bar-l { flex: none; font-family: var(--kit-font-body); font-weight: 500; font-size: 32px; text-align: right; padding-right: 18px; color: var(--kit-ink); }
+.kit-bar-tube { position: relative; flex: none; }
+.kit-bar-tube svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.kit-bar-v { flex: none; padding-left: 16px; font-family: var(--kit-font-mono); font-weight: 700; font-size: 34px; }
+
+/* ---------- formula: typed terms, the meaning handwritten under each, the result ringed in red ---------- */
+.kit-formula { position: absolute; display: flex; align-items: flex-start; gap: 26px; white-space: nowrap; color: var(--kit-ink); }
+.kit-term { position: relative; display: inline-flex; flex-direction: column; align-items: center; }
+.kit-term-v { font-family: var(--kit-font-body); font-weight: 500; font-size: 64px; line-height: 1.1; }
+.kit-term-sub { font-family: var(--kit-font-hand); font-size: 40px; line-height: 1.2; color: var(--kit-muted); margin-top: 2px; }
+.kit-term svg.kit-ink { left: 0; top: 0; }
+
+/* ---------- title: the closing line on a lined sheet, word-timed, emphasis red + ringed, stamped 结案 ---------- */
+.kit-title { position: absolute; padding: 0.62em 0.8em 0.7em; font-size: var(--kit-t-display); --rule: 1.36em; --rule-top: 0.5em; }
+.kit-title-text { position: relative; font-family: var(--kit-font-display); font-weight: 900; line-height: 1.36; color: var(--kit-ink); white-space: nowrap; }
+.kit-title-line { display: block; }
+.kit-title-u { display: inline-block; visibility: hidden; transform-origin: 50% 80%; }
+.kit-title .kit-em { position: relative; color: var(--kit-accent); }
+.kit-title .kit-tag { font-size: 0.3em; line-height: 1.3; top: -0.22em; left: 0.3em; padding: 0.06em 0.5em 0.1em; }
+.kit-title .kit-stamp { font-size: 0.56em; }
+
+/* ---------- recap: the case folder in the middle, every point an index card pinned and strung to it ---------- */
+.kit-recap { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; visibility: hidden; }
+.kit-recap-in { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.kit-recap-folder { position: absolute; padding: 38px 52px 40px; text-align: center; }
+.kit-recap-title { display: block; font-family: var(--kit-font-display); font-weight: 900; line-height: 1.34; color: var(--kit-ink); white-space: nowrap; }
+.kit-recap-tag { display: block; margin-top: 14px; font-family: var(--kit-font-hand); font-size: 50px; line-height: 1.25; color: var(--kit-accent); white-space: nowrap; }
+.kit-recap-card { position: absolute; padding: 30px 30px 26px; --rule: 46px; --rule-top: 92px; }
+.kit-recap-h { display: flex; align-items: center; gap: 14px; height: 50px; }
+.kit-recap-n {
+  padding: 1px 12px 3px; background: var(--kit-label-bg); border-radius: 4px; color: var(--kit-label-ink);
+  font-family: var(--kit-font-mono); font-weight: 700; font-size: 30px; line-height: 1.25;
+}
+.kit-recap-ht { font-family: var(--kit-font-display); font-weight: 900; font-size: 38px; line-height: 1.2; color: var(--kit-accent); white-space: nowrap; }
+.kit-recap-line { display: block; margin-top: 6px; font-family: var(--kit-font-body); font-weight: 500; font-size: 31px; line-height: 46px; color: var(--kit-ink); white-space: nowrap; }

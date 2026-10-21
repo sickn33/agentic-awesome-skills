@@ -1,0 +1,504 @@
+/* v9-clay — the plasticine town kit.
+ * Everything is a sticker on a soft clay diorama: white pills with a peach rim, cocoa-brown text (never pure black),
+ * one HF-yellow accent for "the new / changed / important thing", a tomato red for waste, a mint green for "solved".
+ * Analogy first, real term after it in mono: 「卡片柜 KV cache」.
+ * Sizes are px at 1080p. At most three text sizes on screen: caption 42, label 34, sub / note 28.
+ */
+:root {
+  --kit-bg: #fbeee0;
+  --kit-surface: #ffffff;
+  --kit-paper: #fffaf3;          /* caption / chip / note pill */
+  --kit-rim: #ffe4c8;            /* the sticker outline */
+  --kit-ink: #4a3a31;            /* cocoa brown — 10.4:1 on paper */
+  --kit-muted: #6b5a50;          /* 6.6:1 on white, 5.8:1 on bg */
+  --kit-term: #5a6678;           /* the real term, in mono — 5.8:1 on white */
+  --kit-cap-dim: #957f71;        /* caption words not yet spoken — 3.6:1 on the pill (large text) */
+  --kit-accent: #ffd23f;         /* THE accent: the new / changed / important thing (fills, highlighter) */
+  --kit-accent-ink: #4a3a31;     /* text on the accent */
+  --kit-accent-2: #8fc8ff;       /* second colour: a sky-blue clay */
+  --kit-warn: #d94436;           /* waste / cost — white text on it 4.35:1 */
+  --kit-warn-text: #c2412f;      /* warn as text on white — 5.1:1 */
+  --kit-ok: #0b8a5d;             /* solved / included */
+  --kit-mint: #bfeed5;
+  --kit-cocoa: #6b4f3f;          /* the ink-tone sticker */
+  --kit-shadow: 0 10px 24px rgba(150, 95, 60, 0.16), 0 1px 0 rgba(0, 0, 0, 0.04);
+  --kit-shadow-lg: 0 16px 36px rgba(150, 95, 60, 0.18);
+
+  --kit-font-display: "Smiley Sans", "Noto Sans SC", sans-serif;   /* 得意黑: numbers, the closing line, chip number */
+  --kit-font-hand: "ZCOOL KuaiLe", "Noto Sans SC", sans-serif;     /* 站酷快乐体: sticker labels, chip title, card heads */
+  --kit-font-body: "Noto Sans SC", sans-serif;                     /* captions, notes, card rows */
+  --kit-font-mono: "Geist Mono", "Noto Sans SC", monospace;        /* the real term */
+
+  --kit-t-display: 88px;  /* the closing line */
+  --kit-t-hero: 150px;    /* a hero number */
+  --kit-t-h1: 64px;       /* recap centre, medium numbers */
+  --kit-t-h2: 40px;       /* card heads, formula terms */
+  --kit-t-body: 30px;     /* card rows */
+  --kit-t-label: 34px;    /* sticker labels, chip title */
+  --kit-t-note: 28px;     /* the real term, notes, recap card text */
+  --kit-t-cap: 42px;      /* captions */
+}
+
+/* ---------- captions: one pill per narration line, words light up as they are spoken ---------- */
+.kit-cap {
+  position: absolute;
+  left: 50%;
+  bottom: 46px;
+  transform: translateX(-50%);
+  padding: 12px 34px 14px;
+  border-radius: 30px;
+  border: 4px solid var(--kit-rim);
+  background: rgba(255, 250, 243, 0.97);
+  box-shadow: 0 8px 22px rgba(150, 95, 60, 0.14);
+  font-family: var(--kit-font-body);
+  font-weight: 800;
+  font-size: var(--kit-t-cap);
+  line-height: 1.25;
+  color: var(--kit-ink);
+  white-space: pre;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 30;
+}
+.kit-cap > span {
+  color: color-mix(in srgb, var(--kit-ink) calc(var(--lit, 0) * 100%), var(--kit-cap-dim));
+}
+
+/* ---------- chapter chip, top left: a clay bead with the number + the chapter in sticker type ---------- */
+.kit-chap {
+  position: absolute;
+  left: 56px;
+  top: 48px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 30px 10px 12px;
+  border-radius: 999px;
+  border: 4px solid var(--kit-rim);
+  background: rgba(255, 250, 243, 0.97);
+  box-shadow: 0 8px 20px rgba(150, 95, 60, 0.12);
+  transform-origin: 0 50%;
+  transform: translateY(calc((1 - var(--in, 1)) * 14px)) scale(calc(0.88 + 0.12 * var(--in, 1)));
+  opacity: 0;
+  z-index: 30;
+}
+.kit-chap-n {
+  width: 54px;
+  height: 54px;
+  flex: none;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffe680 0%, var(--kit-accent) 55%, #f2bd1f 100%);
+  box-shadow: inset 0 -4px 0 rgba(180, 120, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--kit-font-display);
+  font-size: 36px;
+  color: var(--kit-accent-ink);
+}
+.kit-chap-t {
+  font-family: var(--kit-font-hand);
+  font-size: var(--kit-t-label);
+  line-height: 1.1;
+  color: var(--kit-ink);
+}
+
+/* ---------- every overlay is a sticker positioned by a transform (core.place) ---------- */
+.kit-o {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* label: the analogy in sticker type, the real term in mono after it */
+.kit-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.kit-label-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 26px 11px;
+  border-radius: 999px;
+  border: 4px solid var(--kit-rim);
+  background: var(--kit-surface);
+  color: var(--kit-ink);
+  font-family: var(--kit-font-hand);
+  font-size: var(--kit-t-label);
+  line-height: 1.15;
+  box-shadow: var(--kit-shadow);
+}
+.kit-label-sub {
+  font-family: var(--kit-font-mono);
+  font-weight: 500;
+  font-size: var(--kit-t-note);
+  color: var(--kit-term);
+}
+.kit-label.kit-stem::after {
+  content: "";
+  width: 4px;
+  height: 34px;
+  background: var(--kit-ink);
+  opacity: 0.4;
+  border-radius: 2px;
+}
+.kit-label.kit-stem-up {
+  flex-direction: column-reverse;
+}
+.kit-label.kit-stem-up::after {
+  content: "";
+  width: 4px;
+  height: 30px;
+  background: var(--kit-ink);
+  opacity: 0.4;
+  border-radius: 2px;
+}
+.kit-label.kit-sm .kit-label-pill {
+  font-size: var(--kit-t-note);
+  padding: 7px 20px 9px;
+}
+.kit-label.kit-sm .kit-label-sub {
+  font-size: var(--kit-t-note);
+}
+.kit-tone-accent .kit-label-pill { background: var(--kit-accent); border-color: #ffffff; color: var(--kit-accent-ink); }
+.kit-tone-accent .kit-label-sub { color: #5b4a00; }
+.kit-tone-warn .kit-label-pill { background: var(--kit-warn); border-color: #ffffff; color: #ffffff; }
+.kit-tone-warn .kit-label-sub { color: #ffffff; }
+.kit-tone-ok .kit-label-pill { background: var(--kit-mint); border-color: #ffffff; color: var(--kit-ink); }
+.kit-tone-ok .kit-label-sub { color: #2d5c48; }
+.kit-tone-ink .kit-label-pill { background: var(--kit-cocoa); border-color: #ffffff; color: #ffffff; }
+.kit-tone-ink .kit-label-sub { color: #dfe3ea; }
+.kit-tone-sky .kit-label-pill { background: var(--kit-accent-2); border-color: #ffffff; color: var(--kit-ink); }
+.kit-tone-sky .kit-label-sub { color: #33475e; }
+.kit-dot {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--kit-accent);
+  box-shadow: 0 0 0 4px rgba(255, 210, 30, 0.3);
+}
+.kit-tone-accent .kit-dot { background: #ffffff; box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.4); }
+.kit-tick {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  stroke: currentColor;
+  stroke-width: 3.4;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* note: one plain-language explanation line — a paper slip with a yellow 说明 bead */
+.kit-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 24px 11px 12px;
+  border-radius: 22px;
+  border: 4px solid var(--kit-rim);
+  background: var(--kit-paper);
+  box-shadow: var(--kit-shadow);
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-t-note);
+  line-height: 1.3;
+  color: var(--kit-ink);
+}
+.kit-note-k {
+  flex: none;
+  padding: 3px 14px 4px;
+  border-radius: 999px;
+  background: var(--kit-accent);
+  font-family: var(--kit-font-hand);
+  font-weight: 400;
+  font-size: var(--kit-t-note);
+  color: var(--kit-accent-ink);
+}
+.kit-note b {
+  font-weight: 800;
+}
+
+/* card: a white clay plaque for panels a film builds itself (price lists, meters…) */
+.kit-card {
+  background: var(--kit-surface);
+  border: 4px solid var(--kit-rim);
+  border-radius: 32px;
+  padding: 24px 30px 22px;
+  box-shadow: var(--kit-shadow-lg);
+  color: var(--kit-ink);
+  font-family: var(--kit-font-body);
+}
+.kit-card-hd {
+  font-family: var(--kit-font-hand);
+  font-size: var(--kit-t-h2);
+  line-height: 1.1;
+}
+.kit-card-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--kit-t-body);
+  font-weight: 800;
+  line-height: 1.25;
+}
+.kit-card-row i {
+  font-style: normal;
+  font-weight: 500;
+  font-size: var(--kit-t-note);
+  color: var(--kit-muted);
+}
+.kit-ok-text { color: var(--kit-ok); }
+.kit-warn-text { color: var(--kit-warn-text); }
+
+/* number: a hero figure in 得意黑 over a yellow highlighter stroke, unit beside, caption below */
+.kit-num {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.kit-num-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 0 10px;
+  background: linear-gradient(transparent 64%, var(--kit-accent) 64%, var(--kit-accent) 92%, transparent 92%);
+}
+.kit-num-v {
+  font-family: var(--kit-font-display);
+  font-size: var(--kit-t-hero);
+  line-height: 1;
+  color: var(--kit-ink);
+  font-variant-numeric: tabular-nums;
+}
+.kit-num-u {
+  font-family: var(--kit-font-display);
+  font-size: var(--kit-t-h1);
+  line-height: 1;
+  color: var(--kit-ink);
+}
+.kit-num-c {
+  margin-top: 16px;
+  padding-left: 10px;
+  font-family: var(--kit-font-body);
+  font-weight: 800;
+  font-size: var(--kit-t-body);
+  color: var(--kit-ink);
+}
+.kit-num.kit-md .kit-num-v { font-size: 104px; }
+.kit-num.kit-md .kit-num-u { font-size: 48px; }
+.kit-num.kit-tone-warn .kit-num-row { background: linear-gradient(transparent 64%, #ffb3a8 64%, #ffb3a8 92%, transparent 92%); }
+.kit-num.kit-plaque {
+  padding: 18px 26px 20px;
+  border-radius: 32px;
+  border: 4px solid var(--kit-rim);
+  background: var(--kit-surface);
+  box-shadow: var(--kit-shadow-lg);
+}
+
+/* bars: a clay meter card — label | groove with a clay fill | value */
+.kit-bars {
+  display: grid;
+  grid-template-columns: auto 380px auto;
+  gap: 14px 16px;
+  align-items: center;
+  padding: 20px 28px 22px;
+  border-radius: 30px;
+  border: 4px solid var(--kit-rim);
+  background: var(--kit-surface);
+  box-shadow: var(--kit-shadow-lg);
+  font-family: var(--kit-font-body);
+  font-weight: 800;
+  font-size: var(--kit-t-note);
+  color: var(--kit-ink);
+}
+.kit-bars-hd {
+  grid-column: 1 / -1;
+  font-family: var(--kit-font-hand);
+  font-weight: 400;
+  font-size: var(--kit-t-label);
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+.kit-bar {
+  height: 26px;
+  border-radius: 13px;
+  background: #efe7df;
+  box-shadow: inset 0 3px 0 rgba(120, 80, 50, 0.08);
+  overflow: hidden;
+}
+.kit-bar > b {
+  display: block;
+  height: 100%;
+  border-radius: 13px;
+  transform-origin: 0 50%;
+  background: var(--kit-accent);
+  box-shadow: inset 0 -5px 0 rgba(0, 0, 0, 0.08), inset 0 4px 0 rgba(255, 255, 255, 0.35);
+}
+.kit-bar.kit-tone-warn > b { background: #ff7a6b; }
+.kit-bar.kit-tone-ok > b { background: #7fd9ad; }
+.kit-bar.kit-tone-sky > b { background: var(--kit-accent-2); }
+.kit-bar.kit-tone-ink > b { background: var(--kit-cocoa); }
+.kit-bars-v { font-variant-numeric: tabular-nums; }
+
+/* formula: clay tiles joined by operators; the result tile is yellow */
+.kit-formula {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 24px;
+  border-radius: 32px;
+  border: 4px solid var(--kit-rim);
+  background: rgba(255, 250, 243, 0.97);
+  box-shadow: var(--kit-shadow-lg);
+}
+.kit-f-term {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 18px 10px;
+  border-radius: 20px;
+  background: var(--kit-surface);
+  border: 4px solid var(--kit-rim);
+  box-shadow: 0 6px 14px rgba(150, 95, 60, 0.14);
+  transform-origin: 50% 100%;
+}
+.kit-f-v {
+  font-family: var(--kit-font-display);
+  font-size: var(--kit-t-h2);
+  line-height: 1.05;
+  color: var(--kit-ink);
+}
+.kit-f-s {
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-t-note);
+  line-height: 1.2;
+  color: var(--kit-muted);
+}
+.kit-f-op {
+  font-family: var(--kit-font-display);
+  font-size: var(--kit-t-h2);
+  color: var(--kit-muted);
+}
+.kit-f-term.kit-tone-accent { background: var(--kit-accent); border-color: #ffffff; }
+.kit-f-term.kit-tone-accent .kit-f-s { color: #5b4a00; }
+.kit-f-term.kit-tone-warn { background: #ffe1dc; border-color: #ffffff; }
+
+/* the closing line: word-timed, 得意黑, emphasis on a yellow highlighter */
+.kit-title {
+  position: absolute;
+  left: 0;
+  top: 56px;
+  width: 1920px;
+  text-align: center;
+  font-family: var(--kit-font-display);
+  font-size: var(--kit-t-display);
+  line-height: 1.08;
+  color: var(--kit-ink);
+  opacity: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  z-index: 25;
+  /* a soft paper halo so the line stays legible wherever the town shows through (trees, roofs) */
+  text-shadow: 0 0 10px rgba(255, 246, 234, 0.95), 0 0 22px rgba(255, 246, 234, 0.85), 0 0 40px rgba(255, 246, 234, 0.6);
+}
+.kit-title > span {
+  display: inline-block;
+  opacity: 0;
+  transform-origin: 50% 100%;
+}
+.kit-title > span.kit-em {
+  background: linear-gradient(transparent 62%, var(--kit-accent) 62%, var(--kit-accent) 90%, transparent 90%);
+}
+
+/* recap: one composed frame — the centre sticker on the town plus numbered cards on their districts */
+.kit-recap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.kit-recap-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.kit-recap-center > .kit-rc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 34px 14px;
+  border-radius: 999px;
+  border: 5px solid #ffffff;
+  background: var(--kit-cocoa);
+  color: #ffffff;
+  font-family: var(--kit-font-display);
+  font-size: var(--kit-t-h1);
+  line-height: 1.05;
+  box-shadow: var(--kit-shadow-lg);
+}
+.kit-recap-center > .kit-rc-pill small {
+  font-family: var(--kit-font-hand);
+  font-size: var(--kit-t-label);
+  color: #ffe9a8;
+}
+.kit-recap-center::after {
+  content: "";
+  width: 4px;
+  height: 36px;
+  background: var(--kit-ink);
+  opacity: 0.4;
+  border-radius: 2px;
+}
+.kit-rc {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 26px 13px 12px;
+  border-radius: 30px;
+  border: 4px solid var(--kit-rim);
+  background: var(--kit-surface);
+  box-shadow: var(--kit-shadow-lg);
+  white-space: nowrap;
+}
+.kit-rc-n {
+  width: 58px;
+  height: 58px;
+  flex: none;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffe680 0%, var(--kit-accent) 55%, #f2bd1f 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--kit-font-display);
+  font-size: 38px;
+  color: var(--kit-accent-ink);
+}
+.kit-rc-t {
+  display: block;
+  font-family: var(--kit-font-hand);
+  font-size: var(--kit-t-label);
+  line-height: 1.2;
+  color: var(--kit-ink);
+}
+.kit-rc-t em {
+  font-style: normal;
+  color: var(--kit-muted);
+}
+.kit-rc-x {
+  display: block;
+  max-width: 700px;
+  white-space: normal;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-t-note);
+  line-height: 1.3;
+  color: var(--kit-muted);
+}

@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>KV cache · V6 电影感 3D「一镜到底」</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/noto-sans-sc-300.woff2") format("woff2"); font-weight: 300; font-style: normal; font-display: block; }
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/noto-sans-sc-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+@font-face { font-family: "Geist"; src: url("assets/fonts/geist-300.woff2") format("woff2"); font-weight: 300; font-style: normal; font-display: block; }
+@font-face { font-family: "Geist"; src: url("assets/fonts/geist-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+@font-face { font-family: "Geist Mono"; src: url("assets/fonts/geist-mono-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+/* fonts:end */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #0c0d11;
+      }
+      #stage,
+      #hud,
+      #caps,
+      #end {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="kit-frame" data-composition-id="main" data-no-timeline data-start="0" data-duration="45" data-width="1920" data-height="1080">
+      <div id="stage" class="clip" data-start="0" data-duration="45" data-track-index="1" data-layout-allow-overflow="">
+        <canvas id="gl" class="kit-gl" width="1920" height="1080"></canvas>
+        <div class="kit-vignette"></div>
+        <div class="kit-grain"></div>
+        <div class="kit-shade"></div>
+        <div id="labels" class="kit-layer" data-layout-allow-overflow=""></div>
+      </div>
+      <div id="hud" class="clip" data-start="0" data-duration="45" data-track-index="2">
+        <div id="chap"></div>
+        <div id="notes" class="kit-layer"></div>
+        <div id="panels" class="kit-layer"></div>
+      </div>
+      <div id="caps" class="clip" data-start="0" data-duration="45" data-track-index="3"></div>
+      <div id="end" class="clip" data-start="0" data-duration="45" data-track-index="4"></div>
+
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40.32" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script type="module">
+      import * as THREE from "three";
+      import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+      import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+      import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+      import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+      import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
+      import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+      import { Reflector } from "three/addons/objects/Reflector.js";
+
+      /* KV cache, performed as one continuous take in the V6 studio.
+       * Every frame is a pure function of t (hf-seek). Every beat time comes from the story (story.at / story.phrase).
+       * Colour has one meaning each: yellow = computed right now (the new token, its K/V), cool blue = matching
+       * (Q, K, attention), ember = waste / memory cost, green = memory saved. */
+      const { clamp01, pr, lerp, env, hash, track } = ExplainerCore;
+      const E = Object.assign({}, ExplainerCore.E, {
+        o4: (u) => 1 - Math.pow(1 - u, 4),
+        i3: (u) => u * u * u,
+        back: (u, s = 1.6) => (u <= 0 ? 0 : 1 + (s + 1) * Math.pow(u - 1, 3) + s * Math.pow(u - 1, 2)),
+      });
+      const pulse = (t, a, d) => (t < a || t > a + d ? 0 : Math.sin((Math.PI * (t - a)) / d));
+      const V = (x, y, z) => new THREE.Vector3(x, y, z);
+      const story = new ExplainerCore.Story(window.STORY);
+      const at = (l, u, n) => story.at(l, u, n);
+      const ph = (l, x) => story.phrase(l, x);
+      const Ln = (i) => story.line(i);
+
+      // ---------------- beat times: all from the narration ----------------
+      const T = {
+        q: Ln(1).start, tok0: at(1, "token", 1), tok1: at(1, "token", 2), tok2: at(1, "蹦"), l1e: Ln(1).end,
+        l2: Ln(2).start, tok3: ph(2, "新"), look: ph(2, "回头看"), all: ph(2, "所有"), l2e: Ln(2).end,
+        l3: Ln(3).start, each3: ph(3, "每次"), front: ph(3, "前面"), recomp: ph(3, "重新算"), jiu: at(3, "就"),
+        slow1: at(3, "越", 1), xie: at(3, "写"), slow2: at(3, "越", 2), l3e: Ln(3).end,
+        kv: at(4, "KV"), every4: ph(4, "每个"), key: at(4, "Key"), value: at(4, "Value"), once: ph(4, "只算一次"), store: ph(4, "存起来"), l4e: Ln(4).end,
+        l5: Ln(5).start, new5: ph(5, "新来"), that: ph(5, "那一个"), yi5: ph(5, "一个"), ge: at(5, "个"), again: at(5, "再"), qu: at(5, "去"), cha: at(5, "查"), l5e: Ln(5).end,
+        l6: Ln(6).start, vram: ph(6, "显存"), cache6: ph(6, "缓存"), follow: ph(6, "跟着"), shang: at(6, "上"), xia: at(6, "下"), yiqi: ph(6, "一起"), zhang: at(6, "涨"), l6e: Ln(6).end,
+        l7: Ln(7).start, llama: at(7, "Llama"), every7: ph(7, "每个"), ge7: ph(7, "个"), tok7: at(7, "token"), dayue: ph(7, "大约"), half: at(7, "0.5"), mb: at(7, "MB"),
+        k4: at(7, "4K"), yao: at(7, "要"), two: at(7, "2", 2), gb: at(7, "GB"), l7e: Ln(7).end,
+        l8: Ln(8).start, gqa: at(8, "GQA"), share: ph(8, "共用"), K8: at(8, "K"), V8: at(8, "V"), paged: at(8, "PagedAttention"), page: ph(8, "按页"), alloc: ph(8, "分配"),
+        quant: ph(8, "量化"), compress: ph(8, "压缩"), l8e: Ln(8).end,
+        l9: Ln(9).start, vram9: ph(9, "显存"), swap: at(9, "换"), speed: ph(9, "速度"), only: ph(9, "只算"), newest: ph(9, "新的"), l9e: Ln(9).end,
+        rec: story.recap.start, end: story.duration,
+      };
+
+      // ---------------- the world ----------------
+      const TOK = ["因为", "空气", "把", "蓝光", "散射", "得", "更", "多"];
+      const PITCH = 2.35, ROWY = 6.2, HEADY = 8.65;
+      const X = (i) => i * PITCH; // token i sits at x = X(i)
+      const KY = 3.9, VY = 2.6; // the cache shelves: K row over V row, one slot under each token
+      const TX = 25.6; // the 显存 tank
+      const TE = [T.tok0, T.tok1, T.tok2, T.tok3, T.front, T.jiu, T.xie, T.new5]; // when each token is emitted
+      const WEIGHT = [0.35, 0.8, 0.18, 1.0, 0.55, 0.22, 0.3, 0.5]; // illustrative attention weights for the newest token
+      const STAGE = V(19.4, 4.6, 3.4); // where one token's cache is taken apart (beat 7)
+
+      const S = Kit.studio({
+        THREE,
+        addons: { RoomEnvironment, EffectComposer, RenderPass, UnrealBloomPass, BokehPass, OutputPass, Reflector },
+        canvas: document.getElementById("gl"),
+        exposure: 1.0,
+        fog: [50, 160],
+      });
+      const { scene, col } = S;
+      S.pool(-5.5, 1.5, 9, 0.12);
+      S.pool(8, 2.0, 14, 0.15);
+      S.pool(TX, 1.5, 8, 0.17);
+      const YEL = col.accent, COOL = col.accent2, WARN = col.warn, OK = col.ok, PORC = col.porc;
+      const glow = S.mat.glow;
+
+      // white text on transparent canvas planes; material colour tints it
+      function textPlane(text, w, h, { cw = 512, ch = 256, font = '500 150px "Noto Sans SC"', tint = 0x1e1e24 } = {}) {
+        const s = S.surface(cw, ch, w, h, (g) => {
+          g.font = font;
+          g.fillStyle = "#fff";
+          g.textAlign = "center";
+          g.textBaseline = "middle";
+          g.fillText(text, cw / 2, ch / 2 + ch * 0.03);
+        });
+        s.mat.color.set(tint);
+        surfaces.push(s);
+        return s;
+      }
+      const surfaces = [];
+
+      // ---- the prompt plaque
+      const plaque = new THREE.Group();
+      plaque.position.set(-5.7, ROWY, 0);
+      scene.add(plaque);
+      const plaqueBody = new THREE.Mesh(new RoundedBoxGeometry(7.6, 1.5, 0.36, 3, 0.12), S.mat.metal());
+      plaqueBody.castShadow = plaqueBody.receiveShadow = true;
+      const plaqueText = textPlane("天空为什么是蓝的？", 7.0, 0.97, { cw: 1600, ch: 220, font: '500 150px "Noto Sans SC"', tint: 0xf2f2f0 });
+      plaqueText.mesh.position.z = 0.19;
+      const sweepMat = glow(new THREE.Color(1.3, 1.25, 1.1), 0);
+      sweepMat.map = S.sprite;
+      sweepMat.blending = THREE.AdditiveBlending;
+      const plaqueSweep = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 1.7), sweepMat);
+      plaqueSweep.position.z = 0.2;
+      plaque.add(plaqueBody, plaqueText.mesh, plaqueSweep);
+
+      // ---- the model head: a dark block that prints one token at a time through a yellow slit
+      const head = new THREE.Group();
+      scene.add(head);
+      const headBody = new THREE.Mesh(new RoundedBoxGeometry(2.5, 1.25, 1.8, 3, 0.2), S.mat.metal());
+      headBody.castShadow = true;
+      const slitMat = glow(YEL.clone().multiplyScalar(1.6), 0.25);
+      const slit = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.08, 1.1), slitMat);
+      slit.position.y = -0.64;
+      const eyeMat = glow(COOL.clone().multiplyScalar(1.4), 0.7);
+      const eye = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.05, 0.02), eyeMat);
+      eye.position.set(0, 0.18, 0.91);
+      head.add(headBody, slit, eye);
+      const headLight = new THREE.PointLight(0xffc21a, 0, 5, 2);
+      scene.add(headLight);
+
+      // ---- tokens
+      const tokGeo = new RoundedBoxGeometry(2.0, 1.2, 0.42, 3, 0.1);
+      const tokens = TOK.map((w, i) => {
+        const mat = S.mat.porcelain();
+        const m = new THREE.Mesh(tokGeo, mat);
+        m.castShadow = m.receiveShadow = true;
+        const tx = textPlane(w, 1.84, 0.92);
+        tx.mesh.position.z = 0.215;
+        m.add(tx.mesh);
+        scene.add(m);
+        return { m, mat, tx, i };
+      });
+      const hotLight = new THREE.PointLight(0xffc21a, 0, 6, 2);
+      scene.add(hotLight);
+
+      // ---- beat 2: attention arcs from the new token back to every earlier one (and the prompt)
+      const arcEnds = [X(2), X(1), X(0), -5.7];
+      const arcs = arcEnds.map((xe, k) => {
+        const a = V(X(3), ROWY + 0.66, 0.25), b = V(xe, ROWY + 0.66 + (k === 3 ? 0.1 : 0), 0.25);
+        const c = V((a.x + b.x) / 2, ROWY + 0.9 + Math.abs(a.x - b.x) * 0.2, 0.25);
+        const curve = new THREE.QuadraticBezierCurve3(a, c, b);
+        const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, 80, 0.05, 8, false), glow(COOL.clone().multiplyScalar(1.5), 0));
+        scene.add(mesh);
+        return { mesh, curve, k, top: curve.getPoint(0.5) };
+      });
+      const arcDots = new THREE.InstancedMesh(new THREE.SphereGeometry(0.13, 12, 12), glow(COOL.clone().multiplyScalar(2.4), 1), 8);
+      arcDots.frustumCulled = false;
+      scene.add(arcDots);
+      function grow(mesh, u) {
+        const n = mesh.geometry.index.count;
+        mesh.geometry.setDrawRange(0, Math.floor((n * clamp01(u)) / 6) * 6);
+      }
+
+      // ---- beat 3: the no-cache triangle — row n = step n, recomputing every earlier token's K/V
+      const cellGeo = new RoundedBoxGeometry(1.9, 0.46, 0.36, 2, 0.07);
+      const ROWT = [];
+      for (let n = 1; n <= 7; n++) ROWT[n] = n <= 4 ? T.each3 + (n - 1) * 0.13 : TE[n - 1] + 0.12;
+      const cells = [];
+      for (let n = 1; n <= 7; n++)
+        for (let i = 0; i < n; i++) {
+          const mat = S.mat.porcelain();
+          const m = new THREE.Mesh(cellGeo, mat);
+          m.castShadow = true;
+          scene.add(m);
+          cells.push({ m, mat, n, i, diag: i === n - 1, y: 4.9 - (n - 1) * 0.62 });
+        }
+
+      // ---- beat 4: the cache — two shelves drawn out under the row, K over V
+      const shelfGeo = new RoundedBoxGeometry(21.6, 0.9, 0.5, 2, 0.08).translate(10.8, 0, 0);
+      const shelves = [KY, VY].map((y, r) => {
+        const m = new THREE.Mesh(shelfGeo, S.mat.metal());
+        m.position.set(-2.7, y, -0.35);
+        m.receiveShadow = true;
+        scene.add(m);
+        const plate = new THREE.Mesh(new RoundedBoxGeometry(2.7, 0.9, 0.5, 2, 0.08), S.mat.metal());
+        plate.position.set(-4.3, y, -0.1);
+        const letter = S.surface(640, 200, 2.5, 0.78, (g) => {
+          g.textBaseline = "middle";
+          g.fillStyle = r === 0 ? "#8fc6ff" : "#f2f2f0";
+          g.font = '500 150px "Geist"';
+          g.fillText(r === 0 ? "K" : "V", 34, 106);
+          g.font = '300 92px "Geist"';
+          g.fillStyle = "#e6e5e0";
+          g.fillText(r === 0 ? "Key" : "Value", 170, 108);
+        });
+        surfaces.push(letter);
+        letter.mesh.position.z = 0.26;
+        plate.add(letter.mesh);
+        scene.add(plate);
+        const strips = TOK.map((_, i) => {
+          const s = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.05, 0.05), glow(r === 0 ? COOL.clone().multiplyScalar(1.6) : new THREE.Color(1.6, 1.45, 1.2), 0));
+          s.position.set(X(i), y - 0.47, 0.0);
+          scene.add(s);
+          return s;
+        });
+        return { m, plate, letter, strips };
+      });
+      const kGeo = new RoundedBoxGeometry(1.62, 0.62, 0.16, 2, 0.05);
+      const vGeo = new RoundedBoxGeometry(1.62, 0.62, 0.42, 2, 0.08);
+      const pairs = TOK.map((w, i) => {
+        const km = new THREE.MeshPhysicalMaterial({ color: new THREE.Color("#DCE8F7"), roughness: 0.3, clearcoat: 0.6, emissive: COOL.clone(), emissiveIntensity: 0.12, transparent: true });
+        const vm = S.mat.porcelain();
+        const K = new THREE.Mesh(kGeo, km);
+        const Vb = new THREE.Mesh(vGeo, vm);
+        K.castShadow = Vb.castShadow = true;
+        const kt = textPlane("K·" + w, 1.5, 0.5, { cw: 512, ch: 170, font: '500 112px "Noto Sans SC"', tint: 0x1d2a3a });
+        kt.mesh.position.z = 0.085;
+        K.add(kt.mesh);
+        const vt = textPlane("V·" + w, 1.5, 0.5, { cw: 512, ch: 170, font: '500 112px "Noto Sans SC"', tint: 0x2a2620 });
+        vt.mesh.position.z = 0.215;
+        Vb.add(vt.mesh);
+        scene.add(K, Vb);
+        return { K, Vb, km, vm, i };
+      });
+      // the newest token's query probe + per-row relevance bars + the V streams it pulls back
+      const qProbe = new THREE.Group();
+      const qCore = new THREE.Mesh(new THREE.SphereGeometry(0.26, 24, 24), glow(COOL.clone().multiplyScalar(2.2), 1));
+      const qRing = new THREE.Mesh(new THREE.TorusGeometry(0.46, 0.035, 8, 64), glow(COOL.clone().multiplyScalar(1.6), 0.9));
+      qProbe.add(qCore, qRing);
+      scene.add(qProbe);
+      const qLight = new THREE.PointLight(0x8fc6ff, 0, 4, 2);
+      scene.add(qLight);
+      const wBars = TOK.map((_, i) => {
+        const m = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1, 0.2).translate(0, 0.5, 0), glow(COOL.clone().multiplyScalar(1.7), 0.9));
+        m.position.set(X(i) + 0.62, KY + 0.33, 0.25);
+        scene.add(m);
+        return m;
+      });
+      const vStreams = TOK.map((_, i) => {
+        const a = V(X(i), VY + 0.15, 0.5), b = V(X(7) - 0.15, ROWY - 0.62, 0.45);
+        const c = V((a.x + b.x) / 2 + 0.8, (a.y + b.y) / 2 + 1.2 + 0.08 * (7 - i), 2.8);
+        const curve = new THREE.QuadraticBezierCurve3(a, c, b);
+        const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, 60, 0.02 + 0.055 * WEIGHT[i], 6, false), glow(new THREE.Color(1.9, 1.6, 0.6), 0));
+        scene.add(mesh);
+        return { mesh, curve };
+      });
+
+      // ---- beat 6+: the 显存 tank
+      const tank = new THREE.Group();
+      tank.position.set(TX, 0, 0);
+      scene.add(tank);
+      const tankBase = new THREE.Mesh(new RoundedBoxGeometry(6.0, 0.4, 4.4, 2, 0.08), S.mat.metal());
+      tankBase.position.y = 0.2;
+      tankBase.castShadow = tankBase.receiveShadow = true;
+      const glassMat = new THREE.MeshPhysicalMaterial({ color: 0x9fb0c8, roughness: 0.22, metalness: 0, transparent: true, opacity: 0, clearcoat: 0, specularIntensity: 0.25, depthWrite: false, side: THREE.DoubleSide });
+      const glass = new THREE.Mesh(new THREE.BoxGeometry(5.0, 11.0, 3.4), glassMat);
+      glass.position.y = 5.9;
+      const tankEdgeMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0.9, 0.9, 0.95), transparent: true, opacity: 0 });
+      const tankEdges = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(5.0, 11.0, 3.4)), tankEdgeMat);
+      tankEdges.position.y = 5.9;
+      tank.add(tankBase, glass, tankEdges);
+      const LEVEL = (k) => 0.45 + (k + 1) * 2.3 - 0.08; // the top of k+1 thousand tokens
+      const ticks = [0, 1, 2, 3].map((k) => {
+        const m = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.05, 0.05), glow(new THREE.Color(1.5, 1.5, 1.5), 0));
+        m.position.set(2.85, LEVEL(k), 1.7);
+        tank.add(m);
+        return m;
+      });
+      const slabGeo = new RoundedBoxGeometry(2.12, 1, 2.9, 2, 0.05);
+      const slabs = [0, 1, 2, 3].map((k) => {
+        const g = new THREE.Group();
+        const km = new THREE.MeshPhysicalMaterial({ color: new THREE.Color("#B9D2F0"), roughness: 0.32, clearcoat: 0.5, emissive: new THREE.Color(0, 0, 0), emissiveIntensity: 1 });
+        const vm = new THREE.MeshPhysicalMaterial({ color: PORC.clone(), roughness: 0.32, clearcoat: 0.5, emissive: new THREE.Color(0, 0, 0), emissiveIntensity: 1 });
+        const a = new THREE.Mesh(slabGeo, km), b = new THREE.Mesh(slabGeo, vm);
+        a.position.x = -1.1;
+        b.position.x = 1.1;
+        a.castShadow = b.castShadow = true;
+        g.add(a, b);
+        tank.add(g);
+        return { g, km, vm, k };
+      });
+      // reserved-but-empty space (before paging)
+      const resMat = new THREE.MeshBasicMaterial({ color: WARN.clone().multiplyScalar(0.9), transparent: true, opacity: 0, depthWrite: false });
+      const reserved = new THREE.Mesh(new THREE.BoxGeometry(4.4, 1, 2.9).translate(0, 0.5, 0), resMat);
+      const resEdgeMat = new THREE.LineBasicMaterial({ color: WARN.clone().multiplyScalar(1.4), transparent: true, opacity: 0 });
+      const resEdges = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(4.4, 1, 2.9).translate(0, 0.5, 0)), resEdgeMat);
+      tank.add(reserved, resEdges);
+      // the stream that pours the shelves into the tank (beat 6)
+      const pourGeo = new RoundedBoxGeometry(0.7, 0.32, 0.4, 2, 0.05);
+      const pour = new THREE.InstancedMesh(pourGeo, new THREE.MeshPhysicalMaterial({ color: PORC, roughness: 0.34, clearcoat: 0.5 }), 16);
+      pour.frustumCulled = false;
+      scene.add(pour);
+
+      // ---- beat 7: one token's cache, taken apart: 2 (K, V) × 32 layers
+      const plateGeo = new THREE.BoxGeometry(1.5, 0.06, 0.95);
+      const deckK = new THREE.InstancedMesh(plateGeo, new THREE.MeshPhysicalMaterial({ color: new THREE.Color("#DCE8F7"), roughness: 0.3, clearcoat: 0.6, emissive: COOL.clone(), emissiveIntensity: 0.25 }), 32);
+      const deckV = new THREE.InstancedMesh(plateGeo, new THREE.MeshPhysicalMaterial({ color: PORC.clone(), roughness: 0.3, clearcoat: 0.6, emissive: YEL.clone(), emissiveIntensity: 0 }), 32);
+      deckK.frustumCulled = deckV.frustumCulled = false;
+      scene.add(deckK, deckV);
+      const cube = new THREE.Mesh(new RoundedBoxGeometry(0.95, 0.95, 0.95, 3, 0.1), S.mat.accent(2.0));
+      scene.add(cube);
+      const trail = new THREE.InstancedMesh(new RoundedBoxGeometry(0.6, 0.6, 0.6, 2, 0.08), glow(new THREE.Color(1.9, 1.5, 0.5), 0.75), 14);
+      trail.frustumCulled = false;
+      scene.add(trail);
+
+      // ---- beat 8: GQA — four query heads, first four K/V pairs, then one shared pair
+      const gqa = [0, 1, 2, 3].map((k) => {
+        const q = new THREE.Mesh(new THREE.SphereGeometry(0.27, 20, 20), glow(COOL.clone().multiplyScalar(2.0), 1));
+        const K = new THREE.Mesh(new RoundedBoxGeometry(0.62, 0.42, 0.14, 2, 0.04), new THREE.MeshPhysicalMaterial({ color: new THREE.Color("#DCE8F7"), roughness: 0.3, emissive: COOL.clone(), emissiveIntensity: 0.2, transparent: true }));
+        const Vb = new THREE.Mesh(new RoundedBoxGeometry(0.62, 0.42, 0.32, 2, 0.06), new THREE.MeshPhysicalMaterial({ color: PORC.clone(), roughness: 0.3, transparent: true }));
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(6), 3));
+        const link = new THREE.Line(g, new THREE.LineBasicMaterial({ color: COOL.clone().multiplyScalar(1.5), transparent: true, opacity: 0 }));
+        link.frustumCulled = false;
+        scene.add(q, K, Vb, link);
+        return { q, K, Vb, link, k };
+      });
+      const GQ = (k) => V(19.0, 9.0 - k * 0.95, 2.4);
+
+      // ---- beat 9: the trade (memory → speed) and the spotlight on the newest token
+      const tradeCurve = new THREE.CatmullRomCurve3([V(TX, 11.7, 0), V(21.4, 12.6, 0.4), V(X(7), ROWY + 0.75, 0.25)]);
+      const trade = new THREE.Mesh(new THREE.TubeGeometry(tradeCurve, 120, 0.06, 8, false), glow(new THREE.Color(1.7, 1.5, 1.1), 0));
+      scene.add(trade);
+      const tradeDots = new THREE.InstancedMesh(new THREE.SphereGeometry(0.17, 12, 12), glow(new THREE.Color(2.6, 2.1, 0.5), 1), 7);
+      tradeDots.frustumCulled = false;
+      scene.add(tradeDots);
+      const coneTex = (() => {
+        const c = document.createElement("canvas");
+        c.width = 4;
+        c.height = 256;
+        const g = c.getContext("2d");
+        const gr = g.createLinearGradient(0, 0, 0, 256);
+        gr.addColorStop(0, "rgb(20,20,20)");
+        gr.addColorStop(0.6, "rgb(90,90,90)");
+        gr.addColorStop(1, "rgb(200,200,200)");
+        g.fillStyle = gr;
+        g.fillRect(0, 0, 4, 256);
+        return new THREE.CanvasTexture(c);
+      })();
+      const cone = new THREE.Mesh(
+        new THREE.ConeGeometry(2.0, 7.5, 64, 1, true),
+        new THREE.MeshBasicMaterial({ color: new THREE.Color(1.0, 0.93, 0.75), alphaMap: coneTex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }),
+      );
+      cone.position.set(X(7), ROWY + 3.4, 0.25);
+      scene.add(cone);
+      const spotPool = S.pool(X(7), 0.8, 3.2, 0);
+
+      // ---------------- camera: one take, keyed to the story ----------------
+      const CAM = [
+        [0.0, -4.2, 7.0, 10.0],
+        [T.q + 1.1, -2.4, 7.4, 12.0],
+        [T.tok0 + 0.3, 0.4, 7.4, 13.6],
+        [T.tok2 + 0.4, 2.6, 7.5, 14.8],
+        [T.tok3, 4.0, 7.8, 16.2],
+        [T.all + 0.4, 1.4, 8.6, 21.0],
+        [T.each3, 4.0, 7.2, 23.0],
+        [T.slow1, 6.5, 6.4, 25.5],
+        [T.l3e + 0.25, 6.8, 6.6, 25.5],
+        [T.kv + 0.7, 2.6, 6.6, 20.5],
+        [T.key, 3.2, 6.2, 19.5],
+        [T.store, 6.0, 6.0, 20.0],
+        [T.l5, 8.4, 5.2, 22.0],
+        [T.new5, 9.6, 5.4, 20.5],
+        [T.again, 8.4, 4.6, 22.5],
+        [T.l5e, 8.6, 4.8, 22.5],
+        [T.vram, 19.5, 7.5, 27.0],
+        [T.zhang, 20.5, 7.4, 26.0],
+        [T.every7, 17.5, 5.6, 26.0],
+        [T.mb, 17.7, 5.7, 25.0],
+        [T.gb, 18.5, 6.0, 26.0],
+        [T.gqa, 21.0, 7.0, 23.0],
+        [T.V8 + 0.15, 21.4, 6.9, 22.4],
+        [T.paged + 0.15, 24.0, 5.4, 19.0],
+        [T.l8e, 24.6, 4.2, 16.5],
+        [T.vram9, 17.0, 5.2, 27.0],
+        [T.speed, 17.2, 5.6, 24.0],
+        [T.l9e, 17.0, 6.0, 17.5],
+        [T.rec + 0.5, 10.5, 12.5, 38.0],
+        [T.end, 9.5, 14.5, 44.0],
+      ];
+      const TGT = [
+        [0.0, -5.2, 6.6, 0],
+        [T.q + 1.1, -2.8, 6.8, 0],
+        [T.tok0 + 0.3, 0.0, 7.0, 0],
+        [T.tok2 + 0.4, 2.4, 6.9, 0],
+        [T.tok3, 3.6, 6.9, 0],
+        [T.all + 0.4, 1.2, 7.0, 0],
+        [T.each3, 5.0, 4.8, 0],
+        [T.slow1, 6.6, 3.6, 0],
+        [T.l3e + 0.25, 6.6, 3.8, 0],
+        [T.kv + 0.7, 3.6, 4.4, 0],
+        [T.key, 4.2, 4.4, 0],
+        [T.store, 6.6, 4.3, 0],
+        [T.l5, 8.4, 5.0, 0],
+        [T.new5, 9.8, 5.2, 0],
+        [T.again, 8.4, 5.2, 0],
+        [T.l5e, 8.6, 5.2, 0],
+        [T.vram, 20.5, 6.4, 0],
+        [T.zhang, 21.5, 6.3, 0],
+        [T.every7, 19.6, 6.4, 0],
+        [T.mb, 19.8, 6.4, 0],
+        [T.gb, 20.6, 6.4, 0],
+        [T.gqa, 22.6, 6.6, 0],
+        [T.V8 + 0.15, 22.9, 6.5, 0],
+        [T.paged + 0.15, 25.0, 4.4, 0],
+        [T.l8e, 25.2, 2.6, 0],
+        [T.vram9, 18.0, 7.6, 0],
+        [T.speed, 17.2, 7.4, 0],
+        [T.l9e, 16.0, 7.0, 0],
+        [T.rec + 0.5, 10.0, 5.0, 0],
+        [T.end, 10.0, 4.6, 0],
+      ];
+      const APT = [
+        [0.0, 0.0022],
+        [T.tok0, 0.0012],
+        [T.each3, 0.0009],
+        [T.kv, 0.0011],
+        [T.vram, 0.0008],
+        [T.every7, 0.0012],
+        [T.l8e, 0.0012],
+        [T.vram9, 0.0008],
+        [T.l9e, 0.0016],
+        [T.rec + 0.6, 0.0018],
+        [T.end, 0.0018],
+      ];
+
+      // ---------------- overlay: kit components ----------------
+      const $ = (id) => document.getElementById(id);
+      const labLayer = $("labels");
+      const add = (item) => (labLayer.appendChild(item.el), item);
+      const P = {}; // live positions written by renderAt, read by label anchors
+      const LABELS = [
+        // beat 1
+        { item: add(Kit.label({ text: "提问", sub: "prompt" })), win: [T.q - 0.1, T.tok2 + 0.7], at: () => V(-8.7, ROWY + 0.85, 0.2), ax: 0, ay: 1 },
+        { item: add(Kit.label({ text: "大模型", sub: "LLM" })), win: [T.q + 0.2, T.l1e + 0.25], at: () => P.head.clone().add(V(1.45, 0.25, 0)), ax: 0, ay: 0.5 },
+        { item: add(Kit.label({ text: "token", sub: "一次一个", tone: "accent" })), win: [T.tok0 + 0.05, T.l1e + 0.3], at: () => V(X(P.newest), ROWY - 0.75, 0.4), ax: 0.5, ay: 0 },
+        // beat 2
+        { item: add(Kit.label({ text: "新 token", tone: "accent" })), win: [T.tok3 + 0.05, T.l2e + 0.3], at: () => V(X(3), ROWY - 0.75, 0.4), ax: 0.5, ay: 0 },
+        { item: add(Kit.label({ text: "回头看", sub: "注意力", tone: "cool" })), win: [T.look + 0.1, T.l2e + 0.3], at: () => arcs[3].top.clone().add(V(0, 0.3, 0)), ax: 0.5, ay: 1 },
+        // beat 3
+        { item: add(Kit.label({ text: "重复计算", sub: "浪费", tone: "warn" })), win: [T.recomp + 0.1, T.kv + 0.2], at: () => V(X(1.5), 0.72, 0.6), ax: 0.5, ay: 0 },
+        { item: add(Kit.label({ text: "每步真正新的只有 1 个", tone: "accent" })), win: [T.recomp + 0.5, T.kv + 0.2], at: () => V(X(3) + 1.3, 4.9 - 3 * 0.62, 0.6), ax: 0, ay: 0.5 },
+        // beat 4
+        { item: add(Kit.label({ text: "×1", sub: "只算一次", big: true, size: 110, tone: "accent" })), win: [T.once, T.store + 0.75], at: () => V(X(3), ROWY + 0.85, 0.4), ax: 0.5, ay: 1 },
+        // beat 5
+        { item: add(Kit.label({ text: "大模型", sub: "LLM" })), win: [T.l5 - 0.1, T.that], at: () => P.head.clone().add(V(1.45, 0.25, 0)), ax: 0, ay: 0.5, fo: 0.2 },
+        { item: add(Kit.label({ text: "新 token", sub: "只算它", tone: "accent" })), win: [T.new5 + 0.1, T.l5e + 0.3], at: () => V(X(7), ROWY + 0.72, 0.3), ax: 0.5, ay: 1 },
+        { item: add(Kit.label({ text: "Q", sub: "Query", tone: "cool", size: 40 })), win: [T.again + 0.05, T.cha + 0.25], at: () => P.q.clone().add(V(0, -0.65, 0)), ax: 0.5, ay: 0, fo: 0.15 },
+        // beat 6
+        { item: add(Kit.label({ text: "显存", sub: "GPU 显存", big: true, size: 92, tone: "warn" })), win: [T.vram, T.every7 - 0.25], at: () => V(TX - 2.8, 10.6, 1.7), ax: 1, ay: 0.5 },
+        { item: add((P.ctx = Kit.number({ value: 4, unit: "", caption: "上下文 (token)", size: 104 }))), win: [T.cache6, T.l6e + 0.6], at: () => V(TX - 2.8, 6.4, 1.7), ax: 1, ay: 0.5 },
+        ...[0, 1, 2, 3].map((k) => ({ item: add(Kit.label({ text: `${k + 1}K`, size: 30 })), win: [T.vram + 0.3 + k * 0.08, T.k4 + 0.2], at: () => V(TX + 3.3, LEVEL(k), 1.7), ax: 0, ay: 0.5 })),
+        // beat 7
+        { item: add(Kit.label({ text: "32 层", sub: "每层一份 K、V", size: 34 })), win: [T.ge7 + 0.15, T.half], at: () => STAGE.clone().add(V(0, 2.15, 0)), ax: 0.5, ay: 1, fo: 0.2 },
+        { item: add(Kit.label({ text: "K", tone: "cool", size: 34, mark: false })), win: [T.ge7 + 0.15, T.half], at: () => STAGE.clone().add(V(-1.05, -2.05, 0)), ax: 0.5, ay: 0, fo: 0.2 },
+        { item: add(Kit.label({ text: "V", size: 34, mark: false })), win: [T.ge7 + 0.15, T.half], at: () => STAGE.clone().add(V(1.05, -2.05, 0)), ax: 0.5, ay: 0, fo: 0.2 },
+        { item: add(Kit.label({ text: "0.5 MB", size: 56, tone: "accent" })), win: [T.half + 0.05, T.k4 + 0.35], at: () => P.cube.clone().add(V(0, 0.8, 0)), ax: 0.5, ay: 1 },
+        { item: add(Kit.label({ text: "2 GB", sub: "4K 上下文", big: true, size: 110, tone: "warn" })), win: [T.two, T.l7e + 0.35], at: () => V(TX - 2.9, 5.2, 1.7), ax: 1, ay: 0.5 },
+        // beat 8
+        ...[0, 1, 2, 3].map((k) => ({ item: add(Kit.label({ text: `Q${k + 1}`, tone: "cool", size: 30, mark: false })), win: [T.gqa + k * 0.06, T.paged + 0.1], at: () => GQ(k).add(V(-0.45, 0, 0)), ax: 1, ay: 0.5, fo: 0.2 })),
+        { item: add(Kit.label({ text: "共用 1 份 K/V", tone: "ok", size: 32 })), win: [T.V8 - 0.05, T.paged + 0.15], at: () => V(21.4, P.gqaY + 0.62, 2.4), ax: 0.5, ay: 1, fo: 0.2 },
+        { item: add(Kit.label({ text: "÷4", big: true, size: 96, tone: "ok" })), win: [T.V8, T.page], at: () => V(TX + 2.6, P.fillTop, 1.6), ax: 0, ay: 0.5, fo: 0.2 },
+        { item: add(Kit.label({ text: "预留却空着", tone: "warn", size: 32 })), win: [T.paged + 0.1, T.alloc + 0.2], at: () => V(TX + 2.6, P.fillTop + 0.3 * (LEVEL(3) - P.fillTop), 1.6), ax: 0, ay: 0.5, fo: 0.25 },
+        { item: add(Kit.label({ text: "按页分配", sub: "用多少分多少", tone: "ok", size: 34 })), win: [T.alloc - 0.05, T.quant + 0.1], at: () => V(TX + 2.6, P.fillTop + 0.3, 1.6), ax: 0, ay: 0.5, fo: 0.2 },
+        { item: add(Kit.label({ text: "÷2", sub: "FP16 → INT8", big: true, size: 96, tone: "ok" })), win: [T.compress - 0.05, T.l8e + 0.45], at: () => V(TX + 2.6, P.fillTop + 0.4, 1.6), ax: 0, ay: 0.5 },
+        // beat 9
+        { item: add(Kit.label({ text: "多占显存", tone: "warn" })), win: [T.vram9, T.rec - 0.05], at: () => V(TX - 2.7, 5.0, 1.7), ax: 1, ay: 0.5 },
+        { item: add(Kit.label({ text: "换来速度", tone: "accent" })), win: [T.speed, T.rec - 0.05], at: () => tradeCurve.getPointAt(0.8).add(V(0.5, 0, 0)), ax: 0, ay: 0.5 },
+      ];
+      function placeLabels(t) {
+        for (const L of LABELS) {
+          const o = env(t, L.win[0], L.win[1], 0.3, L.fo || 0.3);
+          S.place(L.item, L.at(t), o, { t, ax: L.ax, ay: L.ay, dx: L.dx || 0, dy: L.dy || 0 });
+        }
+      }
+
+      // screen-fixed panels: cost bars, the bill formula, the model badge, the three fixes
+      const panels = $("panels");
+      const pin = (item, x, y, ax, ay) => (panels.appendChild(item.el), Object.assign(item, { px: x, py: y, pax: ax, pay: ay }));
+      const barsSlow = pin(Kit.bars({ width: 300, rows: [
+        { label: "第 1 步", value: 1, max: 8, tone: "warn", valueText: "算 1 份" },
+        { label: "第 4 步", value: 4, max: 8, tone: "warn", valueText: "算 4 份" },
+        { label: "第 7 步", value: 7, max: 8, tone: "warn", valueText: "算 7 份" },
+      ] }), 1824, 944, 1, 1);
+      const barsCache = pin(Kit.bars({ width: 300, rows: [
+        { label: "不缓存", value: 8, max: 8, tone: "warn", valueText: "算 8 份" },
+        { label: "KV cache", value: 1, max: 8, tone: "accent", valueText: "算 1 份" },
+      ] }), 96, 226, 0, 0);
+      const f1 = pin(Kit.formula({ size: 64, terms: [
+        { text: "2", sub: "K 和 V", t: T.every7 },
+        { text: "×", t: T.every7 + 0.1 },
+        { text: "32", sub: "层", t: T.ge7 },
+        { text: "×", t: T.ge7 + 0.12 },
+        { text: "4096", sub: "维", t: T.tok7 },
+        { text: "×", t: T.tok7 + 0.12 },
+        { text: "2 B", sub: "FP16", t: T.dayue },
+        { text: "≈", t: T.half - 0.12 },
+        { text: "0.5 MB", sub: "每个 token", t: T.half, tone: "accent" },
+      ] }), 96, 226, 0, 0);
+      const f2 = pin(Kit.formula({ size: 64, terms: [
+        { text: "0.5 MB", sub: "每个 token", t: T.k4 - 0.15, tone: "accent" },
+        { text: "×", t: T.k4 },
+        { text: "4096", sub: "4K 上下文", t: T.k4 + 0.12 },
+        { text: "≈", t: T.yao },
+        { text: "2 GB", sub: "单条请求", t: T.two, tone: "warn" },
+      ] }), 96, 392, 0, 0);
+      const badge = pin(Kit.label({ text: "Llama 2 · 7B", sub: "FP16", size: 44, tone: "ink" }), 1824, 150, 1, 0);
+      const kvTitle = pin(Kit.label({ text: "KV cache", sub: "键值缓存", big: true, size: 136, tone: "accent" }), 960, 150, 0.5, 0);
+      const fixes = [
+        [Kit.label({ text: "GQA", sub: "分组共用 K 和 V", size: 52, tone: "ink" }), T.gqa - 0.05, T.paged - 0.05],
+        [Kit.label({ text: "PagedAttention", sub: "按页分配", size: 52, tone: "ink" }), T.paged - 0.05, T.quant - 0.08],
+        [Kit.label({ text: "量化", sub: "FP16 → INT8", size: 52, tone: "ink" }), T.quant - 0.08, T.l8e + 0.4],
+      ].map(([item, a, b]) => ({ item: pin(item, 1824, 150, 1, 0), a, b }));
+      function placePanels(t) {
+        const show = (it, o) => (it.presence(t, o), it.at(it.px, it.py, it.pax, it.pay, o));
+        const oS = env(t, T.slow1 - 0.15, T.kv + 0.25, 0.3, 0.35);
+        barsSlow.render(t, [pr(t, T.slow1, 0.35), pr(t, T.xie, 0.35), pr(t, T.slow2, 0.4)], 1);
+        show(barsSlow, oS);
+        const oC = env(t, T.new5 - 0.05, T.l5e + 0.3, 0.3, 0.35);
+        barsCache.render(t, [pr(t, T.new5, 0.4), pr(t, T.that, 0.35)], 1);
+        show(barsCache, oC);
+        const oF = env(t, T.every7 - 0.15, T.l7e + 0.35, 0.25, 0.35);
+        f1.render(t, 1);
+        show(f1, oF);
+        f2.render(t, 1);
+        show(f2, oF * pr(t, T.k4 - 0.25, 0.2));
+        show(badge, env(t, T.llama - 0.05, T.l7e + 0.35, 0.3, 0.35));
+        for (const F of fixes) show(F.item, env(t, F.a, F.b, 0.22, 0.2));
+        // the title moment: big in the middle on "KV cache", then parked top-right for the rest of the method
+        const oK = env(t, T.kv - 0.05, T.l5 - 0.05, 0.3, 0.35), uk = E.io3(pr(t, T.every4 - 0.2, 0.7));
+        kvTitle.presence(t, oK);
+        kvTitle.at(lerp(960, 1824, uk), lerp(140, 140, uk), lerp(0.5, 1, uk), 0, oK, lerp(1, 0.6, uk));
+      }
+
+      // notes: one plain line per beat (chapter-level), in the corner under the chip
+      const notesLayer = $("notes");
+      const NOTES = [
+        [Kit.note("自回归：每次只生成 <b>1 个</b> token"), T.tok0 - 0.1, T.l1e + 0.25],
+        [Kit.note("注意力：新 token 要和<b>前面每一个</b>比一比"), T.look - 0.1, T.l2e + 0.25],
+        [Kit.note("第 n 步要把前面 n 个<b>全部重算</b>"), T.each3, T.l3e + 0.25],
+        [Kit.note("K 用来匹配，V 是<b>被取走的内容</b>"), T.key + 0.1, T.l4e + 0.2],
+        [Kit.note("新 token 的 Q 去比对每个 K，按相关度<b>取回 V</b>"), T.again - 0.05, T.l5e + 0.3],
+        [Kit.note("显存占用 <b>∝ 上下文长度</b>"), T.follow, T.l6e + 0.35],
+        [Kit.note("单条请求；并发越多，<b>乘得越多</b>", { tag: "注" }), T.k4 + 0.1, T.l7e + 0.35],
+        [Kit.note("Llama 3 8B：32 个查询头共用 <b>8 份 K/V</b>"), T.gqa + 0.05, T.alloc + 0.25],
+      ].map(([n, a, b]) => (notesLayer.appendChild(n.el), { n, a, b }));
+
+      // captions, chapter chip, progress, closing line, recap
+      const caps = Kit.captions($("caps"), story);
+      const chapters = new ExplainerCore.Chapters($("chap"), story);
+      const prog = Kit.progress(story);
+      $("hud").appendChild(prog.el);
+      const endTitle = Kit.title(story, { top: 112 });
+      const recapCard = Kit.recap(story);
+      $("end").append(endTitle.el, recapCard.el);
+
+      function placeOverlay(t) {
+        for (const x of NOTES) x.n.render(t, Kit.note.window(t, x.a, x.b));
+        S.keepOut(t, NOTES.map((x) => x.n.rect()));
+        const lv = T.follow, steps = [T.follow, T.shang, T.xia, T.yiqi];
+        let k = 0;
+        for (const s of steps) if (t >= s) k++;
+        P.ctx.set(`${Math.max(1, k)}K`);
+        P.ctx.render(t, 1, 1);
+        placeLabels(t);
+        placePanels(t);
+        caps.render(t);
+        chapters.render(t);
+        prog.render(t);
+        endTitle.render(t);
+        recapCard.render(t);
+      }
+
+      // ---------------- per-frame state ----------------
+      const m4 = new THREE.Matrix4(), q4 = new THREE.Quaternion(), s3 = new THREE.Vector3(), p3 = new THREE.Vector3();
+      const tmpC = new THREE.Color();
+      P.head = V(0, HEADY, 0);
+      P.q = V(0, 0, 0);
+      P.cube = STAGE.clone();
+      P.fillTop = 1;
+      P.gqaY = 8.5;
+      P.newest = 0;
+
+      // the head waits over the next empty slot: it moves right after each print (or 0.5 s after, on long gaps)
+      const HEADKEYS = (() => {
+        const keys = [[0, X(0)]];
+        for (let i = 1; i < 8; i++) {
+          const depart = TE[i - 1] + 0.12, arrive = TE[i] - 0.22;
+          keys.push([depart, X(i - 1)], [arrive - depart > 0.6 ? depart + 0.5 : arrive, X(i)]);
+        }
+        return keys;
+      })();
+      const headX = (t) => track(HEADKEYS, t)[0];
+      function tokHot(i, t) {
+        const te = TE[i];
+        if (t < te - 0.05) return 0;
+        let h = Math.exp(-Math.max(0, t - te) / 0.85);
+        if (i === 3) h = Math.max(h, env(t, te, T.l2e + 0.5, 0.05, 0.5));
+        if (i === 7) h = Math.max(h, env(t, te, T.l5e + 0.5, 0.05, 0.5), env(t, T.only - 0.15, T.rec + 0.8, 0.35, 0.8));
+        h = Math.max(h, 0.85 * pulse(t, T.every4 + i * 0.09, 0.42)); // 每个 token: computed once, left to right
+        h = Math.max(h, 0.7 * pulse(t, T.speed + i * 0.045, 0.32)); // 速度: the row runs fast
+        return h;
+      }
+      function tokDim(i, t) {
+        if (i >= 7) return 0;
+        return Math.max(env(t, T.l5 - 0.05, T.l5e + 0.6, 0.35, 0.5), 0.85 * env(t, T.only - 0.15, T.rec + 0.6, 0.35, 0.7));
+      }
+      function tokCool(i, t) {
+        if (i >= 3) return 0;
+        const reach = T.look + (2 - i) * 0.12 + 0.3;
+        return Math.max(0.6 * pulse(t, reach, 0.35), env(t, T.all + (2 - i) * 0.05, T.l2e + 0.45, 0.15, 0.45));
+      }
+      // slab k of the tank: when it lands (beat 6), and the shared vertical layout through beats 7–8
+      const SLAB_T = [T.follow, T.shang, T.xia, T.yiqi];
+      function fillLayout(t) {
+        let h = 2.2;
+        h *= lerp(1, 0.25, E.io3(pr(t, T.share + 0.15, T.V8 - T.share)));
+        h *= lerp(1, 0.5, E.io3(pr(t, T.quant, T.compress + 0.25 - T.quant)));
+        let gap = 0.1 * (1 - E.io2(pr(t, T.k4 + 0.3, T.two - T.k4 - 0.3)));
+        gap = lerp(gap, 0.16, E.o3(pr(t, T.page, 0.45)));
+        return { h, gap };
+      }
+
+      function renderAt(t) {
+        S.shoot(t, CAM, TGT, APT);
+
+        // ---- prompt plaque: read on 大模型回答问题, cool on 所有
+        const read = pr(t, T.q, 1.0);
+        plaqueSweep.position.x = lerp(-3.4, 3.4, E.io2(read));
+        plaqueSweep.material.opacity = 0.22 * pulse(t, T.q, 1.0);
+        plaqueText.mat.color.setScalar(lerp(0.62, 1.0, E.o2(read)));
+        const pc = tokCool(0, t) * (t > T.all ? 1 : 0);
+        plaqueText.mat.color.lerp(COOL, 0.35 * pc);
+
+        // ---- the head: descends on 大模型, prints, lifts away for the cache, returns for the new token
+        const hx = headX(t);
+        const hy = HEADY + 5 * (1 - E.o3(pr(t, T.q, 0.7))) + 4.5 * E.io2(pr(t, T.l3e - 0.3, 0.7)) * (1 - E.io2(pr(t, T.l5 - 0.3, 0.6))) + 6 * E.i2(pr(t, T.l5e, 0.8));
+        let emit = 0, newest = -1;
+        for (let i = 0; i < 8; i++) {
+          if (t >= TE[i] - 0.05) newest = i;
+          emit = Math.max(emit, pulse(t, TE[i] - 0.08, 0.4));
+        }
+        P.newest = Math.max(0, newest);
+        head.position.set(hx, hy, 0);
+        head.visible = t > T.q - 0.05 && hy < 16;
+        P.head.copy(head.position);
+        slitMat.opacity = 0.25 + 0.75 * emit;
+        slitMat.color.copy(YEL).multiplyScalar(1.3 + 1.0 * emit);
+        headLight.position.set(hx, hy - 1.2, 0.8);
+        headLight.intensity = 1.6 * emit;
+
+        // ---- tokens
+        let hotMax = 0, hotX = 0;
+        for (const tk of tokens) {
+          const i = tk.i, te = TE[i];
+          const born = t >= te - 0.05;
+          tk.m.visible = born;
+          if (!born) continue;
+          const u = pr(t, te - 0.05, 0.38);
+          const y = lerp(hy - 0.7, ROWY, E.back(u, 1.2));
+          tk.m.position.set(X(i), u < 1 ? y : ROWY, 0);
+          tk.m.scale.setScalar(lerp(0.3, 1, E.o3(pr(t, te - 0.05, 0.2))));
+          const hot = tokHot(i, t), dim = tokDim(i, t), cool = tokCool(i, t);
+          tk.mat.color.copy(PORC).lerp(YEL, 0.72 * hot).lerp(tmpC.setRGB(0.2, 0.2, 0.23), 0.78 * dim);
+          tk.mat.emissive.setRGB(YEL.r * hot * 0.3 + COOL.r * cool * 0.45, YEL.g * hot * 0.3 + COOL.g * cool * 0.45, YEL.b * hot * 0.3 + COOL.b * cool * 0.45);
+          tk.mat.emissiveIntensity = 1;
+          tk.mat.opacity = 1;
+          tk.tx.mat.color.setRGB(lerp(0.12, 0.58, dim), lerp(0.12, 0.58, dim), lerp(0.14, 0.62, dim));
+          if (hot > hotMax) (hotMax = hot), (hotX = X(i));
+        }
+        hotLight.position.set(hotX, ROWY - 0.4, 1.8);
+        hotLight.intensity = 1.6 * hotMax;
+
+        // ---- beat 2: arcs back to every earlier token, then light returns on 所有
+        const arcFade = 1 - pr(t, T.l2e + 0.2, 0.45);
+        arcs.forEach((A) => {
+          const u = E.io2(pr(t, T.look + A.k * 0.12, 0.36));
+          A.mesh.visible = u > 0 && arcFade > 0;
+          grow(A.mesh, u);
+          A.mesh.material.opacity = 0.85 * arcFade;
+        });
+        for (let j = 0; j < 8; j++) {
+          const A = arcs[j % 4], ph0 = T.all + Math.floor(j / 4) * 0.28 + A.k * 0.04;
+          const u = pr(t, ph0, 0.55);
+          const s = u > 0 && u < 1 && arcFade > 0 ? Math.sin(Math.PI * u) : 0;
+          A.curve.getPoint(1 - u, p3);
+          m4.makeScale(s + 0.001, s + 0.001, s + 0.001).setPosition(p3);
+          arcDots.setMatrixAt(j, m4);
+        }
+        arcDots.instanceMatrix.needsUpdate = true;
+        arcDots.visible = t > T.all - 0.1 && t < T.l2e + 0.8;
+
+        // ---- beat 3: the triangle
+        for (const C of cells) {
+          const a = ROWT[C.n] + C.i * 0.035;
+          const ua = E.back(pr(t, a, 0.26), 1.4);
+          const drop = E.i2(pr(t, T.kv - 0.15 + (7 - C.n) * 0.04 + C.i * 0.02, 0.5));
+          C.m.visible = t >= a && drop < 1;
+          if (!C.m.visible) continue;
+          C.m.position.set(X(C.i), C.y - 2.2 * drop, 0.6);
+          C.m.rotation.set(0.6 * drop, 0, 0.25 * drop * (hash(C.n * 7 + C.i) - 0.5));
+          C.m.scale.setScalar(Math.max(0.001, ua * (1 - drop)));
+          if (C.diag) {
+            C.mat.color.copy(PORC).lerp(YEL, 0.85);
+            C.mat.emissive.copy(YEL);
+            C.mat.emissiveIntensity = 0.75 + 1.4 * pulse(t, a, 0.4);
+          } else {
+            const waste = t >= T.recomp ? 1 : 0;
+            const wave = pulse(t, Math.max(a, T.recomp + (C.n + C.i) * 0.025), 0.45);
+            C.mat.color.copy(PORC).lerp(tmpC.copy(WARN).lerp(PORC, 0.15), waste * E.o2(pr(t, Math.max(a, T.recomp), 0.3)));
+            C.mat.emissive.copy(WARN);
+            C.mat.emissiveIntensity = waste * (0.28 + 1.5 * wave);
+          }
+        }
+
+        // ---- beat 4: shelves draw out, K and V are made once, then stored
+        shelves.forEach((Sh, r) => {
+          const u = E.io3(pr(t, T.kv + 0.2 + r * 0.15, 0.9));
+          Sh.m.visible = u > 0;
+          Sh.m.scale.x = Math.max(0.001, u);
+          const up = E.back(pr(t, T.kv + 0.1 + r * 0.12, 0.35), 1.4);
+          Sh.plate.visible = up > 0;
+          Sh.plate.scale.setScalar(Math.max(0.001, up));
+        });
+        for (const Pp of pairs) {
+          const i = Pp.i;
+          const tK = i < 7 ? T.key + i * 0.07 : T.that;
+          const tV = i < 7 ? T.value + i * 0.07 : T.yi5;
+          const tS = i < 7 ? T.store + i * 0.06 : T.ge;
+          const src = V(X(i), ROWY - 0.55, 0.3);
+          [[Pp.K, Pp.km, tK, KY, 0.0], [Pp.Vb, Pp.vm, tV, VY, 0.12]].forEach(([m, mat, tb, y, zs], r) => {
+            const ub = E.o3(pr(t, tb, 0.4));
+            m.visible = t >= tb;
+            if (!m.visible) return;
+            const us = E.io3(pr(t, tS + r * 0.04, 0.4));
+            const hover = V(X(i), y, 1.5);
+            m.position.copy(src).lerp(hover, ub);
+            m.position.z = lerp(m.position.z, zs, us);
+            m.scale.setScalar(lerp(0.3, 1, ub));
+            // ×1: each pair pulses once; the newest pair is yellow-hot while it is computed
+            const once = i < 7 ? pulse(t, T.once + i * 0.06, 0.5) : env(t, tb, tS + 0.6, 0.05, 0.6);
+            if (r === 0) {
+              mat.emissive.setRGB(COOL.r * 0.12 + YEL.r * 0.75 * once, COOL.g * 0.12 + YEL.g * 0.75 * once, COOL.b * 0.12 + YEL.b * 0.75 * once);
+              mat.color.set("#DCE8F7").lerp(YEL, 0.5 * once);
+            } else {
+              mat.emissive.copy(YEL);
+              mat.emissiveIntensity = 0.75 * once;
+              mat.color.copy(PORC).lerp(YEL, 0.5 * once);
+            }
+            const strip = shelves[r].strips[i];
+            const lit = pr(t, tS + r * 0.04 + 0.32, 0.12);
+            strip.material.opacity = 0.9 * lit * (1 + 0.8 * pulse(t, tS + r * 0.04 + 0.32, 0.4));
+          });
+        }
+
+        // ---- beat 5: Q scans the K column; relevance bars; matching V's flow back to the new token
+        const qStart = V(X(7), ROWY - 0.7, 0.6), qDock = V(X(7) + 1.2, KY, 1.15), qEnd = V(X(0) - 0.6, KY, 1.15);
+        const uq1 = E.io2(pr(t, T.again, T.qu - T.again + 0.05));
+        const sweepA = T.qu + 0.05, sweepD = Math.max(0.5, T.cha - 0.15 - sweepA);
+        const uq2 = E.io2(pr(t, sweepA, sweepD));
+        P.q.copy(qStart).lerp(qDock, uq1).lerp(qEnd, uq2);
+        const qOn = env(t, T.again, T.cha + 0.35, 0.12, 0.3);
+        qProbe.visible = qOn > 0;
+        qProbe.position.copy(P.q);
+        qProbe.scale.setScalar(Math.max(0.001, qOn));
+        qRing.rotation.set(Math.PI / 2, 0, 0);
+        qLight.position.copy(P.q).add(V(0, 0, 0.6));
+        qLight.intensity = 3 * qOn;
+        wBars.forEach((b, i) => {
+          const pass = sweepA + ((qDock.x - X(i)) / (qDock.x - qEnd.x)) * sweepD;
+          const u = E.o3(pr(t, pass, 0.25)) * (1 - pr(t, T.l5e + 0.15, 0.4));
+          b.visible = u > 0.001;
+          b.scale.set(1, Math.max(0.001, WEIGHT[i] * 1.05 * u), 1);
+          if (i < 8) pairs[i].km.emissiveIntensity = 1 + 2.2 * pulse(t, pass - 0.05, 0.35);
+        });
+        vStreams.forEach((Sx, i) => {
+          const u = E.io2(pr(t, T.cha + i * 0.025, 0.4));
+          const f = 1 - pr(t, T.l5e + 0.15, 0.45);
+          Sx.mesh.visible = u > 0 && f > 0;
+          grow(Sx.mesh, u);
+          Sx.mesh.material.opacity = (0.35 + 0.6 * WEIGHT[i]) * f;
+        });
+
+        // ---- beat 6: the tank, the pour, slabs landing as the context grows
+        const tOn = E.o3(pr(t, T.vram, 0.6));
+        tank.visible = tOn > 0;
+        tank.position.y = -0.6 * (1 - tOn);
+        glassMat.opacity = 0.08 * tOn;
+        const bump = pulse(t, T.zhang, 0.45);
+        const gbFlash = pulse(t, T.two, 0.6);
+        tankEdgeMat.opacity = 0.55 * tOn;
+        tankEdgeMat.color.setRGB(0.9, 0.9, 0.95).lerp(tmpC.copy(WARN).multiplyScalar(1.8), Math.max(bump, gbFlash, 0.8 * pulse(t, T.vram9, 0.8)));
+        ticks.forEach((m, k) => (m.material.opacity = 0.8 * pr(t, T.vram + 0.3 + k * 0.08, 0.3) * (1 - pr(t, T.k4 + 0.1, 0.4))));
+        const { h, gap } = fillLayout(t);
+        let fillTop = 0.45;
+        const tint = E.o2(pr(t, T.two - 0.35, 0.5));
+        slabs.forEach((Sl) => {
+          const land = SLAB_T[Sl.k];
+          const ul = pr(t, land, 0.34);
+          Sl.g.visible = t >= land;
+          if (!Sl.g.visible) return;
+          const yk = 0.45 + Sl.k * (h + gap) + h / 2;
+          Sl.g.position.y = yk + 2.6 * (1 - E.back(ul, 1.2)) ;
+          Sl.g.scale.set(1, Math.max(0.001, h * (1 + 0.08 * bump)), 1);
+          fillTop = Math.max(fillTop, 0.45 + (Sl.k + 1) * (h + gap) - gap);
+          const em = 0.9 * pulse(t, land + 0.3, 0.4) + 1.2 * bump + 1.6 * gbFlash;
+          Sl.km.color.set("#B9D2F0").lerp(tmpC.copy(WARN).lerp(PORC, 0.22), tint);
+          Sl.vm.color.copy(PORC).lerp(tmpC.copy(WARN).lerp(PORC, 0.22), tint);
+          Sl.km.emissive.copy(WARN).multiplyScalar(em + 0.18 * tint);
+          Sl.vm.emissive.copy(WARN).multiplyScalar(em + 0.18 * tint);
+        });
+        P.fillTop = fillTop;
+        // the pour: the shelves' K/V tiles stream into the tank as the cache goes to 显存
+        for (let j = 0; j < 16; j++) {
+          const a0 = T.cache6 + j * 0.022, u = E.io2(pr(t, a0, 0.5));
+          const from = V(X(j % 8), j < 8 ? KY : VY, 0.4), to = V(TX + (hash(j) - 0.5) * 3, 1.0 + hash(j * 3.1) * 0.6, 0);
+          const mid = from.clone().lerp(to, 0.5).add(V(0, 5.5, 1));
+          const pp = V(0, 0, 0).addScaledVector(from, (1 - u) * (1 - u)).addScaledVector(mid, 2 * u * (1 - u)).addScaledVector(to, u * u);
+          const s = u > 0 && u < 1 ? 1 - 0.4 * u : 0;
+          q4.setFromEuler(new THREE.Euler(u * 3 * hash(j), u * 4, 0));
+          m4.compose(pp, q4, s3.setScalar(s + 0.001));
+          pour.setMatrixAt(j, m4);
+        }
+        pour.instanceMatrix.needsUpdate = true;
+        pour.visible = t > T.cache6 && t < T.cache6 + 0.9;
+
+        // ---- beat 7: one token's K/V → 2 × 32 plates → one 0.5 MB cube → × 4096 into the tank
+        const fly = E.io3(pr(t, T.every7 - 0.05, 0.4));
+        const spread = E.io3(pr(t, T.ge7, 0.4)) * (1 - E.io3(pr(t, T.half - 0.18, 0.3)));
+        const wide = 1 + 0.4 * E.o3(pr(t, T.tok7, 0.3)) * (1 - pr(t, T.half - 0.18, 0.3));
+        const deckOn = t >= T.every7 - 0.05 && t < T.half + 0.15;
+        deckK.visible = deckV.visible = deckOn;
+        if (deckOn) {
+          const srcK = V(X(7), KY, 0), srcV = V(X(7), VY, 0.12);
+          const conv = E.io3(pr(t, T.half - 0.18, 0.3));
+          [[deckK, srcK, -1.05], [deckV, srcV, 1.05]].forEach(([D, src, dx]) => {
+            const base = src.clone().lerp(STAGE.clone().add(V(dx * (1 - conv), 0, 0)), fly);
+            for (let l = 0; l < 32; l++) {
+              const yy = (l - 15.5) * 0.108 * spread;
+              p3.copy(base).add(V(0, yy, 0));
+              const sx = wide * (1 - 0.45 * conv), sy = 1 + 4.5 * (1 - spread) * (1 - conv);
+              q4.identity();
+              m4.compose(p3, q4, s3.set(sx, sy * (1 - 0.5 * conv), 1 - 0.3 * conv));
+              D.setMatrixAt(l, m4);
+            }
+            D.instanceMatrix.needsUpdate = true;
+          });
+          deckV.material.emissiveIntensity = 1.2 * pulse(t, T.dayue, 0.45);
+          deckK.material.emissiveIntensity = 0.25 + 1.2 * pulse(t, T.dayue, 0.45);
+        }
+        const cubeOn = t >= T.half - 0.02;
+        const into = E.io3(pr(t, T.k4, 0.55));
+        cube.visible = cubeOn && into < 1;
+        P.cube.copy(STAGE).lerp(V(TX, 12.2, 0), into);
+        cube.position.copy(P.cube);
+        cube.scale.setScalar(E.back(pr(t, T.half - 0.02, 0.3), 1.6) * (1 - 0.6 * into));
+        cube.rotation.set(0.3 + into * 2, 0.6 + (t - T.half) * 0.8, 0);
+        for (let j = 0; j < 14; j++) {
+          const u = pr(t, T.k4 + 0.12 + j * 0.06, 0.55);
+          const s = u > 0 && u < 1 ? 0.9 * Math.sin(Math.PI * u) : 0;
+          p3.copy(STAGE).lerp(V(TX + (hash(j * 2.2) - 0.5) * 2.5, 11.5, (hash(j) - 0.5) * 1.5), E.io2(u));
+          p3.y += Math.sin(Math.PI * u) * 1.2;
+          m4.compose(p3, q4.identity(), s3.setScalar(s + 0.001));
+          trail.setMatrixAt(j, m4);
+        }
+        trail.instanceMatrix.needsUpdate = true;
+        trail.visible = t > T.k4 && t < T.k4 + 1.6;
+
+        // ---- beat 8: GQA heads share one K/V; paging removes the reserved gap; quantization halves it
+        const gOn = env(t, T.gqa - 0.05, T.paged + 0.15, 0.3, 0.3);
+        const share = E.io3(pr(t, T.share + 0.05, T.V8 - T.share));
+        P.gqaY = (GQ(0).y + GQ(3).y) / 2;
+        gqa.forEach((G) => {
+          const qp = GQ(G.k);
+          const pk = V(21.4, qp.y, 2.4).lerp(V(21.4, P.gqaY, 2.4), share);
+          const show = gOn * E.back(pr(t, T.gqa + G.k * 0.06, 0.3), 1.4);
+          G.q.visible = G.K.visible = G.Vb.visible = G.link.visible = show > 0.001;
+          if (!G.q.visible) return;
+          G.q.position.copy(qp);
+          G.q.scale.setScalar(Math.max(0.001, show));
+          const pairO = G.k === 0 ? 1 : 1 - pr(t, T.V8 - 0.2, 0.3);
+          G.K.position.copy(pk).add(V(-0.36, 0, 0));
+          G.Vb.position.copy(pk).add(V(0.36, 0, 0.09));
+          G.K.scale.setScalar(Math.max(0.001, show * (G.k === 0 ? 1 + 0.25 * share : 1)));
+          G.Vb.scale.copy(G.K.scale);
+          G.K.material.opacity = G.Vb.material.opacity = pairO;
+          G.K.visible = G.Vb.visible = pairO > 0.01 && show > 0.001;
+          const a = G.link.geometry.attributes.position.array;
+          a[0] = qp.x + 0.3; a[1] = qp.y; a[2] = qp.z;
+          a[3] = pk.x - 0.7; a[4] = pk.y; a[5] = pk.z;
+          G.link.geometry.attributes.position.needsUpdate = true;
+          G.link.material.opacity = 0.8 * show;
+        });
+        const rOn = env(t, T.paged, T.alloc + 0.2, 0.25, 0.01);
+        const rCollapse = E.io3(pr(t, T.page, T.alloc + 0.2 - T.page));
+        const rH = Math.max(0.001, (LEVEL(3) - fillTop) * (1 - rCollapse));
+        reserved.visible = resEdges.visible = rOn > 0 && rCollapse < 1;
+        reserved.position.y = resEdges.position.y = fillTop + 0.04;
+        reserved.scale.y = resEdges.scale.y = rH;
+        resMat.opacity = 0.1 * rOn * (1 - rCollapse);
+        resEdgeMat.opacity = 0.9 * rOn * (1 - rCollapse);
+
+        // ---- beat 9: memory traded for speed; the spotlight on the newest token
+        const tu = E.io2(pr(t, T.vram9, T.swap - T.vram9 + 0.2));
+        const tf = 1 - pr(t, T.rec + 0.1, 0.5);
+        trade.visible = tu > 0 && tf > 0;
+        grow(trade, tu);
+        trade.material.opacity = 0.7 * tf;
+        for (let j = 0; j < 7; j++) {
+          const u = (t - T.swap) * 0.7 + j / 7;
+          const live = t > T.swap && tf > 0;
+          const uu = ((u % 1) + 1) % 1;
+          const s = live ? Math.sin(Math.PI * uu) * tf : 0;
+          tradeCurve.getPointAt(uu, p3);
+          m4.makeScale(s + 0.001, s + 0.001, s + 0.001).setPosition(p3);
+          tradeDots.setMatrixAt(j, m4);
+        }
+        tradeDots.instanceMatrix.needsUpdate = true;
+        tradeDots.visible = t > T.swap;
+        const sp = env(t, T.only - 0.1, T.rec + 0.9, 0.45, 0.8);
+        cone.visible = sp > 0;
+        cone.material.opacity = 0.42 * sp;
+        spotPool.material.opacity = 0.5 * sp;
+
+        placeOverlay(t);
+        S.render();
+      }
+
+      // ---------------- boot ----------------
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      let ready = false;
+      window.__hf.buildReady["kv-cache-v6"] = (async () => {
+        await Promise.all([
+          document.fonts.load('500 150px "Noto Sans SC"', "天空为什么是蓝的？因为空气把蓝光散射得更多"),
+          document.fonts.load('300 92px "Noto Sans SC"', "一句话"),
+          document.fonts.load('500 170px "Geist"', "KV"),
+          document.fonts.load('300 92px "Geist"', "KV cache 0.5 MB"),
+          document.fonts.load('400 28px "Geist Mono"', "0123"),
+        ]);
+        for (const s of surfaces) s.draw();
+        ready = true;
+        renderAt(window.__hfThreeTime || 0);
+      })();
+      window.addEventListener("hf-seek", (e) => {
+        if (ready) renderAt(e.detail.time);
+      });
+    </script>
+  </body>
+</html>

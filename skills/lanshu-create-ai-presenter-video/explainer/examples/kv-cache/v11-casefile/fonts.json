@@ -1,0 +1,7 @@
+{
+  "extra": {
+    "special-elite": {"family": "Special Elite", "css": "Special+Elite", "weight": 500},
+    "noto-sans-sc-700": {"family": "Noto Sans SC", "css": "Noto+Sans+SC:wght@700", "weight": 700}
+  },
+  "index.html": ["noto-serif-sc-900", "noto-serif-sc-500", "special-elite", "long-cang", "noto-sans-sc-700", "jetbrains-mono-700"]
+}

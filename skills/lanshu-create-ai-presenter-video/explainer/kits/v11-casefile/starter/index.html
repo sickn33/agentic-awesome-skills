@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* fonts:begin */
+/* fonts:end */
+    </style>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #24160c; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #24160c; color: var(--kit-ink); font-family: var(--kit-font-body); }
+      #stage { position: absolute; inset: 0; overflow: hidden; background: #24160c; }
+      #caps, #recap, #draft { position: absolute; inset: 0; pointer-events: none; } /* #chap is the kit's chip itself (top-left) */
+      /* captions: a long line wraps into balanced rows, each its own label-maker strip */
+      #caps .kit-cap { white-space: normal; text-wrap: balance; max-width: 1700px; }
+
+      /* the draft card: an index card pinned on the board, the beat typed on as the line is spoken */
+      .sb-body { position: relative; font-family: var(--kit-font-body); font-weight: 500; color: var(--kit-ink); }
+      .sb-row { position: relative; display: block; white-space: nowrap; }
+      .sb-ghost { position: absolute; left: 0; top: 0; color: #8a7864; } /* pre-printed draft text: still 3.9:1 on the card */
+      .sb-ink { position: relative; }
+      .sb-key { color: var(--kit-ink); }
+      .sb-draft {
+        position: absolute; right: 64px; top: 40px; padding: 4px 16px 6px; border: 4px solid var(--kit-accent-2); border-radius: 6px;
+        font-family: var(--kit-font-label); font-weight: 700; font-size: 30px; line-height: 1.25; color: var(--kit-accent-2);
+        background: rgba(251, 246, 234, 0.92); transform: rotate(-3deg);
+      }
+    </style>
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script src="beats.js"></script>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-stamp="story" data-width="1920" data-height="1080">
+      <div id="stage" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="1" data-layout-allow-overflow=""></div>
+      <div id="chap" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="2"></div>
+      <div id="caps" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="3"></div>
+      <div id="recap" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="4"></div>
+      <div id="draft" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="5"></div>
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40" data-stamp="narration" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-stamp="story" data-track-index="11"></audio>
+    </div>
+
+    <script>
+      /* V11 casefile starter — the film minus the topic. One cork board, one station (a screen-sized region of the
+       * board) per chapter, a masking-tape timeline under each station, red string carried from station to station
+       * while the camera rides it, the chapter chip, label-maker captions, the closing line typed on a sheet pinned
+       * over the pulled-back board, and the case-folder recap — all driven by window.STORY. The topic lives in
+       * beats.js: window.Beats(api) is called once after the board is built; its render(t) runs every frame.
+       * Every time comes from the story (story.at / phrase / span / line(i).start); nothing is hard-coded. */
+      (function () {
+        "use strict";
+        window.__timelines = window.__timelines || {};
+        const C = window.ExplainerCore, K = window.Kit;
+        const { pr, E, clamp01, hash } = C;
+        const story = new C.Story(window.STORY);
+        const D = Math.max(story.duration, (story.recap && story.recap.end) || 0); // = tools/stamp.py's length
+        const $ = (id) => document.getElementById(id);
+        const g = K.geo, emOf = K.emOf, esc = K.esc;
+        const clampN = (x, a, b) => (x < a ? a : x > b ? b : x);
+        const union = (a, b) => { const x = Math.min(a.x, b.x), y = Math.min(a.y, b.y); return { x, y, w: Math.max(a.x + a.w, b.x + b.w) - x, h: Math.max(a.y + a.h, b.y + b.h) - y }; };
+        const S = K.scene();
+        const add = (...xs) => S.add(...xs);
+
+        // ================= the plan: chapters → stations on one board =================
+        // A station starts at 2000 × 1125 board px and grows for dense chapters. Cards live in USE (clear of the chip
+        // above and of the station's tape below); the tape runs along TAPE. SAFE is the screen area the camera keeps a
+        // station's cards inside (chip above, tape + captions below).
+        const SAFE = { x0: 72, x1: 1848, y0: 138, y1: 872 }; // y1: the tape's bottom may reach it; cards stay above the tape
+        const SCREEN = { x: SAFE.x0, y: SAFE.y0, w: SAFE.x1 - SAFE.x0, h: SAFE.y1 - SAFE.y0 };
+        const chapters = story.chapters.length ? story.chapters : [{ n: 1, key: "_all", title: story.title || "", start: 0, end: D }];
+        const endLine = story.end ? story.end.line : null;
+        const isEnd = (i) => i === endLine;
+        const chapOf = (i) => {
+          const L = story.line(i);
+          if (L.chapter) { const k = chapters.findIndex((c) => c.key === L.chapter); if (k >= 0) return k; }
+          let k = 0; chapters.forEach((c, j) => { if (L.start + 0.05 >= c.start) k = j; }); return k;
+        };
+        const linesOf = chapters.map(() => []);
+        story.lines.forEach((L) => { if (!isEnd(L.i)) linesOf[chapOf(L.i)].push(L.i); });
+        const PUNCT = /^[，。；：、！？,.;:!?…—「」『』（）()“”‘’"'《》〈〉【】]+$/;
+        const LAT = /[A-Za-z0-9]/, CJK = /[⺀-鿿豈-﫿＀-￯　-〿]/;
+        const PAD_T = 78, PAD_B = 70, PAD_X = 46, MIN_FONT = 40;
+        // Reserve enough height for every draft card at the smallest readable size, including its protruding tag.
+        // The board and camera expand with the content instead of packing oversized cards into fixed-height slots.
+        const useHeight = Math.max(650, ...linesOf.map((ids) => {
+          if (!ids.length) return 0;
+          const cols = ids.length <= 2 ? 1 : ids.length <= 4 ? 2 : 3, rows = Math.ceil(ids.length / cols), gap = 50;
+          const w = Math.min(1320, (1760 - (cols - 1) * gap) / cols);
+          const maxEm = Math.max(4, Math.floor((w - 2 * PAD_X - 40) / MIN_FONT));
+          const h = Math.max(...ids.map((i) => rowsOf(draftUnits(i).units, maxEm).length * Math.round(MIN_FONT * 1.42) + PAD_T + PAD_B + 26));
+          return rows * h + (rows - 1) * gap;
+        }));
+        const SW = 2000, SH = 1125 + useHeight - 650, GX = 220, GY = 170, S_ST = Math.min(1920 / SW, 1080 / SH);
+        const USE = { x: 120, y: 150, w: 1760, h: useHeight };
+        const TAPE = { x: 110, y: USE.y + USE.h + 52, w: 1780, h: 58 };
+        const NCH = chapters.length;
+        // grid: one row up to two stations, then two rows (3 → 2 × 2, 5–6 → 3 × 2, 7–8 → 4 × 2), read as a snake
+        const COLS = NCH <= 2 ? NCH : Math.ceil(NCH / 2), ROWS = Math.ceil(NCH / COLS);
+        const cell = (k) => { const r = Math.floor(k / COLS), c0 = k % COLS, c = r % 2 ? COLS - 1 - c0 : c0; return { x: c * (SW + GX), y: r * (SH + GY) }; };
+        const useAt = (p) => ({ x: p.x + USE.x, y: p.y + USE.y, w: USE.w, h: USE.h });
+
+        // ---------- the closing view: the camera pulls back over the whole board (scale ≥ 0.2) and the closing line is
+        // typed on a lined sheet ≈ 100 px a character on screen — in the grid's free cell (3, 5, 7 chapters), in a band
+        // above a wide board (1, 2, 6, 8) or over the middle of a squarer one (4); the board dims under it
+        let END = null;
+        let all = useAt(cell(0)), fc = null;
+        for (let k = 1; k < NCH; k++) all = union(all, useAt(cell(k)));
+        for (let k = NCH; k < COLS * ROWS; k++) fc = fc ? union(fc, useAt(cell(k))) : useAt(cell(k));
+        if (story.end) {
+          const L = story.line(story.end.line), rows = [""];
+          L.words.forEach(([u], k) => {
+            const nx = L.words[k + 1];
+            rows[rows.length - 1] += u + (/[A-Za-z\d]$/.test(u) && nx && /^[A-Za-z\d]/.test(nx[0]) ? " " : "");
+            if (/^[，；]$/.test(u) && nx) rows.push("");
+          });
+          const maxEm = Math.max(1, ...rows.map(emOf)), nR = rows.length, FW = 1800, FH = 980, gap = 40;
+          const fullAll = fc ? union(all, fc) : all;
+          const mode = fc ? "cell" : fullAll.w / fullAll.h >= 2.2 ? "band" : "over";
+          const Fs = Math.min(104, 1560 / (maxEm + 1.6)), tH = (nR * 1.36 + 1.32) * Fs;
+          const s = clampN(mode === "band" ? Math.min(FW / fullAll.w, (FH - tH - gap) / fullAll.h) : Math.min(FW / fullAll.w, FH / fullAll.h), 0.2, 0.9);
+          const Fp = Fs / s, tw = (maxEm + 1.6) * Fp, th = (nR * 1.36 + 1.32) * Fp, an = fc || fullAll;
+          const tr = mode === "band" ? { x: fullAll.x + fullAll.w / 2 - tw / 2, y: fullAll.y - gap / s - th, w: tw, h: th }
+            : { x: clampN(an.x + an.w / 2 - tw / 2, fullAll.x, fullAll.x + fullAll.w - tw), y: an.y + an.h / 2 - th / 2, w: tw, h: th };
+          const m = 60 / s, b0 = union(fullAll, tr), box = { x: b0.x - m, y: b0.y - m, w: b0.w + 2 * m, h: b0.h + 2 * m }, vw = 1920 / s, vh = 1080 / s;
+          const cx = vw >= box.w ? box.x + box.w / 2 : clampN(tr.x + tr.w / 2, box.x + vw / 2, box.x + box.w - vw / 2);
+          const cy = vh >= box.h ? box.y + box.h / 2 : clampN(tr.y + tr.h / 2, box.y + vh / 2, box.y + box.h - vh / 2);
+          END = { at: story.end.start, mode, s, Fp, title: tr, box, view: K.view(cx, cy, s) };
+        }
+        // the whole board, for a recap without a closing line
+        const wholeView = (() => {
+          const b = fc ? union(all, fc) : all, m = 160;
+          const s = clampN(Math.min(1920 / (b.w + 2 * m), 1080 / (b.h + 2 * m)), 0.18, 0.9);
+          return K.view(b.x + b.w / 2, b.y + b.h / 2, s);
+        })();
+
+        // ================= the board =================
+        let blk = { x: 0, y: 0, w: SW, h: SH };
+        for (let k = 1; k < Math.max(NCH, COLS * ROWS); k++) blk = union(blk, { x: cell(k).x, y: cell(k).y, w: SW, h: SH });
+        let ext = { x: blk.x - 380, y: blk.y - 280, w: blk.w + 760, h: blk.h + 560 }; // cork round the stations: leaning shots never reach the frame
+        if (END) ext = union(ext, { x: END.title.x - 140, y: END.title.y - 140, w: END.title.w + 280, h: END.title.h + 280 });
+        const B = K.desk($("stage"), { x0: ext.x, y0: ext.y, x1: ext.x + ext.w, y1: ext.y + ext.h, frame: 84 });
+        const ink = K.svg(B.cards, ext.x, ext.y, ext.w, ext.h); // board coordinates, under every card (marker on the cork)
+
+        // slots for m cards inside a station's usable area (station-local px): 1–2 stacked, 3–4 in two rows of two,
+        // 5+ in rows of three
+        function slotsFor(m) {
+          if (!m) return [];
+          const cols = m <= 2 ? 1 : m <= 4 ? 2 : 3, rows = Math.ceil(m / cols), gap = 50;
+          const sh = (USE.h - (rows - 1) * gap) / rows;
+          const top = USE.y + (USE.h - (rows * sh + (rows - 1) * gap)) / 2;
+          const out = [];
+          for (let r = 0; r < rows; r++) {
+            const inRow = Math.min(cols, m - r * cols);
+            const sw = Math.min(1320, (USE.w - (inRow - 1) * gap) / inRow);
+            const left = USE.x + (USE.w - (inRow * sw + (inRow - 1) * gap)) / 2;
+            for (let c = 0; c < inRow; c++) out.push({ x: left + c * (sw + gap), y: top + r * (sh + gap), w: sw, h: sh });
+          }
+          return out;
+        }
+        const stations = chapters.map((ch, k) => {
+          const { x, y } = cell(k);
+          const lines = linesOf[k], local = slotsFor(lines.length);
+          return {
+            k: k + 1, chapter: ch, x, y, w: SW, h: SH, lines, local,
+            slots: local.map((s) => ({ x: x + s.x, y: y + s.y, w: s.w, h: s.h })),
+            use: useAt({ x, y }), tapeRect: { x: x + TAPE.x, y: y + TAPE.y, w: TAPE.w, h: TAPE.h },
+            view: K.view(x + SW / 2, y + SH / 2, S_ST),
+            cards: [], entry: null, exit: null, ride: null, tape: true, marks: null,
+          };
+        });
+        const stOf = (k) => stations[clampN(k, 1, NCH) - 1];
+        const stAtPoint = (p) => { let best = 0, bd = 1e18; stations.forEach((st, j) => { const d = (p.x - st.x - SW / 2) ** 2 + (p.y - st.y - SH / 2) ** 2; if (d < bd) { bd = d; best = j; } }); return best + 1; };
+
+        // ================= board helpers (station-local coordinates in, board coordinates out) =================
+        const wp = (k, x, y) => { const st = stOf(k); return { x: st.x + x, y: st.y + y }; };
+        // a card in station k (x, y station-local): registered so the red string can run through it
+        function card(k, o) {
+          const st = stOf(k), c = K.card(B, Object.assign({}, o, { x: st.x + (o.x || 0), y: st.y + (o.y || 0) }));
+          c.k = st.k;
+          st.cards.push(c);
+          return add(c);
+        }
+        const pin = (k, x, y, o) => { const p = wp(k, x, y); return add(K.pin(B, p.x, p.y, o)); };
+        const string = (a, b, o) => add(K.string(B, a, b, o));
+        const stamp = (parent, o) => add(K.stamp(parent, o));
+        const typed = (parent, text, o) => add(K.typed(parent, text, o));
+        const hand = (parent, text, o) => add(K.hand(parent, text, o));
+        const type = (el, o) => add(K.type(el, o));
+        const write = (el, o) => add(K.write(el, o));
+        const mark = (svg, d, o) => add(K.mark(svg, d, o));
+        const highlight = (parent, o) => add(K.highlight(parent, o));
+        const note = (k, text, x, y, o) => { const st = stOf(k); const n = K.note(text, Object.assign({ desk: B }, o, { x: st.x + x, y: st.y + y })); if (n.card) { n.card.k = st.k; st.cards.push(n.card); } return add(n); };
+        const up = (t, a, d, e) => (e || E.io2)(pr(t, a, d));
+
+        // ================= camera: shots (focus requests) → eased moves + slow drifts =================
+        const shots = [];
+        const centerOf = (v) => ({ x: v.x + 960 / v.s, y: v.y + 540 / v.s });
+        // the view that shows board rect r inside SAFE (fill < 1 leaves room for the drift)
+        function fit(r, o = {}) {
+          const s = Math.max(o.min ?? 0.18, Math.min(o.max ?? 1.3, (o.fill ?? 0.86) * Math.min(SCREEN.w / r.w, SCREEN.h / r.h)));
+          return K.view(r.x + r.w / 2 - (SCREEN.x + SCREEN.w / 2 - 960) / s, r.y + r.h / 2 - (SCREEN.y + SCREEN.h / 2 - 540) / s, s);
+        }
+        // the view that shows box b whole inside SAFE while leaning toward rect r (the investigator's eye moves to the
+        // newest exhibit without pushing the station's other cards under the chip or the captions)
+        function lean(b, r, o = {}) {
+          const s = Math.min(o.max ?? 1.3, (o.fill ?? 0.92) * Math.min(SCREEN.w / b.w, SCREEN.h / b.h));
+          const k = o.lean ?? 0.24, bc = { x: b.x + b.w / 2, y: b.y + b.h / 2 }, rc = r ? { x: r.x + r.w / 2, y: r.y + r.h / 2 } : bc;
+          const cx = clampN(bc.x + k * (rc.x - bc.x), b.x + b.w - (SAFE.x1 - 960) / s, b.x + (960 - SAFE.x0) / s);
+          const cy = clampN(bc.y + k * (rc.y - bc.y), b.y + b.h - (SAFE.y1 - 540) / s, b.y + (540 - SAFE.y0) / s);
+          return K.view(cx, cy, s);
+        }
+        function toView(target, o) {
+          if (typeof target === "number") return stOf(target).view;
+          if (target && target.w == null && target.s != null) return target.cx != null ? K.view(target.cx, target.cy, target.s) : target;
+          return fit(target, o);
+        }
+        /* focus(at, target, o): the camera starts moving at `at` to target = a station number | a board rect {x,y,w,h}
+         * | a view {x,y,s} / {cx,cy,s}. o: { dur, ease, fill, min, max, weak, station }. A move to another station
+         * rides the red string (a dip along its sag, a short pull-back); between shots it drifts so it never parks. */
+        function focus(at, target, o = {}) {
+          const v = toView(target, o);
+          const s = { at, view: v, dur: o.dur, ease: o.ease, weak: !!o.weak, closing: !!o.closing, st: o.station || (typeof target === "number" ? clampN(target, 1, NCH) : stAtPoint(centerOf(v))) };
+          shots.push(s);
+          return s;
+        }
+
+        // ================= placeholders: one index card per narration line =================
+        function beatNote(i) {
+          const k = chapOf(i), notes = story.data.notes && story.data.notes[chapters[k].key];
+          if (!notes || !notes.length) return null;
+          const j = linesOf[k].indexOf(i);
+          return j >= 0 && j < notes.length ? String(notes[j]) : null;
+        }
+        // the line's key phrase: the whole line when short, else its weightiest clause (terms and numbers count extra)
+        function keyRange(i) {
+          const Ws = story.line(i).words, cl = [];
+          let cur = null;
+          Ws.forEach(([u], k) => {
+            if (PUNCT.test(u)) { cur = null; return; }
+            if (!cur) { cur = { a: k, b: k + 1 }; cl.push(cur); }
+            cur.b = k + 1;
+          });
+          if (!cl.length) return { a: 0, b: Ws.length };
+          const em = (r) => emOf(Ws.slice(r.a, r.b).map((w) => w[0]).join(""));
+          const whole = { a: cl[0].a, b: cl[cl.length - 1].b };
+          if (em(whole) <= 16) return whole;
+          let best = cl[0], bs = -1;
+          for (const r of cl) { const sc = Math.min(em(r), 16) + (Ws.slice(r.a, r.b).some((w) => LAT.test(w[0])) ? 3 : 0); if (sc > bs) { bs = sc; best = r; } }
+          return best;
+        }
+        const joinUnits = (ws) => ws.map((w, k, a) => w[0] + (LAT.test(w[0].slice(-1)) && a[k + 1] && LAT.test(a[k + 1][0][0]) ? " " : "")).join("");
+        const keyPhrase = (i) => { const r = keyRange(i); return joinUnits(story.line(i).words.slice(r.a, r.b)); };
+        // the opening words of a line (≤ 6 em), for the tape's marks
+        function opening(i) {
+          let s = "", w = 0;
+          for (const [u] of story.line(i).words) {
+            if (PUNCT.test(u)) { if (s) break; continue; }
+            const e = emOf(u) + (s && LAT.test(u[0]) && LAT.test(s.slice(-1)) ? 0.3 : 0);
+            if (w + e > 6) break;
+            s += (s && LAT.test(u[0]) && LAT.test(s.slice(-1)) ? " " : "") + u;
+            w += e;
+          }
+          return s;
+        }
+        // units of a free text (a beat note): CJK one by one, Latin / number runs whole, punctuation on its own
+        function unitsOfText(text) {
+          const toks = text.match(/[A-Za-z0-9][A-Za-z0-9.%+\-/×÷≈:]*|\s+|./gu) || [];
+          const out = [];
+          let sp = false;
+          for (const tk of toks) {
+            if (/^\s+$/.test(tk)) { sp = true; continue; }
+            out.push({ u: tk, sp, punct: PUNCT.test(tk) });
+            sp = false;
+          }
+          return out;
+        }
+        function unitsOfWords(i, r) {
+          return story.line(i).words.slice(r.a, r.b).map(([u, t], k, a) => ({ u, t, punct: PUNCT.test(u), sp: k > 0 && LAT.test(u[0]) && LAT.test(a[k - 1][0].slice(-1)) }));
+        }
+        function draftUnits(i) {
+          const note = beatNote(i);
+          return { mode: note ? "note" : "key", units: note ? unitsOfText(note) : unitsOfWords(i, keyRange(i)) };
+        }
+        // greedy rows of at most maxEm; punctuation never starts a row; prefer breaking after punctuation
+        function rowsOf(units, maxEm) {
+          const out = [[]];
+          let w = 0;
+          for (const x of units) {
+            const ew = emOf(x.u) + (x.sp ? 0.3 : 0), row = out[out.length - 1];
+            if (w + ew > maxEm && row.length && !x.punct) {
+              let cut = -1;
+              for (let k = row.length - 1; k > 0; k--) if (row[k].punct) { cut = k + 1; break; }
+              const head = cut > 0 ? row.slice(0, cut).reduce((a, r) => a + emOf(r.u), 0) : 0;
+              if (cut > 0 && cut < row.length && head > maxEm * 0.4) { const rest = row.splice(cut); out.push(rest); w = rest.reduce((a, r) => a + emOf(r.u), 0); }
+              else { out.push([]); w = 0; }
+            }
+            out[out.length - 1].push(x);
+            w += ew;
+          }
+          return out.filter((r) => r.length);
+        }
+        // a card's layout, computed before any DOM: text, size, rows, padding, its board rect
+        const plans = {};
+        function cardPlan(i) {
+          if (plans[i]) return plans[i];
+          const k = chapOf(i), st = stations[k];
+          const j = Math.max(0, st.lines.indexOf(i));
+          const slot = st.local[j] || { x: USE.x, y: USE.y, w: USE.w, h: USE.h };
+          const { mode, units } = draftUnits(i);
+          const sizes = [58, 52, 48, 44, MIN_FONT];
+          let F = sizes[sizes.length - 1], rows = null, lh = Math.round(F * 1.42);
+          for (const s of sizes) {
+            const r = rowsOf(units, Math.max(4, Math.floor((slot.w - 2 * PAD_X - 40) / s))), h = Math.round(s * 1.42);
+            if (r.length * h + PAD_T + PAD_B <= slot.h && r.length <= 4) { F = s; rows = r; lh = h; break; }
+          }
+          if (!rows) rows = rowsOf(units, Math.max(4, Math.floor((slot.w - 2 * PAD_X - 40) / F)));
+          const maxRowEm = Math.max(...rows.map((r) => r.reduce((a, x) => a + emOf(x.u) + (x.sp ? 0.3 : 0), 0)));
+          const cw = Math.round(Math.min(slot.w, Math.max(560, maxRowEm * F * 1.03 + 2 * PAD_X + 20))), ch = rows.length * lh + PAD_T + PAD_B;
+          // a little scatter so the board does not read as a grid (deterministic)
+          const jx = Math.round((hash(i * 3.7 + 1) - 0.5) * Math.min(80, slot.w - cw)), jy = Math.round((hash(i * 5.3 + 2) - 0.5) * Math.min(50, Math.max(0, slot.h - ch)));
+          const x = slot.x + (slot.w - cw) / 2 + jx, y = slot.y + (slot.h - ch) / 2 + jy;
+          const rect = { x: st.x + x, y: st.y + y - 26, w: cw, h: ch + 26 }; // the tag sticks out above the card
+          return (plans[i] = { i, k, st, slot, mode, units, F, rows, lh, cw, ch, x, y, rect });
+        }
+        // a station's content box so far: its draft cards up to line `upTo` (its usable area when it has none), reaching
+        // down through its tape so the timeline stays in frame above the captions
+        function stationBox(st, upTo) {
+          let b = null;
+          for (const i of st.lines) {
+            if (upTo != null && i > upTo) break;
+            b = b ? union(b, cardPlan(i).rect) : Object.assign({}, cardPlan(i).rect);
+          }
+          b = b || Object.assign({}, st.use);
+          return st.tape === false ? b : union(b, { x: b.x, y: st.tapeRect.y, w: b.w, h: st.tapeRect.h + 6 });
+        }
+
+        const ROT = [-1.6, 1.2, -0.9, 1.7, -1.2, 0.8];
+        const PINS = ["yellow", "red", "blue", "yellow", "white", "red"];
+        const placed = {};
+        /* placeholder(i): a draft card for narration line i in its chapter's station — an index card slapped on and
+         * pinned just before the line, tagged 「线索 n · start s」, the beat note (story.notes) typed on spread over the
+         * spoken words (or the line's key phrase pre-printed faintly and typed unit by unit as spoken), a small blue
+         * 「待演绎」 stamp; red string from the previous card in the station; the camera leans toward it. */
+        function placeholder(i) {
+          if (isEnd(i) || placed[i]) return placed[i] || null;
+          const L = story.line(i), P = cardPlan(i), st = P.st, units = P.units, mode = P.mode, lh = P.lh;
+          const at = L.start - 0.3;
+          const c = card(st.k, {
+            kind: "index", x: P.x, y: P.y, w: P.cw, h: P.ch, rot: ROT[(i - 1) % ROT.length], pin: PINS[(i - 1) % PINS.length],
+            tag: `线索 ${String(i).padStart(2, "0")} · ${L.start.toFixed(1)} s`, at, pad: `${PAD_T}px ${PAD_X}px ${PAD_B}px`,
+            pinX: Math.max(P.cw / 2, 380), // clear of the tag
+            rule: lh, ruleTop: PAD_T + Math.round(lh * 0.86) - lh + 2,
+          });
+          const body = K.el("div", "sb-body", c.el, { fontSize: P.F, lineHeight: lh + "px" });
+          // one text block per row (a key phrase is pre-printed faintly underneath and typed over as spoken; a beat
+          // note is typed fresh); every character gets a time, a row shows the characters whose time has come
+          const ghost = mode === "key";
+          const rowsT = P.rows.map((row) => {
+            const r = K.el("div", "sb-row", body);
+            const text = row.map((x, q) => (x.sp && q ? " " : "") + x.u).join("");
+            if (ghost) K.el("div", "sb-ghost", r, null, esc(text)).setAttribute("data-layout-allow-overlap", "");
+            const ink = K.el("div", ghost ? "sb-ink sb-key" : "sb-ink", r, null, esc(text));
+            return { row, T: K.typer(ink), times: [] };
+          });
+          add(K.stamp(c.el, { text: "待演绎", tone: "accent-2", place: { right: "58px", bottom: "12px" }, size: 30, rot: -7, at: c.land + 0.32, opacity: 0.85 }));
+
+          if (mode === "key") {
+            // each spoken unit is typed as it is said (its characters spread over the unit)
+            let free = L.start - 0.06;
+            const flat = rowsT.flatMap((R) => R.row.map((x) => ({ x, R })));
+            flat.forEach(({ x, R }, q) => {
+              const nx = flat[q + 1] && flat[q + 1].x;
+              const a = Math.max(x.t - 0.02, free + 0.01);
+              const m = [...x.u].filter((ch) => !/\s/.test(ch)).length;
+              const dur = x.punct ? 0.04 : Math.max(0.06, Math.min(0.22, ((nx ? nx.t : L.end) - x.t) * 0.85, 0.05 * m + 0.05));
+              for (let c = 0; c < m; c++) R.times.push(a + (dur * c) / Math.max(1, m));
+              if (!x.punct) K.event("type", a, dur, { n: m });
+              free = a + dur;
+            });
+          } else {
+            // a beat note is not in the narration: spread its characters over the spoken units, never past the line's end
+            const sp = story.spoken(i), M = sp.length, N = Math.max(1, rowsT.reduce((a, R) => a + R.T.n, 0));
+            const lim = Math.max(L.end - 0.05, L.start + 0.6);
+            const times = [];
+            for (let q = 0; q < N; q++) times.push(M ? Math.min(lim, sp[Math.min(M - 1, Math.floor((q * M) / N))][1] + (((q * M) % N) / N) * 0.12) : L.start + q * 0.06);
+            for (let q = 1; q < times.length; q++) times[q] = Math.max(times[q], times[q - 1] + 0.015);
+            let r0 = 0; // typing runs for the sound bed: one cue per spoken word the characters sit on
+            for (let q = 1; q <= times.length; q++) {
+              if (q === times.length || times[q] - times[q - 1] > 0.09) { K.event("type", times[r0], Math.max(0.05, times[q - 1] - times[r0] + 0.05), { n: q - r0 }); r0 = q; }
+            }
+            let q = 0;
+            rowsT.forEach((R) => { for (let c = 0; c < R.T.n; c++) R.times.push(times[q++]); });
+          }
+          const items = [{ render(t) {
+            for (const R of rowsT) { let k = 0; while (k < R.times.length && R.times[k] <= t) k++; R.T.set(k); }
+          } }];
+          items.forEach((it) => add(it));
+
+          // the red string runs on from the previous draft card in this station, corner to nearest corner (round the
+          // text, not across it)
+          const prev = st.lines.slice(0, st.lines.indexOf(i)).reverse().map((j) => placed[j]).find(Boolean);
+          if (prev) { const [pa, pb] = K.ties(prev.card, c); string(pa, pb, { at: c.land + 0.08, dur: 0.38, ends: true }); }
+          // the camera leans toward this card as the line begins (a lone card is framed closer)
+          const sofar = stationBox(st, i);
+          focus(L.start - 0.38, lean(sofar, P.rect, { max: st.lines[0] === i ? 1.3 : 1.22 }), { station: st.k });
+          return (placed[i] = { line: i, mode, card: c, body, rect: P.rect, items });
+        }
+
+        // ================= the topic =================
+        let camRef = null;
+        const keys = {};
+        const api = {
+          story, C, Kit: K, K, E, pr, clamp01, geo: g, D,
+          at: (l, u, n) => story.at(l, u, n), phrase: (l, s) => story.phrase(l, s), span: (l, s) => story.span(l, s),
+          desk: B, world: B.world, cards: B.cards, strings: B.strings, pins: B.pins, top: B.top, ink, scene: S,
+          add, fn: (r) => S.fn(r), up,
+          card, pin, string, stamp, typed, hand, type, write, mark, highlight, note, wp,
+          tapeline: (parent, o) => add(K.tapeline(parent, o)),
+          station: stOf, stations,
+          chapterOf: (i) => chapOf(i) + 1, lines: (k) => stOf(k).lines.slice(), isEnd,
+          beatNote, keyPhrase, cardPlan,
+          focus, fit, lean, view: K.view, screen: SCREEN, safe: SAFE, camAt: (t) => (camRef ? camRef(t) : null),
+          closing: END ? { at: END.at, view: END.view, title: END.title, dim: 0.5 } : null,
+          keys,
+          placeholder,
+        };
+        const beats = window.Beats ? window.Beats(api) || {} : {};
+
+        // ================= the red thread: station to station, ridden by the camera =================
+        // a station's entry / exit: board points set in beats.js, else its first and its last card (the string then ties
+        // to their nearest corners)
+        stations.forEach((st) => {
+          const cs = st.cards.slice().sort((a, b) => a.land - b.land);
+          if (!st.entry && cs.length) st.entry = cs[0];
+          if (!st.exit && cs.length) st.exit = cs[cs.length - 1];
+        });
+        const isCard = (q) => q && typeof q.tie === "function";
+        function threadEnds(a, b) {
+          if (isCard(a) && isCard(b)) return K.ties(a, b);
+          const pa = isCard(a) ? a.tie(b.y < a.y ? "t" : "br") : a, pb = isCard(b) ? b.tie("tl", [18, 44]) : b;
+          return [pa, pb];
+        }
+
+        // ================= the tapes: T marks per narration line, under each station =================
+        stations.forEach((st) => {
+          if (st.tape === false) return;
+          const ls = st.lines;
+          const marks = st.marks || ls.map((i) => ({ html: `<b>T${i}</b>${esc(opening(i))}`, t: story.line(i).start, until: story.line(i).end + 0.15 }));
+          if (!marks.length) return;
+          const first = ls.length ? story.line(ls[0]).start : st.chapter.start, last = ls.length ? story.line(ls[ls.length - 1]).end : st.chapter.end;
+          add(K.tapeline(B.cards, { x: st.tapeRect.x, y: st.tapeRect.y, w: st.tapeRect.w, h: st.tapeRect.h, marks, at: Math.max(0, st.chapter.start - 0.1), head: st.marks ? null : [first, last], rot: [-0.5, 0.4, -0.3, 0.6][(st.k - 1) % 4] }));
+        });
+
+        // ================= the closing line: typed on a lined sheet pinned over the pulled-back board =================
+        let closing = null;
+        if (END) {
+          const cl = api.closing;
+          const tr = cl.title;
+          const ttl = K.title(story, { tag: cl.tag, stamp: cl.stamp, stampText: cl.stampText });
+          ttl.el.style.fontSize = (END.Fp).toFixed(1) + "px";
+          ttl.el.style.left = tr.x + "px";
+          ttl.el.style.top = tr.y + "px";
+          ttl.el.style.width = tr.w + "px";
+          ttl.el.style.transformOrigin = "50% 0";
+          B.top.appendChild(ttl.el);
+          const sl = K.slap(ttl.el, { at: END.at - 0.16, rot: -0.8, dur: 0.2, from: { y: -60 / END.s, scale: 1.06, rot: 2 } });
+          const pn = K.pin(B, tr.x + tr.w / 2, tr.y + 0.3 * END.Fp, { color: "red", at: END.at + 0.08, size: Math.round(40 / END.s), parent: B.top });
+          closing = { el: ttl.el, covers: [ttl.el, pn.el], render(t) { sl.render(t); ttl.render(t); pn.render(t); } };
+          add(closing);
+        }
+
+        // ================= camera plan =================
+        stations.forEach((st) => {
+          const first = st.lines.length ? story.line(st.lines[0]).start : st.chapter.start + 0.2;
+          focus(first - 0.55, st.k, { weak: true });
+        });
+        const R = story.recap;
+        const recapOn = !!(R && R.start < D - 0.6);
+        if (END) focus(END.at - 0.42, api.closing.view || END.view, { dur: 1.15, ease: "io3", closing: true });
+        else if (recapOn) focus(R.start - 0.75, wholeView, { dur: 1.1, ease: "io3", closing: true });
+        const startV = K.view(stations[0].x + SW / 2, stations[0].y + SH / 2, S_ST * 0.94);
+        const plan = [];
+        const timeFor = (s, pv) => {
+          const a = centerOf(pv), b = centerOf(s.view);
+          s.travel = !s.closing && Math.hypot(b.x - a.x, b.y - a.y) * Math.min(pv.s, s.view.s) > 1500;
+          s.d = s.dur ?? (s.closing ? 1.15 : s.travel ? 1.15 : 0.6);
+        };
+        shots.slice().sort((a, b) => a.at - b.at || a.weak - b.weak).forEach((s0) => {
+          let s = s0;
+          s.at = Math.max(0, s.at);
+          for (;;) {
+            const p = plan[plan.length - 1];
+            timeFor(s, p ? p.view : startV);
+            if (!p || s.at >= p.at + p.d - 0.02) break;
+            if (s.weak) { s = null; break; }
+            if (p.weak) { plan.pop(); s.at = Math.min(s.at, p.at); continue; }
+            s.at = p.at + p.d;
+            break;
+          }
+          if (s) plan.push(s);
+        });
+        // a drift: a slow push-in (≤ 2.5 %) that leans toward where the camera goes next (≤ 20 px)
+        function drift(v, dt, toward) {
+          const c = centerOf(v), z = 1 + Math.min(0.025, 0.008 * dt), pan = Math.min(20, 5 * dt) / v.s;
+          let dx = 0.97, dy = -0.24;
+          if (toward) { const b = centerOf(toward), l = Math.hypot(b.x - c.x, b.y - c.y); if (l > 1) { dx = (b.x - c.x) / l; dy = (b.y - c.y) / l; } }
+          return K.view(c.x + dx * pan, c.y + dy * pan, v.s * z);
+        }
+        const cam = K.camera(null, startV);
+        const rides = [];
+        let last = startV, tEnd = 0, curSt = 1;
+        plan.forEach((s) => {
+          if (s.at > tEnd + 0.02) { const dv = drift(last, s.at - tEnd, s.view); cam.move(dv, tEnd, s.at - tEnd, "linear", { sound: false }); last = dv; }
+          cam.move(s.view, s.at, s.d, s.ease || (s.travel || s.closing ? "io3" : "io2"), { sound: false });
+          // entering the next station: the red string is carried from the last clue to the next, and the camera rides it
+          if (!s.closing && s.st && s.st !== curSt) {
+            const from = stOf(curSt), to = stOf(s.st);
+            const ro = to.ride || {};
+            if (((from.exit && to.entry) || (ro.a && ro.b)) && s.st === curSt + 1) {
+              const [a, b] = ro.a && ro.b ? [ro.a, ro.b] : threadEnds(from.exit, to.entry);
+              const str = string(a, b, Object.assign({ at: s.at + 0.05, dur: s.d - 0.1, ease: "io3", ends: true }, ro, { a: undefined, b: undefined }));
+              rides.push({ t0: s.at, t1: s.at + s.d, depth: s.travel ? 0.14 : 0.05, dip: { x: str.point(0.5).x - (a.x + b.x) / 2, y: str.point(0.5).y - (a.y + b.y) / 2 } });
+            } else rides.push({ t0: s.at, t1: s.at + s.d, depth: s.travel ? 0.16 : 0, dip: null });
+            curSt = s.st;
+          }
+          if (s.travel || s.closing || s.d >= 0.8) K.event("cam", s.at, s.d);
+          last = s.view;
+          tEnd = s.at + s.d;
+        });
+        {
+          const tail = Math.max(0.6, D + 0.5 - tEnd);
+          cam.move(drift(last, tail, null), tEnd, tail, "linear", { sound: false });
+        }
+        function camAt(t) {
+          let v = cam.at(t);
+          for (const h of rides) {
+            if (t <= h.t0 || t >= h.t1) continue;
+            const u = (t - h.t0) / (h.t1 - h.t0), c = centerOf(v), arc = Math.sin(Math.PI * u);
+            v = K.view(c.x + (h.dip ? h.dip.x * 0.5 * arc : 0), c.y + (h.dip ? h.dip.y * 0.5 * arc : 0), v.s * (1 - h.depth * arc));
+          }
+          return v;
+        }
+        camRef = camAt;
+
+        // ================= closing dim / recap: the case folder over the whole board =================
+        const dimAt = END ? END.at + 0.2 : recapOn ? R.start - 0.4 : null;
+        const dimTo = END ? (api.closing.dim ?? 0.5) : 0.5;
+        // the cards' text fades out under the closing sheet and the recap (the board keeps its paper, pins and string)
+        const hushAt = END ? END.at - 0.05 : recapOn ? R.start - 0.1 : null;
+        let recap = null;
+        if (recapOn) {
+          recap = K.recap(story, { covers: closing ? closing.covers : [], end: Math.min(R.end ?? D, D) });
+          $("recap").appendChild(recap.el);
+        }
+
+        // ================= screen chrome: chapter chip, captions (the closing line is typed on the board), draft tag ===
+        const chips = K.chapters($("chap"), story);
+        story.lines.forEach((L) => { if (!isEnd(L.i) && !(L.i in keys)) keys[L.i] = K.keyPhrase(story, L.i); });
+        const captions = K.captions($("caps"), story, { skipEnd: !!END, air: 0.2, clamp: true, keys });
+        if (story.data.draft) K.el("div", "sb-draft", $("draft"), null, "草稿 · 无配音");
+
+        function frame(t) {
+          B.view(camAt(t));
+          S.render(t);
+          if (beats.render) beats.render(t);
+          if (dimAt != null) B.dim(dimTo * up(t, dimAt, 0.6));
+          if (hushAt != null) B.hush(up(t, hushAt, 0.4));
+          if (recapOn) B.strings.style.opacity = (1 - 0.55 * up(t, R.start, 0.5)).toFixed(3); // the recap's own strings lead
+          chips.render(t);
+          captions.render(t);
+          if (recap) recap.render(t);
+        }
+        const tl = gsap.timeline({ paused: true });
+        const drive = { v: 0 };
+        tl.fromTo(drive, { v: 0 }, { v: 1, duration: D, ease: "none", onUpdate: () => frame(tl.time()) }, 0);
+        frame(0);
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>V9 一柜 · KV cache 黏土版</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/2f4a90671f9a983010bb50a2aa700d16.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+1EE9,U+1EEB,U+1EED,U+1EEF,U+1EF1,U+201A,U+201E,U+2020-2021,U+2025,U+2030,U+2039-203A,U+2044,U+20A9,U+20AC,U+20B4,U+20B9,U+20BD,U+20BF,U+2103,U+2109,U+2116,U+2121-2122,U+2160-216B,U+2170-2179,U+2190-2193,U+2196-2199,U+2212,U+221A,U+221E,U+2248,U+2260; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/1cc5de500e239a4ac35081a1ccf6d02d.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E10,U+4EA2,U+4EA5,U+4EC3,U+4F36,U+4F3A,U+4F5F,U+4F84,U+4F88,U+4F97,U+501A,U+5029,U+504C,U+5201,U+52FA,U+5364,U+543C,U+545C,U+5471,U+5480,U+5495,U+54C7,U+54DF,U+557C,U+5583,U+55DC,U+5632,U+5676,U+56B7,U+56E4,U+5703,U+5742,U+57A2-57A3,U+5815,U+58D1,U+5919,U+592D,U+5955,U+5983,U+59E5,U+5A13,U+5A34,U+5B09,U+5B70,U+5BD0,U+5BF0,U+5C41,U+5C91,U+5C94,U+5CE6,U+5CED,U+5D69,U+5DC5,U+5EB5,U+5F3C,U+5F95,U+604D,U+6055,U+60E6,U+6123,U+618B,U+61A7,U+61AC,U+61CB,U+62A0,U+62CE,U+62D9,U+62E7,U+62EE,U+62F4,U+631F,U+634E,U+63EA,U+6479,U+6482,U+64D2,U+6593,U+660A,U+664F,U+66E6,U+672D,U+675E,U+67DA,U+6809,U+6868,U+68A2,U+68F1,U+68FA,U+693F,U+695E,U+69AD,U+69B4,U+6A71,U+6A90,U+6B89,U+6BCB,U+6BD9,U+6BE1,U+6C40,U+6CB1,U+6CF1,U+6CF8,U+6D85,U+6DA3,U+6DAA,U+6DC6-6DC7,U+6E0D,U+6E3A,U+6E43,U+6E85,U+6EBA,U+6F3E,U+6F88,U+6FEE,U+70D9,U+71EE,U+722A,U+733F,U+73F2,U+7409,U+7435-7436,U+7459,U+747E,U+7487,U+748B,U+749C,U+749E,U+7504,U+752C,U+759A,U+75A1,U+75CA,U+75D2,U+75EB,U+761F-7620,U+766B,U+7738,U+773A,U+7785,U+77A5,U+77AA,U+77BF,U+78BE,U+78D5,U+7934,U+795B,U+796F,U+79A7,U+7A20,U+7A96,U+7AA5,U+7B03,U+7B19,U+7B28,U+7B50,U+7B77,U+7BF1,U+7C38,U+7C95,U+7CB1,U+7EAD,U+7EC5,U+7ECA,U+7EF0,U+7EFD,U+7F0E,U+7F2E,U+7F79,U+7F9A,U+7FCC,U+8046,U+8098,U+80E7,U+8165,U+819B,U+8237-8238,U+8299,U+82AE,U+82CE,U+82D3,U+8301,U+831C,U+8398,U+83BA,U+83E0,U+8426,U+8475,U+853C,U+85D5,U+8654,U+86DF,U+871A,U+891A,U+8925,U+8BB4,U+8BE3,U+8BEC,U+8BF2,U+8BFF,U+8C06,U+8C0D,U+8C19,U+8C1B,U+8C2C,U+8D61,U+8DB4,U+8DE4,U+8E1E,U+8E66,U+8E6C,U+8F84,U+8F8A,U+8F97,U+8FF8,U+901E,U+9083,U+90F4,U+912F,U+9165,U+91C9,U+91DC,U+94B0,U+94B3,U+94E8,U+94F5,U+9504,U+9532,U+9539,U+954C-954D,U+9550,U+956D,U+95FA,U+962A,U+9668,U+9685,U+96BD,U+9704,U+9773,U+988D,U+9975,U+997A,U+9985,U+9A6F,U+9A8B,U+9AA5,U+9CB8,U+9CC4,U+9E25,U+9E4A; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/b1064e8e8e0c47f09ab16f55adb43a3c.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E1B,U+4E54,U+4E7E,U+4E8F,U+4EAD,U+4FA6,U+5077,U+5146,U+51CC,U+51E4,U+51F8,U+5256,U+529D,U+52A3,U+52D8,U+5353,U+5362,U+5366-5367,U+53A6,U+5439,U+543E,U+5496,U+54B3,U+5561,U+5582,U+5631,U+575D,U+5784,U+5821,U+582A,U+5858,U+5915,U+592F,U+5937-5938,U+5948,U+5974,U+59A8,U+59D0,U+5A31,U+5BD3,U+5CAD,U+5CB3,U+5CE1,U+5E10,U+5E3D,U+5E7B,U+5E99,U+5F18,U+5F26,U+5F70,U+6012,U+6028,U+602A,U+604B,U+607C,U+60A6,U+60DC,U+60E7,U+6109,U+626E,U+6292,U+629B,U+62AB,U+62D6,U+62D8,U+6321,U+632B,U+63A9,U+643A,U+6478,U+64C5,U+64CE,U+64E6,U+6500,U+6566,U+659C,U+65A4,U+65EC,U+6668,U+6691,U+6734,U+6760,U+676D,U+67DC,U+67F4,U+6813,U+683D,U+6851,U+6876,U+68B3,U+68CB,U+68D2,U+68DA,U+699C,U+6B3A,U+6BBF,U+6BC5,U+6C41,U+6C83,U+6CAB,U+6CCA,U+6CEA,U+6D66,U+6D69,U+6E0A,U+6E83,U+6EAA,U+6EAF,U+6EDA,U+6EE5,U+6EE8,U+6F02,U+6F58,U+7076,U+7092,U+70AE,U+718A,U+71D5,U+722C,U+7237,U+7272,U+72B9,U+72ED,U+72F1,U+730E,U+732B,U+7384,U+7483,U+74E3,U+751C,U+754F,U+76FC,U+7709,U+77E3,U+78F7,U+7965,U+7978,U+7985,U+7A83-7A84,U+7A9D,U+7AED,U+7B5B,U+7BEE,U+7CCA,U+7EBA,U+7EF3,U+7F06,U+7F50,U+7F55,U+7F69,U+7FBD,U+8036,U+804A,U+806A,U+80AA,U+80F0,U+80FA,U+8106,U+813E,U+81B3,U+81ED,U+8206,U+8231,U+8236,U+8247,U+829D,U+82BD,U+83B1-83B2,U+845B,U+848B,U+84C4,U+84EC,U+8574,U+884D,U+8881,U+888B,U+8896,U+8BDE,U+8BF5,U+8D3A,U+8E0F,U+8E48,U+8F88,U+8F9F,U+900A,U+9022,U+9038,U+903C,U+903E,U+9065,U+9080,U+90E1,U+94A0,U+94DD,U+94ED,U+9502,U+9505,U+9510,U+9521,U+9526,U+95EA,U+9600,U+966A,U+968B,U+96C7,U+96FE,U+9709,U+9776,U+97E6-97E7,U+9972,U+9A70,U+9AD3,U+9B3C,U+9B42,U+9B54,U+9E3F,U+9ECE-9ECF; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/708342b062bcd557f399d003730d385a.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E18-4E19,U+4E32,U+4ED4,U+4ED9,U+4F2A,U+4F69,U+4FF1,U+5076,U+50AC,U+5144,U+5151,U+517D,U+51BB,U+51EF,U+5220,U+524A,U+5251,U+526A,U+52B2,U+52DF,U+5300,U+5339,U+53C9,U+53E0,U+53F9,U+540A,U+5410,U+554A,U+55B7,U+55BB,U+5634,U+566A,U+574A,U+57C3,U+57CB,U+5835,U+5893,U+58F3,U+5939,U+5954,U+5960,U+59A5,U+59C6,U+59FB,U+59FF,U+5A74,U+5ACC,U+5B5D,U+5B5F,U+5BBF,U+5BF8,U+5C48,U+5DE1-5DE2,U+5E9E,U+5F04,U+5F25,U+5F2F,U+5FBD,U+5FCC-5FCD,U+5FD9,U+5FE7,U+60AC,U+60D1,U+60E9,U+6148,U+629A,U+62E8,U+62FC,U+6350,U+641E,U+642C,U+6447,U+64B0,U+6591,U+65F1,U+65FA,U+6606,U+66FC,U+676F,U+67D4,U+67F3,U+680F,U+682A,U+6842-6843,U+68C9,U+690E,U+69FD,U+6B20,U+6B67,U+6C1B,U+6C2E-6C2F,U+6C57,U+6C88,U+6CC4,U+6CCC,U+6CF5,U+6D46,U+6D78,U+6D8C,U+6DC0,U+6DCB,U+6ECB,U+6EDE,U+6F20,U+70AD,U+70B8,U+70E6,U+70EF,U+710A,U+71E5,U+72C2,U+72D7,U+731B,U+73BB,U+74DC,U+74F7,U+755C,U+756A,U+7586,U+75B2,U+76C6,U+76D7,U+76F2,U+775B,U+77E9,U+7802,U+7816,U+7845,U+7855,U+786B,U+7891,U+78B0-78B1,U+795D,U+796D,U+79D2,U+79E9,U+7A00,U+7A3B,U+7A74,U+7A77,U+7B4B,U+7BAD,U+7EBD,U+7F1D,U+7F8A,U+7FFC,U+8058,U+80A2,U+80A9,U+80C1,U+810A,U+8138,U+814A,U+8170,U+817E-817F,U+81A8,U+81C2,U+820C,U+821F,U+8230,U+827E,U+8352,U+8361,U+83F2,U+8404,U+8428,U+8461,U+846C,U+864E,U+8680,U+8702,U+87BA,U+8854,U+88AD,U+88D5,U+8C6A,U+8D24,U+8D2A,U+8D41,U+8D64,U+8D6B,U+8D76,U+8E2A,U+8F90,U+8F9E,U+8FBD,U+8FC8,U+8FEA,U+9042,U+9093,U+90BB,U+90C1,U+90ED,U+9189,U+94BB,U+94F8,U+9601,U+9655,U+9699,U+96B6,U+96D5,U+97F5,U+9887,U+9971,U+9988,U+9A91,U+9E23,U+9F0E,U+9F7F; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/a03aa93b10197909393e50d40bbe1bff.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E27,U+4EA9,U+4ED3,U+4EF0,U+4F10,U+4FAF,U+5021,U+5112,U+5192,U+51C9,U+5200,U+5237,U+5269,U+5272,U+52C3,U+52D2,U+5348,U+5375,U+5398,U+53D9,U+5427,U+54E5,U+5531,U+559D,U+5609,U+56CA,U+5733,U+573E,U+575B,U+5761,U+5782-5783,U+5806,U+58E4,U+593A,U+5949,U+5951,U+5999,U+59BB,U+5B55,U+5B64,U+5B85,U+5B99,U+5BAA,U+5BBE,U+5BC4,U+5BFA,U+5BFF,U+5C16,U+5C18,U+5C1D,U+5C3A,U+5C4F,U+5DE9,U+5E55,U+5E86,U+5EC9,U+5EF7,U+5F79,U+5F7C,U+5FA1,U+6052,U+6069,U+6070,U+609F,U+60B2,U+6108,U+614E,U+6212,U+6234,U+626B,U+6270,U+62A2,U+62B1,U+62C6,U+62DC,U+6302,U+6355,U+6377,U+63D2,U+63ED,U+63F4,U+642D,U+6446,U+6458,U+649E,U+64A4,U+654C,U+65C1,U+65CB,U+65E8,U+660C,U+6653,U+6676,U+6696,U+66F0,U+66F9,U+6746,U+6770,U+679D,U+67AA,U+6885,U+68AF,U+6B23,U+6BC1,U+6C22,U+6C28,U+6C64,U+6CC9,U+6CF0,U+6D2A,U+6D45,U+6DFB,U+6E14,U+6E17,U+6EE4,U+6EF4,U+6F2B,U+704C,U+7070,U+7089,U+7238,U+7267,U+7275,U+732A,U+7434,U+745E,U+74F6,U+7545,U+75BC,U+76C8,U+7720,U+788E,U+78E8,U+7A0D,U+7A3F,U+7A97,U+7ADF,U+7AF9,U+7B11,U+7C97-7C98,U+7D2B,U+7EB2,U+7EB9,U+8083,U+80A4,U+80C0,U+80CE,U+80E1,U+80F8,U+820D,U+8212,U+8270,U+82B3,U+84B8,U+84DD,U+852C,U+85AA,U+8870,U+89C8,U+8BF1,U+8C28,U+8C46,U+8D1D,U+8D5E,U+8D60,U+8D62,U+8DCC,U+8F68,U+8F89,U+8F9B,U+8FA8,U+8FDF,U+8FF7,U+9003,U+9006,U+90A6,U+90AE,U+90D1,U+916C,U+9176,U+9187,U+9499,U+94DC,U+94FA,U+9501,U+950B,U+953B,U+95F2,U+9610,U+9614,U+9635,U+9675-9676,U+9686,U+96C5,U+96EA,U+987F,U+9881,U+9888,U+9A7B,U+9AA4,U+9B4F,U+9E1F,U+9E21,U+9EA6,U+9F20,U+9F3B; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/1076dc983a0f7ddf85024953535bf619.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E01,U+4E1D,U+4E39,U+4E43,U+4E4C,U+4E95,U+4EC1,U+4EF2,U+4EFF,U+4F0A,U+4F0D,U+4F0F,U+4F19,U+4F26,U+4F2F,U+4F38,U+5012,U+503E,U+5141,U+51B0,U+51E1,U+51ED,U+51FD,U+520A,U+52E4,U+5385,U+5409,U+5428,U+5434,U+54A8,U+54C8,U+54F2,U+5708,U+5723,U+5766,U+5851,U+585E,U+5899,U+58A8,U+58C1,U+58EE,U+594F,U+5976,U+5987-5988,U+5B87,U+5B8F,U+5BD2,U+5C3E,U+5CA9,U+5CB8,U+5CF0,U+5D07,U+5E84,U+5F03,U+5F1F,U+5F90,U+5F92,U+5FD8,U+5FE0,U+5FFD,U+6050,U+6062,U+6089,U+60CA,U+61C2,U+622A,U+624E,U+6263,U+6291,U+62BC-62BD,U+62CD,U+62D2,U+62D4,U+6316,U+6389,U+6398,U+641C,U+6469,U+6562,U+656C,U+65D7,U+664B,U+6670,U+6682,U+6697,U+6717,U+6731,U+675C,U+6768,U+67F1,U+6846,U+6881,U+68A6,U+68B0,U+68EE,U+6A2A,U+6CE1,U+6CE5,U+6CFD,U+6D1B,U+6D1E,U+6D25,U+6D59,U+6D6A,U+6D6E,U+6D82,U+6DB5,U+6DE1,U+6E21,U+6ED1,U+6F0F,U+6F6E,U+6FB3,U+70BC,U+7206,U+73CD,U+73E0,U+74E6,U+7518,U+758F,U+7686,U+76DF,U+7761,U+77DB,U+79D8,U+79E6,U+7BB1,U+7C4D,U+7C92,U+7CAE,U+7EA4,U+7EB5,U+8010,U+8015,U+8033,U+808C,U+809D,U+80AF,U+80BE,U+80C3,U+80C6,U+80F6,U+8102,U+811A,U+8150,U+8154,U+8179-817A,U+81E3,U+82AF,U+8350,U+8377,U+83AB,U+8463,U+8499,U+8584,U+866B,U+8857,U+88C2,U+8A89,U+8BAF,U+8BC8,U+8BE6,U+8C01,U+8C0B,U+8C10,U+8C31,U+8C37,U+8C8C,U+8D21,U+8D4B,U+8D4F,U+8D56,U+8D75,U+8DC3,U+8DD1,U+8DF3,U+8F74,U+8F96,U+8FA9,U+8FCE,U+8FD4,U+8FEB,U+8FF9,U+903B,U+906D,U+9075,U+9677,U+9694,U+97E9,U+9897,U+989C,U+9910,U+996D,U+9970,U+9A71,U+9A97,U+9C81,U+9EBB,U+9ED8; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/0eed02549b26513be5c431f4356b7856.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E3D,U+4E58-4E59,U+4E71,U+4E73,U+4EA6,U+4EAE,U+4F1F,U+4F73,U+4FB5,U+4FC4,U+4FD7,U+500D,U+504F,U+517C,U+51A0,U+51AC,U+51C0,U+51DD,U+523A,U+52C7,U+53EC,U+541B,U+547C,U+552F,U+559C,U+5706,U+5740,U+5750,U+5854,U+586B,U+590F,U+591C,U+594B,U+5965,U+59D3,U+5A5A,U+5A92,U+5B59,U+5B81,U+5BAB,U+5C1A,U+5C3C,U+5C3F,U+5C4A-5C4B,U+5C65,U+5C97,U+5C9B,U+5DDD,U+5DE7,U+5E2D,U+5E78,U+5E97,U+5E9F,U+5F39,U+5F69,U+5F7B,U+5FC6,U+6000,U+6015,U+6076,U+60E0,U+6167,U+626C,U+6276,U+6298,U+62D3,U+6311,U+632F,U+6444,U+6491,U+654F,U+65E6-65E7,U+665A,U+66B4,U+66FF,U+670B,U+672B,U+6740,U+6865,U+695A,U+697C,U+6B22,U+6B32,U+6B8B,U+6B96,U+6BD5,U+6BEB,U+6C0F,U+6C9F,U+6CBF,U+6D01,U+6D17,U+6D53,U+6DA6,U+6DA8,U+6E20,U+6E7E-6E7F,U+6EB6,U+706D,U+706F,U+707E,U+70C8,U+70DF,U+70E7,U+7126,U+7164,U+71C3,U+7259,U+725B,U+7262,U+7389,U+73A9,U+7537,U+7591,U+7624,U+7687,U+76D0,U+76DB,U+76FE,U+77FF,U+788D,U+78C1,U+793C,U+7956,U+7981,U+79C0,U+79CB,U+7A7F,U+7B79,U+7C89,U+7EA0,U+7EAF,U+7EB7-7EB8,U+7ED5,U+7ED8,U+7EEA,U+7F18,U+7F34,U+7F72,U+7FFB,U+8017,U+80A0,U+80BA,U+80BF,U+80DC,U+810F,U+821E,U+82D7,U+86CB,U+8863,U+8986,U+8BBC,U+8BD1,U+8BDA,U+8BF8,U+8BFA,U+8C22,U+8D25-8D26,U+8D34,U+8D54,U+8D5B,U+8F85-8F86,U+8FC1,U+8FC5,U+9012,U+904D,U+9192,U+91CE,U+9274,U+949F,U+955C,U+95ED,U+95FB,U+9634,U+9646,U+96C4,U+96E8,U+96F7,U+9707,U+9732,U+9875-9876,U+9A76,U+9A7E,U+9C9C,U+9F50,U+9F84; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/2c73198549841e2cf0277c3a231cf252.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E45,U+4E4E-4E4F,U+4EA1,U+4EEA,U+4F11,U+4F34,U+4F5B,U+4FA7,U+507F,U+5170,U+5175,U+518C,U+51B2,U+51B7,U+5211,U+5218,U+521A,U+5238,U+5267,U+526F,U+52AA,U+5356,U+5361,U+5377,U+5382,U+539A,U+53CB,U+53EB,U+53F3,U+53F6,U+5403,U+5417,U+542F,U+5448,U+5510,U+574F,U+592B,U+5947,U+5956-5957,U+5979,U+5A01,U+5B54,U+5B63,U+5B8B,U+5B97,U+5B9C,U+5BBD,U+5BFB,U+5C01,U+5C0A,U+5C24,U+5DE8,U+5DF4,U+5E0C,U+5E1D,U+5E45,U+5E8A,U+5EA7,U+5EF6,U+5F31,U+5F52,U+5F84,U+5FAA,U+60A8,U+60EF,U+6162,U+620F,U+6293,U+62B5,U+62DB,U+62DF,U+62E5,U+62FF,U+63CF,U+653B,U+6551,U+6620,U+6728,U+675F,U+677E,U+67B6,U+6863,U+6B27,U+6B4C,U+6B8A,U+6BDB,U+6C27,U+6C38,U+6C47,U+6C60,U+6C89,U+6C99,U+6CDB,U+6D0B,U+6D32,U+6D3E,U+6DF7,U+6E10,U+6E2F,U+6E56,U+6F5C,U+7075,U+708E,U+719F,U+7236,U+724C,U+72AF,U+732E,U+7530,U+7532,U+75DB,U+764C,U+76D6,U+76D8,U+786C,U+78B3,U+79C1,U+79DF,U+7B7E,U+7BC7,U+7CD6,U+7D2F,U+7E41,U+7ECD,U+7EE9,U+7F13,U+7F29,U+7F5A,U+8089,U+80A5,U+8109,U+8131,U+819C,U+8239,U+82E6,U+8336,U+8363,U+83CC,U+83DC,U+85CF,U+8861,U+88C1,U+89E6,U+8B66,U+8BA2,U+8BA8,U+8BBF,U+8BCA,U+8BE2,U+8BEF,U+8C13,U+8D2F,U+8D35,U+8D37-8D38,U+8D8B,U+8DA3,U+8DDD,U+8DDF,U+8DE8,U+8F6E-8F6F,U+8F91,U+900F,U+9014,U+9152,U+94A2,U+94B1,U+94C1,U+9605,U+963B,U+963F,U+9648,U+9690,U+96F6,U+9759,U+987A,U+987E,U+996E,U+9986,U+9AA8,U+9C7C,U+9ED1,U+9F13; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/372dfd55fd80c211a9fb0d2b26f9a051.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E03,U+4E30,U+4E34,U+4E5D,U+4E70,U+4E88,U+4E91,U+4E9A,U+4EAB,U+4EB2,U+4EBF,U+4ECD,U+4ED8,U+4EE4,U+4F24,U+4F30,U+4F3C,U+4F59,U+501F,U+503A,U+5047,U+505C,U+50A8,U+5178,U+51FB,U+523B,U+5242,U+52B1,U+5343,U+534A,U+535A,U+536B,U+5370-5371,U+5374,U+53E5-53E6,U+542C,U+5462,U+5473,U+54EA,U+552E,U+56F0,U+56FA,U+5757,U+5802,U+592E,U+5B88,U+5B9D,U+5BA3,U+5C04,U+5C81,U+5DE6,U+5E01,U+5E2E,U+5E7C,U+5E93,U+5E95,U+5EAD,U+5F85,U+600E,U+6025,U+613F,U+6258,U+6269,U+627E,U+6297,U+62C9,U+6325,U+6362,U+6388,U+638C,U+63A2,U+63AA,U+63E1,U+64AD,U+64CD,U+6563,U+6597,U+65C5,U+65E2,U+661F,U+6625,U+66F2,U+66FE,U+671B,U+671D,U+6742,U+674E,U+677F,U+6811,U+690D,U+6982,U+6B66,U+6B7B,U+6BCD,U+6BD2,U+6C49,U+6C61,U+6C7D,U+6CB9,U+6CE2,U+6D89,U+6DB2,U+6F14,U+7231,U+7248,U+73ED,U+751A,U+7533,U+7559,U+75BE,U+75C7,U+767B,U+76AE,U+773C,U+7763,U+77ED,U+7801,U+7968,U+798F,U+7ADE,U+7AE5,U+7AEF,U+7B14,U+7B26,U+7B51,U+7B54,U+7D22,U+7D27,U+7EC3,U+7EDD,U+7EE7,U+7EFC,U+7EFF,U+7F57,U+7F6A,U+805A,U+80CC,U+80DE,U+8111,U+822A,U+82CF,U+82E5,U+8349,U+8457,U+8651,U+865A,U+867D,U+8BD7,U+8C08,U+8D2B,U+8DF5,U+8F7B,U+8F7D,U+8FDD,U+8FFD,U+9000-9001,U+9010,U+9047,U+9057,U+907F,U+9178,U+91CA,U+9488,U+94FE,U+9519,U+952E,U+9547,U+9636,U+9644,U+9760,U+9891,U+98DE,U+9999,U+9F99; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/1a6ec962063a3669ee0f44475f48f9fe.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E3E,U+4E50,U+4E61,U+4E89,U+4E92,U+4EAC,U+4EC5,U+4ECB,U+4EFD,U+4F4F,U+4FBF,U+4FC3,U+4FEE,U+5019,U+5065,U+50CF,U+5145,U+514B,U+514D,U+516B,U+516D,U+5174,U+51CF,U+5207,U+5217,U+521D,U+5224,U+52B3,U+5360,U+538B,U+53BF,U+53CC,U+53E4,U+5426,U+542B,U+5438,U+5584,U+56E2,U+56ED,U+56F4,U+5747,U+575A,U+58EB,U+58F0,U+591F,U+592A,U+5973,U+5B69,U+5B98,U+5BA2,U+5BA4,U+5BB3,U+5BC6,U+5BCC,U+5BDF,U+5C14,U+5C3D,U+5C45,U+5C5E,U+5DDE,U+5DEE,U+5E8F,U+5EB7,U+5F02,U+5F20,U+5F55,U+5F81,U+5FAE,U+5FD7,U+5FF5,U+60A3,U+623F,U+6267,U+6279,U+627F,U+62C5,U+62E9,U+62EC,U+635F,U+6392,U+6545,U+65AF,U+65CF,U+65E9,U+666E-666F,U+667A,U+6750,U+6797,U+67D0,U+67D3,U+6B3E,U+6B62,U+6C5F,U+6CB3,U+6E29,U+6E38,U+6EE1,U+6FC0,U+706B,U+7247,U+72EC,U+738B,U+7403,U+753B,U+7565,U+75AB,U+767E,U+77F3,U+7834,U+79BB,U+79FB,U+7A33,U+7A81,U+7AD9,U+7AE0,U+7B80,U+7C73,U+7EA2,U+7EAA,U+7EB3,U+7EC8,U+7EDC,U+7F16,U+7F3A,U+80A1,U+822C,U+826F,U+827A,U+82B1,U+82F1,U+83B7,U+843D,U+8865,U+89C9,U+89D2,U+8BAD,U+8BB2,U+8BB8,U+8BC9,U+8BCD,U+8D1F,U+8D22,U+8D27,U+8D2D,U+8D70,U+8D85,U+8DB3,U+8F93,U+8FB9,U+8FDC,U+8FDE,U+8FF0,U+94F6,U+9500,U+961F,U+9633,U+964D,U+969C,U+9752,U+97F3,U+987B,U+989D,U+9996,U+9A6C,U+9EC4; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/8fb777221615c1047b1fdd82dc30bd2b.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E07,U+4E14,U+4E1C,U+4E25,U+4E94,U+4EC0,U+4ECA,U+4F17-4F18,U+4F4E,U+4F55,U+4F8B,U+4F9D,U+503C,U+513F,U+5149,U+518D,U+5199,U+519B,U+51B5,U+51E0,U+5212,U+529E-529F,U+52A9,U+52BF,U+5317,U+5347,U+534E-534F,U+5357,U+5373,U+5386,U+53C2,U+53C8,U+53F0,U+53F2,U+53F7,U+544A,U+5468,U+547D,U+54CD,U+56DE,U+56FE,U+571F,U+57DF,U+57F9,U+5907,U+5931,U+5934,U+59CB,U+59D4,U+5B57,U+5BA1,U+5C40,U+5C42,U+5C71,U+5E03,U+5E26,U+5E72,U+5E7F,U+5E9C,U+5F80,U+5F8B,U+5FB7,U+5FC5,U+5FEB,U+6237,U+6253,U+628A,U+6295,U+6309,U+63A7,U+6599,U+65AD,U+6613,U+663E,U+672A,U+6751,U+6781,U+6790,U+67E5,U+6838,U+68C0,U+6BB5,U+6BCF,U+6D4B,U+6D77,U+6D88,U+6DF1,U+6E05,U+70ED,U+7167,U+72B6,U+754C,U+7597,U+767D,U+76CA,U+76D1,U+7701,U+771F,U+7840,U+795E,U+79EF-79F0,U+7A0E,U+7A7A,U+7B56,U+7B97,U+7CBE,U+7D20,U+7EA6,U+7EC6-7EC7,U+7ED9,U+7EED,U+7EF4,U+7F6E,U+7FA4,U+804C,U+81F4,U+8303,U+836F,U+878D,U+8840,U+88C5,U+89C1,U+89C6,U+8A00,U+8BAE,U+8BC4,U+8BD5,U+8BDD,U+8BF7,U+8BFB,U+8BFE,U+8C61,U+8D23,U+8D8A,U+8FD1,U+9002,U+901F,U+90A3,U+914D,U+91C7,U+9632,U+9650,U+9664,U+9669,U+968F,U+96BE,U+9769,U+9884,U+98DF; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/a1a9492a96364d04152c97e6e0c18740.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E13,U+4E16,U+4E24,U+4E48-4E49,U+4E66,U+4EA4,U+4EF7,U+4EFB,U+4F20,U+4F60,U+4F9B,U+505A,U+5143,U+5148,U+515A,U+5171,U+5177,U+517B,U+519C,U+51B3,U+51C6,U+5219,U+521B,U+522B,U+5305,U+533B,U+5355,U+53BB,U+53CD,U+53D6-53D7,U+53E3,U+53EA,U+53F8,U+540D,U+5411,U+5546,U+5668,U+56DB,U+578B,U+57CE,U+5883,U+589E,U+590D,U+5B58,U+5B83,U+5B8C,U+5BB9,U+5C11,U+5DF1-5DF2,U+5E08,U+5F15,U+5F71,U+5F88,U+6001,U+601D,U+603B,U+606F,U+60F3,U+611F,U+6218,U+624B,U+624D,U+62A4-62A5,U+6307,U+63A5,U+63A8,U+652F,U+6536,U+6539,U+653E,U+6574,U+65BD,U+670D,U+6821,U+6837,U+6839,U+683C,U+6848,U+6A21,U+6B65,U+6C14,U+6CA1,U+6CE8,U+6D4E,U+6E90,U+7387,U+73AF,U+75C5,U+76F4,U+770B,U+786E,U+793A,U+7A76,U+7EA7,U+7EBF,U+7F51,U+7F8E,U+8001,U+8003,U+8054,U+81F3,U+8272,U+8282,U+8425,U+88AB,U+897F,U+89C2,U+8BA4,U+8BA9,U+8BB0,U+8BBA,U+8BC1,U+8BC6,U+8BE5,U+8BED,U+8C03,U+8D39,U+8DEF,U+8EAB,U+8F66,U+8F6C,U+8F83,U+8FBE,U+8FD0,U+9009,U+9020,U+91CC,U+95E8,U+9645,U+9662,U+96C6,U+975E,U+9879,U+9886,U+98CE,U+9A8C; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/db3e99cb0a4d5f8690366014e58fc334.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E09,U+4E60,U+4E8B-4E8C,U+4E9B,U+4ECE,U+4EE3,U+4EF6,U+4F01,U+4F46,U+4F4D,U+4F7F,U+4FDD,U+4FE1,U+5165,U+5185,U+5229,U+524D,U+52A0-52A1,U+533A,U+5341,U+539F,U+53CA,U+53D8,U+5404,U+5458,U+54C1,U+56E0,U+573A,U+57FA,U+5904,U+5916,U+5929,U+597D,U+5B89,U+5BFC,U+5C06,U+5C0F,U+5E02,U+5E38,U+5E73,U+5E76,U+5F00,U+5F0F,U+5F3A,U+5F53,U+5F62,U+5F97,U+5FC3,U+60C5,U+610F,U+6216,U+6280,U+6301,U+636E,U+653F,U+6548,U+65E0,U+65E5,U+660E,U+66F4,U+6700,U+6708,U+671F,U+672F,U+6743,U+6761,U+6784,U+679C,U+6807,U+6B21,U+6B63-6B64,U+6BD4,U+6C11,U+6C34,U+6C42,U+6CBB,U+6D3B,U+6D41,U+70B9,U+7136,U+7269,U+7279,U+7531,U+7535,U+76EE,U+76F8,U+7740,U+77E5,U+7814,U+793E,U+79D1,U+7A0B,U+7ACB,U+7B2C,U+7BA1,U+7C7B,U+7CFB,U+7EC4,U+7ED3,U+7EDF,U+80B2,U+8868,U+89C4,U+89E3,U+8BA1,U+8BBE,U+8BF4,U+8D28,U+8D44,U+8D77,U+8FD8,U+9053,U+90FD,U+91CF,U+91D1,U+957F,U+95EE,U+95F4,U+9700,U+9898; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/4055c8b28ab5185d0c2bf4a133043526.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+4E00,U+4E0A-4E0B,U+4E0D-4E0E,U+4E1A,U+4E2A,U+4E2D,U+4E3A-4E3B,U+4E4B,U+4E5F,U+4E86,U+4E8E,U+4EA7,U+4EBA,U+4ED6,U+4EE5,U+4EEC,U+4F1A,U+4F53,U+4F5C,U+5168,U+516C,U+5173,U+5176,U+51FA,U+5206,U+5230,U+5236,U+529B,U+52A8,U+5316,U+53D1,U+53EF,U+5408,U+540C,U+540E,U+548C,U+56FD,U+5728,U+5730,U+591A,U+5927,U+5982,U+5B50,U+5B66,U+5B9A,U+5B9E,U+5BB6,U+5BF9,U+5C31,U+5C55,U+5DE5,U+5E74,U+5E94,U+5EA6,U+5EFA,U+6027,U+6210-6211,U+6240,U+63D0,U+6559,U+6570,U+6587,U+65B0,U+65B9,U+65F6,U+662F,U+6709,U+672C,U+673A,U+6765,U+6CD5,U+73B0,U+7406,U+751F,U+7528,U+7684,U+79CD,U+7B49,U+7ECF,U+8005,U+800C,U+80FD,U+81EA,U+884C,U+8981,U+8FC7,U+8FD9,U+8FDB,U+901A,U+90E8,U+91CD,U+9762,U+9AD8; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/58bb19d8d1fda1bf440ee80436bed78d.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+2013-2014,U+2018-2019,U+201C-201D,U+2022,U+2026,U+2E3A,U+3001-3002,U+3008-3011,U+3014-3017,U+FE41-FE44,U+FE4F,U+FF01,U+FF08-FF09,U+FF0C-FF0F,U+FF1A-FF1B,U+FF1F,U+FF3B,U+FF3D,U+FF3F,U+FF5B-FF5E; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/4201469e4ad49fa29c4191ce295c301b.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+A0-BF,U+CC-D0,U+D7,U+DF,U+ED-F0,U+F7; }
+@font-face { font-family: "Smiley Sans"; src: url("assets/fonts/smiley-sans/c61784b5352513a7975bc9d7b45dea36.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; unicode-range: U+0,U+20-7E,U+C0-CB,U+D1-D6,U+D8-DE,U+E0-EC,U+F1-F6,U+F8-106,U+10A,U+10C,U+112-113,U+116-11B,U+11D-123,U+12F,U+131-133,U+136-137,U+139,U+13B,U+13D,U+141,U+143-148,U+14C-15B,U+15E-165,U+167-168,U+16A,U+16E,U+170,U+172,U+174-17E,U+18F,U+1A0-1A1,U+1AF,U+1CD-1CE,U+1D1-1DC,U+218-21B,U+237,U+259,U+386,U+388-38A,U+38C,U+38E,U+390-3A1,U+3A4-3A9,U+3AB-3C8,U+3CA-3CD,U+410-418,U+41A-42A,U+42C-438,U+43A-44F,U+490-491,U+1E20-1E21,U+1E80-1E85,U+1E9E,U+1EA0-1EA4,U+1EA6-1EBD,U+1EC0,U+1EC2,U+1EC4-1EC7,U+1ECA-1EE8,U+1EEA,U+1EEC,U+1EEE,U+1EF0,U+1EF2-1EF9; }
+@font-face { font-family: "ZCOOL KuaiLe"; src: url("assets/fonts/zcool-kuaile.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/noto-sans-sc-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/noto-sans-sc-800.woff2") format("woff2"); font-weight: 800; font-style: normal; font-display: block; }
+@font-face { font-family: "Geist Mono"; src: url("assets/fonts/geist-mono-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+/* fonts:end */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--kit-bg);
+      }
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--kit-bg);
+        color: var(--kit-ink);
+        font-family: var(--kit-font-body);
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      #gl {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+      }
+      #labels {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-no-timeline data-start="0" data-duration="45" data-width="1920" data-height="1080">
+      <div id="stage" class="clip" data-start="0" data-duration="45" data-track-index="1" data-layout-allow-overflow="">
+        <canvas id="gl" width="1920" height="1080"></canvas>
+        <div id="labels" data-layout-allow-overflow=""></div>
+        <div id="caps"></div>
+        <div id="chap"></div>
+      </div>
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40.32" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script type="module">
+      import * as THREE from "three";
+      import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+      import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+      import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
+      import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+
+      // V9「一柜」· 黏土版: KV cache told as a small plasticine town — one take, every analogy labelled with its real term.
+      //   写字机器人 = 大模型 · 字块 = token · 回头看的线 = 注意力 · 重算台阶 = 不用缓存每步重算 · 卡片柜 = KV cache
+      //   黄标签 = Key · 蓝卡片 = Value · 放大镜 = Query · 玻璃储藏室 = 显存 · 共用一套卡 = GQA · 按页给 = PagedAttention
+      //   卡片变薄 = 量化 · 天平 = 用显存换速度
+      // Every frame is a pure function of t (hf-seek); every narration time comes from the story (story.at / story.phrase).
+      const { clamp01, pr, lerp, E } = ExplainerCore;
+      const story = new ExplainerCore.Story(window.STORY);
+      const $ = (id) => document.getElementById(id);
+      const S = (line, unit, nth) => story.at(line, unit, nth);
+      const CL = Kit.clay(THREE, { RoundedBoxGeometry, EffectComposer, RenderPass, GTAOPass, OutputPass }, { canvas: $("gl"), shadowExtent: 26, sunPos: [-22, 40, 18], sunTarget: [-4, 0, 3] });
+      const { scene, V, M, rbox, mesh, slab, canvasTex, clayMap, textTexture, squash, hop, dotFace, noAO, noShadow } = CL;
+      Kit.layer = $("labels");
+
+      const AZ = (34 * Math.PI) / 180; // the camera's azimuth: every prop that carries a word turns to face it
+      const Y0 = 0.3;
+      const C = {
+        tile: "#fff3df", yel: "#ffd23f", sky: "#8fc8ff", red: "#ff8f80", cream: "#ffe7b3", white: "#ffffff", body: "#fff6ea", orange: "#ff9a5a",
+        wood: "#e2a46c", empty: "#efe6dc", glass: "#ffffff", mint: "#a6e6cc", pink: "#ffbccd", lilac: "#d5bdff", ink: "#4a3a31",
+      };
+
+      // ================= narration times (all from the story) =================
+      const T = {
+        da: S(1, "大"), wen: S(1, "问"), tok1: S(1, "token", 1), tok2: S(1, "token", 2), beng: S(1, "蹦"),
+        l2: story.line(2).start, xin2: S(2, "新"), hui: S(2, "回"), kan: S(2, "看"), suo: S(2, "所"), l2end: story.line(2).end,
+        l3: story.line(3).start, mei3: S(3, "每"), chong: S(3, "重"), yue: S(3, "越", 1), man: S(3, "慢"),
+        kv: S(4, "KV"), mei4: S(4, "每"), key: S(4, "Key"), val: S(4, "Value"), zhi4: S(4, "只"), cun4: S(4, "存"), lai4: S(4, "来"),
+        zhihou: S(5, "之"), zhi5: S(5, "只"), xin5: S(5, "新"), na5: S(5, "那"), ge5: S(5, "个"), zai: S(5, "再"), qu5: S(5, "去"), huan5: S(5, "缓"), cha: S(5, "查"), l5end: story.line(5).end,
+        daijia: S(6, "代"), xian6: S(6, "显"), huan6: S(6, "缓"), gen: S(6, "跟"), shang6: S(6, "上"), xia6: S(6, "下"), zhang: S(6, "涨"),
+        llama: S(7, "Llama"), mei7: S(7, "每"), ge7: S(7, "个"), tok7: S(7, "token"), dayue: S(7, "大"), half: S(7, "0.5"), k4: S(7, "4K"), shang7: S(7, "上"), xia7: S(7, "下"), wen7: S(7, "文"), gb2: S(7, "2", 2), l7end: story.line(7).end,
+        suoyi: S(8, "所"), gqa: S(8, "GQA"), gong: S(8, "共"), v8: S(8, "V"), paged: S(8, "PagedAttention"), an: S(8, "按"), pei: S(8, "配"), liang: S(8, "量"), ya: S(8, "压"), l8end: story.line(8).end,
+        end: story.line(9).start, xian9: S(9, "显"), huan9: S(9, "换"), su: S(9, "速"), zhi9: S(9, "只"), xin9: S(9, "新"), ge9: S(9, "个"),
+        recap: story.recap.start,
+      };
+
+      // ================= the ground =================
+      CL.diorama(-4.0, 4.4, 31.5, 18);
+      slab(-6.3, 5.4, 15.8, 3.2, Y0, Y0, "#ffd6c2", 0.3); // the writing desk lane
+      slab(-6.3, 1.7, 15.8, 3.0, Y0, Y0, "#e4dcf6", 0.3); // the re-do workshop
+      slab(2.9, 3.6, 6.4, 6.6, Y0, Y0, "#cdeedb", 0.3); // the storeroom lot
+      slab(-4.2, 9.4, 9.0, 3.6, Y0, Y0, "#fde6c6", 0.3); // the little square
+      [[-18.6, -1.8, 1.0], [-17.4, 9.6, 0.9], [-14.6, 11.6, 0.8], [-9.2, 9.9, 0.9], [1.0, 9.8, 0.85], [7.4, 8.8, 1.0], [9.6, -2.6, 0.95], [-1.6, -2.4, 0.9], [-12.4, -2.6, 1.0], [10.2, 6.4, 0.8]].forEach((p) => CL.tree(p[0], p[1], p[2]));
+
+      // ================= the writer robot = the model =================
+      const ROB = V(-12.7, Y0, 5.3);
+      const faceTex = (face) => canvasTex((g, w, h) => { g.fillStyle = "#ffffff"; g.fillRect(0, 0, w, h); CL.paintFace(g, face, 128, 132, 0.95); });
+      const RFACE = { open: faceTex("open"), happy: faceTex("happy"), tired: faceTex("tired"), lookR: faceTex("lookR") };
+      const writer = (() => {
+        const g = new THREE.Group();
+        g.position.copy(ROB);
+        g.rotation.y = AZ;
+        const wM = M(C.white);
+        mesh(rbox(1.3, 1.0, 1.0, 0.3), wM, 0, 0.62, 0, g);
+        mesh(new THREE.SphereGeometry(0.12, 16, 12), M(C.orange), 0, 0.72, 0.52, g, false);
+        const front = clayMap(RFACE.open, { transparent: false });
+        const head = mesh(rbox(1.7, 1.3, 1.2, 0.42), [wM, wM, wM, wM, front, wM], 0, 1.82, 0, g);
+        mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.42, 10), M(C.ink), 0, 2.66, 0, g);
+        mesh(new THREE.SphereGeometry(0.14, 16, 12), M(C.orange), 0, 2.9, 0, g);
+        const arm = (side) => {
+          const p = new THREE.Group();
+          p.position.set(side * 0.78, 0.98, 0.05);
+          g.add(p);
+          mesh(rbox(0.26, 0.66, 0.26, 0.11), wM, 0, -0.3, 0, p);
+          return p;
+        };
+        const sweat = mesh(new THREE.SphereGeometry(0.12, 16, 12), M(C.sky, { bumpMap: null, roughness: 0.3 }), -0.95, 2.2, 0.35, g, false);
+        sweat.scale.set(0.8, 1.25, 0.8);
+        scene.add(g);
+        return { g, front, head, armL: arm(-1), armR: arm(1), sweat };
+      })();
+      const HAND = V(ROB.x + 1.1, Y0 + 1.25, ROB.z + 0.45); // where a new tile pops out
+
+      // ================= token tiles (the answer, written one at a time) =================
+      const TOK = ["因为", "空气", "把", "蓝光", "散射", "得", "更", "多"];
+      const TX = (k) => -10.25 + 1.38 * k, TZ = 5.3;
+      const TILE_AT = (k) => V(TX(k), Y0 + 0.53, TZ);
+      const NT = 6; // tiles this film writes: 因为 空气 把 | 蓝光 | 散射 | 得
+      const TILES = [];
+      for (let k = 0; k < NT; k++) {
+        const side = M(C.tile);
+        const tex = { plain: textTexture(C.tile, TOK[k]), hero: textTexture(C.yel, TOK[k], { face: "open" }), look: textTexture(C.yel, TOK[k], { face: "lookL" }), happy: textTexture(C.yel, TOK[k], { face: "happy" }) };
+        const front = clayMap(tex.plain, { transparent: false });
+        const m = mesh(rbox(1.15, 1.05, 0.72, 0.2), [side, side, side, side, front, side], 0, 0, 0);
+        m.rotation.y = AZ;
+        TILES.push({ m, side, front, tex });
+      }
+      // when each tile pops out of the robot (it lands at `land`) and when it stops being "the new one"
+      const POP = [T.tok1, T.tok2, T.beng, T.xin2, T.xin5, T.xin9].map((land, k) => ({ land, from: land - 0.38 }));
+      const NEWUNTIL = [T.tok2 - 0.05, T.beng - 0.05, T.l2 + 0.3, T.l3 - 0.1, story.line(6).start, 99];
+
+      // attention threads: the new tile (蓝光) looks back along a clay noodle to every earlier tile
+      const THREADS = [2, 1, 0].map((k, j) => {
+        const a = V(TX(3), Y0 + 1.15, TZ), b = V(TX(k), Y0 + 1.15, TZ);
+        const mid = a.clone().lerp(b, 0.5);
+        mid.y += 0.9 + 0.35 * (3 - k);
+        const geo = new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(a, mid, b), 40, 0.055, 8, false);
+        const mm = mesh(geo, M("#ffbf2e", { bumpMap: null, roughness: 0.5, emissive: new THREE.Color("#ffb000"), emissiveIntensity: 0.25 }), 0, 0, 0, scene, false);
+        return { mm, geo, at: T.hui + j * 0.13 };
+      });
+
+      // ================= the re-do workshop: without a cache, step n re-makes the K/V card of all n tokens =================
+      const SZ = 1.75, CARD_H = 0.24;
+      const firstM = M(C.cream, { emissive: new THREE.Color("#ffd23f"), emissiveIntensity: 0 });
+      const wasteM = M(C.red, { emissive: new THREE.Color("#ff3b2a"), emissiveIntensity: 0 });
+      const CARDGEO = rbox(1.12, 0.2, 0.8, 0.07);
+      // the steps slow down as the line gets longer (that is the point): 8 steps between 每次 and 慢
+      const STEPS = (() => {
+        const w = [0, 1, 2, 3, 4, 5, 6, 7].map((n) => 0.18 + 0.05 * n), span = T.man + 0.14 - T.mei3, k = span / w.slice(1).reduce((a, b) => a + b, 0);
+        let at = T.mei3;
+        return w.map((x, n) => (n === 0 ? at : (at += w[n] * k)));
+      })();
+      const STAIR = [];
+      for (let n = 0; n < 8; n++) for (let k = 0; k <= n; k++) {
+        const level = n - k; // step n adds a card on columns 0..n; column k gets its (n-k)th
+        STAIR.push({ m: mesh(CARDGEO, level === 0 ? firstM : wasteM, TX(k), 0, SZ), k, level, at: STEPS[n] + k * 0.025 });
+      }
+      // little word plates in front of each column: the 8 tokens this answer would need
+      const PLATES = [];
+      for (let k = 0; k < 8; k++) {
+        const pl = mesh(rbox(0.92, 0.34, 0.1, 0.05), [M(C.tile), M(C.tile), M(C.tile), M(C.tile), clayMap(textTexture("#ffffff", TOK[k], { w: 256, h: 96, size: 64 }), { transparent: false }), M(C.tile)], TX(k), Y0 + 0.2, SZ + 0.62);
+        pl.rotation.y = AZ;
+        PLATES.push({ m: pl, at: STEPS[k] });
+      }
+
+      // ================= the card cabinet = KV cache =================
+      const CABP = V(2.9, Y0, 3.5);
+      const ROWS = 6, ROW_H = 0.36, BODY_TOP = 0.3 + ROWS * ROW_H + 0.16;
+      const rowY = (r) => 0.56 + r * ROW_H;
+      const KX = -0.88, VX = 0.52, FZ = 0.7;
+      const cab = new THREE.Group();
+      cab.position.copy(CABP);
+      cab.rotation.y = AZ;
+      scene.add(cab);
+      const cabBody = new THREE.Group(); // everything quantization squashes
+      cab.add(cabBody);
+      mesh(rbox(3.3, 0.3, 1.6, 0.12), M(C.wood), 0, 0.15, 0, cabBody);
+      mesh(rbox(3.1, BODY_TOP - 0.3, 1.4, 0.12), M(C.body), 0, 0.3 + (BODY_TOP - 0.3) / 2, -0.05, cabBody);
+      const emptyK = canvasTex((g, w, h) => { g.fillStyle = C.empty; g.fillRect(0, 0, w, h); g.fillStyle = "#d9cdbf"; g.beginPath(); g.arc(w / 2, h / 2, 9, 0, 7); g.fill(); }, 128, 48);
+      const vLines = (word) => canvasTex((g, w, h) => {
+        g.fillStyle = C.sky; g.fillRect(0, 0, w, h);
+        g.fillStyle = "rgba(255,255,255,0.85)";
+        [0.3, 0.52, 0.74].forEach((y, i) => { g.beginPath(); g.roundRect(150, h * y - 5, (i === 2 ? 180 : 300), 10, 5); g.fill(); });
+        g.font = '400 54px "ZCOOL KuaiLe", "Noto Sans SC", sans-serif'; g.fillStyle = "#33475e"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(word, 72, h * 0.54);
+      }, 512, 96);
+      const DRAW = [];
+      for (let r = 0; r < ROWS; r++) {
+        const word = r < 5 ? TOK[r] : "";
+        const kTex = textTexture(C.yel, word || "K", { w: 256, h: 80, size: 54 });
+        const vTex = vLines(word);
+        const kM = clayMap(emptyK, { transparent: false }), vM = clayMap(emptyK, { transparent: false });
+        const kD = mesh(rbox(0.95, 0.3, 0.14, 0.06), [M(C.empty), M(C.empty), M(C.empty), M(C.empty), kM, M(C.empty)], KX, rowY(r), FZ, cabBody);
+        const vD = mesh(rbox(1.68, 0.3, 0.14, 0.06), [M(C.empty), M(C.empty), M(C.empty), M(C.empty), vM, M(C.empty)], VX, rowY(r), FZ, cabBody);
+        DRAW.push({ kD, vD, kM, vM, kTex, vTex });
+      }
+      const crown = new THREE.Group();
+      cab.add(crown);
+      mesh(rbox(3.4, 0.46, 1.62, 0.2), M(C.yel), 0, 0.23, 0, crown);
+      dotFace(crown, 0.26, 0.82, 0.42, 1.5);
+      // the cabinet grows a section per 1K of context (each section is the same cabinet, full)
+      const gridTex = canvasTex((g, w, h) => {
+        g.fillStyle = C.body; g.fillRect(0, 0, w, h);
+        for (let r = 0; r < 6; r++) {
+          const y = 8 + r * 41;
+          g.fillStyle = C.yel; g.beginPath(); g.roundRect(14, y, 150, 33, 8); g.fill();
+          g.fillStyle = C.sky; g.beginPath(); g.roundRect(176, y, 322, 33, 8); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.8)"; g.beginPath(); g.roundRect(196, y + 13, 200, 7, 3); g.fill();
+        }
+      }, 512, 256);
+      const SEC_H = ROWS * ROW_H;
+      const SECTIONS = [0, 1, 2].map(() => {
+        const fm = clayMap(gridTex, { transparent: false });
+        const sm = M(C.body, { emissive: new THREE.Color("#ffd23f"), emissiveIntensity: 0 });
+        const m = mesh(rbox(3.1, SEC_H, 1.4, 0.12), [sm, sm, sm, sm, fm, sm], 0, 0, -0.05, cabBody);
+        return { m, fm, sm };
+      });
+      // where things sit in the world once the cabinet has landed
+      const cabRest = new THREE.Object3D();
+      cabRest.position.copy(CABP);
+      cabRest.rotation.y = AZ;
+      cabRest.updateMatrixWorld(true);
+      const cabW = (x, y, z) => V(x, y, z).applyMatrix4(cabRest.matrixWorld);
+
+      // ================= K tags and V cards: what each token makes, once =================
+      const kTagTex = textTexture(C.yel, "K", { size: 150, w: 256, h: 192 });
+      const vCardTex = canvasTex((g, w, h) => {
+        g.fillStyle = C.sky; g.fillRect(0, 0, w, h);
+        g.fillStyle = "rgba(255,255,255,0.85)";
+        [0.36, 0.56, 0.76].forEach((y, i) => { g.beginPath(); g.roundRect(118, h * y - 7, i === 2 ? 90 : 120, 14, 7); g.fill(); });
+        g.font = '400 120px "ZCOOL KuaiLe", "Noto Sans SC", sans-serif'; g.fillStyle = "#33475e"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("V", 62, h * 0.56);
+      }, 256, 176);
+      const KTAG = rbox(0.78, 0.58, 0.1, 0.05), VCARD = rbox(1.08, 0.75, 0.08, 0.04);
+      const kvMat = (tex, col) => clayMap(tex, { transparent: false });
+      const PAIRS = [0, 1, 2, 3, 4].map((k) => {
+        const km = mesh(KTAG, [M(C.yel), M(C.yel), M(C.yel), M(C.yel), kvMat(kTagTex), M(C.yel)], 0, 0, 0);
+        const vm = mesh(VCARD, [M(C.sky), M(C.sky), M(C.sky), M(C.sky), kvMat(vCardTex), M(C.sky)], 0, 0, 0);
+        km.rotation.y = vm.rotation.y = AZ;
+        const one = mesh(rbox(0.5, 0.36, 0.08, 0.05), [M(C.white), M(C.white), M(C.white), M(C.white), kvMat(textTexture("#ffffff", "×1", { size: 120, w: 256, h: 184, color: "#c2412f" })), M(C.white)], 0, 0, 0);
+        one.rotation.y = AZ;
+        return { km, vm, one, k };
+      });
+      // when each pair is made (Key / Value), and when it flies into its drawer
+      const PAIR_T = [0, 1, 2, 3].map((k) => ({ kAt: T.key + k * 0.07, vAt: T.val + k * 0.07, oneAt: T.zhi4 + k * 0.09, fly: T.cun4 + k * 0.16 }));
+      PAIR_T.push({ kAt: T.na5, vAt: T.na5 + 0.14, oneAt: 99, fly: T.ge5 + 0.02 });
+      const FLY = 0.42;
+
+      // ================= the magnifier = Query of the new token =================
+      const mag = new THREE.Group();
+      mesh(new THREE.TorusGeometry(0.36, 0.085, 16, 40), M("#ff8fa6"), 0, 0, 0, mag);
+      mesh(new THREE.CircleGeometry(0.33, 32), new THREE.MeshPhysicalMaterial({ color: "#e8f6ff", roughness: 0.15, transparent: true, opacity: 0.55 }), 0, 0, 0.01, mag, false);
+      const handle = mesh(rbox(0.14, 0.5, 0.14, 0.06), M("#ff8fa6"), 0.3, -0.42, 0, mag);
+      handle.rotation.z = 0.6;
+      mag.rotation.y = AZ;
+      scene.add(mag);
+      const WEIGHTS = [0.12, 0.3, 0.06, 0.46, 0.06]; // illustrative: 散射 attends most to 蓝光 and 空气
+      const WBARS = WEIGHTS.map((w, r) => {
+        const b = mesh(rbox(1, 0.18, 0.18, 0.06), M(C.yel, { emissive: new THREE.Color("#ffd23f"), emissiveIntensity: 0.3 }), 0, rowY(r), FZ + 0.1, cab, false);
+        return { b, w, at: 0 };
+      });
+      const BACK = WEIGHTS.map((w) => mesh(rbox(0.5, 0.34, 0.05, 0.03), [M(C.sky), M(C.sky), M(C.sky), M(C.sky), kvMat(vCardTex), M(C.sky)], 0, 0, 0)); // V's flowing back
+      BACK.forEach((b) => { b.rotation.y = AZ; });
+
+      // ================= the glass storeroom = GPU memory (显存) =================
+      const CASE_H = 11.2, CW = 2.25, CD = 1.3;
+      const caseG = new THREE.Group();
+      caseG.position.copy(CABP);
+      caseG.rotation.y = AZ;
+      scene.add(caseG);
+      const postM = M("#ffffff");
+      const POSTS = [[-CW, -CD], [CW, -CD], [-CW, CD], [CW, CD]].map(([x, z]) => mesh(rbox(0.18, CASE_H, 0.18, 0.08), postM, x, CASE_H / 2, z, caseG));
+      const RIMS = [
+        mesh(rbox(2 * CW + 0.18, 0.18, 0.18, 0.08), postM, 0, CASE_H, CD, caseG), mesh(rbox(2 * CW + 0.18, 0.18, 0.18, 0.08), postM, 0, CASE_H, -CD, caseG),
+        mesh(rbox(0.18, 0.18, 2 * CD, 0.08), postM, -CW, CASE_H, 0, caseG), mesh(rbox(0.18, 0.18, 2 * CD, 0.08), postM, CW, CASE_H, 0, caseG),
+      ];
+      const paneM = new THREE.MeshPhysicalMaterial({ color: "#f4fbff", roughness: 0.2, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide });
+      const backPane = mesh(new THREE.PlaneGeometry(2 * CW, CASE_H), paneM, 0, CASE_H / 2, -CD, caseG, false);
+      const sidePane = mesh(new THREE.PlaneGeometry(2 * CD, CASE_H), paneM, -CW, CASE_H / 2, 0, caseG, false);
+      sidePane.rotation.y = Math.PI / 2;
+      noAO(backPane, sidePane, ...POSTS, ...RIMS);
+      noShadow(backPane, sidePane, ...POSTS, ...RIMS);
+      // a ruler on the front-left post: one yellow tick per 1K of context
+      const TICKS = [0, 1, 2, 3].map((i) => mesh(rbox(0.5, 0.1, 0.1, 0.04), M(C.yel), -CW - 0.05, BODY_TOP + i * SEC_H, CD + 0.12, caseG, false));
+      const band = mesh(new THREE.PlaneGeometry(2 * CW, 0.5), new THREE.MeshBasicMaterial({ color: "#ff7a5c", transparent: true, opacity: 0, depthWrite: false }), 0, BODY_TOP + 3 * SEC_H + 0.46, -CD + 0.02, caseG, false);
+
+      // ================= one token's pair, opened up: 2 (K, V) × 32 layers =================
+      const sliceTex = canvasTex((g, w, h) => { g.fillStyle = C.yel; g.fillRect(0, 0, w * 0.36, h); g.fillStyle = C.sky; g.fillRect(w * 0.38, 0, w * 0.62, h); g.fillStyle = "#ffffff"; g.fillRect(w * 0.36, 0, w * 0.02, h); }, 256, 16);
+      const sliceM = clayMap(sliceTex, { transparent: false });
+      const acc = new THREE.Group();
+      cab.add(acc);
+      const SLICES = Array.from({ length: 32 }, () => mesh(rbox(2.6, 0.045, 0.8, 0.02), [sliceM, sliceM, sliceM, sliceM, sliceM, sliceM], 0, 0, 0, acc));
+
+      // ================= the fixes =================
+      // GQA: four readers (query heads) each used to need their own K/V; now they share one
+      const READ_C = ["#ffbccd", "#a6e6cc", "#a9cfff", "#d5bdff"];
+      const READERS = READ_C.map((col, k) => {
+        const g = new THREE.Group();
+        g.position.copy(cabW(3.5 + 1.25 * k, Y0, 0.9));
+        g.rotation.y = AZ;
+        mesh(new THREE.SphereGeometry(0.42, 28, 20), M(col), 0, 0.44, 0, g);
+        dotFace(g, 0.52, 0.38, 0.14, 0.9);
+        const sign = mesh(rbox(0.56, 0.32, 0.06, 0.04), [M("#ffffff"), M("#ffffff"), M("#ffffff"), M("#ffffff"), clayMap(textTexture("#ffffff", "Q" + (k + 1), { size: 120, w: 256, h: 146 }), { transparent: false }), M("#ffffff")], 0, 0.1, 0.46, g);
+        scene.add(g);
+        const mk = mesh(rbox(0.52, 0.39, 0.06, 0.03), [M(C.yel), M(C.yel), M(C.yel), M(C.yel), kvMat(kTagTex), M(C.yel)], 0, 0, 0);
+        const mv = mesh(rbox(0.72, 0.52, 0.05, 0.03), [M(C.sky), M(C.sky), M(C.sky), M(C.sky), kvMat(vCardTex), M(C.sky)], 0, 0, 0);
+        mk.rotation.y = mv.rotation.y = AZ;
+        return { g, mk, mv, at: T.gqa - 0.12 + k * 0.07, home: cabW(3.5 + 1.25 * k, Y0 + 1.55, 0.9) };
+      });
+      const SHARED = cabW(5.375, Y0 + 2.45, 0.9);
+      const GQA_THREADS = READERS.map((R, k) => {
+        const a = cabW(3.5 + 1.25 * k, Y0 + 0.95, 0.9), b = SHARED.clone().add(V(0, -0.3, 0));
+        const mid = a.clone().lerp(b, 0.5).add(V(0, 0.3, 0));
+        const geo = new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(a, mid, b), 24, 0.04, 8, false);
+        return { mm: mesh(geo, M("#ffbf2e", { bumpMap: null }), 0, 0, 0, scene, false), geo, at: T.gong + 0.32 + k * 0.06 };
+      });
+      // PagedAttention: the space a request used to reserve (mostly empty) becomes fixed-size pages, given out on demand
+      const stripeTex = canvasTex((g, w, h) => { g.fillStyle = "#ffe1dc"; g.fillRect(0, 0, w, h); g.strokeStyle = "#ff8f80"; g.lineWidth = 12; for (let x = -h; x < w + h; x += 36) { g.beginPath(); g.moveTo(x, h); g.lineTo(x + h, 0); g.stroke(); } }, 256, 64);
+      const PAGE_H = SEC_H / 4;
+      const PAGES = Array.from({ length: 8 }, (_, i) => {
+        const pm = new THREE.MeshBasicMaterial({ map: stripeTex, transparent: true, opacity: 0, depthWrite: false });
+        const m = mesh(rbox(3.1, PAGE_H - 0.06, 1.4, 0.06), pm, 0, 0, -0.05, cab, false);
+        return { m, pm, i };
+      });
+      const nextPage = mesh(rbox(3.1, PAGE_H - 0.06, 1.4, 0.06), new THREE.MeshBasicMaterial({ color: "#7fd9ad", transparent: true, opacity: 0, depthWrite: false }), 0, 0, -0.05, cab, false);
+      const poofs = [0, 1, 2].map(() => CL.poof(scene, 6, 0.5));
+
+      // ================= the balance: memory traded for speed =================
+      const BALP = V(-5.6, Y0, 10.4);
+      const bal = new THREE.Group();
+      bal.position.copy(BALP);
+      bal.rotation.y = AZ;
+      scene.add(bal);
+      mesh(rbox(1.3, 0.3, 1.0, 0.12), M(C.wood), 0, 0.15, 0, bal);
+      mesh(new THREE.CylinderGeometry(0.12, 0.16, 2.2, 16), M("#ffffff"), 0, 1.4, 0, bal);
+      mesh(new THREE.SphereGeometry(0.22, 18, 14), M(C.yel), 0, 2.5, 0, bal);
+      const beam = new THREE.Group();
+      beam.position.set(0, 2.5, 0);
+      bal.add(beam);
+      mesh(rbox(3.8, 0.16, 0.24, 0.07), M("#ffffff"), 0, 0, 0, beam);
+      const pans = [-1, 1].map((s) => {
+        const hang = new THREE.Group();
+        hang.position.set(s * 1.75, 0, 0);
+        beam.add(hang);
+        [-0.32, 0.32].forEach((dx) => mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.0, 6), M(C.ink), dx, -0.5, 0, hang, false));
+        mesh(new THREE.CylinderGeometry(0.62, 0.5, 0.14, 28), M(s < 0 ? C.sky : C.pink), 0, -1.05, 0, hang);
+        return hang;
+      });
+      const memBlock = mesh(rbox(0.9, 0.62, 0.62, 0.12), [M(C.body), M(C.body), M(C.body), M(C.body), clayMap(gridTex, { transparent: false }), M(C.body)], 0, 0, 0, pans[0]);
+      const bolt = (() => {
+        const sh = new THREE.Shape();
+        [[0.1, 0.62], [-0.32, 0.0], [-0.04, 0.0], [-0.16, -0.62], [0.32, 0.08], [0.04, 0.08], [0.2, 0.62]].forEach(([x, y], i) => (i ? sh.lineTo(x, y) : sh.moveTo(x, y)));
+        const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.18, bevelEnabled: true, bevelThickness: 0.07, bevelSize: 0.06, bevelSegments: 4 });
+        geo.translate(0, 0, -0.09);
+        return mesh(geo, M(C.yel, { emissive: new THREE.Color("#ffd23f"), emissiveIntensity: 0.2 }), 0, 0, 0, pans[1]);
+      })();
+      // the spotlight on the newest token
+      const spotM = new THREE.MeshBasicMaterial({ color: "#fff1a8", transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide });
+      const spot = mesh(new THREE.ConeGeometry(1.05, 5.2, 40, 1, true), spotM, TX(5), Y0 + 2.6, TZ, scene, false);
+      const spotFloorM = new THREE.MeshBasicMaterial({ color: "#ffe680", transparent: true, opacity: 0, depthWrite: false });
+      const spotFloor = mesh(new THREE.CircleGeometry(1.0, 40), spotFloorM, TX(5), Y0 + 0.02, TZ, scene, false);
+      spotFloor.rotation.x = -Math.PI / 2;
+      noAO(spot, spotFloor);
+      noShadow(spot, spotFloor, band, nextPage, ...PAGES.map((p) => p.m));
+
+      // ================= labels, notes, numbers, bars, formulas =================
+      const STK = [];
+      const stick = (w, at, draw) => { STK.push({ w, at, draw }); return w; };
+      function placeStickers(t) {
+        for (const s of STK) {
+          const live = s.w.live(t);
+          if (!live) { s.draw ? s.draw(t, null, null) : s.w.render(t, null, null); continue; }
+          const p = s.at ? CL.toScreen(s.at(t)) : { x: undefined, y: undefined };
+          s.draw ? s.draw(t, p.x, p.y) : s.w.render(t, p.x, p.y);
+        }
+      }
+      const tileTop = (k, dy = 0) => () => TILES[k].m.position.clone().add(V(0, 0.75 + dy, 0));
+      // chapter 1 · the problem
+      stick(Kit.label({ text: "天空为什么是蓝的？", tone: "sky", stem: true, win: [T.wen - 0.1, T.l2 - 0.05] }), () => ROB.clone().add(V(0, 3.35, 0)));
+      stick(Kit.label({ text: "写字机器人", sub: "= 大模型", stem: "up", win: [T.da, T.l2 - 0.05] }), () => ROB.clone().add(V(0.2, 0.15, 0.9)));
+      stick(Kit.label({ text: "字块", sub: "= token", tone: "accent", stem: true, win: [T.tok1 + 0.05, T.l2 - 0.05] }), tileTop(0, 0.15));
+      stick(Kit.note("自回归：每次只生成 1 个 token", { win: [T.tok1 - 0.2, T.l2 - 0.05] }));
+      stick(Kit.label({ text: "新来的字块", tone: "accent", stem: true, win: [T.xin2 - 0.05, T.hui - 0.02] }), tileTop(3, 0.15));
+      stick(Kit.label({ text: "回头看", sub: "= 注意力", tone: "accent", stem: true, win: [T.hui, T.l2end + 0.15] }), tileTop(3, 1.25));
+      stick(Kit.note("注意力：新 token 要和前面每一个比一比", { win: [T.xin2 + 0.1, T.l2end + 0.15] }));
+      stick(Kit.label({ text: "重算台阶", sub: "不用缓存", tone: "warn", stem: true, win: [T.mei3, T.kv + 0.1] }), () => V(TX(1), Y0 + 2.35, SZ));
+      const perStep = Kit.number({ value: 1, unit: "张", caption: "这一步要重算的 K/V", size: "md", tone: "warn", plaque: true, win: [T.mei3 + 0.05, T.kv + 0.1], ax: 0, ay: 0.5, dx: 30 });
+      stick(perStep, () => V(TX(7) + 0.7, Y0 + 1.4, SZ), (t, x, y) => {
+        let n = 0;
+        STEPS.forEach((at) => { if (t >= at) n++; });
+        perStep.set(Math.max(1, n));
+        perStep.render(t, null, x, y);
+      });
+      stick(Kit.note("不用缓存：第 n 步要把前面 n 个全部重算", { win: [T.mei3 - 0.1, T.kv + 0.1] }));
+      // chapter 2 · the method
+      stick(Kit.label({ text: "卡片柜", sub: "= KV cache", tone: "accent", stem: true, win: [T.kv + 0.15, T.key - 0.35] }), () => cabW(0, BODY_TOP + 0.6, 0));
+      stick(Kit.label({ text: "黄标签", sub: "= Key，用来匹配", tone: "accent", stem: "up", ax: 0.62, win: [T.key, T.cun4 + 0.1] }), () => TILE_AT(0).add(V(-0.1, -0.6, 0.5)));
+      stick(Kit.label({ text: "蓝卡片", sub: "= Value，被取走的内容", tone: "sky", stem: "up", ax: 0.3, win: [T.val, T.cun4 + 0.1] }), () => TILE_AT(3).add(V(0.2, -0.6, 0.5)));
+      stick(Kit.label({ text: "只算一次", sub: "×1", tone: "accent", ax: 0, ay: 0.5, win: [T.zhi4, T.cun4 + 0.3] }), () => V(TX(3) + 1.0, Y0 + 2.3, TZ));
+      stick(Kit.note("K 用来匹配，V 是被取走的内容", { win: [T.key - 0.1, story.line(4).end + 0.15] }));
+      stick(Kit.label({ text: "K", size: "sm", tone: "accent", stem: true, win: [T.cun4 + 0.4, story.line(6).start - 0.1] }), () => cabW(KX, BODY_TOP + 0.62, 0.3));
+      stick(Kit.label({ text: "V", size: "sm", tone: "sky", stem: true, win: [T.cun4 + 0.4, story.line(6).start - 0.1] }), () => cabW(VX, BODY_TOP + 0.62, 0.3));
+      stick(Kit.label({ text: "只算新来的这一个", tone: "accent", stem: true, win: [T.zhi5 - 0.05, T.zai] }), tileTop(4, 0.15));
+      stick(Kit.label({ text: "放大镜", sub: "= Query", tone: "default", stem: "up", win: [T.zai + 0.1, T.l5end + 0.15] }), () => mag.position.clone().add(V(0, -0.6, 0.3)));
+      const cost = Kit.bars({ title: "这一步要算几份 K、V", rows: [{ label: "不缓存", value: 5, max: 5, tone: "warn", valueText: "5 份" }, { label: "用缓存", value: 1, max: 5, valueText: "1 份" }], win: [T.na5 - 0.1, story.line(6).start - 0.15], x: 1856, y: 140, ax: 1, ay: 0, clamp: false });
+      stick(cost, null, (t) => cost.render(t, [E.o3(pr(t, T.na5, 0.4)), E.o3(pr(t, T.ge5, 0.4))]));
+      stick(Kit.note("新 token 只算自己的 Q、K、V，其余去柜里查", { win: [T.zhi5 - 0.1, story.line(6).start - 0.15] }));
+      // chapter 3 · the cost
+      stick(Kit.label({ text: "玻璃储藏室", sub: "= 显存", tone: "ink", icon: "dot", stem: true, win: [T.xian6 + 0.1, T.llama - 0.05] }), () => caseG.position.clone().add(V(0, CASE_H + 0.3, 0)));
+      const ctx = Kit.number({ value: 1, unit: "token", caption: "上下文长度", size: "md", plaque: true, win: [T.huan6 - 0.1, T.llama - 0.1], ax: 1, ay: 0.5, dx: -40 });
+      const CTX_AT = [T.huan6, T.gen, T.shang6, T.xia6];
+      stick(ctx, () => cabW(-CW, 4.6, CD), (t, x, y) => {
+        let n = 0;
+        CTX_AT.forEach((at) => { if (t >= at) n++; });
+        ctx.set(Math.max(1, n) + "K");
+        ctx.render(t, null, x, y);
+      });
+      stick(Kit.note("显存占用 ∝ 上下文长度：缓存跟着一起涨", { win: [T.gen - 0.1, T.llama - 0.1] }));
+      stick(Kit.label({ text: "Llama 2 · 7B", tone: "ink", icon: "dot", win: [T.llama, story.chapters[2].end - 0.05], x: 96, y: 186, ax: 0, ay: 0, clamp: false }), null);
+      const f1 = Kit.formula({
+        terms: [
+          { text: "2", sub: "K、V", t: T.mei7 },
+          { op: "×", text: "32", sub: "层", t: T.ge7 },
+          { op: "×", text: "4096", sub: "维", t: T.tok7 },
+          { op: "×", text: "2 字节", sub: "FP16", t: T.dayue },
+          { op: "≈", text: "0.5 MB", sub: "每个 token", t: T.half, tone: "accent" },
+        ],
+        win: [T.mei7 - 0.1, story.chapters[2].end - 0.05], x: 96, y: 330, ax: 0, ay: 0.5, clamp: false,
+      });
+      stick(f1, null, (t) => f1.render(t));
+      const f2 = Kit.formula({
+        terms: [
+          { text: "0.5 MB", sub: "每个 token", t: T.k4 - 0.25 },
+          { op: "×", text: "4096", sub: "个 token（4K）", t: T.k4 },
+          { op: "≈", text: "2 GB", sub: "一条请求", t: T.gb2, tone: "warn" },
+        ],
+        win: [T.k4 - 0.35, story.chapters[2].end - 0.05], x: 96, y: 492, ax: 0, ay: 0.5, clamp: false,
+      });
+      stick(f2, null, (t) => f2.render(t));
+      stick(Kit.label({ text: "一格 ≈ 0.5 MB", tone: "accent", ax: 0, ay: 0.5, win: [T.half, T.k4 + 0.2] }), () => cabW(1.5, rowY(0), 1.5));
+      stick(Kit.label({ text: "≈ 2 GB", tone: "warn", stem: true, win: [T.gb2, story.chapters[2].end - 0.05] }), () => cabW(0, BODY_TOP + 3 * SEC_H + 0.75, 0));
+      stick(Kit.note("这只是一条请求；并发越多，乘得越多", { win: [T.xia7, story.chapters[2].end - 0.05] }));
+      // chapter 4 · the fixes
+      stick(Kit.label({ text: "GQA", sub: "几个 Q 共用一份 K、V", tone: "accent", stem: true, win: [T.gqa, T.paged - 0.05] }), () => SHARED.clone().add(V(0, 0.55, 0)));
+      stick(Kit.note("例：Llama 3 8B 的 32 个头共用 8 份 K/V", { win: [T.gqa + 0.05, T.paged - 0.05] }));
+      stick(Kit.label({ text: "÷4", tone: "ok", ax: 0, ay: 0.5, win: [T.v8, T.paged + 0.3] }), () => cabW(1.75, BODY_TOP + 0.2, 0.3));
+      stick(Kit.label({ text: "PagedAttention", sub: "按页分配", tone: "accent", stem: true, win: [T.paged, T.liang - 0.05] }), () => cabW(0, BODY_TOP + 8 * (PAGE_H + 0.07) + 0.85, 0));
+      stick(Kit.note("像活页本：用一页给一页，几乎不留空", { win: [T.an - 0.1, T.liang - 0.05] }));
+      stick(Kit.label({ text: "量化", sub: "FP16 → INT8", tone: "accent", stem: true, win: [T.liang, story.chapters[3].end - 0.05] }), () => cabW(0, BODY_TOP * cabBody.scale.y + 0.75, 0));
+      stick(Kit.label({ text: "÷2", tone: "ok", ax: 0, ay: 0.5, win: [T.ya, story.chapters[3].end - 0.05] }), () => cabW(1.75, BODY_TOP * 0.55 * 0.6, 0.3));
+      stick(Kit.note("卡片变薄：每个数用更少的位存，减半", { win: [T.liang - 0.05, story.chapters[3].end - 0.05] }));
+      // the close
+      stick(Kit.label({ text: "显存", tone: "sky", size: "sm", stem: "up", win: [T.xian9, T.recap - 0.1] }), () => pans[0].localToWorld(V(0, -1.35, 0.5)));
+      stick(Kit.label({ text: "速度", tone: "accent", size: "sm", stem: "up", win: [T.su, T.recap - 0.1] }), () => pans[1].localToWorld(V(0, -1.35, 0.5)));
+
+      // ================= captions, chapter chip, the closing line, the recap =================
+      const caps = Kit.captions($("caps"), story);
+      const chap = Kit.chapters($("chap"), story);
+      const title = Kit.title(story, { parent: $("stage") });
+      const recap = Kit.recap(story, { analogies: ["重算台阶", "卡片柜", "玻璃储藏室", "共用 · 分页 · 变薄"], tagline: false });
+      const RECAP_AT = [
+        [() => V(TX(1), Y0 + 2.4, SZ), 0.5, 1],
+        [() => V(TX(2), Y0, TZ + 2.3), 0.5, 0],
+        [() => cabW(CW + 0.2, CASE_H - 1.2, 0), 0, 0.5],
+        [() => cabW(5.375, Y0, 1.6), 0.5, 0],
+      ];
+      function placeRecap(t) {
+        if (t < T.recap - 0.1) { recap.render(t, {}); return; }
+        recap.render(t, {
+          center: CL.toScreen(cabW(0, BODY_TOP * cabBody.scale.y + 0.75, 0)),
+          points: RECAP_AT.map(([at, ax, ay]) => Object.assign(CL.toScreen(at()), { ax, ay })),
+        });
+      }
+
+      // ================= camera: one take through the town =================
+      // t, target x, y, z, frustum width, azimuth (deg)
+      const A = 34;
+      const CAM = [
+        [-1.0, -11.3, 1.7, 5.2, 12.1, A - 3.6], [0.0, -10.9, 1.7, 5.2, 12.5, A - 3], [T.tok1, -10.4, 1.7, 5.2, 13.2, A - 2], [T.beng + 0.4, -9.9, 1.8, 5.1, 14.2, A - 1],
+        [T.xin2, -9.2, 2.1, 5.0, 14.0, A], [T.l2end, -8.6, 2.1, 4.8, 13.0, A],
+        [T.mei3 + 0.1, -5.8, 1.6, 2.8, 18.5, A], [T.man + 0.4, -5.9, 1.7, 2.7, 19.0, A + 1],
+        [T.kv + 0.5, -3.4, 2.0, 4.2, 23.0, A + 1], [T.key - 0.15, -7.4, 1.7, 4.8, 16.5, A], [T.cun4, -5.6, 1.8, 4.6, 19.0, A],
+        [T.lai4 + 0.15, -2.4, 1.8, 4.3, 22.5, A], [T.xin5, -1.6, 1.6, 4.4, 18.5, A], [T.qu5, 0.6, 1.8, 4.0, 14.5, A], [T.l5end, 0.8, 1.8, 3.9, 14.8, A],
+        [T.xian6 - 0.2, 2.2, 3.6, 3.5, 19.5, A], [T.xia6, 2.2, 5.0, 3.5, 22.5, A], [T.zhang + 0.3, 2.2, 5.3, 3.5, 23.5, A],
+        [T.llama + 0.2, -4.4, 2.2, 3.5, 27.6, A], [T.k4 - 0.5, -3.6, 2.5, 3.5, 26.2, A], [T.l7end, -2.8, 2.8, 3.5, 24.8, A],
+        [T.gqa - 0.2, 5.6, 4.2, 2.9, 22.0, A], [T.v8 + 0.2, 5.4, 3.5, 2.9, 21.0, A], [T.paged + 0.1, 5.2, 5.0, 3.0, 21.5, A], [T.liang, 4.8, 2.5, 3.2, 18.5, A], [T.l8end, 4.3, 2.3, 3.3, 18.0, A],
+        [T.end + 0.9, -6.1, 2.8, 7.0, 18.6, A - 1], [T.ge9 + 0.2, -5.7, 2.9, 7.3, 17.6, A - 0.5],
+        [T.recap + 0.5, -2.0, 2.4, 2.4, 29.5, A], [45.0, -1.2, 2.4, 2.1, 32.6, A + 0.8], [46.0, -1.0, 2.4, 2.0, 33.2, A + 1.0],
+      ];
+
+      // ================= the frame =================
+      function renderAt(t) {
+        CL.setIso(CAM, t);
+
+        // --- the writer: a little press with its right arm each time a tile pops out; tired by the end of the re-do ---
+        let press = 0;
+        POP.forEach((p) => { press = Math.max(press, Math.sin(Math.PI * pr(t, p.from - 0.1, 0.4))); });
+        STEPS.forEach((at) => { press = Math.max(press, 0.7 * Math.sin(Math.PI * pr(t, at - 0.12, 0.26))); });
+        writer.armR.rotation.x = -1.3 * press;
+        writer.armL.rotation.x = -0.5 * Math.sin(Math.PI * pr(t, T.da, 0.6));
+        const tired = t >= T.yue && t < T.kv + 0.2;
+        writer.front.map = tired ? RFACE.tired : t >= T.lai4 && t < story.line(6).start ? RFACE.happy : t >= T.xin9 + 0.3 ? RFACE.happy : RFACE.open;
+        const sw = pr(t, T.yue + 0.1, 0.9);
+        writer.sweat.visible = sw > 0 && sw < 1;
+        writer.sweat.position.set(-0.95, 2.25 - 0.7 * E.i2(sw), 0.35);
+        writer.g.position.y = ROB.y;
+        squash(writer.g, t, T.da - 0.05, 0.6);
+
+        // --- tiles pop out of the robot one at a time; the newest is yellow with a face ---
+        const dimFor5 = E.o2(pr(t, T.zhi5, 0.3)) * (1 - E.o2(pr(t, T.cha + 0.2, 0.4)));
+        const dimFor9 = E.o2(pr(t, T.zhi9, 0.3));
+        TILES.forEach((Tl, k) => {
+          const p = POP[k];
+          const u = E.io2(pr(t, p.from, p.land - p.from));
+          Tl.m.visible = t >= p.from;
+          if (!Tl.m.visible) return;
+          Tl.m.position.copy(hop(HAND, TILE_AT(k), u, 1.6));
+          const s = Math.max(0.001, 0.4 + 0.6 * E.back(pr(t, p.from, 0.22)));
+          Tl.m.scale.setScalar(s);
+          if (t >= p.land) squash(Tl.m, t, p.land);
+          const isNew = t < NEWUNTIL[k];
+          const looking = k === 3 && t >= T.hui - 0.05 && t < T.l2end + 0.1;
+          Tl.front.map = isNew ? (looking ? Tl.tex.look : k === 5 && t > T.xin9 + 0.3 ? Tl.tex.happy : Tl.tex.hero) : Tl.tex.plain;
+          // the earlier tiles light up as they are looked at (注意力), and when the Q finds them
+          let glow = 0;
+          if (k < 3) glow = 0.55 * Math.sin(Math.PI * pr(t, THREADS[2 - k].at + 0.25, 0.5)) + 0.6 * Math.sin(Math.PI * pr(t, T.suo - 0.05, 0.9));
+          if (k < 4) glow = Math.max(glow, 0.5 * Math.sin(Math.PI * pr(t, T.mei4 + k * 0.2, 0.5)));
+          if (k === 4) glow = 0.7 * Math.sin(Math.PI * pr(t, T.cha + 0.35, 0.6));
+          Tl.front.emissiveIntensity = Math.max(0, glow);
+          // only the new one computes: the others go quiet
+          const dim = (k < 4 ? dimFor5 : 0) + (k < 5 ? dimFor9 : 0);
+          const c = 1 - 0.32 * Math.min(1, dim);
+          Tl.front.color.setScalar(c);
+          Tl.side.color.set(C.tile).multiplyScalar(c);
+        });
+        // attention threads grow from the new tile back to each earlier one, then fade
+        THREADS.forEach((th) => {
+          const u = E.o3(pr(t, th.at, 0.32)), out = pr(t, T.l2end, 0.3);
+          th.mm.visible = u > 0 && out < 1;
+          th.geo.setDrawRange(0, Math.round(u * 40) * 8 * 6);
+          th.mm.scale.setScalar(1);
+          th.mm.material.opacity = 1;
+          th.mm.position.y = -2.5 * E.i2(out);
+        });
+
+        // --- the re-do workshop: each step drops a card on every column so far; the re-made ones are waste ---
+        STAIR.forEach((c) => {
+          const rest = Y0 + 0.1 + c.level * CARD_H;
+          c.m.visible = t >= c.at;
+          if (!c.m.visible) return;
+          const u = E.i2(pr(t, c.at, 0.2));
+          c.m.position.set(TX(c.k), rest + 1.5 * (1 - u), SZ);
+          c.m.scale.setScalar(1);
+          if (u >= 1) squash(c.m, t, c.at + 0.2, 0.7);
+        });
+        PLATES.forEach((pl) => { const u = pr(t, pl.at - 0.1, 0.3); pl.m.visible = u > 0; pl.m.scale.setScalar(Math.max(0.001, E.back(u))); });
+        wasteM.emissiveIntensity = 0.55 * Math.sin(Math.PI * pr(t, T.chong - 0.05, 0.7)) + 0.35 * Math.sin(Math.PI * pr(t, T.yue, 0.8));
+        firstM.emissiveIntensity = 0.3 * Math.sin(Math.PI * pr(t, T.mei3, 0.5));
+
+        // --- the cabinet drops in on "KV cache" ---
+        const land = T.kv + 0.42;
+        const du = E.i2(pr(t, T.kv - 0.05, 0.47));
+        cab.visible = t >= T.kv - 0.05;
+        cab.position.set(CABP.x, CABP.y + 7 * (1 - du), CABP.z);
+        cab.scale.setScalar(1);
+        if (t >= land) squash(cab, t, land, 0.8);
+
+        // --- each token makes its K tag (Key) and V card (Value) once, then they fly into a drawer ---
+        PAIRS.forEach((P, k) => {
+          const pt = PAIR_T[k], tile = TILE_AT(k);
+          const kHome = tile.clone().add(V(-0.45, 1.2, 0.2)), vHome = tile.clone().add(V(0.32, 1.42, -0.05));
+          const kIn = cabW(KX, rowY(k), FZ + 0.02), vIn = cabW(VX, rowY(k), FZ + 0.02);
+          const ku = pr(t, pt.kAt, 0.3), vu = pr(t, pt.vAt, 0.3);
+          const fk = E.io2(pr(t, pt.fly, FLY)), fv = E.io2(pr(t, pt.fly + 0.08, FLY));
+          P.km.visible = ku > 0 && fk < 1;
+          P.vm.visible = vu > 0 && fv < 1;
+          P.km.position.copy(hop(kHome, kIn, fk, 2.4));
+          P.vm.position.copy(hop(vHome, vIn, fv, 2.6));
+          P.km.scale.setScalar(Math.max(0.001, E.back(ku) * (1 - 0.45 * fk)));
+          P.vm.scale.setScalar(Math.max(0.001, E.back(vu) * (1 - 0.6 * fv)));
+          const ou = pr(t, pt.oneAt, 0.25);
+          P.one.visible = ou > 0 && t < pt.fly;
+          P.one.position.copy(tile.clone().add(V(-0.05, 2.25, 0.3)));
+          P.one.scale.setScalar(Math.max(0.001, E.back(ou)));
+          const filled = t >= pt.fly + 0.08 + FLY;
+          const D = DRAW[k];
+          D.kM.map = filled ? D.kTex : emptyK;
+          D.vM.map = filled ? D.vTex : emptyK;
+          // a drawer slides out to take its card, then closes
+          const open = Math.sin(Math.PI * pr(t, pt.fly + 0.05, FLY + 0.25));
+          D.kD.position.z = D.vD.position.z = FZ + 0.35 * open;
+          const lit = 0.6 * Math.sin(Math.PI * pr(t, pt.fly + FLY, 0.5));
+          D.kM.emissiveIntensity = D.vM.emissiveIntensity = lit;
+        });
+        // the last empty drawer fills as the storeroom takes over (more context, same cabinet)
+        DRAW[5].kM.map = t >= T.huan6 ? DRAW[5].kTex : emptyK;
+        DRAW[5].vM.map = t >= T.huan6 ? DRAW[5].vTex : emptyK;
+
+        // --- the magnifier (Query) of the new token scans the K column; weights; V's flow back ---
+        const magOn = t >= T.zai - 0.05 && t < T.cha + 0.9;
+        mag.visible = magOn;
+        const magStart = TILE_AT(4).add(V(0, 1.7, 0.3));
+        const scanTop = cabW(KX, rowY(4), FZ + 0.6), scanBot = cabW(KX, rowY(0), FZ + 0.6);
+        const scanU = E.io2(pr(t, T.huan5 - 0.05, T.cha - T.huan5 - 0.05));
+        if (t < T.huan5) mag.position.copy(hop(magStart, scanTop, E.io2(pr(t, T.zai, T.huan5 - T.zai)), 1.4));
+        else mag.position.copy(scanTop.clone().lerp(scanBot, scanU));
+        mag.scale.setScalar(Math.max(0.001, E.back(pr(t, T.zai - 0.05, 0.3)) * (1 - pr(t, T.cha + 0.6, 0.3))));
+        WBARS.forEach((B, r) => {
+          const passAt = T.huan5 - 0.05 + (T.cha - T.huan5 - 0.05) * ((4 - r) / 4);
+          const u = E.back(pr(t, passAt, 0.28)) * (1 - pr(t, story.line(6).start - 0.4, 0.4));
+          const len = 0.3 + 2.4 * B.w;
+          B.b.visible = u > 0.001;
+          B.b.scale.set(Math.max(0.001, u * len), 1, 1);
+          B.b.position.set(-1.62 - (u * len) / 2, rowY(r), FZ - 0.1);
+        });
+        BACK.forEach((b, r) => {
+          const a = T.cha + 0.04 * r, u = E.io2(pr(t, a, 0.5));
+          b.visible = u > 0 && u < 1;
+          b.position.copy(hop(cabW(VX, rowY(r), FZ + 0.2), TILE_AT(4).add(V(0, 0.4, 0.2)), u, 1.6));
+          b.scale.setScalar(0.5 + 1.1 * WEIGHTS[r]);
+        });
+
+        // --- the storeroom (显存) rises around the cabinet; the cabinet grows a section per 1K of context ---
+        const cu = E.o3(pr(t, T.xian6 - 0.1, 0.55));
+        caseG.visible = cu > 0;
+        POSTS.forEach((p) => { p.scale.y = Math.max(0.001, cu); p.position.y = (CASE_H * cu) / 2; });
+        RIMS.forEach((r) => { r.visible = cu > 0.98; });
+        paneM.opacity = 0.22 * cu;
+        TICKS.forEach((tk, i) => { tk.visible = t >= CTX_AT[i]; tk.scale.setScalar(Math.max(0.001, E.back(pr(t, CTX_AT[i], 0.3)))); });
+        band.material.opacity = 0.35 * E.o2(pr(t, T.gb2, 0.3)) * (1 - pr(t, T.suoyi, 0.4));
+        const SEC_DROP = [T.gen, T.shang6, T.xia6];
+        const SEC_GONE = [T.gong + 0.39, T.gong + 0.22, T.gong + 0.05];
+        // each section stretches up out of the one below (clay grows, it is not stacked), and pancakes away on GQA
+        let top = BODY_TOP;
+        SECTIONS.forEach((s, i) => {
+          const grow = E.back(pr(t, SEC_DROP[i] - 0.18, 0.36)), gone = E.io2(pr(t, SEC_GONE[i], 0.3));
+          const h = Math.max(0.001, grow * (1 - gone));
+          s.m.visible = grow > 0 && gone < 1;
+          s.m.scale.set(1 + 0.08 * Math.sin(Math.PI * Math.min(1, grow)) + 0.15 * Math.sin(Math.PI * gone), h, 1);
+          s.m.position.y = top + (SEC_H * h) / 2;
+          top += SEC_H * h;
+          // 4K: each 1K lights in turn; 2 GB: the whole tower warms
+          const g1 = 0.55 * Math.sin(Math.PI * pr(t, [T.shang7, T.xia7, T.wen7][i], 0.5));
+          const g2 = 0.35 * E.o2(pr(t, T.gb2, 0.3)) * (1 - pr(t, T.suoyi, 0.4));
+          s.sm.emissive.set(g2 > g1 ? "#ff7a5c" : "#ffd23f");
+          s.fm.emissive.set(g2 > g1 ? "#ff7a5c" : "#ffd23f");
+          s.sm.emissiveIntensity = s.fm.emissiveIntensity = Math.max(g1, g2 * 0.6);
+        });
+        // the tower bumps on 涨
+        const bump = Math.sin(Math.PI * pr(t, T.zhang, 0.3)) * 0.06;
+        // quantization: every card gets thinner — the whole cabinet halves
+        const qz = 1 - 0.45 * E.io3(pr(t, T.liang + 0.05, 0.45));
+        cabBody.scale.y = qz * (1 + bump);
+        const qPop = Math.sin(Math.PI * pr(t, T.ya, 0.25)) * 0.05;
+        cabBody.scale.x = cabBody.scale.z = 1 + qPop;
+        crown.position.y = top * cabBody.scale.y;
+        // one token's pair, opened: 2 (K, V) × 32 layers, then folded back to one drawer ≈ 0.5 MB
+        const pull = Math.sin(Math.PI * pr(t, T.mei7 - 0.1, T.k4 - T.mei7 + 0.1));
+        const fan = E.o3(pr(t, T.ge7, 0.45)) * (1 - E.io2(pr(t, T.half - 0.15, 0.35)));
+        acc.visible = pull > 0.02;
+        acc.position.set(0, rowY(0) - 0.1, FZ + 0.3 + 0.9 * pull);
+        SLICES.forEach((sl, i) => { sl.position.set(0, i * 0.1 * fan, 0); sl.visible = i === 0 || fan > 0.01; });
+
+        // --- GQA: four readers, four copies of K/V → one shared copy; the tower ÷4 ---
+        READERS.forEach((R, k) => {
+          const u = pr(t, R.at, 0.3);
+          R.g.visible = u > 0;
+          R.g.scale.setScalar(Math.max(0.001, E.back(u)));
+          const mu = E.io2(pr(t, T.gong + 0.02 * k, 0.5));
+          const pos = R.home.clone().lerp(SHARED, mu);
+          R.mk.visible = R.mv.visible = u > 0 && (k === 1 || mu < 1);
+          const sc = Math.max(0.001, E.back(pr(t, R.at + 0.1, 0.3))) * (1 + (k === 1 ? 0.5 * mu : 0));
+          R.mk.position.copy(pos.clone().add(V(-0.26, 0.02, 0.03)));
+          R.mv.position.copy(pos.clone().add(V(0.2, 0.1, -0.03)));
+          R.mk.scale.setScalar(sc);
+          R.mv.scale.setScalar(sc);
+        });
+        GQA_THREADS.forEach((th) => {
+          const u = E.o3(pr(t, th.at, 0.3));
+          th.mm.visible = u > 0;
+          th.geo.setDrawRange(0, Math.round(u * 24) * 8 * 6);
+        });
+        poofs.forEach((pf, i) => pf.render(t, SEC_GONE[i], cabW(0, BODY_TOP + i * SEC_H + SEC_H / 2, 0.2)));
+
+        // --- PagedAttention: a mostly-empty reservation splits into pages and the unused ones go back ---
+        let reservedH = 0;
+        PAGES.forEach((pg) => {
+          const grow = E.o3(pr(t, T.paged + pg.i * 0.03, 0.3));
+          const gap = 0.07 * E.io2(pr(t, T.an, 0.3));
+          const gone = pr(t, T.an + 0.32 + (7 - pg.i) * 0.07, 0.2);
+          pg.m.visible = grow > 0 && gone < 1;
+          pg.m.position.y = BODY_TOP * cabBody.scale.y + PAGE_H / 2 + pg.i * (PAGE_H + gap);
+          pg.m.scale.set(1, Math.max(0.001, grow * (1 - E.i2(gone))), 1);
+          pg.pm.opacity = 0.62 * grow;
+          if (pg.m.visible) reservedH = Math.max(reservedH, pg.m.position.y - BODY_TOP * cabBody.scale.y + (PAGE_H * pg.m.scale.y) / 2);
+        });
+        const np = E.back(pr(t, T.pei - 0.05, 0.35));
+        nextPage.visible = np > 0;
+        nextPage.scale.set(1, Math.max(0.001, np), 1);
+        nextPage.position.y = BODY_TOP * cabBody.scale.y + PAGE_H / 2 + 0.04;
+        nextPage.material.opacity = 0.45 * Math.min(1, np) * (1 - pr(t, T.liang - 0.1, 0.3));
+        crown.position.y = Math.max(crown.position.y, BODY_TOP * cabBody.scale.y + reservedH, BODY_TOP * cabBody.scale.y + PAGE_H * Math.min(1, np) * (1 - pr(t, T.liang - 0.1, 0.3)));
+
+        // --- the balance: memory on one pan, speed on the other ---
+        const bu = pr(t, T.end - 0.05, 0.4);
+        bal.visible = bu > 0;
+        bal.position.set(BALP.x, BALP.y, BALP.z);
+        bal.scale.setScalar(Math.max(0.001, E.back(bu)));
+        const memIn = E.i2(pr(t, T.xian9 - 0.25, 0.28)), boltIn = E.i2(pr(t, T.su - 0.25, 0.28));
+        memBlock.visible = memIn > 0;
+        memBlock.position.set(0, -0.66 + 2.2 * (1 - memIn), 0);
+        bolt.visible = boltIn > 0;
+        bolt.position.set(0, -0.36 + 2.2 * (1 - boltIn), 0);
+        bolt.rotation.y = -0.3;
+        const tilt = 0.2 * E.o3(pr(t, T.xian9 + 0.03, 0.3)) - 0.2 * E.back(pr(t, T.su + 0.03, 0.45));
+        beam.rotation.z = tilt;
+        pans.forEach((h) => { h.rotation.z = -tilt; });
+        if (t >= T.xian9 + 0.03) squash(memBlock, t, T.xian9 + 0.03, 0.8);
+        // the spotlight on the newest token
+        const sp = E.o2(pr(t, T.xin9 - 0.05, 0.4));
+        spotM.opacity = 0.2 * sp;
+        spotFloorM.opacity = 0.5 * sp;
+        spot.visible = spotFloor.visible = sp > 0;
+
+        scene.updateMatrixWorld(); // labels anchored to moving parts (pans) project with this frame's matrices
+        placeStickers(t);
+        placeRecap(t);
+        caps.render(t);
+        chap.render(t);
+        title.render(t);
+        CL.render();
+      }
+
+      Kit.boot("kv-cache-v9-clay", renderAt, {
+        story,
+        text: TOK.join("") + "K V Q1Q2Q3Q4×1天空为什么是蓝的？写字机器人大模型字块新来的回头看注意力重算台阶不用缓存卡片柜黄标签蓝卡片玻璃储藏室显存",
+        afterFonts: () => CL.redraw(),
+      });
+    </script>
+  </body>
+</html>

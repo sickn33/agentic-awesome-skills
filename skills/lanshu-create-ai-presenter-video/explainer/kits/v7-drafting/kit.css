@@ -1,0 +1,643 @@
+/* V7 · 图纸与注脚 (drafting) — kit tokens and components.
+ *
+ * One black drawing sheet, a hot accent with one meaning (the new / changed / important thing), a redline for waste,
+ * non-photo blue for construction / the query, ghost-letter karaoke headlines, typed annotations and true footnotes.
+ * Fonts are declared by the film (tools/fonts.py writes the @font-face block): Noto Sans SC 500/900, Archivo
+ * (expanded 900), JetBrains Mono 400, Instrument Serif italic, Noto Serif SC 600.
+ */
+:root {
+  --kit-bg: #0b0b0c;
+  --kit-surface: #141416;
+  --kit-paper: #ece9e1;
+  --kit-paper-ink: #141311;
+  --kit-ink: #edebe6;
+  --kit-muted: #a6a39d;
+  --kit-line: rgba(237, 235, 230, 0.32);
+  --kit-accent: #ffd21e;
+  --kit-accent-2: #7fc8f8;
+  --kit-warn: #ff5b3a;
+  --kit-ok: #7be0a0;
+  --kit-glow: rgba(255, 190, 0, 0.5);
+  --kit-font-display: "Noto Sans SC", sans-serif;
+  --kit-font-latin: "Archivo", "Noto Sans SC", sans-serif;
+  --kit-font-body: "Noto Sans SC", sans-serif;
+  --kit-font-mono: "JetBrains Mono", "Noto Sans SC", monospace;
+  --kit-font-hand: "Instrument Serif", "Noto Serif SC", serif;
+  --kit-t-display: 120px;
+  --kit-t-h1: 88px;
+  --kit-t-h2: 56px;
+  --kit-t-body: 32px;
+  --kit-t-label: 28px;
+  --kit-t-note: 26px;
+  --kit-t-cap: 44px;
+}
+
+/* ---------------- the sheet, its cells and the frame ---------------- */
+.kit-root {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: var(--kit-bg);
+  color: var(--kit-ink);
+  font-family: var(--kit-font-body);
+}
+.kit-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  perspective: 2300px;
+  perspective-origin: 960px 540px;
+}
+.kit-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  transform-origin: 0 0;
+}
+.kit-sheet {
+  position: absolute;
+  background-color: #0c0c0d;
+  background-image: linear-gradient(rgba(237, 235, 230, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(237, 235, 230, 0.07) 1px, transparent 1px),
+    linear-gradient(rgba(237, 235, 230, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(237, 235, 230, 0.03) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: 200px 200px;
+  border: 2px solid rgba(237, 235, 230, 0.22);
+  outline: 1px solid rgba(237, 235, 230, 0.1);
+  outline-offset: 18px;
+}
+.kit-cell {
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+}
+.kit-tick {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: 0 solid rgba(237, 235, 230, 0.34);
+}
+.kit-tick.tl { left: 40px; top: 40px; border-left-width: 2px; border-top-width: 2px; }
+.kit-tick.tr { right: 40px; top: 40px; border-right-width: 2px; border-top-width: 2px; }
+.kit-tick.bl { left: 40px; bottom: 40px; border-left-width: 2px; border-bottom-width: 2px; }
+.kit-tick.br { right: 40px; bottom: 40px; border-right-width: 2px; border-bottom-width: 2px; }
+/* figure number bubble: a drafting detail callout, sheet texture on the pull-back */
+.kit-fig {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  white-space: nowrap;
+  font-family: var(--kit-font-mono);
+  font-size: 26px;
+  letter-spacing: 0.08em;
+  color: var(--kit-muted);
+}
+.kit-fig b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border: 2.5px solid var(--kit-accent);
+  border-radius: 50%;
+  font-family: var(--kit-font-latin);
+  font-weight: 900;
+  font-size: 30px;
+  letter-spacing: 0;
+  color: var(--kit-accent);
+}
+.kit-spot {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 55% at 50% 46%, rgba(255, 236, 190, 0.07), rgba(255, 236, 190, 0) 70%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.kit-grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("grain.svg");
+  background-size: 400px 400px;
+  opacity: 0.1;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.kit-vig {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 75% at 50% 48%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+}
+.kit-crop {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 0 solid rgba(237, 235, 230, 0.55);
+}
+.kit-crop.tl { left: 28px; top: 28px; border-left-width: 2px; border-top-width: 2px; }
+.kit-crop.tr { right: 28px; top: 28px; border-right-width: 2px; border-top-width: 2px; }
+.kit-crop.bl { left: 28px; bottom: 28px; border-left-width: 2px; border-bottom-width: 2px; }
+.kit-crop.br { right: 28px; bottom: 28px; border-right-width: 2px; border-bottom-width: 2px; }
+.kit-sheetno {
+  position: absolute;
+  right: 64px;
+  bottom: 30px;
+  padding: 4px 12px;
+  white-space: nowrap;
+  font-family: var(--kit-font-mono);
+  font-size: 24px;
+  letter-spacing: 0.14em;
+  color: var(--kit-muted);
+  background: rgba(11, 11, 12, 0.86);
+}
+
+/* ---------------- ghost-letter karaoke (the headline IS the caption) ---------------- */
+.kit-ghost {
+  position: absolute;
+  white-space: nowrap;
+  font-family: var(--kit-font-display);
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+}
+.kit-gk,
+.kit-cap > span {
+  display: inline-block;
+  white-space: pre;
+  --lit: 0;
+  color: rgba(237, 235, 230, calc(0.17 + 0.83 * var(--lit)));
+  -webkit-text-stroke: 1.5px rgba(237, 235, 230, calc(0.3 * (1 - var(--lit))));
+}
+.kit-gk.a {
+  color: rgba(255, 210, 30, calc(0.17 + 0.83 * var(--lit)));
+  -webkit-text-stroke: 1.5px rgba(255, 210, 30, calc(0.34 * (1 - var(--lit))));
+  text-shadow: 0 0 34px rgba(255, 184, 0, calc(0.6 * var(--lit))), 0 0 90px rgba(255, 150, 0, calc(0.28 * var(--lit)));
+}
+.kit-gk.w {
+  color: rgba(255, 91, 58, calc(0.17 + 0.83 * var(--lit)));
+  -webkit-text-stroke: 1.5px rgba(255, 91, 58, calc(0.34 * (1 - var(--lit))));
+}
+.kit-gk.lat {
+  font-family: var(--kit-font-latin);
+  font-weight: 900;
+}
+.kit-paper .kit-gk {
+  color: rgba(20, 19, 17, calc(0.14 + 0.86 * var(--lit)));
+  -webkit-text-stroke: 1.5px rgba(20, 19, 17, calc(0.24 * (1 - var(--lit))));
+}
+/* bottom-bar caption, for a film that wants one instead of headlines (core.Captions) */
+.kit-cap {
+  position: absolute;
+  left: 50%;
+  bottom: 52px;
+  transform: translateX(-50%);
+  max-width: 1720px;
+  padding: 10px 26px 12px;
+  white-space: nowrap;
+  background: rgba(11, 11, 12, 0.86);
+  border-left: 3px solid var(--kit-accent);
+  font-family: var(--kit-font-display);
+  font-weight: 900;
+  font-size: var(--kit-t-cap);
+  line-height: 1.25;
+}
+
+/* ---------------- chapter chip: a detail bubble + the chapter title ---------------- */
+.kit-chap {
+  position: absolute;
+  left: 64px;
+  top: 44px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 22px 8px 8px;
+  white-space: nowrap;
+  background: rgba(11, 11, 12, 0.86);
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-t-label);
+  color: var(--kit-ink);
+}
+.kit-chap::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--kit-accent);
+  transform-origin: left center;
+  transform: scaleX(var(--in, 0));
+}
+.kit-chap-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 2.5px solid var(--kit-accent);
+  border-radius: 50%;
+  font-family: var(--kit-font-latin);
+  font-weight: 900;
+  font-size: 24px;
+  color: var(--kit-accent);
+}
+.kit-chap-t {
+  letter-spacing: 0.02em;
+}
+
+/* ---------------- annotations ---------------- */
+.kit-caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.14em;
+  background: currentColor;
+  opacity: 0.85;
+}
+.kit-label {
+  position: absolute;
+  white-space: nowrap;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-t-label);
+  line-height: 1.25;
+  color: var(--kit-ink);
+}
+.kit-label-main {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 6px;
+}
+.kit-label-main::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--kit-line);
+  transform-origin: left center;
+  transform: scaleX(var(--u, 0));
+}
+.kit-label-sub {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--kit-font-mono);
+  font-size: 24px;
+  letter-spacing: 0.02em;
+  color: var(--kit-muted);
+}
+.kit-label.tone-accent { color: var(--kit-accent); }
+.kit-label.tone-accent .kit-label-main::after,
+.kit-label.tone-ink .kit-label-main::after { background: var(--kit-accent); }
+.kit-label.tone-warn { color: var(--kit-warn); }
+.kit-label.tone-warn .kit-label-main::after { background: var(--kit-warn); }
+.kit-label.tone-ok { color: var(--kit-ok); }
+.kit-label.tone-ok .kit-label-main::after { background: var(--kit-ok); }
+.kit-label.tone-q { color: var(--kit-accent-2); }
+.kit-label.tone-q .kit-label-main::after { background: var(--kit-accent-2); }
+
+.kit-note {
+  position: absolute;
+  white-space: nowrap;
+  font-family: var(--kit-font-mono);
+  font-size: var(--kit-t-note);
+  line-height: 1.3;
+  color: rgba(237, 235, 230, 0.9);
+}
+.kit-note-tag {
+  display: inline-block;
+  margin-right: 14px;
+  padding: 2px 10px;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  color: var(--kit-bg);
+  background: var(--kit-accent);
+}
+/* the insider footnote: small reading speed, but still ≥ 24 px, and always true */
+.kit-fn {
+  position: absolute;
+  white-space: nowrap;
+  font-family: var(--kit-font-mono);
+  font-size: 24px;
+  line-height: 1.4;
+  color: var(--kit-muted);
+}
+.kit-fn.rule::before {
+  content: "";
+  display: block;
+  width: 180px;
+  height: 1px;
+  margin-bottom: 8px;
+  background: var(--kit-muted);
+}
+.kit-fn-m {
+  margin-right: 8px;
+  font-family: var(--kit-font-hand);
+  font-style: italic;
+  font-size: 30px;
+  color: var(--kit-accent);
+}
+
+/* ---------------- numbers, bars, formulas, stamps ---------------- */
+.kit-num {
+  position: absolute;
+  white-space: nowrap;
+  line-height: 1;
+}
+.kit-num-c {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--kit-font-mono);
+  font-size: 24px;
+  letter-spacing: 0.04em;
+  color: var(--kit-muted);
+}
+.kit-num-v {
+  font-family: var(--kit-font-latin);
+  font-weight: 900;
+  font-size: 96px;
+  letter-spacing: -0.01em;
+  color: var(--kit-accent);
+  text-shadow: 0 0 30px var(--kit-glow);
+}
+.kit-num-u {
+  margin-left: 14px;
+  font-family: var(--kit-font-latin);
+  font-weight: 900;
+  font-size: 44px;
+  color: var(--kit-ink);
+}
+.kit-num.tone-warn .kit-num-v { color: var(--kit-warn); text-shadow: 0 0 26px rgba(255, 91, 58, 0.45); }
+.kit-num.tone-ink .kit-num-v { color: var(--kit-ink); text-shadow: none; }
+
+.kit-bars {
+  position: absolute;
+  display: grid;
+  grid-template-columns: auto var(--kit-bar-w, 900px) auto;
+  column-gap: 22px;
+  row-gap: 18px;
+  align-items: center;
+  white-space: nowrap;
+}
+.kit-bar-l {
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-t-label);
+  color: var(--kit-ink);
+}
+.kit-bar-t {
+  position: relative;
+  height: 22px;
+  background: rgba(237, 235, 230, 0.1);
+}
+.kit-bar-f {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: var(--kit-ink);
+}
+.kit-bar-f.tone-accent { background: var(--kit-accent); box-shadow: 0 0 18px var(--kit-glow); }
+.kit-bar-f.tone-warn { background: var(--kit-warn); }
+.kit-bar-f.tone-ok { background: var(--kit-ok); }
+.kit-bar-f.tone-q { background: var(--kit-accent-2); }
+.kit-bar-v {
+  font-family: var(--kit-font-mono);
+  font-size: var(--kit-t-label);
+  color: var(--kit-ink);
+}
+
+.kit-formula {
+  position: absolute;
+  white-space: nowrap;
+  font-family: var(--kit-font-hand);
+  font-size: 58px;
+  line-height: 1.2;
+  color: var(--kit-ink);
+}
+.kit-ft {
+  display: inline-block;
+  white-space: pre;
+}
+.kit-ft i { font-style: italic; }
+.kit-ft.tone-accent { color: var(--kit-accent); text-shadow: 0 0 24px var(--kit-glow); }
+.kit-ft.tone-warn { color: var(--kit-warn); }
+.kit-ft.tone-q { color: var(--kit-accent-2); }
+.kit-ft.mono { font-family: var(--kit-font-mono); font-size: 0.62em; vertical-align: 0.18em; }
+.kit-ft.big { font-family: var(--kit-font-latin); font-weight: 900; }
+
+.kit-stamp {
+  position: absolute;
+  padding: 2px 16px 4px;
+  white-space: nowrap;
+  border: 4px solid currentColor;
+  font-family: var(--kit-font-latin);
+  font-weight: 900;
+  font-size: 72px;
+  line-height: 1.1;
+  color: var(--kit-accent);
+  text-shadow: 0 0 18px var(--kit-glow);
+}
+.kit-stamp small {
+  display: block;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 24px;
+  text-shadow: none;
+}
+.kit-stamp.tone-warn { color: var(--kit-warn); text-shadow: none; }
+.kit-stamp.tone-ok { color: var(--kit-ok); text-shadow: none; }
+
+/* ---------------- svg drawing layer ---------------- */
+svg.kit-svg {
+  position: absolute;
+  overflow: visible;
+}
+svg.kit-svg .kit-ln { fill: none; stroke: rgba(237, 235, 230, 0.78); stroke-width: 2.5; }
+svg.kit-svg .kit-thin { fill: none; stroke: rgba(237, 235, 230, 0.4); stroke-width: 1.5; }
+svg.kit-svg .kit-acc { fill: none; stroke: var(--kit-accent); stroke-width: 3; }
+svg.kit-svg .kit-red { fill: none; stroke: var(--kit-warn); stroke-width: 3; }
+svg.kit-svg .kit-blue { fill: none; stroke: var(--kit-accent-2); stroke-width: 2.5; }
+svg.kit-svg text {
+  font-family: var(--kit-font-mono);
+  font-size: 24px;
+  fill: rgba(237, 235, 230, 0.86);
+}
+svg.kit-svg text.kit-lead-t { font-size: 28px; fill: var(--kit-accent); }
+svg.kit-svg text.kit-dim-t { font-size: 24px; fill: var(--kit-ink); }
+svg.kit-svg text.kit-rev-t { font-size: 24px; fill: var(--kit-warn); }
+.kit-lead-head { filter: drop-shadow(0 0 12px rgba(255, 190, 0, 1)); }
+.kit-lead-dot { filter: drop-shadow(0 0 14px rgba(255, 190, 0, 1)); }
+
+/* ---------------- paper flip (bills, parts lists) ---------------- */
+.kit-paper {
+  position: absolute;
+  background: var(--kit-paper);
+  color: var(--kit-paper-ink);
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+.kit-paper-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 92px;
+  background: var(--kit-paper-ink);
+  color: var(--kit-paper);
+}
+.kit-hl {
+  position: absolute;
+  background: rgba(255, 206, 20, 0.78);
+  transform-origin: left center;
+  border-radius: 3px 8px 5px 9px;
+}
+
+/* ---------------- title block ---------------- */
+.kit-tb {
+  position: absolute;
+  border: 2px solid rgba(237, 235, 230, 0.6);
+  font-family: var(--kit-font-mono);
+  font-size: 28px;
+  color: var(--kit-ink);
+}
+.kit-tb > div {
+  position: absolute;
+  padding: 10px 14px;
+  line-height: 1.25;
+  white-space: nowrap;
+  border: 0 solid rgba(237, 235, 230, 0.45);
+}
+.kit-tb small {
+  display: block;
+  margin-bottom: 6px;
+  line-height: 1.2;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  color: var(--kit-muted);
+}
+
+/* ---------------- the closing line ---------------- */
+.kit-title {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.kit-title-shade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 600px;
+  background: linear-gradient(to top, rgba(11, 11, 12, 0.96) 0%, rgba(11, 11, 12, 0.86) 45%, rgba(11, 11, 12, 0) 100%);
+}
+
+/* ---------------- the one-frame recap ---------------- */
+.kit-recap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.kit-recap-bg {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  outline: 0;
+  background-color: var(--kit-bg);
+}
+.kit-recap-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--kit-accent);
+  box-shadow: 0 0 22px var(--kit-glow);
+}
+.kit-recap-in {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+}
+.kit-recap-kicker {
+  position: absolute;
+  left: 96px;
+  top: 172px;
+  white-space: nowrap;
+  font-family: var(--kit-font-mono);
+  font-size: 24px;
+  letter-spacing: 0.14em;
+  color: var(--kit-muted);
+}
+.kit-recap-c {
+  position: absolute;
+  left: 92px;
+  top: 222px;
+  width: 760px;
+  font-family: var(--kit-font-latin);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--kit-ink);
+}
+.kit-recap-tag {
+  position: absolute;
+  left: 96px;
+  width: 740px;
+  font-family: var(--kit-font-display);
+  font-weight: 900;
+  font-size: 52px;
+  line-height: 1.2;
+}
+.kit-recap-pt {
+  position: absolute;
+  left: 912px;
+  width: 940px;
+}
+.kit-recap-bub {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: 2.5px solid var(--kit-accent);
+  border-radius: 50%;
+  background: var(--kit-bg);
+  font-family: var(--kit-font-latin);
+  font-weight: 900;
+  font-size: 26px;
+  color: var(--kit-accent);
+}
+.kit-recap-pt-t {
+  position: absolute;
+  left: 76px;
+  top: 2px;
+  white-space: nowrap;
+  font-family: var(--kit-font-display);
+  font-weight: 900;
+  font-size: 36px;
+  line-height: 1.2;
+  color: var(--kit-ink);
+}
+.kit-recap-pt-x {
+  position: absolute;
+  left: 76px;
+  top: 52px;
+  width: 860px;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.42;
+  color: #d9d6cf;
+}

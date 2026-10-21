@@ -1,0 +1,10 @@
+{
+  "extra": {
+    "noto-sans-sc-300": {"family": "Noto Sans SC", "css": "Noto+Sans+SC:wght@300", "weight": 300},
+    "noto-sans-sc-500": {"family": "Noto Sans SC", "css": "Noto+Sans+SC:wght@500", "weight": 500},
+    "geist-300": {"family": "Geist", "css": "Geist:wght@300", "weight": 300},
+    "geist-500": {"family": "Geist", "css": "Geist:wght@500", "weight": 500},
+    "geist-mono-400": {"family": "Geist Mono", "css": "Geist+Mono:wght@400", "weight": 400}
+  },
+  "index.html": ["noto-sans-sc-300", "noto-sans-sc-500", "geist-300", "geist-500", "geist-mono-400"]
+}

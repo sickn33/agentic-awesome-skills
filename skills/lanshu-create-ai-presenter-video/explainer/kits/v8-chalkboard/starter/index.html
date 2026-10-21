@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>V8 黑板报 · starter</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+/* fonts:end */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #141c18; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #141c18; }
+      /* draft stories (story.draft: silent narration with estimated times) */
+      .v8-draft {
+        position: absolute; right: 64px; top: 40px; padding: 6px 18px 8px; border: 3px dashed var(--kit-warn); border-radius: 10px;
+        background: rgba(20, 30, 25, 0.86); color: var(--kit-warn); font-family: var(--kit-font-display); font-size: 30px; letter-spacing: 0.04em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-width="1920" data-height="1080" data-stamp="story">
+      <div id="stage" class="clip" data-start="0" data-duration="45" data-track-index="1" data-layout-allow-overflow="" data-stamp="story"></div>
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40" data-track-index="10" data-stamp="narration"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-track-index="11" data-stamp="story"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script src="beats.js"></script>
+    <script>
+      /* V8 黑板报 starter driver — the film minus the topic. Everything below comes from window.STORY:
+       *   the board (one panel per chapter, pages = ⌈lines / 2⌉, walked as a ring: top row → right, bottom row ← left,
+       *   then up to the 报头 masthead top-left), the chalk headlines (= the captions, Kit.say at the spoken times),
+       *   the chapter badges (Kit.chapter), the closing line in the masthead (Kit.title), the one-frame mind map on the
+       *   clean side of the board (Kit.recap) and the camera. beats.js performs each line inside its slot (api below);
+       *   the starter's beats.js puts an on-style storyboard placeholder there. See STARTER.md. */
+      (function () {
+        "use strict";
+        var C = window.ExplainerCore, K = window.Kit, G = K.geo, S = K.S, T = K.T, seq = K.seq, wlen = K.wlen;
+        var story = new C.Story(window.STORY), D = story.data, DUR = story.duration;
+        if (!story.chapters.length) story.chapters = [{ n: 1, key: "all", title: story.title || "", start: 0, end: DUR }];
+        var CH = story.chapters;
+        var END = story.end && story.end.line ? story.end.line : null;
+        var REC = story.recap && (story.recap.points || []).length && story.recap.start < DUR - 1 ? story.recap : null;
+        var PW = 1840, PH = 1020, GAP = 60, PAD = 48;
+        var BORDERS = K.BORDERS || ["wave", "dash", "scallop", "dot", "zig", "double", "wave"];
+        var clamp = function (v, a, b) { return v < a ? a : v > b ? b : v; };
+
+        // ---------------- lines → chapters ----------------
+        var LINES = story.lines.filter(function (L) { return L.i !== END; });
+        var chapOf = {};
+        LINES.forEach(function (L) {
+          var k = -1;
+          CH.forEach(function (c, j) { if (k < 0 && L.start >= c.start - 0.05 && L.start < c.end) k = j; });
+          if (k < 0) CH.forEach(function (c, j) { if (c.start <= L.start + 0.3) k = j; });
+          chapOf[L.i] = Math.max(0, k);
+        });
+        var chLines = CH.map(function (c, k) { return LINES.filter(function (L) { return chapOf[L.i] === k; }).map(function (L) { return L.i; }); });
+        var pagesOf = chLines.map(function (ls) { return Math.max(1, Math.min(3, Math.ceil(ls.length / 2))); });
+
+        // ---------------- the board: chapters on a ring (top row →, bottom row ←), masthead top-left, recap on a clean panel ----------------
+        function packRow() {
+          var x = 0, out = pagesOf.map(function (p, k) { var c = { k: k, col: x, row: 0, span: p }; x += p; return c; });
+          var mast = END ? { col: x++, row: 0 } : null;
+          return { cost: (x >= 4 ? 30 : 0) + x + (REC ? 2 : 0), rows: 1, cols: x + (REC ? 1 : 0), lessonCols: x, chapters: out, mast: mast, recap: REC ? { col: x, row: 0 } : null };
+        }
+        function packRing(cols) {
+          var n2 = 2 * cols, i = END ? 1 : 0, cells = [], gaps = [];
+          var rowOf = function (g) { return g < cols ? 0 : 1; }, colOf = function (g) { return g < cols ? g : n2 - 1 - g; };
+          for (var k = 0; k < pagesOf.length; k++) {
+            var p = pagesOf[k], rowEnd = i < cols ? cols : n2;
+            if (i + p > rowEnd) { if (rowEnd === n2) return null; while (i < rowEnd) gaps.push(i++); }
+            if (i + p > n2) return null;
+            cells.push({ k: k, i0: i, p: p });
+            i += p;
+          }
+          var tail = [];
+          while (i < n2) tail.push(i++);
+          var recapAt = null, stretched = 0, unfilled = 0;
+          if (REC && tail.length) recapAt = tail.pop(); // the clean panel at the end of the walk
+          gaps.concat(tail).forEach(function (g) {
+            var c = cells.filter(function (q) { return q.i0 + q.p === g && rowOf(q.i0) === rowOf(g); })[0];
+            if (c && c.p < Math.min(3, chLines[c.k].length)) { c.p++; stretched++; return; }
+            if (REC && recapAt == null) { recapAt = g; return; }
+            unfilled++;
+          });
+          var extra = REC && recapAt == null;
+          return {
+            cost: unfilled * 100 + stretched * 3 + cols + (extra ? 2 : 0), rows: 2, cols: cols + (extra ? 1 : 0), lessonCols: cols,
+            chapters: cells.map(function (c) { var row = rowOf(c.i0); return { k: c.k, row: row, col: row === 0 ? c.i0 : n2 - c.i0 - c.p, span: c.p }; }),
+            mast: END ? { col: 0, row: 0 } : null,
+            recap: REC ? (extra ? { col: cols, row: 0 } : { col: colOf(recapAt), row: rowOf(recapAt) }) : null,
+          };
+        }
+        var SUM = pagesOf.reduce(function (a, b) { return a + b; }, 0) + (END ? 1 : 0);
+        var LAY = packRow();
+        if (SUM > 3) for (var cc = Math.ceil(SUM / 2); cc < SUM; cc++) { var cand = packRing(cc); if (cand && cand.cost < LAY.cost) LAY = cand; }
+
+        var stage = document.getElementById("stage");
+        var B = K.board({ stage: stage, cols: LAY.cols, rows: LAY.rows, panelW: PW, panelH: PH, gap: GAP });
+
+        // ---------------- stations: one panel per chapter, ⌈lines / 2⌉ pages, ≤ 2 lines per page ----------------
+        var STA = CH.map(function (c, k) {
+          var cell = LAY.chapters[k], ls = chLines[k], np = cell.span;
+          var P = K.panel("ch" + c.n, cell.col, cell.row, { span: np });
+          var pages = [], rem = ls.length, idx = 0;
+          for (var j = 0; j < np; j++) {
+            var q = Math.ceil(rem / (np - j)), x = j * (PW + GAP);
+            pages.push({ j: j, x: x, y: 0, w: PW, h: PH, top: j === 0 ? 104 : 72, lines: ls.slice(idx, idx + q), bx: P.ox + x + PW / 2, by: P.oy + PH / 2 });
+            idx += q; rem -= q;
+          }
+          return { n: c.n, k: k, chapter: c, key: c.key, title: c.title, start: c.start, end: c.end, P: P, pages: pages, lines: ls, tone: K.CHAPTER_TONES[(c.n - 1) % K.CHAPTER_TONES.length], border: BORDERS[(c.n - 1) % BORDERS.length], notes: (D.notes && D.notes[c.key]) || [] };
+        });
+
+        // ---------------- headline rows: the narration line wrapped by estimated width, balanced, broken after a clause ----------------
+        var PUNCT0 = /^[，。：；、！？,.!?;:）」”’…—–\-\/~]/;
+        function unitW(words, k) {
+          var u = words[k][0], nu = k + 1 < words.length ? words[k + 1][0] : null;
+          var sp = nu && !PUNCT0.test(nu) && !/[（「“‘，。：；、！？–\-\/~]$/.test(u) && (/[A-Za-z0-9%]$/.test(u) || /^[A-Za-z0-9]/.test(nu)) ? 0.3 : 0;
+          return wlen(u) + sp;
+        }
+        // unit indices where each row starts (row 0 = 0); pen = cost of breaking anywhere but after a clause;
+        // balanced: rows of equal length (titles) instead of rows that run to the edge (headlines)
+        function rowStarts(words, maxEm, pen, balanced) {
+          var n = words.length, w = [], k;
+          for (k = 0; k < n; k++) w.push(unitW(words, k));
+          var total = w.reduce(function (a, b) { return a + b; }, 0);
+          if (total <= maxEm || n < 2) return [0];
+          var after = function (j) { return /[，。：；、！？,.!?;:]$/.test(words[j - 1][0]); };
+          var latinPair = function (j) { return /[A-Za-z0-9]$/.test(words[j - 1][0]) && /^[A-Za-z0-9]/.test(words[j][0]); };
+          // between two CJK units a break may split a word (word times can be per character); next to a Latin term it cannot
+          var cjkPair = function (j) { return /[\u3400-\u9fff]$/.test(words[j - 1][0]) && /^[\u3400-\u9fff]/.test(words[j][0]); };
+          // rows run (nearly) to the edge the way a teacher writes; a clause end near the edge is the best break,
+          // a very short last row is avoided
+          for (var rows = Math.max(2, Math.ceil(total / maxEm)); rows <= Math.min(n, 6); rows++) {
+            var memo = {}, target = balanced ? total / rows : maxEm * 0.92;
+            var f = function (i, r) {
+              var key = i * 8 + r;
+              if (key in memo) return memo[key];
+              var best = { c: Infinity, cut: [] }, acc = 0;
+              for (var j = i + 1; j <= n; j++) {
+                acc += w[j - 1];
+                if (j < n && PUNCT0.test(words[j][0])) continue; // a row never starts with punctuation
+                if (r === 1 && j < n) continue;
+                if (r > 1 && j === n) break;
+                var over = acc > maxEm * 1.02;
+                if (over && j > i + 1) break;
+                var brk = after(j) ? 0 : latinPair(j) ? 0.4 : cjkPair(j) ? pen : pen * 0.4;
+                var c = (over ? 5 : 0) + (j < n ? Math.pow((acc - target) / maxEm, 2) + brk : balanced ? Math.pow((acc - target) / maxEm, 2) : acc < maxEm * 0.25 ? 0.15 : 0);
+                var rest = r === 1 ? { c: 0, cut: [] } : f(j, r - 1);
+                if (c + rest.c < best.c) best = { c: c + rest.c, cut: [j].concat(rest.cut) };
+              }
+              return (memo[key] = best);
+            };
+            var b = f(0, rows);
+            if (b.c < Infinity) return [0].concat(b.cut.slice(0, rows - 1));
+          }
+          return [0];
+        }
+
+        var HEAD = {}, SLOT = {}, PAGE = {};
+        STA.forEach(function (st) {
+          st.pages.forEach(function (pg) {
+            var ls = pg.lines;
+            if (!ls.length) return;
+            var size = 64, plan = null;
+            [64, 56, 50, 44].some(function (sz) {
+              size = sz;
+              plan = ls.map(function (li) { return rowStarts(story.line(li).words, ((PW - 2 * PAD) * 0.94) / sz, 0.25); });
+              var nr = plan.reduce(function (a, r) { return a + r.length; }, 0);
+              return nr * sz * 1.3 + (ls.length - 1) * sz * 0.3 <= PH * 0.42;
+            });
+            var y = pg.top;
+            ls.forEach(function (li, q) {
+              HEAD[li] = { P: st.P, rows: plan[q].map(function (k, r) { return { x: pg.x + PAD, y: Math.round(y + r * size * 1.3), size: size, k: k }; }), built: null };
+              y += plan[q].length * size * 1.3 + size * 0.3;
+              PAGE[li] = { st: st, pg: pg };
+            });
+            var top = Math.round(y - size * 0.3 + 34), bot = PH - 48, n = ls.length, fw = (PW - 2 * PAD - (n - 1) * 44) / n;
+            ls.forEach(function (li, q) { SLOT[li] = { P: st.P, x: Math.round(pg.x + PAD + q * (fw + 44)), y: top, w: Math.round(fw), h: bot - top, page: pg, station: st, line: li }; });
+          });
+        });
+
+        // default headline colours: number runs in yellow (the result / quantity), Latin terms in blue (the structure)
+        function defaultTones(li) {
+          var tones = {}, run = "", words = story.line(li).words;
+          var flush = function () { if (run) tones[run] = /\d/.test(run) ? "y" : "b"; run = ""; };
+          words.forEach(function (w) { if (/^[A-Za-z0-9][A-Za-z0-9.%–\-\/≈$]*$/.test(w[0])) run += w[0]; else flush(); });
+          flush();
+          return tones;
+        }
+        // api.head(line, { tones }): the chalk headline (= the caption) of a line, written at the spoken times. Built once.
+        function head(li, o) {
+          var h = HEAD[li];
+          if (!h) throw new Error("starter: no headline slot for line " + li);
+          if (h.built) return h.built;
+          o = o || {};
+          var tones = o.tones || API.options.tones[li] || defaultTones(li);
+          h.built = K.say(h.P, story, li, { rows: o.rows || h.rows, tones: tones });
+          return h.built;
+        }
+
+        // ---------------- the masthead (报头): the closing line, written last ----------------
+        var MAST = null;
+        if (END && LAY.mast) {
+          var PM = K.panel("pM", LAY.mast.col, LAY.mast.row);
+          var Lend = story.line(END), ew = Lend.words, kc = -1;
+          for (var q0 = 0; q0 < Math.min(ew.length, 6); q0++) if (/[：:]/.test(ew[q0][0])) { kc = q0; break; }
+          if (kc >= 0 && wlen(ew.slice(0, kc + 1).map(function (w) { return w[0]; }).join("")) > 6) kc = -1;
+          var mainW = ew.slice(kc + 1), top0 = kc >= 0 ? 300 : 220, tRows = null, tSize = 170;
+          [170, 150, 132, 116, 100, 88].some(function (sz) {
+            tSize = sz;
+            tRows = rowStarts(mainW, (PM.w - 200) / sz, 0.6, true);
+            return tRows.length <= 3 && top0 + tRows.length * sz * 1.3 <= 960;
+          });
+          var rows = [], maxW = 0;
+          if (kc >= 0) rows.push({ x: 90, y: 200, size: 72, cls: "kl cw" });
+          tRows.forEach(function (k, r) {
+            var k0 = k, k1 = r + 1 < tRows.length ? tRows[r + 1] : mainW.length, wsum = 0;
+            for (var u = k0; u < k1; u++) wsum += unitW(mainW, u);
+            maxW = Math.max(maxW, wsum * tSize);
+            rows.push({ x: 90, y: Math.round(top0 + r * tSize * 1.3), size: tSize, k: k + kc + 1 });
+          });
+          if (kc < 0) rows[0].k = undefined;
+          var bottom = top0 + tRows.length * tSize * 1.3, freeX = 90 + maxW + 90;
+          var slot = PM.w - freeX - 50 >= 420 ? { side: "right", x: Math.round(freeX), y: 220, w: Math.round(PM.w - freeX - 50), h: 720 } : 950 - bottom >= 200 ? { side: "below", x: 90, y: Math.round(bottom + 20), w: PM.w - 180, h: Math.round(930 - bottom) } : null;
+          if (slot) Object.assign(slot, { P: PM, line: END });
+          MAST = { P: PM, prefix: kc >= 0, rows: rows, rowTones: kc >= 0 ? ["w", "y", "p", "y"] : ["y", "p", "y"], slot: slot, size: tSize };
+          if (slot) SLOT[END] = slot;
+        }
+
+        // ---------------- the review panel ----------------
+        var PR = REC && LAY.recap ? K.panel("pR", LAY.recap.col, LAY.recap.row) : null;
+
+        // ---------------- placeholders: a storyboard frame in chalk, one per line ----------------
+        function keyPhrase(text) {
+          var parts = text.split(/[，。：；！？]+|[,.!?;:](?=\s|$)/).map(function (s) { return s.trim(); }).filter(Boolean);
+          if (!parts.length) return text;
+          var lat = parts.filter(function (s) { return /[A-Za-z0-9]/.test(s); }), pool = lat.length ? lat : parts;
+          return pool.reduce(function (a, b) { return wlen(b) > wlen(a) ? b : a; });
+        }
+        function noteFor(li) {
+          var st = PAGE[li].st, j = st.lines.indexOf(li), notes = st.notes;
+          if (j < notes.length) return { text: j === st.lines.length - 1 ? notes.slice(j).join("；") : notes[j], beat: true };
+          return { text: keyPhrase(story.line(li).text), beat: false };
+        }
+        function clapper(x, y) {
+          return G.rect(x, y + 10, 40, 26) + " M " + x + " " + (y + 10) + " L " + (x + 40) + " " + (y + 2) + " M " + (x + 12) + " " + (y + 8) + " L " + (x + 6) + " " + (y + 18) + " M " + (x + 26) + " " + (y + 5) + " L " + (x + 20) + " " + (y + 16);
+        }
+        function placeholder(li) {
+          var s = SLOT[li], L = story.line(li);
+          if (!s || li === END) return null;
+          var P = s.P, x = s.x, y = s.y, w = s.w, h = s.h, t0 = Math.max(0, L.start - 0.15), dur = Math.max(0.6, L.end - L.start);
+          // the frames of a page are all drawn when the page's first line starts (a panel never sits half empty);
+          // the tag, the note and the ticks come at the line's own time
+          var pls = s.page.lines, tf = Math.min(t0, Math.max(0, story.line(pls[0]).start - 0.15) + 0.2 * Math.max(0, pls.indexOf(li)));
+          var out = { rect: s, line: li, parts: [] };
+          // the frame + the 「待演绎」 tag (a clapperboard and a stamped label) + which line it is
+          out.frame = S(P, G.rect(x, y, w, h), "m", 3, tf, 0.35, { sprite: false });
+          out.tag = [S(P, clapper(x + 26, y + 16), "o", 3, t0 + 0.1, 0.2, { sprite: false }), T(P, x + 78, y + 14, 32, [["待演绎", t0 + 0.15, t0 + 0.4, "kl co"]], { sprite: false }), S(P, G.rect(x + 14, y + 10, 196, 54), "o", 3, t0 + 0.38, 0.16, { sprite: false, kind: "tap" })];
+          var no = "第 " + li + " 句";
+          out.num = T(P, Math.round(x + w - 26 - wlen(no) * 30), y + 20, 30, [[no, tf + 0.2, tf + 0.4, "cm"]], { sprite: false });
+          // the beat ruler: one tick per spoken unit at its time (terms taller, in yellow), the line's start / end times
+          var ry = y + h - 58, x0 = x + 44, x1 = x + w - 44, spoken = story.spoken(li);
+          out.ruler = [S(P, G.line(x0, ry, x1, ry, 2), "m", 2.6, tf + 0.05, 0.3, { sprite: false })];
+          spoken.forEach(function (u) {
+            var tx = x0 + clamp((u[1] - L.start) / dur, 0, 1) * (x1 - x0), term = /[A-Za-z0-9]/.test(u[0]), hh = term ? 15 : 9;
+            out.ruler.push(S(P, "M " + tx.toFixed(1) + " " + (ry - hh) + " L " + tx.toFixed(1) + " " + (ry + hh), term ? "y" : "m", term ? 4 : 3, u[1], 0.05, { sprite: false }));
+          });
+          var a = L.start.toFixed(1) + "s", b = L.end.toFixed(1) + "s";
+          out.ruler.push(T(P, x0 - 4, ry + 14, 30, [[a, tf + 0.1, tf + 0.3, "cm lat"]], { sprite: false }));
+          out.ruler.push(T(P, Math.round(x1 + 4 - wlen(b) * 30), ry + 14, 30, [[b, tf + 0.15, tf + 0.35, "cm lat"]], { sprite: false }));
+          // the beat note (story.notes) or the line's key phrase, centred, written at a steady hand; a short term after
+          // the last "：" gets its own row in yellow 美术字
+          // (a space where Latin / numbers touch CJK, so a row can break there and terms stay whole)
+          var nt = noteFor(li), text = nt.text.replace(/[。.]\s*$/, "").replace(/([\u3400-\u9fff])([A-Za-z0-9$])/g, "$1 $2").replace(/([A-Za-z0-9%])([\u3400-\u9fff])/g, "$1 $2");
+          var ci = text.lastIndexOf("："), tail = null;
+          if (ci > 0 && wlen(text.slice(ci + 1)) <= 8 && wlen(text.slice(ci + 1)) > 0) { tail = text.slice(ci + 1); text = text.slice(0, ci + 1); }
+          var ny0 = y + 82, ny1 = ry - 44, inner = w - 170, size = 40, rowsT = [];
+          (w > 1200 ? [80] : []).concat([72, 64, 56, 50, 44, 40]).some(function (sz) {
+            size = sz;
+            rowsT = K.wrap(text, inner / sz, true).concat(tail ? [tail] : []);
+            var wide = rowsT.every(function (r) { return wlen(r) * sz <= w - 120; });
+            return wide && rowsT.length * sz * 1.32 <= ny1 - ny0 && rowsT.length <= 3;
+          });
+          var em = rowsT.reduce(function (n, r) { return n + wlen(r); }, 0), cps = clamp(em / (0.42 * dur), 12, 30);
+          var by = ny0 + (ny1 - ny0 - rowsT.length * size * 1.32) / 2, tw = L.start + 0.2, chars = [];
+          out.note = rowsT.map(function (r, k) {
+            var isTail = tail && k === rowsT.length - 1;
+            var wr = seq(P, Math.round(x + (w - wlen(r) * size) / 2), Math.round(by + k * size * 1.32), size, [[r, isTail ? "kl cy" : "cw"]], tw, cps, { sprite: false });
+            tw = wr.end + 0.04;
+            chars = chars.concat(wr.chars);
+            return wr;
+          });
+          // "lit as spoken": a yellow chalk underline under the note's words at the time each one is said
+          var flat = chars.map(function (c) { return c.ch; }).join(""), used = {}, cur = 0;
+          out.lit = [];
+          spoken.forEach(function (u) {
+            var key = u[0].replace(/\s/g, "");
+            if (!key) return;
+            if (nt.beat && !(/[A-Za-z0-9]/.test(key) || Array.from(key).length >= 2)) return;
+            var i = flat.indexOf(key, nt.beat ? 0 : cur);
+            while (nt.beat && i >= 0 && used[i]) i = flat.indexOf(key, i + 1);
+            if (i < 0) return;
+            used[i] = 1; cur = i + key.length;
+            var grp = chars.slice(i, i + Array.from(key).length);
+            // one underline per written row the word sits on
+            var runs = [];
+            grp.forEach(function (c) { var r = runs[runs.length - 1]; if (r && r[0].line === c.line) r.push(c); else runs.push([c]); });
+            runs.forEach(function (r) { out.lit.push(K.underline(P, r, "y", Math.max(u[1], r[r.length - 1].at + r[r.length - 1].dur + 0.05), 0.18, { sprite: false, width: 3.6, amp: 3, per: 18 })); });
+          });
+          out.parts = [out.frame, out.num].concat(out.tag, out.ruler, out.note, out.lit.filter(Boolean));
+          return out;
+        }
+
+        // ---------------- the api for beats.js ----------------
+        var LOOKS = [];
+        var API = {
+          story: story, C: C, Kit: K, K: K, G: G, S: S, T: T, X: K.X, seq: seq, wlen: wlen, board: B, DUR: DUR,
+          end: END, recap: REC, draft: !!D.draft,
+          at: function (l, u, n) { return story.at(l, u, n); },
+          phrase: function (l, text) { return story.phrase(l, text); },
+          span: function (l, text) { return story.span(l, text); },
+          lineStart: function (l) { return story.line(l).start; },
+          lineEnd: function (l) { return story.line(l).end; },
+          chap: function (n) { return CH[n - 1].start; },
+          stations: STA,
+          station: function (n) { return STA[n - 1]; },
+          stationOf: function (li) { return PAGE[li] ? PAGE[li].st : null; },
+          page: function (li) { return PAGE[li] ? PAGE[li].pg : null; },
+          slot: function (li) { return SLOT[li] || null; },
+          // area(line): the whole beat area of the line's page (all its slots together, under the headlines)
+          area: function (li) {
+            var s = SLOT[li];
+            if (!s || !s.page) return s || null;
+            var ss = s.page.lines.map(function (l) { return SLOT[l]; }), x1 = Math.max.apply(null, ss.map(function (q) { return q.x + q.w; }));
+            return { P: s.P, x: ss[0].x, y: s.y, w: x1 - ss[0].x, h: s.h, page: s.page, station: s.station, lines: s.page.lines.slice() };
+          },
+          head: head,
+          placeholder: placeholder,
+          masthead: MAST,
+          recapPanel: PR,
+          // look(t, P, x, y, scale=1, { free }): a camera key on a point of a panel (P coords); replaces the starter's drift
+          // keys near t. The view is kept inside the page holding the point (free: true lets it show the neighbours).
+          look: function (t, P, x, y, s, o) {
+            s = s || 1;
+            var bx = P.ox + x, by = P.oy + y;
+            if (!(o && o.free)) {
+              var j = Math.max(0, Math.min(Math.round(P.w / (PW + GAP)) - 1, Math.floor(x / (PW + GAP)))), L0 = P.ox + j * (PW + GAP), hw = 960 / s, hh = 540 / s;
+              var lo = Math.min(L0 + hw, L0 + PW - hw), hi = Math.max(L0 + hw, L0 + PW - hw), lo2 = Math.min(P.oy + hh, P.oy + PH - hh), hi2 = Math.max(P.oy + hh, P.oy + PH - hh);
+              bx = clamp(bx, lo, hi); by = clamp(by, lo2, hi2);
+            }
+            LOOKS.push([t, bx, by, s, 0, 0]);
+          },
+          mark: K.mark,
+          isEnd: function (li) { return li === END; },
+          options: { tones: {}, title: {}, recap: {}, bulb: true, outline: true },
+        };
+
+        var beats = (window.Beats || function (api) { api.story.lines.forEach(function (L) { if (!api.isEnd(L.i)) api.placeholder(L.i); }); return { render: function () {} }; })(API) || {};
+
+        // ---------------- after the beats: the rest of the chrome ----------------
+        LINES.forEach(function (L) { if (HEAD[L.i]) head(L.i); });
+        STA.forEach(function (st) { K.chapter(st.P, story, st.n); });
+
+        if (MAST) {
+          var tE = story.end.start, P_ = MAST.P;
+          S(P_, G.border("double", P_.w, P_.h), "w", 3.4, tE - 0.3, 0.6, { sprite: false });
+          var rib = "知识小课堂 · ", rs = 46, rlen = wlen(rib) + wlen(story.title || "");
+          if (rlen * rs > 1200) rs = Math.max(34, Math.floor(1200 / rlen));
+          var rw = Math.round(rlen * rs + 110);
+          S(P_, "M 60 70 L " + (60 + rw) + " 70 L " + (30 + rw) + " 118 L " + (60 + rw) + " 166 L 60 166 L 90 118 Z", "b", 4, tE - 0.2, 0.3, { sprite: false });
+          seq(P_, 110, Math.round(118 - rs * 0.62), rs, [[rib, "kl cb"], [story.title || "", /[㐀-鿿]/.test(story.title || "") ? "kl cb" : "lat cb"]], tE - 0.1, 22, { sprite: false });
+          MAST.title = K.title(story, Object.assign({ P: P_, rows: MAST.rows, rowTones: MAST.rowTones }, API.options.title));
+          // the takeaway gets a chalk light bulb in the free corner (when the closing line leaves room for it)
+          var sl = MAST.slot;
+          if (API.options.bulb && sl && sl.side === "right") {
+            var bx = sl.x + sl.w / 2, byy = sl.y + Math.min(260, sl.h / 2 - 40), tb = MAST.title.rows[Math.min(MAST.prefix ? 1 : 0, MAST.title.rows.length - 1)].chars.slice(-1)[0];
+            var tbulb = tb ? tb.at + 0.1 : tE + 0.8;
+            S(P_, G.circ(bx, byy, 92, 98, 1.02) + " M " + (bx - 44) + " " + (byy + 86) + " L " + (bx - 40) + " " + (byy + 140) + " L " + (bx + 40) + " " + (byy + 140) + " L " + (bx + 44) + " " + (byy + 86) + " M " + (bx - 38) + " " + (byy + 158) + " L " + (bx + 38) + " " + (byy + 158) + " M " + (bx - 24) + " " + (byy + 176) + " L " + (bx + 24) + " " + (byy + 176) + " M " + (bx - 30) + " " + (byy + 30) + " Q " + (bx - 14) + " " + (byy - 20) + " " + bx + " " + (byy + 20) + " Q " + (bx + 14) + " " + (byy - 20) + " " + (bx + 30) + " " + (byy + 30), "y", 4.5, tbulb, 0.55, { sprite: false });
+            S(P_, G.burst(bx, byy, 124, 168, 9, -Math.PI / 2 + 0.17), "y", 4, tbulb + 0.5, 0.25, { sprite: false, kind: "tap" });
+          }
+          // the lesson in one row under the closing line: a mini panel per chapter, in its board colour and border
+          var tb0 = MAST.rows.length ? MAST.rows[MAST.rows.length - 1].y + MAST.rows[MAST.rows.length - 1].size * 1.25 : 600;
+          var stripY = Math.round(Math.max(tb0 + 30, 790)), nC = STA.length;
+          if (API.options.outline !== false && stripY + 120 <= PH - 40) {
+            var bw = Math.min(330, (PM.w - 180 - (nC - 1) * 24) / nC), Le2 = story.line(END), ts0 = story.end.start + 0.25, tsp = Math.min(0.3, (Le2.end - Le2.start) * 0.45 / nC);
+            MAST.outline = STA.map(function (st, i) {
+              var x = Math.round(90 + i * (bw + 24)), lab = (["", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"][st.n] || st.n) + " · " + st.title.split(/[：:]/)[0];
+              var fs = Math.max(28, Math.min(36, Math.floor((bw - 36) / wlen(lab))));
+              var d = G.border(st.border, bw, 100).replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, function (m, a, b2) { return (+a + x).toFixed(1) + " " + (+b2 + stripY).toFixed(1); });
+              var ti = ts0 + i * tsp;
+              return [S(P_, d, st.tone, 3, ti, 0.25, { sprite: false }), T(P_, Math.round(x + (bw - wlen(lab) * fs) / 2), Math.round(stripY + 50 - fs * 0.6), fs, [[lab, ti + 0.1, ti + 0.3, "kl c" + st.tone]], { sprite: false })];
+            });
+          }
+        }
+
+        if (PR) {
+          var NP = REC.points.length;
+          var doodles = REC.points.map(function (p) {
+            // each branch carries a strip of its board panel's chalk border: the cue back to where it was taught
+            var style = BORDERS[(p.n - 1) % BORDERS.length];
+            return function (c) {
+              if (c.x + 130 > (c.right ? PR.w - 40 : PR.w / 2 - 390)) return; // no room beside a long heading
+              var d = G.border(style, 132, 64).replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, function (m, a, b2) { return (+a + c.x - 14).toFixed(1) + " " + (+b2 + c.y - 10).toFixed(1); });
+              S(PR, d, c.tone, 3, c.t, 0.3, { sprite: false });
+            };
+          });
+          API.recapResult = K.recap(story, Object.assign({ P: PR, t0: REC.start, t1: DUR, hold: 1.25, pace: 0.55, size: NP <= 3 ? 46 : NP === 4 ? 42 : 38, cps: 30, centerFit: true, doodles: doodles }, API.options.recap));
+        }
+
+        // ---------------- camera: walk the board station to station, then the masthead, the whole board, the review ----------------
+        var KEYS = [];
+        function key(t, x, y, s, yaw, roll, travel) { var k = [t, x, y, s, yaw || 0, roll || 0]; k.travel = !!travel; KEYS.push(k); return k; }
+        function spot(li) {
+          var pp = PAGE[li], s = SLOT[li], pg = pp.pg, P = pp.st.P;
+          var dx = P.ox + s.x + s.w / 2 - pg.bx, dy = P.oy + s.y + s.h / 2 - pg.by;
+          return { pg: pg, bx: pg.bx, by: pg.by, A: [pg.bx + clamp(0.02 * dx, -10, 10), pg.by - 10, 1.0], Z: [pg.bx + clamp(0.05 * dx, -20, 20), pg.by + clamp(0.04 * dy, -16, 16), 1.03] };
+        }
+        function travel(from, to, tArrive, tMin) {
+          var d = Math.hypot(to[0] - from[0], to[1] - from[1]), pages = d / (PW + GAP);
+          var dur = Math.min(1.3, 0.6 + 0.16 * Math.max(0, pages - 1)), depart = Math.max(tMin, tArrive - dur);
+          var hor = Math.abs(to[0] - from[0]) > Math.abs(to[1] - from[1]);
+          var sMid = Math.max(0.4, 0.86 / (1 + 0.3 * Math.max(0, pages - 1)));
+          key((depart + tArrive) / 2, (from[0] + to[0]) / 2, (from[1] + to[1]) / 2, sMid, hor ? (to[0] > from[0] ? -6 : 7) : 0, hor ? 0 : to[1] > from[1] ? 0.8 : -0.8, true);
+          key(tArrive, to[0], to[1], to[2], 0, 0, true);
+          return depart;
+        }
+        var prev = null, last = null; // last: [x, y, s] of the latest key
+        LINES.forEach(function (L, idx) {
+          if (!PAGE[L.i]) return;
+          var sp = spot(L.i);
+          if (!prev) {
+            key(0, sp.bx, sp.by - 10, 1.06);
+            last = key(Math.max(0.5, L.end), sp.Z[0], sp.Z[1], 1.0).slice(1);
+          } else if (prev.pg !== sp.pg) {
+            var newChap = PAGE[L.i].st !== PAGE[prev.L.i].st;
+            var dep = travel(last, sp.A, L.start + (newChap ? 0.05 : 0.25), prev.L.end - 0.12);
+            if (dep < prev.zt) { prev.zk[0] = Math.max(prev.L.start + 0.2, dep); }
+            last = key(Math.max(L.end, L.start + 0.6), sp.Z[0], sp.Z[1], sp.Z[2]).slice(1);
+          } else {
+            key(L.start + 0.08, sp.A[0], sp.A[1], sp.A[2]);
+            last = key(Math.max(L.end, L.start + 0.5), sp.Z[0], sp.Z[1], sp.Z[2]).slice(1);
+          }
+          prev = { L: L, pg: sp.pg, zk: KEYS[KEYS.length - 1], zt: KEYS[KEYS.length - 1][0] };
+        });
+        var lastLineEnd = prev ? prev.L.end : 0;
+        var WL = GAP + LAY.lessonCols * (PW + GAP), whole = [WL / 2, (B.H + 60) / 2, Math.min((1920 * 0.94) / (WL + 128), (1080 * 0.9) / (B.H + 200))];
+        var tail0 = REC ? REC.start - 0.15 : DUR - 0.3;
+        if (MAST) {
+          var Le = story.line(END), mx = MAST.P.ox + PW / 2, my = MAST.P.oy + PH / 2;
+          var arrive = Le.start + 0.15, dep2 = travel(last || [mx, my, 1], [mx, my - 10, 1.0], arrive, lastLineEnd - 0.12);
+          if (prev && dep2 < prev.zt) prev.zk[0] = Math.max(prev.L.start + 0.2, dep2);
+          var tPull = Math.min(Math.max(arrive + 0.8, Le.end - 0.75), tail0 - 0.6);
+          if (tPull > arrive + 0.3) {
+            key(tPull, mx + 20, my + 30, 0.96);
+            key(tPull + 0.6, whole[0], whole[1], whole[2], 0, 0, true);
+            K.mark("pullback", tPull + 0.55);
+            last = whole;
+          } else last = [mx + 20, my + 30, 0.96];
+        }
+        if (REC && PR) {
+          var rxp = PR.ox + PW / 2, ryp = PR.oy + PH / 2;
+          if (MAST) {
+            // hold the whole board (still drifting) until the review starts, then cross to the clean panel
+            if (REC.start - 0.1 > KEYS[KEYS.length - 1][0] + 0.1) key(REC.start - 0.1, last[0], last[1], last[2] * 0.98);
+            key(REC.start + 0.55, rxp, ryp - 10, 1.05, 0, 0, true);
+          } else {
+            var dep3 = travel(last || [rxp, ryp, 1], [rxp, ryp - 10, 1.05], REC.start + 0.55, lastLineEnd - 0.12);
+            if (prev && dep3 < prev.zt) prev.zk[0] = Math.max(prev.L.start + 0.2, dep3);
+          }
+          key(Math.max(DUR, REC.start + 1.2), rxp, ryp + 2, 1.0);
+          K.mark("lessonEnd", REC.start);
+        } else {
+          var lk = KEYS[KEYS.length - 1];
+          key(Math.max(DUR, lk[0] + 0.5), lk[1] + 24, lk[2] + 8, lk[3] * (MAST ? 0.97 : 1.025));
+        }
+        // the beats' own camera keys replace the drift keys near them (travels stay)
+        LOOKS.forEach(function (lk) {
+          for (var i = KEYS.length - 1; i >= 0; i--) if (!KEYS[i].travel && Math.abs(KEYS[i][0] - lk[0]) < 0.35 && KEYS[i][0] > 0) KEYS.splice(i, 1);
+          var k = lk.slice(); k.travel = true; KEYS.push(k);
+        });
+        KEYS.sort(function (a, b) { return a[0] - b[0]; });
+        var CAM = [];
+        KEYS.forEach(function (k) {
+          var p = CAM[CAM.length - 1];
+          if (p && k[0] - p[0] < 0.05) { if (k.travel || !p.travel) CAM[CAM.length - 1] = k; }
+          else CAM.push(k);
+        });
+        K.camera(CAM);
+        API.cameraKeys = CAM;
+
+        // ---------------- draft tag ----------------
+        if (D.draft) {
+          // a screen-fixed tag over the moving board: chalk passing under it is intended
+          var dt = document.createElement("div");
+          dt.className = "v8-draft";
+          dt.textContent = "草稿 · 无配音";
+          dt.setAttribute("data-layout-allow-overlap", "");
+          dt.setAttribute("data-layout-allow-occlusion", "");
+          stage.appendChild(dt);
+        }
+
+        // ---------------- drive ----------------
+        function frame(t) { K.render(t); if (beats.render) beats.render(t); }
+        frame(0);
+        window.__starter = API;
+        var tl = gsap.timeline({ paused: true });
+        var drive = { t: 0 };
+        tl.to(drive, { t: DUR, duration: DUR, ease: "none", onUpdate: function () { frame(tl.time()); } }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

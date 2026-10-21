@@ -1,0 +1,7 @@
+{
+  "index.html": ["noto-sans-sc-700", "noto-sans-sc-900", "bangers"],
+  "extra": {
+    "noto-sans-sc-700": {"family": "Noto Sans SC", "css": "Noto+Sans+SC:wght@700", "weight": 700},
+    "noto-sans-sc-900": {"family": "Noto Sans SC", "css": "Noto+Sans+SC:wght@900", "weight": 900}
+  }
+}

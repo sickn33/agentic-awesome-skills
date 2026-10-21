@@ -1,0 +1,11 @@
+{
+  "name": "v2-signal-starter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.8.81 preview",
+    "check": "npx --yes hyperframes@0.8.81 check",
+    "render": "npx --yes hyperframes@0.8.81 render",
+    "publish": "npx --yes hyperframes@0.8.81 publish"
+  }
+}

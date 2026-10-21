@@ -1,0 +1,207 @@
+/* V8 黑板报 chalkboard kit — tokens + components. See KIT.md.
+ * One wooden-framed slate board, chalk written live (Long Cang hand + Patrick Hand Latin + ZCOOL KuaiLe 美术字),
+ * one grain mask over everything chalk. The @font-face rules live in the film's index.html (tools/fonts.py). */
+:root {
+  --kit-bg: #1e3329; /* slate */
+  --kit-surface: #233a2f; /* a freshly wiped panel */
+  --kit-ink: #f2efe6; /* white chalk */
+  --kit-muted: #d6d2c4; /* worn chalk: secondary notes, still ≥ 9:1 on slate */
+  --kit-accent: #f6d96b; /* yellow chalk = the new / important thing */
+  --kit-accent-2: #94cdea; /* blue chalk = the second colour (store, structure) */
+  --kit-warn: #f3a3ba; /* pink chalk = waste / cost / problem */
+  --kit-ok: #aedb93; /* green chalk = solved / included */
+  --kit-orange: #f5b26b; /* fifth chapter colour */
+  --kit-wood: #5a3d26;
+  --kit-font-display: "ZCOOL KuaiLe", "Long Cang", cursive; /* 美术字 badges, mastheads */
+  --kit-font-body: "Long Cang", "ZCOOL KuaiLe", cursive; /* chalk handwriting */
+  --kit-font-hand: "Long Cang", cursive;
+  --kit-font-mono: "Patrick Hand", "Long Cang", cursive; /* Latin terms, numbers, units */
+  /* type scale at 1080p (on screen at camera scale 1.0) */
+  --kit-t-display: 160px;
+  --kit-t-h1: 84px;
+  --kit-t-h2: 60px;
+  --kit-t-body: 46px;
+  --kit-t-label: 40px;
+  --kit-t-note: 38px;
+  --kit-t-cap: 44px;
+}
+
+/* ---------------- the world: stage → world (camera) → frame / board / tray / chalk / fx ---------------- */
+.kit-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #141c18;
+  perspective: 2400px;
+  perspective-origin: 960px 540px;
+}
+.kit-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  transform-origin: 0 0;
+}
+.kit-frame {
+  position: absolute;
+  background: linear-gradient(135deg, #6b4a2f, #4d3421 40%, #6e4c30 70%, #4a321f);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.35), 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+.kit-board {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: var(--kit-bg);
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.45);
+}
+.kit-tray {
+  position: absolute;
+  background: linear-gradient(180deg, #7a5536, var(--kit-wood));
+  border-radius: 4px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+}
+/* everything drawn in chalk sits under one grain mask; a faint glow lifts it off the slate */
+.kit-chalk {
+  position: absolute;
+  left: 0;
+  top: 0;
+  -webkit-mask-image: url("chalk-mask.png");
+  mask-image: url("chalk-mask.png");
+  -webkit-mask-size: 360px 360px;
+  mask-size: 360px 360px;
+  filter: drop-shadow(0 0 1.6px rgba(255, 255, 255, 0.28));
+  color: var(--kit-ink);
+  font-family: var(--kit-font-body);
+}
+.kit-panel {
+  position: absolute;
+}
+.kit-panel > svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+.kit-fx {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+.kit-grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("grain.svg");
+  background-size: 400px 400px;
+  opacity: 0.08;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.kit-vig {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 75% at 50% 48%, rgba(0, 0, 0, 0) 58%, rgba(0, 0, 0, 0.5) 100%);
+  pointer-events: none;
+}
+
+/* ---------------- chalk text: one .ln per written line, one .w per character ---------------- */
+.kit-chalk .ln {
+  position: absolute;
+  white-space: nowrap;
+  line-height: 1.1;
+  /* weight: Long Cang is a thin brush; a stroke in the text colour gives chalk enough body to read at 30–40 px */
+  -webkit-text-stroke: calc(0.018em + 0.45px) currentColor;
+}
+.kit-chalk .w {
+  display: inline-block;
+  white-space: pre;
+  visibility: hidden;
+}
+.kit-chalk .w.gl {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.1em;
+}
+.kit-chalk .w.gl svg {
+  display: block;
+  width: 1em;
+  height: 1em;
+  overflow: visible;
+}
+.kit-chalk .lat {
+  font-family: var(--kit-font-mono);
+  -webkit-text-stroke: calc(0.012em + 0.3px) currentColor;
+}
+.kit-chalk .kl {
+  font-family: var(--kit-font-display);
+  -webkit-text-stroke: calc(0.012em + 0.4px) currentColor;
+  letter-spacing: 0.02em;
+}
+.kit-chalk .mast {
+  font-family: var(--kit-font-display);
+  -webkit-text-stroke: 3px currentColor;
+  letter-spacing: 0.04em;
+}
+.cw { color: var(--kit-ink); }
+.cm { color: var(--kit-muted); }
+.cy { color: var(--kit-accent); }
+.cp { color: var(--kit-warn); }
+.cb { color: var(--kit-accent-2); }
+.cg { color: var(--kit-ok); }
+.co { color: var(--kit-orange); }
+
+/* ---------------- contract components (their chalk is written live by kit.js) ---------------- */
+.kit-label { font-size: var(--kit-t-label); }
+.kit-label-sub { font-size: 32px; }
+.kit-note { font-size: var(--kit-t-note); }
+.kit-num { font-size: 96px; }
+.kit-num-v { font-family: var(--kit-font-mono); color: var(--kit-accent); }
+.kit-num-u { font-family: var(--kit-font-mono); font-size: 0.55em; margin-left: 0.18em; color: var(--kit-ink); }
+.kit-num-c { position: absolute; left: 0; top: 100%; font-size: 34px; color: var(--kit-muted); white-space: nowrap; }
+.kit-formula { font-size: 64px; }
+.kit-formula-sub { font-size: 32px; }
+.kit-title { font-size: var(--kit-t-display); }
+.kit-recap { font-size: 44px; }
+.kit-bars text { font-family: var(--kit-font-body); }
+
+/* captions / chapters: V8 performs the narration as word-timed chalk headlines and the chapter as an in-panel
+ * 美术字 badge (Kit.say / Kit.chapter). These styles exist so core.Captions / core.Chapters also work on a board. */
+.kit-cap {
+  position: absolute;
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%);
+  max-width: 1600px;
+  padding: 10px 30px 14px;
+  border-radius: 10px;
+  background: rgba(20, 30, 25, 0.86);
+  box-shadow: 0 0 0 2px rgba(242, 239, 230, 0.35);
+  font-family: var(--kit-font-body);
+  font-size: var(--kit-t-cap);
+  line-height: 1.25;
+  color: var(--kit-ink);
+  white-space: nowrap;
+  -webkit-text-stroke: 1.1px currentColor;
+}
+.kit-cap > span {
+  opacity: calc(0.38 + 0.62 * var(--lit, 0));
+}
+.kit-chap {
+  position: absolute;
+  left: 64px;
+  top: 48px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 8px 22px 10px;
+  border: 3px dashed rgba(242, 239, 230, 0.7);
+  border-radius: 8px;
+  background: rgba(20, 30, 25, 0.8);
+  font-family: var(--kit-font-display);
+  color: var(--kit-ink);
+  transform: translateX(calc((1 - var(--in, 1)) * -40px));
+}
+.kit-chap-n { font-size: 44px; color: var(--kit-accent); }
+.kit-chap-t { font-size: 34px; }

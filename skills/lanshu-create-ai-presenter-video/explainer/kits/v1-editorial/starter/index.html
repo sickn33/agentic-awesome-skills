@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+@font-face { font-family: "Noto Serif SC"; src: url("assets/fonts/noto-serif-sc-900.woff2") format("woff2"); font-weight: 900; font-style: normal; font-display: block; }
+@font-face { font-family: "Noto Serif SC"; src: url("assets/fonts/noto-serif-sc-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/instrument-serif-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/instrument-serif-400i.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+@font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/ibm-plex-mono-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+/* fonts:end */
+      /* V1 editorial 「留白」 starter — the film minus the topic. Everything below is driven by window.STORY;
+         the topic lives in beats.js. See kits/v1-editorial/starter/STARTER.md. */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #f2eee6; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--kit-bg); color: var(--kit-ink); font-family: var(--kit-font-body); }
+      #v1-stage { position: absolute; inset: 0; overflow: hidden; }
+      #v1-world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+      #v1-hud, #v1-caps { position: absolute; inset: 0; pointer-events: none; }
+      .v1-station { position: absolute; top: 0; width: 1920px; height: 1080px; }
+      .w { position: absolute; }
+      .v1-svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+      .v1-svg path, .v1-svg line { fill: none; }
+      /* draft chrome */
+      .v1-draft { position: absolute; right: 96px; top: 60px; padding: 6px 18px 8px; border: 2px dashed rgba(22, 19, 15, 0.42); border-radius: 999px; font: 500 24px/1.2 var(--kit-font-body); color: var(--kit-muted); white-space: nowrap; }
+      /* placeholder: an on-style draft beat (tag · headline · pinned terms · timing strip; files into a ledger row) */
+      .v1-ph-tag { position: absolute; display: flex; align-items: center; gap: 18px; white-space: nowrap; }
+      .v1-ph-tag b { font: 500 24px/1 var(--kit-font-body); color: var(--kit-muted); padding: 6px 14px 8px; border: 2px dashed rgba(22, 19, 15, 0.42); border-radius: 8px; }
+      .v1-ph-tag span { font: 400 24px/1 var(--kit-font-mono); color: var(--kit-muted); letter-spacing: 0.02em; }
+      .v1-ph-head { position: absolute; font: 900 52px/1.22 var(--kit-font-display); color: var(--kit-ink); white-space: nowrap; letter-spacing: -0.005em; transform-origin: 0 0; }
+      .v1-ph-head > span { color: color-mix(in srgb, var(--kit-ink) calc(var(--lit, 1) * 100%), var(--kit-cap-unlit)); }
+      .v1-ph-track { position: absolute; height: 40px; transform-origin: 0 0; }
+      .v1-ph-u { position: absolute; top: 0; height: 40px; border-radius: 6px; border: 2px dashed rgba(138, 132, 122, 0.9); }
+      .v1-ph-u > i { position: absolute; inset: -2px; border-radius: 6px; background: var(--kit-block); }
+      .v1-ph-u.is-now > i { background: var(--kit-accent); }
+      .v1-ph-play { position: absolute; top: -12px; width: 4px; height: 64px; margin-left: -2px; border-radius: 2px; background: var(--kit-accent); }
+      .v1-ph-row { position: absolute; display: flex; align-items: baseline; gap: 20px; white-space: nowrap; }
+      .v1-ph-row b { font: 400 italic 40px/0.9 var(--kit-font-num); color: var(--kit-muted); min-width: 40px; }
+      .v1-ph-row span { font: 500 28px/1.2 var(--kit-font-body); color: var(--kit-ink); }
+      .v1-ph-rule { position: absolute; height: 0; width: 1728px; border-top: 2px dashed rgba(22, 19, 15, 0.18); transform-origin: 0 50%; }
+      .v1-ph-pin { stroke: rgba(22, 19, 15, 0.45); stroke-width: 2.5; stroke-linecap: round; }
+      /* the closing page's figure slot (a dashed card until the scene draws its figure) */
+      .v1-ph-card { border-style: dashed; border-color: rgba(22, 19, 15, 0.34); box-shadow: none; }
+      .v1-ph-card .kit-card-meta { font-family: var(--kit-font-body); font-size: 24px; }
+      .v1-end-tile { font-size: 50px; min-width: 132px; padding: 10px 30px 12px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-width="1920" data-height="1080" data-stamp="story">
+      <div id="v1-stage" class="clip" data-start="0" data-duration="45" data-track-index="1" data-stamp="story">
+        <div class="kit-paper"></div>
+        <div class="kit-grain"></div>
+        <div id="v1-world" data-layout-allow-overflow=""></div>
+        <div id="v1-hud"></div>
+        <div id="v1-caps" class="kit-caps-wrap"></div>
+      </div>
+      <audio id="v1-narration" src="assets/audio/narration.wav" data-start="0" data-duration="40.32" data-track-index="10" data-volume="1" data-stamp="narration"></audio>
+      <audio id="v1-sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-track-index="11" data-volume="1" data-stamp="story"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script src="beats.js"></script>
+    <script>
+      /* ======================= the driver (topic-free) =======================
+       * World: one 1920 × 1080 page ("station") per chapter, side by side, plus a closing page when the story has
+       * an `end` line. The camera turns the page to the right at each chapter change and keeps a slow push inside a
+       * page (toward the station's focus point), so it never parks. Chrome: chapter chip, captions, draft tag,
+       * Kit.title on the closing page, Kit.recap. The topic is window.Beats(api) from beats.js. */
+      (function () {
+        "use strict";
+        const C = window.ExplainerCore, K = window.Kit, S = new C.Story(window.STORY);
+        const { pr, E, lerp } = C, cl = C.clamp01;
+        const W = 1920, H = 1080, DUR = S.duration;
+        const $ = (id) => document.getElementById(id);
+        const stage = $("v1-stage"), world = $("v1-world"), hud = $("v1-hud"), capsEl = $("v1-caps");
+
+        // ---------- DOM helpers (the KV film's) ----------
+        function mk(cls, parent, x, y, text) {
+          const e = document.createElement("div");
+          if (cls) e.className = cls;
+          if (x != null) { e.style.left = x + "px"; e.style.top = y + "px"; }
+          if (text != null) e.textContent = text;
+          (parent || world).appendChild(e);
+          return e;
+        }
+        function vis(e, o) { const v = o > 0.002 ? o : 0; e.style.opacity = v.toFixed(3); e.style.visibility = v > 0 ? "visible" : "hidden"; }
+        function tf(e, x, y, s) { e.style.transform = "translate(" + (x || 0).toFixed(1) + "px," + (y || 0).toFixed(1) + "px) scale(" + (s == null ? 1 : s).toFixed(4) + ")"; }
+        function svg(parent, w, h) {
+          const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          s.setAttribute("class", "v1-svg");
+          s.setAttribute("width", w || W);
+          s.setAttribute("height", h || H);
+          (parent || world).appendChild(s);
+          return s;
+        }
+        function sv(parent, tag, attrs) {
+          const e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+          for (const k in attrs) e.setAttribute(k, attrs[k]);
+          parent.appendChild(e);
+          return e;
+        }
+        function draw(path, len, u) { path.style.strokeDasharray = len + " " + len; path.style.strokeDashoffset = (len * (1 - cl(u))).toFixed(1); }
+        const kits = [], ups = [];
+        function kit(k, parent) { (parent || world).appendChild(k.el); kits.push(k); return k; }
+        function each(fn) { ups.push(fn); }
+
+        // ---------- text helpers (estimates only — nothing is measured) ----------
+        const CJK = /[\u2e80-\u9fff\u3000-\u303f\uff00-\uffef]/, LAT = /[A-Za-z\d]/, IDEO = /[\u3400-\u9fff]/;
+        const PUNCT = /^[，。：；！？、,.:;!?…—–\-·]+$/, CLAUSE_END = /[，。：；！？,.:;!?]$/;
+        function em(s) { let w = 0; for (const ch of s) w += CJK.test(ch) ? 1 : ch === " " ? 0.3 : /[A-Z]/.test(ch) ? 0.72 : /[a-z\d]/.test(ch) ? 0.6 : 0.66; return w; }
+        function joinUnits(us) { return us.map((u, k) => (/[A-Za-z\d]$/.test(u) && us[k + 1] && /^[A-Za-z\d]/.test(us[k + 1]) ? u + " " : u)).join(""); }
+        function safeSpan(line, text) { try { return S.span(line, text); } catch (e) { return null; } }
+        function fmt(v) { return v.toFixed(1); }
+
+        // ---------- story layout: chapters → stations, lines → chapters ----------
+        const END = S.end && S.end.line && S.line(S.end.line) ? S.end.line : null;
+        const REC = S.recap && S.recap.points && S.recap.start < DUR - 0.05 ? S.recap : null;
+        const CH = S.chapters.length ? S.chapters : [{ n: 1, key: "", title: S.title, start: 0, end: END ? S.line(END).start : DUR }];
+        const N = CH.length;
+        const chapOf = {};
+        function station(k, x) {
+          const el = mk("v1-station", world, x, 0);
+          return { k: k, el: el, x: x, y: 0, w: W, h: H, chapter: CH[k] || null, lines: [], focus: null, autoFocus: [], amount: null, arrive: 0, leave: DUR, rel: 0 };
+        }
+        const stations = CH.map((c, k) => station(k, k * W));
+        S.lines.forEach((L) => {
+          if (L.i === END) return;
+          let k = 0;
+          for (let c = 0; c < N; c++) if (CH[c].start <= L.start + 0.05) k = c;
+          chapOf[L.i] = k;
+          stations[k].lines.push(L.i);
+        });
+        const endSt = END ? station("end", N * W) : null;
+        const all = endSt ? stations.concat([endSt]) : stations.slice();
+        world.style.width = all.length * W + "px";
+
+        // ---------- camera: page turns at chapter changes, a slow push inside each page ----------
+        const TURN = 0.9;
+        const turns = [];
+        for (let k = 1; k < N; k++) turns.push({ t: CH[k].start - 0.3, to: k });
+        if (endSt) turns.push({ t: S.line(END).start - 0.45, to: N });
+        turns.forEach((u, i) => { if (i > 0) u.t = Math.max(u.t, turns[i - 1].t + 0.4); u.t = Math.max(0.1, u.t); });
+        turns.forEach((u, i) => { const nx = turns[i + 1] ? turns[i + 1].t : DUR; u.d = Math.max(0.35, Math.min(TURN, (nx - u.t) * 0.6)); });
+        const CAM = [[0, 0]];
+        turns.forEach((u) => { CAM.push([u.t, -(u.to - 1) * W]); CAM.push([u.t + u.d, -u.to * W]); });
+        CAM.push([Math.max(DUR, CAM[CAM.length - 1][0] + 0.1), CAM[CAM.length - 1][1]]);
+        turns.forEach((u) => { const a = all[u.to], b = all[u.to - 1]; a.arrive = u.t + u.d; b.leave = u.t; b.rel = u.d; });
+
+        function focalAt(st, t) {
+          const keys = st.focus || (st.autoFocus.length ? st.autoFocus.slice().sort((a, b) => a[0] - b[0]) : null);
+          return keys ? C.track(keys, t) : [W / 2, 560];
+        }
+        function pushAt(t) {
+          for (let i = 0; i < all.length; i++) {
+            const st = all[i], a = st.arrive, b = st.leave, last = i === all.length - 1;
+            if (t < a || t > b + st.rel) continue;
+            const amt = st.amount != null ? st.amount : Math.min(0.07, 0.035 + 0.0025 * (b - a));
+            const rel = t <= b || last ? 1 : 1 - E.io2(pr(t, b, st.rel));
+            return { p: amt * pr(t, a, Math.max(0.5, b - a)) * rel, f: focalAt(st, t) };
+          }
+          return { p: 0, f: [W / 2, H / 2] };
+        }
+
+        // ---------- placeholders: an on-style draft beat per narration line ----------
+        // page geometry (page coords): content x 96…1824; filed ledger rows from y 226; beats sit above y 876
+        const PX0 = 96, PW = 1728, ROW0 = 226, ROWH = 52, ZB = 876, MINI = { x: 1404, w: 420 }, TRK = 60;
+
+        // the clause that carries the line: prefers Latin terms / numbers, then length
+        function keyPhrase(L) {
+          const cls = [[]];
+          L.words.forEach((w, idx) => {
+            if (PUNCT.test(w[0]) && CLAUSE_END.test(w[0])) { if (cls[cls.length - 1].length) cls.push([]); return; }
+            cls[cls.length - 1].push(idx);
+          });
+          let best = null;
+          cls.filter((c) => c.length).forEach((c) => {
+            const us = c.map((i) => L.words[i][0]), text = joinUnits(us);
+            const score = em(text) + (us.some((u) => LAT.test(u)) ? 5 : 0);
+            if (!best || score > best.score) best = { idx: c, text: text, score: score };
+          });
+          return best || { idx: [], text: L.text, score: 0 };
+        }
+        // runs of Latin / number units ("KV cache", "0.5 MB", "8–12") with the time they are spoken
+        function latinTerms(L) {
+          const out = [];
+          let cur = null;
+          L.words.forEach((w, idx) => {
+            const u = w[0], latin = LAT.test(u) && !CJK.test(u);
+            const join = cur && /^[–\-/.×+]$/.test(u) && L.words[idx + 1] && LAT.test(L.words[idx + 1][0]);
+            if (latin || join) {
+              if (!cur) cur = { units: [], idx: [], t: w[1] };
+              cur.units.push(u); cur.idx.push(idx);
+            } else if (cur) { out.push(cur); cur = null; }
+          });
+          if (cur) out.push(cur);
+          const seen = {};
+          return out.map((c) => {
+            const text = c.units.reduce((s, u, k) => s + (k && LAT.test(u.charAt(0)) && LAT.test(c.units[k - 1].slice(-1)) ? " " : "") + u, "");
+            const lastIdx = c.idx[c.idx.length - 1], nx = L.words[lastIdx + 1];
+            return { text: text, t: c.t, end: nx ? nx[1] : L.end };
+          }).filter((c) => (seen[c.text] ? false : (seen[c.text] = true)));
+        }
+        // the headline: one line at up to `max` px, or two lines split at the clause nearest the middle
+        function headLayout(units, max) {
+          const text = units.join(""), w = em(text), room = 1540;
+          let fs = Math.min(max, Math.floor(room / Math.max(1, w)));
+          if (fs >= 48) return { lines: 1, fs: fs, split: -1 };
+          let best = Math.floor(units.length / 2), bd = 1e9, acc = 0;
+          units.forEach((u, k) => {
+            acc += em(u);
+            const d = Math.abs(acc - w / 2) - (/[，：；、,:;]$/.test(u) ? w * 0.18 : 0);
+            if (k < units.length - 1 && d < bd) { bd = d; best = k; }
+          });
+          const l1 = em(units.slice(0, best + 1).join("")), l2 = em(units.slice(best + 1).join(""));
+          fs = Math.max(34, Math.min(max - 8, Math.floor(room / Math.max(l1, l2, 1))));
+          return { lines: 2, fs: fs, split: best };
+        }
+        function clip(text, maxEm) {
+          if (em(text) <= maxEm) return text;
+          let out = "";
+          for (const ch of text) { if (em(out + ch) > maxEm - 1) break; out += ch; }
+          return out.replace(/[，、：；,\s]+$/, "") + "…";
+        }
+
+        /* buildTrack(parent, line, x, y, w, { h, at, playhead }): the timing strip — one block per spoken unit, as
+         * wide as the time it takes; dashed until spoken, red while spoken, ink after; a red playhead walks with the
+         * voice. Returns { el, X(t) → px inside the strip, render(t) }. */
+        function buildTrack(parent, i, x, y, w, opts) {
+          opts = opts || {};
+          const L = S.line(i), span = Math.max(0.5, L.end - L.start), hh = opts.h || TRK;
+          const X = (tt) => cl((tt - L.start) / span) * w;
+          const el = mk("v1-ph-track", parent, x, y);
+          el.style.width = w + "px";
+          el.style.height = hh + "px";
+          const us = [];
+          let prevR = -1e9;
+          L.words.forEach((wd, idx) => {
+            if (!/[A-Za-z\d\u3400-\u9fff]/.test(wd[0])) return;
+            const t0 = wd[1], nx = L.words[idx + 1], t1 = Math.max(t0 + 0.05, nx ? nx[1] : L.end);
+            const left = Math.max(X(t0) + 2, prevR + 3), right = Math.max(left + 6, X(t1) - 2);
+            prevR = right;
+            const b = mk("v1-ph-u", el, left, 0);
+            b.style.width = (right - left).toFixed(1) + "px";
+            b.style.height = hh + "px";
+            const fill = document.createElement("i");
+            b.appendChild(fill);
+            us.push({ b: b, fill: fill, t0: t0, t1: t1 });
+          });
+          const play = opts.playhead === false ? null : mk("v1-ph-play", el);
+          if (play) { play.style.top = "-14px"; play.style.height = hh + 28 + "px"; }
+          const tIn = opts.at != null ? opts.at : L.start - 0.3;
+          return {
+            el: el, X: X, line: L,
+            render(t) {
+              us.forEach((u, m) => {
+                vis(u.b, pr(t, tIn + 0.1 + Math.min(0.45, m * 0.012), 0.2));
+                vis(u.fill, pr(t, u.t0 - 0.03, 0.1));
+                u.b.classList.toggle("is-now", t >= u.t0 - 0.03 && t < u.t1 - 0.02);
+              });
+              if (play) {
+                vis(play, C.env(t, L.start - 0.05, L.end + 0.15, 0.12, 0.18));
+                play.style.left = X(t).toFixed(1) + "px";
+              }
+            },
+          };
+        }
+
+        /* placeholder(line): the draft beat for one narration line, in its chapter's page. While its line is spoken:
+         * a 「待演绎」 tag, the beat note (story.notes) or the line's key phrase as the headline, the Latin terms as
+         * paper tiles pinned to the timing strip at the moment they are spoken (red while new). When the chapter's
+         * next line starts it files away: the headline flies into a ledger row at the top of the page, the strip
+         * shrinks into that row's mini timeline. */
+        function placeholder(i) {
+          const L = S.line(i), k = chapOf[i];
+          if (k == null) return { el: null, render() {} };
+          const st = stations[k], list = st.lines, j = list.indexOf(i);
+          const nextL = j + 1 < list.length ? S.line(list[j + 1]) : null;
+          const tIn = j === 0 ? L.start - 0.3 : L.start - 0.06;     // the first beat rides in with the page turn
+          const tF = nextL ? nextL.start - 0.32 : 1e9;              // filing starts as this line ends
+          const notes = S.data.notes && st.chapter && st.chapter.key ? S.data.notes[st.chapter.key] : null;
+          const note = notes && notes[j] ? String(notes[j]) : null;
+          const kp = note ? null : keyPhrase(L);
+          // display units: a note splits into Latin words / single characters; a key phrase keeps the spoken units
+          const hUnits = note
+            ? note.match(/[A-Za-z\d.%+\-–_/]+|\s+|[^\s]/gu) || [note]
+            : kp.idx.map((x, m, arr) => {
+                const u = L.words[x][0], nx = arr[m + 1] != null ? L.words[arr[m + 1]][0] : null;
+                return /[A-Za-z\d]$/.test(u) && nx && /^[A-Za-z\d]/.test(nx) ? u + " " : u;
+              });
+          const terms = latinTerms(L).slice(0, 5);
+          const span = Math.max(0.5, L.end - L.start), X = (tt) => PX0 + cl((tt - L.start) / span) * PW;
+          const zt = j === 0 ? ROW0 : ROW0 + j * ROWH + 26, avail = ZB - zt;
+          // layout: try big (72 px headline, 44 px tiles), then smaller until the beat fits its zone
+          let lay = null;
+          for (const [hmax, tfs] of [[72, 44], [64, 40], [56, 36], [48, 32]]) {
+            const hl = headLayout(hUnits, hmax);
+            const th = Math.round(tfs * 1.15 + 26), tierEnd = [-1e9, -1e9];
+            const tiles = terms.map((tm) => {
+              const cx = (X(tm.t) + X(tm.end)) / 2, w = Math.max(96, em(tm.text) * tfs + 44);
+              const left = Math.max(PX0, Math.min(PX0 + PW - w, cx - w / 2));
+              const tier = tierEnd[0] + 18 <= left ? 0 : 1;
+              tierEnd[tier] = Math.max(tierEnd[tier], left + w);
+              return { tm: tm, cx: cx, left: left, w: w, tier: tier };
+            });
+            const tiers = tiles.length ? Math.max(...tiles.map((x) => x.tier)) + 1 : 0;
+            const band = tiers ? 48 + th + (tiers - 1) * (th + 16) : 0;
+            const hH = hl.lines * Math.round(hl.fs * 1.22);
+            const h = 40 + 26 + hH + 40 + band + TRK;
+            lay = { hl: hl, tfs: tfs, th: th, tiles: tiles, tiers: tiers, band: band, hH: hH, h: h };
+            if (h <= avail) break;
+          }
+          const { hl, tiles, hH, h } = lay;
+          const y0 = Math.round(zt + Math.max(0, (avail - h) / 2));
+          const headTop = y0 + 66, trackTop = headTop + hH + 40 + lay.band;
+          const rowY = ROW0 + j * ROWH;
+          st.autoFocus.push([tIn + 0.2, W / 2, y0 + h / 2]);
+
+          const P = st.el;
+          const tag = mk("v1-ph-tag", P, PX0, y0);
+          tag.innerHTML = "<b>待演绎</b><span></span>";
+          tag.lastChild.textContent = "L" + i + " · " + fmt(L.start) + "–" + fmt(L.end) + " s";
+          const head = mk("v1-ph-head", P, PX0, headTop);
+          head.style.fontSize = hl.fs + "px";
+          head.setAttribute("data-layout-allow-overlap", "");
+          const hs = [];
+          hUnits.forEach((u, m) => {
+            const s = document.createElement("span");
+            s.textContent = u;
+            head.appendChild(s);
+            if (m === hl.split) head.appendChild(document.createElement("br"));
+            hs.push({ s: s, t: note ? null : L.words[kp.idx[m]][1] });
+          });
+          // air where Latin / numbers touch CJK (as the captions do)
+          hs.forEach((x, m) => {
+            if (!LAT.test(x.s.textContent)) return;
+            const pv = hs[m - 1], nx = hs[m + 1];
+            if (pv && IDEO.test(pv.s.textContent.slice(-1))) x.s.style.marginLeft = "0.18em";
+            if (nx && IDEO.test(nx.s.textContent.charAt(0))) x.s.style.marginRight = "0.18em";
+          });
+          const pinSvg = svg(P, W, H);
+          tiles.forEach((x) => {
+            const top = trackTop - 48 - lay.th - x.tier * (lay.th + 16);
+            x.k = K.tile({ text: x.tm.text, x: x.left, y: top });
+            x.k.el.classList.add("v1-ph-tile");
+            x.k.el.style.fontSize = lay.tfs + "px";
+            P.appendChild(x.k.el);
+            const x1 = x.left + x.w / 2, y1 = top + lay.th, x2 = x.cx, y2 = trackTop - 6;
+            x.pin = sv(pinSvg, "path", { d: "M " + x1.toFixed(1) + " " + y1 + " L " + x2.toFixed(1) + " " + y2, class: "v1-ph-pin" });
+            x.len = Math.hypot(x2 - x1, y2 - y1) + 2;
+          });
+          const tr = buildTrack(P, i, PX0, trackTop, PW, { at: tIn });
+          const row = mk("v1-ph-row", P, PX0, rowY);
+          row.innerHTML = "<b></b><span></span>";
+          row.firstChild.textContent = String(i);
+          row.lastChild.textContent = clip(hUnits.join("").trim(), (MINI.x - 156 - 40) / 28);
+          row.lastChild.setAttribute("data-layout-allow-overlap", "");
+          const rule = mk("v1-ph-rule", P, PX0, rowY + 46);
+          // filing targets: headline → ledger row text, strip → the row's mini timeline
+          const hdx = 156 - PX0, hdy = rowY + 1 - headTop, hsc = 28 / hl.fs;
+          const tdx = MINI.x - PX0, tdy = rowY + 13 - trackTop, tsx = MINI.w / PW, tsy = 12 / TRK;
+
+          return {
+            el: P, line: i, station: st, top: y0, height: h, track: tr,
+            render(t) {
+              const on = t >= tIn - 0.05;
+              const inP = E.o3(pr(t, tIn, 0.45));
+              const hu = E.io2(pr(t, tF, 0.5)), su = E.io3(pr(t, tF + 0.05, 0.55));
+              const gone = 1 - pr(t, tF - 0.1, 0.25);               // tag, tiles and pins leave first
+              vis(tag, on ? inP * gone : 0);
+              tf(tag, 0, (1 - inP) * 14);
+              // headline: a note writes on left→right; a key phrase lights as it is spoken
+              if (!on) vis(head, 0);
+              else {
+                vis(head, (note ? 1 : inP) * (1 - pr(t, tF + 0.32, 0.18)));
+                if (note) head.style.clipPath = "inset(-14px " + ((1 - E.o3(pr(t, tIn + 0.05, 0.65))) * 100).toFixed(2) + "% -14px -14px)";
+                else hs.forEach((x) => x.s.style.setProperty("--lit", E.o2(pr(t, x.t - 0.04, 0.16)).toFixed(3)));
+                tf(head, hdx * hu, hdy * hu + (1 - inP) * 20, lerp(1, hsc, hu));
+              }
+              tiles.forEach((x) => {
+                const a = x.tm.t - 0.16;
+                x.k.render(t, Math.min(pr(t, a, 0.22), gone));
+                x.k.tone(t >= a && t < x.tm.t + 0.9 ? "accent" : "default");
+                draw(x.pin, x.len, E.io2(pr(t, a + 0.1, 0.25)));
+                vis(x.pin, t >= a + 0.1 ? gone : 0);
+              });
+              // the strip files into the ledger row as a mini timeline
+              tr.render(t);
+              tr.el.style.transform = "translate(" + (tdx * su).toFixed(1) + "px," + (tdy * su).toFixed(1) + "px) scale(" + lerp(1, tsx, su).toFixed(4) + "," + lerp(1, tsy, su).toFixed(4) + ")";
+              vis(tr.el, on ? 1 : 0);
+              const rp = pr(t, tF + 0.3, 0.25);
+              vis(row, rp);
+              tf(row, (1 - E.o3(rp)) * 18, 0);
+              const ru = E.io2(pr(t, tF + 0.15, 0.5));
+              vis(rule, ru > 0 ? 1 : 0);
+              rule.style.transform = "scaleX(" + ru.toFixed(4) + ")";
+            },
+          };
+        }
+
+        // the chapter's standfirst slot under the chip, in draft form: 「分镜」 N 句 · M 秒
+        function note(text, at, out, key) { return kit(K.note(text, { key: key, x: 96, y: 132, at: at, out: out }), hud); }
+        function placeholderChapter(k) {
+          const st = stations[k], c = st.chapter, n = st.lines.length;
+          const a = n ? S.line(st.lines[0]).start : c.start, b = n ? S.line(st.lines[n - 1]).end : c.end;
+          return note("本章 " + n + " 句 · " + fmt(b - a) + " 秒 · 待演绎", c.start + 0.45, c.end - 0.1, "分镜");
+        }
+
+        // ---------- the closing page: Kit.title on the left, the scene's closing figure on the right ----------
+        let endInfo = null;
+        if (endSt) {
+          const EL = S.line(END), rows = [[]];
+          EL.words.forEach((w) => { rows[rows.length - 1].push(w[0]); if (/[，：；。,:;!?！？]$/.test(w[0])) rows.push([]); });
+          if (!rows[rows.length - 1].length) rows.pop();
+          let tw = 0, th = 18;
+          rows.forEach((r) => {
+            const s = joinUnits(r);
+            if (/[：:]$/.test(s) && s.length <= 5) th += 38 * 1.3 + 8;
+            else { th += 84 * 1.16 + 8; tw = Math.max(tw, em(s) * 84); }
+          });
+          const sc = Math.min(1, 1640 / Math.max(1, tw));
+          const free = 1824 - (120 + tw * sc + 100);
+          endInfo = { station: endSt, title: { x: 120, y: Math.round(540 - (th * sc) / 2 - 10), scale: sc, w: tw * sc, h: th * sc }, free: { x: 1824 - free, w: free } };
+        }
+        // placeholderEnd(): a dashed figure card on the closing page — the end line's emphasis words as tiles that
+        // turn red as they are spoken, and the line's timing strip. Returns null when the closing line fills the page.
+        function placeholderEnd() {
+          if (!endInfo || endInfo.free.w < 460) return null;
+          const EL = S.line(END), P = endSt.el;
+          let items = (S.end.emphasis || []).map((e) => ({ text: e, s: safeSpan(END, e) })).filter((x) => x.s);
+          if (!items.length) items = latinTerms(EL).map((x) => ({ text: x.text, s: { start: x.t, end: x.end } }));
+          if (!items.length) { const kp = keyPhrase(EL); items = [{ text: kp.text, s: { start: EL.words[kp.idx[0]][1], end: EL.end } }]; }
+          items = items.slice(0, 4).sort((a, b) => a.s.start - b.s.start);
+          const w = Math.min(700, endInfo.free.w), x = endInfo.free.x + (endInfo.free.w - w) / 2;
+          const hCard = 110 + items.length * 108 + 30 + 44 + 44;
+          const y = Math.round(540 - hCard / 2);
+          const card = K.card({ title: "结尾图", meta: "待演绎 · L" + END, w: w, h: hCard, x: x, y: y });
+          card.el.classList.add("v1-ph-card");
+          P.appendChild(card.el);
+          const tiles = items.map((it, m) => {
+            const hold = mk("w", P, x + w / 2, y + 110 + m * 108);
+            hold.style.transformOrigin = "0 50%";
+            const tl = K.tile({ text: it.text, tone: "ghost" });
+            tl.el.classList.add("v1-end-tile");
+            tl.el.style.translate = "-50% 0";
+            hold.appendChild(tl.el);
+            return { hold: hold, tl: tl, t: it.s.start, m: m };
+          });
+          const tr = buildTrack(P, END, x + 34, y + hCard - 88, w - 68, { at: EL.start - 0.3, h: 44 });
+          endSt.autoFocus.push([EL.start, W / 2, 540]);
+          return {
+            el: card.el,
+            render(t) {
+              const p = E.o3(pr(t, EL.start - 0.35, 0.5));
+              vis(card.el, p);
+              tf(card.el, (1 - p) * 60, 0);
+              tiles.forEach((x) => {
+                x.tl.render(t, pr(t, EL.start - 0.15 + x.m * 0.08, 0.35));
+                x.tl.tone(t >= x.t - 0.04 ? "accent" : "ghost");
+                const bump = Math.sin(Math.PI * pr(t, x.t - 0.04, 0.3));
+                x.hold.style.transform = "scale(" + (1 + 0.12 * bump).toFixed(4) + ")";
+              });
+              tr.render(t);
+            },
+          };
+        }
+
+        // ---------- the api handed to beats.js ----------
+        let recapFig = null;
+        const api = {
+          story: S, C: C, Kit: K, W: W, H: H,
+          world: world, hud: hud, stage: stage,
+          stations: stations,                               // [k] → { el, x, k, chapter, lines, arrive, leave }
+          station: (k) => (k === "end" ? endSt : stations[k]),  // the page of chapter k (0-based), or the closing page
+          end: endInfo,                                     // { station, title: {x, y, scale}, free: {x, w} } or null
+          chapterOf: (i) => chapOf[i],                      // line number → chapter index (undefined for the end line)
+          linesOf: (k) => stations[k].lines.slice(),
+          placeholder: placeholder, placeholderChapter: placeholderChapter, placeholderEnd: placeholderEnd,
+          track: buildTrack,
+          kit: kit, each: each, note: note,
+          focus: (k, keys) => { api.station(k).focus = keys; },       // [[t, x, y], …] page coords
+          push: (k, amount) => { api.station(k).amount = amount; },   // total push over the page (default 3.5–7 %)
+          recapFigure: (el, size) => { recapFig = { el: el, size: size }; },
+          mk: mk, vis: vis, tf: tf, svg: svg, sv: sv, draw: draw,
+        };
+        const beats = typeof window.Beats === "function" ? window.Beats(api) || {} : {};
+
+        // ---------- chrome: closing line, chip, draft tag, captions, recap ----------
+        let title = null;
+        if (endInfo) {
+          const hold = mk("w", endSt.el, endInfo.title.x, endInfo.title.y);
+          hold.style.transformOrigin = "0 0";
+          hold.style.transform = "scale(" + endInfo.title.scale.toFixed(4) + ")";
+          title = kit(K.title(S, {}), hold);
+        }
+        const chipEl = document.createElement("div");
+        hud.appendChild(chipEl);
+        const chap = new C.Chapters(chipEl, S);
+        if (S.data.draft) mk("v1-draft", hud, null, null, "草稿 · 无配音");
+        const caps = new C.Captions(capsEl, S, { skipEnd: true, air: 0.2, clamp: true, lead: 0.08, tail: 0.1 });
+        const recap = REC ? kit(K.recap(S, recapFig ? { figure: recapFig.el, figureSize: recapFig.size, fit: true } : { fit: true }), stage) : null;
+
+        function frame(t) {
+          const x = C.track(CAM, t)[0], ps = pushAt(t), m = 1 + ps.p;
+          const tx = ps.f[0] + (x - ps.f[0]) * m, ty = ps.f[1] * (1 - m);
+          world.style.transform = "translate(" + tx.toFixed(2) + "px," + ty.toFixed(2) + "px) scale(" + m.toFixed(4) + ")";
+          all.forEach((st) => { const sx = tx + st.x * m; st.el.style.visibility = sx < W && sx + W * m > 0 ? "visible" : "hidden"; });
+          const under = REC ? 1 - pr(t, REC.start - 0.05, 0.35) : 1;
+          [world, hud, capsEl].forEach((e) => { e.style.opacity = under.toFixed(3); e.style.visibility = under > 0 ? "visible" : "hidden"; });
+          caps.render(t);
+          chap.render(t);
+          for (let i = 0; i < ups.length; i++) ups[i](t);
+          for (let i = 0; i < kits.length; i++) kits[i].render(t);
+          if (beats.render) beats.render(t);
+        }
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const drive = { t: 0 };
+        tl.to(drive, { t: DUR, duration: DUR, ease: "none", onUpdate: () => frame(tl.time()) }, 0);
+        frame(0);
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

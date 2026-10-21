@@ -1,0 +1,569 @@
+/* V10 · 推演 (reasoning) — kit tokens and components.
+ *
+ * Derive it on one canvas: a deep ink-blue sheet with a faint dot grid, cream text, and colours that BIND a symbol to
+ * its shape — the accent (rose) for the new / the thing being derived, teal and amber as two binding colours (in the
+ * KV film: q · k · v), a vermilion for waste / cost. Math in STIX Two Text italic, statements in Noto Serif SC 900,
+ * labels and captions in Noto Sans SC, numbers in JetBrains Mono. Fonts are declared by the film (tools/fonts.py
+ * writes the @font-face block): noto-serif-sc-900, noto-sans-sc-500, noto-sans-sc-700, stix-two-500i, stix-two-500,
+ * jetbrains-mono-500.
+ */
+:root {
+  --kit-bg: #12172a;
+  --kit-bg-glow: #1c2446;
+  --kit-bg-edge: #10142a;
+  --kit-surface: #1a2140;
+  --kit-surface-2: #222b52;
+  --kit-ink: #ece6d6;
+  --kit-muted: #9aa1b8; /* 5.3:1 on the glow centre, 6.6:1 on the edge */
+  --kit-faint: #2f395e; /* construction lines, axes, rings (no text) */
+  --kit-dot: #2b3558; /* the canvas dot grid */
+  --kit-line: rgba(236, 230, 214, 0.32);
+  --kit-accent: #ff8ea6; /* rose — the new / the thing being derived (KV: q, the new row) */
+  --kit-accent-2: #5fd3c2; /* teal — binding colour 1 (KV: k, the cache) */
+  --kit-accent-3: #ffc75e; /* amber — binding colour 2 (KV: v) */
+  --kit-warn: #ff6f5e; /* vermilion — waste, recomputation, cost */
+  --kit-ok: #5fd3c2; /* solved / included (= teal: what is kept) */
+  --kit-font-display: "Noto Serif SC", serif;
+  --kit-font-body: "Noto Sans SC", sans-serif;
+  --kit-font-math: "STIX Two Text", "Noto Serif SC", serif;
+  --kit-font-mono: "JetBrains Mono", "Noto Sans SC", monospace;
+  --kit-t-display: 96px;
+  --kit-t-h1: 72px;
+  --kit-t-h2: 52px;
+  --kit-t-body: 34px;
+  --kit-t-label: 28px;
+  --kit-t-note: 28px;
+  --kit-t-cap: 42px;
+}
+
+/* ---------------- the canvas ---------------- */
+.kit-root {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: radial-gradient(ellipse 75% 75% at 50% 45%, var(--kit-bg-glow) 0%, var(--kit-bg) 62%, var(--kit-bg-edge) 100%);
+  color: var(--kit-ink);
+  font-family: var(--kit-font-body);
+}
+.kit-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+/* the infinite canvas: one world element the camera transforms; .kit-canvas paints its dot grid */
+.kit-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  transform-origin: 0 0;
+}
+.kit-canvas {
+  position: absolute;
+  background-image: radial-gradient(circle, var(--kit-dot) 1.5px, rgba(43, 53, 88, 0) 2.1px);
+  background-size: 48px 48px;
+  background-position: 0 0;
+}
+.kit-station {
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+}
+/* screen furniture: a soft vignette and a shade under the caption band (no box behind captions) */
+.kit-vig {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 85% 80% at 50% 46%, rgba(9, 12, 26, 0) 62%, rgba(9, 12, 26, 0.6) 100%);
+}
+.kit-capshade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 190px;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(14, 18, 36, 0.86) 0%, rgba(14, 18, 36, 0.6) 42%, rgba(14, 18, 36, 0) 100%);
+}
+
+/* ---------------- captions: bold cream, the key span in its binding colour with a soft underline, no box ---------------- */
+.kit-cap {
+  position: absolute;
+  left: 50%;
+  bottom: 52px;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 1640px;
+  white-space: normal;
+  text-wrap: balance;
+  text-align: center;
+  font-family: var(--kit-font-body);
+  font-weight: 700;
+  font-size: var(--kit-t-cap);
+  line-height: 1.34;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 14px rgba(9, 12, 26, 0.85);
+}
+.kit-cap > span {
+  --lit: 0;
+  --kc: 236, 230, 214;
+  display: inline-block;
+  white-space: pre;
+  color: rgba(var(--kc), calc(0.5 + 0.5 * var(--lit)));
+}
+.kit-cap > span.kit-k { color: rgba(var(--kc), calc(0.64 + 0.36 * var(--lit))); }
+.kit-cap > span.kit-k { --kc: 255, 142, 166; box-shadow: inset 0 -0.16em 0 rgba(255, 142, 166, calc(0.24 * var(--lit))); }
+.kit-cap > span.kit-k.tone-k { --kc: 95, 211, 194; box-shadow: inset 0 -0.16em 0 rgba(95, 211, 194, calc(0.24 * var(--lit))); }
+.kit-cap > span.kit-k.tone-v { --kc: 255, 199, 94; box-shadow: inset 0 -0.16em 0 rgba(255, 199, 94, calc(0.24 * var(--lit))); }
+.kit-cap > span.kit-k.tone-warn { --kc: 255, 111, 94; box-shadow: inset 0 -0.16em 0 rgba(255, 111, 94, calc(0.24 * var(--lit))); }
+.kit-cap > span.kit-lat { font-family: var(--kit-font-body); }
+.kit-cap > span.kit-math { font-family: var(--kit-font-math); font-style: italic; font-weight: 500; font-size: 1.08em; line-height: 1; }
+
+/* ---------------- chapter chip: ● 推演 01 · title ---------------- */
+.kit-chap {
+  --in: 0;
+  position: absolute;
+  left: 64px;
+  top: 46px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  white-space: nowrap;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-t-label);
+  letter-spacing: 0.06em;
+  color: var(--kit-muted);
+  text-shadow: 0 2px 10px rgba(9, 12, 26, 0.9);
+}
+.kit-chap-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--kit-accent);
+  box-shadow: 0 0 14px var(--kit-accent);
+  transform: scale(calc(0.4 + 0.6 * var(--in)));
+}
+.kit-chap-k { color: var(--kit-muted); }
+.kit-chap-n {
+  font-family: var(--kit-font-mono);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: 0.04em;
+  color: var(--kit-accent);
+}
+.kit-chap-sep { color: var(--kit-muted); }
+.kit-chap-t {
+  color: var(--kit-ink);
+  clip-path: inset(0 calc(100% - 100% * var(--in)) 0 0);
+}
+
+/* ---------------- write-on text (statements, labels): glyph spans that rise into place ---------------- */
+.kit-w > i {
+  display: inline-block;
+  white-space: pre;
+  font-style: inherit;
+}
+.kit-w > i.kit-math {
+  font-family: var(--kit-font-math);
+  font-style: italic;
+  font-weight: 500;
+}
+.kit-stmt {
+  position: absolute;
+  white-space: nowrap;
+  font-family: var(--kit-font-display);
+  font-weight: 900;
+  font-size: var(--kit-t-h2);
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  color: var(--kit-ink);
+}
+.kit-math {
+  font-family: var(--kit-font-math);
+  font-style: italic;
+  font-weight: 500;
+}
+.kit-up {
+  font-family: var(--kit-font-math);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* ---------------- contract components ---------------- */
+.kit-label {
+  position: absolute;
+  white-space: nowrap;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-t-label);
+  line-height: 1.25;
+  color: var(--kit-ink);
+}
+.kit-label-sub {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--kit-font-mono);
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: 0.02em;
+  color: var(--kit-muted);
+}
+.tone-accent, .tone-q { color: var(--kit-accent); }
+.tone-k, .tone-ok { color: var(--kit-accent-2); }
+.tone-v { color: var(--kit-accent-3); }
+.tone-warn { color: var(--kit-warn); }
+.tone-muted { color: var(--kit-muted); }
+.tone-ink { color: var(--kit-ink); }
+
+.kit-note {
+  position: absolute;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  white-space: nowrap;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-t-note);
+  line-height: 1.35;
+  color: rgba(236, 230, 214, 0.92);
+}
+.kit-note-tag {
+  flex: none;
+  padding: 0 10px 1px;
+  border: 1.5px solid var(--kit-accent);
+  border-radius: 6px;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  color: var(--kit-accent);
+}
+.kit-note-m {
+  flex: none;
+  font-family: var(--kit-font-math);
+  font-size: 34px;
+  color: var(--kit-accent);
+}
+
+.kit-num {
+  position: absolute;
+  white-space: nowrap;
+  line-height: 1;
+}
+.kit-num-c {
+  display: block;
+  margin-bottom: 12px;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 26px;
+  color: var(--kit-muted);
+}
+.kit-num-v {
+  font-family: var(--kit-font-mono);
+  font-weight: 500;
+  font-size: 88px;
+  letter-spacing: -0.02em;
+  color: var(--kit-accent);
+  text-shadow: 0 0 26px rgba(255, 142, 166, 0.35);
+}
+.kit-num-u {
+  margin-left: 12px;
+  font-family: var(--kit-font-mono);
+  font-weight: 500;
+  font-size: 40px;
+  color: var(--kit-ink);
+}
+.kit-num.tone-k .kit-num-v { color: var(--kit-accent-2); text-shadow: 0 0 26px rgba(95, 211, 194, 0.35); }
+.kit-num.tone-v .kit-num-v { color: var(--kit-accent-3); text-shadow: 0 0 26px rgba(255, 199, 94, 0.35); }
+.kit-num.tone-warn .kit-num-v { color: var(--kit-warn); text-shadow: 0 0 26px rgba(255, 111, 94, 0.4); }
+.kit-num.tone-ink .kit-num-v { color: var(--kit-ink); text-shadow: none; }
+
+.kit-bars {
+  position: absolute;
+  display: grid;
+  grid-template-columns: auto var(--kit-bar-w, 720px) auto;
+  column-gap: 20px;
+  row-gap: 16px;
+  align-items: center;
+  white-space: nowrap;
+}
+.kit-bar-l {
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-t-label);
+  color: var(--kit-ink);
+}
+.kit-bar-t {
+  position: relative;
+  height: 16px;
+  border-radius: 8px;
+  background: rgba(236, 230, 214, 0.08);
+}
+.kit-bar-f {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 8px;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: var(--kit-ink);
+}
+.kit-bar-f.tone-accent, .kit-bar-f.tone-q { background: var(--kit-accent); box-shadow: 0 0 16px rgba(255, 142, 166, 0.5); }
+.kit-bar-f.tone-k, .kit-bar-f.tone-ok { background: var(--kit-accent-2); }
+.kit-bar-f.tone-v { background: var(--kit-accent-3); }
+.kit-bar-f.tone-warn { background: var(--kit-warn); }
+.kit-bar-f.tone-muted { background: #59627f; }
+.kit-bar-v {
+  font-family: var(--kit-font-mono);
+  font-weight: 500;
+  font-size: var(--kit-t-label);
+  color: var(--kit-ink);
+}
+
+/* the colour-bound formula: STIX italic, each term in the colour of its shape, leaders down to labels */
+.kit-formula {
+  position: absolute;
+  white-space: nowrap;
+  font-family: var(--kit-font-math);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--kit-t-h1);
+  line-height: 1.1;
+  color: var(--kit-ink);
+}
+.kit-ft {
+  display: inline-block;
+  white-space: pre;
+  transform-origin: 50% 70%;
+}
+.kit-ft.up { font-style: normal; }
+.kit-ft.dim { color: var(--kit-muted); }
+.kit-ft sub {
+  font-size: 0.5em;
+  vertical-align: -0.28em;
+  font-style: normal;
+}
+.kit-ft.tone-accent, .kit-ft.tone-q { color: var(--kit-accent); }
+.kit-ft.tone-k { color: var(--kit-accent-2); }
+.kit-ft.tone-v { color: var(--kit-accent-3); }
+.kit-ft.tone-warn { color: var(--kit-warn); }
+.kit-ft.tone-muted { color: var(--kit-muted); }
+.kit-ft-lab {
+  position: absolute;
+  white-space: nowrap;
+  font-family: var(--kit-font-body);
+  font-style: normal;
+  font-weight: 500;
+  font-size: var(--kit-t-label);
+  line-height: 1.2;
+}
+svg.kit-ft-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* ---------------- svg drawing layer ---------------- */
+svg.kit-svg {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+}
+svg.kit-svg text {
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 28px;
+  fill: var(--kit-ink);
+}
+svg.kit-svg text.kit-tm { font-family: var(--kit-font-math); font-style: italic; }
+svg.kit-svg text.kit-tn { font-family: var(--kit-font-mono); font-size: 24px; fill: var(--kit-muted); }
+.kit-glow { filter: drop-shadow(0 0 8px currentColor); }
+
+/* boxes on the canvas (tokens, chips, cells) */
+.kit-box {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border: 2px solid rgba(236, 230, 214, 0.55);
+  border-radius: 12px;
+  background: rgba(26, 33, 64, 0.92);
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 30px;
+  color: var(--kit-ink);
+}
+.kit-box.tone-accent, .kit-box.tone-q { border-color: var(--kit-accent); color: var(--kit-accent); box-shadow: 0 0 22px rgba(255, 142, 166, 0.35); }
+.kit-box.tone-k { border-color: var(--kit-accent-2); color: var(--kit-accent-2); }
+.kit-box.tone-v { border-color: var(--kit-accent-3); color: var(--kit-accent-3); }
+.kit-box.tone-warn { border-color: var(--kit-warn); color: var(--kit-warn); }
+.kit-box.ghost { border-style: dashed; border-color: rgba(154, 161, 184, 0.6); color: var(--kit-muted); background: none; }
+
+/* ---------------- the closing statement ---------------- */
+.kit-title {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.kit-title-shade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 520px;
+  background: linear-gradient(to bottom, rgba(14, 18, 36, 0.95) 0%, rgba(14, 18, 36, 0.85) 52%, rgba(14, 18, 36, 0) 100%);
+}
+.kit-title-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  white-space: nowrap;
+  font-family: var(--kit-font-display);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+}
+.kit-tg {
+  --lit: 0;
+  --kc: 236, 230, 214;
+  display: inline-block;
+  white-space: pre;
+  color: rgba(var(--kc), calc(0.2 + 0.8 * var(--lit)));
+}
+.kit-tg.em {
+  --kc: 255, 142, 166;
+  background: linear-gradient(to bottom, rgba(255, 142, 166, 0) 80%, rgba(255, 142, 166, calc(0.26 * var(--lit))) 80%, rgba(255, 142, 166, calc(0.26 * var(--lit))) 92%, rgba(255, 142, 166, 0) 92%);
+}
+.kit-tg.lat { font-family: var(--kit-font-math); font-style: italic; font-weight: 500; }
+.kit-qed {
+  display: inline-block;
+  margin-left: 0.3em;
+  font-family: var(--kit-font-math);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.62em;
+  vertical-align: 0.06em;
+  color: var(--kit-accent);
+}
+
+/* ---------------- the one-frame recap: the derivation as a proof ---------------- */
+.kit-recap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.kit-recap-kicker {
+  position: absolute;
+  left: 96px;
+  white-space: nowrap;
+  font-family: var(--kit-font-mono);
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: 0.12em;
+  color: var(--kit-muted);
+}
+.kit-recap-c {
+  position: absolute;
+  left: 92px;
+  white-space: nowrap;
+  font-family: var(--kit-font-math);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--kit-ink);
+}
+.kit-recap-c.cjk {
+  font-family: var(--kit-font-display);
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+}
+.kit-recap-tag {
+  position: absolute;
+  left: 96px;
+  width: 760px;
+  font-family: var(--kit-font-display);
+  font-weight: 900;
+  font-size: 46px;
+  line-height: 1.3;
+  letter-spacing: 0.03em;
+}
+.kit-recap-tag .kit-tg { --kc: 255, 142, 166; }
+.kit-recap-frame {
+  position: absolute;
+  border: 1.5px dashed rgba(154, 161, 184, 0.35);
+  border-radius: 14px;
+}
+.kit-recap-pt {
+  position: absolute;
+  left: 1040px;
+  width: 800px;
+}
+.kit-recap-bub {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border: 2px solid var(--kit-accent);
+  border-radius: 50%;
+  background: var(--kit-bg);
+  font-family: var(--kit-font-mono);
+  font-weight: 500;
+  font-size: 26px;
+  color: var(--kit-accent);
+}
+.kit-recap-pin {
+  left: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  font-size: 24px;
+  transform-origin: 50% 50%;
+}
+.kit-recap-pt-t {
+  position: absolute;
+  left: 78px;
+  top: 4px;
+  white-space: nowrap;
+  font-family: var(--kit-font-body);
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1.2;
+  color: var(--kit-ink);
+}
+.kit-recap-pt-x {
+  position: absolute;
+  left: 78px;
+  top: 54px;
+  width: 720px;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.4;
+  color: #d8d3c6;
+  text-wrap: pretty;
+}
+.kit-recap-op {
+  position: absolute;
+  white-space: nowrap;
+  font-family: var(--kit-font-math);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 30px;
+  color: var(--kit-muted);
+}

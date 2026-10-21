@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>V7 图纸与注脚</title>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* fonts:begin */
+/* fonts:end */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #0b0b0c;
+      }
+      #cells,
+      #endwrap,
+      #recapwrap,
+      #fx {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      #endwrap,
+      #recapwrap,
+      #fx {
+        inset: 0;
+        pointer-events: none;
+      }
+      .abs {
+        position: absolute;
+        white-space: nowrap;
+      }
+      .mono {
+        font-family: var(--kit-font-mono);
+      }
+      .cn5 {
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+      }
+      .dim {
+        color: var(--kit-muted);
+      }
+      .acc {
+        color: var(--kit-accent);
+      }
+      .red {
+        color: var(--kit-warn);
+      }
+      .blue {
+        color: var(--kit-accent-2);
+      }
+      /* a drafted part: a box with its text (the KV film's token) */
+      .tok {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(237, 235, 230, 0.72);
+        background: rgba(11, 11, 12, 0.7);
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+        color: var(--kit-ink);
+        white-space: nowrap;
+      }
+      .tok.new {
+        border-color: var(--kit-accent);
+        background: var(--kit-accent);
+        color: #0b0b0c;
+        box-shadow: 0 0 26px rgba(255, 190, 0, 0.55);
+      }
+      .tok.slot {
+        border: 2px dashed rgba(237, 235, 230, 0.28);
+        background: none;
+      }
+      .tok.slot > span {
+        visibility: hidden;
+      }
+      /* ---------------- placeholder: a construction-line hold box (non-photo blue = not final) ---------------- */
+      .ph-tag {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 12px 0 8px;
+        white-space: nowrap;
+        background: var(--kit-bg);
+        font-size: 24px;
+        line-height: 1.3;
+      }
+      .ph-tag b {
+        padding: 1px 10px 2px;
+        border: 2px solid var(--kit-accent-2);
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+        color: var(--kit-accent-2);
+      }
+      .ph-tag span {
+        font-family: var(--kit-font-mono);
+        letter-spacing: 0.04em;
+        color: var(--kit-muted);
+      }
+      .ph-note.kit-label {
+        white-space: normal;
+        line-height: 1.3;
+      }
+      .ph-t {
+        position: absolute;
+        white-space: nowrap;
+        font-family: var(--kit-font-mono);
+        font-size: 24px;
+        letter-spacing: 0.02em;
+        color: var(--kit-muted);
+      }
+      /* screen-space draft tag (story.draft: silent, estimated times) */
+      .draft-tag {
+        position: absolute;
+        left: 64px;
+        bottom: 30px;
+        display: none;
+        padding: 4px 12px;
+        white-space: nowrap;
+        border: 2px solid var(--kit-accent-2);
+        background: rgba(11, 11, 12, 0.86);
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+        font-size: 24px;
+        letter-spacing: 0.06em;
+        color: var(--kit-accent-2);
+      }
+      /* the sheet margin: drawing index + legend */
+      .lg-sw {
+        position: absolute;
+        width: 76px;
+        height: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="kit-root" data-composition-id="main" data-start="0" data-duration="45" data-stamp="story" data-width="1920" data-height="1080">
+      <div id="stage" class="clip kit-stage" data-start="0" data-duration="45" data-stamp="story" data-track-index="1" data-layout-allow-overflow="">
+        <div id="world" class="kit-world" data-layout-allow-overflow="">
+          <div id="sheet" class="kit-sheet"></div>
+          <div id="cells"></div>
+          <svg class="kit-svg" id="leaders" style="left: 0; top: 0" width="1920" height="1080" viewBox="0 0 1920 1080"></svg>
+          <svg class="kit-svg" id="sparks" style="left: 0; top: 0" width="1920" height="1080" viewBox="0 0 1920 1080"></svg>
+        </div>
+        <div id="chap"></div>
+        <div id="endwrap" data-layout-allow-overflow=""></div>
+        <div id="recapwrap" data-layout-allow-overflow=""></div>
+        <div id="fx"></div>
+        <div id="draft" class="draft-tag">草稿 · 无配音</div>
+      </div>
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40" data-stamp="narration" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-stamp="story" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script src="beats.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        /* V7 · 图纸与注脚 — the starter driver. Everything here is built from window.STORY alone:
+         *   the sheet (one figure per 1–2 narration lines, chapters in order, laid out as a snake), the ghost-letter
+         *   headlines (= this style's captions, rows broken to fit), the crane camera keyed to the story, leaders between
+         *   figures, the chapter chip, the sheet furniture, the closing line (Kit.title), the recap (Kit.recap).
+         * The topic lives in beats.js: window.Beats(api) is called once after the world is built, then render(t) every
+         * frame. Every frame is a pure function of t (one driver tween calls frame(t)). */
+        const CX = ExplainerCore, { clamp01, pr, lerp, E } = CX;
+        const U = Kit.util, { op, show, draw, svg, el, typed } = U;
+        const T = Kit.tokens;
+        const story = new CX.Story(window.STORY);
+        const D = story.data;
+        const $ = (id) => document.getElementById(id);
+        const DUR = story.duration;
+        const END = D.end && D.end.line ? D.end : null;
+        const RECAP = D.recap && D.recap.points && D.recap.points.length ? D.recap : null;
+        const NOTES = D.notes || {};
+        const at = (l, u, n) => story.at(l, u, n);
+        const ph = (l, s) => story.phrase(l, s);
+
+        // ---------------- text metrics (estimates, so layout never depends on font load) ----------------
+        // advance widths in em, read from the subset fonts: Archivo expanded 900 (Latin in headlines); CJK = 1 em
+        const ARCH = { A: 0.954, B: 0.93, C: 0.939, D: 0.933, E: 0.86, F: 0.807, G: 1.012, H: 1.009, I: 0.395, J: 0.764, K: 0.988, L: 0.786, M: 1.178, N: 1.007, O: 1.008, P: 0.865, Q: 1.008, R: 0.943, S: 0.882, T: 0.877, U: 0.989, V: 0.938, W: 1.23, X: 0.961, Y: 0.966, Z: 0.877,
+          a: 0.808, b: 0.795, c: 0.809, d: 0.795, e: 0.811, f: 0.526, g: 0.798, h: 0.788, i: 0.344, j: 0.342, k: 0.773, l: 0.344, m: 1.201, n: 0.788, o: 0.81, p: 0.795, q: 0.795, r: 0.515, s: 0.747, t: 0.545, u: 0.788, v: 0.75, w: 1.167, x: 0.831, y: 0.75, z: 0.685,
+          0: 0.811, 1: 0.731, 2: 0.809, 3: 0.813, 4: 0.819, 5: 0.813, 6: 0.815, 7: 0.755, 8: 0.828, 9: 0.815, ".": 0.381, "%": 1.166, "+": 0.75, "/": 0.309, "–": 0.625, "-": 0.416 };
+        // Noto Sans SC 500 (body text: notes, parts) — Latin is narrower than in Archivo
+        const body = (ch) => (/[　-鿿＀-￯]/.test(ch) ? 1 : /[0-9]/.test(ch) ? 0.57 : /[ijl.,:;'|!]/.test(ch) ? 0.3 : /[mwMW%@]/.test(ch) ? 0.9 : /[frt]/.test(ch) ? 0.42 : ch === " " ? 0.225 : /[A-Z]/.test(ch) ? 0.67 : /[a-z]/.test(ch) ? 0.57 : 0.6);
+        const bodyEm = (s) => Array.from(s).reduce((n, ch) => n + body(ch), 0);
+        const LATR = /^[A-Za-z0-9.%+×\/–\-]+$/; // = the kit's LAT (Latin units get Archivo and a space)
+        const PUN = /^[，。、：；！？,.;:!?）)」』”"'…—]$/;
+        const DSH = /^[–\-]$/;
+        const SPOKEN = /[A-Za-z\d㐀-鿿]/;
+        function rowEm(W, a, b) {
+          let em = 0;
+          for (let k = a; k <= b; k++) {
+            const u = W[k][0], prev = k > a ? W[k - 1][0] : null, lat = LATR.test(u);
+            if (prev && !PUN.test(u) && !PUN.test(prev) && !DSH.test(u) && !DSH.test(prev) && (lat || LATR.test(prev))) em += 0.229;
+            for (const ch of u) em += (lat ? ARCH[ch] ?? 0.8 : 1) * 0.99;
+          }
+          return em;
+        }
+        // units → readable text (a space where a Latin / number unit meets anything but punctuation)
+        function joinUnits(us) {
+          let s = "";
+          us.forEach((u, k) => {
+            const p = us[k - 1];
+            if (p != null && !PUN.test(u) && !PUN.test(p) && !DSH.test(u) && !DSH.test(p) && (LATR.test(u) || LATR.test(p))) s += " ";
+            s += u;
+          });
+          return s;
+        }
+        const spokenCount = (W, a, b) => { let n = 0; for (let k = a; k <= b; k++) if (SPOKEN.test(W[k][0])) n++; return n; };
+
+        /* Break units a..b of a line into ≤ maxRows rows of at most maxW px at `size`: balanced rows, breaks after
+         * punctuation preferred, no row starts with punctuation, no orphan rows. Returns [[a, b], ...] or null. */
+        function breakRows(W, a, b, size, maxW, maxRows) {
+          const total = rowEm(W, a, b) * size;
+          const n = b - a + 1;
+          const minRows = Math.max(1, Math.ceil(total / maxW));
+          for (let rows = minRows; rows <= Math.min(maxRows, n); rows++) {
+            const target = total / rows;
+            const f = [], from = [];
+            for (let r = 0; r <= rows; r++) { f.push(new Array(n + 1).fill(Infinity)); from.push(new Array(n + 1).fill(-1)); }
+            f[0][0] = 0;
+            for (let r = 1; r <= rows; r++) {
+              for (let j = 1; j <= n; j++) {
+                for (let i = r - 1; i < j; i++) {
+                  if (f[r - 1][i] === Infinity) continue;
+                  const s = a + i, e = a + j - 1;
+                  if (PUN.test(W[s][0])) continue; // a row never starts with punctuation
+                  const w = rowEm(W, s, e) * size;
+                  if (w > maxW) continue;
+                  let c = (w - target) * (w - target);
+                  if (spokenCount(W, s, e) < 2 && n > 2) c += target * target;
+                  if (j < n && !PUN.test(W[e][0])) c += Math.pow(0.6 * target, 2) + (LATR.test(W[e][0]) || LATR.test(W[e + 1][0]) ? 0 : Math.pow(0.15 * target, 2)); // prefer breaking after punctuation, then at a Latin word
+                  if (j === n && r < rows) continue;
+                  const v = f[r - 1][i] + c;
+                  if (v < f[r][j]) { f[r][j] = v; from[r][j] = i; }
+                }
+              }
+            }
+            if (f[rows][n] === Infinity) continue;
+            const out = [];
+            for (let r = rows, j = n; r > 0; r--) { const i = from[r][j]; out.unshift([a + i, a + j - 1]); j = i; }
+            return out;
+          }
+          return null;
+        }
+        const ROW_GAP = 1.2;
+        const headH = (rows) => rows.reduce((h, r, k) => h + r.size * (k === rows.length - 1 ? 1.04 : ROW_GAP), 0);
+        /* Plan a line's headline in a box { w, h, maxS1, maxS, twoTier }: the first clause big and the rest smaller
+         * (the KV film's hierarchy) when the line has an early clause break, else one size over ≤ 3 rows. */
+        function planHeadline(i, box) {
+          const W = story.line(i).words, n = W.length;
+          let p = -1;
+          for (let k = 0; k < n - 1; k++) if (/^[，：；]$/.test(W[k][0])) { p = k; break; }
+          if (box.twoTier && p >= 0 && spokenCount(W, 0, p) >= 3 && spokenCount(W, p + 1, n - 1) >= 3) {
+            const em1 = rowEm(W, 0, p);
+            for (const s1 of [96, 88, 80, 72, 64, 60]) {
+              if (s1 > box.maxS1 || em1 * s1 > box.w) continue;
+              for (const s2 of [60, 56, 52, 48]) {
+                if (s2 > s1 - 8) continue;
+                const r2 = breakRows(W, p + 1, n - 1, s2, box.w, 2);
+                if (!r2) continue;
+                const rows = [{ a: 0, b: p, size: s1 }].concat(r2.map(([s, e]) => ({ a: s, b: e, size: s2 })));
+                if (headH(rows) <= box.h) return rows;
+              }
+            }
+          }
+          for (const s of [96, 88, 80, 72, 66, 60, 56, 52, 48, 44]) {
+            if (s > box.maxS) continue;
+            const r = breakRows(W, 0, n - 1, s, box.w, 3);
+            if (!r) continue;
+            const rows = r.map(([a, b]) => ({ a, b, size: s }));
+            if (headH(rows) <= box.h) return rows;
+          }
+          return (breakRows(W, 0, n - 1, 40, box.w, 12) || [[0, n - 1]]).map(([a, b]) => ({ a, b, size: 40 }));
+        }
+
+        // ---------------- story → chapters → figures ----------------
+        const CH = (story.chapters.length ? story.chapters : [{ n: 1, key: "all", title: D.title || "", start: 0, end: END ? END.start : DUR }])
+          .map((c, k) => Object.assign({}, c, { k: k + 1, lines: [], figs: [] }));
+        const BODY = story.lines.filter((L) => !END || L.i !== END.line);
+        const chOf = {};
+        BODY.forEach((L) => {
+          let c = CH[0];
+          for (const x of CH) if (L.start >= x.start - 0.25) c = x;
+          c.lines.push(L.i);
+          chOf[L.i] = c;
+        });
+        // one figure holds one or two lines (two when both are short enough to share a 1920×1080 figure);
+        // a chapter always starts a new figure — tools/sfx.py mirrors this rule
+        const tlen = (i) => story.line(i).text.length;
+        const FIG = [];
+        CH.forEach((c) => {
+          const ls = c.lines.slice();
+          while (ls.length) {
+            const a = ls.shift(), b = ls[0];
+            const two = b != null && tlen(a) + tlen(b) <= 72 && Math.max(tlen(a), tlen(b)) <= 50;
+            if (two) ls.shift();
+            const f = { ch: c, lines: two ? [a, b] : [a] };
+            c.figs.push(f);
+            FIG.push(f);
+          }
+        });
+        if (!FIG.length) FIG.push({ ch: CH[0], lines: [] });
+        const NF = FIG.length;
+        const [COLS, ROWS] = NF <= 3 ? [NF, 1] : NF <= 4 ? [2, 2] : NF <= 6 ? [3, 2] : NF <= 8 ? [4, 2] : NF <= 9 ? [3, 3] : NF <= 12 ? [4, 3] : NF <= 15 ? [5, 3] : NF <= 16 ? [4, 4] : NF <= 20 ? [5, 4] : [Math.ceil(NF / 5), 5];
+        const PX = 2100, PY = 1300, CW = 1920, CHT = 1080;
+        const slotXY = (j) => { const r = Math.floor(j / COLS), c0 = j % COLS, c = r % 2 ? COLS - 1 - c0 : c0; return { r, c, x: c * PX, y: r * PY }; };
+        FIG.forEach((f, j) => Object.assign(f, slotXY(j), { j, n: j + 1 }));
+        const EMPTY = [];
+        for (let j = NF; j < COLS * ROWS; j++) EMPTY.push(slotXY(j));
+        const GW = COLS * PX - (PX - CW), GH = ROWS * PY - (PY - CHT);
+        const BAND = EMPTY.length ? 0 : 400; // no free cell: the title block and legend sit in a band under the grid
+        const SW = GW, SH = GH + BAND;
+        const sheet = $("sheet");
+        Object.assign(sheet.style, { left: "-200px", top: "-200px", width: SW + 400 + "px", height: SH + 400 + "px" });
+        ["leaders", "sparks"].forEach((id) => { const s = $(id); s.setAttribute("width", SW); s.setAttribute("height", SH); s.setAttribute("viewBox", `0 0 ${SW} ${SH}`); });
+
+        // ---------------- builders (the KV film's helpers) ----------------
+        const R = []; // per-frame renders registered by the starter and by beats
+        const add = (fn) => { R.push(fn); return fn; };
+        function put(parent, node, x, y) { node.style.left = x + "px"; node.style.top = y + "px"; parent.appendChild(node); return node; }
+        function txt(parent, cls, x, y, text, css) { const e = el("div", "abs " + (cls || ""), parent, text); e.style.left = x + "px"; e.style.top = y + "px"; if (css) e.style.cssText += css; return e; }
+        function box(parent, cls, x, y, w, h, text, css) {
+          const e = el("div", cls, parent, text);
+          e.style.left = x + "px"; e.style.top = y + "px";
+          if (w) e.style.width = w + "px";
+          if (h) e.style.height = h + "px";
+          if (css) e.style.cssText += css;
+          return e;
+        }
+        function label(parent, x, y, o, a, b) { const l = Kit.label(o); put(parent, l.el, x, y); add((t) => l.render(t, a, b)); return l; }
+        function note(parent, x, y, tag, text, a, b) { const n = Kit.note(text, { tag }); put(parent, n.el, x, y); add((t) => n.render(t, a, b)); return n; }
+        function foot(parent, x, y, mark, text, a, b) { const f = Kit.footnote({ mark, text }); put(parent, f.el, x, y); add((t) => f.render(t, a, b)); return f; }
+        function cls(e, c) { if (e._c !== c) { e.className = c; e._c = c; } }
+        function tr(e, s) { if (e._tr !== s) { e.style.transform = s; e._tr = s; } }
+        function xy(e, x, y) { e.style.left = x.toFixed(1) + "px"; e.style.top = y.toFixed(1) + "px"; }
+
+        // ---------------- figures on the sheet ----------------
+        const SP = Kit.sparks($("sparks"));
+        FIG.forEach((f) => {
+          f.el = Kit.cell($("cells"), { x: f.x, y: f.y, n: f.n, bx: 1772, by: 56 });
+          f.svg = svg("svg", { class: "kit-svg", width: CW, height: CHT, viewBox: `0 0 ${CW} ${CHT}`, style: "left:0;top:0" }, f.el);
+        });
+
+        // ---------------- timing: when the camera lands on a figure, when it leaves ----------------
+        const lastUnit = (i) => { const s = story.spoken(i); return s.length ? s[s.length - 1][1] : story.line(i).end; };
+        FIG.forEach((f, j) => {
+          const first = f.lines.length ? story.line(f.lines[0]) : null;
+          f.arrive = j === 0 ? 0 : first ? first.start - 0.1 : 0;
+        });
+        const bodyEnd = BODY.length ? BODY[BODY.length - 1] : null;
+        FIG.forEach((f, j) => {
+          const last = f.lines.length ? f.lines[f.lines.length - 1] : null;
+          const next = FIG[j + 1];
+          const hardEnd = next ? next.arrive : END ? END.start + 0.4 : bodyEnd ? bodyEnd.end + 0.5 : DUR;
+          f.leave = last != null ? Math.min(lastUnit(last) + 0.1, hardEnd - 0.75) : Math.max(f.arrive + 0.5, hardEnd - 0.75);
+          f.leave = Math.max(f.leave, f.arrive + 0.2);
+          f.show = j === 0 ? 0 : FIG[j - 1].leave + 0.1; // the figure is laid out while the camera is on its way
+        });
+
+        // ---------------- a line's beat note, phrases and placeholder plan (pure: sizes → height) ----------------
+        function chunksOf(i, maxEm) {
+          const W = story.line(i).words, groups = [];
+          let cur = [];
+          W.forEach((w, k) => { if (PUN.test(w[0])) { if (cur.length) groups.push(cur); cur = []; } else cur.push(k); });
+          if (cur.length) groups.push(cur);
+          const uEm = (k) => (LATR.test(W[k][0]) ? 0.6 * W[k][0].length : Array.from(W[k][0]).length);
+          const out = [];
+          // a long clause is cut into nearly equal pieces, preferring a cut next to a Latin / number unit (a word
+          // boundary) over one between two CJK characters — tools/sfx.py mirrors this
+          const isLat = (k) => LATR.test(W[k][0]);
+          groups.forEach((ks) => {
+            const cum = [];
+            ks.reduce((n, k, j) => (cum[j] = n + uEm(k)), 0);
+            const em = cum[ks.length - 1], parts = Math.min(ks.length, Math.ceil(em / maxEm));
+            let s0 = 0;
+            for (let m = 1; m < parts; m++) {
+              const target = (m * em) / parts;
+              let best = -1, bs = Infinity;
+              for (let j = s0; j <= ks.length - 1 - (parts - m); j++) {
+                const sc = Math.abs(cum[j] - target) - (isLat(ks[j]) || isLat(ks[j + 1]) ? 1.2 : 0);
+                if (sc < bs) { bs = sc; best = j; }
+              }
+              out.push(ks.slice(s0, best + 1));
+              s0 = best + 1;
+            }
+            out.push(ks.slice(s0));
+          });
+          return out.map((ks) => ({ ks, t: W[ks[0]][1], text: joinUnits(ks.map((k) => W[k][0])) }));
+        }
+        function keyPhrase(i) {
+          const W = story.line(i).words, cl = [];
+          let cur = [];
+          W.forEach((w) => { if (PUN.test(w[0])) { if (cur.length) cl.push(cur); cur = []; } else cur.push(w[0]); });
+          if (cur.length) cl.push(cur);
+          const pick = cl.find((c) => c.some((u) => /[A-Za-z\d]/.test(u))) || cl.slice().sort((p, q) => q.length - p.length)[0] || [];
+          // at most ~20 characters, cut between units (never inside a Latin word)
+          let n = pick.length;
+          while (n > 1 && Array.from(joinUnits(pick.slice(0, n))).length > 20) n--;
+          return joinUnits(pick.slice(0, n)) + (n < pick.length ? "…" : "");
+        }
+        function noteFor(i) {
+          const c = chOf[i];
+          const list = c && c.key ? NOTES[c.key] : null;
+          const j = c ? c.lines.indexOf(i) : -1;
+          if (Array.isArray(list) && list[j]) return { text: list[j], src: "beat" };
+          if (typeof list === "string" && j === 0) return { text: list, src: "beat" };
+          return { text: keyPhrase(i), src: "key" };
+        }
+        /* plan(i, w, solo, note?) — the placeholder's sizes inside a box of width w: the beat note on ≤ 2 lines, the
+         * phrases on ≤ 2 (duo) / 3 (solo) rows at their place on the line's time axis, all text ≥ 28 px.
+         * Returns the layout and `need`, the box height it takes. */
+        const PAD = 26, RULER_LABEL = 150;
+        function plan(i, w, solo, noteText) {
+          const L = story.line(i);
+          const nt = noteText ? { text: noteText, src: "beat" } : noteFor(i);
+          const iw = w - 2 * PAD, iwR = iw - RULER_LABEL;
+          const noteMax = solo ? 40 : 32, em = Math.max(1, bodyEm(nt.text));
+          let nSize = Math.floor((iw * 0.95) / em), nLines = 1;
+          if (nSize < 28) { nLines = 2; nSize = Math.floor((2 * iw * 0.9) / em); }
+          nSize = Math.max(28, Math.min(noteMax, nSize));
+          const CK = chunksOf(i, 7);
+          const span = Math.max(0.5, L.end - L.start), xOf = (t) => clamp01((t - L.start) / span) * iwR;
+          const maxRows = solo ? 3 : 2;
+          let lay = null;
+          for (const ps of solo ? [48, 44, 40, 36, 32, 30, 28] : [32, 30, 28]) {
+            const ph = ps + 18, rowsEnd = [];
+            let ok = true;
+            // each phrase sits at its time on the axis; if that spot is taken it slides right in the same row, and
+            // only takes a new row when the row is full (so short lines stay on one row, in spoken order)
+            const P = CK.map((c) => {
+              const pw = Math.ceil(bodyEm(c.text) * ps + 30), want = Math.min(xOf(c.t), iw - pw);
+              let r = -1, x = want;
+              for (let q = 0; q < rowsEnd.length; q++) {
+                const xq = Math.max(want, rowsEnd[q] + 10);
+                if (xq + pw <= iw) { r = q; x = xq; break; }
+              }
+              if (r < 0) {
+                if (rowsEnd.length < maxRows) { r = rowsEnd.length; x = Math.max(0, want); }
+                else { r = rowsEnd.indexOf(Math.min(...rowsEnd)); x = rowsEnd[r] + 10; ok = false; }
+              }
+              rowsEnd[r] = x + pw;
+              return { c, x, w: pw, r, h: ph };
+            });
+            lay = { ps, P, rows: Math.max(1, rowsEnd.length), ph };
+            if (ok && P.every((p) => p.x >= 0) && (!solo || lay.rows <= 2 || ps <= 32)) break;
+          }
+          const noteH = nLines * nSize * 1.3 + 6, partsH = lay.rows * (lay.ph + 10) - 10;
+          const g = solo ? { top: 36, a: 22, b: 34, bottom: 30 } : { top: 26, a: 12, b: 24, bottom: 22 };
+          const need = g.top + noteH + g.a + partsH + g.b + g.bottom;
+          return { line: i, nt, nSize, nLines, noteH, partsH, lay, need, iw, iwR, xOf, span, g, solo };
+        }
+
+        // ---------------- slots: where each line's headline and its beat live inside its figure ----------------
+        const X0 = 120, HW = 1640, TOP = 120, BOT = 930;
+        const SLOT = {};
+        FIG.forEach((f) => {
+          if (f.lines.length === 1) {
+            const i = f.lines[0];
+            const rows = planHeadline(i, { w: HW, h: 300, maxS1: 96, maxS: 96, twoTier: true });
+            const h = headH(rows), z0 = TOP + h + 46, z1 = 950;
+            const pl = plan(i, HW, true);
+            const bh = Math.min(z1 - z0, pl.need + 110);
+            f.free = { x: X0, y: z0, w: HW, h: z1 - z0 };
+            SLOT[i] = { line: i, fig: f, pos: "solo", rows, plan: pl, head: { x: X0, y: TOP, w: HW, h }, zone: { x: X0, y: z0 + Math.max(0, (z1 - z0 - bh) * 0.45), w: HW, h: bh }, appear: f.show };
+          } else if (f.lines.length === 2) {
+            const [a, b] = f.lines;
+            const pa = plan(a, HW, false), pb = plan(b, HW, false);
+            let ra, rb, z0, z1;
+            for (const [h1, s1, sA, h2, s2, sB] of [[232, 96, 88, 196, 72, 64], [196, 80, 72, 160, 64, 56], [170, 72, 60, 130, 56, 52]]) {
+              ra = planHeadline(a, { w: HW, h: h1, maxS1: s1, maxS: sA, twoTier: true });
+              rb = planHeadline(b, { w: HW, h: h2, maxS1: s2, maxS: sB, twoTier: true });
+              z0 = TOP + headH(ra) + 34; z1 = BOT - headH(rb) - 34;
+              if (z1 - z0 - 26 >= pa.need + pb.need) break;
+            }
+            const ex = Math.max(0, z1 - z0 - 26 - pa.need - pb.need);
+            const ha = pa.need + ex / 2, hb = pb.need + ex / 2;
+            f.free = { x: X0, y: z0, w: HW, h: z1 - z0 };
+            SLOT[a] = { line: a, fig: f, pos: "top", rows: ra, plan: pa, head: { x: X0, y: TOP, w: HW, h: headH(ra) }, zone: { x: X0, y: z0, w: HW, h: ha }, appear: f.show };
+            SLOT[b] = { line: b, fig: f, pos: "bottom", rows: rb, plan: pb, head: { x: X0, y: BOT - headH(rb), w: HW, h: headH(rb) }, zone: { x: X0, y: z1 - hb, w: HW, h: hb }, appear: f.show + 0.25 };
+          }
+        });
+
+        // ---------------- ghost headlines (this style's captions) ----------------
+        const HEAD = {};
+        /* headline(i, { accent, warn, punch, rows, x, y, size, w, appear }) — build (or rebuild) line i's ghost headline.
+         * Without opts the starter's automatic rows are used; accent / warn are phrases (painted across row breaks). */
+        function headline(i, o) {
+          const S = SLOT[i];
+          if (!S) throw new Error("headline: line " + i + " has no slot (the closing line is Kit.title)");
+          if (HEAD[i] && !o) return HEAD[i];
+          if (HEAD[i]) HEAD[i].el.remove();
+          o = o || {};
+          const L = story.line(i), W = L.words;
+          const rows = o.rows || (o.size ? (breakRows(W, 0, W.length - 1, o.size, o.w || S.head.w, 6) || [[0, W.length - 1]]).map(([a, b]) => ({ a, b, size: o.size })) : S.rows);
+          const marks = {};
+          [["a", o.accent], ["w", o.warn]].forEach(([k, list]) => (list || []).forEach((p) => {
+            const r = U.findRange(W, p);
+            if (r) for (let q = r[0]; q <= r[1]; q++) marks[q] = k;
+          }));
+          const wrap = el("div", "", S.fig.el);
+          wrap.style.cssText = `position:absolute;left:${o.x ?? S.head.x}px;top:${o.y ?? S.head.y}px`;
+          const appear = o.appear ?? S.appear;
+          let y = 0;
+          const G = rows.map((r) => {
+            const g = Kit.ghost({ story, line: i, range: [r.a, r.b], marks, punch: o.punch, lead: Math.max(0.35, W[r.a][1] - appear) });
+            g.el.style.left = "0px";
+            g.el.style.top = y.toFixed(0) + "px";
+            g.el.style.fontSize = r.size + "px";
+            wrap.appendChild(g.el);
+            y += r.size * ROW_GAP;
+            return g;
+          });
+          const H = {
+            el: wrap, rows: G, line: i, first: L.words[0][1], last: lastUnit(i),
+            at: (phrase) => story.phrase(i, phrase),
+            render(t) { for (const g of G) g.render(t); },
+          };
+          HEAD[i] = H;
+          return H;
+        }
+
+        /* ---------------- placeholder: the on-style draft beat for one line ----------------
+         * A construction-line hold box in non-photo blue (draft marks that don't print) with a 「待演绎」 tag, the beat
+         * note typed as the line starts, the line's phrases as drafted parts laid out on the line's own time axis
+         * (a dashed slot each, inked when spoken, the one being spoken in the accent), and a time ruler with a playhead. */
+        const PH = {};
+        function placeholder(i, o = {}) {
+          const S = SLOT[i];
+          if (!S) return { el: null, render() {} };
+          if (PH[i]) return PH[i];
+          const L = story.line(i), f = S.fig, z = S.zone;
+          const pl = o.note ? plan(i, z.w, S.pos === "solo", o.note) : S.plan;
+          const { nt, lay, iw, iwR, xOf, span, g: gp } = pl;
+          const bx = z.x, by = z.y, bw = z.w, bh = Math.max(z.h, pl.need);
+          const extra = bh - pl.need;
+          const noteY = by + gp.top, partsY = noteY + pl.noteH + gp.a + extra * 0.4, rulerY = partsY + pl.partsH + gp.b + extra * 0.6;
+          // the hold box: construction rectangle, corner brackets, a faint X (the draftsman's "figure goes here")
+          const g = svg("g", {}, f.svg);
+          const rect = svg("path", { d: `M ${bx} ${by} L ${bx + bw} ${by} L ${bx + bw} ${by + bh} L ${bx} ${by + bh} Z`, class: "kit-blue", style: "stroke-width:1.5;opacity:0.6" }, g);
+          const rlen = 2 * (bw + bh);
+          const xs = svg("path", { d: `M ${bx} ${by} L ${bx + bw} ${by + bh} M ${bx + bw} ${by} L ${bx} ${by + bh}`, class: "kit-blue", style: "stroke-width:1;opacity:0.12" }, g);
+          const xlen = 2 * Math.hypot(bw, bh);
+          const cn = 26;
+          const corners = svg("path", { d: `M ${bx} ${by + cn} L ${bx} ${by} L ${bx + cn} ${by} M ${bx + bw - cn} ${by} L ${bx + bw} ${by} L ${bx + bw} ${by + cn} M ${bx + bw} ${by + bh - cn} L ${bx + bw} ${by + bh} L ${bx + bw - cn} ${by + bh} M ${bx + cn} ${by + bh} L ${bx} ${by + bh} L ${bx} ${by + bh - cn}`, class: "kit-blue", style: "stroke-width:3" }, g);
+          // the tag sits on the top edge of the box
+          const tag = el("div", "ph-tag", f.el);
+          el("b", "", tag, "待演绎");
+          el("span", "", tag, `L${i} · ${L.start.toFixed(2)}–${L.end.toFixed(2)} s`);
+          xy(tag, bx + 22, by - 18);
+          // the beat note (story.notes) or the line's key phrase, typed as the voice reaches it
+          const nl = Kit.label({ text: nt.text, tone: "default" });
+          nl.el.classList.add("ph-note");
+          nl.el.style.fontSize = pl.nSize + "px";
+          nl.el.style.width = iw + "px";
+          put(f.el, nl.el, bx + PAD, noteY);
+          // parts on the time axis
+          const parts = lay.P.map((p) => {
+            const e = box(f.el, "tok slot", bx + PAD + p.x, partsY + p.r * (p.h + 10), p.w, p.h, null, `font-size:${lay.ps}px`);
+            el("span", "", e, p.c.text);
+            return { e, t: p.c.t, x: p.x };
+          });
+          parts.forEach((p, k) => (p.next = k + 1 < parts.length ? parts[k + 1].t : L.end));
+          // the time ruler: the line's span, a tick per phrase, a playhead that runs while the line is spoken
+          const rx0 = bx + PAD, rx1 = rx0 + iwR;
+          const ruler = svg("path", { d: `M ${rx0} ${rulerY} L ${rx1} ${rulerY}`, style: "fill:none;stroke:rgba(237,235,230,0.7);stroke-width:2" }, g);
+          const ends = svg("path", { d: `M ${rx0 - 9} ${rulerY + 9} L ${rx0 + 9} ${rulerY - 9} M ${rx1 - 9} ${rulerY + 9} L ${rx1 + 9} ${rulerY - 9} M ${rx0} ${rulerY - 14} L ${rx0} ${rulerY + 14} M ${rx1} ${rulerY - 14} L ${rx1} ${rulerY + 14}`, style: "fill:none;stroke:rgba(237,235,230,0.85);stroke-width:2.5" }, g);
+          const ticks = parts.map((p) => svg("path", { d: `M ${rx0 + xOf(p.t)} ${rulerY - 12} L ${rx0 + xOf(p.t)} ${rulerY}`, class: "kit-blue", style: "stroke-width:2.5" }, g));
+          const done = svg("path", { d: `M ${rx0} ${rulerY} L ${rx1} ${rulerY}`, class: "kit-acc", style: "stroke-width:3" }, g);
+          const head = svg("circle", { r: 7, fill: T.accent, class: "kit-lead-head", opacity: 0 }, g);
+          const spanT = txt(f.el, "ph-t", rx1 + 26, rulerY - 16, `${span.toFixed(2)} s`);
+          // these texts only touch in the far pull-back projection (the whole sheet at ~0.2×): allowed by design
+          [...tag.children, nl.el.querySelector(".kit-label-main"), spanT, ...parts.map((p) => p.e.firstChild)].forEach((e) => e && e.setAttribute("data-layout-allow-overlap", ""));
+          const A = S.appear, a0 = L.start;
+          const P = {
+            el: g, line: i, slot: S, note: nt, parts, box: { x: bx, y: by, w: bw, h: bh },
+            render(t) {
+              const u = E.io2(pr(t, A, 0.5));
+              op(g, t >= A ? 1 : 0);
+              draw(rect, rlen, u);
+              draw(xs, xlen, E.io2(pr(t, A + 0.15, 0.6)));
+              op(corners, pr(t, A + 0.3, 0.2));
+              show(tag, pr(t, A + 0.25, 0.2));
+              nl.render(t, a0 + 0.05, Infinity, 40);
+              parts.forEach((p, k) => {
+                const vis = pr(t, A + 0.3 + 0.03 * k, 0.2);
+                show(p.e, vis);
+                if (vis <= 0) return;
+                const on = t >= p.t - 0.04, now = on && t < p.next && t < L.end + 0.15;
+                cls(p.e, now ? "tok new" : on ? "tok" : "tok slot");
+                const b = on ? E.back(pr(t, p.t - 0.04, 0.3)) : 1;
+                tr(p.e, on && b < 1 ? `scale(${(0.7 + 0.3 * b).toFixed(3)})` : "");
+                op(ticks[k], on ? 1 : 0);
+              });
+              draw(ruler, iwR, E.io2(pr(t, A + 0.2, 0.45)));
+              op(ends, pr(t, A + 0.5, 0.2));
+              op(spanT, pr(t, A + 0.55, 0.2));
+              const ph3 = clamp01((t - a0) / span);
+              draw(done, iwR, ph3);
+              op(done, t >= a0 ? 1 : 0);
+              head.setAttribute("cx", (rx0 + ph3 * iwR).toFixed(1));
+              head.setAttribute("cy", rulerY);
+              head.setAttribute("opacity", t >= a0 && t <= L.end + 0.3 ? (1 - pr(t, L.end, 0.3)).toFixed(3) : 0);
+            },
+          };
+          PH[i] = P;
+          return P;
+        }
+
+        // ---------------- leaders between figures, the camera's path ----------------
+        const FLOW = END ? END.start + 0.5 : bodyEnd ? bodyEnd.end + 0.4 : DUR;
+        const LEAD = [];
+        for (let j = 0; j + 1 < NF; j++) {
+          const a = FIG[j], b = FIG[j + 1];
+          const { x, y } = a, X = b.x, Y = b.y;
+          let d, lx, ly, lab;
+          if (Y > y) { // down a row (the snake turns)
+            d = `M ${x + 960} ${y + 1000} L ${x + 960} ${y + 1150} L ${x + 920} ${y + 1190} L ${x + 70} ${y + 1190} L ${x + 30} ${y + 1230} L ${x + 30} ${Y + 130} L ${x + 70} ${Y + 170} L ${X + 96} ${Y + 170}`;
+            lx = x + 984; ly = y + 1112; lab = "↓ 图 " + b.n;
+          } else if (X > x) { // right
+            d = `M ${x + 1840} ${y + 990} L ${x + 1990} ${y + 990} L ${x + 2030} ${y + 950} L ${x + 2030} ${Y + 210} L ${x + 2070} ${Y + 170} L ${X + 96} ${Y + 170}`;
+            lx = x + 1850; ly = y + 976; lab = "→ 图 " + b.n;
+          } else { // left
+            d = `M ${x + 80} ${y + 990} L ${x - 70} ${y + 990} L ${x - 110} ${y + 950} L ${x - 110} ${Y + 128} L ${x - 150} ${Y + 88} L ${X + 1850} ${Y + 88}`;
+            lx = x - 70; ly = y + 976; lab = "← 图 " + b.n;
+          }
+          LEAD.push(Kit.leader($("leaders"), { d, a: a.leave + 0.02, b: b.arrive - 0.02, label: lab, lx, ly, sparks: SP, flow: FLOW }));
+        }
+
+        // ---------------- the sheet margin: drawing index + legend + title block ----------------
+        const tbRows = [["标题", D.subtitle || (RECAP && RECAP.tagline) || D.title || ""], ["绘制", "模型"], ["审核", "你"], ["张", "1 / 1"], ["版本", "A"]];
+        const tb = Kit.titleBlock({ rows: tbRows, w: 640 });
+        function legend(parent, x, y) {
+          const LG = [["background:#ffd21e;box-shadow:0 0 18px rgba(255,190,0,0.5)", "黄：新的 · 改变的 · 重要的"], ["background:#ff5b3a", "红线：浪费 · 代价"], ["border:2px solid #7fc8f8", "蓝：构造线 · 待演绎（不出图）"]];
+          txt(parent, "mono dim", x, y, "图例", "font-size:26px");
+          LG.forEach(([css, s], k) => { box(parent, "lg-sw", x, y + 56 + k * 64, null, null, null, css); txt(parent, "cn5", x + 110, y + 60 + k * 64, s, "font-size:26px"); });
+          const gk = txt(parent, "", x + 6, y + 50 + 3 * 64, "字", "font-family:var(--kit-font-display);font-weight:900;font-size:40px;line-height:1;color:rgba(237,235,230,0.17);-webkit-text-stroke:1.5px rgba(237,235,230,0.3)");
+          gk.setAttribute("data-layout-allow-overlap", "");
+          txt(parent, "cn5", x + 110, y + 60 + 3 * 64, "灰字：还没念到（念到才填实）", "font-size:26px");
+        }
+        if (EMPTY.length) {
+          const m = EMPTY[0];
+          const c = Kit.cell($("cells"), { x: m.x, y: m.y, n: null });
+          txt(c, "mono dim", 120, 120, "图纸目录", "font-size:26px");
+          CH.forEach((ch, k) => {
+            const figs = ch.figs.map((f) => f.n);
+            const y = 180 + k * 58;
+            if (y > 600) return;
+            txt(c, "", 120, y, String(ch.n ?? k + 1), "font-family:var(--kit-font-latin);font-weight:900;font-size:28px;color:#ffd21e");
+            txt(c, "cn5", 176, y, ch.title || "", "font-size:28px");
+            txt(c, "mono dim", 820, y + 2, figs.length ? "图 " + (figs.length > 1 ? figs[0] + "–" + figs[figs.length - 1] : figs[0]) : "", "font-size:24px");
+          });
+          legend(c, 1000, 120);
+          put(c, tb.el, 1160, 660);
+        } else {
+          const band = el("div", "", $("cells"));
+          band.style.cssText = `position:absolute;left:0;top:${GH + 60}px`;
+          legend(band, 120, 0);
+          put(band, tb.el, SW - 760, 20);
+        }
+        add((t) => tb.render(t, END ? END.start + 0.3 : FLOW));
+
+        // ---------------- camera: a 2.5D crane over the sheet, keyed to the story ----------------
+        const keys = [];
+        const key = (t, cx, cy, s, tilt, roll) => {
+          if (keys.length && t <= keys[keys.length - 1][0] + 0.02) t = keys[keys.length - 1][0] + 0.02;
+          keys.push([t, cx, cy, s, tilt, roll]);
+        };
+        FIG.forEach((f, j) => {
+          const cx = f.x + 964, cy = f.y;
+          const two = f.lines.length === 2;
+          key(f.arrive, cx, cy + 472, 1.035, 7, 0);
+          if (two) key(story.line(f.lines[1]).start - 0.1, cx - 2, cy + 502, 1.018, 6, 0);
+          key(f.leave, cx - 4, cy + (two ? 524 : 512), 1.0, 5, 0);
+          const nx = FIG[j + 1];
+          if (nx) {
+            const dir = nx.y > f.y ? 0 : nx.x > f.x ? -1 : 1;
+            key((f.leave + nx.arrive) / 2, (cx + nx.x + 964) / 2, (f.y + nx.y) / 2 + 540, 0.8, 14, dir ? 1.2 * dir : -1);
+          }
+        });
+        // the pull-back: the whole drawing at once (the closing line sits under it)
+        const lastF = FIG[NF - 1];
+        const full = (() => {
+          const s = END ? Math.min(1720 / SW, 640 / SH, 0.62) : Math.min(1760 / SW, 880 / SH, 0.8);
+          const cy = SH / 2 + (END ? 150 / s : 0);
+          return [SW / 2, cy, s];
+        })();
+        const pullFrom = lastF.leave;
+        const pullA = END ? END.start + 0.4 : bodyEnd ? bodyEnd.end + 0.4 : DUR;
+        if (DUR - pullFrom > 1.2) {
+          const [fx, fy, fs] = full;
+          const lx = lastF.x + 964, ly = lastF.y + 520;
+          key(Math.min(pullA, (pullFrom + DUR) / 2), lerp(lx, fx, 0.5), lerp(ly, fy, 0.5), Math.sqrt(fs) * 0.92, 18, -1.4);
+          const tFull = Math.min(DUR - 0.2, pullA + 0.8);
+          if (tFull > keys[keys.length - 1][0] + 0.3) key(tFull, fx + 20, fy + 30, fs * 1.07, 25, -2);
+          if (RECAP && RECAP.start < DUR - 0.3 && RECAP.start > keys[keys.length - 1][0] + 0.3) key(RECAP.start, fx + 10, fy + 15, fs * 1.035, 27, -2.4);
+          key(DUR, fx, fy, fs, 28, -2.7);
+        } else {
+          key(DUR, lastF.x + 958, lastF.y + 532, 0.99, 4.6, 0);
+        }
+        const CAM = Kit.camera($("world"), keys);
+        const FOCUS = [];
+        /* focus(a, b, { fig, x, y, s, tilt }) — lean the camera toward a sub-spot of a figure (fig-local x, y) between
+         * a and b; the base drift keeps running underneath, so the camera never parks. */
+        function focus(a, b, o) {
+          const base = CAM.at(a), fg = o.fig || null;
+          const X = (fg ? fg.x : 0) + (o.x ?? base[0] - (fg ? fg.x : 0)), Y = (fg ? fg.y : 0) + (o.y ?? base[1] - (fg ? fg.y : 0));
+          FOCUS.push({ a, b, r: Math.min(0.5, (b - a) / 3), off: [X - base[0], Y - base[1], (o.s ?? base[2]) - base[2], (o.tilt ?? base[3]) - base[3], 0] });
+        }
+        const world = $("world");
+        function camRender(t) {
+          const c = CAM.at(t);
+          for (const F of FOCUS) {
+            const w = E.io3(pr(t, F.a, F.r)) * (1 - E.io3(pr(t, F.b - F.r, F.r)));
+            if (w > 0) for (let k = 0; k < 4; k++) c[k] += w * F.off[k];
+          }
+          world.style.transform = `translate(960px,540px) rotateX(${c[3].toFixed(3)}deg) rotateZ(${c[4].toFixed(3)}deg) scale(${c[2].toFixed(4)}) translate(${(-c[0]).toFixed(2)}px,${(-c[1]).toFixed(2)}px)`;
+          return c;
+        }
+
+        // ---------------- chrome: chapter chip, sheet furniture, closing line, recap ----------------
+        const chap = new CX.Chapters($("chap"), story);
+        const FX = Kit.frame($("fx"));
+        if (D.draft) $("draft").style.display = "block";
+        const TITLE = END ? Kit.title(story, { size: 100, bottom: 200, lead: 0.35 }) : null;
+        if (TITLE) $("endwrap").appendChild(TITLE.el);
+        const RC = RECAP ? Kit.recap(story, { titleBlock: tbRows }) : null;
+        if (RC) $("recapwrap").appendChild(RC.el);
+        function hud(t) {
+          let f = 1;
+          FIG.forEach((F, j) => { if (t >= (j === 0 ? 0 : (FIG[j - 1].leave + F.arrive) / 2)) f = F.n; });
+          const pulled = DUR - pullFrom > 1.2 && t >= (pullFrom + Math.min(pullA, (pullFrom + DUR) / 2)) / 2;
+          const s = RC && t >= RECAP.start ? "SHEET 1 / 1 · 说明" : pulled ? "SHEET 1 / 1 · 全图" : "SHEET 1 / 1 · 图 " + f + " / " + NF;
+          U.setText(FX.sheetno, s);
+        }
+
+        // ---------------- the topic: beats.js ----------------
+        const api = {
+          story, C: CX, Kit, T, U,
+          figs: FIG, chapters: CH,
+          station: (k) => { const c = CH[k - 1]; return c ? { k, chapter: c, n: c.n, title: c.title, lines: c.lines, figs: c.figs, el: c.figs[0] ? c.figs[0].el : null, x: c.figs[0] ? c.figs[0].x : 0, y: c.figs[0] ? c.figs[0].y : 0 } : null; },
+          fig: (n) => FIG[n - 1],
+          slot: (i) => SLOT[i] || null,
+          headline, placeholder, focus, add,
+          camera: CAM, sparks: SP,
+          layers: { world, cells: $("cells"), leaders: $("leaders"), sparks: $("sparks"), endwrap: $("endwrap") },
+          at, ph,
+          put, txt, box, label, note, foot, cls, tr, xy,
+        };
+        let B = null;
+        try {
+          B = typeof window.Beats === "function" ? window.Beats(api) : null;
+        } catch (e) {
+          console.error("beats.js:", e);
+        }
+        BODY.forEach((L) => { if (SLOT[L.i] && !HEAD[L.i]) headline(L.i); });
+        const HL = Object.values(HEAD);
+
+        function frame(t) {
+          const covered = RC ? RC.covered(t) : false;
+          const disp = covered ? "none" : "";
+          if (world.style.display !== disp) { world.style.display = disp; $("endwrap").style.display = disp; }
+          if (RC) RC.render(t);
+          chap.render(t);
+          hud(t);
+          if (covered) return;
+          camRender(t);
+          for (const h of HL) h.render(t);
+          if (B && B.render) B.render(t);
+          for (const fn of R) fn(t);
+          for (const L of LEAD) L.render(t);
+          SP.render(t);
+          if (TITLE) TITLE.render(t);
+        }
+        frame(0);
+        const drive = { t: 0 };
+        const tl = gsap.timeline({ paused: true });
+        tl.to(drive, { t: DUR, duration: DUR, ease: "none", onUpdate: () => frame(tl.time()) }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

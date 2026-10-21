@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+@font-face { font-family: "ZCOOL XiaoWei"; src: url("assets/fonts/zcool-xiaowei.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Long Cang"; src: url("assets/fonts/long-cang.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Caveat"; src: url("assets/fonts/caveat-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+/* fonts:end */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--kit-bg); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--kit-bg); color: var(--kit-ink); font-family: var(--kit-font-body); }
+      #stage { position: absolute; inset: 0; overflow: hidden; }
+      #world { position: absolute; left: 0; top: 0; width: 4400px; height: 2400px; transform-origin: 0 0; }
+      #caps, #recap { position: absolute; inset: 0; pointer-events: none; }
+      .abs { position: absolute; white-space: nowrap; line-height: 1.15; }
+      /* token cards: what the model emits */
+      .tok { position: absolute; width: 108px; height: 72px; transform-origin: 50% 50%; }
+      .tok-card { position: absolute; inset: 0; background: var(--kit-surface); border-radius: 4px; box-shadow: 0 6px 10px rgba(42, 35, 32, 0.14); }
+      .tok-w { position: absolute; left: 0; right: 0; top: 4px; text-align: center; font-family: var(--kit-font-display); font-size: 46px; line-height: 60px; }
+      /* K (a key tag) and V (a value card) */
+      .kv { position: absolute; width: 50px; height: 36px; transform-origin: 50% 50%; }
+      .kv svg { position: absolute; left: 0; top: 0; overflow: visible; }
+      .kv b { position: absolute; inset: 0; text-align: center; font-family: var(--kit-font-mono); font-weight: 700; font-size: 31px; line-height: 38px; }
+      .kv.k b { color: var(--kit-accent-2); padding-left: 10px; }
+      .q { position: absolute; width: 56px; height: 56px; margin: -28px 0 0 -28px; transform-origin: 50% 50%; }
+      .q b { position: absolute; inset: 0; text-align: center; font-family: var(--kit-font-mono); font-weight: 700; font-size: 34px; line-height: 56px; color: var(--kit-accent); }
+      .qh { width: 68px; height: 68px; margin: -34px 0 0 -34px; } .qh b { font-size: 36px; line-height: 68px; }
+      .slip { position: absolute; padding: 8px 30px 12px; background: var(--kit-surface); box-shadow: 0 10px 18px rgba(42, 35, 32, 0.16); }
+      .chipfill { position: absolute; padding: 4px 16px 6px; background: var(--kit-surface); box-shadow: 0 6px 12px rgba(42, 35, 32, 0.16); }
+      .cell8 { position: absolute; height: 60px; transform-origin: 0 50%; overflow: hidden; }
+      .cell8 svg { position: absolute; left: 0; top: 0; overflow: visible; }
+      .page8 { position: absolute; width: 150px; height: 100px; transform-origin: 50% 100%; }
+      .page8 svg { position: absolute; left: 0; top: 0; overflow: visible; }
+      .bill .kit-term-v { font-size: 90px; }
+      .bill .kit-term-sub { font-size: 44px; }
+      #wash { position: absolute; left: -600px; top: -600px; width: 5600px; height: 3600px; pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-width="1920" data-height="1080">
+      <div id="stage" class="clip" data-start="0" data-duration="45" data-track-index="1">
+        <div id="world" data-layout-allow-overflow=""></div>
+      </div>
+      <div id="chap" class="clip" data-start="0" data-duration="45" data-track-index="2"></div>
+      <div id="caps" class="clip" data-start="0" data-duration="45" data-track-index="3"></div>
+      <div id="recap" class="clip" data-start="0" data-duration="45" data-track-index="4"></div>
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40.32" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-track-index="11"></audio>
+    </div>
+
+    <script>
+      /* KV cache in the V3 notebook style: one sheet of grid paper, a live pen, sticky notes.
+       * Every beat time comes from the story (story.at / story.phrase) plus small offsets. */
+      (function () {
+        "use strict";
+        window.__timelines = window.__timelines || {};
+        const C = window.ExplainerCore, K = window.Kit;
+        const { pr, E, clamp01 } = C;
+        const story = new C.Story(window.STORY);
+        const A = (l, u, n) => story.at(l, u, n);
+        const $ = (id) => document.getElementById(id);
+        const g = K.geo;
+        const f1 = (n) => n.toFixed(1);
+        const WORLD = $("world");
+        const S = K.scene();
+
+        // ---------- the page, two ink layers, the pen, the eraser ----------
+        K.page(WORLD, { x: -600, y: -600, w: 5600, h: 3600, margin: 750, holes: [900, 1700, 2500], holeX: 650 });
+        const ink = K.svg(WORLD, -600, -600, 5600, 3600); // world coordinates; under the paper props
+        const pen = K.pen(WORLD, { enter: { x: 1100, y: 900 } });
+        const eraser = K.eraser(WORLD, { home: { x: 2300, y: 1300 } });
+
+        const W = (cls, x, y, size, html) => K.el("div", "abs " + (cls || ""), WORLD, { left: x, top: y, fontSize: size }, html);
+        const write = (el, at, dur, color, o) => S.add(K.write(el, Object.assign({ at, dur, pen: color === null ? null : pen, color: color || "ink" }, o || {})));
+        const draw = (d, at, dur, color, width, o) => S.add(K.stroke((o && o.layer) || ink, d, Object.assign({ at, dur, color, width, pen: o && o.nopen ? null : pen }, o || {})));
+        const put = (el, x, y) => { WORLD.appendChild(el); el.style.left = x + "px"; el.style.top = y + "px"; return el; };
+        const note = (text, x, y, o) => { const n = K.note(text, Object.assign({ pen, speed: 0.04 }, o)); put(n.el, x, y); S.add(n); return n; };
+        // a pure-t envelope: 0 before a, 1 after a + d
+        const up = (t, a, d, e) => (e || E.io2)(pr(t, a, d));
+
+        // ---------- camera: one move per beat, slow pushes in between ----------
+        // the camera never parks: a dolly move per beat, linear drifts in between (no pixel-still holds)
+        const cam = K.camera(WORLD, K.view(690, 400, 1.25));
+        cam
+          .move(K.view(735, 412, 1.2), 0, 7.25, "linear")
+          .move(K.view(1160, 610, 0.88), 7.25, 0.85, "io3")
+          .move(K.view(1160, 600, 0.89), 8.1, 3.1, "linear")
+          .move(K.view(1159, 588, 0.9), 11.2, 8.75, "linear")
+          .move(K.view(2050, 1500, 1.0), 19.95, 0.9, "io3")
+          .move(K.view(2066, 1488, 1.04), 20.85, 3.1, "linear")
+          .move(K.view(1240, 1530, 0.86), 23.95, 0.7, "io3")
+          .move(K.view(1256, 1522, 0.89), 24.65, 5.55, "linear")
+          .move(K.view(3300, 1560, 0.9), 30.2, 0.85, "io3")
+          .move(K.view(3322, 1556, 0.93), 31.05, 4.45, "linear")
+          .move(K.view(2230, 1160, 0.435), 35.5, 0.95, "io3")
+          .move(K.view(2236, 1146, 0.452), 36.45, 4.2, "linear");
+
+        // ================= Beat 1 · 大模型回答问题，一个 token 一个 token 往外蹦 =================
+        const b1 = { big: A(1, "大"), ans: A(1, "回"), shi: A(1, "是"), tok1: A(1, "token", 1), tok2: A(1, "token", 2), beng: A(1, "蹦") };
+        draw(g.rect(200, 272, 280, 106, 11, 3), b1.big + 0.02, 0.24, "ink", 3.4);
+        write(W("kit-serif", 262, 293, 52, "大模型"), b1.big + 0.27, 0.18);
+        write(W("kit-hand kit-tone-accent", 200, 152, 58, "问"), b1.ans - 0.02, 0.1, "accent");
+        write(W("kit-serif", 262, 154, 54, "天空为什么是蓝的？"), b1.ans + 0.1, 0.4);
+        draw(g.arrow(330, 226, 330, 266, 13, 0.1, 12), b1.ans + 0.53, 0.1, "ink", 3);
+        draw(g.arrow(488, 325, 686, 325, 15, 0.04, 16), b1.shi, 0.2, "accent-2", 4);
+
+        // the token cards: they hop ("蹦") out of the model, land in their slot, and the pen writes the word
+        const WORDS = ["因为", "空气", "把", "蓝光", "散射", "得", "更", "多"];
+        const TX = (i) => 700 + 124 * i, TY = 290, TW = 108, TH = 72;
+        const tokens = WORDS.map((w, i) => {
+          const holder = K.el("div", "tok", WORLD, { left: TX(i), top: TY });
+          K.el("div", "tok-card", holder);
+          const sv = K.svg(holder, 0, 0, TW, TH);
+          const red = i === 3 || i === 7;
+          const outline = K.path(sv, g.rect(3, 3, TW - 6, TH - 6, 40 + i, 2), red ? "accent" : "ink", 3);
+          const word = K.el("div", "tok-w" + (red ? " kit-tone-accent" : ""), holder, null, w);
+          holder.style.visibility = "hidden";
+          return { i, w, holder, outline, word, red };
+        });
+        function hop(i, t0, penWrite) {
+          const T = tokens[i], dur = 0.26;
+          S.fn((t) => {
+            const u = pr(t, t0, dur), h = T.holder;
+            if (u <= 0) { h.style.visibility = "hidden"; return; }
+            h.style.visibility = "visible";
+            if (u >= 1) { h.style.transform = "none"; return; }
+            const e = E.io2(u), dx = (488 - TW / 2 - TX(i)) * (1 - e), dy = (325 - TH / 2 - TY) * (1 - e) - Math.sin(Math.PI * e) * 80;
+            h.style.transform = `translate(${f1(dx)}px,${f1(dy)}px) scale(${(0.45 + 0.55 * E.o2(u)).toFixed(3)})`;
+          });
+          K.event("tap", t0 + dur, 0);
+          write(T.word, t0 + dur + 0.02, T.w.length > 1 ? 0.16 : 0.09, penWrite ? (T.red ? "accent" : "ink") : null);
+        }
+        hop(0, b1.tok1 - 0.24, true);
+        hop(1, b1.tok2 - 0.24, true);
+        hop(2, b1.beng - 0.22, true);
+        const N2 = A(2, "token", 2) + 0.02, N3 = A(3, "慢") + 0.12, N4 = A(4, "来") + 0.08;
+        note("自回归：\n每次只生成\n1 个 token", 176, 440, { at: b1.beng + 0.3, width: 440, rot: -1.5, out: [N2 - 0.34, 0.3] });
+
+        // ================= Beat 2 · 新 token 回头看前面所有的 token =================
+        const b2 = { xin: A(2, "新"), hui: A(2, "回"), suo: A(2, "所"), tok: A(2, "token", 2) };
+        hop(3, b2.xin - 0.22, true);
+        // look back: one link from the new token to every earlier token, sweeping left
+        [2, 1, 0].forEach((j, k) => {
+          draw(g.arrow(TX(3) + 44, TY - 8, TX(j) + TW / 2 + 6, TY - 8, 60 + j, 0.34, 16), b2.hui + k * 0.15, 0.14, "accent-2", 3.8);
+        });
+        // on 所有: every earlier token lights up
+        [0, 1, 2].forEach((j) => S.add(K.highlight(tokens[j].holder, { x: 10, y: 30, w: TW - 20, h: 30, at: b2.suo - 0.04 + j * 0.13, dur: 0.11, pen, under: tokens[j].word })));
+        note("注意力：\n新 token 要和\n前面每一个比一比", 168, 430, { at: N2, width: 452, rot: 1.2, out: [N3 - 0.34, 0.3] });
+
+        // ================= Beat 3 · 不缓存：每一步把前面全部重算，越写越慢 =================
+        const b3 = { mei: A(3, "每"), chong: A(3, "重"), yue: A(3, "越", 1), man: A(3, "慢") };
+        const RY = (n) => 404 + (n - 1) * 58, CH = 46;
+        const rowT = (n) => b3.mei + 0.03 + (n - 1) * 0.15;
+        const cellD = (n, j) => g.rect(TX(j) + 3, RY(n), TW - 6, CH, 100 + n * 10 + j, 1.8);
+        const NS = "http://www.w3.org/2000/svg";
+        const rows = [];
+        for (let n = 1; n <= 7; n++) {
+          const lab = W("kit-cv kit-tone-muted", 650, RY(n) - 6, 44, String(n));
+          write(lab, rowT(n), 0.06, null);
+          if (n >= 5) hop(n - 1, rowT(n) - 0.24, false);
+          let d = "";
+          for (let j = 0; j < n; j++) d += cellD(n, j) + " ";
+          const outline = draw(d, rowT(n), 0.13, "ink", 2.6, { ease: "linear" });
+          // waste: the n-1 cells that were already computed in earlier steps (orange marker + hatching)
+          const gW = document.createElementNS(NS, "g");
+          ink.appendChild(gW);
+          if (n > 1) {
+            const cp = document.createElementNS(NS, "clipPath");
+            cp.setAttribute("id", "waste" + n);
+            for (let j = 0; j < n - 1; j++) {
+              const r = document.createElementNS(NS, "rect");
+              r.setAttribute("x", TX(j) + 4); r.setAttribute("y", RY(n) + 1); r.setAttribute("width", TW - 8); r.setAttribute("height", CH - 2);
+              cp.appendChild(r);
+            }
+            ink.appendChild(cp);
+            const wash = document.createElementNS(NS, "rect");
+            wash.setAttribute("x", TX(0)); wash.setAttribute("y", RY(n)); wash.setAttribute("width", 124 * (n - 1)); wash.setAttribute("height", CH);
+            wash.setAttribute("clip-path", `url(#waste${n})`);
+            wash.style.fill = "rgba(240,132,52,0.42)";
+            gW.appendChild(wash);
+            const hat = K.path(gW, g.hatch(TX(0), RY(n), 124 * (n - 1), CH, 13), "warn", 2.4);
+            hat.setAttribute("clip-path", `url(#waste${n})`);
+          }
+          // the new cell of this step (token n): computed for the first time
+          const fresh = K.path(ink, g.rect(TX(n - 1) + 6, RY(n) + 3, TW - 12, CH - 6, 300 + n, 1), "none", 0, { fill: "rgba(42,35,32,0.09)" });
+          rows.push({ n, lab, outline, gW, fresh, tw: Math.max(b3.chong, rowT(n) + 0.12) });
+        }
+        const chongL = W("kit-hand kit-tone-warn", 1196, 412, 56, "重新算");
+        write(chongL, rowT(7) + 0.17, 0.22, "warn");
+        const chongA = draw(g.arrow(1190, 470, 1020, 560, 31, -0.12, 16), rowT(7) + 0.42, 0.13, "warn", 4);
+        const costH = W("kit-hand", 1716, 334, 46, "每步耗时");
+        write(costH, b3.yue - 0.36, 0.26);
+        const cost = K.bars({ rows: [1, 2, 3, 4, 5, 6, 7].map((n) => ({ label: "", value: n, max: 7, tone: "warn", valueText: String(n) })), width: 290, rowH: 58, labelW: 0, stagger: 0.16, at: b3.yue - 0.04, dur: 0.75 });
+        put(cost.el, 1700, RY(1) + 23 - 29);
+        S.add(cost);
+        note("第 n 步要把\n前面 n 个\n全部重算", 172, 432, { at: N3, width: 420, rot: -0.8, out: [N4 - 0.34, 0.3] });
+
+        // ================= Beat 4 · KV cache：每个 token 的 K、V 只算一次，存起来 =================
+        const b4 = { kv: A(4, "KV"), ban: A(4, "办"), mei: A(4, "每"), key: A(4, "Key"), val: A(4, "Value"), zhi: A(4, "只"), cun: A(4, "存"), lai: A(4, "来") };
+        const kvT = W("kit-cv kit-tone-accent", 1736, 238, 76, "KV cache");
+        write(kvT, b4.kv - 0.02, 0.34, "accent");
+        S.add(K.highlight(WORLD, { x: 1730, y: 286, w: 300, h: 34, at: b4.kv + 0.36, dur: 0.2, pen, under: kvT }));
+        // the eraser wipes out the waste and the cost bars: from now on nothing is recomputed
+        const ER0 = b4.kv + 0.04, ER1 = b4.kv + 0.92;
+        eraser.rub(ER0, ER1, [{ x: 1960, y: 440 }, { x: 1780, y: 640 }, { x: 1960, y: 840 }, { x: 1500, y: 800 }, { x: 900, y: 560 }, { x: 760, y: 760 }, { x: 1300, y: 790 }, { x: 820, y: 640 }]);
+        const fadeWaste = (n) => ER0 + 0.3 + (7 - n) * 0.07;
+        S.fn((t) => {
+          for (const r of rows) {
+            r.gW.style.opacity = "0";
+            if (t >= r.tw) {
+              const u = t - r.tw;
+              const flash = u < 0.1 ? u / 0.1 : 1 - 0.55 * Math.sin(Math.PI * clamp01((u - 0.1) / 0.18)) * (u < 0.46 ? 1 : 0) - 0.55 * Math.sin(Math.PI * clamp01((u - 0.28) / 0.18)) * (u < 0.46 ? 1 : 0);
+              r.gW.style.opacity = (Math.max(0, Math.min(1, flash)) * (1 - pr(t, fadeWaste(r.n), 0.16))).toFixed(3);
+            }
+            r.fresh.style.opacity = (pr(t, rowT(r.n) + 0.1, 0.1)).toFixed(3);
+          }
+          const gone = 1 - pr(t, ER0, 0.3);
+          cost.el.style.opacity = gone.toFixed(3);
+          costH.style.opacity = gone.toFixed(3);
+          chongL.style.opacity = gone.toFixed(3);
+          chongA.el.style.opacity = gone.toFixed(3);
+        });
+        // erase the waste cells' outlines too, leaving only the diagonal: one cell per token
+        for (let n = 2; n <= 7; n++) {
+          let d = "";
+          for (let j = 0; j < n - 1; j++) d += cellD(n, j) + " ";
+          const p = K.path(ink, d, "pencil", 2.2, { strokeDasharray: "5 6" });
+          S.fn((t) => { p.style.opacity = (0.8 * pr(t, fadeWaste(n), 0.16) * (1 - pr(t, b4.key - 0.3, 0.3))).toFixed(3); });
+        }
+        S.fn((t) => {
+          for (let n = 2; n <= 7; n++) {
+            // the solid row outline keeps only its diagonal cell once the eraser passed (redrawn as one cell below)
+            rows[n - 1].outline.el.style.opacity = (1 - pr(t, fadeWaste(n), 0.16)).toFixed(3);
+          }
+        });
+        for (let n = 2; n <= 7; n++) {
+          const keep = K.path(ink, cellD(n, n - 1), "ink", 2.6);
+          S.fn((t) => { keep.style.opacity = (t >= fadeWaste(n) ? 1 : 0).toString(); });
+        }
+        // the ledger: two columns, K | V, one row per token
+        draw(g.rect(1716, 300, 434, 576, 81, 3), b4.ban - 0.02, 0.36, "ink", 3.4);
+        draw(g.line(1950, 312, 1952, 866, 82, 2) + " " + g.line(1726, 398, 2140, 396, 83, 2), b4.ban + 0.36, 0.16, "ink", 2.6);
+        write(W("kit-cv kit-tone-accent-2", 1820, 322, 56, "K"), b4.ban + 0.55, 0.07, "accent-2");
+        write(W("kit-cv", 2032, 322, 56, "V"), b4.ban + 0.66, 0.07, "ink");
+        // 每个 token: the pen runs down the diagonal, one cell per token
+        S.add(K.highlight(WORLD, { x: TX(0) + 8, y: RY(1) + 10, w: TW - 16, h: CH - 20, at: b4.mei + 0.1, dur: 0.07, pen }));
+        for (let n = 2; n <= 7; n++) S.add(K.highlight(WORLD, { x: TX(n - 1) + 8, y: RY(n) + 10, w: TW - 16, h: CH - 20, at: b4.mei + 0.1 + (n - 1) * 0.09, dur: 0.07, pen }));
+
+        // K (a key tag) and V (a value card) for every token
+        function kvPiece(kind, x, y, red) {
+          const el = K.el("div", "kv " + kind, WORLD, { left: x, top: y });
+          const sv = K.svg(el, 0, 0, 50, 36);
+          if (kind === "k") K.path(sv, g.tag(1, 2, 48, 32, 7 + x), red ? "accent" : "accent-2", 2.6, { fill: "rgba(46,90,156,0.12)" });
+          else K.path(sv, g.rect(2, 2, 46, 32, 9 + x, 1.2), red ? "accent" : "ink", 2.6, { fill: "#ffe68a" });
+          K.el("b", "", el, null, kind === "k" ? "K" : "V");
+          el.style.visibility = "hidden";
+          return el;
+        }
+        // a piece pops at t0, then (optionally) hops to (x2, y2) between t1 and t1 + dur
+        function pieceMotion(el, x, y, t0, x2, y2, t1, dur) {
+          S.fn((t) => {
+            const u = pr(t, t0, 0.14);
+            if (u <= 0) { el.style.visibility = "hidden"; return; }
+            el.style.visibility = "visible";
+            let dx = 0, dy = 0;
+            if (x2 != null) {
+              const v = E.io2(pr(t, t1, dur));
+              dx = (x2 - x) * v; dy = (y2 - y) * v - Math.sin(Math.PI * v) * 46;
+            }
+            const s = u < 1 ? 1.5 - 0.5 * E.o2(u) : 1;
+            el.style.transform = `translate(${f1(dx)}px,${f1(dy)}px) scale(${s.toFixed(3)})`;
+          });
+        }
+        const LKX = 1806, LVX = 2010;
+        for (let n = 1; n <= 7; n++) {
+          const x0 = TX(n - 1) + 5, y0 = RY(n) + 5;
+          const k = kvPiece("k", x0, y0), v = kvPiece("v", x0 + 53, y0);
+          const ts = b4.cun - 0.06 + (n - 1) * 0.075;
+          pieceMotion(k, x0, y0, b4.key - 0.06 + (n - 1) * 0.035, LKX, y0, ts, 0.42);
+          pieceMotion(v, x0 + 53, y0, b4.val - 0.06 + (n - 1) * 0.035, LVX, y0, ts + 0.03, 0.42);
+          K.event("tap", ts + 0.42, 0);
+        }
+        // 只算一次: ×1, ringed
+        write(W("kit-cv kit-tone-accent", 1296, 404, 112, "×1"), b4.zhi, 0.16, "accent");
+        draw(g.loop(1360, 472, 92, 66, 41), b4.zhi + 0.2, 0.26, "accent", 5);
+        note("K 用来匹配，\nV 是被取走的内容", 172, 434, { at: N4, width: 470, rot: 1.4 });
+
+        // ================= Beat 5 · 之后只算新来的那一个，再去缓存里查 =================
+        const b5 = { zhi: A(5, "只"), xin: A(5, "新"), na: A(5, "那"), ge: A(5, "个"), zai: A(5, "再"), cha: A(5, "查") };
+        const cmp = K.bars({ rows: [{ label: "不缓存", value: 8, max: 8, tone: "warn", valueText: "8 份" }, { label: "缓存", value: 1, max: 8, tone: "ok", valueText: "1 份" }], width: 460, rowH: 60, labelW: 170, stagger: 0.25, at: b5.zhi - 0.06, dur: 0.7 });
+        put(cmp.el, 520, 902);
+        S.add(cmp);
+        S.fn((t) => { cmp.el.style.opacity = (1 - pr(t, A(6, "代") - 0.1, 0.4)).toFixed(3); });
+        hop(7, b5.xin - 0.22, true);
+        // the others stay dark: only the newest token computes
+        S.fn((t) => {
+          const d = pr(t, b5.xin - 0.1, 0.25);
+          for (let i = 0; i < 7; i++) {
+            tokens[i].word.style.color = d > 0.5 ? "var(--kit-muted)" : "";
+            tokens[i].outline.style.stroke = d > 0.5 ? "#9C9186" : "";
+          }
+        });
+        write(W("kit-cv kit-tone-muted", 650, RY(8) - 6, 44, "8"), b5.xin + 0.2, 0.06, null);
+        let skip = "";
+        for (let j = 0; j < 7; j++) skip += cellD(8, j) + " ";
+        draw(skip, b5.xin + 0.22, 0.12, "pencil", 2.2, { nopen: true, dash: "6 7" });
+        draw(cellD(8, 7), b5.xin + 0.24, 0.12, "accent", 3.2);
+        {
+          const x0 = TX(7) + 5, y0 = RY(8) + 5;
+          const k = kvPiece("k", x0, y0, true), v = kvPiece("v", x0 + 53, y0, true);
+          pieceMotion(k, x0, y0, b5.na - 0.04, LKX, y0, b5.ge - 0.06, 0.34);
+          pieceMotion(v, x0 + 53, y0, b5.na + 0.02, LVX, y0, b5.ge - 0.03, 0.34);
+          K.event("tap", b5.ge + 0.3, 0);
+        }
+        // 再去缓存里查: its Q runs down the K column; each row gets a relevance weight; the V's flow back
+        const WTS = [0.22, 0.48, 0.14, 0.86, 0.72, 0.26, 0.92, 0.55];
+        const qEl = K.el("div", "q", WORLD, null, "<b>Q</b>");
+        const qSv = K.svg(qEl, 0, 0, 56, 56);
+        K.path(qSv, g.loop(28, 28, 25, 25, 77, 1.05), "accent", 3.4, { fill: "rgba(198,61,47,0.1)" });
+        qEl.appendChild(qEl.firstChild);
+        const Q0 = { x: TX(7) + TW / 2, y: TY - 46 }, QX = 1758, SCAN0 = b5.zai + 0.24, SCAN1 = b5.cha - 0.12;
+        const qy = (n) => RY(n) + 23;
+        const wBars = WTS.map((w, i) => K.path(ink, g.hatch(1862, qy(i + 1) - 8, 80 * w, 16, 7) + " " + g.rect(1862, qy(i + 1) - 8, 80 * w, 16, 600 + i, 1), "accent-2", 2.4));
+        const links = WTS.map((w, i) => K.path(ink, g.line(QX + 26, qy(i + 1), LKX - 4, qy(i + 1), 700 + i, 2), "accent", 2.4));
+        const dots = [];
+        WTS.forEach((w, i) => { for (let k = 0; k < 2; k++) { const c = document.createElementNS(NS, "circle"); c.setAttribute("r", f1(5 + 9 * w)); c.style.fill = "#2E5A9C"; ink.appendChild(c); dots.push({ c, i, k, w }); } });
+        K.event("stroke", SCAN0, SCAN1 - SCAN0, { len: 500 });
+        S.fn((t) => {
+          // Q
+          const a = pr(t, b5.zai - 0.02, 0.14);
+          qEl.style.visibility = a > 0 ? "visible" : "hidden";
+          let p = Q0;
+          if (t > b5.zai + 0.08) {
+            const m = E.io2(pr(t, b5.zai + 0.08, 0.16));
+            p = { x: Q0.x + (QX - Q0.x) * m, y: Q0.y + (qy(1) - Q0.y) * m };
+          }
+          const sc = pr(t, SCAN0, SCAN1 - SCAN0) * 7;
+          if (t > SCAN0) p = { x: QX, y: qy(1) + sc * 58 };
+          const out = pr(t, b5.cha + 0.42, 0.25);
+          qEl.style.opacity = (1 - out).toFixed(3);
+          qEl.style.transform = `translate(${f1(p.x)}px,${f1(p.y)}px) scale(${(a < 1 ? 1.4 - 0.4 * a : 1).toFixed(3)})`;
+          // weights appear as Q passes each row; the link to the row being compared flashes
+          WTS.forEach((w, i) => {
+            const ti = SCAN0 + ((SCAN1 - SCAN0) * i) / 7;
+            wBars[i].style.opacity = (pr(t, ti - 0.02, 0.08) * (1 - 0.6 * pr(t, b4.kv + 9.5, 0.3))).toFixed(3);
+            links[i].style.opacity = (Math.max(0, 1 - Math.abs(t - ti) / 0.09)).toFixed(3);
+          });
+          // the matching V's flow back to the new token, the heavier the bigger
+          dots.forEach((d) => {
+            const s0 = SCAN1 - 0.05 + d.k * 0.12 + d.i * 0.012, u = pr(t, s0, 0.5);
+            if (u <= 0 || u >= 1) { d.c.style.opacity = "0"; return; }
+            const P0 = { x: LVX + 25, y: qy(d.i + 1) }, P2 = { x: TX(7) + TW / 2, y: TY + TH - 4 }, P1 = { x: 1900, y: Math.min(qy(d.i + 1), 600) - 160 };
+            const e = E.io2(u), q = 1 - e;
+            d.c.setAttribute("cx", f1(q * q * P0.x + 2 * q * e * P1.x + e * e * P2.x));
+            d.c.setAttribute("cy", f1(q * q * P0.y + 2 * q * e * P1.y + e * e * P2.y));
+            d.c.style.opacity = (Math.min(1, Math.sin(Math.PI * u) * 2) * (0.35 + 0.65 * d.w)).toFixed(3);
+          });
+        });
+        draw(g.tick(TX(7) + TW - 18, TY - 34, 34, 51), b5.cha + 0.36, 0.1, "accent", 5);
+
+        // ================= Beat 6 · 代价是显存：缓存跟着上下文一起涨 =================
+        const b6 = { dai: A(6, "代"), xian: A(6, "显"), huan: A(6, "缓"), gen: A(6, "跟"), zhang: A(6, "涨") };
+        draw(g.arrow(1933, 892, 1933, 1150, 91, 0.04, 20), b6.dai - 0.06, 0.32, "accent-2", 4, { dash: "14 10" });
+        const MEM = { x: 1740, y: 1180, w: 380, h: 720 };
+        draw(g.rect(MEM.x, MEM.y, MEM.w, MEM.h, 93, 3), b6.xian - 0.34, 0.32, "ink", 3.6);
+        let pins = "";
+        for (let y = MEM.y + 40; y < MEM.y + MEM.h - 20; y += 48) pins += `M ${MEM.x - 22} ${y} L ${MEM.x - 2} ${y} M ${MEM.x + MEM.w + 2} ${y} L ${MEM.x + MEM.w + 22} ${y} `;
+        draw(pins, b6.xian - 0.04, 0.18, "ink", 3.2, { nopen: true, ease: "linear" });
+        write(W("kit-serif", 1746, 1072, 76, "显存"), b6.xian - 0.02, 0.2);
+        write(W("kit-cv kit-tone-muted", 1984, 1098, 46, "GPU memory"), b6.xian + 0.2, 0.18, "muted");
+        // the fill: cache rows stacking up, one step per 1K of context
+        const STEP = 126, steps = [b6.huan + 0.24, b6.gen + 0.17, b6.gen + 0.57, b6.gen + 0.97];
+        const fillClip = document.createElementNS(NS, "clipPath");
+        fillClip.setAttribute("id", "memfill");
+        const fillRect = document.createElementNS(NS, "rect");
+        fillRect.setAttribute("x", MEM.x + 4); fillRect.setAttribute("width", MEM.w - 8);
+        fillClip.appendChild(fillRect);
+        ink.appendChild(fillClip);
+        const fillG = document.createElementNS(NS, "g");
+        fillG.setAttribute("clip-path", "url(#memfill)");
+        ink.appendChild(fillG);
+        const fw = document.createElementNS(NS, "rect");
+        fw.setAttribute("x", MEM.x); fw.setAttribute("y", MEM.y); fw.setAttribute("width", MEM.w); fw.setAttribute("height", MEM.h);
+        fw.style.fill = "rgba(46,90,156,0.14)";
+        fillG.appendChild(fw);
+        K.path(fillG, g.hatch(MEM.x, MEM.y, MEM.w, MEM.h, 16), "accent-2", 2.2, { opacity: "0.75" });
+        let rowsD = "";
+        for (let y = MEM.y + MEM.h - 21; y > MEM.y; y -= 21) rowsD += `M ${MEM.x + 6} ${y} L ${MEM.x + MEM.w - 6} ${y} `;
+        K.path(fillG, rowsD, "accent-2", 1.6, { opacity: "0.6" });
+        const level = (t) => {
+          let L = 0;
+          steps.forEach((s) => { L += STEP * E.io2(pr(t, s, 0.24)); });
+          const b = t - b6.zhang;
+          if (b > 0) L += 46 * Math.sin(Math.PI * clamp01(b / 0.5)) * (b < 0.5 ? 1 : 0);
+          return L;
+        };
+        const ctx = W("kit-hand", 1452, 1700, 46, '上下文 <span class="kit-cv" style="font-size: 62px">1K</span> <svg width="48" height="22" viewBox="0 0 48 22" style="overflow: visible"><path d="M 2 11 L 42 11 M 31 3 L 44 11 L 31 19" style="fill: none; stroke: #2A2320; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round" /></svg>');
+        const ctxN = ctx.querySelector(".kit-cv");
+        write(ctx, steps[0] - 0.02, 0.22);
+        K.event("tap", steps[1], 0); K.event("tap", steps[2], 0); K.event("tap", steps[3], 0);
+        S.fn((t) => {
+          const L = level(t);
+          fillRect.setAttribute("y", f1(MEM.y + MEM.h - 4 - L));
+          fillRect.setAttribute("height", f1(L));
+          const k = steps.filter((s) => t >= s).length;
+          const s = (Math.max(1, k)) + "K";
+          if (ctxN.textContent !== s) ctxN.textContent = s;
+          ctx.style.top = f1(MEM.y + MEM.h - 4 - Math.max(L, STEP * 0.6) - 44) + "px";
+        });
+        note("显存占用和\n上下文长度成正比", 2300, 1590, { at: b6.gen + 0.62, width: 470, rot: -1.2, out: [23.98, 0.3] });
+        const zhangA = draw(g.arrow(2178, 1580, 2178, 1386, 95, 0.0, 24), b6.zhang - 0.1, 0.16, "accent", 6);
+        const zhangT = W("kit-hand kit-tone-accent", 2200, 1358, 88, "涨");
+        write(zhangT, b6.zhang + 0.08, 0.13, "accent");
+        S.fn((t) => { const o = (1 - pr(t, A(8, "所") - 0.5, 0.3)).toFixed(3); zhangA.el.style.opacity = o; zhangT.style.opacity = o; });
+
+        // ================= Beat 7 · Llama 2 7B：每 token ≈ 0.5 MB，4K ≈ 2 GB =================
+        const b7 = { llama: A(7, "Llama"), mei: A(7, "每"), p5: A(7, "0.5"), mb: A(7, "MB"), k4: A(7, "4K"), shang: A(7, "上"), g2: A(7, "2", 2), gb: A(7, "GB") };
+        const badge = K.el("div", "slip", null, null, '<span class="kit-cv" style="font-size: 64px">Llama 2 · 7B</span>');
+        put(badge, 240, 1068);
+        K.tape(badge, 150, -18, 120, 36, -4);
+        S.add(K.slap(badge, { at: b7.llama - 0.06, rot: -1.5 }));
+        write(badge.firstChild, b7.llama + 0.1, 0.36);
+        const bill1 = K.formula({ pen, terms: [
+          { text: "2", sub: "K 和 V", t: b7.mei },
+          { text: "×", t: b7.mei + 0.2, dur: 0.06 },
+          { text: "32", sub: "层", t: b7.mei + 0.27 },
+          { text: "×", t: b7.mei + 0.46, dur: 0.06 },
+          { text: "4096", sub: "维", t: b7.mei + 0.52 },
+          { text: "×", t: b7.mei + 0.74, dur: 0.06 },
+          { text: "2", sub: "字节 (FP16)", t: b7.mei + 0.8 },
+          { text: "≈ 0.5 MB", t: b7.p5 - 0.02, tone: "accent", ring: true },
+        ] });
+        bill1.el.classList.add("bill");
+        put(bill1.el, 240, 1200);
+        S.add(bill1);
+        const bill2 = K.formula({ pen, terms: [
+          { text: "0.5 MB", t: b7.mb + 0.24, tone: "muted", sub: "每个 token" },
+          { text: "×", t: b7.k4 - 0.08, dur: 0.06 },
+          { text: "4096", sub: "个 token (4K)", t: b7.k4 },
+          { text: "≈ 2 GB", t: b7.g2 - 0.02, tone: "accent", ring: true },
+        ] });
+        bill2.el.classList.add("bill");
+        put(bill2.el, 240, 1466);
+        S.add(bill2);
+        const foot = W("kit-hand kit-tone-muted", 240, 1734, 46, '<span class="kit-tone-accent">*</span> 单条请求；并发越多，乘得越多');
+        write(foot, b7.shang + 0.5, 0.6, "muted");
+        // the 4K fill of the container is that 2 GB
+        draw(g.arrow(1170, 1560, 1700, 1640, 97, -0.1, 22), b7.shang + 0.06, 0.34, "ink", 3.6);
+        draw(g.rect(MEM.x + 10, MEM.y + MEM.h - 4 - 4 * STEP, MEM.w - 20, 4 * STEP - 6, 98, 2.5), b7.g2 - 0.26, 0.24, "accent", 5);
+        const gbChip = K.el("div", "chipfill", null, null, '<span class="kit-cv kit-tone-accent" style="font-size: 72px">≈ 2 GB</span>');
+        put(gbChip, MEM.x + 78, MEM.y + MEM.h - 2 * STEP - 50);
+        S.add(K.slap(gbChip, { at: b7.gb, rot: -3 }));
+
+        // ================= Beat 8 · GQA · PagedAttention · 量化 =================
+        // on 所以才有 the three "before" pictures are laid out; each fix then transforms its own picture on its keyword
+        const b8 = { suo: A(8, "所"), gqa: A(8, "GQA"), gong: A(8, "共"), paged: A(8, "PagedAttention"), an: A(8, "按"), fen: A(8, "分"), liang: A(8, "量"), ya: A(8, "压") };
+        const SET = b8.suo + 0.02;
+        // a "cache" tube under each sketch that shrinks when the fix lands
+        function shrinkBar(x, y, w, setAt, at, frac, dur, mark, markTone) {
+          const lab = W("kit-hand", x, y - 8, 42, "缓存");
+          write(lab, setAt, 0.1, null);
+          const tx = x + 104, sv = K.svg(WORLD, tx - 10, y - 10, w + 20, 60);
+          const hr = K.hatchRect(sv, tx + 2, y + 2, w - 4, 34, { color: "accent-2", step: 12, wash: 0.16 });
+          S.add(K.stroke(sv, g.rect(tx, y, w, 38, x, 1.8), { at: setAt, dur: 0.14, color: "ink", width: 2.8 }));
+          const m = W("kit-cv kit-tone-" + (markTone || "accent"), tx + w + 14, y - 22, 58, mark);
+          S.fn((t) => {
+            const v = pr(t, setAt, 0.14), sh = E.io2(pr(t, at, dur));
+            hr.__clip.setAttribute("width", f1(Math.max(0.01, (w - 4) * v * (1 - (1 - frac) * sh))));
+          });
+          return { lab, mark: m };
+        }
+        const popScale = (u, base) => (u < 1 ? 1.4 - 0.4 * u : 1) * (base || 1);
+
+        // --- GQA: four query heads end up sharing one K/V pair ---
+        write(W("kit-cv kit-tone-accent", 2336, 1100, 88, "GQA"), b8.gqa - 0.06, 0.18, "accent");
+        const QY = (i) => 1300 + i * 104, QX8 = 2410, PKX = 2660, PVX = 2736, MIDY = (QY(1) + QY(2)) / 2;
+        for (let i = 0; i < 4; i++) {
+          const q = K.el("div", "q qh", WORLD, { left: QX8, top: QY(i) }, `<b>Q${i + 1}</b>`);
+          const qs = K.svg(q, 0, 0, 68, 68);
+          K.path(qs, g.loop(34, 34, 32, 32, 80 + i, 1.05), "accent", 3.2, { fill: "rgba(198,61,47,0.08)" });
+          q.appendChild(q.firstChild);
+          q.style.visibility = "hidden";
+          S.fn((t) => { const u = pr(t, SET + i * 0.04, 0.12); q.style.visibility = u > 0 ? "visible" : "hidden"; q.style.transform = `scale(${popScale(u).toFixed(3)})`; });
+          const k = kvPiece("k", PKX, QY(i) - 18), v = kvPiece("v", PVX, QY(i) - 18);
+          const line = K.stroke(ink, g.line(QX8 + 36, QY(i), PKX - 12, QY(i), 120 + i, 3), { at: SET + 0.14 + i * 0.03, dur: 0.1, color: "ink", width: 2.8 });
+          const fan = K.stroke(ink, g.line(QX8 + 36, QY(i), PKX - 12, MIDY, 130 + i, 3), { at: b8.gong + 0.48 + i * 0.05, dur: 0.12, color: "accent-2", width: 3.4 });
+          S.add(line, fan);
+          const cross = i > 0 ? draw(g.cross(PKX + 40, QY(i), 44, 140 + i), b8.gong + 0.02 + (i - 1) * 0.12, 0.1, "accent", 5.5) : null;
+          S.fn((t) => {
+            line.el.style.opacity = (1 - pr(t, b8.gong + 0.4, 0.16)).toFixed(3);
+            const pop = pr(t, SET + 0.08 + i * 0.04, 0.12);
+            const gone = i > 0 ? pr(t, b8.gong + 0.42, 0.2) : 0;
+            const mv = i === 0 ? E.io2(pr(t, b8.gong + 0.36, 0.24)) : 0;
+            [k, v].forEach((el) => {
+              el.style.visibility = pop > 0 && gone < 1 ? "visible" : "hidden";
+              el.style.opacity = (1 - gone).toFixed(3);
+              el.style.transform = `translateY(${f1((MIDY - QY(0)) * mv)}px) scale(${popScale(pop, 1.35).toFixed(3)})`;
+            });
+            if (cross) cross.el.style.opacity = (1 - gone).toFixed(3);
+          });
+        }
+        const gqaBar = shrinkBar(2336, 1730, 420, SET + 0.1, b8.gong + 0.5, 0.25, 0.3, "÷4");
+        write(gqaBar.mark, b8.gong + 0.84, 0.1, "accent");
+        note("Llama 3 8B：\n32 个头共用 8 份 K/V", 2336, 1822, { at: b8.gong + 0.86, width: 540, rot: -1, fontSize: 40, pen: null });
+
+        // --- PagedAttention: a long reserved block (mostly empty) becomes pages added on demand ---
+        write(W("kit-cv", 3010, 1112, 68, "PagedAttention"), b8.paged - 0.06, 0.28);
+        const RES = { x: 3020, y: 1300, w: 560, h: 80 };
+        const resBox = draw(g.rect(RES.x, RES.y, RES.w, RES.h, 150, 2), SET + 0.04, 0.18, "ink", 3);
+        let slots = "";
+        for (let sI = 1; sI < 8; sI++) slots += `M ${RES.x + sI * 70} ${RES.y + 4} L ${RES.x + sI * 70} ${RES.y + RES.h - 4} `;
+        const resSlots = draw(slots, SET + 0.2, 0.1, "ink", 2, { nopen: true });
+        const used = K.hatchRect(ink, RES.x + 3, RES.y + 3, 207, RES.h - 6, { color: "accent-2", wash: 0.16 });
+        const emptyH = K.hatchRect(ink, RES.x + 213, RES.y + 3, 344, RES.h - 6, { color: "warn", step: 14, width: 2, wash: 0.1 });
+        const emptyL = W("kit-hand kit-tone-warn", 3236, 1394, 44, "预留了却空着");
+        write(emptyL, SET + 0.3, 0.22, null);
+        const resX = draw(g.cross(RES.x + 385, RES.y + 40, 56, 151), b8.an - 0.02, 0.12, "accent", 5.5);
+        const PG = (k) => ({ x: 3030 + k * 182, y: 1480 });
+        const pages = [0, 1, 2].map((k) => {
+          const p = PG(k);
+          const d = `M ${p.x} ${p.y} L ${p.x + 124} ${p.y} L ${p.x + 150} ${p.y + 26} L ${p.x + 150} ${p.y + 100} L ${p.x} ${p.y + 100} Z M ${p.x + 124} ${p.y} L ${p.x + 124} ${p.y + 26} L ${p.x + 150} ${p.y + 26}`;
+          draw(d, b8.an + 0.14 + k * 0.19, 0.14, "ink", 3);
+          const fill = K.hatchRect(ink, p.x + 4, p.y + (k === 2 ? 58 : 30), 142, k === 2 ? 38 : 66, { color: "accent-2", wash: 0.16 });
+          return { fill, k };
+        });
+        S.fn((t) => {
+          const off = pr(t, b8.an + 0.1, 0.22);
+          used.style.opacity = (pr(t, SET + 0.24, 0.1) * (1 - off)).toFixed(3);
+          emptyH.style.opacity = (pr(t, SET + 0.26, 0.1) * (1 - off)).toFixed(3);
+          resBox.el.style.opacity = (1 - 0.72 * off).toFixed(3);
+          resSlots.el.style.opacity = (1 - 0.72 * off).toFixed(3);
+          resX.el.style.opacity = (1 - 0.6 * off).toFixed(3);
+          emptyL.style.opacity = (1 - off).toFixed(3);
+          pages.forEach((p) => { p.fill.style.opacity = pr(t, b8.an + 0.26 + p.k * 0.19, 0.1).toFixed(3); });
+        });
+        write(W("kit-hand kit-tone-muted", 3030, 1598, 44, "要用时才加一页"), b8.an + 0.74, 0.3);
+        const pgBar = shrinkBar(3010, 1730, 340, SET + 0.16, b8.fen - 0.02, 0.45, 0.3, "少浪费", "ok");
+        write(pgBar.mark, b8.fen + 0.46, 0.16, null);
+
+        // --- 量化: every K/V number drops from 2 bytes (FP16) to 1 byte (INT8) ---
+        write(W("kit-serif", 3680, 1104, 78, "量化"), b8.liang - 0.06, 0.16);
+        write(W("kit-cv", 3846, 1118, 60, "FP16"), b8.liang + 0.12, 0.12);
+        draw(g.arrow(3996, 1160, 4066, 1160, 171, 0, 16), b8.liang + 0.25, 0.08, "ink", 4);
+        write(W("kit-cv kit-tone-accent", 4080, 1118, 60, "INT8"), b8.liang + 0.34, 0.12, "accent");
+        const cells = [0, 1, 2, 3].map((i) => {
+          const c = K.el("div", "cell8", WORLD, { left: 3690 + i * 140, top: 1300, width: 120 });
+          const sv = K.svg(c, 0, 0, 120, 60);
+          const fill = i % 2 ? "#ffe68a" : "rgba(46,90,156,0.14)";
+          K.path(sv, g.rect(2, 2, 56, 56, 160 + i, 1.2), "ink", 2.8, { fill });
+          K.path(sv, g.rect(62, 2, 56, 56, 170 + i, 1.2), "ink", 2.8, { fill });
+          K.el("b", "kit-cv", c, { position: "absolute", left: "0", width: "60px", top: "6px", textAlign: "center", fontSize: "36px", color: i % 2 ? "#2A2320" : "#2E5A9C" }, i % 2 ? "V" : "K");
+          c.style.visibility = "hidden";
+          return c;
+        });
+        const bytes = W("kit-hand", 3690, 1384, 46, '每个数 <span class="kit-cv">2</span> 字节');
+        const bytes2 = W("kit-hand kit-tone-accent", 3690, 1384, 46, '每个数 <span class="kit-cv">1</span> 字节');
+        write(bytes, SET + 0.34, 0.24, null);
+        write(bytes2, b8.ya + 0.22, 0.2, null);
+        S.fn((t) => {
+          const sq = E.io2(pr(t, b8.ya, 0.26));
+          cells.forEach((c, i) => {
+            const u = pr(t, SET + 0.2 + i * 0.04, 0.1);
+            c.style.visibility = u > 0 ? "visible" : "hidden";
+            c.style.width = f1(120 - 60 * sq) + "px";
+            c.style.transform = `translateX(${f1(-i * 60 * sq)}px) scale(${popScale(u).toFixed(3)})`;
+          });
+          bytes.style.opacity = (1 - pr(t, b8.ya + 0.1, 0.12)).toFixed(3);
+        });
+        K.event("slide", b8.ya, 0.26);
+        const qBar = shrinkBar(3680, 1730, 340, SET + 0.22, b8.ya + 0.04, 0.5, 0.26, "÷2");
+        write(qBar.mark, b8.ya + 0.32, 0.1, "accent");
+
+        // ================= Beat 9 · 一句话：用显存换速度，只算新的那一个 =================
+        const b9 = { yong: A(9, "用"), xian: A(9, "显"), huan: A(9, "换"), su: A(9, "速"), xin: A(9, "新"), na: A(9, "那") };
+        // spotlight: the page dims, except the newest token
+        const wash = K.el("div", "", WORLD);
+        wash.id = "wash";
+        const TOKC = { x: TX(7) + TW / 2 + 600, y: TY + TH / 2 + 600 };
+        wash.style.background = `radial-gradient(circle at ${TOKC.x}px ${TOKC.y}px, rgba(244,237,224,0) 150px, rgba(244,237,224,0.74) 290px)`;
+        S.fn((t) => { const u = up(t, b9.huan + 0.5, 0.45); wash.style.opacity = u.toFixed(3); wash.style.visibility = u > 0 ? "visible" : "hidden"; });
+        const inkTop = K.svg(WORLD, -600, -600, 5600, 3600);
+        const closing = K.title(story, { pen });
+        closing.el.style.fontSize = "150px";
+        put(closing.el, 2380, 150);
+        S.add(closing);
+        // the trade: a balance, 显存 goes down, 速度 goes up
+        const PV = { x: 3200, y: 800 };
+        const beam = document.createElementNS(NS, "g");
+        inkTop.appendChild(beam);
+        const beamLine = K.stroke(beam, g.line(2800, PV.y, 3600, PV.y, 181, 3), { at: b9.yong - 0.04, dur: 0.22, color: "ink", width: 7 });
+        const strings = K.stroke(beam, `M 2800 ${PV.y} L 2690 ${PV.y + 150} M 2800 ${PV.y} L 2910 ${PV.y + 150} M 3600 ${PV.y} L 3490 ${PV.y + 150} M 3600 ${PV.y} L 3710 ${PV.y + 150} M 2660 ${PV.y + 150} Q 2800 ${PV.y + 196} 2940 ${PV.y + 150} M 3460 ${PV.y + 150} Q 3600 ${PV.y + 196} 3740 ${PV.y + 150}`, { at: b9.yong + 0.16, dur: 0.24, color: "ink", width: 5 });
+        S.add(beamLine, strings);
+        draw(`M ${PV.x} ${PV.y} L ${PV.x - 60} ${PV.y + 190} L ${PV.x + 60} ${PV.y + 190} Z M ${PV.x - 120} ${PV.y + 190} L ${PV.x + 120} ${PV.y + 190}`, b9.yong + 0.06, 0.24, "ink", 6, { nopen: true, layer: inkTop });
+        const panL = W("kit-serif kit-tone-accent-2", 2704, 1004, 96, "显存");
+        const panR = W("kit-serif kit-tone-accent", 3504, 1004, 96, "速度");
+        write(panL, b9.xian + 0.02, 0.2, null);
+        write(panR, b9.su + 0.02, 0.2, null);
+        const tilt = (t) => -7 * E.back(pr(t, b9.huan, 0.5));
+        S.fn((t) => {
+          const a = tilt(t);
+          beam.setAttribute("transform", `rotate(${a.toFixed(2)} ${PV.x} ${PV.y})`);
+          const rad = (a * Math.PI) / 180;
+          [[panL, 2800, -1], [panR, 3600, 1]].forEach(([el, x, side]) => {
+            const dy = (x - PV.x) * Math.sin(rad);
+            el.style.transform = `translateY(${f1(dy)}px)`;
+          });
+        });
+        draw(g.arrow(2600, 820, 2600, 1000, 191, 0, 22), b9.huan + 0.42, 0.14, "accent-2", 6, { nopen: true, layer: inkTop });
+        draw(g.arrow(3800, 1000, 3800, 790, 192, 0, 22), b9.huan + 0.5, 0.14, "accent", 6, { nopen: true, layer: inkTop });
+        // ... and the newest token is the one that gets computed
+        draw(g.loop(TX(7) + TW / 2, TY + TH / 2, 96, 70, 901, 1.1), b9.xin, 0.3, "accent", 7, { nopen: true, layer: inkTop });
+        draw(g.arrow(2360, 520, 1730, 356, 902, 0.16, 34), b9.na, 0.3, "accent", 7, { nopen: true, layer: inkTop });
+
+        // ================= Recap · one page, one map =================
+        const recap = K.recap(story, { covers: [WORLD] });
+        $("recap").appendChild(recap.el);
+        pen.away(story.recap.start - 0.15, 99);
+
+        // ---------- screen layers: chapter chip + captions (line 9 is written on the page) ----------
+        const chapters = new C.Chapters($("chap"), story);
+        const captions = new C.Captions($("caps"), story, { groups: [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8]] });
+
+        // the pen and the eraser are always on top of the page
+        WORLD.appendChild(inkTop);
+        WORLD.appendChild(eraser.el);
+        WORLD.appendChild(pen.el);
+
+        function frame(t) {
+          cam.render(t);
+          S.render(t);
+          eraser.render(t);
+          pen.render(t);
+          chapters.render(t);
+          captions.render(t);
+          recap.render(t);
+        }
+        const tl = gsap.timeline({ paused: true });
+        const drive = { v: 0 };
+        tl.fromTo(drive, { v: 0 }, { v: 1, duration: 45, ease: "none", onUpdate: () => frame(tl.time()) }, 0);
+        frame(0);
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

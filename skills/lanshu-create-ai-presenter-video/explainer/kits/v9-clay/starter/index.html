@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>V9 黏土小城 · 起步模板</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+/* fonts:end */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--kit-bg);
+      }
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--kit-bg);
+        color: var(--kit-ink);
+        font-family: var(--kit-font-body);
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      #gl {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+      }
+      #labels {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      #leaders {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: visible;
+        pointer-events: none;
+      }
+      #leaders line {
+        stroke: var(--kit-ink);
+        stroke-opacity: 0.4;
+        stroke-width: 4;
+        stroke-linecap: round;
+      }
+      #leaders circle {
+        fill: var(--kit-accent);
+        stroke: #ffffff;
+        stroke-width: 4;
+      }
+
+      /* ---------- the draft beat: a storyboard slip hanging under its row of clay type ---------- */
+      .ph-card {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+      .ph-card::before {
+        content: "";
+        margin-right: 58px;
+        width: 4px;
+        height: 30px;
+        background: var(--kit-ink);
+        opacity: 0.4;
+        border-radius: 2px;
+      }
+      .ph-box {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        max-width: 800px;
+        padding: 10px 24px 12px 12px;
+        border-radius: 22px;
+        border: 4px solid var(--kit-rim);
+        background: var(--kit-paper);
+        box-shadow: var(--kit-shadow);
+      }
+      .ph-hd {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .ph-tag {
+        padding: 2px 14px 4px;
+        border-radius: 999px;
+        border: 3px dashed #b9a596;
+        font-family: var(--kit-font-hand);
+        font-weight: 400;
+        font-size: 28px;
+        line-height: 1.15;
+        color: var(--kit-muted);
+      }
+      .ph-id {
+        font-family: var(--kit-font-display);
+        font-size: 30px;
+        line-height: 1;
+        color: var(--kit-muted);
+      }
+      .ph-note {
+        white-space: normal;
+        padding-left: 6px;
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+        font-size: 30px;
+        line-height: 1.32;
+        color: var(--kit-ink);
+      }
+      .ph-note > span {
+        color: color-mix(in srgb, var(--kit-ink) calc(var(--lit, 0) * 100%), var(--kit-cap-dim));
+      }
+      /* 「草稿 · 无配音」 when the story was built with story.py --dry */
+      .ph-draft {
+        padding: 8px 24px 10px;
+        border-radius: 999px;
+        border: 3px dashed #b9a596;
+        background: rgba(255, 250, 243, 0.96);
+        font-family: var(--kit-font-hand);
+        font-size: 28px;
+        line-height: 1.15;
+        color: var(--kit-muted);
+      }
+      /* a paper haze over the far town while the closing line (and the recap under it) sits at the top */
+      #wash {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 330px;
+        background: linear-gradient(to bottom, rgba(251, 238, 224, 0.95) 0%, rgba(251, 238, 224, 0.86) 42%, rgba(251, 238, 224, 0) 100%);
+        opacity: 0;
+        pointer-events: none;
+      }
+      /* the recap's centre sticker sits on the plaza as the flagpole's sign (no stem): every district stays visible */
+      .ph-recap .kit-recap-center::after {
+        display: none;
+      }
+      /* a recap with many districts: narrower cards */
+      .ph-dense .kit-rc-x {
+        max-width: 430px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-no-timeline data-start="0" data-duration="45" data-width="1920" data-height="1080" data-stamp="story">
+      <div id="stage" class="clip" data-start="0" data-duration="45" data-track-index="1" data-layout-allow-overflow="" data-stamp="story">
+        <canvas id="gl" width="1920" height="1080"></canvas>
+        <div id="wash"></div>
+        <div id="labels" data-layout-allow-overflow=""></div>
+        <div id="caps"></div>
+        <div id="chap"></div>
+      </div>
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40" data-track-index="10" data-stamp="narration"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-track-index="11" data-stamp="story"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script src="beats.js"></script>
+    <script type="module">
+      import * as THREE from "three";
+      import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+      import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+      import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
+      import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+
+      // V9 黏土小城 · starter — the clay town minus the topic. Everything here is driven by window.STORY:
+      //   one plot (station) per chapter on a three-layer cream base, streets between them, a plaza with a flag for the
+      //   closing line, an orthographic iso camera that travels plot to plot at each chapter and drifts row to row inside it,
+      //   captions / chapter chip / closing line (Kit.title) / one-frame recap (Kit.recap) with a card on every district.
+      //   beats.js (the only topic file) gets an `api` and performs each line; the starter's beats.js calls api.placeholder()
+      //   for every narration line: a row of clay movable type (the line's key phrase, one tile per spoken unit, landing as
+      //   it is spoken) and a storyboard slip (the beat note from story.notes, written on as the line plays, + 「待演绎」).
+      const XC = ExplainerCore;
+      const { clamp01, pr, lerp, E, hash } = XC;
+      const story = new XC.Story(window.STORY);
+      const $ = (id) => document.getElementById(id);
+      const W = 1920, H = 1080;
+      const DUR = story.duration;
+      const END = story.end ? story.line(story.end.line) : null; // the closing line (Kit.title performs it)
+      const RECAP = story.recap && story.recap.points && story.recap.points.length ? story.recap : null;
+      const NOTES = story.data.notes || {};
+
+      const CL = Kit.clay(THREE, { RoundedBoxGeometry, EffectComposer, RenderPass, GTAOPass, OutputPass }, { canvas: $("gl"), shadowExtent: 30 });
+      const { scene, V, M, rbox, mesh, slab, canvasTex, clayMap, squash } = CL;
+      Kit.layer = $("labels");
+
+      // ================= chapters → stations (a story without chapters is one station) =================
+      const CHS = story.chapters.length ? story.chapters : [{ n: 1, key: "_all", title: story.title || "", start: 0, end: DUR }];
+      const N = CHS.length;
+      const LINES = story.lines.filter((L) => !END || L.i !== END.i);
+      const BY = CHS.map(() => []); // narration lines (indices) per chapter, by time
+      LINES.forEach((L) => {
+        let k = 0;
+        CHS.forEach((c, n) => { if (L.start >= c.start - 0.05) k = n; });
+        BY[k].push(L.i);
+      });
+      const SLOT = {}; // line i → { k: station, j: row in the station }
+      BY.forEach((ids, k) => ids.forEach((i, j) => { SLOT[i] = { k, j }; }));
+      const maxL = Math.max(1, ...BY.map((a) => a.length));
+
+      // ================= the town's geometry: plots in a 1–3 row grid, walked as a snake =================
+      const AZd = 34, AZ = (AZd * Math.PI) / 180, EL = (33 * Math.PI) / 180, Y0 = 0.3;
+      const DZ = 2.4, ST = DZ * Math.tan(AZ); // rows in a plot: each next row sits DZ nearer and ST right — straight below on screen
+      const RS = 9.2, RX = RS / Math.cos(AZ); // a row's budget: 9.2 units across the screen
+      const PW = RX + (maxL - 1) * ST + 2.6, PD = Math.max(8.2, (maxL - 1) * DZ + 4.4);
+      const ROWS = N <= 2 ? 1 : N <= 6 ? 2 : 3, COLS = ROWS === 3 ? Math.max(3, Math.ceil((N + 1) / 3)) : Math.ceil(N / ROWS);
+      const CC = Math.floor((COLS - 1) / 2); // with three rows the plaza takes the middle cell of column CC
+      const GX = 2.8, GZ = ROWS > 1 ? 4.4 : 3.2; // street widths: between columns, between rows (main street)
+      const PX = PW + GX, PZ = PD + GZ;
+      const CELLS = [];
+      for (let c = 0; c < COLS; c++) {
+        const rs = [...Array(ROWS).keys()];
+        if (c % 2) rs.reverse(); // a snake: every next plot is a neighbour, so the camera walks the streets
+        for (const r of rs) if (!(ROWS === 3 && c === CC && r === 1)) CELLS.push({ c, r, x: (c - (COLS - 1) / 2) * PX, z: (r - (ROWS - 1) / 2) * PZ });
+      }
+      const PLAZA = ROWS === 1 ? V(0, Y0, PD / 2 + GZ + 2.6) : ROWS === 3 ? V((CC - (COLS - 1) / 2) * PX, Y0, 0) : V(0, Y0, 0); // the closing line's square
+      const TOWN = {
+        x0: -(COLS * PX) / 2 + GX / 2 - 3.2, x1: (COLS * PX) / 2 - GX / 2 + 3.2,
+        z0: -(ROWS * PZ) / 2 + GZ / 2 - 3.2, z1: ROWS === 1 ? PLAZA.z + 5.4 : (ROWS * PZ) / 2 - GZ / 2 + 3.2,
+      };
+      TOWN.cx = (TOWN.x0 + TOWN.x1) / 2;
+      TOWN.cz = (TOWN.z0 + TOWN.z1) / 2;
+      // the sun and its shadow box follow the size of the town
+      CL.sun.position.set(TOWN.cx - 22, 40, TOWN.cz + 18);
+      CL.sun.target.position.set(TOWN.cx - 4, 0, TOWN.cz + 3);
+      const ext = Math.max(26, Math.max(TOWN.x1 - TOWN.x0, TOWN.z1 - TOWN.z0) * 0.62 + 6);
+      Object.assign(CL.sun.shadow.camera, { left: -ext, right: ext, top: ext, bottom: -ext, far: 160 });
+      CL.sun.shadow.camera.updateProjectionMatrix();
+
+      // ================= the ground: cake base, streets, plaza, parks, trees =================
+      CL.diorama(TOWN.cx, TOWN.cz, TOWN.x1 - TOWN.x0, TOWN.z1 - TOWN.z0);
+      const ROAD = "#d9cfe8", DASH = "#ffffff";
+      const nearPlaza = (x, z) => Math.hypot(x - PLAZA.x, z - PLAZA.z) < 3.2;
+      function street(x, z, w, d, alongX) {
+        slab(x, z, w, d, 0.1, 0.1, ROAD, 0.4);
+        const len = alongX ? w : d, n = Math.floor((len - 1.5) / 1.9);
+        for (let k = 0; k <= n; k++) {
+          const s = -len / 2 + 0.75 + (k * (len - 1.5)) / Math.max(1, n);
+          const px = alongX ? x + s : x, pz = alongX ? z : z + s;
+          if (nearPlaza(px, pz)) continue;
+          mesh(rbox(alongX ? 0.8 : 0.2, 0.06, alongX ? 0.2 : 0.8, 0.05), M(DASH), px, 0.13, pz, scene, false);
+        }
+      }
+      const SPANX = TOWN.x1 - TOWN.x0 - 2.6, SPANZ = TOWN.z1 - TOWN.z0 - 2.6;
+      for (let r = 0; r < ROWS - 1; r++) street(TOWN.cx, (r + 0.5 - (ROWS - 1) / 2) * PZ, SPANX, GZ - 1.2, true);
+      for (let c = 0; c < COLS - 1; c++) street((c + 0.5 - (COLS - 1) / 2) * PX, TOWN.cz, GX - 0.9, SPANZ, false);
+      if (ROWS === 1) street(TOWN.cx, PD / 2 + GZ / 2, SPANX, GZ - 1.0, true);
+
+      // the plaza: a round cream square with a flag that rises on the closing line
+      const plaza = new THREE.Group();
+      plaza.position.set(PLAZA.x, 0, PLAZA.z);
+      scene.add(plaza);
+      if (ROWS === 3) mesh(rbox(PW - 1.2, 0.3, PD - 1.2, 0.5), M("#fff1dc"), 0, 0.15, 0, plaza, false);
+      mesh(new THREE.CylinderGeometry(2.0, 2.1, 0.34, 48), M("#fff6ea"), 0, 0.17 + (ROWS === 3 ? 0.3 : 0), 0, plaza, false);
+      const PLZ_Y = ROWS === 3 ? 0.64 : 0.34;
+      mesh(rbox(0.9, 0.36, 0.9, 0.14), M("#ffffff"), 0, PLZ_Y + 0.18, 0, plaza);
+      const POLE_H = 4.3;
+      mesh(new THREE.CylinderGeometry(0.08, 0.1, POLE_H, 16), M("#ffffff"), 0, PLZ_Y + POLE_H / 2, 0, plaza);
+      mesh(new THREE.SphereGeometry(0.17, 18, 12), M("#ffffff"), 0, PLZ_Y + POLE_H + 0.1, 0, plaza);
+      const flag = new THREE.Group(); // turned to the camera; the cloth hangs to the right of the pole
+      flag.rotation.y = AZ;
+      plaza.add(flag);
+      const cloth = mesh(rbox(1.7, 1.06, 0.14, 0.06), M(CL.P.yel), 0.95, 0, 0, flag);
+      CL.dotFace(cloth, 0.06, 0.08, 0.24, 1.0);
+      const FLAG_LO = PLZ_Y + 0.95, FLAG_HI = PLZ_Y + POLE_H - 0.6;
+      const PLAZA_TOP = V(PLAZA.x, PLZ_Y + POLE_H + 0.35, PLAZA.z);
+      [[-1.55, -1.55], [1.55, 1.55], [1.6, -1.45], [-1.5, 1.6]].forEach(([dx, dz], k) => { if (ROWS === 3 || ROWS === 1) CL.tree(PLAZA.x + dx * 1.45, PLAZA.z + dz * 1.45, 0.75 + 0.08 * k, ROWS === 3 ? 0.3 : 0); });
+
+      // a little clay cottage (parks and corners): walls, a gable roof, a door, a window
+      const ROOFS = ["#ff9f94", "#8fc8ff", "#d5bdff", "#a6e6cc"];
+      function cottage(x, z, s, n, y0 = Y0) {
+        const g = new THREE.Group();
+        g.position.set(x, y0, z);
+        g.rotation.y = n % 2 ? 0 : Math.PI / 2;
+        scene.add(g);
+        mesh(rbox(1.7 * s, 1.25 * s, 1.5 * s, 0.22), M("#fff7ee"), 0, 0.62 * s, 0, g);
+        const roof = mesh(rbox(1.22 * s, 1.22 * s, 1.85 * s, 0.24), M(ROOFS[n % ROOFS.length]), 0, 1.25 * s, 0, g);
+        roof.rotation.set(0, Math.PI / 2, Math.PI / 4);
+        mesh(rbox(0.42 * s, 0.62 * s, 0.1, 0.05), M(CL.P.wood), -0.3 * s, 0.33 * s, 0.76 * s, g, false);
+        mesh(rbox(0.38 * s, 0.36 * s, 0.1, 0.05), M("#bfe3ff"), 0.4 * s, 0.7 * s, 0.76 * s, g, false);
+        return g;
+      }
+      // cells no chapter uses become parks: a mint lawn, trees, a pond, a cottage
+      CELLS.slice(N).forEach((cell, n) => {
+        slab(cell.x, cell.z, PW - 1.4, PD - 1.4, Y0, Y0, "#c9ebd2", 0.45);
+        const pond = mesh(new THREE.CylinderGeometry(1.6, 1.7, 0.1, 40), M("#a9d6ff", { roughness: 0.35 }), cell.x + PW * 0.16, Y0 + 0.05, cell.z + PD * 0.08, scene, false);
+        pond.scale.z = 0.75;
+        cottage(cell.x - PW * 0.24, cell.z - PD * 0.12, 1.0, n + 1);
+        [[-0.38, 0.28], [0.32, -0.3], [0.05, 0.36], [-0.1, -0.33], [0.4, 0.3]].forEach(([fx, fz], k) => CL.tree(cell.x + fx * PW, cell.z + fz * PD, 0.8 + 0.12 * hash(n * 7 + k)));
+      });
+      // trees and a few cottages around the rim of the base (never inside a plot)
+      (() => {
+        const rim = [];
+        const mx = 1.5;
+        for (let x = TOWN.x0 + 2.2; x < TOWN.x1 - 1.5; x += 4.6) rim.push([x, TOWN.z0 + mx], [x + 2.1, TOWN.z1 - mx]);
+        for (let z = TOWN.z0 + 4.2; z < TOWN.z1 - 3; z += 4.8) rim.push([TOWN.x0 + mx, z], [TOWN.x1 - mx, z + 2.2]);
+        rim.forEach(([x, z], k) => {
+          const h = hash(k * 3.7 + 1.3);
+          if (h < 0.28) return;
+          if (h > 0.9 && k % 3 === 0) cottage(x, z, 0.8, k, 0);
+          else CL.tree(x + (hash(k) - 0.5) * 0.8, z + (hash(k + 9) - 0.5) * 0.6, 0.72 + 0.3 * hash(k * 1.9), 0);
+        });
+      })();
+
+      // ================= the stations: a pastel plot per chapter, a smiling pin with its number =================
+      const PADS = ["#ffd6c2", "#e4dcf6", "#cdeedb", "#fde6c6", "#ffdbe6", "#dcd6f5", "#d4eaff", "#ffe9c2"];
+      const numTex = (n) => canvasTex((g, w, h) => {
+        g.fillStyle = "#ffffff"; g.fillRect(0, 0, w, h);
+        g.font = '400 92px "Smiley Sans", "Noto Sans SC", sans-serif'; g.fillStyle = "#4a3a31"; g.textAlign = "center"; g.textBaseline = "middle";
+        g.fillText(String(n), w / 2, h * 0.55);
+      }, 128, 96);
+      const STATIONS = CHS.map((ch, k) => {
+        const cell = CELLS[k], color = PADS[k % PADS.length];
+        slab(cell.x, cell.z, PW, PD, Y0, Y0, color, 0.5);
+        const group = new THREE.Group(); // a scene's props go here: local (0, 0, 0) is the plot centre at ground level
+        group.position.set(cell.x, Y0, cell.z);
+        scene.add(group);
+        const Lk = Math.max(1, BY[k].length);
+        // row j of the station's lines: rows step DZ nearer and ST right, so on screen they stack like lines of text
+        const slot = (j) => {
+          const cx = cell.x - ((Lk - 1) * ST) / 2 + j * ST, cz = cell.z - ((Lk - 1) * DZ) / 2 + j * DZ - 0.55;
+          return { j, cx, cz, len: RX, center: V(cx, Y0, cz), card: V(cx, Y0 + 0.14, cz + 0.62) };
+        };
+        // the pin: back-right corner (the rows' staircase leaves it free)
+        const pin = new THREE.Group();
+        pin.position.set(cell.x + PW / 2 - 1.15, Y0, cell.z - PD / 2 + 1.15);
+        pin.rotation.y = AZ;
+        scene.add(pin);
+        mesh(new THREE.CylinderGeometry(0.085, 0.1, 1.75, 14), M("#ffffff"), 0, 0.875, 0, pin);
+        const head = mesh(new THREE.SphereGeometry(0.46, 30, 22), M(CL.P.yel), 0, 1.95, 0, pin);
+        CL.dotFace(head, 0.04, 0.43, 0.16, 0.95);
+        const plaque = mesh(rbox(0.78, 0.56, 0.12, 0.06), [M("#fff"), M("#fff"), M("#fff"), M("#fff"), clayMap(numTex(ch.n), { transparent: false }), M("#fff")], 0, 0.95, 0.12, pin);
+        const band = ROWS === 1 ? "up" : ROWS === 2 ? (cell.r === 0 ? "up" : "down") : cell.r === 0 ? "up" : cell.r === 2 ? "down" : cell.c === 0 ? "left" : "right";
+        return {
+          k, n: ch.n, chapter: ch, lines: BY[k], cell, cx: cell.x, cz: cell.z, w: PW, d: PD, color, group, slot, pin, head, plaque, band,
+          center: V(cell.x, Y0, cell.z), pinTop: () => pin.localToWorld(V(0, 2.45, 0)), rowLen: {}, // screen length of row j (set by placeholders)
+        };
+      });
+
+      // ================= stickers: widgets pinned to world anchors, projected every frame =================
+      const STK = [];
+      const stick = (w, at, draw) => { STK.push({ w, at, draw }); return w; };
+      function placeStickers(t) {
+        for (const s of STK) {
+          if (!s.w.live(t)) { s.draw ? s.draw(t, null, null) : s.w.render(t, null, null); continue; }
+          const p = s.at ? CL.toScreen(typeof s.at === "function" ? s.at(t) : s.at) : { x: undefined, y: undefined };
+          s.draw ? s.draw(t, p.x, p.y) : s.w.render(t, p.x, p.y);
+        }
+      }
+
+      // ================= the draft beat: api.placeholder(line) =================
+      // one tile of clay movable type per unit of the line's key phrase (Kit.keyPhrase), dropping in as the unit is spoken;
+      // the newest tile is yellow (the accent = the new thing) and settles to cream; a storyboard slip hangs under the row
+      const CREAM = new THREE.Color("#fff3df"), YEL = new THREE.Color(CL.P.yel);
+      const tileTex = (text, w, h) => canvasTex((g, cw, chh) => {
+        g.fillStyle = "#ffffff"; g.fillRect(0, 0, cw, chh);
+        let fs = Math.round(chh * (/[A-Za-z\d]/.test(text) ? 0.58 : 0.66));
+        const font = () => `400 ${fs}px "ZCOOL KuaiLe", "Noto Sans SC", sans-serif`;
+        g.font = font();
+        while (g.measureText(text).width > cw * 0.84 && fs > 18) { fs -= 3; g.font = font(); }
+        g.fillStyle = "#4a3a31"; g.textAlign = "center"; g.textBaseline = "middle";
+        g.fillText(text, cw / 2, chh * 0.54);
+      }, w, h);
+      function noteFor(i) {
+        const { k, j } = SLOT[i], ns = NOTES[CHS[k].key];
+        if (Array.isArray(ns)) return ns[j] || null;
+        return typeof ns === "string" && j === 0 ? ns : null;
+      }
+      const PH = [];
+      function placeholder(i, o = {}) {
+        const L = story.line(i), where = SLOT[i];
+        if (!where) throw new Error("placeholder: line " + i + " is the closing line or not in a chapter");
+        const S = STATIONS[where.k], sl = S.slot(where.j);
+        const units = o.units || Kit.keyPhrase(story, i);
+        const note = o.note !== undefined ? o.note : noteFor(i);
+        // the row of tiles, fitted to the row's budget
+        const TH = 0.86, TD = 0.56, GAP = 0.12;
+        const tw = units.map((k) => { const u = L.words[k][0]; return /[A-Za-z\d]/.test(u) ? 0.3 * u.length + 0.5 : 0.84 * [...u].length + 0.04; });
+        const natural = tw.reduce((a, b) => a + b, 0) + GAP * Math.max(0, tw.length - 1);
+        const sc = Math.max(0.5, Math.min(1, RS / Math.max(natural, 0.01)));
+        const rowS = natural * sc, rowX = rowS / Math.cos(AZ);
+        S.rowLen[where.j] = rowS;
+        const strip = mesh(rbox(rowX + 1.0, 0.14, TD * sc + 0.75, 0.07), M(new THREE.Color(S.color).multiplyScalar(0.93)), sl.cx, Y0 + 0.07, sl.cz, scene, false);
+        let s0 = 0;
+        const tiles = units.map((k, n) => {
+          const u = L.words[k][0], w = tw[n] * sc, h = TH * sc;
+          const sMid = s0 + w / 2;
+          s0 += w + GAP * sc;
+          const front = clayMap(tileTex(u, Math.round(128 * (w / h)), 128), { transparent: false, color: CREAM.clone() });
+          const side = M("#fff3df");
+          const m = mesh(rbox(w, h, TD * sc, 0.12 * sc), [side, side, side, side, front, side], 0, 0, 0);
+          m.rotation.y = AZ;
+          m.visible = false;
+          const land = L.words[k][1] + 0.08;
+          return { m, front, side, land, x: sl.cx + (sMid - rowS / 2) / Math.cos(AZ), y: Y0 + 0.14 + h / 2, z: sl.cz };
+        });
+        tiles.forEach((T, n) => { T.until = n + 1 < tiles.length ? tiles[n + 1].land : L.end + 0.25; });
+        // the storyboard slip: 「待演绎」 + 镜 k·j, and the beat note written on across the line
+        const nextStart = (() => { const nx = story.lines.find((M2) => M2.start > L.start + 0.01); return nx ? nx.start : DUR; })();
+        const html = '<div class="ph-box"><div class="ph-hd"><b class="ph-tag">待演绎</b><span class="ph-id">镜 ' + S.n + "·" + (where.j + 1) + "</span></div>" +
+          (note ? '<div class="ph-note">' + [...note].map((ch) => "<span>" + Kit.esc(ch) + "</span>").join("") + "</div>" : "") + "</div>";
+        const cardO = { cls: "ph-card", win: [L.start - 0.15, Math.min(L.end + 0.35, nextStart + 0.05)], ax: 0.9, ay: 0 };
+        const card = Kit.sticker(html, cardO);
+        const spans = [...card.el.querySelectorAll(".ph-note > span")];
+        const span = Math.max(0.6, (L.end - L.start) * 0.88);
+        let measured = false;
+        stick(card, () => sl.card, (t, x, y) => {
+          if (!measured && x != null) { measured = true; cardO.ax = 1 - 60 / Math.max(120, card.el.offsetWidth); } // the stem meets the row
+          spans.forEach((sp, c) => sp.style.setProperty("--lit", E.o2(pr(t, L.start + (c / spans.length) * span - 0.04, 0.16)).toFixed(3)));
+          card.render(t, x, y);
+        });
+        const ph = {
+          line: i, station: where.k, row: where.j, slot: sl, tiles, strip, card, note, units,
+          render(t) {
+            const su = E.o3(pr(t, L.start - 0.22, 0.4));
+            strip.visible = su > 0;
+            strip.scale.set(Math.max(0.001, su), 1, 1);
+            strip.position.x = sl.cx - ((rowX + 1.0) * (1 - su)) / 2;
+            for (const T of tiles) {
+              const u = pr(t, T.land - 0.22, 0.22);
+              T.m.visible = u > 0;
+              if (!T.m.visible) continue;
+              T.m.position.set(T.x, T.y + 1.7 * (1 - E.i2(u)), T.z);
+              T.m.scale.setScalar(1);
+              if (u >= 1) squash(T.m, t, T.land, 0.8);
+              const ny = 1 - E.io2(pr(t, T.until, 0.35)); // 1 while it is the newest
+              T.front.color.copy(CREAM).lerp(YEL, ny);
+              T.side.color.copy(CREAM).lerp(YEL, ny);
+              T.front.emissiveIntensity = 0.5 * Math.sin(Math.PI * pr(t, T.land, 0.5));
+            }
+          },
+        };
+        PH.push(ph);
+        return ph;
+      }
+
+      // ================= the camera: plot to plot, row to row; scenes may take over a station =================
+      const SHOTS = {}, EXTRA = [];
+      const cam = {
+        // replace station k's default shots: [[t, dx, dy, dz, width], …] relative to the plot centre (ground level)
+        station(k, list) { SHOTS[k] = list; },
+        // an absolute key anywhere [t, x, y, z, width, azimuthDeg?]; default keys within 0.3 s of it are dropped
+        add(t, x, y, z, w, az) { EXTRA.push([t, x, y, z, w, az]); },
+        keys: null, // filled after Beats() returns: the final [[t, x, y, z, width, azimuthDeg], …]
+      };
+      const ESTW = Math.min(24, PW * Math.cos(AZ) + PD * Math.sin(AZ) + 2.2); // a whole plot in frame
+      const AZT = (t) => AZd + 0.05 * t + (RECAP ? 1.2 * E.io2(clamp01((t - RECAP.start) / Math.max(1, DUR - RECAP.start))) : 0);
+      function stationShots(S) {
+        if (SHOTS[S.k]) return SHOTS[S.k].map(([t, dx, dy, dz, w]) => [t, S.cx + dx, Y0 + dy, S.cz + dz, w]);
+        const c = S.chapter, out = [];
+        // arrive on the whole plot (the pin pops up), then push in on the first row
+        const est = c.start + 0.35;
+        out.push([est, S.cx + 0.5, Y0 + 0.4, S.cz + 0.3, ESTW]);
+        S.lines.forEach((i, j) => {
+          const L = story.line(i), sl = S.slot(j), dur = L.end - L.start;
+          const d = Math.min(0.75, Math.max(0.3, 0.2 * dur)); // a slow pan down the row while it is being spoken
+          const w = Math.min(15.5, Math.max(12, (S.rowLen[j] ?? RS) + 5.0));
+          let a = j === 0 ? Math.max(est + 0.75, L.start + 0.55) : L.start + Math.min(0.25, dur * 0.2);
+          a = Math.min(a, Math.max(est + 0.3, L.end - 0.6));
+          const b = Math.max(a + 0.3, L.end - Math.min(0.45, dur * 0.25)); // leave early, arrive a beat late: ~1 s row to row
+          out.push([a, sl.cx - 0.55 - d, Y0 + 0.1, sl.cz + 0.55, w * 1.015], [b, sl.cx - 0.55 + d, Y0 + 0.1, sl.cz + 0.75, w * 0.985]);
+        });
+        if (!S.lines.length) out.push([Math.max(est + 0.6, c.end - 0.2), S.cx + 1.1, Y0 + 0.4, S.cz + 0.6, ESTW * 0.95]);
+        return out;
+      }
+      function recapFrame() {
+        // fit the whole base (and its back trees) between the card bands
+        const az = (AZT(RECAP.start + 2) * Math.PI) / 180, ca = Math.cos(az), sa = Math.sin(az);
+        const pts = [];
+        [TOWN.x0, TOWN.x1].forEach((x) => [TOWN.z0, TOWN.z1].forEach((z) => [-1.2, 2.6].forEach((y) => pts.push([x, y, z]))));
+        const sx = pts.map(([x, y, z]) => x * ca - z * sa), sy = pts.map(([x, y, z]) => y * Math.cos(EL) - (x * sa + z * ca) * Math.sin(EL));
+        const bw = Math.max(...sx) - Math.min(...sx), bh = Math.max(...sy) - Math.min(...sy);
+        const w = Math.max(bw * 0.96, (bh * (W / H)) / 0.9);
+        const scx = (Math.max(...sx) + Math.min(...sx)) / 2, scy = (Math.max(...sy) + Math.min(...sy)) / 2 - bh * 0.02;
+        const yT = 1.2, q = (yT * Math.cos(EL) - scy) / Math.sin(EL);
+        return { x: scx * ca + q * sa, y: yT, z: -scx * sa + q * ca, w };
+      }
+      function buildCamera() {
+        const shots = [];
+        let prev = null;
+        const add = (seg, lift = true) => {
+          if (!seg.length) return;
+          if (prev && lift) {
+            const a = prev[prev.length - 1], b = seg[0], dist = Math.hypot(b[1] - a[1], b[3] - a[3]);
+            if (dist > 7 && b[0] - a[0] > 0.6) shots.push([(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, Math.max(a[2], b[2]) + 0.4, (a[3] + b[3]) / 2, Math.max(a[4], b[4]) + 0.28 * dist]);
+          }
+          shots.push(...seg);
+          prev = seg;
+        };
+        STATIONS.forEach((S) => add(stationShots(S)));
+        if (END) {
+          const a = END.start - 0.05, b = Math.max(a + 0.6, END.end + 0.2);
+          add([[a, PLAZA.x - 0.8, Y0 + 3.1, PLAZA.z - 0.3, 24.5], [b, PLAZA.x + 0.8, Y0 + 3.1, PLAZA.z + 0.4, 23.4]]);
+        }
+        if (RECAP) {
+          const f = recapFrame(), a = RECAP.start + 0.7;
+          add([[a, f.x - 0.6, f.y, f.z, f.w], [Math.max(a + 0.6, DUR), f.x + 0.6, f.y, f.z + 0.3, f.w * 1.07]], false);
+        }
+        // the film never parks: keep drifting to the end, then phantom keys beyond both ends
+        let last = shots[shots.length - 1];
+        if (last[0] < DUR - 0.3) shots.push((last = [DUR, last[1] + 1.0, last[2], last[3] + 0.3, last[4] * 0.95]));
+        const before = shots[shots.length - 2] || last;
+        const f0 = shots[0];
+        shots.unshift([Math.min(-1.2, f0[0] - 1.6), f0[1] - 1.6, f0[2], f0[3] - 0.7, f0[4] * 1.14]);
+        shots.push([Math.max(DUR + 1.5, last[0] + 1.5), last[1] + (last[1] - before[1]) * 0.6 + 0.3, last[2], last[3] + (last[3] - before[3]) * 0.6, last[4] * (last[4] >= before[4] ? 1.03 : 0.98)]);
+        // scene keys win over the defaults around them
+        let keys = shots.filter((s) => !EXTRA.some((e) => Math.abs(e[0] - s[0]) < 0.3)).map((s) => [...s, AZT(s[0])]);
+        keys = keys.concat(EXTRA.map((e) => [e[0], e[1], e[2], e[3], e[4], e[5] ?? AZT(e[0])]));
+        keys.sort((a, b) => a[0] - b[0]);
+        const out = [];
+        for (const k of keys) if (!out.length || k[0] - out[out.length - 1][0] >= 0.12) out.push(k);
+        return out;
+      }
+
+      // ================= chrome: captions, chapter chip, closing line, recap, draft tag =================
+      const WASH = $("wash");
+      const caps = Kit.captions($("caps"), story);
+      const chap = Kit.chapters($("chap"), story);
+      const title = END ? Kit.title(story, { parent: $("stage") }) : null;
+      const leaders = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      leaders.id = "leaders";
+      $("labels").appendChild(leaders);
+      const recap = RECAP ? Kit.recap(story, { tagline: !END }) : null;
+      if (recap) recap.el.classList.add("ph-recap");
+      if (recap && RECAP.points.length > 5) recap.el.classList.add("ph-dense");
+      const draft = story.data.draft ? Kit.sticker('<div class="ph-draft">草稿 · 无配音</div>', { x: W - 64, y: 52, ax: 1, ay: 0, clamp: false }) : null;
+      const LEAD = RECAP ? RECAP.points.map(() => {
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.innerHTML = '<line x1="0" y1="0" x2="0" y2="0"></line><circle r="8" cx="0" cy="0"></circle>';
+        leaders.appendChild(g);
+        return { g, line: g.firstChild, dot: g.lastChild };
+      }) : [];
+      let RC = null; // measured card sizes (and the centre sticker's)
+      function measureRecap(wraps) {
+        const m = () => wraps.map((e) => ({ w: e.offsetWidth, h: e.offsetHeight }));
+        let sz = m();
+        const pill = recap.el.querySelector(".kit-recap-center");
+        // too much for a band? narrower cards (their text wraps)
+        const need = (band) => STATIONS.slice(0, sz.length).reduce((a, S, k) => a + (S.band === band ? sz[k].w + 28 : 0), 0);
+        if (!recap.el.classList.contains("ph-dense") && Math.max(need("up"), need("down")) > W - 140) { recap.el.classList.add("ph-dense"); sz = m(); }
+        return { cards: sz, pill: { w: pill.offsetWidth, h: pill.offsetHeight } };
+      }
+      function placeRecap(t) {
+        if (!recap) return;
+        if (t < RECAP.start - 0.1) { recap.render(t, {}); leaders.style.opacity = "0"; return; }
+        const wraps = [...recap.el.querySelectorAll(".kit-rc-wrap")];
+        if (!RC) RC = measureRecap(wraps);
+        const SAFE = { l: 48, r: W - 48, t: 176, b: H - 40 };
+        // each card goes to its district: above the back row, below the front row, beside the middle row
+        const cards = RECAP.points.map((p, k) => {
+          const S = STATIONS[k], sz = RC.cards[k];
+          if (!S) return null;
+          const pin = CL.toScreen(S.pinTop()), mid = CL.toScreen(V(S.cx, Y0, S.cz));
+          const corner = (dx, dz) => CL.toScreen(V(S.cx + dx * (PW / 2), Y0, S.cz + dz * (PD / 2)));
+          let x, y, ax = 0.5, ay;
+          if (S.band === "up") { const c = corner(-1, -1); x = mid.x; y = Math.min(c.y, pin.y) - 26; ay = 1; }
+          else if (S.band === "down") { const c = corner(1, 1); x = mid.x; y = c.y + 26; ay = 0; }
+          else if (S.band === "left") { const c = corner(-1, 1); x = c.x - 20; y = mid.y; ax = 1; ay = 0.5; }
+          else { const c = corner(1, -1); x = c.x + 20; y = mid.y; ax = 0; ay = 0.5; }
+          return { k, x, y, ax, ay, w: sz.w, h: sz.h, band: S.band, to: mid };
+        });
+        const live = cards.filter(Boolean);
+        live.forEach((c) => {
+          c.x = Math.max(SAFE.l + c.ax * c.w, Math.min(SAFE.r - (1 - c.ax) * c.w, c.x));
+          c.y = Math.max(SAFE.t + c.ay * c.h, Math.min(SAFE.b - (1 - c.ay) * c.h, c.y));
+        });
+        // the centre sticker sits on the plaza's flag; in a band it overlaps it is a fixed obstacle the cards make room for
+        const pg = CL.toScreen(V(PLAZA.x, PLZ_Y + 0.2, PLAZA.z)), cp = { x: pg.x, y: pg.y + RC.pill.h * 0.5 };
+        const pill = { x: cp.x, w: RC.pill.w, top: cp.y - RC.pill.h, bot: cp.y, fixed: true };
+        ["up", "down"].forEach((band) => {
+          const row = live.filter((c) => c.band === band);
+          if (!row.length) return;
+          // one baseline per band: the cards sit in a tidy row above (below) the town, clear of the centre
+          const hmax = Math.max(...row.map((c) => c.h));
+          const yb = band === "up" ? Math.max(SAFE.t + hmax, Math.min(...row.map((c) => c.y))) : Math.min(SAFE.b - hmax, Math.max(...row.map((c) => c.y)));
+          row.forEach((c) => { c.y = yb; });
+          const top = Math.min(...row.map((c) => c.y - c.ay * c.h)), bot = Math.max(...row.map((c) => c.y + (1 - c.ay) * c.h));
+          if (pill.top < bot && pill.bot > top) row.push(pill);
+          row.sort((a, b) => a.x - b.x);
+          const gap = (a, b) => (a.w + b.w) / 2 + 24;
+          for (let n = 1; n < row.length; n++) if (!row[n].fixed) row[n].x = Math.max(row[n].x, row[n - 1].x + gap(row[n - 1], row[n]));
+          const lastC = row[row.length - 1];
+          if (!lastC.fixed) lastC.x = Math.min(lastC.x, SAFE.r - lastC.w / 2);
+          for (let n = row.length - 2; n >= 0; n--) if (!row[n].fixed) row[n].x = Math.min(row[n].x, row[n + 1].x - gap(row[n], row[n + 1]));
+          if (!row[0].fixed) row[0].x = Math.max(row[0].x, SAFE.l + row[0].w / 2);
+          for (let n = 1; n < row.length; n++) if (!row[n].fixed) row[n].x = Math.max(row[n].x, row[n - 1].x + gap(row[n - 1], row[n]));
+          row.forEach((c) => { if (!c.fixed) c.x = Math.max(SAFE.l + c.w / 2, Math.min(SAFE.r - c.w / 2, c.x)); }); // never off frame
+        });
+        recap.render(t, { center: cp, points: cards.map((c) => c && { x: c.x, y: c.y, ax: c.ax, ay: c.ay }) });
+        // leaders: card edge → its plot, fading in with the card
+        leaders.style.opacity = "1";
+        cards.forEach((c, k) => {
+          const Ld = LEAD[k];
+          if (!c) { Ld.g.style.opacity = "0"; return; }
+          const o = +wraps[k].style.opacity || 0;
+          Ld.g.style.opacity = o.toFixed(3); // (c.x, c.y) is the card's attachment point on its edge
+          Ld.line.setAttribute("x1", c.x.toFixed(1)); Ld.line.setAttribute("y1", c.y.toFixed(1));
+          Ld.line.setAttribute("x2", c.to.x.toFixed(1)); Ld.line.setAttribute("y2", c.to.y.toFixed(1));
+          Ld.dot.setAttribute("cx", c.to.x.toFixed(1)); Ld.dot.setAttribute("cy", c.to.y.toFixed(1));
+        });
+      }
+      // long lines wrap into balanced lines; a long closing line shrinks (then wraps) — measured once the fonts are in
+      function fitText() {
+        for (const b of caps.boxes) {
+          const el = b.el;
+          el.style.whiteSpace = "pre";
+          el.style.width = "";
+          const w = el.offsetWidth;
+          if (w <= 1720) continue;
+          const n = Math.ceil((w - 80) / 1640);
+          el.style.whiteSpace = "normal";
+          el.style.textAlign = "center";
+          el.style.width = Math.ceil(((w - 80) / n) * 1.06 + 84) + "px";
+        }
+        if (title) {
+          const el = title.el, sum = () => [...el.children].reduce((a, c) => a + c.offsetWidth, 0);
+          el.style.fontSize = "";
+          let w = sum();
+          if (w > 1800) { el.style.fontSize = Math.max(62, Math.floor((88 * 1800) / w)) + "px"; w = sum(); }
+          if (w > 1800) { el.style.whiteSpace = "normal"; el.style.padding = "0 72px"; }
+        }
+      }
+
+      // ================= the scene: beats.js =================
+      const api = {
+        story, C: XC, Kit, THREE, CL, scene, camera: CL.camera, V, M, rbox, mesh,
+        AZ, AZd, Y0, W, H, layer: $("labels"),
+        stations: STATIONS, station: (k) => STATIONS[k], stationOf: (i) => (SLOT[i] ? SLOT[i].k : null), slotOf: (i) => SLOT[i] || null,
+        plaza: { group: plaza, flag, center: PLAZA, top: PLAZA_TOP }, town: { ...TOWN, rows: ROWS, cols: COLS, cells: CELLS, plotW: PW, plotD: PD },
+        cam, stick, toScreen: CL.toScreen, face: (o) => { o.rotation.y = AZ; return o; },
+        placeholder, notes: NOTES, noteFor,
+      };
+      const beats = (window.Beats || (() => ({ render() {} })))(api) || { render() {} };
+      const CAM = (cam.keys = buildCamera());
+
+      // ================= the frame =================
+      function renderAt(t) {
+        CL.setIso(CAM, t);
+        // pins pop up as their chapter begins
+        STATIONS.forEach((S) => {
+          const a = S.chapter.start + 0.1, u = pr(t, a, 0.35);
+          S.pin.visible = u > 0;
+          S.pin.scale.setScalar(Math.max(0.001, E.back(u)));
+          S.pin.position.y = Y0;
+          if (u >= 1) squash(S.pin, t, a + 0.35, 0.7);
+        });
+        // the flag rises on the closing line (or as the recap opens)
+        const fa = END ? END.start - 0.1 : RECAP ? RECAP.start - 0.5 : DUR + 1, fd = END ? Math.max(0.8, (END.end - END.start) * 0.8) : 0.9;
+        const fu = E.io3(pr(t, fa, fd));
+        flag.visible = t >= fa - 0.2;
+        flag.position.y = lerp(FLAG_LO, FLAG_HI, fu);
+        cloth.position.set(0.95, 0, 0);
+        cloth.scale.setScalar(Math.max(0.001, E.back(pr(t, fa - 0.2, 0.35))));
+        if (fu >= 1) squash(cloth, t, fa + fd, 0.6);
+        beats.render(t);
+        scene.updateMatrixWorld();
+        placeStickers(t);
+        placeRecap(t);
+        caps.render(t);
+        chap.render(t);
+        if (title) title.render(t);
+        WASH.style.opacity = (END ? pr(t, END.start - 0.4, 0.5) : RECAP ? pr(t, RECAP.start - 0.2, 0.5) : 0).toFixed(3);
+        if (draft) draft.render(t);
+        CL.render();
+      }
+
+      Kit.boot("main", renderAt, {
+        story,
+        text: "待演绎镜草稿无配音·0123456789" + Object.values(NOTES).flat().join(""),
+        afterFonts: () => { CL.redraw(); fitText(); },
+      });
+    </script>
+  </body>
+</html>

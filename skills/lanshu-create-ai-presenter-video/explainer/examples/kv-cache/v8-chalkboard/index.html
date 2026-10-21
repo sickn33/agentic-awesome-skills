@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>KV cache · V8 黑板报</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+@font-face { font-family: "Long Cang"; src: url("assets/fonts/long-cang.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "ZCOOL KuaiLe"; src: url("assets/fonts/zcool-kuaile.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Patrick Hand"; src: url("assets/fonts/patrick-hand.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+/* fonts:end */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #141c18; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #141c18; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-width="1920" data-height="1080">
+      <div id="stage" class="clip" data-start="0" data-duration="45" data-track-index="1" data-layout-allow-overflow=""></div>
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40.32" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script>
+      (function () {
+        // KV cache on ONE blackboard (V8 黑板报). The teacher writes the narration as chalk headlines at the spoken times,
+        // draws each idea live, and uses the eraser to remove what a fix makes unnecessary. Every beat time comes from the
+        // story (story.at / story.phrase / chapter starts); the pictures are chalk; every frame is Kit.render(t).
+        var K = window.Kit, G = K.geo, S = K.S, T = K.T, X = K.X, seq = K.seq, wlen = K.wlen;
+        var story = new ExplainerCore.Story(window.STORY);
+        var at = function (l, u, n) { return story.at(l, u, n); };
+        var lineStart = function (l) { return story.line(l).start; };
+        var lineEnd = function (l) { return story.line(l).end; };
+        var chap = function (n) { return story.chapters[n - 1].start; };
+        var DUR = story.duration;
+        var TOK = ["因为", "空气", "把", "蓝光", "散射", "得", "更", "多"]; // 「天空为什么是蓝的？」 answered one token at a time
+
+        var B = K.board({ stage: document.getElementById("stage"), cols: 4, rows: 2 });
+        var PM = K.panel("pM", 0, 0), P1 = K.panel("p1", 1, 0, { span: 2 }), P2 = K.panel("p2", 2, 1), P3 = K.panel("p3", 1, 1);
+        var P4 = K.panel("p4", 0, 1), PR = K.panel("pR", 3, 0);
+
+        // a token in a chalk box, written centred; returns the parts so they can be faded / erased later
+        function token(P, x, y, w, h, text, t, tone, size, o) {
+          o = o || {};
+          size = size || 46;
+          var box = S(P, G.rect(x, y, w, h), tone || "w", o.width || 3.6, t, 0.12, { sprite: false });
+          var tx = T(P, Math.round(x + (w - wlen(text) * size) / 2), Math.round(y + (h - size * 1.12) / 2), size, [[text, t + 0.08, t + 0.08 + 0.07 * Array.from(text).length, "c" + K.tone(o.textTone || tone || "w")]], { sprite: o.sprite === true });
+          return { box: box, text: tx, x: x, y: y, w: w, h: h, cx: x + w / 2, cy: y + h / 2, parts: [box, tx] };
+        }
+        function pop(P, x, y, t, tone) {
+          var b = S(P, G.burst(x, y, 16, 34, 7, -Math.PI / 2 + 0.2), tone || "y", 3.4, t, 0.12, { sprite: false });
+          K.fade([b], t + 0.3, 0.35, 0);
+          K.mark("pop", t);
+        }
+
+        // ======================= 一 · 问题：越写越慢 (one wide panel; the camera walks from tokens to the triangle) =======================
+        K.chapter(P1, story, 1);
+        K.say(P1, story, 1, { rows: [{ x: 48, y: 104, size: 64 }], tones: { token: "y" } });
+        K.say(P1, story, 2, { rows: [{ x: 48, y: 188, size: 64 }], tones: { 新: "y", 回头看: "b", 所有: "b" } });
+        // the question and the model
+        var tAsk = at(1, "回"), tIs = at(1, "是");
+        S(P1, "M 60 300 L 700 300 Q 716 300 716 316 L 716 372 Q 716 388 700 388 L 210 388 L 160 430 L 168 388 L 76 388 Q 60 388 60 372 L 60 316 Q 60 300 76 300 Z", "b", 4, lineStart(1), 0.35, { sprite: false });
+        T(P1, 84, 312, 48, [["问：天空为什么是蓝的？", tAsk - 0.3, tAsk + 0.45, "cw"]], { sprite: false });
+        S(P1, G.rect(60, 470, 290, 230), "w", 4.5, lineStart(1) + 0.15, 0.4);
+        seq(P1, 92, 500, 60, [["大模型", "kl cy"]], lineStart(1) + 0.3, 7, { sprite: false });
+        // a little brain-ish gear: the model "thinking"
+        S(P1, G.circ(205, 628, 40, 40, 1.0) + " " + G.burst(205, 628, 44, 60, 8, 0), "w", 3, lineStart(1) + 0.6, 0.35, { sprite: false });
+        S(P1, G.arrow(352, 585, 390, 585, 428, 585, 20), "w", 4, tIs, 0.18);
+        // tokens pop out one at a time, into slots numbered by step
+        var SLOT = function (i) { return 440 + i * 160; };
+        var tokT = [at(1, "token", 1), at(1, "token", 2), at(1, "蹦"), at(1, "的") + 0.1, at(2, "新")];
+        var toks = [];
+        for (var i = 0; i < 5; i++) {
+          var isNew = i === 4;
+          toks.push(token(P1, SLOT(i), 540, 140, 96, TOK[i], tokT[i], isNew ? "y" : "w", 48));
+          pop(P1, SLOT(i) + 70, 520, tokT[i] + 0.06, isNew ? "y" : "w");
+          T(P1, SLOT(i) + 52, 650, 34, [["第" + (i + 1) + "步", tokT[i] + 0.1, tokT[i] + 0.3, isNew ? "cy" : "cm"]], { sprite: false });
+        }
+        for (i = 5; i < 8; i++) {
+          S(P1, G.rect(SLOT(i), 540, 140, 96), "rgba(242,239,230,0.55)", 3, tokT[0] + 0.15 + (i - 5) * 0.08, 0.1, { sprite: false, dash: "12 10" });
+          T(P1, SLOT(i) + 58, 556, 48, [["?", tokT[0] + 0.2 + (i - 5) * 0.08, tokT[0] + 0.3 + (i - 5) * 0.08, "cm"]], { sprite: false });
+        }
+        T(P1, SLOT(5), 650, 34, [["还没生成", tokT[0] + 0.3, tokT[0] + 0.6, "cm"]], { sprite: false });
+        K.note("自回归：每次只生成 1 个 token", { at: [P1, 440, 740], t: at(1, "的") + 0.08, size: 44, cps: 24 });
+        // 回头看: the new token looks back at every earlier one — arcs sweep left, then every earlier token lights
+        var tBack = at(2, "回"), tAll = at(2, "所");
+        for (i = 3; i >= 0; i--) {
+          var d = 4 - i, x0 = toks[4].cx - 20, x1 = toks[i].cx + 10, cyA = 528 - 34 - d * 26;
+          S(P1, G.arrow(x0, 532, (x0 + x1) / 2, cyA - 40, x1, 532, 18), "b", 3.8, tBack + (3 - i) * 0.1, 0.2, { sprite: i === 3 });
+        }
+        for (i = 0; i < 4; i++) S(P1, G.circ(toks[i].cx, toks[i].cy, 78, 58), "b", 3.6, tAll + i * 0.05, 0.16, { sprite: false, kind: i === 0 ? "tap" : "draw" });
+        K.mark("light", tAll);
+        K.note("注意力：新 token 要和前面每一个比一比", { at: [P1, 440, 830], t: at(2, "token", 2) - 0.05, size: 44, cps: 26, tone: "accent2" });
+
+        // ---- right half: without a cache, step n recomputes all n tokens → a triangle of work ----
+        K.say(P1, story, 3, { rows: [{ x: 1948, y: 104, size: 64 }], tones: { 重新算: "p", 越写越慢: "p" } });
+        var tEach = at(3, "每"), tRe = at(3, "重"), tSlow = at(3, "越", 1);
+        var CX = function (c) { return 2200 + c * 112; }, RY = function (r) { return 290 + r * 66; };
+        T(P1, 1960, 232, 36, [["每一步要算：", tEach - 0.25, tEach + 0.1, "cm"]], { sprite: false });
+        for (var c = 0; c < 8; c++) T(P1, Math.round(CX(c) + (100 - wlen(TOK[c]) * 34) / 2), 236, 34, [[TOK[c], tEach - 0.2 + c * 0.03, tEach + c * 0.03, "cm"]], { sprite: false });
+        var cells = [];
+        for (var r = 0; r < 8; r++) {
+          var tr = tEach + 0.05 + r * 0.1;
+          T(P1, 1960, RY(r) + 10, 36, [["第" + (r + 1) + "步", tr, tr + 0.12, "cm"]], { sprite: false });
+          for (c = 0; c <= r; c++) {
+            var cell = { r: r, c: c, x: CX(c), y: RY(r) + 6, box: S(P1, G.rect(CX(c), RY(r) + 6, 100, 52), c === r ? "y" : "w", 3.2, tr + c * 0.012, 0.06, { sprite: false, kind: c === r ? "draw" : "tick" }) };
+            cells.push(cell);
+          }
+        }
+        // 重新算: everything off the diagonal is work already done before — it flashes as waste
+        var waste = cells.filter(function (q) { return q.c < q.r; });
+        waste.forEach(function (q, k) { S(P1, G.hatch(q.x + 6, q.y + 6, 88, 40, 12), "p", 3, tRe + q.r * 0.07 + q.c * 0.012, 0.08, { sprite: false, kind: "tick" }); });
+        cells.filter(function (q) { return q.c === q.r; }).forEach(function (q) { S(P1, G.hatch(q.x + 6, q.y + 6, 88, 40, 12), "y", 3, tRe + 0.55 + q.r * 0.03, 0.08, { sprite: false }); });
+        T(P1, 2200, 838, 38, [["粉格 = 前面已经算过、又重算一遍", tRe + 0.4, tRe + 0.95, "cp"]], { sprite: false });
+        // 越写越慢: per-step time bars grow, each longer than the last
+        T(P1, 3150, 232, 36, [["每步耗时", tSlow - 0.3, tSlow, "cm"]], { sprite: false });
+        var slowBars = K.bars({
+          at: [P1, 3150, 296], t: tSlow - 0.15, w: 420, h: 40, gap: 26, labelW: 0, size: 32, stagger: 0.075, grow: 0.3,
+          rows: [1, 2, 3, 4, 5, 6, 7, 8].map(function (n) { return { label: "", value: n, max: 8, tone: "warn" }; }),
+        });
+        // a snail at the end of the slowest step
+        S(P1, G.circ(3628, 812, 30, 26, 1.0) + " " + G.circ(3631, 815, 13, 11, 1.0) + " M 3590 842 L 3680 842 Q 3702 842 3696 818 M 3690 822 L 3694 790 M 3700 826 L 3712 796 " + G.circ(3694, 786, 4, 4, 1.0) + " " + G.circ(3713, 792, 4, 4, 1.0), "p", 3.4, at(3, "慢") + 0.05, 0.35, { sprite: false });
+        K.note("问题：第 n 步要把前面 n 个全部重算", { at: [P1, 1960, 900], t: lineEnd(3) - 0.42, size: 44, cps: 30, tone: "warn" });
+
+        // ======================= 二 · 方法：存起来，只算新的 =======================
+        K.chapter(P2, story, 2);
+        K.say(P2, story, 4, { rows: [{ x: 48, y: 98, size: 80 }, { x: 52, y: 196, size: 56, from: "每个" }], tones: { "KV cache": "y", Key: "y", Value: "b", 只算一次: "y" } });
+        K.say(P2, story, 5, { rows: [{ x: 52, y: 268, size: 56 }], tones: { 新来的那一个: "y", 缓存里查: "b" } });
+        var tKV = at(4, "KV"), tEachTok = at(4, "每"), tKey = at(4, "Key"), tVal = at(4, "Value"), tOnce = at(4, "只"), tStore = at(4, "存");
+        // the cache: a table with two columns K | V, one row per token (the title moment)
+        var TX = 1100, TY = 420, TW = 560, ROWH = 62, CK = 1260, CV = 1460;
+        seq(P2, TX, 870, 50, [["KV cache", "lat cy"], ["（缓存）", "cw"]], tKV + 0.05, 14, { sprite: false });
+        S(P2, G.rect(TX, TY, TW, 64 + 6 * ROWH), "y", 4.5, tKV, 0.45, { kind: "draw" });
+        S(P2, G.line(TX, TY + 64, TX + TW, TY + 64, 2) + " " + G.line(CK, TY, CK, TY + 64 + 6 * ROWH, 2) + " " + G.line(CV, TY, CV, TY + 64 + 6 * ROWH, 2), "w", 3, tKV + 0.4, 0.3, { sprite: false });
+        T(P2, TX + 28, TY + 12, 38, [["token", tKV + 0.6, tKV + 0.8, "cm"]], { sprite: false });
+        T(P2, CK + 88, TY + 8, 46, [["K", tKV + 0.7, tKV + 0.8, "cy"]], { sprite: false });
+        T(P2, CV + 88, TY + 8, 46, [["V", tKV + 0.78, tKV + 0.88, "cb"]], { sprite: false });
+        for (var rr = 1; rr < 6; rr++) S(P2, G.line(TX + 8, TY + 64 + rr * ROWH, TX + TW - 8, TY + 64 + rr * ROWH, 2), "rgba(242,239,230,0.45)", 2, tKV + 0.6 + rr * 0.04, 0.08, { sprite: false });
+        // every token yields a Key (to match) and a Value (the content)
+        var KX = function (i) { return 60 + i * 146; };
+        var t2 = [], kv = [];
+        for (i = 0; i < 4; i++) t2.push(token(P2, KX(i), 404, 128, 84, TOK[i], tEachTok + i * 0.14, "w", 44));
+        for (i = 0; i < 4; i++) {
+          kv.push({
+            k: S(P2, G.keyIcon(KX(i) + 6, 508, 56), "y", 3.6, tKey + i * 0.08, 0.14, { sprite: i === 0 }),
+            v: S(P2, G.cardIcon(KX(i) + 68, 506, 54), "b", 3.6, tVal + i * 0.08, 0.14, { sprite: i === 0 }),
+          });
+        }
+        var nK = K.note("K：用来匹配", { at: [P2, 60, 584], t: tKey + 0.1, size: 42, cps: 16 });
+        var nV = K.note("V：被取走的内容", { at: [P2, 60, 646], t: tVal + 0.1, size: 42, cps: 16, tone: "accent2" });
+        // 只算一次: a ×1 stamp
+        var once = S(P2, G.circ(770, 662, 66, 50), "y", 4.5, tOnce, 0.22, { kind: "tap" });
+        var onceT = T(P2, 730, 632, 60, [["×1", tOnce + 0.08, tOnce + 0.24, "lat cy"]], { sprite: false });
+        // 存起来: the pairs go into the cache, one row per token
+        var into = S(P2, G.arrow(640, 560, 880, 650, TX - 12, 600, 22), "y", 4, tStore, 0.25);
+        function cacheRow(i, t, hl) {
+          var ry = TY + 64 + i * ROWH;
+          var parts = [T(P2, Math.round(TX + (CK - TX - wlen(TOK[i]) * 38) / 2), ry + 10, 38, [[TOK[i], t, t + 0.12, hl ? "cy" : "cw"]], { sprite: false })];
+          parts.push(S(P2, G.keyIcon(CK + 64, ry + 14, 70), "y", 3.4, t + 0.05, 0.12, { sprite: false }));
+          parts.push(S(P2, G.cardIcon(CV + 68, ry + 10, 62), "b", 3.4, t + 0.1, 0.12, { sprite: false }));
+          return parts;
+        }
+        var rowsOld = [];
+        for (i = 0; i < 4; i++) rowsOld = rowsOld.concat(cacheRow(i, tStore + 0.15 + i * 0.13, false));
+        // ---- beat 5: after that, only the new one is computed; then it queries the cache ----
+        var tAfter = at(5, "之"), tOnly = at(5, "只"), tNew5 = at(5, "新"), tThat = at(5, "那"), tAgain = at(5, "再"), tQ = at(5, "查");
+        var nt = token(P2, KX(4), 404, 128, 84, TOK[4], tNew5 - 0.1, "y", 44);
+        pop(P2, KX(4) + 64, 386, tNew5, "y");
+        // the others stay dark: nothing old is recomputed
+        var olds = [once, onceT, into];
+        t2.forEach(function (q) { olds = olds.concat(q.parts); });
+        kv.forEach(function (q) { olds.push(q.k, q.v); });
+        K.fade(olds, tOnly, 0.35, 0.38);
+        K.fade([nK, nV], tOnly, 0.35, 0.6);
+        S(P2, G.keyIcon(KX(4) + 6, 508, 56), "y", 3.8, tNew5 + 0.2, 0.14);
+        S(P2, G.cardIcon(KX(4) + 68, 506, 54), "b", 3.8, tNew5 + 0.32, 0.14);
+        // its K, V append as a new row
+        S(P2, G.arrow(KX(4) + 128, 540, 1000, 700, TX - 14, TY + 64 + 4.5 * ROWH, 22), "y", 4, tThat, 0.22, { sprite: false });
+        cacheRow(4, tThat + 0.12, true);
+        S(P2, G.rect(TX + 4, TY + 64 + 4 * ROWH + 4, TW - 8, ROWH - 8), "y", 3, tThat + 0.3, 0.2, { sprite: false });
+        // 再去缓存里查: its Q scans the K column; a match weight appears per row; the matching V's flow back
+        var qx = 850, qy = 440;
+        S(P2, G.circ(qx, qy, 30, 30, 1.0) + " M " + (qx + 22) + " " + (qy + 22) + " L " + (qx + 46) + " " + (qy + 46), "o", 4.5, tAgain, 0.2);
+        T(P2, qx - 11, qy - 24, 40, [["Q", tAgain + 0.12, tAgain + 0.22, "lat co"]], { sprite: false });
+        T(P2, 806, 500, 34, [["Q = 它的提问", tAgain + 0.15, tAgain + 0.5, "co"]], { sprite: false });
+        S(P2, G.arrow(qx + 34, qy - 16, 1080, 340, CK + 100, TY - 10, 18), "o", 3.6, tAgain + 0.2, 0.25, { sprite: false });
+        var WEIGHT = [0.35, 0.8, 0.25, 0.6, 0.45];
+        var tScan = at(5, "缓");
+        S(P2, "M " + (CK + 24) + " " + (TY + 70) + " L " + (CK + 24) + " " + (TY + 64 + 5 * ROWH - 6), "o", 5, tScan - 0.05, 0.55, { kind: "draw" });
+        T(P2, TX + TW + 14, TY + 12, 34, [["匹配度", tScan - 0.1, tScan + 0.15, "co"]], { sprite: false });
+        WEIGHT.forEach(function (w, i) {
+          var ry = TY + 64 + i * ROWH + 18, len = Math.round(130 * w);
+          S(P2, G.hatch(TX + TW + 16, ry, len, 26, 9) + " " + G.rect(TX + TW + 16, ry, len, 26), "o", 2.8, tScan + i * 0.1, 0.1, { sprite: false, kind: "tick" });
+        });
+        // the strongest matches give their V back to the new token
+        [1, 3].forEach(function (i, j) {
+          var ry = TY + 64 + i * ROWH + ROWH / 2;
+          S(P2, G.circ(CV + 99, ry, 66, 28), "b", 3.6, tQ - 0.35 + j * 0.08, 0.16, { sprite: false, kind: "tap" });
+          var back = S(P2, G.arrow(CV + 70 - j * 36, TY - 6, 1150 + j * 50, 296 - j * 18, KX(4) + 104, 398, 20), "b", 3.6, tQ - 0.15 + j * 0.1, 0.3, { sprite: false });
+          K.flow(back, tQ + 0.15 + j * 0.1, { n: 3, speed: 1.1, tone: "b", r: 7, until: chap(3) + 0.2 });
+        });
+        T(P2, 1500, 878, 38, [["取回 V，组成答案", tQ + 0.05, tQ + 0.45, "cb"]], { sprite: false });
+        // the contrast with the triangle: per step, without a cache n copies, with a cache 1
+        var cost = K.bars({
+          at: [P2, 60, 760], t: tOnly - 0.05, w: 360, h: 42, gap: 24, labelW: 300, size: 38, stagger: 0.18, grow: 0.4,
+          rows: [
+            { label: "不缓存：每步", value: 8, max: 8, tone: "warn", valueText: "n 份", labelTone: "warn" },
+            { label: "有缓存：每步", value: 1, max: 8, tone: "accent", valueText: "1 份", labelTone: "accent" },
+          ],
+        });
+
+        // ======================= 三 · 代价：显存 =======================
+        K.chapter(P3, story, 3);
+        K.say(P3, story, 6, { rows: [{ x: 48, y: 104, size: 72 }], tones: { 显存: "p", 涨: "p" } });
+        K.say(P3, story, 7, { rows: [{ x: 52, y: 200, size: 50 }], tones: { "0.5 MB": "y", "2 GB": "y", "4K": "b", "Llama 2 7B": "b" } });
+        var tMem = at(6, "显"), STEP = [at(6, "跟"), at(6, "着"), at(6, "上"), at(6, "下")], tRise = at(6, "涨");
+        // the 显存 container: its fill is the KV cache
+        var lvl = function (t) {
+          var v = 0;
+          STEP.forEach(function (s, k) { v = Math.max(v, 0.2 * (k + 1) * ExplainerCore.E.o3(ExplainerCore.pr(t, s, 0.22))); });
+          v += 0.07 * Math.sin(Math.PI * ExplainerCore.pr(t, tRise, 0.45)); // the bump on 涨
+          return v;
+        };
+        var gauge = K.gauge({ at: [P3, 130, 410], w: 240, h: 490, tone: "warn", label: "显存", labelTone: "warn", t: tMem - 0.05, level: lvl });
+        T(P3, 168, 842, 34, [["KV cache", STEP[0] + 0.1, STEP[0] + 0.35, "lat cw"]], { sprite: false });
+        // context grows 1K → 4K: tick labels on the container and points on a straight line
+        var OX = 560, OY = 760, DX = 170, DY = 92;
+        S(P3, G.arrow(OX, OY, OX + 360, OY, OX + 740, OY, 20) + " " + G.arrow(OX, OY, OX, OY - 200, OX, 360, 20), "w", 4, tMem + 0.1, 0.4);
+        T(P3, OX + 600, OY + 52, 36, [["上下文", tMem + 0.4, tMem + 0.65, "cm"]], { sprite: false });
+        T(P3, OX + 20, 340, 36, [["显存", tMem + 0.45, tMem + 0.6, "cm"]], { sprite: false });
+        var pts = [];
+        STEP.forEach(function (s, k) {
+          var gy = gauge.levelY(0.2 * (k + 1));
+          S(P3, G.line(118, gy, 140, gy, 1), "b", 3, s, 0.06, { sprite: false });
+          T(P3, 56, Math.round(gy - 22), 38, [[(k + 1) + "K", s, s + 0.12, "cb"]], { sprite: false });
+          var px = OX + DX * (k + 1), py = OY - DY * (k + 1);
+          pts.push([px, py]);
+          S(P3, G.line(px, OY - 10, px, OY + 10, 1), "w", 3, s, 0.05, { sprite: false });
+          T(P3, px - 18, OY + 14, 36, [[(k + 1) + "K", s + 0.02, s + 0.14, "cb"]], { sprite: false });
+          S(P3, G.circ(px, py, 10, 10, 1.0), "p", 5, s + 0.06, 0.08, { sprite: false, kind: "tick" });
+        });
+        S(P3, "M " + OX + " " + OY + " L " + (OX + DX * 4 + 50) + " " + (OY - DY * 4 - 27), "p", 4, STEP[3] + 0.12, 0.3, { sprite: false });
+        // 涨: the line keeps going up
+        S(P3, G.arrow(OX + DX * 4 + 50, OY - DY * 4 - 27, OX + DX * 4 + 62, OY - DY * 4 - 34, OX + DX * 4 + 80, OY - DY * 4 - 44, 18), "p", 4.5, tRise, 0.15, { kind: "tap" });
+        T(P3, OX + DX * 4 - 10, OY - DY * 4 - 100, 56, [["涨", tRise + 0.05, tRise + 0.2, "cp"]], { sprite: false });
+        T(P3, 400, Math.round(gauge.levelY(0.88)) - 4, 40, [["↑", tRise, tRise + 0.12, "cp"]], { sprite: false });
+        K.note("代价：显存占用 ∝ 上下文长度", { at: [P3, 520, 866], t: tRise + 0.18, size: 42, cps: 30, tone: "warn" });
+        // the per-token bill, as a chalk 竖式 (column sum), for Llama 2 7B
+        var tLlama = at(7, "Llama"), tPer = at(7, "每"), t05 = at(7, "0.5"), t4K = at(7, "4K"), t2GB = at(7, "2", 2);
+        K.label({ text: "Llama 2 · 7B", at: [P3, 1360, 296], t: tLlama, size: 48, tone: "accent2", box: true, cps: 14 });
+        var bill = K.formula({
+          at: [P3, 1360, 384], column: true, size: 52, subX: 250, rowGap: 68, rules: [3, 5], ruleW: 400, sprite: false,
+          terms: [
+            { text: "2", t: tPer, sub: "K、V 两份" },
+            { text: "× 32 层", t: tPer + 0.24 },
+            { text: "× 4096 维", t: tPer + 0.5 },
+            { text: "× 2 字节", t: tPer + 0.78, sub: "FP16" },
+            { text: "≈ 0.5 MB", t: t05, tone: "accent", sub: "每个 token" },
+            { text: "× 4096 个", t: t4K, sub: "4K 上下文" },
+            { text: "≈ 2 GB", t: t2GB, tone: "accent", size: 72 },
+          ],
+        });
+        K.ring(P3, bill.rows[4].chars, "y", at(7, "MB") + 0.05, 0.2, { pad: 18, padY: 6 });
+        K.ring(P3, bill.rows[6].chars, "y", at(7, "GB") + 0.12, 0.22, { pad: 22, padY: 8 });
+        // the 4K level of the container is the 2 GB
+        S(P3, G.brace(380, gauge.levelY(0.8), gauge.levelY(0), 30), "y", 4, t2GB - 0.05, 0.25, { sprite: false });
+        var twoGB = K.number({ value: 2, unit: "GB", at: [P3, 420, Math.round(gauge.levelY(0.42))], t: t2GB, size: 60, grow: 0.3, decimals: 0, sprite: false });
+        T(P3, 520, 940, 36, [["单条请求；并发越多，乘得越多", at(7, "就"), at(7, "就") + 0.55, "cm"]], { sprite: false });
+
+        // ======================= 四 · 优化：省显存 — three fixes, each one shrinks the cache =======================
+        K.chapter(P4, story, 4);
+        K.say(P4, story, 8, { rows: [{ x: 48, y: 104, size: 64 }, { x: 52, y: 190, size: 64, from: "PagedAttention" }], tones: { GQA: "g", PagedAttention: "g", 量化: "g", 压缩: "g" } });
+        var t8 = at(8, "所"), tGQA = at(8, "GQA"), tShare = at(8, "共"), tK8 = at(8, "K"), tV8 = at(8, "V"), tPaged = at(8, "PagedAttention"), tPage = at(8, "按"), tAlso = at(8, "还"), tQuant = at(8, "量"), tPress = at(8, "压");
+        S(P4, "M 620 300 L 620 960", "rgba(242,239,230,0.5)", 3, t8 - 0.15, 0.3, { sprite: false, dash: "14 14" });
+        S(P4, "M 1220 300 L 1220 960", "rgba(242,239,230,0.5)", 3, t8 - 0.1, 0.3, { sprite: false, dash: "14 14" });
+        // — GQA: four query heads, at first four K/V pairs; three are erased and the heads share the one left —
+        K.label({ text: "GQA", at: [P4, 60, 296], t: tGQA, size: 56, tone: "ok", font: "kl", cps: 10 });
+        var QX = function (i) { return 100 + i * 130; };
+        var pairs = [];
+        for (i = 0; i < 4; i++) {
+          S(P4, G.circ(QX(i), 430, 46, 40, 1.0), "o", 3.8, t8 + i * 0.07, 0.14, { sprite: false });
+          T(P4, QX(i) - 26, 408, 38, [["Q" + (i + 1), t8 + 0.05 + i * 0.07, t8 + 0.2 + i * 0.07, "lat co"]], { sprite: false });
+          pairs.push([S(P4, G.keyIcon(QX(i) - 52, 512, 50), "y", 3.4, t8 + 0.2 + i * 0.07, 0.12, { sprite: false }), S(P4, G.cardIcon(QX(i) + 4, 510, 48), "b", 3.4, t8 + 0.25 + i * 0.07, 0.12, { sprite: false })]);
+        }
+        X(P4, [pairs[1], pairs[2], pairs[3]].reduce(function (a, p) { return a.concat(p); }, []), [150, 490, 450, 80], tShare, 0.42);
+        for (i = 1; i < 4; i++) S(P4, G.arrow(QX(i) - 10, 476, QX(i) - 60, 520, QX(0) + 56, 532, 16), "o", 3.4, tK8 - 0.05 + i * 0.07, 0.16, { sprite: false });
+        T(P4, 60, 590, 38, [["4 个头共用 1 份 K/V", tV8 - 0.1, tV8 + 0.3, "cg"]], { sprite: false });
+        // — PagedAttention: a long block reserved up front, mostly empty; erased; pages handed out as needed —
+        K.label({ text: "PagedAttention", at: [P4, 660, 296], t: tPaged - 0.05, size: 52, tone: "ok", font: "lat", cps: 26 });
+        var resv = [S(P4, G.rect(660, 400, 520, 74), "w", 3.6, tV8 + 0.05, 0.2, { sprite: false }), S(P4, G.hatch(664, 404, 120, 66, 11), "p", 3, tV8 + 0.2, 0.12, { sprite: false })];
+        resv.push(T(P4, 800, 412, 38, [["预留：大半空着", tV8 + 0.25, tV8 + 0.5, "cp"]], { sprite: false }));
+        X(P4, resv, [650, 390, 540, 96], tPage, 0.36);
+        for (i = 0; i < 4; i++) {
+          var pxp = 660 + i * 112;
+          S(P4, G.rect(pxp, 404, 96, 66), "g", 3.6, tPage + 0.32 + i * 0.09, 0.08, { sprite: false, kind: "tick" });
+          S(P4, G.hatch(pxp + 4, 408, 88, 58, 11), "g", 2.8, tPage + 0.36 + i * 0.09, 0.08, { sprite: false });
+        }
+        T(P4, 660, 500, 38, [["按需一页一页分配", at(8, "分"), at(8, "配") + 0.05, "cg"]], { sprite: false });
+        // — 量化: FP16 cells lose half their width to the eraser and become INT8 —
+        K.label({ text: "量化", at: [P4, 1260, 296], t: tQuant - 0.05, size: 56, tone: "ok", font: "kl", cps: 10 });
+        var fp = [];
+        for (i = 0; i < 4; i++) {
+          S(P4, G.rect(1260, 390 + i * 58, 120, 46), "y", 3.4, tAlso + i * 0.06, 0.08, { sprite: false });
+          S(P4, G.hatch(1264, 394 + i * 58, 112, 38, 10), "y", 2.6, tAlso + 0.05 + i * 0.06, 0.08, { sprite: false });
+          fp.push(S(P4, G.rect(1380, 390 + i * 58, 120, 46) + " " + G.hatch(1384, 394 + i * 58, 112, 38, 10), "y", 2.6, tAlso + 0.03 + i * 0.06, 0.08, { sprite: false }));
+        }
+        T(P4, 1540, 404, 46, [["FP16", tAlso + 0.15, tAlso + 0.35, "lat cw"]], { sprite: false });
+        X(P4, fp, [1376, 384, 140, 240], tQuant + 0.05, 0.4);
+        T(P4, 1540, 470, 46, [["→ INT8", tPress - 0.05, tPress + 0.25, "lat cy"]], { sprite: false });
+        T(P4, 1260, 650, 38, [["每个数：2 字节 → 1 字节", tQuant + 0.2, tQuant + 0.6, "cg"]], { sprite: false });
+        // each fix, the same yardstick: how big the KV cache is
+        T(P4, 60, 690, 38, [["KV cache 占用：", t8 + 0.3, t8 + 0.7, "cm"]], { sprite: false });
+        var fixBars = [
+          { col: 60, t: t8 + 0.35, from: 1, to: 0.25, at: tShare + 0.35, text: "÷ 4" },
+          { col: 660, t: t8 + 0.47, from: 1, to: 0.4, at: tPage + 0.3, text: "少浪费" },
+          { col: 1260, t: t8 + 0.59, from: 1, to: 0.5, at: tQuant + 0.4, text: "÷ 2" },
+        ].map(function (f) {
+          var b = K.bars({ at: [P4, f.col, 760], t: f.t, w: 360, h: 50, labelW: 0, size: 40, grow: 0.25, rows: [{ label: "", value: 1, max: 1, tone: "warn" }] });
+          var vt = T(P4, f.col + 380, 756, 50, [[f.text, f.at + 0.08, f.at + 0.28, "cy"]], { sprite: false });
+          return Object.assign(f, { b: b });
+        });
+        K.onRender(function (t) {
+          fixBars.forEach(function (f) {
+            var grow = ExplainerCore.E.o3(ExplainerCore.pr(t, f.t + 0.2, 0.25)), shrink = ExplainerCore.E.io2(ExplainerCore.pr(t, f.at, 0.45));
+            f.b.render(t, grow * (f.from + (f.to - f.from) * shrink));
+          });
+        });
+        // the real-model note (story facts): Llama 3 8B, 32 query heads share 8 K/V heads
+        seq(P4, 60, 856, 38, [["Llama 3 8B：", "lat cg"]], tPage - 0.1, 30, { sprite: false });
+        seq(P4, 60, 908, 38, [["32 个头共用 8 份 K/V", "cw"]], tPage + 0.25, 30, { sprite: false });
+
+        // ======================= 报头 · the closing line =======================
+        var tEnd = story.data.end.start;
+        S(PM, G.border("double", PM.w, PM.h), "w", 3.4, tEnd - 0.3, 0.6, { sprite: false });
+        S(PM, "M 60 70 L 820 70 L 790 118 L 820 166 L 60 166 L 90 118 Z", "b", 4, tEnd - 0.2, 0.3, { sprite: false });
+        seq(PM, 110, 88, 46, [["技术小课堂 · ", "kl cb"], [story.title, "lat cb"]], tEnd - 0.1, 22, { sprite: false });
+        K.title(story, { P: PM, rows: [{ x: 90, y: 200, size: 72, cls: "kl cw" }, { x: 90, y: 300, size: 150, from: "用" }, { x: 90, y: 500, size: 150, from: "只算" }], rowTones: ["w", "y", "p"] });
+        // 用显存换速度: a balance — memory goes on one pan, speed comes out the other
+        var tUse = at(9, "用"), tMemE = at(9, "显"), tSpd = at(9, "速");
+        S(PM, "M 1500 560 L 1440 640 L 1560 640 Z", "w", 4.5, tUse, 0.2);
+        S(PM, G.line(1290, 330, 1710, 250, 3) + " " + G.circ(1500, 290, 9, 9, 1.0), "w", 5, tUse + 0.15, 0.25);
+        S(PM, G.line(1500, 300, 1500, 560, 2), "w", 4.5, tUse + 0.1, 0.15, { sprite: false });
+        S(PM, "M 1290 330 L 1230 420 M 1290 330 L 1350 420 M 1215 420 Q 1290 470 1365 420 Z", "p", 4, tMemE, 0.25, { sprite: false });
+        for (i = 0; i < 3; i++) S(PM, G.rect(1252 + i * 26, 376 - i * 0, 24, 36), "p", 3, tMemE + 0.1 + i * 0.05, 0.06, { sprite: false });
+        T(PM, 1215, 470, 44, [["付出：显存", tMemE + 0.15, tMemE + 0.5, "cp"]], { sprite: false });
+        S(PM, "M 1710 250 L 1650 340 M 1710 250 L 1770 340 M 1635 340 Q 1710 390 1785 340 Z", "y", 4, tSpd - 0.1, 0.25, { sprite: false });
+        S(PM, "M 1716 268 L 1694 312 L 1714 312 L 1700 340", "y", 4.5, tSpd, 0.15, { sprite: false, kind: "tap" });
+        T(PM, 1580, 396, 44, [["换来：速度", tSpd + 0.05, tSpd + 0.4, "cy"]], { sprite: false });
+        // 只算新的那一个: the token row again — the old ones are cached, the spotlight is on the newest
+        var tOnlyE = at(9, "只"), tNewE = at(9, "新"), tThatE = at(9, "那");
+        var row = [];
+        for (i = 0; i < 8; i++) row.push(token(PM, 90 + i * 132, 760, 118, 74, TOK[i], tOnlyE + i * 0.04, i === 7 ? "y" : "w", 40));
+        var oldParts = [];
+        row.slice(0, 7).forEach(function (q) { oldParts = oldParts.concat(q.parts); });
+        K.fade(oldParts, tNewE, 0.3, 0.45);
+        S(PM, "M 96 862 Q 96 880 120 880 L 940 880 Q 964 880 964 898 M 520 880 L 520 900", "w", 3, tNewE + 0.05, 0.25, { sprite: false });
+        T(PM, 330, 904, 38, [["已在缓存里，不重算", tNewE + 0.15, tNewE + 0.6, "cm"]], { sprite: false });
+        K.ring(PM, row[7].text.chars, "y", tNewE, 0.25, { pad: 46, padY: 30, width: 5 });
+        S(PM, G.burst(row[7].cx, row[7].cy, 80, 112, 10, -Math.PI / 2), "y", 4, tNewE + 0.2, 0.2, { sprite: false });
+        T(PM, 1160, 776, 46, [["只算这一个", tThatE, tThatE + 0.4, "cy"]], { sprite: false });
+
+        // ======================= 复习 · ONE chalk mind map on the clean side of the board =======================
+        var RC = K.recap(story, {
+          P: PR, t0: story.recap.start, t1: DUR, hold: 1.25, pace: 0.55, size: 40, cps: 30,
+          // one small doodle per branch, drawn as its words finish (c = where the branch heading ends)
+          doodles: [
+            function (c) { var d = ""; for (var r = 0; r < 3; r++) for (var q = 0; q <= r; q++) d += " " + G.rect(c.x + q * 26, c.y - 4 + r * 18, 22, 14); S(PR, d.trim(), c.tone, 2.6, c.t, 0.25, { sprite: false }); }, // 问题: the triangle
+            function (c) { S(PR, G.rect(c.x, c.y - 4, 110, 56) + " " + G.line(c.x + 55, c.y - 4, c.x + 55, c.y + 52, 1) + " " + G.line(c.x, c.y + 16, c.x + 110, c.y + 16, 1), c.tone, 3, c.t, 0.25, { sprite: false }); }, // 方法: K | V table
+            function (c) { S(PR, "M " + c.x + " " + (c.y - 4) + " L " + c.x + " " + (c.y + 52) + " L " + (c.x + 56) + " " + (c.y + 52) + " L " + (c.x + 56) + " " + (c.y - 4) + " " + G.hatch(c.x + 4, c.y + 22, 48, 26, 9), c.tone, 3, c.t, 0.25, { sprite: false }); }, // 代价: a half-full container
+            function (c) { S(PR, G.rect(c.x, c.y - 2, 120, 12) + " " + G.rect(c.x, c.y + 18, 74, 12) + " " + G.rect(c.x, c.y + 38, 36, 12), c.tone, 3, c.t, 0.25, { sprite: false }); }, // 优化: shrinking bars
+          ],
+        });
+
+        // ======================= camera: one board, walked panel by panel, then the whole board, then the review =======================
+        // [t, centre x, centre y, scale, yaw°, roll°] in board coordinates
+        var L = B.center(1, 0), R1 = { x: L.x + 1900, y: L.y }, C2 = B.center(2, 1), C3 = B.center(1, 1), C4 = B.center(0, 1), CM = B.center(0, 0), CR = B.center(3, 0);
+        var tRight = lineStart(3) - 0.45, tDown = chap(2) - 0.35, tLeft3 = lineEnd(5) - 0.08, tLeft4 = chap(4) - 0.25, tUp = lineStart(9) - 0.42;
+        var tPull = at(9, "一", 2) + 0.03;
+        K.camera([
+          [0, L.x, L.y - 10, 1.06, 0, 0], [lineEnd(1), L.x, L.y, 1.0, 0, 0], [at(2, "回") - 0.2, L.x - 50, L.y + 8, 1.04, 0, 0], [tRight, L.x - 40, L.y + 14, 1.045, 0, 0],
+          [tRight + 0.35, (L.x + R1.x) / 2, L.y + 10, 0.86, -6, 0], [tRight + 0.72, R1.x, R1.y, 1.0, 0, 0], [tDown, R1.x + 16, R1.y + 8, 1.03, 0, 0],
+          [tDown + 0.28, R1.x + 10, (R1.y + C2.y) / 2, 0.86, 0, 0.8], [tDown + 0.6, C2.x, C2.y, 1.0, 0, 0], [at(5, "再"), C2.x + 18, C2.y + 8, 1.04, 0, 0], [tLeft3, C2.x + 6, C2.y + 4, 1.02, 0, 0],
+          [tLeft3 + 0.3, (C2.x + C3.x) / 2, C3.y + 10, 0.84, 7, 0], [tLeft3 + 0.62, C3.x, C3.y, 1.0, 0, 0], [at(6, "跟"), C3.x - 40, C3.y - 10, 1.06, 0, 0], [lineEnd(6) + 0.1, C3.x - 18, C3.y - 2, 1.075, 0, 0], [at(7, "Llama") + 0.3, C3.x, C3.y, 1.0, 0, 0], [at(7, "4K"), C3.x + 14, C3.y + 6, 1.03, 0, 0], [tLeft4, C3.x + 10, C3.y, 1.0, 0, 0],
+          [tLeft4 + 0.3, (C3.x + C4.x) / 2, C4.y + 10, 0.84, 7, 0], [tLeft4 + 0.62, C4.x, C4.y, 1.0, 0, 0], [tGQA, C4.x - 40, C4.y + 10, 1.04, 0, 0], [tPaged, C4.x, C4.y + 10, 1.04, 0, 0], [tQuant, C4.x + 40, C4.y + 10, 1.04, 0, 0], [tUp, C4.x, C4.y, 1.0, 0, 0],
+          [tUp + 0.28, C4.x, (C4.y + CM.y) / 2, 0.86, 0, -0.8], [tUp + 0.56, CM.x, CM.y, 1.0, 0, 0], [tNewE, CM.x + 10, CM.y + 16, 0.99, 0, 0], [tPull, CM.x + 20, CM.y + 30, 0.96, 0, 0],
+          [tPull + 0.6, 2880, 1150, 0.318, 0, 0], [story.recap.start - 0.1, 2880, 1150, 0.312, 0, 0],
+          [story.recap.start + 0.55, CR.x, CR.y - 10, 1.05, 0, 0], [DUR, CR.x, CR.y + 2, 1.0, 0, 0],
+        ]);
+        K.mark("pullback", tPull + 0.55);
+        K.mark("lessonEnd", story.recap.start);
+
+        K.render(0);
+        var tl = gsap.timeline({ paused: true });
+        var drive = { t: 0 };
+        tl.to(drive, { t: DUR, duration: DUR, ease: "none", onUpdate: function () { K.render(tl.time()); } }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

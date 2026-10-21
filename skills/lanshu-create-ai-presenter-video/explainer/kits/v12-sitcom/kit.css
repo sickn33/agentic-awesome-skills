@@ -1,0 +1,332 @@
+/* v12-sitcom kit — 小剧场: a flat, warm sitcom set seen straight on. Cream wall, mint wainscot, wood floor; rounded flat
+ * characters with thick cocoa outlines; props as evidence (receipts, notebooks, queues); speech / thought bubbles;
+ * captions in a white rounded box with an offset shadow and a dark 旁白 tag, the key span on a yellow marker.
+ * Fonts are declared by the film (tools/fonts.py writes the @font-face block into index.html):
+ *   Noto Sans SC 700 / 900 (body, labels, captions), Long Cang (thoughts, chalk), ZCOOL QingKe HuangYou (the 小剧场 tag),
+ *   JetBrains Mono 700 (real terms, order numbers — this kit's mono). */
+:root {
+  --kit-bg: #fbf3e4;          /* cream wall */
+  --kit-surface: #ffffff;     /* bubbles, cards, captions */
+  --kit-paper: #fffdf7;       /* receipts, notebook pages */
+  --kit-ink: #3d2b22;         /* cocoa: every outline and all text (13.4:1 on white) */
+  --kit-muted: #6b5548;       /* secondary text (6.3:1 on cream, 7:1 on white) */
+  --kit-dim: #94806f;         /* caption units not yet spoken (3.8:1 on white, large text) */
+  --kit-accent: #ffcf5a;      /* THE accent: the key thing (a fill or a marker; text on it is cocoa) */
+  --kit-accent-2: #5fb88f;    /* mint: matching / the second colour */
+  --kit-mint: #cfe8dc;        /* wainscot */
+  --kit-mint-2: #a6e6cc;      /* light mint fills */
+  --kit-coral: #ef7d61;       /* the counter, the 小剧场 world colour */
+  --kit-coral-d: #e0694c;     /* coral behind white text (3.3:1, large text only) */
+  --kit-peach: #ffd9a8;
+  --kit-warn: #e2483d;        /* the mistake / the waste */
+  --kit-warn-soft: #ffe1dc;
+  --kit-warn-ink: #c8382e;    /* warn as text on its soft fill (4.2:1) */
+  --kit-ok: #5fb88f;          /* solved */
+  --kit-ok-ink: #2f7a57;      /* ok as text (5.2:1 on white) */
+  --kit-board: #2f5a4b;       /* chalk board */
+  --kit-chalk: #fff6d6;       /* chalk on the board (7.2:1) */
+  --kit-wood: #ecd0a8;        /* floor */
+  --kit-sky: #bfe3f5;
+  --kit-line: 4px;
+  --kit-drop: 0 6px 0 #3d2b22;
+  --kit-font-display: "Noto Sans SC", sans-serif;   /* weight 900 */
+  --kit-font-body: "Noto Sans SC", sans-serif;      /* weight 700 */
+  --kit-font-mono: "JetBrains Mono", "Noto Sans SC", monospace;
+  --kit-font-hand: "Long Cang", "Noto Sans SC", cursive;
+  --kit-font-tag: "ZCOOL QingKe HuangYou", "Noto Sans SC", sans-serif;
+  --kit-t-display: 96px;
+  --kit-t-h1: 64px;
+  --kit-t-h2: 48px;
+  --kit-t-body: 34px;
+  --kit-t-label: 30px;
+  --kit-t-note: 28px;
+  --kit-t-cap: 40px;
+}
+
+.kit-term { font-family: var(--kit-font-mono); font-weight: 700; font-size: 0.9em; letter-spacing: -0.01em; }
+.kit-hand { font-family: var(--kit-font-hand); font-weight: 400; }
+
+/* ---------------- the set: one long room, pieces and actors placed in world px ---------------- */
+.kit-world { position: absolute; left: 0; top: 0; width: 10px; height: 10px; transform-origin: 0 0; }
+.kit-backdrop { position: absolute; left: 0; top: 0; overflow: visible; }
+.kit-set { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.kit-piece { position: absolute; left: 0; top: 0; overflow: visible; }
+.kit-piece > svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.kit-actor { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 0 0; }
+.kit-actor > svg { position: absolute; left: -170px; top: -560px; width: 340px; height: 580px; overflow: visible; }
+.kit-prop { position: absolute; left: 0; top: 0; transform-origin: 50% 100%; }
+.kit-prop > svg { position: absolute; left: 0; top: 0; overflow: visible; }
+
+/* a name tag / small pill pinned to an actor or a prop */
+.kit-tag {
+  position: absolute; left: 0; top: 0; padding: 4px 18px 6px; border-radius: 999px; background: var(--kit-surface);
+  border: 3px solid var(--kit-ink); color: var(--kit-ink); font-family: var(--kit-font-body); font-weight: 700;
+  font-size: 28px; line-height: 1.2; white-space: nowrap; transform-origin: 50% 100%;
+}
+.kit-tag.kit-tone-accent { background: var(--kit-accent); }
+.kit-tag.kit-tone-warn { background: var(--kit-warn); border-color: var(--kit-ink); color: #fff; }
+.kit-tag.kit-tone-ok { background: var(--kit-mint-2); }
+.kit-tag.kit-tone-ink { background: var(--kit-ink); color: #fff; }
+
+/* an emote over a head: ！ ？ … on a yellow badge */
+.kit-emote {
+  position: absolute; left: 0; top: 0; width: 72px; height: 72px; border-radius: 50%; background: var(--kit-accent); border: var(--kit-line) solid var(--kit-ink);
+  display: flex; align-items: center; justify-content: center; font-family: var(--kit-font-display); font-weight: 900; font-size: 46px; line-height: 1;
+  color: var(--kit-ink); transform-origin: 50% 100%; box-shadow: 0 5px 0 var(--kit-ink);
+}
+
+/* ---------------- the chalk / menu board ---------------- */
+.kit-board-h {
+  position: absolute; left: 0; right: 0; text-align: center; color: var(--kit-chalk); font-family: var(--kit-font-display);
+  font-weight: 900; line-height: 1.1; white-space: nowrap;
+}
+.kit-board-rows { position: absolute; display: flex; flex-direction: column; gap: 10px; }
+.kit-board-row { display: flex; justify-content: space-between; gap: 30px; color: var(--kit-chalk); font-family: var(--kit-font-body); font-weight: 700; font-size: 30px; line-height: 1.25; white-space: nowrap; }
+.kit-board-row b { color: var(--kit-accent); font-family: var(--kit-font-mono); font-weight: 700; }
+.kit-chalk { position: absolute; left: 0; top: 0; font-family: var(--kit-font-hand); font-weight: 400; color: var(--kit-chalk); line-height: 1.25; white-space: nowrap; }
+.kit-chalk > span { display: inline-block; transform-origin: 50% 80%; }
+.kit-chalk .kit-chalk-y { color: var(--kit-accent); }
+.kit-chalk .kit-chalk-r { color: #ff9d8e; }
+
+/* ---------------- the ticket number display (叫号屏) ---------------- */
+.kit-display { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.kit-display-l { font-family: var(--kit-font-body); font-weight: 700; font-size: 26px; line-height: 1.1; color: var(--kit-ink); padding: 2px 12px; background: var(--kit-bg); border-radius: 8px; }
+.kit-display-v {
+  min-width: 150px; padding: 8px 18px 10px; border-radius: 12px; background: #2b2b2b; border: var(--kit-line) solid var(--kit-ink);
+  color: #ff6b5c; font-family: var(--kit-font-mono); font-weight: 700; font-size: 40px; line-height: 1; text-align: center; transform-origin: 50% 50%;
+}
+
+/* ---------------- speech / thought bubbles ---------------- */
+.kit-bubble { position: absolute; left: 0; top: 0; }
+.kit-bubble > svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.kit-bubble-t {
+  position: absolute; display: flex; align-items: center; justify-content: center; text-align: center;
+  font-family: var(--kit-font-body); font-weight: 700; color: var(--kit-ink); line-height: 1.3;
+  word-break: keep-all; overflow-wrap: anywhere; text-wrap: balance;
+}
+.kit-bubble-t > div { max-width: 100%; }
+.kit-bubble.kit-think .kit-bubble-t { font-family: var(--kit-font-hand); font-weight: 400; line-height: 1.2; }
+.kit-bubble.kit-shout .kit-bubble-t { font-family: var(--kit-font-display); font-weight: 900; }
+.kit-bubble-u { color: color-mix(in srgb, var(--kit-ink) calc(var(--lit, 1) * 100%), var(--kit-dim)); }
+.kit-bubble-u.kit-term { font-size: 0.9em; white-space: nowrap; }
+.kit-bubble-u.kit-mark, .kit-mark-on {
+  text-decoration-line: underline; text-decoration-thickness: 0.34em; text-underline-offset: -0.24em; text-decoration-skip-ink: none;
+  text-decoration-color: color-mix(in srgb, var(--kit-accent) calc(var(--mk, 1) * 100%), transparent);
+}
+.kit-bubble-k { /* a small dark tag on the bubble edge (分镜 03) */
+  position: absolute; left: 26px; top: -22px; padding: 3px 14px 5px; border-radius: 10px; background: var(--kit-ink); color: #fff;
+  font-family: var(--kit-font-body); font-weight: 700; font-size: 26px; line-height: 1.15; white-space: nowrap;
+}
+.kit-bubble-todo { /* the 待演绎 marker */
+  position: absolute; right: 22px; top: -24px; padding: 2px 14px 4px; border-radius: 999px; background: var(--kit-surface);
+  border: 3px dashed var(--kit-ink); color: var(--kit-ink); font-family: var(--kit-font-body); font-weight: 700; font-size: 26px;
+  line-height: 1.2; white-space: nowrap; transform-origin: 100% 100%;
+}
+
+/* ---------------- the receipt (出单记录): unrolls row by row ---------------- */
+.kit-receipt { position: absolute; left: 0; top: 0; transform-origin: 50% 0; }
+.kit-receipt-clip { position: absolute; left: 0; top: 0; overflow: hidden; }
+.kit-receipt-paper {
+  position: absolute; left: 0; top: 0; background: var(--kit-paper); border: var(--kit-line) solid var(--kit-ink); border-bottom: 0;
+  padding: 26px 28px 0;
+}
+.kit-receipt-h { text-align: center; font-family: var(--kit-font-display); font-weight: 900; font-size: 32px; line-height: 1.2; color: var(--kit-ink); white-space: nowrap; }
+.kit-receipt-rule { height: 0; margin: 14px 0 10px; border-top: 3px dashed rgba(61, 43, 34, 0.55); }
+.kit-receipt-row { display: flex; align-items: center; gap: 18px; height: 52px; white-space: nowrap; }
+.kit-receipt-no { flex: none; width: 92px; font-family: var(--kit-font-mono); font-weight: 700; font-size: 26px; color: var(--kit-muted); }
+.kit-receipt-it { flex: 1; font-family: var(--kit-font-body); font-weight: 700; font-size: 28px; color: var(--kit-muted); }
+.kit-receipt-tag {
+  flex: none; padding: 2px 14px 4px; border-radius: 999px; background: var(--kit-warn-soft); border: 3px solid var(--kit-warn);
+  color: var(--kit-warn-ink); font-family: var(--kit-font-body); font-weight: 700; font-size: 24px; line-height: 1.2; transform-origin: 50% 50%;
+}
+.kit-receipt-row.kit-new .kit-receipt-no, .kit-receipt-row.kit-new .kit-receipt-it { color: var(--kit-warn-ink); font-weight: 900; }
+.kit-receipt-row.kit-new .kit-receipt-tag { background: var(--kit-accent); border-color: var(--kit-ink); color: var(--kit-ink); }
+.kit-receipt-row.kit-ok .kit-receipt-tag { background: var(--kit-mint-2); border-color: var(--kit-ok-ink); color: var(--kit-ink); }
+.kit-receipt-f { text-align: center; font-family: var(--kit-font-body); font-weight: 700; font-size: 26px; line-height: 1.35; color: var(--kit-muted); white-space: nowrap; }
+.kit-receipt-f b { color: var(--kit-warn-ink); font-weight: 900; }
+.kit-receipt-edge { position: absolute; left: 0; top: 0; overflow: visible; }
+
+/* ---------------- the notebook (小本本) ---------------- */
+.kit-nb { position: absolute; left: 0; top: 0; transform-origin: 50% 100%; }
+.kit-nb-stack { position: absolute; left: 0; right: 0; border: var(--kit-line) solid var(--kit-ink); border-top: 0; border-radius: 0 0 12px 12px;
+  background: repeating-linear-gradient(180deg, #fffdf7 0 5px, #e9dcc6 5px 8px); }
+.kit-nb-cover {
+  position: absolute; left: 0; top: 0; border-radius: 14px; background: var(--kit-accent); border: var(--kit-line) solid var(--kit-ink);
+  display: flex; align-items: center; justify-content: center; transform-origin: 0 50%;
+}
+.kit-nb-cover > span { padding: 6px 20px 8px; border-radius: 10px; background: var(--kit-surface); border: 3px solid var(--kit-ink);
+  font-family: var(--kit-font-display); font-weight: 900; font-size: 34px; line-height: 1.15; color: var(--kit-ink); white-space: nowrap; }
+.kit-nb-page { position: absolute; top: 0; background: var(--kit-paper); border: var(--kit-line) solid var(--kit-ink); overflow: hidden; }
+.kit-nb-page.kit-l { border-radius: 14px 0 0 14px; }
+.kit-nb-page.kit-r { border-radius: 0 14px 14px 0; }
+.kit-nb-rule { position: absolute; left: 18px; right: 18px; height: 0; border-top: 2px solid rgba(95, 184, 143, 0.55); }
+.kit-nb-head { position: absolute; left: 0; right: 0; top: 14px; display: flex; font-family: var(--kit-font-body); font-weight: 900; font-size: 26px; color: var(--kit-muted); }
+.kit-nb-head > span { flex: 1; text-align: center; }
+.kit-nb-cell { position: absolute; font-family: var(--kit-font-hand); font-weight: 400; font-size: 40px; line-height: 1; color: var(--kit-ink); white-space: nowrap; }
+.kit-nb-cell.kit-term { font-family: var(--kit-font-mono); font-weight: 700; font-size: 28px; }
+.kit-nb-hi { position: absolute; border-radius: 10px; }
+.kit-nb-flip { position: absolute; top: 0; background: var(--kit-paper); border: var(--kit-line) solid var(--kit-ink); transform-origin: 0 50%; border-radius: 0 14px 14px 0; }
+.kit-nb-spine { position: absolute; top: 6px; bottom: 6px; width: 8px; margin-left: -4px; border-radius: 4px; background: var(--kit-ink); }
+
+/* ---------------- the term chip: analogy = real term ---------------- */
+.kit-chip { position: absolute; left: 0; top: 0; display: flex; align-items: stretch; height: 68px; border-radius: 999px; background: var(--kit-surface);
+  border: var(--kit-line) solid var(--kit-ink); box-shadow: var(--kit-drop); white-space: nowrap; transform-origin: 0 50%; }
+.kit-chip-a { display: flex; align-items: center; justify-content: center; padding: 0 30px; margin: -4px 0 -4px -4px; border-radius: 999px;
+  border: var(--kit-line) solid var(--kit-ink); background: var(--kit-accent); font-family: var(--kit-font-display); font-weight: 900; font-size: 30px; color: var(--kit-ink); }
+.kit-chip-b { display: flex; align-items: center; gap: 12px; padding: 0 30px 0 22px; font-family: var(--kit-font-body); font-weight: 700; font-size: 30px; color: var(--kit-ink); }
+.kit-chip-b .kit-term { font-size: 32px; }
+.kit-chip.kit-tone-ok .kit-chip-a { background: var(--kit-mint-2); }
+.kit-chip.kit-tone-peach .kit-chip-a { background: var(--kit-peach); }
+.kit-chip.kit-tone-warn .kit-chip-a { background: var(--kit-warn-soft); }
+.kit-chip.kit-tone-coral .kit-chip-a { background: var(--kit-coral); }
+
+/* ---------------- captions: a white rounded box, a dark 旁白 tag, the key span on a yellow marker ---------------- */
+.kit-caps { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; }
+.kit-cap {
+  position: absolute; left: 50%; bottom: 44px; width: max-content; max-width: 1680px; padding: 14px 36px 16px 132px;
+  background: var(--kit-surface); border: var(--kit-line) solid var(--kit-ink); border-radius: 28px; box-shadow: var(--kit-drop);
+  font-family: var(--kit-font-body); font-weight: 700; font-size: var(--kit-t-cap); line-height: 1.36; color: var(--kit-ink);
+  text-align: left; text-wrap: balance; transform: translateX(-50%);
+}
+.kit-cap-tag {
+  position: absolute; left: 18px; top: 50%; margin-top: -21px; height: 42px; padding: 0 14px; display: flex; align-items: center;
+  border-radius: 12px; background: var(--kit-ink); color: #fff; font-style: normal; font-family: var(--kit-font-body); font-weight: 700;
+  font-size: 26px; line-height: 1; white-space: nowrap;
+}
+.kit-cap > span { --lit: 0; color: color-mix(in srgb, var(--kit-ink) calc(var(--lit) * 100%), var(--kit-dim)); }
+/* the marker is a thick underline pulled up behind the glyphs (decorations paint under the text), inked unit by unit */
+.kit-cap > span.kit-mark {
+  text-decoration-line: underline; text-decoration-thickness: 0.34em; text-underline-offset: -0.24em; text-decoration-skip-ink: none;
+  text-decoration-color: color-mix(in srgb, var(--kit-accent) calc(var(--lit) * 100%), transparent);
+}
+.kit-cap > span.kit-term { font-family: var(--kit-font-mono); font-size: 0.9em; }
+
+/* ---------------- chapter chip: 小剧场 pill + scene number + title ---------------- */
+.kit-chap {
+  --in: 1; position: absolute; left: 56px; top: 40px; display: flex; align-items: center; gap: 14px; padding: 9px 30px 10px 10px;
+  border-radius: 999px; background: var(--kit-surface); border: var(--kit-line) solid var(--kit-ink); box-shadow: var(--kit-drop);
+  font-family: var(--kit-font-body); font-weight: 700; font-size: 30px; line-height: 1.2; color: var(--kit-ink); white-space: nowrap;
+  transform-origin: 0 50%; transform: translateX(calc((1 - var(--in)) * -80px)) scale(calc(0.8 + 0.2 * var(--in)));
+}
+.kit-chap-tag { padding: 3px 16px 5px; border-radius: 999px; background: var(--kit-coral-d); color: #fff; font-style: normal;
+  font-family: var(--kit-font-tag); font-weight: 400; font-size: 32px; line-height: 1.1; }
+.kit-chap-n { display: inline-flex; align-items: center; justify-content: center; min-width: 46px; height: 46px; padding: 0 6px; border-radius: 999px;
+  background: var(--kit-ink); color: #fff; font-family: var(--kit-font-mono); font-weight: 700; font-size: 28px; line-height: 1; }
+
+/* ---------------- label: a pill sticker; sub = the real term ---------------- */
+.kit-label {
+  position: absolute; left: 0; top: 0; display: inline-flex; align-items: baseline; gap: 12px; padding: 8px 26px 10px; border-radius: 999px;
+  background: var(--kit-surface); border: var(--kit-line) solid var(--kit-ink); box-shadow: var(--kit-drop);
+  font-family: var(--kit-font-display); font-weight: 900; font-size: var(--kit-t-label); line-height: 1.2; color: var(--kit-ink);
+  white-space: nowrap; transform-origin: 50% 100%;
+}
+.kit-label-sub { font-family: var(--kit-font-mono); font-weight: 700; font-size: 28px; color: var(--kit-ink); }
+.kit-label-sub.kit-cjk { font-family: var(--kit-font-body); font-weight: 700; }
+.kit-label.kit-tone-accent { background: var(--kit-accent); }
+.kit-label.kit-tone-warn { background: var(--kit-warn); color: #fff; }
+.kit-label.kit-tone-warn .kit-label-sub { color: #fff; }
+.kit-label.kit-tone-ok { background: var(--kit-mint-2); }
+.kit-label.kit-tone-ink { background: var(--kit-ink); color: #fff; box-shadow: 0 6px 0 var(--kit-coral); }
+.kit-label.kit-tone-ink .kit-label-sub { color: var(--kit-accent); }
+.kit-label.kit-tone-peach { background: var(--kit-peach); }
+
+/* ---------------- note: a memo card taped to the set wall (说明) ---------------- */
+.kit-note {
+  position: absolute; left: 0; top: 0; width: max-content; display: flex; align-items: flex-start; gap: 14px; max-width: 640px; padding: 16px 26px 18px 16px;
+  background: #fff3c4; border: var(--kit-line) solid var(--kit-ink); border-radius: 16px; box-shadow: var(--kit-drop);
+  font-family: var(--kit-font-body); font-weight: 700; font-size: var(--kit-t-note); line-height: 1.38; color: var(--kit-ink);
+  transform-origin: 50% 0;
+}
+.kit-note::before { /* the tape */
+  content: ""; position: absolute; left: 50%; top: -16px; width: 96px; height: 28px; margin-left: -48px; transform: rotate(-3deg);
+  background: rgba(255, 255, 255, 0.72); border: 2px solid rgba(61, 43, 34, 0.25);
+}
+.kit-note-tag { flex: none; padding: 3px 12px 5px; border-radius: 10px; background: var(--kit-ink); color: #fff; font-size: 26px; line-height: 1.2; }
+.kit-note-t { word-break: keep-all; overflow-wrap: anywhere; text-wrap: pretty; }
+.kit-note-t b { font-weight: 900; background-image: linear-gradient(transparent 58%, var(--kit-accent) 58%, var(--kit-accent) 92%, transparent 92%); }
+
+/* ---------------- number: a big figure on a card ---------------- */
+.kit-num { position: absolute; left: 0; top: 0; display: inline-flex; flex-direction: column; align-items: center; gap: 10px; transform-origin: 50% 100%; }
+.kit-num-card { display: flex; align-items: baseline; gap: 10px; padding: 10px 30px 14px; border-radius: 24px; background: var(--kit-surface);
+  border: var(--kit-line) solid var(--kit-ink); box-shadow: var(--kit-drop); white-space: nowrap; }
+.kit-num-v { font-family: var(--kit-font-display); font-weight: 900; font-size: var(--kit-t-display); line-height: 1; color: var(--kit-ink); font-variant-numeric: tabular-nums; }
+.kit-num-u { font-family: var(--kit-font-display); font-weight: 900; font-size: 44px; line-height: 1; color: var(--kit-ink); }
+.kit-num-c { padding: 4px 16px 6px; border-radius: 10px; background: var(--kit-ink); color: #fff; font-family: var(--kit-font-body); font-weight: 700; font-size: 28px; line-height: 1.2; white-space: nowrap; }
+.kit-num.kit-tone-accent .kit-num-card { background: var(--kit-accent); }
+.kit-num.kit-tone-warn .kit-num-card { background: var(--kit-warn-soft); }
+.kit-num.kit-tone-warn .kit-num-v { color: var(--kit-warn-ink); }
+
+/* ---------------- bars: rounded tracks with flat fills ---------------- */
+.kit-bars { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; gap: 20px; }
+.kit-bar { display: flex; align-items: center; gap: 18px; }
+.kit-bar-l { flex: none; min-width: 150px; padding: 6px 18px 8px; border-radius: 999px; background: var(--kit-surface); border: 3px solid var(--kit-ink);
+  font-family: var(--kit-font-body); font-weight: 700; font-size: var(--kit-t-label); line-height: 1.2; color: var(--kit-ink); text-align: center; white-space: nowrap; }
+.kit-bar-tr { position: relative; flex: none; height: 44px; border-radius: 999px; background: var(--kit-surface); border: var(--kit-line) solid var(--kit-ink); overflow: hidden; }
+.kit-bar-f { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--kit-accent); border-right: var(--kit-line) solid var(--kit-ink); }
+.kit-bar-v { flex: none; font-family: var(--kit-font-display); font-weight: 900; font-size: 32px; line-height: 1; color: var(--kit-ink); white-space: nowrap; }
+.kit-bar.kit-tone-warn .kit-bar-f { background: var(--kit-warn); }
+.kit-bar.kit-tone-ok .kit-bar-f { background: var(--kit-ok); }
+.kit-bar.kit-tone-peach .kit-bar-f { background: var(--kit-peach); }
+.kit-bar.kit-tone-coral .kit-bar-f { background: var(--kit-coral); }
+
+/* ---------------- formula: pill terms + round operators ---------------- */
+.kit-formula { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 14px; white-space: nowrap; }
+.kit-ft { display: flex; flex-direction: column; align-items: center; padding: 8px 24px 10px; border-radius: 22px; background: var(--kit-surface);
+  border: var(--kit-line) solid var(--kit-ink); box-shadow: var(--kit-drop); transform-origin: 50% 100%; }
+.kit-ft-v { font-family: var(--kit-font-display); font-weight: 900; font-size: 48px; line-height: 1.1; color: var(--kit-ink); }
+.kit-ft-s { font-family: var(--kit-font-body); font-weight: 700; font-size: 26px; line-height: 1.2; color: var(--kit-muted); }
+.kit-ft.kit-tone-accent { background: var(--kit-accent); }
+.kit-ft.kit-tone-warn { background: var(--kit-warn-soft); }
+.kit-ft.kit-tone-ok { background: var(--kit-mint-2); }
+.kit-ft.kit-tone-peach { background: var(--kit-peach); }
+.kit-ft.kit-tone-accent .kit-ft-s, .kit-ft.kit-tone-ok .kit-ft-s, .kit-ft.kit-tone-peach .kit-ft-s { color: var(--kit-ink); }
+.kit-fo { flex: none; width: 60px; height: 60px; border-radius: 50%; background: var(--kit-ink); color: #fff; display: flex; align-items: center;
+  justify-content: center; font-family: var(--kit-font-display); font-weight: 900; font-size: 38px; line-height: 1; transform-origin: 50% 50%; }
+
+/* ---------------- title: the closing line, a big caption box with the 一句话 tag ---------------- */
+.kit-title-wrap { position: absolute; left: 0; right: 0; bottom: 44px; display: flex; justify-content: center; pointer-events: none; }
+.kit-title-wrap > .kit-title { position: relative; }
+.kit-title {
+  position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 22px; max-width: 1792px; padding: 18px 42px 22px 20px;
+  background: var(--kit-surface); border: 5px solid var(--kit-ink); border-radius: 34px; box-shadow: 0 8px 0 var(--kit-ink);
+  transform-origin: 50% 100%;
+}
+.kit-title-tag { flex: none; padding: 6px 18px 8px; border-radius: 14px; background: var(--kit-ink); color: #fff; font-family: var(--kit-font-body);
+  font-weight: 700; font-size: 32px; line-height: 1.2; white-space: nowrap; }
+.kit-title-t { font-family: var(--kit-font-display); font-weight: 900; font-size: 56px; line-height: 1.3; color: var(--kit-ink); text-wrap: balance; }
+.kit-title-u { display: inline-block; transform-origin: 50% 80%; }
+.kit-title-u.kit-term { font-family: var(--kit-font-mono); font-size: 0.9em; }
+.kit-title-u.kit-em {
+  background-image: linear-gradient(transparent 58%, var(--kit-accent) 58%, var(--kit-accent) 94%, transparent 94%);
+  background-repeat: no-repeat; background-size: calc(var(--mk, 0) * 100%) 100%;
+}
+
+/* ---------------- recap: one composed frame — a curtain-call set ---------------- */
+.kit-recap { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; pointer-events: none; }
+.kit-recap-push { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 960px 520px; }
+.kit-recap-push > svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.kit-recap-badge { position: absolute; left: 112px; top: 40px; display: flex; align-items: center; gap: 14px; padding: 9px 30px 10px 10px; border-radius: 999px;
+  background: var(--kit-surface); border: var(--kit-line) solid var(--kit-ink); box-shadow: var(--kit-drop); font-family: var(--kit-font-body);
+  font-weight: 700; font-size: 30px; line-height: 1.2; color: var(--kit-ink); white-space: nowrap; }
+.kit-recap-board { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  background: var(--kit-board); border: 5px solid var(--kit-ink); border-radius: 22px; transform-origin: 50% 0; }
+.kit-recap-c { color: var(--kit-chalk); font-family: var(--kit-font-display); font-weight: 900; line-height: 1.15; white-space: nowrap; }
+.kit-recap-c .kit-term { font-size: 0.92em; color: var(--kit-accent); }
+.kit-recap-tl { color: var(--kit-accent); font-family: var(--kit-font-hand); font-weight: 400; line-height: 1.15; white-space: nowrap; }
+.kit-recap-card { position: absolute; padding: 18px 26px 22px; border-radius: 24px; background: var(--kit-surface); border: var(--kit-line) solid var(--kit-ink);
+  box-shadow: var(--kit-drop); transform-origin: 50% 50%; }
+.kit-recap-h { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+.kit-recap-n { flex: none; width: 50px; height: 50px; border-radius: 50%; background: var(--kit-coral-d); border: 3px solid var(--kit-ink); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-family: var(--kit-font-mono); font-weight: 700; font-size: 28px; line-height: 1; }
+.kit-recap-t { padding: 3px 18px 5px; border-radius: 999px; border: 3px solid var(--kit-ink); background: var(--kit-accent); font-family: var(--kit-font-display);
+  font-weight: 900; font-size: 32px; line-height: 1.2; color: var(--kit-ink); white-space: nowrap; }
+.kit-recap-x { font-family: var(--kit-font-body); font-weight: 700; font-size: 30px; line-height: 1.42; color: var(--kit-ink); line-break: strict;
+  text-wrap: pretty; }
+.kit-recap-x .kit-term { white-space: nowrap; }
+.kit-recap-links path { fill: none; stroke: var(--kit-ink); stroke-width: 4; stroke-dasharray: 10 10; stroke-linecap: round; }
+.kit-recap-cast { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.kit-curtain { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; pointer-events: none; }
+
+/* ---------------- draft marker ---------------- */
+.kit-draft { position: absolute; right: 64px; top: 44px; padding: 6px 20px 8px; border-radius: 999px; background: var(--kit-surface);
+  border: 3px dashed var(--kit-ink); color: var(--kit-ink); font-family: var(--kit-font-body); font-weight: 700; font-size: 28px; line-height: 1.2; white-space: nowrap; }

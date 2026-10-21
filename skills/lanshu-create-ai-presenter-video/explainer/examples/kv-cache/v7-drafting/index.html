@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>KV cache · V7 图纸与注脚</title>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* fonts:begin */
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/noto-sans-sc-900.woff2") format("woff2"); font-weight: 900; font-style: normal; font-display: block; }
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/noto-sans-sc-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+@font-face { font-family: "Noto Serif SC"; src: url("assets/fonts/noto-serif-sc-600.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+@font-face { font-family: "Archivo"; src: url("assets/fonts/archivo-x-900.woff2") format("woff2"); font-weight: 900; font-style: normal; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jetbrains-mono-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/instrument-serif-400i.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+/* fonts:end */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #0b0b0c;
+      }
+      #sheet {
+        left: -200px;
+        top: -200px;
+        width: 6520px;
+        height: 2780px;
+      }
+      #cells,
+      #endwrap,
+      #recapwrap,
+      #fx {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      #endwrap,
+      #recapwrap,
+      #fx {
+        inset: 0;
+        pointer-events: none;
+      }
+      .abs {
+        position: absolute;
+        white-space: nowrap;
+      }
+      .mono {
+        font-family: var(--kit-font-mono);
+      }
+      .cn5 {
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+      }
+      .dim {
+        color: var(--kit-muted);
+      }
+      .acc {
+        color: var(--kit-accent);
+      }
+      .red {
+        color: var(--kit-warn);
+      }
+      .blue {
+        color: var(--kit-accent-2);
+      }
+      /* a token is a drafted part: a box with its text */
+      .tok {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(237, 235, 230, 0.72);
+        background: rgba(11, 11, 12, 0.7);
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+        color: var(--kit-ink);
+        white-space: nowrap;
+      }
+      .tok.new {
+        border-color: var(--kit-accent);
+        background: var(--kit-accent);
+        color: #0b0b0c;
+        box-shadow: 0 0 26px rgba(255, 190, 0, 0.55);
+      }
+      .tok.slot {
+        border: 2px dashed rgba(237, 235, 230, 0.28);
+        background: none;
+      }
+      /* K is a key tag (it is matched), V a block of content (it is taken), Q the question a new token asks */
+      .kt,
+      .vb,
+      .qt {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 76px;
+        height: 40px;
+        font-family: var(--kit-font-mono);
+        font-size: 24px;
+        white-space: nowrap;
+      }
+      .kt {
+        padding-right: 12px;
+        border: 2.5px solid var(--kit-ink);
+        border-radius: 6px 20px 20px 6px;
+        color: var(--kit-ink);
+        background: rgba(11, 11, 12, 0.8);
+      }
+      .kt::after {
+        content: "";
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        width: 8px;
+        height: 8px;
+        margin-top: -4px;
+        border: 2px solid currentColor;
+        border-radius: 50%;
+      }
+      .vb {
+        border: 2.5px solid #dcd9d2;
+        background: #dcd9d2;
+        color: #141311;
+      }
+      .qt {
+        border: 2.5px solid var(--kit-accent-2);
+        border-radius: 20px 6px 6px 20px;
+        color: var(--kit-accent-2);
+        background: rgba(11, 11, 12, 0.8);
+      }
+      .kt.new {
+        border-color: var(--kit-accent);
+        color: var(--kit-accent);
+        box-shadow: 0 0 18px rgba(255, 190, 0, 0.45);
+      }
+      .vb.new {
+        border-color: var(--kit-accent);
+        background: var(--kit-accent);
+      }
+      .c {
+        position: absolute;
+        display: block;
+        border: 1.5px solid rgba(237, 235, 230, 0.4);
+        background: rgba(237, 235, 230, 0.5);
+      }
+      .code {
+        position: absolute;
+        white-space: pre;
+        font-family: var(--kit-font-mono);
+        font-size: 24px;
+        line-height: 36px;
+        color: rgba(237, 235, 230, 0.9);
+      }
+      .plate {
+        position: absolute;
+        background: #0b0b0c;
+        border: 1.5px solid rgba(237, 235, 230, 0.3);
+      }
+      .bill-row {
+        position: absolute;
+        left: 32px;
+        display: flex;
+        align-items: baseline;
+        white-space: nowrap;
+        color: #141311;
+      }
+      .bill-row b {
+        display: inline-block;
+        width: 210px;
+        text-align: right;
+        margin-right: 22px;
+        font-family: var(--kit-font-latin);
+        font-weight: 900;
+        font-size: 36px;
+      }
+      .bill-row span {
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+        font-size: 28px;
+      }
+      /* highlighter on the bill: a background that grows left → right (no negative z-index) */
+      .hlt {
+        --h: 0;
+        padding: 0 6px;
+        border-radius: 3px 8px 5px 9px;
+        background: linear-gradient(rgba(255, 206, 20, 0.78), rgba(255, 206, 20, 0.78)) no-repeat left center / calc(var(--h) * 100%) 92%;
+      }
+      .spot2 {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 220, 90, 0.28), rgba(255, 220, 90, 0) 70%);
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="kit-root" data-composition-id="main" data-start="0" data-duration="45" data-width="1920" data-height="1080">
+      <div id="stage" class="clip kit-stage" data-start="0" data-duration="45" data-track-index="1" data-layout-allow-overflow="">
+        <div id="world" class="kit-world" data-layout-allow-overflow="">
+          <div id="sheet" class="kit-sheet"></div>
+          <div id="cells"></div>
+          <svg class="kit-svg" id="leaders" style="left: 0; top: 0" width="6400" height="2600" viewBox="0 0 6400 2600"></svg>
+          <svg class="kit-svg" id="sparks" style="left: 0; top: 0" width="6400" height="2600" viewBox="0 0 6400 2600"></svg>
+        </div>
+        <div id="chap"></div>
+        <div id="endwrap" data-layout-allow-overflow=""></div>
+        <div id="recapwrap" data-layout-allow-overflow=""></div>
+        <div id="fx"></div>
+      </div>
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40.32" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        /* KV cache, drawn as one V7 drawing sheet. Every beat time comes from the story (story.at / story.phrase) plus
+         * small offsets; every frame is a pure function of t (one driver tween calls frame(t)). */
+        const CX = ExplainerCore, { clamp01, pr, lerp, E } = CX;
+        const U = Kit.util, { op, show, draw, svg, el, typed, pulse } = U;
+        const story = new CX.Story(window.STORY);
+        const at = (l, u, n) => story.at(l, u, n);
+        const ph = (l, s) => story.phrase(l, s);
+        const $ = (id) => document.getElementById(id);
+        const T = Kit.tokens;
+        const TOK = ["因为", "空气", "把", "蓝光", "散射", "得", "更", "多"];
+        const SP = Kit.sparks($("sparks"));
+        const R = []; // per-frame renders of kit components
+
+        // ---------------- builders ----------------
+        function mkCell(n, x, y) {
+          const c = Kit.cell($("cells"), { x, y, n, bx: 1772, by: 56 });
+          const s = svg("svg", { class: "kit-svg", width: 1920, height: 1080, viewBox: "0 0 1920 1080", style: "left:0;top:0" }, c);
+          return { c, s, x, y };
+        }
+        function put(parent, node, x, y) {
+          node.style.left = x + "px";
+          node.style.top = y + "px";
+          parent.appendChild(node);
+          return node;
+        }
+        function txt(parent, cls, x, y, text, css) {
+          const e = el("div", "abs " + (cls || ""), parent, text);
+          e.style.left = x + "px";
+          e.style.top = y + "px";
+          if (css) e.style.cssText += css;
+          return e;
+        }
+        function box(parent, cls, x, y, w, h, text, css) {
+          const e = el("div", cls, parent, text);
+          e.style.left = x + "px";
+          e.style.top = y + "px";
+          if (w) e.style.width = w + "px";
+          if (h) e.style.height = h + "px";
+          if (css) e.style.cssText += css;
+          return e;
+        }
+        function gh(cell, x, y, size, o) {
+          o.story = story;
+          const g = Kit.ghost(o);
+          g.el.style.left = x + "px";
+          g.el.style.top = y + "px";
+          g.el.style.fontSize = size + "px";
+          cell.appendChild(g.el);
+          R.push((t) => g.render(t));
+          return g;
+        }
+        function note(cell, x, y, tag, text, a) {
+          const n = Kit.note(text, { tag });
+          put(cell, n.el, x, y);
+          R.push((t) => n.render(t, a));
+          return n;
+        }
+        function foot(cell, x, y, mark, text, a) {
+          const f = Kit.footnote({ mark, text });
+          put(cell, f.el, x, y);
+          R.push((t) => f.render(t, a));
+          return f;
+        }
+        function label(cell, x, y, o, a, b) {
+          const l = Kit.label(o);
+          put(cell, l.el, x, y);
+          R.push((t) => l.render(t, a, b));
+          return l;
+        }
+        function cls(e, c) { if (e._c !== c) { e.className = c; e._c = c; } }
+        function tr(e, s) { if (e._tr !== s) { e.style.transform = s; e._tr = s; } }
+        function xy(e, x, y) { e.style.left = x.toFixed(1) + "px"; e.style.top = y.toFixed(1) + "px"; }
+        const arrowHead = (x, y, dir) => (dir > 0 ? `M ${x - 14} ${y - 9} L ${x} ${y} L ${x - 14} ${y + 9}` : `M ${x + 14} ${y - 9} L ${x} ${y} L ${x + 14} ${y + 9}`);
+
+        const C1 = mkCell(1, 0, 0), C2 = mkCell(2, 2100, 0), C3 = mkCell(3, 4200, 0), C4 = mkCell(4, 4200, 1300), C5 = mkCell(5, 2100, 1300), C6 = mkCell(null, 0, 1300);
+
+        // ======================= 图 1 · 一个一个往外蹦，每次都回头看 =======================
+        const c1 = C1.c, s1 = C1.s;
+        gh(c1, 116, 130, 96, { line: 1, upto: "，" });
+        gh(c1, 120, 244, 60, { line: 1, from: "是", punch: [{ phrase: "蹦", amp: 0.3, dur: 0.4 }] });
+        gh(c1, 120, 786, 60, { line: 2, upto: "，", accent: ["新token"], lead: 2.6 });
+        gh(c1, 120, 862, 60, { line: 2, from: "都要", lead: 2.6 });
+        const tEmit = [at(1, "token", 1), at(1, "token", 2), at(1, "蹦"), at(2, "蹦")];
+        note(c1, 120, 326, "自回归", "每次只生成 1 个 token", tEmit[1] + 0.2);
+        note(c1, 120, 952, "注意力", "新 token 要和前面每一个比一比", at(2, "token", 2) + 0.05);
+        foot(c1, 1050, 956, "¹", "softmax(q·Kᵀ/√d)·V：q 给每个 k 打分，按分数取 V", at(2, "所") + 0.15);
+        // the prompt, the model, the output row
+        const prm = box(c1, "abs", 120, 438, 380, 78, null, "border:2px solid rgba(237,235,230,0.72)");
+        const prmL = txt(c1, "mono dim", 120, 398, "prompt", "font-size:24px");
+        const prmT = txt(c1, "cn5", 142, 456, "", "font-size:32px");
+        const mdl = svg("rect", { x: 560, y: 428, width: 200, height: 100, class: "kit-ln", style: "stroke-width:3" }, s1);
+        const mdlT = txt(c1, "", 598, 448, "LLM", "font-family:var(--kit-font-latin);font-weight:900;font-size:48px");
+        const stepT = txt(c1, "mono", 598, 538, "", "font-size:26px");
+        const arr1 = svg("path", { class: "kit-ln", d: "M 504 477 L 552 477 " + arrowHead(552, 477, 1) }, s1);
+        const arr2 = svg("path", { class: "kit-ln", d: "M 764 477 L 826 477 " + arrowHead(826, 477, 1) }, s1);
+        const slotX = (i) => 840 + i * 122;
+        const toks1 = TOK.map((w, i) => {
+          const slot = box(c1, "tok slot", slotX(i), 440, 110, 74);
+          const tk = box(c1, "tok", slotX(i), 440, 110, 74, w, "font-size:32px");
+          const idx = txt(c1, "mono dim", slotX(i) + 44, 404, String(i + 1), "font-size:24px");
+          return { slot, tk, idx, i };
+        });
+        // the decode loop, as the drawing's insider margin note
+        const CODE = ["while 没说完:", "    下一个 = 模型(问题 + 已输出)", "    已输出 += 下一个    # 一次 1 个"];
+        const codeL = txt(c1, "mono dim", 120, 608, "伪代码 · 解码循环", "font-size:24px");
+        const codeHL = box(c1, "abs", 112, 680, 560, 36, null, "background:rgba(255,210,30,0.16);border-left:3px solid #ffd21e");
+        const codeEls = CODE.map((s, k) => { const e = txt(c1, "code", 120, 644 + k * 36, ""); e.setAttribute("data-layout-allow-overlap", ""); return e; });
+        // looking back: one arc from the new token to every earlier one (and the prompt)
+        const NEWI = 3, nx = slotX(NEWI) + 55, ny = 516;
+        const targets = [2, 1, 0].map((j) => ({ x: slotX(j) + 55, j })).concat([{ x: 470, j: -1 }]);
+        const tBack = at(2, "回"), tAll = at(2, "所");
+        const arcs = targets.map((g, k) => {
+          const dx = nx - g.x, depth = Math.min(150, 30 + 0.16 * dx);
+          const p = svg("path", { class: "kit-blue", d: `M ${nx} ${ny} Q ${(nx + g.x) / 2} ${ny + depth * 2} ${g.x} ${ny}`, style: "stroke-width:2.5" }, s1);
+          const head = svg("circle", { r: 7, fill: T.accent2, opacity: 0 }, s1);
+          return { p, len: p.getTotalLength(), head, a: tBack + k * 0.13, g };
+        });
+        arcs.forEach((A) => SP.burst(A.g.x, ny, A.a + 0.28, 6));
+        label(c1, slotX(NEWI) - 20, 334, { text: "新 token", tone: "accent" }, at(2, "新"));
+        label(c1, 1380, 568, { text: "回头看 = 注意力¹", sub: "attention", tone: "q" }, tBack + 0.1);
+        tEmit.forEach((te, i) => SP.burst(slotX(i) + 55, 440, te + 0.3, 10, Math.PI, true));
+        function fig1(t) {
+          op(prm, pr(t, 0.45, 0.25));
+          op(prmL, pr(t, 0.45, 0.25));
+          typed(prmT, "天空为什么是蓝的？", t, at(1, "回"), 16);
+          draw(mdl, 600, E.io2(pr(t, 0.4, 0.35)));
+          op(mdlT, pr(t, 0.6, 0.2));
+          op(arr1, pr(t, 1.3, 0.2));
+          op(arr2, pr(t, 1.6, 0.2));
+          let n = 0;
+          tEmit.forEach((te) => { if (t >= te) n++; });
+          const flash = Math.max(...tEmit.map((te) => pulse(t, te - 0.06, 0.32)));
+          mdl.style.stroke = flash > 0.05 ? T.accent : "";
+          mdl.style.filter = flash > 0.05 ? `drop-shadow(0 0 ${(14 * flash).toFixed(1)}px rgba(255,190,0,0.9))` : "";
+          U.setText(stepT, t < tEmit[0] ? "" : "第 " + n + " 步");
+          const allFlash = pulse(t, tAll - 0.05, 0.5);
+          toks1.forEach((o) => {
+            const i = o.i, te = i < tEmit.length ? tEmit[i] : Infinity;
+            op(o.slot, pr(t, 1.7 + i * 0.05, 0.25) * (t >= te + 0.3 ? 0 : 1));
+            if (t < te) { show(o.tk, 0); op(o.idx, 0); return; }
+            const u = E.io3(pr(t, te, 0.32));
+            show(o.tk, 1);
+            op(o.idx, pr(t, te + 0.2, 0.2));
+            const x = lerp(770, slotX(i), u), y = 440 - Math.sin(Math.PI * u) * 46;
+            xy(o.tk, x, y);
+            tr(o.tk, `scale(${(0.6 + 0.4 * u).toFixed(3)})`);
+            cls(o.tk, i === n - 1 ? "tok new" : "tok");
+            const lit = i < NEWI && t >= tAll ? allFlash : 0;
+            o.tk.style.borderColor = lit > 0.02 ? T.accent2 : "";
+            o.tk.style.boxShadow = lit > 0.02 ? `0 0 ${(20 * lit).toFixed(1)}px rgba(127,200,248,0.8)` : "";
+          });
+          prm.style.borderColor = t >= tAll ? (allFlash > 0.02 ? T.accent2 : "") : "";
+          // the loop runs once per token: its body lights at every emit
+          op(codeL, pr(t, 0.9, 0.2));
+          typed(codeEls[0], CODE[0], t, 1.0, 60, 1.25);
+          typed(codeEls[1], CODE[1], t, 1.25, 60, 1.8);
+          typed(codeEls[2], CODE[2], t, 1.8, 60);
+          const hit = Math.max(...tEmit.map((te) => pulse(t, te - 0.1, 0.45)));
+          op(codeHL, Math.max(hit, t > tEmit[0] ? 0.35 : 0));
+          // look back: the arcs sweep left from the new token, then everything earlier lights at once
+          arcs.forEach((A) => {
+            const u = E.io2(pr(t, A.a, 0.3));
+            draw(A.p, A.len, u);
+            op(A.p, t >= A.a ? 1 : 0);
+            A.p.style.strokeWidth = t >= tAll ? (2.5 + 1.5 * allFlash).toFixed(2) : "2.5";
+            const q = A.p.getPointAtLength(u * A.len);
+            A.head.setAttribute("cx", q.x.toFixed(1));
+            A.head.setAttribute("cy", q.y.toFixed(1));
+            A.head.setAttribute("opacity", t >= A.a && u < 1 ? 1 : 0);
+          });
+        }
+
+        // ======================= 图 2 · 不缓存：每一步都重算前面全部 =======================
+        const c2 = C2.c, s2 = C2.s;
+        gh(c2, 120, 124, 60, { line: 3, upto: "，", warn: ["重新算"] });
+        gh(c2, 116, 200, 96, { line: 3, from: "就会", warn: ["越写越慢"], punch: [{ phrase: "慢", amp: 0.22, dur: 0.4 }] });
+        const X0 = 330, Y0 = 384, P = 66, CS = 58;
+        const tRow0 = at(3, "每"), tRe = at(3, "重"), tSlow = at(3, "越");
+        const rowT = (r) => tRow0 + r * 0.1;
+        TOK.forEach((w, c) => txt(c2, "cn5 dim", X0 + P * c + 29 - (w.length * 24) / 2, 340, w, "font-size:24px"));
+        const rowL = TOK.map((w, r) => txt(c2, "mono dim", 196, Y0 + P * r + 14, "第 " + (r + 1) + " 步", "font-size:24px"));
+        const tri = [];
+        for (let r = 0; r < 8; r++) for (let c = 0; c <= r; c++) {
+          const e = box(c2, "abs", X0 + P * c, Y0 + P * r, CS, CS);
+          e.className = "c";
+          e.style.position = "absolute";
+          tri.push({ e, r, c });
+        }
+        // the checker's redline around everything that is computed again: a staircase revision cloud
+        const gx = (c) => X0 + P * c - 4, gy = (r) => Y0 + P * r - 4;
+        const stair = [[gx(0), gy(1)]];
+        for (let r = 1; r <= 7; r++) { stair.push([gx(r), gy(r)]); stair.push([gx(r), gy(r + 1)]); }
+        stair.push([gx(0), gy(8)]);
+        const cloud = Kit.revcloud(s2, { pts: stair, r: 9, tag: "重复计算", tx: X0 + 4.6 * P, ty: Y0 + 1.6 * P });
+        const tCloud = at(3, "算") + 0.05;
+        const dimTri = Kit.dim(s2, { x1: X0, y1: Y0 + 8 * P - 8, x2: X0 + 8 * P - 8, y2: Y0 + 8 * P - 8, text: "第 8 步：8 份", off: 26 });
+        label(c2, X0 + 4.1 * P, Y0 + 2.9 * P, { text: "总量 ≈ n²/2 ¹", tone: "warn" }, tSlow + 0.3);
+        foot(c2, 1040, 296, "¹", "1+2+…+n = n(n+1)/2：算量像个三角形", tSlow + 0.5);
+        // the same steps as a cost chart: one stacked bar per step (new part in accent, recomputed part in redline)
+        const BX = 1100, BY = 900, BP = 86, BW = 52, BH = 52;
+        const axes = svg("path", { class: "kit-ln", d: `M 1060 440 L 1060 ${BY} L 1790 ${BY}`, style: "stroke-width:2" }, s2);
+        const chT = txt(c2, "mono", 1060, 372, "每一步要算几份 K/V", "font-size:26px");
+        const yL = txt(c2, "cn5 dim", 1074, 432, "份数", "font-size:24px");
+        const xT = txt(c2, "mono dim", 1610, 944, "第几步 →", "font-size:24px");
+        const bars2 = TOK.map((w, k) => {
+          const red = box(c2, "abs", BX + BP * k, BY, BW, 0, null, "background:#ff5b3a");
+          const yel = box(c2, "abs", BX + BP * k, BY, BW, 0, null, "background:#ffd21e");
+          const xl = txt(c2, "mono dim", BX + BP * k + 18, 908, String(k + 1), "font-size:24px");
+          return { red, yel, xl, k };
+        });
+        const ramp = svg("path", { class: "kit-red", d: `M ${BX + BW / 2} ${BY - BH - 18} L ${BX + BP * 7 + BW / 2} ${BY - BH * 8 - 18}`, style: "stroke-width:3;stroke-dasharray:12 10" }, s2);
+        const rampHead = svg("path", { class: "kit-red", d: "M -16 -10 L 0 0 L -16 10", style: "stroke-width:3" }, s2);
+        label(c2, 1520, 386, { text: "越写越慢", tone: "warn" }, tSlow + 0.2);
+        note(c2, 1060, 958, "问题", "第 n 步要把前面 n 个全部重算", at(3, "慢") + 0.15);
+        const rampA = [BX + BW / 2, BY - BH - 18], rampB = [BX + BP * 7 + BW / 2, BY - BH * 8 - 18];
+        SP.burst(2100 + rampB[0], rampB[1], tSlow + 0.6, 14);
+        function fig2(t) {
+          tri.forEach((o) => {
+            const a = rowT(o.r) + o.c * 0.014;
+            const u = E.o3(pr(t, a, 0.2));
+            op(o.e, u);
+            tr(o.e, `scale(${(0.5 + 0.5 * u).toFixed(3)})`);
+            if (o.c === o.r) { o.e.style.background = "#ffd21e"; o.e.style.borderColor = "#ffd21e"; return; }
+            const ra = tRe + o.r * 0.035, f = pr(t, ra, 0.15), fl = pulse(t, ra, 0.4);
+            o.e.style.background = f > 0 ? `rgba(255,91,58,${(0.55 + 0.4 * fl).toFixed(3)})` : "rgba(237,235,230,0.5)";
+            o.e.style.borderColor = f > 0 ? "#ff5b3a" : "rgba(237,235,230,0.4)";
+          });
+          rowL.forEach((e, r) => op(e, pr(t, rowT(r), 0.2)));
+          cloud.render(t, tCloud);
+          dimTri.render(t, tRow0 + 0.95);
+          op(axes, pr(t, tRow0 - 0.1, 0.3));
+          [chT, yL, xT].forEach((e) => op(e, pr(t, tRow0 - 0.1, 0.3)));
+          bars2.forEach((b) => {
+            const u = E.o3(pr(t, rowT(b.k), 0.25)), rf = pr(t, tRe + b.k * 0.035, 0.15);
+            const hy = BH * u, hr = BH * b.k * u;
+            b.yel.style.height = hy.toFixed(1) + "px";
+            b.yel.style.top = (BY - hr - hy).toFixed(1) + "px";
+            b.red.style.height = hr.toFixed(1) + "px";
+            b.red.style.top = (BY - hr).toFixed(1) + "px";
+            b.red.style.background = rf > 0 ? "#ff5b3a" : "rgba(237,235,230,0.55)";
+            op(b.xl, u);
+          });
+          const ru = E.io2(pr(t, tSlow, 0.6));
+          draw(ramp, 1000, ru);
+          op(ramp, t >= tSlow ? 1 : 0);
+          const hx = lerp(rampA[0], rampB[0], ru), hy2 = lerp(rampA[1], rampB[1], ru);
+          rampHead.setAttribute("transform", `translate(${hx.toFixed(1)} ${hy2.toFixed(1)}) rotate(${(Math.atan2(rampB[1] - rampA[1], rampB[0] - rampA[0]) * 180 / Math.PI).toFixed(2)})`);
+          op(rampHead, t >= tSlow ? 1 : 0);
+        }
+
+        // ======================= 图 3 · KV cache：每个 K、V 只算一次，存进表里；新 token 只算自己，再去查 =======================
+        const c3 = C3.c, s3 = C3.s;
+        const tKV = at(4, "KV");
+        gh(c3, 116, 128, 88, { line: 4, upto: "：", accent: ["KV cache"], punch: [{ phrase: "KV cache", amp: 0.1, dur: 0.5 }] });
+        gh(c3, 120, 236, 52, { line: 4, from: "每", upto: "Value" });
+        gh(c3, 930, 236, 52, { line: 4, from: "只", accent: ["只算一次"] });
+        gh(c3, 120, 770, 52, { line: 5, upto: "，", accent: ["新来的那一个"], lead: 4.2 });
+        gh(c3, 740, 770, 52, { line: 5, from: "再", lead: 4.2 });
+        note(c3, 120, 862, "K / V", "K 用来匹配，V 是被取走的内容", at(4, "来") + 0.2);
+        // the cache: a parts list with one row per token
+        const TX0 = 600, TY0 = 320, TH = 52, RH = 58, TW = 700;
+        const rowY = (i) => TY0 + TH + RH * i;
+        const tblD = [`M ${TX0} ${TY0} L ${TX0 + TW} ${TY0} L ${TX0 + TW} ${rowY(6)} L ${TX0} ${rowY(6)} Z`, `M ${TX0} ${rowY(0)} L ${TX0 + TW} ${rowY(0)}`, `M 660 ${TY0} L 660 ${rowY(6)} M 880 ${TY0} L 880 ${rowY(6)} M 1100 ${TY0} L 1100 ${rowY(6)}`];
+        const tbl = tblD.map((d, k) => { const p = svg("path", { class: k === 0 ? "kit-ln" : "kit-thin", d, style: k === 0 ? "stroke-width:2.5" : "stroke-width:2;stroke:rgba(237,235,230,0.55)" }, s3); return { p, len: p.getTotalLength() }; });
+        const rowLines = [1, 2, 3, 4, 5].map((i) => svg("path", { class: "kit-thin", d: `M ${TX0} ${rowY(i)} L ${TX0 + TW} ${rowY(i)}` }, s3));
+        const hdr = [["#", 616], ["K · Key", 676], ["V · Value", 896]].map(([s, x]) => txt(c3, "mono", x, TY0 + 12, s, "font-size:24px"));
+        const hdrW = txt(c3, "cn5 blue", 1112, TY0 + 12, "相关度（示意）", "font-size:24px");
+        const rowN = [0, 1, 2, 3, 4, 5].map((i) => txt(c3, "mono dim", 622, rowY(i) + 14, String(i + 1), "font-size:24px"));
+        const tStore = at(4, "存"), tKey = at(4, "Key"), tVal = at(4, "Value"), tOnce = at(4, "一");
+        const tNew = at(5, "新"), tThat = at(5, "那"), tGo = at(5, "再"), tScan = at(5, "缓"), tLook = at(5, "查");
+        const tokY = (i) => rowY(i) + 6;
+        const W = [0.3, 0.55, 0.2, 0.9, 0.45];
+        const rows3 = [0, 1, 2, 3, 4].map((i) => {
+          const isNew = i === 4;
+          const tk = box(c3, "tok", 150, tokY(i), 168, 46, TOK[i], "font-size:28px");
+          const k = box(c3, "kt", 0, 0, null, null, "K" + (i + 1));
+          const v = box(c3, "vb", 0, 0, null, null, "V" + (i + 1));
+          const w = box(c3, "abs", 1112, rowY(i) + 20, 170, 18, null, "background:#7fc8f8;transform-origin:left center");
+          const kA = isNew ? tNew + 0.12 : tKey + i * 0.07, vA = isNew ? tNew + 0.24 : tVal + i * 0.07;
+          const sA = isNew ? tThat + 0.02 : tStore + i * 0.09, inA = isNew ? tNew - 0.05 : at(4, "每") + i * 0.08;
+          if (!isNew) { SP.burst(4200 + 390, tokY(i) + 23, kA + 0.1, 5); SP.burst(4200 + 970, tokY(i) + 23, sA + 0.4, 6); }
+          return { i, isNew, tk, k, v, w, kA, vA, sA, inA, gx: isNew ? 440 : 352 };
+        });
+        const q5 = box(c3, "qt", 0, 0, null, null, "Q5");
+        const stampOnce = Kit.stamp({ text: "×1", sub: "只算一次" });
+        put(c3, stampOnce.el, 372, 608);
+        stampOnce.el.setAttribute("data-layout-allow-overlap", "");
+        SP.burst(4200 + 450, 660, tOnce, 18);
+        const scan = svg("path", { class: "kit-blue", d: `M 660 0 L 1300 0`, style: "stroke-width:3;filter:drop-shadow(0 0 8px rgba(127,200,248,0.9))" }, s3);
+        const flows = rows3.slice(0, 5).map((o) => {
+          const y0 = rowY(o.i) + 23, y1 = rowY(4) + 23;
+          const p = svg("path", { d: `M 990 ${y0} Q 640 ${Math.max(y0, y1) + 70} 318 ${y1}`, style: "fill:none;stroke:none" }, s3);
+          const dots = [0, 1, 2].map(() => svg("circle", { r: 7, fill: T.accent, opacity: 0, class: "kit-lead-dot" }, s3));
+          return { p, len: p.getTotalLength(), dots, w: W[o.i] };
+        });
+        label(c3, 150, 664, { text: "只算这一个 ¹", tone: "accent" }, tThat);
+        foot(c3, 120, 912, "¹", "新 token 只算自己的 Q、K、V；旧的 K、V 直接从缓存读", tLook + 0.1);
+        // contrast with figure 2: what step 5 has to compute
+        label(c3, 1360, 324, { text: "第 5 步要算几份 K/V？", tone: "ink" }, tNew + 0.05);
+        const cmp = Kit.bars({ rows: [{ label: "不缓存", value: 5, max: 5, tone: "warn", valueText: "5 份" }, { label: "有缓存", value: 1, max: 5, tone: "accent", valueText: "1 份" }], width: 200 });
+        put(c3, cmp.el, 1360, 392);
+        const mini = [];
+        for (let r = 0; r < 5; r++) for (let c = 0; c <= r; c++) mini.push({ e: box(c3, "c", 1400 + 26 * c, 26 * r, 22, 22, null, "position:absolute"), r, c });
+        const miniT0 = txt(c3, "cn5 red", 1400, 0, "不缓存（图 2）：每步全部重算", "font-size:24px");
+        const miniT = txt(c3, "cn5", 1400, 0, "三角形塌成对角线：每步只多 1 格", "font-size:24px");
+        function fig3(t) {
+          tbl.forEach((L, k) => draw(L.p, L.len, E.io2(pr(t, tKV + k * 0.12, 0.6))));
+          rowLines.forEach((p, k) => op(p, pr(t, tKV + 0.5 + k * 0.05, 0.2)));
+          hdr.forEach((e, k) => op(e, pr(t, tKV + 0.4 + k * 0.1, 0.2)));
+          op(hdrW, pr(t, tGo, 0.25));
+          rowN.forEach((e, k) => op(e, pr(t, tKV + 0.6 + k * 0.05, 0.2)));
+          const stampOut = tStore + 0.15;
+          stampOnce.render(t, tOnce, stampOut);
+          const dimOld = E.o2(pr(t, at(5, "之"), 0.35));
+          rows3.forEach((o) => {
+            // the token arrives, then yields its K and V once, which slide into its row of the cache
+            const ui = E.o3(pr(t, o.inA, 0.35));
+            show(o.tk, t >= o.inA ? 1 : 0);
+            tr(o.tk, `translateX(${((1 - ui) * -80).toFixed(1)}px)`);
+            if (o.isNew) cls(o.tk, "tok new");
+            else op(o.tk, ui * (1 - 0.6 * dimOld));
+            const y = tokY(o.i) + 3;
+            [[o.k, o.kA, o.gx, 732, "kt"], [o.v, o.vA, o.gx + 88, 952, "vb"]].forEach(([e, a, gx, tx, base]) => {
+              if (t < a) { show(e, 0); return; }
+              const born = E.back(pr(t, a, 0.28)), mv = E.io3(pr(t, o.sA, 0.42));
+              show(e, 1);
+              xy(e, lerp(gx, tx, mv), y - Math.sin(Math.PI * mv) * 34);
+              tr(e, `scale(${(0.4 + 0.6 * born).toFixed(3)})`);
+              cls(e, base + (o.isNew || (t < o.sA + 0.42 && t >= a && pulse(t, a, 0.6) > 0.3) ? " new" : ""));
+            });
+            // relevance: the query's scan reaches this row
+            const sa = tScan + o.i * 0.12;
+            o.w.style.transform = `scaleX(${(W[o.i] * E.o3(pr(t, sa, 0.3))).toFixed(3)})`;
+            op(o.w, t >= sa ? 1 : 0);
+          });
+          // Q5: born with the new token, it goes to the cache and scans the keys
+          if (t < tNew) { show(q5, 0); op(scan, 0); }
+          else {
+            show(q5, 1);
+            const go = E.io3(pr(t, tGo, 0.42)), sc = E.io2(pr(t, tScan, 0.6));
+            const qy = lerp(tokY(4) + 3, lerp(rowY(0) + 9, rowY(4) + 9, sc), go);
+            xy(q5, lerp(352, 518, go), qy);
+            tr(q5, `scale(${(0.4 + 0.6 * E.back(pr(t, tNew, 0.28))).toFixed(3)})`);
+            const sOn = t >= tScan && t < tLook + 0.9;
+            scan.setAttribute("transform", `translate(0 ${(qy + 20).toFixed(1)})`);
+            op(scan, sOn ? 1 - pr(t, tLook + 0.6, 0.3) : 0);
+          }
+          // 查: the values flow back to the new token, weighted by relevance
+          flows.forEach((F) => F.dots.forEach((d, j) => {
+            if (t < tLook || t > tLook + 1.4) { d.setAttribute("opacity", 0); return; }
+            const ph2 = clamp01((t - tLook - j * 0.12) / 0.7);
+            const q = F.p.getPointAtLength(E.io2(ph2) * F.len);
+            d.setAttribute("cx", q.x.toFixed(1));
+            d.setAttribute("cy", q.y.toFixed(1));
+            d.setAttribute("opacity", (F.w * Math.sin(Math.PI * ph2)).toFixed(3));
+          }));
+          const got = pulse(t, tLook + 0.6, 0.6);
+          rows3[4].tk.style.boxShadow = got > 0.02 ? `0 0 ${(26 + 30 * got).toFixed(1)}px rgba(255,190,0,0.9)` : "";
+          cmp.render(t, pr(t, tNew + 0.2, 0.6));
+          const my0 = lerp(392, 520, E.io3(pr(t, tNew, 0.5)));
+          mini.forEach((m) => {
+            const ap = pr(t, tKV + 0.8 + m.r * 0.08, 0.2), gone = E.io2(pr(t, at(5, "个") + 0.05, 0.4));
+            const diag = m.c === m.r;
+            m.e.style.top = (my0 + 26 * m.r).toFixed(1) + "px";
+            m.e.style.background = diag ? "#ffd21e" : "#ff5b3a";
+            m.e.style.borderColor = diag ? "#ffd21e" : "#ff5b3a";
+            op(m.e, ap * (diag ? 1 : 1 - gone));
+            tr(m.e, diag ? "" : `scale(${(1 - 0.6 * gone).toFixed(3)})`);
+          });
+          miniT0.style.top = miniT.style.top = (my0 + 144).toFixed(1) + "px";
+          op(miniT0, pr(t, tKV + 1.3, 0.3) * (1 - pr(t, at(5, "个"), 0.25)));
+          op(miniT, pr(t, at(5, "个") + 0.3, 0.3));
+        }
+
+        // ======================= 图 4 · 代价：显存跟着上下文涨；Llama 2 7B 的账单 =======================
+        const c4 = C4.c, s4 = C4.s;
+        gh(c4, 116, 140, 88, { line: 6, upto: "：", warn: ["显存"] });
+        gh(c4, 120, 252, 52, { line: 6, from: "缓存", punch: [{ phrase: "涨", amp: 0.35, dur: 0.45 }] });
+        const tMem = at(6, "显"), tUp = at(6, "涨");
+        const tBand = [at(6, "缓"), at(6, "跟"), at(6, "上"), at(6, "下")];
+        note(c4, 520, 940, "代价", "显存占用 ∝ 上下文长度", tUp + 0.25);
+        // the GPU memory, drawn as a vessel in section (hatched walls) that the cache fills band by band
+        const VX = 170, VY = 430, VW = 240, VH = 520, BAND = 100;
+        const vessel = svg("path", { class: "kit-ln", d: `M ${VX} ${VY} L ${VX} ${VY + VH} L ${VX + VW} ${VY + VH} L ${VX + VW} ${VY}`, style: "stroke-width:3" }, s4);
+        let hatch = "";
+        for (let y = VY + 10; y < VY + VH; y += 18) hatch += `M ${VX - 18} ${y + 14} L ${VX} ${y - 4} M ${VX + VW} ${y + 14} L ${VX + VW + 18} ${y - 4} `;
+        const hatchP = svg("path", { class: "kit-thin", d: hatch, style: "stroke:rgba(237,235,230,0.35)" }, s4);
+        const vesL = txt(c4, "cn5", VX, 386, "显存（GPU）", "font-size:28px");
+        const bands = [0, 1, 2, 3].map((b) => {
+          const e = box(c4, "abs", VX + 6, VY + VH - BAND * (b + 1), VW - 12, BAND, null, "transform-origin:bottom center;background:repeating-linear-gradient(to bottom, rgba(237,235,230,0.55) 0 9px, rgba(237,235,230,0.3) 9px 12px)");
+          const lab = txt(c4, "mono", VX + VW + 26, VY + VH - BAND * (b + 1) - 14, b + 1 + "K", "font-size:24px");
+          const tick = svg("path", { class: "kit-thin", d: `M ${VX + VW} ${VY + VH - BAND * (b + 1)} L ${VX + VW + 20} ${VY + VH - BAND * (b + 1)}`, style: "stroke:rgba(237,235,230,0.7);stroke-width:2" }, s4);
+          SP.burst(4200 + VX + VW / 2, 1300 + VY + VH - BAND * (b + 1), tBand[b] + 0.15, 8);
+          return { e, lab, tick, b };
+        });
+        const upArrow = svg("path", { class: "kit-red", d: `M ${VX + VW / 2} ${VY + 90} L ${VX + VW / 2} ${VY + 10} M ${VX + VW / 2 - 16} ${VY + 28} L ${VX + VW / 2} ${VY + 10} L ${VX + VW / 2 + 16} ${VY + 28}`, style: "stroke-width:4" }, s4);
+        SP.burst(4200 + VX + VW / 2, 1300 + VY + 60, tUp, 16, Math.PI, true);
+        const ctx = Kit.number({ value: 4, unit: "K", caption: "上下文长度（token 数）", tone: "ink" });
+        put(c4, ctx.el, 520, 420);
+        ctx.unitEl.style.marginLeft = "4px";
+        const rowExplain = label(c4, 520, 590, { text: "每个 token 一行 K、V", sub: "上下文越长，缓存的行越多" }, tBand[0] + 0.1);
+        // ∝: memory against context is a straight line
+        const GX = 1100, GY = 900, GW = 640, GH = 400;
+        const gAxes = svg("path", { class: "kit-ln", d: `M ${GX} ${GY - GH - 30} L ${GX} ${GY} L ${GX + GW + 30} ${GY}`, style: "stroke-width:2" }, s4);
+        const gLine = svg("path", { class: "kit-acc", d: `M ${GX} ${GY} L ${GX + GW} ${GY - GH}`, style: "stroke-width:4" }, s4);
+        const gDot = svg("circle", { r: 9, fill: T.accent, class: "kit-lead-head" }, s4);
+        const gProj = svg("path", { class: "kit-thin", d: "", style: "stroke-dasharray:6 6;stroke:rgba(237,235,230,0.6)" }, s4);
+        const gYL = txt(c4, "cn5 dim", GX + 12, GY - GH - 40, "显存", "font-size:24px");
+        const gXL = txt(c4, "cn5 dim", GX + GW - 70, GY - 48, "上下文 →", "font-size:24px");
+        const gProp = txt(c4, "", GX + GW * 0.5 + 20, GY - GH * 0.5 - 40, "∝", "font-family:var(--kit-font-hand);font-style:italic;font-size:72px;color:#ffd21e");
+        const gTicks = [1, 2, 3, 4].map((k) => txt(c4, "mono dim", GX + (GW * k) / 4 - 16, GY + 14, k + "K", "font-size:24px"));
+        // the bill: Llama 2 7B, one token, then 4K of them
+        const tBill = at(7, "拿"), tEach = at(7, "每"), tHalf = at(7, "0.5"), tMB = at(7, "MB"), t4K = at(7, "4K"), t2GB = at(7, "2", 2), tGB = at(7, "GB");
+        const bill = box(c4, "kit-paper", 1060, 130, 760, 870);
+        const bar = box(bill, "kit-paper-bar", 0, 0, null, null);
+        txt(bar, "", 32, 18, "显存账单", "font-family:var(--kit-font-display);font-weight:900;font-size:40px");
+        txt(bar, "mono", 0, 30, "Llama 2 · 7B · FP16", "font-size:24px;left:auto;right:32px;color:rgba(236,233,225,0.85)");
+        gh(bill, 32, 112, 50, { line: 7, upto: "，" });
+        const BILL = [
+          ["2", "K、V 两份", tEach],
+          ["× 32", "层", tEach + 0.3],
+          ["× 4,096", "维（32 头 × 128）", at(7, "token") + 0.05],
+          ["× 2 B", "FP16：每个数 2 字节", at(7, "大")],
+        ];
+        const billRows = BILL.map((r, k) => {
+          const e = box(bill, "bill-row", null, 186 + k * 50);
+          e.style.left = "32px";
+          const b = el("b", "", e, r[0]);
+          const s = el("span", "", e);
+          return { e, s, r };
+        });
+        const rule1 = box(bill, "abs", 32, 392, 696, 2, null, "background:#141311;transform-origin:left center");
+        const resRow = box(bill, "bill-row", null, 408);
+        resRow.style.left = "32px";
+        const resB = el("b", "", resRow, "= 524,288 B");
+        const resS = el("span", "", resRow);
+        resS.innerHTML = '≈ <span class="hlt">0.5 MB</span> ¹';
+        const hltHalf = resS.querySelector(".hlt");
+        resB.style.width = "auto";
+        resS.style.cssText = "font-family:var(--kit-font-latin);font-weight:900;font-size:36px";
+        gh(bill, 32, 478, 44, { line: 7, from: "每", upto: "，", lead: 2.2 });
+        const mulRow = box(bill, "bill-row", null, 548);
+        mulRow.style.left = "32px";
+        const mulB = el("b", "", mulRow, "× 4,096");
+        const mulS = el("span", "", mulRow);
+        const rule2 = box(bill, "abs", 32, 606, 696, 2, null, "background:#141311;transform-origin:left center");
+        const hl2GB = box(bill, "kit-hl", 380, 636, 190, 64);
+        const row2GB = gh(bill, 32, 624, 60, { line: 7, from: "4K", lead: 2.4 });
+        const g2 = row2GB.glyphs.filter((g) => g.u === "2")[0], gB = row2GB.glyphs.filter((g) => g.u === "GB").slice(-1)[0];
+        const billFn1 = txt(bill, "mono", 32, 760, "", "font-size:24px;color:rgba(20,19,17,0.8)");
+        const billFn2 = txt(bill, "mono", 32, 812, "", "font-size:24px;color:rgba(20,19,17,0.8)");
+        [billFn1, billFn2].forEach((e) => e.setAttribute("data-layout-allow-overlap", ""));
+        // the 2 GB that the bill adds up to lands on the vessel: 4K of context fills it to here
+        const gbBlock = box(c4, "abs", 0, 0, VW - 12, BAND * 4, null, "border:3px solid #ff5b3a;box-shadow:0 0 22px rgba(255,91,58,0.45);transform-origin:center center");
+        const gbTag = txt(c4, "", 0, 0, "≈ 2 GB", "font-family:var(--kit-font-latin);font-weight:900;font-size:40px;color:#ff5b3a");
+        const dim2 = Kit.dim(s4, { x1: VX, y1: VY + VH, x2: VX, y2: VY + VH - BAND * 4, text: "4K ≈ 2 GB", off: -46, tone: "warn" });
+        const perK = label(c4, VX + VW + 70, VY + VH - BAND - 40, { text: "每 1K ≈ 0.5 GB", tone: "ink" }, t4K + 0.2);
+        SP.burst(4200 + VX + VW / 2, 1300 + VY + VH - BAND * 2, tGB + 0.5, 22);
+        function fig4(t) {
+          draw(vessel, 1100, E.io2(pr(t, tMem - 0.3, 0.5)));
+          op(hatchP, pr(t, tMem, 0.3));
+          op(vesL, pr(t, tMem - 0.1, 0.25));
+          let n = 0;
+          tBand.forEach((tb) => { if (t >= tb) n++; });
+          const bump = pulse(t, tUp, 0.45);
+          bands.forEach((B) => {
+            const u = E.o3(pr(t, tBand[B.b], 0.3));
+            show(B.e, u > 0 ? 1 : 0);
+            tr(B.e, `scaleY(${(u * (1 + 0.08 * bump)).toFixed(3)})`);
+            B.e.style.background = B.b === n - 1 && t < tBill ? "repeating-linear-gradient(to bottom, rgba(255,210,30,0.85) 0 9px, rgba(255,210,30,0.45) 9px 12px)" : "repeating-linear-gradient(to bottom, rgba(237,235,230,0.55) 0 9px, rgba(237,235,230,0.3) 9px 12px)";
+            op(B.lab, pr(t, tBand[B.b], 0.2));
+            op(B.tick, pr(t, tBand[B.b], 0.2));
+          });
+          draw(upArrow, 200, E.o3(pr(t, tUp, 0.25)));
+          op(upArrow, t >= tUp ? 1 - pr(t, tUp + 0.9, 0.4) : 0);
+          ctx.set(Math.max(1, n));
+          ctx.render(t);
+          show(ctx.el, t >= tBand[0] - 0.05 ? 1 : 0);
+          tr(ctx.el, `scale(${(1 + 0.08 * Math.max(...tBand.map((tb) => pulse(t, tb, 0.3)))).toFixed(3)})`);
+          ctx.el.style.transformOrigin = "0% 70%";
+          // the graph lives until the bill covers it
+          const gv = (t >= tMem ? 1 : 0) * (1 - pr(t, tBill, 0.35));
+          [gAxes, gYL, gXL].forEach((e) => op(e, gv * pr(t, tMem, 0.3)));
+          const frac = n === 0 ? 0 : (n - 1 + E.o3(pr(t, tBand[n - 1], 0.3))) / 4;
+          draw(gLine, Math.hypot(GW, GH), frac);
+          op(gLine, gv);
+          const px = GX + GW * frac, py = GY - GH * frac;
+          gDot.setAttribute("cx", px.toFixed(1));
+          gDot.setAttribute("cy", py.toFixed(1));
+          op(gDot, n > 0 ? gv : 0);
+          gProj.setAttribute("d", `M ${px.toFixed(1)} ${py.toFixed(1)} L ${px.toFixed(1)} ${GY} M ${px.toFixed(1)} ${py.toFixed(1)} L ${GX} ${py.toFixed(1)}`);
+          op(gProj, n > 0 ? gv : 0);
+          gTicks.forEach((e, k) => op(e, gv * pr(t, tBand[k], 0.2)));
+          op(gProp, gv * E.o3(pr(t, at(6, "一"), 0.3)));
+          // the bill slides in over the graph (a paper flip on the drawing)
+          const pin = E.o3(pr(t, tBill, 0.6));
+          show(bill, t >= tBill ? 1 : 0);
+          tr(bill, `translate(${((1 - pin) * 700).toFixed(1)}px, ${((1 - pin) * 30).toFixed(1)}px) rotate(${(-0.8 - (1 - pin) * 5).toFixed(2)}deg)`);
+          billRows.forEach((R2, k) => {
+            op(R2.e, pr(t, R2.r[2], 0.12));
+            typed(R2.s, R2.r[1], t, R2.r[2] + 0.05, 40, R2.r[2] + 0.5);
+            tr(R2.e, `translateX(${((1 - E.o3(pr(t, R2.r[2], 0.25))) * 20).toFixed(1)}px)`);
+          });
+          tr(rule1, `scaleX(${E.io2(pr(t, tHalf - 0.2, 0.25)).toFixed(3)})`);
+          op(resRow, pr(t, tHalf, 0.15));
+          hltHalf.style.setProperty("--h", E.io2(pr(t, tMB, 0.35)).toFixed(3));
+          op(mulRow, pr(t, t4K, 0.12));
+          typed(mulS, "个 token（4K 上下文）", t, t4K + 0.05, 30, t4K + 0.9);
+          tr(rule2, `scaleX(${E.io2(pr(t, t4K + 0.4, 0.3)).toFixed(3)})`);
+          if (t >= t2GB - 0.1) {
+            hl2GB.style.left = (row2GB.el.offsetLeft + g2.s.offsetLeft - 8) + "px";
+            hl2GB.style.width = (gB.s.offsetLeft + gB.s.offsetWidth - g2.s.offsetLeft + 16) + "px";
+          }
+          show(hl2GB, t >= t2GB ? 1 : 0);
+          tr(hl2GB, `scaleX(${E.io2(pr(t, t2GB, 0.35)).toFixed(3)})`);
+          typed(billFn1, "* 单条请求；并发越多，乘得越多", t, tGB + 0.35, 36);
+          typed(billFn2, "¹ 1 MB = 2²⁰ B，1 GB = 2³⁰ B", t, tGB + 0.6, 36);
+          // the total leaves the bill and settles on the vessel as a measured 2 GB
+          const fly = E.io3(pr(t, tGB, 0.55));
+          const fx0 = 1060 + 380, fy0 = 130 + 640, fx1 = VX + 6, fy1 = VY + VH - BAND * 4;
+          show(gbBlock, t >= tGB ? 1 : 0);
+          xy(gbBlock, lerp(fx0, fx1, fly), lerp(fy0, fy1, fly) - Math.sin(Math.PI * fly) * 120);
+          tr(gbBlock, `scale(${lerp(0.3, 1, fly).toFixed(3)})`);
+          show(gbTag, t >= tGB + 0.45 ? pr(t, tGB + 0.45, 0.2) : 0);
+          xy(gbTag, VX + 40, VY + VH - BAND * 4 - 58);
+          dim2.render(t, tGB + 0.5);
+        }
+
+        // ======================= 图 5 · 优化：三处修订（GQA · PagedAttention · 量化） =======================
+        // drawn as the sheet's revision block: △A △B △C, each a change that visibly shrinks what has to be cached
+        const c5 = C5.c, s5 = C5.s;
+        const tGQA = at(8, "GQA"), tShare = at(8, "共"), tV = at(8, "V"), tPA = at(8, "PagedAttention"), tPage = at(8, "页"), tAlloc = at(8, "配"), tQ = at(8, "量"), tPress = at(8, "压"), tSq = at(8, "缩");
+        const t5 = at(8, "所") - 0.25;
+        gh(c5, 110, 190, 40, { line: 8, upto: "，", accent: ["GQA"] });
+        gh(c5, 670, 190, 38, { line: 8, from: "PagedAttention", upto: "，", accent: ["PagedAttention"] });
+        gh(c5, 1350, 190, 44, { line: 8, from: "还有", accent: ["量化"] });
+        note(c5, 110, 930, "优化", "三种办法：少存几份、少留空位、每份更小", tSq + 0.1);
+        const REV = [["A", 110, "GQA · 分组共用 K/V", tGQA], ["B", 670, "PagedAttention · 分页", tPA], ["C", 1350, "量化 · 每个数更少位", tQ]];
+        REV.forEach(([r, x, s, a]) => {
+          const tri2 = svg("path", { class: "kit-acc", d: `M ${x + 20} 262 L ${x + 42} 300 L ${x - 2} 300 Z`, style: "stroke-width:2.5" }, s5);
+          const rt = svg("text", { x: x + 12, y: 296, style: "font-size:20px;fill:#ffd21e;font-family:Archivo;font-weight:900" }, s5);
+          rt.textContent = r;
+          label(c5, x + 56, 262, { text: s, tone: "accent" }, a - 0.25);
+          R.push((t) => { op(tri2, pr(t, a - 0.3, 0.2)); op(rt, pr(t, a - 0.3, 0.2)); });
+        });
+        // A · GQA: four query heads, each with its own K/V → they share one
+        const gA = { q: [], k: [], v: [], ln: [], ln2: [] };
+        const qy = (i) => 380 + i * 82;
+        const qHead = txt(c5, "mono dim", 140, 330, "query 头", "font-size:24px");
+        const kvHead = txt(c5, "mono dim", 360, 330, "要缓存的 K/V", "font-size:24px");
+        for (let i = 0; i < 4; i++) {
+          gA.q.push(box(c5, "qt", 140, qy(i), null, null, "Q" + (i + 1)));
+          gA.k.push(box(c5, "kt", 380, qy(i), null, null, "K" + (i + 1)));
+          gA.v.push(box(c5, "vb", 470, qy(i), null, null, "V" + (i + 1)));
+          gA.ln.push(svg("path", { class: "kit-blue", d: `M 218 ${qy(i) + 20} L 378 ${qy(i) + 20}`, style: "stroke-width:2" }, s5));
+          const l2 = svg("path", { class: "kit-acc", d: `M 218 ${qy(i) + 20} L 378 ${qy(0) + 20}`, style: "stroke-width:2.5" }, s5);
+          gA.ln2.push({ p: l2, len: l2.getTotalLength() });
+        }
+        const shareL = txt(c5, "cn5 acc", 380, qy(1) + 10, "4 个头共用 1 份", "font-size:26px");
+        const beforeA = txt(c5, "cn5 dim", 140, 712, "以前：每个头各存一份", "font-size:24px");
+        const stA = Kit.stamp({ text: "÷4", sub: "K/V 份数" });
+        put(c5, stA.el, 400, 756);
+        stA.el.setAttribute("data-layout-allow-overlap", "");
+        foot(c5, 110, 880, "¹", "Llama 3 8B：32 个头共用 8 份 K/V", tV + 0.15);
+        // B · PagedAttention: a long reserved strip with idle slots → fixed-size pages, each handed a block of memory on demand
+        const PX = 690, PY = 380, PS = 44, PP = 50;
+        const slotsB = [];
+        for (let k = 0; k < 12; k++) slotsB.push(box(c5, "abs", PX + k * PP, PY, PS, PS, null, k < 5 ? "background:#dcd9d2;border:2px solid #dcd9d2" : "border:2px dashed #ff5b3a;background:repeating-linear-gradient(45deg, rgba(255,91,58,0.35) 0 4px, transparent 4px 10px)"));
+        const resvL = txt(c5, "cn5 red", PX, PY + 62, "按最长预留：空着也占着", "font-size:24px");
+        const pageFrames = [0, 1, 2].map((g) => box(c5, "abs", PX + g * 4 * PP - 6, PY - 6, 4 * PP + 6, PS + 12, null, "border:3px solid #ffd21e"));
+        const pageL = [0, 1, 2].map((g) => txt(c5, "mono acc", PX + g * 4 * PP + 40, PY - 44, "页 " + (g + 1), "font-size:24px"));
+        const freedL = txt(c5, "cn5 dim", PX + 8 * PP + 36, PY + 8, "（还给显存）", "font-size:24px");
+        const memL = txt(c5, "mono dim", PX, 520, "显存里的块（大小固定）", "font-size:24px");
+        const BLK = [0, 1, 2, 3, 4].map((b) => box(c5, "abs", PX + b * 124, 560, 112, 44, null, "border:2px dashed rgba(237,235,230,0.4)"));
+        // page g lands in block DEST[g]: blocks need not be next to each other
+        const DEST = [3, 1], USED = [4, 1];
+        const landed = DEST.map((b, g) => {
+          const cp = box(c5, "abs", 0, 0, 112, 44, null, "border:3px solid #ffd21e;transform-origin:left top");
+          for (let q = 0; q < 4; q++) box(cp, "abs", 4 + q * 26, 6, 22, 28, null, q < USED[g] ? "background:#dcd9d2" : "border:1.5px dashed rgba(237,235,230,0.45)");
+          return { cp, b, g, a: tPage + 0.05 + g * 0.18 };
+        });
+        const pagedL = txt(c5, "cn5", PX, 636, "用到才分一页：空位最多剩在最后一页", "font-size:24px");
+        const stB = Kit.stamp({ text: "按需", sub: "页大小固定" });
+        put(c5, stB.el, 960, 756);
+        stB.el.setAttribute("data-layout-allow-overlap", "");
+        foot(c5, 670, 880, "²", "vLLM：固定大小的块，按需分配", tAlloc + 0.1);
+        // C · quantization: every number in K/V stored in fewer bits, so the whole cache halves
+        const QX = 1360, QY = 380;
+        const bitsA = [], bitsB = [];
+        for (let k = 0; k < 16; k++) bitsA.push(box(c5, "abs", QX + k * 26, QY, 22, 30, null, "background:#dcd9d2"));
+        for (let k = 0; k < 8; k++) bitsB.push(box(c5, "abs", QX + k * 26, QY + 92, 22, 30, null, "background:#ffd21e"));
+        const fp16L = txt(c5, "mono", QX, QY + 40, "FP16 · 2 字节", "font-size:24px");
+        const int8L = txt(c5, "mono acc", QX, QY + 132, "INT8 · 1 字节", "font-size:24px");
+        const totL = label(c5, QX, 556, { text: "整个 KV cache", tone: "ink" }, t5 + 0.3);
+        const barF = Kit.bars({ rows: [{ label: "FP16", value: 2, max: 2, tone: "ink", valueText: "×1" }], width: 240 });
+        const barI = Kit.bars({ rows: [{ label: "INT8", value: 1, max: 2, tone: "accent", valueText: "×½" }], width: 240 });
+        put(c5, barF.el, QX, 620);
+        put(c5, barI.el, QX, 668);
+        const stC = Kit.stamp({ text: "÷2", sub: "每个数" });
+        put(c5, stC.el, 1600, 756);
+        stC.el.setAttribute("data-layout-allow-overlap", "");
+        foot(c5, 1350, 880, "³", "也可用 FP8 等更少位数", tSq + 0.15);
+        SP.burst(2100 + 520, 1300 + 400, tShare + 0.5, 14);
+        DEST.forEach((b, g) => SP.burst(2100 + PX + b * 124 + 56, 1300 + 582, tPage + 0.5 + g * 0.18, 10));
+        SP.burst(2100 + QX + 120, 1300 + 690, tPress + 0.45, 12);
+        function fig5(t) {
+          const ap = pr(t, t5, 0.4);
+          // A
+          const merge = E.io3(pr(t, tShare, 0.5));
+          [qHead, kvHead].forEach((e) => op(e, ap));
+          gA.q.forEach((e) => show(e, ap));
+          gA.k.forEach((e, i) => { show(e, i === 0 ? ap : ap * (1 - merge)); xy(e, 380, lerp(qy(i), qy(0), merge)); cls(e, i === 0 && merge > 0.5 ? "kt new" : "kt"); });
+          gA.v.forEach((e, i) => { show(e, i === 0 ? ap : ap * (1 - merge)); xy(e, 470, lerp(qy(i), qy(0), merge)); cls(e, i === 0 && merge > 0.5 ? "vb new" : "vb"); });
+          gA.ln.forEach((p, i) => op(p, ap * (i === 0 ? 1 : 1 - merge)));
+          gA.ln2.forEach((L, i) => { draw(L.p, L.len, E.io2(pr(t, tShare + 0.15 + i * 0.05, 0.35))); op(L.p, i === 0 ? 0 : 1); });
+          op(shareL, pr(t, at(8, "用") + 0.1, 0.2));
+          op(beforeA, ap * (1 - pr(t, tShare, 0.3)));
+          stA.render(t, tV);
+          // B
+          const split = E.o3(pr(t, tPA, 0.3)), free = E.io3(pr(t, tPage, 0.5));
+          slotsB.forEach((e, k) => {
+            op(e, ap * (k >= 8 ? 1 - free : 1));
+            const gap = Math.floor(k / 4) * 12 * split;
+            tr(e, `translate(${gap.toFixed(1)}px, ${(k >= 8 ? 60 * free : 0).toFixed(1)}px)`);
+            if (k >= 5 && k < 8) e.style.borderColor = free > 0.5 ? "rgba(237,235,230,0.45)" : "#ff5b3a";
+          });
+          op(resvL, ap * (1 - pr(t, tPage, 0.3)));
+          pageFrames.forEach((e, g) => { op(e, split * (g === 2 ? 1 - free : 1)); tr(e, `translate(${(g * 12 * split).toFixed(1)}px, ${(g === 2 ? 60 * free : 0).toFixed(1)}px)`); });
+          pageL.forEach((e, g) => { op(e, split * (g === 2 ? 1 - free : 1)); tr(e, `translateX(${(g * 12 * split).toFixed(1)}px)`); });
+          op(freedL, pr(t, tPage + 0.3, 0.3));
+          op(memL, ap);
+          BLK.forEach((e, b) => {
+            op(e, ap);
+            const hit = landed.some((L) => L.b === b && t >= L.a + 0.45);
+            e.style.borderColor = hit ? "#ffd21e" : "";
+          });
+          landed.forEach((L) => {
+            const u = E.io3(pr(t, L.a, 0.45));
+            show(L.cp, t >= L.a ? 1 : 0);
+            const x0 = PX + L.g * 4 * PP + L.g * 12 * split - 6, y0 = PY - 6;
+            xy(L.cp, lerp(x0, PX + L.b * 124, u), lerp(y0, 560, u) - Math.sin(Math.PI * u) * 30);
+            tr(L.cp, `scale(${lerp(206 / 112, 1, u).toFixed(3)}, ${lerp(56 / 44, 1, u).toFixed(3)})`);
+            L.cp.style.boxShadow = u >= 1 ? `0 0 ${(16 * pulse(t, L.a + 0.45, 0.5) + 4).toFixed(1)}px rgba(255,190,0,0.6)` : "";
+          });
+          op(pagedL, pr(t, at(8, "分") + 0.05, 0.3));
+          stB.render(t, tAlloc);
+          // C
+          const sq = E.io3(pr(t, tQ, 0.5));
+          bitsA.forEach((e) => op(e, ap * (1 - 0.55 * sq)));
+          bitsB.forEach((e, k) => { op(e, pr(t, tQ + 0.15 + k * 0.03, 0.15)); tr(e, `translateY(${((1 - E.o3(pr(t, tQ + 0.15 + k * 0.03, 0.25))) * -60).toFixed(1)}px)`); });
+          op(fp16L, ap);
+          op(int8L, pr(t, tQ + 0.3, 0.2));
+          barF.render(t, pr(t, t5 + 0.4, 0.5));
+          barI.render(t, pr(t, tPress, 0.45));
+          stC.render(t, tSq);
+        }
+
+        // ======================= 图 6 (sheet margin): legend + title block — read on the pull-back =======================
+        const c6 = C6.c;
+        txt(c6, "mono dim", 120, 120, "图例", "font-size:26px");
+        const LEG = [["tok new", "散射", "新 token"], ["kt", "K", "Key：用来匹配"], ["vb", "V", "Value：被取走的内容"], ["qt", "Q", "Query：新 token 提的问题"]];
+        LEG.forEach(([k, s, d], i) => { box(c6, k, 120, 170 + i * 64, k.indexOf("tok") >= 0 ? 110 : null, 44, s, k.indexOf("tok") >= 0 ? "font-size:26px" : ""); txt(c6, "cn5", 260, 176 + i * 64, d, "font-size:26px"); });
+        box(c6, "abs", 120, 170 + 4 * 64, 76, 40, null, "background:#ff5b3a");
+        txt(c6, "cn5", 260, 176 + 4 * 64, "红线：重复计算 · 浪费 · 代价", "font-size:26px");
+        const tbw = Kit.titleBlock({ rows: [["标题", "KV cache · 用显存换速度"], ["绘制", "模型"], ["审核", "你"], ["张", "1 / 1"], ["版本", "A"]], w: 640 });
+        put($("world"), tbw.el, 5620, 2300);
+        R.push((t) => tbw.render(t, story.data.end.start + 0.3));
+
+        // ======================= the closing line (screen space) =======================
+        const END = story.data.end.start;
+        const closing = Kit.title(story, { size: 100, bottom: 200, lead: 0.35 });
+        $("endwrap").appendChild(closing.el);
+        const tSpend = at(9, "显"), tTrade = at(9, "换"), tSpeed = at(9, "速"), tOnly = at(9, "只"), tNewest = at(9, "新");
+        const eq = Kit.formula({ terms: [
+          { html: "算(K、V) = 1 份 / 步", t: tNewest + 0.15 },
+          { html: '<span style="display:inline-block;width:56px"></span>存(K、V) ∝ <i>n</i><sup style="font-size:28px">¹</sup>', t: tNewest + 0.4, tone: "accent" },
+        ] });
+        put($("endwrap"), eq.el, 118, 900);
+        const eqn = Kit.footnote({ mark: "¹", text: "Llama 2 7B：约 0.5 MB / token，4K ≈ 2 GB（单条请求）" });
+        put($("endwrap"), eqn.el, 1010, 930);
+        // detail view: the trade, drawn as a lever
+        const plate = box($("endwrap"), "plate", 1300, 368, 540, 452);
+        const plateT = txt($("endwrap"), "mono dim", 1320, 380, "详图 · 交换", "font-size:24px");
+        const lev = svg("svg", { class: "kit-svg", width: 1920, height: 1080, viewBox: "0 0 1920 1080", style: "left:0;top:0" }, $("endwrap"));
+        const fulcrum = svg("path", { d: "M 1570 532 L 1594 584 L 1546 584 Z", style: "fill:none;stroke:#edebe6;stroke-width:2.5" }, lev);
+        const beamG = svg("g", {}, lev);
+        const beam = svg("path", { d: "M 1370 532 L 1770 532", style: "fill:none;stroke:#edebe6;stroke-width:5" }, beamG);
+        const panL = svg("g", {}, lev), panR = svg("g", {}, lev);
+        svg("path", { d: "M -40 0 L 40 0 M -40 0 L -30 18 L 30 18 L 40 0", style: "fill:none;stroke:#edebe6;stroke-width:2.5" }, panL);
+        svg("path", { d: "M -40 0 L 40 0 M -40 0 L -30 18 L 30 18 L 40 0", style: "fill:none;stroke:#edebe6;stroke-width:2.5" }, panR);
+        const memBlocks = [0, 1, 2].map((k) => svg("rect", { x: -26 + k * 0, y: -22 - k * 22, width: 52, height: 18, style: "fill:#ff5b3a" }, panL));
+        const memT = txt($("endwrap"), "cn5 red", 0, 0, "显存", "font-size:28px");
+        const spdT = txt($("endwrap"), "cn5 acc", 0, 0, "速度 ↑", "font-size:28px");
+        // the newest token, in the light
+        const lastRow = [0, 1, 2, 3, 4].map((i) => box($("endwrap"), "tok", 1320 + i * 100, 680, 88, 52, TOK[i], "font-size:24px"));
+        const spot = box($("endwrap"), "spot2", 1640, 586, 240, 240);
+        const lastL = label($("endwrap"), 1660, 744, { text: "只算这一个", tone: "accent" }, tNewest + 0.1, story.recap.start);
+        // the detail plate is opaque and sits over the pulled-back sheet on purpose: its texts may cover sheet texts
+        [plateT, memT, spdT, ...lastRow, ...lastL.el.querySelectorAll("span")].forEach((e) => e.setAttribute("data-layout-allow-overlap", ""));
+        function fig6(t) {
+          closing.render(t);
+          eq.render(t);
+          eqn.render(t, tNewest + 0.6, story.recap.start);
+          const pv = pr(t, END + 0.4, 0.3) * (1 - pr(t, story.recap.start, 0.3));
+          [plate, plateT].forEach((e) => show(e, pv));
+          show(lev, pv);
+          draw(fulcrum, 200, E.io2(pr(t, END + 0.45, 0.3)));
+          // spend memory: blocks drop on the left pan, the beam tips, speed rises on the right
+          const drop = memBlocks.map((b, k) => E.o3(pr(t, tSpend + k * 0.1, 0.25)));
+          memBlocks.forEach((b, k) => { b.setAttribute("opacity", drop[k] > 0 ? 1 : 0); b.setAttribute("transform", `translate(0 ${(-(1 - drop[k]) * 60).toFixed(1)})`); });
+          const tip = -9 * E.io3(pr(t, tTrade, 0.5));
+          const cx0 = 1570, cy0 = 532, rad = (tip * Math.PI) / 180;
+          beamG.setAttribute("transform", `rotate(${tip.toFixed(2)} ${cx0} ${cy0})`);
+          const lx = cx0 - 190 * Math.cos(rad), ly = cy0 - 190 * Math.sin(rad), rx = cx0 + 190 * Math.cos(rad), ry = cy0 + 190 * Math.sin(rad);
+          panL.setAttribute("transform", `translate(${lx.toFixed(1)} ${(ly + 20).toFixed(1)})`);
+          panR.setAttribute("transform", `translate(${rx.toFixed(1)} ${(ry + 20).toFixed(1)})`);
+          xy(memT, lx - 28, ly + 46);
+          xy(spdT, rx - 40, ry - 62 - 16 * E.o3(pr(t, tSpeed, 0.3)));
+          show(memT, pv * pr(t, tSpend, 0.2));
+          show(spdT, pv * pr(t, tSpeed, 0.2));
+          // only the newest one is computed
+          const lv = pr(t, END + 0.6, 0.3) * (1 - pr(t, story.recap.start, 0.3));
+          const dimOld = E.o2(pr(t, tOnly, 0.3));
+          lastRow.forEach((e, i) => {
+            show(e, lv);
+            if (i === 4) cls(e, t >= tNewest ? "tok new" : "tok");
+            else op(e, lv * (1 - 0.6 * dimOld));
+          });
+          show(spot, lv * E.o2(pr(t, tNewest, 0.3)));
+        }
+
+        // ======================= leaders between figures =======================
+        const tFlow = at(9, "速");
+        const LEAD = [
+          { d: "M 1840 990 L 1990 990 L 2030 950 L 2030 420 L 2070 380 L 2400 380", a: at(2, "token", 2) + 0.25, b: rowT(0) - 0.1, label: "→ 图 2", lx: 1850, ly: 976 },
+          { d: "M 3880 960 L 3990 960 L 4030 920 L 4030 400 L 4070 360 L 4330 360", a: at(3, "慢") + 0.4, b: tKV, label: "→ 图 3", lx: 3880, ly: 946 },
+          { d: "M 5560 860 L 5560 1150 L 4170 1150 L 4130 1190 L 4130 1950 L 4170 1990 L 4330 1990", a: tLook + 0.35, b: at(6, "代"), label: "↓ 图 4", lx: 5590, ly: 1110 },
+          { d: "M 4380 2270 L 4060 2270 L 4020 2230 L 3910 2230", a: tGB + 0.35, b: at(8, "所"), label: "← 图 5", lx: 4060, ly: 2256 },
+        ].map((o) => { o.sparks = SP; o.flow = tFlow; return Kit.leader($("leaders"), o); });
+
+        // ======================= camera: a 2.5D crane over the sheet, keyed to the story =======================
+        const CAM = Kit.camera($("world"), [
+          [0.0, 964, 470, 1.04, 7, 0], [at(1, "是"), 964, 490, 1.03, 6, 0], [at(1, "蹦") + 0.4, 964, 512, 1.015, 5, 0],
+          [tBack - 0.1, 964, 520, 1.0, 5, 0], [tAll, 955, 522, 1.0, 5, 0], [at(2, "token", 2) + 0.2, 960, 520, 1.0, 5, 0],
+          [at(2, "token", 2) + 0.55, 2000, 560, 0.8, 14, -1.2], [rowT(0) - 0.05, 3060, 540, 1.0, 6, 0], [tSlow, 3070, 545, 1.01, 5, 0],
+          [at(3, "慢") + 0.45, 3060, 545, 1.0, 5, 0], [tKV - 0.3, 4100, 580, 0.82, 13, 1.0], [tKV + 0.1, 5160, 536, 1.0, 6, 0],
+          [at(5, "之"), 5170, 540, 1.02, 5, 0], [tNew, 5175, 540, 1.02, 5, 0], [tLook + 0.3, 5180, 544, 1.025, 5, 0],
+          [tLook + 0.7, 5000, 1200, 0.84, 15, -1], [at(6, "代") + 0.2, 5160, 1856, 1.0, 6, 0], [tBill, 5130, 1860, 1.02, 5, 0],
+          [tGB + 0.35, 5165, 1862, 1.01, 5, 0], [at(8, "所") - 0.5, 4100, 1840, 0.82, 14, 1.2], [at(8, "所") - 0.05, 3050, 1856, 1.0, 6, 0],
+          [tV + 0.1, 3055, 1856, 1.0, 5, 0], [tPA, 3060, 1856, 1.0, 5, 0], [tAlloc + 0.05, 3064, 1856, 1.0, 5, 0],
+          [tQ, 3066, 1856, 1.0, 5, 0], [tSq + 0.35, 3070, 1856, 1.0, 5, 0], [END + 0.4, 3100, 1500, 0.42, 20, -1.5],
+          [END + 1.2, 3150, 1450, 0.3, 25, -2], [story.recap.start, 3140, 1430, 0.282, 27, -2.4], [story.duration, 3130, 1420, 0.27, 28, -2.7],
+        ]);
+        const chap = new CX.Chapters($("chap"), story);
+        const FX = Kit.frame($("fx"));
+        const recap = Kit.recap(story, { titleBlock: [["标题", "用显存换速度，只算新的那一个"], ["绘制", "模型"], ["审核", "你"], ["张", "1 / 1"], ["版本", "A"]] });
+        $("recapwrap").appendChild(recap.el);
+        const FIGS = [[0, 1], [rowT(0) - 0.4, 2], [tKV - 0.2, 3], [at(6, "代") - 0.1, 4], [at(8, "所") - 0.3, 5], [END + 0.6, 0]];
+        function hud(t) {
+          let f = 1;
+          FIGS.forEach(([a, n]) => { if (t >= a) f = n; });
+          const s = t >= story.recap.start ? "SHEET 1 / 1 · 说明" : f === 0 ? "SHEET 1 / 1 · 全图" : "SHEET 1 / 1 · 图 " + f + " / 5";
+          U.setText(FX.sheetno, s);
+        }
+
+        function frame(t) {
+          const covered = recap.covered(t);
+          const disp = covered ? "none" : "";
+          if ($("world").style.display !== disp) { $("world").style.display = disp; $("endwrap").style.display = disp; }
+          recap.render(t);
+          chap.render(t);
+          hud(t);
+          if (covered) return;
+          CAM.render(t);
+          R.forEach((f) => f(t));
+          fig1(t);
+          fig2(t);
+          fig3(t);
+          fig4(t);
+          fig5(t);
+          fig6(t);
+          LEAD.forEach((L) => L.render(t));
+          SP.render(t);
+        }
+        frame(0);
+        const drive = { t: 0 };
+        const tl = gsap.timeline({ paused: true });
+        tl.to(drive, { t: story.duration, duration: story.duration, ease: "none", onUpdate: () => frame(tl.time()) }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/noto-sans-sc-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/noto-sans-sc-900.woff2") format("woff2"); font-weight: 900; font-style: normal; font-display: block; }
+@font-face { font-family: "Bangers"; src: url("assets/fonts/bangers.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+/* fonts:end */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #fff6e0; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--kit-bg); color: var(--kit-ink);
+        font-family: var(--kit-font-body); font-weight: 900; }
+      #stage { position: absolute; inset: 0; overflow: hidden; background: var(--kit-bg); }
+      #shake { position: absolute; inset: 0; }
+      #bg { overflow: hidden; background: var(--kit-bg); }
+      #bg .kit-dots { opacity: 0; }
+      #view { position: absolute; inset: 0; clip-path: inset(30px 40px 42px 32px); }
+      #world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+      .scene { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: none; }
+      .scene > * { position: absolute; left: 0; top: 0; }
+      #hud { position: absolute; inset: 0; }
+      #hud > * { left: 0; top: 0; }
+      .full { width: 1920px; height: 1080px; overflow: visible; }
+      .a { position: absolute; left: 0; top: 0; }
+
+      /* tokens: lettered tiles; the newest is pink and grows eyes */
+      .tok { height: 116px; display: flex; align-items: center; justify-content: center; background: #ffffff; border: 6px solid var(--kit-ink);
+        border-radius: 12px; box-shadow: 7px 7px 0 var(--kit-ink); font-size: 64px; line-height: 1; white-space: nowrap; color: var(--kit-ink); }
+      .tok.sm { height: 96px; font-size: 52px; border-radius: 10px; }
+      .tok.new { background: var(--kit-accent); }
+      .tok.lit { background: var(--kit-yellow); }
+      .tok.dim { background: #ece3cf; color: #5e5850; border-color: #5e5850; box-shadow: 5px 5px 0 #5e5850; }
+      .eyes { position: absolute; left: 50%; top: -44px; display: flex; gap: 6px; transform: translateX(-50%); visibility: hidden; }
+      .eye { position: relative; display: block; width: 46px; height: 46px; border-radius: 50%; background: #ffffff; border: 6px solid var(--kit-ink); }
+      .eye i { position: absolute; left: 9px; top: 9px; width: 16px; height: 16px; border-radius: 50%; background: var(--kit-ink); }
+      .tok.sm .eyes { top: -26px; gap: 4px; }
+      .tok.sm .eye { width: 38px; height: 38px; border-width: 5px; }
+      .tok.sm .eye i { left: 7px; top: 7px; width: 14px; height: 14px; }
+      .slotd { height: 116px; border: 6px dashed #9a9184; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+        font-family: var(--kit-font-display); font-weight: 400; font-size: 64px; line-height: 1; color: #5e5850; }
+
+      /* the model */
+      .mach { width: 400px; height: 520px; }
+      .mach-body { position: absolute; left: 0; top: 60px; width: 400px; height: 460px; border: 8px solid var(--kit-ink); border-radius: 28px;
+        box-shadow: 12px 12px 0 var(--kit-ink); }
+      .mach-plate { position: absolute; left: 50%; top: 26px; transform: translateX(-50%) rotate(-2deg); padding: 4px 26px 8px; background: var(--kit-yellow);
+        border: 6px solid var(--kit-ink); box-shadow: 6px 6px 0 var(--kit-ink); font-size: 54px; line-height: 1.2; white-space: nowrap; }
+      .mach-eye { position: absolute; top: 150px; width: 92px; height: 92px; border-radius: 50%; background: #ffffff; border: 7px solid var(--kit-ink); }
+      .mach-eye i { position: absolute; left: 24px; top: 24px; width: 30px; height: 30px; border-radius: 50%; background: var(--kit-ink); }
+      .mach-mouth { position: absolute; left: 90px; top: 290px; width: 220px; height: 34px; border-radius: 18px; background: var(--kit-ink); }
+      .mach-ant { position: absolute; left: 192px; top: 4px; width: 16px; height: 62px; background: var(--kit-ink); }
+      .mach-ant i { position: absolute; left: -17px; top: -26px; width: 50px; height: 50px; border-radius: 50%; background: var(--kit-accent); border: 6px solid var(--kit-ink); }
+
+      .ask { width: 760px; height: 234px; }
+      .ask svg { position: absolute; left: 0; top: 0; width: 760px; height: 234px; overflow: visible; transform: scaleY(-1); }
+      .ask-t { position: absolute; left: 0; top: 76px; width: 750px; height: 150px; display: flex; align-items: center; justify-content: center; font-size: 60px; white-space: nowrap; }
+
+      .cell { width: 108px; height: 50px; border: 5px solid var(--kit-ink); border-radius: 6px; background: #ffffff; box-shadow: 4px 4px 0 var(--kit-ink); }
+      .cell.new { background: var(--kit-accent); }
+      .cell.redo { background: repeating-linear-gradient(-45deg, var(--kit-warn) 0 9px, #ffab96 9px 17px); }
+      .rowlab { font-size: 30px; font-weight: 700; line-height: 1; white-space: nowrap; }
+      .legend { display: flex; align-items: center; gap: 14px; font-size: 32px; line-height: 1.2; white-space: nowrap; }
+      .legend i { display: block; width: 58px; height: 36px; border: 5px solid var(--kit-ink); border-radius: 5px; box-shadow: 3px 3px 0 var(--kit-ink); }
+      .badge-bi { width: 60px; height: 60px; border-radius: 50%; background: var(--kit-yellow); border: 5px solid var(--kit-ink); box-shadow: 4px 4px 0 var(--kit-ink);
+        display: flex; align-items: center; justify-content: center; font-size: 32px; line-height: 1; }
+
+      /* the cache cabinet */
+      .cab { width: 600px; height: 730px; background: #ffffff; border: 8px solid var(--kit-ink); box-shadow: 12px 12px 0 var(--kit-ink); }
+      .cab-h { position: absolute; left: 0; right: 0; top: 0; height: 74px; background: var(--kit-ink); color: #ffffff; display: flex; align-items: center;
+        padding: 0 24px; font-family: var(--kit-font-display); font-weight: 400; font-size: 56px; letter-spacing: 0.04em; line-height: 1; }
+      .cab-col { position: absolute; top: 82px; height: 50px; display: flex; align-items: center; justify-content: center; gap: 10px; border: 5px solid var(--kit-ink);
+        font-size: 30px; line-height: 1; white-space: nowrap; }
+      .cab-col b { font-family: var(--kit-font-display); font-weight: 400; font-size: 40px; }
+      .slot { width: 240px; height: 84px; border: 5px dashed #9a9184; border-radius: 8px; }
+      .slot.full { border-style: solid; border-color: var(--kit-ink); background: #fff3b0; }
+      .slot.vfull { border-style: solid; border-color: var(--kit-ink); background: #d4e7f8; }
+      .wbar { height: 26px; border: 4px solid var(--kit-ink); background: repeating-linear-gradient(-45deg, var(--kit-accent) 0 9px, #ff9fcd 9px 17px);
+        transform-origin: 0 50%; }
+      .ktag, .vcard { width: 100px; height: 76px; display: flex; align-items: center; justify-content: center; border: 5px solid var(--kit-ink);
+        box-shadow: 5px 5px 0 var(--kit-ink); font-family: var(--kit-font-display); font-weight: 400; font-size: 56px; line-height: 1; }
+      .ktag { background: var(--kit-yellow); border-radius: 8px 30px 30px 8px; justify-content: flex-start; padding: 4px 0 0 18px; }
+      .ktag::after { content: ""; position: absolute; right: 12px; top: 26px; width: 14px; height: 14px; border-radius: 50%; border: 4px solid var(--kit-ink); background: #ffffff; }
+      .vcard { background: var(--kit-accent-2); color: #ffffff; border-radius: 8px; }
+      .qglass { width: 110px; height: 110px; }
+      .qglass .ring { position: absolute; left: 0; top: 0; width: 92px; height: 92px; border-radius: 50%; background: var(--kit-accent); border: 7px solid var(--kit-ink);
+        box-shadow: 5px 5px 0 var(--kit-ink); display: flex; align-items: center; justify-content: center; font-family: var(--kit-font-display); font-weight: 400;
+        font-size: 56px; line-height: 1; padding-top: 4px; }
+      .qglass .hdl { position: absolute; left: 76px; top: 70px; width: 22px; height: 52px; background: var(--kit-ink); border-radius: 8px; transform: rotate(-45deg); transform-origin: 50% 0; }
+      .stamp1 { width: 300px; height: 240px; }
+      .stamp1 .kit-burst { left: 0; top: 0; }
+      .stamp1-t { position: absolute; left: 0; right: 0; top: 44px; text-align: center; font-family: var(--kit-font-display); font-weight: 400; font-size: 92px; line-height: 1;
+        color: var(--kit-accent); -webkit-text-stroke: 12px var(--kit-ink); paint-order: stroke fill; text-shadow: 5px 5px 0 var(--kit-ink); }
+      .stamp1-s { position: absolute; left: 0; right: 0; top: 140px; text-align: center; font-size: 32px; line-height: 1.2; }
+
+      /* 显存 tank + chart */
+      .tank { width: 340px; height: 720px; background: #ffffff; border: 8px solid var(--kit-ink); border-radius: 18px; box-shadow: 12px 12px 0 var(--kit-ink); overflow: hidden; }
+      .tank-h { position: absolute; left: 0; right: 0; top: 0; height: 82px; background: var(--kit-ink); color: #ffffff; display: flex; align-items: center; justify-content: center;
+        font-size: 54px; line-height: 1; }
+      .tank-tick { position: absolute; left: 0; width: 26px; height: 5px; background: var(--kit-ink); }
+      .slab { width: 284px; height: 114px; border: 6px solid var(--kit-ink); border-radius: 8px; display: flex; align-items: center; justify-content: center;
+        background: repeating-linear-gradient(-45deg, var(--kit-accent) 0 13px, #ff9fcd 13px 24px); font-family: var(--kit-font-display); font-weight: 400;
+        font-size: 50px; line-height: 1; color: var(--kit-ink); }
+      .slab span { background: #ffffff; border: 4px solid var(--kit-ink); padding: 4px 12px 0; }
+      .tick-l { font-family: var(--kit-font-display); font-weight: 400; font-size: 44px; line-height: 1; white-space: nowrap; }
+      .axis-t { font-size: 32px; font-weight: 700; line-height: 1.2; white-space: nowrap; }
+      .bracket-t { padding: 6px 20px 2px; background: var(--kit-accent); border: 6px solid var(--kit-ink); box-shadow: 7px 7px 0 var(--kit-ink);
+        font-family: var(--kit-font-display); font-weight: 400; font-size: 64px; line-height: 1; white-space: nowrap; }
+
+      /* the three fixes */
+      .pnl { width: 570px; height: 800px; }
+      .pnl-h { position: absolute; left: 0; right: 0; top: 0; height: 104px; background: var(--kit-yellow); border-bottom: 6px solid var(--kit-ink); display: flex;
+        align-items: center; gap: 16px; padding: 0 22px; white-space: nowrap; }
+      .pnl-h .big { font-family: var(--kit-font-display); font-weight: 400; font-size: 66px; line-height: 1; padding-top: 6px; letter-spacing: 0.03em; }
+      .pnl-h .big.cjk { font-family: var(--kit-font-body); font-weight: 900; font-size: 58px; padding-top: 0; letter-spacing: 0; }
+      .pnl-h .chip { padding: 2px 14px 4px; background: var(--kit-ink); color: #ffffff; font-size: 32px; line-height: 1.25; }
+      .pnl-n { position: absolute; right: 18px; top: 18px; width: 58px; height: 58px; border-radius: 50%; background: var(--kit-ink); color: #ffffff;
+        display: flex; align-items: center; justify-content: center; font-family: var(--kit-font-display); font-weight: 400; font-size: 38px; padding-top: 4px; }
+      .qh { width: 92px; height: 64px; display: flex; align-items: center; justify-content: center; background: var(--kit-accent); border: 5px solid var(--kit-ink);
+        border-radius: 8px; box-shadow: 4px 4px 0 var(--kit-ink); font-family: var(--kit-font-display); font-weight: 400; font-size: 40px; line-height: 1; padding-top: 4px; }
+      .mk, .mv { width: 58px; height: 58px; display: flex; align-items: center; justify-content: center; border: 5px solid var(--kit-ink); box-shadow: 4px 4px 0 var(--kit-ink);
+        font-family: var(--kit-font-display); font-weight: 400; font-size: 36px; line-height: 1; padding-top: 3px; }
+      .mk { background: var(--kit-yellow); border-radius: 6px 20px 20px 6px; }
+      .mv { background: var(--kit-accent-2); color: #ffffff; border-radius: 6px; }
+      .cbar-l { font-size: 30px; line-height: 1.2; white-space: nowrap; }
+      .cbar { width: 500px; height: 46px; border: 5px solid var(--kit-ink); background: #ffffff; box-shadow: 5px 5px 0 var(--kit-ink); overflow: hidden; }
+      .cbar i { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; transform-origin: 0 50%; border-right: 4px solid var(--kit-ink);
+        background: repeating-linear-gradient(-45deg, var(--kit-accent) 0 12px, #ff9fcd 12px 22px); }
+      .cbar i.waste { background: repeating-linear-gradient(-45deg, var(--kit-warn) 0 12px, #ffab96 12px 22px); }
+      .page { width: 112px; height: 86px; border: 5px dashed #9a9184; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+        font-size: 30px; line-height: 1; color: #5e5850; }
+      .page.full { border-style: solid; border-color: var(--kit-ink); background: var(--kit-accent); color: var(--kit-ink); box-shadow: 4px 4px 0 var(--kit-ink); }
+      .resv { width: 500px; height: 86px; border: 5px solid var(--kit-ink); box-shadow: 5px 5px 0 var(--kit-ink); overflow: hidden;
+        background: repeating-linear-gradient(-45deg, #ffd6cc 0 12px, #fff 12px 22px); }
+      .resv i { position: absolute; left: 0; top: 0; bottom: 0; width: 150px; background: var(--kit-accent); border-right: 5px solid var(--kit-ink); }
+      .resv span { position: absolute; left: 170px; top: 0; bottom: 0; display: flex; align-items: center; font-size: 30px; color: var(--kit-ink); }
+      .bits { height: 80px; border: 5px solid var(--kit-ink); border-radius: 6px; box-shadow: 4px 4px 0 var(--kit-ink); overflow: hidden;
+        background: repeating-linear-gradient(90deg, var(--kit-yellow) 0 6px, #ffffff 6px 12px); }
+      .bits.v { background: repeating-linear-gradient(90deg, #8cc0ee 0 6px, #ffffff 6px 12px); }
+      .rowk { font-family: var(--kit-font-display); font-weight: 400; font-size: 52px; line-height: 1; }
+      .jaw { width: 34px; height: 300px; background: var(--kit-ink); border-radius: 6px; }
+      .fmt { display: flex; align-items: center; gap: 12px; font-family: var(--kit-font-display); font-weight: 400; font-size: 52px; line-height: 1; white-space: nowrap; }
+      .fmt b { font-weight: 400; padding: 4px 14px 0; border: 5px solid var(--kit-ink); background: #ffffff; }
+      .fmt b.to { background: var(--kit-accent); }
+
+      /* balance */
+      .beam { width: 640px; height: 26px; background: var(--kit-ink); border-radius: 13px; }
+      .pole { width: 30px; height: 520px; background: var(--kit-ink); }
+      .basep { width: 320px; height: 50px; background: var(--kit-ink); border-radius: 12px 12px 4px 4px; }
+      .pan { width: 240px; height: 40px; background: var(--kit-yellow); border: 6px solid var(--kit-ink); border-radius: 0 0 120px 120px; box-shadow: 5px 5px 0 var(--kit-ink); }
+      .vblock { width: 190px; height: 140px; border: 7px solid var(--kit-ink); border-radius: 12px; box-shadow: 6px 6px 0 var(--kit-ink);
+        background: repeating-linear-gradient(-45deg, var(--kit-accent) 0 13px, #ff9fcd 13px 24px); display: flex; align-items: center; justify-content: center; }
+      .vblock span { background: #ffffff; border: 4px solid var(--kit-ink); padding: 2px 12px 4px; font-size: 40px; line-height: 1.2; }
+      .bolt { width: 200px; height: 180px; }
+      .bolt-t { position: absolute; left: 50%; top: 58px; transform: translateX(-50%); background: #ffffff; border: 4px solid var(--kit-ink); padding: 2px 12px 4px;
+        font-size: 40px; line-height: 1.2; white-space: nowrap; }
+      .swap { width: 200px; height: 110px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-width="1920" data-height="1080">
+      <div id="stage" class="clip" data-start="0" data-duration="45" data-track-index="1">
+        <div id="shake">
+          <div id="bg" class="kit-page">
+            <div class="kit-dots kit-dots-pink"></div>
+            <div class="kit-dots kit-dots-blue"></div>
+            <div class="kit-dots kit-dots-yellow"></div>
+            <div class="kit-dots kit-dots-pink"></div>
+            <div class="kit-dots kit-dots-blue"></div>
+          </div>
+          <div id="view">
+            <svg id="rays" class="kit-rays"></svg>
+            <div id="world" data-layout-allow-overflow=""></div>
+          </div>
+          <div class="kit-page kit-page-frame"></div>
+          <div id="hud"></div>
+        </div>
+      </div>
+
+      <!-- chapter chip (core.Chapters, styled by the kit) -->
+      <div id="chap" class="clip" data-start="0" data-duration="45" data-track-index="2"></div>
+
+      <!-- the one-frame recap (Kit.recap) -->
+      <div id="recap-layer" class="clip" data-start="0" data-duration="45" data-track-index="5" style="position: absolute; inset: 0"></div>
+
+      <!-- halftone dot wipe at every chapter seam -->
+      <div id="wipe-layer" class="clip" data-start="0" data-duration="45" data-track-index="6" data-layout-allow-occlusion="" style="position: absolute; inset: 0; pointer-events: none">
+        <canvas id="wipe" class="kit-wipe" width="1920" height="1080" data-layout-allow-occlusion=""></canvas>
+      </div>
+
+      <!-- captions (core.Captions, word-timed) -->
+      <div id="caps" class="clip kit-caps" data-start="0" data-duration="45" data-track-index="3"></div>
+
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40.32" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        window.__timelines = window.__timelines || {};
+        var tl = gsap.timeline({ paused: true });
+        var C = window.ExplainerCore, K = window.Kit, S = new C.Story(window.STORY);
+        var clamp01 = C.clamp01, lerp = C.lerp, E = C.E, hash = C.hash, track = C.track;
+        var INK = "#141414", PINK = "#ff4fa3", BLUE = "#1c7bd1", YEL = "#ffe14d", WARN = "#ff5a36";
+        function $(id) { return document.getElementById(id); }
+
+        // ================= story times: every beat is a word of the narration =================
+        var T = {
+          big: S.at(1, "大"), ask: S.phrase(1, "回答问题"), tk1: S.at(1, "token", 1), tk2: S.at(1, "token", 2), beng: S.at(1, "蹦"),
+          l2: S.line(2).start, nw: S.at(2, "新"), look: S.phrase(2, "回头看"), all: S.phrase(2, "所有"),
+          l3: S.line(3).start, every: S.phrase(3, "每次"), redo: S.phrase(3, "重新算"), slow: S.phrase(3, "越写越慢"), slowE: S.at(3, "慢"),
+          kv: S.at(4, "KV"), how: S.phrase(4, "办法"), each4: S.at(4, "每"), key: S.at(4, "Key"), val: S.at(4, "Value"), once: S.phrase(4, "只算一次"), store: S.phrase(4, "存起来"),
+          after: S.phrase(5, "之后"), only: S.phrase(5, "只算"), nw5: S.at(5, "新"), that: S.phrase(5, "那一个"), find: S.phrase(5, "再去缓存里查"), cha: S.at(5, "查"),
+          cost: S.phrase(6, "代价"), vram: S.phrase(6, "显存"), cache6: S.phrase(6, "缓存"), rise: S.at(6, "涨"),
+          steps6: [S.phrase(6, "跟着"), S.at(6, "着"), S.phrase(6, "上下文"), S.at(6, "下")],
+          l7: S.line(7).start, llama: S.at(7, "Llama"), b7: S.at(7, "7B"), every7: S.at(7, "每"), ge7: S.at(7, "个"), tok7: S.at(7, "token"), about: S.phrase(7, "大约"),
+          half: S.at(7, "0.5"), mb: S.at(7, "MB"), k4: S.at(7, "4K"), ctx7: S.phrase(7, "上下文"), need: S.phrase(7, "就要"), two: S.at(7, "2", 2), gb: S.at(7, "GB"),
+          so: S.phrase(8, "所以"), gqa: S.at(8, "GQA"), share: S.phrase(8, "共用"), vv: S.at(8, "V"), paged: S.at(8, "PagedAttention"), page: S.phrase(8, "按页分配"),
+          ye: S.at(8, "页"), fen: S.at(8, "分"), pei: S.at(8, "配"), quant: S.phrase(8, "量化"), press: S.phrase(8, "压缩"),
+          one: S.phrase(9, "一句话"), mem9: S.phrase(9, "显存"), swap: S.at(9, "换"), spd: S.phrase(9, "速度"), onlyNew: S.phrase(9, "只算新的那一个"), nw9: S.at(9, "新"),
+        };
+        var CH = S.chapters, RC = S.recap;
+        // scene k lives in [SEAM[k], SEAM[k+1]) — every seam is a chapter boundary, covered by a halftone dot wipe
+        var SEAM = [0, CH[1].start, CH[2].start, CH[3].start, CH[3].end, RC.start];
+
+        // ================= helpers =================
+        function el(cls, parent, text, css) {
+          var e = document.createElement("div");
+          if (cls) e.className = cls;
+          if (text != null) e.textContent = text;
+          if (css) Object.assign(e.style, css);
+          parent.appendChild(e);
+          return e;
+        }
+        function fullSvg(parent, cls) {
+          var s = K.svgEl("svg", { viewBox: "0 0 1920 1080", class: "full a" + (cls ? " " + cls : "") }, parent);
+          return s;
+        }
+        function off(e) { if (e.style.visibility !== "hidden") { e.style.visibility = "hidden"; e.style.opacity = "0"; } }
+        function put(e, x, y, sx, sy, r, o) {
+          if (sx == null) sx = 1;
+          if (sy == null) sy = sx;
+          if (o == null) o = 1;
+          if (o <= 0.002) { off(e); return false; }
+          e.style.visibility = "visible";
+          e.style.opacity = o > 0.998 ? "1" : o.toFixed(3);
+          e.style.transform = "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px) rotate(" + (r || 0).toFixed(2) + "deg) scale(" + sx.toFixed(3) + "," + sy.toFixed(3) + ")";
+          return true;
+        }
+        // an entry (slam / pop / rise from the kit) and an exit, written at top-left (x, y), base scale o.s
+        function enter(e, t, at, end, x, y, o) {
+          o = o || {};
+          var a = K[o.kind || "slam"](t, at, o), g = K.gone(t, end, o.dOut == null ? 0.14 : o.dOut);
+          if (!a || g <= 0) { off(e); return false; }
+          var s = (o.s == null ? 1 : o.s) * (0.4 + 0.6 * g);
+          return put(e, x + a.x, y + a.y, a.sx * s, a.sy * s, a.r, a.o * g);
+        }
+        function cls(e, c, on) { if (e.classList.contains(c) !== on) e.classList.toggle(c, on); }
+        function tokW(w, fs, pad) { return Array.from(w).length * fs + 2 * pad + 12; }
+        function bump(t, at, d) { var u = (t - at) / d; return u > 0 && u < 1 ? Math.sin(Math.PI * u) : 0; }
+        function land(t, at) { // squash on landing → {sx, sy}
+          var q = t - at;
+          if (q < 0) return [1, 1];
+          if (q < 0.05) { var a = q / 0.05; return [1 + 0.22 * a, 1 - 0.22 * a]; }
+          if (q < 0.25) { var b = K.backOut((q - 0.05) / 0.2); return [1.22 - 0.22 * b, 0.78 + 0.22 * b]; }
+          return [1, 1];
+        }
+        function tokEl(parent, w, small) {
+          var e = el("tok a" + (small ? " sm" : ""), parent);
+          e.style.width = tokW(w, small ? 52 : 64, small ? 22 : 30) + "px";
+          e.innerHTML = w + '<b class="eyes"><i class="eye"><i></i></i><i class="eye"><i></i></i></b>';
+          e._eyes = e.querySelector(".eyes");
+          e._pup = e.querySelectorAll(".eye i");
+          return e;
+        }
+        function eyes(e, t, at, end, px, py) {
+          var ey = e._eyes, a = K.pop(t, at, { s0: 0.2, d: 0.22 }), g = K.gone(t, end, 0.12);
+          if (!a || g <= 0) { if (ey.style.visibility !== "hidden") ey.style.visibility = "hidden"; return; }
+          ey.style.visibility = "visible";
+          ey.style.transform = "translateX(-50%) scale(" + (a.sx * g).toFixed(3) + ")";
+          for (var i = 0; i < 2; i++) e._pup[i].style.transform = "translate(" + px.toFixed(1) + "px," + py.toFixed(1) + "px)";
+        }
+
+        // ================= stage, fx =================
+        var W = $("world"), HUD = $("hud");
+        var SC = [0, 1, 2, 3, 4].map(function () { return el("scene", W); });
+        var SPD = K.Speed(fullSvg(W, "kit-speed"), 64);
+        var SHK = K.Shake(30), RAYS = K.Rays($("rays"));
+        function boom(at, amp, d, rx, ry) { SHK.add(at, amp, d || 0.24); if (rx != null) RAYS.add(at, rx, ry); }
+        var WIPE = K.Wipe($("wipe"), [
+          { s: CH[1].start, col: PINK, c: [1600, 640], r: [960, 430] },
+          { s: CH[2].start, col: BLUE, c: [260, 820], r: [1600, 520] },
+          { s: CH[3].start, col: PINK, c: [1600, 560], r: [420, 420] },
+          { s: CH[3].end, col: BLUE, c: [1560, 520], r: [520, 420] },
+          { s: RC.start, col: PINK, c: [1400, 760], r: [960, 470] },
+        ]);
+        var DOTS = Array.prototype.slice.call(document.querySelectorAll("#bg .kit-dots"));
+        function sfxAt(text, parent, x, y, o) { var k = K.sfx(text, o); k.el.style.left = x + "px"; k.el.style.top = y + "px"; parent.appendChild(k.el); return k; }
+        function at(comp, parent, x, y) { comp.el.style.left = x + "px"; comp.el.style.top = y + "px"; parent.appendChild(comp.el); return comp; }
+
+        // ======================================================================================
+        // S1 · 问题 (beats 1–3): the model pops tokens one by one, the new one looks back, and without a cache
+        //      every step recomputes everything before it (the triangle)
+        // ======================================================================================
+        var s1 = SC[0];
+        var MX = 110, MY = 240;
+        var mach = el("mach a", s1);
+        mach.innerHTML = '<div class="mach-ant"><i></i></div><div class="mach-body kit-halftone-blue"><div class="mach-plate">大模型</div>' +
+          '<div class="mach-eye" style="left: 78px"><i></i></div><div class="mach-eye" style="left: 222px"><i></i></div><div class="mach-mouth"></div></div>';
+        var mPup = mach.querySelectorAll(".mach-eye i"), mMouth = mach.querySelector(".mach-mouth"), mBulb = mach.querySelector(".mach-ant i");
+        var MOUTH = { x: MX + 200, y: MY + 60 + 290 + 17 };
+        var ask = el("ask a", s1);
+        K.balloon(K.svgEl("svg", {}, ask), 760, 234, { tail: [120, 36, 232] });
+        el("ask-t", ask, "天空为什么是蓝的？");
+
+        var ANS = ["因为", "空气", "把", "蓝光", "散射", "得", "更", "多"];
+        var ROWX = [600, 826, 1052, 1214], ROWY = 542;
+        var slotsD = [0, 1, 2, 3, 4].map(function (k) {
+          var e = el("slotd a", s1, k < 4 ? "?" : "…");
+          e.style.width = (k < 4 ? tokW(ANS[k], 64, 30) : 136) + "px";
+          return e;
+        });
+        var arcSvg = fullSvg(s1);
+        var toks = ANS.map(function (w) { return tokEl(s1, w, false); });
+        var TE = [T.tk1, T.tk2, T.beng, T.nw].map(function (x) { return x - 0.1; });
+        function HX(j) { return 400 + j * 128; }
+        var HY = 190, HS = 0.56;
+        // look-back arcs (beat 2): from the new token to each earlier one, sweeping left
+        var ARCS = [2, 1, 0].map(function (k, n) {
+          var x0 = ROWX[3] + 100, x1 = ROWX[k] + tokW(ANS[k], 64, 30) / 2, y0 = ROWY - 6, H = 90 + (x0 - x1) * 0.25;
+          var path = K.svgEl("path", { d: "M " + x0 + " " + y0 + " C " + x0 + " " + (y0 - H) + ", " + x1 + " " + (y0 - H) + ", " + x1 + " " + (y0 - 10), pathLength: "1",
+            fill: "none", stroke: INK, "stroke-width": "9", "stroke-linecap": "round" }, arcSvg);
+          var head = K.svgEl("polygon", { points: (x1 - 17) + "," + (y0 - 34) + " " + (x1 + 17) + "," + (y0 - 34) + " " + x1 + "," + (y0 - 4), fill: INK }, arcSvg);
+          var bi = el("badge-bi a", s1, "比");
+          return { k: k, path: path, head: head, bi: bi, at: T.look + n * 0.12, bx: (x0 + x1) / 2 - 30, by: y0 - 0.75 * H - 30 };
+        });
+        var note1 = at(K.note("自回归：每次只生成 1 个 token"), s1, 600, 712);
+        var note2 = at(K.note("注意力：新 token 要和前面每一个比一比"), s1, 600, 712);
+        // beat 3: no cache → the triangle
+        var nocache = at(K.label({ text: "要是不缓存", tone: "warn" }), s1, 108, 150);
+        var ROWT = []; // build time of row i
+        for (var i = 0; i < 8; i++) ROWT.push(T.every + 0.08 + i * 0.19);
+        function RY(i) { return 270 + i * 64; }
+        var rowLabs = ROWT.map(function (_, i) { return el("rowlab a", s1, "第 " + (i + 1) + " 步"); });
+        var cells = [];
+        for (var r = 0; r < 8; r++) for (var c = 0; c <= r; c++) cells.push({ i: r, j: c, e: el("cell a", s1) });
+        var counter = at(K.number({ value: 8, unit: "个", caption: "这一步要算" }), s1, 1450, 112);
+        counter.v.style.fontSize = "124px";
+        var legA = el("legend a", s1), legB = el("legend a", s1);
+        legA.innerHTML = '<i style="background: var(--kit-accent)"></i>新 token 的 K、V';
+        legB.innerHTML = '<i style="background: repeating-linear-gradient(-45deg, var(--kit-warn) 0 9px, #ffab96 9px 17px)"></i>重复计算';
+        var bars3 = at(K.bars({ width: 420, rows: [
+          { label: "第 1 步", value: 1, max: 8, tone: "warn", valueText: "算 1 个" },
+          { label: "第 4 步", value: 4, max: 8, tone: "warn", valueText: "算 4 个" },
+          { label: "第 8 步", value: 8, max: 8, tone: "warn", valueText: "算 8 个" },
+        ] }), s1, 1410, 548);
+        var slowSfx = sfxAt("SLOW…", s1, 1060, 800, { color: WARN, size: 100, rot: -8 });
+        var arrSvg = fullSvg(s1);
+        var arrLine = K.svgEl("path", { d: "M 600 262 L 1316 620", pathLength: "1", fill: "none", stroke: INK, "stroke-width": "22", "stroke-linecap": "round" }, arrSvg);
+        var arrIn = K.svgEl("path", { d: "M 600 262 L 1316 620", pathLength: "1", fill: "none", stroke: WARN, "stroke-width": "10", "stroke-linecap": "round" }, arrSvg);
+        var arrHead = K.svgEl("polygon", { points: "1350,638 1295,648 1322,596", fill: WARN, stroke: INK, "stroke-width": "7", "stroke-linejoin": "round" }, arrSvg);
+        var slowLab = at(K.label({ text: "越写越慢", tone: "warn" }), s1, 880, 352);
+        var note3 = at(K.note("第 n 步，要把前面 n 个全部重算"), s1, 130, 800);
+
+        function renderS1(t, segs) {
+          // the model: slams in, watches the question, opens its mouth for every token, then steps aside for the chart
+          var mOut = E.io2(clamp01((t - T.l3) / 0.4));
+          var ms = K.slam(t, T.big - 0.05, { s0: 1.7, r0: -6, r: 0, d: 0.16 });
+          if (!ms || mOut >= 1) off(mach);
+          else put(mach, MX - 760 * mOut + ms.x, MY + ms.y, ms.sx * (1 - 0.3 * mOut), ms.sy * (1 - 0.3 * mOut), ms.r, ms.o * (1 - mOut));
+          var lookAsk = clamp01((t - T.ask) / 0.2), lookRow = clamp01((t - (T.tk1 - 0.45)) / 0.2);
+          var px = lerp(lerp(0, 12, lookAsk), 16, lookRow), py = lerp(lerp(0, -12, lookAsk), 4, lookRow);
+          for (var q = 0; q < 2; q++) mPup[q].style.transform = "translate(" + px.toFixed(1) + "px," + py.toFixed(1) + "px)";
+          var open = 0;
+          TE.forEach(function (te) { open = Math.max(open, bump(t, te - 0.14, 0.42)); });
+          mMouth.style.transform = "scaleY(" + (1 + 1.7 * open).toFixed(3) + ")";
+          mBulb.style.background = open > 0.35 ? YEL : PINK;
+          enter(ask, t, T.ask - 0.06, T.l3, 560, 66, { kind: "pop", s0: 0.3, r0: -4, r: 0, d: 0.26 });
+          // empty answer slots: each one is filled by exactly one token
+          slotsD.forEach(function (e, k) {
+            var gone = k < 4 ? TE[k] + 0.3 : T.l3;
+            enter(e, t, T.ask + 0.3 + k * 0.07, gone, k < 4 ? ROWX[k] : 1440, ROWY, { kind: "pop", s0: 0.4, d: 0.2, dOut: 0.08, sOut: 1 });
+          });
+
+          // tokens: hop out of the mouth (beat 1–2), then fly up into the chart header (beat 3)
+          toks.forEach(function (e, k) {
+            var w = parseFloat(e.style.width), cx, cy, sx = 1, sy = 1, rr = 0, yAdj = 0;
+            if (k < 4) {
+              var te = TE[k];
+              if (t < te) { off(e); return; }
+              var slotX = ROWX[k] + w / 2, slotY = ROWY + 58, fu = clamp01((t - te) / 0.32);
+              if (fu < 1) {
+                var e2 = E.io2(fu), sc = 0.35 + 0.65 * E.o3(fu), st = Math.sin(Math.PI * fu);
+                cx = lerp(MOUTH.x, slotX, e2); cy = lerp(MOUTH.y, slotY, e2) - st * 170;
+                sx = sc * (1 - 0.14 * st); sy = sc * (1 + 0.2 * st); rr = (1 - fu) * -14;
+                var p1 = [lerp(MOUTH.x, slotX, E.io2(Math.max(0, fu - 0.25))), lerp(MOUTH.y, slotY, E.io2(Math.max(0, fu - 0.25))) - Math.sin(Math.PI * Math.max(0, fu - 0.25)) * 170];
+                if (fu > 0.3 && fu < 0.9) for (var m = -1; m <= 1; m++) segs.push([p1[0] - 70, p1[1] + m * 22, cx - 120, cy + m * 22, m ? 4 : 5]);
+              } else {
+                cx = slotX; cy = slotY;
+                var L = land(t, te + 0.32); sx = L[0]; sy = L[1]; yAdj = (sy - 1) * 58;
+              }
+              var hu = E.io3(clamp01((t - T.l3 - k * 0.05) / 0.45));
+              if (hu > 0) { cx = lerp(cx, HX(k), hu); cy = lerp(cy, HY, hu); var hs = lerp(1, HS, hu); sx *= hs; sy *= hs; yAdj *= 1 - hu; }
+              cls(e, "new", (t < (k < 3 ? TE[k + 1] : T.l3)) || (t >= ROWT[k] && t < (ROWT[k + 1] || T.slow)));
+              cls(e, "lit", k < 3 && t >= T.all + (2 - k) * 0.06 && t < T.l3);
+              put(e, cx - w / 2, cy - 58 - yAdj, sx, sy, rr, 1);
+            } else {
+              var pa = T.l3 + 0.22 + (k - 4) * 0.07;
+              var a = K.pop(t, pa, { s0: 0.2, d: 0.22 });
+              if (!a) { off(e); return; }
+              cls(e, "new", t >= ROWT[k] && t < (ROWT[k + 1] || T.slow));
+              put(e, HX(k) - w / 2, HY - 58, a.sx * HS, a.sy * HS, 0, a.o);
+            }
+          });
+          // the new token grows eyes and looks back (回头看)
+          var lk = clamp01((t - T.look) / 0.25);
+          eyes(toks[3], t, T.look - 0.16, T.l3, lerp(4, -9, lk), lerp(-2, 1, lk));
+          // look-back arcs, one per earlier token, sweeping left; "比" on each when all of them light up
+          ARCS.forEach(function (a, n) {
+            var u = E.o2(clamp01((t - a.at) / 0.26)), g = K.gone(t, T.l3 - 0.05, 0.16);
+            a.path.style.strokeDasharray = (u * g).toFixed(4) + " 2";
+            a.path.style.opacity = u * g > 0.002 ? "1" : "0";
+            a.head.style.opacity = u > 0.97 && g > 0 ? "1" : "0";
+            a.path.style.strokeWidth = (9 + 5 * bump(t, T.all + (2 - a.k) * 0.06, 0.3)).toFixed(1);
+            enter(a.bi, t, T.all + n * 0.06 + 0.05, T.l3 - 0.05, a.bx, a.by, { kind: "pop", s0: 0.2, r0: -20, r: 0, d: 0.22 });
+          });
+          note1.render(t, T.tk2 + 0.05, T.look + 0.25);
+          note2.render(t, T.look + 0.35, T.l3);
+
+          // beat 3: the triangle — step n recomputes the K/V of all n tokens
+          nocache.render(t, T.l3 + 0.12, null, { s0: 2, r0: -12, r: -3 });
+          rowLabs.forEach(function (e, i) { enter(e, t, ROWT[i] - 0.02, null, 130, RY(i) - 15, { kind: "pop", s0: 0.4, d: 0.16 }); });
+          cells.forEach(function (c) {
+            var t0 = ROWT[c.i] + c.j * 0.025;
+            if (t < t0) { off(c.e); return; }
+            var redoAt = Math.max(T.redo + (c.i * 0.012 + c.j * 0.02), t0);
+            var isRedo = c.j < c.i && t >= redoAt, a = K.pop(t, t0, { s0: 0.3, d: 0.16 });
+            cls(c.e, "new", c.j === c.i);
+            cls(c.e, "redo", isRedo);
+            var b = c.j < c.i ? 0.25 * bump(t, redoAt, 0.22) : 0;
+            put(c.e, HX(c.j) - 54, RY(c.i) - 25, a.sx + b, a.sy + b, 0, a.o);
+          });
+          var built = 0;
+          ROWT.forEach(function (r0) { if (t >= r0) built++; });
+          counter.set(Math.max(1, built));
+          var cb = 0;
+          ROWT.forEach(function (r0) { cb = Math.max(cb, bump(t, r0, 0.18)); });
+          counter.render(t, undefined, ROWT[0] - 0.05, null, { s0: 1.8, r0: -8, r: -2 });
+          if (built > 0) counter.el.style.transform += " scale(" + (1 + 0.12 * cb).toFixed(3) + ")";
+          enter(legA, t, ROWT[0] + 0.1, null, 1416, 400, { kind: "pop", s0: 0.4, d: 0.2 });
+          enter(legB, t, T.redo + 0.02, null, 1416, 462, { s0: 1.8, r0: -8, r: 0, d: 0.14 });
+          bars3.render(t, (t - T.slow) / 0.7, T.slow - 0.15);
+          var au = E.o2(clamp01((t - T.slow) / 0.45));
+          arrLine.style.strokeDasharray = arrIn.style.strokeDasharray = au.toFixed(4) + " 2";
+          arrLine.style.opacity = arrIn.style.opacity = au > 0.002 ? "1" : "0";
+          arrHead.style.opacity = au > 0.97 ? "1" : "0";
+          slowLab.render(t, T.slow + 0.32, null, { s0: 2, r0: 14, r: 26.6 });
+          slowSfx.render(t, T.slowE - 0.04, null, { s0: 2.4, r0: -20 });
+          note3.render(t, T.redo + 0.3, null);
+        }
+
+        // ======================================================================================
+        // S2 · 方法 (beats 4–5): KV cache — each token's K and V computed once and stored; later only the
+        //      new token computes, then its Q looks the cache up
+        // ======================================================================================
+        var s2 = SC[1];
+        function ROW(i) { return 360 + i * 116; }
+        var kvb = el("a", s2, null, { width: "900px", height: "420px" });
+        K.makeBurst(kvb, 900, 420, { n: 16, inner: 0.7, seed: 41, sw: 9, shadow: 12 });
+        var kvbT = el("kit-sfx", kvb, "KV CACHE!", { left: "0px", right: "0px", top: "136px", textAlign: "center", color: PINK, fontSize: "150px" });
+        kvbT.style.position = "absolute";
+        var cab = el("cab a", s2);
+        el("cab-h", cab, "KV CACHE");
+        var colK = el("cab-col", cab, null, { left: "32px", width: "240px", background: YEL });
+        colK.innerHTML = "<b>K</b>Key · 匹配用";
+        var colV = el("cab-col", cab, null, { left: "312px", width: "248px", background: BLUE, color: "#ffffff" });
+        colV.innerHTML = "<b>V</b>Value · 内容";
+        var CABX = 720, CABY = 160;
+        var slotsK = [], slotsV = [], wbars = [];
+        for (var i2 = 0; i2 < 5; i2++) {
+          var sk = el("slot", cab, null, { position: "absolute", left: "32px", top: (ROW(i2) - CABY - 42 - 8) + "px" });
+          var wb = el("wbar", sk, null, { position: "absolute", left: "112px", top: "24px", width: "112px" });
+          slotsK.push(sk); wbars.push(wb);
+          slotsV.push(el("slot", cab, null, { position: "absolute", left: "316px", top: (ROW(i2) - CABY - 42 - 8) + "px" }));
+        }
+        var KV_W = [0.35, 0.55, 0.25, 0.95, 0.6]; // illustrative attention weights (no numbers shown)
+        var WORDS = ["因为", "空气", "把", "蓝光", "散射"];
+        var tok2 = WORDS.map(function (w) { return tokEl(s2, w, true); });
+        var ktags = WORDS.map(function () { return el("ktag a", s2, "K"); });
+        var vcards = WORDS.map(function () { return el("vcard a", s2, "V"); });
+        var ghosts = WORDS.map(function () { return el("vcard a", s2, "V"); });
+        var once = el("stamp1 a", s2);
+        K.makeBurst(once, 300, 240, { n: 12, inner: 0.68, seed: 33, sw: 7 });
+        el("stamp1-t", once, "×1");
+        el("stamp1-s", once, "只算一次");
+        var qg = el("qglass a", s2);
+        el("ring", qg, "Q");
+        el("hdl", qg);
+        var match = sfxAt("MATCH!", s2, 480, 640, { color: YEL, size: 72, rot: -10 });
+        var note4 = at(K.note("K 用来匹配，\nV 是被取走的内容"), s2, 1330, 172);
+        var note5 = at(K.note("只算新 token 的 Q、K、V，\n旧的 K、V 去缓存里取"), s2, 1330, 172);
+        note4.el.style.maxWidth = note5.el.style.maxWidth = "520px";
+        note5.el.style.fontSize = "28px";
+        var bars5 = at(K.bars({ width: 440, rows: [
+          { label: "不缓存", value: 5, max: 5, tone: "warn", valueText: "这一步算 5 个" },
+          { label: "KV cache", value: 1, max: 5, tone: "accent", valueText: "这一步算 1 个" },
+        ] }), s2, 1376, 600);
+        var KX = CABX + 32 + 4 + 8, VX = CABX + 316 + 70 + 8; // where the K tag / V card rest inside their slots
+        function kvLand(i) { return i < 4 ? T.store + i * 0.11 + 0.32 : T.that + 0.58; }
+        var QT = []; // the moment Q reaches row i
+        for (var q2 = 0; q2 < 5; q2++) QT.push(T.find + 0.3 + q2 * 0.19);
+
+        function renderS2(t, segs) {
+          // title moment: KV CACHE! slams, then shrinks into the cabinet's header
+          var flyU = E.io3(clamp01((t - T.how) / 0.32));
+          var kb = K.slam(t, T.kv - 0.08, { s0: 2.4, r0: -10, r: -3, d: 0.16 });
+          if (!kb || flyU >= 1) off(kvb);
+          else put(kvb, lerp(510, 570, flyU) + kb.x, lerp(220, -40, flyU) + kb.y, kb.sx * (1 - 0.75 * flyU), kb.sy * (1 - 0.75 * flyU), kb.r, kb.o * (1 - flyU * flyU));
+          enter(cab, t, T.how + 0.16, null, CABX, CABY, { s0: 1.25, r0: -3, r: 0, d: 0.18 });
+          // the tokens of the answer so far, in a column; the newcomer arrives in beat 5
+          tok2.forEach(function (e, i) {
+            var w = parseFloat(e.style.width);
+            if (i < 4) {
+              enter(e, t, T.each4 + i * 0.12, null, 110, ROW(i) - 48, { kind: "pop", s0: 0.3, r0: -8, r: 0, d: 0.24 });
+              cls(e, "dim", t >= T.only);
+            } else {
+              enter(e, t, T.nw5 - 0.08, null, 110, ROW(i) - 48, { s0: 2.2, r0: -14, r: 0, d: 0.14 });
+              cls(e, "new", true);
+              var pulse = 0;
+              ghosts.forEach(function (_, j) { pulse = Math.max(pulse, bump(t, T.cha - 0.1 + j * 0.06 + 0.4, 0.2)); });
+              if (pulse > 0 && e.style.visibility === "visible") e.style.transform += " scale(" + (1 + 0.1 * pulse).toFixed(3) + ")";
+            }
+          });
+          var lq = clamp01((t - T.find) / 0.3);
+          eyes(tok2[4], t, T.nw5 + 0.1, null, lerp(10, 12, lq), lerp(0, -6, lq));
+          // K and V come out of every token, are stamped ×1, then ZIP into the cabinet
+          for (var i = 0; i < 5; i++) {
+            var kAt = i < 4 ? T.key - 0.05 + i * 0.07 : T.that - 0.06, vAt = i < 4 ? T.val - 0.05 + i * 0.07 : T.that + 0.06;
+            var zAt = i < 4 ? T.store + i * 0.11 : T.that + 0.3, landT = kvLand(i);
+            var homeK = [300, ROW(i) - 38], homeV = [420, ROW(i) - 38], dstK = [KX, ROW(i) - 38], dstV = [VX, ROW(i) - 38];
+            [[ktags[i], kAt, homeK, dstK, 0], [vcards[i], vAt, homeV, dstV, 0.04]].forEach(function (p) {
+              var e = p[0], a = K.pop(t, p[1], { s0: 0.3, d: 0.22, x0: -90 });
+              if (!a) { off(e); return; }
+              var zu = clamp01((t - zAt - p[4]) / 0.32), ze = E.io2(zu), x = lerp(p[2][0], p[3][0], ze) + a.x, y = lerp(p[2][1], p[3][1], ze) - Math.sin(Math.PI * zu) * 46;
+              var sx = a.sx, sy = a.sy;
+              if (zu > 0 && zu < 1) { var st = Math.sin(Math.PI * zu); sx *= 1 + 0.35 * st; sy *= 1 - 0.2 * st; if (zu > 0.2 && zu < 0.85) speedTrail(segs, p[2][0] + 50, p[2][1] + 38, p[3][0] + 50, p[3][1] + 38, ze); }
+              if (zu >= 1) { var L = land(t, zAt + p[4] + 0.32); sx = L[0]; sy = L[1]; }
+              put(e, x, y, sx, sy, 0, a.o);
+            });
+            cls(slotsK[i], "full", t >= landT);
+            cls(slotsV[i], "vfull", t >= landT + 0.04);
+            // Q's look-up: a weight bar grows in every K slot as the magnifier passes
+            var wu = E.o3(clamp01((t - QT[i]) / 0.2));
+            wbars[i].style.transform = "scaleX(" + (KV_W[i] * wu).toFixed(3) + ")";
+            wbars[i].style.visibility = wu > 0 ? "visible" : "hidden";
+          }
+          enter(once, t, T.once - 0.06, T.store + 0.05, 300, 88, { s0: 2.6, r0: -24, r: -6, d: 0.16 });
+          // the magnifier Q: leaves the new token, scans down the K column
+          var qa = K.pop(t, T.find - 0.16, { s0: 0.2, d: 0.2 });
+          if (!qa || t >= T.cha + 0.45) off(qg);
+          else {
+            var qx, qy;
+            if (t < QT[0]) { var u0 = E.io2(clamp01((t - T.find + 0.02) / (QT[0] - T.find + 0.02))); qx = lerp(300, KX - 34, u0); qy = lerp(ROW(4) - 90, ROW(0) - 70, u0); }
+            else { var v = Math.min(4, (t - QT[0]) / 0.19), vi = Math.floor(v), vf = E.io2(v - vi); qx = KX - 34; qy = lerp(ROW(vi), ROW(Math.min(4, vi + 1)), vf) - 70; }
+            put(qg, qx, qy, qa.sx, qa.sy, 0, qa.o * K.gone(t, T.cha + 0.3, 0.15));
+          }
+          match.render(t, QT[3] + 0.06, T.cha + 0.5, { s0: 2.2, r0: -26 });
+          // the matching V's flow back to the new token (bigger weight, bigger copy)
+          ghosts.forEach(function (g, j) {
+            var g0 = T.cha - 0.1 + j * 0.06, u = clamp01((t - g0) / 0.42);
+            if (u <= 0 || u >= 1) { off(g); return; }
+            var e2 = E.io2(u), sx0 = VX, sy0 = ROW(j) - 38, dx = 150, dy = ROW(4) - 38;
+            var s = (0.45 + 0.55 * KV_W[j]) * (1 - 0.5 * e2);
+            put(g, lerp(sx0, dx, e2), lerp(sy0, dy, e2) - Math.sin(Math.PI * u) * 90, s, s, 0, 0.35 + 0.65 * KV_W[j]);
+            if (u > 0.15 && u < 0.85) speedTrail(segs, sx0 + 50, sy0 + 38, dx + 50, dy + 38, e2);
+          });
+          note4.render(t, T.val + 0.2, T.find - 0.25);
+          note5.render(t, T.find - 0.05, null);
+          bars5.render(t, (t - T.only) / 0.8, T.only - 0.08);
+        }
+        function speedTrail(segs, ax, ay, bx, by, u) {
+          var dx = bx - ax, dy = by - ay, L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L, u0 = Math.max(0, u - 0.3), u1 = Math.max(0, u - 0.08);
+          for (var m = -1; m <= 1; m++) segs.push([ax + dx * u0 + nx * m * 16, ay + dy * u0 + ny * m * 16, ax + dx * u1 + nx * m * 16, ay + dy * u1 + ny * m * 16, m ? 4 : 5]);
+        }
+
+        // ======================================================================================
+        // S3 · 代价 (beats 6–7): 显存 grows linearly with the context; Llama 2 7B's bill
+        // ======================================================================================
+        var s3 = SC[2];
+        var costLab = at(K.label({ text: "代价", sub: "COST", tone: "warn" }), s3, 1478, 82);
+        costLab.el.style.fontSize = "44px";
+        // 代价 first lands big in the middle of the page on a burst, then flies onto the tank as its tag
+        var costB = el("a", s3, null, { width: "760px", height: "420px" });
+        K.makeBurst(costB, 760, 420, { n: 15, inner: 0.66, seed: 17, sw: 8, shadow: 10 });
+        var TKX = 1440, TKY = 170;
+        var tank = el("tank a", s3);
+        el("tank-h", tank, "显存");
+        for (var tk = 0; tk < 9; tk++) el("tank-tick", tank, null, { top: (150 + tk * 62) + "px" });
+        s3.appendChild(costB);
+        s3.appendChild(costLab.el); // above the tank: the tag lands on it
+        var slabs = [0, 1, 2, 3].map(function (k) { var e = el("slab a", s3); e.innerHTML = "<span>" + (k + 1) + "K</span>"; return e; });
+        function SLABY(k) { return 870 - (k + 1) * 118; }
+        var chart = fullSvg(s3);
+        var O = [260, 780];
+        var axes = K.svgEl("path", { d: "M 260 250 L 260 780 L 1250 780", pathLength: "1", fill: "none", stroke: INK, "stroke-width": "9", "stroke-linecap": "round", "stroke-linejoin": "round" }, chart);
+        var axHeads = K.svgEl("path", { d: "M 244 276 L 260 246 L 276 276 M 1224 764 L 1254 780 L 1224 796", fill: "none", stroke: INK, "stroke-width": "8", "stroke-linecap": "round", "stroke-linejoin": "round" }, chart);
+        var PTS = [1, 2, 3, 4].map(function (k) { return [260 + k * 230, 780 - k * 115]; });
+        var lineP = K.svgEl("polyline", { points: "260,780", fill: "none", stroke: PINK, "stroke-width": "12", "stroke-linecap": "round", "stroke-linejoin": "round" }, chart);
+        var lineInk = K.svgEl("polyline", { points: "260,780", fill: "none", stroke: INK, "stroke-width": "20", "stroke-linecap": "round", "stroke-linejoin": "round" }, chart);
+        chart.insertBefore(lineInk, lineP);
+        var dots = PTS.map(function (p) { return K.svgEl("circle", { cx: p[0], cy: p[1], r: "18", fill: YEL, stroke: INK, "stroke-width": "7" }, chart); });
+        var ticks = PTS.map(function (p, k) { return el("tick-l a", s3, (k + 1) + "K"); });
+        var axX = el("axis-t a", s3, "上下文长度 →"), axY = el("axis-t a", s3, "显存 ↑");
+        var ctr = at(K.number({ value: 4, unit: "K", caption: "上下文" }), s3, 560, 140);
+        ctr.v.style.fontSize = "120px";
+        var zhang = sfxAt("涨!", s3, 1120, 150, { color: WARN, size: 130, rot: -10 });
+        var note6 = at(K.note("显存占用 ∝ 上下文长度"), s3, 300, 862);
+        // beat 7: the bill
+        var llama = at(K.label({ text: "Llama 2 · 7B", tone: "ink" }), s3, 150, 118);
+        llama.el.style.fontSize = "52px";
+        var specs = ["32 层", "4096 维", "FP16 · 2 字节"].map(function (s, i) { return at(K.label({ text: s, tone: "white" }), s3, [580, 772, 990][i], 132); });
+        var lab1 = at(K.label({ text: "每个 token 的 K、V：" }), s3, 150, 268);
+        var f1 = at(K.formula({ terms: [
+          { text: "2", sub: "K 和 V", t: T.every7 + 0.04 },
+          { text: "×", t: T.every7 + 0.12 },
+          { text: "32", sub: "层", t: T.ge7 },
+          { text: "×", t: T.ge7 + 0.12 },
+          { text: "4096", sub: "维", t: T.tok7 },
+          { text: "×", t: T.tok7 + 0.14 },
+          { text: "2 B", sub: "字节 · FP16", t: T.about },
+          { text: "≈", t: T.half - 0.22 },
+          { text: "0.5 MB", t: T.half - 0.02, tone: "accent" },
+        ] }), s3, 150, 345);
+        var pow = sfxAt("POW!", s3, 1120, 222, { color: "#ffffff", size: 96, rot: -12 });
+        var lab2 = at(K.label({ text: "4K 上下文：" }), s3, 150, 522);
+        var f2 = at(K.formula({ terms: [
+          { text: "0.5 MB", t: T.k4 - 0.12, tone: "yellow" },
+          { text: "×", t: T.k4 - 0.03 },
+          { text: "4096", sub: "个 token", t: T.k4 + 0.06 },
+          { text: "≈", t: T.two - 0.26 },
+          { text: "2 GB", t: T.two - 0.04, tone: "accent" },
+        ] }), s3, 150, 598);
+        var brSvg = fullSvg(s3);
+        var bracket = K.svgEl("path", { d: "M 1424 398 L 1404 398 L 1404 870 L 1424 870 M 1404 634 L 1384 634", fill: "none", stroke: INK, "stroke-width": "9", "stroke-linecap": "round", "stroke-linejoin": "round", pathLength: "1" }, brSvg);
+        var gbTag = el("bracket-t a", s3, "≈ 2 GB");
+        var boomSfx = sfxAt("BOOM!", s3, 1150, 214, { color: YEL, size: 104, rot: -8 });
+        var note7 = at(K.note("单条请求；并发越多，乘得越多", { tag: "注" }), s3, 150, 800);
+
+        function renderS3(t, segs) {
+          var ca = K.slam(t, T.cost - 0.06, { s0: 2.2, r0: -14, r: -4, d: 0.14 });
+          if (!ca) off(costLab.el);
+          else {
+            var cm = E.io3(clamp01((t - (T.vram - 0.22)) / 0.34)), csc = lerp(2.1, 1, cm);
+            put(costLab.el, lerp(-628, 0, cm) + ca.x, lerp(313, 0, cm) + ca.y, ca.sx * csc, ca.sy * csc, ca.r, ca.o);
+          }
+          enter(costB, t, T.cost - 0.04, T.vram - 0.2, 580, 220, { kind: "pop", s0: 0.2, r0: -20, r: 0, d: 0.24, dOut: 0.18 });
+          enter(tank, t, T.vram - 0.06, null, TKX, TKY, { s0: 1.5, r0: 6, r: 0, d: 0.16 });
+          var rb = bump(t, T.rise, 0.3);
+          if (rb > 0 && tank.style.visibility === "visible") tank.style.transform += " scale(" + (1 + 0.05 * rb).toFixed(3) + "," + (1 + 0.03 * rb).toFixed(3) + ")";
+          // context steps 1K → 4K: a slab drops into the tank and a point lands on the line, every step the same size
+          var chartOut = T.l7 - 0.18;
+          var nStep = 0;
+          T.steps6.forEach(function (s0) { if (t >= s0) nStep++; });
+          slabs.forEach(function (e, k) {
+            var d0 = T.steps6[k], u = clamp01((t - d0) / 0.26);
+            if (t < d0) { off(e); return; }
+            var y = lerp(TKY - 140, SLABY(k), E.i2(u)), L = u >= 1 ? land(t, d0 + 0.26) : [0.9, 1.12];
+            var lit = Math.max(bump(t, T.ctx7 + 0.12 + k * 0.24, 0.22), bump(t, T.two, 0.4));
+            put(e, TKX + 20, y - 4 * rb, L[0] * (1 + 0.06 * lit), L[1] * (1 + 0.06 * lit), 0, 1);
+            if (u > 0 && u < 1) for (var m = -1; m <= 1; m++) segs.push([TKX + 162 + m * 60, y - 120, TKX + 162 + m * 60, y - 20, m ? 4 : 5]);
+          });
+          var ax = E.o2(clamp01((t - (T.cache6 - 0.1)) / 0.4)), cg = K.gone(t, chartOut, 0.2);
+          axes.style.strokeDasharray = ax.toFixed(4) + " 2";
+          axes.style.opacity = cg > 0 && ax > 0.002 ? cg.toFixed(3) : "0";
+          axHeads.style.opacity = cg > 0 && ax > 0.97 ? cg.toFixed(3) : "0";
+          var pts = ["260,780"], cur = [260, 780];
+          PTS.forEach(function (p, k) {
+            var u = E.o2(clamp01((t - T.steps6[k]) / 0.2));
+            if (u > 0) { cur = [lerp(k ? PTS[k - 1][0] : 260, p[0], u), lerp(k ? PTS[k - 1][1] : 780, p[1], u)]; pts.push(cur[0].toFixed(1) + "," + cur[1].toFixed(1)); }
+            var dp = K.pop(t, T.steps6[k] + 0.16, { s0: 0.2, d: 0.2 });
+            dots[k].style.opacity = dp && cg > 0 ? (dp.o * cg).toFixed(3) : "0";
+            dots[k].setAttribute("r", dp ? (18 * dp.sx * (1 + 0.3 * rb)).toFixed(1) : "0");
+            enter(ticks[k], t, T.steps6[k] + 0.04, chartOut, p[0] - 26, 800, { kind: "pop", s0: 0.3, d: 0.2 });
+          });
+          lineP.setAttribute("points", pts.join(" "));
+          lineInk.setAttribute("points", pts.join(" "));
+          lineP.style.opacity = lineInk.style.opacity = cg.toFixed(3);
+          enter(axX, t, T.cache6 + 0.2, chartOut, 1010, 716, { kind: "pop", s0: 0.4, d: 0.2 });
+          enter(axY, t, T.cache6 + 0.1, chartOut, 286, 236, { kind: "pop", s0: 0.4, d: 0.2 });
+          ctr.set(Math.max(1, nStep));
+          ctr.render(t, undefined, T.steps6[0] - 0.08, chartOut, { s0: 1.8, r0: -8, r: -2 });
+          var sb = 0;
+          T.steps6.forEach(function (s0) { sb = Math.max(sb, bump(t, s0, 0.18)); });
+          if (ctr.el.style.visibility === "visible") ctr.el.style.transform += " scale(" + (1 + 0.12 * sb).toFixed(3) + ")";
+          zhang.render(t, T.rise - 0.06, chartOut, { s0: 2.6, r0: -30 });
+          note6.render(t, T.steps6[2] + 0.45, chartOut);
+          // beat 7: Llama 2 7B's per-token bill, then × 4096 → 2 GB, the stack in the tank is bracketed
+          llama.render(t, T.llama - 0.06, null, { s0: 2.2, r0: -14, r: -2 });
+          specs.forEach(function (s, i) { s.render(t, T.b7 + 0.02 + i * 0.1, null, { kind: "pop", s0: 0.3, r0: -10, r: i % 2 ? 2 : -2, d: 0.22 }); });
+          lab1.render(t, T.every7 - 0.12, null, { s0: 1.8, r0: -8, r: -1.5 });
+          f1.render(t);
+          pow.render(t, T.half + 0.04, T.k4 - 0.2, { s0: 2.4, r0: -30 });
+          lab2.render(t, T.k4 - 0.2, null, { s0: 1.8, r0: -8, r: -1.5 });
+          f2.render(t);
+          var bu = E.o2(clamp01((t - T.gb) / 0.3));
+          bracket.style.strokeDasharray = bu.toFixed(4) + " 2";
+          bracket.style.opacity = bu > 0.002 ? "1" : "0";
+          enter(gbTag, t, T.gb + 0.12, null, 1196, 596, { s0: 2.2, r0: -14, r: -4, d: 0.14 });
+          boomSfx.render(t, T.two + 0.06, null, { s0: 2.6, r0: -24 });
+          note7.render(t, T.k4 + 0.7, null);
+        }
+
+        // ======================================================================================
+        // S4 · 优化 (beat 8): three panels, each shrinking the cache — GQA, PagedAttention, 量化
+        // ======================================================================================
+        var s4 = SC[3];
+        var PX = [64, 675, 1286], PY = 110;
+        var pnls = PX.map(function (x, i) {
+          var p = el("pnl kit-panel a", s4);
+          var h = el("pnl-h", p);
+          var big = el("big" + (i === 2 ? " cjk" : ""), h, ["GQA", "PagedAttention", "量化"][i], { visibility: "hidden" });
+          if (i === 1) big.style.fontSize = "48px";
+          var chip = el("chip", h, ["共用 K、V", "按页分配", "压缩"][i], { visibility: "hidden" });
+          return { p: p, big: big, chip: chip };
+        });
+        function inP(i, cls2, text, css) { var e = el(cls2 + " a", pnls[i].p, text, css); return e; }
+        // panel 1 · GQA
+        var QX = [95, 215, 335, 455];
+        var gSvg = K.svgEl("svg", { viewBox: "0 0 570 800", class: "a", width: "570", height: "800" }, pnls[0].p);
+        gSvg.style.overflow = "visible";
+        var gLines = QX.map(function () { return K.svgEl("line", { stroke: INK, "stroke-width": "6", "stroke-linecap": "round" }, gSvg); });
+        var qhs = QX.map(function (x, i) { return inP(0, "qh", "Q" + (i + 1)); });
+        var mks = QX.map(function () { return inP(0, "mk", "K"); });
+        var mvs = QX.map(function () { return inP(0, "mv", "V"); });
+        var shareTag = at(K.label({ text: "4 个 Q 共用一份", tone: "accent" }), pnls[0].p, 168, 404);
+        var cbl1 = inP(0, "cbar-l", "KV cache 大小"), cb1 = inP(0, "cbar"), cf1 = el("", cb1); cf1.className = "";
+        cf1.style.cssText = "position:absolute;left:0;top:0;bottom:0;width:100%;transform-origin:0 50%;border-right:4px solid #141414;background:repeating-linear-gradient(-45deg,#ff5a36 0 12px,#ffab96 12px 22px)";
+        var div4 = el("stamp1 a", pnls[0].p, null, { width: "180px", height: "150px" });
+        K.makeBurst(div4, 180, 150, { n: 11, inner: 0.66, seed: 61, sw: 6 });
+        el("stamp1-t", div4, "÷4", { top: "26px", fontSize: "78px" });
+        var noteG = at(K.note("Llama 3 8B：32 个头\n共用 8 份 K、V", { tag: "例" }), pnls[0].p, 22, 640);
+        // panel 2 · PagedAttention
+        var resvL = inP(1, "cbar-l", "整块预留：");
+        var resv = inP(1, "resv");
+        resv.innerHTML = "<i></i><span>空着也占着</span>";
+        var pages = [];
+        for (var pg = 0; pg < 8; pg++) pages.push(inP(1, "page", "页"));
+        var PAGE_FILL = [T.page + 0.08, T.ye + 0.04, T.fen + 0.04, T.pei - 0.02];
+        var pageL = inP(1, "cbar-l", "固定大小的页，用到才分配");
+        var cbl2 = inP(1, "cbar-l", "KV cache 占用"), cb2 = inP(1, "cbar"), cf2 = el("", cb2);
+        cf2.style.cssText = cf1.style.cssText;
+        // panel 3 · 量化
+        var fmt = inP(2, "fmt");
+        fmt.innerHTML = '<b>FP16</b><span>→</span><b class="to">INT8</b>';
+        var fmtTo = fmt.querySelectorAll("b")[1], fmtAr = fmt.querySelector("span");
+        var rowK = inP(2, "rowk", "K"), rowV = inP(2, "rowk", "V");
+        var bitsK = [0, 1, 2, 3].map(function () { return inP(2, "bits"); });
+        var bitsV = [0, 1, 2, 3].map(function () { return inP(2, "bits v"); });
+        var jawL = inP(2, "jaw"), jawR = inP(2, "jaw");
+        var squeeze = sfxAt("SQUEEZE!", pnls[2].p, 110, 440, { color: YEL, size: 70, rot: -8 });
+        var cbl3 = inP(2, "cbar-l", "KV cache 大小"), cb3 = inP(2, "cbar"), cf3 = el("", cb3);
+        cf3.style.cssText = cf1.style.cssText;
+        var div2 = el("stamp1 a", pnls[2].p, null, { width: "180px", height: "150px" });
+        K.makeBurst(div2, 180, 150, { n: 11, inner: 0.66, seed: 71, sw: 6 });
+        el("stamp1-t", div2, "÷2", { top: "26px", fontSize: "78px" });
+        var noteQ = at(K.note("K、V 用更少的位来存"), pnls[2].p, 22, 690);
+
+        function cbar(fill, t, show, k, pink) {
+          fill.style.transform = "scaleX(" + k.toFixed(3) + ")";
+          fill.style.background = pink ? "repeating-linear-gradient(-45deg,#ff4fa3 0 12px,#ff9fcd 12px 22px)" : "repeating-linear-gradient(-45deg,#ff5a36 0 12px,#ffab96 12px 22px)";
+        }
+        function renderS4(t) {
+          var keys = [T.gqa, T.paged, T.quant], chips = [T.share, T.page, T.press];
+          pnls.forEach(function (o, i) {
+            enter(o.p, t, T.so + i * 0.1, null, PX[i], PY, { s0: 1.25, r0: i === 1 ? 2 : -2, r: 0, d: 0.16 });
+            var b = K.slam(t, keys[i] - 0.06, { s0: 2.2, r0: -12, r: -2, d: 0.14 });
+            if (b) { o.big.style.visibility = "visible"; o.big.style.transform = "rotate(" + b.r.toFixed(2) + "deg) scale(" + b.sx.toFixed(3) + "," + b.sy.toFixed(3) + ")"; o.big.style.opacity = b.o.toFixed(3); }
+            else o.big.style.visibility = "hidden";
+            var c = K.pop(t, chips[i] - 0.04, { s0: 0.3, d: 0.22 });
+            if (c) { o.chip.style.visibility = "visible"; o.chip.style.transform = "scale(" + c.sx.toFixed(3) + ")"; o.chip.style.opacity = c.o.toFixed(3); }
+            else o.chip.style.visibility = "hidden";
+          });
+          // GQA: four query heads, each with its own K/V → they share one pair; the cache is a quarter
+          var mu = E.io3(clamp01((t - T.share) / 0.55));
+          QX.forEach(function (x, i) {
+            enter(qhs[i], t, T.gqa + i * 0.05, null, x - 46, 140, { kind: "pop", s0: 0.3, d: 0.2 });
+            var px = lerp(x, 285, mu), gOut = i > 0 ? T.share + 0.56 : null;
+            enter(mks[i], t, T.gqa + 0.1 + i * 0.05, gOut, px - 29, 262, { kind: "pop", s0: 0.3, d: 0.2, sOut: 1.6, dOut: 0.12 });
+            enter(mvs[i], t, T.gqa + 0.12 + i * 0.05, gOut, px - 29, 328, { kind: "pop", s0: 0.3, d: 0.2, sOut: 1.6, dOut: 0.12 });
+            var lu = clamp01((t - T.gqa - 0.15 - i * 0.05) / 0.2);
+            gLines[i].setAttribute("x1", x); gLines[i].setAttribute("y1", 208);
+            gLines[i].setAttribute("x2", lerp(x, lerp(x, 285, mu), lu).toFixed(1)); gLines[i].setAttribute("y2", lerp(208, 258, lu).toFixed(1));
+            gLines[i].style.opacity = lu > 0 ? "1" : "0";
+          });
+          shareTag.render(t, T.share + 0.5, null, { s0: 1.9, r0: -10, r: -3 });
+          enter(cbl1, t, T.gqa + 0.25, null, 30, 486, { kind: "pop", s0: 0.4, d: 0.2 });
+          enter(cb1, t, T.gqa + 0.25, null, 30, 530, { kind: "pop", s0: 0.4, d: 0.2 });
+          var k1 = lerp(1, 0.25, E.io3(clamp01((t - (T.vv - 0.12)) / 0.3)));
+          cbar(cf1, t, true, k1, k1 < 0.6);
+          enter(div4, t, T.vv + 0.02, null, 370, 470, { s0: 2.4, r0: -24, r: -6, d: 0.14 });
+          noteG.render(t, T.vv + 0.2, null);
+          // PagedAttention: one long reservation (mostly empty) → fixed-size pages, filled as they are needed
+          enter(resvL, t, T.paged + 0.02, T.page + 0.05, 30, 128, { kind: "pop", s0: 0.4, d: 0.2 });
+          enter(resv, t, T.paged + 0.08, T.page + 0.05, 30, 176, { kind: "rise", y0: 40, d: 0.25, dOut: 0.2, sOut: 0.6 });
+          pages.forEach(function (e, j) {
+            var c = j % 4, r = Math.floor(j / 4), fillAt = j < 4 ? PAGE_FILL[j] : 1e9;
+            cls(e, "full", t >= fillAt);
+            e.textContent = t >= fillAt ? "K V" : "页";
+            var fb = 0.2 * bump(t, fillAt, 0.2);
+            enter(e, t, T.page + 0.02 + j * 0.03, null, 30 + c * 128, 150 + r * 108, { kind: "pop", s0: 0.3, d: 0.2 });
+            if (fb > 0 && e.style.visibility === "visible") e.style.transform += " scale(" + (1 + fb).toFixed(3) + ")";
+          });
+          enter(pageL, t, T.fen, null, 30, 380, { kind: "pop", s0: 0.4, d: 0.22 });
+          enter(cbl2, t, T.paged + 0.18, null, 30, 486, { kind: "pop", s0: 0.4, d: 0.2 });
+          enter(cb2, t, T.paged + 0.18, null, 30, 530, { kind: "pop", s0: 0.4, d: 0.2 });
+          var filled = PAGE_FILL.filter(function (x) { return t >= x; }).length;
+          var k2 = t < T.page ? 1 : lerp(1, filled / 8, E.io3(clamp01((t - T.page) / 0.3)));
+          cbar(cf2, t, true, k2, t >= T.page);
+          // 量化: FP16 cells squeezed to INT8 — half the bits, half the cache
+          enter(fmt, t, T.quant - 0.02, null, 30, 128, { kind: "pop", s0: 0.4, d: 0.2 });
+          fmtTo.style.visibility = fmtAr.style.visibility = t >= T.press ? "visible" : "hidden";
+          var qu = E.io3(clamp01((t - T.press) / 0.32)), cw = lerp(96, 48, qu);
+          enter(rowK, t, T.quant + 0.06, null, 34, 252, { kind: "pop", s0: 0.4, d: 0.2 });
+          enter(rowV, t, T.quant + 0.1, null, 34, 362, { kind: "pop", s0: 0.4, d: 0.2 });
+          [bitsK, bitsV].forEach(function (row, ri) {
+            row.forEach(function (e, j) {
+              e.style.width = cw.toFixed(1) + "px";
+              enter(e, t, T.quant + 0.08 + ri * 0.05 + j * 0.03, null, 96 + j * (cw + 10), 236 + ri * 110, { kind: "pop", s0: 0.3, d: 0.2 });
+            });
+          });
+          var jawIn = 96 + 4 * cw + 3 * 10 + 14;
+          enter(jawL, t, T.quant + 0.2, null, 46, 216, { kind: "rise", y0: -40, d: 0.22 });
+          enter(jawR, t, T.quant + 0.2, null, jawIn, 216, { kind: "rise", y0: -40, d: 0.22 });
+          squeeze.render(t, T.press + 0.06, null, { s0: 2.4, r0: -24 });
+          enter(cbl3, t, T.quant + 0.24, null, 30, 586, { kind: "pop", s0: 0.4, d: 0.2 });
+          enter(cb3, t, T.quant + 0.24, null, 30, 630, { kind: "pop", s0: 0.4, d: 0.2 });
+          var k3 = lerp(1, 0.5, qu);
+          cbar(cf3, t, true, k3, qu > 0.5);
+          enter(div2, t, T.press + 0.3, null, 380, 520, { s0: 2.4, r0: -24, r: -6, d: 0.14 });
+          noteQ.render(t, T.press + 0.18, null);
+        }
+
+        // ======================================================================================
+        // S5 · 一句话 (beat 9): a balance trades 显存 for 速度; the spotlight finds the newest token
+        // ======================================================================================
+        var s5 = SC[4];
+        var PIV = [480, 340], BL = 320;
+        var pole = el("pole a", s5), basep = el("basep a", s5);
+        var strSvg = fullSvg(s5);
+        var strings = [0, 1, 2, 3].map(function () { return K.svgEl("line", { stroke: INK, "stroke-width": "5" }, strSvg); });
+        var beam = el("beam a", s5);
+        var pans = [el("pan a", s5), el("pan a", s5)];
+        var vblock = el("vblock a", s5);
+        vblock.innerHTML = "<span>显存</span>";
+        var bolt = el("bolt a", s5);
+        var bs = K.svgEl("svg", { viewBox: "0 0 190 170", width: "200", height: "180" }, bolt);
+        bs.innerHTML = '<polygon points="112,4 34,96 88,96 62,166 160,62 104,62 136,4" transform="translate(7 7)" fill="#141414"/>' +
+          '<polygon points="112,4 34,96 88,96 62,166 160,62 104,62 136,4" fill="#ffe14d" stroke="#141414" stroke-width="7" stroke-linejoin="round"/>';
+        el("bolt-t", bolt, "速度");
+        var swap = el("swap a", s5);
+        var sws = K.svgEl("svg", { viewBox: "0 0 200 110", width: "200", height: "110" }, swap);
+        sws.innerHTML = '<path d="M 30 62 C 40 14, 150 14, 166 46" fill="none" stroke="#141414" stroke-width="12" stroke-linecap="round"/>' +
+          '<polygon points="178,30 172,66 144,46" fill="#141414"/>' +
+          '<path d="M 170 70 C 160 104, 52 104, 34 74" fill="none" stroke="#ff4fa3" stroke-width="12" stroke-linecap="round"/>' +
+          '<polygon points="20,92 24,56 52,76" fill="#ff4fa3" stroke="#141414" stroke-width="3"/>';
+        var swapT = el("badge-bi a", s5, "换");
+        var payLab = at(K.label({ text: "花掉：显存", tone: "warn" }), s5, 92, 706);
+        var getLab = at(K.label({ text: "换来：速度", tone: "ok" }), s5, 700, 706);
+        payLab.el.style.fontSize = getLab.el.style.fontSize = "36px";
+        var W5 = ["因为", "空气", "把", "蓝光", "散射"], X5 = [1010, 1188, 1366, 1492, 1670];
+        var spot = fullSvg(s5);
+        var cone = K.svgEl("polygon", { points: "1702,34 1798,34 1868,478 1632,478", fill: "rgba(255,225,77,0.55)", stroke: INK, "stroke-width": "6", "stroke-dasharray": "18 12" }, spot);
+        var powB = el("a", s5, null, { width: "320px", height: "250px" });
+        K.makeBurst(powB, 320, 250, { n: 13, inner: 0.62, seed: 91, sw: 7 });
+        var tok5 = W5.map(function (w) { return tokEl(s5, w, true); });
+        var title = at(K.title(S), HUD, 1000, 560);
+
+        function renderS5(t) {
+          var s0 = CH[3].end;
+          // the balance: 显存 lands on the left pan, the swap turns, 速度 lands on the right and levels the beam
+          enter(pole, t, s0 + 0.05, null, PIV[0] - 15, PIV[1], { kind: "rise", y0: 60, d: 0.3 });
+          enter(basep, t, s0 + 0.05, null, PIV[0] - 160, PIV[1] + 510, { kind: "rise", y0: 60, d: 0.3 });
+          var memLand = T.mem9 + 0.12, spdLand = T.spd + 0.14;
+          var a = 0;
+          if (t >= memLand) a = -13 * K.backOut(clamp01((t - memLand) / 0.35), 1.5);
+          if (t >= spdLand) a = -13 * (1 - K.backOut(clamp01((t - spdLand) / 0.5), 1.4));
+          var ar = a * Math.PI / 180, ends = [[PIV[0] - BL * Math.cos(ar), PIV[1] - BL * Math.sin(ar)], [PIV[0] + BL * Math.cos(ar), PIV[1] + BL * Math.sin(ar)]];
+          var bOk = enter(beam, t, s0 + 0.12, null, PIV[0] - 320, PIV[1] - 13, { kind: "pop", s0: 0.4, d: 0.24, r0: 0, r: 0 });
+          if (bOk) beam.style.transform = beam.style.transform.replace(/rotate\([^)]*\)/, "rotate(" + a.toFixed(2) + "deg)");
+          ends.forEach(function (E2, i) {
+            var ok = t >= s0 + 0.2;
+            put(pans[i], E2[0] - 120, E2[1] + 200, 1, 1, 0, ok ? 1 : 0);
+            [0, 1].forEach(function (k) {
+              var ln = strings[i * 2 + k];
+              ln.setAttribute("x1", E2[0].toFixed(1)); ln.setAttribute("y1", E2[1].toFixed(1));
+              ln.setAttribute("x2", (E2[0] - 110 + k * 220).toFixed(1)); ln.setAttribute("y2", (E2[1] + 202).toFixed(1));
+              ln.style.opacity = ok ? "1" : "0";
+            });
+          });
+          [[vblock, T.mem9 - 0.12, memLand, 190, 140], [bolt, T.spd - 0.12, spdLand, 200, 180]].forEach(function (p, i) {
+            var e = p[0];
+            if (t < p[1]) { off(e); return; }
+            var u = clamp01((t - p[1]) / (p[2] - p[1])), tx = ends[i][0] - p[3] / 2, ty = ends[i][1] + 200 - p[4] + 6;
+            var L = land(t, p[2]);
+            put(e, tx, lerp(ty - 420, ty, E.i2(u)), L[0], L[1], 0, 1);
+          });
+          var sa = K.pop(t, T.swap - 0.06, { s0: 0.2, d: 0.24 });
+          if (sa) put(swap, PIV[0] - 100, PIV[1] - 190, sa.sx, sa.sy, 180 * E.io3(clamp01((t - T.swap) / 0.5)), sa.o); else off(swap);
+          enter(swapT, t, T.swap, null, PIV[0] - 30, PIV[1] - 165, { kind: "pop", s0: 0.2, d: 0.2 });
+          payLab.render(t, memLand + 0.1, null, { s0: 1.9, r0: -10, r: -3 });
+          getLab.render(t, spdLand + 0.1, null, { s0: 1.9, r0: 10, r: 2 });
+          // the answer so far; the spotlight lands on the newest token — only it is computed
+          tok5.forEach(function (e, i) {
+            enter(e, t, s0 + 0.1 + i * 0.05, null, X5[i], 352, { kind: "pop", s0: 0.3, d: 0.22 });
+            cls(e, "dim", i < 4 && t >= T.onlyNew);
+            cls(e, "new", i === 4 && t >= T.onlyNew);
+          });
+          var cu = E.o3(clamp01((t - (T.onlyNew - 0.04)) / 0.24));
+          spot.style.opacity = cu > 0 ? "1" : "0";
+          spot.style.transformOrigin = "1750px 34px";
+          spot.style.transform = "scaleY(" + cu.toFixed(3) + ")";
+          enter(powB, t, T.nw9 - 0.06, null, 1750 - 160, 400 - 125, { kind: "pop", s0: 0.2, r0: -30, r: 0, d: 0.26 });
+          var eu = clamp01((t - T.nw9) / 0.3);
+          eyes(tok5[4], t, T.onlyNew + 0.08, null, lerp(4, -4, eu), lerp(-2, -8, eu));
+          title.render(t);
+        }
+
+        // ================= camera: one writer, keys built from story times =================
+        var CAMS = [
+          [[0, 620, 470, 1.16], [T.ask + 0.4, 660, 480, 1.14], [T.tk1, 760, 520, 1.1], [T.beng + 0.3, 900, 540, 1.05], [T.nw + 0.2, 990, 540, 1.04],
+            [T.look, 1040, 530, 1.06], [T.all + 0.3, 880, 530, 1.06], [T.l3 - 0.05, 900, 535, 1.04], [T.l3 + 0.5, 980, 520, 1.0], [T.slow, 990, 520, 1.01], [SEAM[1], 990, 520, 1.03]],
+          [[SEAM[1], 960, 440, 1.1], [T.how, 962, 444, 1.11], [T.how + 0.5, 960, 520, 1.0], [T.store + 0.6, 972, 528, 1.022], [T.find, 966, 540, 1.025], [SEAM[2], 968, 546, 1.028]],
+          [[SEAM[2], 960, 520, 1.0], [T.rise, 960, 520, 1.02], [T.l7 + 0.2, 950, 500, 1.03], [T.mb + 0.3, 940, 490, 1.04], [T.two - 0.25, 940, 510, 1.04], [T.gb + 0.3, 960, 520, 1.0], [SEAM[3], 960, 525, 1.0]],
+          [[SEAM[3], 960, 512, 0.99], [T.so + 0.1, 960, 510, 1.0], [T.gqa - 0.1, 470, 510, 1.1], [T.vv + 0.1, 482, 512, 1.106], [T.paged, 960, 510, 1.1], [T.pei, 974, 512, 1.106],
+            [T.quant - 0.05, 1450, 510, 1.1], [SEAM[4], 1464, 514, 1.11]],
+          [[SEAM[4], 960, 520, 1.0], [T.onlyNew, 970, 520, 1.0], [RC.start, 985, 512, 1.012]],
+        ];
+        function sceneAt(t) { for (var k = 4; k >= 0; k--) if (t >= SEAM[k]) return k; return 0; }
+
+        // ================= kit: captions, chapter chip, recap =================
+        var caps = K.dressCaptions(new C.Captions($("caps"), S, { groups: [1, 2, 3, 4, 5, 6, 7, 8].map(function (i) { return [i, i]; }) }));
+        var chaps = new C.Chapters($("chap"), S);
+        var RECAP = K.recap(S);
+        $("recap-layer").appendChild(RECAP.el);
+        var stage = $("stage"), shakeEl = $("shake"), worldEl = $("world");
+
+        // impact moments (shake + two-frame rays, screen space)
+        boom(T.big + 0.11, 6, 0.2);
+        boom(T.kv + 0.08, 12, 0.3, 960, 430);
+        boom(T.how + 0.34, 5, 0.2);
+        boom(T.once + 0.1, 6, 0.2);
+        boom(T.nw5 + 0.06, 5, 0.18);
+        boom(T.vram + 0.1, 8, 0.24);
+        boom(T.rise + 0.02, 9, 0.28, 1180, 330);
+        boom(T.half + 0.12, 9, 0.26, 1150, 400);
+        boom(T.two + 0.1, 14, 0.32, 1500, 520);
+        boom(T.redo + 0.02, 6, 0.2);
+        boom(T.gqa + 0.08, 5, 0.18);
+        boom(T.vv + 0.16, 6, 0.2);
+        boom(T.paged + 0.08, 5, 0.18);
+        boom(T.quant + 0.08, 5, 0.18);
+        boom(T.press + 0.3, 7, 0.22);
+        boom(T.mem9 + 0.12, 6, 0.2);
+        boom(T.spd + 0.14, 7, 0.22);
+        boom(T.nw9 + 0.06, 9, 0.26, 1750, 400);
+        S.line(9).words.forEach(function (w) { if (S.data.end.emphasis.some(function (e) { return e.charAt(0) === w[0]; }) && w[1] > T.mem9 - 0.01) SHK.add(w[1] + 0.06, 3, 0.14); });
+
+        // ================= the one per-frame writer =================
+        var last = -1;
+        function frame() {
+          var t = tl.time(), k = sceneAt(t);
+          if (k !== last) { SC.forEach(function (s, i) { s.style.display = i === k ? "block" : "none"; }); DOTS.forEach(function (d, i) { d.style.opacity = i === k ? "1" : "0"; }); last = k; }
+          var c = track(CAMS[k], t);
+          worldEl.style.transform = "translate(" + (960 - c[0] * c[2]).toFixed(2) + "px," + (540 - c[1] * c[2]).toFixed(2) + "px) scale(" + c[2].toFixed(4) + ")";
+          var sh = SHK.offset(t);
+          shakeEl.style.transform = "translate(" + sh[0].toFixed(2) + "px," + sh[1].toFixed(2) + "px)";
+          var segs = [];
+          if (k === 0) renderS1(t, segs);
+          if (k === 1) renderS2(t, segs);
+          if (k === 2) renderS3(t, segs);
+          if (k === 3) renderS4(t);
+          if (k === 4) renderS5(t);
+          if (k !== 4) title.render(-1);
+          SPD.flush(segs);
+          RAYS.render(t);
+          WIPE.render(t);
+          caps.render(t);
+          chaps.render(t);
+          RECAP.render(t);
+          var under = t >= RC.start + 0.02;
+          if (stage.style.display !== (under ? "none" : "")) stage.style.display = under ? "none" : "";
+        }
+
+        var drive = { t: 0 };
+        tl.fromTo(drive, { t: 0 }, { t: S.duration, duration: S.duration, ease: "none", onUpdate: frame }, 0);
+        frame();
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

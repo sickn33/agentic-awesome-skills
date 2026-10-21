@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.idea/
+.vscode/
+.env
+.env.*
+!.env.example
+
+# Generated production jobs and media do not belong in the Skill repository.
+work/
+jobs/
+outputs/
+renders/
+*.mp4
+*.mov
+*.wav
+*.mp3
+_work/
+
+# Voice caches of the bundled stories (story.py regenerates them; only script.md, story.json, STORYBOARD.md are kept)
+explainer/stories/*/audio/

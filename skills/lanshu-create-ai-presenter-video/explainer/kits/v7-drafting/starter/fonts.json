@@ -1,0 +1,9 @@
+{
+  "extra": {
+    "noto-sans-sc-900": {"family": "Noto Sans SC", "css": "Noto+Sans+SC:wght@900", "weight": 900},
+    "noto-sans-sc-500": {"family": "Noto Sans SC", "css": "Noto+Sans+SC:wght@500", "weight": 500},
+    "noto-serif-sc-600": {"family": "Noto Serif SC", "css": "Noto+Serif+SC:wght@600", "weight": 600},
+    "archivo-x-900": {"family": "Archivo", "css": "Archivo:wdth,wght@125,900", "weight": 900}
+  },
+  "index.html": ["noto-sans-sc-900", "noto-sans-sc-500", "noto-serif-sc-600", "archivo-x-900", "jetbrains-mono-400", "instrument-serif-400i"]
+}

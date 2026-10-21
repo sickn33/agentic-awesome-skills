@@ -1,0 +1,571 @@
+/* V6 cinematic kit — a Three.js one-take in a graphite studio: porcelain props, ONE emissive accent,
+ * bloom + bokeh, HTML type projected from 3D. Fonts: Noto Sans SC 300/500, Geist 300/500, Geist Mono 400
+ * (faces are written into the film's index.html by tools/fonts.py — this file only names the families). */
+:root {
+  --kit-bg: #0c0d11;
+  --kit-surface: rgba(18, 19, 25, 0.78);
+  --kit-ink: #f6f5f1;
+  --kit-muted: #bdbcb6;
+  --kit-accent: #ffd21e; /* the new / changed / computed-now thing — never decoration */
+  --kit-accent-2: #8fc6ff; /* cool rim light: links, queries, matching */
+  --kit-warn: #ff6b4a; /* waste, cost, memory spent */
+  --kit-ok: #6fe3b0; /* solved / included */
+  --kit-font-display: "Geist", "Noto Sans SC", sans-serif;
+  --kit-font-body: "Noto Sans SC", sans-serif;
+  --kit-font-mono: "Geist Mono", "Noto Sans SC", monospace;
+  --kit-t-display: 132px;
+  --kit-t-h1: 92px;
+  --kit-t-h2: 60px;
+  --kit-t-body: 34px;
+  --kit-t-label: 36px;
+  --kit-t-note: 31px;
+  --kit-t-cap: 44px;
+  --kit-shadow: 0 0 18px rgba(6, 6, 9, 0.95), 0 0 4px rgba(6, 6, 9, 0.9), 0 2px 2px rgba(6, 6, 9, 0.6);
+}
+
+/* ---------- frame ---------- */
+.kit-frame {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: var(--kit-bg);
+  color: var(--kit-ink);
+  font-family: var(--kit-font-body);
+}
+.kit-gl {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  display: block;
+}
+.kit-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 80% 74% at 50% 46%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.42) 100%);
+}
+.kit-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("grain.svg");
+  background-size: 420px 420px;
+  opacity: 0.07;
+  mix-blend-mode: screen;
+}
+/* the caption scrim: a dark band that keeps captions readable over bloom */
+.kit-shade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 250px;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(8, 8, 11, 0.86), rgba(8, 8, 11, 0.5) 45%, rgba(8, 8, 11, 0));
+}
+.kit-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.kit-layer > * {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* ---------- captions (core.Captions builds .kit-cap > span with --lit) ---------- */
+.kit-caps {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 200px;
+}
+.kit-cap {
+  position: absolute;
+  left: 64px;
+  right: 64px;
+  bottom: 54px;
+  text-align: center;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-t-cap);
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  color: var(--kit-ink);
+  white-space: nowrap;
+  visibility: hidden;
+}
+.kit-cap > span {
+  --lit: 0;
+  opacity: calc(0.6 + 0.4 * var(--lit));
+  text-shadow: var(--kit-shadow), 0 0 calc(var(--lit) * 22px) rgba(255, 250, 235, calc(var(--lit) * 0.32));
+}
+
+/* opt-in (Kit.captions(…, { wrap: true })): a line too long for one row wraps into balanced rows instead of
+ * running off the frame; a line that fits stays on one row, exactly as before */
+.kit-cap.is-wrap {
+  white-space: normal;
+  text-wrap: balance;
+}
+
+.kit-cap > span.lat-l {
+  margin-left: 0.24em;
+}
+.kit-cap > span.lat-r {
+  margin-right: 0.24em;
+}
+
+/* ---------- chapter chip (core.Chapters) ---------- */
+.kit-chap {
+  --in: 0;
+  position: absolute;
+  left: 96px;
+  top: 74px;
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  opacity: 0;
+  white-space: nowrap;
+  text-shadow: var(--kit-shadow);
+  transform: translateY(calc((1 - var(--in)) * 12px));
+}
+.kit-chap-n {
+  font-family: var(--kit-font-mono);
+  font-size: 28px;
+  letter-spacing: 0.12em;
+  color: var(--kit-accent);
+}
+.kit-chap-n::before {
+  content: "0";
+}
+.kit-chap-t {
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 32px;
+  letter-spacing: 0.08em;
+  color: var(--kit-ink);
+}
+/* progress hairline (Kit.progress) */
+.kit-progress {
+  position: absolute;
+  left: 96px;
+  right: 96px;
+  top: 48px;
+  height: 2px;
+  display: flex;
+  gap: 10px;
+}
+.kit-progress > div {
+  position: relative;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(242, 242, 240, 0.16);
+}
+.kit-progress b {
+  position: absolute;
+  inset: 0;
+  background: rgba(246, 245, 241, 0.82);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+/* ---------- label: a term pinned to a 3D thing ---------- */
+.kit-label {
+  --kit-label-size: var(--kit-t-label);
+  --tone: var(--kit-ink);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  text-shadow: var(--kit-shadow);
+}
+.kit-label.tone-accent { --tone: var(--kit-accent); }
+.kit-label.tone-warn { --tone: var(--kit-warn); }
+.kit-label.tone-ok { --tone: var(--kit-ok); }
+.kit-label.tone-ink { --tone: var(--kit-ink); }
+.kit-label.tone-cool { --tone: var(--kit-accent-2); }
+.kit-label-mark {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--tone);
+  box-shadow: 0 0 16px 3px color-mix(in srgb, var(--tone) 70%, transparent);
+}
+.kit-label.tone-default .kit-label-mark,
+.kit-label.tone-ink .kit-label-mark {
+  width: 34px;
+  height: 2px;
+  border-radius: 0;
+  box-shadow: none;
+  background: rgba(246, 245, 241, 0.7);
+}
+.kit-label.no-mark .kit-label-mark {
+  display: none;
+}
+.kit-label-body {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+.kit-label-t {
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-label-size);
+  letter-spacing: 0.04em;
+  color: var(--kit-ink);
+}
+.kit-label.tone-accent .kit-label-t,
+.kit-label.tone-warn .kit-label-t,
+.kit-label.tone-ok .kit-label-t,
+.kit-label.tone-cool .kit-label-t {
+  color: var(--tone);
+}
+.kit-label-sub {
+  font-family: var(--kit-font-mono);
+  font-size: 26px;
+  letter-spacing: 0.08em;
+  color: var(--kit-muted);
+}
+/* a big numeral / symbol label (×1, 5%, ÷4) */
+.kit-label.is-big .kit-label-t {
+  font-family: var(--kit-font-display);
+  font-weight: 300;
+  font-size: var(--kit-label-size);
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+}
+.kit-label.is-big .kit-label-mark {
+  display: none;
+}
+.kit-label.is-big .kit-label-sub {
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 36px;
+  letter-spacing: 0.04em;
+  color: var(--kit-ink);
+}
+/* the leader from a label to its 3D pin */
+.kit-leader {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 1.5px;
+  transform-origin: 0 50%;
+  background: color-mix(in srgb, var(--tone) 75%, transparent);
+}
+.kit-pin {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--tone);
+  box-shadow: 0 0 10px 2px color-mix(in srgb, var(--tone) 60%, transparent);
+}
+
+/* ---------- note: one plain-language line per chapter ---------- */
+.kit-note {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  opacity: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  text-shadow: var(--kit-shadow);
+}
+.kit-note.at-top {
+  left: 96px !important;
+  top: 132px !important;
+}
+.kit-note-k {
+  flex: none;
+  padding: 3px 12px 4px;
+  border: 1.5px solid rgba(255, 210, 30, 0.75);
+  border-radius: 4px;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: 0.12em;
+  color: var(--kit-accent);
+}
+.kit-note-t {
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: var(--kit-t-note);
+  letter-spacing: 0.04em;
+  color: #e9e8e3;
+}
+.kit-note-t b {
+  font-weight: 500;
+  color: var(--kit-accent);
+}
+
+/* ---------- number ---------- */
+.kit-num {
+  opacity: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  text-shadow: var(--kit-shadow);
+}
+.kit-num-row {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+.kit-num-v {
+  font-family: var(--kit-font-display);
+  font-weight: 300;
+  font-size: var(--kit-t-display);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--kit-ink);
+}
+.kit-num.tone-accent .kit-num-v { color: var(--kit-accent); }
+.kit-num.tone-warn .kit-num-v { color: var(--kit-warn); }
+.kit-num.tone-cool .kit-num-v { color: var(--kit-accent-2); }
+.kit-num-u {
+  font-family: var(--kit-font-display);
+  font-weight: 500;
+  font-size: 40px;
+  letter-spacing: 0.02em;
+  color: var(--kit-ink);
+}
+.kit-num-c {
+  margin-top: 14px;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 30px;
+  letter-spacing: 0.04em;
+  color: var(--kit-muted);
+}
+
+/* ---------- bars ---------- */
+.kit-bars {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  column-gap: 22px;
+  row-gap: 20px;
+  opacity: 0;
+  visibility: hidden;
+  padding: 26px 32px 28px;
+  border-radius: 14px;
+  background: var(--kit-surface);
+  box-shadow: inset 0 0 0 1px rgba(246, 245, 241, 0.1), 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+.kit-bars-l {
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 30px;
+  letter-spacing: 0.04em;
+  color: var(--kit-ink);
+  white-space: nowrap;
+}
+.kit-bars-track {
+  position: relative;
+  height: 14px;
+  border-radius: 7px;
+  background: rgba(246, 245, 241, 0.1);
+  overflow: hidden;
+}
+.kit-bars-fill {
+  --tone: var(--kit-ink);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 7px;
+  background: var(--tone);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--tone) 60%, transparent);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+.kit-bars-fill.tone-accent { --tone: var(--kit-accent); }
+.kit-bars-fill.tone-warn { --tone: var(--kit-warn); }
+.kit-bars-fill.tone-ok { --tone: var(--kit-ok); }
+.kit-bars-fill.tone-cool { --tone: var(--kit-accent-2); }
+.kit-bars-v {
+  min-width: 120px;
+  text-align: right;
+  font-family: var(--kit-font-mono);
+  font-size: 30px;
+  color: var(--kit-ink);
+  white-space: nowrap;
+}
+
+/* ---------- formula ---------- */
+.kit-formula {
+  display: flex;
+  align-items: flex-start;
+  gap: 26px;
+  opacity: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  text-shadow: var(--kit-shadow);
+}
+.kit-formula-term {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+}
+.kit-formula-v {
+  font-family: var(--kit-font-display);
+  font-weight: 300;
+  font-size: 76px;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--kit-ink);
+}
+.kit-formula-term.is-op .kit-formula-v {
+  color: var(--kit-muted);
+}
+.kit-formula-term.tone-accent .kit-formula-v { color: var(--kit-accent); font-weight: 500; }
+.kit-formula-term.tone-warn .kit-formula-v { color: var(--kit-warn); font-weight: 500; }
+.kit-formula-term.tone-cool .kit-formula-v { color: var(--kit-accent-2); }
+.kit-formula-s {
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: 0.04em;
+  color: var(--kit-muted);
+}
+
+/* ---------- closing line (Kit.title) ---------- */
+.kit-title {
+  position: absolute;
+  left: 118px;
+  font-family: var(--kit-font-body);
+  font-weight: 300;
+  font-size: var(--kit-t-h1);
+  line-height: 1.18;
+  letter-spacing: 0.03em;
+  color: var(--kit-ink);
+  white-space: nowrap;
+  text-shadow: 0 0 30px rgba(6, 6, 9, 0.85), 0 0 6px rgba(6, 6, 9, 0.8);
+  visibility: hidden;
+}
+.kit-title-line {
+  display: block;
+  overflow: hidden;
+  padding: 0 0.1em 0.06em 0;
+}
+.kit-title-line.is-lead {
+  font-size: 0.5em;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--kit-muted);
+  padding-bottom: 0.2em;
+}
+.kit-title-u {
+  display: inline-block;
+  white-space: pre;
+}
+.kit-title-u.em {
+  font-weight: 500;
+  color: var(--kit-accent);
+}
+
+/* ---------- recap: one composed frame ---------- */
+.kit-recap {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  opacity: 0;
+}
+.kit-recap-scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 62% 58% at 50% 50%, rgba(10, 11, 15, 0.5), rgba(8, 8, 11, 0.86) 100%);
+}
+.kit-recap-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: visible;
+}
+.kit-recap-svg line {
+  stroke: rgba(246, 245, 241, 0.42);
+  stroke-width: 1.5;
+}
+.kit-recap-svg .ring {
+  fill: none;
+  stroke: rgba(255, 210, 30, 0.55);
+  stroke-width: 1.5;
+}
+.kit-recap-svg circle.dot {
+  fill: var(--kit-accent);
+}
+.kit-recap-center {
+  position: absolute;
+  left: 960px;
+  top: 540px;
+  text-align: center;
+  white-space: nowrap;
+  text-shadow: var(--kit-shadow);
+}
+.kit-recap-h {
+  font-family: var(--kit-font-display);
+  font-weight: 300;
+  font-size: 92px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--kit-ink);
+}
+.kit-recap-tag {
+  margin-top: 18px;
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 36px;
+  letter-spacing: 0.08em;
+  color: var(--kit-accent);
+}
+.kit-recap-pt {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 500px;
+  padding: 22px 26px 24px;
+  border-radius: 14px;
+  background: rgba(16, 17, 23, 0.82);
+  box-shadow: inset 0 0 0 1px rgba(246, 245, 241, 0.12), 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+.kit-recap-pt-h {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+.kit-recap-pt-n {
+  font-family: var(--kit-font-mono);
+  font-size: 28px;
+  color: var(--kit-accent);
+}
+.kit-recap-pt-t {
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 36px;
+  letter-spacing: 0.06em;
+  color: var(--kit-ink);
+}
+.kit-recap-pt-x {
+  font-family: var(--kit-font-body);
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.45;
+  text-wrap: balance;
+  letter-spacing: 0.02em;
+  color: #d6d5cf;
+}

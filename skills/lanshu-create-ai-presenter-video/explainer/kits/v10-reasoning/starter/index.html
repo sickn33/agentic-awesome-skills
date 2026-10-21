@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>V10 推演</title>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* fonts:begin */
+/* fonts:end */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #12172a;
+      }
+      #stations,
+      #fx,
+      #caps,
+      #endwrap,
+      #recapwrap {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      #fx,
+      #caps,
+      #endwrap,
+      #recapwrap {
+        inset: 0;
+        pointer-events: none;
+      }
+      .abs {
+        position: absolute;
+        white-space: nowrap;
+      }
+      /* ---------------- placeholder: a derivation step waiting to be performed ---------------- */
+      .ph-mark {
+        position: absolute;
+        white-space: nowrap;
+        font-family: var(--kit-font-math);
+        font-style: italic;
+        font-weight: 500;
+        font-size: 34px;
+        line-height: 1.2;
+        color: var(--kit-muted);
+      }
+      .ph-mark.on {
+        color: var(--kit-accent);
+      }
+      .ph-note {
+        position: absolute;
+        white-space: normal;
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+        line-height: 1.3;
+        color: var(--kit-ink);
+      }
+      .ph-terms {
+        position: absolute;
+        white-space: normal;
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+        line-height: 1.45;
+      }
+      .ph-term {
+        --lit: 0;
+        --kc: 236, 230, 214;
+        display: inline-block;
+        white-space: pre;
+        color: rgba(var(--kc), calc(0.52 + 0.48 * var(--lit)));
+      }
+      .ph-term.now {
+        --kc: 255, 142, 166;
+      }
+      .ph-op {
+        display: inline-block;
+        white-space: pre;
+        font-family: var(--kit-font-math);
+        color: var(--kit-muted);
+      }
+      .ph-tag {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 1px 12px 2px;
+        white-space: nowrap;
+        border: 1.5px dashed rgba(154, 161, 184, 0.7);
+        border-radius: 8px;
+        background: rgba(18, 23, 42, 0.9);
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+        font-size: 24px;
+        color: var(--kit-muted);
+      }
+      .ph-tag b {
+        font-weight: 500;
+        color: var(--kit-ink);
+      }
+      /* screen-space draft tag (story.draft: silent, estimated times) */
+      .draft-tag {
+        position: absolute;
+        right: 64px;
+        top: 46px;
+        display: none;
+        padding: 2px 14px 3px;
+        white-space: nowrap;
+        border: 1.5px solid var(--kit-accent);
+        border-radius: 8px;
+        background: rgba(18, 23, 42, 0.9);
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+        font-size: 24px;
+        letter-spacing: 0.06em;
+        color: var(--kit-accent);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="kit-root" data-composition-id="main" data-start="0" data-duration="54" data-stamp="story" data-width="1920" data-height="1080">
+      <div id="stage" class="clip kit-stage" data-start="0" data-duration="54" data-stamp="story" data-track-index="1" data-layout-allow-overflow="">
+        <div id="world" class="kit-world" data-layout-allow-overflow="">
+          <div id="stations"></div>
+          <svg class="kit-svg" id="wsvg" style="left: 0; top: 0" width="1920" height="1080" viewBox="0 0 1920 1080"></svg>
+        </div>
+        <div id="fx"></div>
+        <div id="caps"></div>
+        <div id="chap"></div>
+        <div id="endwrap" data-layout-allow-overflow=""></div>
+        <div id="recapwrap" data-layout-allow-overflow=""></div>
+        <div id="draft" class="draft-tag">草稿 · 无配音</div>
+      </div>
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="49" data-stamp="narration" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="54" data-stamp="story" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script src="beats.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        /* V10 · 推演 — the starter driver. Everything here is built from window.STORY alone:
+         *   one infinite dot-grid canvas; one derivation station per chapter (a 1920×1080 region, laid out as a snake grid
+         *   sized from the chapter count) with the chapter's statement at its top and a slot per narration line; ⇒ arrows
+         *   between stations that the camera glides along; the glide camera keyed to the story (drifts toward the line
+         *   being spoken, never parks); captions with key spans; the chapter chip; the closing statement (Kit.title) over
+         *   the whole canvas pulled back; the recap (Kit.recap) with the canvas in its picture zone.
+         * The topic lives in beats.js: window.Beats(api) is called once after the world is built, then render(t) every
+         * frame. Every frame is a pure function of t (one driver tween calls frame(t)). tools/sfx.py mirrors the timing. */
+        const CX = ExplainerCore, { clamp01, pr, lerp, E } = CX;
+        const U = Kit.util, { op, show, vis, svg, el, attr, tr } = U;
+        const T = Kit.tokens;
+        const story = new CX.Story(window.STORY);
+        const D = story.data;
+        const $ = (id) => document.getElementById(id);
+        const DUR = story.duration;
+        const END = D.end && D.end.line ? D.end : null;
+        const RECAP = D.recap && D.recap.points && D.recap.points.length ? D.recap : null;
+        const NOTES = D.notes || {};
+        const at = (l, u, n) => story.at(l, u, n);
+        const ph = (l, s) => story.phrase(l, s);
+        const span = (l, s) => story.span(l, s);
+        const PUN = /^[，。、：；！？,.;:!?）)」』”"'…—]$/;
+        const LATR = /^[A-Za-z0-9.%+×\/–\-]+$/;
+        const SPOKEN = /[A-Za-z\d㐀-鿿]/;
+        const em = U.em;
+
+        // ---------------- story → chapters (stations) → lines ----------------
+        const CH = (story.chapters.length ? story.chapters : [{ n: 1, key: "all", title: D.title || "", start: 0, end: END ? END.start : DUR }])
+          .map((c, k) => Object.assign({}, c, { k: k + 1, lines: [] }));
+        const BODY = story.lines.filter((L) => !END || L.i !== END.line);
+        const chOf = {};
+        BODY.forEach((L) => {
+          let c = L.chapter ? CH.find((x) => x.key === L.chapter) : null;
+          if (!c) { c = CH[0]; for (const x of CH) if (L.start >= x.start - 0.25) c = x; }
+          c.lines.push(L.i);
+          chOf[L.i] = c;
+        });
+        const lastUnit = (i) => { const s = story.spoken(i); return s.length ? s[s.length - 1][1] : story.line(i).end; };
+
+        // stations: a snake grid sized from the chapter count (≤3 → one row, 4 → 2×2, 5–6 → 3×2, 7–8 → 4×2, more → 2 rows+)
+        const NSt = CH.length;
+        const COLS = NSt <= 3 ? NSt : NSt === 4 ? 2 : NSt <= 8 ? Math.ceil(NSt / 2) : Math.ceil(Math.sqrt(NSt * 1.8));
+        const ROWS = Math.ceil(NSt / COLS);
+        const SW = 1920, SH = 1080, PX = 2300, PY = 1420;
+        const WW = COLS * PX - (PX - SW), WH = ROWS * PY - (PY - SH);
+        CH.forEach((c, j) => {
+          const r = Math.floor(j / COLS), c0 = j % COLS, col = r % 2 ? COLS - 1 - c0 : c0;
+          Object.assign(c, { j, row: r, col, x: col * PX, y: r * PY });
+        });
+        const world = $("world");
+        Kit.canvas(world, { x: -1400, y: -1100, w: WW + 2800, h: WH + 2200 });
+        const wsvg = $("wsvg");
+        wsvg.setAttribute("width", WW); wsvg.setAttribute("height", WH); wsvg.setAttribute("viewBox", `0 0 ${WW} ${WH}`);
+
+        // ---------------- builders (shared with beats) ----------------
+        const R = []; // per-frame renders registered by the driver and by beats
+        const add = (fn) => { R.push(fn); return fn; };
+        function put(parent, node, x, y) { node.style.left = x + "px"; node.style.top = y + "px"; parent.appendChild(node); return node; }
+        function txt(parent, cls, x, y, text, css) { const e = el("div", "abs " + (cls || ""), parent, text); e.style.left = x + "px"; e.style.top = y + "px"; if (css) e.style.cssText += css; return e; }
+        function cls(e, c) { if (e._c !== c) { e.className = c; e._c = c; } }
+        function label(parent, x, y, o, a, b) { const l = Kit.label(o); put(parent, l.el, x, y); add((t) => l.render(t, a, b)); return l; }
+        function note(parent, x, y, text, a, b, o) { const n = Kit.note(text, o); put(parent, n.el, x, y); add((t) => n.render(t, a, b)); return n; }
+        function stmt(parent, x, y, text, a, o = {}) { const s = Kit.stmt(text, o); put(parent, s.el, x, y); if (o.center) s.el.style.transform = "translateX(-50%)"; add((t) => s.render(t, a, o.cps, o.b)); return s; }
+
+        // ---------------- stations: the region, its statement, its line slots ----------------
+        CH.forEach((c, j) => {
+          c.el = el("div", "kit-station", $("stations"));
+          c.el.style.left = c.x + "px"; c.el.style.top = c.y + "px";
+          c.svg = svg("svg", { class: "kit-svg", width: SW, height: SH, viewBox: `0 0 ${SW} ${SH}`, style: "left:0;top:0" }, c.el);
+        });
+        // timing: when the camera lands on a station, when it leaves (it rides the ⇒ arrow in between)
+        const bodyEnd = BODY.length ? BODY[BODY.length - 1] : null;
+        CH.forEach((c, j) => {
+          const first = c.lines.length ? story.line(c.lines[0]) : null;
+          c.arrive = j === 0 ? 0 : first ? Math.max(0, first.start - 0.15) : c.start;
+        });
+        CH.forEach((c, j) => {
+          const nx = CH[j + 1];
+          const hard = nx ? nx.arrive : END ? END.start + 0.3 : bodyEnd ? bodyEnd.end + 0.5 : DUR;
+          const last = c.lines.length ? c.lines[c.lines.length - 1] : null;
+          c.leave = last != null ? Math.min(lastUnit(last) + 0.12, hard - 0.7) : Math.max(c.arrive + 0.5, hard - 0.7);
+          c.leave = Math.max(c.leave, c.arrive + 0.3);
+          c.show = j === 0 ? 0 : CH[j - 1].leave; // the station is laid out while the camera is on its way
+        });
+        // the statement: the part of the chapter title after 「：」 (the chip carries the whole title)
+        CH.forEach((c) => {
+          const raw = String(c.title || "");
+          const s = raw.includes("：") ? raw.slice(raw.indexOf("：") + 1) : raw;
+          const size = Math.max(40, Math.min(56, Math.floor(1300 / Math.max(1, em(s) * 1.04))));
+          c.header = stmt(c.el, 960, 140, s, c.show + 0.15, { size, center: true, cps: 18 });
+          c.header.text = s;
+          c.header.size = size;
+        });
+
+        // slots: ≤ 3 lines stack in one column; 4–5 lines take two columns (reading order: row by row)
+        const AX = 120, AY = 262, AW = 1680, AH = 590;
+        const SLOT = {};
+        CH.forEach((c) => {
+          const n = c.lines.length, two = n >= 4, rows = two ? Math.ceil(n / 2) : Math.max(1, n);
+          const cw = two ? (AW - 80) / 2 : AW, rh = AH / rows;
+          c.lines.forEach((i, k) => {
+            const r = two ? Math.floor(k / 2) : k, cc = two ? k % 2 : 0;
+            const rect = { x: AX + cc * (cw + 80), y: AY + r * rh, w: cw, h: rh - 18 };
+            SLOT[i] = { line: i, station: c, k, rect, appear: c.show + 0.3 + 0.12 * k };
+          });
+        });
+
+        // ---------------- a line's beat note and phrases (pure: sizes from estimates) ----------------
+        function chunksOf(i, maxEm) {
+          const W = story.line(i).words, groups = [];
+          let cur = [];
+          W.forEach((w, k) => { if (PUN.test(w[0])) { if (cur.length) groups.push(cur); cur = []; } else cur.push(k); });
+          if (cur.length) groups.push(cur);
+          const uEm = (k) => (LATR.test(W[k][0]) ? 0.6 * W[k][0].length : Array.from(W[k][0]).length);
+          const isLat = (k) => LATR.test(W[k][0]);
+          const out = [];
+          // a long clause is cut into nearly equal pieces, preferring a cut next to a Latin / number unit — tools/sfx.py mirrors this
+          groups.forEach((ks) => {
+            const cum = [];
+            ks.reduce((n, k, j) => (cum[j] = n + uEm(k)), 0);
+            const tot = cum[ks.length - 1], parts = Math.min(ks.length, Math.ceil(tot / maxEm));
+            let s0 = 0;
+            for (let m = 1; m < parts; m++) {
+              const target = (m * tot) / parts;
+              let best = -1, bs = Infinity;
+              for (let j = s0; j <= ks.length - 1 - (parts - m); j++) {
+                const sc = Math.abs(cum[j] - target) - (isLat(ks[j]) || isLat(ks[j + 1]) ? 1.2 : 0);
+                if (sc < bs) { bs = sc; best = j; }
+              }
+              out.push(ks.slice(s0, best + 1));
+              s0 = best + 1;
+            }
+            out.push(ks.slice(s0));
+          });
+          const join = (us) => us.reduce((s, u, k) => s + (k && (LATR.test(u) || LATR.test(us[k - 1])) ? " " : "") + u, "");
+          return out.map((ks) => ({ ks, t: W[ks[0]][1], text: join(ks.map((k) => W[k][0])) }));
+        }
+        function keyPhrase(i) {
+          const W = story.line(i).words, cl = [];
+          let cur = [];
+          W.forEach((w) => { if (PUN.test(w[0])) { if (cur.length) cl.push(cur); cur = []; } else cur.push(w[0]); });
+          if (cur.length) cl.push(cur);
+          const pick = cl.find((c) => c.some((u) => /[A-Za-z\d]/.test(u))) || cl.slice().sort((p, q) => q.length - p.length)[0] || [];
+          let n = pick.length, s = "";
+          const join = (us) => us.reduce((a, u, k) => a + (k && (LATR.test(u) || LATR.test(us[k - 1])) ? " " : "") + u, "");
+          while (n > 1 && Array.from(join(pick.slice(0, n))).length > 22) n--;
+          s = join(pick.slice(0, n));
+          return s + (n < pick.length ? "…" : "");
+        }
+        function noteFor(i) {
+          const c = chOf[i];
+          const list = c && c.key ? NOTES[c.key] : null;
+          const j = c ? c.lines.indexOf(i) : -1;
+          if (Array.isArray(list) && list[j]) return list[j];
+          if (typeof list === "string" && j === 0) return list;
+          return keyPhrase(i);
+        }
+
+        /* ---------------- placeholder: the on-style draft beat for one line ----------------
+         * A derivation step waiting to be performed: its number (k) in math italic, the beat note (story.notes, else the
+         * line's key phrase) written as the line starts, a construction axis over the line's own time with a dot per
+         * phrase that grows when it is spoken (arcs link step to step), and the phrases themselves as terms that light
+         * as they are spoken (the one being spoken in rose). A small 「待演绎」 tag marks it as a draft. */
+        const PH = {};
+        function placeholder(i, o = {}) {
+          const S = SLOT[i];
+          if (!S) return { el: null, render() {} };
+          if (PH[i]) return PH[i];
+          const L = story.line(i), c = S.station, z = S.rect;
+          const text = o.note || noteFor(i);
+          const CK = chunksOf(i, 7);
+          const ix = z.x + 64, iw = z.w - 64;
+          const tagW = 210;
+          // sizes: the note on ≤ 2 lines, the terms on ≤ 3 rows, everything ≥ 28 px, shrinking to fit the slot
+          const termsEm = CK.reduce((n, k) => n + em(k.text), 0) + 1.3 * Math.max(0, CK.length - 1);
+          let ns = 0, nl = 1, fs = 0, rows = 1, need = 0;
+          for (const [nMax, fMax] of [[44, 34], [40, 32], [36, 30], [32, 28], [28, 28]]) {
+            ns = Math.max(28, Math.min(nMax, Math.floor((iw - tagW) / Math.max(1, em(text)))));
+            nl = Math.max(1, Math.ceil((em(text) * ns) / (iw - tagW)));
+            fs = fMax;
+            rows = Math.max(1, Math.ceil((termsEm * fs) / (iw * 0.94)));
+            need = nl * ns * 1.3 + 22 + 30 + 18 + rows * fs * 1.45;
+            if (need <= z.h) break;
+          }
+          const extra = Math.max(0, z.h - need);
+          const y0 = z.y + Math.min(extra * 0.35, 40);
+          const ay = y0 + nl * ns * 1.3 + 22 + 15, ty = ay + 15 + 18;
+          // pieces
+          const mark = txt(c.el, "ph-mark", z.x, y0 - 2, "(" + (S.k + 1) + ")");
+          const nEl = el("div", "ph-note", c.el);
+          Object.assign(nEl.style, { left: ix + "px", top: y0 + "px", width: iw - tagW + "px", fontSize: ns + "px" });
+          const NW = Kit.write(nEl, text);
+          const tag = el("div", "ph-tag", c.el);
+          el("b", "", tag, "待演绎");
+          el("span", "", tag, "L" + i);
+          tag.style.left = z.x + z.w - 170 + "px";
+          tag.style.top = y0 + 4 + "px";
+          const g = svg("g", {}, c.svg);
+          const ax0 = ix, ax1 = ix + iw - 20;
+          const spanT = Math.max(0.5, L.end - L.start), xOf = (t) => ax0 + clamp01((t - L.start) / spanT) * (ax1 - ax0);
+          const base = svg("path", { d: `M ${ax0} ${ay} L ${ax1} ${ay}`, fill: "none", stroke: T.faint, "stroke-width": 2, "stroke-dasharray": "3 7" }, g);
+          const ink = svg("path", { d: `M ${ax0} ${ay} L ${ax1} ${ay}`, fill: "none", stroke: U.rgba("ink", 0.55), "stroke-width": 2.5 }, g);
+          const pen = svg("circle", { r: 6, fill: T.accent, class: "kit-glow", style: `color:${T.accent}` }, g);
+          const D2 = CK.map((k, j) => {
+            const x = xOf(k.t);
+            const dot = svg("circle", { cx: x, cy: ay, r: 9, fill: T.ink }, g);
+            const prevX = j ? xOf(CK[j - 1].t) : ax0;
+            const hh = Math.min(26, Math.max(10, (x - prevX) * 0.3));
+            const arc = j ? svg("path", { d: `M ${prevX} ${ay - 10} Q ${(prevX + x) / 2} ${ay - 10 - hh} ${x} ${ay - 10}`, fill: "none", stroke: U.rgba("accent", 0.7), "stroke-width": 2 }, g) : null;
+            const alen = arc ? arc.getTotalLength() : 0;
+            return { k, x, dot, arc, alen, next: j + 1 < CK.length ? CK[j + 1].t : L.end };
+          });
+          const tEl = el("div", "ph-terms", c.el);
+          Object.assign(tEl.style, { left: ix + "px", top: ty + "px", width: iw + "px", fontSize: fs + "px" });
+          const TS = CK.map((k, j) => {
+            if (j) el("span", "ph-op", tEl, " · ");
+            const s = el("span", "ph-term", tEl, k.text);
+            return s;
+          });
+          const A = S.appear;
+          const P = {
+            el: g, line: i, slot: S, note: text, rect: z, axis: { x0: ax0, x1: ax1, y: ay },
+            render(t) {
+              const v = pr(t, A, 0.3);
+              vis(mark, v);
+              cls(mark, t >= L.start - 0.05 && t < L.end + 0.2 ? "ph-mark on" : "ph-mark");
+              vis(tag, pr(t, A + 0.2, 0.3));
+              vis(nEl, t >= L.start ? 1 : 0);
+              NW.render(t, L.start + 0.05, Math.max(14, Math.min(30, NW.n / Math.max(0.6, (L.end - L.start) * 0.45))));
+              vis(g, v);
+              U.draw(base, ax1 - ax0, E.io2(pr(t, A + 0.1, 0.6)));
+              const ph3 = clamp01((t - L.start) / spanT);
+              U.draw(ink, ax1 - ax0, ph3);
+              attr(pen, "cx", lerp(ax0, ax1, ph3));
+              attr(pen, "cy", ay);
+              attr(pen, "opacity", t >= L.start - 0.1 && t <= L.end + 0.35 ? (pr(t, L.start - 0.1, 0.1) * (1 - pr(t, L.end, 0.35))).toFixed(3) : 0);
+              D2.forEach((d) => {
+                const on = t >= d.k.t - 0.04, now = on && t < d.next && t < L.end + 0.15;
+                const b = E.back(pr(t, d.k.t - 0.04, 0.3));
+                attr(d.dot, "r", on ? 9 * (0.3 + 0.7 * b) + (now ? 2 : 0) : 5);
+                attr(d.dot, "fill", now ? T.accent : on ? T.ink : T.faint);
+                attr(d.dot, "opacity", on ? 1 : v);
+                if (d.arc) { U.draw(d.arc, d.alen, E.io2(pr(t, d.k.t - 0.2, 0.25))); attr(d.arc, "opacity", on || t >= d.k.t - 0.2 ? 0.8 : 0); }
+              });
+              vis(tEl, v);
+              TS.forEach((s, j) => {
+                const d = D2[j];
+                const f = E.o2(pr(t, d.k.t - 0.04, 0.2)).toFixed(3);
+                if (s._f !== f) { s.style.setProperty("--lit", f); s._f = f; }
+                cls(s, t >= d.k.t - 0.04 && t < d.next && t < L.end + 0.15 ? "ph-term now" : "ph-term");
+              });
+            },
+          };
+          PH[i] = P;
+          return P;
+        }
+
+        // ---------------- ⇒ arrows between stations: the camera rides them ----------------
+        const FLOW = END ? END.start + 0.2 : bodyEnd ? bodyEnd.end + 0.4 : DUR;
+        const LINKS = [];
+        for (let j = 0; j + 1 < NSt; j++) {
+          const a = CH[j], b = CH[j + 1];
+          let d;
+          if (b.y > a.y) d = `M ${a.x + 960} ${a.y + SH + 34} C ${a.x + 960} ${a.y + SH + 150} ${b.x + 960} ${b.y - 150} ${b.x + 960} ${b.y - 34}`;
+          else if (b.x > a.x) d = `M ${a.x + SW + 34} ${a.y + 540} C ${a.x + SW + 170} ${a.y + 470} ${b.x - 170} ${b.y + 470} ${b.x - 34} ${b.y + 540}`;
+          else d = `M ${a.x - 34} ${a.y + 540} C ${a.x - 170} ${a.y + 610} ${b.x + SW + 170} ${b.y + 610} ${b.x + SW + 34} ${b.y + 540}`;
+          const s = Kit.stroke(wsvg, { d, tone: "accent", width: 3, arrow: true });
+          const runner = svg("circle", { r: 9, fill: T.accent, class: "kit-glow", style: `color:${T.accent}` }, wsvg);
+          LINKS.push({ s, a, b, runner });
+        }
+        function renderLinks(t) {
+          LINKS.forEach((Lk, j) => {
+            Lk.s.render(t, Lk.a.leave - 0.05, Math.max(0.3, Lk.b.arrive - Lk.a.leave + 0.1));
+            // after the narration a dot runs each arrow: the derivation read as one chain
+            if (t < FLOW) { attr(Lk.runner, "opacity", 0); return; }
+            const ph2 = ((t - FLOW) / 1.8 + j * 0.23) % 1;
+            const q = Lk.s.point(ph2);
+            attr(Lk.runner, "cx", q.x); attr(Lk.runner, "cy", q.y);
+            attr(Lk.runner, "opacity", (Math.sin(Math.PI * ph2) * pr(t, FLOW, 0.4)).toFixed(3));
+          });
+        }
+
+        // ---------------- chrome: captions, chapter chip, closing statement, recap ----------------
+        const BD = Kit.backdrop($("fx"));
+        const capShade = BD.shade;
+        const CAPS = Kit.captions($("caps"), story);
+        const chap = Kit.chapters($("chap"), story);
+        if (D.draft) $("draft").style.display = "block";
+        const TITLE = END ? Kit.title(story, { top: 112 }) : null;
+        if (TITLE) $("endwrap").appendChild(TITLE.el);
+        let camAt = null;
+        const anchorOK = RECAP && RECAP.points.length === NSt;
+        // the recap pins step i to station i in the pulled-back picture (when there is one step per chapter)
+        const RC = RECAP ? Kit.recap(story, { picture: { aspect: WW / WH }, anchor: anchorOK ? (i, t) => {
+          const c = camAt(t), [x0, y0] = CAM.screen(c, CH[i].x + 40, CH[i].y + 40), [x1, y1] = CAM.screen(c, CH[i].x + SW - 40, CH[i].y + SH - 40);
+          return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+        } : null }) : null;
+        if (RC) $("recapwrap").appendChild(RC.el);
+
+        // ---------------- camera: glide over the canvas, keyed to the story ----------------
+        const keys = [];
+        const key = (t, cx, cy, s, rot = 0) => {
+          if (keys.length && t <= keys[keys.length - 1][0] + 0.05) t = keys[keys.length - 1][0] + 0.05;
+          keys.push([t, cx, cy, s, rot]);
+        };
+        CH.forEach((c, j) => {
+          const cx = c.x + 960, cy = c.y + 540;
+          // drift toward the slot being spoken (station-local rect → world), a little in x, a little more in y
+          const bias = (i) => { const z = SLOT[i].rect; return [lerp(cx, c.x + z.x + z.w / 2, 0.1), lerp(cy, c.y + z.y + z.h / 2, 0.08)]; };
+          if (c.lines.length) {
+            const [bx, by] = bias(c.lines[0]);
+            key(c.arrive, bx - 14, by - 8, 1.0, 0);
+            c.lines.forEach((i, k) => {
+              if (!k) return;
+              const [x, y] = bias(i);
+              key(story.line(i).start - 0.15, x - 6 + 3 * k, y, 1.0 + 0.012 * k, 0);
+            });
+            const [lx, ly] = bias(c.lines[c.lines.length - 1]);
+            key(c.leave, lx + 10, ly + 6, 1.03 + 0.006 * c.lines.length, 0);
+          } else {
+            key(c.arrive, cx - 14, cy - 8, 1.0, 0);
+            key(c.leave, cx + 10, cy + 6, 1.03, 0);
+          }
+          const nx = CH[j + 1];
+          if (nx) key((c.leave + nx.arrive) / 2, (cx + nx.x + 960) / 2, (cy + nx.y + 540) / 2, 0.78, nx.y > c.y ? 0 : nx.x > c.x ? -0.6 : 0.6);
+        });
+        // the pull-back: the whole canvas under the closing statement
+        const lastC = CH[NSt - 1];
+        const topRoom = TITLE ? TITLE.bottom + 40 : 80;
+        const fullS = Math.min(1760 / WW, (1040 - topRoom) / WH, 0.9);
+        const fullCY = WH / 2 - ((topRoom + 1040) / 2 - 540) / fullS;
+        const pullA = END ? END.start : bodyEnd ? bodyEnd.end + 0.3 : DUR;
+        const pullB = Math.min(DUR - 0.2, pullA + 1.1);
+        const recapA = RECAP ? RECAP.start : DUR + 1;
+        if (!END && !RECAP) {
+          // With no separate ending, reserve the final glide within the existing film duration.
+          const endAt = DUR - Math.min(0.12, DUR * 0.1);
+          const startAt = Math.max(0, Math.min(lastC.arrive, endAt - 0.05), endAt - 1.1);
+          const c = CX.track(keys, startAt);
+          while (keys.length && keys[keys.length - 1][0] >= startAt) keys.pop();
+          keys.push([startAt, ...c], [endAt, WW / 2, fullCY, fullS, 0]);
+          key(DUR + 2, WW / 2 - 20, fullCY - 10, fullS * 1.08, 0);
+        } else if (DUR - lastC.leave > 1.2) {
+          key(Math.min(pullA, lastC.leave + 0.6), lastC.x + 960 + (WW / 2 - lastC.x - 960) * 0.25, lastC.y + 540 + (fullCY - lastC.y - 540) * 0.25, Math.sqrt(fullS) * 0.95, 0);
+          key(pullB, WW / 2 + 12, fullCY + 8, fullS * 1.0, 0);
+          if (RC && RC.zone) {
+            const Z = RC.zone, s2 = Math.min(Z.w / WW, Z.h / WH) * 0.96;
+            const zx = Z.x + Z.w / 2, zy = Z.y + Z.h / 2;
+            if (recapA - 0.15 > pullB + 0.2) key(recapA - 0.15, WW / 2 - 6, fullCY - 4, fullS * 1.035, 0);
+            key(recapA + 0.9, WW / 2 - (zx - 960) / s2, WH / 2 - (zy - 540) / s2, s2, 0);
+            // a constant slow push to the end (keys past DUR keep the last frames moving)
+            const s3 = s2 * 1.08;
+            key(DUR + 2, WW / 2 - (zx - 960) / s3, WH / 2 - (zy - 540) / s3, s3, 0);
+          } else {
+            key(DUR + 2, WW / 2 - 20, fullCY - 10, fullS * 1.08, 0);
+          }
+        } else {
+          key(DUR + 2, lastC.x + 960 + 30, lastC.y + 560, 1.06, 0);
+        }
+        const CAM = Kit.camera(world, keys);
+        const FOCUS = [];
+        /* focus(a, b, { station, x, y, s, rot, amt, drift, ease }) — lean the camera toward a spot (station-local x, y; world
+         * px without a station) between a and b: it eases in over `ease` s, holds with a slow push (`drift`, default 2.5 %)
+         * so it never parks, and eases back to the base camera before b. amt < 1 leans only part of the way. */
+        function focus(a, b, o) {
+          FOCUS.push({ a, b, r: Math.min(o.ease ?? 0.6, (b - a) / 3), st: o.station || null, x: o.x, y: o.y, s: o.s, rot: o.rot, amt: o.amt ?? 1, drift: o.drift ?? 0.025 });
+        }
+        camAt = function (t) {
+          const c = CAM.at(t);
+          for (const F of FOCUS) {
+            const w = E.io3(pr(t, F.a, F.r)) * (1 - E.io3(pr(t, F.b - F.r, F.r))) * F.amt;
+            if (w <= 0) continue;
+            const k = pr(t, F.a, F.b - F.a);
+            const tx = F.x != null ? (F.st ? F.st.x : 0) + F.x : c[0];
+            const ty = F.y != null ? (F.st ? F.st.y : 0) + F.y : c[1];
+            const ts = (F.s ?? c[2]) * (1 + F.drift * k), trot = F.rot ?? c[3];
+            c[0] = lerp(c[0], tx + 40 * F.drift * k, w);
+            c[1] = lerp(c[1], ty + 20 * F.drift * k, w);
+            c[2] = lerp(c[2], ts, w);
+            c[3] = lerp(c[3], trot, w);
+          }
+          return c;
+        };
+
+        // ---------------- the topic: beats.js ----------------
+        const ST = CH.map((c) => ({ k: c.k, n: c.n, key: c.key, title: c.title, chapter: c, lines: c.lines, el: c.el, svg: c.svg, x: c.x, y: c.y, w: SW, h: SH, arrive: c.arrive, leave: c.leave, show: c.show, header: c.header }));
+        const api = {
+          story, C: CX, Kit, T, U,
+          stations: ST,
+          station: (k) => ST[k - 1] || null,
+          slot: (i) => SLOT[i] || null,
+          world: { el: world, svg: wsvg, w: WW, h: WH },
+          placeholder, focus, add,
+          camera: CAM, camAt: (t) => camAt(t),
+          captions: CAPS,
+          keys: (line, list) => CAPS.keys(line, list),
+          at, ph, span,
+          put, txt, cls, label, note, stmt,
+          layers: { world, stations: $("stations"), wsvg, fx: $("fx"), caps: $("caps"), endwrap: $("endwrap"), recapwrap: $("recapwrap") },
+        };
+        let B = null;
+        try {
+          B = typeof window.Beats === "function" ? window.Beats(api) : null;
+        } catch (e) {
+          console.error("beats.js:", e);
+        }
+
+        // during the recap the whole stage (the canvas picture and the recap together) pushes in at a constant speed,
+        // so the last frames never settle (and the recap's frames stay pinned to their stations)
+        const stage = $("stage");
+        function frame(t) {
+          const push = RC ? pr(t, RECAP.start + 0.3, Math.max(0.5, DUR - RECAP.start - 0.3)) : 0;
+          const ps = push > 0 ? `scale(${(1 + 0.045 * push).toFixed(4)})` : "";
+          if (stage._ps !== ps) { stage.style.transform = ps; stage.style.transformOrigin = "50% 50%"; stage._ps = ps; }
+          const c = camAt(t);
+          CAM.apply(c);
+          chap.render(t);
+          CAPS.render(t);
+          op(capShade, 1 - pr(t, END ? END.start - 0.3 : recapA - 0.3, 0.5));
+          renderLinks(t);
+          if (B && B.render) B.render(t);
+          for (const fn of R) fn(t);
+          if (TITLE) TITLE.render(t);
+          if (RC) RC.render(t);
+        }
+        frame(0);
+        const drive = { t: 0 };
+        const tl = gsap.timeline({ paused: true });
+        tl.to(drive, { t: DUR, duration: DUR, ease: "none", onUpdate: () => frame(tl.time()) }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

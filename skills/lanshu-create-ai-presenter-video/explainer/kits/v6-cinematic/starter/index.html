@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>V6 电影感 3D「一镜到底」· 起步模板</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+/* fonts:end */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #0c0d11;
+      }
+      #stage,
+      #hud,
+      #caps,
+      #end {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      /* starter-only chrome: the 「待演绎」 tag on every placeholder beat, the 「草稿 · 无配音」 tag on a silent draft */
+      .ph-tag,
+      .ph-draft {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 3px 12px 5px;
+        border: 1.5px solid rgba(246, 245, 241, 0.42);
+        border-radius: 4px;
+        background: rgba(12, 13, 17, 0.62);
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+      }
+      .ph-tag-n {
+        font-family: var(--kit-font-mono);
+        font-size: 24px;
+        letter-spacing: 0.06em;
+        color: var(--kit-muted);
+      }
+      .ph-tag-t {
+        font-family: var(--kit-font-body);
+        font-weight: 500;
+        font-size: 24px;
+        letter-spacing: 0.14em;
+        color: #e6e5e0;
+      }
+      .ph-draft {
+        position: absolute;
+        right: 96px;
+        top: 66px;
+        opacity: 1;
+        visibility: visible;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="kit-frame" data-composition-id="main" data-no-timeline data-start="0" data-stamp="story" data-duration="45" data-width="1920" data-height="1080">
+      <div id="stage" class="clip" data-start="0" data-stamp="story" data-duration="45" data-track-index="1" data-layout-allow-overflow="">
+        <canvas id="gl" class="kit-gl" width="1920" height="1080"></canvas>
+        <div class="kit-vignette"></div>
+        <div class="kit-grain"></div>
+        <div class="kit-shade"></div>
+        <div id="labels" class="kit-layer" data-layout-allow-overflow=""></div>
+      </div>
+      <div id="hud" class="clip" data-start="0" data-stamp="story" data-duration="45" data-track-index="2">
+        <div id="chap"></div>
+        <div id="notes" class="kit-layer"></div>
+        <div id="panels" class="kit-layer"></div>
+      </div>
+      <div id="caps" class="clip" data-start="0" data-stamp="story" data-duration="45" data-track-index="3"></div>
+      <div id="end" class="clip" data-start="0" data-stamp="story" data-duration="45" data-track-index="4"></div>
+
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-stamp="narration" data-duration="40.32" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-stamp="story" data-duration="45" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script src="beats.js"></script>
+    <script type="module">
+      import * as THREE from "three";
+      import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+      import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+      import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+      import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+      import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
+      import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+      import { Reflector } from "three/addons/objects/Reflector.js";
+
+      /* V6 cinematic starter: the KV film's studio, camera and chrome, driven only by window.STORY.
+       * One station per chapter along +x (GAP apart); the camera trucks station to station at
+       * story.chapters[k].start and keeps a slow truck + push inside a station (never parks); the closing line
+       * looks back down the row of stations; the recap drifts on behind its scrim. beats.js is the only topic
+       * file: window.Beats(api) is called once after the world is built, its render(t) every frame.
+       * Every frame is a pure function of t (hf-seek). */
+      const C = ExplainerCore;
+      const { clamp01, pr, lerp, env, hash, track } = C;
+      const E = Object.assign({}, C.E, {
+        back: (u, s = 1.6) => (u <= 0 ? 0 : 1 + (s + 1) * Math.pow(u - 1, 3) + s * Math.pow(u - 1, 2)),
+      });
+      const pulse = (t, a, d) => (t < a || t > a + d ? 0 : Math.sin((Math.PI * (t - a)) / d));
+      const V = (x, y, z) => new THREE.Vector3(x, y, z);
+      const $ = (id) => document.getElementById(id);
+
+      const story = new C.Story(window.STORY);
+      const END = story.end, REC = story.recap, DUR = story.duration;
+      const endLine = END ? END.line : null;
+      const LINES = story.lines.filter((L) => L.i !== endLine);
+      const CH = story.chapters.length ? story.chapters : [{ n: 1, key: "_", title: story.title || "", start: 0, end: END ? END.start : DUR }];
+      const N = CH.length;
+      const chapterOf = (L) => CH.reduce((k, c, i) => (L.start >= c.start - 1e-6 ? i : k), 0);
+      const SPOKEN = /[A-Za-z\d\u3400-\u9fff]/, CLAUSE = /[，。：；！？,.;:!?]/;
+
+      // ---------------- the world ----------------
+      const GAP = 20; // stations sit GAP apart on +x: station k's origin is (k·GAP, 0, 0)
+      const CY = 5.8; // the height a placeholder centres on
+      const DEFAULT_BOX = { x0: -8, x1: 8, y0: 2.2, y1: 9.4 }; // a station's framing when nothing registered a box
+      let S, scene, col;
+      const surfaces = [];
+      const stations = [];
+      const hot = { v: 0, p: new THREE.Vector3() };
+      let hotLight;
+
+      // white text on a transparent canvas plane; the material colour tints it (drawn at once: fonts are loaded)
+      function text(txt, w, h, { cw = 512, ch = 256, font = '500 150px "Noto Sans SC"', tint = 0x1e1e24 } = {}) {
+        const s = S.surface(cw, ch, w, h, (g) => {
+          g.font = font;
+          g.fillStyle = "#fff";
+          g.textAlign = "center";
+          g.textBaseline = "middle";
+          g.fillText(txt, cw / 2, ch / 2 + ch * 0.03);
+        });
+        s.mat.color.set(tint);
+        s.draw();
+        surfaces.push(s);
+        return s;
+      }
+      // grow a TubeGeometry along its length (u 0..1)
+      function grow(mesh, u) {
+        const n = mesh.geometry.index.count;
+        mesh.geometry.setDrawRange(0, Math.floor((n * clamp01(u)) / 6) * 6);
+      }
+
+      function buildStations() {
+        CH.forEach((c, k) => {
+          const origin = V(k * GAP, 0, 0);
+          const group = new THREE.Group();
+          group.position.copy(origin);
+          scene.add(group);
+          const next = CH[k + 1];
+          const st = {
+            k, n: c.n, chapter: c, key: c.key, title: c.title, origin, group,
+            lines: LINES.filter((L) => chapterOf(L) === k).map((L) => L.i),
+            start: c.start, end: next ? next.start : END ? END.start : DUR,
+            box: null, // the union of every box fitted here (station-local {x0, x1, y0, y1}); DEFAULT_BOX if none
+            segs: [], // framing segments [{ a, b, box }]: the camera frames `box` from a to b
+            at: (x = 0, y = 0, z = 0) => origin.clone().add(V(x, y, z)),
+            // fit(box) widens the station's framing; fit(box, a, b) also frames exactly that box from a to b
+            fit(b, a, z) {
+              const o = this.box;
+              this.box = o ? { x0: Math.min(o.x0, b.x0), x1: Math.max(o.x1, b.x1), y0: Math.min(o.y0, b.y0), y1: Math.max(o.y1, b.y1) } : { ...b };
+              if (a != null) this.segs.push({ a, b: z ?? Infinity, box: { ...b } });
+            },
+          };
+          st.pool = S.pool(origin.x, 1.6, 11, 0.14);
+          st.F = frameOf(DEFAULT_BOX); // refined from the fitted boxes once beats.js has run
+          stations.push(st);
+        });
+        // camera times: leave 0.4 s before the next chapter, arrive 0.75 s after it starts (tools/sfx.py uses the same)
+        stations.forEach((st, k) => {
+          const nx = stations[k + 1];
+          st.depart = nx ? nx.start - 0.4 : END ? END.start - 0.25 : REC ? REC.start - 0.2 : DUR + 3;
+          st.arrive = k === 0 ? Math.max(-1, Math.min(st.start + 2.4, st.depart - 0.4)) : st.start + 0.75;
+          if (st.depart - st.arrive < 0.4) {
+            const m = (st.arrive + st.depart) / 2;
+            st.arrive = m - 0.2;
+            st.depart = m + 0.2;
+          }
+        });
+      }
+      const stationOf = (line) => stations[chapterOf(story.line(line))];
+
+      // ---------------- placeholder: an on-style draft beat for one narration line ----------------
+      /* A dark metal plaque rises with the line's beat note (story.notes[chapter key][j] for the j-th line of the
+       * chapter, else the line's longest clause); every spoken unit is printed out of the plaque as a porcelain
+       * tile that lands in reading order, hot yellow while it is spoken, then porcelain. When the chapter's next
+       * line starts, this one flies back into the dark and fades as the new plaque rises; a chapter's last line
+       * stays (the closing shot looks back at them). A small 「待演绎」 tag marks it as a draft. */
+      const mctx = document.createElement("canvas").getContext("2d");
+      const em = (s, w = 500) => ((mctx.font = `${w} 100px "Noto Sans SC"`), mctx.measureText(s).width / 100);
+      function keyPhrase(L) {
+        const parts = L.text.split(/[，。：；！？,;:!?]/).map((s) => s.trim()).filter(Boolean);
+        const weight = (s) => [...s].reduce((a, ch) => a + (/[\u3400-\u9fff]/.test(ch) ? 1 : 0.55), 0);
+        return parts.reduce((a, b) => (weight(b) > weight(a) ? b : a), parts[0] || L.text);
+      }
+      // break a long note into two lines of similar width: after punctuation if one is near the middle, never inside
+      // a word or number, never right after an operator (× ≈ = …) or before closing punctuation
+      function splitTwo(s) {
+        const cw = [...s].map((ch) => em(ch)), sum = cw.reduce((a, b) => a + b, 0);
+        let best = -1, bs = 1e9, acc = 0;
+        for (let i = 1; i < s.length; i++) {
+          acc += cw[i - 1];
+          const a = s[i - 1], b = s[i], a2 = s.slice(0, i).trimEnd().slice(-1);
+          if (/[A-Za-z\d.%]/.test(a) && /[A-Za-z\d.%]/.test(b)) continue;
+          if (/[，、：；,:;）)」”。]/.test(b)) continue;
+          if (/[×÷≈=+→\-–（(「“]/.test(a2)) continue;
+          let cost = Math.abs(acc - sum / 2) / sum;
+          if (/[，、：；,:;]/.test(a)) cost -= 0.12;
+          else if (a === " " || b === " ") cost -= 0.03;
+          if (/\d/.test(a2)) cost += 0.1; // keep a number with its unit
+          else if (/[A-Za-z]/.test(a2)) cost += 0.04;
+          if (cost < bs) (bs = cost), (best = i);
+        }
+        return best < 0 ? [s] : [s.slice(0, best).trim(), s.slice(best).trim()];
+      }
+      const blockGeos = new Map();
+      const blockGeo = (w) => {
+        const k = Math.round(w * 50) / 50;
+        if (!blockGeos.has(k)) blockGeos.set(k, new RoundedBoxGeometry(k, 0.8, 0.34, 2, 0.08));
+        return blockGeos.get(k);
+      };
+      const tagItem = (n) => {
+        const el = document.createElement("div");
+        el.className = "ph-tag";
+        el.innerHTML = `<span class="ph-tag-n">L${n}</span><span class="ph-tag-t">待演绎</span>`;
+        $("labels").appendChild(el);
+        return {
+          el,
+          presence(t, o) {
+            const v = o > 0.001;
+            el.style.visibility = v ? "visible" : "hidden";
+            el.style.opacity = v ? o.toFixed(3) : "0";
+            if (v) el.style.translate = `0 ${((1 - E.o3(clamp01(o))) * 10).toFixed(1)}px`;
+            return v;
+          },
+        };
+      };
+
+      function placeholder(i) {
+        const L = story.line(i), st = stationOf(i);
+        const j = st.lines.indexOf(i);
+        const notes = story.data.notes && story.data.notes[st.key];
+        // a space where Latin / numbers touch CJK (stories written without spaces read cramped on a plaque)
+        const head = ((notes && j >= 0 && notes[j]) || keyPhrase(L))
+          .replace(/([\u3400-\u9fff])([A-Za-z\d])/g, "$1 $2")
+          .replace(/([A-Za-z\d%])([\u3400-\u9fff])/g, "$1 $2");
+        const after = (m) => (j >= 0 && st.lines[j + m] ? story.line(st.lines[j + m]).start : Infinity);
+        const nextA = after(1);
+        const tagEnd = Math.min(nextA - 0.25, st.depart + 0.3);
+
+        // ---- plaque: the beat note, one or two lines, fitted
+        let F = 0.6, rows = [head];
+        const maxW = 14.2;
+        if (em(head) * F > maxW) rows = splitTwo(head);
+        const widest = Math.max(...rows.map((r) => em(r)));
+        if (widest * F > maxW) F = Math.max(0.4, maxW / widest);
+        const PW = Math.max(6.5, widest * F + 1.4), PH = rows.length * F * 1.42 + 0.62;
+
+        // ---- tiles: one per spoken unit, wrapped into balanced rows, clause breaks preferred
+        const FB = 0.46, units = [];
+        let brk = 0;
+        for (const [u, t] of L.words) {
+          if (!SPOKEN.test(u)) { brk = Math.max(brk, CLAUSE.test(u) ? 2 : 1); continue; }
+          const s = u.trim();
+          units.push({ s, t, brk, w: Math.max(0.8, em(s) * FB + 0.36) });
+          brk = 0;
+        }
+        const gapOf = (U) => (U.brk === 2 ? 0.42 : U.brk === 1 ? 0.26 : 0.1);
+        const total = units.reduce((a, U, k) => a + U.w + (k ? gapOf(U) : 0), 0);
+        // greedy rows against a target width; raise the target until the rows come out as few as the width allows
+        function wrap(target) {
+          let x = 0, r = 0;
+          units.forEach((U, k) => {
+            let g = x === 0 ? 0 : gapOf(U);
+            if (U.brk === 2 && x > 0.5 * target) {
+              // a clause that will not fit starts a new row
+              let cw = U.w;
+              for (let m = k + 1; m < units.length && units[m].brk !== 2; m++) cw += units[m].w + gapOf(units[m]);
+              if (x + g + cw > target * 1.04) (r++, (x = 0), (g = 0));
+            }
+            if (x > 0 && x + g + U.w > target) (r++, (x = 0), (g = 0));
+            U.row = r;
+            U.x = x + g + U.w / 2;
+            x += g + U.w;
+          });
+          return r + 1;
+        }
+        const nRows = Math.max(1, Math.ceil(total / 15.5));
+        for (let tg = total / nRows + 0.6; wrap(tg) > nRows && tg < 15.5; tg += 0.5);
+        const rowW = [];
+        units.forEach((U) => (rowW[U.row] = Math.max(rowW[U.row] || 0, U.x + U.w / 2)));
+        const RW = Math.max(0, ...rowW), nR = rowW.length || 1;
+        const Hc = PH + 0.95 + nR * 0.8 + (nR - 1) * 0.2;
+        const top = CY + Hc / 2, PY = top - PH / 2, pBottom = top - PH;
+        const rowY = (k) => pBottom - 0.95 - 0.4 - k * 1.0;
+        const W = Math.max(PW, RW);
+        st.fit({ x0: -W / 2, x1: W / 2, y0: top - Hc - 0.2, y1: top + 0.65 }, L.start - 0.3, nextA - 0.3);
+
+        // ---- build
+        const G = new THREE.Group();
+        G.visible = false;
+        st.group.add(G);
+        const plaqueMat = S.mat.metal();
+        const plaque = new THREE.Mesh(new RoundedBoxGeometry(PW, PH, 0.36, 3, 0.12), plaqueMat);
+        plaque.castShadow = plaque.receiveShadow = true;
+        plaque.position.set(0, PY, -0.2);
+        const PXU = 128, pcw = Math.min(2048, Math.round(PW * PXU)), pch = Math.round(PH * PXU);
+        const plaqueText = S.surface(pcw, pch, PW, PH, (g) => {
+          g.font = `500 ${Math.round(F * PXU)}px "Noto Sans SC"`;
+          g.fillStyle = "#fff";
+          g.textAlign = "center";
+          g.textBaseline = "middle";
+          rows.forEach((s, k) => g.fillText(s, pcw / 2, pch / 2 + (k - (rows.length - 1) / 2) * F * 1.42 * PXU + F * PXU * 0.04));
+        });
+        plaqueText.draw();
+        surfaces.push(plaqueText);
+        plaqueText.mesh.position.set(0, PY, -0.01);
+        const sweepMat = S.mat.glow(new THREE.Color(1.3, 1.25, 1.1), 0);
+        sweepMat.map = S.sprite;
+        sweepMat.blending = THREE.AdditiveBlending;
+        const sweep = new THREE.Mesh(new THREE.PlaneGeometry(0.9, PH + 0.3), sweepMat);
+        sweep.position.set(0, PY, 0.0);
+        G.add(plaque, plaqueText.mesh, sweep);
+
+        // tile faces share one atlas per line: white text in cells, mapped by uv, tinted by one material
+        const AXU = 160, AW = 2048, cellH = Math.round(0.7 * AXU);
+        let cx = 0, cy = 0;
+        for (const U of units) {
+          U.cw = Math.min(AW, Math.ceil((U.w - 0.1) * AXU));
+          if (cx + U.cw > AW) (cx = 0), (cy += cellH);
+          U.cx = cx;
+          U.cy = cy;
+          cx += U.cw;
+        }
+        const AH = cy + cellH;
+        const atlas = document.createElement("canvas");
+        atlas.width = AW;
+        atlas.height = AH;
+        const ag = atlas.getContext("2d");
+        ag.font = `500 ${Math.round(FB * AXU)}px "Noto Sans SC"`;
+        ag.fillStyle = "#fff";
+        ag.textAlign = "center";
+        ag.textBaseline = "middle";
+        for (const U of units) ag.fillText(U.s, U.cx + U.cw / 2, U.cy + cellH / 2 + FB * AXU * 0.04);
+        const atlasTex = new THREE.CanvasTexture(atlas);
+        atlasTex.colorSpace = THREE.SRGBColorSpace;
+        atlasTex.anisotropy = 8;
+        const faceMat = new THREE.MeshBasicMaterial({ map: atlasTex, transparent: true, depthWrite: false, toneMapped: false, color: 0x1e1e24 });
+        const tiles = units.map((U) => {
+          const mat = S.mat.porcelain();
+          const m = new THREE.Mesh(blockGeo(U.w), mat);
+          m.castShadow = m.receiveShadow = true;
+          const fg = new THREE.PlaneGeometry(U.cw / AXU, cellH / AXU);
+          const uv = fg.attributes.uv;
+          const u0 = U.cx / AW, u1 = (U.cx + U.cw) / AW, vt = 1 - U.cy / AH, vb = 1 - (U.cy + cellH) / AH;
+          for (let q = 0; q < uv.count; q++) uv.setXY(q, lerp(u0, u1, uv.getX(q)), lerp(vb, vt, uv.getY(q)));
+          const face = new THREE.Mesh(fg, faceMat);
+          face.position.z = 0.176;
+          m.add(face);
+          m.visible = false;
+          G.add(m);
+          return { U, m, mat, slot: V(-RW / 2 + U.x, rowY(U.row), 0.45) };
+        });
+        const tag = tagItem(i);
+        const tmpC = new THREE.Color(), DIM = new THREE.Color(0.2, 0.2, 0.23), YEL = col.accent, PORC = col.porc;
+        const wp = new THREE.Vector3();
+
+        return {
+          line: i, station: st, group: G, head, tiles,
+          box: { x0: -W / 2, x1: W / 2, y0: top - Hc, y1: top },
+          render(t) {
+            const s0 = L.start;
+            const on = t >= s0 - 0.32 && t < nextA + 0.45;
+            G.visible = on;
+            if (!on) { tag.presence(t, 0); return; }
+            const uin = E.o3(pr(t, s0 - 0.3, 0.55));
+            const ur = E.io3(pr(t, nextA - 0.3, 0.75)); // the chapter's next line pushes this one back into the dark
+            const ug = E.o2(ur);
+            G.position.set(0, -0.7 * (1 - uin) + 0.9 * ur, -7 * ur);
+            const o = uin * (1 - ug), dim = 0.35 * ur;
+            plaqueMat.opacity = o;
+            plaqueText.mat.opacity = o;
+            plaqueText.mat.color.setScalar(lerp(0.62, 1.0, E.o2(pr(t, s0, 0.9))) * (1 - 0.5 * dim));
+            sweep.position.x = lerp(-PW / 2, PW / 2, E.io2(pr(t, s0 - 0.1, 0.9)));
+            sweepMat.opacity = 0.22 * pulse(t, s0 - 0.1, 0.9) * o;
+            faceMat.opacity = 1 - ug;
+            faceMat.color.setRGB(lerp(0.12, 0.58, dim), lerp(0.12, 0.58, dim), lerp(0.14, 0.62, dim));
+            for (const T of tiles) {
+              const tu = T.U.t, born = t >= tu - 0.06;
+              T.m.visible = born;
+              if (!born) continue;
+              const u = pr(t, tu - 0.06, 0.38);
+              T.m.position.set(T.slot.x, u < 1 ? lerp(pBottom - 0.2, T.slot.y, E.back(u, 1.2)) : T.slot.y, T.slot.z);
+              T.m.scale.setScalar(lerp(0.3, 1, E.o3(pr(t, tu - 0.06, 0.2))));
+              const h = Math.exp(-Math.max(0, t - tu) / 0.75) * (1 - ur);
+              T.mat.color.copy(PORC).lerp(YEL, 0.72 * h).lerp(DIM, 0.78 * dim);
+              T.mat.emissive.copy(YEL).multiplyScalar(0.3 * h);
+              T.mat.emissiveIntensity = 1;
+              T.mat.opacity = 1 - ug;
+              if (h > 0.05) {
+                wp.copy(T.m.position).add(G.position).add(st.origin);
+                api.hot(h, wp);
+              }
+            }
+            // the draft tag rides the plaque's top-left corner
+            wp.set(-PW / 2 + 0.1, PY + PH / 2 + 0.06, 0).add(G.position).add(st.origin);
+            S.place(tag, wp, env(t, s0 - 0.1, tagEnd, 0.3, 0.3) * (1 - ur), { t, ax: 0, ay: 1, dy: -10 });
+          },
+        };
+      }
+
+      // ---------------- camera: one take, keyed to the chapters ----------------
+      /* Inside a station the camera trucks right and pushes in slowly (u = in-station progress); each framing
+       * segment (a placeholder's line, or any st.fit(box, a, b)) sets the distance and height for its stretch, so the
+       * camera re-frames as each beat's plaque rises. Between stations it travels: depart 0.4 s before the next
+       * chapter, arrive 0.75 s after it starts. */
+      const TAN = Math.tan(THREE.MathUtils.degToRad(16)), ASP = 16 / 9, EL = 0.16; // fov 32, ~9° above the subject
+      function frameOf(b) {
+        const w = Math.max(11, b.x1 - b.x0), h = Math.max(5, b.y1 - b.y0);
+        const cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2;
+        const d = Math.max(w / 2 / (TAN * ASP * 0.8), h / 2 / (TAN * 0.66));
+        const ppu = 540 / (d * TAN);
+        return { cx, cy: cy - 28 / ppu, d }; // aim a little low: the safe band's centre sits above the frame centre
+      }
+      const uOf = (st, t) => clamp01((t - st.arrive) / Math.max(0.01, st.depart - st.arrive));
+      // a station's shot at in-station progress u (0 = arrive, 1 = depart) for framing F: slow truck right + slow push
+      function shotAt(st, u, F = st.F) {
+        const f = lerp(1.05, 0.97, u);
+        return {
+          pos: st.at(F.cx + lerp(-0.7, 0.7, u), F.cy + F.d * f * Math.sin(EL), F.d * f * Math.cos(EL)),
+          tgt: st.at(F.cx + lerp(-0.25, 0.25, u), F.cy, 0),
+        };
+      }
+      function stationKeys(st) {
+        const segs = st.segs.filter((g) => g.b > st.arrive && g.a < st.depart).sort((p, q) => p.a - q.a);
+        if (!segs.length) segs.push({ a: st.arrive, b: st.depart, box: st.box || DEFAULT_BOX });
+        const out = [];
+        const add = (t, F) => {
+          if (out.length && t < out[out.length - 1][0] + 0.25) return;
+          const s = shotAt(st, uOf(st, t), F);
+          out.push([t, s.pos, s.tgt]);
+        };
+        segs.forEach((g, i) => {
+          const F = frameOf(g.box);
+          const ka = i === 0 ? st.arrive : Math.max(st.arrive, g.a + 0.5);
+          const kb = i === segs.length - 1 ? st.depart : Math.min(st.depart, segs[i + 1].a);
+          if (kb - ka < 0.5) return add((ka + kb) / 2, F);
+          for (const q of [0, 1 / 3, 2 / 3, 1]) add(lerp(ka, kb, q), F);
+        });
+        return out;
+      }
+      // the closing line: pull back from the last chapter's exhibit and let it settle lower-right (the KV film's
+      // composition), so the word-timed title owns the dark cove top-left; the floor pools flare first to last
+      function lookBack(u) {
+        const st = stations[N - 1];
+        const g = st.segs.length ? st.segs[st.segs.length - 1].box : st.box || DEFAULT_BOX;
+        const hw = Math.max(5.5, (g.x1 - g.x0) / 2), cxB = (g.x0 + g.x1) / 2, cyB = (g.y0 + g.y1) / 2;
+        // the exhibit's right edge at 0.88 of the half-frame; 2 units of air keep the previous station off-frame
+        const hv = hw + 2, d = hv / (TAN * ASP), vh = d * TAN, k = 1 + 0.1 * u, el = 0.2;
+        const tgt = st.at(cxB + hw - 0.88 * hv, cyB + 0.26 * vh, 0);
+        return { pos: tgt.clone().add(V(0.8 * u, d * k * Math.sin(el), d * k * Math.cos(el))), tgt };
+      }
+      // the recap: crane up over the row of stations; the exhibits become small, soft porcelain texture under the
+      // recap card's scrim (their words too small to compete), still drifting so the frame never freezes
+      function recapShot(u) {
+        const XL = stations[N - 1].origin.x, span = XL - stations[0].origin.x;
+        const tgt = V(XL - Math.min(0.5 * span, 20) - 2.5 * u, 3.0, -2);
+        return { pos: tgt.clone().add(V(3 + 3 * u, 30 + 3 * u, 38 + 6 * u)), tgt };
+      }
+      // the closing line lights every station's floor pool once more, first to last, as the summary is spoken
+      function poolsAt(t) {
+        if (!END) return;
+        const a = END.start + 0.25, b = Math.max(a + 0.6, story.line(END.line).end - 0.5);
+        for (const st of stations) {
+          const tk = N > 1 ? lerp(a, b, st.k / (N - 1)) : a;
+          st.pool.material.opacity = 0.14 + 0.32 * pulse(t, tk, 1.1) + 0.1 * E.o2(pr(t, tk + 0.3, 0.8));
+        }
+      }
+      const authored = { keys: [], own: [] };
+      let CAM = [], TGT = [], APT = [];
+      function buildCamera() {
+        const keys = []; // [t, pos, tgt]
+        const apt = [[-1.5, 0.0017]];
+        stations.forEach((st, k) => {
+          const sk = stationKeys(st);
+          if (k === 0) keys.push([Math.min(-1.5, sk[0][0] - 1), sk[0][1].clone().add(V(-1.2, 1.6, 6.5)), sk[0][2].clone().add(V(-0.4, 0.2, 0))]);
+          keys.push(...sk);
+          apt.push([st.arrive, 0.0011], [st.depart, 0.0011]);
+        });
+        if (END) {
+          const a = END.start + 1.6, b = REC ? REC.start : DUR + 3;
+          keys.push([a, lookBack(0).pos, lookBack(0).tgt], [Math.max(a + 0.5, b), lookBack(1).pos, lookBack(1).tgt]);
+          apt.push([a, 0.0013]);
+        }
+        if (REC) {
+          // evenly spaced keys keep the recap move at constant speed through the last frame (it never settles)
+          const a = REC.start + (END ? 1.2 : 1.6), z = Math.max(a + 1, DUR), uAt = (t) => 0.15 + (0.85 * (t - a)) / (z - a);
+          for (const t of [a, (a + z) / 2, z, z + 2]) keys.push([t, recapShot(uAt(t)).pos, recapShot(uAt(t)).tgt]);
+          apt.push([a, 0.0016], [z + 2, 0.0016]);
+        }
+        // author keys (api.shot) win: driver keys inside an owned stretch or within 0.3 s of an author key go
+        const near = (t) => authored.own.some(([a, b]) => t >= a && t <= b) || authored.keys.some((k) => Math.abs(k[0] - t) < 0.3);
+        const all = keys.filter((k) => !near(k[0])).concat(authored.keys.map((k) => [k[0], k[1], k[2]])).sort((p, q) => p[0] - q[0]);
+        for (let k = 1; k < all.length; k++) if (all[k][0] <= all[k - 1][0]) all[k][0] = all[k - 1][0] + 0.001;
+        CAM = all.map(([t, p]) => [t, p.x, p.y, p.z]);
+        TGT = all.map(([t, , q]) => [t, q.x, q.y, q.z]);
+        const mine = authored.keys.filter((k) => k[3] != null).map((k) => [k[0], k[3]]);
+        APT = apt.filter((k) => !mine.some((a) => Math.abs(a[0] - k[0]) < 0.3)).concat(mine).sort((p, q) => p[0] - q[0]);
+        for (let k = 1; k < APT.length; k++) if (APT[k][0] <= APT[k - 1][0]) APT[k][0] = APT[k - 1][0] + 0.001;
+      }
+
+      // ---------------- overlay registries (beats add to them through the api) ----------------
+      const pins = [], panels = [], notes = [];
+      const winO = (w, t, fi = 0.3, fo = 0.3) => (typeof w === "function" ? w(t) : env(t, w[0], w[1], fi, fo));
+
+      // ---------------- the api handed to beats.js ----------------
+      const toV = (p) => (Array.isArray(p) ? V(p[0], p[1], p[2]) : p.clone());
+      const api = {
+        story, C, Kit, E, pulse, V, hash, track,
+        THREE, RoundedBoxGeometry,
+        get S() { return S; },
+        get scene() { return scene; },
+        get camera() { return S.camera; },
+        get col() { return S.col; },
+        get mat() { return S.mat; },
+        stations,
+        station: (k) => stations[k], // k = 0-based index into story.chapters
+        stationOf, // the station of a narration line (1-based line number)
+        GAP, CY,
+        frame: (st, u = 0.5, box) => shotAt(st, u, box ? frameOf(box) : st.F), // a station's shot { pos, tgt } at progress u (for box, or its default)
+        layers: { labels: $("labels"), panels: $("panels"), notes: $("notes") },
+        text, // (text, w, h, { cw, ch, font, tint }) → canvas text plane in 3D ({ mesh, mat, draw })
+        grow, // (tubeMesh, u) → draw a TubeGeometry up to u
+        hot(v, p) { if (v > hot.v) { hot.v = v; hot.p.copy(p); } }, // feed the warm accent light (max per frame wins)
+        // a kit component pinned to a world point: at = Vector3 | (t) => Vector3; win = [a, b] | (t) => opacity
+        pin(item, at, win, opts = {}) {
+          $("labels").appendChild(item.el);
+          pins.push({ item, at, win, opts });
+          return item;
+        },
+        // a screen-fixed kit component (bars, formula, badge …) at (x, y) with anchor (ax, ay)
+        panel(item, x, y, ax, ay, win, opts = {}) {
+          $("panels").appendChild(item.el);
+          panels.push({ item, x, y, ax, ay, win, opts });
+          return item;
+        },
+        // one plain-language line under the chapter chip, from a to b (pinned labels avoid it)
+        note(html, a, b, opts) {
+          const n = Kit.note(html, opts);
+          $("notes").appendChild(n.el);
+          notes.push({ n, a, b });
+          return n;
+        },
+        // camera: add a key (world points as Vector3 or [x, y, z]; apt = bokeh aperture, optional)
+        shot(t, pos, tgt, apt) { authored.keys.push([t, toV(pos), toV(tgt), apt ?? null]); },
+        // the author owns the camera from a to b: the driver's station keys inside it are dropped
+        own(a, b) { authored.own.push([a, b]); },
+        placeholder: (i) => placeholder(i),
+      };
+
+      // ---------------- chrome ----------------
+      const caps = Kit.captions($("caps"), story, { wrap: true, clamp: true });
+      const chapters = new C.Chapters($("chap"), story);
+      const prog = story.chapters.length ? Kit.progress(story) : null;
+      if (prog) $("hud").appendChild(prog.el);
+      const endTitle = END ? Kit.title(story, { top: 112 }) : null;
+      const recapCard = REC ? Kit.recap(story) : null;
+      if (endTitle) $("end").appendChild(endTitle.el);
+      if (recapCard) $("end").appendChild(recapCard.el);
+      if (story.data.draft) {
+        const d = document.createElement("div");
+        d.className = "ph-draft";
+        d.innerHTML = '<span class="ph-tag-t">草稿 · 无配音</span>';
+        $("hud").appendChild(d);
+      }
+
+      let beats = { render() {} };
+      function placeOverlay(t) {
+        for (const x of notes) x.n.render(t, Kit.note.window(t, x.a, x.b));
+        S.keepOut(t, notes.map((x) => x.n.rect()));
+        for (const P of pins) {
+          const o = winO(P.win, t, P.opts.fi, P.opts.fo);
+          const p = typeof P.at === "function" ? P.at(t) : P.at;
+          S.place(P.item, p, o, Object.assign({ t, ax: 0, ay: 0.5 }, P.opts));
+        }
+        for (const P of panels) {
+          const o = winO(P.win, t, P.opts.fi, P.opts.fo);
+          P.item.presence(t, o);
+          P.item.at(P.x, P.y, P.ax, P.ay, o);
+        }
+        caps.render(t);
+        chapters.render(t);
+        if (prog) prog.render(t);
+        if (endTitle) endTitle.render(t);
+        if (recapCard) recapCard.render(t);
+      }
+
+      function renderAt(t) {
+        S.shoot(t, CAM, TGT, APT);
+        poolsAt(t);
+        hot.v = 0;
+        beats.render(t);
+        hotLight.position.copy(hot.p).add(V(0, -0.3, 1.8));
+        hotLight.intensity = 1.6 * hot.v;
+        placeOverlay(t);
+        S.render();
+      }
+
+      // ---------------- boot ----------------
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      let ready = false;
+      window.__hf.buildReady["starter-v6"] = (async () => {
+        const all = story.lines.map((L) => L.text).join("") + JSON.stringify(story.data.notes || {}) + "待演绎";
+        await Promise.all([
+          document.fonts.load('500 100px "Noto Sans SC"', all),
+          document.fonts.load('300 92px "Noto Sans SC"', all),
+          document.fonts.load('300 92px "Geist"', "0123456789 KV"),
+          document.fonts.load('500 40px "Geist"', "0123456789 KV"),
+          document.fonts.load('400 28px "Geist Mono"', "0123456789L"),
+        ]);
+        S = Kit.studio({
+          THREE,
+          addons: { RoomEnvironment, EffectComposer, RenderPass, UnrealBloomPass, BokehPass, OutputPass, Reflector },
+          canvas: $("gl"),
+          exposure: 1.0,
+          fog: [56, 190],
+        });
+        scene = S.scene;
+        col = S.col;
+        hotLight = new THREE.PointLight(0xffc21a, 0, 6, 2);
+        scene.add(hotLight);
+        buildStations();
+        if (typeof window.Beats === "function") beats = window.Beats(api) || beats;
+        for (const st of stations) st.F = frameOf(st.box || DEFAULT_BOX);
+        buildCamera();
+        // a closing line too wide for the frame shrinks to fit
+        if (endTitle && endTitle.el.offsetWidth > 1680) endTitle.el.style.fontSize = ((92 * 1680) / endTitle.el.offsetWidth).toFixed(1) + "px";
+        ready = true;
+        window.__v6 = { api, renderAt, get CAM() { return CAM; }, get TGT() { return TGT; } }; // debugging handle (console)
+        renderAt(window.__hfThreeTime || 0);
+      })();
+      window.addEventListener("hf-seek", (e) => {
+        if (ready) renderAt(e.detail.time);
+      });
+    </script>
+  </body>
+</html>

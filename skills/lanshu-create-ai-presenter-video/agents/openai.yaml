@@ -1,0 +1,4 @@
+interface:
+  display_name: "岚叔 · 通用数字人与讲解视频制作"
+  short_description: "从主题或文案制作并验收完整讲解视频：数字人口播，或十二种风格的动画讲解（九种画风 + 三种讲法）"
+  default_prompt: "Use $lanshu-create-ai-presenter-video to turn my topic or script into a verified publish-ready explainer video: help me choose between a digital-human presenter and a styled explainer."

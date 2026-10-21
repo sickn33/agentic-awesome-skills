@@ -1,0 +1,8 @@
+{
+  "extra": {
+    "noto-sans-sc-500": {"family": "Noto Sans SC", "css": "Noto+Sans+SC:wght@500", "weight": 500},
+    "noto-sans-sc-800": {"family": "Noto Sans SC", "css": "Noto+Sans+SC:wght@800", "weight": 800},
+    "geist-mono-500": {"family": "Geist Mono", "css": "Geist+Mono:wght@500", "weight": 500}
+  },
+  "index.html": ["smiley-sans", "zcool-kuaile", "noto-sans-sc-500", "noto-sans-sc-800", "geist-mono-500"]
+}

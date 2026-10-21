@@ -1,0 +1,229 @@
+/* V3 notebook kit — grid paper, a live pen, handwriting + serif, sticky notes.
+ * Tokens + component styles. Sizes are px at 1080p; anything that lives on the page (world layer) is in
+ * page px and gets scaled by the camera, so keep camera scale x size above the baseline (see KIT.md).
+ * Fonts (subset per project by tools/fonts.py): ZCOOL XiaoWei (serif), Long Cang (hand), Caveat 700 (numbers / terms). */
+:root {
+  --kit-bg: #f4ede0; /* the notebook page */
+  --kit-surface: #fbf8f1; /* index cards, caption strip */
+  --kit-ink: #2a2320; /* structure, body */
+  --kit-muted: #6e655c; /* graphite: secondary text, unspoken caption words (4.9:1 on the page) */
+  --kit-accent: #c63d2f; /* red pen: the new / changed / important thing */
+  --kit-accent-2: #2e5a9c; /* blue pen: annotation, data flow, matching */
+  --kit-warn: #a9531a; /* orange marker: waste / cost */
+  --kit-ok: #2f6b43; /* green pen: solved / included */
+  --kit-pencil: #9c9186; /* pencil: what already exists, ghosts, placeholders (never text) */
+  --kit-hl: rgba(255, 210, 63, 0.62); /* highlighter, multiply */
+  --kit-hl-warn: rgba(240, 132, 52, 0.42);
+  --kit-sticky: #ffe68a;
+  --kit-tape: rgba(233, 217, 168, 0.85);
+  --kit-grid: rgba(190, 172, 140, 0.42);
+  --kit-margin-line: rgba(214, 120, 104, 0.7);
+
+  --kit-font-display: "Kit ZCOOL Fix", "ZCOOL XiaoWei", serif;
+  --kit-font-body: "Kit ZCOOL Fix", "ZCOOL XiaoWei", serif;
+  --kit-font-hand: "Long Cang", cursive;
+  --kit-font-mono: "Caveat", cursive; /* real terms and numbers are hand-lettered in Caveat */
+
+  --kit-t-display: 140px; /* closing line on the page */
+  --kit-t-h1: 96px; /* hero numbers */
+  --kit-t-h2: 64px; /* section words on the page */
+  --kit-t-body: 44px;
+  --kit-t-label: 46px; /* Long Cang draws small: 46px reads like a ~34px sans */
+  --kit-t-note: 44px;
+  --kit-t-cap: 42px;
+}
+
+/* ZCOOL XiaoWei's 回 (U+56DE) fills its inner square solid; borrow that one glyph from Noto Serif SC 500.
+ * The one-glyph subset ships with the kit (fix-56de.woff2, OFL Noto Serif SC). */
+@font-face { font-family: "Kit ZCOOL Fix"; src: url("fix-56de.woff2") format("woff2"); unicode-range: U+56DE; font-weight: 400; font-display: block; }
+
+/* ---------- the page (world layer: moves with the camera) ---------- */
+.kit-stage { position: absolute; inset: 0; overflow: hidden; background: var(--kit-bg); }
+.kit-world { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.kit-page {
+  position: absolute;
+  background-color: var(--kit-bg);
+  background-image: linear-gradient(var(--kit-grid) 1.5px, rgba(0, 0, 0, 0) 1.5px), linear-gradient(90deg, var(--kit-grid) 1.5px, rgba(0, 0, 0, 0) 1.5px);
+  background-size: 48px 48px;
+}
+.kit-page-grain { position: absolute; inset: 0; background-image: url("paper-grain.svg"); background-size: 512px 512px; opacity: 0.42; }
+.kit-page-margin { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--kit-margin-line); }
+.kit-page-hole { position: absolute; width: 44px; height: 44px; border-radius: 50%; background: #e2d6c1; box-shadow: inset 0 4px 6px rgba(42, 35, 32, 0.28); }
+
+/* ---------- ink ---------- */
+svg.kit-ink { position: absolute; overflow: visible; pointer-events: none; }
+svg.kit-ink path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- writing: a window slides right while its content slides back, so the text is uncovered at pen speed ---------- */
+.kit-w { display: inline-block; white-space: nowrap; line-height: 1.15; overflow: hidden; margin: -0.22em -0.14em; vertical-align: baseline; }
+.kit-wx { display: block; padding: 0.22em 0.14em; }
+.kit-hand { font-family: var(--kit-font-hand); font-weight: 400; }
+.kit-serif { font-family: var(--kit-font-display); font-weight: 400; }
+.kit-cv { font-family: var(--kit-font-mono); font-weight: 700; }
+.kit-hand .kit-cv { font-size: 1.08em; }
+.kit-tone-ink, .kit-tone-default { color: var(--kit-ink); }
+.kit-tone-accent { color: var(--kit-accent); }
+.kit-tone-accent-2 { color: var(--kit-accent-2); }
+.kit-tone-warn { color: var(--kit-warn); }
+.kit-tone-ok { color: var(--kit-ok); }
+.kit-tone-muted { color: var(--kit-muted); }
+
+/* paper props */
+.kit-tape { position: absolute; background: var(--kit-tape); box-shadow: 0 2px 5px rgba(42, 35, 32, 0.12); border-radius: 2px; }
+.kit-hl { position: absolute; background: var(--kit-hl); mix-blend-mode: multiply; border-radius: 12px 20px 14px 22px; transform-origin: 0% 50%; }
+.kit-hl.kit-tone-warn { background: var(--kit-hl-warn); }
+.kit-card {
+  position: absolute;
+  background-color: var(--kit-surface);
+  background-image: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0) 0 58px, rgba(46, 90, 156, 0.26) 58px 60px);
+  box-shadow: 0 12px 20px rgba(42, 35, 32, 0.16);
+}
+
+/* ---------- the pen (and the eraser) ---------- */
+.kit-pen, .kit-eraser { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; }
+.kit-pen svg { position: absolute; left: -20px; top: -20px; width: 340px; height: 340px; overflow: visible; }
+.kit-eraser i {
+  position: absolute; left: -60px; top: -30px; width: 120px; height: 60px; border-radius: 10px;
+  background: linear-gradient(90deg, #eba7a0 0 62%, #2e5a9c 62% 100%);
+  box-shadow: 0 8px 10px rgba(42, 35, 32, 0.25);
+}
+
+/* ---------- captions: a paper strip, a red tick, words ink in as they are spoken ---------- */
+.kit-caps { position: absolute; inset: 0; pointer-events: none; }
+.kit-cap {
+  position: absolute;
+  left: 50%;
+  bottom: 44px;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 1792px;
+  padding: 10px 34px 13px 92px;
+  font-family: var(--kit-font-body);
+  font-size: var(--kit-t-cap);
+  line-height: 1.25;
+  color: var(--kit-ink);
+  white-space: nowrap;
+  background: var(--kit-surface);
+  border-radius: 3px;
+  box-shadow: 0 8px 18px rgba(42, 35, 32, 0.16), 0 1px 2px rgba(42, 35, 32, 0.12);
+}
+.kit-cap::before {
+  content: "";
+  position: absolute;
+  left: 30px;
+  top: 50%;
+  width: 46px;
+  height: 46px;
+  margin-top: -25px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 46'%3E%3Cpath d='M 6 24 L 17 36 L 40 9' fill='none' stroke='%23c63d2f' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.kit-cap > span { color: color-mix(in srgb, var(--kit-ink) calc(var(--lit, 0) * 100%), var(--kit-muted)); }
+
+/* ---------- chapter chip: red number + serif title, written on, red pen underline ---------- */
+.kit-chap {
+  position: absolute;
+  left: 84px;
+  top: 34px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  white-space: nowrap;
+  text-shadow: 0 0 10px var(--kit-bg), 0 0 4px var(--kit-bg);
+  clip-path: inset(-30px calc((1 - var(--in, 1)) * 100%) -40px -30px);
+}
+.kit-chap-n { font-family: var(--kit-font-mono); font-weight: 700; font-size: 56px; line-height: 1; color: var(--kit-accent); }
+.kit-chap-t { position: relative; font-family: var(--kit-font-display); font-size: 40px; line-height: 1.1; color: var(--kit-ink); }
+.kit-chap-t::after {
+  content: "";
+  position: absolute;
+  left: -4px;
+  right: -8px;
+  bottom: -14px;
+  height: 12px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M 2 7 Q 60 3 110 6 T 198 5' fill='none' stroke='%23c63d2f' stroke-width='3.2' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+}
+
+/* ---------- label: handwriting + the real term in Caveat ---------- */
+.kit-label { position: absolute; white-space: nowrap; color: var(--kit-ink); }
+.kit-label-t { font-family: var(--kit-font-hand); font-size: var(--kit-t-label); }
+.kit-label-t.kit-serif { font-family: var(--kit-font-display); }
+.kit-label-sub { display: block; margin-top: 4px; font-family: var(--kit-font-mono); font-weight: 700; font-size: 38px; color: var(--kit-muted); }
+.kit-label-sub.kit-inline { display: inline-block; margin: 0 0 0 14px; }
+
+/* ---------- note: a sticky note slapped on, one plain sentence written on it ---------- */
+.kit-note {
+  position: absolute;
+  padding: 30px 30px 30px 34px;
+  background: var(--kit-sticky);
+  box-shadow: 0 16px 22px rgba(42, 35, 32, 0.2), 0 2px 3px rgba(42, 35, 32, 0.1);
+  color: var(--kit-ink);
+  font-family: var(--kit-font-hand);
+  font-size: var(--kit-t-note);
+  line-height: 1.3;
+}
+.kit-note-tape { position: absolute; left: 50%; top: -20px; width: 140px; height: 42px; margin-left: -70px; background: var(--kit-tape); transform: rotate(-3deg); box-shadow: 0 2px 4px rgba(42, 35, 32, 0.12); }
+.kit-note-line { display: block; }
+.kit-note-line .kit-w { display: inline-block; }
+
+/* ---------- number: Caveat count-up + unit + caption ---------- */
+.kit-num { position: absolute; white-space: nowrap; color: var(--kit-ink); }
+.kit-num-v { font-family: var(--kit-font-mono); font-weight: 700; font-size: var(--kit-t-h1); line-height: 1; }
+.kit-num-u { font-family: var(--kit-font-mono); font-weight: 700; font-size: calc(var(--kit-t-h1) * 0.56); margin-left: 10px; }
+.kit-num-c { display: block; font-family: var(--kit-font-hand); font-size: 40px; color: var(--kit-muted); margin-top: 2px; }
+
+/* ---------- bars: hand-drawn tubes filled with hatching ---------- */
+.kit-bars { position: absolute; }
+.kit-bar { position: relative; display: flex; align-items: center; white-space: nowrap; }
+.kit-bar-l { flex: none; font-family: var(--kit-font-hand); font-size: 40px; color: var(--kit-ink); text-align: right; padding-right: 18px; }
+.kit-bar-tube { position: relative; flex: none; }
+.kit-bar-tube svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.kit-bar-v { flex: none; padding-left: 16px; font-family: var(--kit-font-mono); font-weight: 700; font-size: 42px; }
+
+/* ---------- formula: terms written one by one, the real unit under each ---------- */
+.kit-formula { position: absolute; display: flex; align-items: flex-start; gap: 22px; white-space: nowrap; color: var(--kit-ink); }
+.kit-term { position: relative; display: inline-flex; flex-direction: column; align-items: center; }
+.kit-term-v { font-family: var(--kit-font-mono); font-weight: 700; font-size: 76px; line-height: 1.05; }
+.kit-term-v.kit-hand { font-family: var(--kit-font-hand); font-weight: 400; }
+.kit-term-sub { font-family: var(--kit-font-hand); font-size: 40px; color: var(--kit-muted); margin-top: 2px; }
+.kit-term svg.kit-ink { left: 0; top: 0; }
+
+/* ---------- title: the closing line, word-timed, emphasis in red with a wavy underline ---------- */
+.kit-title { position: absolute; font-family: var(--kit-font-display); font-size: var(--kit-t-display); line-height: 1.18; color: var(--kit-ink); white-space: nowrap; }
+.kit-title-line { display: block; }
+.kit-title .kit-em { position: relative; color: var(--kit-accent); }
+.kit-title .kit-em::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.06em;
+  width: calc(var(--ul, 0) * 100%);
+  height: 0.16em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 16'%3E%3Cpath d='M 0 8 Q 10 1 20 8 T 40 8' fill='none' stroke='%23c63d2f' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E") 0 50% / 0.42em 100% repeat-x;
+}
+
+/* ---------- recap: a fresh page turned in, one mind map ---------- */
+.kit-recap { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; visibility: hidden; }
+.kit-recap-paper {
+  position: absolute; inset: 0;
+  background-color: var(--kit-bg);
+  background-image: linear-gradient(var(--kit-grid) 1.5px, rgba(0, 0, 0, 0) 1.5px), linear-gradient(90deg, var(--kit-grid) 1.5px, rgba(0, 0, 0, 0) 1.5px);
+  background-size: 48px 48px;
+  box-shadow: -40px 0 60px rgba(42, 35, 32, 0.22);
+}
+.kit-recap-in { position: absolute; inset: 0; transform-origin: 50% 48%; }
+.kit-recap-center { position: absolute; text-align: center; white-space: nowrap; }
+.kit-recap-title { display: block; font-family: var(--kit-font-display); color: var(--kit-ink); line-height: 1.08; }
+.kit-recap-tag { display: block; margin-top: 14px; font-family: var(--kit-font-hand); font-size: 46px; line-height: 1.2; color: var(--kit-accent); }
+.kit-recap-card {
+  position: absolute;
+  width: 590px;
+  padding: 22px 30px 26px 100px;
+  background-color: var(--kit-surface);
+  background-image: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0) 0 47px, rgba(46, 90, 156, 0.2) 47px 49px);
+  background-position: 0 30px;
+  box-shadow: 0 12px 20px rgba(42, 35, 32, 0.16), 0 1px 2px rgba(42, 35, 32, 0.1);
+}
+.kit-recap-card::before { content: ""; position: absolute; left: 80px; top: 0; bottom: 0; width: 2px; background: rgba(198, 61, 47, 0.42); }
+.kit-recap-n { position: absolute; left: 20px; top: 16px; width: 54px; text-align: center; font-family: var(--kit-font-mono); font-weight: 700; font-size: 58px; line-height: 1; color: var(--kit-accent); }
+.kit-recap-h { display: block; font-family: var(--kit-font-hand); font-size: 46px; line-height: 1.15; color: var(--kit-accent); }
+.kit-recap-line { display: block; font-family: var(--kit-font-body); font-size: 32px; line-height: 1.5; color: var(--kit-ink); }

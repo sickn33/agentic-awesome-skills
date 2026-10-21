@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+/* fonts:end */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #e8dcc4; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--kit-bg); color: var(--kit-ink); font-family: var(--kit-font-body); }
+      #stage { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #e2d3b6 0%, #e8dcc4 48%, #e8dcc4 100%); }
+      #overlay { position: absolute; inset: 0; pointer-events: none; }
+      .a { position: absolute; }
+      .num { font-family: var(--kit-font-mono); font-weight: 400; }
+
+      /* ---------- a station's signpost: navy post + paper board with the chapter number ---------- */
+      .sign { width: 0; z-index: 700; transform-origin: 50% 100%; }
+      .sign .post { position: absolute; left: -9px; bottom: 0; width: 18px; height: 210px; border-radius: 5px 5px 0 0; background: var(--kit-ink); }
+      .sign .bd {
+        position: absolute; left: 0; bottom: 168px; transform: translateX(-50%); display: flex; align-items: baseline; gap: 16px;
+        padding: 16px 28px 18px; border-radius: 10px; background: var(--kit-surface); color: var(--kit-ink); white-space: nowrap;
+        box-shadow: inset 0 -6px 0 rgba(38, 54, 74, 0.07), 4px 10px 12px -5px rgba(38, 54, 74, 0.38);
+      }
+      .sign .bd b { font-weight: 400; font-size: 64px; line-height: 1; }
+      .sign .bd span { font-size: 40px; line-height: 1; }
+
+      /* ---------- the placeholder: a pop-up storyboard card (draft frame) ---------- */
+      .ph { z-index: 800; border-radius: 16px; background: var(--kit-surface); transform-origin: 50% 100%; }
+      .ph-frame { position: absolute; inset: 16px; border: 3px dashed rgba(38, 54, 74, 0.17); border-radius: 10px; }
+      .ph-no { position: absolute; left: 40px; top: 36px; padding: 7px 16px 8px; border-radius: 7px; background: var(--kit-ink); color: var(--kit-surface); font-size: 30px; line-height: 1; }
+      .ph-st { position: absolute; right: 42px; top: 32px; padding: 5px 16px 7px; border: 3px dashed var(--kit-muted); border-radius: 8px; color: var(--kit-muted); font-size: 30px; line-height: 1.15; white-space: nowrap; }
+      .ph-t { position: absolute; left: 64px; right: 64px; top: 100px; height: 284px; display: flex; align-items: center; justify-content: center; }
+      .ph-tx { max-width: 100%; text-align: center; line-height: 1.24; text-wrap: balance; word-break: keep-all; overflow-wrap: anywhere; color: var(--kit-ink); }
+      .ph-cl { display: inline-block; }
+      .ph-w { position: relative; color: color-mix(in srgb, var(--kit-ink) calc(var(--lit, 0) * 100%), #7a8492); }
+      .ph-w.kit-term { font-size: 0.86em; }
+      .ph-tape { position: absolute; left: 64px; right: 64px; top: 402px; height: 56px; }
+      .ph-groove { position: absolute; left: 0; right: 0; top: 24px; height: 26px; border-radius: 4px; background: rgba(38, 54, 74, 0.07); box-shadow: inset 0 2px 3px rgba(38, 54, 74, 0.14); }
+      .ph-fill {
+        position: absolute; left: 0; top: 26px; height: 22px; width: 0; z-index: 1;
+        background-color: var(--kit-sand); background-image: repeating-linear-gradient(90deg, rgba(38, 54, 74, 0.45) 0 2px, rgba(0, 0, 0, 0) 2px 36px);
+        background-size: 100% 9px; background-repeat: repeat-x; box-shadow: 0 5px 7px -4px rgba(38, 54, 74, 0.38);
+      }
+      .ph-slit { position: absolute; left: -4px; top: 18px; width: 8px; height: 38px; border-radius: 3px; background: var(--kit-ink); z-index: 2; }
+      .ph-tab { position: absolute; top: 20px; width: 34px; height: 34px; margin-left: -3px; z-index: 3; background: var(--kit-ink); clip-path: polygon(0 50%, 14px 0, 100% 0, 100% 100%, 14px 100%); }
+      .ph-tick { position: absolute; top: 0; width: 6px; height: 18px; margin-left: -3px; border-radius: 3px; background: var(--kit-ink); transform-origin: 50% 100%; }
+      .ph-tick.now { background: var(--kit-accent); }
+
+      /* ---------- the end station: a low paper plinth under a paper spotlight ---------- */
+      .plinth { z-index: 780; border-radius: 12px 12px 0 0; transform-origin: 50% 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding-top: 26px; }
+      .plinth .lip { position: absolute; left: -14px; right: -14px; top: -10px; height: 34px; border-radius: 8px; background: var(--kit-surface); box-shadow: 0 6px 8px -4px rgba(38, 54, 74, 0.32); }
+      .plinth .pl-name { max-width: 92%; color: var(--kit-ink); line-height: 1.1; white-space: nowrap; }
+      .plinth .pl-name .kit-term { font-size: 0.9em; }
+      .plinth .pl-st { padding: 3px 14px 5px; border: 3px dashed var(--kit-muted); border-radius: 8px; color: var(--kit-muted); font-size: 26px; line-height: 1.15; white-space: nowrap; }
+      .spot { z-index: 850; width: 0; height: 0; }
+      .spot div { position: absolute; top: 0; background: linear-gradient(180deg, rgba(251, 248, 241, 0), rgba(251, 248, 241, 0.55)); clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%); }
+
+      /* ---------- a draft story (silent narration) ---------- */
+      #draft {
+        position: absolute; right: 64px; top: 14px; z-index: 90; padding: 6px 18px 8px; border-radius: 8px; background: var(--kit-surface);
+        color: var(--kit-muted); font-size: 28px; line-height: 1.15; white-space: nowrap; transform: rotate(1.5deg);
+        box-shadow: inset 0 0 0 3px rgba(79, 93, 112, 0.35), 3px 8px 10px -5px rgba(38, 54, 74, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-stamp="story" data-width="1920" data-height="1080">
+      <div id="stage" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="1">
+        <div id="world" data-layout-allow-overflow=""></div>
+      </div>
+      <div id="overlay" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="3">
+        <div id="chap"></div>
+        <div id="caps"></div>
+      </div>
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40" data-stamp="narration" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-stamp="story" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script src="beats.js"></script>
+    <script>
+      /* v4-paper starter driver — the film minus the topic. Everything here comes from window.STORY:
+       * the book page (Kit.world), one station per chapter along the page, one camera that travels station to station and
+       * drifts inside a station, the chrome (bookmark chip, paper captions, closing ribbons, recap page) and the end plinth.
+       * The topic lives in beats.js (window.Beats). tools/sfx.py mirrors the timing constants marked [sfx]. */
+      (function () {
+        "use strict";
+        var C = ExplainerCore, K = Kit, EZ = K.EZ, pr = C.pr, cl = C.clamp01, fold = K.fold, foldCss = K.foldCss;
+        var story = new C.Story(window.STORY);
+        var DUR = story.duration;
+        var END = story.end || null, endLine = END ? END.line : null;
+        function $(id) { return document.getElementById(id); }
+        function f2(v) { return v.toFixed(2); }
+        function pad2(n) { return (n < 10 ? "0" : "") + n; }
+
+        // ================= layout constants (world px; the floor line pieces stand on is FLOOR) =================
+        var FLOOR = 840, CARD_W = 1100, CARD_H = 500, PITCH = 1360, GAP = 900, MIN_W = 1900;
+        var CAM_Y = 536, CAM_S = 1.15;                                   // a line's framing: card floor ≈ 890 px on screen
+        var PLINTH_W0 = 760, PLINTH_H = 230, END_CAM_Y = 508, END_CAM_S = 1.1;
+        // [sfx] timing (seconds): card up = line.start + CARD_UP; stamp = card up + STAMP; moves: lead / duration
+        var CARD_UP = -0.25, STAMP = 0.45, MOVE_FIRST = [0.5, 1.05], MOVE_NEXT = [0.42, 0.85], MOVE_END = [0.55, 1.15];
+
+        // ================= chapters → stations, lines → spots =================
+        var chapters = story.chapters.length ? story.chapters : [{ n: 1, key: "all", title: story.title || "", start: 0, end: DUR }];
+        function chapterIndexOf(L) {
+          for (var i = 0; i < chapters.length; i++) if (L.start >= chapters[i].start - 1e-6 && L.start < chapters[i].end) return i;
+          var k = 0;
+          chapters.forEach(function (c, i) { if (c.start <= L.start) k = i; });
+          return k;
+        }
+        var beatLines = story.lines.filter(function (L) { return L.i !== endLine; });
+        var stations = chapters.map(function (c, k) {
+          return { k: k, n: c.n, chapter: c, title: c.title, key: c.key, start: c.start, end: c.end, lines: [], floor: FLOOR };
+        });
+        beatLines.forEach(function (L) { stations[chapterIndexOf(L)].lines.push(L.i); });
+        var cursor = 0;
+        stations.forEach(function (S) {
+          var m = Math.max(1, S.lines.length), rowW = m * PITCH - (PITCH - CARD_W);
+          S.w = Math.max(MIN_W, rowW);
+          S.x0 = cursor; S.x1 = cursor + S.w; S.x = cursor + S.w / 2;
+          var first = S.x - rowW / 2 + CARD_W / 2;
+          S.spots = S.lines.map(function (i, j) { return { line: i, x: first + j * PITCH, y: FLOOR }; });
+          if (!S.spots.length) S.spots = [{ line: null, x: S.x, y: FLOOR }];
+          S.signX = first - CARD_W / 2 - 300;
+          cursor = S.x1 + GAP;
+        });
+        var endSt = END ? { x: cursor + 700, y: FLOOR } : null;   // the plinth sits one gap after the last station
+        var lastX = endSt ? endSt.x + 900 : cursor;
+        function stationOf(i) { return stations[chapterIndexOf(story.line(i))]; }
+        function spotOf(i) {
+          var S = stationOf(i), j = S.lines.indexOf(i);
+          return j >= 0 ? S.spots[j] : null;
+        }
+
+        // ================= the book page: far 0.4× / stage 1× / near 1.25× =================
+        var fxOf = function (x) { return 960 + (x - 960) * 0.4; };
+        var clouds = [], fx0 = fxOf(-1400) - 500, fx1 = fxOf(lastX + 1400) + 500;
+        for (var ci = 0, cx = fx0; cx < fx1; ci++, cx += 520 + 260 * K.hsh(ci * 3.1)) {
+          clouds.push([Math.round(cx), Math.round(230 + 300 * K.hsh(ci * 7.3 + 1)), Math.round(150 + 60 * K.hsh(ci + 5)), 0]);
+          clouds[clouds.length - 1][3] = Math.round(clouds[clouds.length - 1][2] * 0.46);
+        }
+        var firstSpot = stations[0].spots[0];
+        var W = K.world($("stage"), { stage: $("world"), span: [-1400, lastX + 1400], sun: [Math.round(fxOf(firstSpot.x - 300) + 560), 46], clouds: clouds });
+        var world = $("world"), overlay = $("overlay");
+
+        // ================= tiny helpers (also handed to Beats) =================
+        function el(tag, cls, html, parent) {
+          var e = document.createElement(tag);
+          if (cls) e.className = cls;
+          if (html != null) e.innerHTML = html;
+          (parent || world).appendChild(e);
+          return e;
+        }
+        function box(e, x, y, w, h) { e.style.left = x + "px"; e.style.top = y + "px"; if (w != null) e.style.width = w + "px"; if (h != null) e.style.height = h + "px"; return e; }
+        function vis(e, v) { e.style.visibility = v ? "inherit" : "hidden"; }
+        // ExplainerCore.place() for pieces inside the world: keep visibility inherited from their parents
+        function put(e, x, y, ax, ay, sc) { C.place(e, x, y, ax == null ? 0.5 : ax, ay == null ? 0.5 : ay, 1, sc || 1); e.style.visibility = ""; return e; }
+        // a floor shadow lying behind a piece that stands on FLOOR (x, w: the piece's left edge and width)
+        function shadowFor(x, w, hgt, parent) { var s = el("div", "kit-shadow", null, parent); box(s, x + 6, FLOOR - hgt, w, hgt); return s; }
+        // a piece (and its floor shadow) folds up at `up`, optionally flat again at `down`; returns the fold angle
+        function standUp(e, sh, t, up, dUp, down, dDown, eye, dist) {
+          var on = K.alive(t, up, down, dDown || 0.3);
+          vis(e, on);
+          if (sh) vis(sh, on);
+          if (!on) return K.FLAT;
+          var a = fold(t, up, dUp || 0.45, down, dDown || 0.3, EZ.b14);
+          e.style.transform = foldCss(a, eye || 300, dist || 1400);
+          if (sh) K.floorShadow(sh, a);
+          return a;
+        }
+        // a point on an arc from A to B lifted by `lift` px (for hops and flights); u 0..1
+        function flight(A, B, lift, u) { return K.bez2(A, { x: (A.x + B.x) / 2, y: Math.min(A.y, B.y) - lift }, B, cl(u)); }
+        // topic CSS from beats.js (keeps index.html topic-free)
+        function css(text) { var st = document.createElement("style"); st.textContent = text; document.head.appendChild(st); return st; }
+        function note(text, o) {
+          var n = K.note(text, o || {});
+          overlay.appendChild(n.el);
+          C.place(n.el, 960, 138, 0.5, 0);
+          return n;
+        }
+
+        // ================= text helpers: beat note, key phrase, units, word-time alignment =================
+        var PUNCT = /[，,；;：:。！!？?、]/;
+        var CONTENT = /[A-Za-z\d㐀-鿿]/;
+        function termCount(s) { var m = String(s).match(new RegExp(K.TERM.source, "g")); return m ? m.length : 0; }
+        function cjkLen(s) { return String(s).replace(/\s/g, "").length; }
+        // the line's most informative clause: Latin terms / numbers first, then length (≤ 16)
+        function keyPhrase(i) {
+          var text = story.line(i).text, best = null, bs = -1e9;
+          text.split(/[，,；;：:。！!？?]/).forEach(function (p) {
+            p = p.trim();
+            if (!p) return;
+            var n = cjkLen(p), sc = 4 * Math.min(3, termCount(p)) + Math.min(n, 16) - Math.max(0, n - 26);
+            if (sc > bs) { bs = sc; best = p; }
+          });
+          return best || text;
+        }
+        // the beat note for this line from story.notes[chapter.key] (j-th note ↔ j-th line of the chapter)
+        function beatNote(i) {
+          var notes = story.data.notes, S = stationOf(i);
+          if (!notes || !S.key || notes[S.key] == null) return null;
+          var arr = typeof notes[S.key] === "string" ? [notes[S.key]] : notes[S.key];
+          return arr[S.lines.indexOf(i)] || null;
+        }
+        // split a text into print units: Latin / number runs whole, everything else per character
+        function units(text) {
+          var out = [], re = new RegExp(K.TERM.source, "g"), last = 0, m, i;
+          while ((m = re.exec(text))) {
+            for (i = last; i < m.index; i++) out.push({ s: text[i], latin: false });
+            out.push({ s: m[0], latin: true });
+            last = m.index + m[0].length;
+          }
+          for (i = last; i < text.length; i++) out.push({ s: text[i], latin: false });
+          out.forEach(function (u) { u.space = /^\s+$/.test(u.s); });
+          return out;
+        }
+        // when is each unit of `text` "spoken"? characters shared with the line (longest common subsequence) take their
+        // spoken time; the rest are spread evenly between those anchors, so the text prints in step with the voice
+        function alignTimes(us, L) {
+          var lc = [];
+          story.spoken(L.i).forEach(function (w) { Array.from(w[0].toLowerCase()).forEach(function (c) { if (CONTENT.test(c)) lc.push({ c: c, t: w[1] }); }); });
+          var tc = [];
+          us.forEach(function (u, i) { if (!u.space) Array.from(u.s.toLowerCase()).forEach(function (c) { if (CONTENT.test(c)) tc.push({ c: c, i: i }); }); });
+          var n = tc.length, m = lc.length, dp = [], a, b;
+          for (a = 0; a <= n; a++) { dp.push(new Int16Array(m + 1)); }
+          for (a = n - 1; a >= 0; a--) for (b = m - 1; b >= 0; b--) dp[a][b] = tc[a].c === lc[b].c ? dp[a + 1][b + 1] + 1 : Math.max(dp[a + 1][b], dp[a][b + 1]);
+          var known = {};
+          a = 0; b = 0;
+          while (a < n && b < m) {
+            if (tc[a].c === lc[b].c) { if (known[tc[a].i] == null) known[tc[a].i] = lc[b].t; a++; b++; }
+            else if (dp[a + 1][b] >= dp[a][b + 1]) a++;
+            else b++;
+          }
+          var P = [];
+          us.forEach(function (u, i) { if (!u.space) P.push(i); });
+          var sp = story.spoken(L.i), t0 = L.start, t1 = sp.length ? sp[sp.length - 1][1] : L.end - 0.2;
+          var anchors = [];
+          P.forEach(function (i, k) { if (known[i] != null) anchors.push([k, known[i]]); });
+          var T = P.map(function (i, k) {
+            if (known[i] != null) return known[i];
+            var lo = null, hi = null;
+            anchors.forEach(function (A) { if (A[0] < k) lo = A; if (A[0] > k && !hi) hi = A; });
+            if (!lo) lo = [-1, t0];
+            if (!hi) hi = [P.length, t1];
+            return lo[1] + (hi[1] - lo[1]) * (k - lo[0]) / (hi[0] - lo[0]);
+          });
+          var run = t0, out = {};
+          P.forEach(function (i, k) { run = Math.max(run, Math.min(T[k], t1)); out[i] = run; });
+          return out;
+        }
+        // print units → clauses → words. A word ends at a space, at a Latin↔CJK seam and after punctuation (CJK runs stay
+        // whole: the title uses keep-all, with <wbr> at the seams)
+        function clausesOf(us) {
+          var out = [], cur = { words: [], text: "", us: [] }, word = null, prevLatin = null, gap = false;
+          us.forEach(function (u) {
+            cur.us.push(u);
+            if (u.space) { gap = true; word = null; cur.text += " "; return; }
+            var punct = PUNCT.test(u.s);
+            if (!word || gap || (!punct && prevLatin !== null && u.latin !== prevLatin)) { word = { s: "", sp: gap && cur.words.length > 0 }; cur.words.push(word); }
+            word.s += u.s; cur.text += u.s; gap = false;
+            if (!punct) prevLatin = u.latin;
+            if (punct) { out.push(cur); cur = { words: [], text: "", us: [] }; word = null; prevLatin = null; }
+          });
+          if (cur.us.length) out.push(cur);
+          return out;
+        }
+        // the largest font size at which the clauses fit the title box: a clause that fits a line never splits; a wider one
+        // starts its own line and wraps between its words. 2 lines from 58 px up, 3 below, 4 at 46 px and less
+        // (Kit.textW over-estimates real widths by ≈ 5 %, which is the safety margin)
+        function fitSize(cls, w, h) {
+          for (var fs = 78; fs >= 38; fs -= 2) {
+            var lines = 1, cur = 0, ok = true;
+            cls.forEach(function (c) {
+              var cw = K.textW(c.text.trim(), fs, 0.57);
+              if (cw <= w) { if (cur > 0 && cur + cw > w) { lines++; cur = 0; } cur += cw; return; }
+              if (cur > 0) { lines++; cur = 0; }
+              c.words.forEach(function (wd) {
+                var ww = K.textW(wd.s, fs, 0.57) + (wd.sp && cur > 0 ? 0.3 * fs : 0);
+                if (ww > w) ok = false;
+                if (cur > 0 && cur + ww > w) { lines++; cur = 0; ww = K.textW(wd.s, fs, 0.57); }
+                cur += ww;
+              });
+              cur = w + 1;   // the wrapped clause fills its last line: the next clause starts a new one
+            });
+            if (ok && lines <= (fs >= 58 ? 2 : fs > 46 ? 3 : 4) && lines * fs * 1.24 <= h) return fs;
+          }
+          return 38;
+        }
+        // how many lines a narration line's caption takes (kit caption: 44 px, 1624 px of text width, balanced)
+        function capLines(i) { return Math.max(1, Math.ceil((K.textW(story.line(i).text, 44, 0.57) * 0.96) / 1624)); }
+
+        // ================= the placeholder: a pop-up storyboard card for one narration line =================
+        /* placeholder(line, { text }) — a white paper card standing on the line's spot: frame number tab, a 「待演绎」 stamp,
+         * the beat note (story.notes) or the line's key phrase in pencil that is inked unit by unit as the voice says it, and
+         * a timing tape pulled out of a slit across the line with one little flag per spoken unit. Folds up as the line starts. */
+        function placeholder(line, o) {
+          o = o || {};
+          var L = typeof line === "number" ? story.line(line) : line;
+          var sp = spotOf(L.i);
+          if (!sp) return { el: null, line: L.i, render: function () {} };
+          var text = o.text || beatNote(L.i) || keyPhrase(L.i);
+          var x0 = sp.x - CARD_W / 2, y0 = FLOOR - CARD_H;
+          var card = el("div", "a ph", '<i class="ph-frame"></i><b class="ph-no num">' + pad2(L.i) + '</b><span class="ph-st"><span>待演绎</span></span><div class="ph-t"><div class="ph-tx"></div></div><div class="ph-tape"><i class="ph-groove"></i><i class="ph-fill"></i><i class="ph-slit"></i><i class="ph-tab"></i></div>');
+          box(card, x0, y0, CARD_W, CARD_H);
+          var sh = shadowFor(x0, CARD_W, 150);
+          var stamp = card.querySelector(".ph-st"), tx = card.querySelector(".ph-tx"), tape = card.querySelector(".ph-tape");
+          var fill = card.querySelector(".ph-fill"), tab = card.querySelector(".ph-tab");
+          // print units, grouped into clause atoms so lines break after ， ； ： (and at word seams inside a long clause)
+          var us = units(text), times = alignTimes(us, L), cls = clausesOf(us), toks = [], k0 = 0;
+          var coveredByRecap = !END && !!story.recap && beatLines.length && L.i === beatLines[beatLines.length - 1].i;
+          tx.style.fontSize = fitSize(cls, (CARD_W - 128) * 0.97, 284) + "px";
+          cls.forEach(function (c) {
+            var atom = el("span", "ph-cl", null, tx), prev = null;
+            c.us.forEach(function (u) {
+              var i = k0++;
+              if (u.space) { atom.appendChild(document.createTextNode(" ")); prev = null; return; }
+              if (prev && prev.latin !== u.latin && !PUNCT.test(u.s)) atom.appendChild(document.createElement("wbr"));
+              var s = el("span", "ph-w" + (u.latin ? " kit-term" : ""), null, atom);
+              s.textContent = u.s;
+              if (coveredByRecap) s.setAttribute("data-layout-allow-overlap", "");   // the recap page folds up over this card
+              toks.push({ el: s, t: times[i] });
+              prev = u;
+            });
+          });
+          // one flag per spoken unit along the tape, at its share of the line
+          var dur = Math.max(0.3, L.end - L.start);
+          var flags = story.spoken(L.i).map(function (w) {
+            var f = el("i", "ph-tick", null, tape);
+            f.style.left = (cl((w[1] - L.start) / dur) * 100).toFixed(2) + "%";
+            return { el: f, t: w[1] };
+          });
+          var up = L.start + CARD_UP, tStamp = up + STAMP;
+          return {
+            el: card, line: L.i, text: text, x: sp.x, y: FLOOR, w: CARD_W, h: CARD_H, up: up,
+            render: function (t) {
+              var a = standUp(card, sh, t, up, 0.5, null, 0, 300, 1500);
+              if (t < up) return;
+              card.style.boxShadow = K.cardShadow(a);
+              var ps = pr(t, tStamp, 0.28);
+              stamp.style.visibility = ps > 0 ? "inherit" : "hidden";
+              if (ps > 0) stamp.style.transform = "rotate(-4deg) scale(" + (1.45 - 0.45 * EZ.b16(ps)).toFixed(3) + ")";
+              toks.forEach(function (k) {
+                var p = pr(t, k.t - 0.04, 0.18);
+                k.el.style.setProperty("--lit", EZ.o2(p).toFixed(3));
+                k.el.style.top = p > 0 && p < 1 ? f2(-10 * Math.sin(Math.PI * p) * (1 - 0.4 * p)) + "px" : "0px";
+              });
+              var u = cl((t - L.start) / dur), w = (u * 100).toFixed(2) + "%";
+              fill.style.width = w;
+              tab.style.left = w;
+              var nowK = -1;
+              flags.forEach(function (f, k) { if (t >= f.t - 0.03) nowK = k; });
+              flags.forEach(function (f, k) {
+                var p = pr(t, f.t - 0.03, 0.2);
+                f.el.style.transform = "scaleY(" + Math.max(0.12, EZ.b16(p) * (p > 0 ? 1 : 0)).toFixed(3) + ")";
+                f.el.style.opacity = p > 0 ? "1" : "0.28";
+                f.el.classList.toggle("now", k === nowK && t < L.end);
+              });
+            },
+          };
+        }
+
+        // ================= station signposts (chrome) =================
+        stations.forEach(function (S) {
+          var tt = String(S.title || ""), head = tt.split(/[：:]/)[0];
+          if (cjkLen(head) > 6) head = cjkLen(tt) <= 6 ? tt : "";
+          var sg = el("div", "a sign", '<i class="post"></i><div class="bd"><b class="num">' + pad2(S.n) + "</b>" + (head ? "<span>" + K.esc(head) + "</span>" : "") + "</div>");
+          box(sg, S.signX, FLOOR - 400, 0, 400);
+          S.sign = sg;
+          S.signSh = shadowFor(S.signX - 60, 120, 60);
+        });
+
+        // ================= the end station: a plinth under a spotlight; story.end.emphasis pops up on it =================
+        var endStage = null;
+        if (END) {
+          var EL = story.line(END.line);
+          var flat = EL.words.map(function (w) { return w[0]; }), flatS = flat.join("");
+          var timeOf = function (e) {
+            var s = String(e).replace(/\s/g, ""), at = flatS.indexOf(s);
+            if (!s || at < 0) return null;
+            for (var k = 0, pos = 0; k < flat.length; pos += flat[k].length, k++) if (pos + flat[k].length > at) return EL.words[k][1];
+            return null;
+          };
+          var ems = (END.emphasis || []).map(function (e) { return { text: e, t: timeOf(e) }; }).filter(function (e) { return e.t != null; });
+          if (!ems.length) { var kp = keyPhrase(END.line), kt = timeOf(kp); if (kt != null) ems = [{ text: kp, t: kt }]; }
+          ems = ems.slice(0, 4).sort(function (a, b) { return a.t - b.t; });   // left to right in spoken order; the last one is coral
+          var TAG_FS = 56, tagW = ems.map(function (e) { return K.textW(e.text, TAG_FS, 0.62) + 100; });
+          var rowW = tagW.reduce(function (s, w) { return s + w; }, 0) + Math.max(0, ems.length - 1) * 44;
+          var PW = Math.max(PLINTH_W0, rowW + 240, story.title ? K.textW(story.title, 44, 0.66) / 0.84 : 0);
+          var name = String(story.title || "");
+          var plinth = el("div", "a plinth kit-sandp", '<i class="lip"></i>' + (name ? '<div class="pl-name">' + K.term(name) + "</div>" : "") + '<span class="pl-st"><span>待演绎 · 结尾</span></span>');
+          box(plinth, endSt.x - PW / 2, FLOOR - PLINTH_H, PW, PLINTH_H);
+          // the story's title is the plinth's nameplate (sized to the plinth, at most 76 px)
+          plinth.querySelectorAll("span, .pl-name").forEach(function (x) { x.setAttribute("data-layout-allow-overlap", ""); });
+          if (name) plinth.querySelector(".pl-name").style.fontSize = Math.max(36, Math.min(76, Math.floor((PW * 0.84) / Math.max(1, K.textW(name, 1, 0.66))))) + "px";
+          var plSh = shadowFor(endSt.x - PW / 2, PW, 120);
+          var spot = el("div", "a spot", "<div></div>");
+          box(spot, endSt.x, -260);
+          var spH = FLOOR - PLINTH_H + 40 + 260;
+          box(spot.firstChild, -PW / 2 - 40, 0, PW + 80, spH);
+          var tx0 = endSt.x - rowW / 2;
+          var tags = ems.map(function (e, k) {
+            var lab = K.label({ text: e.text, tone: k === ems.length - 1 ? "accent" : "default", size: TAG_FS });
+            world.appendChild(lab.el);
+            lab.el.style.zIndex = "900";
+            lab.el.querySelectorAll("span").forEach(function (x) { x.setAttribute("data-layout-allow-overlap", ""); });   // the recap page folds up over it
+            put(lab.el, tx0 + tagW[k] / 2, FLOOR - PLINTH_H + 6, 0.5, 1);
+            tx0 += tagW[k] + 44;
+            lab.at = e.t - 0.06;
+            return lab;
+          });
+          endStage = { x: endSt.x, y: FLOOR, w: PW, h: PLINTH_H, plinth: plinth, spot: spot, tags: tags, shadow: plSh, on: true };
+        }
+
+        // ================= camera: one shot per line (its spot), one for the closing line (the plinth) =================
+        var shots = [], prevT1 = -1;
+        beatLines.forEach(function (L, idx) {
+          var S = stations[chapterIndexOf(L)], j = S.lines.indexOf(L.i), first = j === 0;
+          var mv = first ? MOVE_FIRST : MOVE_NEXT, t0 = L.start - mv[0], d = mv[1];
+          if (idx === 0) { t0 = 0; d = Math.max(0.8, L.start + 0.7); }
+          t0 = Math.max(t0, prevT1 + 0.1);
+          shots.push({ kind: "line", line: L.i, k: S.k, first: first, t0: t0, t1: t0 + d, spot: S.spots[j], o: {} });
+          prevT1 = t0 + d;
+        });
+        if (END) {
+          var te0 = Math.max(story.line(END.line).start - MOVE_END[0], prevT1 + 0.1);
+          shots.push({ kind: "end", line: END.line, t0: te0, t1: te0 + MOVE_END[1], spot: endSt, o: {} });
+        }
+        var focuses = [];
+        var camera = {
+          shots: shots,
+          // override the framing the camera moves to for `line` (world x, y at frame centre, scale s; dx/dy/ds = drift
+          // during the shot). Call while Beats is being built.
+          frame: function (line, o) { shots.forEach(function (sh) { if (sh.line === line) Object.assign(sh.o, o); }); },
+          // push toward a world point between t0 and t1 (eased in/out), on top of the shot's drift
+          focus: function (t0, t1, target, o) { o = o || {}; focuses.push({ t0: t0, t1: t1, g: target, dIn: o.dIn || 0.7, dOut: o.dOut || 0.7, ez: o.ease || EZ.io3 }); },
+        };
+        var CX, CY, CS;
+        function buildCamera() {
+          shots.forEach(function (sh, i) {
+            var tN = i + 1 < shots.length ? shots[i + 1].t0 : DUR, span = Math.max(0.05, tN - sh.t1), end = sh.kind === "end";
+            var s = sh.o.s != null ? sh.o.s : end ? END_CAM_S : CAM_S;
+            // drift ≈ 22 px/s on screen toward the reading direction, so a hold never parks
+            var dx = sh.o.dx != null ? sh.o.dx : Math.min(end ? 140 : 260, Math.max(30, (22 / s) * span));
+            sh.s = s; sh.dx = dx;
+            sh.dy = sh.o.dy != null ? sh.o.dy : end ? 0 : 0.08 * dx;
+            sh.ds = sh.o.ds != null ? sh.o.ds : end ? 0.035 : Math.min(0.03, 0.006 * span);
+            sh.x = sh.o.x != null ? sh.o.x : sh.spot.x - dx / 2 - (sh.first ? 150 : 0);
+            // keep the card's foot (≈ 890 px on screen) above the caption label (+ its tape and 30 px of air)
+            var foot = end ? 905 : Math.min(890, 1080 - 50 - (capLines(sh.line) * 54.6 + 31) - 30);
+            sh.y = sh.o.y != null ? sh.o.y : (end ? END_CAM_Y : CAM_Y) + (end ? 0 : (890 - foot) / s);
+            sh.tN = tN;
+          });
+          var s0 = shots[0] || { x: 960, y: CAM_Y, s: CAM_S, t1: 1, tN: DUR, dx: 30, dy: 0, ds: 0 };
+          CX = [[0, s0.x - 170]]; CY = [[0, s0.y + 12]]; CS = [[0, s0.s * 0.94]];
+          shots.forEach(function (sh, i) {
+            var ez = i === 0 ? EZ.io2 : EZ.io3;
+            CX.push([sh.t1, sh.x, ez], [sh.tN, sh.x + sh.dx, EZ.lin]);
+            CY.push([sh.t1, sh.y, ez], [sh.tN, sh.y + sh.dy, EZ.lin]);
+            CS.push([sh.t1, sh.s, ez], [sh.tN, sh.s * (1 + sh.ds), EZ.lin]);
+          });
+          if (!shots.length) { CX.push([DUR, s0.x]); CY.push([DUR, s0.y]); CS.push([DUR, s0.s]); }
+        }
+        function shotAt(t) { var r = shots[0]; shots.forEach(function (sh) { if (sh.t0 <= t) r = sh; }); return r; }
+        var cam = { x: 960, y: CAM_Y, s: CAM_S };
+        function applyCamera(t) {
+          var x = K.ladder(t, CX), y = K.ladder(t, CY), s = K.ladder(t, CS);
+          focuses.forEach(function (f) {
+            var w = f.ez(pr(t, f.t0, f.dIn)) * (1 - f.ez(pr(t, f.t1, f.dOut)));
+            if (w <= 0) return;
+            var a = f.anchor || (f.anchor = shotAt(f.t0));
+            if (f.g.x != null) x += w * (f.g.x - a.x);
+            if (f.g.y != null) y += w * (f.g.y - a.y);
+            if (f.g.s != null) s *= 1 + w * (f.g.s / a.s - 1);
+          });
+          cam.x = x; cam.y = y; cam.s = s;
+          W.render(cam, t);
+        }
+
+        // ================= the api handed to beats.js =================
+        var api = {
+          story: story, C: C, Kit: K, EZ: EZ, W: W, world: world, overlay: overlay, cam: cam, camera: camera,
+          FLOOR: FLOOR, CARD: { w: CARD_W, h: CARD_H },
+          at: function (l, u, n) { return story.at(l, u, n); },
+          ph: function (l, p) { return story.phrase(l, p); },
+          station: function (k) { return stations[k]; },
+          stations: stations,
+          stationOf: stationOf,
+          spot: spotOf,
+          endStage: endStage,
+          el: el, box: box, vis: vis, put: put, shadowFor: shadowFor, standUp: standUp, flight: flight, note: note, css: css,
+          beatNote: beatNote, keyPhrase: keyPhrase,
+          placeholder: placeholder,
+        };
+        var beats = typeof window.Beats === "function" ? window.Beats(api) : null;
+        if (!beats || typeof beats.render !== "function") beats = { render: function () {} };
+        buildCamera();
+        // [sfx] a station's signpost folds up as the camera sets off toward it (the first one at 0.1 s)
+        stations.forEach(function (S) {
+          var sh = shots.filter(function (x) { return x.k === S.k && x.first; })[0];
+          S.signUp = S.k === 0 ? 0.1 : sh ? sh.t0 + 0.15 : S.start - 0.15;
+        });
+
+        // ================= screen chrome: bookmark chip, paper captions, closing ribbons, recap page, draft tag =================
+        var chap = new C.Chapters($("chap"), story);
+        var caps = K.captions($("caps"), story);
+        var closing = null;
+        if (END) {
+          closing = K.title(story);
+          overlay.appendChild(closing.el);
+          // the widest ribbon must fit the frame (64 px margins): clause width at 80 px + its 200 px of ribbon ends
+          var widest = 0;
+          story.line(END.line).text.split(/(?<=[，,。：:；;！!？?])/).forEach(function (c) { widest = Math.max(widest, K.textW(c, 80, 0.57) + 200); });
+          C.place(closing.el, 960, 44, 0.5, 0, 1, Math.min(1, 1792 / widest));
+        }
+        var recap = story.recap ? K.recap(story, { hide: [$("stage")].concat(closing ? [closing.el] : []) }) : null;
+        if (recap) overlay.appendChild(recap.el);
+        if (story.data.draft) el("div", null, "草稿 · 无配音", overlay).id = "draft";
+
+        // ================= the frame renderer: a pure function of t =================
+        function render(t) {
+          applyCamera(t);
+          stations.forEach(function (S) { standUp(S.sign, S.signSh, t, S.signUp, 0.5, null, 0, 260, 1400); });
+          if (endStage && !endStage.on) {   // beats.js switched the default end stage off (it performs its own closing scene)
+            [endStage.plinth, endStage.shadow, endStage.spot].forEach(function (e) { vis(e, false); });
+            endStage.tags.forEach(function (lab) { vis(lab.el, false); });
+          } else if (endStage) {
+            var es = shots[shots.length - 1], pa = standUp(endStage.plinth, endStage.shadow, t, es.t0 + 0.4, 0.5, null, 0, 300, 1500);
+            endStage.plinth.style.boxShadow = K.cardShadow(pa);
+            var so = EZ.o2(pr(t, story.line(END.line).start + 0.1, 0.6));
+            endStage.spot.style.opacity = so.toFixed(3);
+            vis(endStage.spot, so > 0);
+            endStage.tags.forEach(function (lab) { lab.render(t); });
+          }
+          beats.render(t);
+          chap.render(t);
+          caps.render(t);
+          if (closing) closing.render(t);
+          if (recap) recap.render(t);
+        }
+
+        render(0);
+        var tl = gsap.timeline({ paused: true });
+        var drive = { v: 0 };
+        tl.fromTo(drive, { v: 0 }, { v: DUR, duration: DUR, ease: "none", onUpdate: function () { render(drive.v); } }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

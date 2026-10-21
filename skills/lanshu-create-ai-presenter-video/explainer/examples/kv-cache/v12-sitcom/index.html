@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/noto-sans-sc-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+@font-face { font-family: "Noto Sans SC"; src: url("assets/fonts/noto-sans-sc-900.woff2") format("woff2"); font-weight: 900; font-style: normal; font-display: block; }
+@font-face { font-family: "ZCOOL QingKe HuangYou"; src: url("assets/fonts/zcool-qingke.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Long Cang"; src: url("assets/fonts/long-cang.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jetbrains-mono-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+/* fonts:end */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #fbf3e4; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--kit-bg); color: var(--kit-ink); font-family: var(--kit-font-body); font-weight: 700; }
+      #stage { position: absolute; inset: 0; overflow: hidden; background: var(--kit-bg); }
+      #overlay { position: absolute; inset: 0; pointer-events: none; }
+      #recap-layer { position: absolute; inset: 0; pointer-events: none; }
+      .a { position: absolute; left: 0; top: 0; }
+      /* the end station's board: the emphasis words in chalk */
+      .end-words { position: absolute; left: 0; top: 0; display: flex; align-items: baseline; justify-content: center; gap: 40px; }
+      .end-words .kit-chalk { position: relative; }
+      .end-slot { position: relative; display: flex; flex-direction: column; align-items: center; }
+      .end-blank { height: 0; border-top: 6px dashed rgba(255, 246, 214, 0.75); border-radius: 3px; margin-top: 6px; }
+      .end-sep { width: 18px; height: 18px; border-radius: 50%; background: var(--kit-chalk); opacity: 0.7; align-self: center; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="50.1" data-stamp="story" data-width="1920" data-height="1080">
+      <div id="stage" class="clip" data-start="0" data-duration="50.1" data-stamp="story" data-track-index="1">
+        <div id="world" class="kit-world" data-layout-allow-overflow=""></div>
+      </div>
+      <div id="overlay" class="clip" data-start="0" data-duration="50.1" data-stamp="story" data-track-index="3">
+        <div id="chap"></div>
+        <div id="caps"></div>
+      </div>
+      <div id="recap-layer" class="clip" data-start="0" data-duration="50.1" data-stamp="story" data-track-index="5"></div>
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="45.56" data-stamp="narration" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="50.1" data-stamp="story" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script src="beats.js"></script>
+    <script>
+      /* v12-sitcom starter driver — the film minus the topic. Everything here comes from window.STORY:
+       *   the set       one long room seen straight on; one SET (station) per chapter side by side, wall pillars between them,
+       *                 each dressed from a small rotation of layouts (shop / office / lobby / library); an end set for
+       *                 story.end (a chalk board + the cast)
+       *   the camera    trucks set to set at each chapter, shifts toward the speaker each line, drifts so it never parks
+       *   the chrome    小剧场 chip, captions with the 旁白 tag + yellow marker, closing line (Kit.title), curtain-call recap
+       * The topic lives in beats.js (window.Beats). tools/sfx.py mirrors the timing constants marked [sfx]. */
+      (function () {
+        "use strict";
+        var C = ExplainerCore, K = Kit, EZ = K.EZ, pr = C.pr, cl = C.clamp01;
+        var story = new C.Story(window.STORY);
+        var DUR = story.duration, END = story.end || null, endLine = END ? END.line : null, RC = story.recap || null;
+        function $(id) { return document.getElementById(id); }
+        function pad2(n) { return (n < 10 ? "0" : "") + n; }
+
+        // ================= layout (world px) =================
+        var SW = 2240, PITCH = 2400, FEET = 905, CAM_Y = 540, CAM_S = 1.0;
+        // [sfx] timing: bubble pops at line.start + BUBBLE; stand-ins gesture at line.start + GESTURE; moves [lead, duration]
+        var BUBBLE = -0.12, GESTURE = -0.18, MOVE_FIRST = [0.6, 1.15], MOVE_NEXT = [0.4, 0.75], MOVE_END = [0.6, 1.2];
+
+        // ================= chapters → sets (stations), lines → spots =================
+        var chapters = story.chapters.length ? story.chapters : [{ n: 1, key: "all", title: story.title || "", start: 0, end: END ? END.start - 0.2 : DUR }];
+        function chapterIndexOf(L) {
+          if (L.chapter) { for (var i = 0; i < chapters.length; i++) if (chapters[i].key === L.chapter) return i; }
+          for (var j = 0; j < chapters.length; j++) if (L.start >= chapters[j].start - 0.25 && L.start < chapters[j].end) return j;
+          var k = 0;
+          chapters.forEach(function (c, i) { if (c.start <= L.start) k = i; });
+          return k;
+        }
+        var beatLines = story.lines.filter(function (L) { return L.i !== endLine; });
+        var LAYOUTS = ["shop", "office", "lobby", "library"];
+        var stations = chapters.map(function (c, k) {
+          var x0 = k * PITCH;
+          return { k: k, n: c.n, chapter: c, title: c.title, key: c.key, start: c.start, end: c.end, lines: [], x0: x0, x1: x0 + SW, cx: x0 + SW / 2, w: SW, layout: LAYOUTS[k % 4] };
+        });
+        beatLines.forEach(function (L) { stations[chapterIndexOf(L)].lines.push(L.i); });
+        stations.forEach(function (S) {
+          var m = S.lines.length;
+          S.spots = S.lines.map(function (i, j) { return { line: i, x: m > 1 ? S.cx - 140 + (280 * j) / (m - 1) : S.cx, j: j }; });
+          if (!S.spots.length) S.spots = [{ line: null, x: S.cx, j: 0 }];
+        });
+        var endSt = END ? { x0: stations.length * PITCH, cx: stations.length * PITCH + SW / 2 } : null;
+        var lastX = endSt ? endSt.x0 + SW : stations[stations.length - 1].x1;
+        function stationOf(i) { return stations[chapterIndexOf(story.line(i))]; }
+        function spotOf(i) { var S = stationOf(i), j = S.lines.indexOf(i); return j >= 0 ? S.spots[j] : null; }
+
+        // ================= the set =================
+        var world = $("world"), overlay = $("overlay");
+        var dividers = [];
+        stations.forEach(function (S, k) { if (k > 0) dividers.push(S.x0 - (PITCH - SW) / 2); });
+        if (endSt) dividers.push(endSt.x0 - (PITCH - SW) / 2);
+        var rooms = stations.map(function (S, k) { return { x0: S.x0 - 80, x1: S.x1 + 80, paper: k % 2 === 1 }; });
+        var back = K.backdrop({ x0: -200, x1: lastX + 200, rooms: rooms, dividers: dividers });
+        world.appendChild(back.el);
+
+        // ================= tiny helpers (also handed to Beats) =================
+        function el(tag, cls, html, parent) {
+          var e = document.createElement(tag);
+          if (cls) e.className = cls;
+          if (html != null) e.innerHTML = html;
+          (parent || world).appendChild(e);
+          return e;
+        }
+        function z(e, n) { e.style.zIndex = String(n); return e; }
+        function css(text) { var st = document.createElement("style"); st.textContent = text; document.head.appendChild(st); return st; }
+        function piece(kind, x, y, o, parent, zi) { var p = K.piece(kind, o || {}); (parent || world).appendChild(p.el); K.at(p.el, x, y); if (zi != null) z(p.el, zi); return p; }
+        var LIVE = [];
+        // live(obj, ...args): the driver calls obj.render(t, ...args) every frame (before beats.render)
+        function live(obj) { var args = Array.prototype.slice.call(arguments, 1); LIVE.push({ o: obj, a: args }); return obj; }
+        function actor(o, parent, zi) { var a = K.character(o || {}); (parent || world).appendChild(a.el); if (zi != null) z(a.el, zi); return a; }
+        function bubble(o, parent, zi) { var b = K.bubble(o); (parent || world).appendChild(b.el); z(b.el, zi == null ? 60 : zi); return b; }
+        // a memo note on a set's wall (top-right of its free area by default)
+        function note(k, text, o) {
+          o = o || {};
+          var S = typeof k === "number" ? stations[k] : k, n = K.note(text, o);
+          world.appendChild(n.el); z(n.el, 55);
+          K.at(n.el, o.x != null ? o.x : S.cx + 300, o.y != null ? o.y : 150);
+          return n;
+        }
+
+        // ================= default dressing per set (keeps the upper centre free for bubbles) =================
+        function dress(S) {
+          var g = el("div", "kit-set"), x = S.cx;
+          S.dress = g;
+          if (S.layout === "shop") {
+            piece("window", x - 930, 150, { w: 170, h: 320 }, g);
+            piece("board", x + 630, 104, { w: 380, h: 250, title: "今日", rows: [["推荐", "★"], ["新品", "★"]], titleSize: 40 }, g);
+            piece("counter", x + 260, 580, { w: 760, h: 280 }, g, 30);
+            piece("register", x + 830, 510, {}, g, 31);
+            piece("plant", x - 840, 650, { h: 260 }, g);
+          } else if (S.layout === "office") {
+            piece("shelf", x - 950, 110, { w: 320, items: "books", seed: S.k + 2 }, g);
+            piece("clock", x + 630, 150, { r: 54 }, g);
+            piece("lamp", x + 800, 24, { len: 120 }, g);
+            piece("desk", x + 360, 620, { w: 560, h: 230 }, g, 30);
+            piece("stool", x - 820, 740, {}, g);
+          } else if (S.layout === "lobby") {
+            piece("door", x - 940, 290, { w: 200, h: 470 }, g);
+            piece("frame", x + 680, 170, { w: 230, h: 170 }, g);
+            piece("bench", x + 380, 750, { w: 380 }, g, 30);
+            piece("plant", x + 790, 640, { h: 270 }, g);
+          } else {
+            piece("shelf", x + 650, 110, { w: 320, items: "jars", seed: S.k + 5 }, g);
+            piece("window", x - 900, 150, { w: 170, h: 320 }, g);
+            piece("clock", x - 700, 120, { r: 46 }, g);
+            piece("stool", x - 840, 740, {}, g);
+            piece("plant", x + 820, 660, { h: 240 }, g);
+          }
+        }
+        stations.forEach(dress);
+
+        // ================= the stand-ins (two per set, created when a placeholder needs them) =================
+        function cast(S) {
+          if (S.cast) return S.cast;
+          var a = actor({ x: S.cx - 560, y: FEET, s: 0.95, seed: 11 + S.k * 7, hair: ["short", "spiky", "cap", "short"][S.k % 4], face: "smile" }, null, 40);
+          var b = actor({ x: S.cx + 560, y: FEET, s: 0.95, seed: 23 + S.k * 5, hair: ["bun", "bob", "ponytail", "long"][S.k % 4], glasses: S.k % 2 === 0, face: "smile" }, null, 40);
+          S.cast = [a, b];
+          live(a); live(b);
+          return S.cast;
+        }
+
+        // ================= text helpers: beat note, key phrase, alignment =================
+        var CONTENT = /[A-Za-z\d㐀-鿿]/;
+        function termCount(s) { var m = String(s).match(new RegExp(K.TERM.source, "g")); return m ? m.length : 0; }
+        function cjkLen(s) { return String(s).replace(/\s/g, "").length; }
+        // the line's most informative clause: Latin terms / numbers first, then length (≤ 16)
+        function keyPhrase(i) {
+          var text = story.line(i).text, best = null, bs = -1e9;
+          text.split(/[，,；;：:。！!？?]/).forEach(function (p) {
+            p = p.trim();
+            if (!p) return;
+            var n = cjkLen(p), sc = 4 * Math.min(3, termCount(p)) + Math.min(n, 16) - Math.max(0, n - 26);
+            if (sc > bs) { bs = sc; best = p; }
+          });
+          return best || text;
+        }
+        // the beat note for a line from story.notes[chapter.key] (j-th note ↔ j-th line of the chapter)
+        function beatNote(i) {
+          var notes = story.data.notes, S = stationOf(i);
+          if (!notes || !S.key || notes[S.key] == null) return null;
+          var arr = typeof notes[S.key] === "string" ? [notes[S.key]] : notes[S.key];
+          return arr[S.lines.indexOf(i)] || null;
+        }
+        // when is each unit of `text` spoken? units shared with the line (longest common subsequence) take their spoken
+        // time; the rest are spread between those anchors, so a beat note lights in step with the voice
+        function alignTimes(us, L) {
+          var lc = [];
+          story.spoken(L.i).forEach(function (w) { Array.from(w[0].toLowerCase()).forEach(function (c) { if (CONTENT.test(c)) lc.push({ c: c, t: w[1] }); }); });
+          var tc = [];
+          us.forEach(function (u, i) { Array.from(u.s.toLowerCase()).forEach(function (c) { if (CONTENT.test(c)) tc.push({ c: c, i: i }); }); });
+          var n = tc.length, m = lc.length, dp = [], a, b;
+          for (a = 0; a <= n; a++) dp.push(new Int16Array(m + 1));
+          for (a = n - 1; a >= 0; a--) for (b = m - 1; b >= 0; b--) dp[a][b] = tc[a].c === lc[b].c ? dp[a + 1][b + 1] + 1 : Math.max(dp[a + 1][b], dp[a][b + 1]);
+          var known = {};
+          a = 0; b = 0;
+          while (a < n && b < m) {
+            if (tc[a].c === lc[b].c) { if (known[tc[a].i] == null) known[tc[a].i] = lc[b].t; a++; b++; }
+            else if (dp[a + 1][b] >= dp[a][b + 1]) a++;
+            else b++;
+          }
+          var sp = story.spoken(L.i), t0 = L.start, t1 = sp.length ? sp[sp.length - 1][1] : L.end - 0.2;
+          var anchors = [];
+          us.forEach(function (u, k) { if (known[k] != null) anchors.push([k, known[k]]); });
+          var run = t0;
+          return us.map(function (u, k) {
+            var tt;
+            if (known[k] != null) tt = known[k];
+            else {
+              var lo = null, hi = null;
+              anchors.forEach(function (A) { if (A[0] < k) lo = A; if (A[0] > k && !hi) hi = A; });
+              if (!lo) lo = [-1, t0];
+              if (!hi) hi = [us.length, t1];
+              tt = lo[1] + ((hi[1] - lo[1]) * (k - lo[0])) / (hi[0] - lo[0]);
+            }
+            run = Math.max(run, Math.min(tt, t1));
+            return run;
+          });
+        }
+
+        // ================= the placeholder: a storyboard bubble from a stand-in =================
+        /* placeholder(line, { text }) — one of the set's two stand-ins speaks the beat: a speech bubble with the beat note
+         * (story.notes) or the line's key phrase, every unit lit as the voice says it (characters shared with the line take
+         * their spoken time), a dark 「分镜 NN」 tag and a dashed 「待演绎」 tag. The speaker gestures, the other one reacts
+         * on the line's last word. The caption marks the line's key phrase on the yellow marker. */
+        function placeholder(line, o) {
+          o = o || {};
+          var L = typeof line === "number" ? story.line(line) : line;
+          var S = stationOf(L.i), j = S.lines.indexOf(L.i);
+          if (j < 0) return { el: null, line: L.i, render: function () {} };
+          var pair = cast(S), left = j % 2 === 0, sp = pair[left ? 0 : 1], ls = pair[left ? 1 : 0];
+          var text = o.text || beatNote(L.i) || keyPhrase(L.i);
+          var us = K.units(text), times = alignTimes(us, L);
+          var spx = left ? S.cx - 560 : S.cx + 560, tipX = spx + (left ? 50 : -50), tipY = FEET - 470 * 0.95 - 16;
+          var b = bubble({ text: text, size: 44, maxW: 960, tail: "down", along: left ? 0.16 : 0.84, tip: left ? [-30, 84] : [30, 84], times: times, tag: "分镜 " + pad2(L.i), todo: true });
+          b.place(tipX, tipY);
+          var nextL = S.lines[j + 1] ? story.line(S.lines[j + 1]) : null;
+          var tIn = L.start + BUBBLE, tOut = nextL ? nextL.start + BUBBLE - 0.05 : Math.min(S.end, L.end + 2.2);
+          // the speaker gestures through the line; the listener reacts on the last spoken unit
+          var spk = story.spoken(L.i), tLast = spk.length ? spk[spk.length - 1][1] : L.end - 0.3;
+          sp.cue(L.start + GESTURE, { arms: left ? ["down", "point"] : ["point", "down"], face: "happy" });
+          sp.cue(Math.max(L.start + 0.6, L.end - 0.05), { arms: ["down", "down"], face: "smile" });
+          ls.cue(tLast - 0.05, { face: "surprised" });
+          ls.hop(tLast - 0.02, 26, 0.32);
+          ls.cue(tLast + 0.6, { face: "happy" });
+          if (caps) caps.mark(L.i, keyPhrase(L.i));
+          return { el: b.el, line: L.i, text: text, bubble: b, render: function (t) { b.render(t, tIn, tOut); } };
+        }
+
+        // ================= the end set: a chalk board with the emphasis words, the cast cheering =================
+        var endStage = null;
+        if (END) {
+          var EL = story.line(END.line);
+          var flat = EL.words.map(function (w) { return w[0]; }), flatS = flat.join("");
+          var spanOf = function (e) {
+            var s = String(e).replace(/\s/g, ""), a = flatS.indexOf(s);
+            if (!s || a < 0) return null;
+            var ts = [];
+            for (var k = 0, pos = 0; k < flat.length; pos += flat[k].length, k++) if (pos + flat[k].length > a && pos < a + s.length) ts.push(EL.words[k][1]);
+            return ts;
+          };
+          var ems = (END.emphasis || []).map(function (e) { return { text: String(e), ts: spanOf(e) }; }).filter(function (e) { return e.ts && e.ts.length; });
+          if (!ems.length) { var kp = keyPhrase(END.line), kt = spanOf(kp); if (kt) ems = [{ text: kp, ts: kt }]; }
+          ems = ems.slice(0, 3).sort(function (a, b) { return a.ts[0] - b.ts[0]; });
+          var eg = el("div", "kit-set"), ex = endSt.cx;
+          var BW = 1180, BH = 330;
+          var board = piece("board", ex - BW / 2, 96, { w: BW, h: BH, title: story.title || "", titleSize: 46 }, eg);
+          var fsW = Math.min(110, Math.floor((BW - 140 - 40 * (ems.length - 1)) / Math.max(1, ems.reduce(function (n, e) { return n + K.textW(e.text, 1, 0.5); }, 0))));
+          var row = el("div", "end-words", null, board.el);
+          K.at(row, 0, 120); row.style.width = BW + "px";
+          // each emphasis word gets a dashed chalk blank first; the word is chalked in as it is spoken
+          var words = ems.map(function (e, i) {
+            if (i) el("i", "end-sep", null, row);
+            var slot = el("div", "end-slot", null, row);
+            var c = K.chalk(e.text, { size: fsW, spans: i === ems.length - 1 ? [[e.text, "kit-chalk-y"]] : [] });
+            slot.appendChild(c.el);
+            var blank = el("i", "end-blank", null, slot);
+            blank.style.width = Math.round(K.textW(e.text, fsW, 0.5) + 20) + "px";
+            return { c: c, ts: e.ts, blank: blank };
+          });
+          piece("window", ex - 930, 150, { w: 170, h: 320 }, eg);
+          piece("plant", ex + 790, 640, { h: 260 }, eg);
+          var ec = [
+            actor({ x: ex - 440, y: FEET, s: 0.95, seed: 31, hair: "short", face: "smile" }, eg, 40),
+            actor({ x: ex + 440, y: FEET, s: 0.95, seed: 37, hair: "bun", glasses: true, face: "smile" }, eg, 40),
+          ];
+          ems.forEach(function (e, i) {
+            var last = i === ems.length - 1;
+            ec.forEach(function (a, k) {
+              a.cue(e.ts[0] - 0.05, { face: last ? "proud" : "happy", arms: last ? ["cheer", "cheer"] : (k ? ["point", "down"] : ["down", "point"]) });
+              if (last) a.hop(e.ts[0], 40, 0.4);
+            });
+          });
+          endStage = { x0: endSt.x0, cx: ex, el: eg, board: board, words: words, cast: ec, on: true };
+        }
+
+        // ================= camera: one shot per line (toward its speaker), one for the closing line =================
+        var shots = [], prevT1 = -1;
+        beatLines.forEach(function (L, idx) {
+          var S = stations[chapterIndexOf(L)], j = S.lines.indexOf(L.i), first = j === 0;
+          var mv = first ? MOVE_FIRST : MOVE_NEXT, t0 = L.start - mv[0], d = mv[1];
+          if (idx === 0) { t0 = 0; d = Math.max(0.8, L.start + 0.8); }
+          t0 = Math.max(t0, prevT1 + 0.1);
+          shots.push({ kind: "line", line: L.i, k: S.k, first: first && idx > 0, t0: t0, t1: t0 + d, spot: S.spots[j], o: {} });
+          prevT1 = t0 + d;
+        });
+        if (END) {
+          var te0 = Math.max(story.line(END.line).start - MOVE_END[0], prevT1 + 0.1);
+          shots.push({ kind: "end", line: END.line, first: true, t0: te0, t1: te0 + MOVE_END[1], spot: { x: endSt.cx }, o: {} });
+        }
+        var focuses = [];
+        var camera = {
+          shots: shots,
+          // change the framing a line's shot moves to: { x, y, s, dx, dy, ds } (call while Beats is being built)
+          frame: function (line, o) { shots.forEach(function (sh) { if (sh.line === line) Object.assign(sh.o, o); }); },
+          // push toward a world point between t0 and t1 (eased in / out), on top of the shot's drift
+          focus: function (t0, t1, target, o) { o = o || {}; focuses.push({ t0: t0, t1: t1, g: target, dIn: o.dIn || 0.7, dOut: o.dOut || 0.7, ez: o.ease || EZ.io3 }); },
+        };
+        var CX, CY, CS;
+        function buildCamera() {
+          shots.forEach(function (sh, i) {
+            var tN = i + 1 < shots.length ? shots[i + 1].t0 : (RC ? RC.start + 0.4 : DUR), span = Math.max(0.05, tN - sh.t1);
+            var s = sh.o.s != null ? sh.o.s : CAM_S;
+            var dx = sh.o.dx != null ? sh.o.dx : Math.min(200, Math.max(30, (18 / s) * span));
+            sh.s = s; sh.dx = dx;
+            sh.dy = sh.o.dy != null ? sh.o.dy : -0.06 * dx;
+            sh.ds = sh.o.ds != null ? sh.o.ds : Math.min(0.035, 0.006 * span);
+            sh.x = sh.o.x != null ? sh.o.x : sh.spot.x - dx / 2;
+            sh.y = sh.o.y != null ? sh.o.y : CAM_Y;
+            sh.tN = tN;
+          });
+          var s0 = shots[0] || { x: stations[0].cx, y: CAM_Y, s: CAM_S, t1: 1, tN: DUR, dx: 30, dy: 0, ds: 0 };
+          CX = [[0, s0.x - 160]]; CY = [[0, s0.y + 20]]; CS = [[0, s0.s * 0.94]];
+          shots.forEach(function (sh, i) {
+            var ez = i === 0 ? EZ.io2 : EZ.io3;
+            if (sh.first && i > 0) {   // a set change: a little pull back mid-truck
+              var mid = (sh.t0 + sh.t1) / 2, prevS = CS[CS.length - 1][1];
+              CS.push([mid, Math.min(prevS, sh.s) * 0.9, EZ.io2]);
+              CS.push([sh.t1, sh.s, EZ.io2], [sh.tN, sh.s * (1 + sh.ds), EZ.lin]);
+            } else CS.push([sh.t1, sh.s, ez], [sh.tN, sh.s * (1 + sh.ds), EZ.lin]);
+            CX.push([sh.t1, sh.x, ez], [sh.tN, sh.x + sh.dx, EZ.lin]);
+            CY.push([sh.t1, sh.y, ez], [sh.tN, sh.y + sh.dy, EZ.lin]);
+          });
+        }
+        function shotAt(t) { var r = shots[0]; shots.forEach(function (sh) { if (sh.t0 <= t) r = sh; }); return r; }
+        var cam = { x: 960, y: CAM_Y, s: CAM_S };
+        function applyCamera(t) {
+          var x = K.ladder(t, CX), y = K.ladder(t, CY), s = K.ladder(t, CS);
+          focuses.forEach(function (f) {
+            var w = f.ez(pr(t, f.t0, f.dIn)) * (1 - f.ez(pr(t, f.t1, f.dOut)));
+            if (w <= 0) return;
+            var a = f.anchor || (f.anchor = shotAt(f.t0));
+            if (f.g.x != null) x += w * (f.g.x - a.x);
+            if (f.g.y != null) y += w * (f.g.y - a.y);
+            if (f.g.s != null) s *= 1 + w * (f.g.s / a.s - 1);
+          });
+          cam.x = x; cam.y = y; cam.s = s;
+          world.style.transform = "translate(" + (960 - x * s).toFixed(2) + "px," + (540 - y * s).toFixed(2) + "px) scale(" + s.toFixed(4) + ")";
+        }
+        function toScreen(x, y) { return { x: 960 + (x - cam.x) * cam.s, y: 540 + (y - cam.y) * cam.s }; }
+
+        // ================= chrome built before Beats (so placeholders can mark captions) =================
+        var caps = K.captions($("caps"), story);
+
+        // ================= the api handed to beats.js =================
+        var api = {
+          story: story, C: C, Kit: K, EZ: EZ, world: world, overlay: overlay, cam: cam, camera: camera, toScreen: toScreen,
+          FEET: FEET, WAIN: K.WAIN, FLOOR: K.FLOOR, SW: SW, PITCH: PITCH,
+          at: function (l, u, n) { return story.at(l, u, n); },
+          ph: function (l, p) { return story.phrase(l, p); },
+          span: function (l, p) { return story.span(l, p); },
+          station: function (k) { return stations[k]; },
+          stations: stations, stationOf: stationOf, spot: spotOf, cast: cast,
+          endStage: endStage,
+          caps: caps, mark: function (l, text) { return caps.mark(l, text); },
+          el: el, z: z, css: css, piece: piece, actor: actor, bubble: bubble, note: note, live: live,
+          beatNote: beatNote, keyPhrase: keyPhrase, alignTimes: alignTimes,
+          placeholder: placeholder,
+          recapCast: null,   // set to [characterOpts …] to put your own cast in the curtain-call recap
+        };
+        var endShot = shots[shots.length - 1];
+        var beats = typeof window.Beats === "function" ? window.Beats(api) : null;
+        if (!beats || typeof beats.render !== "function") beats = { render: function () {} };
+        buildCamera();
+
+        // ================= screen chrome: chip, closing line, recap, draft tag =================
+        var chap = K.chapters($("chap"), story);
+        var closing = null;
+        if (END) {
+          // the closing line sits in the caption band, centred (a long one shrinks to fit 1792 px, 44 px at least)
+          closing = K.title(story);
+          el("div", "kit-title-wrap", null, overlay).appendChild(closing.el);
+          var tw = closing.units.reduce(function (w, u) { return w + K.textW(u.el.textContent, 56, 0.6); }, 0) + K.textW(closing.tag, 32, 0.6) + 120;
+          if (tw > 1792) closing.el.querySelector(".kit-title-t").style.fontSize = Math.max(44, Math.floor((56 * 1792) / tw)) + "px";
+        }
+        var recap = RC ? K.recap(story, { cast: api.recapCast || [{ seed: 31, hair: "short" }, { seed: 37, hair: "bun", glasses: true }], hide: [world].concat(closing ? [closing.el] : []) }) : null;
+        if (recap) $("recap-layer").appendChild(recap.el);
+        if (story.data.draft) el("div", "kit-draft", "草稿 · 无配音", overlay);
+
+        // ================= the frame renderer: a pure function of t =================
+        function render(t) {
+          applyCamera(t);
+          if (endStage) {
+            var on = endStage.on !== false;
+            K.vis(endStage.el, on);
+            if (on) {
+              endStage.words.forEach(function (w) {
+                w.c.render(t, w.ts.length > 1 ? w.ts : w.ts[0], w.ts[0] + 0.4);
+                var bu = EZ.o3(pr(t, endShot.t0 + 0.5, 0.4));
+                w.blank.style.transform = "scaleX(" + bu.toFixed(3) + ")";
+              });
+              endStage.cast.forEach(function (a) { a.render(t); });
+            }
+          }
+          for (var i = 0; i < LIVE.length; i++) LIVE[i].o.render.apply(LIVE[i].o, [t].concat(LIVE[i].a));
+          beats.render(t);
+          chap.render(t);
+          caps.render(t);
+          if (closing) closing.render(t);
+          if (recap) recap.render(t);
+        }
+
+        render(0);
+        var tl = gsap.timeline({ paused: true });
+        var drive = { v: 0 };
+        tl.fromTo(drive, { v: 0 }, { v: DUR, duration: DUR, ease: "none", onUpdate: function () { render(drive.v); } }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="384" height="384" viewBox="0 0 384 384">
+  <!-- cork: soft patches + fine dark specks; stitched so it tiles (used by .kit-cork at 384 px) -->
+  <filter id="c" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="3" stitchTiles="stitch" result="m" />
+    <feColorMatrix in="m" type="matrix" values="0 0 0 0 0.86  0 0 0 0 0.64  0 0 0 0 0.40  0 0 0 0.62 -0.16" result="patch" />
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" stitchTiles="stitch" result="n" />
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.40  0 0 0 0 0.25  0 0 0 0 0.12  0 0 0 0.62 -0.02" result="specks" />
+    <feTurbulence type="turbulence" baseFrequency="0.32" numOctaves="1" seed="19" stitchTiles="stitch" result="g" />
+    <feColorMatrix in="g" type="matrix" values="0 0 0 0 0.30  0 0 0 0 0.18  0 0 0 0 0.08  0 0 0 1.6 -0.9" result="pits" />
+    <feMerge><feMergeNode in="patch" /><feMergeNode in="specks" /><feMergeNode in="pits" /></feMerge>
+  </filter>
+  <rect width="384" height="384" fill="#b5844f" />
+  <rect width="384" height="384" filter="url(#c)" />
+</svg>

@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+@font-face { font-family: "ZCOOL KuaiLe"; src: url("assets/fonts/zcool-kuaile.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Archivo Black"; src: url("assets/fonts/archivo-black.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+/* fonts:end */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #e8dcc4; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--kit-bg); color: var(--kit-ink); font-family: var(--kit-font-body); }
+      #kv-stage { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #e2d3b6 0%, #e8dcc4 48%, #e8dcc4 100%); }
+      #kv-overlay { position: absolute; inset: 0; pointer-events: none; }
+      .a { position: absolute; }
+      .num { font-family: var(--kit-font-mono); font-weight: 400; }
+      .z-fly { z-index: 1600; }
+
+      /* ---------- the model: a paper press that prints one token at a time ---------- */
+      #kv-press { left: 90px; top: 500px; width: 340px; height: 340px; z-index: 600; }
+      #kv-press .top { position: absolute; left: 0; top: 0; width: 340px; height: 50px; border-radius: 14px 14px 0 0; background: var(--kit-ink); }
+      #kv-press .slot { position: absolute; left: 50px; top: 19px; width: 240px; height: 9px; border-radius: 4px; background: #0e1520; }
+      #kv-press .body { position: absolute; left: 0; top: 46px; width: 340px; height: 294px; border-radius: 0 0 14px 14px; }
+      #kv-press .name { position: absolute; left: 0; right: 0; top: 92px; text-align: center; font-size: 64px; line-height: 1; }
+      #kv-press .sub { position: absolute; left: 0; right: 0; top: 176px; text-align: center; font-size: 30px; color: var(--kit-muted); }
+      #kv-press .vent { position: absolute; left: 40px; right: 40px; height: 6px; border-radius: 3px; background: rgba(38, 54, 74, 0.13); }
+      .crank { position: absolute; width: 74px; height: 74px; border-radius: 50%; background: var(--kit-surface); border: 7px solid var(--kit-ink); box-shadow: 3px 6px 8px rgba(38, 54, 74, 0.3); }
+      .crank::before, .crank::after { content: ""; position: absolute; left: 26px; top: 3px; width: 8px; height: 54px; border-radius: 4px; background: var(--kit-ink); }
+      .crank::after { transform: rotate(90deg); }
+
+      /* the question, hung on a string */
+      #kv-ask { left: 830px; top: -140px; width: 0; height: 0; z-index: 700; }
+      #kv-ask .bub {
+        position: absolute; left: -290px; top: 560px; width: 580px; height: 108px; border-radius: 54px; background: var(--kit-surface);
+        display: flex; align-items: center; justify-content: center; font-size: 48px; white-space: nowrap;
+        box-shadow: inset 0 -6px 0 rgba(38, 54, 74, 0.06), 6px 14px 16px -6px rgba(38, 54, 74, 0.38);
+      }
+      #kv-ask .bub::after { content: ""; position: absolute; left: 70px; bottom: -26px; width: 44px; height: 30px; background: var(--kit-surface); clip-path: polygon(0 0, 100% 0, 10% 100%); }
+
+      /* tokens: white paper cards standing on the page */
+      .tok {
+        width: 124px; height: 108px; border-radius: 9px; background: var(--kit-surface); display: flex; align-items: center; justify-content: center;
+        font-size: 46px; line-height: 1; white-space: nowrap; transform-origin: 50% 100%; z-index: 900;
+      }
+      .tok.hot { background: var(--kit-accent); }
+      .tok .dim { position: absolute; inset: 0; border-radius: 9px; background: #d9ccb2; opacity: 0; }
+      .tok .lit { position: absolute; inset: 0; border-radius: 9px; background: var(--kit-accent-2); opacity: 0; }
+      .tok span { position: relative; }
+      #kv-looks path { stroke: var(--kit-ink); }
+
+      /* K / V / Q tags */
+      .tag {
+        width: 70px; height: 56px; border-radius: 7px; display: flex; align-items: center; justify-content: center; gap: 4px;
+        font-family: var(--kit-font-mono); font-size: 34px; line-height: 1; transform-origin: 50% 100%; z-index: 1000;
+      }
+      .tag.k { background: var(--kit-accent-2); }
+      .tag.v { background: var(--kit-sand); box-shadow: inset 0 0 0 2px rgba(38, 54, 74, 0.12); }
+      .tag.q { background: var(--kit-accent); width: 86px; }
+
+      /* ---------- beat 3: the no-cache staircase ---------- */
+      .board { border-radius: 12px; transform-origin: 50% 100%; }
+      .bhead {
+        position: absolute; left: 0; right: 0; top: 0; height: 66px; border-radius: 12px 12px 0 0; background: var(--kit-ink); color: var(--kit-surface);
+        display: flex; align-items: center; justify-content: center; gap: 14px; font-size: 38px; white-space: nowrap;
+      }
+      #kv-tri { left: 1680px; top: 340px; width: 780px; height: 500px; z-index: 800; }
+      .trow { position: absolute; left: 26px; height: 46px; display: flex; align-items: center; transform-origin: 50% 100%; }
+      .trow b { display: block; width: 150px; font-weight: 400; font-size: 34px; white-space: nowrap; }
+      .tcell { width: 56px; height: 40px; margin-right: 8px; border-radius: 5px; background: var(--kit-surface); box-shadow: inset 0 -4px 0 rgba(38, 54, 74, 0.08); }
+      .tcell.me { background: var(--kit-accent); }
+      .trow .hl { position: absolute; left: -12px; right: -14px; top: -3px; bottom: -3px; border-radius: 8px; background: rgba(227, 180, 72, 0.32); opacity: 0; }
+      #kv-watch { left: 1262px; top: 500px; width: 330px; height: 340px; z-index: 820; }
+      #kv-watch .cap { position: absolute; left: 0; right: 0; top: 0; text-align: center; font-size: 36px; white-space: nowrap; }
+      #kv-watch .disc { position: absolute; left: 60px; top: 74px; width: 210px; height: 210px; border-radius: 50%; background: var(--kit-surface); box-shadow: inset 0 0 0 9px var(--kit-ink), 5px 12px 14px -4px rgba(38, 54, 74, 0.38); }
+      #kv-watch .knob { position: absolute; left: 150px; top: 52px; width: 30px; height: 26px; border-radius: 6px 6px 0 0; background: var(--kit-ink); }
+      #kv-watch .fill { position: absolute; left: 76px; top: 90px; width: 178px; height: 178px; border-radius: 50%; }
+      #kv-watch .hand { position: absolute; left: 161px; top: 106px; width: 8px; height: 76px; border-radius: 4px; background: var(--kit-ink); transform-origin: 4px 73px; }
+      #kv-watch .hub { position: absolute; left: 155px; top: 169px; width: 20px; height: 20px; border-radius: 50%; background: var(--kit-ink); }
+      #kv-watch .stepn { position: absolute; left: 0; right: 0; top: 296px; text-align: center; font-size: 34px; white-space: nowrap; }
+
+      /* ---------- beat 4/5: the cache cabinet ---------- */
+      #kv-cab { left: 1680px; top: 330px; width: 780px; height: 510px; z-index: 800; }
+      #kv-cab .bhead { font-family: var(--kit-font-mono); font-size: 44px; }
+      #kv-cab .bhead small { font-family: var(--kit-font-body); font-size: 32px; }
+      .ccol { position: absolute; top: 78px; height: 46px; display: flex; align-items: center; justify-content: center; font-size: 32px; white-space: nowrap; }
+      .cslot { position: absolute; height: 50px; border-radius: 7px; border: 3px dashed rgba(38, 54, 74, 0.22); }
+      .ccell {
+        position: absolute; height: 50px; border-radius: 7px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 32px;
+        white-space: nowrap; transform-origin: 50% 100%; box-shadow: inset 0 -4px 0 rgba(38, 54, 74, 0.08), 2px 4px 5px -2px rgba(38, 54, 74, 0.28);
+      }
+      .ccell.t { background: var(--kit-surface); }
+      .ccell.t.hot { background: var(--kit-accent); }
+      .ccell.k { background: var(--kit-accent-2); font-family: var(--kit-font-mono); }
+      .ccell.v { background: var(--kit-sand); font-family: var(--kit-font-mono); box-shadow: inset 0 0 0 2px rgba(38, 54, 74, 0.12), 2px 4px 5px -2px rgba(38, 54, 74, 0.28); }
+      .cw { position: absolute; height: 26px; border-radius: 4px; background: var(--kit-accent-2); box-shadow: inset 0 -3px 0 rgba(38, 54, 74, 0.12); transform-origin: 0 50%; }
+      .cw.top { background: var(--kit-accent); }
+      #kv-x1 { left: 1340px; top: 640px; width: 190px; height: 200px; z-index: 820; }
+      #kv-x1 .disc {
+        position: absolute; left: 5px; top: 0; width: 180px; height: 180px; border-radius: 50%; background: var(--kit-surface); color: var(--kit-accent-ink);
+        box-shadow: inset 0 0 0 11px var(--kit-accent), inset 0 0 0 15px var(--kit-surface), inset 0 0 0 18px rgba(38, 54, 74, 0.18), 5px 12px 14px -5px rgba(38, 54, 74, 0.4);
+        display: flex; align-items: center; justify-content: center; font-size: 74px;
+      }
+      #kv-x1 .foot { position: absolute; left: 80px; top: 172px; width: 30px; height: 28px; background: var(--kit-ink); }
+      .vfly { width: 46px; height: 38px; border-radius: 6px; background: var(--kit-sand); box-shadow: inset 0 0 0 2px rgba(38, 54, 74, 0.14), 3px 6px 8px -3px rgba(38, 54, 74, 0.35); font-family: var(--kit-font-mono); font-size: 24px; display: flex; align-items: center; justify-content: center; z-index: 1500; }
+
+      /* ---------- station B: GPU memory ---------- */
+      #kv-mem { left: 3470px; top: 290px; width: 370px; height: 550px; z-index: 800; }
+      #kv-mem .bhead { font-size: 50px; height: 76px; }
+      #kv-mem .well {
+        position: absolute; left: 22px; right: 22px; top: 92px; bottom: 22px; border-radius: 6px; overflow: hidden;
+        background-color: #ece2cd; background-image: repeating-linear-gradient(0deg, rgba(38, 54, 74, 0.08) 0 2px, rgba(0, 0, 0, 0) 2px 54px);
+        box-shadow: inset 0 3px 6px rgba(38, 54, 74, 0.16);
+      }
+      .slab {
+        position: absolute; left: 10px; right: 10px; border-radius: 5px; background: var(--kit-warn); display: flex; align-items: center; justify-content: center;
+        font-size: 32px; white-space: nowrap; overflow: hidden; box-shadow: inset 0 -5px 0 rgba(38, 54, 74, 0.12), 0 3px 5px -2px rgba(38, 54, 74, 0.3);
+      }
+      .slab span { font-family: var(--kit-font-mono); font-size: 30px; }
+      #kv-reserve {
+        position: absolute; left: 10px; right: 10px; border-radius: 5px; border: 4px dashed rgba(38, 54, 74, 0.45); display: flex; align-items: center;
+        justify-content: center; font-size: 30px; color: var(--kit-ink); background: rgba(251, 248, 241, 0.5);
+      }
+      .rpage { position: absolute; left: 10px; right: 10px; border-radius: 4px; border: 3px dashed rgba(38, 54, 74, 0.45); background: rgba(251, 248, 241, 0.6); transform-origin: 50% 100%; }
+      #kv-cachecard { width: 200px; height: 96px; border-radius: 8px; background: var(--kit-warn); display: flex; align-items: center; justify-content: center; font-family: var(--kit-font-mono); font-size: 30px; z-index: 1700; box-shadow: 6px 14px 16px -6px rgba(38, 54, 74, 0.4); }
+
+      #kv-llama { left: 4140px; top: -80px; width: 0; height: 0; z-index: 1300; }
+      #kv-fboard { left: 3930px; top: 440px; width: 1180px; height: 400px; z-index: 800; }
+      #kv-fboard .kit-ft-v { font-size: 46px; }
+      #kv-fboard .kit-ft { padding: 14px 16px 10px; min-width: 96px; }
+      #kv-fboard .kit-ft-s { font-size: 29px; }
+      #kv-fboard .kit-fo { width: 54px; height: 54px; font-size: 32px; margin-bottom: 30px; }
+      #kv-fboard .kit-formula { gap: 24px; }
+      #kv-fboard .kit-f-row { gap: 11px; }
+
+      /* ---------- beat 8: the three fixes ---------- */
+      #kv-fix { left: 3930px; top: 450px; width: 1180px; height: 390px; z-index: 800; }
+      .ftab {
+        position: absolute; top: -62px; height: 66px; padding: 0 28px; border-radius: 12px 12px 0 0; display: flex; align-items: center; justify-content: center;
+        font-size: 34px; white-space: nowrap; background: var(--kit-surface); transform-origin: 50% 100%; box-shadow: inset 0 -4px 0 rgba(38, 54, 74, 0.06);
+      }
+      .ftab.on { background: var(--kit-ink); color: var(--kit-surface); }
+      .demo { position: absolute; left: 0; top: 0; width: 1180px; height: 390px; }
+      .qtag { width: 110px; height: 60px; border-radius: 8px; background: var(--kit-accent); display: flex; align-items: center; justify-content: center; font-family: var(--kit-font-mono); font-size: 32px; transform-origin: 50% 100%; }
+      .pair { width: 176px; height: 60px; display: flex; gap: 8px; transform-origin: 50% 100%; }
+      .pair i { flex: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-style: normal; font-family: var(--kit-font-mono); font-size: 32px; }
+      .pair i.k { background: var(--kit-accent-2); }
+      .pair i.v { background: var(--kit-sand); box-shadow: inset 0 0 0 2px rgba(38, 54, 74, 0.14); }
+      .stampd {
+        width: 170px; height: 170px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--kit-surface);
+        color: var(--kit-accent-ink); font-family: var(--kit-font-mono); font-size: 62px;
+        box-shadow: inset 0 0 0 10px var(--kit-accent), inset 0 0 0 14px var(--kit-surface), inset 0 0 0 17px rgba(38, 54, 74, 0.18), 5px 12px 14px -5px rgba(38, 54, 74, 0.4);
+      }
+      .dtext { font-size: 34px; line-height: 1.3; white-space: nowrap; }
+      .dtext.s { font-size: 30px; color: var(--kit-ink); }
+      .strip { height: 104px; border-radius: 8px; }
+      .page { height: 104px; border-radius: 6px; transform-origin: 50% 100%; }
+      .page.full { background: var(--kit-warn); box-shadow: inset 0 -5px 0 rgba(38, 54, 74, 0.12), 3px 6px 8px -3px rgba(38, 54, 74, 0.35); }
+      .page.empty { border: 4px dashed rgba(38, 54, 74, 0.45); background: rgba(251, 248, 241, 0.6); }
+      .qcell { height: 90px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--kit-font-mono); font-size: 32px; overflow: hidden; white-space: nowrap; box-shadow: inset 0 -5px 0 rgba(38, 54, 74, 0.1), 3px 6px 8px -3px rgba(38, 54, 74, 0.3); }
+      .qcell.k { background: var(--kit-accent-2); }
+      .qcell.v { background: var(--kit-sand); }
+      .cutline { position: absolute; top: -10px; width: 4px; height: 124px; border-radius: 2px; background: var(--kit-ink); transform-origin: 50% 0; }
+
+      /* ---------- station C: the trade ---------- */
+      #kv-scale { left: 6000px; top: 470px; width: 700px; height: 370px; z-index: 800; }
+      #kv-scale .post { position: absolute; left: 338px; top: 82px; width: 24px; height: 268px; border-radius: 6px 6px 0 0; background: var(--kit-ink); }
+      #kv-scale .foot { position: absolute; left: 250px; top: 336px; width: 200px; height: 34px; border-radius: 10px 10px 0 0; background: var(--kit-ink); }
+      #kv-scale .pivot { position: absolute; left: 350px; top: 92px; width: 0; height: 0; }
+      #kv-scale .beam { position: absolute; left: -300px; top: -10px; width: 600px; height: 20px; border-radius: 10px; background: var(--kit-ink); }
+      #kv-scale .hub { position: absolute; left: -20px; top: -20px; width: 40px; height: 40px; border-radius: 50%; background: var(--kit-surface); border: 8px solid var(--kit-ink); }
+      .pan { position: absolute; width: 0; height: 0; }
+      .pan .rope { position: absolute; left: -1.5px; top: 0; width: 3px; height: 160px; background: var(--kit-ink); transform-origin: 50% 0; }
+      .pan .rope.l { transform: rotate(39deg); }
+      .pan .rope.r { transform: rotate(-39deg); }
+      .pan .dish { position: absolute; left: -120px; top: 124px; width: 240px; height: 26px; border-radius: 4px 4px 60px 60px; background: var(--kit-sand); box-shadow: inset 0 -6px 0 rgba(38, 54, 74, 0.1), 3px 8px 10px -4px rgba(38, 54, 74, 0.35); }
+      .pan .load { position: absolute; left: -100px; width: 200px; }
+      .mslab { position: absolute; left: 0; width: 200px; height: 34px; border-radius: 5px; background: var(--kit-warn); box-shadow: inset 0 -4px 0 rgba(38, 54, 74, 0.12); }
+      .bolt { position: absolute; left: 50px; width: 100px; height: 120px; }
+      #kv-spot { left: 0; top: -200px; width: 0; height: 0; z-index: 850; }
+      #kv-spot div { position: absolute; left: -150px; top: 0; width: 300px; height: 1000px; background: linear-gradient(180deg, rgba(251, 248, 241, 0), rgba(251, 248, 241, 0.55)); clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-width="1920" data-height="1080">
+      <div id="kv-stage" class="clip" data-start="0" data-duration="45" data-track-index="1">
+        <div id="kv-world" data-layout-allow-overflow=""></div>
+      </div>
+      <div id="kv-overlay" class="clip" data-start="0" data-duration="45" data-track-index="3">
+        <div id="kv-chap"></div>
+        <div id="kv-caps"></div>
+      </div>
+      <audio id="kv-narration" src="assets/audio/narration.wav" data-start="0" data-duration="40.32" data-track-index="10"></audio>
+      <audio id="kv-sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var DUR = 45;
+        var C = ExplainerCore, K = Kit, EZ = K.EZ, pr = C.pr, cl = C.clamp01, tw = K.tw, fold = K.fold, foldCss = K.foldCss;
+        var story = new C.Story(window.STORY);
+        var at = function (l, u, n) { return story.at(l, u, n); }, ph = function (l, p) { return story.phrase(l, p); };
+        function $(id) { return document.getElementById(id); }
+        function f2(v) { return v.toFixed(2); }
+
+        // ================= every beat time comes from the story =================
+        var T = {
+          model: at(1, "大"), answer: at(1, "回"), tok1: at(1, "token", 1), tok2: at(1, "token", 2), beng: at(1, "蹦"),
+          newTok: at(2, "新"), lookBack: ph(2, "回头看"), lookEnd: at(2, "看"), all: ph(2, "所有"), l2end: story.line(2).end,
+          ifEach: at(3, "要"), each: ph(3, "每次"), recompute: ph(3, "重新算"), slower: ph(3, "越写越慢"), slowEnd: at(3, "慢"),
+          kv: at(4, "KV"), eachTok: ph(4, "每个"), key: at(4, "Key"), value: at(4, "Value"), once: ph(4, "只算一次"), store: ph(4, "存起来"), storeEnd: at(4, "来"),
+          after: at(5, "之"), only: ph(5, "只算"), onlyNew: at(5, "新"), thatOne: ph(5, "那一个"), lookup: ph(5, "再去缓存里查"), query: at(5, "查"), l5end: story.line(5).end,
+          cost: at(6, "代"), vram: ph(6, "显存"), ctx: [at(6, "跟"), at(6, "着"), at(6, "上"), at(6, "文")], rise: at(6, "涨"),
+          llama: at(7, "Llama"), say: at(7, "说"), per: at(7, "每"), perGe: at(7, "个"), perTok: at(7, "token"), da: at(7, "大"), half: at(7, "0.5"), mb: at(7, "MB"),
+          k4: at(7, "4K"), jiu: at(7, "就"), gb2: at(7, "2", 2), gb: at(7, "GB"), l7end: story.line(7).end,
+          fixes: at(8, "所"), gqa: at(8, "GQA"), share: ph(8, "共用"), kAndV: at(8, "K"), vEnd: at(8, "V"), paged: at(8, "PagedAttention"), byPage: ph(8, "按页"),
+          alloc: ph(8, "分配"), quant: ph(8, "量化"), compress: ph(8, "压缩"), l8end: story.line(8).end,
+          one: at(9, "一"), useVram: ph(9, "用显存"), vram9: ph(9, "显存"), swap: at(9, "换"), speed: ph(9, "速度"), only9: ph(9, "只算"), new9: at(9, "新"), that9: ph(9, "那一个"),
+          recap: story.recap.start,
+        };
+
+        // ================= the book page: far 0.4× / stage 1× / near 1.25× =================
+        var W = K.world($("kv-stage"), {
+          stage: $("kv-world"), span: [-400, 8200], sun: [1760, 40],
+          clouds: [[40, 520, 190, 88], [760, 300, 160, 74], [1480, 430, 160, 74], [1960, 250, 200, 92], [2500, 470, 170, 78], [3060, 300, 190, 88], [3560, 440, 160, 74], [-240, 240, 200, 92]],
+        });
+        var world = $("kv-world");
+        function el(tag, cls, html, parent) {
+          var e = document.createElement(tag);
+          if (cls) e.className = cls;
+          if (html != null) e.innerHTML = html;
+          (parent || world).appendChild(e);
+          return e;
+        }
+        function box(e, x, y, w, h) { e.style.left = x + "px"; e.style.top = y + "px"; if (w != null) e.style.width = w + "px"; if (h != null) e.style.height = h + "px"; return e; }
+        function shadowFor(x, w, hgt) { var s = el("div", "kit-shadow"); box(s, x + 6, 840 - hgt, w, hgt); return s; }
+        function vis(e, v) { e.style.visibility = v ? "inherit" : "hidden"; }
+        // ExplainerCore.place() for pieces that live inside the world: keep visibility inherited from their parents
+        function put(e, x, y, ax, ay, sc) { C.place(e, x, y, ax, ay, 1, sc || 1); e.style.visibility = ""; }
+        var KEY = '<svg width="22" height="22" viewBox="0 0 22 22"><circle cx="7" cy="11" r="5" fill="none" stroke="#26364a" stroke-width="3"/><path d="M 12 11 L 21 11 M 17 11 L 17 15 M 20 11 L 20 14" stroke="#26364a" stroke-width="3" fill="none"/></svg>';
+        var MAG = '<svg width="22" height="22" viewBox="0 0 22 22"><circle cx="9" cy="9" r="6" fill="none" stroke="#26364a" stroke-width="3"/><path d="M 13.5 13.5 L 20 20" stroke="#26364a" stroke-width="3.5"/></svg>';
+
+        // ================= station A: the press, the question, the tokens =================
+        var WORDS = ["因为", "空气", "把", "蓝光", "散射", "得"];
+        var TX = function (i) { return 520 + i * 146; };
+        var press = el("div", "a", '<div class="top"><i class="slot a"></i></div><div class="body kit-sandp"><div class="name">大模型</div><div class="sub">一次只出一个 token</div><i class="vent" style="top: 238px"></i><i class="vent" style="top: 256px"></i></div><i class="crank" style="left: 296px; top: 120px"></i>');
+        press.id = "kv-press";
+        press.style.transformOrigin = "50% 100%";
+        var pressSh = shadowFor(90, 340, 110);
+        var crank = press.querySelector(".crank");
+        var ask = el("div", "a", '<div class="kit-thread"></div><div class="bub">天空为什么是蓝的？</div>');
+        ask.id = "kv-ask";
+        var askStr = ask.firstChild;
+
+        // emission (leaves the press) and landing times of each token on the row
+        var EMIT = [T.tok1 - 0.3, T.tok2 - 0.3, T.beng - 0.26, T.newTok - 0.28, T.onlyNew - 0.34];
+        var toks = WORDS.slice(0, 5).map(function (w, i) {
+          var e = el("div", "a tok", '<i class="lit"></i><i class="dim"></i><span>' + w + "</span>");
+          box(e, TX(i), 732);
+          var sh = shadowFor(TX(i), 124, 46);
+          return { el: e, sh: sh, lit: e.firstChild, dim: e.children[1], te: EMIT[i], tl: EMIT[i] + 0.42, x: TX(i) };
+        });
+        // the look-back strings (beat 2)
+        var svgNS = "http://www.w3.org/2000/svg";
+        function svgLayer(id, z) {
+          var s = document.createElementNS(svgNS, "svg");
+          s.setAttribute("class", "kit-strings");
+          s.id = id;
+          s.style.zIndex = z;
+          world.appendChild(s);
+          return s;
+        }
+        var looks = svgLayer("kv-looks", 950);
+        var lookPaths = [0, 1, 2].map(function () { var p = document.createElementNS(svgNS, "path"); looks.appendChild(p); return p; });
+
+        // ================= beat 3: the staircase of recomputation + the stopwatch =================
+        var tri = el("div", "a board kit-sandp", '<div class="bhead">不缓存：每一步都把前面重算一遍</div>');
+        tri.id = "kv-tri";
+        var triSh = shadowFor(1680, 780, 120);
+        var trows = [];
+        for (var r = 1; r <= 8; r++) {
+          var row = el("div", "trow", '<i class="hl"></i><b>第 <span class="num">' + r + "</span> 步</b>", tri);
+          row.style.top = 82 + (r - 1) * 51 + "px";
+          var cells = [];
+          for (var c = 0; c < r; c++) cells.push(el("i", "tcell" + (c === r - 1 ? " me" : ""), null, row));
+          trows.push({ el: row, hl: row.firstChild, cells: cells, t: T.each + (r - 1) * 0.11, n: r });
+        }
+        var watch = el("div", "a", '<div class="cap">每步耗时</div><i class="knob"></i><i class="disc"></i><i class="fill"></i><i class="hand"></i><i class="hub"></i><div class="stepn"></div>');
+        watch.id = "kv-watch";
+        watch.style.transformOrigin = "50% 100%";
+        var watchSh = shadowFor(1302, 250, 70);
+        var wFill = watch.querySelector(".fill"), wHand = watch.querySelector(".hand"), wStep = watch.querySelector(".stepn");
+        var SLOW = [0, 1, 2, 3, 4, 5, 6, 7].map(function (k) { return T.slower - 0.05 + k * 0.085; });
+
+        // ================= beat 4/5: the KV cache cabinet =================
+        var cab = el("div", "a board kit-sandp", '<div class="bhead">KV cache <small>缓存</small></div>');
+        cab.id = "kv-cab";
+        var cabSh = shadowFor(1680, 780, 120);
+        var COLX = { t: 24, k: 196, v: 392, w: 590 }, COLW = { t: 156, k: 180, v: 180, w: 168 };
+        var heads = [["t", '<span class="num" style="font-size: 30px">token</span>'], ["k", '<span class="num">K</span>&nbsp;键'], ["v", '<span class="num">V</span>&nbsp;值'], ["w", "相关度"]].map(function (hd) {
+          var e = el("div", "ccol", hd[1], cab);
+          e.style.left = COLX[hd[0]] + "px";
+          e.style.width = COLW[hd[0]] + "px";
+          return e;
+        });
+        var ROWY = function (r) { return 134 + r * 60; };
+        var crows = [];
+        for (r = 0; r < 6; r++) {
+          var slots = ["t", "k", "v"].map(function (c) { var s = el("i", "cslot", null, cab); box(s, COLX[c], ROWY(r), COLW[c]); return s; });
+          var ct = el("div", "ccell t" + (r === 4 ? " hot" : ""), r < 5 ? WORDS[r] : "", cab); box(ct, COLX.t, ROWY(r), COLW.t);
+          var ck = el("div", "ccell k", KEY + "K", cab); box(ck, COLX.k, ROWY(r), COLW.k);
+          var cv = el("div", "ccell v", "V", cab); box(cv, COLX.v, ROWY(r), COLW.v);
+          var cw = el("i", "cw" + (r === 3 ? " top" : ""), null, cab); box(cw, COLX.w, ROWY(r) + 12, COLW.w);
+          crows.push({ slots: slots, t: ct, k: ck, v: cv, w: cw });
+        }
+        // where a cache cell sits in the world
+        var cabCell = function (r, c) { return { x: 1680 + COLX[c] + COLW[c] / 2, y: 330 + ROWY(r) + 25 }; };
+        var WEIGHT = [0.34, 0.58, 0.22, 0.96, 0.46];     // illustrative: 「蓝光」 matters most to 「散射」
+        // K / V tags that pop out of each token, and the new token's Q
+        var kvTags = [0, 1, 2, 3, 4].map(function (i) {
+          var k = el("div", "a tag k", KEY + "K"); box(k, TX(i) - 9, 668);
+          var v = el("div", "a tag v", "V"); box(v, TX(i) + 63, 668);
+          var isNew = i === 4;
+          var tk = isNew ? T.onlyNew + 0.22 : T.key + i * 0.07, tv = isNew ? T.onlyNew + 0.3 : T.value + i * 0.07;
+          var tf = isNew ? T.thatOne + 0.02 : T.store + i * 0.12;
+          return { k: k, v: v, tk: tk, tv: tv, tf: tf, land: tf + 0.5, r: i };
+        });
+        var qTag = el("div", "a tag q", MAG + "Q");
+        box(qTag, TX(4) + 19, 594);
+        var vflies = [0, 1, 2, 3].map(function () { return el("div", "a vfly", "V"); });
+        var x1 = el("div", "a", '<div class="disc num">×1</div><i class="foot"></i>');
+        x1.id = "kv-x1";
+        x1.style.transformOrigin = "50% 100%";
+        var x1Sh = shadowFor(1350, 170, 40);
+        var x1Label = K.label({ text: "只算一次" });
+        world.appendChild(x1Label.el);
+        put(x1Label.el, 1435, 626, 0.5, 1, 1.12);
+        x1Label.el.style.zIndex = "830";
+        var bars = K.bars({ rows: [
+          { label: "不缓存", value: 5, max: 5, tone: "warn", valueText: "重算 5 份" },
+          { label: "有缓存", value: 1, max: 5, tone: "accent", valueText: "只算 1 份" },
+        ], width: 640, labelWidth: 150 });
+        world.appendChild(bars.el);
+        put(bars.el, 520, 360, 0, 0, 1.18);
+        bars.el.style.zIndex = "1100";
+
+        // ================= station B: 显存 =================
+        var mem = el("div", "a board kit-paper", '<div class="bhead">显存</div><div class="well"></div>');
+        mem.id = "kv-mem";
+        var memSh = shadowFor(3470, 370, 130);
+        var well = mem.querySelector(".well");
+        var WELL_H = 550 - 92 - 22;    // 436
+        var slabs = [0, 1, 2, 3].map(function (k) { return el("div", "slab", '<span>' + (k + 1) + "K</span>&nbsp;token", well); });
+        var reserve = el("div", "", "预留 · 空着", well);
+        reserve.id = "kv-reserve";
+        var rpages = [0, 1, 2, 3].map(function () { return el("i", "rpage", null, well); });
+        var cacheCard = el("div", "a", "KV cache");
+        cacheCard.id = "kv-cachecard";
+        cacheCard.setAttribute("data-layout-allow-overlap", "");   // it lifts off the cabinet it is a copy of
+        var grow = K.bars({ rows: [
+          { label: "上下文", value: 4, max: 4, tone: "sky", valueText: "1K token" },
+          { label: "KV 缓存", value: 4, max: 4, tone: "warn", valueText: "×1" },
+        ], width: 900, labelWidth: 170 });
+        world.appendChild(grow.el);
+        put(grow.el, 3960, 620, 0, 0, 1);
+        grow.el.style.zIndex = "820";
+        var counter = K.number({ unit: "K", caption: "上下文长度 · token", steps: [[T.ctx[0], 1], [T.ctx[1], 2], [T.ctx[2], 3], [T.ctx[3], 4]], at: T.ctx[0] - 0.4, out: T.llama - 0.3 });
+        world.appendChild(counter.el);
+        put(counter.el, 4460, 330, 0.5, 0);
+        counter.el.style.zIndex = "820";
+        // the Llama badge, hung on a string
+        var llama = el("div", "a", '<div class="kit-thread"></div>');
+        llama.id = "kv-llama";
+        var llamaStr = llama.firstChild;
+        var llamaLab = K.label({ text: "Llama 2 · 7B", tone: "ink", size: 40 });
+        llama.appendChild(llamaLab.el);
+        // the per-token bill
+        var fboard = el("div", "a board kit-sandp", '<div class="bhead">每个 token 的 K、V 要占多少显存？</div>');
+        fboard.id = "kv-fboard";
+        var fbSh = shadowFor(3930, 1180, 110);
+        var formula = K.formula({ terms: [
+          { text: "2", sub: "K 和 V", t: T.per },
+          { text: "×", t: T.per + 0.1 },
+          { text: "32", sub: "层", t: T.perGe },
+          { text: "×", t: T.perGe + 0.14 },
+          { text: "4096", sub: "维", t: T.perTok },
+          { text: "×", t: T.perTok + 0.14 },
+          { text: "2", sub: "字节 · FP16", t: T.da },
+          { text: "≈", t: T.half - 0.22 },
+          { text: "0.5 MB", sub: "每个 token", tone: "accent", t: T.half },
+          { br: true },
+          { text: "0.5 MB", sub: "每个 token", t: T.k4 - 0.3 },
+          { text: "×", t: T.k4 - 0.14 },
+          { text: "4096", sub: "个 token · 4K", t: T.k4 },
+          { text: "≈", t: T.gb2 - 0.25 },
+          { text: "2 GB", sub: "一条请求", tone: "accent", t: T.gb2 },
+        ], out: T.fixes - 0.25 });
+        fboard.appendChild(formula.el);
+        put(formula.el, 44, 92, 0, 0);
+        var gbTag = K.label({ text: "≈ 2 GB", sub: "4K 上下文", tone: "accent", size: 44, at: T.gb, out: T.fixes - 0.2 });
+        world.appendChild(gbTag.el);
+        put(gbTag.el, 3655, 600, 0.5, 0.5, 1.1);
+        gbTag.el.style.zIndex = "1200";
+
+        // ================= beat 8: three fixes on one board =================
+        var fix = el("div", "a board kit-sandp");
+        fix.id = "kv-fix";
+        var fixSh = shadowFor(3930, 1180, 110);
+        var TABS = [["GQA", 40, T.gqa], ["PagedAttention", 236, T.paged], ["量化", 596, T.quant]].map(function (d) {
+          var e = el("div", "ftab", d[0] === "量化" ? "量化" : '<span class="num" style="font-size: 32px">' + d[0] + "</span>", fix);
+          e.style.left = d[1] + "px";
+          return { el: e, t: d[2] };
+        });
+        // GQA demo
+        var dG = el("div", "demo", null, fix);
+        var gq = [0, 1, 2, 3].map(function (i) { var e = el("div", "a qtag", "Q" + (i + 1), dG); box(e, 100 + i * 190, 46); return e; });
+        var gp = [0, 1, 2, 3].map(function (i) { var e = el("div", "a pair", '<i class="k">K</i><i class="v">V</i>', dG); box(e, 67 + i * 190, 256); return e; });
+        var gSvg = document.createElementNS(svgNS, "svg");
+        gSvg.setAttribute("class", "kit-strings");
+        dG.appendChild(gSvg);
+        var gStr = [0, 1, 2, 3].map(function () { var p = document.createElementNS(svgNS, "path"); gSvg.appendChild(p); return p; });
+        var gStamp = el("div", "a stampd", "÷4", dG); box(gStamp, 860, 30);
+        var gNote = el("div", "a dtext s", '例：<span class="num">Llama 3 8B</span><br><span class="num">32</span> 个头共用 <span class="num">8</span> 份 <span class="num">K/V</span>', dG); box(gNote, 820, 226);
+        // PagedAttention demo
+        var dP = el("div", "demo", null, fix);
+        var pStrip = el("div", "a strip", null, dP); box(pStrip, 60, 70, 1060);
+        pStrip.style.border = "4px dashed rgba(38, 54, 74, 0.45)";
+        pStrip.style.background = "rgba(251, 248, 241, 0.5)";
+        var pFill = el("div", "a", null, dP); box(pFill, 64, 74, 0, 96);
+        pFill.style.background = "var(--kit-warn)";
+        pFill.style.borderRadius = "6px";
+        var pLab = el("div", "a dtext", "预留一大块，大半空着", dP); box(pLab, 560, 98);
+        var pPages = [0, 1, 2, 3, 4, 5].map(function (i) { var e = el("div", "a page " + (i < 2 ? "full" : "empty"), null, dP); box(e, 60 + i * 177, 70, 167); return e; });
+        var pCuts = [1, 2, 3, 4, 5].map(function (i) { var e = el("i", "cutline", null, dP); e.style.left = 60 + i * 177 - 7 + "px"; e.style.top = "60px"; return e; });
+        var pNew = el("div", "a page full", null, dP); box(pNew, 60 + 2 * 177, 70, 167);
+        var pSay = el("div", "a dtext", "切成固定大小的页：用到一页，才分一页", dP); box(pSay, 60, 250);
+        // quantization demo
+        var dQ = el("div", "demo", null, fix);
+        var qc = [0, 1, 2, 3].map(function (i) { var e = el("div", "a qcell " + (i % 2 ? "v" : "k"), '<span>' + (i % 2 ? "V" : "K") + "</span>", dQ); box(e, 60 + i * 250, 70, 226); return { el: e, sp: e.firstChild }; });
+        var qPrec = el("div", "a dtext", '<span class="num">FP16</span> · 每个数 <span class="num">2</span> 字节', dQ); box(qPrec, 60, 186);
+        var qSay = el("div", "a dtext", '压缩到 <span class="num">INT8</span> · 每个数 <span class="num">1</span> 字节', dQ); box(qSay, 60, 250);
+        var qStamp = el("div", "a stampd", "÷2", dQ); box(qStamp, 930, 176);
+
+        // ================= station C: the trade =================
+        var scale = el("div", "a", '<i class="foot"></i><i class="post"></i><div class="pivot"><div class="beam"></div><div class="pan" id="kv-panl"><i class="rope l"></i><i class="rope r"></i><i class="dish"></i><div class="load"></div></div><div class="pan" id="kv-panr"><i class="rope l"></i><i class="rope r"></i><i class="dish"></i><div class="load"></div></div><i class="hub"></i></div>');
+        scale.id = "kv-scale";
+        scale.style.transformOrigin = "50% 100%";
+        var scaleSh = shadowFor(6200, 300, 50);
+        var pivot = scale.querySelector(".pivot"), panL = $("kv-panl"), panR = $("kv-panr");
+        panL.style.left = "-280px"; panR.style.left = "280px";
+        var mslabs = [0, 1, 2, 3].map(function (k) { var e = el("i", "mslab", null, panL.querySelector(".load")); return e; });
+        var bolt = el("div", "bolt", '<svg width="100" height="120" viewBox="0 0 100 120"><path d="M 60 0 L 12 66 L 44 66 L 30 120 L 90 44 L 56 44 L 74 0 Z" fill="#9dba9a" stroke="#26364a" stroke-width="5" stroke-linejoin="round"/></svg>', panR.querySelector(".load"));
+        var labVram = K.label({ text: "显存", tone: "warn", size: 40 });
+        var labSpeed = K.label({ text: "速度", tone: "ok", size: 40 });
+        world.appendChild(labVram.el);
+        world.appendChild(labSpeed.el);
+        labVram.el.style.zIndex = labSpeed.el.style.zIndex = "1200";
+        var CX0 = 6720;
+        var ctoks = WORDS.map(function (w, i) {
+          var e = el("div", "a tok" + (i === 5 ? " hot" : ""), '<i class="lit"></i><i class="dim"></i><span>' + w + "</span>");
+          box(e, CX0 + i * 146, 732);
+          var sh = shadowFor(CX0 + i * 146, 124, 46);
+          return { el: e, sh: sh, dim: e.children[1] };
+        });
+        var spot = el("div", "a", "<div></div>");
+        spot.id = "kv-spot";
+        spot.style.left = CX0 + 5 * 146 + 62 + "px";
+
+        // ================= screen overlay: chapter bookmark, notes, captions, closing line, recap =================
+        var overlay = $("kv-overlay");
+        var chap = new C.Chapters($("kv-chap"), story);
+        var caps = K.captions($("kv-caps"), story);
+        var NOTES = [
+          K.note("[[自回归]]：每次只生成 1 个 token", { at: T.beng - 0.5, out: T.newTok - 0.3 }),
+          K.note("注意力：新 token 要和前面[[每一个]]比一比", { at: T.lookBack - 0.45, out: T.l2end + 0.05 }),
+          K.note("第 n 步，要把前面 n 个[[全部重算]]", { at: T.recompute + 0.45, out: T.kv - 0.4 }),
+          K.note("[[K]] 用来匹配，[[V]] 是被取走的内容", { at: T.value + 0.25, out: T.after - 0.1 }),
+          K.note("新 token 只算自己的 Q、K、V，再拿 [[Q]] 去查缓存", { at: T.only + 0.05, out: T.cost - 0.3 }),
+          K.note("显存占用随上下文[[线性增长]]", { at: T.rise - 0.65, out: T.llama - 0.25 }),
+          K.note("单条请求；并发越多，乘得越多", { small: true, at: T.jiu - 0.6, out: T.fixes - 0.2 }),
+        ];
+        NOTES.forEach(function (n) { overlay.appendChild(n.el); C.place(n.el, 960, 138, 0.5, 0); });
+        var closing = K.title(story);
+        overlay.appendChild(closing.el);
+        C.place(closing.el, 960, 44, 0.5, 0);
+        var recap = K.recap(story, { hide: [$("kv-stage"), closing.el] });
+        overlay.appendChild(recap.el);
+
+        // ================= camera: ONE object for the three parallax layers =================
+        // the camera never parks: between the big moves it drifts (linearly) toward whatever the narration is about
+        var L = EZ.lin;
+        var CX = [[0, 520], [2.0, 650, EZ.io2], [7.1, 760, L], [7.95, 1470, EZ.io3], [T.kv - 0.2, 1526, L], [T.store - 0.8, 1470, L], [T.after, 1524, L], [T.lookup, 1488, L], [19.95, 1526, L],
+          [20.95, 4290, EZ.io3], [T.llama - 0.2, 4256, L], [T.l7end, 4320, L], [T.paged, 4266, L], [35.5, 4314, L], [36.25, 6770, EZ.io3], [40.3, 6810, L], [45, 6820, L]];
+        var CY = [[0, 620], [2.0, 594, EZ.io2], [7.1, 584, L], [7.95, 500, EZ.io3], [T.kv - 0.2, 492, L], [T.store - 0.8, 500, L], [T.after, 492, L], [T.lookup, 498, L], [19.95, 492, L],
+          [20.95, 560, EZ.io3], [T.llama - 0.2, 568, L], [T.l7end, 554, L], [T.paged, 562, L], [35.5, 554, L], [36.25, 520, EZ.io3], [40.3, 510, L], [45, 508, L]];
+        var CS = [[0, 1.42], [2.0, 1.3, EZ.io2], [7.1, 1.26, L], [7.95, 0.88, EZ.io3], [T.kv - 0.2, 0.89, L], [T.store - 0.8, 0.88, L], [T.after, 0.89, L], [T.lookup, 0.88, L], [19.95, 0.888, L],
+          [20.95, 1.05, EZ.io3], [T.llama - 0.2, 1.04, L], [T.l7end, 1.045, L], [T.paged, 1.04, L], [35.5, 1.045, L], [36.25, 1.0, EZ.io3], [40.3, 1.03, L], [45, 1.035, L]];
+        var cam = { x: 520, y: 620, s: 1.42 };
+
+        // ================= helpers for paper pieces =================
+        function standUp(e, sh, t, up, dUp, down, dDown, eye, dist) {
+          var on = K.alive(t, up, down, dDown || 0.3);
+          vis(e, on);
+          if (sh) vis(sh, on);
+          if (!on) return 88;
+          var a = fold(t, up, dUp || 0.45, down, dDown || 0.3, EZ.b14);
+          e.style.transform = foldCss(a, eye || 300, dist || 1400);
+          if (sh) K.floorShadow(sh, a);
+          return a;
+        }
+        // a token's hop: out of the press slot, over an arc, onto its place on the row
+        function hop(t, te, from, to, apex) {
+          var p = pr(t, te, 0.42);
+          var A = from, B = to, Cc = { x: (A.x + B.x) / 2, y: Math.min(A.y, B.y) - apex };
+          var q = K.bez2(A, Cc, B, EZ.sio(p));
+          return { x: q.x - B.x, y: q.y - B.y, rot: -200 * (1 - EZ.o2(p)) + 0, p: p };
+        }
+        function crankAngle(t) {
+          var a = 0;
+          EMIT.forEach(function (te) { a += 120 * EZ.io2(pr(t, te - 0.18, 0.3)); });
+          return a;
+        }
+
+        // ================= the frame renderer: a pure function of t =================
+        function render(t) {
+          cam.x = K.ladder(t, CX); cam.y = K.ladder(t, CY); cam.s = K.ladder(t, CS);
+          W.render(cam, t);
+
+          // ---------- beat 1: the press stands up, the question is hung, tokens hop out one at a time ----------
+          standUp(press, pressSh, t, 0.08, 0.5, T.ifEach - 0.35, 0.35, 260, 1400);
+          crank.style.transform = "rotate(" + f2(crankAngle(t)) + "deg)";
+          var askDrop = Kit.ladder(t, [[T.answer - 0.2, -720], [T.answer + 0.15, 0, EZ.i2], [T.ifEach - 0.45, 0], [T.ifEach + 0.15, -760, EZ.i3]]);
+          var askAng = t < T.answer + 0.15 ? -10 * (1 - pr(t, T.answer - 0.2, 0.35)) : K.swing(t, T.answer + 0.15, 7, 0.66, 2.3, 1.7);
+          vis(ask, t >= T.answer - 0.2 && t < T.ifEach + 0.15);
+          ask.style.transform = "rotate(" + f2(askAng) + "deg)";
+          ask.lastChild.style.transform = "translateY(" + f2(askDrop) + "px)";
+          askStr.style.height = f2(Math.max(0, 560 + askDrop)) + "px";
+
+          toks.forEach(function (k, i) {
+            var on = t >= k.te;
+            vis(k.el, on); vis(k.sh, t >= k.tl);
+            if (!on) return;
+            var tf;
+            if (t < k.tl) {
+              var from = i < 4 ? { x: 262, y: 520 } : { x: 300, y: 560 };
+              var hh = hop(t, k.te, from, { x: k.x + 62, y: 840 }, i < 4 ? 260 : 360);
+              tf = "translate(" + f2(hh.x) + "px," + f2(hh.y) + "px) rotate(" + f2(hh.rot) + "deg) scale(" + (0.7 + 0.3 * EZ.o2(hh.p)).toFixed(3) + ")";
+            } else {
+              // lands with a squash; beat 2: the new token leans back to look; earlier tokens nod when 所有 is said
+              var q = pr(t, k.tl, 0.22), dip = Math.sin(Math.PI * q) * (1 - q);
+              var lean = i === 3 ? -7 * EZ.io2(pr(t, T.lookBack - 0.1, 0.3)) * (1 - EZ.io2(pr(t, T.l2end, 0.4))) : 0;
+              var nod = i < 3 ? Math.sin(Math.PI * pr(t, T.all + (2 - i) * 0.05, 0.36)) : 0;
+              tf = "translateY(" + f2(-10 * nod) + "px) rotate(" + f2(lean - 4 * nod) + "deg) scale(" + (1 + 0.08 * dip).toFixed(3) + "," + (1 - 0.14 * dip).toFixed(3) + ")";
+              K.floorShadow(k.sh, 0);
+            }
+            k.el.style.transform = tf;
+            // highlight: the newest token is coral until the next one arrives; earlier ones light sky on 所有
+            var hot = (i === 3 && t < T.kv - 0.2) || (i === 4);
+            k.el.classList.toggle("hot", hot);
+            var lit = i < 3 ? cl(pr(t, T.all + (2 - i) * 0.05, 0.15)) * (1 - pr(t, T.l2end + 0.1, 0.4)) : 0;
+            k.lit.style.opacity = lit.toFixed(3);
+            // beat 5: only the new one computes, the others stay dark
+            var dim = i < 4 ? cl(pr(t, T.only, 0.25)) * (1 - pr(t, T.l5end + 0.2, 0.4)) : 0;
+            k.dim.style.opacity = (0.62 * dim).toFixed(3);
+          });
+
+          // beat 2: strings from the new token back to every earlier token, sweeping left
+          var src = { x: TX(3) + 62, y: 732 };
+          lookPaths.forEach(function (p, j) {
+            var tgt = 2 - j;   // nearest first
+            var u = EZ.o2(pr(t, T.lookBack + j * 0.13, 0.32)) * (1 - EZ.i2(pr(t, T.l2end + 0.15, 0.35)));
+            K.string(p, src, { x: TX(tgt) + 62, y: 732 }, u, -0.32);
+          });
+
+          // ---------- beat 3: without a cache, step n recomputes all n ----------
+          var triA = standUp(tri, triSh, t, T.ifEach, 0.5, T.kv - 0.42, 0.32, 360, 1500);
+          trows.forEach(function (R, j) {
+            var on = t >= R.t;
+            vis(R.el, on);
+            if (!on) return;
+            R.el.style.transform = foldCss(fold(t, R.t, 0.26, null, 0, EZ.b16), 30, 600);
+            // 重新算: every cell before the new one is recomputed — waste flashes mustard, a wave down the rows
+            var tw0 = T.recompute + j * 0.04;
+            var flash = Math.sin(Math.PI * pr(t, tw0, 0.3));
+            var warn = pr(t, tw0, 0.12);
+            R.cells.forEach(function (cEl, c) {
+              if (c === R.n - 1) return;
+              cEl.style.backgroundColor = warn > 0.5 ? "#e3b448" : "#fbf8f1";
+              cEl.style.transform = "scale(" + (1 + 0.16 * flash).toFixed(3) + ")";
+            });
+            // 越写越慢: the rows are read one by one while the stopwatch takes longer for each
+            var hl = Math.sin(Math.PI * pr(t, SLOW[j] - 0.02, 0.22));
+            R.hl.style.opacity = (Math.max(hl, j === 7 ? pr(t, SLOW[7], 0.2) : 0)).toFixed(3);
+          });
+          standUp(watch, watchSh, t, T.slower - 0.42, 0.42, T.kv - 0.42, 0.3, 300, 1400);
+          var step = 0;
+          SLOW.forEach(function (s0, k) { if (t >= s0) step = k + 1; });
+          var arc = 0;
+          SLOW.forEach(function (s0, k) { arc += 45 * EZ.o2(pr(t, s0, 0.08)) * (k + 1) / 8; });
+          var deg = cl(arc / 162) * 360;
+          wFill.style.background = "conic-gradient(#e3b448 0deg " + f2(deg) + "deg, rgba(0,0,0,0) " + f2(deg) + "deg 360deg)";
+          wHand.style.transform = "rotate(" + f2(deg) + "deg)";
+          var sTxt = step ? "第 " + step + " 步" : "";
+          if (wStep.textContent !== sTxt) wStep.textContent = sTxt;
+
+          // ---------- beat 4: the cache cabinet; each token yields K and V once; they are stored ----------
+          standUp(cab, cabSh, t, T.kv - 0.05, 0.5, null, 0, 360, 1500);
+          heads[3].style.visibility = t >= T.lookup ? "inherit" : "hidden";
+          crows.forEach(function (R, r) {
+            var tag = kvTags[r];
+            var landT = tag ? tag.land : 1e9;
+            var filled = t >= landT;
+            [R.t, R.k, R.v].forEach(function (c, ci) {
+              var tt = landT + ci * 0.04;
+              vis(c, t >= tt);
+              if (t >= tt) c.style.transform = foldCss(fold(t, tt, 0.28, null, 0, EZ.b16), 30, 500);
+            });
+            // beat 5: Q scans down the K column; each row answers with a relevance weight
+            var tq = T.lookup + 0.45 + r * 0.13;
+            var wv = r < 5 ? WEIGHT[r] : 0;
+            var wu = EZ.o3(pr(t, tq, 0.3)) * (1 - pr(t, T.l5end + 0.6, 0.3));
+            R.w.style.visibility = r < 5 && wu > 0.01 ? "inherit" : "hidden";
+            R.w.style.transform = "scaleX(" + Math.max(0.001, wv * wu).toFixed(3) + ")";
+            var nodK = Math.sin(Math.PI * pr(t, tq - 0.05, 0.25));
+            if (filled && r < 5 && nodK > 0) R.k.style.transform = "translateY(" + f2(-6 * nodK) + "px)";
+          });
+          kvTags.forEach(function (g, i) {
+            [[g.k, g.tk, "k"], [g.v, g.tv, "v"]].forEach(function (d, di) {
+              var e = d[0], t0 = d[1];
+              var on = t >= t0 && t < g.land;
+              vis(e, on);
+              if (!on) return;
+              var a = fold(t, t0, 0.3, null, 0, EZ.b16);
+              if (t < g.tf + di * 0.05) { e.style.transform = foldCss(a, 30, 500); return; }
+              // fly into the cabinet row
+              var p = pr(t, g.tf + di * 0.05, 0.45);
+              var A = { x: TX(i) + (di ? 98 : 26), y: 696 }, B = cabCell(g.r, d[2]);
+              var Cc = { x: (A.x + B.x) / 2, y: Math.min(A.y, B.y) - 220 };
+              var q = K.bez2(A, Cc, B, EZ.io2(p));
+              e.style.transform = "translate(" + f2(q.x - A.x) + "px," + f2(q.y - A.y) + "px) rotate(" + f2(-20 * Math.sin(Math.PI * p)) + "deg) scale(" + (1 + 0.5 * EZ.io2(p)).toFixed(3) + ")";
+            });
+          });
+          // ×1 — each K and V is computed only once
+          standUp(x1, x1Sh, t, T.once, 0.45, T.vram - 0.9, 0.3, 300, 1400);
+          x1Label.at = T.once + 0.18; x1Label.out = T.vram - 0.9;
+          x1Label.render(t);
+
+          // ---------- beat 5: only the new token computes; its Q looks the answer up in the cache ----------
+          var qOn = t >= T.lookup && t < T.l5end + 0.35;
+          vis(qTag, qOn);
+          if (qOn) {
+            var qa = fold(t, T.lookup, 0.25, null, 0, EZ.b16);
+            var Q0 = { x: TX(4) + 62, y: 622 }, Q1 = { x: cabCell(0, "k").x + 52, y: cabCell(0, "k").y - 4 };
+            var qx = 0, qy = 0;
+            if (t >= T.lookup + 0.2) {
+              var pq = pr(t, T.lookup + 0.2, 0.25);
+              var qc1 = K.bez2(Q0, { x: (Q0.x + Q1.x) / 2, y: Q0.y - 160 }, Q1, EZ.io2(pq));
+              qx = qc1.x - Q0.x; qy = qc1.y - Q0.y;
+              // then it slides down the K column, row by row
+              var scanY = 60 * 4 * EZ.io2(pr(t, T.lookup + 0.45, 0.52));
+              qy += scanY;
+            }
+            qTag.style.transform = "translate(" + f2(qx) + "px," + f2(qy) + "px)" + foldCss(qa, 30, 500);
+            qTag.style.opacity = (1 - pr(t, T.l5end + 0.1, 0.25)).toFixed(3);
+          }
+          // the matching V's flow back to the new token (weighted)
+          vflies.forEach(function (e, j) {
+            var r = [3, 1, 4, 0][j], tv0 = T.query - 0.05 + j * 0.08;
+            var p = pr(t, tv0, 0.5);
+            var on = p > 0 && p < 1;
+            vis(e, on);
+            if (!on) return;
+            var A = cabCell(r, "v"), B = { x: TX(4) + 62, y: 700 };
+            var q = K.bez2(A, { x: (A.x + B.x) / 2, y: Math.min(A.y, B.y) - 140 }, B, EZ.io2(p));
+            e.style.transform = "translate(" + f2(q.x - 23) + "px," + f2(q.y - 19) + "px) scale(" + (0.7 + 0.6 * WEIGHT[r]).toFixed(3) + ")";
+            e.style.opacity = (0.45 + 0.55 * WEIGHT[r]).toFixed(3);
+          });
+          bars.at = T.query - 0.1; bars.out = T.cost - 0.15;
+          bars.render(t);
+
+          // ---------- beat 6: the cost is GPU memory; the cache grows with the context ----------
+          var memA = standUp(mem, memSh, t, T.vram - 0.12, 0.5, null, 0, 360, 1500);
+          // the cache leaves the cabinet with the camera and drops into 显存 as the first 1K
+          var ccP = pr(t, T.cost - 0.15, T.ctx[0] - T.cost + 0.15);
+          vis(cacheCard, ccP > 0 && ccP < 1);
+          if (ccP > 0 && ccP < 1) {
+            var A0 = { x: 2070, y: 400 }, B0 = { x: 3655, y: 810 - 48 };
+            var qcc = K.bez2(A0, { x: 3000, y: 120 }, B0, EZ.io2(ccP));
+            cacheCard.style.transform = "translate(" + f2(qcc.x - 100) + "px," + f2(qcc.y - 48) + "px) rotate(" + f2(-12 * Math.sin(Math.PI * ccP)) + "deg) scale(" + (1 + 0.25 * Math.sin(Math.PI * ccP)).toFixed(3) + ")";
+          }
+          // slab height factor: GQA ÷4, then quantization ÷2
+          var hf = 1 - 0.75 * EZ.io2(pr(t, T.kAndV, 0.42));
+          hf *= 1 - 0.5 * EZ.io2(pr(t, T.compress, 0.36));
+          var bump = Math.sin(Math.PI * pr(t, T.rise, 0.28)) * (1 - pr(t, T.rise, 0.28));
+          var SH = 96, GAP = 6, yb = WELL_H - 10;
+          slabs.forEach(function (s, k) {
+            var tl = T.ctx[k];
+            var on = t >= tl - 0.25;
+            vis(s, on);
+            if (!on) return;
+            var hk = SH * hf;
+            var drop = k === 0 ? 0 : -260 * (1 - EZ.i2(pr(t, tl - 0.25, 0.25)));
+            var land = pr(t, tl, 0.2), sq = Math.sin(Math.PI * land) * (1 - land);
+            var top = yb - (k + 1) * hk - k * GAP * hf + drop - 18 * bump * (k + 1) / 4;
+            s.style.top = f2(top) + "px";
+            s.style.height = f2(hk) + "px";
+            s.style.transform = "scale(" + (1 + 0.05 * sq).toFixed(3) + "," + (1 - 0.12 * sq).toFixed(3) + ")";
+            var gbOn = t >= T.gb && t < T.fixes + 0.1;
+            s.firstChild.style.visibility = hf > 0.45 && !gbOn ? "inherit" : "hidden";
+            s.style.fontSize = hf > 0.45 && !gbOn ? "" : "0px";
+          });
+          if (t >= T.vram - 0.12) mem.style.transform = foldCss(memA, 360, 1500) + " scale(" + (1 + 0.035 * bump).toFixed(4) + ")";
+          // PagedAttention: a big reserved block shows up above the cache, gets cut into pages, the empty ones go
+          var stackTop = yb - 4 * SH * hf - 3 * GAP * hf;
+          var rsOn = t >= T.paged - 0.05 && t < at(8, "配") + 0.4;
+          vis(reserve, rsOn && t < at(8, "页") + 0.05);
+          var rH = 190;
+          reserve.style.top = f2(stackTop - 8 - rH) + "px";
+          reserve.style.height = rH + "px";
+          reserve.style.opacity = EZ.o2(pr(t, T.paged - 0.05, 0.25)).toFixed(3);
+          rpages.forEach(function (p, k) {
+            var on = t >= at(8, "页") + 0.05 && t < at(8, "配") + 0.4;
+            vis(p, on);
+            if (!on) return;
+            var ph0 = (rH - 3 * 6) / 4;
+            p.style.top = f2(stackTop - 8 - rH + k * (ph0 + 6)) + "px";
+            p.style.height = f2(ph0) + "px";
+            var down = fold(t, at(8, "页"), 0.01, at(8, "配") - 0.25 + k * 0.06, 0.26, EZ.lin);
+            p.style.transform = "perspective(500px) rotateX(" + f2(down) + "deg)";
+          });
+
+          // the context counter flips 1K → 4K; the context tape and the cache tape grow together (linear)
+          counter.render(t);
+          var gk = 0;
+          T.ctx.forEach(function (tc, k) { gk = Math.max(gk, (k + 1) * EZ.o3(pr(t, tc, 0.2)) / 4); });
+          grow.at = T.ctx[0] - 0.45; grow.out = T.llama - 0.3;
+          grow.render(t, [gk, gk]);
+          var stepN = 0;
+          T.ctx.forEach(function (tc, k) { if (t >= tc) stepN = k + 1; });
+          grow.setValueText(0, Math.max(1, stepN) + "K token");
+          grow.setValueText(1, "×" + Math.max(1, stepN));
+
+          // ---------- beat 7: Llama 2 7B, the per-token bill, × 4K = 2 GB ----------
+          var lOn = t >= T.llama - 0.3 && t < T.fixes;
+          vis(llama, lOn);
+          if (lOn) {
+            var lDrop = K.ladder(t, [[T.llama - 0.3, -460], [T.llama + 0.02, 0, EZ.i2], [T.fixes - 0.45, 0], [T.fixes, -520, EZ.i3]]);
+            var lAng = t < T.llama + 0.02 ? -12 * (1 - pr(t, T.llama - 0.3, 0.32)) : K.swing(t, T.llama + 0.02, 7, 0.62, 2.4, 1.6);
+            llama.style.transform = "rotate(" + f2(lAng) + "deg)";
+            put(llamaLab.el, 0, 330 + lDrop, 0.5, 0);
+            llamaStr.style.height = f2(Math.max(0, 336 + lDrop)) + "px";
+            llamaLab.render(t, 1);
+          }
+          standUp(fboard, fbSh, t, T.say - 0.1, 0.5, T.fixes - 0.25, 0.3, 300, 1500);
+          formula.render(t);
+          gbTag.render(t);
+
+          // ---------- beat 8: GQA, PagedAttention, quantization — each one shrinks the cache ----------
+          standUp(fix, fixSh, t, T.fixes + 0.05, 0.45, null, 0, 300, 1500);
+          var cur = t < T.paged - 0.05 ? 0 : t < T.quant - 0.05 ? 1 : 2;
+          TABS.forEach(function (tb, k) {
+            var on = t >= tb.t - 0.1;
+            vis(tb.el, on);
+            if (on) tb.el.style.transform = foldCss(fold(t, tb.t - 0.1, 0.32, null, 0, EZ.b16), 40, 500);
+            tb.el.classList.toggle("on", k === cur);
+          });
+          // demo pages fold up / down in turn
+          var dLife = [[T.gqa - 0.05, T.paged - 0.3], [T.paged - 0.05, T.quant - 0.18], [T.quant - 0.02, null]];
+          [dG, dP, dQ].forEach(function (d, k) {
+            var on = K.alive(t, dLife[k][0], dLife[k][1], 0.25);
+            vis(d, on);
+            if (on) d.style.transform = foldCss(fold(t, dLife[k][0], 0.35, dLife[k][1], 0.25, EZ.b14), 230, 1400);
+          });
+          // GQA: four query heads, one shared K/V pair
+          var shareP = EZ.io2(pr(t, T.kAndV, 0.4));
+          gq.forEach(function (e, i) { e.style.transform = foldCss(fold(t, T.gqa + i * 0.06, 0.3, null, 0, EZ.b16), 30, 500); });
+          gp.forEach(function (e, i) {
+            var a = fold(t, T.gqa + 0.12 + i * 0.06, 0.3, i > 0 ? T.kAndV : null, 0.3, EZ.b16);
+            var dx = i === 0 ? (352 - 67) * shareP : 0;   // the shared pair slides to the middle
+            e.style.transform = "translateX(" + f2(dx) + "px)" + foldCss(a, 30, 500);
+            e.style.opacity = i > 0 ? (1 - pr(t, T.kAndV + 0.2, 0.15)).toFixed(3) : "1";
+          });
+          gStr.forEach(function (p, i) {
+            var a = { x: 155 + i * 190, y: 106 };
+            var own = { x: 155 + i * 190, y: 256 }, shared = { x: 352 + 88, y: 256 };
+            var b = { x: own.x + (shared.x - own.x) * shareP, y: 256 };
+            K.string(p, a, b, EZ.o2(pr(t, T.share - 0.05 + i * 0.05, 0.3)), 0.02);
+          });
+          gStamp.style.transform = "scale(" + Math.max(0.001, EZ.b18(pr(t, T.vEnd, 0.3))).toFixed(3) + ") rotate(-8deg)";
+          gNote.style.opacity = EZ.o2(pr(t, T.vEnd + 0.1, 0.3)).toFixed(3);
+          // PagedAttention: reserved → pages on demand
+          var fillW = 1052 * 0.36;
+          pFill.style.width = f2(fillW * EZ.o3(pr(t, T.paged, 0.4))) + "px";
+          var tCut = at(8, "页"), tSep = at(8, "分"), tGo = at(8, "配");
+          vis(pStrip, t < tCut + 0.2); vis(pFill, t < tCut + 0.2); vis(pLab, t < tCut + 0.15);
+          pCuts.forEach(function (c, k) {
+            var u = pr(t, tCut - 0.12 + k * 0.04, 0.16);
+            vis(c, u > 0 && t < tSep + 0.1);
+            c.style.transform = "scaleY(" + Math.max(0.001, u).toFixed(3) + ")";
+          });
+          pPages.forEach(function (p, k) {
+            var on = t >= tCut + 0.12;
+            var gone = k >= 2 ? fold(t, -1, 0.01, tGo - 0.25 + (k - 2) * 0.06, 0.26, EZ.lin) : 0;
+            vis(p, on && !(k >= 2 && t > tGo + 0.05 + (k - 2) * 0.06));
+            p.style.transform = "translateX(" + f2(k * 10 * EZ.o2(pr(t, tSep, 0.25))) + "px) perspective(600px) rotateX(" + f2(gone) + "deg)";
+          });
+          // a third page is added only when it is needed
+          var nOn = t >= tGo + 0.12;
+          vis(pNew, nOn);
+          if (nOn) pNew.style.transform = "translateX(" + f2(20) + "px)" + foldCss(fold(t, tGo + 0.12, 0.3, null, 0, EZ.b16), 40, 500);
+          pSay.style.opacity = EZ.o2(pr(t, tSep - 0.1, 0.3)).toFixed(3);
+          // quantization: FP16 → INT8, every cell half as wide
+          var qP = EZ.io2(pr(t, T.compress, 0.36));
+          qc.forEach(function (q, i) {
+            q.el.style.transform = foldCss(fold(t, T.quant + i * 0.05, 0.3, null, 0, EZ.b16), 40, 500);
+            q.el.style.width = f2(226 - 113 * qP) + "px";
+            q.el.style.left = f2(60 + i * (250 - 125 * qP)) + "px";
+          });
+          qStamp.style.transform = "scale(" + Math.max(0.001, EZ.b18(pr(t, T.compress + 0.25, 0.3))).toFixed(3) + ") rotate(-8deg)";
+          qSay.style.opacity = EZ.o2(pr(t, T.compress - 0.1, 0.3)).toFixed(3);
+          qPrec.style.opacity = (0.55 + 0.45 * (1 - EZ.o2(pr(t, T.compress, 0.3)))).toFixed(3);
+
+          // ---------- beat 9: trade memory for speed; only the newest token is computed ----------
+          standUp(scale, scaleSh, t, T.one - 0.2, 0.5, null, 0, 300, 1400);
+          var tip = -11 * EZ.b14(pr(t, T.swap - 0.05, 0.5));
+          pivot.style.transform = "rotate(" + f2(tip) + "deg)";
+          [panL, panR].forEach(function (p) { p.style.transform = "rotate(" + f2(-tip) + "deg)"; });
+          mslabs.forEach(function (m, k) {
+            var tm = T.vram9 + k * 0.08;
+            var on = t >= tm - 0.2;
+            vis(m, on);
+            m.style.top = f2(124 - 36 * (k + 1) - 200 * (1 - EZ.i2(pr(t, tm - 0.2, 0.2)))) + "px";
+          });
+          var bOn = t >= T.speed - 0.1;
+          vis(bolt, bOn);
+          bolt.style.top = "4px";
+          if (bOn) bolt.style.transform = "scale(" + Math.max(0.001, EZ.b18(pr(t, T.speed - 0.1, 0.3))).toFixed(3) + ")";
+          // labels ride under the pans
+          var pv = { x: 6000 + 350, y: 470 + 92 };
+          var rad = (tip * Math.PI) / 180;
+          var lEnd = { x: pv.x - 280 * Math.cos(rad), y: pv.y - 280 * Math.sin(rad) }, rEnd = { x: pv.x + 280 * Math.cos(rad), y: pv.y + 280 * Math.sin(rad) };
+          labVram.at = T.vram9; labSpeed.at = T.speed;
+          put(labVram.el, lEnd.x, lEnd.y + 168, 0.5, 0);
+          put(labSpeed.el, rEnd.x, rEnd.y + 168, 0.5, 0);
+          labVram.render(t); labSpeed.render(t);
+          ctoks.forEach(function (k, i) {
+            var tin = i < 5 ? T.one - 0.25 + i * 0.07 : T.new9 - 0.12;
+            var on = t >= tin;
+            vis(k.el, on); vis(k.sh, on);
+            if (!on) return;
+            var a = fold(t, tin, 0.36, null, 0, EZ.b16);
+            var bounce = i === 5 ? Math.sin(Math.PI * pr(t, T.that9, 0.3)) * 14 : 0;
+            k.el.style.transform = "translateY(" + f2(-bounce) + "px)" + foldCss(a, 80, 700);
+            K.floorShadow(k.sh, a);
+            k.dim.style.opacity = (i < 5 ? 0.6 * pr(t, T.only9, 0.3) : 0).toFixed(3);
+          });
+          var sp = EZ.o2(pr(t, T.only9 + 0.15, 0.4));
+          spot.style.opacity = (sp * 1).toFixed(3);
+          vis(spot, sp > 0);
+
+          // ---------- overlay ----------
+          chap.render(t);
+          NOTES.forEach(function (n) { n.render(t); });
+          caps.render(t);
+          closing.render(t);
+          recap.render(t);
+        }
+
+        render(0);
+        var tl = gsap.timeline({ paused: true });
+        var drive = { v: 0 };
+        tl.fromTo(drive, { v: 0 }, { v: DUR, duration: DUR, ease: "none", onUpdate: function () { render(drive.v); } }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

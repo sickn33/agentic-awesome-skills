@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+/* fonts:end */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #080b10;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #080b10;
+        color: #e8f1f8;
+        font-family: "Noto Sans SC", sans-serif;
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      #world {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        transform-origin: 0 0;
+      }
+      /* one station per chapter (+ one for the closing line), side by side: station k at x = k × 2400 */
+      .zone {
+        position: absolute;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+      }
+      .abs {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .m {
+        font-family: "JetBrains Mono", "Noto Sans SC", monospace;
+      }
+      .lime {
+        color: #c8ff3e;
+      }
+      .tex {
+        font: 400 20px/1 "JetBrains Mono", monospace;
+        letter-spacing: 0.16em;
+        color: #8fa1b5;
+        white-space: nowrap;
+      }
+      .svgl {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: visible;
+      }
+      .draft-tag {
+        position: absolute;
+        right: 64px;
+        top: 96px;
+        padding: 5px 14px 7px;
+        border: 2px dashed #6b7c8f;
+        background: rgba(9, 14, 20, 0.9);
+        font: 500 24px/1.1 "Noto Sans SC", sans-serif;
+        color: #c9d6e3;
+        white-space: nowrap;
+      }
+
+      /* ---- placeholder beat: one storyboard frame per narration line (api.placeholder) ---- */
+      .ph {
+        position: absolute;
+      }
+      .ph-hd {
+        position: absolute;
+        left: 44px;
+        right: 44px;
+        top: 26px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        white-space: nowrap;
+      }
+      .ph-id {
+        display: flex;
+        align-items: center;
+        height: 42px;
+        padding: 0 12px;
+        background: #131d29;
+        border: 2px solid #4a5d73;
+        font: 700 26px/1 "JetBrains Mono", monospace;
+        color: #c9d6e3;
+      }
+      .ph.on .ph-id {
+        background: #c8ff3e;
+        border-color: #c8ff3e;
+        color: #0b1004;
+      }
+      .ph.on .ph-id .kit-s,
+      .cn.on b .kit-s {
+        color: #2c3a10;
+      }
+      .ph-tag {
+        margin-left: auto;
+        padding: 5px 14px 7px;
+        border: 2px dashed #6b7c8f;
+        font: 500 26px/1.1 "Noto Sans SC", sans-serif;
+        color: #c9d6e3;
+      }
+      .ph-mid {
+        position: absolute;
+        left: 44px;
+        right: 44px;
+        top: 92px;
+        bottom: 156px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 20px;
+      }
+      .ph-h {
+        font: 400 68px/1.14 "Smiley Sans", "Noto Sans SC", sans-serif;
+        color: #e8f1f8;
+        white-space: normal;
+        text-wrap: balance;
+      }
+      .ph-terms {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 16px;
+      }
+      .ph-terms .kit-label {
+        position: relative;
+      }
+      .ph-tx {
+        font: 500 34px/1.45 "Noto Sans SC", sans-serif;
+        color: #c9d6e3;
+        white-space: normal;
+      }
+      .ph-lat {
+        font-family: "JetBrains Mono", "Noto Sans SC", monospace;
+        font-size: 0.92em;
+        margin: 0 0.2em;
+      }
+      .ph-h .ph-lat {
+        font-family: inherit;
+        font-size: 1em;
+        margin: 0;
+      }
+      .ph-h .al {
+        margin-left: 0.12em;
+      }
+      .ph-h .ar {
+        margin-right: 0.12em;
+      }
+      .ph-cur {
+        font-style: normal;
+        color: #c8ff3e;
+      }
+      .ph-tr {
+        position: absolute;
+        left: 44px;
+        right: 44px;
+        bottom: 26px;
+        height: 110px;
+      }
+      .ph-tr svg {
+        position: absolute;
+        left: 0;
+        top: 0;
+        overflow: visible;
+      }
+      .ph-lit {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 110px;
+        overflow: hidden;
+      }
+      .ph-lit rect {
+        fill: #c8ff3e;
+      }
+      .ph.done .ph-lit rect {
+        fill: #6b7c8f;
+      }
+      .ph-dim rect {
+        fill: #26323f;
+      }
+      .ph-ph {
+        position: absolute;
+        top: -8px;
+        width: 3px;
+        height: 126px;
+        margin-left: -1px;
+        background: #c8ff3e;
+        box-shadow: 0 0 14px 3px rgba(200, 255, 62, 0.55);
+      }
+      .ph-clock {
+        position: absolute;
+        right: 0;
+        top: 40px;
+        font: 500 26px/1 "JetBrains Mono", monospace;
+        color: #c9d6e3;
+        white-space: nowrap;
+      }
+      .ph-scan {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 3px;
+        background: #c8ff3e;
+        box-shadow: 0 0 18px 4px rgba(200, 255, 62, 0.55);
+      }
+      .ph-port {
+        position: absolute;
+        width: 22px;
+        height: 8px;
+        margin-left: -11px;
+        background: #4a5d73;
+      }
+      .ph-port.v {
+        width: 8px;
+        height: 24px;
+        margin: -12px 0 0 -4px;
+      }
+      .ph.on .ph-port {
+        background: #c8ff3e;
+      }
+
+      /* ---- closing station: the chapters light up in a chain under the closing line (api.closingChain) ---- */
+      .cn {
+        position: absolute;
+        display: flex;
+        align-items: stretch;
+        height: 56px;
+        background: #0f1620;
+        border: 2px solid #4a5d73;
+        white-space: nowrap;
+        clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+      }
+      .cn b {
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        background: #131d29;
+        font: 700 26px/1 "JetBrains Mono", monospace;
+        color: #c9d6e3;
+      }
+      .cn span {
+        display: flex;
+        align-items: center;
+        padding: 0 18px 0 14px;
+        font: 500 30px/1 "Noto Sans SC", sans-serif;
+        color: #e8f1f8;
+      }
+      .cn.done {
+        border-color: #c8ff3e;
+      }
+      .cn.on {
+        border-color: #c8ff3e;
+        box-shadow: 0 0 26px rgba(200, 255, 62, 0.45);
+      }
+      .cn.on b {
+        background: #c8ff3e;
+        color: #0b1004;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-stamp="story" data-width="1920" data-height="1080">
+      <div id="stage" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="1">
+        <div id="back"></div>
+        <div id="world" data-layout-allow-overflow=""></div>
+      </div>
+
+      <!-- HUD (screen space): kit texture + core chapter chip (+ any Kit.note the beats add to #head) -->
+      <div id="hud" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="2"><div class="kit-head" id="head"><div id="chap"></div></div></div>
+
+      <!-- captions (core.Captions, styled by the kit; long lines wrap) -->
+      <div id="caps" class="clip kit-caps-wrap" data-start="0" data-duration="45" data-stamp="story" data-track-index="3"></div>
+
+      <!-- one-frame recap (Kit.recap): the clip spans the film, Kit.recap shows itself from story.recap.start -->
+      <div id="recap" class="clip" data-start="0" data-duration="45" data-stamp="story" data-track-index="4"></div>
+
+      <audio id="narration" src="assets/audio/narration.wav" data-start="0" data-duration="40.32" data-stamp="narration" data-track-index="10"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-stamp="story" data-track-index="11"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script src="beats.js"></script>
+    <script>
+      /* V2 signal starter — the driver. The film minus the topic: one station per chapter in one big #world, a camera
+       * that rides from station to station (glitch cut at every seam), HUD + chapter chip + captions, the word-timed
+       * closing line (Kit.title) and the one-frame recap (Kit.recap). Everything topic-specific lives in beats.js:
+       * window.Beats(api) is called once after the world is built, its render(t) every frame. See STARTER.md. */
+      (function () {
+        "use strict";
+        const C = window.ExplainerCore,
+          K = window.Kit;
+        const { pr, E, clamp01, lerp, track, hash } = C;
+        const S = new C.Story(window.STORY);
+        const $ = (id) => document.getElementById(id);
+        const tl = gsap.timeline({ paused: true });
+
+        // ================= tiny DOM / style helpers (every write is cached) — also handed to beats.js =================
+        function mk(tag, cls, parent, style, html) {
+          const n = document.createElement(tag);
+          if (cls) n.className = cls;
+          if (style) n.style.cssText = style;
+          if (html != null) n.innerHTML = html;
+          if (parent) parent.appendChild(n);
+          return n;
+        }
+        function css(el, p, v) {
+          const k = "_c_" + p;
+          if (el[k] !== v) {
+            el.style[p] = v;
+            el[k] = v;
+          }
+        }
+        function op(el, o) {
+          o = clamp01(o);
+          css(el, "opacity", o.toFixed(3));
+          css(el, "visibility", o > 0.001 ? "visible" : "hidden");
+          return o;
+        }
+        function mv(el, x, y, s, sx) {
+          let v = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;
+          if (s != null && s !== 1) v += ` scale(${s.toFixed(3)})`;
+          if (sx != null) v += ` scaleX(${sx.toFixed(3)})`;
+          css(el, "transform", v);
+        }
+        function cls(el, c, on) {
+          if (!!el["_k" + c] !== !!on) {
+            el.classList.toggle(c, !!on);
+            el["_k" + c] = !!on;
+          }
+        }
+        const NS = "http://www.w3.org/2000/svg";
+        function sv(tag, attrs, parent) {
+          const n = document.createElementNS(NS, tag);
+          for (const a in attrs) n.setAttribute(a, attrs[a]);
+          if (parent) parent.appendChild(n);
+          return n;
+        }
+        const u3 = (t, a, d) => E.o3(pr(t, a, d));
+        const io = (t, a, d) => E.io2(pr(t, a, d));
+        const win = (t, a, b, fi = 0.25, fo = 0.25) => C.env(t, a, b, fi, fo);
+        // a point at fraction q along a polyline [[x, y], ...] (data buses)
+        function polyAt(pts, q) {
+          let L = 0;
+          const seg = [];
+          for (let i = 1; i < pts.length; i++) {
+            const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+            seg.push(d);
+            L += d;
+          }
+          let r = q * L;
+          for (let i = 0; i < seg.length; i++) {
+            if (r <= seg[i] || i === seg.length - 1) {
+              const u = seg[i] ? Math.min(1, r / seg[i]) : 0;
+              return [lerp(pts[i][0], pts[i + 1][0], u), lerp(pts[i][1], pts[i + 1][1], u)];
+            }
+            r -= seg[i];
+          }
+          return pts[pts.length - 1];
+        }
+        const wide = (ch) => ch.charCodeAt(0) > 0x2e80;
+        // decode without reflow: characters resolve left → right, each one a ghost (layout kept) until the scramble front
+        // reaches it — for big text whose scramble glyphs (mono) would otherwise re-wrap the block mid-decode
+        // (Latin / numbers touching CJK get a little air: .al / .ar)
+        const HAN = /[\u3400-\u9fff]/,
+          LATC = /[A-Za-z0-9%$.]/;
+        function decIn(text, t, t0, dur, seed) {
+          const ch = Array.from(String(text)),
+            n = ch.length,
+            done = t >= t0 + dur + 0.08;
+          let h = "";
+          ch.forEach((c, i) => {
+            if (c === " ") return void (h += " ");
+            const ri = t0 + dur * (n > 1 ? i / (n - 1) : 1);
+            let g = done ? K.esc(c) : t < ri - 0.08 ? '<span class="kit-ghost">' + K.esc(c) + "</span>" : K.dec(c, t, ri - 0.08, 0.14, seed + i * 0.37);
+            if (LATC.test(c)) {
+              const l = i > 0 && HAN.test(ch[i - 1]),
+                r = i < n - 1 && HAN.test(ch[i + 1]);
+              if (l || r) g = '<span class="' + (l ? "al" : "") + (r ? " ar" : "") + '">' + g + "</span>";
+            }
+            h += g;
+          });
+          return h;
+        }
+        // estimated width of a string in em (CJK 1, Latin 0.6) — layout without DOM measuring
+        function ems(str) {
+          let w = 0;
+          for (const ch of str) w += wide(ch) ? 1 : ch === " " ? 0.3 : 0.6;
+          return w;
+        }
+        const isLat = (u) => /[A-Za-z0-9]/.test(u) && /^[A-Za-z0-9.%+\-/$€£¥]+$/.test(u);
+        const isJoin = (u) => /^[–—\-~/×+.]$/.test(u);
+        const isStop = (u) => /^[，。；：？！,;:?!…]+$/.test(u);
+        // join units the way captions do: a space between two Latin / number units, none inside CJK
+        function joinUnits(W) {
+          let s = "";
+          W.forEach(([u], k) => {
+            const n = W[k + 1];
+            s += u + (/[A-Za-z\d]$/.test(u) && n && /^[A-Za-z\d]/.test(n[0]) ? " " : "");
+          });
+          return s;
+        }
+
+        // ================= the story's skeleton =================
+        // the film's length: the story's, or the recap's end if a (hand-made) story stops before its recap
+        const DUR = Math.max(S.duration, S.recap && S.recap.end ? S.recap.end : 0);
+        const CHS = S.chapters.length ? S.chapters : [{ n: 1, key: "all", title: S.title || "", start: 0, end: DUR }];
+        const NCH = CHS.length;
+        const END = S.end && S.end.line ? S.line(S.end.line) : null; // the closing line (performed by Kit.title)
+        const RC = S.recap && S.recap.points ? S.recap : null;
+        const R0 = RC ? RC.start : DUR;
+        const CLOSE = END ? Math.min(CHS[NCH - 1].end, END.start - 0.05) : null;
+        const LINES = S.lines.filter((L) => !END || L.i !== END.i); // the narration lines that get a beat
+        function chapterOf(L) {
+          if (typeof L === "number") L = S.line(L);
+          for (let c = NCH - 1; c >= 0; c--) if (L.start >= CHS[c].start - 0.05) return c;
+          return 0;
+        }
+        const BYCH = CHS.map(() => []);
+        LINES.forEach((L) => BYCH[chapterOf(L)].push(L));
+        const SEAMS = CHS.slice(1).map((c) => c.start);
+        if (END) SEAMS.push(CLOSE);
+        if (RC) SEAMS.push(R0);
+        const NOTES = S.data.notes || {};
+        function noteOf(L) {
+          const c = chapterOf(L),
+            j = BYCH[c].indexOf(L);
+          let n = NOTES[CHS[c].key];
+          if (typeof n === "string") n = [n];
+          return n && j >= 0 && n[j] ? String(n[j]) : null;
+        }
+        // Latin / number terms in a line ("Llama 2 7B", "0.5 MB", "8–12"), deduped, in spoken order
+        function termsOf(L) {
+          const W = L.words,
+            out = [],
+            seen = {};
+          let i = 0;
+          while (i < W.length) {
+            if (!isLat(W[i][0])) {
+              i++;
+              continue;
+            }
+            let txt = W[i][0],
+              j = i + 1;
+            const t0 = W[i][1];
+            while (j < W.length) {
+              if (isLat(W[j][0])) {
+                txt += " " + W[j][0];
+                j++;
+              } else if (isJoin(W[j][0]) && j + 1 < W.length && isLat(W[j + 1][0])) {
+                txt += W[j][0] + W[j + 1][0];
+                j += 2;
+              } else break;
+            }
+            const key = txt.toLowerCase();
+            if (!seen[key] && !/^\d$/.test(txt)) {
+              seen[key] = 1;
+              out.push({ text: txt, t: t0 });
+            }
+            i = j;
+          }
+          return out.slice(0, 6);
+        }
+        // the line's key phrase: the clause with the most terms, else the last clause (where Chinese puts the point)
+        function keyPhrase(L) {
+          const cl = [[]];
+          L.words.forEach((w) => (isStop(w[0]) ? cl.push([]) : cl[cl.length - 1].push(w)));
+          const cs = cl.filter((c) => c.length >= 2);
+          if (!cs.length) return { text: joinUnits(L.words.filter((w) => !isStop(w[0]))), whole: true };
+          let best = cs[cs.length - 1],
+            bestN = 0;
+          cs.forEach((c) => {
+            const n = c.filter((w) => isLat(w[0])).length;
+            if (n > bestN) {
+              best = c;
+              bestN = n;
+            }
+          });
+          return { text: joinUnits(best), whole: cs.length === 1 };
+        }
+
+        // ================= the world: stations side by side =================
+        const SW = 2400; // station pitch: station k spans x = k·SW … k·SW + 1920 (world px), y = 0 … 1080
+        const WORLD = $("world");
+        function zone(k) {
+          const z = mk("div", "zone", WORLD, `left:${k * SW}px`);
+          z.dataset.station = String(k);
+          return z;
+        }
+        const WIRES = sv("svg", { class: "svgl", viewBox: "0 0 1920 1080" }, WORLD); // beat-to-beat wires (world coords, under the stations)
+        const STATIONS = CHS.map((c, k) => zone(k));
+        const CLOSING = END ? zone(NCH) : null;
+
+        // ================= camera: shots → core.track keys (one writer) =================
+        // keys live in look space — [t, world x, world y, s]: the world point at the frame centre and the scale — so a
+        // zoom never slides the frame sideways (interpolating the translate itself would, far out in a wide world)
+        const look = (k, cx, cy, s) => [k * SW + cx, cy, s];
+        const SHOTS = []; // added by beats (and placeholders): { t0, t1, k, a: [cx, cy, s], b: [cx, cy, s] }
+        const cam = {
+          /** world → screen transform at time t: { tx, ty, s } (for overlays that follow a world point) */
+          at(t) {
+            const [wx, wy, s] = track(cam.keys, t);
+            return { tx: 960 - wx * s, ty: 540 - wy * s, s };
+          },
+          /** during [t0, t1] the camera drifts in station k from a = [cx, cy, s] to b; between shots it travels */
+          shot(t0, t1, k, a, b) {
+            SHOTS.push({ t0, t1: Math.max(t1, t0 + 0.05), k, a, b: b || [a[0], a[1] - 10, a[2] * 1.02] });
+            return cam;
+          },
+          keys: null, // filled after Beats(): the final [[t, world x, world y, s], ...]
+        };
+        const TRAVEL = 0.45; // default shots keep this far from an added shot, so the camera has room to travel
+        function defaultShots() {
+          const d = CHS.map((c, k) => ({
+            t0: k === 0 ? 0 : c.start + 0.45,
+            t1: k === NCH - 1 && !END ? DUR : c.end - 0.25,
+            k,
+            a: [960, 548, 1],
+            b: [960, 530, 1.03],
+          }));
+          if (END) d.push({ t0: CLOSE + 0.45, t1: DUR, k: NCH, a: [960, 528, 1], b: [960, 508, 1.03] });
+          return d;
+        }
+        function buildKeys() {
+          const user = SHOTS.slice().sort((a, b) => a.t0 - b.t0);
+          const all = user.slice();
+          defaultShots().forEach((d) => {
+            // cut the default shot around every added shot (+ travel room); keep pieces ≥ 0.6 s
+            let pieces = [[d.t0, d.t1]];
+            user.forEach((u) => {
+              const a = u.t0 - TRAVEL,
+                b = u.t1 + TRAVEL,
+                next = [];
+              pieces.forEach(([p0, p1]) => {
+                if (b <= p0 || a >= p1) return next.push([p0, p1]);
+                if (a > p0) next.push([p0, a]);
+                if (b < p1) next.push([b, p1]);
+              });
+              pieces = next;
+            });
+            const at = (t) => {
+              const u = clamp01((t - d.t0) / Math.max(0.01, d.t1 - d.t0));
+              return [lerp(d.a[0], d.b[0], u), lerp(d.a[1], d.b[1], u), lerp(d.a[2], d.b[2], u)];
+            };
+            pieces.filter(([p0, p1]) => p1 - p0 >= 0.6 || (p0 <= 0 && p1 > 0)).forEach(([p0, p1]) => all.push({ t0: p0, t1: p1, k: d.k, a: at(p0), b: at(p1) }));
+          });
+          all.sort((a, b) => a.t0 - b.t0);
+          const keys = [];
+          all.forEach((s) => {
+            keys.push([s.t0, ...look(s.k, ...s.a)]);
+            keys.push([s.t1, ...look(s.k, ...s.b)]);
+          });
+          keys.sort((a, b) => a[0] - b[0]);
+          const out = [];
+          keys.forEach((k) => {
+            if (out.length && k[0] - out[out.length - 1][0] < 0.04) return; // never two keys at one time
+            out.push(k);
+          });
+          if (!out.length) out.push([0, ...look(0, 960, 540, 1)], [DUR, ...look(0, 960, 520, 1.03)]);
+          if (out[0][0] > 0) out.unshift([0, ...push(out[0], 0.97)]);
+          const last = out[out.length - 1];
+          if (last[0] < DUR) out.push([DUR, ...push(last, 1 + 0.006 * (DUR - last[0]) + 0.004)]); // never park at the end
+          return out;
+        }
+        // the same view pushed in (f > 1) or pulled back (f < 1)
+        function push(k, f) {
+          return [k[1], k[2], k[3] * f];
+        }
+
+        // ================= placeholder beats: one storyboard frame per line =================
+        const PW = 1560,
+          PX = 180,
+          PY0 = 196,
+          GAP = 260,
+          INW = PW - 88,
+          TRW = INW - 170,
+          MINH = 600;
+        // headline (beat note, or the line's key phrase): size so it fits in 2 lines (3 at the smallest size)
+        function plan(L) {
+          const note = noteOf(L);
+          const kp = keyPhrase(L);
+          const mode = note ? "note" : kp.whole ? "line" : "phrase"; // "line": the headline is the word-timed line itself
+          const head = note || kp.text;
+          const he = mode === "line" ? ems(joinUnits(L.words)) : ems(head);
+          let fs = Math.min(88, Math.floor((INW * 0.94 * 2) / Math.max(1, he)));
+          fs = Math.max(48, fs);
+          const hl = Math.max(1, Math.ceil((he * fs) / (INW * 0.94)));
+          const terms = termsOf(L);
+          let rows = 0,
+            x = 0;
+          terms.forEach((m) => {
+            const w = ems(m.text) * 30 + 44;
+            if (!rows || x + w > INW) {
+              rows++;
+              x = 0;
+            }
+            x += w + 16;
+          });
+          const latN = L.words.filter((w) => isLat(w[0])).length;
+          const txl = mode === "line" ? 0 : Math.max(1, Math.ceil(((ems(joinUnits(L.words)) + latN * 0.4) * 34) / (INW * 0.95)));
+          const items = [hl * fs * 1.14, rows ? rows * 56 + (rows - 1) * 12 : 0, txl * 34 * 1.45].filter((h) => h > 0);
+          const mid = items.reduce((a, b) => a + b, 0) + 20 * (items.length - 1);
+          return { note, mode, head, fs, terms, h: Math.max(MINH, Math.ceil(mid + 92 + 156 + 24)) };
+        }
+        const PLAN = {};
+        BYCH.forEach((ls, c) => {
+          let y = PY0;
+          ls.forEach((L, j) => {
+            const p = plan(L);
+            p.y = y;
+            y += p.h + GAP;
+            // the camera window that frames this beat: from its arrival (the chapter's, for the first beat) to its
+            // departure (the chapter's end, for the last beat); between two windows the camera travels
+            p.t0 = j === 0 ? (c === 0 ? 0 : CHS[c].start + 0.45) : L.start + 0.2;
+            p.t1 = j === ls.length - 1 ? Math.max(L.end + 0.05, c === NCH - 1 && !END ? DUR : CHS[c].end - 0.25) : L.end + 0.05;
+            p.tHd = L.start - 0.12;
+            PLAN[L.i] = p;
+          });
+          for (let j = 1; j < ls.length; j++) {
+            const a = PLAN[ls[j - 1].i],
+              b = PLAN[ls[j].i];
+            if (b.t0 - a.t1 < 0.5) {
+              // a tight gap between two lines still gets 0.5 s of travel, centred on the gap
+              const m = (a.t1 + b.t0) / 2;
+              a.t1 = m - 0.25;
+              b.t0 = m + 0.25;
+            }
+            b.tHd = Math.max(b.tHd, (a.t1 + b.t0) / 2); // the header decodes once the frame is halfway up the screen
+          }
+        });
+        // the default framing of a slot: its centre a little above the frame centre (captions below), whole slot in view
+        function frameOf(sl) {
+          const s = Math.min(1.1, 1720 / sl.w, 700 / sl.h);
+          return { s, cx: sl.x + sl.w / 2, cy: sl.y + sl.h / 2 + 48 / s };
+        }
+        const PH = {}; // line number → placeholder
+        let phSeed = 1;
+        /** api.placeholder(line, { x, y, station, note, cam }) → { el, line, slot, render(t) } */
+        function placeholder(line, o = {}) {
+          const L = typeof line === "number" ? S.line(line) : line;
+          const c = o.station != null ? o.station : chapterOf(L);
+          const p = PLAN[L.i] || plan(L);
+          const ls = BYCH[chapterOf(L)],
+            j = Math.max(0, ls.indexOf(L)),
+            n = ls.length;
+          const sl = { k: c, x: o.x != null ? o.x : PX, y: o.y != null ? o.y : p.y != null ? p.y : PY0, w: PW, h: p.h };
+          const seed = (phSeed += 13.7);
+          const host = STATIONS[c] || STATIONS[0];
+          const root = mk("div", "ph", host, `left:${sl.x}px;top:${sl.y}px;width:${sl.w}px;height:${sl.h}px`);
+          const pan = K.panel(root, sl.w, sl.h, 22, { stroke: "#34445a", dash: "10 8", fill: "#0f1620" });
+          mk("i", "ph-port", root, `left:${sl.w / 2}px;top:-4px`); // wire ports (lime while live)
+          mk("i", "ph-port", root, `left:${sl.w / 2}px;top:${sl.h - 4}px`);
+          // header: line id, texture, the draft tag
+          const hd = mk("div", "ph-hd", root);
+          const id = mk("span", "ph-id", hd, "", "L" + String(L.i).padStart(2, "0"));
+          const metaTxt = `CH ${String(CHS[chapterOf(L)].n).padStart(2, "0")} · BEAT ${j + 1}/${n} · ${L.start.toFixed(1)}–${L.end.toFixed(1)} S`;
+          const meta = mk("span", "tex", hd);
+          const tag = mk("span", "ph-tag", hd, "", "待演绎");
+          // middle: headline, terms, transcript
+          const mid = mk("div", "ph-mid", root);
+          const hl = mk("div", "ph-h", mid, `font-size:${p.fs}px`);
+          const terms = p.terms.length ? mk("div", "ph-terms", mid) : null;
+          const TM = p.terms.map((m) => {
+            const lab = K.label({ text: m.text, at: m.t - 0.06 });
+            terms.appendChild(lab.el);
+            return { m, lab };
+          });
+          const tx = p.mode === "line" ? null : mk("div", "ph-tx", mid);
+          const units = L.words.map(([u, t], k) => {
+            const nx = L.words[k + 1],
+              pv = L.words[k - 1];
+            const lat = isLat(u);
+            // sp: a space to the next Latin unit; al / ar: air where Latin touches CJK
+            const air = lat ? (pv && HAN.test(pv[0].slice(-1)) ? " al" : "") + (nx && HAN.test(nx[0].charAt(0)) ? " ar" : "") : "";
+            return { u, t, lat, sp: lat && nx && isLat(nx[0]), air };
+          });
+          // trace: one spike per spoken unit at its time — the line's rhythm; lit up to the playhead
+          const tr = mk("div", "ph-tr", root);
+          const dimS = sv("svg", { class: "ph-dim", width: TRW, height: 110, viewBox: `0 0 ${TRW} 110` }, tr);
+          const litBox = mk("div", "ph-lit", tr, "width:0px");
+          const litS = sv("svg", { width: TRW, height: 110, viewBox: `0 0 ${TRW} 110` }, litBox);
+          sv("rect", { x: 0, y: 54, width: TRW, height: 2, fill: "#34445a" }, tr.firstChild);
+          const span = Math.max(0.3, L.end - L.start);
+          const X = (t) => clamp01((t - L.start) / span) * TRW;
+          units.forEach((w, k) => {
+            if (isStop(w.u) || !/[A-Za-z\d\u3400-\u9fff]/.test(w.u)) return;
+            const amp = w.lat ? 0.82 + 0.18 * hash(seed + k) : 0.3 + 0.5 * hash(seed + k * 3.1);
+            [
+              [0, 1, 6],
+              [0.05, 0.62, 4],
+              [0.1, 0.34, 4],
+            ].forEach(([dt, f, bw]) => {
+              const h = Math.max(4, 100 * amp * f);
+              const x = X(w.t + dt * Math.min(1, span / 2));
+              [dimS, litS].forEach((s) => sv("rect", { x: (x - bw / 2).toFixed(1), y: (55 - h / 2).toFixed(1), width: bw, height: h.toFixed(1) }, s));
+            });
+          });
+          const playhead = mk("i", "ph-ph", tr);
+          const clock = mk("div", "ph-clock", tr);
+          const scan = mk("i", "ph-scan", root, `width:${sl.w}px`);
+          // camera: frame this slot for its line (first line of a chapter: from the arrival; last: until the chapter ends)
+          const fr = frameOf(sl);
+          const shot = p.t0 != null ? { t0: p.t0, t1: p.t1 } : { t0: L.start - 0.3, t1: L.end + 0.05 };
+          if (o.cam !== false) {
+            const first = shot.t0 <= 0;
+            cam.shot(shot.t0, shot.t1, c, first ? [fr.cx, fr.cy + 60, fr.s * 0.9] : [fr.cx, fr.cy - 8, fr.s], [fr.cx, fr.cy + 12, fr.s * 1.035]);
+          }
+          const self = { el: root, line: L, slot: sl, shot, plan: p, render, wire: null };
+          PH[L.i] = self;
+          [PH[L.i - 1] && [PH[L.i - 1], self], PH[L.i + 1] && [self, PH[L.i + 1]]].forEach((pair) => pair && linkWire(pair[0], pair[1]));
+
+          const tOn = L.start - 0.25,
+            tDone = L.end + 0.35;
+          let state = "";
+          function wordsHTML(t) {
+            let cur = -1;
+            if (t < L.end + 0.15) units.forEach((w, k) => t >= w.t - 0.02 && /[A-Za-z\d\u3400-\u9fff]/.test(w.u) && (cur = k));
+            let h = "";
+            units.forEach((w, k) => {
+              const txt = w.u + (w.sp ? " " : "");
+              if (t < w.t - 0.08) return void (h += '<span class="kit-ghost">' + K.esc(txt) + "</span>");
+              if (t < w.t + 0.1) return void (h += K.dec(txt, t, w.t - 0.08, 0.18, seed + k * 1.7));
+              const inner = w.lat ? '<span class="ph-lat' + w.air + '">' + K.esc(w.u) + "</span>" + (w.sp ? " " : "") : K.esc(txt);
+              h += k === cur ? '<em class="ph-cur">' + inner + "</em>" : inner;
+            });
+            return h;
+          }
+          function render(t) {
+            const on = t >= tOn && t < tDone;
+            const done = t >= tDone;
+            const st = on ? "on" : done ? "done" : "wait";
+            if (st !== state) {
+              state = st;
+              cls(root, "on", on);
+              cls(root, "done", done);
+              pan.poly.setAttribute("stroke", on ? "#c8ff3e" : done ? "#4a5d73" : "#34445a");
+              pan.poly.setAttribute("stroke-width", on ? 3 : 2);
+              if (on || done) pan.poly.removeAttribute("stroke-dasharray");
+              else pan.poly.setAttribute("stroke-dasharray", "10 8");
+              css(pan.el, "filter", on ? "drop-shadow(0 0 16px rgba(200,255,62,0.3))" : "none");
+            }
+            op(root, done ? 0.62 : 1);
+            // "signal acquired": a scan line runs down the frame as the line begins
+            const sq = pr(t, tOn, 0.36);
+            if (sq > 0 && sq < 1) {
+              op(scan, 1);
+              css(scan, "transform", `translateY(${(E.io2(sq) * (sl.h - 3)).toFixed(1)}px)`);
+            } else op(scan, 0);
+            // header: hidden while the frame waits (it may sit under the captions at the frame's bottom edge), decodes in
+            // as the camera starts toward it, stays once the beat is done
+            const tHd = p.tHd != null ? p.tHd : L.start - 0.12;
+            op(hd, t >= tHd ? 1 : 0);
+            if (t >= tHd && t < tHd + 0.6) {
+              K.put(id, K.dec("L" + String(L.i).padStart(2, "0"), t, tHd, 0.22, seed + 1));
+              K.put(meta, K.dec(metaTxt, t, tHd + 0.04, 0.4, seed + 3));
+              op(tag, u3(t, tHd + 0.1, 0.2));
+            } else if (t >= tHd + 0.6) {
+              K.put(id, "L" + String(L.i).padStart(2, "0"));
+              K.put(meta, metaTxt);
+              op(tag, 1);
+            }
+            // headline: a beat note / key phrase decodes in at the line start; "line" mode writes the line on as it is spoken
+            if (p.mode === "line") K.put(hl, wordsHTML(t));
+            else K.put(hl, t >= L.start ? decIn(p.head, t, L.start + 0.02, Math.min(0.6, 0.25 + p.head.length * 0.012), seed + 2) : "");
+            if (tx) K.put(tx, wordsHTML(t));
+            TM.forEach(({ m, lab }) => {
+              lab.render(t);
+              cls(lab.el, "kit-tone-line", t >= m.t && t < m.t + 0.8);
+            });
+            // trace + playhead + clock
+            const ph = t < L.start ? 0 : X(Math.min(t, L.end));
+            css(litBox, "width", ph.toFixed(1) + "px");
+            if (t >= L.start - 0.1 && t < L.end + 0.25) {
+              op(playhead, 1);
+              css(playhead, "left", ph.toFixed(1) + "px");
+            } else op(playhead, 0);
+            const el = clamp01((t - L.start) / span) * span;
+            K.put(clock, t < L.start || t >= L.end ? span.toFixed(2) + " s" : "+" + el.toFixed(2) + " s");
+            css(clock, "color", on && t >= L.start && t < L.end ? "#c8ff3e" : "#c9d6e3");
+            for (const w of self.wires || []) w.render(t);
+          }
+          return self;
+        }
+        // a wire from one beat to the next: the story's signal hops on it while the camera travels between them
+        function linkWire(a, b) {
+          if (b.wire) return;
+          const w = K.wire(WIRES, { packets: 1, color: "#c8ff3e", r: 9 });
+          let pts;
+          if (a.slot.k === b.slot.k) {
+            // same station: bottom port → top port of the next frame
+            const A = { x: a.slot.k * SW + a.slot.x + a.slot.w / 2, y: a.slot.y + a.slot.h + 4 };
+            const B = { x: b.slot.k * SW + b.slot.x + b.slot.w / 2, y: b.slot.y - 4 };
+            pts = [A, { x: A.x, y: A.y + 60 }, { x: B.x, y: B.y - 60 }, B];
+          } else {
+            // next station: out of the right side, across the gap between stations, into the left side
+            const A = { x: a.slot.k * SW + a.slot.x + a.slot.w + 4, y: a.slot.y + a.slot.h / 2 };
+            const B = { x: b.slot.k * SW + b.slot.x - 4, y: b.slot.y + b.slot.h / 2 };
+            pts = K.link(A, B);
+            mk("i", "ph-port v", a.el, `left:${a.slot.w}px;top:${a.slot.h / 2}px`);
+            mk("i", "ph-port v", b.el, `left:0px;top:${b.slot.h / 2}px`);
+          }
+          const t0 = a.shot.t1,
+            t1 = Math.max(a.shot.t1 + 0.2, b.shot.t0);
+          b.wire = {
+            render(t) {
+              const tw = t0 + E.io2(pr(t, t0, t1 - t0)) * (t1 - t0); // the packet eases like the camera
+              w.render(tw, pts, { draw: 1, live: t >= t0 && t < t1, t0, rate: 1 / (t1 - t0), speed: 140, op: 1 });
+            },
+          };
+          (b.wires = b.wires || []).push(b.wire);
+        }
+
+        // ================= the closing station: Kit.title (+ the chapter chain, if beats asks for it) =================
+        let TITLE = null;
+        if (END) {
+          // break after commas; long halves also break after a colon / semicolon; size so the longest row fits
+          const segs = (brk) => {
+            const out = [""];
+            END.words.forEach(([u], k) => {
+              const n = END.words[k + 1];
+              out[out.length - 1] += u + (/[A-Za-z\d]$/.test(u) && n && /^[A-Za-z\d]/.test(n[0]) ? " " : "");
+              if (brk.includes(u) && k < END.words.length - 1) out.push("");
+            });
+            return out;
+          };
+          let brk = ["，"];
+          if (Math.max(...segs(brk).map(ems)) > 16) brk = ["，", "：", "；"];
+          const rows = segs(brk);
+          const wE = Math.max(...rows.map(ems));
+          const fs = Math.max(56, Math.min(112, Math.floor(1680 / wE)));
+          TITLE = K.title(S, { breakAfter: brk });
+          CLOSING.appendChild(TITLE.el);
+          TITLE.el.style.fontSize = fs + "px";
+          let nRows = rows.length;
+          if (wE * fs > 1680) {
+            // a row still too long at the smallest size: let the rows wrap inside 1680 px (ghosts keep the layout)
+            TITLE.el.style.whiteSpace = "normal";
+            TITLE.el.style.textWrap = "balance";
+            TITLE.el.style.width = "1680px";
+            nRows = rows.reduce((a, r) => a + Math.ceil((ems(r) * fs) / 1600), 0);
+          }
+          TITLE.el.style.left = Math.max(120, Math.round((1920 - Math.min(1680, wE * fs)) / 2)) + "px"; // the block centred, rows flush left
+          TITLE.el.style.top = Math.max(140, Math.round(400 - (nRows * fs * 1.16) / 2)) + "px";
+          TITLE.rows = nRows;
+          TITLE.fs = fs;
+        }
+        /** api.closingChain(): one node per chapter under the closing line, lit in turn while it is spoken */
+        function closingChain() {
+          if (!END) return null;
+          const n = NCH,
+            X0 = 160,
+            X1 = 1760,
+            Y = 742;
+          const svg = sv("svg", { class: "svgl", viewBox: "0 0 1920 1080" }, CLOSING);
+          const w = K.wire(svg, { packets: 3, color: "#c8ff3e" });
+          const maxC = Math.max(2, Math.floor(((X1 - X0) / n - 96) / 30));
+          const nodes = CHS.map((c, i) => {
+            let s = String(c.title || "").split(/[：:]/)[0].trim() || "CH";
+            if (s.length > maxC) s = s.slice(0, maxC - 1) + "…";
+            const el = mk("div", "cn", CLOSING);
+            const b = mk("b", null, el);
+            const sp = mk("span", null, el);
+            const x = X0 + ((i + 0.5) * (X1 - X0)) / n;
+            const wpx = (ems(s) * 30 + 32 + 2 * 15.6 + 24 + 4);
+            el.style.left = (x - wpx / 2).toFixed(0) + "px";
+            el.style.top = Y - 28 + "px";
+            return { el, b, sp, s, num: String(c.n).padStart(2, "0"), x, seed: 400 + i * 9.1 };
+          });
+          const span = Math.max(0.6, END.end - END.start);
+          const lit = (i) => END.start + (i / n) * span * 0.85;
+          return {
+            el: svg,
+            nodes,
+            render(t) {
+              const vis = t >= CLOSE + 0.3;
+              nodes.forEach((nd, i) => {
+                const a = CLOSE + 0.35 + i * 0.07;
+                op(nd.el, t >= a ? u3(t, a, 0.2) : 0);
+                K.put(nd.b, K.dec(nd.num, t, a, 0.2, nd.seed));
+                K.put(nd.sp, K.dec(nd.s, t, a + 0.04, 0.3, nd.seed + 1));
+                const on = t >= lit(i) && (i === n - 1 || t < lit(i + 1));
+                cls(nd.el, "on", on);
+                cls(nd.el, "done", t >= lit(i) && !on);
+              });
+              const q = n > 1 ? clamp01((t - lit(0)) / (lit(n - 1) - lit(0))) : t >= lit(0) ? 1 : 0;
+              const pts = K.link({ x: nodes[0].x, y: Y }, { x: nodes[n - 1].x, y: Y }, 60);
+              w.render(t, pts, { draw: q, live: q >= 1, t0: lit(n - 1), speed: 110, rate: 0.9, op: vis ? 1 : 0 });
+            },
+          };
+        }
+
+        // ================= HUD, captions, chapter chip, glitch, backdrop, recap =================
+        const BACK = K.backdrop($("back"));
+        const HUD = K.hud(S);
+        $("hud").appendChild(HUD.el);
+        if (S.data.draft) mk("div", "draft-tag", $("hud"), "", "草稿 · 无配音");
+        const CHAP = new C.Chapters($("chap"), S);
+        const CAPS = K.dressCaptions(new C.Captions($("caps"), S, { skipEnd: !!END, clamp: true }));
+        const GL = K.glitch($("root"), SEAMS);
+        const RECAP = RC ? K.recap(S) : null;
+        if (RECAP) $("recap").appendChild(RECAP.el);
+
+        // ================= the topic: beats.js =================
+        const api = {
+          story: S,
+          C,
+          Kit: K,
+          lines: LINES,
+          chapters: CHS,
+          chapterOf,
+          linesOf: (k) => BYCH[k] || [],
+          station: (k) => STATIONS[k],
+          closing: CLOSING,
+          world: WORLD,
+          head: $("head"),
+          hud: $("hud"),
+          title: TITLE,
+          cam,
+          SW,
+          seams: SEAMS,
+          close: CLOSE,
+          recapStart: RC ? R0 : null,
+          placeholder,
+          closingChain,
+          termsOf,
+          keyPhrase,
+          noteOf,
+          note(text, o) {
+            const nt = K.note(text, o);
+            $("head").appendChild(nt.el);
+            return nt;
+          },
+          h: { mk, css, op, mv, cls, sv, u3, io, win, polyAt, ems, joinUnits },
+        };
+        const beats = typeof window.Beats === "function" ? window.Beats(api) || {} : {};
+        const CAM = buildKeys();
+        cam.keys = CAM;
+
+        function camera(t) {
+          const [wx, wy, s] = track(CAM, t);
+          const tx = 960 - wx * s,
+            ty = 540 - wy * s;
+          css(WORLD, "transform", `translate(${tx.toFixed(2)}px,${ty.toFixed(2)}px) scale(${s.toFixed(4)})`);
+          BACK.render({ tx, ty, s });
+        }
+        function frame(t) {
+          camera(t);
+          GL.render(t);
+          HUD.render(t);
+          CHAP.render(t);
+          CAPS.render(t);
+          if (TITLE) TITLE.render(t);
+          if (beats.render) beats.render(t);
+          op(WORLD, t < R0 ? 1 : 0);
+          if (RECAP) {
+            RECAP.render(t);
+            // Kit.recap's own push eases out to a stop; a slow linear one on top keeps the last half-second alive
+            if (t >= R0) css($("recap"), "transform", `scale(${(1 + 0.012 * clamp01((t - R0) / Math.max(0.5, DUR - R0))).toFixed(4)})`);
+          }
+        }
+
+        const drive = { t: 0 };
+        tl.fromTo(drive, { t: 0 }, { t: DUR, duration: DUR, ease: "none", onUpdate: () => frame(tl.time()) }, 0);
+        frame(0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

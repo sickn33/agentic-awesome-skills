@@ -1,0 +1,271 @@
+/* v4-paper kit — 纸艺「立体书」: an open pop-up book. Kraft page, white paper pieces that fold up from the page,
+ * soft paper shadows, ribbons that unroll, tapes pulled out of slits, one continuous parallax world.
+ * Fonts are declared by the film (tools/fonts.py writes the @font-face block into index.html):
+ *   ZCOOL KuaiLe (CJK display + body) and Archivo Black (numbers, English terms — this kit's "mono"). */
+:root {
+  --kit-bg: #e8dcc4;          /* kraft page */
+  --kit-surface: #fbf8f1;     /* white paper */
+  --kit-sand: #f1e6cf;        /* sand paper (ribbons, boards) */
+  --kit-ink: #26364a;         /* navy ink: text, roofs, slits */
+  --kit-muted: #4f5d70;       /* 4.9:1 on kraft, 6.3:1 on white paper */
+  --kit-accent: #e27d60;      /* coral paper: THE new / changed / important thing */
+  --kit-accent-ink: #b8492f;  /* coral as text on light paper (4.9:1) */
+  --kit-accent-2: #bcd4e6;    /* sky paper: the second colour (match, scan, look-up) */
+  --kit-warn: #e3b448;        /* mustard paper: waste / cost */
+  --kit-warn-ink: #8a5a0c;
+  --kit-ok: #9dba9a;          /* sage paper: solved / included */
+  --kit-ok-ink: #3e6a45;
+  --kit-shade: rgba(38, 54, 74, 0.28);
+  --kit-font-display: "ZCOOL KuaiLe", sans-serif;
+  --kit-font-body: "ZCOOL KuaiLe", sans-serif;
+  --kit-font-mono: "Archivo Black", sans-serif;
+  --kit-t-display: 112px;
+  --kit-t-h1: 80px;
+  --kit-t-h2: 56px;
+  --kit-t-body: 36px;
+  --kit-t-label: 32px;
+  --kit-t-note: 36px;
+  --kit-t-cap: 44px;
+}
+
+.kit-term { font-family: var(--kit-font-mono); font-weight: 400; font-size: 0.86em; letter-spacing: 0.01em; }
+.kit-hot { color: var(--kit-accent-ink); }
+
+/* ---------------- the world: three parallax layers over one book page ---------------- */
+.kit-layer { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+.kit-grain {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0.42; z-index: 70;
+  background-image: url("paper-grain.svg"); background-size: 512px 512px;
+}
+.kit-grain.kit-grain-page { inset: auto; transform-origin: 0 0; }
+.kit-sun {
+  position: absolute; width: 120px; height: 120px; border-radius: 50%; background: var(--kit-sand);
+  box-shadow: 0 8px 14px rgba(38, 54, 74, 0.18), inset 0 -6px 0 rgba(38, 54, 74, 0.06);
+}
+.kit-cloud { position: absolute; overflow: visible; }
+.kit-floor {
+  position: absolute; height: 1400px; z-index: 0;
+  background: linear-gradient(180deg, rgba(38, 54, 74, 0.16) 0px, rgba(38, 54, 74, 0) 28px), linear-gradient(180deg, #ebdfc6 0px, #f3eada 320px, #f5eee0 100%);
+  border-top: 2px solid rgba(38, 54, 74, 0.12);
+}
+
+/* paper pieces */
+.kit-piece { position: absolute; transform-origin: 50% 100%; }
+.kit-paper { background: var(--kit-surface); box-shadow: inset 0 -6px 0 rgba(38, 54, 74, 0.06), 0 2px 0 rgba(38, 54, 74, 0.1); }
+.kit-sandp { background: var(--kit-sand); box-shadow: inset 0 0 0 2px rgba(38, 54, 74, 0.08), inset 0 -10px 0 rgba(38, 54, 74, 0.07); }
+.kit-face { position: absolute; left: 0; top: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.kit-back { transform: rotateY(180deg); }
+.kit-shadow {
+  position: absolute; transform-origin: 0 100%; z-index: 20; border-radius: 6px 6px 0 0;
+  background: linear-gradient(0deg, rgba(38, 54, 74, 0.26), rgba(38, 54, 74, 0.05));
+}
+.kit-thread { position: absolute; left: -1.5px; top: 0; width: 3px; background: var(--kit-ink); transform-origin: 50% 0; }
+.kit-strings { position: absolute; left: 0; top: 0; width: 10px; height: 10px; overflow: visible; }
+.kit-strings path { fill: none; stroke: var(--kit-ink); stroke-width: 4; stroke-dasharray: 14 10; stroke-linecap: round; }
+.kit-nail { position: absolute; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--kit-ink); }
+
+/* the ribbon (飘带) with notched ends, unrolled from a paper roll */
+.kit-ribbon-clip { position: relative; filter: drop-shadow(0 8px 8px rgba(38, 54, 74, 0.26)); }
+.kit-ribbon {
+  display: flex; align-items: center; justify-content: center; white-space: nowrap; color: var(--kit-ink);
+  background: var(--kit-sand); clip-path: polygon(0 0, 100% 0, calc(100% - 28px) 50%, 100% 100%, 0 100%, 28px 50%);
+}
+.kit-roll {
+  position: absolute; top: -6px; width: 24px; border-radius: 9px;
+  background: linear-gradient(90deg, #cdb993 0%, #f7efde 45%, #d8c7a4 100%); box-shadow: 0 6px 8px -2px rgba(38, 54, 74, 0.3);
+}
+
+/* ---------------- captions: a paper label pasted along the bottom of the page ---------------- */
+.kit-caps { position: absolute; left: 0; right: 0; bottom: 50px; height: 0; z-index: 60; pointer-events: none; }
+.kit-cap {
+  position: absolute; left: 0; right: 0; bottom: 0; margin: 0 auto; width: max-content; max-width: 1720px;
+  padding: 14px 48px 17px; background: var(--kit-surface); color: var(--kit-ink);
+  font-family: var(--kit-font-body); font-size: var(--kit-t-cap); line-height: 1.24; text-align: center; text-wrap: balance;
+  box-shadow: 0 2px 0 rgba(38, 54, 74, 0.08), 0 14px 20px -8px rgba(38, 54, 74, 0.42); transform-origin: 50% 100%;
+}
+.kit-cap::before, .kit-cap::after {
+  content: ""; position: absolute; top: -12px; width: 74px; height: 26px;
+  background: rgba(214, 196, 158, 0.78); box-shadow: 0 1px 2px rgba(38, 54, 74, 0.12);
+}
+.kit-cap::before { left: -18px; transform: rotate(-9deg); }
+.kit-cap::after { right: -18px; transform: rotate(7deg); }
+/* unspoken words sit in pencil grey (3.6:1, large text), spoken words in full ink */
+.kit-cap > span { color: color-mix(in srgb, var(--kit-ink) calc(var(--lit, 1) * 100%), #7a8492); }
+/* a little air where a Latin term meets CJK (core already spaces Latin–Latin) */
+.kit-cap > span:not(.kit-term) + span.kit-term { margin-left: 0.18em; }
+.kit-cap > span.kit-term:has(+ span:not(.kit-term)) { margin-right: 0.18em; }
+
+/* ---------------- chapter chip: a navy bookmark hanging from the top edge + a paper tab ---------------- */
+.kit-chap {
+  position: absolute; left: 64px; top: 0; z-index: 62; display: flex; align-items: flex-start; gap: 0;
+  font-family: var(--kit-font-body); color: var(--kit-ink); pointer-events: none;
+  transform: translateY(calc((1 - var(--in, 1)) * -150px)); filter: drop-shadow(0 10px 9px rgba(38, 54, 74, 0.3));
+}
+.kit-chap-n {
+  display: flex; align-items: flex-end; justify-content: center; width: 78px; height: 124px; padding-bottom: 30px;
+  background: var(--kit-ink); color: var(--kit-surface); font-family: var(--kit-font-mono); font-size: 38px; line-height: 1;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 84%, 0 100%);
+}
+.kit-chap-t {
+  margin-top: 30px; padding: 10px 30px 12px 24px; background: var(--kit-surface); font-size: 36px; line-height: 1.2; white-space: nowrap;
+  box-shadow: inset 0 -5px 0 rgba(38, 54, 74, 0.07);
+}
+
+/* ---------------- label: a paper tag with a punched hole ---------------- */
+.kit-label { position: absolute; left: 0; top: 0; white-space: nowrap; font-family: var(--kit-font-body); }
+.kit-label-card {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 10px 28px 12px 50px; border-radius: 9px; background: var(--kit-surface); color: var(--kit-ink);
+  font-size: var(--kit-t-label); line-height: 1.15; transform-origin: 50% 100%;
+}
+.kit-label-card::before {
+  content: ""; position: absolute; left: 16px; top: 50%; width: 16px; height: 16px; margin-top: -8px; border-radius: 50%;
+  background: var(--kit-bg); box-shadow: 0 0 0 4px rgba(38, 54, 74, 0.55);
+}
+.kit-label-sub { font-family: var(--kit-font-mono); font-size: 28px; line-height: 1.1; color: var(--kit-ink); }
+.kit-label-t .kit-term { font-size: 0.9em; }
+.kit-tone-accent > .kit-label-card { background: var(--kit-accent); }
+.kit-tone-warn > .kit-label-card { background: var(--kit-warn); }
+.kit-tone-ok > .kit-label-card { background: var(--kit-ok); }
+.kit-tone-ink > .kit-label-card { background: var(--kit-ink); color: var(--kit-surface); }
+.kit-tone-ink > .kit-label-card .kit-label-sub { color: var(--kit-surface); }
+.kit-tone-ink > .kit-label-card::before { box-shadow: 0 0 0 4px rgba(251, 248, 241, 0.6); }
+.kit-tone-sky > .kit-label-card { background: var(--kit-accent-2); }
+
+/* ---------------- note: one plain-language line on an unrolling ribbon ---------------- */
+.kit-note { position: absolute; left: 0; top: 0; height: 88px; font-family: var(--kit-font-body); }
+.kit-note .kit-ribbon { height: 88px; padding: 0 66px; font-size: var(--kit-t-note); gap: 18px; }
+.kit-note .kit-roll { height: 100px; }
+.kit-note-k {
+  font-weight: 400; font-size: 28px; padding: 5px 14px 6px; border-radius: 6px; background: var(--kit-ink); color: var(--kit-surface);
+}
+.kit-note.kit-note-s { height: 66px; }
+.kit-note.kit-note-s .kit-ribbon { height: 66px; padding: 0 52px; font-size: 30px; }
+.kit-note.kit-note-s .kit-roll { height: 78px; }
+
+/* ---------------- number: a pop-up card with a flip page ---------------- */
+.kit-num { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; align-items: center; font-family: var(--kit-font-body); }
+.kit-num-card {
+  position: relative; display: flex; align-items: baseline; gap: 12px; padding: 20px 40px 16px; border-radius: 12px;
+  background: var(--kit-surface); color: var(--kit-ink); transform-origin: 50% 100%; perspective: 900px;
+}
+.kit-num-v { font-family: var(--kit-font-mono); font-size: 128px; line-height: 1; font-variant-numeric: tabular-nums; }
+.kit-num-u { font-family: var(--kit-font-mono); font-size: 56px; line-height: 1; }
+.kit-num-flip {
+  position: absolute; inset: 0; border-radius: 12px; background: var(--kit-surface); display: flex; align-items: baseline; justify-content: center;
+  gap: 12px; padding: 20px 40px 16px; transform-origin: 50% 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  box-shadow: inset 0 -6px 0 rgba(38, 54, 74, 0.07);
+}
+.kit-num-c {
+  margin-top: 14px; padding: 6px 22px 8px; background: var(--kit-sand); color: var(--kit-ink); font-size: 32px; line-height: 1.2;
+  white-space: nowrap; box-shadow: 0 6px 8px -4px rgba(38, 54, 74, 0.3);
+}
+.kit-num.kit-tone-accent .kit-num-card, .kit-num.kit-tone-accent .kit-num-flip { background: var(--kit-accent); }
+.kit-num.kit-tone-warn .kit-num-card, .kit-num.kit-tone-warn .kit-num-flip { background: var(--kit-warn); }
+
+/* ---------------- bars: paper tapes pulled out of slits in the page ---------------- */
+.kit-bars { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; gap: 22px; font-family: var(--kit-font-body); }
+.kit-bar { display: flex; align-items: center; height: 64px; }
+.kit-bar-l {
+  flex: none; min-width: 170px; padding: 9px 22px 11px; margin-right: 18px; border-radius: 8px; background: var(--kit-surface);
+  color: var(--kit-ink); font-size: var(--kit-t-label); line-height: 1.15; text-align: center; white-space: nowrap;
+  box-shadow: inset 0 -5px 0 rgba(38, 54, 74, 0.07), 3px 6px 8px -3px rgba(38, 54, 74, 0.3);
+}
+.kit-bar-t { position: relative; flex: 1; height: 64px; }
+.kit-bar-t::before { /* the groove the tape is pulled along */
+  content: ""; position: absolute; left: 0; right: 0; top: 14px; height: 36px; border-radius: 4px;
+  background: rgba(38, 54, 74, 0.07); box-shadow: inset 0 2px 3px rgba(38, 54, 74, 0.14);
+}
+.kit-bar-slit { position: absolute; left: -4px; top: 4px; width: 8px; height: 56px; border-radius: 3px; background: var(--kit-ink); z-index: 2; }
+.kit-bar-f {
+  position: absolute; left: 0; top: 16px; height: 32px; width: 0; z-index: 1;
+  background-color: var(--kit-surface);
+  background-image: repeating-linear-gradient(90deg, rgba(38, 54, 74, 0.45) 0 2px, rgba(0, 0, 0, 0) 2px 48px);
+  background-size: 100% 12px; background-repeat: repeat-x; box-shadow: 0 5px 8px -4px rgba(38, 54, 74, 0.35);
+}
+.kit-bar-v {
+  position: absolute; top: 6px; height: 52px; padding: 0 18px 0 30px; margin-left: -2px; z-index: 3; white-space: nowrap;
+  background: var(--kit-ink); color: var(--kit-surface); font-size: 30px; line-height: 52px;
+  clip-path: polygon(0 50%, 22px 0, 100% 0, 100% 100%, 22px 100%);
+}
+.kit-bar.kit-tone-accent .kit-bar-f { background-color: var(--kit-accent); }
+.kit-bar.kit-tone-warn .kit-bar-f { background-color: var(--kit-warn); }
+.kit-bar.kit-tone-ok .kit-bar-f { background-color: var(--kit-ok); }
+.kit-bar.kit-tone-sky .kit-bar-f { background-color: var(--kit-accent-2); }
+
+/* ---------------- formula: term cards fold up one by one; operators are navy discs ---------------- */
+.kit-formula { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 30px; font-family: var(--kit-font-body); }
+.kit-f-row { display: flex; align-items: flex-end; gap: 16px; }
+.kit-ft {
+  display: flex; flex-direction: column; align-items: center; min-width: 120px; padding: 16px 24px 12px; border-radius: 10px;
+  background: var(--kit-surface); color: var(--kit-ink); transform-origin: 50% 100%; white-space: nowrap;
+}
+.kit-ft-v { font-family: var(--kit-font-mono); font-size: 60px; line-height: 1; }
+.kit-ft-v .kit-term { font-size: 1em; }
+.kit-ft-s { margin-top: 8px; font-size: 30px; line-height: 1.15; }
+.kit-ft.kit-tone-accent { background: var(--kit-accent); }
+.kit-ft.kit-tone-warn { background: var(--kit-warn); }
+.kit-ft.kit-tone-ok { background: var(--kit-ok); }
+.kit-ft.kit-tone-ink { background: var(--kit-ink); color: var(--kit-surface); }
+.kit-fo {
+  flex: none; width: 66px; height: 66px; margin-bottom: 26px; border-radius: 50%; background: var(--kit-ink); color: var(--kit-surface);
+  display: flex; align-items: center; justify-content: center; font-family: var(--kit-font-mono); font-size: 40px; line-height: 1;
+  box-shadow: 3px 6px 8px -3px rgba(38, 54, 74, 0.35);
+}
+
+/* ---------------- title: the closing line, printed word by word onto unrolling ribbons ---------------- */
+.kit-title { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; align-items: center; gap: 20px; font-family: var(--kit-font-display); }
+.kit-title-k {
+  padding: 8px 26px 10px; border-radius: 8px; background: var(--kit-ink); color: var(--kit-surface); font-size: 40px; line-height: 1.15;
+  transform-origin: 50% 100%; box-shadow: 3px 8px 10px -4px rgba(38, 54, 74, 0.4);
+}
+.kit-title-r { position: relative; height: 128px; }
+.kit-title-r .kit-ribbon { height: 128px; padding: 0 100px; font-size: var(--kit-t-h1); line-height: 1; }
+.kit-title-r .kit-roll { height: 140px; }
+.kit-title-w { display: inline-block; transform-origin: 50% 70%; }
+.kit-title-w.kit-em { color: var(--kit-accent-ink); }
+.kit-title-w.kit-term { font-size: 0.86em; }
+
+/* ---------------- recap: the last page of the book folds up — one composed pop-up spread ---------------- */
+.kit-recap { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; z-index: 80; pointer-events: none; font-family: var(--kit-font-body); }
+.kit-recap-board {
+  position: absolute; inset: 0; transform-origin: 50% 100%; overflow: hidden;
+  background: linear-gradient(180deg, #e2d3b6 0%, #e8dcc4 70%);
+  box-shadow: 0 -18px 40px rgba(38, 54, 74, 0.25);
+}
+.kit-recap-grain {
+  position: absolute; inset: -80px; background-image: url("paper-grain.svg"); background-size: 512px 512px; opacity: 0.42; pointer-events: none;
+}
+.kit-recap-push { position: absolute; inset: 0; transform-origin: 50% 52%; }
+.kit-recap-land { position: absolute; left: 0; right: 0; top: 520px; height: 560px; }
+.kit-recap-land svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.kit-recap-strings { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+.kit-recap-strings path { fill: none; stroke: var(--kit-ink); stroke-width: 4; stroke-dasharray: 14 10; stroke-linecap: round; opacity: 0.8; }
+.kit-recap-center {
+  position: absolute; display: flex; flex-direction: column; align-items: center; transform-origin: 50% 100%;
+  background: var(--kit-surface); border-radius: 14px; overflow: hidden;
+  box-shadow: inset 0 -8px 0 rgba(38, 54, 74, 0.06), 6px 16px 22px -8px rgba(38, 54, 74, 0.45);
+}
+.kit-recap-ct {
+  align-self: stretch; text-align: center; padding: 22px 40px 20px; background: var(--kit-ink); color: var(--kit-surface);
+  font-family: var(--kit-font-mono); line-height: 1.05; white-space: nowrap;
+}
+.kit-recap-ct .kit-term { font-size: 1em; }
+.kit-recap-ct.kit-recap-ct-cjk { font-family: var(--kit-font-display); }
+.kit-recap-tg { padding: 22px 44px 28px; font-size: 52px; line-height: 1.2; color: var(--kit-ink); white-space: nowrap; }
+.kit-recap-tg .kit-hot { color: var(--kit-accent-ink); }
+.kit-recap-card {
+  position: absolute; padding: 22px 30px 24px 30px; border-radius: 12px; background: var(--kit-surface); color: var(--kit-ink);
+  transform-origin: 50% 100%; box-shadow: inset 0 -6px 0 rgba(38, 54, 74, 0.06);
+}
+.kit-recap-h { display: flex; align-items: center; gap: 18px; margin-bottom: 10px; }
+.kit-recap-n {
+  flex: none; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--kit-surface); color: var(--kit-accent-ink); font-family: var(--kit-font-mono); font-size: 36px; line-height: 1;
+  box-shadow: inset 0 0 0 7px var(--kit-accent), inset 0 0 0 10px var(--kit-surface), inset 0 0 0 12px rgba(38, 54, 74, 0.18);
+}
+.kit-recap-t { font-size: 44px; line-height: 1.1; }
+/* break at punctuation / spaces rather than inside a CJK phrase; balance the lines */
+.kit-recap-x { font-size: 34px; line-height: 1.38; text-wrap: balance; word-break: keep-all; overflow-wrap: anywhere; }
+.kit-recap-x .kit-term { white-space: nowrap; }
+.kit-recap-x .kit-cl { display: inline-block; }

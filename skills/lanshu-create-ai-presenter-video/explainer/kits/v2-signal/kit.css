@@ -1,0 +1,645 @@
+/* V2 signal — dark HUD, one acid-lime accent, data pulses, mono read-outs.
+ * Tokens + the shared component classes (.kit-cap, .kit-chap, .kit-label, .kit-note, .kit-num, .kit-bars,
+ * .kit-formula, .kit-title, .kit-recap) + the style's extras (decode glyphs, panels, trackers, stamps, HUD).
+ * Fonts are declared by the film (tools/fonts.py writes the @font-face block into index.html):
+ *   Smiley Sans (display), Noto Sans SC 500 (body / captions / labels), JetBrains Mono 400/700 (terms, numbers).
+ */
+:root {
+  --kit-bg: #080b10;
+  --kit-surface: #0f1620;
+  --kit-surface-2: #131d29;
+  --kit-line: #34445a;
+  --kit-line-2: #4a5d73;
+  --kit-ink: #e8f1f8;
+  --kit-ink-2: #c9d6e3;
+  --kit-muted: #8fa1b5;
+  --kit-accent: #c8ff3e;
+  --kit-accent-ink: #0b1004;
+  --kit-accent-dim: #2c3a10;
+  --kit-accent-2: #6cb6ff;
+  --kit-warn: #ff7a45;
+  --kit-ok: #7cebb0;
+  --kit-font-display: "Smiley Sans", "Noto Sans SC", sans-serif;
+  --kit-font-body: "Noto Sans SC", sans-serif;
+  --kit-font-mono: "JetBrains Mono", "Noto Sans SC", monospace;
+  --kit-t-hero: 150px;
+  --kit-t-display: 92px;
+  --kit-t-h1: 64px;
+  --kit-t-h2: 44px;
+  --kit-t-body: 34px;
+  --kit-t-label: 30px;
+  --kit-t-note: 30px;
+  --kit-t-cap: 44px;
+  --kit-t-hud: 20px; /* texture only: timecode, coordinates, log noise */
+  --kit-chamfer: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+/* ---------------- decode glyphs (scramble → text) ---------------- */
+.kit-s {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: inherit;
+  font-style: normal;
+  color: var(--kit-accent);
+}
+.kit-s.w {
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+}
+.kit-hot {
+  font-style: normal;
+  color: var(--kit-accent);
+}
+.kit-ghost {
+  visibility: hidden;
+}
+.kit-on-accent .kit-s,
+.kit-tone-accent .kit-s {
+  color: var(--kit-accent-dim);
+}
+.kit-cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 0.12em;
+  vertical-align: -0.14em;
+  background: var(--kit-accent);
+}
+
+/* ---------------- captions (core.Captions builds .kit-cap > span with --lit) ---------------- */
+.kit-cap {
+  position: absolute;
+  left: 50%;
+  bottom: 50px;
+  transform: translateX(-50%);
+  max-width: 1792px;
+  padding: 12px 34px 15px 30px;
+  background: rgba(9, 14, 20, 0.93);
+  border-left: 6px solid var(--kit-accent);
+  box-shadow: 0 0 0 1px rgba(74, 93, 115, 0.55);
+  font: 500 var(--kit-t-cap) / 1.32 var(--kit-font-body);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  visibility: hidden;
+}
+.kit-cap > span {
+  --lit: 0;
+  color: color-mix(in srgb, var(--kit-ink) calc(var(--lit) * 100%), var(--kit-muted));
+}
+.kit-cap > span.kit-cap-lat {
+  font-family: var(--kit-font-mono);
+  font-weight: 500;
+  font-size: 0.92em;
+  margin: 0 0.22em;
+}
+/* opt-in (add .kit-caps-wrap to the captions container): a long line wraps into balanced lines instead of
+   running off the frame; the box still grows upward from the bottom band */
+.kit-caps-wrap > .kit-cap {
+  width: max-content;
+  max-width: 1640px;
+  white-space: normal;
+  text-wrap: balance;
+}
+
+/* ---------------- chapter chip (core.Chapters: .kit-chap-n + .kit-chap-t, --in 0..1) ---------------- */
+.kit-chap {
+  --in: 0;
+  position: absolute;
+  left: 64px;
+  top: 40px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 58px;
+  white-space: nowrap;
+  opacity: 0;
+}
+.kit-chap-n {
+  display: flex;
+  align-items: center;
+  height: 46px;
+  padding: 0 14px;
+  background: var(--kit-accent);
+  color: var(--kit-accent-ink);
+  font: 700 28px/1 var(--kit-font-mono);
+  clip-path: var(--kit-chamfer);
+}
+.kit-chap-n::before {
+  content: "CH 0";
+  font-weight: 400;
+  opacity: 0.7;
+  margin-right: 0.15em;
+}
+.kit-chap-t {
+  position: relative;
+  font: 400 40px/1.1 var(--kit-font-display);
+  color: var(--kit-ink);
+  clip-path: inset(-20% calc((1 - var(--in)) * 100%) -20% 0);
+}
+.kit-chap::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 3px;
+  width: calc(var(--in) * 100%);
+  background: linear-gradient(90deg, var(--kit-accent), rgba(200, 255, 62, 0));
+}
+
+/* ---------------- label ---------------- */
+.kit-label {
+  --on: 1;
+  position: absolute;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 6px 18px 9px;
+  background: var(--kit-surface);
+  border: 2px solid var(--kit-line-2);
+  color: var(--kit-ink);
+  font: 500 var(--kit-t-label) / 1.2 var(--kit-font-body);
+  white-space: nowrap;
+  clip-path: var(--kit-chamfer);
+}
+.kit-label-sub {
+  font: 400 28px/1.2 var(--kit-font-mono);
+  color: var(--kit-muted);
+}
+.kit-label::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--on) * 100%);
+  width: 3px;
+  background: var(--kit-accent);
+  box-shadow: 0 0 12px 2px rgba(200, 255, 62, 0.6);
+  opacity: calc(var(--on) * (1 - var(--on)) * 4);
+}
+.kit-label.kit-tone-accent {
+  background: var(--kit-accent);
+  border-color: var(--kit-accent);
+  color: var(--kit-accent-ink);
+}
+.kit-label.kit-tone-accent .kit-label-sub {
+  color: var(--kit-accent-dim);
+}
+.kit-label.kit-tone-accent::after {
+  background: var(--kit-ink);
+}
+.kit-label.kit-tone-line {
+  border-color: var(--kit-accent);
+  color: var(--kit-accent);
+}
+.kit-label.kit-tone-warn {
+  border-color: var(--kit-warn);
+  color: var(--kit-warn);
+}
+.kit-label.kit-tone-ok {
+  border-color: var(--kit-ok);
+  color: var(--kit-ok);
+}
+.kit-label.kit-tone-ink {
+  background: var(--kit-ink);
+  border-color: var(--kit-ink);
+  color: var(--kit-bg);
+}
+.kit-label.kit-tone-ink .kit-label-sub {
+  color: #3a4a5c;
+}
+.kit-label.kit-tone-k {
+  border-color: var(--kit-accent-2);
+  color: var(--kit-accent-2);
+}
+
+/* ---------------- HUD header: chapter chip + the chapter's note on one line (top-left) ---------------- */
+.kit-head {
+  position: absolute;
+  left: 64px;
+  top: 40px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  white-space: nowrap;
+}
+.kit-head > .kit-chap,
+.kit-head > .kit-note {
+  position: relative;
+  left: auto;
+  top: auto;
+}
+
+/* ---------------- note (one plain-language line per chapter) ---------------- */
+.kit-note {
+  position: absolute;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 8px 22px 11px 18px;
+  background: rgba(12, 18, 26, 0.9);
+  border-left: 4px solid var(--kit-accent);
+  font: 500 var(--kit-t-note) / 1.3 var(--kit-font-body);
+  color: var(--kit-ink-2);
+  white-space: nowrap;
+}
+.kit-note-tag {
+  font: 500 28px/1.3 var(--kit-font-body);
+  color: var(--kit-accent);
+}
+.kit-note-x .kit-hot {
+  color: var(--kit-ink);
+}
+
+/* ---------------- number ---------------- */
+.kit-num {
+  position: absolute;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0;
+  white-space: nowrap;
+}
+.kit-num-c {
+  font: 500 30px/1.25 var(--kit-font-body);
+  color: var(--kit-ink-2);
+}
+.kit-num-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+.kit-num-v {
+  font: 700 var(--kit-t-hero) / 1.32 var(--kit-font-mono);
+  letter-spacing: -0.03em;
+  color: var(--kit-accent);
+  text-shadow: 0 0 30px rgba(200, 255, 62, 0.25);
+}
+.kit-num-u {
+  font: 500 44px/1.32 var(--kit-font-mono);
+  color: var(--kit-ink);
+}
+.kit-num.kit-tone-warn .kit-num-v {
+  color: var(--kit-warn);
+  text-shadow: 0 0 30px rgba(255, 122, 69, 0.25);
+}
+.kit-num.kit-tone-ink .kit-num-v {
+  color: var(--kit-ink);
+  text-shadow: none;
+}
+
+/* ---------------- bars ---------------- */
+.kit-bars {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.kit-bar-h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  font: 500 30px/1.25 var(--kit-font-body);
+  color: var(--kit-ink);
+  white-space: nowrap;
+}
+.kit-bar-v {
+  font: 700 30px/1.25 var(--kit-font-mono);
+  color: var(--kit-ink);
+}
+.kit-bar-track {
+  position: relative;
+  margin-top: 10px;
+  height: 18px;
+  border: 1px solid var(--kit-line);
+  background: repeating-linear-gradient(90deg, rgba(52, 68, 90, 0.7) 0 2px, rgba(0, 0, 0, 0) 2px 8px);
+}
+.kit-bar-fill {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  right: 1px;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: repeating-linear-gradient(90deg, var(--kit-ink) 0 6px, rgba(0, 0, 0, 0) 6px 8px);
+}
+.kit-bar.kit-tone-accent .kit-bar-fill {
+  background: repeating-linear-gradient(90deg, var(--kit-accent) 0 6px, rgba(0, 0, 0, 0) 6px 8px);
+  box-shadow: 0 0 14px rgba(200, 255, 62, 0.45);
+}
+.kit-bar.kit-tone-accent .kit-bar-v {
+  color: var(--kit-accent);
+}
+.kit-bar.kit-tone-warn .kit-bar-fill {
+  background: repeating-linear-gradient(90deg, var(--kit-warn) 0 6px, rgba(0, 0, 0, 0) 6px 8px);
+  box-shadow: 0 0 14px rgba(255, 122, 69, 0.4);
+}
+.kit-bar.kit-tone-warn .kit-bar-v {
+  color: var(--kit-warn);
+}
+.kit-bar.kit-tone-ok .kit-bar-fill {
+  background: repeating-linear-gradient(90deg, var(--kit-ok) 0 6px, rgba(0, 0, 0, 0) 6px 8px);
+}
+
+/* ---------------- formula ---------------- */
+.kit-formula {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  white-space: nowrap;
+}
+.kit-f-term {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.kit-f-v {
+  font: 700 60px/1 var(--kit-font-mono);
+  color: var(--kit-ink);
+}
+.kit-f-s {
+  font: 500 28px/1.2 var(--kit-font-body);
+  color: var(--kit-muted);
+}
+.kit-f-term.kit-f-op .kit-f-v {
+  font-weight: 400;
+  color: var(--kit-muted);
+}
+.kit-f-term.kit-tone-accent .kit-f-v {
+  color: var(--kit-accent);
+  text-shadow: 0 0 24px rgba(200, 255, 62, 0.3);
+}
+.kit-f-term.kit-tone-k .kit-f-v {
+  color: var(--kit-accent-2);
+}
+.kit-f-term.kit-tone-warn .kit-f-v {
+  color: var(--kit-warn);
+}
+
+/* ---------------- closing line ---------------- */
+.kit-title {
+  position: absolute;
+  font: 400 var(--kit-t-display) / 1.16 var(--kit-font-display);
+  color: var(--kit-ink);
+  white-space: nowrap;
+}
+.kit-title-line {
+  display: block;
+}
+
+/* ---------------- recap (one composed frame: a node map) ---------------- */
+.kit-recap {
+  position: absolute;
+  inset: 0;
+  transform-origin: 960px 520px;
+}
+.kit-rc-wires {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: visible;
+}
+.kit-rc-wires .w0 {
+  fill: none;
+  stroke: var(--kit-line-2);
+  stroke-width: 3;
+}
+.kit-rc-wires .w1 {
+  fill: none;
+  stroke: var(--kit-accent);
+  stroke-width: 3;
+  stroke-dasharray: 10 16;
+}
+.kit-rc-wires circle {
+  fill: var(--kit-accent);
+}
+.kit-rc-center {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 26px 30px 30px;
+  text-align: center;  box-sizing: border-box;
+}
+.kit-rc-k,
+.kit-rc-title,
+.kit-rc-tag,
+.kit-rc-hd,
+.kit-rc-x {
+  position: relative;
+}
+.kit-rc-k {
+  font: 400 var(--kit-t-hud) / 1 var(--kit-font-mono);
+  letter-spacing: 0.24em;
+  color: var(--kit-muted);
+}
+.kit-rc-title {
+  font: 400 104px/1.02 var(--kit-font-display);
+  color: var(--kit-ink);
+}
+.kit-rc-tag {
+  font: 500 36px/1.25 var(--kit-font-body);
+  color: var(--kit-accent);
+}
+.kit-rc-col {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 26px;
+}
+.kit-rc-card {
+  position: relative;
+  flex: none;
+  padding: 20px 26px 22px 26px;  box-sizing: border-box;
+}
+.kit-rc-hd {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.kit-rc-n {
+  padding: 2px 10px;
+  background: var(--kit-accent);
+  color: var(--kit-accent-ink);
+  font: 700 26px/1.2 var(--kit-font-mono);
+}
+.kit-rc-h {
+  font: 400 40px/1.15 var(--kit-font-display);
+  color: var(--kit-ink);
+}
+.kit-rc-x {
+  font: 500 29px/1.42 var(--kit-font-body);
+  color: var(--kit-ink-2);
+  white-space: normal;
+}
+
+/* ---------------- extras: panels, trackers, stamps, HUD, dots ---------------- */
+.kit-panel-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+}
+.kit-trk {
+  position: absolute;
+  pointer-events: none;
+}
+.kit-trk i {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 0 solid var(--kit-accent);
+}
+.kit-trk i:nth-child(1) {
+  left: 0;
+  top: 0;
+  border-top-width: 3px;
+  border-left-width: 3px;
+}
+.kit-trk i:nth-child(2) {
+  right: 0;
+  top: 0;
+  border-top-width: 3px;
+  border-right-width: 3px;
+}
+.kit-trk i:nth-child(3) {
+  left: 0;
+  bottom: 0;
+  border-bottom-width: 3px;
+  border-left-width: 3px;
+}
+.kit-trk i:nth-child(4) {
+  right: 0;
+  bottom: 0;
+  border-bottom-width: 3px;
+  border-right-width: 3px;
+}
+.kit-trk.kit-tone-warn i {
+  border-color: var(--kit-warn);
+}
+.kit-trk.kit-tone-k i {
+  border-color: var(--kit-accent-2);
+}
+.kit-trk.big i {
+  width: 34px;
+  height: 34px;
+  border-width: 0;
+}
+.kit-trk.big i:nth-child(1) {
+  border-top-width: 4px;
+  border-left-width: 4px;
+}
+.kit-trk.big i:nth-child(2) {
+  border-top-width: 4px;
+  border-right-width: 4px;
+}
+.kit-trk.big i:nth-child(3) {
+  border-bottom-width: 4px;
+  border-left-width: 4px;
+}
+.kit-trk.big i:nth-child(4) {
+  border-bottom-width: 4px;
+  border-right-width: 4px;
+}
+.kit-stamp {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 26px 12px;
+  background: var(--kit-accent);
+  color: var(--kit-accent-ink);
+  box-shadow: 0 0 44px rgba(200, 255, 62, 0.45);
+  white-space: nowrap;
+}
+.kit-stamp b {
+  font: 400 56px/1.1 var(--kit-font-display);
+}
+.kit-stamp span {
+  font: 700 28px/1.1 var(--kit-font-mono);
+}
+.kit-stamp.kit-tone-warn {
+  background: var(--kit-warn);
+  color: #1a0700;
+  box-shadow: 0 0 44px rgba(255, 122, 69, 0.4);
+}
+.kit-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.kit-hud-c {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 0 solid #6b7c8f;
+}
+.kit-hud-r {
+  position: absolute;
+  right: 64px;
+  top: 44px;
+  width: 220px;
+  text-align: right;
+}
+.kit-hud-tc {
+  font: 400 var(--kit-t-hud) / 1 var(--kit-font-mono);
+  letter-spacing: 0.08em;
+  color: var(--kit-muted);
+  white-space: nowrap;
+}
+.kit-hud-segs {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  height: 4px;
+}
+.kit-hud-segs div {
+  position: relative;
+  height: 4px;
+  background: #1e2a38;
+}
+.kit-hud-segs i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: var(--kit-accent);
+}
+.kit-gline {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 3px;
+  background: var(--kit-accent);
+  box-shadow: 0 0 18px 4px rgba(200, 255, 62, 0.6);
+  opacity: 0;
+}
+.kit-dots {
+  position: absolute;
+  left: -600px;
+  top: -500px;
+  width: 3120px;
+  height: 2080px;
+  background-image: radial-gradient(circle, rgba(125, 143, 163, 0.3) 1.6px, rgba(125, 143, 163, 0) 2.1px);
+  background-size: 40px 40px;
+  background-position: 20px 20px;
+  transform-origin: 1560px 1040px;
+}
+.kit-vig {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 72% at 50% 48%, rgba(8, 11, 16, 0) 60%, rgba(8, 11, 16, 0.8) 100%);
+}

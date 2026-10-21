@@ -1,0 +1,10 @@
+{
+  "extra": {
+    "noto-sans-sc-500": {"family": "Noto Sans SC", "css": "Noto+Sans+SC:wght@500", "weight": 500},
+    "noto-sans-sc-700": {"family": "Noto Sans SC", "css": "Noto+Sans+SC:wght@700", "weight": 700},
+    "stix-two-500i": {"family": "STIX Two Text", "css": "STIX+Two+Text:ital,wght@1,500", "weight": 500, "style": "italic"},
+    "stix-two-500": {"family": "STIX Two Text", "css": "STIX+Two+Text:wght@500", "weight": 500},
+    "jetbrains-mono-500": {"family": "JetBrains Mono", "css": "JetBrains+Mono:wght@500", "weight": 500}
+  },
+  "index.html": ["noto-serif-sc-900", "noto-sans-sc-500", "noto-sans-sc-700", "stix-two-500i", "stix-two-500", "jetbrains-mono-500"]
+}

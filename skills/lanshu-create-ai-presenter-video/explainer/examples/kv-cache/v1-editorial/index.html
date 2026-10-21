@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="lib/kit/kit.css">
+    <style>
+      /* fonts:begin */
+@font-face { font-family: "Noto Serif SC"; src: url("assets/fonts/noto-serif-sc-900.woff2") format("woff2"); font-weight: 900; font-style: normal; font-display: block; }
+@font-face { font-family: "Noto Serif SC"; src: url("assets/fonts/noto-serif-sc-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: block; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/instrument-serif-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Instrument Serif"; src: url("assets/fonts/instrument-serif-400i.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+@font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/ibm-plex-mono-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+/* fonts:end */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #f2eee6; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--kit-bg); color: var(--kit-ink); font-family: var(--kit-font-body); }
+      #kv-stage { position: absolute; inset: 0; overflow: hidden; }
+      #kv-world { position: absolute; left: 0; top: 0; width: 7680px; height: 1080px; transform-origin: 0 0; }
+      #kv-hud, #kv-caps { position: absolute; inset: 0; pointer-events: none; }
+      .w { position: absolute; }
+      .kv-q { font: 500 46px/1.2 var(--kit-font-body); white-space: nowrap; }
+      .kv-tok { font-size: 40px; min-width: 92px; padding: 8px 16px 10px; }
+      .kv-tok.is-lit { border-color: var(--kit-accent); box-shadow: 0 0 0 4px rgba(210, 70, 44, 0.18); }
+      .kv-cell { position: absolute; width: 96px; height: 44px; border-radius: 7px; }
+      .kv-cell .kit-block { position: absolute; inset: 0; width: auto; height: auto; border-radius: 7px; }
+      .kv-kv { position: absolute; width: 80px; height: 44px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font: 400 26px/1 var(--kit-font-mono); white-space: nowrap; }
+      .kv-kv.is-k { background: var(--kit-block); color: #fbf9f5; }
+      .kv-kv.is-v { background: var(--kit-stone); color: var(--kit-ink); }
+      .kv-kv.is-q { background: var(--kit-accent-ink); color: #fffaf2; }
+      .kv-kv.is-hit { box-shadow: 0 0 0 4px rgba(210, 70, 44, 0.55); }
+      .kv-rowlab { position: absolute; font: 500 28px/1 var(--kit-font-body); color: var(--kit-muted); white-space: nowrap; }
+      .kv-colhead { position: absolute; font: 400 28px/1 var(--kit-font-mono); color: var(--kit-muted); white-space: nowrap; transform: translateX(-50%); }
+      .kv-colhead.is-on { color: var(--kit-accent-ink); }
+      .kv-name { position: absolute; font: 500 30px/44px var(--kit-font-body); color: var(--kit-ink); white-space: nowrap; }
+      .kv-bar { position: absolute; height: 16px; border-radius: 8px; transform-origin: 0 50%; background: repeating-linear-gradient(135deg, var(--kit-warn) 0 6px, var(--kit-warn-fill) 6px 12px); }
+      .kv-head { position: absolute; font: 900 104px/1 var(--kit-font-display); color: var(--kit-ink); white-space: nowrap; transform-origin: 0 0; letter-spacing: -0.01em; }
+      .kv-rule { position: absolute; height: 5px; background: var(--kit-accent); transform-origin: 0 50%; }
+      .kv-svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+      .kv-svg path { fill: none; }
+      .kv-dot { position: absolute; border-radius: 50%; background: var(--kit-accent); }
+      .kv-slot { position: absolute; width: 36px; height: 36px; border-radius: 6px; }
+      .kv-legend { position: absolute; display: flex; gap: 30px; align-items: center; font: 500 28px/1 var(--kit-font-body); color: var(--kit-ink); white-space: nowrap; }
+      .kv-legend i { display: inline-block; width: 26px; height: 26px; border-radius: 5px; margin-right: 12px; vertical-align: -3px; }
+      .kv-axis { position: absolute; font: 400 28px/1 var(--kit-font-mono); color: var(--kit-muted); white-space: nowrap; }
+      .kv-fixhead { position: absolute; display: flex; align-items: baseline; gap: 14px; white-space: nowrap; }
+      .kv-fixhead b { font: 400 italic 56px/0.9 var(--kit-font-num); color: var(--kit-accent-ink); }
+      .kv-fixhead span { font: 900 44px/1.1 var(--kit-font-display); color: var(--kit-ink); }
+      .kv-fixsub { position: absolute; font: 500 28px/1.3 var(--kit-font-body); color: var(--kit-muted); white-space: nowrap; }
+      .kv-meter { position: absolute; height: 22px; border-radius: 4px; transform-origin: 0 50%; }
+      .kv-page { position: absolute; width: 72px; height: 56px; border-radius: 7px; }
+      .kv-qc { position: absolute; width: 88px; border-radius: 7px; background: var(--kit-block); display: flex; align-items: center; justify-content: center; overflow: hidden; font: 400 24px/1 var(--kit-font-mono); color: #fbf9f5; }
+      .kv-small { position: absolute; font: 400 28px/1 var(--kit-font-mono); white-space: nowrap; }
+      .kv-tk2 { font-size: 34px; min-width: 76px; padding: 6px 12px 8px; }
+      #kv-recap-fig .kit-card-title { font-size: 30px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="45" data-width="1920" data-height="1080">
+      <div id="kv-stage" class="clip" data-start="0" data-duration="45" data-track-index="1">
+        <div class="kit-paper"></div>
+        <div class="kit-grain"></div>
+        <div id="kv-world" data-layout-allow-overflow=""></div>
+        <div id="kv-hud"></div>
+        <div id="kv-caps"></div>
+      </div>
+      <audio id="kv-narration" src="assets/audio/narration.wav" data-start="0" data-duration="40.32" data-track-index="10" data-volume="1"></audio>
+      <audio id="kv-sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="45" data-track-index="11" data-volume="1"></audio>
+    </div>
+
+    <script src="lib/core.js"></script>
+    <script src="lib/story.js"></script>
+    <script src="lib/kit/kit.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var C = window.ExplainerCore, K = window.Kit, S = new C.Story(window.STORY);
+        var pr = C.pr, env = C.env, E = C.E, lerp = C.lerp, cl = C.clamp01;
+        var DUR = S.duration;
+        var world = document.getElementById("kv-world"), hud = document.getElementById("kv-hud");
+        var U = []; // per-frame updaters, each a pure function of t
+
+        // ---------- beat anchors (every time below = one of these + a small offset) ----------
+        var T = {
+          big: S.at(1, "大"), answer: S.at(1, "回"), shi: S.at(1, "是"), tok1: S.at(1, "token", 1), tok2: S.at(1, "token", 2), beng: S.at(1, "蹦"),
+          every2: S.at(2, "每"), xin: S.at(2, "新"), hui: S.at(2, "回"), tou: S.at(2, "头"), kan: S.at(2, "看"), all: S.at(2, "所"),
+          yaoshi: S.at(3, "要"), meici: S.at(3, "每"), recompute: S.at(3, "重"), slow: S.at(3, "越", 1), slow2: S.at(3, "慢"),
+          kv: S.at(4, "KV"), method: S.at(4, "办"), each: S.at(4, "每"), key: S.at(4, "Key"), value: S.at(4, "Value"), once: S.at(4, "只"), store: S.at(4, "存"), storeEnd: S.at(4, "来"),
+          after: S.at(5, "之"), only: S.at(5, "只"), newTok: S.at(5, "新"), thatOne: S.at(5, "那"), again: S.at(5, "再"), look5: S.at(5, "缓"), query: S.at(5, "查"),
+          cost: S.at(6, "代"), vram: S.at(6, "显"), cache6: S.at(6, "缓"), follow: S.at(6, "着"), ctx: S.at(6, "下"), together: S.at(6, "起"), rise: S.at(6, "涨"),
+          llama: S.at(7, "Llama"), per: S.at(7, "每"), tok7: S.at(7, "token"), about: S.at(7, "大"), half: S.at(7, "0.5"), mb: S.at(7, "MB"), k4: S.at(7, "4K"), gb2: S.at(7, "2", 2), gb: S.at(7, "GB"),
+          so: S.at(8, "所"), gqa: S.at(8, "GQA"), share: S.at(8, "共"), vv: S.at(8, "V"), paged: S.at(8, "PagedAttention"), page: S.at(8, "按"), alloc: S.at(8, "配"), quant: S.at(8, "量"), compress: S.at(8, "压"),
+          use9: S.at(9, "用"), mem9: S.at(9, "显"), swap9: S.at(9, "换"), speed9: S.at(9, "速"), only9: S.at(9, "只"), new9: S.at(9, "新"), that9: S.at(9, "那"), last9: S.at(9, "个"),
+        };
+        var CH = S.chapters, R0 = S.recap.start;
+
+        // ---------- small DOM helpers ----------
+        function mk(cls, parent, x, y, text) {
+          var e = document.createElement("div");
+          e.className = cls;
+          if (x != null) { e.style.left = x + "px"; e.style.top = y + "px"; }
+          if (text != null) e.textContent = text;
+          (parent || world).appendChild(e);
+          return e;
+        }
+        function vis(e, o) { var v = o > 0.002 ? o : 0; e.style.opacity = v.toFixed(3); e.style.visibility = v > 0 ? "visible" : "hidden"; }
+        function tf(e, x, y, s) { e.style.transform = "translate(" + (x || 0).toFixed(1) + "px," + (y || 0).toFixed(1) + "px) scale(" + (s == null ? 1 : s).toFixed(4) + ")"; }
+        function svg(parent, w, h) {
+          var s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          s.setAttribute("class", "kv-svg");
+          s.setAttribute("width", w || 1920);
+          s.setAttribute("height", h || 1080);
+          (parent || world).appendChild(s);
+          return s;
+        }
+        function sv(parent, tag, attrs) {
+          var e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+          for (var k in attrs) e.setAttribute(k, attrs[k]);
+          parent.appendChild(e);
+          return e;
+        }
+        function draw(path, len, u) { path.style.strokeDasharray = len + " " + len; path.style.strokeDashoffset = (len * (1 - cl(u))).toFixed(1); }
+        var kits = [];
+        function kit(k, parent) { (parent || world).appendChild(k.el); kits.push(k); return k; }
+
+        // ======================= SPREAD A · tokens, recompute triangle, the cache =======================
+        var TOK = ["因为", "空气", "把", "蓝光", "散射", "得", "更", "多"];
+        var CX = function (i) { return 440 + i * 128; }, ROWY = function (r) { return 400 + r * 56; };
+        var MODEL = { x: 225, y: 325 };
+        var KX = 1450, VX = 1542, NX = 1644; // ledger columns
+        var W8 = [0.06, 0.12, 0.04, 0.3, 0.24, 0.06, 0.1, 0.08]; // illustrative attention weights for the new token
+
+        // prompt + model
+        kit(K.label({ text: "提问", tone: "ink", x: 150, y: 200, at: T.answer - 0.1 }));
+        var qEl = mk("kv-q w", world, 282, 194);
+        var qChars = "天空为什么是蓝的？".split("").map(function (ch) { var s = document.createElement("span"); s.textContent = ch; qEl.appendChild(s); return s; });
+        U.push(function (t) { qChars.forEach(function (s, i) { s.style.opacity = pr(t, T.answer + i * 0.055, 0.08).toFixed(2); }); });
+        var model = kit(K.tile({ text: "大模型", tone: "ink", x: MODEL.x, y: MODEL.y, ax: 0.5, ay: 0.5, at: T.big - 0.08 }));
+        model.el.classList.add("kv-tok");
+
+        // token tiles: they fly out of the model one at a time
+        var tokAt = [T.tok1 - 0.14, T.tok2 - 0.14, T.beng - 0.14, T.xin - 0.1, 0, 0, 0, T.newTok - 0.1];
+        var toks = TOK.map(function (w, i) {
+          var tl = K.tile({ text: w, x: CX(i), y: MODEL.y, ax: 0.5, ay: 0.5 });
+          tl.el.classList.add("kv-tok");
+          world.appendChild(tl.el);
+          return tl;
+        });
+        // next-slot placeholder for the 4th token
+        // a dashed "next slot" waits where the next token will land (the cursor walks ahead of the voice)
+        var slotWin = [[T.shi - 0.05, tokAt[0] + 0.34], [tokAt[0] + 0.4, tokAt[1] + 0.34], [tokAt[1] + 0.4, tokAt[2] + 0.34], [T.every2, tokAt[3] + 0.34]];
+        var nextSlots = slotWin.map(function (w, i) {
+          var e = mk("w", world, CX(i) - 48, MODEL.y - 34);
+          e.style.cssText += "width:96px;height:68px;border:2px dashed rgba(22,19,15,0.35);border-radius:12px";
+          return e;
+        });
+        // autoregression: each emitted token is appended to the input and fed back for the next step
+        var loopSvg = svg(world, 1920, 1080);
+        var loop = sv(loopSvg, "path", { d: "", stroke: "#2b2723", "stroke-width": 3, "stroke-linecap": "round", "stroke-linejoin": "round" });
+        var loopHead = sv(loopSvg, "path", { d: "M " + (MODEL.x - 11) + " " + (MODEL.y + 56) + " L " + MODEL.x + " " + (MODEL.y + 42) + " L " + (MODEL.x + 11) + " " + (MODEL.y + 56), stroke: "#2b2723", "stroke-width": 3, "stroke-linecap": "round", "stroke-linejoin": "round" });
+        var loopLab = mk("kv-rowlab", world, MODEL.x + 34, 486, "接回输入，再出下一个");
+        U.push(function (t) {
+          var li = -1;
+          for (var i = 0; i < 4; i++) if (t >= tokAt[i] + 0.28) li = i;
+          var fade = 1 - pr(t, T.hui - 0.25, 0.25);
+          if (li < 0 || fade <= 0) { vis(loop, 0); vis(loopHead, 0); vis(loopLab, 0); return; }
+          var x = CX(li), y0 = MODEL.y + 40, yb = 470, r = 20;
+          loop.setAttribute("d", "M " + x + " " + y0 + " L " + x + " " + (yb - r) + " Q " + x + " " + yb + " " + (x - r) + " " + yb + " L " + (MODEL.x + r) + " " + yb + " Q " + MODEL.x + " " + yb + " " + MODEL.x + " " + (yb - r) + " L " + MODEL.x + " " + (y0 + 2));
+          var len = (yb - y0) * 2 + (x - MODEL.x) + 10;
+          var u = E.io2(pr(t, tokAt[li] + 0.28, 0.5));
+          draw(loop, len, u);
+          vis(loop, fade);
+          vis(loopHead, pr(u, 0.9, 0.1) * fade);
+          vis(loopLab, pr(t, tokAt[0] + 0.55, 0.3) * fade);
+        });
+
+        // triangle (no cache): row r = step r+1 recomputes the K/V of tokens 0..r
+        var rowAt = function (r) { return T.meici + r * 0.1; };
+        var cells = [];
+        for (var r = 0; r < 8; r++) {
+          for (var c = 0; c <= r; c++) {
+            var cell = mk("kv-cell", world, CX(c) - 48, ROWY(r));
+            var base = K.block(c === r ? "accent" : "ink");
+            var hatch = K.block("warn");
+            cell.appendChild(base);
+            cell.appendChild(hatch);
+            cells.push({ el: cell, base: base, hatch: hatch, r: r, c: c });
+          }
+        }
+        var rowLabs = [];
+        for (var rr = 0; rr < 7; rr++) rowLabs.push(mk("kv-rowlab", world, 150, ROWY(rr) + 8, "第 " + (rr + 1) + " 步"));
+        var bars = [];
+        for (var rb = 0; rb < 7; rb++) { var b = mk("kv-bar", world, 1460, ROWY(rb) + 14); b.style.width = (rb + 1) * 44 + "px"; bars.push(b); }
+        kit(K.label({ text: "每步计算量", tone: "warn", x: 1460, y: 300, at: T.recompute + 0.4, out: T.kv + 0.25 }));
+        kit(K.label({ text: "越写越慢", tone: "warn", x: 1460, y: 790, at: T.slow2 - 0.06, out: T.kv + 0.25 }));
+        var wasteLab = kit(K.label({ text: "重复计算", sub: "白算 21 格", tone: "warn", x: 900, y: 440, at: T.recompute + 0.12, out: T.kv + 0.2 }));
+
+        // attention arcs (beat 2): the new token looks back at every earlier one
+        var arcSvg = svg(world, 1920, 1080);
+        var arcs = [2, 1, 0].map(function (k, j) {
+          var x1 = CX(3), x2 = CX(k), y = MODEL.y + 40, d = 50 + (3 - k) * 42;
+          var p = sv(arcSvg, "path", { d: "M " + x1 + " " + y + " C " + x1 + " " + (y + d) + ", " + x2 + " " + (y + d) + ", " + x2 + " " + y, stroke: "#d2462c", "stroke-width": 4, "stroke-linecap": "round" });
+          var dot = sv(arcSvg, "circle", { cx: x2, cy: y, r: 8, fill: "#d2462c" });
+          var flow = [0, 1].map(function () { return sv(arcSvg, "circle", { cx: x2, cy: y, r: 7, fill: "#d2462c" }); });
+          return { p: p, dot: dot, len: Math.abs(x1 - x2) + d * 1.6, at: [T.hui, T.tou, T.kan][j], k: k, P: [[x1, y], [x1, y + d], [x2, y + d], [x2, y]], flow: flow };
+        });
+
+        // step counter (screen space, beats 1–2)
+        var counter = kit(K.number({ value: 1, unit: "步", caption: "一步只出一个 token", x: 1540, y: 410, at: T.tok1 - 0.1, out: T.yaoshi + 0.25 }), hud);
+
+        U.push(function (t) {
+          // tokens: fly from the model (beats 1, 2, 5) or pop in place with their row (beat 3)
+          toks.forEach(function (tk, i) {
+            var a = i >= 4 && i <= 6 ? rowAt(i) : tokAt[i];
+            var p = pr(t, a, 0.32), e = E.o3(p);
+            var fly = i <= 3 || i === 7;
+            var x = fly ? lerp(i === 7 ? CX(7) : MODEL.x, CX(i), e) : CX(i);
+            var y = fly ? MODEL.y - Math.sin(Math.PI * p) * (i === 7 ? 0 : 56) - (i === 7 ? (1 - e) * 90 : 0) : MODEL.y;
+            tk.el.style.left = x.toFixed(1) + "px";
+            tk.el.style.top = y.toFixed(1) + "px";
+            tk.render(t, p);
+            var red = (i === 3 && t < T.yaoshi + 0.1) || (i === 7 && t < CH[2].start + 0.6);
+            tk.tone(red ? "accent" : "default");
+            tk.el.classList.toggle("is-lit", (i < 3 && t >= T.all - 0.05 && t < T.yaoshi + 0.1) || (i < 7 && t >= T.each - 0.05 + i * 0.085 && t < T.key - 0.1));
+          });
+          nextSlots.forEach(function (e, i) { vis(e, env(t, slotWin[i][0], slotWin[i][1], 0.2, 0.08)); });
+          var n = t < tokAt[1] ? 1 : t < tokAt[2] ? 2 : t < tokAt[3] ? 3 : 4;
+          counter.set(n);
+          arcs.forEach(function (a) {
+            var o = 1 - pr(t, T.yaoshi + 0.05, 0.35);
+            draw(a.p, a.len, E.io2(pr(t, a.at - 0.05, 0.35)));
+            vis(a.p, t >= a.at - 0.05 ? o : 0);
+            vis(a.dot, pr(t, a.at + 0.25, 0.1) * o);
+            a.flow.forEach(function (c, j) {
+              var live = t >= T.all && t < T.yaoshi + 0.4;
+              var f = live ? ((t - T.all) * 0.85 + j * 0.5 + a.k * 0.17) % 1 : 0;
+              var u = 1 - f, w = 1 - u, P = a.P;
+              var bx = w * w * w * P[0][0] + 3 * w * w * u * P[1][0] + 3 * w * u * u * P[2][0] + u * u * u * P[3][0];
+              var by = w * w * w * P[0][1] + 3 * w * w * u * P[1][1] + 3 * w * u * u * P[2][1] + u * u * u * P[3][1];
+              c.setAttribute("cx", bx.toFixed(1));
+              c.setAttribute("cy", by.toFixed(1));
+              vis(c, live ? Math.sin(Math.PI * f) * o * pr(t, T.all, 0.2) : 0);
+            });
+          });
+          // triangle
+          cells.forEach(function (ce) {
+            var a = rowAt(ce.r) + ce.c * 0.025, p = E.back(pr(t, a, 0.2));
+            var waste = ce.c < ce.r;
+            var live = ce.r < 7 ? pr(t, a, 0.12) : 0;
+            var gone = waste ? E.i2(pr(t, T.kv + ce.r * 0.035, 0.4)) : 0;
+            // row 8 (index 7) is the would-be next step, used in beat 5
+            if (ce.r === 7) {
+              live = env(t, T.only + ce.c * 0.03, waste ? T.thatOne + (6 - ce.c) * 0.04 + 0.3 : T.thatOne + 0.42, 0.14, 0.25);
+              p = E.back(pr(t, T.only + ce.c * 0.03, 0.2));
+              gone = 0;
+            }
+            // the diagonal cell becomes the K/V pair at "Key"
+            if (!waste && ce.r < 7) live *= 1 - pr(t, T.key + ce.r * 0.04 - 0.02, 0.12);
+            vis(ce.el, live * (1 - gone));
+            tf(ce.el, 0, gone * 34, lerp(0.6, 1, p));
+            vis(ce.hatch, ce.r === 7 ? (waste ? 0.85 : 0) : waste ? pr(t, T.recompute + ce.r * 0.035, 0.18) : 0);
+          });
+          var wasted = 0;
+          cells.forEach(function (ce) { if (ce.r < 7 && ce.c < ce.r && t >= T.recompute + ce.r * 0.035 + 0.09) wasted++; });
+          wasteLab.set("重复计算", "白算 " + wasted + " 格");
+          rowLabs.forEach(function (l, i) { vis(l, env(t, rowAt(i), T.kv + 0.3, 0.2, 0.3)); });
+          bars.forEach(function (b, i) {
+            var g = E.o2(pr(t, T.recompute + 0.5 + i * 0.14, 0.45)) * (1 - E.i2(pr(t, T.kv, 0.3)));
+            vis(b, g > 0.01 ? 1 : 0);
+            b.style.transform = "scaleX(" + g.toFixed(4) + ")";
+          });
+        });
+
+        // ---- chapter 2: the cache ledger ----
+        var head = mk("kv-head", world, 880, 430, "KV cache");
+        var headRule = mk("kv-rule", world, 884, 552);
+        headRule.style.width = "300px";
+        var ledger = K.card({ title: "KV cache", meta: "", w: 404, h: 600, x: 1420, y: 276 });
+        world.appendChild(ledger.el);
+        var colHeads = [mk("kv-colhead", world, KX + 40, 356, "Key"), mk("kv-colhead", world, VX + 40, 356, "Value"), mk("kv-colhead", world, NX + 40, 356, "token")];
+        var rowLines = [];
+        for (var rl = 0; rl < 8; rl++) { var ln = mk("w", world, 1446, ROWY(rl) + 50); ln.style.cssText += "width:350px;height:0;border-top:2px dashed rgba(22,19,15,0.16)"; rowLines.push(ln); }
+        var underline = mk("kv-rule", world, CX(0) - 58, MODEL.y + 42);
+        underline.style.height = "4px";
+        underline.style.width = (CX(6) - CX(0) + 116) + "px";
+        var pairs = [];
+        for (var pk = 0; pk < 8; pk++) {
+          var kEl = mk("kv-kv is-k", world, 0, 0, "K"), vEl = mk("kv-kv is-v", world, 0, 0, "V");
+          kEl.setAttribute("data-layout-allow-overlap", ""); vEl.setAttribute("data-layout-allow-overlap", "");
+          var nm = mk("kv-name", world, NX, ROWY(pk), TOK[pk]);
+          pairs.push({ k: kEl, v: vEl, name: nm, r: pk });
+        }
+        var once = kit(K.label({ text: "×1", sub: "每个 token 只算一次", tone: "accent", x: 440, y: 690, at: T.once - 0.02, out: T.storeEnd + 0.15 }));
+        // beat 5: the new token's Q, the cost contrast, the lookup
+        var cmp = kit(K.bars({ width: 660, x: 440, y: 470, at: T.only - 0.05, out: CH[1].end - 0.1, rows: [
+          { label: "不缓存", value: 8, max: 8, tone: "warn", valueText: "算 8 个" },
+          { label: "KV cache", value: 1, max: 8, tone: "accent", valueText: "只算 1 个" },
+        ] }));
+        var QP = { x: 1210, y: 566 };
+        var qTag = mk("kv-kv is-q", world, 0, 0, "Q");
+        var lookSvg = svg(world, 1920, 1080);
+        var looks = W8.map(function (w, r) {
+          var x1 = QP.x + 80, y1 = QP.y + 22, x2 = KX - 6, y2 = ROWY(r) + 22;
+          var p = sv(lookSvg, "path", { d: "M " + x1 + " " + y1 + " C " + (x1 + 70) + " " + y1 + ", " + (x2 - 70) + " " + y2 + ", " + x2 + " " + y2, stroke: "#d2462c", "stroke-width": (2 + 12 * w).toFixed(1), "stroke-linecap": "round" });
+          var dot = mk("kv-dot", world, 0, 0);
+          var s = 10 + 26 * w;
+          dot.style.width = dot.style.height = s.toFixed(1) + "px";
+          return { p: p, len: Math.hypot(x2 - x1, y2 - y1) * 1.12, w: w, r: r, dot: dot, s: s };
+        });
+        kit(K.label({ text: "Q", sub: "新 token 的提问", tone: "default", x: QP.x - 270, y: QP.y + 66, at: T.again + 0.1, out: CH[1].end - 0.15 }));
+
+        U.push(function (t) {
+          // headline: arrives on "KV cache", then becomes the ledger's own title
+          var hin = E.o3(pr(t, T.kv - 0.05, 0.45));
+          var fly = E.io3(pr(t, T.key - 0.5, 0.45));
+          var hx = lerp(0, 1454 - 880, fly), hy = lerp((1 - hin) * 30, 296 - 438, fly), hs = lerp(1, 32 / 104, fly);
+          vis(head, t < T.key - 0.05 ? hin : 0);
+          tf(head, hx, hy, hs);
+          vis(headRule, (1 - fly) * hin);
+          headRule.style.transform = "scaleX(" + E.io3(pr(t, T.kv + 0.25, 0.4)).toFixed(4) + ")";
+          // ledger card
+          var lp = E.o3(pr(t, T.method - 0.1, 0.5));
+          var lo = 1 - pr(t, CH[1].end + 0.6, 0.3);
+          vis(ledger.el, lp * lo);
+          tf(ledger.el, (1 - lp) * 60, 0, 1);
+          vis(ledger.title, t >= T.key - 0.05 ? 1 : 0);
+          colHeads.forEach(function (h, i) {
+            vis(h, pr(t, T.method + 0.2 + i * 0.08, 0.3) * lo);
+            h.classList.toggle("is-on", (i === 0 && t >= T.key - 0.05 && t < T.key + 0.7) || (i === 1 && t >= T.value - 0.05 && t < T.value + 0.7));
+          });
+          rowLines.forEach(function (l, i) { vis(l, pr(t, T.method + 0.25 + i * 0.03, 0.3) * lo); });
+          // "每个 token": a red rule sweeps under the tokens that will be cached
+          var us = pr(t, T.each - 0.05, 0.6);
+          vis(underline, us > 0 ? 1 - pr(t, T.key - 0.1, 0.25) : 0);
+          underline.style.transform = "scaleX(" + E.io2(us).toFixed(4) + ")";
+          // K and V: born on the diagonal ("Key", "Value"), stored in the ledger ("存起来")
+          pairs.forEach(function (pp) {
+            var r = pp.r, newRow = r === 7;
+            var kIn = newRow ? pr(t, T.thatOne + 0.24, 0.16) : pr(t, T.key + r * 0.04, 0.16);
+            var vIn = newRow ? pr(t, T.thatOne + 0.28, 0.16) : pr(t, T.value + r * 0.04, 0.16);
+            var go = newRow ? E.io3(pr(t, T.thatOne + 0.36, 0.38)) : E.io3(pr(t, T.store + r * 0.07, 0.55));
+            var sx = CX(r);
+            var kx = lerp(sx - 84, KX, go), vx = lerp(sx + 4, VX, go), y = ROWY(r);
+            pp.k.style.left = kx.toFixed(1) + "px"; pp.k.style.top = y + "px";
+            pp.v.style.left = vx.toFixed(1) + "px"; pp.v.style.top = y + "px";
+            var out = 1 - pr(t, CH[1].end - 0.05, 0.2);
+            vis(pp.k, kIn * out);
+            vis(pp.v, vIn * out);
+            tf(pp.k, 0, 0, lerp(0.7, 1, E.back(kIn)));
+            tf(pp.v, 0, 0, lerp(0.7, 1, E.back(vIn)));
+            vis(pp.name, pr(t, (newRow ? T.thatOne + 0.6 : T.store + r * 0.07 + 0.45), 0.25) * out);
+            pp.name.style.color = newRow ? "#b53a22" : "";
+            // the Q scan lights each K as its look-up line arrives
+            var hit = t >= T.look5 - 0.2 + r * 0.07 + 0.25 && t < T.query + 0.35;
+            var walk = r < 7 && t >= T.once + 0.08 + r * 0.11 && t < T.once + 0.38 + r * 0.11;
+            pp.k.classList.toggle("is-hit", hit || walk);
+            pp.v.classList.toggle("is-hit", walk);
+          });
+          cmp.render(t, [pr(t, T.only, 0.45), pr(t, T.thatOne, 0.35)]);
+          // the new token's Q: born in its cell, rises to ask, then scans the K column
+          var qIn = pr(t, T.thatOne + 0.24, 0.16), qUp = E.io3(pr(t, T.again - 0.02, 0.36));
+          var qOut = 1 - pr(t, CH[1].end - 0.05, 0.2);
+          qTag.style.left = lerp(CX(7) - 40, QP.x, qUp).toFixed(1) + "px";
+          qTag.style.top = lerp(ROWY(6), QP.y, qUp).toFixed(1) + "px";
+          vis(qTag, qIn * qOut);
+          var pulse = Math.sin(Math.PI * pr(t, T.query + 0.25, 0.3));
+          tf(qTag, 0, 0, 1 + 0.18 * pulse);
+          looks.forEach(function (lk) {
+            var a = T.look5 - 0.2 + lk.r * 0.07;
+            draw(lk.p, lk.len, E.io2(pr(t, a, 0.3)));
+            vis(lk.p, t >= a ? 1 - pr(t, CH[1].end - 0.3, 0.25) : 0);
+            // the matching V flows back to Q, weighted
+            var f = E.io2(pr(t, T.query - 0.3 + lk.r * 0.03, 0.55));
+            var x0 = VX + 40, y0 = ROWY(lk.r) + 22, x1 = QP.x + 40, y1 = QP.y + 22;
+            lk.dot.style.left = (lerp(x0, x1, f) - lk.s / 2).toFixed(1) + "px";
+            lk.dot.style.top = (lerp(y0, y1, f) - lk.s / 2 - Math.sin(Math.PI * f) * 40).toFixed(1) + "px";
+            vis(lk.dot, f > 0 && f < 1 ? 1 : 0);
+          });
+        });
+
+        // ======================= SPREAD B · 显存 grows with context; Llama 2 7B bill =======================
+        var BX = 1920;
+        var GX = BX + 158, GY = 312, GP = 42;
+        var vram = K.card({ title: "显存", meta: "GPU", w: 470, h: 650, x: BX + 130, y: 220 });
+        world.appendChild(vram.el);
+        var slots = [];
+        for (var s = 0; s < 100; s++) {
+          var col = s % 10, row = Math.floor(s / 10);
+          var sl = mk("kv-slot", world, GX + col * GP, GY + row * GP);
+          var fill = K.block("ink", 36);
+          fill.style.left = "0"; fill.style.top = "0";
+          sl.style.border = "2px solid rgba(22,19,15,0.14)";
+          sl.appendChild(fill);
+          slots.push({ el: sl, fill: fill, col: col, row: row });
+        }
+        var legend = mk("kv-legend", world, BX + 164, 760);
+        legend.innerHTML = '<span><i style="background:#2b2723"></i>KV cache</span><span><i style="border:2px solid rgba(22,19,15,0.3)"></i>空闲</span>';
+        var ctxAt = [T.cache6, T.follow, T.ctx, T.together]; // 1K, 2K, 3K, 4K
+        var ctxNum = kit(K.number({ value: 4, unit: "K", caption: "上下文长度（token）", x: BX + 800, y: 236, at: T.cache6 - 0.1, out: CH[2].end + 0.4 }));
+        // the linear chart (beat 6)
+        var chart = mk("w", world, BX + 1150, 250);
+        chart.style.cssText += "width:680px;height:420px";
+        var chSvg = svg(chart, 680, 420);
+        var CH0 = { x: 40, y: 360 }, CHX = 140, CHY = 70;
+        var axes = sv(chSvg, "path", { d: "M " + CH0.x + " 20 L " + CH0.x + " " + CH0.y + " L 640 " + CH0.y, stroke: "rgba(22,19,15,0.55)", "stroke-width": 3 });
+        var line = sv(chSvg, "path", { d: "M " + CH0.x + " " + CH0.y + " L " + (CH0.x + 4 * CHX) + " " + (CH0.y - 4 * CHY), stroke: "#2b2723", "stroke-width": 5, "stroke-linecap": "round" });
+        var chDots = [1, 2, 3, 4].map(function (k) { return sv(chSvg, "circle", { cx: CH0.x + k * CHX, cy: CH0.y - k * CHY, r: 9, fill: "#2b2723" }); });
+        var ticks = [1, 2, 3, 4].map(function (k) { var e = mk("kv-axis", chart, CH0.x + k * CHX - 22, CH0.y + 18, k + "K"); return e; });
+        mk("kv-axis", chart, CH0.x + 12, 0, "缓存占用");
+        var chLab = kit(K.label({ text: "成正比", sub: "一条直线", tone: "default", x: CH0.x + 4 * CHX - 330, y: CH0.y - 4 * CHY - 40, at: T.rise - 0.05, out: T.llama - 0.3 }), chart);
+        // Llama 2 7B: the bill per token, then for 4K tokens
+        kit(K.label({ text: "Llama 2 · 7B", sub: "FP16", tone: "ink", x: BX + 1210, y: 252, at: T.llama - 0.06 }));
+        var f1 = kit(K.formula({ x: BX + 800, y: 470, terms: [
+          { text: "2", sub: "K 和 V", t: T.per },
+          { text: "×", kind: "op", t: T.per + 0.1 },
+          { text: "32", sub: "层", t: T.per + 0.2 },
+          { text: "×", kind: "op", t: T.per + 0.32 },
+          { text: "4096", sub: "维", t: T.tok7 - 0.02 },
+          { text: "×", kind: "op", t: T.tok7 + 0.12 },
+          { text: "2 B", sub: "FP16 每个数", t: T.about - 0.02 },
+          { text: "≈", kind: "op", t: T.half - 0.16 },
+          { text: "0.5 MB", sub: "每个 token", kind: "res", t: T.half },
+        ] }));
+        var f2 = kit(K.formula({ x: BX + 800, y: 668, terms: [
+          { text: "0.5 MB", sub: "每个 token", t: T.k4 - 0.12 },
+          { text: "×", kind: "op", t: T.k4 },
+          { text: "4096", sub: "4K 上下文", t: T.k4 + 0.06 },
+          { text: "≈", kind: "op", t: T.gb2 - 0.2 },
+          { text: "2 GB", sub: "一条请求", kind: "res", t: T.gb2 },
+        ] }));
+        kit(K.note("单条请求；并发越多，乘得越多", { key: "注", x: BX + 800, y: 852, at: T.gb + 0.15 }));
+        var gbSvg = svg(world, 3840, 1080);
+        var gbBr = sv(gbSvg, "path", { d: "M " + (GX + 420) + " " + (GY + 6 * GP) + " L " + (GX + 432) + " " + (GY + 6 * GP) + " L " + (GX + 432) + " " + (GY + 9 * GP + 36) + " L " + (GX + 420) + " " + (GY + 9 * GP + 36), stroke: "#b53a22", "stroke-width": 4 });
+        var gbLab = kit(K.label({ text: "≈ 2 GB", tone: "accent", x: BX + 616, y: GY + 7 * GP + 16, at: T.gb2 + 0.1 }));
+
+        function ctxK(t) {
+          if (t < ctxAt[0]) return 1;
+          for (var i = 0; i < 3; i++) if (t < ctxAt[i + 1]) return i + 1 + (t - ctxAt[i]) / (ctxAt[i + 1] - ctxAt[i]);
+          return 4;
+        }
+        function billQ(t) { return E.o2(pr(t, T.k4 + 0.06, T.gb2 - 0.12 - T.k4)); }
+        U.push(function (t) {
+          var cin = pr(t, CH[1].end - 0.2, 0.3);
+          vis(vram.el, cin);
+          vis(legend, pr(t, T.vram, 0.3));
+          // the ledger's K/V cells carry into the memory: the first row is the cache we just built
+          slots.forEach(function (sl) {
+            vis(sl.el, pr(t, T.vram - 0.1 + sl.row * 0.02, 0.25));
+            var k = 9 - sl.row; // fill bottom-up: row 9 = 1K … row 6 = 4K
+            var f = k === 0 ? pr(t, CH[1].end + 0.85 + sl.col * 0.025, 0.14) : k < 4 ? cl((ctxK(t) - k - sl.col * 0.1) / 0.1) : 0;
+            vis(sl.fill, f);
+            var bump = k === 3 ? Math.sin(Math.PI * pr(t, T.rise - 0.02, 0.3)) : 0;
+            tf(sl.fill, 0, -bump * 10, lerp(0.5, 1, E.back(f)));
+            // 「× 4096 ≈ 2 GB」: the cache turns red block by block as the token count runs up
+            sl.fill.classList.toggle("is-accent", k < 4 && k * 10 + sl.col < 40 * billQ(t) - 0.001);
+          });
+          // the carrier: ledger K/V cells fly into the bottom row while the camera turns the page
+          pairs.forEach(function (pp, i) {
+            [pp.k, pp.v].forEach(function (e, j) {
+              var idx = i * 2 + j, slot = Math.floor(idx * 10 / 16);
+              var p = E.io3(pr(t, CH[1].end - 0.05 + idx * 0.012, 0.8));
+              if (p <= 0) return;
+              var x0 = j === 0 ? KX : VX, y0 = ROWY(pp.r);
+              e.style.left = lerp(x0, GX + slot * GP - 22, p).toFixed(1) + "px";
+              e.style.top = lerp(y0, GY + 9 * GP - 4, p).toFixed(1) + "px";
+              vis(e, 1 - pr(t, CH[1].end + 0.75, 0.15));
+              tf(e, 0, 0, lerp(1, 0.45, p));
+            });
+          });
+          var ck = ctxK(t);
+          ctxNum.set(ck >= 3.999 ? "4" : ck.toFixed(1));
+          var tokTerm = f2.terms[2].firstChild, nTok = String(Math.max(1, Math.round(4096 * billQ(t))));
+          if (tokTerm.textContent !== nTok) tokTerm.textContent = nTok;
+          // chart: axes draw, the line extends one K at a time
+          var co = pr(t, T.vram, 0.3) * (1 - pr(t, T.llama - 0.35, 0.3));
+          vis(chart, co);
+          draw(axes, 1000, E.io2(pr(t, T.vram, 0.5)));
+          draw(line, 630, t < ctxAt[0] ? 0.25 * E.io2(pr(t, T.vram + 0.1, ctxAt[0] - T.vram - 0.1)) : ctxK(t) / 4);
+          chDots.forEach(function (d, i) { vis(d, pr(t, ctxAt[i], 0.15)); });
+          ticks.forEach(function (e, i) { vis(e, pr(t, ctxAt[i] - 0.05, 0.2)); });
+          draw(gbBr, 200, E.io2(pr(t, T.gb2, 0.3)));
+          vis(gbBr, t >= T.gb2 ? 1 : 0);
+        });
+
+        // ======================= SPREAD C · three ways to shrink the cache =======================
+        // All three "before" pictures land on 「所以才有」; each fix then acts on its own keyword and its column lights up.
+        var CXX = 3840;
+        var fixes = [
+          { n: "1", name: "GQA", sub: "几个头共用一份 K/V", x: 150, at: T.gqa },
+          { n: "2", name: "PagedAttention", sub: "按页分配，用多少拿多少", x: 760, at: T.paged },
+          { n: "3", name: "量化", sub: "FP16 → INT8，每个数减半", x: 1370, at: T.quant },
+        ];
+        var cols = fixes.map(function (fx, i) {
+          var holder = mk("w", world, 0, 0);
+          var h = mk("kv-fixhead", holder, CXX + fx.x, 214);
+          h.innerHTML = "<b>" + fx.n + "</b><span>" + fx.name + "</span>";
+          var sb = mk("kv-fixsub", holder, CXX + fx.x, 284, fx.sub);
+          fx.h = h; fx.sb = sb; fx.el = holder; fx.pre = T.so + 0.1 + i * 0.14;
+          return holder;
+        });
+        function meter(parent, x, y, parts) {
+          var holder = mk("w", parent, CXX + x, y);
+          var segs = parts.map(function (p) { var m = mk("kv-meter", holder, p.x, 0); m.style.width = p.w + "px"; m.style.background = p.bg; return m; });
+          return { el: holder, segs: segs };
+        }
+        // 1 · GQA: four query heads, four K/V pairs → one shared pair
+        var gq = [0, 1, 2, 3].map(function (i) {
+          var y = 360 + i * 80;
+          var q = mk("kv-kv is-q", cols[0], CXX + 170, y, "Q" + (i + 1));
+          var k = mk("kv-kv is-k", cols[0], CXX + 470, y, "K");
+          var v = mk("kv-kv is-v", cols[0], CXX + 562, y, "V");
+          k.setAttribute("data-layout-allow-overlap", ""); v.setAttribute("data-layout-allow-overlap", "");
+          return { q: q, k: k, v: v, y: y };
+        });
+        var gqSvg = svg(cols[0], 7680, 1080);
+        var gqLinks = gq.map(function () { return sv(gqSvg, "path", { d: "", stroke: "rgba(22,19,15,0.5)", "stroke-width": 3 }); });
+        var m1 = meter(cols[0], 150, 712, [0, 1, 2, 3].map(function (i) { return { x: i * 104, w: 100, bg: "#2b2723" }; }));
+        kit(K.label({ text: "÷4", tone: "accent", x: CXX + 260, y: 692, at: T.vv }), cols[0]);
+        kit(K.note("Llama 3 8B：32 个头共用 8 份 K/V", { key: "例", x: CXX + 150, y: 800, at: T.vv + 0.1 }), cols[0]);
+        // 2 · PagedAttention: a long reserved strip with idle space → fixed pages, filled on demand
+        var strip = mk("w", cols[1], CXX + 780, 380);
+        strip.style.cssText += "width:480px;height:56px;border-radius:8px;overflow:hidden;display:flex";
+        strip.innerHTML = '<div style="width:192px;background:#2b2723"></div><div style="flex:1;background:repeating-linear-gradient(135deg,#8a5512 0 6px,#c99a55 6px 12px)"></div>';
+        var stripLab = mk("kv-small", cols[1], CXX + 980, 456, "预留但空着");
+        stripLab.style.color = "#8a5512";
+        var pages = [0, 1, 2, 3, 4].map(function (i) {
+          var pg = mk("kv-page", cols[1], CXX + 780 + (i % 3) * 84, 380 + Math.floor(i / 3) * 70);
+          pg.style.background = i < 4 ? "#2b2723" : "linear-gradient(90deg,#2b2723 0 45%,rgba(43,39,35,0.12) 45%)";
+          return pg;
+        });
+        var pageLab = mk("kv-small", cols[1], CXX + 1040, 470, "新页按需加");
+        pageLab.style.color = "#5e584f";
+        var m2 = meter(cols[1], 780, 712, [{ x: 0, w: 192, bg: "#2b2723" }, { x: 192, w: 288, bg: "repeating-linear-gradient(135deg,#8a5512 0 6px,#c99a55 6px 12px)" }]);
+        kit(K.label({ text: "不再预留浪费", tone: "accent", x: CXX + 1010, y: 692, at: T.alloc + 0.05 }), cols[1]);
+        kit(K.note("vLLM：固定大小的块，按需分配", { key: "例", x: CXX + 780, y: 800, at: T.alloc + 0.12 }), cols[1]);
+        // 3 · quantization: every K/V number takes half the bytes
+        var qcs = [];
+        for (var qi = 0; qi < 8; qi++) {
+          var qc = mk("kv-qc", cols[2], CXX + 1390 + (qi % 4) * 100, 360 + Math.floor(qi / 4) * 120, "FP16");
+          qc.style.height = "88px";
+          qcs.push(qc);
+        }
+        var m3 = meter(cols[2], 1390, 712, [{ x: 0, w: 396, bg: "#2b2723" }]);
+        kit(K.label({ text: "÷2", tone: "accent", x: CXX + 1610, y: 692, at: T.compress + 0.05 }), cols[2]);
+        kit(K.note("每个数 2 字节 → 1 字节", { key: "例", x: CXX + 1390, y: 800, at: T.compress + 0.12 }), cols[2]);
+
+        U.push(function (t) {
+          fixes.forEach(function (fx) {
+            var pre = pr(t, fx.pre, 0.4), on = pr(t, fx.at - 0.08, 0.25);
+            // waiting columns sit back at 56%; the active one comes forward on its keyword
+            vis(fx.el, pre * lerp(0.56, 1, on));
+            vis(fx.sb, on);
+            tf(fx.h, 0, (1 - E.o3(pre)) * 16, 1);
+          });
+          // GQA
+          var sh = E.io3(pr(t, T.share, 0.6));
+          gq.forEach(function (g, i) {
+            var a = fixes[0].pre + i * 0.05;
+            vis(g.q, pr(t, a, 0.2));
+            var ty = lerp(g.y, gq[0].y, sh);
+            g.k.style.top = ty.toFixed(1) + "px";
+            g.v.style.top = ty.toFixed(1) + "px";
+            var kv = pr(t, a + 0.04, 0.2) * (i === 0 ? 1 : 1 - pr(t, T.share + 0.5, 0.15));
+            vis(g.k, kv); vis(g.v, kv);
+            g.k.classList.toggle("is-hit", i === 0 && t >= T.share + 0.55);
+            g.v.classList.toggle("is-hit", i === 0 && t >= T.share + 0.55);
+            var x1 = CXX + 250, y1 = g.y + 22, x2 = CXX + 470, y2 = ty + 22;
+            gqLinks[i].setAttribute("d", "M " + x1 + " " + y1 + " C " + (x1 + 90) + " " + y1 + ", " + (x2 - 90) + " " + y2 + ", " + x2 + " " + y2);
+            vis(gqLinks[i], pr(t, a + 0.08, 0.2));
+          });
+          m1.segs.forEach(function (sg, i) { vis(sg, i === 0 ? 1 : 1 - pr(t, T.share + 0.35 + (3 - i) * 0.06, 0.2)); });
+          // PagedAttention
+          var pg = pr(t, T.page, 0.35);
+          vis(strip, 1 - pg);
+          vis(stripLab, 1 - pg);
+          pages.forEach(function (pe, i) {
+            var a = i < 3 ? T.page + i * 0.06 : T.alloc - 0.15 + (i - 3) * 0.2;
+            var p = pr(t, a, 0.22);
+            vis(pe, p);
+            tf(pe, 0, (1 - E.o3(p)) * -18, lerp(0.7, 1, E.back(p)));
+          });
+          vis(pageLab, pr(t, T.alloc + 0.1, 0.25));
+          vis(m2.segs[1], 1 - pr(t, T.alloc - 0.1, 0.3));
+          // quantization
+          var qs = E.io3(pr(t, T.compress - 0.05, 0.45));
+          qcs.forEach(function (qc, i) {
+            vis(qc, pr(t, fixes[2].pre + i * 0.03, 0.2));
+            qc.style.height = lerp(88, 44, qs).toFixed(1) + "px";
+            var label = qs > 0.5 ? "INT8" : "FP16";
+            if (qc.textContent !== label) qc.textContent = label;
+          });
+          m3.segs[0].style.transform = "scaleX(" + lerp(1, 0.5, qs).toFixed(4) + ")";
+        });
+
+        // ======================= SPREAD D · the trade, the newest token =======================
+        var DX = 5760;
+        var title = kit(K.title(S, { x: DX + 120, y: 320 }));
+        var balSvg = svg(world, 7680, 1080);
+        var PIV = { x: DX + 1400, y: 290 }, HALF = 300;
+        var post = sv(balSvg, "path", { d: "M " + PIV.x + " " + PIV.y + " L " + PIV.x + " 650 M " + (PIV.x - 70) + " 650 L " + (PIV.x + 70) + " 650", stroke: "#16130f", "stroke-width": 5, "stroke-linecap": "round" });
+        var beam = sv(balSvg, "path", { d: "", stroke: "#16130f", "stroke-width": 6, "stroke-linecap": "round" });
+        var strings = [sv(balSvg, "path", { d: "", stroke: "rgba(22,19,15,0.55)", "stroke-width": 2.5 }), sv(balSvg, "path", { d: "", stroke: "rgba(22,19,15,0.55)", "stroke-width": 2.5 })];
+        var pans = [sv(balSvg, "path", { d: "", stroke: "#16130f", "stroke-width": 5, fill: "#fbf9f5" }), sv(balSvg, "path", { d: "", stroke: "#16130f", "stroke-width": 5, fill: "#fbf9f5" })];
+        var memBlocks = [0, 1, 2, 3, 4, 5].map(function (i) { var b = K.block("ink", 40); world.appendChild(b); return b; });
+        var memLab = kit(K.label({ text: "显存", x: 0, y: 0, at: T.mem9 - 0.05 }));
+        var spdLab = kit(K.label({ text: "速度", x: 0, y: 0, at: T.speed9 - 0.05 }));
+        var spdArrow = mk("kv-small", world, 0, 0, "↑");
+        spdArrow.style.cssText += "font:400 64px/1 var(--kit-font-num);color:#b53a22";
+        var endToks = TOK.map(function (w, i) {
+          var tk = K.tile({ text: w, x: DX + 596 + i * 104, y: 820, ax: 0.5, ay: 0.5, at: T.use9 - 0.2 + i * 0.03 });
+          tk.el.classList.add("kv-tok", "kv-tk2");
+          kit(tk);
+          return tk;
+        });
+        var ringSvg = svg(world, 7680, 1080);
+        var ring = sv(ringSvg, "circle", { cx: DX + 596 + 7 * 104, cy: 820, r: 62, stroke: "#d2462c", "stroke-width": 5, fill: "none" });
+        U.push(function (t) {
+          var bin = pr(t, CH[3].end + 0.1, 0.4);
+          vis(balSvg, bin);
+          var th = -0.16 * E.io3(pr(t, T.swap9 - 0.05, 0.5)) * (1 - 0.15 * Math.sin(Math.PI * pr(t, T.swap9 + 0.45, 0.5)));
+          var c = Math.cos(th), s = Math.sin(th);
+          var L = { x: PIV.x - HALF * c, y: PIV.y - HALF * s }, Rr = { x: PIV.x + HALF * c, y: PIV.y + HALF * s };
+          beam.setAttribute("d", "M " + L.x.toFixed(1) + " " + L.y.toFixed(1) + " L " + Rr.x.toFixed(1) + " " + Rr.y.toFixed(1));
+          [L, Rr].forEach(function (e, i) {
+            var py = e.y + 170;
+            strings[i].setAttribute("d", "M " + e.x.toFixed(1) + " " + e.y.toFixed(1) + " L " + (e.x - 100).toFixed(1) + " " + py.toFixed(1) + " M " + e.x.toFixed(1) + " " + e.y.toFixed(1) + " L " + (e.x + 100).toFixed(1) + " " + py.toFixed(1));
+            pans[i].setAttribute("d", "M " + (e.x - 120).toFixed(1) + " " + py.toFixed(1) + " Q " + e.x.toFixed(1) + " " + (py + 60).toFixed(1) + " " + (e.x + 120).toFixed(1) + " " + py.toFixed(1) + " Z");
+          });
+          // memory blocks drop onto the left pan on "显存"; the beam tips on "换"; speed rises
+          memBlocks.forEach(function (b, i) {
+            var a = T.mem9 - 0.1 + i * 0.05, p = E.i2(pr(t, a, 0.25));
+            var px = L.x - 66 + (i % 3) * 44, py = L.y + 170 - 44 - Math.floor(i / 3) * 44;
+            b.style.left = px.toFixed(1) + "px";
+            b.style.top = (py - (1 - p) * 220).toFixed(1) + "px";
+            vis(b, pr(t, a, 0.08) * bin);
+          });
+          memLab.el.style.left = (L.x - 52).toFixed(1) + "px"; memLab.el.style.top = (L.y + 250).toFixed(1) + "px";
+          spdLab.el.style.left = (Rr.x - 52).toFixed(1) + "px"; spdLab.el.style.top = (Rr.y + 250).toFixed(1) + "px";
+          spdLab.tone(t >= T.speed9 ? "accent" : "default");
+          spdArrow.style.left = (Rr.x - 18).toFixed(1) + "px"; spdArrow.style.top = (Rr.y + 80).toFixed(1) + "px";
+          vis(spdArrow, pr(t, T.speed9, 0.25));
+          tf(spdArrow, 0, (1 - E.o3(pr(t, T.speed9, 0.4))) * 30, 1);
+          // the newest token: the others dim, it turns red, a ring draws round it
+          endToks.forEach(function (tk, i) {
+            var last = i === 7;
+            tk.tone(last && t >= T.new9 - 0.05 ? "accent" : "default");
+            if (!last) tk.el.style.filter = "opacity(" + lerp(1, 0.35, pr(t, T.that9 - 0.1, 0.4)).toFixed(3) + ")";
+          });
+          draw(ring, 400, E.io2(pr(t, T.new9, 0.6)));
+          vis(ring, t >= T.new9 ? 1 : 0);
+        });
+
+        // ======================= screen space: chip, notes, captions, recap =======================
+        var chipEl = document.createElement("div");
+        hud.appendChild(chipEl);
+        var chap = new C.Chapters(chipEl, S);
+        [
+          ["自回归：每次只生成 1 个 token", T.shi - 0.6, T.every2 - 0.1],
+          ["注意力：新 token 要和前面每一个比一比", T.every2 + 0.1, T.yaoshi - 0.1],
+          ["第 n 步要把前面 n 个全部重算", T.yaoshi + 0.15, CH[0].end - 0.1],
+          ["K 用来匹配，V 是被取走的内容", T.each - 0.1, CH[1].end - 0.1],
+          ["显存占用 ∝ 上下文长度", T.vram, CH[2].end - 0.1],
+          ["三招都在省同一样东西：缓存占的显存", T.so - 0.2, CH[3].end - 0.1],
+        ].forEach(function (n) { kit(K.note(n[0], { x: 96, y: 132, at: n[1], out: n[2] }), hud); });
+        var caps = new C.Captions(document.getElementById("kv-caps"), S, { groups: [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8]], lead: 0.08, tail: 0.1 });
+        // recap figure: a miniature cache ledger, the newest row in red
+        var fig = document.createElement("div");
+        fig.id = "kv-recap-fig";
+        fig.style.cssText = "position:absolute;left:0;top:0;width:470px;height:540px";
+        var mini = K.card({ title: "KV cache", meta: "K | V", w: 470, h: 540, x: 0, y: 0 });
+        fig.appendChild(mini.el);
+        TOK.forEach(function (w, i) {
+          var y = 92 + i * 52;
+          var k = mk("kv-kv is-k", mini.el, 34, y, "K"), v = mk("kv-kv is-v", mini.el, 126, y, "V");
+          var nm = mk("kv-name", mini.el, 232, y, w);
+          if (i === 7) { k.classList.add("is-hit"); v.classList.add("is-hit"); nm.style.color = "#b53a22"; }
+        });
+        var recap = kit(K.recap(S, { figure: fig, figureSize: [470, 540] }), document.getElementById("kv-stage"));
+
+        // ---------- camera: one world, page turns to the right ----------
+        var CAM = [
+          [0, 120, 22.5, 1.5],
+          [T.yaoshi - 0.08, 120, 22.5, 1.5],
+          [T.yaoshi + 0.6, 0, 0, 1],
+          [CH[1].end - 0.05, 0, 0, 1],
+          [CH[1].end + 0.95, -1920, 0, 1],
+          [CH[2].end - 0.05, -1920, 0, 1],
+          [CH[2].end + 0.75, -3840, 0, 1],
+          [CH[3].end - 0.1, -3840, 0, 1],
+          [CH[3].end + 0.65, -5760, 0, 1],
+          [DUR, -5760, 0, 1],
+        ];
+
+        // slow pushes (screen focal point, extra scale) on each page; each releases during the next page turn
+        var PUSH = [
+          { a: 0, b: T.yaoshi - 0.08, f: [1560, 640], k: 0.07, rel: 0.6 },                   // the token row: lean toward where tokens will land
+          { a: T.yaoshi + 0.6, b: CH[1].end - 0.05, f: [1500, 560], k: 0.05, rel: 0.9 },      // triangle → cache: lean toward the ledger
+          { a: CH[1].end + 0.95, b: CH[2].end - 0.05, f: [1000, 520], k: 0.055, rel: 0.75 },  // 显存 + the bill
+          { a: CH[2].end + 0.75, b: CH[3].end - 0.1, f: [960, 520], k: 0.03, rel: 0.7 },      // three fixes
+          { a: CH[3].end + 0.65, b: R0 + 0.3, f: [960, 540], k: 0.04, rel: 5 },                // the trade (held under the recap page)
+        ];
+        function pushAt(t) {
+          for (var i = 0; i < PUSH.length; i++) {
+            var q = PUSH[i];
+            if (t >= q.a && t <= q.b + q.rel) return { p: q.k * pr(t, q.a, q.b - q.a) * (t <= q.b || i === PUSH.length - 1 ? 1 : 1 - E.io2(pr(t, q.b, q.rel))), f: q.f };
+          }
+          return { p: 0, f: [960, 540] };
+        }
+        function frame(t) {
+          var c = C.track(CAM, t), ps = pushAt(t), m = 1 + ps.p;
+          var tx = ps.f[0] + (c[0] - ps.f[0]) * m, ty = ps.f[1] + (c[1] - ps.f[1]) * m;
+          world.style.transform = "translate(" + tx.toFixed(2) + "px," + ty.toFixed(2) + "px) scale(" + (c[2] * m).toFixed(4) + ")";
+          var under = 1 - pr(t, R0 - 0.05, 0.35);
+          [world, hud, document.getElementById("kv-caps")].forEach(function (e) { e.style.opacity = under.toFixed(3); e.style.visibility = under > 0 ? "visible" : "hidden"; });
+          caps.render(t);
+          chap.render(t);
+          for (var i = 0; i < U.length; i++) U[i](t);
+          for (var k = 0; k < kits.length; k++) if (kits[k] !== cmp) kits[k].render(t);
+        }
+        var tl = gsap.timeline({ paused: true });
+        var drive = { t: 0 };
+        tl.to(drive, { t: DUR, duration: DUR, ease: "none", onUpdate: function () { frame(tl.time()); } }, 0);
+        frame(0);
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
