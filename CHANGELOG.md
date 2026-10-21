@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [19.13.0] - 2026-10-21 - "Thirteen Reviewed Skills And Security Hardening"
+
+> Adds **13** catalog skills and ships **2,737 skills**. All nine PRs in the maintenance batch were repaired, reviewed and merged.
+
+### Added
+
+- **neverapply** — find jobs, tailor resumes and prepare applications through the hosted NeverApply MCP service, with user approval before applying.
+- **agy-powerline** — configure Antigravity CLI's statusline for quotas, model, context and Git information, using a reviewed runtime.
+- **calibrate-first** — establish a dataset's detection floor and pre-register trading-signal tests; insufficient evidence stays undecidable.
+- **lanshu-create-ai-presenter-video** — plan presenter-led explainer videos with an immutable upstream source reference and explicit provider, upload and spending consent. The catalog bundles the guide and license, not an executable runtime.
+- **apify-youtube-transcript-scraper** — retrieve captions, timestamped quotations, SRT/VTT and translated transcripts from YouTube videos, channels and playlists through Apify, with private exports and bounded paid runs.
+- **party-planning** — estimate food and drink purchases, choose games and draft hosting timelines from disclosed HostPartyPlay heuristics, with allergy, age and privacy limits.
+- **pixeltable** — build multimodal applications, embedding search and computed-column pipelines with Pixeltable, reviewing application code before schema commands import it.
+- **Six official Beatra pointers** — `ai-audiobook-narration`, `ai-image-realism`, `ai-storyboard-generator`, `wechat-cover-maker`, `zhongcao-cover-maker` and `zhongcao-note-copywriter`. Each names immutable upstream content and requires complete source review plus consent for credentials, uploads and paid work.
+
+### Changed
+
+- **goal-instruction-writer** — refresh goal contracts, drift controls and examples to the author's 0.2.5 guidance.
+- **datacircle** — refresh the published plan-pricing dataset workflow and its usage guidance.
+- **apify-tiktok-scraper** — require explicit approval of recurring frequency, duration, budget and delivery destination before creating scheduled tracking.
+- Restore **216 skill introduction dates** from their actual first-addition history; a previous bulk edit had overwritten them with one date.
+
+### Security and reliability
+
+- Resolve the supplied **93-row security report** against current canonical sources: 91 rows corrected, one already corrected and one referencing a retired path. Duplicate mirror findings share their canonical fix; the per-row evidence is recorded in `docs/maintainers/security-findings-19.13.0.json`.
+- Keep contributor Markdown inert in repository tests: reviewed executable fixtures are maintained separately and document examples are compared as data.
+- Harden local preview, citation, session and state paths against symlinks and traversal; protect Electron driver state with private ownership/permissions, including Windows ACL checks, and atomic writes.
+- Bound template, color and archive parsing; redact sensitive fact-check and PII output; escape terminal controls and neutralize spreadsheet formulas. Tighten credential handling, recurring-work consent, remote-code guidance and external installer prerequisites throughout the affected skills.
+- Patch the web application's vulnerable MCP dependencies and refresh its lockfile. Extend regression coverage for the security boundaries and ensure nested skill trees are included in maintainer review inventories.
+- Preserve direct-installer release identity by verifying the actual packed manifest and published registry `gitHead`; reject staged candidate changes and skipped protected-source validation.
+
+### Contributors
+
+Thanks to @msohaildev, @wassim-azi, @assaylabdesk-sudo, @djmahe4, @harshmaur, @tarunbatta, @pierrebrunelle, @beatra-ai, @wu736139669 and @waynehamadi for the catalog contributions and updates.
+
 ## [19.12.1] - 2026-10-20 - "Direct Installer Release Identity"
 
 > The catalog stays at **2,724 skills**. This patch fixes the direct installer failing against any release published from the pre-built candidate tarball.
