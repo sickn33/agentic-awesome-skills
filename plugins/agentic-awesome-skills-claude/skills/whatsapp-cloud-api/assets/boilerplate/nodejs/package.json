@@ -4,7 +4,7 @@
   "description": "WhatsApp Cloud API integration with Express and TypeScript",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -16,8 +16,8 @@
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "tsx": "4.23.15"
   },
   "overrides": {
     "brace-expansion": "^1.1.21",

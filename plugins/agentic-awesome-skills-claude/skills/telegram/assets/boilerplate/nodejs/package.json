@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node-dev --respawn src/index.ts"
+    "dev": "tsx watch src/index.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.0",
@@ -17,7 +17,7 @@
     "@types/node": "^20.0.0",
     "@types/express": "^4.17.0",
     "typescript": "^5.4.0",
-    "ts-node-dev": "^2.0.0"
+    "tsx": "4.23.15"
   },
   "overrides": {
     "brace-expansion": "^1.1.21",
