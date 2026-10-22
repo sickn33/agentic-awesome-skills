@@ -1,0 +1,91 @@
+name: Retire an npm version
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Exact package name
+        required: true
+        type: string
+      version:
+        description: Exact published version to retire
+        required: true
+        type: string
+      expected_git_head:
+        description: Expected immutable release commit
+        required: true
+        type: string
+      confirmation:
+        description: Type RETIRE to authorize the unpublish
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  retire:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: npm-retire
+    steps:
+      - name: Validate exact retirement request
+        env:
+          PACKAGE: ${{ inputs.package }}
+          VERSION: ${{ inputs.version }}
+          EXPECTED_GIT_HEAD: ${{ inputs.expected_git_head }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          test "$PACKAGE" = "agentic-awesome-skills"
+          test "$CONFIRMATION" = "RETIRE"
+          [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?$ ]]
+          [[ "$EXPECTED_GIT_HEAD" =~ ^[0-9a-f]{40}$ ]]
+
+      - name: Setup Node
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Verify package version provenance
+        env:
+          PACKAGE: ${{ inputs.package }}
+          VERSION: ${{ inputs.version }}
+          EXPECTED_GIT_HEAD: ${{ inputs.expected_git_head }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          metadata="$(npm view "$PACKAGE@$VERSION" name version gitHead --json)"
+          test "$(printf '%s' "$metadata" | jq -r .name)" = "$PACKAGE"
+          test "$(printf '%s' "$metadata" | jq -r .version)" = "$VERSION"
+          test "$(printf '%s' "$metadata" | jq -r .gitHead)" = "$EXPECTED_GIT_HEAD"
+
+      - name: Retire requested version
+        env:
+          PACKAGE: ${{ inputs.package }}
+          VERSION: ${{ inputs.version }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          tags="$(npm view "$PACKAGE" dist-tags --json)"
+          while IFS= read -r tag; do
+            test -n "$tag"
+            npm dist-tag rm "$PACKAGE" "$tag"
+          done < <(printf '%s' "$tags" | jq -r --arg version "$VERSION" 'to_entries[] | select(.value == $version) | .key')
+          npm unpublish "$PACKAGE@$VERSION"
+          if npm view "$PACKAGE@$VERSION" version >/dev/null 2>&1; then
+            echo "Retired version remains visible in npm."
+            exit 1
+          fi
+
+      - name: Record retired version
+        env:
+          PACKAGE: ${{ inputs.package }}
+          VERSION: ${{ inputs.version }}
+          EXPECTED_GIT_HEAD: ${{ inputs.expected_git_head }}
+        run: |
+          {
+            echo "## npm version retired"
+            echo
+            echo "- Package: \`$PACKAGE@$VERSION\`"
+            echo "- Release commit: \`$EXPECTED_GIT_HEAD\`"
+            echo "- npm prevents republishing the same version after unpublish."
+          } >> "$GITHUB_STEP_SUMMARY"
