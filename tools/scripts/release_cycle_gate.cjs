@@ -7,8 +7,8 @@ const FILE = 'data/release-cycle.json';
 const MARKER = '<!-- aas-cycle-close:';
 function closureComment(pr, comments, owner = 'sickn33') {
   return comments.find(c => c.user?.login === owner && !c.user?.type?.includes('Bot') &&
-    typeof c.body === 'string' && c.body.includes(`${MARKER}${pr.head.sha} -->`) &&
-    c.body.replace(/<!--[\s\S]*?-->/g, '').trim().length >= 20 &&
+    typeof c.body === 'string' && c.body.startsWith(`${MARKER}${pr.head.sha} -->\n`) &&
+    c.body.slice(`${MARKER}${pr.head.sha} -->\n`.length).trim().length >= 20 &&
     Date.parse(c.created_at) <= Date.parse(pr.closed_at) &&
     Date.parse(c.updated_at) <= Date.parse(pr.closed_at));
 }
