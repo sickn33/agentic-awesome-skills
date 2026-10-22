@@ -9,7 +9,8 @@ function closureComment(pr, comments, owner = 'sickn33') {
   return comments.find(c => c.user?.login === owner && !c.user?.type?.includes('Bot') &&
     typeof c.body === 'string' && c.body.includes(`${MARKER}${pr.head.sha} -->`) &&
     c.body.replace(/<!--[\s\S]*?-->/g, '').trim().length >= 20 &&
-    Date.parse(c.created_at) <= Date.parse(pr.closed_at));
+    Date.parse(c.created_at) <= Date.parse(pr.closed_at) &&
+    Date.parse(c.updated_at) <= Date.parse(pr.closed_at));
 }
 function resolvedPull(pr, comments, ancestor) {
   if (pr.base?.ref !== 'main' || pr.base?.repo?.full_name !== REPO || pr.state !== 'closed')
