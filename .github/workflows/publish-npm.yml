@@ -8,6 +8,8 @@ name: Publish to npm
 permissions:
   contents: read
   actions: read
+  pull-requests: read
+  issues: read
 
 on:
   release:
@@ -26,6 +28,7 @@ jobs:
       - name: Verify protected release provenance
         shell: bash
         env:
+          GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           test "$GITHUB_EVENT_NAME" = "release"
@@ -36,6 +39,7 @@ jobs:
           git merge-base --is-ancestor "$tag_commit" "$main_commit"
           tag_version="$(git show "$RELEASE_TAG:package.json" | node -e 'let s=""; process.stdin.on("data",c=>s+=c); process.stdin.on("end",()=>process.stdout.write(JSON.parse(s).version))')"
           test "$RELEASE_TAG" = "v$tag_version"
+          node tools/scripts/release_cycle_gate.cjs "$tag_version" "$tag_commit"
           git checkout --detach "$tag_commit"
 
       - name: Setup Node

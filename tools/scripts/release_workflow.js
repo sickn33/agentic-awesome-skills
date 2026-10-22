@@ -12,10 +12,12 @@ const {
 } = require("../lib/workflow-contract");
 
 function parseArgs(argv) {
-  const [command, version] = argv;
+  const [command, version, ...rest] = argv;
+  if (rest.length && (rest.length !== 2 || rest[0] !== '--state-dir' || !rest[1])) throw Error('Use --state-dir /absolute/private/cycle');
   return {
     command,
     version: version || null,
+    stateDir: rest[1],
   };
 }
 
@@ -323,7 +325,7 @@ function convergePreparedRelease(projectRoot, contract, options = {}) {
   ensureCleanWorkingTree(projectRoot, "Prepared release has generated or unmanaged drift; refusing to push.");
 }
 
-function prepareRelease(projectRoot, version) {
+function prepareRelease(projectRoot, version, stateDir) {
   if (!version) {
     throw new Error("Usage: npm run release:prepare -- X.Y.Z");
   }
@@ -333,9 +335,12 @@ function prepareRelease(projectRoot, version) {
   ensureCleanWorkingTree(projectRoot, "release:prepare requires a clean tracked working tree.");
   ensureTagMissing(projectRoot, `v${version}`);
   ensureChangelogSection(projectRoot, version);
+  const cycleGate = require('./release_cycle_gate.cjs');
+  const cycleProof = cycleGate.prepareProof(projectRoot, version, stateDir);
   const releaseBranch = `release/v${version}`;
   runCommand("git", ["switch", "-c", releaseBranch], projectRoot);
 
+  fs.writeFileSync(path.join(projectRoot, cycleGate.FILE), JSON.stringify(cycleProof, null, 2) + '\n');
   const currentVersion = readPackageVersion(projectRoot);
   if (currentVersion !== version) {
     runCommand("npm", ["version", version, "--no-git-tag-version"], projectRoot);
@@ -417,6 +422,7 @@ function publishRelease(projectRoot, version) {
     throw new Error(`package.json version ${packageVersion} does not match requested release ${version}.`);
   }
 
+  require('./release_cycle_gate.cjs').verifyFile(projectRoot, version);
   const tagName = `v${version}`;
   const candidate = mergedReleaseCandidate(projectRoot, version);
 
@@ -472,7 +478,7 @@ function main() {
   }
 
   if (args.command === "prepare") {
-    prepareRelease(projectRoot, args.version);
+    prepareRelease(projectRoot, args.version, args.stateDir);
     return;
   }
 

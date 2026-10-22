@@ -15,7 +15,7 @@ const dependencies = {
     const endpoint = args.at(-1);
     if(alignment && args.includes('--method')) {writes++;if(incomplete)return null;throw Error('ECONNRESET');}
     if(alignment && endpoint.endsWith('/pulls/1')) return {state:'open',base:{ref:'main'},head:{sha}};
-    if (endpoint.endsWith('/pulls/1')) return {number:1, merged:true, base:{ref:'main'}, head:{sha}, merge_commit_sha:sha};
+    if (endpoint.endsWith('/pulls/1')) return {number:1, state:'closed', merged:true, base:{ref:'main',repo:{full_name:'sickn33/agentic-awesome-skills'}}, head:{sha}, merge_commit_sha:sha};
     if (endpoint.includes('/jobs?')) {collected=true;return [{jobs:[{name:"main-validation-and-sync",status:"completed",conclusion:"success",steps:[{name:"Validate protected source diff with ephemeral snapshots",conclusion:validation}]}]}];}
     const rows=[{workflow_runs:['ci.yml','codeql.yml'].map((name,i)=>({id:i+1+(newRun&&collected?10:0),path:'.github/workflows/'+name,head_sha:sha,head_branch:'main',event:'push',status:pending?'in_progress':'completed',conclusion:pending?null:'success'}))}];
     if(/\/runs\/\d+$/.test(endpoint)) return {...rows[0].workflow_runs.find(r=>r.id===Number(endpoint.split('/').at(-1))), ...(rerun?{run_attempt:2}: {})};
