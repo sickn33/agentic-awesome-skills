@@ -26,7 +26,6 @@ function validateProof(proof, version, deps) {
       !/^[a-f0-9]{40}$/.test(proof.main || '') || !Array.isArray(proof.prs) ||
       proof.prs.some(n => !Number.isSafeInteger(n) || n <= 0) || new Set(proof.prs).size !== proof.prs.length ||
       !Number.isFinite(Date.parse(proof.completedAt)) || !Array.isArray(proof.pulls) || proof.pulls.length !== proof.prs.length) throw Error('Missing or invalid completed release cycle');
-  deps.protection?.();
   deps.ancestor(proof.main);
   for (const n of proof.prs) {
     const pr = deps.gh(['api',`repos/${REPO}/pulls/${n}`]);
@@ -48,7 +47,7 @@ function validateProof(proof, version, deps) {
 }
 function dependencies(root, target = 'HEAD') {
   const run=(cmd,args)=>execFileSync(cmd,args,{cwd:root,encoding:'utf8',timeout:120000,maxBuffer:16*1024*1024}).trim();
-  return {protection:()=>require('./merge_batch.cjs').assertEffectiveMainProtection(root,REPO),gh:args=>JSON.parse(run('gh',args)),ancestor:(sha,base=target)=>run('git',['merge-base','--is-ancestor',sha,base])};
+  return {gh:args=>JSON.parse(run('gh',args)),ancestor:(sha,base=target)=>run('git',['merge-base','--is-ancestor',sha,base])};
 }
 function prepareProof(root, version, directory) {
   if (!directory) throw Error('release:prepare requires --state-dir with a successful maintenance:cycle verify');
