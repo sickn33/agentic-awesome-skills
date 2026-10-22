@@ -1,6 +1,7 @@
 export const MAX_SHARED_SKILLS = 50;
 const MAX_FRAGMENT_LENGTH = 12000;
-const ID_PATTERN = /^[a-z0-9][a-z0-9_-]{0,127}$/;
+// Match the canonical public catalog skill ID contract (skillsIndex.ts).
+const ID_PATTERN = /^[a-z0-9][a-z0-9._-]{0,199}$/;
 const VERSION_PATTERN = /^\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?$/;
 
 export interface SharedShortlist {

@@ -6,6 +6,12 @@ describe('bounded collection files', () => {
   it('round-trips exact IDs, order, version and notes without treating notes as markup', () => {
     expect(parseCollectionFile(serializeCollections([collection])).collections).toEqual([collection]);
   });
+  it('preserves canonical dotted and 200-character skill IDs in collections', () => {
+    const ids = ['review.v2', `a${'x'.repeat(199)}`];
+    const updated = { ...collection, ids };
+    expect(parseCollectionFile(serializeCollections([updated])).collections[0].ids).toEqual(ids);
+    expect(() => parseCollectionFile(file({ ...collection, ids: [`a${'x'.repeat(200)}`] }))).toThrow();
+  });
   it('rejects malformed, incompatible and oversized input', () => {
     for (const text of ['broken', '{}', JSON.stringify({ format: 2, collections: [] }), ' '.repeat(MAX_COLLECTION_FILE_BYTES + 1)]) expect(() => parseCollectionFile(text)).toThrow();
   });

@@ -9,6 +9,13 @@ describe('shared shortlist links', () => {
     expect(parseSharedShortlist(url.hash)).toEqual({ format: 1, version: '19.3.0', ids: ['security-audit', 'review'] });
   });
 
+  it('accepts canonical catalog skill IDs containing dots and up to 200 characters', () => {
+    const ids = ['review.v2', `a${'x'.repeat(199)}`];
+    const url = new URL(buildSharedShortlistUrl(ids, '19.3.0', 'https://aaskills.tech', '/'));
+    expect(parseSharedShortlist(url.hash)?.ids).toEqual(ids);
+    expect(() => buildSharedShortlistUrl([`a${'x'.repeat(200)}`], '19.3.0', 'https://aaskills.tech', '/')).toThrow();
+  });
+
   it('rejects malformed, oversized, duplicate or extra private fields', () => {
     const encode = (value: unknown) => `#selection=${encodeURIComponent(JSON.stringify(value))}`;
     const valid = { format: 1, version: '19.3.0', ids: ['review'] };
