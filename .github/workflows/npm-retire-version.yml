@@ -65,11 +65,6 @@ jobs:
           VERSION: ${{ inputs.version }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          tags="$(npm view "$PACKAGE" dist-tags --json)"
-          while IFS= read -r tag; do
-            test -n "$tag"
-            npm dist-tag rm "$PACKAGE" "$tag"
-          done < <(printf '%s' "$tags" | jq -r --arg version "$VERSION" 'to_entries[] | select(.value == $version) | .key')
           npm unpublish "$PACKAGE@$VERSION"
           if npm view "$PACKAGE@$VERSION" version >/dev/null 2>&1; then
             echo "Retired version remains visible in npm."
