@@ -2777,6 +2777,25 @@
       "runtime_files": []
     },
     {
+      "id": "animated-github-profile",
+      "path": "skills/animated-github-profile",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "animejs-animation",
       "path": "skills/animejs-animation",
       "targets": {
@@ -28221,6 +28240,25 @@
       "runtime_files": []
     },
     {
+      "id": "launch-check",
+      "path": "skills/launch-check",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "launch-strategy",
       "path": "skills/launch-strategy",
       "targets": {
@@ -41397,6 +41435,29 @@
       "runtime_files": []
     },
     {
+      "id": "second-deposit-igaming",
+      "path": "skills/second-deposit-igaming",
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "secrets-management",
       "path": "skills/secrets-management",
       "targets": {
@@ -49196,6 +49257,25 @@
       "runtime_files": []
     },
     {
+      "id": "usage-engineer",
+      "path": "skills/usage-engineer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "use-dom",
       "path": "skills/use-dom",
       "targets": {
@@ -50481,6 +50561,25 @@
     {
       "id": "warren-buffett",
       "path": "skills/warren-buffett",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "watch-igaming",
+      "path": "skills/watch-igaming",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -52519,13 +52618,13 @@
     }
   ],
   "summary": {
-    "total_skills": 2738,
+    "total_skills": 2743,
     "supported": {
-      "codex": 2653,
-      "claude": 2674
+      "codex": 2657,
+      "claude": 2679
     },
     "blocked": {
-      "codex": 85,
+      "codex": 86,
       "claude": 64
     },
     "manual_setup": 22

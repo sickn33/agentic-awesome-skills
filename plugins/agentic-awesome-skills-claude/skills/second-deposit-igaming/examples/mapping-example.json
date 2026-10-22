@@ -1,0 +1,120 @@
+{
+  "currency": "EUR",
+  "files": {
+    "deposits": {
+      "path": "export-example.xlsx",
+      "sheet": "Депозиты",
+      "columns": {
+        "player_id": "player_id",
+        "time": "created_at",
+        "amount": "amount",
+        "currency": "currency",
+        "status": "status",
+        "method": "method",
+        "reason": "decline_reason"
+      },
+      "status": {
+        "success": [
+          "Approved"
+        ],
+        "declined": [
+          "Declined",
+          "Error"
+        ],
+        "abandoned": [
+          "Cancelled by user"
+        ],
+        "pending": [
+          "Pending"
+        ]
+      },
+      "decline_reasons": {
+        "limit": [
+          "Deposit limit reached"
+        ],
+        "block": [
+          "Gambling blocked by bank"
+        ]
+      }
+    },
+    "withdrawals": {
+      "path": "export-example.xlsx",
+      "sheet": "Выводы",
+      "columns": {
+        "player_id": "player_id",
+        "time": "created_at",
+        "amount": "amount",
+        "currency": "currency",
+        "status": "status",
+        "done_time": "processed_at"
+      },
+      "status": {
+        "success": [
+          "Paid"
+        ],
+        "pending": [
+          "Pending"
+        ],
+        "declined": [
+          "Rejected"
+        ]
+      }
+    },
+    "bonuses": {
+      "path": "export-example.xlsx",
+      "sheet": "Бонусы",
+      "columns": {
+        "player_id": "player_id",
+        "time": "issued_at",
+        "name": "bonus_name",
+        "wager": "wager",
+        "amount": "amount",
+        "status": "status"
+      },
+      "status": {
+        "active": [
+          "Active"
+        ],
+        "lost": [
+          "Lost"
+        ],
+        "expired": [
+          "Expired"
+        ],
+        "completed": [
+          "Wagered"
+        ],
+        "cancelled": [
+          "Cancelled"
+        ]
+      }
+    },
+    "bets": {
+      "path": "export-example.xlsx",
+      "sheet": "Ставки",
+      "columns": {
+        "player_id": "player_id",
+        "time": "date",
+        "bets": "bets",
+        "wins": "wins",
+        "rounds": "rounds"
+      }
+    },
+    "players": {
+      "path": "export-example.xlsx",
+      "sheet": "Игроки",
+      "columns": {
+        "player_id": "player_id",
+        "reg_time": "registered_at",
+        "country": "country",
+        "source": "source",
+        "kyc_time": "kyc_requested_at",
+        "ftd_time": "first_deposit_at"
+      },
+      "rg_flags": [
+        "self_excluded",
+        "deposit_limit"
+      ]
+    }
+  }
+}

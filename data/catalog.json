@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-22T12:55:24.000Z",
-  "total": 2738,
+  "generatedAt": "2026-10-22T13:59:33.000Z",
+  "total": 2743,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -4414,6 +4414,40 @@
         "managing"
       ],
       "path": "skills/angular-ui-patterns/SKILL.md"
+    },
+    {
+      "id": "animated-github-profile",
+      "canonical_id": "animated-github-profile",
+      "name": "animated-github-profile",
+      "description": "Build high-impact, animated GitHub profile READMEs that play like mini-movies using pure SVG, CSS, and SMIL animations. Covers dark/light theme switching, swinging lanyard ID badges, tech orbits, local stat cards, and automated contribution graphs.",
+      "category": "development",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "license": "MIT",
+      "tags": [
+        "github",
+        "profile-readme",
+        "svg-animation",
+        "smil",
+        "css-animation",
+        "portfolio"
+      ],
+      "triggers": [
+        "github",
+        "profile-readme",
+        "svg-animation",
+        "smil",
+        "css-animation",
+        "portfolio",
+        "animated",
+        "profile",
+        "high",
+        "impact",
+        "readmes",
+        "play"
+      ],
+      "path": "skills/animated-github-profile/SKILL.md"
     },
     {
       "id": "animejs-animation",
@@ -44016,6 +44050,44 @@
       "path": "skills/latex-paper-conversion/SKILL.md"
     },
     {
+      "id": "launch-check",
+      "canonical_id": "launch-check",
+      "name": "launch-check",
+      "description": "Passive pre-launch check of a live URL for AI-built apps: exposed secret keys, open Supabase/Firebase tables, security headers, phone layout, search and speed.",
+      "category": "security",
+      "risk": "safe",
+      "source": "https://github.com/Ces107/agent-forge/tree/main/skills/launch-check",
+      "source_type": "official",
+      "source_repo": "Ces107/agent-forge",
+      "license": "MIT",
+      "license_source": "https://github.com/Ces107/agent-forge/blob/main/LICENSE",
+      "tags": [
+        "security",
+        "pre-launch",
+        "vibe-coding",
+        "supabase",
+        "firebase",
+        "security-headers",
+        "seo",
+        "audit"
+      ],
+      "triggers": [
+        "security",
+        "pre-launch",
+        "vibe-coding",
+        "supabase",
+        "firebase",
+        "security-headers",
+        "seo",
+        "audit",
+        "launch",
+        "check",
+        "passive",
+        "pre"
+      ],
+      "path": "skills/launch-check/SKILL.md"
+    },
+    {
       "id": "launch-strategy",
       "canonical_id": "launch-strategy",
       "name": "launch-strategy",
@@ -64896,6 +64968,43 @@
       "path": "skills/search-specialist/SKILL.md"
     },
     {
+      "id": "second-deposit-igaming",
+      "canonical_id": "second-deposit-igaming",
+      "name": "second-deposit-igaming",
+      "description": "Finds why casino first-time depositors skip a second deposit from local back-office exports: 12 reasons, missed Sum Dep per reason, daily CRM list. For industry teams, 21+.",
+      "category": "business",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "igamingsychov/second-deposit-igaming",
+      "license": "MIT",
+      "license_source": "https://github.com/igamingsychov/second-deposit-igaming/blob/main/LICENSE",
+      "tags": [
+        "igaming",
+        "crm",
+        "retention",
+        "analytics",
+        "csv",
+        "xlsx",
+        "python"
+      ],
+      "triggers": [
+        "igaming",
+        "crm",
+        "retention",
+        "analytics",
+        "csv",
+        "xlsx",
+        "python",
+        "second",
+        "deposit",
+        "finds",
+        "why",
+        "casino"
+      ],
+      "path": "skills/second-deposit-igaming/SKILL.md"
+    },
+    {
       "id": "secrets-management",
       "canonical_id": "secrets-management",
       "name": "secrets-management",
@@ -76955,6 +77064,42 @@
       "path": "skills/usage-based-pricing/SKILL.md"
     },
     {
+      "id": "usage-engineer",
+      "canonical_id": "usage-engineer",
+      "name": "usage-engineer",
+      "description": "Cut wasted tokens in coding-agent sessions: compact long logs, stop identical retries, check stale project maps, and audit local Codex/OpenCode usage.",
+      "category": "productivity",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "noamshorts22-prog/usage-engineer",
+      "license": "MIT",
+      "license_source": "https://github.com/noamshorts22-prog/usage-engineer/blob/main/LICENSE",
+      "tags": [
+        "tokens",
+        "usage",
+        "context",
+        "logs",
+        "cost",
+        "codex"
+      ],
+      "triggers": [
+        "tokens",
+        "usage",
+        "context",
+        "logs",
+        "cost",
+        "codex",
+        "engineer",
+        "cut",
+        "wasted",
+        "coding",
+        "agent",
+        "sessions"
+      ],
+      "path": "skills/usage-engineer/SKILL.md"
+    },
+    {
       "id": "use-dom",
       "canonical_id": "use-dom",
       "name": "use-dom",
@@ -79028,6 +79173,43 @@
         "do"
       ],
       "path": "skills/warren-buffett/SKILL.md"
+    },
+    {
+      "id": "watch-igaming",
+      "canonical_id": "watch-igaming",
+      "name": "watch-igaming",
+      "description": "Reviews a video link or local screen recording from transcript and scene-change frames matched by timecode, then returns a review, QA table, UX audit, comparison or minutes.",
+      "category": "media",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "igamingsychov/watch-igaming",
+      "license": "MIT",
+      "license_source": "https://github.com/igamingsychov/watch-igaming/blob/main/LICENSE",
+      "tags": [
+        "video",
+        "transcription",
+        "ffmpeg",
+        "whisper",
+        "qa",
+        "screen-recording",
+        "timecodes"
+      ],
+      "triggers": [
+        "video",
+        "transcription",
+        "ffmpeg",
+        "whisper",
+        "qa",
+        "screen-recording",
+        "timecodes",
+        "watch",
+        "igaming",
+        "reviews",
+        "link",
+        "local"
+      ],
+      "path": "skills/watch-igaming/SKILL.md"
     },
     {
       "id": "wcag-audit-patterns",

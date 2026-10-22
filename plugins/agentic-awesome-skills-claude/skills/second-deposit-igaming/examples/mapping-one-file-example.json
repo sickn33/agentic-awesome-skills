@@ -1,0 +1,70 @@
+{
+  "currency": "EUR",
+  "files": {
+    "transactions": {
+      "path": "one-file*.csv",
+      "latest": true,
+      "columns": {
+        "player_id": "player_id",
+        "time": "created_at",
+        "type": "type",
+        "amount": "amount",
+        "currency": "currency",
+        "status": "status",
+        "method": "method",
+        "reason": "decline_reason",
+        "done_time": "processed_at",
+        "country": "country"
+      },
+      "type": {
+        "deposit": [
+          "Deposit"
+        ],
+        "withdrawal": [
+          "Withdrawal"
+        ]
+      },
+      "status": {
+        "success": [
+          "Approved",
+          "Paid"
+        ],
+        "declined": [
+          "Declined",
+          "Error",
+          "Rejected"
+        ],
+        "abandoned": [
+          "Cancelled by user"
+        ],
+        "pending": [
+          "Pending"
+        ]
+      },
+      "decline_reasons": {
+        "limit": [
+          "Deposit limit reached"
+        ],
+        "block": [
+          "Gambling blocked by bank"
+        ]
+      }
+    },
+    "players": {
+      "path": "one-file*.csv",
+      "latest": true,
+      "columns": {
+        "player_id": "player_id",
+        "reg_time": "registered_at",
+        "country": "country",
+        "source": "source",
+        "kyc_time": "kyc_requested_at",
+        "ftd_time": "first_deposit_at"
+      },
+      "rg_flags": [
+        "self_excluded",
+        "deposit_limit"
+      ]
+    }
+  }
+}

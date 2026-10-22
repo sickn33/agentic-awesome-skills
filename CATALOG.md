@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-10-22T12:55:24.000Z
+Generated at: 2026-10-22T13:59:33.000Z
 
-Total skills: 2738
+Total skills: 2743
 
 ## agent-behavior (5)
 
@@ -547,7 +547,7 @@ Total skills: 2738
 | `reverse-browser-automation` | Automate browsers (Playwright) and Windows desktop applications (UI automation) for reverse-engineering evidence collection, UI-driven workflows, and network... | safe | zhaoxuya520/reverse-skill | reverse, browser | reverse, browser, automation, automate, browsers, playwright, windows, desktop, applications, ui, engineering, evidence |
 | `skyvern-browser-automation` | AI-powered browser automation — navigate sites, fill forms, extract structured data, log in with stored credentials, and build reusable workflows. | safe | Skyvern-AI/skyvern | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation, skyvern, browser, automation, ai, powered, navigate |
 
-## business (178)
+## business (179)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -706,6 +706,7 @@ Total skills: 2738
 | `sales-accounting` | Sales register: customer, invoice, gross amount, discount, VAT and TDS, net receivable, credit terms and balance. Use for sales accounting. | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, accounting, audit, finance, database, csv, notion, sql, sales | sme, accounting, audit, finance, database, csv, notion, sql, sales, register, customer, invoice |
 | `sales-automator` | Draft cold emails, follow-ups, and proposal templates. Creates pricing pages, case studies, and sales scripts. Use PROACTIVELY for sales outreach or lead nur... | none | community | sales, automator | sales, automator, draft, cold, emails, follow, ups, proposal, creates, pricing, pages, case |
 | `sales-enablement` | Create sales collateral such as decks, one-pagers, objection docs, demo scripts, playbooks, and proposal templates. Use when a sales team needs assets that h... | safe | https://github.com/coreyhaines31/marketingskills | sales, enablement | sales, enablement, collateral, such, decks, one, pagers, objection, docs, demo, scripts, playbooks |
+| `second-deposit-igaming` | Finds why casino first-time depositors skip a second deposit from local back-office exports: 12 reasons, missed Sum Dep per reason, daily CRM list. For indus... | safe | igamingsychov/second-deposit-igaming | igaming, crm, retention, analytics, csv, xlsx, python | igaming, crm, retention, analytics, csv, xlsx, python, second, deposit, finds, why, casino |
 | `seo-directory-backlinks` | Directory and backlink register: platform, domain, target URL, follow attribute, authority and spam scores, approval and NAP-match status. Use for SEO citati... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, seo, backlinks, citations, directories, local-seo, nap-consistency, link-building, spam, digital-pr, csv, sql, notion | sme, seo, backlinks, citations, directories, local-seo, nap-consistency, link-building, spam, digital-pr, csv, sql |
 | `shark` | Pitch a business idea to a Shark Tank-style panel of Claude sub-agent investors who grill it, hear a founder agent answer, and each go IN or OUT with a pract... | safe | alexyc9381/shark-skill | business, startup, pitch, investors, subagents, feedback | business, startup, pitch, investors, subagents, feedback, shark, idea, tank, style, panel, claude |
 | `skill-gap-analysis` | Skill gap register: employee, skill area, current against required level, gap severity and recommended training. Use for capability planning. | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, develop | sme, business, operations, database, csv, notion, sql, develop, skill, gap, analysis, register |
@@ -1356,13 +1357,14 @@ Total skills: 2738
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (226)
+## development (227)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `agent-harness-fault-injection` | Use when an agent workflow needs deterministic recovery evidence for sandbox, MCP/tool, worker, checkpoint, memory, or orchestration failures. | safe | self | agent-harness, fault-injection, recovery, state-machine, mcp, multi-agent | agent-harness, fault-injection, recovery, state-machine, mcp, multi-agent, agent, harness, fault, injection, deterministic, evidence |
 | `agents-md` | Create, revise, or audit AGENTS.md files from repository evidence, verified commands, and correctly scoped instructions without overwriting maintainer intent. | critical | community | agents, md | agents, md, revise, audit, files, repository, evidence, verified, commands, correctly, scoped, instructions |
 | `agenttrace-session-audit` | Audit local AI coding-agent sessions with agenttrace for cost, tool failures, latency, anomalies, health, diffs, and CI gates. | safe | luoyuctl/agenttrace | ai-coding, observability, cost-tracking, session-analysis | ai-coding, observability, cost-tracking, session-analysis, agenttrace, session, audit, local, ai, coding, agent, sessions |
+| `animated-github-profile` | Build high-impact, animated GitHub profile READMEs that play like mini-movies using pure SVG, CSS, and SMIL animations. Covers dark/light theme switching, sw... | safe | self | github, profile-readme, svg-animation, smil, css-animation, portfolio | github, profile-readme, svg-animation, smil, css-animation, portfolio, animated, profile, high, impact, readmes, play |
 | `api-contract-testing` | Design and review API contract tests across providers and consumers. Use for schema changes, compatibility regressions and client integration failures. | safe | self | api, contracts, testing, compatibility | api, contracts, testing, compatibility, contract, review, tests, providers, consumers, schema, changes, regressions |
 | `api-endpoint-builder` | Builds production-ready REST API endpoints with validation, error handling, authentication, and documentation. Follows best practices for security and scalab... | safe | community | api, endpoint, builder | api, endpoint, builder, rest, endpoints, validation, error, handling, authentication, documentation, follows, security |
 | `api-rate-limit-handler` | Implement bounded, idempotency-aware API throttling, backoff, and retry handling for 429 and transient 5xx responses. | safe | self | rate-limiting, retry, backoff, api, resilience, throttle, 429 | rate-limiting, retry, backoff, api, resilience, throttle, 429, rate, limit, handler, bounded, idempotency |
@@ -2219,7 +2221,7 @@ Total skills: 2738
 | `protect-mcp-governance` | Agent governance skill for MCP tool calls — Cedar policy authoring, shadow-to-enforce rollout, and Ed25519 receipt verification. | safe | scopeblind/scopeblind-gateway | protect, mcp, governance | protect, mcp, governance, agent, skill, calls, cedar, policy, authoring, shadow, enforce, rollout |
 | `serply-search-mcp` | Search Google, Bing, Google News and Google Scholar, and read public pages, with the Serply MCP server. Use when the user chooses Serply or its connected too... | safe | self | mcp, web-search, news, scholar, research, citations | mcp, web-search, news, scholar, research, citations, serply, search, google, bing, read, public |
 
-## media (49)
+## media (50)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2269,6 +2271,7 @@ Total skills: 2738
 | `viral-video-teardown-remake` | Install and use the official Viral Video Remake package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/viral-video-remake-skill | short-video, video-generation, mcp, paid-api, beatra | short-video, video-generation, mcp, paid-api, beatra, viral, video, teardown, remake, install, official, package |
 | `voice-cloning-studio` | Install and use the official AI Voice Cloning package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/ai-voice-cloning-skill | voice-cloning, custom-voice, mcp, paid-api, beatra | voice-cloning, custom-voice, mcp, paid-api, beatra, voice, cloning, studio, install, official, ai, package |
 | `voiceover-narration-studio` | Install and use the official AI Voiceover Generator package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/ai-voiceover-generator-skill | tts, voiceover, narration, mcp, paid-api, beatra | tts, voiceover, narration, mcp, paid-api, beatra, studio, install, official, ai, generator, package |
+| `watch-igaming` | Reviews a video link or local screen recording from transcript and scene-change frames matched by timecode, then returns a review, QA table, UX audit, compar... | safe | igamingsychov/watch-igaming | video, transcription, ffmpeg, whisper, qa, screen-recording, timecodes | video, transcription, ffmpeg, whisper, qa, screen-recording, timecodes, watch, igaming, reviews, link, local |
 | `web-media-getter` | One query across free image / video / GIF APIs (stock + historical/archival + GIF engines), returning normalized, license-tagged results with optional top-K ... | safe | connerkward/web-media-getter-skill | media, images, video, gif, stock, archival, attribution | media, images, video, gif, stock, archival, attribution, web, getter, one, query, free |
 | `wechat-cover-maker` | Install and use the official WeChat Article Cover package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/wechat-article-cover-skill | wechat, article-cover, image-generation, mcp, paid-api, beatra | wechat, article-cover, image-generation, mcp, paid-api, beatra, cover, maker, install, official, article, package |
 | `zhongcao-cover-maker` | Install and use the official Xiaohongshu Cover Maker package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/xiaohongshu-cover-maker-skill | xiaohongshu, rednote, cover-design, image-generation, social-data, mcp, paid-api, beatra | xiaohongshu, rednote, cover-design, image-generation, social-data, mcp, paid-api, beatra, zhongcao, cover, maker, install |
@@ -2472,7 +2475,7 @@ Total skills: 2738
 | --- | --- | --- | --- | --- | --- |
 | `idea-os` | Five-phase pipeline (triage → clarify → research → PRD → plan) that turns a raw idea into four linked files: clarifying questions, deep research, a PRD with ... | safe | Slashworks-biz/idea-os | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical, idea, os |
 
-## productivity (56)
+## productivity (57)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2531,6 +2534,7 @@ Total skills: 2738
 | `time-ledger` | Natural-language time tracking: parse what the user says they did into Activity/Minutes/Date rows in their own Notion database — asking instead of guessing w... | critical | cruisekkk/time-ledger | time-tracking, notion, quantified-self, productivity, journaling | time-tracking, notion, quantified-self, productivity, journaling, time, ledger, natural, language, tracking, parse, what |
 | `trading-ledger` | A trading journal that captures the decision, not just the fill: thesis, plan, and emotion at the moment of entry, written to the user's own Notion database;... | critical | cruisekkk/trading-ledger | trading-journal, notion, journaling, market-wizards, decision-making | trading-journal, notion, journaling, market-wizards, decision-making, trading, ledger, journal, captures, decision, just, fill |
 | `unpaid-intern` | A free second brain for work in plain markdown files the user owns. Turns transcripts, docs, and tickets into briefings, meeting prep, debriefs, follow-ups, ... | critical | kevinmmiddleton/unpaid-intern | second-brain, knowledge-work, meetings, follow-ups, project-status, markdown, productivity | second-brain, knowledge-work, meetings, follow-ups, project-status, markdown, productivity, unpaid, intern, free, second, brain |
+| `usage-engineer` | Cut wasted tokens in coding-agent sessions: compact long logs, stop identical retries, check stale project maps, and audit local Codex/OpenCode usage. | safe | noamshorts22-prog/usage-engineer | tokens, usage, context, logs, cost, codex | tokens, usage, context, logs, cost, codex, engineer, cut, wasted, coding, agent, sessions |
 | `workorai` | WorkorAI talent-marketplace skill: candidates search jobs and manage applications; employers run the job lifecycle and get ranked candidate matches with whit... | critical | work0r-ai/agent-kit | job-search, hiring, recruiting, talent-marketplace, mcp | job-search, hiring, recruiting, talent-marketplace, mcp, workorai, talent, marketplace, skill, candidates, search, jobs |
 
 ## project-management (31)
@@ -2667,7 +2671,7 @@ Total skills: 2738
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | safe | community | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
 | `sympy` | SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations. | safe | https://github.com/sympy/sympy | sympy | sympy, python, library, symbolic, mathematics, enables, exact, computation, mathematical, symbols, rather, than |
 
-## security (265)
+## security (266)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2820,6 +2824,7 @@ Total skills: 2738
 | `js-reverse` | Front-end JavaScript reverse engineering: locate signature chains, analyze encrypted request parameters, sample runtime behavior, and reproduce logic locally... | offensive | zhaoxuya520/reverse-skill | js, reverse | js, reverse, front, javascript, engineering, locate, signature, chains, analyze, encrypted, request, parameters |
 | `kubernetes-hardening` | Implement Kubernetes security contexts, Pod Security Standards, and network policies. | critical | BagelHole/DevOps-Security-Agent-Skills | kubernetes, hardening | kubernetes, hardening, security, contexts, pod, standards, network, policies |
 | `laravel-security-audit` | Security auditor for Laravel applications. Analyzes code for vulnerabilities, misconfigurations, and insecure practices using OWASP standards and Laravel sec... | safe | community | laravel, security, audit | laravel, security, audit, auditor, applications, analyzes, code, vulnerabilities, misconfigurations, insecure, owasp, standards |
+| `launch-check` | Passive pre-launch check of a live URL for AI-built apps: exposed secret keys, open Supabase/Firebase tables, security headers, phone layout, search and speed. | safe | Ces107/agent-forge | security, pre-launch, vibe-coding, supabase, firebase, security-headers, seo, audit | security, pre-launch, vibe-coding, supabase, firebase, security-headers, seo, audit, launch, check, passive, pre |
 | `linux-hardening` | Apply CIS benchmarks and secure Linux servers. | critical | BagelHole/DevOps-Security-Agent-Skills | linux, hardening | linux, hardening, apply, cis, benchmarks, secure, servers |
 | `linux-privilege-escalation` | Execute systematic privilege escalation assessments on Linux systems to identify and exploit misconfigurations, vulnerable services, and security weaknesses ... | offensive | community | linux, privilege, escalation | linux, privilege, escalation, execute, systematic, assessments, identify, exploit, misconfigurations, vulnerable, security, weaknesses |
 | `llm-app-security` | Secure LLM-powered applications with input validation, output controls, tenant isolation, and abuse prevention. | safe | BagelHole/DevOps-Security-Agent-Skills | llm, app, security | llm, app, security, secure, powered, applications, input, validation, output, controls, tenant, isolation |

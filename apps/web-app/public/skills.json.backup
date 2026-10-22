@@ -3770,6 +3770,38 @@
     }
   },
   {
+    "id": "animated-github-profile",
+    "path": "skills/animated-github-profile",
+    "category": "development",
+    "name": "animated-github-profile",
+    "description": "Build high-impact, animated GitHub profile READMEs that play like mini-movies using pure SVG, CSS, and SMIL animations. Covers dark/light theme switching, swinging lanyard ID badges, tech orbits, local stat cards, and automated contribution graphs.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-10-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "tags": [
+      "github",
+      "profile-readme",
+      "svg-animation",
+      "smil",
+      "css-animation",
+      "portfolio"
+    ]
+  },
+  {
     "id": "animejs-animation",
     "path": "skills/animejs-animation",
     "category": "web-development",
@@ -37426,6 +37458,42 @@
     }
   },
   {
+    "id": "launch-check",
+    "path": "skills/launch-check",
+    "category": "security",
+    "name": "launch-check",
+    "description": "Passive pre-launch check of a live URL for AI-built apps: exposed secret keys, open Supabase/Firebase tables, security headers, phone layout, search and speed.",
+    "risk": "safe",
+    "source": "https://github.com/Ces107/agent-forge/tree/main/skills/launch-check",
+    "date_added": "2026-10-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Ces107/agent-forge",
+    "license": "MIT",
+    "license_source": "https://github.com/Ces107/agent-forge/blob/main/LICENSE",
+    "tags": [
+      "security",
+      "pre-launch",
+      "vibe-coding",
+      "supabase",
+      "firebase",
+      "security-headers",
+      "seo",
+      "audit"
+    ]
+  },
+  {
     "id": "launch-strategy",
     "path": "skills/launch-strategy",
     "category": "marketing",
@@ -55771,6 +55839,43 @@
     }
   },
   {
+    "id": "second-deposit-igaming",
+    "path": "skills/second-deposit-igaming",
+    "category": "business",
+    "name": "second-deposit-igaming",
+    "description": "Finds why casino first-time depositors skip a second deposit from local back-office exports: 12 reasons, missed Sum Dep per reason, daily CRM list. For industry teams, 21+.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-10-21",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    },
+    "source_type": "community",
+    "source_repo": "igamingsychov/second-deposit-igaming",
+    "license": "MIT",
+    "license_source": "https://github.com/igamingsychov/second-deposit-igaming/blob/main/LICENSE",
+    "tags": [
+      "igaming",
+      "crm",
+      "retention",
+      "analytics",
+      "csv",
+      "xlsx",
+      "python"
+    ]
+  },
+  {
     "id": "secrets-management",
     "path": "skills/secrets-management",
     "category": "security",
@@ -66114,6 +66219,40 @@
     "license_source": "https://github.com/jonathimer/devmarketing-skills/blob/main/LICENSE"
   },
   {
+    "id": "usage-engineer",
+    "path": "skills/usage-engineer",
+    "category": "productivity",
+    "name": "usage-engineer",
+    "description": "Cut wasted tokens in coding-agent sessions: compact long logs, stop identical retries, check stale project maps, and audit local Codex/OpenCode usage.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-10-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "noamshorts22-prog/usage-engineer",
+    "license": "MIT",
+    "license_source": "https://github.com/noamshorts22-prog/usage-engineer/blob/main/LICENSE",
+    "tags": [
+      "tokens",
+      "usage",
+      "context",
+      "logs",
+      "cost",
+      "codex"
+    ]
+  },
+  {
     "id": "use-dom",
     "path": "skills/use-dom",
     "category": "mobile",
@@ -67970,6 +68109,41 @@
       "investing",
       "value-investing",
       "business"
+    ]
+  },
+  {
+    "id": "watch-igaming",
+    "path": "skills/watch-igaming",
+    "category": "media",
+    "name": "watch-igaming",
+    "description": "Reviews a video link or local screen recording from transcript and scene-change frames matched by timecode, then returns a review, QA table, UX audit, comparison or minutes.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-10-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "igamingsychov/watch-igaming",
+    "license": "MIT",
+    "license_source": "https://github.com/igamingsychov/watch-igaming/blob/main/LICENSE",
+    "tags": [
+      "video",
+      "transcription",
+      "ffmpeg",
+      "whisper",
+      "qa",
+      "screen-recording",
+      "timecodes"
     ]
   },
   {
