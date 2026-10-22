@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [19.14.0] - 2026-10-22 - "One New Skill And Reliable Fork Evidence"
+
+> Adds **1** catalog skill, ships **2,738 skills**, and removes the false SkillSpector timeout on legitimate fork pull requests.
+
+### Added
+
+- **us-watchlist-alerts** - keep a local US stock and ETF watchlist, evaluate price and market alerts, and write morning or after-close briefs from public quotes. Installation and optional delivery integrations require consent; credentials stay in environment variables; the skill never places, modifies or cancels trades and does not present output as financial advice.
+
+### Changed
+
+- **mmx-cli** - prefer MiniMax M3.1 Flash for new text workloads after the upstream documentation changed the recommended default.
+- **datacircle** - use a bounded temporary download, reject insecure redirects and oversized responses, describe the expanded cached API sheets, and treat the downloaded pricing dataset as untrusted data rather than instructions.
+
+### Fixed
+
+- **Fork PR SkillSpector evidence** - bind the exact-head `pr-evidence` result to its Actions job, trusted CI workflow run and current pull request instead of relying on GitHub's sometimes-empty `check_run.pull_requests` association. Wrong SHAs, branches, source or base repositories, workflow paths and events now fail closed.
+- **Shared shortlist and collection skill IDs** - accept the canonical catalog contract for dotted and 200-character IDs while rejecting 201 characters and keeping collection record IDs on their stricter format.
+- **Catalog app dependency audit** - update the affected Vitest dependency chain so the web application audit reports no vulnerabilities.
+
+### Merge batch
+
+Four source PRs were merged through the protected lane: the SkillSpector evidence repair, the shared-ID fix, the Datacircle update and `us-watchlist-alerts`. The remaining additions were reviewed but not merged because their fork bundles contain executable scripts, HTML, XLSX or support paths that the current trusted policy does not authorize; no attestation or policy bypass was used for them.
+
+### Review scope
+
+Changed skill trees were reviewed at their exact submitted content heads. Deterministic validation, reference checks, documentation security and changed-skill evidence passed. The SkillSpector workflow was also exercised against a real exact-head run with positive provenance and negative SHA and fork cases. Web changes passed their focused tests and protected CI. The broader catalog audit remains unfinished.
+
+### Thanks
+
+Thanks to **@eli-alvarado** for `us-watchlist-alerts`, **@jhuang-tt** for the catalog-ID repair and the fork-evidence diagnosis, and **@waynehamadi** for the Datacircle update, and to the upstream authors whose licensed material is included.
+
 ## [19.13.0] - 2026-10-21 - "Thirteen Reviewed Skills And Security Hardening"
 
 > Adds **13** catalog skills and ships **2,737 skills**. All nine PRs in the maintenance batch were repaired, reviewed and merged.
