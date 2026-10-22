@@ -100,7 +100,8 @@ async function mainUnlocked(argv, dependencies = {}) {
       if(user.login!=='sickn33') throw Error('Only the repository owner may resolve a batch PR without merge');
       const body=`${require('./release_cycle_gate.cjs').MARKER}${expected} -->\n${o.reason.trim()}`;
       // Comment first. Never retry uncertain writes automatically.
-      gh(['api','--method','POST',`repos/${REPO}/issues/${pr.number}/comments`,'-f',`body=${body}`]);
+      const comment=gh(['api','--method','POST',`repos/${REPO}/issues/${pr.number}/comments`,'-f',`body=${body}`]);
+      if(!Number.isSafeInteger(comment?.id) || comment.body!==body || comment.user?.login!==user.login || !Number.isFinite(Date.parse(comment.created_at))) throw failure('WRITE_UNCERTAIN','Comment response incomplete; inspect the PR before closing');
       const current=gh(['api',`repos/${REPO}/pulls/${pr.number}`]);
       if(current.state!=='open' || current.head.sha!==expected) throw Error('PR changed after comment; closure stopped');
       attempt.result=gh(['api','--method','PATCH',`repos/${REPO}/pulls/${pr.number}`,'-f','state=closed']);
