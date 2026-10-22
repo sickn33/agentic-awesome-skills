@@ -23,6 +23,11 @@ try {
   assert.equal(result.commit, commit, "the packer records HEAD as the release commit");
   assert.equal(path.basename(result.tarball), "package.tgz", "the packed candidate keeps the expected artifact name");
   assert.equal(readTarballGitHead(result.tarball), commit, "the packed manifest records gitHead for the registry");
+  const originalPath = process.env.PATH;
+  try {
+    process.env.PATH = "";
+    assert.equal(readTarballGitHead(result.tarball), commit, "manifest verification must not depend on a platform tar executable");
+  } finally { process.env.PATH = originalPath; }
   assert.ok(fs.readFileSync(path.join(root, "package.json")).equals(before), "the working tree package.json is restored byte-for-byte");
 
   fs.writeFileSync(path.join(root, "untracked.txt"), "drift");

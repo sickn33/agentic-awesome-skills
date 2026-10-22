@@ -52,3 +52,5 @@ Consult [scanner interpretation](references/skillspector.md) when triaging Skill
 Follow [public surface verification](references/public-surfaces.md) for catalog, Pages and legacy redirect changes.
 
 For CSV security intake, distinguish historical/generated duplicates from current canonical defects. Never execute skill Markdown or external setup as a triage shortcut. Dossiers must include containing nested skill trees; use reviewed test fixtures and inert source comparisons for executable documentation examples. Record each finding disposition and its evidence before release.
+
+Before creating a release tag, inventory and audit every canonical npm lockfile, including bundled applications and templates; a clean root/web audit does not cover nested dependencies. Recheck live security alerts after source merges and immediately before tagging. Treat newly created alerts as new work before publication.

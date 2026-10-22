@@ -3,6 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
+const { readTarballManifest } = createRequire(import.meta.url)("../../tools/scripts/distribution_pack.cjs");
 
 function fail(code) {
   throw new Error(`AAS_PREVIEW_INSTALL_${code}`);
@@ -51,6 +53,7 @@ function main() {
     .sort();
   if (tarballs.length !== 1) fail("TARBALL_COUNT_INVALID");
   const tarball = path.join(args["artifact-root"], tarballs[0]);
+  if (readTarballManifest(tarball)?.name !== "agentic-awesome-skills") fail("TARBALL_MANIFEST_INVALID");
   fs.mkdirSync(args["install-root"], { recursive: true, mode: 0o700 });
   fs.mkdirSync(args["work-root"], { recursive: true, mode: 0o700 });
   const npmCommand = process.platform === "win32" ? process.execPath : "npm";

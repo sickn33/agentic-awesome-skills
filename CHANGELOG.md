@@ -35,7 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Keep contributor Markdown inert in repository tests: reviewed executable fixtures are maintained separately and document examples are compared as data.
 - Harden local preview, citation, session and state paths against symlinks and traversal; protect Electron driver state with private ownership/permissions, including Windows ACL checks, and atomic writes.
 - Bound template, color and archive parsing; redact sensitive fact-check and PII output; escape terminal controls and neutralize spreadsheet formulas. Tighten credential handling, recurring-work consent, remote-code guidance and external installer prerequisites throughout the affected skills.
-- Patch the web application's vulnerable MCP dependencies and refresh its lockfile. Extend regression coverage for the security boundaries and ensure nested skill trees are included in maintainer review inventories.
+- Patch MCP dependencies in the web application and local plugin server, Vite in the bundled frontend example and redirect handling in the WhatsApp example. Replace the unmaintained `ts-node-dev` watcher in the WhatsApp and Telegram templates with pinned `tsx`, removing its vulnerable globbing chain. Audit every canonical npm lockfile. Extend regression coverage for the security boundaries and ensure nested skill trees are included in maintainer review inventories.
+- Verify packed manifests with the bounded runtime archive parser, avoiding the native Windows tar failure; exercise that same check in platform previews.
 - Preserve direct-installer release identity by verifying the actual packed manifest and published registry `gitHead`; reject staged candidate changes and skipped protected-source validation.
 
 ### Contributors
