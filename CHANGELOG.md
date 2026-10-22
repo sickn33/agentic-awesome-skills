@@ -7,13 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [19.14.0] - 2026-10-22 - "One New Skill And Reliable Fork Evidence"
+## [19.15.0] - 2026-10-22 - "Reviewed Community Skills And Reliable Fork Evidence"
 
-> Adds **1** catalog skill, ships **2,738 skills**, and removes the false SkillSpector timeout on legitimate fork pull requests.
+> Adds **6** catalog skills, ships **2,743 skills**, and removes the false SkillSpector timeout on legitimate fork pull requests.
 
 ### Added
 
 - **us-watchlist-alerts** - keep a local US stock and ETF watchlist, evaluate price and market alerts, and write morning or after-close briefs from public quotes. Installation and optional delivery integrations require consent; credentials stay in environment variables; the skill never places, modifies or cancels trades and does not present output as financial advice.
+- **animated-github-profile** - build theme-aware animated GitHub profile READMEs with SVG, CSS and SMIL, including example automation pinned to immutable action commits.
+- **launch-check** - run a passive pre-launch audit of a public URL for exposed secrets, open database rules, security headers, phone layout, search readiness and speed. Live reads are bounded and destructive or write-capable steps are excluded.
+- **second-deposit-igaming** - analyze local casino CRM exports for why first-time depositors skip a second deposit, producing local aggregates and CRM lists while keeping player rows out of chat. Laws must be rechecked, responsible-gaming filters remain mandatory and schedule creation requires explicit consent.
+- **usage-engineer** - compact agent logs, detect stale project maps and audit local Codex and OpenCode usage with no network calls. Maintainer repairs remove shell invocation, make health checks argv-based and return an explicit unavailable status for omitted upstream tests.
+- **watch-igaming** - pair video speech and scene frames by timecode to produce reviews, QA tables, UX audits or meeting notes. Downloads and processing remain local, dependency installation requires consent and findings without timecodes are rejected.
 
 ### Changed
 
@@ -28,15 +33,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Merge batch
 
-Four source PRs were merged through the protected lane: the SkillSpector evidence repair, the shared-ID fix, the Datacircle update and `us-watchlist-alerts`. The remaining additions were reviewed but not merged because their fork bundles contain executable scripts, HTML, XLSX or support paths that the current trusted policy does not authorize; no attestation or policy bypass was used for them.
+Eleven source changes were reviewed for this release. The five fork bundles with executable or support files were consolidated into one owner-authored protected PR, then merged after complete-tree review and deterministic checks. The workflow/evidence repair, shared-ID fix, Datacircle refresh, `us-watchlist-alerts` and `animated-github-profile` also merged through `merge:batch`.
 
 ### Review scope
 
-Changed skill trees were reviewed at their exact submitted content heads. Deterministic validation, reference checks, documentation security and changed-skill evidence passed. The SkillSpector workflow was also exercised against a real exact-head run with positive provenance and negative SHA and fork cases. Web changes passed their focused tests and protected CI. The broader catalog audit remains unfinished.
+Changed skill trees were reviewed at their exact submitted content heads or their reproducible owner-authored consolidation. Deterministic validation, reference checks, documentation security, strict scanning and changed-skill evidence passed. The SkillSpector workflow was exercised against a real exact-head run with positive provenance and negative SHA and fork cases. The executable bundle dry runs covered launch checks, local GEO and polish audits, synthetic second-deposit analysis and usage local audit/map behavior. The broader catalog audit remains unfinished.
 
 ### Thanks
 
-Thanks to **@eli-alvarado** for `us-watchlist-alerts`, **@jhuang-tt** for the catalog-ID repair and the fork-evidence diagnosis, and **@waynehamadi** for the Datacircle update, and to the upstream authors whose licensed material is included.
+Thanks to **@eli-alvarado** for `us-watchlist-alerts`, **@jhuang-tt** for the catalog-ID repair and fork-evidence diagnosis, **@waynehamadi** for the Datacircle update, **@noamshorts22-prog** for `usage-engineer`, **@Ces107** for `launch-check`, **@igamingsychov** for the two igaming skills and **@shivamnamdev** for `animated-github-profile`, and to the upstream authors whose licensed material is included.
 
 ## [19.13.0] - 2026-10-21 - "Thirteen Reviewed Skills And Security Hardening"
 
