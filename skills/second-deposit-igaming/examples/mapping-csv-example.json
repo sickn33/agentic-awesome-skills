@@ -1,0 +1,120 @@
+{
+  "currency": "EUR",
+  "files": {
+    "deposits": {
+      "path": "deposits*.csv",
+      "columns": {
+        "player_id": "player_id",
+        "time": "created_at",
+        "amount": "amount",
+        "currency": "currency",
+        "status": "status",
+        "method": "method",
+        "reason": "decline_reason"
+      },
+      "status": {
+        "success": [
+          "Approved"
+        ],
+        "declined": [
+          "Declined",
+          "Error"
+        ],
+        "abandoned": [
+          "Cancelled by user"
+        ],
+        "pending": [
+          "Pending"
+        ]
+      },
+      "decline_reasons": {
+        "limit": [
+          "Deposit limit reached"
+        ],
+        "block": [
+          "Gambling blocked by bank"
+        ]
+      },
+      "latest": true
+    },
+    "withdrawals": {
+      "path": "withdrawals*.csv",
+      "columns": {
+        "player_id": "player_id",
+        "time": "created_at",
+        "amount": "amount",
+        "currency": "currency",
+        "status": "status",
+        "done_time": "processed_at"
+      },
+      "status": {
+        "success": [
+          "Paid"
+        ],
+        "pending": [
+          "Pending"
+        ],
+        "declined": [
+          "Rejected"
+        ]
+      },
+      "latest": true
+    },
+    "bonuses": {
+      "path": "bonuses*.csv",
+      "columns": {
+        "player_id": "player_id",
+        "time": "issued_at",
+        "name": "bonus_name",
+        "wager": "wager",
+        "amount": "amount",
+        "status": "status"
+      },
+      "status": {
+        "active": [
+          "Active"
+        ],
+        "lost": [
+          "Lost"
+        ],
+        "expired": [
+          "Expired"
+        ],
+        "completed": [
+          "Wagered"
+        ],
+        "cancelled": [
+          "Cancelled"
+        ]
+      },
+      "latest": true
+    },
+    "bets": {
+      "path": "bets*.csv",
+      "columns": {
+        "player_id": "player_id",
+        "time": "date",
+        "bets": "bets",
+        "wins": "wins",
+        "rounds": "rounds"
+      },
+      "latest": true
+    },
+    "players": {
+      "path": "players*.csv",
+      "columns": {
+        "player_id": "player_id",
+        "reg_time": "registered_at",
+        "country": "country",
+        "source": "source",
+        "kyc_time": "kyc_requested_at",
+        "ftd_time": "first_deposit_at"
+      },
+      "rg_flags": [
+        "self_excluded",
+        "deposit_limit"
+      ],
+      "latest": true
+    }
+  }
+}
