@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-10-21T08:26:18.000Z
+Generated at: 2026-10-22T12:55:24.000Z
 
-Total skills: 2737
+Total skills: 2738
 
 ## agent-behavior (5)
 
@@ -239,7 +239,7 @@ Total skills: 2737
 | `mesh-memory` | Self-hosted semantic memory for AI agents via MCP. Save worklogs, decisions, and notes, then recall them across sessions by meaning, not keyword. Postgres + ... | safe | dklymentiev/mesh-memory (MIT) | mesh, memory | mesh, memory, self, hosted, semantic, ai, agents, via, mcp, save, worklogs, decisions |
 | `ml-engineer` | Build production ML systems with PyTorch 2.x, TensorFlow, and modern ML frameworks. Implements model serving, feature engineering, A/B testing, and monitoring. | critical | community | ml | ml, engineer, pytorch, tensorflow, frameworks, implements, model, serving, feature, engineering, testing, monitoring |
 | `mlops-engineer` | Build comprehensive ML pipelines, experiment tracking, and model registries with MLflow, Kubeflow, and modern MLOps tools. | critical | community | mlops | mlops, engineer, ml, pipelines, experiment, tracking, model, registries, mlflow, kubeflow |
-| `mmx-cli` | Use mmx to generate text, images, video, speech, and music via the MiniMax AI platform. Use when the user wants to create media content, chat with MiniMax mo... | safe | https://github.com/MiniMax-AI/cli | mmx, cli | mmx, cli, generate, text, images, video, speech, music, via, minimax, ai, platform |
+| `mmx-cli` | Use mmx to generate text, images, video, speech, and music via the MiniMax AI platform. Use when the user wants to create media content, chat with MiniMax mo... | critical | https://github.com/MiniMax-AI/cli | mmx, cli | mmx, cli, generate, text, images, video, speech, music, via, minimax, ai, platform |
 | `molykit` | CRITICAL: Use for MolyKit AI chat toolkit. Triggers on: BotClient, OpenAI, SSE streaming, AI chat, molykit, PlatformSend, spawn(), ThreadToken, cross-platfor... | critical | community | molykit | molykit, critical, ai, chat, toolkit, triggers, botclient, openai, sse, streaming, platformsend, spawn |
 | `monte-carlo-monitoring-advisor` | Analyze data coverage, create monitors for warehouse tables and AI agents. Covers coverage gaps, use-case analysis, data monitor creation, and agent observab... | critical | monte-carlo-data/mc-agent-toolkit | monte, carlo, monitoring, advisor | monte, carlo, monitoring, advisor, analyze, data, coverage, monitors, warehouse, tables, ai, agents |
 | `moyu` | Anti-over-engineering guardrail that activates when an AI coding agent expands scope, adds abstractions, or changes files the user did not request. | safe | community | moyu | moyu, anti, engineering, guardrail, activates, ai, coding, agent, expands, scope, adds, abstractions |
@@ -1095,7 +1095,7 @@ Total skills: 2737
 | `liuguang-banlan-ui` | Builds two parameterized UI modes—流光溢彩白 (iridescent white) and 五彩斑斓黑 (colorful black)—with OKLCH, WebGL/CSS fallback, vision gating, screenshot QA, and total... | critical | self | ui, frontend, oklch, webgl, accessibility | ui, frontend, oklch, webgl, accessibility, liuguang, banlan, two, parameterized, modes, iridescent, white |
 | `modellix` | Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download). | critical | Modellix/modellix-plugin | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api, integrate, async, ai |
 
-## data (50)
+## data (51)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1140,6 +1140,7 @@ Total skills: 2737
 | `spark-optimization` | Optimize Apache Spark jobs with partitioning, caching, shuffle optimization, and memory tuning. Use when improving Spark performance, debugging slow jobs, or... | critical | community | spark, optimization | spark, optimization, optimize, apache, jobs, partitioning, caching, shuffle, memory, tuning, improving, performance |
 | `sql-pro` | Master modern SQL with cloud-native databases, OLTP/OLAP optimization, and advanced query techniques. Expert in performance tuning, data modeling, and hybrid... | critical | community | sql | sql, pro, cloud, native, databases, oltp, olap, optimization, query, techniques, performance, tuning |
 | `sql-sentinel` | Audit SQL for the cost & performance anti-patterns that burn warehouse credits. Scores warehouse health 0-100 and outputs a prioritized cost-reduction plan f... | critical | takeaseatventure/sql-sentinel | sql, bigquery, snowflake, redshift, postgres, data-warehouse, cost-optimization, performance, audit, finops | sql, bigquery, snowflake, redshift, postgres, data-warehouse, cost-optimization, performance, audit, finops, sentinel, cost |
+| `us-watchlist-alerts` | Free US stock watchlists, price alerts and daily briefs; no API key, NYSE-holiday aware. Informational only, never places trades. | safe | eli-alvarado/us-watchlist-alerts | stocks, watchlist, price-alerts, market-brief, finance | stocks, watchlist, price-alerts, market-brief, finance, us, alerts, free, stock, watchlists, price, daily |
 | `warehouse` | Plan and review read-only data warehouse analysis with explicit scope, privacy, provenance, and validation checks. | critical | self | analytics, data-warehouse, sql, data-quality | analytics, data-warehouse, sql, data-quality, warehouse, plan, review, read, data, analysis, explicit, scope |
 | `weather-data-lifecycle-management` | Manage ownership, retention, and cleanup of downloaded weather data across one-shot jobs, interactive viewers, caches, failures, and cancellation. | safe | self | weather, data-lifecycle, cleanup, caching, desktop-apps | weather, data-lifecycle, cleanup, caching, desktop-apps, data, lifecycle, ownership, retention, downloaded, one, shot |
 | `weather-data-reproducibility` | Record and verify provenance manifests for weather-data inputs and derived artifacts, including object identity, selections, software versions, transformatio... | safe | self | weather, reproducibility, provenance, checksums, grib2, netcdf | weather, reproducibility, provenance, checksums, grib2, netcdf, data, record, verify, manifests, inputs, derived |

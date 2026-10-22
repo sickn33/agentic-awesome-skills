@@ -49158,6 +49158,25 @@
       "runtime_files": []
     },
     {
+      "id": "us-watchlist-alerts",
+      "path": "skills/us-watchlist-alerts",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "usage-based-pricing",
       "path": "skills/usage-based-pricing",
       "targets": {
@@ -52500,10 +52519,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2737,
+    "total_skills": 2738,
     "supported": {
-      "codex": 2652,
-      "claude": 2673
+      "codex": 2653,
+      "claude": 2674
     },
     "blocked": {
       "codex": 85,

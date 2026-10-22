@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-21T08:26:18.000Z",
+  "generatedAt": "2026-10-22T12:55:24.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -507,6 +507,7 @@
         "unship",
         "upstash-ratelimit",
         "us-property-data",
+        "us-watchlist-alerts",
         "usage-based-pricing",
         "uv-package-manager",
         "ux-audit",

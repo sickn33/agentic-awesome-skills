@@ -42524,7 +42524,7 @@
     "category": "ai-ml",
     "name": "mmx-cli",
     "description": "Use mmx to generate text, images, video, speech, and music via the MiniMax AI platform. Use when the user wants to create media content, chat with MiniMax models, perform web search, or manage MiniMax API resources from the terminal.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/MiniMax-AI/cli",
     "date_added": "2026-04-14",
     "plugin": {
@@ -66052,6 +66052,39 @@
       "real-estate",
       "api",
       "zillow"
+    ]
+  },
+  {
+    "id": "us-watchlist-alerts",
+    "path": "skills/us-watchlist-alerts",
+    "category": "data",
+    "name": "us-watchlist-alerts",
+    "description": "Free US stock watchlists, price alerts and daily briefs; no API key, NYSE-holiday aware. Informational only, never places trades.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-10-21",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "eli-alvarado/us-watchlist-alerts",
+    "license": "MIT",
+    "license_source": "https://github.com/eli-alvarado/us-watchlist-alerts/blob/main/LICENSE",
+    "tags": [
+      "stocks",
+      "watchlist",
+      "price-alerts",
+      "market-brief",
+      "finance"
     ]
   },
   {

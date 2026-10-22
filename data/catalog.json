@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-21T08:26:18.000Z",
-  "total": 2737,
+  "generatedAt": "2026-10-22T12:55:24.000Z",
+  "total": 2738,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -49856,7 +49856,7 @@
       "name": "mmx-cli",
       "description": "Use mmx to generate text, images, video, speech, and music via the MiniMax AI platform. Use when the user wants to create media content, chat with MiniMax models, perform web search, or manage MiniMax API resources from the terminal.",
       "category": "ai-ml",
-      "risk": "safe",
+      "risk": "critical",
       "source": "https://github.com/MiniMax-AI/cli",
       "tags": [
         "mmx",
@@ -76885,6 +76885,41 @@
         "listings"
       ],
       "path": "skills/us-property-data/SKILL.md"
+    },
+    {
+      "id": "us-watchlist-alerts",
+      "canonical_id": "us-watchlist-alerts",
+      "name": "us-watchlist-alerts",
+      "description": "Free US stock watchlists, price alerts and daily briefs; no API key, NYSE-holiday aware. Informational only, never places trades.",
+      "category": "data",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "eli-alvarado/us-watchlist-alerts",
+      "license": "MIT",
+      "license_source": "https://github.com/eli-alvarado/us-watchlist-alerts/blob/main/LICENSE",
+      "tags": [
+        "stocks",
+        "watchlist",
+        "price-alerts",
+        "market-brief",
+        "finance"
+      ],
+      "triggers": [
+        "stocks",
+        "watchlist",
+        "price-alerts",
+        "market-brief",
+        "finance",
+        "us",
+        "alerts",
+        "free",
+        "stock",
+        "watchlists",
+        "price",
+        "daily"
+      ],
+      "path": "skills/us-watchlist-alerts/SKILL.md"
     },
     {
       "id": "usage-based-pricing",
