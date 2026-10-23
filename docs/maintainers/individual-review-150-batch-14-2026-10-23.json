@@ -18,7 +18,8 @@
       "Validation and reference checks passed; documentation security rerun passed.",
       "15 changed executable/JSON files passed Python AST, Node/Bash syntax or JSON parsing.",
       "Seven offline Telegram regressions passed: config environment isolation, token-in-argv avoidance, invalid names/IDs/limit rejection, literal caption and symlink refusal, safe formatting retry, exact reply matching/private cursor, setup token validation.",
-      "Modified executable-mode helpers in bumblebee and webapp-testing reduced to mode100644; explicit Python invocation already documented."
+      "Modified executable-mode helpers in bumblebee and webapp-testing reduced to mode100644; explicit Python invocation already documented.",
+      "Contrast trusted fixture equality retained; refreshed after full source reread and passed expanded CLI/color/pair/private-output/gamut regressions, preserving original numerical black/white checks."
     ],
     "limitations": [
       "Direct npm test stopped on intentionally stale distribution snapshot; complete preflight generates ephemeral state and its exact-head result is reported separately.",
@@ -26,6 +27,24 @@
       "No Tessl passing review or exact-head maintainer merge attestation claimed.",
       "No generated indexes, mirrors, release, merge, publication or original-checkout changes.",
       "No independent upstream license chain audit or general production certification."
+    ],
+    "trustedTestChanges": [
+      {
+        "path": "tools/scripts/tests/fixtures/reviewed_examples/contrast.mjs",
+        "beforeSha256": "4c7ae5f4a55a5529d5f574f2a9bc4c9b72e8e6c81478511ac84736f9c75623cc",
+        "afterSha256": "78ace7452ad0be7043d423696cd9152554c60d58409fa3c370f3b2bff5cd72bb",
+        "beforeGitMode": "100644",
+        "afterGitMode": "100644",
+        "reason": "Entire documented checker re-read as inert source, existing equality assertion preserved, trusted snapshot refreshed. Added negative regressions for CLI values, invalid hex, partial colors, pair kind/transparency, private exclusive JSON output and finite gamut suggestions."
+      },
+      {
+        "path": "tools/scripts/tests/security_contrast_example.test.js",
+        "beforeSha256": "079df2f0ae20c2d05cb915f4d378a0b6e9d6e5b28e5a13ae3c2992c4c2fae92e",
+        "afterSha256": "d0e57e2c9080624a1441dc5639ab8c2d4c65ff8a5553cb62ada56b5b6ba418ff",
+        "beforeGitMode": "100644",
+        "afterGitMode": "100644",
+        "reason": "Entire documented checker re-read as inert source, existing equality assertion preserved, trusted snapshot refreshed. Added negative regressions for CLI values, invalid hex, partial colors, pair kind/transparency, private exclusive JSON output and finite gamut suggestions."
+      }
     ]
   },
   "records": [

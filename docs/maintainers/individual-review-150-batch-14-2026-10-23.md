@@ -24,6 +24,8 @@ Final committed-head evidence and preflight are recorded externally and in the P
 
 Modified executable-mode helpers in `bumblebee` and `webapp-testing` use mode100644; their docs already invoke Python explicitly.
 
+Contrast checker: the exact documentation/fixture equality gate is retained. After full source reread, the trusted snapshot was refreshed and expanded CLI, invalid-color, pair-kind/transparency, partial-report, private exclusive-output and gamut cases passed; existing black/white numerical checks remain.
+
 ## Individual dispositions
 
 ### wellally-tech — corrected
