@@ -55,7 +55,7 @@ vendor_lifecycle:
       - Disable SSO/SAML connections
 
     step_3_verify:
-      - Confirm data destruction (written certification)
+      - Review destruction attestation scope, exceptions, backups/retention and independent evidence; a certificate alone is not proof of every copy being erased
       - Verify all access revoked
       - Update vendor registry status to inactive
       - Archive vendor records for retention period
@@ -79,7 +79,7 @@ vendor_management_checklist:
     - [ ] Risk tier assigned to each vendor
     - [ ] Security assessments current (per tier schedule)
     - [ ] Compliance certifications on file and not expired
-    - [ ] DPAs/BAAs signed for all vendors handling personal data
+    - [ ] Applicable DPA/BAA requirements determined by legal role/data scope and signed where required
     - [ ] SLA monitoring active for critical and high-tier vendors
     - [ ] Sub-processor lists reviewed and tracked
     - [ ] Vendor security incidents tracked and assessed
@@ -90,7 +90,7 @@ vendor_management_checklist:
     - [ ] Assessment findings tracked to remediation
     - [ ] Vendor risk reported to management quarterly
     - [ ] Offboarding includes data destruction verification
-    - [ ] Evidence retained for compliance audit (3+ years)
+    - [ ] Evidence retained under documented applicable legal/contractual retention and deletion policy
 ```
 
 

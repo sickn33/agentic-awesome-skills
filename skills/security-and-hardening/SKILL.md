@@ -25,6 +25,10 @@ Security-first development practices for web applications. Treat every external 
 - Adding file uploads, webhooks, or callbacks
 - Handling payment or PII data
 
+## Integration boundaries
+
+Code blocks are independent sketches with missing application imports/adapters, not a complete tested server. Review executable code before running it, use isolated synthetic fixtures, and bound provider/network/production effects to user authority. Runtime validation, tenant checks, authorization, CSRF, output allowlists and atomic write predicates belong in the actual implementation. A green scanner/checklist is not security certification.
+
 ## Process: Threat Model First
 
 Controls bolted on without a threat model are guesses. Before hardening, spend five minutes thinking like an attacker:
@@ -44,7 +48,7 @@ Controls bolted on without a threat model are guesses. Before hardening, spend f
 
 4. **Write abuse cases next to use cases.** For each feature, ask "how would I misuse this?" — then make that your first test.
 
-If you can't name the trust boundaries for a feature, you're not ready to secure it. This is OWASP **A04: Insecure Design** — most breaches begin in design, not code.
+If you can't name the trust boundaries for a feature, you're not ready to secure it. Insecure design is a relevant risk category; the exact OWASP edition/category numbering must be verified before citing it. No majority-of-breaches claim is established here.
 
 ## The Three-Tier Boundary System
 
@@ -59,7 +63,11 @@ If you can't name the trust boundaries for a feature, you're not ready to secure
 - **Use httpOnly, secure, sameSite cookies** for sessions
 - **Run `npm audit`** (or equivalent) before every release
 
-### Ask First (Requires Human Approval)
+### Confirm scope for sensitive changes
+
+Existing explicit authorization covers the requested implementation; do not ask repeatedly for routine steps already included. New sensitive-data categories, data destinations, permission grants and production effects need the appropriate owner authority.
+
+Changes requiring a clear authorized scope include:
 
 - Adding new authentication flows or changing auth logic
 - Storing new categories of sensitive data (PII, payment info)
@@ -106,9 +114,11 @@ const SALT_ROUNDS = 12;
 const hashedPassword = await hash(plaintext, SALT_ROUNDS);
 const isValid = await compare(plaintext, hashedPassword);
 
-// Session management
+// Session management: require trusted proxy/TLS configuration when appropriate,
+// rotate the session identifier on login/privilege changes and enforce revocation.
 app.use(session({
-  secret: process.env.SESSION_SECRET,  // From environment, not code
+  secret: requiredSessionSecret,  // validate high-entropy configured secret at startup
+  store: productionSessionStore, // do not use express-session MemoryStore in production
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -177,7 +187,8 @@ app.use(helmet.contentSecurityPolicy({
 
 // CORS — restrict to known origins
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || 'http://localhost:3000',
+  origin: approvedOrigins, // validate an explicit nonempty production list at startup
+  // No implicit development-origin fallback in production.
   credentials: true,
 }));
 ```
@@ -203,7 +214,8 @@ Any time the server fetches a URL the user influenced — webhooks, "import from
 // BAD: fetch whatever the user gives you
 await fetch(req.body.webhookUrl);
 
-// GOOD: allowlist scheme + host, reject if ANY resolved IP is private, forbid redirects
+// PARTIAL CHECK ONLY: this has the DNS rebinding gap described below.
+// Do not deploy the direct fetch as a complete SSRF defense.
 import { lookup } from 'node:dns/promises';
 import ipaddr from 'ipaddr.js';
 
@@ -211,11 +223,13 @@ const ALLOWED_HOSTS = new Set(['hooks.example.com']);
 
 async function assertSafeUrl(raw: string): Promise<URL> {
   const url = new URL(raw);
-  if (url.protocol !== 'https:') throw new Error('https only');
+  if (url.protocol !== 'https:' || url.username || url.password || (url.port && url.port !== '443')) {
+    throw new Error('https only; no credentials or alternate ports');
+  }
   if (!ALLOWED_HOSTS.has(url.hostname)) throw new Error('host not allowed');
   // Resolve ALL records; a single private/reserved address fails the check.
   const addrs = await lookup(url.hostname, { all: true });
-  if (addrs.some((a) => ipaddr.parse(a.address).range() !== 'unicast')) {
+  if (!addrs.length || addrs.some((a) => ipaddr.process(a.address).range() !== 'unicast')) {
     throw new Error('private/reserved IP');
   }
   return url;
@@ -226,7 +240,7 @@ await fetch(await assertSafeUrl(req.body.webhookUrl), { redirect: 'error' });
 
 The `range() !== 'unicast'` check covers loopback, link-local `169.254.169.254` (cloud metadata, the #1 SSRF target), private, and unique-local ranges across IPv4 and IPv6.
 
-**Caveat — this still has a TOCTOU gap.** `fetch` resolves DNS again after the check, so an attacker using a short-TTL record can rebind to an internal IP between validation and connection. For high-risk surfaces, resolve once and connect to the pinned IP, or put a filtering agent in front (`request-filtering-agent` / `ssrf-req-filter`).
+**Caveat — this still has a TOCTOU gap.** `fetch` resolves DNS again after the check, so an attacker using a short-TTL record can rebind to an internal IP between validation and connection. For any surface exposed to untrusted DNS, use a reviewed transport that connects only to approved resolved addresses while preserving TLS hostname validation, and enforce network egress restrictions. Bound response bytes/time/concurrency and revalidate every permitted redirect. Named third-party filtering packages require current compatibility/security review; their names are not a guarantee.
 
 ## Input Validation Patterns
 
@@ -236,14 +250,14 @@ The `range() !== 'unicast'` check covers loopback, link-local `169.254.169.254` 
 import { z } from 'zod';
 
 const CreateTaskSchema = z.object({
-  title: z.string().min(1).max(200).trim(),
+  title: z.string().trim().min(1).max(200),
   description: z.string().max(2000).optional(),
   priority: z.enum(['low', 'medium', 'high']).default('medium'),
   dueDate: z.string().datetime().optional(),
 });
 
 // Validate at the route handler
-app.post('/api/tasks', async (req, res) => {
+app.post('/api/tasks', authenticate, async (req, res) => {
   const result = CreateTaskSchema.safeParse(req.body);
   if (!result.success) {
     return res.status(422).json({
@@ -255,7 +269,8 @@ app.post('/api/tasks', async (req, res) => {
     });
   }
   // result.data is now typed and validated
-  const task = await taskService.create(result.data);
+  // Authenticated tenant/owner come from the server, never writable request fields.
+  const task = await taskService.createOwned(req.user.tenantId, req.user.id, result.data);
   return res.status(201).json(task);
 });
 ```
@@ -274,7 +289,10 @@ function validateUpload(file: UploadedFile) {
   if (file.size > MAX_SIZE) {
     throw new ValidationError('File too large (max 5MB)');
   }
-  // Don't trust the file extension — check magic bytes if critical
+  // MIME and extension are untrusted hints. Enforce streaming size/decode limits,
+  // inspect file signature/content and re-encode supported images in isolation.
+  // Use random storage names outside executable paths, owner authorization, quotas
+  // and safe response headers; malformed/decompression-bomb inputs must fail.
 }
 ```
 
@@ -287,10 +305,10 @@ npm audit reports a vulnerability
 ├── Severity: critical or high
 │   ├── Is the vulnerable code reachable in your app?
 │   │   ├── YES --> Fix immediately (update, patch, or replace the dependency)
-│   │   └── NO (dev-only dep, unused code path) --> Fix soon, but not a blocker
+│   │   └── NO --> Verify build/CI reachability too; document evidence and follow repository risk policy
 │   └── Is a fix available?
 │       ├── YES --> Update to the patched version
-│       └── NO --> Check for workarounds, consider replacing the dependency, or add to allowlist with a review date
+│       └── NO --> Check for workarounds, consider replacing the dependency, or document a reviewed exception under repository policy
 ├── Severity: moderate
 │   ├── Reachable in production? --> Fix in the next release cycle
 │   └── Dev-only? --> Fix when convenient, track in backlog
@@ -307,7 +325,7 @@ When you defer a fix, document the reason and set a review date.
 
 ### Supply-Chain Hygiene
 
-`npm audit` catches known CVEs; it won't catch a malicious or typosquatted package. Also:
+`npm audit` reports advisories known to its selected registry/database; it won't catch a malicious or typosquatted package. Also:
 
 - **Commit the lockfile** and install with `npm ci` (not `npm install`) in CI — reproducible builds, no silent version drift.
 - **Review new dependencies before adding them** — maintenance, download counts, and whether they truly earn their place. Every dependency is attack surface (OWASP **A06: Vulnerable Components**, **LLM03: Supply Chain**).
@@ -353,10 +371,12 @@ app.use('/api/auth/', rateLimit({
 **Always check before committing:**
 ```bash
 # Check for accidentally staged secrets
-git diff --cached | grep -i "password\|secret\|api_key\|token"
+git diff --cached --name-only
+# Review sensitive content locally with a redacting scanner; do not print candidate
+# secret values into shared terminal/tool logs. A keyword search cannot prove absence.
 ```
 
-**If a secret is ever committed, rotate it.** Deleting the line or rewriting history is not enough — assume it's compromised the moment it reaches a remote. Revoke and reissue the key first, then purge it from history.
+**If a secret is ever committed, rotate it.** Deleting the line or rewriting history is not enough — assume it's compromised the moment it reaches a remote. Revoke and reissue the key first; coordinate any history rewrite separately with the owner and collaborators. Do not rewrite shared history automatically.
 
 ## Securing AI / LLM Features
 
@@ -382,7 +402,8 @@ try {
 } catch {
   throw new ValidationError('unexpected model output'); // JSON.parse or schema failed
 }
-await runAllowlistedAction(intent.action, intent.params);
+// Allowlisting does not authorize a user/tenant or prevent repeated side effects.
+await runAuthorizedAction(serverIdentity, intent.action, intent.params, idempotencyKey);
 container.textContent = await llm.reply(userMessage);
 ```
 
@@ -390,7 +411,7 @@ container.textContent = await llm.reply(userMessage);
 
 ```markdown
 ### Authentication
-- [ ] Passwords hashed with bcrypt/scrypt/argon2 (salt rounds ≥ 12)
+- [ ] Passwords hashed with a reviewed password KDF (algorithm-specific cost/memory settings; bcrypt rounds do not apply to scrypt/Argon2)
 - [ ] Session tokens are httpOnly, secure, sameSite
 - [ ] Login has rate limiting
 - [ ] Password reset tokens expire
@@ -435,11 +456,11 @@ For detailed security checklists and pre-commit verification steps, see `referen
 | Rationalization | Reality |
 |---|---|
 | "This is an internal tool, security doesn't matter" | Internal tools get compromised. Attackers target the weakest link. |
-| "We'll add security later" | Security retrofitting is 10x harder than building it in. Add it now. |
+| "We'll add security later" | Late security changes can require redesign; estimate the actual impact rather than claim a universal multiplier. |
 | "No one would try to exploit this" | Automated scanners will find it. Security by obscurity is not security. |
 | "The framework handles security" | Frameworks provide tools, not guarantees. You still need to use them correctly. |
 | "It's just a prototype" | Prototypes become production. Security habits from day one. |
-| "Threat modeling is overkill here" | Five minutes of "how would I attack this?" prevents the design flaws no control can patch later. |
+| "Threat modeling is overkill here" | A bounded threat-model exercise can expose design gaps; it cannot guarantee prevention. |
 | "It's just LLM output, it's only text" | That "text" can be a SQL statement, a script tag, or a shell command. Treat it like any untrusted input. |
 
 ## Red Flags
@@ -447,7 +468,7 @@ For detailed security checklists and pre-commit verification steps, see `referen
 - User input passed directly to database queries, shell commands, or HTML rendering
 - Secrets in source code or commit history
 - API endpoints without authentication or authorization checks
-- Missing CORS configuration or wildcard (`*`) origins
+- CORS policy inconsistent with the endpoint trust model; public noncredential resources can legitimately use wildcard origins
 - No rate limiting on authentication endpoints
 - Stack traces or internal errors exposed to users
 - Dependencies with known critical vulnerabilities

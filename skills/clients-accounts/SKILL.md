@@ -21,7 +21,7 @@ source_repo: WHOISABHISHEKADHIKARI/sme-ops-system-builder
 Works out the smallest useful **Clients & Accounts** setup for the business in front of it, then
 builds it only when asked. The default output is a short recommendation, not a
 spreadsheet. Artifacts - CSV, SQL DDL, JSON Schema, Notion mapping - are produced on
-request, from one field list so they cannot drift apart.
+request, from one field list, then verify their mappings agree.
 
 Layer: Layer 8: Operate. Fits: Starter stage. Table code: n/a.
 
@@ -40,7 +40,8 @@ empty templates only - it never holds or processes real employee or customer dat
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+The upstream shared execution contract is not bundled; use this file's stated
+intent, placeholder-only, output and external-write rules without inventing a read. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -110,7 +111,7 @@ so do not add tax rate or tax amount fields to the schema unless the user asks f
 Outstanding = Total Invoiced - Total Paid
 ```
 
-Round once, at the end, to 2 decimal places, and use the rounded figure everywhere. When credits, write-offs
+For this two-decimal example, round once at the end; confirm currency precision before adapting, and use the rounded figure everywhere. When credits, write-offs
 or a part payment mean the two totals do not explain the difference, record why in `Notes` and leave
 `Outstanding` as the arithmetic result - do not adjust `Total Paid` to force a tie-out. If the user has
 not supplied either total, leave `Outstanding` empty rather than defaulting it to 0.
@@ -139,7 +140,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Client Name,Client Type,Industry,Contact Person,Email,Phone,Billing Address,Tax ID,Currency,Tax Basis,Payment Terms (Days),Account Manager,Projects,Invoices,Total Invoiced,Total Paid,Outstanding,Client Portal Access,Status,Notes,Client ID
-Example Customer,Retainer,Professional services,Example Contact,contact@example.com,+91 98xxxxxx21,"Example Address, Example City 000000",PAN-EXAMPLE-001,INR,Not confirmed,30,Example Account Manager,"Website Redesign, Data Migration","INV-EXAMPLE-001, INV-EXAMPLE-002",100000.00,90000.00,10000.00,"Read-only portal, expires 2026-03-31",Active,Account review set for March once the quarterly numbers are signed off.,(blank)
+Example Customer,Retainer,Professional services,Example Contact,contact@example.com,+91 98xxxxxx21,"Example Address, Example City 000000",PAN-EXAMPLE-001,INR,Not confirmed,30,Example Account Manager,"Website Redesign, Data Migration","INV-EXAMPLE-001, INV-EXAMPLE-002",100000.00,90000.00,10000.00,"Read-only portal, expires 2026-03-31",Active,Account review set for March once the quarterly numbers are signed off.,CLIENT-EXAMPLE-001
 
 ```
 
@@ -159,13 +160,13 @@ CREATE TABLE clients_accounts (
   account_manager VARCHAR(255),
   projects VARCHAR(255),
   invoices VARCHAR(255),
-  total_invoiced NUMERIC(14,2) NOT NULL,
-  total_paid NUMERIC(14,2) NOT NULL,
-  outstanding NUMERIC(14,2),
+  total_invoiced NUMERIC(14,2),
+  total_paid NUMERIC(14,2),
+  outstanding NUMERIC(14,2) GENERATED ALWAYS AS (total_invoiced - total_paid) STORED,
   client_portal_access VARCHAR(255),
   status VARCHAR(100) NOT NULL,
   notes TEXT,
-  client_id SERIAL PRIMARY KEY,
+  client_id VARCHAR(100) PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
   CHECK (tax_basis IN ('Not confirmed', 'Tax-inclusive', 'Tax-exclusive')),
@@ -174,7 +175,6 @@ CREATE TABLE clients_accounts (
 );
 
 CREATE INDEX idx_clients_accounts_status ON clients_accounts (status);
-```
 ```
 
 ```json
@@ -204,14 +204,13 @@ CREATE INDEX idx_clients_accounts_status ON clients_accounts (status);
       "Client Portal Access": { "type": "string" },
       "Status": { "type": "string" },
       "Notes": { "type": "string" },
-      "Client ID": { "type": "integer" }
+      "Client ID": { "type": "string", "minLength": 1 }
   },
   "required": [
+    "Client ID",
     "Client Type",
     "Tax Basis",
     "Payment Terms (Days)",
-    "Total Invoiced",
-    "Total Paid",
     "Status"
   ]
 }
@@ -242,16 +241,31 @@ CREATE INDEX idx_clients_accounts_status ON clients_accounts (status);
 | Notes | Text | Leave as Text |
 | Client ID | Text (preserve source ID) | Keep imported IDs as Text; optionally add a separate Unique ID property |
 ```
-```
 
-The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
-and anything pointing at another table stays `relation`.
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Keep monetary/date semantics; the documented Projects/Invoices convenience lists
+remain text, not foreign-key relations.
+
+## Calculation and privacy boundaries
+
+The SQL fragment is PostgreSQL-specific; generated Outstanding is read-only and
+becomes NULL when either total is unknown. For CSV/JSON emit recalculated values
+only when both inputs are known and preserve unknown by omission/blank, never
+invent zero. In Notion, replace imported Outstanding with a separately verified
+formula/calculation workflow; a Number property itself enforces no arithmetic.
+Totals must share one currency, tax basis and accounting period, with credits and
+write-offs reconciled separately; never sum currencies or use this convenience
+register as an authoritative ledger. `updated_at DEFAULT NOW()` is insert-only,
+not an automatic update trigger. Store IDs as text across formats. Portal Access
+is an access-status description, never a login/token/password. Restrict contact,
+billing/tax details to approved roles and retention; escape formula-like text
+including phone prefixes for spreadsheet-safe export. Relationship owner/next-action
+are proposed extensions: add them consistently only when the user requests them.
 
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Client Name | `text` | `VARCHAR(255)` | `string` | Text | `Example Customer` |
+| 1 | Client Name | `text` | `VARCHAR(255)` | `string` | Title | `Example Customer` |
 | 2 | Client Type | `select` | `VARCHAR(100)` | `string` | Select | `Retainer` |
 | 3 | Industry | `text` | `VARCHAR(255)` | `string` | Text | `Professional services` |
 | 4 | Contact Person | `text` | `VARCHAR(255)` | `string` | Text | `Example Contact` |
@@ -271,7 +285,7 @@ and anything pointing at another table stays `relation`.
 | 18 | Client Portal Access | `text` | `VARCHAR(255)` | `string` | Text | `Read-only portal, expires 2026-03-31` |
 | 19 | Status | `select` | `VARCHAR(100)` | `string` | Select | `Active` |
 | 20 | Notes | `long_text` | `TEXT` | `string` | Text | `Account review set for March once the quarterly numbers are signed off.` |
-| 21 | Client ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | (blank) |
+| 21 | Client ID | `id` | `VARCHAR(100) PRIMARY KEY` | `string` | Text (preserve source ID) | CLIENT-EXAMPLE-001 |
 
 ## Select Options
 
@@ -339,7 +353,7 @@ Client details live in three people inboxes.
 - Build when requested; recommend and offer a build for advice-only requests.
 - One question per message. A batched intake reads as a form and gets guessed at.
 - Keep display names identical across CSV and JSON; document normalized SQL identifiers.
-- Use `relation` for anything that points at another table, `text` only for free text.
+- Use real foreign keys/relations only where the target exists; preserve documented denormalized convenience lists as text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
 - If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 

@@ -11,7 +11,7 @@
  */
 
 import { parseArgs } from 'node:util';
-import { writeFileSync, statSync } from 'node:fs';
+import { writeFileSync, statSync, readFileSync } from 'node:fs';
 
 // User-Agent for tracking skill usage in Apify analytics
 const USER_AGENT = 'apify-agent-skills/apify-competitor-intelligence-1.0.1';
@@ -47,6 +47,11 @@ function parseCliArgs() {
         process.exit(1);
     }
 
+    if (!/^[A-Za-z0-9_-]+(?:[~/][A-Za-z0-9_-]+)?$/.test(values.actor)) throw new Error('Invalid Actor ID');
+    if (!['csv', 'json'].includes(values.format)) throw new Error('Unsupported output format');
+    for (const key of ['timeout', 'poll-interval']) {
+        if (!/^\d+$/.test(values[key]) || Number(values[key]) < 1 || Number(values[key]) > 3600) throw new Error(`Invalid ${key}`);
+    }
     return {
         actor: values.actor,
         input: values.input,
@@ -92,11 +97,17 @@ Examples:
 `);
 }
 
+// Never put bearer credentials in URLs or automatically follow redirects.
+async function apiFetch(token, url, options = {}) {
+    return fetch(url, { ...options, redirect: 'error', signal: AbortSignal.timeout(30_000),
+        headers: { ...options.headers, Authorization: `Bearer ${token}` } });
+}
+
 // Start an actor run and return { runId, datasetId }
 async function startActor(token, actorId, inputJson) {
     // Convert "author/actor" format to "author~actor" for API compatibility
     const apiActorId = actorId.replace('/', '~');
-    const url = `https://api.apify.com/v2/acts/${apiActorId}/runs?token=${encodeURIComponent(token)}`;
+    const url = `https://api.apify.com/v2/actors/${apiActorId}/runs`;
 
     let data;
     try {
@@ -106,7 +117,7 @@ async function startActor(token, actorId, inputJson) {
         process.exit(1);
     }
 
-    const response = await fetch(url, {
+    const response = await apiFetch(token, url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -121,7 +132,7 @@ async function startActor(token, actorId, inputJson) {
     }
 
     if (!response.ok) {
-        const text = await response.text();
+        const text = `HTTP ${response.status}`;
         console.error(`Error: API request failed (${response.status}): ${text}`);
         process.exit(1);
     }
@@ -135,14 +146,14 @@ async function startActor(token, actorId, inputJson) {
 
 // Poll run status until complete or timeout
 async function pollUntilComplete(token, runId, timeout, interval) {
-    const url = `https://api.apify.com/v2/actor-runs/${runId}?token=${encodeURIComponent(token)}`;
+    const url = `https://api.apify.com/v2/actor-runs/${encodeURIComponent(runId)}`;
     const startTime = Date.now();
     let lastStatus = null;
 
     while (true) {
-        const response = await fetch(url);
+        const response = await apiFetch(token, url);
         if (!response.ok) {
-            const text = await response.text();
+            const text = `HTTP ${response.status}`;
             console.error(`Error: Failed to get run status: ${text}`);
             process.exit(1);
         }
@@ -179,49 +190,46 @@ function csvCell(value) {
 
 // Download dataset items
 async function downloadResults(token, datasetId, outputPath, format) {
-    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${encodeURIComponent(token)}&format=json`;
+    const url = `https://api.apify.com/v2/datasets/${encodeURIComponent(datasetId)}/items?format=json&limit=1000`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(token, url, {
         headers: {
             'User-Agent': `${USER_AGENT}/download_${format}`,
         },
     });
 
     if (!response.ok) {
-        const text = await response.text();
+        const text = `HTTP ${response.status}`;
         console.error(`Error: Failed to download results: ${text}`);
         process.exit(1);
     }
 
     const data = await response.json();
+    if (!Array.isArray(data)) throw new Error('Expected dataset array');
+    console.log('Export is limited to the first 1000 items; paginate separately for larger datasets.');
 
     if (format === 'json') {
-        writeFileSync(outputPath, JSON.stringify(data, null, 2));
+        writeFileSync(outputPath, JSON.stringify(data, null, 2), { flag: 'wx' });
     } else {
         // CSV output
         if (data.length > 0) {
-            const fieldnames = Object.keys(data[0]);
+            const fieldnames = [...new Set(data.flatMap(row => Object.keys(row)))];
             const csvLines = [fieldnames.map(csvCell).join(',')];
 
             for (const row of data) {
                 const values = fieldnames.map((key) => {
                     let value = row[key];
 
-                    // Truncate long text fields
-                    if (typeof value === 'string' && value.length > 200) {
-                        value = value.slice(0, 200) + '...';
-                    } else if (Array.isArray(value) || (typeof value === 'object' && value !== null)) {
-                        value = JSON.stringify(value) || '';
-                    }
+                    if (typeof value === 'object' && value !== null) value = JSON.stringify(value);
 
                     return csvCell(value);
                 });
                 csvLines.push(values.join(','));
             }
 
-            writeFileSync(outputPath, csvLines.join('\n'));
+            writeFileSync(outputPath, csvLines.join('\n'), { flag: 'wx' });
         } else {
-            writeFileSync(outputPath, '');
+            writeFileSync(outputPath, '', { flag: 'wx' });
         }
     }
 
@@ -230,22 +238,22 @@ async function downloadResults(token, datasetId, outputPath, format) {
 
 // Display top 5 results in chat format
 async function displayQuickAnswer(token, datasetId) {
-    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${encodeURIComponent(token)}&format=json`;
+    const url = `https://api.apify.com/v2/datasets/${encodeURIComponent(datasetId)}/items?format=json&limit=1000`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(token, url, {
         headers: {
             'User-Agent': `${USER_AGENT}/quick_answer`,
         },
     });
 
     if (!response.ok) {
-        const text = await response.text();
+        const text = `HTTP ${response.status}`;
         console.error(`Error: Failed to download results: ${text}`);
         process.exit(1);
     }
 
     const data = await response.json();
-    const total = data.length;
+    const total = data.length; // bounded sample, not dataset total
 
     if (total === 0) {
         console.log('\nNo results found.');
@@ -254,7 +262,7 @@ async function displayQuickAnswer(token, datasetId) {
 
     // Display top 5
     console.log(`\n${'='.repeat(60)}`);
-    console.log(`TOP 5 RESULTS (of ${total} total)`);
+    console.log(`TOP 5 RESULTS (of ${total} fetched, maximum 1000)`);
     console.log('='.repeat(60));
 
     for (let i = 0; i < Math.min(5, data.length); i++) {
@@ -291,7 +299,7 @@ function reportSummary(outputPath, format) {
 
     let count;
     try {
-        const content = require('fs').readFileSync(outputPath, 'utf-8');
+        const content = readFileSync(outputPath, 'utf-8');
         if (format === 'json') {
             const data = JSON.parse(content);
             count = Array.isArray(data) ? data.length : 1;
@@ -304,7 +312,7 @@ function reportSummary(outputPath, format) {
         count = 'unknown';
     }
 
-    console.log(`Records: ${count}`);
+    console.log(`Records (CSV multiline cells may affect line count): ${count}`);
     console.log(`Size: ${size.toLocaleString()} bytes`);
 }
 
@@ -357,6 +365,6 @@ async function main() {
 }
 
 main().catch((err) => {
-    console.error(`Error: ${err.message}`);
+    console.error(`Request failed; inspect the run in the authorized Apify console (raw error omitted)`);
     process.exit(1);
 });

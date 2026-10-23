@@ -40,7 +40,7 @@ empty templates only - it never holds or processes real employee or customer dat
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+No shared execution-contract file is bundled; use this file’s bounded template workflow and the current host’s authorization rules. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -94,7 +94,7 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Recommended approach:** Build an account register tied to people records, then provision and remove from that one list.
 
-**Why this one:** Account sprawl is a security problem, not an admin problem. One register per person, with join and leave dates, is the whole fix.
+**Why this one:** Account sprawl is a security problem, not an admin problem. A register supports reconciliation but does not itself discover or revoke access, sessions, keys, groups or delegated permissions.
 
 **Workflow:** Joiner → Create accounts → Assign tools → Leave → Remove access → Log
 
@@ -102,8 +102,7 @@ If an artifact was requested, build it after resolving essential missing facts. 
 account is live, and is set on the day access is actually removed. Never pre-fill it with a planned or
 probable leaver date, because a removal date that was only a forecast is indistinguishable from one that
 happened, and the register is read to answer "does this person still have access". A record that is `Active`
-with a removal date is a contradiction: fix the status or clear the date, never leave both. `Closed` and
-`Pending Offboarding` must carry the date, or the offboarding is not finished.
+with a removal date is a contradiction: fix the status or clear the date, never leave both. `Closed` must carry verified removal evidence/date. `Pending Offboarding` remains undated until removal is actually verified; do not mark it complete from a planned leave date.
 
 **Security columns are facts, not targets.** `Two Factor On`, `Recovery Email Set` and `Password Policy Met`
 record what is true now. They are not a to-do list and must never be pre-set to TRUE to close a ticket. When
@@ -139,13 +138,13 @@ that need a number, date or currency format applied.
 
 ```csv
 Account Record,Employee Name,Department,Account Type,Work Email,Aliases,Email Groups,Tool or System,Licence Type,Licence Cost,Currency,Created Date,Created By,Two Factor On,Recovery Email Set,Password Policy Met,Last Access Review,Next Review Due,Access Removed Date,Handover To,Status,Notes,Account ID
-ACC-EXAMPLE-001,Example Employee,Delivery,Work Email,employee@example.com,"employee, e.surname","all-staff, delivery-team",Example Mail Service,Per User,1200.00,INR,2026-01-15,Example Requester,TRUE,FALSE,FALSE,2026-02-28,2026-02-28,2026-02-28,Example Successor,Closed,Contract ended 2026-02-28. Access removed and mailbox handed to the Example Successor; licences not reassigned.,(blank)
+ACC-EXAMPLE-001,Example Employee,Delivery,Work Email,employee@example.com,"employee, e.surname","all-staff, delivery-team",Example Mail Service,Per User,1200.00,INR,2026-01-15,Example Requester,TRUE,FALSE,FALSE,2026-02-28,2026-02-28,2026-02-28,Example Successor,Closed,Contract ended 2026-02-28. Access removed and mailbox handed to the Example Successor; licences not reassigned.,ACC-001
 
 ```
 
 ```sql
 CREATE TABLE company_email_accounts (
-  account_record VARCHAR(255),
+  account_record VARCHAR(255) NOT NULL UNIQUE,
   employee_name VARCHAR(255),
   department VARCHAR(255),
   account_type VARCHAR(100) NOT NULL,
@@ -154,7 +153,7 @@ CREATE TABLE company_email_accounts (
   email_groups VARCHAR(255),
   tool_or_system VARCHAR(255),
   licence_type VARCHAR(100) NOT NULL,
-  licence_cost NUMERIC(14,2) NOT NULL,
+  licence_cost NUMERIC(14,2),
   currency VARCHAR(255),
   created_date DATE NOT NULL,
   created_by VARCHAR(255),
@@ -163,23 +162,24 @@ CREATE TABLE company_email_accounts (
   password_policy_met BOOLEAN,
   last_access_review DATE,
   next_review_due DATE,
-  access_removed_date DATE NOT NULL,
+  access_removed_date DATE,
   handover_to VARCHAR(255),
   status VARCHAR(100) NOT NULL,
   notes TEXT,
-  account_id SERIAL PRIMARY KEY,
+  account_id VARCHAR(255) PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
   CHECK (status IN ('Active', 'Suspended', 'Pending Offboarding', 'Closed')),
   -- The core integrity rule: access that has been removed is dated, and live access is not.
-  CHECK ((status IN ('Closed', 'Pending Offboarding')) = (access_removed_date IS NOT NULL)),
-  -- A review cannot be recorded after the date it was due.
-  CHECK (last_access_review IS NULL OR next_review_due IS NULL
-         OR last_access_review <= next_review_due)
+  CHECK ((status = 'Closed') = (access_removed_date IS NOT NULL)),
+  CHECK (access_removed_date IS NULL OR access_removed_date >= created_date),
+  CHECK (licence_cost IS NULL OR licence_cost >= 0)
+  -- Late reviews are real history: never reject last_access_review > old due date.
+  -- Advance next_review_due after completed review under the approved cadence.
+
 );
 
 CREATE INDEX idx_company_email_accounts_status ON company_email_accounts (status);
-```
 ```
 
 ```json
@@ -198,7 +198,7 @@ CREATE INDEX idx_company_email_accounts_status ON company_email_accounts (status
       "Email Groups": { "type": "string" },
       "Tool or System": { "type": "string" },
       "Licence Type": { "type": "string" },
-      "Licence Cost": { "type": "number" },
+      "Licence Cost": { "type": ["number", "null"], "minimum": 0 },
       "Currency": { "type": "string" },
       "Created Date": { "type": "string", "format": "date" },
       "Created By": { "type": "string" },
@@ -207,16 +207,17 @@ CREATE INDEX idx_company_email_accounts_status ON company_email_accounts (status
       "Password Policy Met": { "type": "boolean" },
       "Last Access Review": { "type": "string", "format": "date" },
       "Next Review Due": { "type": "string", "format": "date" },
-      "Access Removed Date": { "type": "string", "format": "date" },
+      "Access Removed Date": { "type": ["string", "null"], "format": "date" },
       "Handover To": { "type": "string" },
-      "Status": { "type": "string" },
+      "Status": { "type": "string", "enum": ["Active", "Suspended", "Pending Offboarding", "Closed"] },
       "Notes": { "type": "string" },
-      "Account ID": { "type": "integer" }
+      "Account ID": { "type": "string" }
   },
   "required": [
+    "Account Record",
+    "Account ID",
     "Account Type",
     "Licence Type",
-    "Licence Cost",
     "Created Date",
     "Status"
   ]
@@ -226,8 +227,8 @@ CREATE INDEX idx_company_email_accounts_status ON company_email_accounts (status
 ```markdown
 | CSV column | Notion property | Set after import |
 |---|---|---|
-| Account Record | Text | Leave as Text. A human-readable reference you choose, not a generated number, so it stays reproducible |
-| Employee Name | Title | Use as the database title |
+| Account Record | Title | Use the unique account reference as the database title |
+| Employee Name | Text | Display name only; not a unique identity |
 | Department | Text | Leave as Text |
 | Account Type | Select | Add options: "Work Email", "Shared Mailbox", "Tool Account", "Group Address" |
 | Work Email | Email | Convert to Email |
@@ -250,7 +251,6 @@ CREATE INDEX idx_company_email_accounts_status ON company_email_accounts (status
 | Notes | Text | Leave as Text |
 | Account ID | Text (preserve source ID) | Keep imported IDs as Text; optionally add a separate Unique ID property |
 ```
-```
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
@@ -259,7 +259,7 @@ and anything pointing at another table stays `relation`.
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Account Record | `text` | `VARCHAR(255)` | `string` | Text | `ACC-EXAMPLE-001` |
+| 1 | Account Record | `text` | `VARCHAR(255) NOT NULL UNIQUE` | `string` | Title | `ACC-EXAMPLE-001` |
 | 2 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Example Employee` |
 | 3 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 4 | Account Type | `select` | `VARCHAR(100)` | `string` | Select | `Work Email` |
@@ -281,7 +281,7 @@ and anything pointing at another table stays `relation`.
 | 20 | Handover To | `text` | `VARCHAR(255)` | `string` | Text | `Example Successor` |
 | 21 | Status | `select` | `VARCHAR(100)` | `string` | Select | `Closed` |
 | 22 | Notes | `long_text` | `TEXT` | `string` | Text | `Contract ended 2026-02-28. Access removed and mailbox handed to the Example Successor; licences not reassigned.` |
-| 23 | Account ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | (blank) |
+| 23 | Account ID | `id` | `VARCHAR(255) PRIMARY KEY` | `string` | Text (preserve source ID) | `ACC-001` |
 
 ## Select Options
 
@@ -402,3 +402,23 @@ Then recommend the smallest setup that fits, and wait for me to ask before you b
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
+
+## Artifact and review boundaries
+
+One row is one account in one system, not one employee with all systems collapsed.
+Use stable provider/account and employee identifiers when integrating a directory;
+name matching alone can collide/drift. The text account ID above is supplied by the
+builder, not an invented provider ID. Unknown license costs/controls stay unknown;
+Notion checkboxes cannot represent unknown without a separate status/tri-state field.
+Record cost billing period/tax/currency before summing; no mixed-currency totals.
+JSON Schema does not enforce cross-field dates/status here; application validation
+must apply the same Closed/removal invariant and actual calendar dates.
+
+Example: an Active account with no removal date is valid; a Pending Offboarding
+account is still unverified access; Closed without a verified removal date is invalid.
+A review completed after a missed deadline must retain the actual late completion,
+not change history to satisfy a CHECK. Restrict the real register to authorized
+admins; never store passwords, MFA seeds/recovery codes or actual recovery addresses
+in Notes. Mailbox handover requires approved privacy/retention and access review,
+not merely naming a successor. These templates do not provision, revoke or audit
+provider state, and no SQL/Notion/import/account action was run.

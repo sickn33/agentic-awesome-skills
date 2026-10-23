@@ -52,7 +52,7 @@ const calculateTotal = (items: Item[]) => {
 // Iteration 2: Make it clear (refactor)
 const calculateTotal = (items: Item[]): number => {
 return items.reduce((total, item) => {
-return total + (item.price \* item.quantity);
+return total + (item.price * item.quantity);
 }, 0);
 };
 
@@ -61,15 +61,15 @@ const calculateTotal = (items: Item[]): number => {
 if (!items?.length) return 0;
 
 return items.reduce((total, item) => {
-if (item.price < 0 || item.quantity < 0) {
+if (!Number.isFinite(item.price) || !Number.isFinite(item.quantity) || item.price < 0 || item.quantity < 0) {
 throw new Error('Price and quantity must be non-negative');
 }
-return total + (item.price \* item.quantity);
+return total + (item.price * item.quantity);
 }, 0);
 };
 
-````
-Each step is complete, tested, and working
+```
+These are alternative illustrative stages, not test results; do not concatenate duplicate declarations.
 </Good>
 
 <Bad>
@@ -86,7 +86,7 @@ const calculateTotal = (items: Item[]): number => {
   // Plus caching, plus logging, plus currency conversion...
   return validItems.reduce(...); // Too many concerns at once
 };
-````
+```
 
 Overwhelming, error-prone, hard to verify
 </Bad>
@@ -117,7 +117,7 @@ Overwhelming, error-prone, hard to verify
 
 ### 2. Poka-Yoke (Error Proofing)
 
-Design systems that prevent errors at compile/design time, not runtime.
+Use design-time constraints alongside runtime validation; types cannot validate untrusted JSON.
 
 #### Principles
 
@@ -154,7 +154,7 @@ type OrderBad = {
 
 // Good: Only valid states possible
 type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered';
-type Order = {
+type SimpleOrder = {
 status: OrderStatus;
 total: number;
 };
@@ -168,7 +168,7 @@ type Order =
 
 // Now impossible to have shipped without trackingNumber
 
-````
+```
 Type system prevents entire classes of errors
 </Good>
 
@@ -186,7 +186,7 @@ const items: number[] = [1, 2, 3];
 if (items.length > 0) {
   firstItem(items as NonEmptyArray<number>); // Safe
 }
-````
+```
 
 Function signature guarantees safety
 </Good>
@@ -204,37 +204,38 @@ const processPayment = (amount: number) => {
 
 // Good: Validate immediately
 const processPayment = (amount: number) => {
-if (amount <= 0) {
+if (!Number.isFinite(amount) || amount <= 0) {
 throw new Error('Payment amount must be positive');
 }
 if (amount > 10000) {
 throw new Error('Payment exceeds maximum allowed');
 }
 
-const fee = amount \* 0.03;
+const fee = amount * 0.03;
 // ... now safe to use
 };
 
 // Better: Validation at boundary with branded type
-type PositiveNumber = number & { readonly \_\_brand: 'PositiveNumber' };
+type PositiveNumber = number & { readonly __brand: 'PositiveNumber' };
 
 const validatePositive = (n: number): PositiveNumber => {
-if (n <= 0) throw new Error('Must be positive');
+if (!Number.isFinite(n) || n <= 0) throw new Error('Must be finite and positive');
 return n as PositiveNumber;
 };
 
 const processPayment = (amount: PositiveNumber) => {
 // amount is guaranteed positive, no need to check
-const fee = amount \* 0.03;
+const fee = amount * 0.03;
 };
 
 // Validate at system boundary
+// Request denotes the application framework request type, not the DOM Request.
 const handlePaymentRequest = (req: Request) => {
 const amount = validatePositive(req.body.amount); // Validate once
 processPayment(amount); // Use everywhere safely
 };
 
-````
+```
 Validate once at boundary, safe everywhere else
 </Good>
 
@@ -262,7 +263,7 @@ const processUser = (user: User | null) => {
   // Main logic here, guaranteed user is valid and active
   sendEmail(user.email, 'Welcome!');
 };
-````
+```
 
 Guards make assumptions explicit and enforced
 </Good>
@@ -301,7 +302,7 @@ timeout: 5000,
 const config = loadConfig();
 const client = new APIClient(config);
 
-````
+```
 Fail at startup, not in production
 </Good>
 
@@ -366,7 +367,7 @@ class OrderAPIClient {
     return this.fetch(`/orders/${id}`);
   }
 }
-````
+```
 
 Consistency makes codebase predictable
 </Good>
@@ -381,7 +382,7 @@ const getOrder = async (id: string): Promise<Order> => {
 // Breaking consistency "because I prefer functions"
 };
 
-````
+```
 Inconsistency creates confusion
 </Bad>
 
@@ -412,7 +413,7 @@ if (!result.ok) {
   return;
 }
 const user = result.value; // Type-safe!
-````
+```
 
 Standard pattern across codebase
 </Good>
@@ -530,7 +531,7 @@ const logError = (error: Error) => {
 Logger.getInstance().log('error', error.message);
 };
 
-````
+```
 Building for imaginary future requirements
 </Bad>
 
@@ -554,12 +555,13 @@ const formatCurrency = (amount: number, currency: string): string => {
 };
 
 // Requirement evolves: support localization
-const formatCurrency = (amount: number, locale: string): string => {
-  return new Intl.NumberFormat(locale, {\n    style: 'currency',
-    currency: locale === 'en-US' ? 'USD' : 'EUR',
+const formatCurrency = (amount: number, locale: string, currency: string): string => {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
   }).format(amount);
 };
-````
+```
 
 Complexity added only when needed
 </Good>
@@ -581,7 +583,7 @@ class GenericRepository<T> { /_300 lines _/ }
 class QueryBuilder<T> { /_ 200 lines_/ }
 // ... building entire ORM for single table
 
-````
+```
 Massive abstraction for uncertain future
 </Bad>
 
@@ -597,7 +599,7 @@ const getUserById = async (id: string): Promise<User | null> => {
 };
 
 // When pattern emerges across multiple entities, then abstract
-````
+```
 
 Abstract only when pattern proven across 3+ cases
 </Good>
@@ -617,7 +619,7 @@ const filterActiveUsers = (users: User[]): User[] => {
 // Later: After profiling shows this is bottleneck
 // Then optimize with indexed lookup or caching
 
-````
+```
 Optimize based on measurement, not assumptions
 </Good>
 
@@ -632,7 +634,7 @@ const filterActiveUsers = (users: User[]): User[] => {
   // Adds complexity, harder to maintain
   // No evidence it was needed
 };\
-````
+```
 
 Complex solution for unmeasured problem
 </Bad>
@@ -663,7 +665,7 @@ Complex solution for unmeasured problem
 
 ## Integration with Commands
 
-The Kaizen skill guides how you work. The commands provide structured analysis:
+The following are conceptual workflow names, not commands bundled or installed by this skill:
 
 - **`/why`**: Root cause analysis (5 Whys)
 - **`/cause-and-effect`**: Multi-factor analysis (Fishbone)

@@ -13,4 +13,8 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `scripts/build-command.js` | `hyperexecute-skill/scripts/build-command.js` | `e8cbdcc4fa6f39f4f004eb1d66201a88d2873d7b` | stored without executable bit; invoke via its interpreter |
 | `scripts/summarize-artifacts.js` | `hyperexecute-skill/scripts/summarize-artifacts.js` | `6b36f2bc8e67383681e98ec0a261523d7ad259ef` | stored without executable bit; invoke via its interpreter |
 
-`doctor.js --validate` runs the user-installed HyperExecute CLI using provider credentials supplied by environment variables; the provider CLI receives those values in process arguments, where local process-inspection tools may expose them. Restrict use to an authorized account on a trusted host. Treat it as a remote account operation and verify current CLI behavior before invocation. No credentials were supplied during this restoration.
+`doctor.js --validate-cli` runs the user-installed HyperExecute CLI using provider credentials supplied by environment variables; the provider CLI receives those values in process arguments, where local process-inspection tools may expose them. Restrict use to an authorized account on a trusted host. Treat it as a remote account operation and verify current CLI behavior before invocation. No credentials were supplied during this restoration.
+
+## Local review modifications (2026-10-23)
+
+Original blob hashes above identify imported upstream bytes, not the modified files. Local changes bound doctor subprocess waiting, reject misleading download-only run construction and invalid concurrency, limit artifact traversal, and make text-config lint boundaries explicit. MIT attribution and license wording are preserved.

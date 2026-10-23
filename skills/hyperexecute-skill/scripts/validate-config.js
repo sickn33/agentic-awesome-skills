@@ -16,11 +16,11 @@ function warn(message) {
 }
 
 function hasKey(content, key) {
-  return new RegExp(`^\\s*${key}\\s*:`, 'm').test(content);
+  return new RegExp(`^${key}\\s*:`, 'm').test(content);
 }
 
 function keyValue(content, key) {
-  const match = content.match(new RegExp(`^\\s*${key}\\s*:\\s*(.+?)\\s*$`, 'm'));
+  const match = content.match(new RegExp(`^${key}\\s*:\\s*(.+?)\\s*$`, 'm'));
   return match ? match[1].replace(/^['"]|['"]$/g, '') : '';
 }
 
@@ -53,7 +53,7 @@ if (!hasKey(content, 'pre')) warn('No pre step found; ensure dependencies and br
 if (!hasKey(content, 'uploadArtefacts') && !hasKey(content, 'uploadArtifacts')) warn('No artifact upload paths found; debugging failed jobs may be harder.');
 if (hasKey(content, 'retryOnFailure') && !hasKey(content, 'maxRetries')) warn('retryOnFailure is set but maxRetries is missing.');
 
-if (/LT_ACCESS_KEY\s*:\s*[^\s$][^\n]*/.test(content)) {
+if (/LT_ACCESS_KEY\s*:\s*['"]?(?!\$)[A-Za-z0-9_-]{12,}/.test(content)) {
   fail('LT_ACCESS_KEY appears to be hardcoded. Use ${LT_ACCESS_KEY} or CI secrets.');
 }
 
@@ -68,5 +68,5 @@ if (/access[_-]?key\s*[:=]\s*['"]?[A-Za-z0-9_-]{12,}/i.test(content)) {
 if (process.exitCode) {
   console.error('HyperExecute config lint failed. Run the official CLI with --validate after fixing these issues.');
 } else {
-  console.log('HyperExecute config lint passed. Next: run official CLI validation with --validate.');
+  console.log('Text checks found no blocking patterns; YAML syntax/schema and credential safety remain unverified. Next: approved official CLI validation.');
 }

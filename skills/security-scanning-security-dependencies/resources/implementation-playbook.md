@@ -25,7 +25,7 @@ You are a security expert specializing in dependency vulnerability analysis, SBO
 - Treat dependency changes as release-impacting and test accordingly.
 
 ## Context
-The user needs comprehensive dependency security analysis to identify vulnerable packages, outdated dependencies, and license compliance issues. Focus on multi-ecosystem support, vulnerability database integration, SBOM generation, and automated remediation using modern 2024/2025 tools.
+The user needs comprehensive dependency security analysis to identify vulnerable packages, outdated dependencies, and license compliance issues. Focus on multi-ecosystem support, vulnerability database integration, SBOM generation, and automated remediation using version-pinned tools and dated advisory data.
 
 ## Requirements
 $ARGUMENTS
@@ -100,6 +100,10 @@ class DependencyScanner:
                 results['ecosystems'][ecosystem] = ecosystem_results
                 results['vulnerabilities'].extend(ecosystem_results.get('vulnerabilities', []))
 
+        results['coverage'] = {
+            'status': 'unverified',
+            'reason': 'Adapters require pinned schema/exit-code validation; empty lists do not prove a clean scan'
+        }
         self._update_summary(results)
         results['remediation_plan'] = self.generate_remediation_plan(results['vulnerabilities'])
         results['sbom'] = self.generate_sbom(results['ecosystems'])
@@ -126,11 +130,13 @@ class DependencyScanner:
                 for vuln_id, vuln in audit_data.get('vulnerabilities', {}).items():
                     results['vulnerabilities'].append({
                         'package': vuln.get('name', vuln_id),
-                        'version': vuln.get('range', ''),
+                        'affected_range': vuln.get('range', ''),
+                        'version': None,  # Resolve installed nodes from the lockfile, not the advisory range.
                         'vulnerability_id': vuln_id,
                         'severity': vuln.get('severity', 'UNKNOWN').upper(),
                         'cve': vuln.get('cves', []),
-                        'fixed_in': vuln.get('fixAvailable', {}).get('version', 'N/A'),
+                        'fixed_in': (vuln['fixAvailable'].get('version')
+                                     if isinstance(vuln.get('fixAvailable'), dict) else None),
                         'source': 'npm_audit'
                     })
         except Exception as e:
@@ -160,7 +166,7 @@ class DependencyScanner:
                         'package': vuln.get('package_name', ''),
                         'version': vuln.get('analyzed_version', ''),
                         'vulnerability_id': vuln.get('vulnerability_id', ''),
-                        'severity': 'HIGH',
+                        'severity': 'UNKNOWN',
                         'fixed_in': vuln.get('fixed_version', ''),
                         'source': 'safety'
                     })
@@ -185,15 +191,21 @@ class DependencyScanner:
             )
 
             if govuln_result.stdout:
-                for line in govuln_result.stdout.strip().split('\n'):
-                    if line:
-                        vuln_data = json.loads(line)
+                decoder = json.JSONDecoder()
+                remaining = govuln_result.stdout.lstrip()
+                messages = []
+                while remaining:
+                    value, end = decoder.raw_decode(remaining)
+                    messages.append(value)
+                    remaining = remaining[end:].lstrip()
+                for vuln_data in messages:
+                    if isinstance(vuln_data, dict):
                         if vuln_data.get('finding'):
                             finding = vuln_data['finding']
                             results['vulnerabilities'].append({
-                                'package': finding.get('osv', ''),
+                                'package': (finding.get('trace') or [{}])[0].get('module', 'UNKNOWN'),
                                 'vulnerability_id': finding.get('osv', ''),
-                                'severity': 'HIGH',
+                                'severity': 'UNKNOWN',
                                 'source': 'govulncheck'
                             })
         except Exception as e:
@@ -224,7 +236,7 @@ class DependencyScanner:
                         'package': vuln.get('package', {}).get('name', ''),
                         'version': vuln.get('package', {}).get('version', ''),
                         'vulnerability_id': advisory.get('id', ''),
-                        'severity': 'HIGH',
+                        'severity': 'UNKNOWN',
                         'source': 'cargo_audit'
                     })
         except Exception as e:
@@ -260,41 +272,19 @@ class DependencyScanner:
             plan['immediate_actions'].append({
                 'package': vuln.get('package', ''),
                 'current_version': vuln.get('version', ''),
-                'fixed_version': vuln.get('fixed_in', 'latest'),
+                'fixed_version': vuln.get('fixed_in'),
                 'severity': vuln.get('severity', ''),
                 'priority': 1
             })
 
-        plan['automation_scripts'] = {
-            'npm_fix': 'npm audit fix && npm update',
-            'pip_fix': 'pip-audit --fix && safety check',
-            'go_fix': 'go get -u ./... && go mod tidy',
-            'cargo_fix': 'cargo update && cargo audit'
-        }
+        plan['automation_scripts'] = {}  # Propose reviewed targeted changes; never bulk-update implicitly.
 
         return plan
 
     def generate_sbom(self, ecosystems: Dict[str, Any]) -> Dict[str, Any]:
-        sbom = {
-            'bomFormat': 'CycloneDX',
-            'specVersion': '1.5',
-            'version': 1,
-            'metadata': {
-                'timestamp': datetime.now().isoformat()
-            },
-            'components': []
-        }
+        # Advisory findings are not a complete inventory/SBOM. No fabricated purls.
+        return {"status": "not_generated", "reason": "Use a reviewed full lockfile/artifact SBOM generator"}
 
-        for ecosystem_name, ecosystem_data in ecosystems.items():
-            for vuln in ecosystem_data.get('vulnerabilities', []):
-                sbom['components'].append({
-                    'type': 'library',
-                    'name': vuln.get('package', ''),
-                    'version': vuln.get('version', ''),
-                    'purl': f"pkg:{ecosystem_name}/{vuln.get('package', '')}@{vuln.get('version', '')}"
-                })
-
-        return sbom
 ```
 
 ### 2. Vulnerability Prioritization
@@ -323,110 +313,33 @@ class VulnerabilityPrioritizer:
 
 ### 3. CI/CD Integration
 
-```yaml
-name: Dependency Security Scan
+The previous workflow swallowed scanner errors and grepped a case-sensitive JSON
+substring, which could pass empty/malformed reports and ignored Python/Go findings.
+Implement one version-pinned adapter per actual workspace, with these gates:
 
-on:
-  push:
-    branches: [main]
-  schedule:
-    - cron: '0 2 * * *'
+1. Enumerate manifests/lockfiles excluding vendored/generated/install trees and
+   run in each matching project directory; recursive detection plus root-only scan
+   is incomplete. Missing/unsupported lockfile is an explicit coverage gap.
+2. Keep install lifecycle/build scripts disabled unless reviewed execution is
+   authorized. Scanners may resolve/build/import packages and send names/versions
+   to third-party services; choose an approved isolated environment and data flow.
+3. Capture exit code/stdout/stderr separately with time/size limits; classify valid
+   findings exit codes separately from missing tools, auth/network/schema errors.
+4. Parse the tool's exact schema structurally. Unknown severity is unknown, not
+   invented HIGH or zero. govulncheck emits a stream of JSON values, not guaranteed
+   one-object-per-line NDJSON; Safety schemas vary by release.
+5. Fail the required gate on incomplete coverage/errors or policy-threshold findings;
+   do not use `|| true` or grep as a final decision. Upload only restricted,
+   redacted result files, not every project JSON manifest/credential file.
 
-jobs:
-  scan-dependencies:
-    runs-on: ubuntu-latest
+### 4. Targeted Updates
 
-    strategy:
-      matrix:
-        ecosystem: [npm, python, go]
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: NPM Audit
-        if: matrix.ecosystem == 'npm'
-        run: |
-          npm ci
-          npm audit --json > npm-audit.json || true
-          npm audit --audit-level=moderate
-
-      - name: Python Safety
-        if: matrix.ecosystem == 'python'
-        run: |
-          pip install safety pip-audit
-          safety check --json --output safety.json || true
-          pip-audit --format=json --output=pip-audit.json || true
-
-      - name: Go Vulnerability Check
-        if: matrix.ecosystem == 'go'
-        run: |
-          go install golang.org/x/vuln/cmd/govulncheck@latest
-          govulncheck -json ./... > govulncheck.json || true
-
-      - name: Upload Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: scan-${{ matrix.ecosystem }}
-          path: '*.json'
-
-      - name: Check Thresholds
-        run: |
-          CRITICAL=$(grep -o '"severity":"CRITICAL"' *.json 2>/dev/null | wc -l || echo 0)
-          if [ "$CRITICAL" -gt 0 ]; then
-            echo "❌ Found $CRITICAL critical vulnerabilities!"
-            exit 1
-          fi
-```
-
-### 4. Automated Updates
-
-```bash
-#!/bin/bash
-# automated-dependency-update.sh
-
-set -euo pipefail
-
-ECOSYSTEM="$1"
-UPDATE_TYPE="${2:-patch}"
-
-update_npm() {
-    npm audit --audit-level=moderate || true
-
-    if [ "$UPDATE_TYPE" = "patch" ]; then
-        npm update --save
-    elif [ "$UPDATE_TYPE" = "minor" ]; then
-        npx npm-check-updates -u --target minor
-        npm install
-    fi
-
-    npm test
-    npm audit --audit-level=moderate
-}
-
-update_python() {
-    pip install --upgrade pip
-    pip-audit --fix
-    safety check
-    pytest
-}
-
-update_go() {
-    go get -u ./...
-    go mod tidy
-    govulncheck ./...
-    go test ./...
-}
-
-case "$ECOSYSTEM" in
-    npm) update_npm ;;
-    python) update_python ;;
-    go) update_go ;;
-    *)
-        echo "Unknown ecosystem: $ECOSYSTEM"
-        exit 1
-        ;;
-esac
-```
+`npm update` is not patch-only, `go get -u ./...` updates unrelated dependencies,
+and a `latest` fallback invents a fix version. Select the advisory-supported fixed
+release compatible with the project, review manifest/lock diff, verify provenance,
+then run relevant behavior tests and a fresh scan. Test failures, unresolved
+advisories or unsupported versions are reported, not auto-suppressed. A package
+advisory match does not establish application reachability or license permission.
 
 ### 5. Reporting
 
@@ -503,42 +416,21 @@ class VulnerabilityReporter:
 
 1. **Regular Scanning**: Run dependency scans daily via scheduled CI/CD
 2. **Prioritize by CVSS**: Focus on high CVSS scores and exploit availability
-3. **Staged Updates**: Auto-update patch versions, manual for major versions
+3. **Staged Updates**: Review compatible targeted fixes; patch labels do not guarantee behavior or license compatibility
 4. **Test Coverage**: Always run full test suite after updates
 5. **SBOM Generation**: Maintain up-to-date Software Bill of Materials
 6. **License Compliance**: Check for restrictive licenses
 7. **Rollback Strategy**: Create backup branches before major updates
 
-## Tool Installation
+## Tool and CLI availability
 
-```bash
-# Python
-pip install safety pip-audit pipenv pip-licenses
-
-# JavaScript
-npm install -g snyk npm-check-updates
-
-# Go
-go install golang.org/x/vuln/cmd/govulncheck@latest
-
-# Rust
-cargo install cargo-audit
-```
-
-## Usage Examples
-
-```bash
-# Scan all dependencies
-python dependency_scanner.py scan --path .
-
-# Generate SBOM
-python dependency_scanner.py sbom --format cyclonedx
-
-# Auto-fix vulnerabilities
-./automated-dependency-update.sh npm patch
-
-# CI/CD integration
-python dependency_scanner.py scan --fail-on critical,high
-```
+The classes above are illustrative adapters; no `dependency_scanner.py` or
+`automated-dependency-update.sh` CLI is bundled. Do not claim the usage commands
+ran. Provision only reviewed fixed-version scanner tools through the project's
+approved dependency process, without global/latest installs or auto-fix by default.
+Generate a real CycloneDX/SPDX SBOM from ALL installed/locked components and their
+relationships using a reviewed tool, validate its schema, and distinguish it from
+a list of vulnerable components. The SARIF builder is a minimal result sketch,
+not a schema-validated or uploaded security scan.
 
 Focus on automated vulnerability detection, risk assessment, and remediation across all major package ecosystems.

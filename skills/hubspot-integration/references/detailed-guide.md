@@ -2,6 +2,12 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Integration and authority contract
+
+Independent historical sketches, not a complete tested app. Pin HubSpot SDK/API versions and validate actual object properties, association labels, scopes, product entitlements and limits. Initialize required configuration explicitly; non-null assertions do not validate environment values. Protect tokens in server-side tenant-bound storage; do not return them to a browser, log them or share accounts across clients. User authorization must cover CRM reads/writes, associations, archiving, webhooks and schema creation; an installed SDK is not permission. Review code before execution, use synthetic test records, and do not launch other agents automatically from role suggestions.
+
+OAuth requires cryptographically random, expiring, single-use state bound to the initiating session and intended tenant/account, an exact allowed redirect and callback error handling. Verify state before exchanging code; use supported PKCE where applicable. Store tokens with actual expires_in, refresh safely with concurrency control and persist rotated refresh tokens. Validate status/body schema, add timeout/cancellation and redact errors. A callback code alone does not establish account ownership or prevent login CSRF.
+
 ## Patterns
 
 ### OAuth 2.0 Authentication
@@ -22,16 +28,19 @@ const REDIRECT_URI = process.env.HUBSPOT_REDIRECT_URI;
 const SCOPES = "crm.objects.contacts.read crm.objects.contacts.write";
 
 // Step 1: Generate authorization URL
-function getAuthUrl(): string {
+function getAuthUrl(state: string): string {
+  // state is generated/stored server-side and bound to this session; never arbitrary input.
   const authUrl = new URL("https://app.hubspot.com/oauth/authorize");
   authUrl.searchParams.set("client_id", CLIENT_ID);
   authUrl.searchParams.set("redirect_uri", REDIRECT_URI);
   authUrl.searchParams.set("scope", SCOPES);
+  authUrl.searchParams.set("state", state);
   return authUrl.toString();
 }
 
 // Step 2: Handle OAuth callback
-async function handleOAuthCallback(code: string) {
+async function handleOAuthCallback(code: string, state: string, sessionId: string) {
+  await consumeAndVerifyOAuthState(state, sessionId); // required atomic application adapter
   const response = await fetch("https://api.hubapi.com/oauth/v1/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -44,7 +53,8 @@ async function handleOAuthCallback(code: string) {
     }),
   });
 
-  const tokens = await response.json();
+  if (!response.ok) throw new Error(`OAuth exchange status ${response.status}`);
+  const tokens = await response.json(); // validate token schema before storage
   // {
   //   access_token: "xxx",
   //   refresh_token: "xxx",
@@ -54,7 +64,7 @@ async function handleOAuthCallback(code: string) {
   // Store tokens securely
   await storeTokens(tokens);
 
-  return tokens;
+  return { connected: true }; // do not expose access/refresh tokens to the browser
 }
 
 // Step 3: Refresh access token (before expiry)
@@ -70,7 +80,8 @@ async function refreshAccessToken(refreshToken: string) {
     }),
   });
 
-  return response.json();
+  if (!response.ok) throw new Error(`OAuth refresh status ${response.status}`);
+  return response.json(); // validate and atomically persist new tokens/expiry
 }
 
 // Step 4: Create authenticated client
@@ -81,10 +92,10 @@ function createClient(accessToken: string): Client {
 
 ### Notes
 
-- Access tokens expire in 30 minutes
+- Use actual expires_in from the token response; do not hardcode30minutes
 - Refresh tokens before expiry
 - Store refresh tokens securely
-- Rotate tokens every 6 months
+- Follow actual provider/security policy and revoke on compromise; no universal6-month rule
 
 ### Private App Token
 
@@ -103,7 +114,7 @@ const hubspotClient = new Client({
 });
 
 // Private app tokens don't expire
-// But should be rotated every 6 months for security
+// Validate revocation/rotation behavior under the actual app/security policy.
 
 // Example: Get contacts
 async function getContacts() {
@@ -116,12 +127,9 @@ async function getContacts() {
 
     return response.results;
   } catch (error) {
-    if (error.code === 429) {
-      // Rate limited - implement backoff
-      const retryAfter = error.headers?.["retry-after"] || 10;
-      await sleep(retryAfter * 1000);
-      return getContacts();
-    }
+    // Do not recursively retry forever. A shared adapter must classify the
+    // pinned SDK status/header shape, honor Retry-After and use bounded
+    // attempts, jitter and total deadline. Never blindly retry a write.
     throw error;
   }
 }
@@ -141,7 +149,7 @@ async function getContacts() {
 - Private app tokens don't expire
 - All private apps share daily rate limit
 - Each private app has own burst limit
-- Recommended: Rotate every 6 months
+- Set rotation/revocation under the actual provider/security policy
 
 ### CRM Object CRUD Operations
 
@@ -185,7 +193,7 @@ async function getContact(contactId: string) {
 }
 
 // UPDATE contact
-async function updateContact(contactId: string, properties: object) {
+async function updateContact(contactId: string, properties: Record<string, string>) {
   const response = await hubspotClient.crm.contacts.basicApi.update(
     contactId,
     { properties },
@@ -274,7 +282,7 @@ async function batchCreateContacts(contacts: Array<{
 
 // BATCH UPDATE contacts
 async function batchUpdateContacts(
-  updates: Array<{ id: string; properties: object }>
+  updates: Array<{ id: string; properties: Record<string, string> }>
 ) {
   const inputs = updates.map(({ id, properties }) => ({
     id,
@@ -320,7 +328,7 @@ async function processLargeDataset(allContacts: any[]) {
 
     // Respect rate limits - wait between batches
     if (i + BATCH_SIZE < allContacts.length) {
-      await sleep(100);  // 100ms between batches
+      await configuredRateLimiter.wait(); //100ms is not a universal safe quota
     }
   }
 
@@ -330,7 +338,7 @@ async function processLargeDataset(allContacts: any[]) {
 ### Notes
 
 - Max 100 items per batch request
-- Saves up to 80% of rate limit quota
+- Request savings depend on endpoint, batch size and quota rules; no universal80% gain
 - Batch operations are atomic per item (partial success possible)
 - Check response.errors for failed items
 
@@ -465,57 +473,34 @@ Receive real-time notifications from HubSpot
 import crypto from "crypto";
 import { Client } from "@hubspot/api-client";
 
-// Webhook signature validation
-function validateWebhookSignature(
-  requestBody: string,
-  signature: string,
-  clientSecret: string
+// v3 signature validation uses actual raw body, method, normalized original URI
+// and timestamp, not the historical body-only/v2-mislabeled HMAC recipe.
+// This is a verifier fragment: supply raw-body middleware and trusted URI adapter.
+function validateV3(
+  method: string, normalizedUri: string, rawBody: string,
+  timestamp: string, signature: string, clientSecret: string, now = Date.now(),
 ): boolean {
-  // For v2 signature (most common)
-  const expectedSignature = crypto
-    .createHmac("sha256", clientSecret)
-    .update(requestBody)
-    .digest("hex");
-
-  return signature === expectedSignature;
+  if (!/^\d+$/.test(timestamp) || !clientSecret) return false;
+  const signedAt = Number(timestamp);
+  if (!Number.isSafeInteger(signedAt) || signedAt > now + 30_000 || now - signedAt > 300_000) return false;
+  const expected = crypto.createHmac('sha256', clientSecret)
+    .update(method + normalizedUri + rawBody + timestamp, 'utf8').digest('base64');
+  const actual = Buffer.from(signature, 'utf8');
+  const wanted = Buffer.from(expected, 'utf8');
+  return actual.length === wanted.length && crypto.timingSafeEqual(actual, wanted);
 }
 
-// Express webhook handler
-app.post("/webhooks/hubspot", async (req, res) => {
-  const signature = req.headers["x-hubspot-signature-v3"] as string;
-  const timestamp = req.headers["x-hubspot-request-timestamp"] as string;
-  const requestBody = JSON.stringify(req.body);
-
-  // Validate signature
-  const isValid = validateWebhookSignature(
-    requestBody,
-    signature,
-    process.env.HUBSPOT_CLIENT_SECRET
-  );
-
-  if (!isValid) {
-    console.error("Invalid webhook signature");
-    return res.status(401).send("Unauthorized");
-  }
-
-  // Check timestamp (prevent replay attacks)
-  const timestampAge = Date.now() - parseInt(timestamp);
-  if (timestampAge > 300000) {  // 5 minutes
-    console.error("Webhook timestamp too old");
-    return res.status(401).send("Timestamp expired");
-  }
-
-  // Process events - respond quickly!
-  const events = req.body;
-
-  // Queue for async processing
-  for (const event of events) {
-    await queue.add("hubspot-webhook", event);
-  }
-
-  // Respond immediately
-  res.status(200).send("OK");
-});
+// Handler procedure (application adapters deliberately not invented):
+// 1. Read bounded raw bytes before JSON middleware. Reject missing/duplicate headers.
+// 2. Reconstruct original public URI from trusted fixed config/proxy rules and
+//    apply HubSpot's documented selective URI decoding; not decodeURIComponent all.
+// 3. Select the documented signature version for the actual app/event; never
+//    downgrade after a failed v3 check. Validate BEFORE parsing/queueing.
+// 4. Parse/schema-check a bounded event array; bind appId/portalId to the
+//    installed tenant and allowed subscription/object/property scope.
+// 5. Atomically persist an idempotent inbox/queue and acknowledge promptly;
+//    enqueue failure must not return a false success. Deduplicate repeated delivery.
+// 6. Authorize and idempotently apply work; events may be duplicated/out of order.
 
 // Async processor
 async function processWebhookEvent(event: any) {
@@ -621,10 +606,10 @@ async function createCustomObjectSchema() {
 async function createProject(data: {
   project_name: string;
   status: string;
-  budget: number;
+  budget: string; // CRM numeric properties serialize according to actual schema
 }) {
   const response = await hubspotClient.crm.objects.basicApi.create(
-    "projects",  // Custom object name
+    configuredObjectTypeId,  // actual schema objectTypeId or supported fullyQualifiedName
     { properties: data }
   );
 
@@ -634,7 +619,7 @@ async function createProject(data: {
 // READ custom object by ID
 async function getProject(projectId: string) {
   const response = await hubspotClient.crm.objects.basicApi.getById(
-    "projects",
+    configuredObjectTypeId,
     projectId,
     ["project_name", "status", "budget", "start_date"]
   );
@@ -643,9 +628,9 @@ async function getProject(projectId: string) {
 }
 
 // UPDATE custom object
-async function updateProject(projectId: string, properties: object) {
+async function updateProject(projectId: string, properties: Record<string, string>) {
   const response = await hubspotClient.crm.objects.basicApi.update(
-    "projects",
+    configuredObjectTypeId,
     projectId,
     { properties }
   );
@@ -656,7 +641,7 @@ async function updateProject(projectId: string, properties: object) {
 // SEARCH custom objects
 async function searchProjects(status: string) {
   const response = await hubspotClient.crm.objects.searchApi.doSearch(
-    "projects",
+    configuredObjectTypeId,
     {
       filterGroups: [
         {
@@ -679,11 +664,19 @@ async function searchProjects(status: string) {
 
 ### Notes
 
-- Custom objects require Enterprise tier
-- Max 10 custom objects per account
+- Verify custom-object entitlement for the actual account and current API
+- Verify current custom-object limits and add-ons for the actual account
 - Use crm.objects API with object name as parameter
 - Can associate with standard and other custom objects
 
+
+## Pagination, partial success and safety
+
+The simple getContacts/searchContacts/getContactCompanies examples return ONE page, not complete datasets. Every full traversal needs cursor/repeated-cursor detection, page/item/time/memory limits and resumable output; do not accumulate an unbounded CRM into RAM. Search caps and association/batch limits differ by endpoint/version.
+
+Split batches within the actual endpoint count/byte quota and inspect individual results/errors, preserving source correlation. Current examples returning only response.results are incomplete handling and must not mark the entire batch successful. Reconcile ambiguous create outcomes by a stable external key before retrying; do not replay bulk creates blindly. Archive is a soft-delete action and is not erasure/compliance proof; permanent/privacy deletion is a separate authorized process. Update properties need an allowlist/runtime schema and tenant/object ownership checks, not arbitrary object forwarding.
+
+OAuth token examples require timeouts, durable tenant binding and error schemas in the actual application. No script here has been compiled/run; missing sleep/storeTokens/queue/handlers and enum types are application adapters.
 
 ## Sharp Edges
 
@@ -699,7 +692,7 @@ Severity: HIGH
 
 Severity: CRITICAL
 
-### OAuth Access Tokens Expire in 30 Minutes
+### OAuth expiry must follow the actual token response
 
 Severity: HIGH
 
@@ -715,7 +708,7 @@ Severity: MEDIUM
 
 Severity: HIGH
 
-### Polling Limited to 100,000 Requests Per Day
+### Verify the actual app/account/endpoint quota before polling
 
 Severity: MEDIUM
 
@@ -804,6 +797,8 @@ Message: Using deprecated API key. Migrate to Private App token or OAuth 2.0.
 
 
 ## Collaboration
+
+Role names below are optional planning suggestions, not installed tooling or permission to spawn agents or transfer CRM data.
 
 ### Delegation Triggers
 

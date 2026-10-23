@@ -64,7 +64,7 @@ the file - go straight to that module skill.
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+No shared execution-contract file is bundled here. Follow the explicit intake, routing and safety rules below; verify the selected installed module before handoff. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify the stage, not the tool
 
@@ -116,7 +116,7 @@ invent an answer - if the user does not know, record it as unknown and carry on.
 
 Match on what the user named, not on what the tier allows. Present two or three modules,
 one line of reason each, and ask which to start. A list of 100 is not a recommendation.
-Full index: `catalog.md`.
+Full index: `references/catalog.md`.
 
 **Starter** - 7 modules, the usual starting set: Sales Accounting, Purchase Accounting,
 Receipt Accounting, Payment Accounting, Petty Cash Management, Day Book, Expense
@@ -136,7 +136,7 @@ module, continue under that module; do not repeat answered intake questions. Nev
 merge two modules into one questionnaire.
 
 For Notion, read the selected module and then the Notion helper. Manual artifacts need
-no connection; live workspace changes follow the shared execution contract.
+no connection; live workspace changes require an explicitly authorized destination and review of the selected module/helper.
 
 ### Step 5 - Output
 

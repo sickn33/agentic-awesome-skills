@@ -1,7 +1,6 @@
 {
   "version": "2.1",
   "last_updated": "2026-01-21",
-
   "sources": {
     "tier1": {
       "description": "高命中率源，优先抓取",
@@ -14,7 +13,7 @@
           "extract": "top_10",
           "enabled": true,
           "avg_quality": 4.5,
-          "success_rate": 0.95
+          "success_rate": null
         },
         {
           "id": "hf_papers",
@@ -24,7 +23,7 @@
           "extract": "top_voted",
           "enabled": true,
           "avg_quality": 4.8,
-          "success_rate": 0.98
+          "success_rate": null
         }
       ],
       "batch_b": [
@@ -36,7 +35,7 @@
           "extract": "latest_3",
           "enabled": true,
           "avg_quality": 4.7,
-          "success_rate": 0.92
+          "success_rate": null
         },
         {
           "id": "paul_graham",
@@ -46,11 +45,10 @@
           "extract": "latest_5",
           "enabled": true,
           "avg_quality": 4.6,
-          "success_rate": 0.99
+          "success_rate": null
         }
       ]
     },
-
     "tier2": {
       "description": "中等命中率，按需抓取",
       "batch_a": [
@@ -62,7 +60,7 @@
           "extract": "latest_issue",
           "enabled": true,
           "avg_quality": 4.3,
-          "success_rate": 0.90
+          "success_rate": null
         },
         {
           "id": "fs_blog",
@@ -72,7 +70,7 @@
           "extract": "latest_issue",
           "enabled": true,
           "avg_quality": 4.4,
-          "success_rate": 0.88
+          "success_rate": null
         }
       ],
       "batch_b": [
@@ -84,7 +82,7 @@
           "extract": "latest_5",
           "enabled": true,
           "avg_quality": 3.8,
-          "success_rate": 0.85
+          "success_rate": null
         },
         {
           "id": "scotthyoung",
@@ -94,11 +92,10 @@
           "extract": "latest_3",
           "enabled": true,
           "avg_quality": 4.0,
-          "success_rate": 0.90
+          "success_rate": null
         }
       ]
     },
-
     "tier3_browser": {
       "description": "需要浏览器渲染的源",
       "sources": [
@@ -110,7 +107,7 @@
           "extract": "today_top_5",
           "enabled": true,
           "avg_quality": 4.2,
-          "success_rate": 0.75,
+          "success_rate": null,
           "note": "需要无头浏览器，403 on WebFetch"
         },
         {
@@ -121,12 +118,11 @@
           "extract": "latest_3",
           "enabled": true,
           "avg_quality": 4.6,
-          "success_rate": 0.70,
+          "success_rate": null,
           "note": "Substack 需要 JS 渲染"
         }
       ]
     },
-
     "disabled": {
       "description": "已禁用的源（失效或低质量）",
       "sources": [
@@ -161,7 +157,6 @@
       ]
     }
   },
-
   "fetch_config": {
     "webfetch": {
       "timeout_ms": 30000,
@@ -171,13 +166,13 @@
     "browser": {
       "timeout_ms": 45000,
       "wait_for_selector": "article, .post, .item",
-      "screenshot_on_error": true
+      "screenshot_on_error": false
     }
   },
-
   "quality_thresholds": {
     "min_score_to_include": 3,
     "target_items": 20,
     "early_stop_threshold": 25
-  }
+  },
+  "statistics_note": "Imported quality priorities are editorial defaults, not measured success rates. Disabled-source reasons are historical observations requiring recheck."
 }

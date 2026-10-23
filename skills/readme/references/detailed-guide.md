@@ -11,6 +11,12 @@
 ---
 
 
+## Scope, evidence and execution boundary
+
+The long Rails/Inertia examples below are illustrative outlines, not detected project facts or supported-version requirements. Keep only sections relevant to the actual repository. Verify each script, endpoint, variable/default, feature and deployment claim against source/manifests and record unknowns. Do not invent authentication helpers, queues dashboards, telemetry, license terms or successful tests. Preserve existing useful docs and legal text in a targeted update.
+
+Read source before running it. README generation does not authorize dependency installation, database creation/migrations/reset, credential editing, cache deletion, provisioning, deployment, production consoles or public pushes. Review scripts in an isolated environment with synthetic data before optional tests; identify destructive commands as separate operator actions and require an actual rollback plan. Never copy a production database URL or raw secret into the document.
+
 ## Before Writing
 
 ### Step 1: Deep Codebase Exploration
@@ -28,7 +34,7 @@ Before writing a single line of documentation, thoroughly explore the codebase. 
 
 - .env.example, .env.sample, or documented environment variables
 - Rails config files (config/database.yml, config/application.rb, config/environments/)
-- Credentials setup (config/credentials.yml.enc, config/master.key)
+- Credentials setup metadata and documented secret names; do not open master keys or decrypt credential values merely to write a README
 - Docker files (Dockerfile, docker-compose.yml)
 - CI/CD configs (.github/workflows/, .gitlab-ci.yml, etc.)
 - Deployment configs (config/deploy.yml for Kamal, fly.toml, render.yaml, Procfile, etc.)
@@ -69,14 +75,14 @@ Look for these files to determine deployment platform and tailor instructions:
 - `terraform/` / `*.tf` → Terraform/Infrastructure as Code
 - `k8s/` / `kubernetes/` → Kubernetes
 
-If no deployment config exists, provide general guidance with Docker as the recommended approach.
+If no deployment configuration exists, state that no target is verified. Describe optional deployment considerations without inventing a Docker/platform recommendation or a working deployment path.
 
 ### Step 3: Ask Only If Critical
 
 Only ask the user questions if you cannot determine:
 
 - What the project does (if not obvious from code)
-- Specific deployment credentials or URLs needed
+- Nonsecret deployment context or public URL needed; never request passwords, master keys or tokens for writing documentation
 - Business context that affects documentation
 
 Otherwise, proceed with exploration and writing.
@@ -182,7 +188,7 @@ Configure the following variables:
 Start PostgreSQL (if using Docker):
 
 \`\`\`bash
-docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres:16
+docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 127.0.0.1:5432:5432 -d postgres:16
 \`\`\`
 
 Create and set up the database:
@@ -419,7 +425,7 @@ RAILS_SERVE_STATIC_FILES=true
 | `bin/rails db:migrate`        | Run pending database migrations                     |
 | `bin/rails db:rollback`       | Rollback last migration                             |
 | `bin/rails db:seed`           | Run database seeds                                  |
-| `bin/rails db:reset`          | Drop, create, migrate, and seed database            |
+| `bin/rails db:reset`          | Drop, recreate, load schema, and seed database; destroys existing data            |
 | `bin/rails routes`            | List all routes                                     |
 | `bin/rails test`              | Run test suite (Minitest)                           |
 | `bundle exec rspec`           | Run test suite (RSpec, if used)                     |
@@ -461,7 +467,7 @@ bin/rails test:system
 
 # Run with coverage (SimpleCov)
 
-COVERAGE=true bin/rails test
+COVERAGE=true bin/rails test # only if this project actually reads COVERAGE
 \`\`\`
 
 ### Test Structure
@@ -569,7 +575,7 @@ kamal deploy
 
 # Rollback to previous version
 
-kamal rollback
+kamal rollback <verified-version>
 
 # View logs
 
@@ -615,8 +621,8 @@ heroku addons:create heroku-postgresql:mini
 
 # Set environment variables
 
-heroku config:set SECRET_KEY_BASE=$(bin/rails secret)
-heroku config:set RAILS_MASTER_KEY=$(cat config/master.key)
+# Set required secrets through the approved provider secret-input workflow.
+# Do not put secret values or command substitutions into shell arguments/logs.
 
 # Deploy
 
@@ -650,7 +656,7 @@ fly ssh console -C "bin/rails console"
 
 ### Render
 
-If `render.yaml` exists, connect your repo to Render and it will auto-deploy.
+If render.yaml exists, verify the actual configured service, branch and auto-deploy policy; file presence alone does not establish deployment behavior.
 
 Manual setup:
 
@@ -753,7 +759,7 @@ bin/rails assets:precompile
 The master key doesn't match the credentials file. Either:
 
 1. Get the correct `config/master.key` from another team member
-2. Or regenerate credentials: `rm config/credentials.yml.enc && bin/rails credentials:edit`
+2. Do not delete/regenerate the encrypted credential file as a generic fix. Preserve it and retrieve the correct key through the approved secret manager; regeneration is a separately authorized migration with backup and rotation planning.
 
 ### Vite/Inertia Issues
 
@@ -797,7 +803,7 @@ Include if open source or team project.
 
 ## Writing Principles
 
-1. **Be Absurdly Thorough** - When in doubt, include it. More detail is always better.
+1. **Be complete for the user task** - Keep onboarding and required operations concise; link detailed reference/runbooks rather than padding every possible platform.
 
 2. **Use Code Blocks Liberally** - Every command should be copy-pasteable.
 
@@ -826,4 +832,4 @@ Generate a complete README.md file with:
 - Clear section hierarchy
 - Linked table of contents for long documents
 
-Write the README directly to `README.md` in the project root.
+For an authorized README edit, update README.md in the actual project root without discarding existing content. In review/draft mode, deliver a local draft or findings instead; publication is separate. Verify rendered fences, relative links and actual script names before delivery.

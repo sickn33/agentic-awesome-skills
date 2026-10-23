@@ -77,11 +77,11 @@ Mouse interactions: interpolate with `useSpring` rather than tying value directl
 
 ## Interruptibility
 
-CSS **transitions** can be interrupted and retargeted mid-animation; **keyframes** restart from zero. For anything triggered rapidly (toasts being added, toggles), transitions are smoother.
+CSS **transitions** can be interrupted and retargeted mid-animation; newly restarted keyframe animations may jump unless current state is preserved. For anything triggered rapidly (toasts being added, toggles), transitions are smoother.
 
 ```css
 /* Interruptible — good for dynamic UI */
-.toast { transition: transform 400ms ease; }
+.toast { transition: transform 200ms ease; }
 
 /* Not interruptible — avoid for dynamic UI */
 @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -92,7 +92,7 @@ Use `@starting-style` for entry without JS:
 ```css
 .toast {
   opacity: 1; transform: translateY(0);
-  transition: opacity 400ms ease, transform 400ms ease;
+  transition: opacity 200ms ease, transform 200ms ease;
   @starting-style { opacity: 0; transform: translateY(100%); }
 }
 ```
@@ -110,19 +110,19 @@ Slow where the user is deciding, fast where the system responds.
 
 ## Performance
 
-- **Only animate `transform` and `opacity`** — they skip layout/paint and run on the GPU. `padding`/`margin`/`height`/`width`/`top`/`left` trigger all three rendering steps.
+- **Prefer `transform` and `opacity`** — often compositor-friendly; verify actual layer/rasterization behavior. `padding`/`margin`/`height`/`width`/`top`/`left` trigger all three rendering steps.
 - **Don't drive child transforms via a CSS variable on the parent** — it recalcs styles for all children. Set `transform` directly on the element.
   ```js
   element.style.setProperty('--swipe-amount', `${d}px`); // bad: recalc on all children
   element.style.transform = `translateY(${d}px)`;        // good: only this element
   ```
-- **Framer Motion shorthands are NOT hardware-accelerated.** `x`/`y`/`scale` run on the main thread via rAF and drop frames under load. Use the full transform string:
+- **Motion acceleration depends on engine, version and property.** Profile main-thread work; independent transforms may differ from full transform strings, and neither spelling proves dropped frames or acceleration:
   ```jsx
-  <motion.div animate={{ x: 100 }} />                          // drops frames under load
-  <motion.div animate={{ transform: "translateX(100px)" }} />  // hardware accelerated
+  <motion.div animate={{ x: 100 }} />                          // profile on the target engine
+  <motion.div animate={{ transform: "translateX(100px)" }} />  // profile compositing on target devices
   ```
 - **CSS animations beat JS under load** — they run off the main thread; rAF-based animations stutter while the browser loads/scripts/paints. Use CSS for predetermined motion, JS for dynamic/interruptible.
-- **WAAPI** gives JS control with CSS performance (hardware-accelerated, interruptible, no library):
+- **WAAPI** gives JS control over browser animations; acceleration depends on property/browser, not merely API choice:
   ```js
   element.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0 0)' }],
     { duration: 1000, fill: 'forwards', easing: 'cubic-bezier(0.77, 0, 0.175, 1)' });
@@ -162,7 +162,7 @@ Stagger group entrances; 30–80ms between items. Longer delays feel slow. Stagg
 
 ```css
 @media (prefers-reduced-motion: reduce) {
-  .element { animation: fade 0.2s ease; } /* keep opacity/color, drop transform-based motion */
+  .element { animation: none; transition: none; } /* preserve visible final state separately */
 }
 @media (hover: hover) and (pointer: fine) {
   .element:hover { transform: scale(1.05); } /* gate hover motion — touch fires false hovers on tap */
@@ -174,7 +174,7 @@ const reduce = useReducedMotion();
 const closedX = reduce ? 0 : '-100%';
 ```
 
-Reduced motion means fewer and gentler animations, not zero — keep transitions that aid comprehension, remove movement/position changes.
+Reduced motion can mean no optional animation. Remove movement and disable even fades when needed; preserve necessary state feedback without depending on motion.
 
 ## Debugging (recommend in reviews when feel is uncertain)
 

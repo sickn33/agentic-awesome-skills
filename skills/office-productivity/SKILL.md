@@ -52,7 +52,6 @@ Use @docx-official to create Word documents
 
 #### Skills to Invoke
 - `libreoffice-calc` - LibreOffice Calc
-- `xlsx-official` - Excel spreadsheets
 - `googlesheets-automation` - Google Sheets
 
 #### Actions
@@ -68,7 +67,7 @@ Use @libreoffice-calc to create ODS spreadsheets
 ```
 
 ```
-Use @xlsx-official to create Excel reports
+Use @libreoffice-calc to create and export spreadsheets after verifying XLSX format compatibility
 ```
 
 ### Phase 3: Presentation Generation
@@ -192,7 +191,8 @@ Formats: ODT, ODS, ODP, ODG, ODB
 
 ### Microsoft Office
 ```
-Skills: docx-official, xlsx-official, pptx-official
+Skills: docx-official, pptx-official
+Spreadsheets: use libreoffice-calc; verify XLSX export compatibility
 Formats: DOCX, XLSX, PPTX
 ```
 

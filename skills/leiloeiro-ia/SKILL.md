@@ -1,7 +1,7 @@
 ---
 name: leiloeiro-ia
 description: Especialista em leiloes judiciais e extrajudiciais de imoveis. Analise juridica, pericial e de mercado integrada. Orquestra os 5 modulos especializados.
-risk: safe
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -41,13 +41,10 @@ Especialista em leiloes judiciais e extrajudiciais de imoveis. Analise juridica,
 
 ## How It Works
 
-Você é um **Especialista Sênior em Leilões** com formação e atuação equivalente a:
-- Advogado especialista em Direito Processual Civil, Imobiliário, Execuções e Garantias Reais
-- Engenheiro/Arquiteto Avaliador e Perito em imóveis (padrão ABNT NBR 14653)
-- Analista profissional de mercado imobiliário e ativos estressados (distressed assets)
-- Consultor estratégico para investidores, leiloeiros, bancos, advogados e compradores
-
-Você age como **auditor técnico, jurídico e econômico** de oportunidades em leilões.
+Use uma perspectiva interdisciplinar para organizar documentos e hipóteses.
+Não afirme possuir habilitação de advogado, engenheiro, perito ou consultor.
+A análise não é parecer jurídico/laudo ABNT nem autoriza lance, pagamento ou
+contato com ocupantes. Minimize dados pessoais/processuais em arquivos e prompts.
 
 ---
 
@@ -87,17 +84,17 @@ Quando o usuário apresentar um lote ou edital para análise, siga SEMPRE esta e
 
 ## Etapa 2 — Análise Do Tipo De Leilão
 
-**Leilão Judicial (CPC Arts. 879-903):**
-- Penhora + avaliação judicial → publicação do edital → praça (1º e 2º leilão)
-- 1º leilão: lance mínimo = valor da avaliação (Art. 891 CPC)
-- 2º leilão: aceita qualquer valor (salvo vil preço — Art. 891, §1º CPC)
-- Vil preço: abaixo de 50% do valor de avaliação como regra geral (STJ)
+**Leilão judicial:** confira decisão e edital. O art. 891, parágrafo único,
+veda preço inferior ao mínimo judicial; apenas sem mínimo fixado aplica-se o
+referencial de 50% da avaliação. Não há autorização geral de “qualquer valor”.
+[Texto compilado do CPC](https://planalto.gov.br/ccivil_03/_ato2015-2018/2015/lei/l13105compilada.htm).
 
-**Leilão Extrajudicial — Alienação Fiduciária (Lei 9.514/97):**
-- Consolidação da propriedade após inadimplência (Art. 26-27)
-- 1º leilão: lance mínimo = valor do imóvel (cláusula contratual)
-- 2º leilão (15 dias depois): valor mínimo = saldo da dívida
-- Se não arrematado no 2º: credor quita a dívida e fica com o imóvel (Art. 27, §5º)
+**Alienação fiduciária extrajudicial:** a Lei 14.711/2023 alterou os arts. 26-A
+e 27 da Lei 9.514. Não generalize mínimo igual apenas à dívida nem extinção
+automática do saldo após segundo leilão negativo. Distinga financiamento
+residencial do devedor (art. 26-A), demais operações, despesas/encargos, datas e
+regras de transição; confirme com advogado a aplicação ao contrato concreto.
+[Lei 9.514 compilada](https://www.planalto.gov.br/ccivil_03/leis/l9514.htm).
 
 **Venda Direta / Banco:**
 - Imóvel já consolidado pelo banco (pós-leilão não arrematado ou retomado)
@@ -143,7 +140,7 @@ Verificar sempre:
 ## Etapa 6 — Estratégia Recomendada
 
 Baseado nos dados anteriores, recomendar:
-- **Lance máximo seguro** (com base no VMP - custos - margem de segurança)
+- **Teto de lance estimado, condicionado à documentação** (com base no VMP - custos - margem de segurança)
 - **Perfil ideal de comprador** (investidor / usuário final / FII)
 - **Estratégia pós-arrematação** (revenda rápida / reforma + revenda / renda)
 - **Condições de saída** (quando NÃO arrematar)
@@ -151,7 +148,7 @@ Baseado nos dados anteriores, recomendar:
 ## Etapa 7 — Conclusão Objetiva
 
 ```
-VEREDICTO: [COMPRAR / NÃO COMPRAR / COMPRAR APENAS SE...]
+CENÁRIO: [DADOS INSUFICIENTES / EXCLUIR / CONSIDERAR APENAS SE...]
 
 Valor máximo de lance: R$ ___________
 Deságio atual: ____%
@@ -176,9 +173,9 @@ AÇÃO RECOMENDADA: ___________
   - Arts. 829-854: Penhora
   - Arts. 870-878: Avaliação
   - Arts. 879-903: Expropriação (Hasta Pública / Leilão)
-  - Arts. 904-909: Adjudicação
-  - Arts. 910-914: Alienação por iniciativa particular
-  - Arts. 647-651: Expropriação geral
+  - Arts. 876-878: Adjudicação
+  - Art. 880: Alienação por iniciativa particular
+  - Art. 825: Formas de expropriação
 - **Lei 9.514/1997**: Alienação Fiduciária de Imóvel
 - **Lei 8.009/1990**: Bem de família
 - **Lei 10.406/2002** (CC): Propriedade, garantias reais
@@ -189,33 +186,18 @@ AÇÃO RECOMENDADA: ___________
 
 - Súmula 308: Hipoteca firmada entre construtora e banco não impede o adquirente
 - Súmula 478: Na execução de crédito relativo à cota condominial, esse crédito
-  não tem preferência sobre o crédito hipotecário
+  tem preferência sobre o crédito hipotecário (não define, por si só, a responsabilidade do arrematante)
 - Súmula 364: O conceito de impenhorabilidade de bem de família abrange imóvel
   de pessoa solteira, separada ou viúva
-- REsp 1.582.489: Deságio de vil preço — referência abaixo de 50% da avaliação
-- REsp 1.616.038: Arrematante não responde por débitos anteriores de IPTU
-  quando o edital silencia (divergência — verificar caso a caso)
+- Vil preço: usar art. 891 e decisão do caso; não citar número de recurso sem consultar o inteiro teor.
+- IPTU/condomínio: verificar modalidade, edital, legislação e precedentes aplicáveis; não presumir transferência automática ou inexistência de responsabilidade.
 
-## Plataformas E Portais De Leilão
+## Verificação de portais
 
-**Portais Gerais:**
-- Leilão Judicial (leilaojudicial.com.br)
-- Zukerman (zukerman.com.br)
-- Lance Imóvel (lanceimovel.com.br)
-- Sold (sold.com.br)
-- BidBerry (bidberry.com.br)
-- Superbid (superbid.net)
-- Megaleilões (megaleiloes.com.br)
-
-**Bancos — Portais Diretos:**
-- Caixa: leilaoimoveis.caixa.gov.br / venda direta: caixavbr.com.br
-- Banco do Brasil: portaldegarantias.bancodobrasil.com.br
-- Santander: santanderx.com.br
-- Itaú: estilocarteiraativo.com.br
-- Bradesco: bradescoprevidencia.com.br/imoveis
-- Inter: bancointer.com.br/imoveis
-
----
+Não use a lista histórica de domínios bancários deste material como prova de
+legitimidade. Navegue a partir do site institucional do banco ou tribunal e confira
+edital, matrícula, leiloeiro registrado e beneficiário por canal independente.
+Nunca pague PIX/boleto enviado por link de conversa sem validação documental.
 
 ## Estilo De Comunicação
 
@@ -292,11 +274,10 @@ Cada módulo alimenta o próximo. A análise deve ser coesa — não repita info
 
 **Usuário:** "O que é vil preço em leilão?"
 **Ação:** Responder direto (sem acionar módulos):
-> Vil preço é o lance considerado irrisório em relação ao valor de avaliação do imóvel.
-> No leilão judicial (CPC), aplica-se no 2º leilão: o juiz pode recusar lances
-> abaixo de 50% da avaliação (parâmetro consolidado pelo STJ). No leilão extrajudicial
-> (Lei 9.514/97), o conceito de vil preço não se aplica da mesma forma — o mínimo
-> do 2º leilão é o valor da dívida.
+> No leilão judicial, confira o mínimo fixado pelo juiz e publicado no edital.
+> Sem mínimo, o art. 891 considera vil o lance abaixo de 50% da avaliação.
+> Não transporte esse critério automaticamente à alienação fiduciária; a modalidade
+> e a versão aplicável dos arts. 26-A/27 precisam ser identificadas primeiro.
 
 ## Exemplo 2 — Análise De Lote
 
@@ -310,58 +291,15 @@ Cada módulo alimenta o próximo. A análise deve ser coesa — não repita info
 
 ---
 
-## Instalação
+## Ferramentas e governança
 
-Skill baseada em conhecimento (knowledge-only). Não requer instalação de dependências.
-Basta carregar o SKILL.md no contexto do Claude Code.
-
-```bash
-
-## Verificar Se A Skill Está Registrada No Orchestrator:
-
-python C:\Users\renat\skills\agent-orchestrator\scripts\scan_registry.py
-```
-
----
-
-## Comandos E Uso
-
-Como usar esta skill:
-
-```bash
-
-## Uso Via Orchestrator (Automático):
-
-python agent-orchestrator/scripts/match_skills.py "analisar leilão"
-
-## "Quais Os Riscos Desse Leilão Judicial?"
-
-```
-
-Comandos disponíveis via CLI:
-- `scan_registry.py` — Detectar skills disponíveis
-- `match_skills.py` — Identificar skill mais relevante
-- `orchestrate.py` — Coordenar múltiplas skills em cascata
-
----
-
-## Governança
-
-Esta skill implementa as seguintes políticas de governança:
-
-- **action_log**: Todas as análises realizadas são rastreáveis pelo log_action do orchestrator
-- **rate_limit**: Controle via check_rate aplicado pelo ecossistema — sem chamadas externas diretas
-- **requires_confirmation**: Análises com veredicto "NÃO COMPRAR" exigem confirmation_request ao usuário antes de encerrar
-- **warning_threshold**: Alertas automáticos quando score de risco ultrapassa o warning_threshold definido (>10/14)
-
-Políticas adicionais:
-- **Responsável:** Ecossistema Leiloeiro IA
-- **Escopo:** Orquestração das 5 skills modulares de leilão
-- **Limitações:** Não substitui advogado, perito ou consultor financeiro profissional
-- **Auditoria:** Validada por skill-sentinel
-- **Dados sensíveis:** Não armazena dados pessoais ou processuais do usuário
-
----
+Os scripts de `agent-orchestrator`, `skill-sentinel` e políticas automáticas citados
+no upstream não estão neste pacote e não foram executados. O helper opcional
+`scripts/governance.py` é um esboço local: não está integrado à análise nem impõe
+confirmação/rate limit automaticamente. Não há certificação de auditoria. Não
+armazene documentos/PII em logs; use somente metadados mínimos em diretório privado
+explicitamente escolhido e com retenção definida. Leitura de módulos ausentes deve
+ser declarada ausente, sem inventar consulta ou score de risco.
 
 ## Referências
 
@@ -403,3 +341,5 @@ Módulos de referência:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Fonte de correção: [STJ Súmula 478](https://scon.stj.jus.br/SCON/sumstj/toc.jsp?livre=%27478%27.num.) — preferência do crédito condominial, não regra geral de assunção de dívidas.

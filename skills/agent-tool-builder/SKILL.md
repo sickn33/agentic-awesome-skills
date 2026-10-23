@@ -2,7 +2,7 @@
 name: agent-tool-builder
 description: Tools are how AI agents interact with the world. A well-designed
   tool is the difference between an agent that works and one that hallucinates,
-  fails silently, or costs 10x more tokens than necessary. This skill covers
+  fails silently, or wastes tokens. This skill covers
   tool design from schema to error handling.
 risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
@@ -13,21 +13,27 @@ date_added: 2026-02-27
 
 Tools are how AI agents interact with the world. A well-designed tool is the
 difference between an agent that works and one that hallucinates, fails
-silently, or costs 10x more tokens than necessary.
+silently, or wastes tokens.
 
 This skill covers tool design from schema to error handling. JSON Schema
 best practices, description writing that actually helps the LLM, validation,
 and the emerging MCP standard that's becoming the lingua franca for AI tools.
 
-Key insight: Tool descriptions are more important than tool implementations.
-The LLM never sees your code - it only sees the schema and description.
+Descriptions guide selection, but implementations enforce correctness, authorization
+and safety. Both require testing; the model may also inspect exposed code/results.
 
 ## Detailed Guide
 
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
 
-## Python Example
-"""
+## Historical Python SDK sketch
+
+Mock only: fixed weather is synthetic, not a current forecast. Pin/verify SDK beta
+API and an account-accessible model before any billed call. Tools need bounded
+execution/approval policies; the runner does not authorize external effects.
+
+```python
+import json
 import anthropic
 from anthropic import beta_tool
 
@@ -52,7 +58,7 @@ def search_web(query: str) -> str:
         query: The search query
     '''
     # Implementation
-    return json.dumps({"results": [...]})
+    return json.dumps({"results": [], "mock": True})
 
 # Tool runner handles the loop
 runner = client.beta.messages.tool_runner(
@@ -66,11 +72,13 @@ runner = client.beta.messages.tool_runner(
 
 # Process each message
 for message in runner:
-    print(message.content[0].text)
+    for block in message.content:
+        if getattr(block, "type", None) == "text":
+            print(block.text)
 
 # Or just get final result
 final = runner.until_done()
-"""
+```
 
 ## When to Use
 - User mentions or implies: agent tool

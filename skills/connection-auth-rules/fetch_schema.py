@@ -18,6 +18,8 @@ Set GITHUB_TOKEN env var to raise the GitHub API rate limit from 60 to
 from __future__ import annotations
 
 import ast
+import base64
+import urllib.parse
 import json
 import os
 import sys
@@ -39,22 +41,34 @@ def _headers() -> dict[str, str]:
     return headers
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise ValueError("Unexpected redirect; credentials were not forwarded")
+
+
 def _fetch_json(url: str) -> object:
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme != "https" or parsed.netloc != "api.github.com" or not parsed.path.startswith(f"/repos/{REPO}/contents/"):
+        raise ValueError("Unexpected schema source URL")
     req = urllib.request.Request(url, headers=_headers())
-    with urllib.request.urlopen(req) as resp:
-        return json.loads(resp.read())
+    with urllib.request.build_opener(_NoRedirect()).open(req, timeout=30) as resp:
+        payload = resp.read(2_000_001)
+        if len(payload) > 2_000_000:
+            raise ValueError("Schema response exceeds 2 MB limit")
+        return json.loads(payload)
 
 
 def _fetch_text(url: str) -> str:
-    req = urllib.request.Request(url, headers=_headers())
-    with urllib.request.urlopen(req) as resp:
-        return resp.read().decode("utf-8")
+    entry = _fetch_json(url)
+    if not isinstance(entry, dict) or entry.get("encoding") != "base64":
+        raise ValueError("Expected base64 GitHub contents entry")
+    return base64.b64decode(entry["content"]).decode("utf-8")
 
 
 def _list_py_files(api_path: str) -> list[dict]:
     entries = _fetch_json(f"{GITHUB_API}/{api_path}")
     return [
-        {"name": e["name"].removesuffix(".py"), "download_url": e["download_url"]}
+        {"name": e["name"].removesuffix(".py"), "download_url": e["url"]}
         for e in entries
         if e["type"] == "file"
         and e["name"].endswith(".py")
@@ -308,6 +322,9 @@ def main() -> None:
 
     except urllib.error.HTTPError as exc:
         print(json.dumps({"error": f"GitHub API error {exc.code}: {exc.reason}"}))
+        sys.exit(1)
+    except (ValueError, SyntaxError, KeyError) as exc:
+        print(json.dumps({"error": f"Schema parsing failed: {type(exc).__name__}"}))
         sys.exit(1)
     except urllib.error.URLError as exc:
         print(json.dumps({"error": f"Network error: {exc.reason}"}))

@@ -40,7 +40,7 @@ Inline code spans and code blocks are claim-dense; prose hides claims in verbs (
 
 In write-time mode, keep a short verification trail in your working notes (not in the doc): claim → file:line where confirmed. In review mode, this trail becomes your evidence — every finding cites the definition site that contradicts the doc.
 
-When the runtime allows execution, prefer executable checks: run `--help`, run the sample, run a link checker. When it does not, source-reading is the standard — never skip to "it looks right."
+After reviewing inputs and establishing isolation, authorization and budgets, use appropriate executable checks; --help, samples and link checkers may execute untrusted code or make network requests. Do not run them automatically against production or with ambient secrets. When it does not, source-reading is the standard — never skip to "it looks right."
 
 ## When you cannot verify
 

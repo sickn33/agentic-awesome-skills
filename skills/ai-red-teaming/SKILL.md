@@ -191,7 +191,8 @@ class AIRedTeamRunner:
             prompts = yaml.safe_load(f)
 
         cases = prompts.get("categories", {})
-        if not isinstance(cases, dict) or not 1 <= sum(len(v) for v in cases.values() if isinstance(v, list)) <= 50:
+        if (not isinstance(cases, dict) or any(not isinstance(v, list) for v in cases.values())
+                or not 1 <= sum(len(v) for v in cases.values()) <= 50):
             raise ValueError("Provide between 1 and 50 approved synthetic cases")
         for category, prompt_list in cases.items():
             for prompt in prompt_list:
@@ -231,6 +232,7 @@ class AIRedTeamRunner:
             return "unverified"
         if not successful:
             return "info"
+        # Illustrative defaults only; impact/context must be independently scored.
         severity_map = {
             "data_exfiltration": "critical",
             "tool_abuse": "critical",
@@ -277,7 +279,7 @@ temperature: 0.0
 | Dimension | Score 1 | Score 3 | Score 5 |
 |-----------|---------|---------|---------|
 | **Likelihood** | Requires expert knowledge and multiple steps | Moderate skill, some setup required | Simple prompt, easily reproducible |
-| **Impact** | Cosmetic policy violation | Sensitive data partially exposed | Full system prompt leak, tool abuse, data breach |
+| **Impact** | Cosmetic policy violation | Sensitive data partially exposed | Verified sensitive data disclosure or unauthorized tool effect |
 | **Detectability** | Easily caught by basic filters | Requires tuned detection rules | Evades current detection stack |
 | **Control Maturity** | Strong mitigations in place | Partial coverage, gaps exist | No controls or easily bypassed |
 
@@ -365,38 +367,25 @@ def calculate_risk_score(likelihood: int, impact: int, detectability: int) -> di
 Do not expose provider keys to untrusted PR code. Use mock/synthetic checks there and an explicitly authorized trusted protected run for paid evaluation. Pin reviewed action/dependency revisions, apply least-privilege permissions and keep raw prompt/response artifacts private and redacted. Empty results, missing judges and provider failures must fail as incomplete; a jq count of critical findings alone cannot establish a pass.
 
 ```yaml
-# .github/workflows/ai-red-team.yml
-name: AI Red Team Gate
-on:
-  pull_request:
-    paths:
-      - 'src/ai/**'
-      - 'prompts/**'
-
+# PR job: offline fixture tests only; no provider credentials or paid calls.
+name: AI red-team fixture validation
+on: pull_request
+permissions:
+  contents: read
 jobs:
-  red-team:
+  fixtures:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v4 # replace with reviewed immutable action SHA
+      - uses: actions/setup-python@v5 # replace with reviewed immutable action SHA
         with:
           python-version: '3.11'
-      - run: pip install -r requirements-redteam.txt
-      - run: python ai_red_team_runner.py
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      - run: |
-          CRITICAL=$(jq '[.[] | select(.severity=="critical" and .attack_successful==true)] | length' red-team-results-*.json)
-          if [ "$CRITICAL" -gt 0 ]; then
-            echo "CRITICAL red team failures found. Blocking merge."
-            exit 1
-          fi
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: red-team-results
-          path: red-team-results-*.json
+      # Supply this real local test suite first; absent tests fail rather than pass.
+      - run: python -m unittest discover -s tests/redteam_fixtures -p 'test_*.py'
 ```
+
+The shown job is an integration shape, not a bundled test suite. Configure a fail-closed discovery/count check so zero tests cannot pass. Paid live evaluations belong in a separate authorized trusted workflow with approved secrets, fixed target configuration, budgets and restricted artifact retention. Do not upload raw prompt/response artifacts from PR jobs.
+
 
 ## Troubleshooting
 

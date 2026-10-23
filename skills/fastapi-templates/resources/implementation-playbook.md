@@ -4,7 +4,7 @@ This file contains detailed patterns, checklists, and code samples referenced by
 
 # FastAPI Project Templates
 
-Production-ready FastAPI project structures with async patterns, dependency injection, middleware, and best practices for building high-performance APIs.
+Illustrative FastAPI project structures with async patterns, dependency injection, middleware, and best practices for building high-performance APIs.
 
 ## When to Use This Skill
 
@@ -69,7 +69,9 @@ Proper async/await usage:
 
 ## Implementation Patterns
 
-### Pattern 1: Complete FastAPI Application
+These multi-file fragments require actual models, schemas, router and authentication endpoints; they are not a complete bundled project. Pin compatible FastAPI/Pydantic2/SQLAlchemy2/httpx/pytest-asyncio versions. Use test data and a separate database; migrations, provider credentials and deployment are outside these snippets.
+
+### Pattern 1: FastAPI Application Fragments
 
 ```python
 # main.py
@@ -81,10 +83,11 @@ from contextlib import asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan events."""
     # Startup
-    await database.connect()
-    yield
-    # Shutdown
-    await database.disconnect()
+    from app.core.database import engine
+    try:
+        yield
+    finally:
+        await engine.dispose()
 
 app = FastAPI(
     title="API Template",
@@ -95,7 +98,7 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://app.example.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -133,7 +136,7 @@ settings = get_settings()
 
 engine = create_async_engine(
     settings.DATABASE_URL,
-    echo=True,
+    echo=False,
     future=True
 )
 
@@ -150,7 +153,7 @@ async def get_db() -> AsyncSession:
     async with AsyncSessionLocal() as session:
         try:
             yield session
-            await session.commit()
+            # Services commit successful writes before returning a success response.
         except Exception:
             await session.rollback()
             raise
@@ -202,7 +205,7 @@ class BaseRepository(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         obj_in: CreateSchemaType
     ) -> ModelType:
         """Create new record."""
-        db_obj = self.model(**obj_in.dict())
+        db_obj = self.model(**obj_in.model_dump())
         db.add(db_obj)
         await db.flush()
         await db.refresh(db_obj)
@@ -215,7 +218,7 @@ class BaseRepository(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         obj_in: UpdateSchemaType
     ) -> ModelType:
         """Update record."""
-        update_data = obj_in.dict(exclude_unset=True)
+        update_data = obj_in.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             setattr(db_obj, field, value)
         await db.flush()
@@ -231,6 +234,9 @@ class BaseRepository(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return False
 
 # repositories/user_repository.py
+from typing import Optional
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.base_repository import BaseRepository
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
@@ -262,6 +268,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.user_repository import user_repository
 from app.schemas.user import UserCreate, UserUpdate, User
 from app.core.security import get_password_hash, verify_password
+from pydantic import BaseModel, EmailStr, ConfigDict
+
+class UserCreateDB(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    email: EmailStr
+    name: str
+    hashed_password: str
+
+class UserUpdateDB(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    name: Optional[str] = None
+    hashed_password: Optional[str] = None
 
 class UserService:
     """Business logic for users."""
@@ -281,11 +299,12 @@ class UserService:
             raise ValueError("Email already registered")
 
         # Hash password
-        user_in_dict = user_in.dict()
+        user_in_dict = user_in.model_dump()
         user_in_dict["hashed_password"] = get_password_hash(user_in_dict.pop("password"))
 
         # Create user
-        user = await self.repository.create(db, UserCreate(**user_in_dict))
+        user = await self.repository.create(db, UserCreateDB(**user_in_dict))
+        await db.commit()  # also enforce an atomic database unique email constraint
         return user
 
     async def authenticate(
@@ -296,7 +315,7 @@ class UserService:
     ) -> Optional[User]:
         """Authenticate user."""
         user = await self.repository.get_by_email(db, email)
-        if not user:
+        if not user or not user.is_active:
             return None
         if not verify_password(password, user.hashed_password):
             return None
@@ -313,14 +332,14 @@ class UserService:
         if not user:
             return None
 
-        if user_in.password:
-            user_in_dict = user_in.dict(exclude_unset=True)
-            user_in_dict["hashed_password"] = get_password_hash(
-                user_in_dict.pop("password")
-            )
-            user_in = UserUpdate(**user_in_dict)
-
-        return await self.repository.update(db, user, user_in)
+        # Explicit allowlist: never pass roles, tenant IDs or active flags from input.
+        values = user_in.model_dump(exclude_unset=True)
+        updates = {key: value for key, value in values.items() if key == "name"}
+        if values.get("password"):
+            updates["hashed_password"] = get_password_hash(values["password"])
+        result = await self.repository.update(db, user, UserUpdateDB(**updates))
+        await db.commit()
+        return result
 
 user_service = UserService()
 ```
@@ -366,6 +385,8 @@ async def read_user(
     current_user: User = Depends(get_current_user)
 ):
     """Get user by ID."""
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized")
     user = await user_service.repository.get(db, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -400,6 +421,7 @@ async def delete_user(
     deleted = await user_service.repository.delete(db, user_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="User not found")
+    await db.commit()
 ```
 
 ### Pattern 5: Authentication & Authorization
@@ -447,6 +469,7 @@ from app.core.security import ALGORITHM
 from app.core.config import get_settings
 from app.repositories.user_repository import user_repository
 
+settings = get_settings()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
 
 async def get_current_user(
@@ -462,14 +485,15 @@ async def get_current_user(
 
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: int = payload.get("sub")
-        if user_id is None:
+        subject = payload.get("sub")
+        if not isinstance(subject, str) or not subject.isdecimal():
             raise credentials_exception
+        user_id = int(subject)
     except JWTError:
         raise credentials_exception
 
     user = await user_repository.get(db, user_id)
-    if user is None:
+    if user is None or not user.is_active:
         raise credentials_exception
 
     return user
@@ -481,7 +505,8 @@ async def get_current_user(
 # tests/conftest.py
 import pytest
 import asyncio
-from httpx import AsyncClient
+from httpx import AsyncClient, ASGITransport
+import pytest_asyncio
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
@@ -490,13 +515,7 @@ from app.core.database import get_db, Base
 
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
-@pytest.fixture(scope="session")
-def event_loop():
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
-
-@pytest.fixture
+@pytest_asyncio.fixture
 async def db_session():
     engine = create_async_engine(TEST_DATABASE_URL, echo=True)
     async with engine.begin() as conn:
@@ -509,15 +528,18 @@ async def db_session():
     async with AsyncSessionLocal() as session:
         yield session
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def client(db_session):
     async def override_get_db():
         yield db_session
 
     app.dependency_overrides[get_db] = override_get_db
 
-    async with AsyncClient(app=app, base_url="http://test") as client:
-        yield client
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        try:
+            yield client
+        finally:
+            app.dependency_overrides.pop(get_db, None)
 
 # tests/test_users.py
 import pytest
@@ -538,13 +560,11 @@ async def test_create_user(client):
     assert "id" in data
 ```
 
-## Resources
+## Unbundled Components and Verification
 
-- **references/fastapi-architecture.md**: Detailed architecture guide
-- **references/async-best-practices.md**: Async/await patterns
-- **references/testing-strategies.md**: Comprehensive testing guide
-- **assets/project-template/**: Complete FastAPI project
-- **assets/docker-compose.yml**: Development environment setup
+No `references/*.md`, `assets/project-template/` or Compose application is bundled here. Implement the missing schema/model/router/login files and migrations before running. The public `User` response schema must exclude password/hash and internal roles; public create/update schemas must forbid privileged fields. Unique-email validation must be enforced by the database, with integrity errors handled before returning success. Add JWT issuer/audience/required-claim checks for the actual trust domain and use a high-entropy secret with rotation; the token URL above is metadata, not an implemented login endpoint.
+
+Password hashing/verification may block the event loop; choose a supported password library and offload CPU work with bounded concurrency. Test token expiry/inactive users, cross-user access, duplicate registration races, unauthorized field updates,204 deletion and rollback failures. Dispose the test engine and import all model metadata in the real fixture; ASGITransport alone does not run lifespan startup/shutdown. Do not claim a test passed by copying its code.
 
 ## Best Practices
 
