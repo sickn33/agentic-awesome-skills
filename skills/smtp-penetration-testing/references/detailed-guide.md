@@ -39,7 +39,7 @@ nmap -p 25,465,587,2525 -sV TARGET_IP
 nmap -sV -sC -p 25 TARGET_IP
 
 # SMTP-specific scripts
-nmap --script=smtp-* -p 25 TARGET_IP
+# Select individually reviewed NSE scripts; wildcard smtp-* may include intrusive tests.
 
 # Discover MX records for domain
 dig MX target.com
@@ -54,11 +54,11 @@ Retrieve SMTP server information:
 ```bash
 # Using Telnet
 telnet TARGET_IP 25
-# Response: 220 mail.target.com ESMTP Postfix
+# Response: 220 mail.target.invalid ESMTP Postfix
 
 # Using Netcat
 nc TARGET_IP 25
-# Response: 220 mail.target.com ESMTP
+# Response: 220 mail.target.invalid ESMTP
 
 # Using Nmap
 nmap -sV -p 25 TARGET_IP
@@ -91,7 +91,7 @@ nc TARGET_IP 25
 EHLO attacker.com
 
 # Response shows capabilities:
-250-mail.target.com
+250-mail.target.invalid
 250-PIPELINING
 250-SIZE 10240000
 250-VRFY
@@ -117,8 +117,7 @@ EXPN staff
 # RCPT TO - Recipient verification
 MAIL FROM:<test@attacker.com>
 RCPT TO:<admin@target.com>
-# 250 OK = user exists
-# 550 = user doesn't exist
+# Codes can reflect catch-all/policy/anti-enumeration behavior; compare controlled known accounts.
 ```
 
 ### Phase 5: User Enumeration
@@ -171,14 +170,14 @@ nmap -p 25 --script smtp-open-relay TARGET_IP
 telnet TARGET_IP 25
 HELO attacker.com
 MAIL FROM:<test@attacker.com>
-RCPT TO:<victim@external-domain.com>
+RCPT TO:<controlled-recipient@example.invalid>
 DATA
 Subject: Relay Test
 This is a test.
 .
 QUIT
 
-# If accepted (250 OK), server is open relay
+# Acceptance alone is not proof of external delivery; verify only with approved controlled mailboxes.
 ```
 
 Using Metasploit:
@@ -353,3 +352,5 @@ dig TXT _dmarc.target.com                 # DMARC
 | VRFY/EXPN Disabled | Server hardened | Use RCPT TO method; analyze response time/code variations |
 | Brute Force Blocked | Rate limiting/lockout | Slow down (`hydra -W 5`); use password spraying; check for fail2ban |
 | SSL/TLS Errors | Wrong port or protocol | Use 465 for SSL, 25/587 for STARTTLS; verify EHLO response |
+
+All delivery/relay/spoofing examples require specifically authorized sender and recipient test mailboxes; no third-party delivery, employee deception or password spraying is implicit. Agree rate/attempt/lockout limits and stop when blocked. A manually supplied Bcc/X-Injected header is not command/header injection: demonstrate a vulnerable application input-to-header boundary separately. STARTTLS capability or a completed s_client handshake alone does not verify certificate hostname/trust or downgrade policy; configure SNI/verification and inspect failures. DNS record presence alone does not validate SPF/DKIM/DMARC effectiveness. Redact authentication data and captured addresses.

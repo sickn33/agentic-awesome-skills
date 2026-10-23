@@ -34,7 +34,7 @@ Manage identity and access in AWS with least-privilege policies, roles, federati
 ## Prerequisites
 
 - AWS CLI v2 installed and configured
-- IAM permissions: `iam:*` (or scoped to specific actions for least privilege)
+- Least-privilege IAM actions for the chosen roles/policies; iam:* is not a prerequisite
 - For OIDC: ability to create identity providers (`iam:CreateOpenIDConnectProvider`)
 - AWS Organizations access for Service Control Policies (SCPs)
 
@@ -57,12 +57,7 @@ Every IAM policy follows the same JSON structure. Always specify the minimum act
       "Resource": [
         "arn:aws:s3:::my-app-bucket",
         "arn:aws:s3:::my-app-bucket/*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "s3:x-amz-server-side-encryption": "aws:kms"
-        }
-      }
+      ]
     },
     {
       "Sid": "DenyUnencryptedUploads",
@@ -270,7 +265,7 @@ aws iam create-policy \
           "StringNotEquals": {
             "aws:RequestedRegion": ["us-east-1", "us-west-2"]
           },
-          "ForAnyValue:StringNotLike": {
+          "ArnNotLike": {
             "aws:PrincipalArn": "arn:aws:iam::*:role/admin-*"
           }
         }
@@ -301,8 +296,8 @@ aws accessanalyzer list-findings \
 aws iam generate-credential-report
 aws iam get-credential-report --output text --query Content | base64 -d > credential-report.csv
 
-# Find users with console access but no MFA
-aws iam list-users --query "Users[].UserName" --output text | while read user; do
+# List IAM users with no IAM MFA device (does not establish console access)
+aws iam list-users --query "Users[].UserName" --output text | tr '\t' '\n' | while IFS= read -r user; do
   mfa=$(aws iam list-mfa-devices --user-name "$user" --query "MFADevices" --output text)
   if [ -z "$mfa" ]; then
     echo "NO MFA: $user"
@@ -352,7 +347,7 @@ resource "aws_iam_role" "github_actions" {
           "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
         }
         StringLike = {
-          "token.actions.githubusercontent.com:sub" = "repo:my-org/my-repo:*"
+          "token.actions.githubusercontent.com:sub" = "repo:my-org/my-repo:ref:refs/heads/main"
         }
       }
     }]
@@ -426,7 +421,7 @@ resource "aws_iam_policy" "boundary" {
         "StringNotEquals": {
           "aws:RequestedRegion": ["us-east-1", "us-west-2"]
         },
-        "ForAnyValue:StringNotLike": {
+        "ArnNotLike": {
           "aws:PrincipalArn": ["arn:aws:iam::*:role/OrganizationAdmin"]
         }
       }
@@ -461,3 +456,5 @@ resource "aws_iam_policy" "boundary" {
 - Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
 - Docs-only import: upstream scripts and templates not bundled.
 
+
+The upload encryption deny above deliberately requires an explicit KMS request header; bucket default encryption alone will not satisfy it. Separate KMS key policy/grants may be required. Account-root trust delegates to permitted identities in that account, not only its root user; narrow to intended role principals. OIDC subject claims must match the intended branch or protected environment, with current provider trust configuration. Region-deny examples can block global services: design tested service exceptions and recovery access before attachment. Boundaries/SCPs do not grant access and are not complete escalation prevention; resource policies, role sessions, PassRole and service-linked roles need separate review. MFA report/90-day heuristics are leads, not proof of credential compromise or console access. Never print temporary credential values into logs; prefer credential-process/profiles. Simulators do not reproduce every real resource-policy/SCP context.

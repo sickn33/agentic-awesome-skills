@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Recognition Title,Category,Date,Department,Given By,Message,Month,Notes,Points Awarded,Rec-Rwd ID,Recognised Employee,Reward Type,Visibility,Year
-Won the Northwind pitch,Team,2026-01-15,Delivery,Karan Malhotra,Your probation review is due on 28 Feb. Book a slot with your manager.,2026-03,February awards sent; two nominations were duplicates of the same contribution.,50,,Aarav Sharma,Spot Award,Company-wide,2026
+Won the Northwind pitch,Team,2026-01-15,Delivery,Karan Malhotra,Thank you for preparing the synthetic example pitch and supporting the team.,2026-03,February awards sent; two nominations were duplicates of the same contribution.,50,,Aarav Sharma,Spot Award,Company-wide,2026
 ```
 
 ```sql
@@ -135,7 +135,7 @@ CREATE TABLE recognition_rewards (
   message VARCHAR(255),
   month VARCHAR(255),
   notes TEXT,
-  points_awarded NUMERIC NOT NULL,
+  points_awarded NUMERIC,
   rec_rwd_id SERIAL PRIMARY KEY,
   recognised_employee VARCHAR(255),
   reward_type VARCHAR(100) NOT NULL,
@@ -161,7 +161,7 @@ CREATE TABLE recognition_rewards (
       "Message": { "type": "string" },
       "Month": { "type": "string" },
       "Notes": { "type": "string" },
-      "Points Awarded": { "type": "number" },
+      "Points Awarded": { "type": ["number", "null"] },
       "Rec-Rwd ID": { "type": "integer" },
       "Recognised Employee": { "type": "string" },
       "Reward Type": { "type": "string" },
@@ -171,7 +171,6 @@ CREATE TABLE recognition_rewards (
   "required": [
       "Category",
       "Date",
-      "Points Awarded",
       "Reward Type"
   ]
 }
@@ -208,7 +207,7 @@ and anything pointing at another table stays `relation`.
 | 3 | Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 4 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 5 | Given By | `text` | `VARCHAR(255)` | `string` | Text | `Karan Malhotra` |
-| 6 | Message | `text` | `VARCHAR(255)` | `string` | Text | `Your probation review is due on 28 Feb. Book a slot with your manager.` |
+| 6 | Message | `text` | `VARCHAR(255)` | `string` | Text | `Thank you for preparing the synthetic example pitch and supporting the team.` |
 | 7 | Month | `text` | `VARCHAR(255)` | `string` | Text | `2026-03` |
 | 8 | Notes | `long_text` | `TEXT` | `string` | Text | `February awards sent; two nominations were duplicates of the same contribution.` |
 | 9 | Points Awarded | `number` | `NUMERIC` | `number` | Number | `50` |
@@ -322,3 +321,5 @@ Then recommend the smallest setup that fits, and wait for me to ask before you b
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
+
+Points are optional when no points system exists; unknown is blank/null, not an invented award. Visibility is a label, not enforced permissions: verify audience and avoid exposing personnel review information in recognition messages. This register does not authorize public announcements or monetary reward delivery.

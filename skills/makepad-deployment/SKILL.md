@@ -262,8 +262,8 @@ First, create an empty app in Xcode with matching org/app names to generate prov
 cargo makepad apple ios \
     --org=com.yourcompany \
     --app=YourApp \
-    --profile=$YOUR_PROFILE_PATH \
-    --cert=$YOUR_CERT_FINGERPRINT \
+    --profile="$YOUR_PROFILE_PATH" \
+    --cert="$YOUR_CERT_FINGERPRINT" \
     --device=iPhone \
     run-device -p your-app --release
 ```
@@ -301,13 +301,13 @@ Output in `./target/makepad-wasm-app/release/your-app/`:
 **Serve locally:**
 ```bash
 cd ./target/makepad-wasm-app/release/your-app
-python3 -m http.server 8080
+python3 -m http.server 8080 --bind 127.0.0.1
 # Open http://localhost:8080
 ```
 
 ---
 
-## Complete Example Cargo.toml
+## Illustrative Cargo.toml (application sources/assets not bundled)
 
 ```toml
 [package]
@@ -439,3 +439,5 @@ cargo makepad android install-toolchain --full-ndk
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The install commands and dev-branch dependencies are historical examples; pin reviewed versions/immutable commits and matching lockfiles before execution. `--locked` alone does not pin a moving Git branch. Preserve existing tool installations rather than blindly using --force. Raw Payload zipping does not establish a valid distribution IPA: signing, provisioning, entitlements and supported export workflow must match the target channel. Package signing/notarization, device installation and release upload require authorized targets and secure signing credentials. Check the selected packager's actual key names, platform dependencies and output paths; these snippets have not been built. The additional community workflow reference is external/unbundled too.

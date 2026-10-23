@@ -34,7 +34,7 @@ Deploy and manage Amazon RDS relational databases with production-grade backups,
 ## Prerequisites
 
 - AWS CLI v2 installed and configured
-- IAM permissions: `rds:*`, `ec2:DescribeSecurityGroups`, `ec2:DescribeSubnets`, `kms:*`, `cloudwatch:*`
+- Least-privilege IAM actions for the selected RDS, subnet, monitoring and KMS resources; avoid service-wide wildcard grants
 - A VPC with at least two subnets in different AZs (for subnet group)
 - Security group allowing database port access from application subnets only
 
@@ -129,8 +129,8 @@ aws rds modify-db-parameter-group \
   --db-parameter-group-name production-pg16 \
   --parameters \
     "ParameterName=max_connections,ParameterValue=200,ApplyMethod=pending-reboot" \
-    "ParameterName=shared_buffers,ParameterValue={DBInstanceClassMemory/4},ApplyMethod=pending-reboot" \
-    "ParameterName=effective_cache_size,ParameterValue={DBInstanceClassMemory*3/4},ApplyMethod=pending-reboot" \
+    "ParameterName=shared_buffers,ParameterValue={DBInstanceClassMemory/32768},ApplyMethod=pending-reboot" \
+    "ParameterName=effective_cache_size,ParameterValue={DBInstanceClassMemory*3/32768},ApplyMethod=pending-reboot" \
     "ParameterName=work_mem,ParameterValue=65536,ApplyMethod=immediate" \
     "ParameterName=maintenance_work_mem,ParameterValue=524288,ApplyMethod=immediate" \
     "ParameterName=random_page_cost,ParameterValue=1.1,ApplyMethod=immediate" \
@@ -282,13 +282,14 @@ resource "aws_db_parameter_group" "postgres16" {
   family = "postgres16"
 
   parameter {
-    name  = "max_connections"
-    value = "200"
+    name         = "max_connections"
+    value        = "200"
+    apply_method = "pending-reboot"
   }
 
   parameter {
     name         = "shared_buffers"
-    value        = "{DBInstanceClassMemory/4}"
+    value        = "{DBInstanceClassMemory/32768}"
     apply_method = "pending-reboot"
   }
 
@@ -358,7 +359,7 @@ resource "aws_db_instance" "read_replica" {
 | Cannot connect to RDS | Security group blocks traffic | Verify SG allows app subnet CIDR on DB port |
 | Storage full | Auto-scaling not enabled or limit reached | Set `--max-allocated-storage`; increase manually |
 | High replication lag | Write-heavy workload or replica undersized | Upgrade replica instance class; reduce write volume |
-| Parameter change not applied | Requires reboot for static params | Reboot with `--force-failover` during maintenance window |
+| Parameter change not applied | Requires reboot for static params | Schedule an approved reboot; force failover only when specifically required and supported |
 | Snapshot restore slow | Large database size | Use larger instance class for restore; consider PITR |
 | Performance Insights empty | Not enabled or instance type unsupported | Enable PI; check instance class supports it |
 | Multi-AZ failover happened | Hardware or AZ failure | Check RDS events; review failover logs |
@@ -378,3 +379,5 @@ resource "aws_db_instance" "read_replica" {
 - Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
 - Docs-only import: upstream scripts and templates not bundled.
 
+
+Engine versions, monitoring products, classes and parameter ranges are historical examples; discover currently supported options in the target region. PostgreSQL buffer/cache parameters use 8KiB blocks, while DBInstanceClassMemory is bytes; verify units and workload memory budgets before applying. See [RDS memory guidance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Tuning.concepts.memory.html). Do not print master secret values into logs/chat; use a scoped application role rather than master credentials. Plan downtime and costs, verify nonpublic access explicitly, and capture each actual snapshot ID instead of mixing dynamic creation dates with fixed placeholders. Restores create new endpoints and do not perform application cutover; validate restored data and security groups. Replicas are asynchronous and promotion is not automatic zero-loss disaster recovery. Preserve final snapshot uniqueness and never delete restore points without approved retention scope.

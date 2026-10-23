@@ -84,6 +84,8 @@ const client = new Client({
 await client.connect();
 ```
 
+Examples are separate sketches requiring imports/schema and an authorized non-production database. Parameter binding protects values, not identifiers or tenant authorization. TypeScript query generics are compile-time assertions, not runtime result validation. On rollback failure, destroy the client instead of returning it to the pool; preserve the original error.
+
 ## Core Workflows
 
 ### 1. Single Client Connection
@@ -271,81 +273,27 @@ async function createUser(
 
 ## Pool with Entra ID Token Refresh
 
-For long-running applications, tokens expire and need refresh:
+Use the installed node-postgres version's supported dynamic password callback so new connections obtain a current token. Do not tear down and recreate a shared pool on every token expiry: concurrent callers can race with shutdown.
 
 ```typescript
-import { Pool, PoolConfig } from "pg";
-import { DefaultAzureCredential, AccessToken } from "@azure/identity";
+import { Pool } from "pg";
+import { DefaultAzureCredential } from "@azure/identity";
 
-class AzurePostgresPool {
-  private pool: Pool | null = null;
-  private credential: DefaultAzureCredential;
-  private tokenExpiry: Date | null = null;
-  private config: Omit<PoolConfig, "password">;
-
-  constructor(config: Omit<PoolConfig, "password">) {
-    this.credential = new DefaultAzureCredential();
-    this.config = config;
-  }
-
-  private async getToken(): Promise<string> {
-    const tokenResponse = await this.credential.getToken(
-      "https://ossrdbms-aad.database.windows.net/.default"
-    );
-    this.tokenExpiry = new Date(tokenResponse.expiresOnTimestamp);
-    return tokenResponse.token;
-  }
-
-  private isTokenExpired(): boolean {
-    if (!this.tokenExpiry) return true;
-    // Refresh 5 minutes before expiry
-    return new Date() >= new Date(this.tokenExpiry.getTime() - 5 * 60 * 1000);
-  }
-
-  async getPool(): Promise<Pool> {
-    if (this.pool && !this.isTokenExpired()) {
-      return this.pool;
-    }
-
-    // Close existing pool if token expired
-    if (this.pool) {
-      await this.pool.end();
-    }
-
-    const token = await this.getToken();
-    this.pool = new Pool({
-      ...this.config,
-      password: token
-    });
-
-    return this.pool;
-  }
-
-  async query<T>(text: string, params?: any[]): Promise<QueryResult<T>> {
-    const pool = await this.getPool();
-    return pool.query<T>(text, params);
-  }
-
-  async end(): Promise<void> {
-    if (this.pool) {
-      await this.pool.end();
-      this.pool = null;
-    }
-  }
-}
-
-// Usage
-const azurePool = new AzurePostgresPool({
-  host: process.env.AZURE_POSTGRESQL_HOST!,
-  database: process.env.AZURE_POSTGRESQL_DATABASE!,
-  user: process.env.AZURE_POSTGRESQL_USER!,
-  port: 5432,
+const credential = new DefaultAzureCredential();
+const azurePool = new Pool({
+  host: process.env.AZURE_POSTGRESQL_HOST,
+  database: process.env.AZURE_POSTGRESQL_DATABASE,
+  user: process.env.AZURE_POSTGRESQL_USER,
   ssl: { rejectUnauthorized: true },
-  max: 20
+  password: async () => {
+    const token = await credential.getToken("https://ossrdbms-aad.database.windows.net/.default");
+    if (!token) throw new Error("Token acquisition failed");
+    return token.token;
+  },
 });
-
-const result = await azurePool.query("SELECT NOW()");
 ```
+
+Verify Entra principal mapping and server authentication settings first. Tokens are secrets; never log them. Token expiration is supplied by the issuer, not a guaranteed one-hour lifetime.
 
 ## Error Handling
 
@@ -358,10 +306,10 @@ try {
   if (error instanceof DatabaseError) {
     switch (error.code) {
       case "23505":  // unique_violation
-        console.error("Duplicate entry:", error.detail);
+        console.error("Duplicate entry (details redacted)");
         break;
       case "23503":  // foreign_key_violation
-        console.error("Foreign key constraint failed:", error.detail);
+        console.error("Foreign key constraint failed (details redacted)");
         break;
       case "42P01":  // undefined_table
         console.error("Table does not exist:", error.message);
@@ -385,7 +333,8 @@ try {
 ```typescript
 // Alternative: Use connection string
 const pool = new Pool({
-  connectionString: `postgres://${user}:${password}@${host}:${port}/${database}?sslmode=require`
+  connectionString: `postgres://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${host}:${port}/${encodeURIComponent(database)}`,
+  ssl: { rejectUnauthorized: true }
 });
 
 // With SSL required (Azure)

@@ -102,7 +102,7 @@ Your quickstart is your most important conversion page. Optimize ruthlessly.
 
 ### The 5-Minute Rule
 
-Developers should reach a meaningful success moment within 5 minutes. If your quickstart takes longer, you're losing developers.
+Treat five minutes as a design hypothesis, not a universal benchmark. Measure a meaningful success moment for the actual audience and disclose prerequisites, waiting time and cost.
 
 **Measure and optimize:**
 - Time from page load to first successful API call
@@ -147,8 +147,8 @@ Get your first [meaningful result] in under 5 minutes.
 Send an SMS in under 5 minutes.
 
 ## Prerequisites
-- Node.js 16 or higher
-- A Twilio account ([sign up free](https://github.com/jonathimer/devmarketing-skills/tree/main/skills/docs-as-marketing/link))
+- A supported Node.js version compatible with the pinned SDK
+- A Twilio account ([sign up free](https://www.twilio.com/try-twilio))
 
 ## Install the SDK
 ```bash
@@ -156,10 +156,11 @@ npm install twilio
 ```
 
 ## Send a Message
+This sends a real, potentially billed SMS. Use approved test credentials/recipients, and send only when explicitly requested. Never put live credentials in source or logs.
 Create `send-sms.js`:
 ```javascript
 const twilio = require('twilio');
-const client = twilio('YOUR_ACCOUNT_SID', 'YOUR_AUTH_TOKEN');
+const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 client.messages.create({
   body: 'Hello from my app!',
@@ -214,7 +215,7 @@ Create a .env file and add the following variables...
 
 ### Copy-Paste Code That Works
 
-**Critical**: Example code must work when copied. Test it.
+**Critical**: Test examples in a disposable authorized fixture using reviewed source, not by blindly executing retrieved Markdown. Clearly label pseudocode and unavailable prerequisites.
 
 **Good Example:**
 ```markdown
@@ -378,6 +379,8 @@ Create a documentation web, not documentation silos:
 - **Custom CI**: Run code samples as tests
 
 ### Search and Analytics
+
+Deploy analytics or session recording only within authorized scope, with required consent, retention and sensitive-field exclusion. A tool listing is not a recommendation to transmit private developer activity.
 - **Algolia DocSearch**: Free for open source, powerful
 - **Google Analytics**: Basic traffic metrics
 - **FullStory/Hotjar**: Session recording, heatmaps

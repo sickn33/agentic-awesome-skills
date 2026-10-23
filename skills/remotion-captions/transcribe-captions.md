@@ -18,6 +18,8 @@ If it is not installed, use the following command:
 npx remotion add @remotion/install-whisper-cpp
 ```
 
+Dependency/binary/model downloads require the requested installation scope and reviewed compatible versions; this historical pin is not a security certification. Use authorized media, preserve originals and review transcript accuracy. Do not upload private audio or publish captions without authorization.
+
 ## Transcribing
 
 Make a Node.js script to download Whisper.cpp and a model, and transcribe the audio.
@@ -62,7 +64,8 @@ const { captions } = toCaptions({
 });
 
 // Write it to the public/ folder so it can be fetched from Remotion
-fs.writeFileSync("captions123.json", JSON.stringify(captions, null, 2));
+fs.mkdirSync("public", { recursive: true });
+fs.writeFileSync("public/captions123.json", JSON.stringify(captions, null, 2), { flag: "wx" });
 ```
 
 Transcribe each clip individually and create multiple JSON files.

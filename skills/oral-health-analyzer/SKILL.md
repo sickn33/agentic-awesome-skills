@@ -1,12 +1,10 @@
 ---
 name: oral-health-analyzer
 description: 分析口腔健康数据、识别口腔问题模式、评估口腔健康状况、提供个性化口腔健康建议。支持与营养、慢性病、用药等其他健康数据的关联分析。
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-06"
 ---
-name: oral-health-analyzer
-
 # 口腔健康分析技能
 
 ## Detailed Guide

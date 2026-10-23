@@ -1,7 +1,7 @@
 ---
 name: progressive-web-app
 description: "Build Progressive Web Apps (PWAs) with offline support, installability, and caching strategies. Trigger whenever the user mentions PWA, service workers, web app manifests, Workbox, 'add to home screen', or wants their web app to work offline, feel native, or be installable."
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-17"
 tags: [pwa, web-dev, service-worker, frontend, offline, caching]
@@ -12,7 +12,7 @@ tools: [gemini, cursor, claude]
 
 ## Overview
 
-A Progressive Web App is a web application that uses modern browser capabilities to deliver a fast, reliable, and installable experience — even on unreliable networks. The three required pillars are:
+A Progressive Web App is a web application that uses modern browser capabilities to deliver a fast, reliable, and installable experience — even on unreliable networks. Common building blocks (install criteria vary by browser) are:
 
 1. **HTTPS** — Required in production for service workers to register (localhost is exempt for development).
 2. **Web App Manifest** (`manifest.json`) — Makes the app installable and defines its appearance on device home screens.
@@ -28,13 +28,13 @@ A Progressive Web App is a web application that uses modern browser capabilities
 
 ## Deliverables Checklist
 
-Every PWA implementation must include these files at minimum:
+This example layout uses the following files; these exact filenames are not a universal PWA requirement:
 
 - [ ] `index.html` — Links manifest, registers service worker
 - [ ] `manifest.json` — Full app metadata and icon set
 - [ ] `sw.js` — Service worker with install, activate, and fetch handlers
 - [ ] `app.js` — Main app logic with SW registration and install prompt handling
-- [ ] `offline.html` — Fallback page shown when navigation fails offline (required — missing file will cause install to fail)
+- [ ] `offline.html` — Fallback page shown when navigation fails offline (required by this example's cache.addAll list, not by the PWA standard)
 
 ---
 
@@ -162,7 +162,7 @@ if (installBtn) {
 // Fires when the app is installed (via browser or your button)
 window.addEventListener('appinstalled', () => {
   console.log('[App] PWA installed successfully');
-  installBtn.hidden = true;
+  if (installBtn) installBtn.hidden = true;
 });
 ```
 
@@ -174,8 +174,9 @@ window.addEventListener('appinstalled', () => {
 
 ```javascript
 const CACHE_VERSION = 'v1';
-const STATIC_CACHE = `static-${CACHE_VERSION}`;
-const DYNAMIC_CACHE = `dynamic-${CACHE_VERSION}`;
+const CACHE_PREFIX = 'my-pwa-'; // Unique to this app and deployment scope.
+const STATIC_CACHE = `${CACHE_PREFIX}static-${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `${CACHE_PREFIX}dynamic-${CACHE_VERSION}`;
 
 // Files to pre-cache during install (the "App Shell")
 const APP_SHELL = [
@@ -187,6 +188,8 @@ const APP_SHELL = [
   '/offline.html', // Fallback page shown when network is unavailable
 ];
 ```
+
+The hand-written strategies are teaching sketches. Coordinate updates before skipWaiting/clients.claim to avoid old-page/new-worker incompatibility. Bound cache size/retention, preserve other apps' caches, and tie background revalidation to event.waitUntil with rejection handling.
 
 ### Install — Pre-cache the App Shell
 
@@ -213,7 +216,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((name) => name !== STATIC_CACHE && name !== DYNAMIC_CACHE)
+          .filter((name) => name.startsWith(CACHE_PREFIX) && name !== STATIC_CACHE && name !== DYNAMIC_CACHE)
           .map((name) => {
             console.log('[SW] Deleting old cache:', name);
             return caches.delete(name);
@@ -238,6 +241,10 @@ self.addEventListener('fetch', (event) => {
   // Only handle GET requests from our own origin
   if (request.method !== 'GET' || url.origin !== location.origin) return;
 
+  // Explicit public resources only. Never cache authenticated/user-specific
+  // HTML or API responses by URL; cache contents can survive logout/account changes.
+  if (!APP_SHELL.includes(url.pathname)) return;
+
   // Strategy A: Cache-First (for static assets — fast, tolerates stale)
   if (url.pathname.match(/\.(css|js|png|jpg|svg|woff2)$/)) {
     event.respondWith(cacheFirst(request));
@@ -250,11 +257,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Strategy C: Stale-While-Revalidate (for API data — fast and eventually fresh)
-  if (url.pathname.startsWith('/api/')) {
-    event.respondWith(staleWhileRevalidate(request));
-    return;
-  }
+  // API caching is intentionally omitted; default to network-only for private data.
 });
 
 // ─── Strategy Implementations ──────────────────────────────────────────────
@@ -265,7 +268,7 @@ async function cacheFirst(request) {
   try {
     const response = await fetch(request);
     const cache = await caches.open(STATIC_CACHE);
-    cache.put(request, response.clone());
+    if (response.ok && response.type !== "opaque") await cache.put(request, response.clone());
     return response;
   } catch {
     // Nothing useful to fall back to for assets
@@ -277,19 +280,19 @@ async function networkFirst(request) {
   try {
     const response = await fetch(request);
     const cache = await caches.open(DYNAMIC_CACHE);
-    cache.put(request, response.clone());
+    if (response.ok && response.type !== "opaque") await cache.put(request, response.clone());
     return response;
   } catch {
     const cached = await caches.match(request);
-    return cached || caches.match('/offline.html');
+    return cached || await caches.match('/offline.html') || new Response("Offline", { status: 503 });
   }
 }
 
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(DYNAMIC_CACHE);
   const cached = await cache.match(request);
-  const fetchPromise = fetch(request).then((response) => {
-    cache.put(request, response.clone());
+  const fetchPromise = fetch(request).then(async (response) => {
+    if (response.ok && response.type !== "opaque") await cache.put(request, response.clone());
     return response;
   });
   return cached || fetchPromise;
@@ -314,7 +317,7 @@ async function staleWhileRevalidate(request) {
 - A common pattern is to inject the version automatically via your build tool (e.g., Vite, Webpack).
 
 ### Opaque Responses (cross-origin requests)
-- Requests to external origins (e.g., CDN fonts, third-party APIs) return "opaque" responses that cannot be inspected. Cache them with caution — a failed opaque response still gets a `200` status.
+- Cross-origin no-cors responses can be opaque, with status 0 and unreadable bodies; CORS-enabled responses need not be opaque. Do not interpret status 0 as success.
 - Prefer `staleWhileRevalidate` for cross-origin resources, or use a library like Workbox which handles this safely.
 
 ---
@@ -348,7 +351,7 @@ registerRoute(({ request }) => request.destination === 'script', new StaleWhileR
 - [ ] `sw.js` registers without errors in DevTools → Application → Service Workers
 - [ ] App shell loads from cache when network is throttled to "Offline" in DevTools
 - [ ] `offline.html` fallback is cached and served when navigation fails offline
-- [ ] Lighthouse PWA audit passes (Chrome DevTools → Lighthouse tab)
+- [ ] Current browser installability, offline, accessibility and performance checks pass; do not rely on a retired Lighthouse PWA category
 - [ ] Tested on iOS Safari (manual install flow) and Android Chrome (install prompt)
 
 ## Limitations

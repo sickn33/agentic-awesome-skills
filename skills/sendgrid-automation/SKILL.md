@@ -18,7 +18,7 @@ Automate SendGrid email delivery workflows including marketing campaigns (Single
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Authenticate the MCP server/client and authorize the SendGrid account; the endpoint alone does not grant access.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `sendgrid`
@@ -48,12 +48,12 @@ Automate SendGrid email delivery workflows including marketing campaigns (Single
 - `send__to__list__ids`: Array of list UUIDs to send to
 - `send__to__segment__ids`: Array of segment UUIDs
 - `send__to__all`: true to send to all contacts
-- `email__config__suppression__group__id` or `email__config__custom__unsubscribe__url`: One required for compliance
+- `email__config__suppression__group__id` or `email__config__custom__unsubscribe__url`: One required by the service configuration; this alone does not establish legal compliance
 
 **Pitfalls**:
 - Setting `send_at` on CREATE does NOT schedule the send; it only prepopulates the UI date; use the Schedule endpoint separately
 - `send_at: "now"` is only valid with the Schedule endpoint, not CREATE
-- Must provide either `suppression_group_id` or `custom_unsubscribe_url` for unsubscribe compliance
+- Provide the service-required unsubscribe configuration and separately verify applicable consent and unsubscribe requirements
 - Sender must be verified before use; check with `SENDGRID_GET_ALL_SENDER_IDENTITIES`
 - Nested params use double-underscore notation (e.g., `email__config__subject`)
 
@@ -170,7 +170,7 @@ Always resolve names to IDs before operations:
 Contact operations (`ADD_OR_UPDATE_A_CONTACT`, `IMPORT_CONTACTS`) are asynchronous:
 - Returns 202 with a `job_id`
 - Wait 10-30 seconds before verifying with `GET_CONTACTS_BY_EMAILS`
-- Use `GET_LIST_CONTACT_COUNT` to confirm list growth
+- Verify the actual job outcome and intended contact membership; count growth alone does not prove all changes succeeded
 
 ## Known Pitfalls
 
@@ -240,3 +240,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+This is a historical connector schema/limit snapshot; live discovery and provider documentation take precedence. Creating a Single Send is a draft, not evidence of delivery; discover the actual schedule/send endpoint only for an explicitly authorized send, final content, sender, audience and time. Do not default to send_to_all. Contact import does not establish consent or permit resubscribing suppressed recipients. Verification emails, sender changes and DNS authentication require their own authorized targets. Poll async jobs with bounded backoff rather than assuming a fixed delay; do not repeat unknown-result sends. Open/click events may reflect privacy proxies or bots, not human reading. Minimize recipient data in exports and treat temporary download URLs as sensitive.

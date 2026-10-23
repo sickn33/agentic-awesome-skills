@@ -38,7 +38,9 @@ export const MyComponent: React.FC = () => {
     try {
       // Assuming captions.json is in the public/ folder.
       const response = await fetch(staticFile("captions123.json"));
+      if (!response.ok) throw new Error(`Caption fetch failed: ${response.status}`);
       const data = await response.json();
+      // Validate Caption[] shape, finite ordered times and size before setCaptions.
       setCaptions(data);
       continueRender(handle);
     } catch (e) {

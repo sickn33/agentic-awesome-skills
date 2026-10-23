@@ -18,7 +18,7 @@ Automate Supabase operations including database queries, table schema inspection
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Complete the client/server authentication and explicitly authorized Supabase connection flow; an endpoint alone does not establish access.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `supabase`
@@ -63,11 +63,11 @@ Automate Supabase operations including database queries, table schema inspection
 
 **Pitfalls**:
 - `project_ref` must be exactly 20 lowercase letters (a-z only, no numbers or hyphens)
-- `SELECT_FROM_TABLE` is read-only; use `RUN_SQL_QUERY` for INSERT, UPDATE, DELETE operations
+- `SELECT_FROM_TABLE` is read-only; use an available authorized write tool; SQL is one option
 - For PostgreSQL array columns (text[], integer[]), use `ARRAY['item1', 'item2']` or `'{"item1", "item2"}'` syntax, NOT JSON array syntax `'["item1", "item2"]'`
 - SQL identifiers that are case-sensitive must be double-quoted in queries
 - Complex DDL operations may timeout (~60 second limit); break into smaller queries
-- ERROR 42P01 "relation does not exist" usually means unquoted case-sensitive identifiers
+- ERROR 42P01 may mean a wrong database/schema/search_path, absent relation, or quoting mismatch
 - ERROR 42883 "function does not exist" means you are calling non-standard helpers; prefer information_schema queries
 
 ### 2. Manage Projects and Organizations
@@ -162,7 +162,7 @@ Automate Supabase operations including database queries, table schema inspection
 **Pitfalls**:
 - `LISTS_ALL_BUCKETS` returns bucket list only, not bucket contents or access policies
 - For file uploads, `SUPABASE_RESUMABLE_UPLOAD_SIGN_OPTIONS_WITH_ID` handles CORS preflight for TUS resumable uploads only
-- Direct file operations may require using `proxy_execute` with the Supabase storage API
+- Use only a documented, available storage tool/API within the same authorized scope; do not invent proxy tools
 
 ## Common Patterns
 
@@ -248,3 +248,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Tool names, schemas, identifier restrictions and limits above describe a historical connector snapshot. Current discovery wins; preserve returned identifiers rather than deriving them from display names. Schema inspection does not authorize writes, key retrieval, bulk personal-data export or auth changes. Management SQL may run with privileged access and bypass application RLS: constrain project/schema/rows and parameterize values. Read-only transactions can still be expensive; bound queries and review locks before DDL. Do not split atomic migrations merely to avoid timeout without a recovery plan. Use stable unique ordering for offset pagination and disclose concurrent-change limits. Do not replay unknown-result writes.

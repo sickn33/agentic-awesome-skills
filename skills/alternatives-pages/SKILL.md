@@ -138,7 +138,7 @@ Look for patterns in:
 **1. Hero**
 - "[Your Product] vs [Competitor]: [Key Differentiator]"
 - Neutral, informative tone
-- Both logos (don't be weird about it)
+- Product names; use logos only after checking applicable brand-use permissions
 
 **2. Quick Comparison**
 - At-a-glance summary for scanners
@@ -380,3 +380,5 @@ Use social listening tools to set up searches for:
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+Use only verified, dated claims and permitted testimonials or visual assets. Legal rules depend on jurisdiction; this checklist is not a determination that trademark use is lawful. Research does not authorize publishing pages, contacting reviewers or creating ongoing paid monitoring. Rankings and conversion improvements are goals, not guarantees.

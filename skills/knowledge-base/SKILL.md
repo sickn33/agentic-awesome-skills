@@ -135,7 +135,7 @@ CREATE TABLE knowledge_base (
   summary TEXT,
   linked_sop VARCHAR(255),  -- relation -> target record
   audience VARCHAR(255),
-  last_reviewed DATE NOT NULL,
+  last_reviewed DATE,
   next_review DATE NOT NULL,
   status VARCHAR(100) NOT NULL,
   article_id SERIAL PRIMARY KEY,
@@ -161,14 +161,13 @@ CREATE INDEX idx_knowledge_base_status ON knowledge_base (status);
       "Summary": { "type": "string" },
       "Linked SOP": { "type": "string" },
       "Audience": { "type": "string" },
-      "Last Reviewed": { "type": "string", "format": "date" },
+      "Last Reviewed": { "type": ["string", "null"], "format": "date" },
       "Next Review": { "type": "string", "format": "date" },
       "Status": { "type": "string" },
       "Article ID": { "type": "integer" }
   },
   "required": [
       "Category",
-      "Last Reviewed",
       "Next Review",
       "Status"
   ]
@@ -303,7 +302,7 @@ Nobody can find our client onboarding documents.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 
@@ -316,3 +315,5 @@ Then recommend the smallest setup that fits, and wait for me to ask before you b
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
+
+Last Reviewed may be blank/null for a draft that has never been reviewed; do not invent an attestation date. Audience is descriptive metadata, not an enforced access-control policy. The SQL relation column is an identifier placeholder until a target table and foreign key are configured.

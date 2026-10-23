@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Suggestion Title,Submitted By,Anonymous,Department,Category,Description,Date Submitted,Votes,Reviewer,Decision,Response,Status,Suggestion ID
-Add a second parking bay,Ananya Rao,FALSE,Delivery,Process,"Anonymous idea from staff, routed to the owner who can actually act on it.",2026-01-15,14,Sneha Iyer,Approved,"Short, specific and actionable feedback only.",Under Review,
+Add a second parking bay,Ananya Rao,FALSE,Delivery,Process,"Synthetic example idea routed to an assigned reviewer.",2026-01-15,14,Sneha Iyer,Approved,"Short, specific and actionable feedback only.",Under Review,
 ```
 
 ```sql
@@ -134,7 +134,7 @@ CREATE TABLE employee_suggestion_hub (
   category VARCHAR(100) NOT NULL,
   description TEXT,
   date_submitted DATE NOT NULL,
-  votes NUMERIC NOT NULL,
+  votes INTEGER NOT NULL CHECK (votes >= 0),
   reviewer VARCHAR(255),
   decision VARCHAR(255),
   response VARCHAR(255),
@@ -161,7 +161,7 @@ CREATE INDEX idx_employee_suggestion_hub_status ON employee_suggestion_hub (stat
       "Category": { "type": "string" },
       "Description": { "type": "string" },
       "Date Submitted": { "type": "string", "format": "date" },
-      "Votes": { "type": "number" },
+      "Votes": { "type": "integer", "minimum": 0 },
       "Reviewer": { "type": "string" },
       "Decision": { "type": "string" },
       "Response": { "type": "string" },
@@ -169,6 +169,7 @@ CREATE INDEX idx_employee_suggestion_hub_status ON employee_suggestion_hub (stat
       "Suggestion ID": { "type": "integer" }
   },
   "required": [
+      "Anonymous",
       "Category",
       "Date Submitted",
       "Votes",
@@ -207,7 +208,7 @@ and anything pointing at another table stays `relation`.
 | 3 | Anonymous | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
 | 4 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 5 | Category | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Process` |
-| 6 | Description | `long_text` | `TEXT` | `string` | Text | `Anonymous idea from staff, routed to the owner who can actually act on it.` |
+| 6 | Description | `long_text` | `TEXT` | `string` | Text | `Synthetic example idea routed to an assigned reviewer.` |
 | 7 | Date Submitted | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 8 | Votes | `number` | `NUMERIC` | `number` | Number | `14` |
 | 9 | Reviewer | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
@@ -307,7 +308,7 @@ People suggest improvements and never hear anything back.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 
@@ -320,3 +321,5 @@ Then recommend the smallest setup that fits, and wait for me to ask before you b
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
+
+An Anonymous checkbox does not anonymize submitter, department, free text, logs or metadata. Do not promise anonymity without validating the actual collection/access model. Keep Submitted By blank for genuinely anonymous submissions and avoid inferential reidentification. Votes are nonnegative whole counts under a defined deduplication rule, not a verified measure of workforce consensus.
