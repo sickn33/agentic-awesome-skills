@@ -27,7 +27,7 @@ shopify-development/
 
 ## Validated GraphQL
 
-All GraphQL queries and mutations in this skill have been validated against Shopify Admin API 2026-01 schema using the official Shopify MCP.
+Examples target API 2026-01; no reproducible MCP schema-validation evidence is bundled. Validate each operation against that version and inspect mutation userErrors.
 
 ## Quick Start
 
@@ -53,7 +53,7 @@ This skill activates when the user mentions:
 
 ## API Version
 
-Current: **2026-01** (Quarterly releases with 12-month support)
+Example target: **2026-01** (Quarterly releases with 12-month support)
 
 ## License
 

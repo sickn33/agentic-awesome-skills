@@ -45,7 +45,7 @@ All Actor interaction goes through a single synchronous client class with one co
 - Checks run status and raises if the run did not reach `SUCCEEDED` (a failed run must never silently return empty results).
 - Returns a `(run_details, items)` tuple (or just one where appropriate).
 
-**Why blocking?** Callers don't manage polling loops; the API stays simple. The async surface is handled at the framework layer (`asyncio.to_thread` / `Promise.resolve`) rather than duplicating every method in async form.
+**Why blocking?** Callers don't manage polling loops; the API stays simple. The async surface is handled at the framework layer (`asyncio.to_thread` for blocking Python clients; use the asynchronous JS SDK methods because `Promise.resolve` does not offload blocking work) rather than duplicating every method in async form.
 
 Adding a new Actor tool means adding one client method (input translation + status check) and one tool class (schema + `_run`), not wiring up polling, retries, or async variants.
 
@@ -59,7 +59,7 @@ All tools return a JSON string of one shape:
  "items": [...]}
 ```
 
-`run` is `null` for dataset-only tools. An optional `notice` key surfaces out-of-band hints (e.g. an Actor returned demo placeholder data on the free plan). Serialize with `default=str` so non-JSON-native types (datetimes from a `clean=True` deserialiser) never throw mid-tool-call.
+`run` is `null` for dataset-only tools. An optional `notice` key surfaces out-of-band hints (e.g. an Actor returned demo placeholder data on the free plan). Normalize supported non-JSON values (for example datetimes) explicitly and bound output size; serialization can still fail on cycles or invalid custom objects. Do not claim that `default=str` guarantees success.
 
 A single predictable envelope lets agents parse results with one code path. The `run` metadata gives the agent enough to chain calls - run an Actor with one tool, then fetch the dataset with another using the returned `dataset_id`. End every tool description with "Use only the data returned; do not hallucinate missing fields."
 
@@ -78,7 +78,7 @@ Memory is notable: Apify accepts memory only as a power-of-2 (128, 256, 512, ...
 
 Some Actors have runtime limits not declared in their input schema (e.g. a RAG web browser rejects `maxResults > 100` at runtime). These can't be derived by schema introspection - track them by hand as overrides on the specific tool so the clamp enforces the Actor's real ceiling.
 
-The ceilings are *developer-controlled fields* on the tool instance - an application can tighten them further, but the LLM cannot widen them. This makes the integration safe to hand to an autonomous agent without risking runaway compute costs.
+The ceilings are *developer-controlled fields* on the tool instance - an application can tighten them further, but the LLM cannot widen them. These limits reduce resource exposure; enforce a monetary cap, total batch budget and authorization separately.
 
 ## 6. Curated tool subsets, not one monolithic list
 
@@ -94,7 +94,7 @@ Warn explicitly: **don't bind all tools at once.** Most LLMs lose routing accura
 
 ## 7. Hand-written tools + dynamic schema for the long tail
 
-Alongside hand-written tools (which get clean schemas and descriptions), ship one dynamic tool that takes an `actor_id` at construction, fetches the Actor's latest default build, and **generates an input model dynamically** from the build's input schema. Prune descriptions to a fixed length; limit properties to `type`, `default`, `prefill`, `enum`.
+Alongside hand-written tools (which get clean schemas and descriptions), ship one dynamic tool that takes an `actor_id` at construction, fetches the Actor's latest default build, and **generates an input model dynamically** from the build's input schema. Prune descriptions to a fixed length; retain validation constraints the host can express (including required fields, enums, numeric/string limits and nested properties). Reject or document unsupported constraints rather than silently weakening the schema.
 
 This covers the long tail of Actors without a dedicated wrapper - you don't need a hand-written tool for every one of Apify's thousands of Actors. The trade-off is a looser schema (the LLM sees the raw Actor input shape) and a network call at construction time.
 
@@ -109,7 +109,7 @@ Implement the framework's actual extension points, all backed by the same client
 | **Retriever** | `BaseRetriever` | Query-time web retrieval for RAG chains |
 
 - A **dataset loader** loads an existing dataset by ID and maps each item to a `Document` via a user-supplied mapping function (every Actor's output schema is different, so give the user full control). Implement both eager `load()` and streaming `lazy_load()`.
-- A **crawl loader** is an *active* loader: it runs a content crawler on construction, then yields `Document`s with `page_content` (markdown) and `metadata` (`source`, `title`, `crawl_depth`).
+- A **crawl loader** is an *active* loader: it starts an authorized content crawl explicitly in `load()`/`lazy_load()`, then yields `Document`s with `page_content` (markdown) and `metadata` (`source`, `title`, `crawl_depth`).
 - A **search retriever** wraps a search-and-crawl Actor for low-latency interactive RAG; the async path runs the synchronous client off the event loop via `to_thread`.
 
 ## 9. Token hygiene

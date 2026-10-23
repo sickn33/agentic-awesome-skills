@@ -1,3 +1,4 @@
+// Modified locally: usable palette default and nonzero input-range check.
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *                  P5.JS GENERATIVE ART - BEST PRACTICES
@@ -31,6 +32,7 @@ let params = {
     // - Colors: palette arrays
 
     seed: 12345,
+    colorPalette: ['#d97757', '#6a9bcc', '#788c5d'],
     // define colorPalette as an array -- choose whatever colors you'd like ['#d97757', '#6a9bcc', '#788c5d', '#b0aea5']
     // Add YOUR parameters here based on your algorithm
 };
@@ -144,6 +146,7 @@ function colorFromPalette(index) {
 
 // Mapping and easing
 function mapRange(value, inMin, inMax, outMin, outMax) {
+    if (inMax === inMin) throw new RangeError("input range must be nonzero");
     return outMin + (outMax - outMin) * ((value - inMin) / (inMax - inMin));
 }
 

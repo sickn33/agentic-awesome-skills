@@ -6,12 +6,7 @@ Complete guide to recovering failed payments and reducing involuntary churn.
 
 ## Why Dunning Matters
 
-- Failed payments cause 30-50% of all subscription churn
-- Most failed payments are recoverable with the right strategy
-- Subscription businesses lose an estimated $129 billion annually to involuntary churn
-- Effective dunning recovers 50-60% of failed payments
-
----
+Payment failures are one source of churn. Measure their share and recovery by invoice cohort; no universal recovery percentage or market-loss estimate is established here. Timelines, targets and prices below are illustrative, not current provider commitments.
 
 ## The Dunning Timeline
 
@@ -66,7 +61,7 @@ Major card networks offer automatic card update programs:
 | Mastercard Automatic Billing Updater (ABU) | Mastercard | Same for Mastercard |
 | Amex Cardrefresher | American Express | Same for Amex |
 
-**Impact:** Reduces hard declines from expired/replaced cards by 30-50%.
+**Impact:** Measure recoveries in your own issuer/payment-method mix; network updater participation varies.
 
 **How to enable:**
 - **Stripe**: Automatic — enabled by default
@@ -98,7 +93,7 @@ For annual plans or high-value subscriptions:
 | Code | Type | Meaning | Retry? |
 |------|------|---------|--------|
 | `insufficient_funds` | Soft | Temporarily low balance | Yes — retry in 2-3 days |
-| `card_declined` (generic) | Soft | Various temporary reasons | Yes — retry 3-4 times |
+| `card_declined` (generic) | Unknown | Inspect decline/advice code | Follow provider advice; do not assume retryable |
 | `processing_error` | Soft | Gateway/network issue | Yes — retry within 24h |
 | `expired_card` | Hard | Card is expired | No — request new card |
 | `stolen_card` | Hard | Card reported stolen | No — request new card |
@@ -111,7 +106,7 @@ For annual plans or high-value subscriptions:
 - Enable "Smart Retries" in Stripe Dashboard → Billing → Settings
 - Stripe's ML model picks optimal retry timing based on billions of transactions
 - Typically 4-8 retry attempts over 3-4 weeks
-- Recovers ~15% more than fixed-schedule retries
+- Compare recovered revenue and customer impact against your own fixed-schedule baseline
 
 **Manual retry schedule (if no smart retries):**
 
@@ -123,7 +118,7 @@ For annual plans or high-value subscriptions:
 | 4 | Day 7 | Morning of the next business day |
 | 5 (final) | Day 10 | Last attempt before grace period ends |
 
-**Retry timing insights:**
+**Unvalidated timing hypotheses (test only within provider/network retry limits):**
 - Retry on the same day of month the original payment succeeded
 - Retry after common paydays (1st and 15th of the month)
 - Avoid retrying on weekends (lower approval rates)
@@ -276,6 +271,8 @@ will be paused automatically.
 
 ---
 
+Verify signatures over raw webhook bodies, reject wrong account/tenant, deduplicate event IDs, tolerate out-of-order deliveries and fetch current invoice/subscription state before changing access. Do not restore access for every invoice.paid event without matching the subscription and entitlement policy. Stop scheduled emails/retries after verified payment or cancellation.
+
 ## Provider-Specific Setup
 
 ### Stripe
@@ -316,7 +313,7 @@ Final:   Mark subscription as unpaid after last retry
 **Managed dunning:**
 - Paddle handles retries and dunning automatically
 - Limited customization (Paddle manages the relationship)
-- Webhook: `subscription.payment_failed`, `subscription.cancelled`
+- Verify the active Paddle API generation and signed event schema; Billing uses `transaction.payment_failed` and `subscription.canceled`, rather than the names from older integrations.
 - Best for hands-off approach
 
 ### Recurly
@@ -374,6 +371,8 @@ Don't rely on email alone. Show payment failures in the app:
 
 ### Key Metrics
 
+Use unique invoices/payment obligations and a defined observation window; attempts are not independent failures. Prevented failures need a counterfactual experiment, not direct observation. Email opens are noisy (privacy proxies); test clicks against delivered messages and actual recoveries.
+
 | Metric | How to Calculate | Target |
 |--------|-----------------|--------|
 | Recovery rate | Recovered payments / Total failed | 50-60% |
@@ -383,7 +382,7 @@ Don't rely on email alone. Show payment failures in the app:
 | Dunning email open rate | Opens / Sent per email | 60%+ |
 | Dunning email click rate | Clicks / Opens per email | 30%+ |
 | Revenue recovered (monthly) | Sum of recovered payment amounts | Track trend |
-| Revenue lost to involuntary churn | Sum of failed + unrecovered amounts | Track trend |
+| Revenue lost to involuntary churn | Sum of outstanding unrecovered amounts for the cohort | Track trend |
 
 ### Benchmarking
 
@@ -404,5 +403,6 @@ Target recovery rate:               60% ($6,000 recovered)
 Monthly improvement:                $3,000/month
 Annual improvement:                 $36,000/year
 Cost of dunning optimization:       ~$200-500/month (tooling)
-ROI:                                6-15x
+Gross recovered-revenue / tooling cost: 6-15x
+Net ROI: (incremental contribution - total cost) / total cost; not shown here
 ```

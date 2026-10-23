@@ -1,5 +1,6 @@
 #!/bin/bash
-set -e
+set -euo pipefail
+# Modified in catalog review: preserve previous output and use isolated staging.
 
 echo "📦 Bundling React app to single HTML artifact..."
 
@@ -31,17 +32,22 @@ if [ ! -f ".parcelrc" ]; then
 EOF
 fi
 
-# Clean previous build
-echo "🧹 Cleaning previous build..."
-rm -rf dist bundle.html
+# Never delete an existing build or artifact.
+if [ -e bundle.html ] || [ -L bundle.html ]; then
+  echo "bundle.html already exists; choose a new output directory" >&2; exit 1
+fi
+BUILD_DIR=$(mktemp -d "$PWD/.artifact-build.XXXXXX")
+trap 'rm -rf -- "$BUILD_DIR"' EXIT
 
 # Build with Parcel
 echo "🔨 Building with Parcel..."
-pnpm exec parcel build index.html --dist-dir dist --no-source-maps
+pnpm exec parcel build index.html --dist-dir "$BUILD_DIR/dist" --no-source-maps
 
 # Inline everything into single HTML
 echo "🎯 Inlining all assets into single HTML file..."
-pnpm exec html-inline dist/index.html > bundle.html
+pnpm exec html-inline "$BUILD_DIR/dist/index.html" > "$BUILD_DIR/bundle.html"
+# noclobber preserves a file created after the initial existence check.
+(set -o noclobber; cat "$BUILD_DIR/bundle.html" > bundle.html)
 
 # Get file size
 FILE_SIZE=$(du -h bundle.html | cut -f1)

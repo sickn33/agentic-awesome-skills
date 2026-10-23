@@ -8,6 +8,6 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 
 | Local file | Original upstream path | Original Git blob SHA | Import changes |
 | --- | --- | --- | --- |
-| `scripts/relay.mjs` | `skills/omp-delegate/scripts/relay.mjs` | `59468e92fbaf7632c83848483e312cd637c4151b` | content unchanged |
+| `scripts/relay.mjs` | `skills/omp-delegate/scripts/relay.mjs` | `59468e92fbaf7632c83848483e312cd637c4151b` | Local review: fresh private artifact directories, restrictive file modes and direct execution disabled (invoke with node). |
 
 The relay launches the user-installed, authenticated agent CLI. Write-capable modes can approve child tools automatically; they are not a host sandbox. Invoke only for explicitly authorized delegation, keep credentials out of task briefs, and review the child output and project changes before landing them. This import does not run the CLI.

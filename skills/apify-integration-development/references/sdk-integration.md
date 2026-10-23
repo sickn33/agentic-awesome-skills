@@ -52,7 +52,8 @@ const run = await client.actor('apify/web-scraper').call({
     maxPagesPerCrawl: 10,
 }, { maxTotalChargeUsd: 5 });
 
-const { items } = await client.dataset(run.defaultDatasetId).listItems();
+if (!run || run.status !== 'SUCCEEDED') throw new Error('Actor did not succeed');
+const { items } = await client.dataset(run.defaultDatasetId).listItems({ limit: 100 });
 ```
 
 `.call()` blocks until the Actor finishes. Use for short-running Actors (under a few minutes). Pass `maxTotalChargeUsd` in the **options** argument - never in the input.
@@ -62,14 +63,15 @@ const { items } = await client.dataset(run.defaultDatasetId).listItems();
 ```typescript
 const run = await client.actor('apify/web-scraper').start({
     startUrls: [{ url: 'https://example.com' }],
-});
+}, { maxTotalChargeUsd: 5, timeoutSecs: 120 });
 
 // Poll for completion
 // Derive waitSecs from the run's timeoutSecs + a grace buffer, never unbounded.
 const finishedRun = await client.run(run.id).waitForFinish({ waitSecs: 120 });
 
-// Retrieve results
-const { items } = await client.dataset(finishedRun.defaultDatasetId).listItems();
+// A bounded wait can return a pending run. Preserve run.id for later polling.
+if (!finishedRun || finishedRun.status !== 'SUCCEEDED') throw new Error(`Run ${run.id} not yet successful`);
+const { items } = await client.dataset(finishedRun.defaultDatasetId).listItems({ limit: 100 });
 ```
 
 Use `.start()` + `.waitForFinish()` for long-running Actors or when you need the run ID immediately.
@@ -91,18 +93,20 @@ const record = await client.keyValueStore(run.defaultKeyValueStoreId).getRecord(
 
 ```typescript
 try {
-    const run = await client.actor('apify/web-scraper').call(input);
+    const run = await client.actor('apify/web-scraper').call(input, { maxTotalChargeUsd: 5, timeoutSecs: 120 });
 
     if (run.status !== 'SUCCEEDED') {
         const log = await client.log(run.id).get();
         throw new Error(`Actor failed with status ${run.status}: ${log}`);
     }
 
-    const { items } = await client.dataset(run.defaultDatasetId).listItems();
+    if (!run || run.status !== 'SUCCEEDED') throw new Error('Actor did not succeed');
+const { items } = await client.dataset(run.defaultDatasetId).listItems({ limit: 100 });
 } catch (error) {
-    if (error.type === 'record-not-found') {
+    const apiError = error as { type?: string; statusCode?: number };
+    if (apiError.type === 'record-not-found') {
         // Actor ID is wrong or Actor was deleted
-    } else if (error.statusCode === 401) {
+    } else if (apiError.statusCode === 401) {
         // Invalid or missing APIFY_TOKEN
     }
     throw error;
@@ -134,7 +138,9 @@ run = client.actor('apify/web-scraper').call(
     max_total_charge_usd=Decimal('5'),
 )
 
-items = client.dataset(run['defaultDatasetId']).list_items().items
+if not run or run['status'] != 'SUCCEEDED':
+    raise RuntimeError('Actor did not succeed')
+items = client.dataset(run['defaultDatasetId']).list_items(limit=100).items
 ```
 
 ### Asynchronous execution
@@ -142,10 +148,12 @@ items = client.dataset(run['defaultDatasetId']).list_items().items
 ```python
 run = client.actor('apify/web-scraper').start(run_input={
     'startUrls': [{'url': 'https://example.com'}],
-})
+}, max_total_charge_usd=Decimal('5'), timeout_secs=120)
 
 # Poll for completion
-finished_run = client.run(run['id']).wait_for_finish()
+finished_run = client.run(run['id']).wait_for_finish(wait_secs=120)
+if not finished_run or finished_run['status'] != 'SUCCEEDED':
+    raise RuntimeError(f"Run {run['id']} not yet successful; poll later")
 
 items = client.dataset(finished_run['defaultDatasetId']).list_items().items
 ```
@@ -154,14 +162,18 @@ items = client.dataset(finished_run['defaultDatasetId']).list_items().items
 
 ```python
 from apify_client import ApifyClientAsync
+from decimal import Decimal
+import os
 
 client = ApifyClientAsync(token=os.environ['APIFY_TOKEN'])
 
 run = await client.actor('apify/web-scraper').call(run_input={
     'startUrls': [{'url': 'https://example.com'}],
-})
+}, max_total_charge_usd=Decimal('5'), timeout_secs=120)
 
-items = (await client.dataset(run['defaultDatasetId']).list_items()).items
+if not run or run['status'] != 'SUCCEEDED':
+    raise RuntimeError('Actor did not succeed')
+items = (await client.dataset(run['defaultDatasetId']).list_items(limit=100)).items
 ```
 
 ## 6. REST API (any language)
@@ -171,7 +183,7 @@ For languages without an official client, use the REST API directly.
 ### Start a run
 
 ```
-POST https://api.apify.com/v2/actors/{actorId}/runs
+POST https://api.apify.com/v2/actors/{actorId}/runs?maxTotalChargeUsd=5&timeout=120
 Authorization: Bearer <APIFY_TOKEN>
 Content-Type: application/json
 

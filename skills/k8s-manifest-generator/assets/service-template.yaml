@@ -52,7 +52,7 @@ spec:
     protocol: TCP
   - name: https
     port: 443
-    targetPort: https
+    targetPort: https  # requires an explicitly defined TLS container port; absent in deployment template
     protocol: TCP
   loadBalancerSourceRanges:
   - 203.0.113.0/24  # Replace with approved ingress CIDRs

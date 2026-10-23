@@ -2,7 +2,7 @@
 name: aws-security-audit
 description: "Comprehensive AWS security posture assessment using AWS CLI and security best practices"
 category: security
-risk: safe
+risk: critical
 source: community
 tags: "[aws, security, audit, compliance, kiro-cli, security-assessment]"
 date_added: "2026-02-27"
@@ -11,6 +11,12 @@ date_added: "2026-02-27"
 # AWS Security Audit
 
 Perform comprehensive security assessments of AWS environments to identify vulnerabilities and misconfigurations.
+
+## Review scope and execution boundaries
+
+Select the exact account/role, partition, regions and control/framework version before collecting evidence; verify identity with `aws sts get-caller-identity`. Read-only assessment is the default. Commands that create MFA devices, change policies/keys, enable services, rotate secrets or create alarms require an approved change scope and rollback plan. Keep evidence and secret material out of shared logs.
+
+These are partial examples, not certification or complete benchmark implementations. Control numbers are illustrative historical mappings, not a pinned current benchmark. Record PASS/FAIL/UNKNOWN/NOT-APPLICABLE per control with evidence and coverage. AccessDenied, API errors, missing permissions, absent pages and unimplemented checks are UNKNOWN, never PASS. Use paginators for SDK listings and cover all selected regions/accounts; never infer completeness from no findings. Shell snippets require Bash/GNU date, AWS CLI, jq and error checking (`set -euo pipefail` in complete scripts). Generate the IAM credential report first, wait for COMPLETE and decode its base64 Content; parse CSV by header in production. Credential reports are sensitive.
 
 ## When to Use
 Use this skill when you need to audit AWS security posture, identify vulnerabilities, or prepare for compliance assessments.
@@ -34,7 +40,7 @@ Use this skill when you need to audit AWS security posture, identify vulnerabili
 **Data Protection**
 - Unencrypted EBS volumes
 - Unencrypted RDS instances
-- S3 bucket encryption disabled
+- S3 object encryption and required key-policy coverage
 - Backup policies missing
 - KMS key rotation disabled
 
@@ -51,11 +57,11 @@ Use this skill when you need to audit AWS security posture, identify vulnerabili
 
 ```bash
 # List users without MFA
-aws iam get-credential-report --output text | \
-  awk -F, '$4=="false" && $1!="<root_account>" {print $1}'
+aws iam get-credential-report --query Content --output text | base64 --decode | \
+  awk -F, '$8=="false" && $1!="<root_account>" {print $1}'
 
 # Find unused IAM users (no activity in 90 days)
-aws iam list-users --query 'Users[*].[UserName]' --output text | \
+aws iam list-users --query 'Users[*].[UserName]' --output text | tr '\t' '\n' | \
 while read user; do
   last_used=$(aws iam get-user --user-name "$user" \
     --query 'User.PasswordLastUsed' --output text)
@@ -65,9 +71,11 @@ done
 # List overly permissive policies (AdministratorAccess)
 aws iam list-policies --scope Local \
   --query 'Policies[?PolicyName==`AdministratorAccess`]'
+# Scope Local excludes AWS-managed AdministratorAccess. Inspect attached and
+# inline effective policies, boundaries, session policies and SCPs separately.
 
 # Find access keys older than 90 days
-aws iam list-users --query 'Users[*].UserName' --output text | \
+aws iam list-users --query 'Users[*].UserName' --output text | tr '\t' '\n' | \
 while read user; do
   aws iam list-access-keys --user-name "$user" \
     --query 'AccessKeyMetadata[*].[AccessKeyId,CreateDate]' \
@@ -88,7 +96,7 @@ aws ec2 describe-security-groups \
   --output table
 
 # List public S3 buckets
-aws s3api list-buckets --query 'Buckets[*].Name' --output text | \
+aws s3api list-buckets --query 'Buckets[*].Name' --output text | tr '\t' '\n' | \
 while read bucket; do
   acl=$(aws s3api get-bucket-acl --bucket "$bucket" 2>/dev/null)
   if echo "$acl" | grep -q "AllUsers"; then
@@ -97,7 +105,7 @@ while read bucket; do
 done
 
 # Check VPC Flow Logs status
-aws ec2 describe-vpcs --query 'Vpcs[*].VpcId' --output text | \
+aws ec2 describe-vpcs --query 'Vpcs[*].VpcId' --output text | tr '\t' '\n' | \
 while read vpc; do
   flow_logs=$(aws ec2 describe-flow-logs \
     --filter "Name=resource-id,Values=$vpc" \
@@ -121,19 +129,20 @@ aws ec2 describe-volumes \
   --query 'Volumes[?Encrypted==`false`].[VolumeId,Size,State]' \
   --output table
 
-# Check S3 bucket encryption
-aws s3api list-buckets --query 'Buckets[*].Name' --output text | \
+# Inspect default configuration; all new S3 uploads have SSE-S3 baseline encryption.
+# Existing historical objects and required KMS policies need separate evidence.
+aws s3api list-buckets --query 'Buckets[*].Name' --output text | tr '\t' '\n' | \
 while read bucket; do
   encryption=$(aws s3api get-bucket-encryption \
     --bucket "$bucket" 2>&1)
   if echo "$encryption" | grep -q "ServerSideEncryptionConfigurationNotFoundError"; then
-    echo "No encryption: $bucket"
+    echo "Default encryption query needs investigation: $bucket; not proof all objects lack encryption"
   fi
 done
 
 # Find RDS snapshots that are public
 aws rds describe-db-snapshots \
-  --query 'DBSnapshots[*].[DBSnapshotIdentifier]' --output text | \
+  --query 'DBSnapshots[*].[DBSnapshotIdentifier]' --output text | tr '\t' '\n' | \
 while read snapshot; do
   attrs=$(aws rds describe-db-snapshot-attributes \
     --db-snapshot-identifier "$snapshot" \
@@ -145,7 +154,7 @@ while read snapshot; do
 done
 
 # Check KMS key rotation
-aws kms list-keys --query 'Keys[*].KeyId' --output text | \
+aws kms list-keys --query 'Keys[*].KeyId' --output text | tr '\t' '\n' | \
 while read key; do
   rotation=$(aws kms get-key-rotation-status --key-id "$key" \
     --query 'KeyRotationEnabled' --output text 2>/dev/null)
@@ -173,7 +182,7 @@ aws configservice describe-configuration-recorders \
   --output table
 
 # List S3 buckets without access logging
-aws s3api list-buckets --query 'Buckets[*].Name' --output text | \
+aws s3api list-buckets --query 'Buckets[*].Name' --output text | tr '\t' '\n' | \
 while read bucket; do
   logging=$(aws s3api get-bucket-logging --bucket "$bucket" 2>&1)
   if ! echo "$logging" | grep -q "LoggingEnabled"; then
@@ -195,8 +204,8 @@ echo ""
 # IAM Checks
 echo "## IAM Security"
 echo "Users without MFA:"
-aws iam get-credential-report --output text | \
-  awk -F, '$4=="false" && $1!="<root_account>" {print "  - " $1}'
+aws iam get-credential-report --query Content --output text | base64 --decode | \
+  awk -F, '$8=="false" && $1!="<root_account>" {print "  - " $1}'
 
 echo ""
 echo "Root account access keys:"
@@ -209,7 +218,7 @@ echo "## Network Security"
 echo "Security groups open to 0.0.0.0/0:"
 aws ec2 describe-security-groups \
   --query 'SecurityGroups[?IpPermissions[?IpRanges[?CidrIp==`0.0.0.0/0`]]].GroupId' \
-  --output text | wc -l
+  --output json | jq 'length'
 
 # Data Protection
 echo ""
@@ -217,86 +226,30 @@ echo "## Data Protection"
 echo "Unencrypted EBS volumes:"
 aws ec2 describe-volumes \
   --query 'Volumes[?Encrypted==`false`].VolumeId' \
-  --output text | wc -l
+  --output json | jq 'length'
 
 echo ""
 echo "Unencrypted RDS instances:"
 aws rds describe-db-instances \
   --query 'DBInstances[?StorageEncrypted==`false`].DBInstanceIdentifier' \
-  --output text | wc -l
+  --output json | jq 'length'
 
 # Logging
 echo ""
 echo "## Logging & Monitoring"
 echo "CloudTrail status:"
 aws cloudtrail describe-trails \
-  --query 'trailList[*].[Name,IsLogging]' \
+  --query 'trailList[*].[Name,TrailARN]'
+# Get IsLogging from get-trail-status for each TrailARN, not describe-trails. \
   --output table
 
 echo ""
 echo "=== End of Report ==="
 ```
 
-## Security Score Calculator
+## Assessment result model
 
-```python
-#!/usr/bin/env python3
-# security-score.py
-
-import boto3
-import json
-
-def calculate_security_score():
-    iam = boto3.client('iam')
-    ec2 = boto3.client('ec2')
-    s3 = boto3.client('s3')
-    
-    score = 100
-    issues = []
-    
-    # Check MFA
-    try:
-        report = iam.get_credential_report()
-        users_without_mfa = 0
-        # Parse report and count
-        if users_without_mfa > 0:
-            score -= 10
-            issues.append(f"{users_without_mfa} users without MFA")
-    except:
-        pass
-    
-    # Check open security groups
-    sgs = ec2.describe_security_groups()
-    open_sgs = 0
-    for sg in sgs['SecurityGroups']:
-        for perm in sg.get('IpPermissions', []):
-            for ip_range in perm.get('IpRanges', []):
-                if ip_range.get('CidrIp') == '0.0.0.0/0':
-                    open_sgs += 1
-                    break
-    
-    if open_sgs > 0:
-        score -= 15
-        issues.append(f"{open_sgs} security groups open to internet")
-    
-    # Check unencrypted volumes
-    volumes = ec2.describe_volumes()
-    unencrypted = sum(1 for v in volumes['Volumes'] if not v['Encrypted'])
-    
-    if unencrypted > 0:
-        score -= 20
-        issues.append(f"{unencrypted} unencrypted EBS volumes")
-    
-    print(f"Security Score: {score}/100")
-    print("\nIssues Found:")
-    for issue in issues:
-        print(f"  - {issue}")
-    
-    return score
-
-if __name__ == "__main__":
-    calculate_security_score()
-```
+Do not calculate a security score from stubs or skipped checks. For each control report account/region/resource, evidence timestamp, exact check and PASS/FAIL/UNKNOWN/NOT-APPLICABLE. Explicitly list unqueried regions, unavailable permissions, pagination failures and controls requiring manual evidence. Public ingress may be intentional; severity depends on port/protocol, IPv6 exposure, asset sensitivity and compensating controls.
 
 ## Compliance Mapping
 

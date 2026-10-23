@@ -9,11 +9,11 @@ Quantitative strategy generation and optimisation framework — grid search, wal
 3. Define the parameter search space.
 4. Generate a Python framework that:
    - Implements the strategy logic
-   - Runs `GridSearchCV`-style parameter sweep
+   - Runs a temporally ordered parameter sweep with purged/embargoed folds for overlapping targets; ordinary random CV leaks future information
    - Splits data into in-sample (IS) and out-of-sample (OOS) windows
    - Applies walk-forward validation (rolling IS/OOS windows)
    - Computes Sharpe, Calmar, max drawdown, and IS/OOS degradation ratio
-   - Flags overfitting if OOS Sharpe < 0.5 × IS Sharpe
+   - Reports IS/OOS degradation as a heuristic, not proof of overfitting; ratios are unstable for near-zero/negative IS Sharpe. Reserve a final untouched test period after model/parameter selection.
 5. For multi-strategy combination: compute correlation matrix and suggest weights.
 6. Present results as a parameter heatmap description and key metrics table.
 

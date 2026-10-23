@@ -52,15 +52,19 @@ public abstract class BaseTest {
             .setTimezoneId("Asia/Kolkata")
             .setRecordVideoDir(Paths.get("target/videos/"));
 
-        // Load saved auth state if available
+        contextOptions.setBaseURL(ConfigReader.getBaseUrl());
+
+        // Opt in: login/negative-auth tests must start unauthenticated.
         Path authState = Paths.get("target/auth/user-state.json");
-        if (Files.exists(authState)) {
+        if (Boolean.getBoolean("reuseAuth") && Files.exists(authState)) {
             contextOptions.setStorageStatePath(authState);
         }
 
         BrowserContext context = browser.newContext(contextOptions);
         context.setDefaultTimeout(ConfigReader.getDefaultTimeout());
         context.setDefaultNavigationTimeout(60_000);
+
+        contextTL.set(context); // Register before fallible tracing setup.
 
         // Start tracing
         context.tracing().start(new Tracing.StartOptions()
@@ -94,7 +98,7 @@ public abstract class BaseTest {
             // Stop and save trace
             if (contextTL.get() != null) {
                 contextTL.get().tracing().stop(new Tracing.StopOptions()
-                    .setPath(Paths.get("target/traces/" + safeName + ".zip")));
+                    .setPath(Paths.get("target/traces/" + safeName + "-" + java.util.UUID.randomUUID() + ".zip")));
             }
         } catch (Exception ignored) {}
 
@@ -114,7 +118,8 @@ public abstract class BaseTest {
         return switch (System.getProperty("browser", "chromium").toLowerCase()) {
             case "firefox" -> playwright.firefox();
             case "webkit"  -> playwright.webkit();
-            default        -> playwright.chromium();
+            case "chromium" -> playwright.chromium();
+            default -> throw new IllegalArgumentException("Unsupported browser");
         };
     }
 

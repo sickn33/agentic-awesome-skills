@@ -15,11 +15,13 @@ import sys
 from pptx import Presentation
 
 
-def extract_pptx(file_path, output_dir="."):
+def extract_pptx(file_path, output_dir="extracted-deck"):
     """
     Extract all content from a PowerPoint file.
     Returns a list of slide data dicts with text, images, and notes.
     """
+    # Use a fresh private output directory; partial extraction is possible on error.
+    os.makedirs(output_dir, exist_ok=False)
     prs = Presentation(file_path)
     slides_data = []
 
@@ -54,7 +56,7 @@ def extract_pptx(file_path, output_dir="."):
                 image_name = f"slide{slide_num + 1}_img{len(slide_data['images']) + 1}.{image_ext}"
                 image_path = os.path.join(assets_dir, image_name)
 
-                with open(image_path, "wb") as f:
+                with open(image_path, "xb") as f:
                     f.write(image_bytes)
 
                 slide_data["images"].append(
@@ -81,13 +83,13 @@ if __name__ == "__main__":
         sys.exit(1)
 
     input_file = sys.argv[1]
-    output_dir = sys.argv[2] if len(sys.argv) > 2 else "."
+    output_dir = sys.argv[2] if len(sys.argv) > 2 else "extracted-deck"
 
     slides = extract_pptx(input_file, output_dir)
 
     # Write extracted data as JSON
     output_path = os.path.join(output_dir, "extracted-slides.json")
-    with open(output_path, "w") as f:
+    with open(output_path, "x", encoding="utf-8") as f:
         json.dump(slides, f, indent=2)
 
     print(f"Extracted {len(slides)} slides to {output_path}")

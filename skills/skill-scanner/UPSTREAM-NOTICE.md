@@ -12,3 +12,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `references/prompt-injection-patterns.md` | `skills/skill-scanner/references/prompt-injection-patterns.md` | `a675bd5f946b83abbdaba3a21c827214d88b0df7` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/dangerous-code-patterns.md` | `skills/skill-scanner/references/dangerous-code-patterns.md` | `974073260eb9fa199efcd9cd0f21b0f7f31fe694` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/permission-analysis.md` | `skills/skill-scanner/references/permission-analysis.md` | `ac33919098695e551faf5d478f5b4318ebc4721b` | text-only trailing whitespace and EOF blank lines normalized |
+
+AAS review: clarified read-only data exposure and model-dependent Unicode handling.

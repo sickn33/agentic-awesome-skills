@@ -6,11 +6,10 @@ For repeated UI components (navbars, modals, tables), create Component classes:
 
 ```java
 // Reusable table component — pass the locator root
-public class DataTable extends BasePage {
+public class DataTable {
     private final Locator tableRoot;
 
     public DataTable(Page page, Locator tableRoot) {
-        super(page);
         this.tableRoot = tableRoot;
     }
 
@@ -57,8 +56,7 @@ public class UsersPage extends BasePage {
 
     public UsersPage searchFor(String query) {
         searchInput.fill(query);
-        searchInput.press("Enter");
-        page.waitForResponse("**/api/users**", () -> {});
+        page.waitForResponse("**/api/users**", () -> searchInput.press("Enter"));
         return this;
     }
 }
@@ -109,16 +107,15 @@ Page methods should **return the next page object** — never return `void` for 
 public DashboardPage loginAs(String email, String password) {
     fill(emailInput, email);
     fill(passwordInput, password);
-    clickAndWaitForNav(submitButton);
+    clickAndWaitForNav(submitButton, "**/dashboard");
     return new DashboardPage(page);
 }
 
-// USAGE
-DashboardPage dash = new LoginPage(page)
-    .navigate()
-    .loginAs("user@test.com", "secret")
-    .navigateTo(OrdersPage::new)  // helper to reduce boilerplate
-    .filterByStatus("PENDING");
+// USAGE: keep the concrete page type; no unsafe generic navigate cast.
+LoginPage login = new LoginPage(page);
+login.navigate();
+DashboardPage dash = login.loginAs("user@example.test", "fixture-only-secret");
+
 ```
 
 ---
@@ -136,6 +133,7 @@ public Locator getProductCard(String productName) {
 
 // Wait for a specific row to appear in a table
 public void waitForOrderRow(String orderId) {
+    if (!orderId.matches("[A-Za-z0-9_-]+")) throw new IllegalArgumentException("Invalid fixture order ID");
     page.locator("tr[data-order-id='" + orderId + "']")
         .waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE)
                 .setTimeout(15_000));
@@ -167,8 +165,8 @@ public void selectCountry(String countryName) {
 // Standard file input
 page.setInputFiles("#file-upload", Paths.get("src/test/resources/testdata/sample.pdf"));
 
-// Drag-and-drop upload zone
-page.locator(".upload-zone").setInputFiles(Paths.get("src/test/resources/testdata/sample.pdf"));
+// setInputFiles requires the underlying input[type=file], not a drop-zone div.
+page.locator(".upload-zone input[type=file]").setInputFiles(Paths.get("src/test/resources/testdata/sample.pdf"));
 
 // Multiple files
 page.setInputFiles("#file-upload", new Path[]{
@@ -209,8 +207,8 @@ assertThat(tooltip).hasText("This field is required");
 page.waitForResponse(resp -> resp.url().contains("/api/search") && resp.status() == 200,
     () -> searchInput.fill("test"));
 
-// Wait for network idle (after complex renders)
-page.waitForLoadState(LoadState.NETWORKIDLE);
+// Assert application readiness; network idle can hang on background polling.
+assertThat(page.getByTestId("results-ready")).isVisible();
 
 // Wait for element count to stabilize
 Locator rows = page.locator("tbody tr");

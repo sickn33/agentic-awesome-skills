@@ -148,3 +148,5 @@ crossframe -> source-continuity-check -> v5-read-state-capsule -> source-anchor-
 - 用户给了文章：先 `review`，若未明确“只要评审”，再默认进入 `essay` 做文章式综合。
 - 用户给了证据材料：先 `public` 或 `casebook`，再决定是否 `essay`。
 - 用户给了书摘：先 `notebook`，再决定是否 `essay` 或 `teach`。
+
+> 本地修订：先应用入口 SKILL.md 的「用户目标与执行边界」。以下长文/菜单/底稿示例不覆盖用户既有要求；底稿表示简明证据与假设摘要，不是内部思维链。缺失 sibling 文件不得虚构已读。

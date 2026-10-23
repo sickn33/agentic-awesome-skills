@@ -80,6 +80,7 @@ const send = (command, args = {}) => {
         })
       }
     )
+    request.setTimeout(330_000, () => request.destroy(new Error('Driver request timed out; inspect app before retrying effects')))
     request.on('error', reject)
     request.end(body)
   })
@@ -168,7 +169,10 @@ const start = async (flags) => {
     }
     await sleep(500)
   }
-  if (!readState()) fail(`Timed out waiting for the app. See ${daemonLogPath()}.`)
+  if (!readState()) {
+    try { daemon.kill('SIGTERM') } catch {}
+    fail(`Timed out waiting for the app; cleanup requested. Inspect processes and ${daemonLogPath()}.`)
+  }
   print(await send('status'))
 }
 
@@ -195,8 +199,7 @@ const run = async () => {
       if (!state || !isAlive(state.pid)) {
         rmSync(statePath(), { force: true })
         if (state?.electronPid && isAlive(state.electronPid)) {
-          process.kill(state.electronPid, 'SIGKILL')
-          return print('The daemon was gone but the app was not; killed it.')
+          return fail(`Daemon missing; refusing to kill stale PID ${state.electronPid} without process-identity verification. Inspect the app manually.`)
         }
         return print('Not running.')
       }

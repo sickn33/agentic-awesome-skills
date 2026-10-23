@@ -18,9 +18,11 @@ Use a custom SQL monitor when the user wants to:
 
 Custom SQL is the fallback monitor type. Reach for it whenever another monitor type cannot express what the user needs:
 
-- **Validation monitor won't work** because the column doesn't exist yet, or the logic requires joins across tables.
+- **Validation monitor cannot express the logic**, such as a supported cross-table aggregate.
+  A custom query cannot reference a column that does not exist either; wait for
+  the schema change or choose a verified existing source.
 - **Metric monitor can't express the business logic** -- for example, a ratio between two columns, a conditional aggregation, or a calculation that spans multiple tables.
-- **Cross-table joins are needed** -- metric and validation monitors operate on a single table. If the check requires data from two or more tables, custom SQL is the only option.
+- **Cross-table joins are needed** -- metric and validation monitors operate on a single table. If the check requires data from two or more tables, custom SQL is a flexible option; validation SQL subqueries may also fit when supported.
 - **The user already has a SQL query** -- don't force it into another monitor type. Wrap it in a custom SQL monitor.
 
 If you find yourself contorting another monitor type to fit the user's intent, stop and use custom SQL instead.
@@ -96,10 +98,10 @@ SQL syntax for date arithmetic and functions varies across warehouses. When writ
 
 | Operation | Snowflake | BigQuery | Redshift |
 |-----------|-----------|----------|----------|
-| Subtract 1 day from now | `DATEADD(day, -1, CURRENT_TIMESTAMP())` | `DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY)` | `DATEADD(day, -1, GETDATE())` |
+| Subtract 1 day from now | `DATEADD(day, -1, CURRENT_TIMESTAMP())` | `TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY)` | `DATEADD(day, -1, GETDATE())` |
 | Subtract 1 hour from now | `DATEADD(hour, -1, CURRENT_TIMESTAMP())` | `TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 HOUR)` | `DATEADD(hour, -1, GETDATE())` |
 | Current timestamp | `CURRENT_TIMESTAMP()` | `CURRENT_TIMESTAMP()` | `GETDATE()` |
-| Date truncation | `DATE_TRUNC('day', col)` | `DATE_TRUNC(col, DAY)` | `DATE_TRUNC('day', col)` |
+| Date truncation | `DATE_TRUNC('day', col)` | `TIMESTAMP_TRUNC(timestamp_col, DAY)` (use `DATE_TRUNC` for DATE columns) | `DATE_TRUNC('day', col)` |
 
 When unsure which warehouse the user is on, ask. Getting the syntax wrong causes the monitor to fail on every scheduled run.
 

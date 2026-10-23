@@ -83,6 +83,8 @@ Both of these are silent-failure traps — leave them out and the workflow runs,
 
 ## What the system prompt and the tool argument look like
 
+Treat original filenames, file contents and uploaded metadata as untrusted data, never instructions. Keep them out of privileged instruction text where possible. Build one aggregated manifest of all successful uploads before running the agent; executeOnce alone processes only the first item and does not aggregate remaining files. Authorize requested keys server-side by tenant/session, and validate any supplied URL against SSRF, redirect, byte-size and content-type limits.
+
 The agent has to know which keys exist *for this turn*. Inject them into the system prompt, listing both the original name (human context for the model) and the storage key (what the tool needs):
 
 ```
@@ -176,7 +178,7 @@ Share generated VIDEO as a plain link, NOT an embed: [title](url)
 
 **Ask which service before building.** n8n has native nodes for many backends, and defaulting to S3 is presumptuous.
 
-- **Object storage:** Amazon S3, Cloudflare R2, Google Cloud Storage, Azure Blob, Backblaze B2, Supabase Storage. Most expose S3-compatible APIs (the S3 node with the right endpoint, or HTTP Request with AWS auth) or ship a dedicated node. Keys, optional public buckets, signed URLs, lifecycle rules for TTL.
+- **Object storage:** Amazon S3, Cloudflare R2, Google Cloud Storage, Azure Blob, Backblaze B2, Supabase Storage. Some expose S3-compatible APIs (the S3 node with the right endpoint, or HTTP Request with AWS auth) or ship a dedicated node. Keys, optional public buckets, signed URLs, lifecycle rules for TTL.
 - **Drive-style:** Dropbox, Google Drive, OneDrive, Box. File IDs and share links instead of keys, folder permissions instead of bucket ACLs, no built-in TTL (cleanup is its own workflow).
 - **Self-hosted / FTP / SFTP:** when the user has on-prem infrastructure.
 - **Caller-supplied URL:** the agent's caller provides the storage location as input.
@@ -189,14 +191,14 @@ A common production split: a **private** bucket/folder for inbound user files, a
 
 **Hash strategy differs by direction:**
 
-- **Inbound** files may be referenced repeatedly within a session, so use a stable key — re-uploading the same file lands at the same key and the agent's reference doesn't break. A session-and-filename composite hash works.
+- **Inbound** files may be referenced repeatedly within a session, so use a stable key — re-uploading the same file lands at the same key and the agent's reference doesn't break. Use a server-generated tenant/session-scoped key that includes a verified content digest or fresh upload ID; a filename hash alone collides when different contents share a name. Keys are not authorization: enforce ownership on every read/write.
 - **Outbound** artifacts are single-use, so use a fresh random key every time, or concurrent generations overwrite each other. Pattern: `<session-suffix>-<random-hex>.<ext>`.
 
 Two `Crypto` nodes in one of these workflows is usually deliberate, not a copy-paste error — one for the inbound stable hash, one for the outbound unique suffix.
 
 **Cleanup** keeps the bill down. Object storage has lifecycle rules (auto-delete after 7–30 days). Drive-style backends need a scheduled cleanup workflow. For precise control, track live keys in a Data Table (the `n8n_manage_datatable` surface — see **n8n-mcp-tools-expert**) and delete unreferenced files.
 
-**Long-running tools** (video generation, large batches): agent tool calls have no agent-layer timeout — a sub-workflow tool returns whenever it returns and the agent waits. The one real timeout is on the **HTTP Request node** itself (default ~5 minutes). If the tool is an HTTP Request Tool calling a slow external API, bump `options.timeout` past the expected duration, or the HTTP call aborts mid-job while the work keeps running and the agent gets nothing. Error-branch these steps so a failed upload or a storage 404 surfaces instead of vanishing — see **n8n-error-handling**.
+**Long-running tools** (video generation, large batches): timeouts can exist at the workflow, execution, hosting, proxy and HTTP layers. Inspect the deployed limits; use polling/job IDs for work that exceeds them. If the tool is an HTTP Request Tool calling a slow external API, bump `options.timeout` past the expected duration, or the HTTP call aborts mid-job while the work keeps running and the agent gets nothing. Error-branch these steps so a failed upload or a storage 404 surfaces instead of vanishing — see **n8n-error-handling**.
 
 ---
 

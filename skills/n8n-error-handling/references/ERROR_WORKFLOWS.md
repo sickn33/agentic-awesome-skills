@@ -102,7 +102,7 @@ Error Trigger
   → Data Table (log for tracking)
 ```
 
-"Include Execution Details: true" hits `GET /executions/{id}?includeData=true` and returns the full run data, so you can pluck the failed node's input out of `data.resultData.runData[<lastNodeExecuted>]`. Now the on-call message can carry the actual offending payload (which customer, which order id), not just "node X errored".
+"Include Execution Details: true" hits `GET /executions/{id}?includeData=true` and returns the full run data, so you can pluck the failed node's input out of `data.resultData.runData[<lastNodeExecuted>]`. Extract only necessary redacted identifiers; runData is execution output/history and may require source linkage to reconstruct inputs. Never post complete offending payloads or credentials to alerts.
 
 Caveats, all of which can turn the error workflow itself into a *new* silent failure:
 
@@ -114,9 +114,9 @@ Minimal is enough most of the time. The featureful version earns its keep on pro
 
 ---
 
-## Assigning it (UI only — the MCP can't)
+## Assigning it (Connector/version dependent; UI fallback — the MCP can't)
 
-> The error workflow is assigned in the n8n **UI**: per workflow under **Workflow Settings → Error Workflow**, or as an instance-wide default. There is **no community-MCP tool** to set this assignment. `n8n_update_partial_workflow` exposes an `updateSettings` op, but the error-workflow setting is not reliably writable through it — confirm in the UI.
+> The error workflow is assigned in the n8n **UI**: per workflow under **Workflow Settings → Error Workflow**, or as an instance-wide default. Connector capabilities vary; inspect the current tool schema. `n8n_update_partial_workflow` exposes an `updateSettings` op, but the error-workflow setting is not reliably writable through it — confirm in the UI.
 
 So the agent's job is: **build the error workflow with the MCP, then hand the user the exact UI step** — "Open the failing workflow → Settings → Error Workflow → select '<name>'" — and remind them to do it for *every* unattended workflow (or set the instance default once). Building the workflow without assigning it does nothing; the trigger only fires for workflows that point at it.
 
@@ -143,7 +143,7 @@ That second case is the subtle one: **a per-node error output wired to a no-op t
 ## What the error workflow should NOT do
 
 - **Make external calls that can themselves fail without a fallback.** If the error workflow fails, the original error disappears — you've added a second silent failure on top of the first.
-- **Take significant time.** It runs synchronously; a slow error workflow compounds the original failure's impact.
+- **Take significant time.** Keep it bounded; dispatch behavior is version dependent and it cannot repair the original HTTP response.
 
 Keep it fast: parse, notify, return.
 
@@ -156,7 +156,7 @@ If your monitored workflows alert Slack, and the *error* workflow also alerts Sl
 Mitigations:
 
 - **Use a different channel than the monitored workflows.** If everything notifies Slack, the error workflow should use email (or vice versa).
-- **Add a fallback** — write to a Data Table (`n8n_manage_datatable`) if the primary notification fails, so there's always a trace.
+- **Add a fallback** — write to a Data Table (`n8n_manage_datatable`) if the primary notification fails, as an additional trace when n8n remains available.
 - **Lean on instance-level logging** (server logs, Sentry) so even an error-workflow failure surfaces somewhere outside n8n.
 
 ---
@@ -166,7 +166,7 @@ Mitigations:
 After building and assigning:
 
 1. Make a throwaway workflow that always fails — e.g. an HTTP Request to an invalid URL, with **no** error output wired so the failure is unhandled.
-2. Run it.
+2. Trigger a controlled automatic execution (not a manual editor run); use an isolated test workflow and authorized alert destination.
 3. Confirm the error workflow fires and the notification arrives.
 
 This catches the setup mistakes that otherwise stay invisible until a real incident: wrong workflow assigned, wrong channel, missing API credential. Do it once before you rely on the alerting.

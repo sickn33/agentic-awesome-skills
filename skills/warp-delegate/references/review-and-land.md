@@ -15,8 +15,9 @@ Work through these in order. Stop at the first one that fails and decide whether
 discard.
 
 1. **Read `result.json` first.** If there is no `result.json`, stop: a usage error exits 2 before
-   Warp is ever dispatched and writes none, so an absent file means the run did not happen — read the
-   relay's stderr, not the tree. Otherwise require `status: "completed"` and `exitCode: 0` before
+   Warp is dispatched and writes none, but a crash, SIGKILL or storage failure can
+   also leave no result after edits. Inspect process state, stderr and the tree;
+   absence is not proof that nothing ran. Otherwise require `status: "completed"` and `exitCode: 0` before
    going further. `failed`, `timeout`, `aborted`, and `warp_unavailable` all mean the run did not
    finish on its own terms, and `timeout` and `aborted` additionally mean the tree may be mid-edit
    and incoherent. Rework or discard from the baseline rather than reviewing a partial run.

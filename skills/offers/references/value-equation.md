@@ -10,7 +10,7 @@ The single most useful frame for offer design. Originated in Alex Hormozi's *$10
               Time Delay     ×   Effort & Sacrifice
 ```
 
-The customer compares the *Value* score to the *Price*. If Value > Price, they buy. If not, they don't, no matter how good the copy is.
+This equation is a qualitative discussion aid, not a measured score comparable to a monetary price or a predictive model of purchase. Budget, alternatives, trust and timing also affect decisions.
 
 **Price is the comparison, not the value.** Most "lower the price" requests are actually "raise the numerator or lower the denominator" requests.
 
@@ -100,7 +100,7 @@ Overestimating how much your buyer *enjoys* the work. They want the outcome, not
 
 ## Diagnostic: scoring the levers
 
-When an offer is stuck, score each lever 1–10 honestly. The lowest is the binding constraint.
+When an offer is stuck, score each lever 1–10 honestly. The lowest score is a hypothesis to investigate, not proof of a binding constraint.
 
 ### Quick scoring prompts
 
@@ -123,7 +123,7 @@ Lowest: effort & sacrifice and perceived likelihood are tied. Pick one (perceive
 - Add 8 named-customer case studies with before/after copy + revenue numbers
 - Add an "even if you've never written before" cohort with 3 named graduates
 
-After: perceived likelihood goes 4 → 8. Course converts at ~3x baseline. Two months later, attack effort & sacrifice (replace weekly live calls with async + 1 live Q&A).
+Hypothetical after-score: perceived likelihood 4 → 8. No observed conversion result is established. Two months later, attack effort & sacrifice (replace weekly live calls with async + 1 live Q&A).
 
 ---
 

@@ -110,6 +110,8 @@ def filter_data(adata, mt_threshold=5, min_genes=200, max_genes=None,
     AnnData
         Filtered annotated data matrix
     """
+    if adata.n_obs == 0 or adata.n_vars == 0:
+        raise ValueError('QC requires a non-empty matrix')
     n_cells_before = adata.n_obs
     n_genes_before = adata.n_vars
 
@@ -150,6 +152,11 @@ def main():
                         help='Skip generating QC plots')
 
     args = parser.parse_args()
+    from pathlib import Path
+    if Path(args.output).exists() or Path(args.output).is_symlink():
+        parser.error('Choose a fresh output path; refusing to overwrite')
+    if not 0 <= args.mt_threshold <= 100 or args.min_genes < 0 or args.min_cells < 1:
+        parser.error('Invalid QC thresholds')
 
     # Configure scanpy
     sc.settings.verbosity = 2
@@ -183,6 +190,9 @@ def main():
     # Filter data
     adata = filter_data(adata, mt_threshold=args.mt_threshold,
                         min_genes=args.min_genes, min_cells=args.min_cells)
+
+    if adata.n_obs == 0 or adata.n_vars == 0:
+        raise ValueError("No cells or genes remain after filtering; inspect thresholds")
 
     # Generate QC plots (after filtering)
     if not args.skip_plots:

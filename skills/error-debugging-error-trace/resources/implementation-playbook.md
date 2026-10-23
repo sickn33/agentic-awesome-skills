@@ -8,7 +8,9 @@ This file contains detailed patterns, checklists, and code samples referenced by
 
 Analyze current error handling and tracking:
 
-**Error Analysis Script**
+**Error Analysis Script (partial heuristic)**
+
+Counts from regex/AST snippets are not proof of handled failures. The analyzer references omitted methods; complete them or report the component unavailable rather than claiming a full-codebase assessment. Restrict traversal to approved source files and exclude vendored/generated/secrets paths.
 ```python
 import os
 import re
@@ -42,7 +44,9 @@ class ErrorTrackingAnalyzer:
             'error_reporting': []
         }
         
-        for file_path in Path(project_path).rglob('*.{js,ts,py,java,go}'):
+        for file_path in Path(project_path).rglob('*'):
+            if not file_path.is_file() or file_path.suffix not in {'.js', '.ts', '.py', '.java', '.go'}:
+                continue
             content = file_path.read_text(errors='ignore')
             
             # JavaScript/TypeScript patterns
@@ -97,7 +101,9 @@ class ErrorTrackingAnalyzer:
 
 Implement integrations with popular error tracking services:
 
-**Sentry Integration**
+**Legacy Sentry Integration (not current setup code)**
+
+The class-based integrations and `Sentry.Handlers` below are legacy APIs. Use the [official migration guide](https://docs.sentry.io/platforms/javascript/guides/node/migration/v7-to-v8/) and the installed SDK's framework setup instead of mixing versions. Do not add duplicate process handlers over SDK-managed handlers.
 ```javascript
 // sentry-setup.js
 import * as Sentry from "@sentry/node";
@@ -116,8 +122,8 @@ class SentryErrorTracker {
             release: this.config.release,
             
             // Performance Monitoring
-            tracesSampleRate: this.config.tracesSampleRate || 0.1,
-            profilesSampleRate: this.config.profilesSampleRate || 0.1,
+            tracesSampleRate: this.config.tracesSampleRate ?? 0.1,
+            profilesSampleRate: this.config.profilesSampleRate ?? 0.1,
             
             // Integrations
             integrations: [
@@ -277,7 +283,9 @@ export const sentryMiddleware = {
 };
 ```
 
-**Custom Error Tracking Service**
+**Custom Error Tracking Service (partial)**
+
+Before use, bound queued events by count/bytes, serialize flushes, cap retry attempts with backoff, implement request cancellation/timeouts and provide shutdown flush. The key-name sanitizer below does not cover secrets embedded in messages, stacks or values and needs cycle/depth protection; prefer an explicit allowlisted event schema. Never embed a service API key in browser code.
 ```typescript
 // error-tracker.ts
 interface ErrorEvent {
@@ -474,7 +482,7 @@ class StructuredLogger {
             filename: 'logs/combined.log',
             maxsize: 5242880,
             maxFiles: 5
-        });
+        }));
         
         // Elasticsearch transport for production
         if (config.elasticsearch) {
@@ -552,9 +560,7 @@ export function requestLoggingMiddleware(logger: StructuredLogger) {
         // Log request
         logger.info('Incoming request', {
             method: req.method,
-            url: req.url,
-            ip: req.ip,
-            userAgent: req.get('user-agent')
+            route: req.route?.path || '[unmatched]' // omit raw queries, addresses and user agent
         });
         
         // Log response
@@ -562,7 +568,7 @@ export function requestLoggingMiddleware(logger: StructuredLogger) {
             const duration = Date.now() - start;
             logger.info('Request completed', {
                 method: req.method,
-                url: req.url,
+                route: req.route?.path || '[unmatched]',
                 status: res.statusCode,
                 duration,
                 contentLength: res.get('content-length')
@@ -578,7 +584,9 @@ export function requestLoggingMiddleware(logger: StructuredLogger) {
 
 Set up intelligent alerting:
 
-**Alert Manager**
+**Alert Manager (partial)**
+
+The `window` field alone does not aggregate a time window; implement a real rolling metric query and validate finite values/units. Missing data is unknown, not healthy. Configure disk-free thresholds with the opposite comparison from memory use. Only dispatch to approved channels; partial delivery needs per-channel idempotency/cooldown state to prevent duplicates.
 ```python
 # alert_manager.py
 from dataclasses import dataclass
@@ -734,14 +742,17 @@ class SlackAlertChannel:
         
         # Send to Slack
         async with aiohttp.ClientSession() as session:
-            await session.post(self.webhook_url, json=payload)
+            async with session.post(self.webhook_url, json=payload, timeout=aiohttp.ClientTimeout(total=10)) as response:
+                response.raise_for_status()
 ```
 
 ### 5. Error Grouping and Deduplication
 
 Implement intelligent error grouping:
 
-**Error Grouping Algorithm**
+**Error Grouping Algorithm (heuristic)**
+
+Bound retained groups and instances; the sketch otherwise grows indefinitely. Normalize structured values such as UUIDs/timestamps before generic numbers. Fuzzy grouping can merge unrelated causes and should be reviewed; when matched, return the existing group identity rather than the new candidate fingerprint.
 ```python
 import hashlib
 import re
@@ -774,6 +785,7 @@ class ErrorGrouper:
             group['count'] += 1
             group['last_seen'] = error['timestamp']
             group['instances'].append(error)
+            fingerprint = group['fingerprint']
         else:
             # Create new group
             self.groups[fingerprint] = {
@@ -782,7 +794,7 @@ class ErrorGrouper:
                 'last_seen': error['timestamp'],
                 'count': 1,
                 'instances': [error],
-                'pattern': self.extract_pattern(error)
+                'pattern': self.normalize_message(error['message'])
             }
         
         return fingerprint
@@ -863,6 +875,7 @@ Monitor performance impact of errors:
 ```typescript
 // performance-monitor.ts
 interface PerformanceMetrics {
+    timestamp: number;
     responseTime: number;
     errorRate: number;
     throughput: number;
@@ -888,6 +901,7 @@ class PerformanceMonitor {
     
     private async collectMetrics(service: string) {
         const metrics: PerformanceMetrics = {
+            timestamp: Date.now(),
             responseTime: await this.getResponseTime(service),
             errorRate: await this.getErrorRate(service),
             throughput: await this.getThroughput(service),
@@ -983,7 +997,9 @@ class PerformanceMonitor {
 
 Implement automatic error recovery:
 
-**Recovery Manager**
+**Recovery Manager (partial)**
+
+Retry only idempotent or deduplicated operations under a total deadline, bounded attempts and validated Retry-After; a timeout does not prove the original write failed. Replica/cache fallbacks must preserve tenant scope, authorization and freshness requirements. The breaker below lacks rolling percentage calculation, atomic half-open admission and actual operation cancellation; supplied percentage/window options are not implemented. `Promise.race` alone leaves the losing operation running.
 ```javascript
 // recovery-manager.js
 class RecoveryManager {
@@ -1202,8 +1218,8 @@ Create comprehensive error dashboard:
 **Dashboard Component**
 ```typescript
 // error-dashboard.tsx
-import React from 'react';
-import { LineChart, BarChart, PieChart } from 'recharts';
+import React, { useEffect, useState } from 'react';
+import { LineChart, BarChart, PieChart, Line, Bar, Pie } from 'recharts';
 
 const ErrorDashboard: React.FC = () => {
     const [metrics, setMetrics] = useState<DashboardMetrics>();

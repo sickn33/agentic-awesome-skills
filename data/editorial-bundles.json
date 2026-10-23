@@ -519,10 +519,6 @@
           "summary": "Create and edit PowerPoint-compatible presentations."
         },
         {
-          "id": "pdf-official",
-          "summary": "Extract, generate, and manipulate PDFs."
-        },
-        {
           "id": "pdf-conversion-router",
           "summary": "Choose high-fidelity PDF conversion routes."
         },
@@ -2569,7 +2565,6 @@
         "docx-official",
         "pptx-official",
         "xlsx-official",
-        "pdf-official",
         "google-docs-automation",
         "google-slides-automation",
         "google-sheets-automation"

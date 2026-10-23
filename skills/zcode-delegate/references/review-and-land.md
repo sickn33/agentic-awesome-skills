@@ -12,7 +12,7 @@ hypothesis. You are the reviewer; the commit is yours.
 3. **Check the "Out of scope" list.** Was anything on it touched?
 4. **Read the DECISIONS section** of the report. Anything ZCode chose that the brief did not specify
    is something you now own. Surface it; do not absorb it silently.
-5. **On a `--read-only` run**, confirm `touchedFiles` is `[]` and `readOnlyViolation` is `false`.
+5. **On a `--read-only` run**, confirm `readOnlyViolation` is `false` and compare `touchedFiles` with the pre-run baseline (`[]` only when the tree started clean).
    Plan mode refuses edits, but the relay measures rather than assumes — see below.
 6. **Run your guard skills** on the diff if you have them installed. This skill produces the work;
    those skills judge it.
@@ -79,3 +79,5 @@ After landing, say what actually happened:
 
 If a gate failed, say so with the output. If a step was skipped, say that. A clean report of a messy
 run is more useful than a confident summary that does not survive contact with the diff.
+
+The Git tripwire does not cover ignored files, files outside the repository, transient writes restored before the snapshot, or independently committed changes that leave identical status. It is evidence of detected changes, not containment. Use OS isolation for a strict read-only requirement.

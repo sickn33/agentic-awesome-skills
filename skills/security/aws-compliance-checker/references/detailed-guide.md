@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Only selected technical evidence is collected here. Framework compliance also needs governance, scope, documented controls and independent review. The headings and numeric labels below do not establish current control-version coverage.
+
 ## Supported Frameworks
 
 **CIS AWS Foundations Benchmark**
@@ -41,7 +43,7 @@ echo "=== CIS IAM Compliance Checks ==="
 
 # 1.1: Root account usage
 echo "1.1: Checking root account usage..."
-root_usage=$(aws iam get-credential-report --output text | \
+root_usage=$(aws iam get-credential-report --query Content --output text | base64 --decode | \
   awk -F, 'NR==2 {print $5,$11}')
 echo "  Root password last used: $root_usage"
 
@@ -53,7 +55,7 @@ echo "  Root MFA enabled: $root_mfa"
 
 # 1.3: Unused credentials
 echo "1.3: Checking for unused credentials (>90 days)..."
-aws iam get-credential-report --output text | \
+aws iam get-credential-report --query Content --output text | base64 --decode | \
   awk -F, 'NR>1 {
     if ($5 != "N/A" && $5 != "no_information") {
       cmd = "date -d \"" $5 "\" +%s"
@@ -67,7 +69,7 @@ aws iam get-credential-report --output text | \
 
 # 1.4: Access keys rotated
 echo "1.4: Checking access key age..."
-aws iam list-users --query 'Users[*].UserName' --output text | \
+aws iam list-users --query 'Users[*].UserName' --output text | tr '\t' '\n' | \
 while read user; do
   aws iam list-access-keys --user-name "$user" \
     --query 'AccessKeyMetadata[*].[AccessKeyId,CreateDate]' \
@@ -100,8 +102,8 @@ fi
 
 # 1.12-1.14: MFA for IAM users
 echo "1.12-1.14: Checking IAM user MFA..."
-aws iam get-credential-report --output text | \
-  awk -F, 'NR>1 && $4=="false" {print "  ⚠️  " $1 ": No MFA"}'
+aws iam get-credential-report --query Content --output text | base64 --decode | \
+  awk -F, 'NR>1 && $8=="false" {print "  ⚠️  " $1 ": No MFA"}'
 ```
 
 ### Logging (2.x)
@@ -137,7 +139,7 @@ fi
 echo "2.2: Checking log file validation..."
 aws cloudtrail describe-trails \
   --query 'trailList[?LogFileValidationEnabled==`false`].Name' \
-  --output text | \
+  --output text | tr '\t' '\n' | \
 while read trail; do
   echo "  ⚠️  $trail: Log validation disabled"
 done
@@ -145,14 +147,14 @@ done
 # 2.3: S3 bucket for CloudTrail
 echo "2.3: Checking CloudTrail S3 bucket access..."
 aws cloudtrail describe-trails \
-  --query 'trailList[*].S3BucketName' --output text | \
+  --query 'trailList[*].S3BucketName' --output text | tr '\t' '\n' | \
 while read bucket; do
   public=$(aws s3api get-bucket-acl --bucket "$bucket" 2>&1 | \
     grep -c "AllUsers")
   if [ "$public" -gt 0 ]; then
     echo "  ❌ $bucket: Publicly accessible"
   else
-    echo "  ✓ $bucket: Not public"
+    echo "  UNKNOWN: ACL alone cannot prove $bucket is private; inspect policies, access points and Block Public Access"
   fi
 done
 
@@ -160,7 +162,7 @@ done
 echo "2.4: Checking CloudWatch Logs integration..."
 aws cloudtrail describe-trails \
   --query 'trailList[*].[Name,CloudWatchLogsLogGroupArn]' \
-  --output text | \
+  --output text | tr '\t' '\n' | \
 while read name log_group; do
   if [ "$log_group" = "None" ]; then
     echo "  ⚠️  $name: Not integrated with CloudWatch Logs"
@@ -177,12 +179,12 @@ recorders=$(aws configservice describe-configuration-recorders \
 if [ -z "$recorders" ]; then
   echo "  ❌ AWS Config not enabled"
 else
-  echo "  ✓ AWS Config enabled: $recorders"
+  echo "  Recorders configured: $recorders; inspect describe-configuration-recorder-status recording/error fields"
 fi
 
 # 2.6: S3 bucket logging
 echo "2.6: Checking S3 bucket logging..."
-aws s3api list-buckets --query 'Buckets[*].Name' --output text | \
+aws s3api list-buckets --query 'Buckets[*].Name' --output text | tr '\t' '\n' | \
 while read bucket; do
   logging=$(aws s3api get-bucket-logging --bucket "$bucket" 2>&1)
   if ! echo "$logging" | grep -q "LoggingEnabled"; then
@@ -192,7 +194,7 @@ done
 
 # 2.7: VPC Flow Logs
 echo "2.7: Checking VPC Flow Logs..."
-aws ec2 describe-vpcs --query 'Vpcs[*].VpcId' --output text | \
+aws ec2 describe-vpcs --query 'Vpcs[*].VpcId' --output text | tr '\t' '\n' | \
 while read vpc; do
   flow_logs=$(aws ec2 describe-flow-logs \
     --filter "Name=resource-id,Values=$vpc" \
@@ -204,6 +206,8 @@ while read vpc; do
   fi
 done
 ```
+
+Metric filter names alone do not prove correct matching, transformations, alarms, actions or delivery. Inspect each and test a benign expected event. Trail existence does not prove recording or event coverage.
 
 ### Monitoring (3.x)
 
@@ -268,7 +272,7 @@ aws ec2 describe-security-groups \
   --query 'SecurityGroups[*].[GroupId,GroupName,IpPermissions]' \
   --output json | \
 jq -r '.[] | select(.[2][]? |
-  select(.FromPort == 22 and .IpRanges[]?.CidrIp == "0.0.0.0/0")) |
+  select(((.IpProtocol == "-1") or (.IpProtocol == "tcp" and .FromPort <= 22 and .ToPort >= 22)) and ((any(.IpRanges[]?; .CidrIp == "0.0.0.0/0")) or (any(.Ipv6Ranges[]?; .CidrIpv6 == "::/0"))))) |
   "  ⚠️  \(.[0]): \(.[1]) allows SSH from 0.0.0.0/0"'
 
 # 4.2: No security groups allow 0.0.0.0/0 ingress to port 3389
@@ -277,7 +281,7 @@ aws ec2 describe-security-groups \
   --query 'SecurityGroups[*].[GroupId,GroupName,IpPermissions]' \
   --output json | \
 jq -r '.[] | select(.[2][]? |
-  select(.FromPort == 3389 and .IpRanges[]?.CidrIp == "0.0.0.0/0")) |
+  select(((.IpProtocol == "-1") or (.IpProtocol == "tcp" and .FromPort <= 3389 and .ToPort >= 3389)) and ((any(.IpRanges[]?; .CidrIp == "0.0.0.0/0")) or (any(.Ipv6Ranges[]?; .CidrIpv6 == "::/0"))))) |
   "  ⚠️  \(.[0]): \(.[1]) allows RDP from 0.0.0.0/0"'
 
 # 4.3: Default security group restricts all traffic
@@ -286,7 +290,7 @@ aws ec2 describe-security-groups \
   --filters Name=group-name,Values=default \
   --query 'SecurityGroups[*].[GroupId,IpPermissions,IpPermissionsEgress]' \
   --output json | \
-jq -r '.[] | select((.[1] | length) > 0 or (.[2] | length) > 1) |
+jq -r '.[] | select((.[1] | length) > 0 or (.[2] | length) > 0) |
   "  ⚠️  \(.[0]): Default SG has rules"'
 ```
 
@@ -351,7 +355,7 @@ if __name__ == "__main__":
     issues = check_pci_compliance()
 
     if not issues:
-        print("✓ No PCI-DSS issues found")
+        print("No findings in these partial checks; untested controls remain UNKNOWN")
     else:
         print(f"Found {len(issues)} issues:\n")
         for issue in issues:
@@ -369,8 +373,8 @@ echo "=== HIPAA Compliance Checks ==="
 
 # Access Controls (164.308(a)(3))
 echo "Access Controls:"
-aws iam get-credential-report --output text | \
-  awk -F, 'NR>1 && $4=="false" {print "  ⚠️  " $1 ": No MFA (164.312(a)(2)(i))"}'
+aws iam get-credential-report --query Content --output text | base64 --decode | \
+  awk -F, 'NR>1 && $8=="false" {print "  ⚠️  " $1 ": No MFA (164.312(a)(2)(i))"}'
 
 # Audit Controls (164.312(b))
 echo ""
@@ -387,14 +391,14 @@ echo ""
 echo "Encryption at Rest:"
 aws ec2 describe-volumes \
   --query 'Volumes[?Encrypted==`false`].VolumeId' \
-  --output text | \
+  --output text | tr '\t' '\n' | \
 while read vol; do
   echo "  ⚠️  $vol: Not encrypted (164.312(a)(2)(iv))"
 done
 
 aws rds describe-db-instances \
   --query 'DBInstances[?StorageEncrypted==`false`].DBInstanceIdentifier' \
-  --output text | \
+  --output text | tr '\t' '\n' | \
 while read db; do
   echo "  ⚠️  $db: Not encrypted (164.312(a)(2)(iv))"
 done
@@ -431,6 +435,8 @@ def generate_compliance_report(framework='cis'):
         }
     }
 
+    if framework not in {'cis', 'pci', 'hipaa'}:
+        raise ValueError('Unsupported framework')
     # Run all checks based on framework
     if framework == 'cis':
         checks = run_cis_checks()
@@ -443,7 +449,7 @@ def generate_compliance_report(framework='cis'):
     report['summary']['total'] = len(checks)
     report['summary']['passed'] = sum(1 for c in checks if c['status'] == 'PASS')
     report['summary']['failed'] = report['summary']['total'] - report['summary']['passed']
-    report['summary']['score'] = (report['summary']['passed'] / report['summary']['total']) * 100
+    report['summary']['score'] = (report['summary']['passed'] / report['summary']['total']) * 100 if checks else None
 
     return report
 
@@ -467,7 +473,7 @@ if __name__ == "__main__":
 
     print(f"\n{framework.upper()} Compliance Report")
     print("=" * 50)
-    print(f"Score: {report['summary']['score']:.1f}%")
+    print(f"Illustrative implemented-check score: {report['summary']['score']} (None means no implemented checks)")
     print(f"Passed: {report['summary']['passed']}/{report['summary']['total']}")
     print(f"Failed: {report['summary']['failed']}/{report['summary']['total']}")
 

@@ -1,7 +1,7 @@
 ---
 name: qiskit
-description: "Qiskit is the world's most popular open-source quantum computing framework with 13M+ downloads. Build quantum circuits, optimize for hardware, execute on simulators or real quantum computers, and analyze results. Supports IBM Quantum (100+ qubit systems), IonQ, Amazon Braket, and other providers."
-license: Apache-2.0 license
+description: "Build and transpile Qiskit circuits, test local simulators and prepare authorized hardware workloads with Sampler/Estimator primitives."
+license: MIT
 metadata:
     skill-author: K-Dense Inc.
 risk: critical
@@ -21,13 +21,14 @@ Supporting files are included at skill-relative paths. See [UPSTREAM-NOTICE.md](
 
 ## Overview
 
-Qiskit is the world's most popular open-source quantum computing framework with 13M+ downloads. Build quantum circuits, optimize for hardware, execute on simulators or real quantum computers, and analyze results. Supports IBM Quantum (100+ qubit systems), IonQ, Amazon Braket, and other providers.
+Qiskit provides circuit construction, transpilation and quantum-computing tools.
+Provider plugins and hardware access require their own supported versions,
+authentication and account entitlements. Performance depends on the workload.
 
-**Key Features:**
-- 83x faster transpilation than competitors
-- 29% fewer two-qubit gates in optimized circuits
-- Backend-agnostic execution (local simulators or cloud hardware)
-- Comprehensive algorithm libraries for optimization, chemistry, and ML
+Hardware jobs, sessions and serverless calls can consume paid quota. Prepare and
+test locally first; authorize the exact provider, target and budget before any
+remote submission. Examples are sketches requiring version checks and supplied
+variables, not preauthorized workloads.
 
 ## Quick Start
 
@@ -248,11 +249,11 @@ from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as Sampler
 from qiskit import transpile
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 qc_optimized = transpile(qc, backend=backend, optimization_level=3)
 
-sampler = Sampler(backend)
+sampler = Sampler(mode=backend)
 job = sampler.run([qc_optimized], shots=1024)
 result = job.result()
 ```
@@ -264,12 +265,12 @@ from qiskit_ibm_runtime import Session, EstimatorV2 as Estimator
 from scipy.optimize import minimize
 
 with Session(backend=backend) as session:
-    estimator = Estimator(session=session)
+    estimator = Estimator(mode=session)
 
     def cost_function(params):
         bound_qc = ansatz.assign_parameters(params)
         qc_isa = transpile(bound_qc, backend=backend)
-        result = estimator.run([(qc_isa, hamiltonian)]).result()
+        result = estimator.run([(qc_isa, hamiltonian.apply_layout(qc_isa.layout))]).result()
         return result[0].data.evs
 
     result = minimize(cost_function, initial_params, method='COBYLA')

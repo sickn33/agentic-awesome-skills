@@ -88,7 +88,7 @@ export async function extractFrames({
 
   for await (using videoSample of sink.samplesAtTimestamps(timestamps)) {
     if (signal?.aborted) {
-      break;
+      throw new Error("Aborted");
     }
 
     if (!videoSample) {
@@ -172,7 +172,7 @@ try {
     src: "https://remotion.media/video.mp4",
     timestampsInSeconds: [0, 1, 2, 3, 4],
     onVideoSample: (sample) => {
-      using frame = sample;
+      const frame = sample; // borrowed for this synchronous callback; extraction owns disposal
       const canvas = document.createElement("canvas");
       canvas.width = frame.displayWidth;
       canvas.height = frame.displayHeight;
@@ -210,7 +210,7 @@ try {
       src: "https://remotion.media/video.mp4",
       timestampsInSeconds: [0, 1, 2, 3, 4],
       onVideoSample: (sample) => {
-        using frame = sample;
+        const frame = sample; // borrowed for this synchronous callback; extraction owns disposal
         const canvas = document.createElement("canvas");
         canvas.width = frame.displayWidth;
         canvas.height = frame.displayHeight;
@@ -227,3 +227,5 @@ try {
   console.error("Frame extraction was aborted or failed:", error);
 }
 ```
+
+The timeout example is a sketch: clear the timer in a `finally` block after either promise settles; `Promise.race` alone does not cancel a successful task’s pending timeout. Do not retain a sample beyond the synchronous callback without cloning it.

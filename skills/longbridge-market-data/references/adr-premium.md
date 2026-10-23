@@ -7,7 +7,7 @@ Cross-market premium / discount analysis for companies dual- or triple-listed as
 1. Identify all available listing venues for the company (ADR ticker, HK code, A-share code).
 2. Fetch real-time quotes for each venue.
 3. Fetch USD/HKD and USD/CNY exchange rates.
-4. Convert all prices to a common currency (USD) using the ADR ratio where applicable.
+4. Verify the depositary ratio from the issuer/depositary record; if one ADR represents N local shares, ADR-equivalent USD = local price × N ÷ local-currency-per-USD FX. Match quote and FX times. Convert all prices to a common currency (USD) using the ADR ratio where applicable.
 5. Calculate premium / discount between each pair: `(Price_A − Price_B) / Price_B × 100%`.
 6. Assess arbitrage constraints: FX repatriation rules, stamp duty, liquidity depth, settlement lag.
 7. Output a comparison table and narrative.
@@ -37,20 +37,20 @@ Common examples:
 
 ## Output
 
-Present a summary table then a narrative:
+Present a summary table then a narrative. The following numbers are fictional ADR-equivalent values, not current quotes or a verified issuer ratio:
 
 ```
 Symbol        Price (local)   Price (USD)   vs ADR
 ──────────────────────────────────────────────────
 BABA.US        $82.50          $82.50        baseline
-9988.HK        HK$638.00       $81.79        −0.9%
+9988.HK        HK$638.00 (per ADR-equivalent)       $81.79        −0.9%
 ```
 
 Then explain:
 
 - Which venue is cheapest / most expensive and why.
 - Arbitrage constraints (FX controls, transaction costs, liquidity).
-- Whether the spread is actionable or structural.
+- Whether sufficient executable quotes, conversion, financing and fee data exist to assess the spread; otherwise leave actionability unresolved.
 
 ## Error handling
 

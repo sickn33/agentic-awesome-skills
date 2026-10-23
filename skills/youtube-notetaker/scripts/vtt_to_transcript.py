@@ -71,7 +71,7 @@ def main():
         if new:
             out.append(f"{label} {markdown_text(' '.join(new))}")
         seen_words=(seen_words+new)[-40:]  # bounded window
-    with safe_user_path(sys.argv[2]).open('w',encoding='utf-8') as f:
+    with safe_user_path(sys.argv[2]).open('x',encoding='utf-8') as f:
         f.write('\n'.join(out)+'\n')
     print(f"wrote {len(out)} transcript lines -> {sys.argv[2]}")
 

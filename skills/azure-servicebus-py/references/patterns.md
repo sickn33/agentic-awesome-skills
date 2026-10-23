@@ -1,6 +1,6 @@
 # Messaging Patterns Reference
 
-Advanced messaging patterns for Azure Service Bus.
+Advanced messaging sketches for Azure Service Bus. Use an explicitly supplied destination rather than trusting reply_to from a message. Validate body type before copying: DATA bodies may need b"".join(msg.body), while VALUE/SEQUENCE bodies require type-specific handling. Preserve IDs, sessions and required properties explicitly, bound retries, close credentials, and protect sensitive logs. Request/response listener concurrency and shared-client use need application-level coordination.
 
 ## Competing Consumers
 
@@ -151,7 +151,7 @@ from datetime import datetime, timedelta, timezone
 
 async def process_with_backoff(client, receiver, msg):
     """Retry with exponential backoff using scheduled messages."""
-    retry_count = int(msg.application_properties.get("retry_count", 0))
+    retry_count = int((msg.application_properties or {}).get("retry_count", 0))
     max_retries = 5
 
     try:
@@ -180,12 +180,11 @@ async def process_with_backoff(client, receiver, msg):
             }
         )
 
-        # Complete original and schedule retry
-        await receiver.complete_message(msg)
-
+        # Schedule before completing to avoid loss; duplicates remain possible.
         sender = client.get_queue_sender(queue_name=receiver.entity_path)
         async with sender:
             await sender.schedule_messages(retry_message, retry_time)
+        await receiver.complete_message(msg)
 
         print(f"Scheduled retry {retry_count + 1} for {retry_time}")
 ```
@@ -310,38 +309,9 @@ async def subscribe_high_priority(client, topic: str):
             await receiver.complete_message(msg)
 ```
 
-## Transaction Support
+## Forwarding and transaction boundaries
 
-Atomic operations within a single entity:
-
-```python
-from azure.servicebus import ServiceBusMessage
-
-async def transactional_receive_and_forward(client, source_queue: str, dest_queue: str):
-    """Receive from one queue and send to another atomically."""
-    receiver = client.get_queue_receiver(queue_name=source_queue)
-    sender = client.get_queue_sender(queue_name=dest_queue)
-
-    async with receiver, sender:
-        messages = await receiver.receive_messages(max_message_count=1)
-
-        if messages:
-            msg = messages[0]
-
-            # Start transaction
-            async with receiver.transaction_scope() as txn:
-                # Transform message
-                new_msg = ServiceBusMessage(
-                    body=f"Forwarded: {str(msg.body)}",
-                    application_properties={"original_id": msg.message_id}
-                )
-
-                # Both operations in same transaction
-                await sender.send_messages(new_msg, transaction=txn)
-                await receiver.complete_message(msg, transaction=txn)
-
-                # Transaction commits when context exits without error
-```
+Do not infer an atomic transaction API from service-level transaction support. Verify the installed Python SDK's documented methods; this guide does not provide a verified transaction implementation. Sending and then completing in separate calls can duplicate delivery after a crash; completing first can lose a message. Use an idempotent outbox/inbox strategy or an explicitly supported transaction client when atomicity is required.
 
 ## Batch Processing with Prefetch
 
@@ -401,5 +371,5 @@ async def batch_processor(client, queue_name: str, batch_size: int = 100):
 | Scheduled Messages | Delayed delivery, exponential backoff |
 | Request-Response | Synchronous-style communication |
 | Topics/Filters | Pub/sub with selective routing |
-| Transactions | Atomic multi-operation guarantees |
+| Transactions | Verify SDK support and use a tested transactional design |
 | Prefetch | High-throughput batch processing |

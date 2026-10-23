@@ -43,7 +43,8 @@ class ComputerUseAgent:
         """Capture screen and return base64 encoded image."""
         screenshot = pyautogui.screenshot()
         # Resize for token efficiency (1280x800 is good balance)
-        screenshot = screenshot.resize((1280, 800), Image.LANCZOS)
+        # Keep native display coordinates. If resizing, map every action back
+        # to the actual display dimensions before execution.
 
         import io
         buffer = io.BytesIO()
@@ -158,7 +159,8 @@ class ComputerUseAgent:
             # Check if done
             if action.get("type") == "done":
                 return {
-                    "success": True,
+                    "success": False,
+                    "status": "verification_required",
                     "result": action.get("result"),
                     "steps": step_count
                 }
@@ -256,8 +258,8 @@ services:
   computer-use-agent:
     build: .
     ports:
-      - "5900:5900"  # VNC for observation
-      - "8080:8080"  # API for control
+      - "127.0.0.1:5900:5900"  # VNC for observation
+      - "127.0.0.1:8080:8080"  # API for control
 
     # Security constraints
     security_opt:
@@ -303,348 +305,17 @@ volumes:
 
 ---
 
-# Python wrapper with additional runtime sandboxing
-import subprocess
-import os
-from dataclasses import dataclass
-from typing import Optional
+### Runtime boundary and provider adapter
 
-@dataclass
-class SandboxConfig:
-    """Configuration for agent sandbox."""
-    network_allowed: list[str] = None  # Allowed domains
-    max_runtime_seconds: int = 300
-    max_memory_mb: int = 2048
-    allow_downloads: bool = False
-    allow_clipboard: bool = False
+The Dockerfile and Compose above are incomplete deployment sketches: supply reviewed requirements, supervisor configuration, authenticated control service and a tested seccomp profile. Bind observation/control ports to loopback, authenticate them, and use ephemeral storage. `--add-host` changes name resolution; it does **not** restrict network access. Use `--network none` for offline tasks or an independently enforced egress proxy/firewall with DNS and redirect controls. Never interpolate model output into shell commands, container names or network flags.
 
-class SandboxedAgent:
-    """
-    Run computer use agent in Docker sandbox.
-    """
+Launch containers with a validated argument list and `subprocess.run(..., check=True, timeout=...)`, a unique name and a non-root user. Enforce the deadline from the host supervisor and remove the container in `finally`. A host HTTP client cannot reach an unpublished container service; explicitly configure authenticated loopback transport or a scoped exec transport before submitting tasks. Do not expose the host Docker socket or credentials.
 
-    def __init__(self, config: SandboxConfig):
-        self.config = config
-        self.container_id: Optional[str] = None
+For Anthropic computer use, select a currently supported model/tool/beta combination from the provider documentation. This repository does not bundle a tested SDK adapter. Historical 20241022 classes are not a portable current implementation. Keep the virtual display dimensions identical to the coordinates supplied to the tool; map crop/resize coordinates explicitly if images are transformed. Check every subprocess result and capture screenshots into fresh private files to prevent stale observations.
 
-    def start(self):
-        """Start sandboxed environment."""
-        # Build network rules
-        network_rules = ""
-        if self.config.network_allowed:
-            for domain in self.config.network_allowed:
-                network_rules += f"--add-host={domain}:$(dig +short {domain}) "
-        else:
-            network_rules = "--network=none"
+Expose only the computer tool needed for the task. A substring blacklist cannot make arbitrary shell execution safe. Shell and editor capabilities require a separate, explicit authorization boundary, disposable execution environment and filesystem policy; omit them by default. Resolve editor paths inside a dedicated workspace, reject symlink escapes and bound reads/writes. Encode tool results using the SDK's supported text/image content blocks, retaining tool-use IDs and errors. Model end-of-turn indicates a proposed result, which must be checked against observable success criteria.
 
-        cmd = f"""
-        docker run -d \
-            --name computer-use-sandbox-$$ \
-            --security-opt no-new-privileges \
-            --cap-drop ALL \
-            --memory {self.config.max_memory_mb}m \
-            --cpus 2 \
-            --read-only \
-            --tmpfs /tmp \
-            {network_rules} \
-            computer-use-agent:latest
-        """
-
-        result = subprocess.run(cmd, shell=True, capture_output=True)
-        self.container_id = result.stdout.decode().strip()
-
-        # Set up kill timer
-        subprocess.Popen([
-            "sh", "-c",
-            f"sleep {self.config.max_runtime_seconds} && docker kill {self.container_id}"
-        ])
-
-        return self.container_id
-
-    def execute_task(self, task: str) -> dict:
-        """Execute task in sandbox."""
-        if not self.container_id:
-            self.start()
-
-        # Send task to agent via API
-        import requests
-        response = requests.post(
-            f"http://localhost:8080/task",
-            json={"task": task},
-            timeout=self.config.max_runtime_seconds
-        )
-
-        return response.json()
-
-    def stop(self):
-        """Stop and remove sandbox."""
-        if self.container_id:
-            subprocess.run(f"docker rm -f {self.container_id}", shell=True)
-            self.container_id = None
-
-### Anti_patterns
-
-- Running agents on host system directly
-- Giving sandbox full network access
-- Running as root in container
-- No resource limits (denial of service)
-- Persistent storage (data can leak between runs)
-
-### Anthropic Computer Use Implementation
-
-Official implementation pattern using Claude's computer use capability.
-Claude 3.5 Sonnet was the first frontier model to offer computer use.
-Claude Opus 4.5 is now the "best model in the world for computer use."
-
-Key capabilities:
-- screenshot: Capture current screen state
-- mouse: Click, move, drag operations
-- keyboard: Type text, press keys
-- bash: Run shell commands
-- text_editor: View and edit files
-
-Tool versions:
-- computer_20251124 (Opus 4.5): Adds zoom action for detailed inspection
-- computer_20250124 (All other models): Standard capabilities
-
-Critical limitation: "Some UI elements (like dropdowns and scrollbars)
-might be tricky for Claude to manipulate" - Anthropic docs
-
-**When to use**: Building production computer use agents,Need highest quality vision understanding,Full desktop control (not just browser)
-
-from anthropic import Anthropic
-from anthropic.types.beta import (
-    BetaToolComputerUse20241022,
-    BetaToolBash20241022,
-    BetaToolTextEditor20241022,
-)
-import subprocess
-import base64
-from PIL import Image
-import io
-
-class AnthropicComputerUse:
-    """
-    Official Anthropic Computer Use implementation.
-
-    Requires:
-    - Docker container with virtual display
-    - VNC for viewing agent actions
-    - Proper tool implementations
-    """
-
-    def __init__(self):
-        self.client = Anthropic()
-        self.model = "claude-sonnet-4-20250514"  # Best for computer use
-        self.screen_size = (1280, 800)
-
-    def get_tools(self) -> list:
-        """Define computer use tools."""
-        return [
-            BetaToolComputerUse20241022(
-                type="computer_20241022",
-                name="computer",
-                display_width_px=self.screen_size[0],
-                display_height_px=self.screen_size[1],
-            ),
-            BetaToolBash20241022(
-                type="bash_20241022",
-                name="bash",
-            ),
-            BetaToolTextEditor20241022(
-                type="text_editor_20241022",
-                name="str_replace_editor",
-            ),
-        ]
-
-    def execute_tool(self, name: str, input: dict) -> dict:
-        """Execute a tool and return result."""
-
-        if name == "computer":
-            return self._handle_computer_action(input)
-        elif name == "bash":
-            return self._handle_bash(input)
-        elif name == "str_replace_editor":
-            return self._handle_editor(input)
-        else:
-            return {"error": f"Unknown tool: {name}"}
-
-    def _handle_computer_action(self, input: dict) -> dict:
-        """Handle computer control actions."""
-        action = input.get("action")
-
-        if action == "screenshot":
-            # Capture via xdotool/scrot
-            subprocess.run(["scrot", "/tmp/screenshot.png"])
-
-            with open("/tmp/screenshot.png", "rb") as f:
-                img_data = f.read()
-
-            # Resize for efficiency
-            img = Image.open(io.BytesIO(img_data))
-            img = img.resize(self.screen_size, Image.LANCZOS)
-
-            buffer = io.BytesIO()
-            img.save(buffer, format="PNG")
-
-            return {
-                "type": "image",
-                "source": {
-                    "type": "base64",
-                    "media_type": "image/png",
-                    "data": base64.b64encode(buffer.getvalue()).decode()
-                }
-            }
-
-        elif action == "mouse_move":
-            x, y = input.get("coordinate", [0, 0])
-            subprocess.run(["xdotool", "mousemove", str(x), str(y)])
-            return {"success": True}
-
-        elif action == "left_click":
-            subprocess.run(["xdotool", "click", "1"])
-            return {"success": True}
-
-        elif action == "right_click":
-            subprocess.run(["xdotool", "click", "3"])
-            return {"success": True}
-
-        elif action == "double_click":
-            subprocess.run(["xdotool", "click", "--repeat", "2", "1"])
-            return {"success": True}
-
-        elif action == "type":
-            text = input.get("text", "")
-            # Use xdotool type with delay for reliability
-            subprocess.run(["xdotool", "type", "--delay", "50", text])
-            return {"success": True}
-
-        elif action == "key":
-            key = input.get("key", "")
-            # Map common key names
-            key_map = {
-                "return": "Return",
-                "enter": "Return",
-                "tab": "Tab",
-                "escape": "Escape",
-                "backspace": "BackSpace",
-            }
-            xdotool_key = key_map.get(key.lower(), key)
-            subprocess.run(["xdotool", "key", xdotool_key])
-            return {"success": True}
-
-        elif action == "scroll":
-            direction = input.get("direction", "down")
-            amount = input.get("amount", 3)
-            button = "5" if direction == "down" else "4"
-            for _ in range(amount):
-                subprocess.run(["xdotool", "click", button])
-            return {"success": True}
-
-        return {"error": f"Unknown action: {action}"}
-
-    def _handle_bash(self, input: dict) -> dict:
-        """Execute bash command."""
-        command = input.get("command", "")
-
-        # Security: Sanitize and limit commands
-        dangerous_patterns = ["rm -rf", "mkfs", "dd if=", "> /dev/"]
-        for pattern in dangerous_patterns:
-            if pattern in command:
-                return {"error": "Dangerous command blocked"}
-
-        try:
-            result = subprocess.run(
-                command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                timeout=30
-            )
-            return {
-                "stdout": result.stdout[:10000],  # Limit output
-                "stderr": result.stderr[:1000],
-                "returncode": result.returncode
-            }
-        except subprocess.TimeoutExpired:
-            return {"error": "Command timed out"}
-
-    def _handle_editor(self, input: dict) -> dict:
-        """Handle text editor operations."""
-        command = input.get("command")
-        path = input.get("path")
-
-        if command == "view":
-            try:
-                with open(path, "r") as f:
-                    content = f.read()
-                return {"content": content[:50000]}  # Limit size
-            except Exception as e:
-                return {"error": str(e)}
-
-        elif command == "str_replace":
-            old_str = input.get("old_str")
-            new_str = input.get("new_str")
-            try:
-                with open(path, "r") as f:
-                    content = f.read()
-                if old_str not in content:
-                    return {"error": "old_str not found in file"}
-                content = content.replace(old_str, new_str, 1)
-                with open(path, "w") as f:
-                    f.write(content)
-                return {"success": True}
-            except Exception as e:
-                return {"error": str(e)}
-
-        return {"error": f"Unknown editor command: {command}"}
-
-    def run_task(self, task: str, max_steps: int = 50) -> dict:
-        """Run computer use task with agentic loop."""
-        messages = [{"role": "user", "content": task}]
-        tools = self.get_tools()
-
-        for step in range(max_steps):
-            response = self.client.beta.messages.create(
-                model=self.model,
-                max_tokens=4096,
-                tools=tools,
-                messages=messages,
-                betas=["computer-use-2024-10-22"]
-            )
-
-            # Check for completion
-            if response.stop_reason == "end_turn":
-                return {
-                    "success": True,
-                    "result": response.content[0].text if response.content else "",
-                    "steps": step + 1
-                }
-
-            # Handle tool use
-            if response.stop_reason == "tool_use":
-                messages.append({"role": "assistant", "content": response.content})
-
-                tool_results = []
-                for block in response.content:
-                    if block.type == "tool_use":
-                        result = self.execute_tool(block.name, block.input)
-                        tool_results.append({
-                            "type": "tool_result",
-                            "tool_use_id": block.id,
-                            "content": result
-                        })
-
-                messages.append({"role": "user", "content": tool_results})
-
-        return {"success": False, "error": "Max steps reached"}
-
-### Anti_patterns
-
-- Not using betas=['computer-use-2024-10-22'] flag
-- Full resolution screenshots (wasteful)
-- No command sanitization for bash tool
-- Unbounded execution time
+Primary reference: [Anthropic computer use documentation](https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool).
 
 ### Browser-Use Pattern (Playwright-based)
 
@@ -699,7 +370,7 @@ class BrowserUseAgent:
         Uses accessibility tree for efficiency.
         """
         # Get accessibility tree
-        snapshot = await self.page.accessibility.snapshot()
+        snapshot = await self.page.locator("body").aria_snapshot()  # Requires a Playwright version supporting aria_snapshot
 
         # Get simplified DOM info
         elements = await self.page.evaluate('''() => {
@@ -740,7 +411,8 @@ class BrowserUseAgent:
 
             elif action.action == "click":
                 await self.page.click(action.selector, timeout=5000)
-                await self.page.wait_for_load_state("networkidle", timeout=5000)
+                # Verify the task-specific postcondition; networkidle can time out
+                # on continuously connected pages even after a successful click.
                 return {"success": True}
 
             elif action.action == "type":
@@ -759,7 +431,7 @@ class BrowserUseAgent:
                     text = await self.page.text_content(action.selector)
                 else:
                     text = await self.page.text_content("body")
-                return {"success": True, "text": text[:5000]}
+                return {"success": True, "text": (text or "")[:5000]}
 
             elif action.action == "screenshot":
                 # Fall back to vision when needed
@@ -831,7 +503,7 @@ class BrowserUseAgent:
             action_dict = json.loads(assistant_text)
 
             if action_dict.get("action") == "done":
-                return {"success": True, "result": action_dict.get("result")}
+                return {"success": False, "status": "verification_required", "result": action_dict.get("result")}
 
             action = BrowserAction(**action_dict)
             result = await self.execute_action(action)
@@ -980,7 +652,9 @@ class ConfirmationGate:
         if context.get("involves_money"):
             return ActionSeverity.CRITICAL
         if context.get("irreversible"):
-            return max(base_severity, ActionSeverity.HIGH, key=lambda x: x.value)
+            rank = {ActionSeverity.LOW: 0, ActionSeverity.MEDIUM: 1,
+                    ActionSeverity.HIGH: 2, ActionSeverity.CRITICAL: 3}
+            return max(base_severity, ActionSeverity.HIGH, key=rank.get)
 
         return base_severity
 
@@ -1126,9 +800,9 @@ All computer use agent actions should be logged for:
 Log format should capture:
 - Timestamp
 - Action type and parameters
-- Screenshot before/after
+- Screenshot before/after only with explicit capture and retention policy
 - Success/failure status
-- Model reasoning (if available)
+- Brief observable decision summary; do not request private chain of thought
 
 **When to use**: Production computer use deployments,Debugging automation failures,Security-sensitive environments
 
@@ -1157,10 +831,10 @@ class ActionLogEntry:
             "action_type": self.action_type,
             "parameters": self._sanitize_params(self.parameters),
             "success": self.success,
-            "error": self.error,
+            "error": "[error recorded]" if self.error else None,
             "screenshot_before": self.screenshot_before,
             "screenshot_after": self.screenshot_after,
-            "model_reasoning": self.model_reasoning,
+            "model_reasoning": "[not persisted]",
             "duration_ms": self.duration_ms
         }
 
@@ -1170,8 +844,12 @@ class ActionLogEntry:
         sensitive_keys = ['password', 'secret', 'token', 'key', 'credit_card']
 
         for k, v in params.items():
-            if any(s in k.lower() for s in sensitive_keys):
+            if k.lower() in {"text", "task", "content", "value"} or any(s in k.lower() for s in sensitive_keys):
                 sanitized[k] = "[REDACTED]"
+            elif isinstance(v, dict):
+                sanitized[k] = self._sanitize_params(v)
+            elif isinstance(v, list):
+                sanitized[k] = "[REDACTED: collection]"
             elif isinstance(v, str) and len(v) > 100:
                 sanitized[k] = v[:100] + "...[truncated]"
             else:
@@ -1297,7 +975,7 @@ class ActionLogger:
 
         summary = {
             "session_id": self.current_session.session_id,
-            "task": self.current_session.task,
+            "task": "[not persisted]",
             "start_time": self.current_session.start_time.isoformat(),
             "end_time": self.current_session.end_time.isoformat(),
             "duration_seconds": (
@@ -1312,7 +990,7 @@ class ActionLogger:
                 1 for a in self.current_session.actions if not a.success
             ),
             "success": success,
-            "final_result": result
+            "final_result": "[not persisted]"
         }
 
         with open(summary_file, "w") as f:
@@ -1404,18 +1082,18 @@ Recommended fix:
 
 ## Defense in depth - no single solution works
 
-1. Sandboxing (most effective):
+1. Sandboxing (limits host impact; does not stop misuse of an authorized website):
    ```python
    # Docker with strict isolation
    docker run \
        --security-opt no-new-privileges \
        --cap-drop ALL \
-       --network none \  # No internet!
+       --network none \
        --read-only \
        computer-use-agent
    ```
 
-2. Classifier-based detection:
+2. Heuristic warning only; pattern matching cannot establish that content is safe:
    ```python
    def scan_for_injection(content: str) -> bool:
        """Detect prompt injection attempts."""
@@ -1449,91 +1127,9 @@ Recommended fix:
    - Use temporary, limited tokens
    - Revoke after task completion
 
-### Vision Agents Click Exact Centers
+### Respect site controls and preserve targeting accuracy
 
-Severity: MEDIUM
-
-Situation: Agent clicking on UI elements
-
-Symptoms:
-Agent's clicks are detectable as non-human. Websites may block or
-CAPTCHA the agent. Anti-bot systems flag the interaction.
-
-Why this breaks:
-"When a vision model identifies a button, it calculates the center.
-Click coordinates land at mathematically precise positions—often exact
-element centers or grid-aligned pixel values. Humans don't click centers;
-their click distributions follow a Gaussian pattern around targets."
-
-The screenshot loop also creates detectable patterns:
-"Predictable pauses. Vision agents are completely still during their
-'thinking' phase. The pattern looks like: Action → Complete stillness
-(1-5 seconds) → Action → Complete stillness → Action."
-
-Sophisticated anti-bot systems detect:
-- Perfect center clicks
-- No mouse movement during "thinking"
-- Consistent timing between actions
-- Lack of micro-movements and hesitation
-
-Recommended fix:
-
-
-## Add human-like variance to actions
-
-```python
-import random
-import time
-
-def humanized_click(x: int, y: int) -> tuple[int, int]:
-    """Add human-like variance to click coordinates."""
-    # Gaussian distribution around target
-    # Humans typically land within ~10px of target
-    x_offset = int(random.gauss(0, 5))
-    y_offset = int(random.gauss(0, 5))
-
-    return (x + x_offset, y + y_offset)
-
-def humanized_delay():
-    """Add human-like delay between actions."""
-    # Humans have variable reaction times
-    base_delay = random.uniform(0.3, 0.8)
-    # Occasionally longer pauses (reading, thinking)
-    if random.random() < 0.2:
-        base_delay += random.uniform(0.5, 2.0)
-    time.sleep(base_delay)
-
-def humanized_movement(from_pos: tuple, to_pos: tuple):
-    """Move mouse in curved path like human."""
-    # Bezier curve or similar
-    # Humans don't move in straight lines
-    steps = random.randint(10, 20)
-    for i in range(steps):
-        t = i / steps
-        # Simple curve approximation
-        x = from_pos[0] + (to_pos[0] - from_pos[0]) * t
-        y = from_pos[1] + (to_pos[1] - from_pos[1]) * t
-        # Add wobble
-        x += random.gauss(0, 2)
-        y += random.gauss(0, 2)
-        pyautogui.moveTo(int(x), int(y))
-        time.sleep(0.01)
-```
-
-
-## Rotate user agents and fingerprints
-
-```python
-USER_AGENTS = [
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120...",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Safari/...",
-    # ... more realistic agents
-]
-
-await page.set_extra_http_headers({
-    "User-Agent": random.choice(USER_AGENTS)
-})
-```
+A blocked action, CAPTCHA or access restriction calls for the site's supported automation route or a user handoff. Randomizing coordinates, fingerprints and user agents is not a reliability or authorization mechanism. Keep clicks inside verified targets, use stable accessible locators when available and report blocked operations accurately.
 
 ### Dropdowns, Scrollbars, and Drags Are Unreliable
 
@@ -1637,7 +1233,7 @@ async def verified_scroll(page, direction):
         await page.keyboard.press("PageDown" if direction == "down" else "PageUp")
 ```
 
-### Agents Are 2-5x Slower Than Humans
+### Measure latency on representative tasks
 
 Severity: MEDIUM
 
@@ -1680,7 +1276,7 @@ SCREEN_SIZE = (1280, 800)  # Not 4K
 
 # 2. Batch similar actions
 # Instead of: type "hello", wait, type " world"
-await page.type("hello world")
+await page.locator("input[name=message]").fill("hello world")
 
 # 3. Parallelize independent tasks
 # Run multiple sandboxed agents concurrently
@@ -1723,7 +1319,7 @@ Agent forgets earlier steps. Starts repeating actions.
 Errors increase as task progresses. Costs explode.
 
 Why this breaks:
-Each screenshot is ~1500-3000 tokens. A task with 30 screenshots
+Image token use varies by provider, dimensions and preprocessing; the following numbers are illustrative, not a bound. A screenshot might use ~1500-3000 tokens. A task with 30 screenshots
 uses 45,000-90,000 tokens just for images - before any text.
 
 Claude's context window is finite. When full:
@@ -1872,7 +1468,7 @@ But it compounds:
 - Turn 20 processes 20 screenshots = $0.40-0.60
 - Quadratic growth!
 
-Complex task: 50 turns × average 25 images in context = 1250 image tokens
+Complex task: 50 turns × average 25 images in context = 1250 image appearances (not tokens)
 Plus text = could easily hit $5-10 per task.
 
 Recommended fix:
@@ -1884,7 +1480,7 @@ Recommended fix:
 class CostTracker:
     """Track and limit computer use costs."""
 
-    # Anthropic pricing (approximate)
+    # Illustrative rates only: configure verified current provider rates
     INPUT_COST_PER_1K = 0.003   # Text
     OUTPUT_COST_PER_1K = 0.015
     IMAGE_COST_PER_1K = 0.01    # Roughly
@@ -1900,14 +1496,19 @@ class CostTracker:
         output_tokens: int,
         image_tokens: int
     ):
-        """Track cost of a single turn."""
+        """Illustrative post-call estimate; input_tokens includes image_tokens.
+        Not a hard budget: reject the next call using a conservative preflight
+        reservation and reconcile provider usage/cache rates separately.
+        """
+        if not 0 <= image_tokens <= input_tokens:
+            raise ValueError("image_tokens must be included in input_tokens")
         cost = (
-            input_tokens / 1000 * self.INPUT_COST_PER_1K +
+            (input_tokens - image_tokens) / 1000 * self.INPUT_COST_PER_1K +
             output_tokens / 1000 * self.OUTPUT_COST_PER_1K +
             image_tokens / 1000 * self.IMAGE_COST_PER_1K
         )
         self.current_cost += cost
-        self.total_tokens += input_tokens + output_tokens + image_tokens
+        self.total_tokens += input_tokens + output_tokens  # input_tokens includes images
 
         if self.current_cost > self.max_cost:
             raise CostLimitExceeded(
@@ -1936,7 +1537,7 @@ except CostLimitExceeded:
 # 1. Lower resolution
 SCREEN_SIZE = (1024, 768)  # Smaller = fewer tokens
 
-# 2. JPEG instead of PNG (when quality ok)
+# 2. JPEG can reduce transfer bytes; token billing may not decrease
 screenshot.save(buffer, format="JPEG", quality=70)
 
 # 3. Crop to relevant region
@@ -2024,7 +1625,7 @@ docker run -it --rm \
 @dataclass
 class SandboxConfig:
     docker_image: str = "computer-use-sandbox:latest"
-    network: str = "none"  # or specific allowlist
+    network: str = "none"  # A domain list requires an external egress enforcement layer
     readonly_root: bool = True
     max_memory_mb: int = 2048
     max_cpu: float = 1.0
@@ -2104,7 +1705,7 @@ Severity: WARNING
 
 Containers should use seccomp profiles for syscall filtering
 
-Message: No security options set. Consider --security-opt seccomp:profile.json
+Message: Docker normally applies its default seccomp profile. Review that policy; use a custom profile only when tested and available.
 
 ### No Maximum Step Limit
 

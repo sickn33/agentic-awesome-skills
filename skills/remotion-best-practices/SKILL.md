@@ -1,7 +1,7 @@
 ---
 name: remotion-best-practices
 description: "Best practices for Remotion - Video creation in React"
-risk: safe
+risk: critical
 source: community
 tags: "remotion, video, react, animation, composition"
 date_added: "2026-02-27"
@@ -47,3 +47,7 @@ Read individual rule files for detailed explanations and code examples:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Runtime and data boundaries
+
+Use installed project tooling and lockfile versions; commands using package runners may download code when the CLI is absent. Install only dependencies needed by the agreed task and keep all Remotion packages on the same version. Remote media, font and transcription requests disclose data to their providers; use authorized assets and confirm paid/cloud transcription scope. Examples are partial component snippets unless exported; hooks belong inside React components, not module scope. `using` examples require TypeScript explicit resource management support. Validate rendered frames and audio in the target runtime.

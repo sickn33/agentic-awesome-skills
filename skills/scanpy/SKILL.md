@@ -29,6 +29,10 @@ This skill should be used when:
 - Conducting trajectory inference or pseudotime analysis
 - Generating publication-quality single-cell plots
 
+## Analysis boundaries
+
+Confirm species, gene-ID mapping, raw-count provenance and donor/sample design. QC cutoffs, regression and cluster labels are illustrative; regression can remove biology and densify sparse data. Never copy numeric cluster-to-cell-type mappings as validated annotations. Cell-level condition tests are exploratory and do not replace replicate-aware/pseudobulk inference. Keep human data local unless explicitly authorized, preserve original inputs and choose fresh output paths. The bundled support license is MIT; the entrypoint's legacy license label is unresolved and must not be treated as a verified redistribution grant.
+
 ## Quick Start
 
 ### Basic Import and Setup
@@ -68,7 +72,7 @@ adata.obs        # Cell metadata (DataFrame)
 adata.var        # Gene metadata (DataFrame)
 adata.uns        # Unstructured annotations (dict)
 adata.obsm       # Multi-dimensional cell data (PCA, UMAP)
-adata.raw        # Raw data backup
+adata.raw        # Snapshot of X/var; contents depend on assignment time
 
 # Access cell and gene names
 adata.obs_names  # Cell barcodes
@@ -85,6 +89,8 @@ Identify and filter low-quality cells and genes:
 # Identify mitochondrial genes
 adata.var['mt'] = adata.var_names.str.startswith('MT-')
 
+# Gene symbols/species must be verified; this example uses human symbols.
+adata.var['mt'] = adata.var_names.str.startswith('MT-')
 # Calculate QC metrics
 sc.pp.calculate_qc_metrics(adata, qc_vars=['mt'], inplace=True)
 
@@ -106,13 +112,15 @@ python scripts/qc_analysis.py input_file.h5ad --output filtered.h5ad
 ### 2. Normalization and Preprocessing
 
 ```python
+# Preserve counts before normalization (only if X contains counts)
+adata.layers['counts'] = adata.X.copy()
 # Normalize to 10,000 counts per cell
 sc.pp.normalize_total(adata, target_sum=1e4)
 
 # Log-transform
 sc.pp.log1p(adata)
 
-# Save raw counts for later
+# Save log-normalized full-gene expression for later
 adata.raw = adata
 
 # Identify highly variable genes
@@ -141,7 +149,7 @@ sc.pp.neighbors(adata, n_neighbors=10, n_pcs=40)
 
 # UMAP for visualization
 sc.tl.umap(adata)
-sc.pl.umap(adata, color='leiden')
+# Plot by leiden only after the clustering step below.
 
 # Alternative: t-SNE
 sc.tl.tsne(adata)
@@ -247,6 +255,7 @@ sc.pl.paga(adata, color='leiden')
 
 # Diffusion pseudotime
 adata.uns['iroot'] = np.flatnonzero(adata.obs['leiden'] == '0')[0]
+sc.tl.diffmap(adata)
 sc.tl.dpt(adata)
 sc.pl.umap(adata, color='dpt_pseudotime')
 ```
@@ -302,12 +311,12 @@ sc.pp.combat(adata, key='batch')
 
 ## Common Pitfalls and Best Practices
 
-1. **Always save raw counts**: `adata.raw = adata` before filtering genes
+1. **Preserve counts**: `adata.layers["counts"] = adata.X.copy()` before normalization; `.raw` here holds log-normalized expression
 2. **Check QC plots carefully**: Adjust thresholds based on dataset quality
 3. **Use Leiden over Louvain**: More efficient and better results
 4. **Try multiple clustering resolutions**: Find optimal granularity
 5. **Validate cell type annotations**: Use multiple marker genes
-6. **Use `use_raw=True` for gene expression plots**: Shows original counts
+6. **Use `use_raw=True` for gene expression plots**: Shows the saved snapshot, here log-normalized expression
 7. **Check PCA variance ratio**: Determine optimal number of PCs
 8. **Save intermediate results**: Long workflows can fail partway through
 

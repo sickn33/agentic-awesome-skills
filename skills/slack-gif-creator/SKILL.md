@@ -10,11 +10,17 @@ date_added: "2026-02-27"
 
 A toolkit providing utilities and knowledge for creating animated GIFs optimized for Slack.
 
-## Slack Requirements
+Catalog modification notice: clarified Slack recommendations and validator limits, corrected GIF duration/format checks and basic builder input handling. The bundled Apache-2.0 license text is retained; this review does not establish missing upstream authorship metadata.
+
+Run from the resolved skill root (or add it to the Python module path), using an isolated environment and the bundled requirements. Decode untrusted images with bounded dimensions/frame counts and retain Pillow decompression-bomb protections. Export to a new task-local path; sharing/uploading requires the requested workspace and permission. Avoid flashing animations and provide a still preview.
+
+## Slack Targets and Recommendations
 
 **Dimensions:**
 - Emoji GIFs: 128x128 (recommended)
 - Message GIFs: 480x480
+
+Slack recommends square custom images below 128 KB and supports GIFs with up to 50 frames; see [Slack custom emoji guidance](https://slack.com/help/articles/206870177-Add-custom-emoji-and-aliases-to-your-workspace). The dimensions/FPS/color/duration values here are design targets, not complete platform acceptance rules. Message GIF dimensions are suggestions.
 
 **Parameters:**
 - FPS: 10-30 (lower is smaller file size)
@@ -146,7 +152,7 @@ t = i / (num_frames - 1)
 y = interpolate(start=0, end=400, t=t, easing='ease_out')
 
 # Available: linear, ease_in, ease_out, ease_in_out,
-#           bounce_out, elastic_out, back_out
+#           bounce_out, elastic_out, back_out (these may overshoot the range)
 ```
 
 ### Frame Helpers (`core.frame_composer`)
@@ -220,7 +226,7 @@ Only when asked to make the file size smaller, implement a few of the following 
 1. **Fewer frames** - Lower FPS (10 instead of 20) or shorter duration
 2. **Fewer colors** - `num_colors=48` instead of 128
 3. **Smaller dimensions** - 128x128 instead of 480x480
-4. **Remove duplicates** - `remove_duplicates=True` in save()
+4. **Remove duplicates** - `remove_duplicates=True` shortens timing in this implementation; leave false when pauses or duration must be preserved
 5. **Emoji mode** - `optimize_for_emoji=True` auto-optimizes
 
 ```python
@@ -257,6 +263,8 @@ pip install pillow imageio numpy
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+`is_slack_ready` checks local encoding/target constraints, not actual upload acceptance. RGB conversion drops transparency. Emoji optimization mutates stored frames and may shorten the animation; inspect the encoded file rather than trusting nominal FPS or the returned palette count. The package does not upload anything to Slack.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

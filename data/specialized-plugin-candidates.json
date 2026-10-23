@@ -121,7 +121,6 @@
         "docx-official",
         "xlsx-official",
         "pptx-official",
-        "pdf-official",
         "pdf-conversion-router",
         "google-docs-automation",
         "google-sheets-automation",

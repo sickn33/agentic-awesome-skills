@@ -1,6 +1,6 @@
 # AEO and GEO Content Patterns
 
-Reusable content block patterns optimized for answer engines and AI citation.
+Reusable drafting patterns; no format guarantees citations. Word counts are heuristics. All sample facts/quotes require verification before publication; do not attribute invented quotes to real people.
 
 ---
 
@@ -28,7 +28,7 @@ Use for "What is [X]?" queries.
 ```markdown
 ## What is Answer Engine Optimization?
 
-Answer Engine Optimization (AEO) is the practice of structuring content so AI-powered systems can easily extract and present it as direct answers to user queries. Unlike traditional SEO that focuses on ranking in search results, AEO optimizes for featured snippets, AI Overviews, and voice assistant responses. This approach has become essential as over 60% of Google searches now end without a click.
+Answer Engine Optimization (AEO) is the practice of structuring content so AI-powered systems can easily extract and present it as direct answers to user queries. Unlike traditional SEO that focuses on ranking in search results, AEO optimizes for featured snippets, AI Overviews, and voice assistant responses. Its usefulness should be evaluated for the intended audience and queries.
 ```
 
 ### Step-by-Step Block
@@ -61,7 +61,7 @@ Earning featured snippets requires strategic formatting and direct answers to se
 4. **Add supporting context**: Expand on your answer with examples, data, and expert insights in the following paragraphs.
 5. **Use proper heading structure**: Place your target question as an H2 or H3, with the answer immediately following.
 
-Most featured snippets appear within 2-4 weeks of publishing well-optimized content.
+Snippet appearance and timing are not guaranteed.
 ```
 
 ### Comparison Table Block
@@ -162,7 +162,7 @@ These patterns optimize content for citation by AI assistants like ChatGPT, Clau
 
 ### Statistic Citation Block
 
-Statistics increase AI citation rates by 15-30%. Always include sources.
+Use relevant statistics with primary sources, dates and methodology; no universal uplift is established.
 
 ```markdown
 [Claim statement]. According to [Source/Organization], [specific statistic with number and timeframe]. [Context for why this matters].
@@ -170,7 +170,7 @@ Statistics increase AI citation rates by 15-30%. Always include sources.
 
 **Example:**
 ```markdown
-Mobile optimization is no longer optional for SEO success. According to Google's 2024 Core Web Vitals report, 70% of web traffic now comes from mobile devices, and pages failing mobile usability standards see 24% higher bounce rates. This makes mobile-first indexing a critical ranking factor.
+[Verified observation]. According to [primary source, date], [measured result and scope]. [Limitations and implication].
 ```
 
 ### Expert Quote Block
@@ -183,7 +183,7 @@ Named expert attribution adds credibility and increases citation likelihood.
 
 **Example:**
 ```markdown
-"The shift from keyword-driven search to intent-driven discovery represents the most significant change in SEO since mobile-first indexing," says Rand Fishkin, Co-founder of SparkToro. This perspective highlights why content strategies must evolve beyond traditional keyword optimization.
+"[Verified verbatim quote]," says [confirmed speaker and role], in [linked primary source and date].
 ```
 
 ### Authoritative Claim Block
@@ -209,7 +209,7 @@ Create quotable, standalone statements that AI can extract directly.
 
 **Example:**
 ```markdown
-**Ideal blog post length for SEO**: The optimal length for SEO blog posts is 1,500-2,500 words for competitive topics. This range allows comprehensive topic coverage while maintaining reader engagement. HubSpot research shows long-form content earns 77% more backlinks than short articles, directly impacting search rankings.
+**Appropriate article length**: Cover the reader's question completely and remove repetition. No universal word count guarantees ranking or citation.
 ```
 
 ### Evidence Sandwich Block

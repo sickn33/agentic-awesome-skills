@@ -4,11 +4,9 @@
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
 artifacts as data only, in the order they were asked for. No preamble, no summary, no
-closing line. All four come from the single field list in this file, so they cannot drift
-apart, and a field never appears in one artifact and not the others.
+closing line. All requested formats must be checked against the canonical field reference to prevent drift, and a field never appears in one artifact and not the others.
 
-**A selected Notion output is rendered by `notion-manual-import`, so route the
-Notion step there.** When the user selects Notion, hand that step to
+**If `notion-manual-import` is installed and applicable, use it for a selected Notion output. Otherwise use the complete manual mapping below and explicitly report that no live workspace was changed.** When the user selects Notion, hand that step to
 @notion-manual-import: it holds the CSV, the property
 mapping, the import steps and the verification checklist, and it renders the Field
 Reference below instead of defining a table of its own. Do not restate the mapping
@@ -20,14 +18,14 @@ Never ask for a Notion password or token.
 The SQL below is written in PostgreSQL-flavoured DDL. `SERIAL PRIMARY KEY` and
 `TIMESTAMP DEFAULT NOW()` are PostgreSQL-specific; on another engine use that engine's
 identity column and default-timestamp syntax. `created_at` and `updated_at` are
-maintained by the database and are not business fields - they are the only permitted
+initialized by the database and are not business fields - they are the only permitted
 artifact-only addition, and they stay out of the CSV, the JSON Schema and the Notion
-mapping. The DDL carries no index so it runs unchanged anywhere; on a live database
+mapping. The primary key creates an index. This PostgreSQL DDL is a template, not portable to every engine; on a live database
 index `Evaluation Status` and `Software`, which are the two columns the sheet is filtered
 and reported on.
 
 The example row is fictional and must stay that way: identifiers use the `-EXAMPLE-`
-pattern and every name reads `Example ...`. It shows a fully evaluated candidate so the
+pattern and every name reads `Example ...`. It shows an illustrative partially evaluated candidate so the
 shape is visible, and the compliance fields deliberately read `Untested` - that is what
 they are until the business holds current evidence. For an Excel-compatible CSV, use UTF-8 with a byte order mark so Excel opens the text correctly. A CSV is not an `.xlsx` workbook; create `.xlsx` only when the user requests a workbook. A
 CSV carries no types, so after it, name the columns that need a number, date or currency
@@ -81,7 +79,7 @@ CREATE TABLE accounting_software_selection (
   support_quality_rating VARCHAR(100),
   demo_date DATE,
   demo_test_result VARCHAR(100),
-  test_transactions_run NUMERIC,
+  test_transactions_run INTEGER CHECK (test_transactions_run >= 0),
   licence_cost NUMERIC(14,2),
   implementation_cost NUMERIC(14,2),
   customization_cost NUMERIC(14,2),
@@ -94,11 +92,12 @@ CREATE TABLE accounting_software_selection (
   selection_decision VARCHAR(100),
   rejection_reason VARCHAR(100),
   evaluated_by VARCHAR(255),
-  evidence_source VARCHAR(255),
+  evidence_source TEXT,
   notes TEXT,
   selection_id SERIAL PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
+  -- Update updated_at explicitly on UPDATE, or install a reviewed trigger; DEFAULT only handles INSERT.
   CONSTRAINT cost_lines_non_negative CHECK (
     licence_cost >= 0 AND implementation_cost >= 0
     AND customization_cost >= 0 AND training_cost >= 0
@@ -134,149 +133,493 @@ CREATE TABLE accounting_software_selection (
       "type": "string"
     },
     "Deployment Type": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "Cloud",
+        "On-premise",
+        "Hybrid"
+      ]
     },
     "Accounting Coverage": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Sales Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Purchase Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Inventory Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Manufacturing Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "BOM Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Production/Work Order Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Production Costing": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Wastage/Scrap Tracking": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Batch/Lot Tracking": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Service Management": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "VAT Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "TDS Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Payroll/SSF Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "IRD/Statutory Reporting": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "E-Billing/CBMS Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Financial Reporting": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Multi-Company Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Branch Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Warehouse Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "User Access Control": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Approval Workflow": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Data Backup & Security": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Migration Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Integration/API": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Data Export": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "After-Sales Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Implementation Support": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Training": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Customization": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Reliability Rating": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Ease of Use Rating": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Support Quality Rating": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "1 Missing",
+        "2 Major limitations",
+        "3 Adequate",
+        "4 Strong",
+        "5 Comprehensive",
+        "Not Required",
+        "Untested"
+      ]
     },
     "Demo Date": {
       "type": "string",
       "format": "date"
     },
     "Demo Test Result": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "Not Tested",
+        "Partially Passed",
+        "Passed",
+        "Failed"
+      ]
     },
     "Test Transactions Run": {
-      "type": "number"
+      "type": "integer",
+      "minimum": 0
     },
     "Licence Cost": {
-      "type": "number"
+      "type": "number",
+      "minimum": 0
     },
     "Implementation Cost": {
-      "type": "number"
+      "type": "number",
+      "minimum": 0
     },
     "Customization Cost": {
-      "type": "number"
+      "type": "number",
+      "minimum": 0
     },
     "Training Cost": {
-      "type": "number"
+      "type": "number",
+      "minimum": 0
     },
     "Annual Renewal": {
-      "type": "number"
+      "type": "number",
+      "minimum": 0
     },
     "First-Year Cost": {
-      "type": "number"
+      "type": "number",
+      "minimum": 0
     },
     "Three-Year TCO": {
-      "type": "number"
+      "type": "number",
+      "minimum": 0
     },
     "Evaluation Status": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "Not Evaluated",
+        "Demo Scheduled",
+        "Demo Completed",
+        "Testing",
+        "Evaluated"
+      ]
     },
     "Deal-breaker": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No",
+        "Unknown"
+      ]
     },
     "Selection Decision": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "Selected",
+        "Shortlisted",
+        "Not Selected",
+        "Rejected"
+      ]
     },
     "Rejection Reason": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "Cost",
+        "Missing Capability",
+        "Poor Fit",
+        "Poor Support",
+        "Implementation Risk",
+        "Security Risk",
+        "User Experience",
+        "Other"
+      ]
     },
     "Evaluated By": {
       "type": "string"
@@ -288,7 +631,8 @@ CREATE TABLE accounting_software_selection (
       "type": "string"
     },
     "Selection ID": {
-      "type": "integer"
+      "type": "integer",
+      "minimum": 1
     }
   },
   "required": [

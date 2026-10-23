@@ -89,8 +89,8 @@ python3 scripts/research.py --list
 ## Output Formats
 
 - **Default**: Human-readable markdown report
-- **JSON** (`--json`): Structured data for programmatic use
-- **Raw** (`--raw`): Unprocessed API response
+- **JSON** (`--json`): Parsed result text (or a text wrapper); this does not enforce a schema. Progress and returned IDs are on stderr in waiting polling mode. `--status --json` returns the status object, and `--list --json` returns history; `--no-wait` remains a human-readable acknowledgment.
+- **Raw** (`--raw`): Provider response for a waiting non-stream `--query`. Streaming is text-only and rejects JSON/raw/continuation combinations rather than silently ignoring them.
 
 ## Cost & Time
 

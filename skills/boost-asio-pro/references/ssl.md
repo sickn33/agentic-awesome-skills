@@ -4,6 +4,8 @@ Applies to every style — `ssl::stream<>` is a library feature, not a language 
 
 
 ```cpp
+// Sketch: define endpoint, request and bounded response_buf; use explicit completion tokens on older Asio.
+
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 
@@ -22,7 +24,8 @@ asio::awaitable<void> tls_client(asio::io_context& io) {
     co_await sock.async_connect(endpoint);
 
     // Set SNI hostname (required for most servers)
-    SSL_set_tlsext_host_name(stream.native_handle(), "example.com");
+    if (!SSL_set_tlsext_host_name(stream.native_handle(), "example.com"))
+        throw std::runtime_error("SNI setup failed");
     stream.set_verify_mode(ssl::verify_peer);
     stream.set_verify_callback(ssl::host_name_verification("example.com"));
 

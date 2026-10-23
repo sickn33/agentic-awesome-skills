@@ -8,6 +8,6 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 
 | Local file | Original upstream path | Original Git blob SHA | Import changes |
 | --- | --- | --- | --- |
-| `references/authoring.md` | `plugins/aws-iac/skills/aws-sst-development/references/authoring.md` | `3e7daad2d4b21f01ef6358bc145df88180e62876` | text-only trailing whitespace and EOF blank lines normalized |
-| `references/testing.md` | `plugins/aws-iac/skills/aws-sst-development/references/testing.md` | `1ca8e38fbd73d0f150097208689838df780722af` | text-only trailing whitespace and EOF blank lines normalized |
-| `references/deploy-and-troubleshoot.md` | `plugins/aws-iac/skills/aws-sst-development/references/deploy-and-troubleshoot.md` | `5dc51bdf9efd23b95e0e1505c2878f5ba17f33d4` | text-only trailing whitespace and EOF blank lines normalized |
+| `references/authoring.md` | `plugins/aws-iac/skills/aws-sst-development/references/authoring.md` | `3e7daad2d4b21f01ef6358bc145df88180e62876` | text normalized; local review corrects migration, runtime/secret, evidence and deployment guidance |
+| `references/testing.md` | `plugins/aws-iac/skills/aws-sst-development/references/testing.md` | `1ca8e38fbd73d0f150097208689838df780722af` | text normalized; local review corrects migration, runtime/secret, evidence and deployment guidance |
+| `references/deploy-and-troubleshoot.md` | `plugins/aws-iac/skills/aws-sst-development/references/deploy-and-troubleshoot.md` | `5dc51bdf9efd23b95e0e1505c2878f5ba17f33d4` | text normalized; local review corrects migration, runtime/secret, evidence and deployment guidance |

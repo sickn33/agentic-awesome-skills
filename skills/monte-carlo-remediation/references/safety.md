@@ -1,3 +1,5 @@
+<!-- Modified by AAS: clarified authorization, evidence and runtime boundaries. -->
+
 # Safety Rails
 
 Detailed safety protocols for the remediation skill. These rules are non-negotiable — they apply in every remediation scenario, regardless of severity or urgency.
@@ -24,16 +26,9 @@ These actions must not be executed without the user explicitly saying "yes", "go
 - **Incident escalation:** Paging on-call via PagerDuty, creating high-severity incidents
 - **Alert status changes:** Marking alerts as FIXED, EXPECTED, or NO_ACTION_NEEDED
 
-### Actions that do NOT require confirmation
+### Read-only investigation and external writes
 
-These are safe to execute without asking:
-
-- **Read-only investigation:** All Monte Carlo investigation tools (getAlerts, getTable, getAssetLineage, etc.)
-- **Adding comments:** `createOrUpdateAlertComment` — documenting findings is always safe
-- **Acknowledging alerts:** `updateAlert(status="ACKNOWLEDGED")` — this just signals awareness
-- **Setting ownership:** `setAlertOwner` — assigning someone to look at it
-- **Sending non-urgent notifications:** Posting informational messages to Slack channels (not paging)
-- **Status updates:** `updateAlert(status="WORK_IN_PROGRESS")` — tracking progress
+Read-only investigation within the user's scope may proceed. Comments, acknowledgement, ownership and progress status are external writes and require applicable user authorization; tool availability is not permission. Sending Slack/email/other notifications requires explicit user instruction, regardless of urgency. Redact sensitive query text and data from any authorized update.
 
 ### How to ask for confirmation
 
@@ -135,14 +130,14 @@ You should consider yourself "uncertain" and ask the user for direction when:
 **When in doubt, state your confidence level:**
 
 **Example:**
-> "I'm moderately confident (60-70%) that the root cause is [X], based on [evidence]. However, [alternative explanation] is also possible. I'd recommend [safer action] first. If that doesn't resolve it, the data platform team may need to investigate further. How would you like to proceed?"
+> "I have provisional evidence that the root cause is [X], based on [evidence]. However, [alternative explanation] is also possible. I'd recommend [safer action] first. If that doesn't resolve it, the data platform team may need to investigate further. How would you like to proceed?"
 
 ## Rollback planning
 
 Before executing any remediation action, have a rollback plan:
 
 ### For pipeline restarts
-- **Rollback:** If the rerun produces bad data, the previous good state is usually available in the warehouse's time travel / versioning feature. Note the timestamp before triggering.
+- **Rollback:** If the rerun produces bad data, verify whether a recoverable previous good state exists in the warehouse's time travel / versioning feature. Note the timestamp before triggering.
 
 ### For dbt reruns
 - **Rollback:** dbt models can be rebuilt from source. If a rerun produces bad results, fix the model and rerun again. For incremental models, note the last successful run timestamp.

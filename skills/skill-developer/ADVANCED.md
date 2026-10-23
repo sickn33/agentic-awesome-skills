@@ -6,7 +6,7 @@ Ideas and concepts for future improvements to the skill system.
 
 ## Dynamic Rule Updates
 
-**Current State:** Requires Claude Code restart to pick up changes to skill-rules.json
+**Illustrative custom-system state (verify actual implementation):** Requires Claude Code restart to pick up changes to skill-rules.json
 
 **Future Enhancement:** Hot-reload configuration without restart
 
@@ -25,7 +25,7 @@ Ideas and concepts for future improvements to the skill system.
 
 ## Skill Dependencies
 
-**Current State:** Skills are independent
+**Illustrative custom-system state (verify actual implementation):** Skills are independent
 
 **Future Enhancement:** Specify skill dependencies and load order
 
@@ -54,7 +54,7 @@ Ideas and concepts for future improvements to the skill system.
 
 ## Conditional Enforcement
 
-**Current State:** Enforcement level is static
+**Illustrative custom-system state (verify actual implementation):** Enforcement level is static
 
 **Future Enhancement:** Enforce based on context or environment
 
@@ -86,7 +86,7 @@ Ideas and concepts for future improvements to the skill system.
 
 ## Skill Analytics
 
-**Current State:** No usage tracking
+**Illustrative custom-system state (verify actual implementation):** No usage tracking
 
 **Future Enhancement:** Track skill usage patterns and effectiveness
 
@@ -113,7 +113,7 @@ Ideas and concepts for future improvements to the skill system.
 
 ## Skill Versioning
 
-**Current State:** No version tracking
+**Illustrative custom-system state (verify actual implementation):** No version tracking
 
 **Future Enhancement:** Version skills and track compatibility
 
@@ -139,7 +139,7 @@ Ideas and concepts for future improvements to the skill system.
 
 ## Multi-Language Support
 
-**Current State:** English only
+**Illustrative custom-system state (verify actual implementation):** English only
 
 **Future Enhancement:** Support multiple languages for skill content
 
@@ -157,7 +157,7 @@ Ideas and concepts for future improvements to the skill system.
 
 ## Skill Testing Framework
 
-**Current State:** Manual testing with npx tsx commands
+**Illustrative custom-system state (verify actual implementation):** Manual testing with npx tsx commands
 
 **Future Enhancement:** Automated skill testing
 

@@ -18,7 +18,7 @@ project-name/
 │   │   │   └── register/page.tsx
 │   │   ├── (dashboard)/            # Route group - dashboard layout
 │   │   │   ├── layout.tsx
-│   │   │   └── page.tsx
+│   │   │   └── dashboard/page.tsx
 │   │   └── api/
 │   │       └── [resource]/route.ts
 │   │
@@ -67,7 +67,7 @@ project-name/
 | Principle | Implementation |
 |-----------|----------------|
 | **Feature isolation** | Each feature in `features/` with its own components, hooks, actions |
-| **Server/Client separation** | Server-only code in `server/`, prevents accidental client imports |
+| **Server/Client separation** | Folder names alone do not prevent client imports; enforce server-only boundaries and keep secrets out of rendered props |
 | **Thin routes** | `app/` only for routing, logic lives in `features/` |
 | **Route groups** | `(groupName)/` for layout sharing without URL impact |
 | **Shared code** | `shared/` for truly reusable UI and utilities |

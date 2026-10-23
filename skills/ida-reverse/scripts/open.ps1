@@ -68,18 +68,9 @@ else {
     }
 }
 
-# Prefer a short temp root to avoid MAX_PATH issues on Windows.
-$TempDir = 'C:\rs-ida'
-if (-not (Test-Path -LiteralPath $TempDir)) {
-    try {
-        New-Item -ItemType Directory -Path $TempDir -Force | Out-Null
-    } catch {
-        $TempDir = Join-Path $env:TEMP 'rs-ida'
-        if (-not (Test-Path -LiteralPath $TempDir)) {
-            New-Item -ItemType Directory -Path $TempDir -Force | Out-Null
-        }
-    }
-}
+# Use a fresh per-run directory; never share or overwrite predictable temp copies.
+$TempDir = Join-Path ([System.IO.Path]::GetTempPath()) ('rs-ida-' + [System.Guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path $TempDir -ErrorAction Stop | Out-Null
 $PollIntervalMs = 2000
 $ProgressIntervalSeconds = 10
 
@@ -148,7 +139,7 @@ function Get-OpenReadySession {
         $sid = [string]$candidate.session_id
         if ([string]::IsNullOrWhiteSpace($sid)) { continue }
 
-        if (($sameSession -or $samePath) -and -not $isAnalyzing) {
+        if ($sameSession -and $samePath -and -not $isAnalyzing) {
             return $candidate
         }
     }

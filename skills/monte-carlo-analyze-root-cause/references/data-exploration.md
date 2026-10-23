@@ -10,12 +10,12 @@ Adjust SQL syntax based on the warehouse type. Common differences:
 
 | Pattern | Snowflake | BigQuery | Redshift |
 |---------|-----------|----------|----------|
-| Date subtraction | `DATEADD('day', -7, CURRENT_TIMESTAMP())` | `DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 7 DAY)` | `DATEADD(day, -7, GETDATE())` |
+| Date subtraction | `DATEADD('day', -7, CURRENT_TIMESTAMP())` | `TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 7 DAY)` | `DATEADD(day, -7, GETDATE())` |
 | Timestamp truncation | `DATE_TRUNC('hour', ts)` | `TIMESTAMP_TRUNC(ts, HOUR)` | `DATE_TRUNC('hour', ts)` |
 | String concatenation | `col1 || col2` | `CONCAT(col1, col2)` | `col1 || col2` |
 | Approximate count | `APPROX_COUNT_DISTINCT(col)` | `APPROX_COUNT_DISTINCT(col)` | `SELECT COUNT(DISTINCT col)` |
 
-If you're unsure of the dialect, try Snowflake syntax first — error messages will indicate the correct dialect.
+Identify the warehouse and dialect before running SQL; do not probe production with guessed syntax.
 
 ## Investigation queries
 
@@ -142,8 +142,10 @@ LIMIT 20
 
 ## Rules for data exploration
 
-- **Always LIMIT queries** — never run unbounded SELECTs. Start with LIMIT 20, increase only if needed.
+- **Bound query cost and disclosure** — LIMIT bounds returned rows, not bytes scanned or sort/aggregation cost. Use partition filters, query estimates, timeouts and read-only credentials. Select necessary columns instead of sensitive SELECT * samples.
 - **Use time filters** — always scope to the relevant time window around the incident.
 - **Start broad, then narrow** — sample rows first, then targeted aggregations.
 - **Compare before vs after** — the most powerful investigation pattern.
 - **Follow the data upstream** — if this table looks wrong, check the source it reads from.
+
+<!-- Modified locally: evidence, SQL safety or paid-run corrections. -->

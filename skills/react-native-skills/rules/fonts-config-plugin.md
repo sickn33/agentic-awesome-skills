@@ -64,8 +64,7 @@ function App() {
 }
 ```
 
-After adding fonts to the config plugin, run `npx expo prebuild` and rebuild the
-native app.
+Embedding requires a native rebuild (not Expo Go). Use the installed Expo CLI and review prebuild/native file changes first; it can regenerate platform files. On iOS, the font family comes from font metadata and may differ from the filename.
 
 Reference:
 [Expo Font Documentation](https://docs.expo.dev/versions/latest/sdk/font/)

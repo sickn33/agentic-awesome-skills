@@ -225,7 +225,6 @@ Treat the names below as candidates. Check the live installed catalog and read t
 
 ### Document creation
 - Word doc: `@docx-official`
-- PDF: `@pdf-official`
 - Spreadsheet: `@xlsx-official`
 - Presentation: `@pptx-official`
 

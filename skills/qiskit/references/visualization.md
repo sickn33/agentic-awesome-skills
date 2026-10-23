@@ -130,7 +130,7 @@ plot_histogram(counts, bar_labels=True)
 
 # Set target distribution (for comparison)
 target = {'00': 0.5, '11': 0.5}
-plot_histogram(counts, target=target)
+plot_histogram([counts, target], legend=["Observed", "Target"])
 ```
 
 ## State Visualization
@@ -140,17 +140,17 @@ plot_histogram(counts, target=target)
 Visualize single-qubit states on the Bloch sphere:
 
 ```python
-from qiskit.visualization import plot_bloch_vector
+from qiskit.visualization import plot_bloch_vector, plot_bloch_multivector
 from qiskit.quantum_info import Statevector
 import numpy as np
 
 # Visualize a specific state vector
 # State |+⟩: equal superposition of |0⟩ and |1⟩
 state = Statevector.from_label('+')
-plot_bloch_vector(state.to_bloch())
+plot_bloch_multivector(state)
 
 # Custom vector
-plot_bloch_vector([0, 1, 0])  # |+⟩ state on X-axis
+plot_bloch_vector([1, 0, 0])  # |+⟩ state on X-axis
 ```
 
 ### Multi-Qubit Bloch Sphere
@@ -209,7 +209,7 @@ plot_state_hinton(state)
 ## Density Matrix Visualization
 
 ```python
-from qiskit.visualization import plot_state_density
+from qiskit.visualization import plot_state_city
 from qiskit.quantum_info import DensityMatrix
 
 qc = QuantumCircuit(2)
@@ -217,7 +217,7 @@ qc.h(0)
 qc.cx(0, 1)
 
 state = DensityMatrix.from_instruction(qc)
-plot_state_density(state)
+plot_state_city(state)
 ```
 
 ## Gate Map Visualization
@@ -229,13 +229,13 @@ from qiskit.visualization import plot_gate_map
 from qiskit_ibm_runtime import QiskitRuntimeService
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 # Show qubit connectivity
 plot_gate_map(backend)
 
 # Show with error rates
-plot_gate_map(backend, plot_error_rates=True)
+plot_error_map(backend)
 ```
 
 ## Error Map Visualization
@@ -258,32 +258,11 @@ transpiled_qc = transpile(qc, backend=backend)
 plot_circuit_layout(transpiled_qc, backend)
 ```
 
-## Pulse Visualization
+## Legacy Pulse and Composer Examples
 
-For pulse-level control:
-
-```python
-from qiskit import pulse
-from qiskit.visualization import pulse_drawer
-
-# Create pulse schedule
-with pulse.build(backend) as schedule:
-    pulse.play(pulse.Gaussian(duration=160, amp=0.1, sigma=40), pulse.drive_channel(0))
-
-# Visualize
-schedule.draw()
-```
-
-## Interactive Widgets (Jupyter)
-
-### Circuit Composer Widget
-
-```python
-from qiskit.tools.jupyter import QuantumCircuitComposer
-
-composer = QuantumCircuitComposer()
-composer.show()
-```
+Pulse APIs and `qiskit.tools.jupyter.QuantumCircuitComposer` are historical
+interfaces, not portable SDK 2.x examples. Use the installed release's supported
+visualization API or IBM's web Composer instead.
 
 ### Interactive State Visualization
 

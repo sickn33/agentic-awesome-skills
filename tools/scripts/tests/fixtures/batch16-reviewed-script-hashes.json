@@ -1,0 +1,7 @@
+{
+  "skills/drizzle-migration-conflict/scripts/check_drizzle_migrations.py": "6f6096c3ace94bf4ec2a30c2a82234d964454dba544c3cc1578e88a6fbd76810",
+  "skills/diary/scripts/master_diary_sync.py": "c80d5f2a29114b6c42d0562acabb8b5cef545734c421ef5add0f52465b25c3bc",
+  "skills/youtube-notetaker/scripts/serve.py": "849ec65a3653110ddc5dcd39a128e5f215b5981711341f15473e9e8968e2951a",
+  "skills/audio-transcriber/examples/basic-transcription.sh": "b36877b86332ca33f36fc45041c9e1dd61dfb68d230f400cc779dfa16afafe5a",
+  "skills/shopify-development/scripts/shopify_graphql.py": "4406b00ca1dc0966d8dfbf6e5248973a83f71a465c6f4799bc079be8213707ba"
+}

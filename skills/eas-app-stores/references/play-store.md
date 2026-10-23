@@ -14,7 +14,7 @@ Once these are complete, the default `eas submit` works for a first-time submiss
 
 1. Go to Google Cloud Console → IAM & Admin → Service Accounts
 2. Create a new service account
-3. Grant the "Service Account User" role
+3. Grant only the Cloud/Play permissions required by the current official setup; Service Account User alone is not Play publishing permission
 4. Create and download a JSON key
 
 ### 2. Link to Play Console
@@ -43,34 +43,9 @@ Add the service account key path to `eas.json`:
 
 Store the key file securely and add it to `.gitignore`.
 
-## Environment Variables
+## CI credentials
 
-For CI/CD, use environment variables instead of file paths:
-
-```bash
-# Base64-encoded service account JSON
-EXPO_ANDROID_SERVICE_ACCOUNT_KEY_BASE64=...
-```
-
-Or use EAS Secrets:
-
-```bash
-eas secret:create --name GOOGLE_SERVICE_ACCOUNT --value "$(cat google-service-account.json)" --type file
-```
-
-Then reference in `eas.json`:
-
-```json
-{
-  "submit": {
-    "production": {
-      "android": {
-        "serviceAccountKeyPath": "@secret:GOOGLE_SERVICE_ACCOUNT"
-      }
-    }
-  }
-}
-```
+Use the Google Service Account key assigned to the exact Android app in EAS Credentials, or set serviceAccountKeyPath to an actual securely provisioned CI file path. Do not assume an arbitrary base64 environment variable or @secret: pseudo-path is consumed by EAS Submit. Keep keys out of Git, command arguments, logs and build archives. See the current [Expo Android submission guide](https://docs.expo.dev/submit/android/).
 
 ## Release Tracks
 
@@ -198,7 +173,7 @@ Increment `versionCode` in `app.json` or use `autoIncrement: true` in `eas.json`
 
 ### "Service account lacks permission"
 
-Ensure the service account has "Release to production" permission in Play Console → API access.
+Check app-specific permissions for the intended track; do not grant production release permission just to fix internal testing.
 
 ### "APK not acceptable"
 

@@ -7,12 +7,14 @@ ability inline** using public APIs and short, self-contained snippets you run at
 How to use a guideline:
 
 1. Pick the ability you need below.
-2. Run the inline snippet (adjust inputs) in an ephemeral scratch file or terminal — do not save it
+2. Review and adapt the illustrative snippet (adjust inputs and guards) before running in an ephemeral scratch file or terminal — do not save it
    into the skill, since the skill keeps only `references/`.
 3. Place the returned local asset path into `layout_tree.objects` with `content.path`, `content.alt`,
    `bbox`, `z_index`, and `classification`.
 
 Shared rules:
+
+- Download snippets below are incomplete sketches: validate HTTPS hosts and redirects, reject local/private destinations and untrusted path components, cap response bytes and image dimensions, validate content type/SVG safety, and use exclusive non-symlink output creation before use. Never pass confidential source text into a public search query.
 
 - Always return a **local file path** for any placed asset, plus `content.alt`.
 - Record provenance (`source`, `license`, `provider`, `model`) for audits.
@@ -114,6 +116,8 @@ from openai import OpenAI, AzureOpenAI  # provided by the user's environment
 def text_to_infographic(prompt, output_path, provider="openai",
                         model_or_deployment="gpt-image-1", size="1024x1024",
                         confirmed=False, allow_overwrite=False):
+    if provider not in {"openai", "azure-openai"}:
+        raise ValueError("Unsupported provider")
     output = Path(output_path)
     manifest_path = output.with_suffix(".manifest.json")
     existing = [path for path in (output, manifest_path) if path.exists()]

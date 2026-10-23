@@ -30,7 +30,6 @@ Use this workflow when:
 #### Skills to Invoke
 - `libreoffice-writer` - LibreOffice Writer
 - `docx-official` - Microsoft Word
-- `pdf-official` - PDF handling
 
 #### Actions
 1. Design document template
@@ -104,7 +103,6 @@ Use @frontend-slides to create HTML presentations
 #### Skills to Invoke
 - `libreoffice-writer` - Document conversion
 - `libreoffice-calc` - Spreadsheet conversion
-- `pdf-official` - PDF conversion
 
 #### Actions
 1. Identify source format

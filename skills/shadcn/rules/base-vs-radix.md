@@ -84,7 +84,7 @@ Same for triggers whose `render` is not a `Button`:
 
 ## Select
 
-**items prop (base only).** Base requires an `items` prop on the root. Radix uses inline JSX only.
+**items prop (base only).** Use `items` to supply labels for values as required by the installed wrapper; it is not universally required by the primitive. Radix uses inline JSX only.
 
 **Incorrect (base):**
 
@@ -133,7 +133,7 @@ const items = [
 </Select>
 ```
 
-**Placeholder.** Base uses a `{ value: null }` item in the items array. Radix uses `<SelectValue placeholder="...">`.
+**Placeholder.** Current Base UI primitives also support a `Select.Value` placeholder. Check the installed shadcn wrapper; a null-label item is one supported data pattern, not a universal requirement. Radix uses `<SelectValue placeholder="...">`.
 
 **Content positioning.** Base uses `alignItemWithTrigger`. Radix uses `position`.
 
@@ -226,7 +226,7 @@ Base uses a `multiple` boolean prop. Radix uses `type="single"` or `type="multip
 ```tsx
 // base — wrap/unwrap arrays.
 const [value, setValue] = React.useState("normal")
-<ToggleGroup value={[value]} onValueChange={(v) => setValue(v[0])}>
+<ToggleGroup value={[value]} onValueChange={(v) => setValue(v[0] ?? "")}>
 
 // radix — plain string.
 const [value, setValue] = React.useState("normal")
@@ -237,9 +237,9 @@ const [value, setValue] = React.useState("normal")
 
 ## Slider
 
-Base accepts a plain number for a single thumb. Radix always requires an array.
+Base supports a number or number array, including a one-element array for one thumb. Radix requires an array. Check the installed wrapper type.
 
-**Incorrect (base):**
+**Also valid for a compatible Base wrapper:**
 
 ```tsx
 <Slider defaultValue={[50]} max={100} step={1} />
@@ -273,7 +273,7 @@ const [value, setValue] = React.useState([0.3, 0.7])
 
 ## Accordion
 
-Radix requires `type="single"` or `type="multiple"` and supports `collapsible`. `defaultValue` is a string. Base uses no `type` prop, uses `multiple` boolean, and `defaultValue` is always an array.
+Radix requires `type="single"` or `type="multiple"` and supports `collapsible` for single mode. `defaultValue` is a string in single mode and an array in multiple mode. Base uses no `type` prop, uses `multiple` boolean, and `defaultValue` is always an array.
 
 **Incorrect (base):**
 

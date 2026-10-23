@@ -29,7 +29,7 @@ create policy orders_policy on orders
 
 Use security definer functions for complex checks:
 
-`SECURITY DEFINER` functions run with the creator's privileges and bypass RLS on any tables they touch — which is what makes them useful for internal lookups, but also what makes them dangerous if misused. Always include an explicit `auth.uid()` check inside the function body, keep them in a non-exposed schema, and revoke `EXECUTE` from any role that shouldn't call them directly.
+`SECURITY DEFINER` functions run with their owner's privileges; RLS bypass depends on ownership/BYPASSRLS/FORCE RLS, not SECURITY DEFINER alone — which is what makes them useful for internal lookups, but also what makes them dangerous if misused. Always include an explicit `auth.uid()` check inside the function body, keep them in a non-exposed schema, and revoke `EXECUTE` from any role that shouldn't call them directly.
 
 ```sql
 -- Create helper function in a private schema
@@ -42,14 +42,17 @@ as $$
   select exists (
     select 1 from public.team_members
     -- always check the calling user's identity inside the function
-    where team_id = $1 and user_id = (select auth.uid())
+    where team_members.team_id = $1 and team_members.user_id = (select auth.uid())
   );
 $$;
 
 -- Revoke direct execution from public roles
-revoke execute on function private.is_team_member(bigint) from PUBLIC, anon, authenticated, service_role;
+revoke execute on function private.is_team_member(bigint) from PUBLIC, anon;
+-- The policy caller needs EXECUTE; keep private schema out of exposed RPC schemas.
+grant usage on schema private to authenticated;
+grant execute on function private.is_team_member(bigint) to authenticated;
 
--- Use in policy (indexed lookup, not per-row check)
+-- Correlated team_id varies per row; SELECT wrapping does not make this globally once-only
 create policy team_orders_policy on orders
   using ((select private.is_team_member(team_id)));
 ```

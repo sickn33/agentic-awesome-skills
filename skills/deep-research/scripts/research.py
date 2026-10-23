@@ -182,7 +182,7 @@ class DeepResearchClient:
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         if not self.api_key:
             raise DeepResearchError(
-                "GEMINI_API_KEY not set. Set it in .env or environment variables."
+                "GEMINI_API_KEY not set. Inject it through the approved host environment; .env is not loaded."
             )
         self._client = None
         self.timeout = int(os.getenv("DEEP_RESEARCH_TIMEOUT", "600"))
@@ -411,7 +411,7 @@ class DeepResearchClient:
                     if received > 4 * 1024 * 1024 or asyncio.get_event_loop().time() - start > self.timeout:
                         yield {"type": "error", "error": "Stream limit reached; remote job may continue. Query its existing ID"}
                         return
-                    buffer += chunk.replace("\r\n", "\n")
+                    buffer = (buffer + chunk).replace("\r\n", "\n")
                     if len(buffer) > 1024 * 1024:
                         yield {"type": "error", "error": "SSE event exceeds limit"}
                         return
@@ -424,12 +424,12 @@ class DeepResearchClient:
                             continue
 
                         # Parse SSE format
-                        data_line = None
+                        data_lines = []
                         for line in event_str.split("\n"):
-                            if line.startswith("data: "):
-                                data_line = line[6:]
-                                break
-
+                            if line.startswith("data:"):
+                                value = line[5:]
+                                data_lines.append(value[1:] if value.startswith(" ") else value)
+                        data_line = "\n".join(data_lines)
                         if not data_line:
                             continue
 
@@ -444,7 +444,10 @@ class DeepResearchClient:
                         event_type = event.get("event_type", "")
 
                         if event_type in {"interaction.created", "interaction.start"}:
-                            interaction_id = event.get("interaction", {}).get("id")
+                            interaction = event.get("interaction")
+                            if not isinstance(interaction, dict):
+                                raise DeepResearchError("Malformed stream interaction")
+                            interaction_id = checked_interaction_id(interaction.get("id"))
                             if interaction_id:
                                 self.history.add_interaction(interaction_id, query, "streaming")
                             yield {"type": "start", "interaction_id": interaction_id}
@@ -473,7 +476,7 @@ class DeepResearchClient:
 
                 if not complete:
                     yield {"type": "error", "error": "Stream ended without completion; query the existing interaction ID, do not create a replacement job"}
-        except httpx.HTTPError:
+        except (httpx.HTTPError, DeepResearchError, AttributeError, TypeError):
             yield {"type": "error", "error": "Stream transport failed; remote work may continue"}
 
     def parse_result(self, text: str) -> Optional[Dict]:
@@ -518,7 +521,7 @@ def print_progress(poll_count: int, elapsed: float, status: str):
     """Print progress update during polling."""
     mins = int(elapsed // 60)
     secs = int(elapsed % 60)
-    print(f"\r[{mins:02d}:{secs:02d}] Poll #{poll_count} - Status: {status}", end="", flush=True)
+    print(f"\r[{mins:02d}:{secs:02d}] Poll #{poll_count} - Status: {status}", end="", flush=True, file=sys.stderr)
 
 
 async def cmd_research(args):
@@ -555,25 +558,25 @@ async def cmd_research(args):
             # Polling mode
             previous_id = args.continue_from if hasattr(args, 'continue_from') else None
 
-            print(f"Starting research task...")
+            print("Starting research task...", file=sys.stderr)
             interaction_id = await client.start_research(
                 args.query,
                 args.format,
                 previous_id
             )
-            print(f"Interaction ID: {interaction_id}")
-            print("Duration and cost depend on current provider usage; local waiting is bounded\n")
+            print(f"Interaction ID: {interaction_id}", file=sys.stderr)
+            print("Duration and cost depend on current provider usage; local waiting is bounded\n", file=sys.stderr)
 
             if args.no_wait:
                 print(f"Research started. Check status with: --status {interaction_id}")
                 return 0
 
-            print("Waiting for completion (Ctrl+C stops local waiting, not the remote job)...")
+            print("Waiting for completion (Ctrl+C stops local waiting, not the remote job)...", file=sys.stderr)
             result = await client.wait_for_completion(
                 interaction_id,
                 progress_callback=print_progress
             )
-            print()  # New line after progress
+            print(file=sys.stderr)  # New line after progress
 
             if result["status"] == "completed":
                 text = result.get("result", "")
@@ -638,12 +641,12 @@ async def cmd_wait(args):
     client = DeepResearchClient()
 
     try:
-        print(f"Waiting for {args.interaction_id}...")
+        print(f"Waiting for {args.interaction_id}...", file=sys.stderr)
         result = await client.wait_for_completion(
             args.interaction_id,
             progress_callback=print_progress
         )
-        print()
+        print(file=sys.stderr)
 
         if result["status"] == "completed":
             text = result.get("result", "")
@@ -769,6 +772,12 @@ Note: Paid external research requires account/data/budget authorization. Timeout
 
     args = parser.parse_args()
 
+    if args.json and args.raw:
+        parser.error("--json and --raw are mutually exclusive")
+    if args.stream and (args.continue_from or args.json or args.raw):
+        parser.error("--stream does not support --continue, --json or --raw; use polling mode")
+    if args.raw and (not args.query or args.no_wait):
+        parser.error("--raw requires a waiting non-stream --query")
     if args.stream and args.no_wait:
         parser.error("--stream and --no-wait are mutually exclusive")
     if not args.query and (args.stream or args.no_wait or args.continue_from or args.format):

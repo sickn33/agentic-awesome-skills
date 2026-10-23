@@ -39,6 +39,7 @@ export const MyComponent: React.FC = () => {
   const fetchCaptions = useCallback(async () => {
     try {
       const response = await fetch(staticFile('subtitles.srt'));
+      if (!response.ok) throw new Error(`Caption fetch failed: ${response.status}`);
       const text = await response.text();
       const {captions: parsed} = parseSrt({input: text});
       setCaptions(parsed);

@@ -1,5 +1,7 @@
 # Product Requirements Document (PRD) Templates
 
+Illustrative fields, dates, effort allocations and launch targets; replace with confirmed evidence or labeled hypotheses. They do not establish a completed security review, approved budget or launch authorization.
+
 ## Standard PRD Template
 
 ### 1. Executive Summary
@@ -147,7 +149,7 @@ Acceptance Criteria:
 | Metric | Target | Measurement Method |
 |--------|--------|-------------------|
 | Adoption Rate | X% | Daily Active Users |
-| User Satisfaction | X/10 | NPS Score |
+| User Satisfaction | Defined CSAT target or NPS target (-100 to 100) | State survey question, scale, sample and method |
 | Revenue Impact | $X | Monthly Recurring Revenue |
 | Performance | <Xms | P95 Response Time |
 

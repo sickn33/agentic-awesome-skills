@@ -77,8 +77,8 @@ def inspect_video(file_path, raw=False):
 
     # Parse duration
     try:
-        duration_val = float(duration) if duration else 0.0
-        duration_str = f"{duration_val:.2f}s"
+        duration_val = float(duration) if duration else None
+        duration_str = f"{duration_val:.2f}s" if duration_val is not None else "Unknown"
     except ValueError:
         duration_str = "Unknown"
         duration_val = None

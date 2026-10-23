@@ -33,6 +33,7 @@ import express from "express";
 import { DBOS } from "@dbos-inc/dbos-sdk";
 
 const app = express();
+app.use(express.json({ limit: "64kb" }));
 
 async function processTaskFn(data: string) {
   // ...
@@ -40,6 +41,10 @@ async function processTaskFn(data: string) {
 const processTask = DBOS.registerWorkflow(processTaskFn);
 
 app.post("/process", async (req, res) => {
+  if (typeof req.body?.data !== "string") {
+    res.status(400).json({ error: "data must be a string" });
+    return;
+  }
   const handle = await DBOS.startWorkflow(processTask)(req.body.data);
   res.json({ workflowID: handle.workflowID });
 });
@@ -55,7 +60,7 @@ async function main() {
   });
 }
 
-main().catch(console.log);
+main().catch(error => { console.error(error); process.exitCode = 1; });
 ```
 
 Reference: [Integrating DBOS](https://docs.dbos.dev/typescript/integrating-dbos)

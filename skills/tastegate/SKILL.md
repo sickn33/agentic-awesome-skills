@@ -67,10 +67,9 @@ python3 skills/tastegate/scripts/gate.py <path/to/index.html or http://localhost
 
 It renders the page in headless Chromium at 390x844 and 1440x900, prints every finding with
 its rule, viewport and element, saves full-page screenshots, and exits 1 while any **fail**
-finding is open. First run only: `pip install playwright && python3 -m playwright install chromium`.
+finding is open. In a dedicated virtual environment, install a reviewed Playwright version and its matching Chromium using that environment’s Python. Browser downloads and page loads need network access.
 
-Fix every fail finding in one batch, then run the gate again. Warnings are judgment calls:
-fix them unless the brief asked for that thing.
+Inspect each finding against the actual rendered page before changing it; geometric and CSS heuristics can produce false positives. Fix confirmed mechanical failures and rerun with a fresh `--out` directory. Style warnings are judgment calls governed by the brief, brand and accessibility needs.
 
 ### Step 4: Look at it yourself
 
@@ -92,7 +91,7 @@ scroll from an un-wrapped feature row. Three real defects, none visible in the m
 The gate names what "AI slop" actually is on this page: a purple-to-blue gradient hero,
 gradient heading text, emoji feature icons, an uppercase eyebrow over every section, the
 system font stack as the display voice, and three equal cards carrying the structure. Each
-is a line item to fix, not a matter of opinion.
+is a style warning to assess against the brief, not objective evidence of poor quality.
 
 ## Best Practices
 
@@ -105,6 +104,7 @@ is a line item to fix, not a matter of opinion.
 
 ## Limitations
 
+- A zero-failure result covers only these two viewports and heuristic checks, not all widths or interactions. Contrast skips image/gradient backgrounds and modern unsupported color formats, ignores some opacity/occlusion, and does not inspect shadow DOM or iframe contents. Placeholder text contrast and alt-text quality are not comprehensively checked.
 - The gate checks mechanics. It cannot tell you the page is boring, off-brand or wrong for the audience: step 4 is not optional.
 - It needs Playwright and headless Chromium installed, and a page it can reach (a file path or a local server).
 - A brief that pins fonts, colors or an era overrides the craft floor.
@@ -113,7 +113,7 @@ is a line item to fix, not a matter of opinion.
 ## Security & Safety Notes
 
 - `scripts/gate.py` launches headless Chromium and loads the URL or file you give it. Point it at your own page or a local server, in a local or authorized test environment; it will fetch whatever that page fetches.
-- It is read-only against your project: it renders, measures and writes screenshots plus findings into the `--out` directory. It does not edit source files.
+- The script does not edit project source, but loading a page executes its JavaScript and network requests, which can mutate server state. Use an isolated authorized test environment without production sessions; this is not an offline or read-only guarantee. Reports can contain DOM text, URLs and console output: keep output private.
 
 ## Files
 

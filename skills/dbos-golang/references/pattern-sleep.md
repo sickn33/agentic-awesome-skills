@@ -44,8 +44,8 @@ Use cases:
 ```go
 func scheduledTask(ctx dbos.DBOSContext, task string) (string, error) {
 	// Sleep for one week
-	dbos.Sleep(ctx, 7*24*time.Hour)
-	return processTask(task)
+	if _, err := dbos.Sleep(ctx, 7*24*time.Hour); err != nil { return "", err }
+	return dbos.RunAsStep(ctx, func(stepCtx context.Context) (string, error) { return processTask(task) }, dbos.WithStepName("processTask"))
 }
 ```
 

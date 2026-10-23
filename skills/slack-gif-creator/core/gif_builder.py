@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+Modified in catalog review: validate bounded RGB inputs and copy supplied arrays.
+
 GIF Builder - Core module for assembling frames into GIFs optimized for Slack.
 
 This module provides the main interface for creating GIFs from programmatically
@@ -26,6 +28,10 @@ class GIFBuilder:
             height: Frame height in pixels
             fps: Frames per second
         """
+        if not (isinstance(width, int) and isinstance(height, int) and 1 <= width <= 4096 and 1 <= height <= 4096):
+            raise ValueError("dimensions must be integers from 1 to 4096")
+        if not isinstance(fps, (int, float)) or not np.isfinite(fps) or not 0 < fps <= 100:
+            raise ValueError("fps must be finite and between 0 and 100")
         self.width = width
         self.height = height
         self.fps = fps
@@ -41,6 +47,11 @@ class GIFBuilder:
         if isinstance(frame, Image.Image):
             frame = np.array(frame.convert("RGB"))
 
+        if not isinstance(frame, np.ndarray) or frame.dtype != np.uint8 or frame.ndim != 3 or frame.shape[2] != 3:
+            raise ValueError("frame must be an RGB uint8 array or PIL image")
+        if sum(f.nbytes for f in self.frames) + self.width * self.height * 3 > 256 * 1024 * 1024:
+            raise ValueError("frame storage exceeds 256 MiB limit")
+
         # Ensure frame is correct size
         if frame.shape[:2] != (self.height, self.width):
             pil_frame = Image.fromarray(frame)
@@ -49,7 +60,7 @@ class GIFBuilder:
             )
             frame = np.array(pil_frame)
 
-        self.frames.append(frame)
+        self.frames.append(frame.copy())
 
     def add_frames(self, frames: list[np.ndarray | Image.Image]):
         """Add multiple frames at once."""
@@ -69,6 +80,8 @@ class GIFBuilder:
         Returns:
             List of color-optimized frames
         """
+        if not isinstance(num_colors, int) or not 2 <= num_colors <= 256:
+            raise ValueError("num_colors must be from 2 to 256")
         optimized = []
 
         if use_global_palette and len(self.frames) > 1:
@@ -212,7 +225,7 @@ class GIFBuilder:
                     f"  Reducing frames from {len(self.frames)} to ~12 for emoji size"
                 )
                 # Keep every nth frame to get close to 12 frames
-                keep_every = max(1, len(self.frames) // 12)
+                keep_every = max(1, (len(self.frames) + 11) // 12)
                 self.frames = [
                     self.frames[i] for i in range(0, len(self.frames), keep_every)
                 ]

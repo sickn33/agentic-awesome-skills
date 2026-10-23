@@ -12,7 +12,7 @@ license_source: https://github.com/neondatabase/agent-skills/blob/main/LICENSE
 
 # Neon Functions
 
-This is a preview feature and only available in `us-east-2`. Neon Functions are long-running Node.js HTTP handlers deployed onto a Neon branch. Each function gets a public HTTPS URL, runs in the same region as your database, and — if the branch has Postgres — gets `DATABASE_URL` injected automatically. You deploy and manage them through the same Neon CLI, `neon.ts`, and API you already use.
+This document describes an upstream preview snapshot; verify current regions, access and billing against the official docs before provisioning. Neon Functions are long-running Node.js HTTP handlers deployed onto a Neon branch. Each function gets a public HTTPS URL, runs in the same region as your database, and — if the branch has Postgres — gets `DATABASE_URL` injected automatically. You deploy and manage them through the same Neon CLI, `neon.ts`, and API you already use.
 
 Use this skill to help the user define, run locally, deploy, and manage functions next to their database. Deliver a deployed function with its invocation URL, a working local `neon dev` loop, or a precise answer from the official Neon docs.
 
@@ -345,17 +345,18 @@ When you only need **server → client** streaming (live counters, notifications
 // src/index.ts — minimal SSE endpoint
 const encoder = new TextEncoder();
 export default {
-  fetch: () =>
-    new Response(
-      new ReadableStream<Uint8Array>({
-        start(controller) {
-          controller.enqueue(encoder.encode("data: hello\n\n"));
-          const t = setInterval(() => controller.enqueue(encoder.encode(": ping\n\n")), 25_000);
-          return () => clearInterval(t); // fires when the client disconnects
-        },
-      }),
-      { headers: { "Content-Type": "text/event-stream", "Cache-Control": "no-cache, no-transform" } },
-    ),
+  fetch: () => {
+    let timer: ReturnType<typeof setInterval>;
+    return new Response(new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(encoder.encode("data: hello\n\n"));
+        timer = setInterval(() => {
+          if ((controller.desiredSize ?? 0) > 0) controller.enqueue(encoder.encode(": ping\n\n"));
+        }, 25_000);
+      },
+      cancel() { clearInterval(timer); },
+    }), {headers: {"Content-Type": "text/event-stream", "Cache-Control": "no-cache, no-transform"}});
+  },
 };
 ```
 
@@ -385,7 +386,7 @@ Functions are long-running but **still serverless** — they are a request/respo
 
 - **Time to first byte: 15 minutes.** Your handler must _begin_ returning a response within 15 minutes of receiving a request. Most handlers finish in seconds; the 15-minute ceiling exists so agent workloads like image/video generation have room.
 - **Heartbeat: 15 minutes.** Open WebSocket/SSE connections stay alive as long as data flows. The timeout only fires when a connection goes silent — send at least one byte every 15 minutes to keep a quiet stream alive.
-- **`waitUntil`: 15 minutes.** Work registered with `waitUntil` keeps the invocation alive after the response is sent, up to 15 minutes — for cleanup like analytics writes and audit logs, **not** a background job runner. (`waitUntil` from `@neon/functions` is currently a stub during the preview.)
+- **`waitUntil`: 15 minutes.** Work registered with `waitUntil` keeps the invocation alive after the response is sent, up to 15 minutes — for cleanup like analytics writes and audit logs, **not** a background job runner. (Current runtime tracks `waitUntil`; outside Neon it is a no-op for lifecycle tracking.)
 - **Idle eviction.** With no active connections the platform shuts the function down; it may also evict/restart for operational reasons — e.g. maintenance, or moving the function to a different compute node (active functions can run for hours first). Treat eviction like a process restart — WebSocket/SSE clients must reconnect. The platform sends `SIGINT` before evicting, so a `process.on("SIGINT", ...)` handler lets you detect that the function is about to be evicted and run any last-minute cleanup. You don't need one just to close Postgres connections — Neon's pooler reclaims those on its own.
 
 - **Runtime:** Node.js 24, memory fixed at 2048 MiB during the preview. Slugs must match `^[a-z0-9]{1,20}$`. **An isolate is reused across many requests** — multiple requests can be in flight on the same isolate at once (interleaved on Node's single-threaded event loop), and under load the runtime runs several isolates in parallel, each with its own copy of module state. State held in module scope is therefore per-isolate (shared by every request that isolate handles) and in-memory only — persist anything that must survive eviction in Postgres. This reuse is exactly why you create a connection pool once at module scope rather than per request (see [Connecting to Postgres](#connecting-to-postgres)).
@@ -442,7 +443,7 @@ Pass the JWKS/issuer URL to the function via its `env` (see Environment variable
 
 ## Availability
 
-Neon Functions is a preview (early access) feature available only on new projects in the `us-east-2` region. Confirm the user's Neon project is a new project in `us-east-2`; it can't be enabled on existing projects. Functions usage isn't billed during the private preview. If the user does not yet have access, point them to the private beta sign-up: https://neon.com/blog/were-building-backends#access
+Neon Functions is a preview (early access) feature available only on new projects in the `us-east-2` region. Confirm the user's Neon project is a new project in `us-east-2`; it can't be enabled on existing projects. Preview access and billing can change; verify the current project/account terms before provisioning. If the user does not yet have access, point them to the private beta sign-up: https://neon.com/blog/were-building-backends#access
 
 ## Neon Documentation
 
@@ -463,3 +464,7 @@ The Neon documentation is the source of truth and Functions is evolving rapidly,
 - Use this skill only when the task clearly matches its upstream product or API scope.
 - Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
 - Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+## Example deployment boundary
+
+The snippets are integration sketches, not production-complete servers. Before public deployment, implement the JWT/auth helpers, bounded validated request bodies, tenant-scoped database filters, allowed origins and rate limits. Confirm exact branch/project and plan effects before deploy/apply/delete; installation or CLI execution can load project code. Query tokens can leak through logs: use short-lived connection tickets, redact URLs, and prefer secure session cookies where feasible. LISTEN/NOTIFY is transient with payload limits, not durable delivery; add reconnect/re-LISTEN handling and persistent event IDs/replay when loss matters.

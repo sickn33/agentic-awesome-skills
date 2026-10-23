@@ -2,6 +2,8 @@
 
 Comprehensive patterns for testing workflows with mocked external dependencies, error injection, and complex scenarios.
 
+Required imports depend on the snippet: `asyncio`, `timedelta`, `activity`, `workflow`, `RetryPolicy`, `ApplicationError`, `ActivityError`, pytest and the testing/worker classes. Workflows and registered activities belong at module scope in real sandboxed tests. A plain Mock is not a registered Temporal activity; give the stub the exact activity name expected by workflow history.
+
 ## Activity Mocking Strategy
 
 **Purpose**: Test workflow orchestration logic without calling real external services
@@ -21,6 +23,10 @@ async def test_workflow_with_mocked_activity(workflow_env):
     # Create mock activity
     mock_activity = Mock(return_value="mocked-result")
 
+    @activity.defn(name="process_external_data")
+    async def activity_stub(input: str) -> str:
+        return mock_activity(input)
+
     @workflow.defn
     class WorkflowWithActivity:
         @workflow.run
@@ -36,7 +42,7 @@ async def test_workflow_with_mocked_activity(workflow_env):
         workflow_env.client,
         task_queue="test",
         workflows=[WorkflowWithActivity],
-        activities=[mock_activity],  # Use mock instead of real activity
+        activities=[activity_stub],  # Use mock instead of real activity
     ):
         result = await workflow_env.client.execute_workflow(
             WorkflowWithActivity.run,
@@ -58,7 +64,8 @@ async def test_workflow_multiple_mock_scenarios(workflow_env):
     """Test different workflow paths with dynamic mocks"""
 
     # Mock returns different values based on input
-    def dynamic_activity(input: str) -> str:
+    @activity.defn
+    async def dynamic_activity(input: str) -> str:
         if input == "error-case":
             raise ApplicationError("Validation failed", non_retryable=True)
         return f"processed-{input}"
@@ -74,8 +81,10 @@ async def test_workflow_multiple_mock_scenarios(workflow_env):
                     start_to_close_timeout=timedelta(seconds=10),
                 )
                 return f"success: {result}"
-            except ApplicationError as e:
-                return f"error: {e.message}"
+            except ActivityError as e:
+                if isinstance(e.cause, ApplicationError):
+                    return f"error: {e.cause.message}"
+                raise
 
     async with Worker(
         workflow_env.client,
@@ -181,8 +190,10 @@ async def test_workflow_non_retryable_error(workflow_env):
                     input,
                     start_to_close_timeout=timedelta(seconds=10),
                 )
-            except ApplicationError as e:
-                return f"validation-failed: {e.message}"
+            except ActivityError as e:
+                if isinstance(e.cause, ApplicationError):
+                    return f"validation-failed: {e.cause.message}"
+                raise
 
     async with Worker(
         workflow_env.client,
@@ -364,7 +375,7 @@ async def test_workflow_signals(workflow_env):
 
 ### Workflow Logic Coverage
 
-**Target**: ≥80% coverage of workflow decision logic
+**Target**: a project-defined threshold (80% here is illustrative) coverage of workflow decision logic
 
 ```python
 # Test all branches
@@ -374,13 +385,12 @@ async def test_workflow_signals(workflow_env):
 ])
 async def test_workflow_branches(workflow_env, condition, expected):
     """Ensure all code paths are tested"""
-    # Test implementation
-    pass
+    pytest.skip("Sketch: implement the fixture, action and independent assertion before counting this as coverage")
 ```
 
 ### Activity Coverage
 
-**Target**: ≥80% coverage of activity logic
+**Target**: a project-defined threshold (80% here is illustrative) coverage of activity logic
 
 ```python
 # Test activity edge cases
@@ -391,8 +401,7 @@ async def test_workflow_branches(workflow_env, condition, expected):
 ])
 async def test_activity_edge_cases(activity_env, input, expected):
     """Test activity error handling"""
-    # Test implementation
-    pass
+    pytest.skip("Sketch: implement the fixture, action and independent assertion before counting this as coverage")
 ```
 
 ## Integration Test Organization
@@ -420,12 +429,14 @@ tests/
 import pytest
 from temporalio.testing import WorkflowEnvironment
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 async def workflow_env():
     """Session-scoped environment for integration tests"""
     env = await WorkflowEnvironment.start_time_skipping()
-    yield env
-    await env.shutdown()
+    try:
+        yield env
+    finally:
+        await env.shutdown()
 
 @pytest.fixture
 def mock_payment_service():
@@ -445,7 +456,7 @@ def mock_inventory_service():
 3. **Parallel Testing**: Use pytest-xdist for faster test runs
 4. **Isolated Tests**: Each test should be independent
 5. **Clear Assertions**: Verify both results and side effects
-6. **Coverage Target**: ≥80% for critical workflows
+6. **Coverage Target**: a project-defined threshold (80% here is illustrative) for critical workflows
 7. **Fast Execution**: Use time-skipping, avoid real delays
 
 ## Additional Resources

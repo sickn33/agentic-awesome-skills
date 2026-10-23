@@ -118,8 +118,10 @@ nx.draw(G, node_color=node_colors)
 
 # Color by attribute
 colors = [G.nodes[n].get('value', 0) for n in G.nodes()]
-nx.draw(G, node_color=colors, cmap=plt.cm.viridis)
-plt.colorbar()
+pos = nx.spring_layout(G, seed=42)
+nodes = nx.draw_networkx_nodes(G, pos, node_color=colors, cmap=plt.cm.viridis)
+nx.draw_networkx_edges(G, pos)
+plt.colorbar(nodes)
 plt.show()
 ```
 
@@ -477,6 +479,7 @@ plt.show()
 ```python
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
 
 # 3D spring layout
 pos = nx.spring_layout(G, dim=3, seed=42)
@@ -498,7 +501,7 @@ ax.scatter(*node_xyz.T, s=100, c='lightblue', edgecolors='black')
 
 # Labels
 for i, (x, y, z) in enumerate(node_xyz):
-    ax.text(x, y, z, str(i))
+    ax.text(x, y, z, str(list(G.nodes())[i]))
 
 ax.set_axis_off()
 plt.show()

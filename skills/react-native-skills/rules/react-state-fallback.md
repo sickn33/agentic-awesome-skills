@@ -18,7 +18,7 @@ source changes, not just on initial render.
 type Props = { fallbackEnabled: boolean }
 
 function Toggle({ fallbackEnabled }: Props) {
-  const [enabled, setEnabled] = useState(defaultEnabled)
+  const [enabled, setEnabled] = useState(fallbackEnabled)
   // If fallbackEnabled changes, state is stale
   // State mixes user intent with default value
 
@@ -33,9 +33,9 @@ type Props = { fallbackEnabled: boolean }
 
 function Toggle({ fallbackEnabled }: Props) {
   const [_enabled, setEnabled] = useState<boolean | undefined>(undefined)
-  const enabled = _enabled ?? defaultEnabled
+  const enabled = _enabled ?? fallbackEnabled
   // undefined = user hasn't touched it, falls back to prop
-  // If defaultEnabled changes, component reflects it
+  // If fallbackEnabled changes, component reflects it
   // Once user interacts, their choice persists
 
   return <Switch value={enabled} onValueChange={setEnabled} />

@@ -14,14 +14,14 @@ A negative `from` value shifts time backwards, making the animation start partwa
 ```tsx
 import { Sequence, useVideoConfig } from "remotion";
 
-const fps = useVideoConfig();
+const {fps} = useVideoConfig();
 
 <Sequence from={-0.5 * fps}>
   <MyAnimation />
 </Sequence>
 ```
 
-The animation appears 15 frames into its progress - the first 15 frames are trimmed off.
+At 30 fps, the animation appears 15 frames into its progress - the first 15 frames are trimmed off.
 Inside `<MyAnimation>`, `useCurrentFrame()` starts at 15 instead of 0.
 
 ## Trim the End
@@ -35,7 +35,7 @@ Use `durationInFrames` to unmount content after a specified duration:
 </Sequence>
 ```
 
-The animation plays for 45 frames, then the component unmounts.
+At 30 fps, the animation plays for 45 frames, then the component unmounts.
 
 ## Trim and Delay
 

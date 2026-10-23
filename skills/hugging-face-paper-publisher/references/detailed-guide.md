@@ -132,16 +132,23 @@ When you add an arXiv paper link to a model or dataset README:
 4. The Paper Page shows all models/datasets citing this paper
 5. Papers are discoverable through filters and search
 
+### Helper capability boundary
+
+Only `index`, `check`, `link`, `create`, `info`, `citation`, and a search-URL
+placeholder are implemented. `index` checks the paper page; it does not prove
+a successful indexing mutation. The claim, visibility, conversion and validation
+commands shown below are proposed workflows, not executable bundled commands.
+Use the supported website workflow for those features. `link` commits remotely
+by default; `--create-pr` requests a PR. Obtain authorization for the concrete
+repository and reviewed README change before either write.
+
 ### Method 3: Claim Authorship
 
 Verify your authorship on papers published on Hugging Face.
 
 **Start Claim Process:**
-```bash
-uv run scripts/paper_manager.py claim \
-  --arxiv-id "2301.12345" \
-  --email "your.email@institution.edu"
-```
+> These operations require the Hub website or separately implemented/reviewed tooling. The bundled CLI does not implement claim, visibility, conversion or validation commands.
+
 
 **Manual Process:**
 1. Navigate to your paper's page: `https://huggingface.co/papers/{arxiv-id}`
@@ -165,11 +172,8 @@ uv run scripts/paper_manager.py list-my-papers
 ```
 
 **Toggle Visibility:**
-```bash
-uv run scripts/paper_manager.py toggle-visibility \
-  --arxiv-id "2301.12345" \
-  --show true
-```
+> These operations require the Hub website or separately implemented/reviewed tooling. The bundled CLI does not implement claim, visibility, conversion or validation commands.
+
 
 **Manage in Settings:**
 Navigate to your account settings → Papers section to toggle "Show on profile" for each paper.
@@ -203,12 +207,8 @@ uv run scripts/paper_manager.py create \
 ```
 
 **Convert to HTML:**
-```bash
-uv run scripts/paper_manager.py convert \
-  --input "paper.md" \
-  --output "paper.html" \
-  --style "modern"
-```
+> These operations require the Hub website or separately implemented/reviewed tooling. The bundled CLI does not implement claim, visibility, conversion or validation commands.
+
 
 ### Paper Template Structure
 
@@ -277,18 +277,12 @@ uv run scripts/paper_manager.py link \
 ```
 
 **Claim Authorship:**
-```bash
-uv run scripts/paper_manager.py claim \
-  --arxiv-id "2301.12345" \
-  --email "your.email@edu"
-```
+> These operations require the Hub website or separately implemented/reviewed tooling. The bundled CLI does not implement claim, visibility, conversion or validation commands.
+
 
 **Manage Visibility:**
-```bash
-uv run scripts/paper_manager.py toggle-visibility \
-  --arxiv-id "2301.12345" \
-  --show true|false
-```
+> These operations require the Hub website or separately implemented/reviewed tooling. The bundled CLI does not implement claim, visibility, conversion or validation commands.
+
 
 **Create Research Article:**
 ```bash
@@ -301,12 +295,8 @@ uv run scripts/paper_manager.py create \
 ```
 
 **Convert Markdown to HTML:**
-```bash
-uv run scripts/paper_manager.py convert \
-  --input "paper.md" \
-  --output "paper.html" \
-  [--style "modern|classic"]
-```
+> These operations require the Hub website or separately implemented/reviewed tooling. The bundled CLI does not implement claim, visibility, conversion or validation commands.
+
 
 **Check Paper Status:**
 ```bash
@@ -381,32 +371,8 @@ The Hub automatically extracts arXiv IDs from these links and creates `arxiv:230
 ### Integration Examples
 
 **Workflow 1: Publish New Research**
-```bash
-# 1. Create research article
-uv run scripts/paper_manager.py create \
-  --template "modern" \
-  --title "Novel Fine-Tuning Approach" \
-  --output "paper.md"
+> These operations require the Hub website or separately implemented/reviewed tooling. The bundled CLI does not implement claim, visibility, conversion or validation commands.
 
-# 2. Edit paper.md with your content
-
-# 3. Submit to arXiv (external process)
-# Upload to arxiv.org, get arXiv ID
-
-# 4. Index on Hugging Face
-uv run scripts/paper_manager.py index --arxiv-id "2301.12345"
-
-# 5. Link to your model
-uv run scripts/paper_manager.py link \
-  --repo-id "your-username/your-model" \
-  --repo-type "model" \
-  --arxiv-id "2301.12345"
-
-# 6. Claim authorship
-uv run scripts/paper_manager.py claim \
-  --arxiv-id "2301.12345" \
-  --email "your.email@edu"
-```
 
 **Workflow 2: Link Existing Paper**
 ```bash
@@ -509,12 +475,8 @@ uv run scripts/paper_manager.py citation \
 ```
 
 **Validate Links:**
-```bash
-# Check all paper links in a repository
-uv run scripts/paper_manager.py validate \
-  --repo-id "username/model-name" \
-  --repo-type "model"
-```
+> These operations require the Hub website or separately implemented/reviewed tooling. The bundled CLI does not implement claim, visibility, conversion or validation commands.
+
 
 ### Error Handling
 
@@ -581,12 +543,8 @@ uv run scripts/paper_manager.py link --repo-id "user/model" --arxiv-id "2301.123
 ```
 
 **Pattern 3: Author Portfolio Management**
-```bash
-# Claim → Verify → Organize
-uv run scripts/paper_manager.py claim --arxiv-id "2301.12345"
-uv run scripts/paper_manager.py list-my-papers
-uv run scripts/paper_manager.py toggle-visibility --arxiv-id "2301.12345" --show true
-```
+> These operations require the Hub website or separately implemented/reviewed tooling. The bundled CLI does not implement claim, visibility, conversion or validation commands.
+
 
 ### API Integration
 
@@ -594,13 +552,13 @@ uv run scripts/paper_manager.py toggle-visibility --arxiv-id "2301.12345" --show
 ```python
 from scripts.paper_manager import PaperManager
 
-pm = PaperManager(hf_token="your_token")
+pm = PaperManager()  # explicit environment or HF credential store
 
 # Index paper
 pm.index_paper("2301.12345")
 
 # Link to model
-pm.link_paper(
+pm.link_paper_to_repo(
     repo_id="username/model",
     repo_type="model",
     arxiv_id="2301.12345",

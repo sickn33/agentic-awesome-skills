@@ -11,7 +11,7 @@ When possible, pass only primitive values (strings, numbers, booleans) as props
 to list item components. Primitives enable shallow comparison in `memo()` to
 work correctly, skipping re-renders when values haven't changed.
 
-**Incorrect (object prop requires deep comparison):**
+**Object props compare by reference (stable objects work):**
 
 ```tsx
 type User = { id: string; name: string; email: string; avatar: string }
@@ -25,7 +25,7 @@ const UserRow = memo(function UserRow({ user }: { user: User }) {
 renderItem={({ item }) => <UserRow user={item} />}
 ```
 
-This can still be optimized, but it is harder to memoize properly.
+If `item` retains the same reference, ordinary shallow memoization already works; deep comparison is not required.
 
 **Correct (primitive props enable shallow comparison):**
 

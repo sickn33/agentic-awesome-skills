@@ -28,7 +28,7 @@ Comprehensive testing approaches for Temporal workflows using pytest, progressiv
 - **Replay testing** - Validate determinism against production histories
 - **Local development** - Set up Temporal server and pytest
 - **CI/CD integration** - Automated testing pipelines
-- **Coverage strategies** - Achieve ≥80% test coverage
+- **Coverage strategies** - Achieve a project-defined threshold (80% here is illustrative) test coverage
 
 ## Testing Philosophy
 
@@ -36,7 +36,7 @@ Comprehensive testing approaches for Temporal workflows using pytest, progressiv
 
 - Write majority as integration tests
 - Use pytest with async fixtures
-- Time-skipping enables fast feedback (month-long workflows → seconds)
+- Time-skipping enables fast feedback (long timer waits can be accelerated; activities still consume real time)
 - Mock activities to isolate workflow logic
 - Validate determinism with replay testing
 
@@ -96,6 +96,10 @@ This skill provides detailed guidance through progressive disclosure. Load speci
 - Coverage tool integration
 - Development workflow
 
+## Runtime prerequisites
+
+Pin compatible `temporalio`, pytest and pytest-asyncio versions in the target project; configure `asyncio_mode = auto` or use `pytest_asyncio.fixture` explicitly. Snippets using `YourWorkflow`, activities, expected values and imports are adaptation sketches, not a bundled runnable test suite. Define sandboxed workflows/activities at module scope in importable modules; nested classes/functions in snippets illustrate logic but can fail sandbox re-import validation. Use unique workflow IDs/task queues and bound execution time. Time-skipping starts/downloads a test server where supported; isolate it from production.
+
 ## Quick Start Guide
 
 ### Basic Workflow Test
@@ -108,8 +112,10 @@ from temporalio.worker import Worker
 @pytest.fixture
 async def workflow_env():
     env = await WorkflowEnvironment.start_time_skipping()
-    yield env
-    await env.shutdown()
+    try:
+        yield env
+    finally:
+        await env.shutdown()
 
 @pytest.mark.asyncio
 async def test_workflow(workflow_env):
@@ -121,7 +127,7 @@ async def test_workflow(workflow_env):
     ):
         result = await workflow_env.client.execute_workflow(
             YourWorkflow.run,
-            args,
+            "test-input", # or args=[arg1, arg2] for multiple arguments
             id="test-wf-id",
             task_queue="test-queue",
         )
@@ -141,20 +147,20 @@ async def test_activity():
 
 ## Coverage Targets
 
-**Recommended Coverage** (Source: docs.temporal.io best practices):
+**Illustrative project coverage target** (not an official Temporal threshold):
 
-- **Workflows**: ≥80% logic coverage
-- **Activities**: ≥80% logic coverage
+- **Workflows**: a project-defined threshold (80% here is illustrative) logic coverage
+- **Activities**: a project-defined threshold (80% here is illustrative) logic coverage
 - **Integration**: Critical paths with mocked activities
 - **Replay**: All workflow versions before deployment
 
 ## Key Testing Principles
 
-1. **Time-Skipping** - Month-long workflows test in seconds
+1. **Time-Skipping** - Timer skipping does not accelerate real activity I/O
 2. **Mock Activities** - Isolate workflow logic from external dependencies
 3. **Replay Testing** - Validate determinism before deployment
-4. **High Coverage** - ≥80% target for production workflows
-5. **Fast Feedback** - Unit tests run in milliseconds
+4. **High Coverage** - a project-defined threshold (80% here is illustrative) target for production workflows
+5. **Fast Feedback** - Measure actual test duration; server startup and activities take real time
 
 ## How to Use Resources
 

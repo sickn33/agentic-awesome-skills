@@ -99,7 +99,11 @@ export const profileDir = (profile) => {
   if (!/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(profile)) {
     throw new Error(`Invalid profile name '${profile}': letters, digits, '-' and '_' only.`)
   }
-  return path.join(driveRoot(), 'profiles', profile)
+  const target = path.join(driveRoot(), 'profiles', profile)
+  for (const candidate of [path.dirname(target), target]) {
+    if (existsSync(candidate) && lstatSync(candidate).isSymbolicLink()) throw new Error('Scratch profile symlink')
+  }
+  return target
 }
 
 export const readState = () => {
@@ -109,7 +113,11 @@ export const readState = () => {
     const stat = lstatSync(file)
     if (!stat.isFile()) throw new Error('Unsafe daemon state')
     assertPrivateStatePath(file)
-    return JSON.parse(readFileSync(file, 'utf8'))
+    const state = JSON.parse(readFileSync(file, 'utf8'))
+    if (!state || !Number.isInteger(state.pid) || state.pid <= 0 ||
+        !Number.isInteger(state.port) || state.port < 1 || state.port > 65535 ||
+        typeof state.token !== 'string' || !/^[a-f0-9]{48}$/.test(state.token)) throw new Error('Invalid daemon state')
+    return state
   } catch {
     return null
   }

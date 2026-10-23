@@ -80,7 +80,7 @@ Tips that make these tests pull their weight:
   isn't counted as a call.
 - **Write regression guards as negative assertions** — `expect(src).not.toMatch(
   /new sst\.aws\.Dynamo\("Items"[^V]/)` proves the pre-migration table is gone.
-- **Pin numeric/string tunables via an exported `__test__` object.** When a module
+- **Put pure tunables in a separate side-effect-free module, rather than importing resource-declaration modules for a `__test__` object.** When a module
   has knobs (memory, timeout, model id), export them and assert both the constant
   *and* its presence in the source, so a value change can't silently drift from
   the test contract:
@@ -89,7 +89,7 @@ Tips that make these tests pull their weight:
   // infra/query.ts
   export const __test__ = { LAMBDA_MEMORY_MB: 2048, LAMBDA_TIMEOUT: "2 minutes" };
   // infra/tests/query.test.ts
-  import { __test__ } from "../query";
+  import { __test__ } from "../query-config"; // separate pure module
   it("pins 2 GB memory", () => {
     expect(__test__.LAMBDA_MEMORY_MB).toBe(2048);
     expect(src).toContain(`${__test__.LAMBDA_MEMORY_MB} MB`);
@@ -121,6 +121,5 @@ Prioritize invariants where a silent change is expensive:
 - **AWS-side behavior** (does the GSI return the right items, does the IAM policy
   actually allow the call) — verify against a real preview deploy.
 
-Source assertions tell you the *declaration* didn't drift. Preview deploys + smoke
-tests tell you the *deployment* is correct. You want both; they catch different
+Source assertions are brittle heuristics: comments, dead code and formatting can fool them. Graph/preview and deployed behavioral tests provide different bounded evidence, not a blanket correctness proof. Source greps must not be sole IAM/public-access security gates. You want both; they catch different
 failures.

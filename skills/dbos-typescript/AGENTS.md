@@ -1,6 +1,6 @@
 # dbos-typescript
 
-> **Note:** `CLAUDE.md` is a symlink to this file.
+> **Note:** `CLAUDE.md` mirrors this navigation guide in this distribution.
 
 ## Overview
 
@@ -12,7 +12,7 @@ DBOS TypeScript SDK for building reliable, fault-tolerant applications with dura
 dbos-typescript/
   SKILL.md       # Main skill file - read this first
   AGENTS.md      # This navigation guide
-  CLAUDE.md      # Symlink to AGENTS.md
+  CLAUDE.md      # Mirror of AGENTS.md
   references/    # Detailed reference files
 ```
 
@@ -36,7 +36,7 @@ dbos-typescript/
 | 8 | Client | MEDIUM | `client-` |
 | 9 | Advanced | LOW | `advanced-` |
 
-Reference files are named `{prefix}-{topic}.md` (e.g., `query-missing-indexes.md`).
+Reference files are named `{prefix}-{topic}.md` (e.g., `queue-concurrency.md`).
 
 ## Available References
 

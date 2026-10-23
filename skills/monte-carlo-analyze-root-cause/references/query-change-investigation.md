@@ -44,7 +44,7 @@ The `get_query_changes` output should include enough SQL diff information to und
 If the root cause is a bad query change:
 - Show the user the before/after SQL
 - Suggest reverting the change or fixing the query
-- If DB connector is available, run the old and new queries on a sample to compare outputs
+- If DB connector is available, inspect both statements first; compare only read-only SELECTs in a bounded safe environment, never replay arbitrary historical DML/DDL
 
 ## Common patterns
 
@@ -53,3 +53,5 @@ If the root cause is a bad query change:
 - **Dedup logic change** — DISTINCT or ROW_NUMBER window changed, altering unique row count
 - **Source table swap** — query now reads from a different source table
 - **Aggregation change** — GROUP BY granularity changed, producing different row counts
+
+<!-- Modified locally: evidence, SQL safety or paid-run corrections. -->

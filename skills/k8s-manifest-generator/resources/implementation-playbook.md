@@ -211,7 +211,7 @@ stringData:
     ...
     -----END CERTIFICATE-----
   tls.key: |
-    <BASE64_PRIVATE_KEY>
+    <PEM_PRIVATE_KEY>  # stringData takes plaintext PEM; data takes base64 encoding
 ```
 
 **Security considerations:**
@@ -258,7 +258,7 @@ spec:
 
 **Storage considerations:**
 - Choose appropriate StorageClass for performance needs
-- Use ReadWriteOnce for single-pod access
+- ReadWriteOnce restricts mounting to one node, not necessarily one Pod; use ReadWriteOncePod where the CSI driver supports strict single-Pod access
 - Use ReadWriteMany for multi-pod shared storage
 - Consider backup strategies
 - Set appropriate retention policies
@@ -454,8 +454,8 @@ The following templates are available in the `assets/` directory:
 - `deployment-template.yaml` - Standard deployment with best practices
 - `service-template.yaml` - Service configurations (ClusterIP, LoadBalancer, NodePort)
 - `configmap-template.yaml` - ConfigMap examples with different data types
-- `secret-template.yaml` - Secret examples (to be generated, not committed)
-- `pvc-template.yaml` - PersistentVolumeClaim templates
+- Secret examples are inline above; no secret-template.yaml is bundled.
+- PVC examples are inline above; no pvc-template.yaml is bundled.
 
 ## Reference Documentation
 
@@ -464,7 +464,7 @@ The following templates are available in the `assets/` directory:
 
 ## Best Practices Summary
 
-1. **Always set resource requests and limits** - Prevents resource starvation
+1. **Always set resource requests and limits** - Provides scheduling inputs and enforces configured limits; does not guarantee availability
 2. **Implement health checks** - Ensures Kubernetes can manage your application
 3. **Use specific image tags** - Avoid unpredictable deployments
 4. **Apply security contexts** - Run as non-root, drop capabilities

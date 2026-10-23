@@ -1,6 +1,10 @@
+<!-- Modified by AAS: clarified authorization, evidence and runtime boundaries. -->
+
 # Tool Discovery at Runtime
 
 This reference explains how to discover what remediation tools are available to you at runtime. You have three categories of tools to check: MCP servers, CLI tools (via shell access), and APIs (via `curl` or language-specific clients). Check all three before deciding what's possible.
+
+No integration is bundled here. Confirm actual tool/account schemas; CLI presence alone does not establish authenticated access or authorization. Never bypass tool restrictions by changing transport.
 
 ## Category 1: MCP servers
 
@@ -56,7 +60,7 @@ curl -X POST "https://cloud.getdbt.com/api/v2/accounts/<account_id>/jobs/<job_id
   -d '{"cause": "Triggered by remediation skill"}'
 ```
 
-**Note:** API calls require credentials. If you don't have the right tokens or environment variables, ask the user — don't guess at authentication.
+**Note:** API calls require credentials. If you don't have the right tokens or environment variables, ask the user to configure secure credentials locally — never request tokens in chat.
 
 ## Discovery procedure
 
@@ -84,8 +88,8 @@ For any capability not covered by MCP, check if a relevant CLI tool is available
 
 - `gh` — covers GitHub operations (PRs, issues, API calls) without needing a GitHub MCP
 - `dbt` — covers dbt operations (run, test, retry) without needing a dbt Cloud MCP
-- `git` — always available for code changes
-- `curl` — always available for calling any REST API
+- `git` — check availability for code changes
+- `curl` — check availability for calling any REST API
 
 ### Step 3: Assess coverage
 

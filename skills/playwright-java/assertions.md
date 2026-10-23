@@ -11,7 +11,7 @@ import org.assertj.core.api.SoftAssertions;
 
 ## Locator Assertions (Auto-Retry)
 
-Playwright's `assertThat(locator)` polls automatically (up to `defaultTimeout`).
+Playwright's `assertThat(locator)` polls automatically (using the separate assertion timeout, 5 seconds by default).
 **Always prefer these over `locator.isVisible()` + `assertTrue`.**
 
 ```java
@@ -116,29 +116,18 @@ void shouldDisplayAllProfileFields() {
 ```java
 APIResponse response = page().context().request().get("/api/health");
 assertThat(response).isOK();                         // status 200-299
-assertThat(response).hasStatus(201);
-assertThat(response).hasHeader("content-type", "application/json");
-assertThat(response).hasJSON("{\"status\":\"UP\"}"); // exact JSON match
+org.junit.jupiter.api.Assertions.assertEquals(201, response.status());
+org.junit.jupiter.api.Assertions.assertTrue(response.headers().get("content-type").startsWith("application/json"));
+org.junit.jupiter.api.Assertions.assertEquals(
+    new ObjectMapper().readTree("{\"status\":\"UP\"}"),
+    new ObjectMapper().readTree(response.text())); // Jackson structural comparison
 ```
 
 ---
 
 ## Screenshot Comparison (Visual Testing)
 
-```java
-// Full page screenshot
-assertThat(page).hasScreenshot(new PageAssertions.HasScreenshotOptions()
-    .setName("dashboard.png")
-    .setFullPage(true)
-    .setThreshold(0.2));
-
-// Locator screenshot
-assertThat(page.locator(".chart-container"))
-    .hasScreenshot(new LocatorAssertions.HasScreenshotOptions()
-        .setName("revenue-chart.png"));
-```
-
-Update golden files: run with `PLAYWRIGHT_UPDATE_SNAPSHOTS=true mvn test`
+Java's Playwright assertion API does not provide the Playwright Test JavaScript `toHaveScreenshot` runner workflow shown in some cross-language examples. Capture with `page.screenshot()` or `locator.screenshot()`, then integrate a separately selected Java image-comparison tool with explicit golden-file review, platform/font normalization and tolerance. There is no generic `PLAYWRIGHT_UPDATE_SNAPSHOTS` switch implemented by these Java snippets.
 
 ---
 

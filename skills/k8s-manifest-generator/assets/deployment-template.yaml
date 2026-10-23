@@ -17,7 +17,7 @@ metadata:
     description: "<application description>"
     contact: "<team-email>"
 spec:
-  replicas: 3  # Minimum 3 for production HA
+  replicas: 3  # illustrative; size and spread for the workload
   revisionHistoryLimit: 10
 
   selector:
@@ -29,7 +29,7 @@ spec:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
-      maxUnavailable: 0  # Zero-downtime deployment
+      maxUnavailable: 0  # availability target, not a zero-downtime guarantee
 
   minReadySeconds: 10
   progressDeadlineSeconds: 600
@@ -47,6 +47,7 @@ spec:
 
     spec:
       serviceAccountName: <app-name>
+      automountServiceAccountToken: false  # enable only when Kubernetes API access is needed
 
       # Pod-level security context
       securityContext:

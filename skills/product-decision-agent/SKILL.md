@@ -75,7 +75,8 @@ license_source: "https://github.com/atdy/maoxuan-product-agent/blob/main/LICENSE
 - 明确属于某个产品/运营/数据/协作场景：读 `references/product-playbooks.md` 对应小节。
 - 需要校准中文口吻和输出密度：读 `references/response-examples.md`。
 - 维护或审查“后台推理是否来自完整方法转译”时：读 `references/methodology-basis.md`。默认回答用户时不要引用它。
-- 维护样例输出质量时：运行 `scripts/quality_gate.py` 检查样例是否中文、可执行、无来源暴露。
+- 维护样例输出质量时：用 `python3 scripts/quality_gate.py` 检查默认中文样例。
+  该词法检查只提供风格提示，不能证明建议正确、实验有效或已获得授权。
 
 ## Example
 

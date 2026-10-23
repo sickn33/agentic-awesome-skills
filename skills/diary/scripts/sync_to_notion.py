@@ -56,9 +56,11 @@ HEADERS = {
 def notion_request(method: str, endpoint: str, data: dict = None) -> dict:
     """Execute a Notion API request with error handling."""
     url = f"{NOTION_API}/{endpoint}"
-    resp = getattr(requests, method)(url, headers=HEADERS, json=data)
+    resp = requests.request(method, url, headers=HEADERS, json=data, timeout=(10, 60), allow_redirects=False)
+    if 300 <= resp.status_code < 400:
+        raise RuntimeError("Notion redirect refused")
     if resp.status_code >= 400:
-        print(f"❌ Notion API Error ({resp.status_code}): {resp.json().get('message', resp.text)}")
+        print(f"Notion API error ({resp.status_code}); inspect approved private diagnostics")
         sys.exit(1)
     return resp.json()
 
@@ -73,6 +75,8 @@ def search_diary_by_date(date_str: str) -> str | None:
     }
     result = notion_request("post", f"databases/{NOTION_DIARY_DB}/query", data)
     pages = result.get("results", [])
+    if len(pages) > 1 or result.get("has_more"):
+        raise RuntimeError("Multiple diary pages match this date; resolve before sync")
     return pages[0]["id"] if pages else None
 
 
@@ -300,95 +304,11 @@ def create_diary_page(metadata: dict, blocks: list) -> str:
 
 def update_business_section(page_id: str, metadata: dict, business_blocks: list):
     """Update ONLY the Business section of an existing page, preserving all other content."""
-    # Update properties
-    notion_request("patch", f"pages/{page_id}", {
-        "properties": {
-            "標題": {"title": [{"text": {"content": metadata["title"]}}]},
-            "專案": {"multi_select": [{"name": p} for p in metadata["projects"][:10]]},
-            "標籤": {"multi_select": [{"name": t} for t in metadata["tags"][:10]]},
-        }
-    })
-
-    # Read all existing blocks
-    all_blocks = []
-    cursor = None
-    while True:
-        endpoint = f"blocks/{page_id}/children?page_size=100"
-        if cursor:
-            endpoint += f"&start_cursor={cursor}"
-        result = notion_request("get", endpoint)
-        all_blocks.extend(result.get("results", []))
-        if not result.get("has_more"):
-            break
-        cursor = result.get("next_cursor")
-
-    # Find the Business section boundaries
-    business_start = None
-    business_end = None
-
-    for idx, block in enumerate(all_blocks):
-        if block["type"] == "heading_2":
-            text = ""
-            for rt in block.get("heading_2", {}).get("rich_text", []):
-                text += rt.get("plain_text", rt.get("text", {}).get("content", ""))
-            if "Business" in text:
-                business_start = idx
-            elif business_start is not None and business_end is None:
-                # Next H2 after Business = end of Business section
-                business_end = idx
-                break
-
-    if business_start is None:
-        print("⚠️ 找不到 Business 區塊，將覆蓋整頁內容")
-        blocks_to_delete = all_blocks
-        after_block_id = None
-    else:
-        # If no end found, look for a divider after business content
-        if business_end is None:
-            for idx in range(business_start + 1, len(all_blocks)):
-                if all_blocks[idx]["type"] == "divider":
-                    business_end = idx + 1  # Include the divider
-                    break
-            if business_end is None:
-                business_end = len(all_blocks)
-
-        # Delete old Business content (between heading and next section)
-        blocks_to_delete = all_blocks[business_start + 1:business_end]
-        
-        # Find the block AFTER which to insert (the Business heading itself)
-        after_block_id = all_blocks[business_start]["id"]
-
-    for block in blocks_to_delete:
-        try:
-            requests.delete(f"{NOTION_API}/blocks/{block['id']}", headers=HEADERS)
-        except Exception:
-            pass
-
-    # Insert new Business blocks after the heading, or at the end of the page
-    for i in range(0, len(business_blocks), 100):
-        chunk = business_blocks[i:i+100]
-        payload = {"children": chunk}
-        if after_block_id:
-            payload["after"] = after_block_id
-            
-        result = notion_request("patch", f"blocks/{page_id}/children", payload)
-        
-        # Update after_block_id to the last inserted block for ordering
-        if chunk and result.get("results"):
-            after_block_id = result["results"][-1]["id"]
-
-    # Re-add divider after business content
-    if after_block_id:
-        notion_request("patch", f"blocks/{page_id}/children", {
-            "children": [make_divider()],
-            "after": after_block_id
-        }) 
-    else:
-        notion_request("patch", f"blocks/{page_id}/children", {
-            "children": [make_divider()]
-        })
-
-    print("✅ Business 區塊已更新（其他區塊未受影響）")
+    # Preserve existing page content: append a new revision instead of deleting blocks.
+    revision = [make_heading2("Business diary revision " + metadata["date"])] + business_blocks + [make_divider()]
+    for i in range(0, len(revision), 100):
+        notion_request("patch", f"blocks/{page_id}/children", {"children": revision[i:i + 100]})
+    print("Appended diary revision; previous page content retained")
 
 
 def create_database(parent_page_id: str) -> str:

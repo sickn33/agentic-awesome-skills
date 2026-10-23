@@ -1,7 +1,7 @@
 ---
 name: photopea-embedded-editor
-description: Embed Photopea in web apps using photopea.js. Covers embedding, file I/O, scripting, exporting, layers, text, filters, and the full Photoshop-compatible API.
-risk: safe
+description: Embed Photopea in web apps using photopea.js. Covers embedding, file I/O, scripting, exporting, layers, text, filters, and selected Photoshop-like scripting patterns.
+risk: critical
 source: community
 source_repo: yikuansun/PhotopeaAPI
 source_type: community
@@ -25,7 +25,7 @@ Use this skill for **every task** that involves:
 - Building an image editing feature into your product using Photopea as the engine
 - Writing scripts to manipulate documents, layers, text, selections, filters, colors, and paths
 
-**Do NOT** use raw `postMessage` wiring — always use `photopea.js` as the wrapper.
+Use a reviewed messaging wrapper or carefully scoped Live Messaging implementation. A wrapper alone does not establish message authenticity: verify received `origin` and `source` against the exact iframe/parent, use an exact target origin, serialize operations and bound timeouts. Do not accept arbitrary page messages as export data.
 
 ---
 
@@ -54,6 +54,9 @@ app.echoToOE("done");
 app.preferences.rulerUnits = Units.PIXELS;
 var doc = app.activeDocument;
 
+var originalVisibility = [];
+for (var i = 0; i < doc.layers.length; i++) originalVisibility.push(doc.layers[i].visible);
+try {
 for (var i = 0; i < doc.layers.length; i++) {
   // Hide all layers
   for (var j = 0; j < doc.layers.length; j++) doc.layers[j].visible = false;
@@ -65,13 +68,14 @@ for (var i = 0; i < doc.layers.length; i++) {
   opts.PNG8    = false;
   opts.quality = 100;
   doc.exportDocument(
-    new File("/" + doc.layers[i].name + ".png"),
+    new File("/layer-" + i + ".png"),
     ExportType.SAVEFORWEB, opts
   );
 }
 
-// Restore visibility
-for (var i = 0; i < doc.layers.length; i++) doc.layers[i].visible = true;
+} finally {
+  for (var i = 0; i < doc.layers.length; i++) doc.layers[i].visible = originalVisibility[i];
+}
 ```
 
 ### 3. Find and replace text across all text layers
@@ -129,6 +133,7 @@ var wm = doc.activeLayer;
 // Resize to 20% of document width
 var wmW = wm.bounds[2] - wm.bounds[0];
 var targetW = doc.width * 0.2;
+if (wmW <= 0) throw new Error("Watermark has no measurable width");
 var scalePct = (targetW / wmW) * 100;
 wm.resize(scalePct, scalePct, AnchorPosition.TOPLEFT);
 
@@ -176,6 +181,10 @@ app.echoToOE(JSON.stringify(getLayerInfo(app.activeDocument)));
 ```
 
 ---
+
+## Integration boundary
+
+Embedding loads a third-party application. Review its terms and privacy/network behavior before loading confidential documents, fonts or assets. Work on an approved duplicate for destructive scripts and preserve a recoverable original. The third-party wrapper source is not bundled; pin and inspect its actual version before enabling document control. Treat URLs and returned strings as data; HTML script embedding also requires safe handling of `</script>` beyond JavaScript string serialization. Do not expose credentials in remote asset URLs.
 
 ## Limitations
 

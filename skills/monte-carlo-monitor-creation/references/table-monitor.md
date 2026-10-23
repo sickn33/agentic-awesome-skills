@@ -223,7 +223,7 @@ Monitors only schema changes (not freshness or volume) across multiple databases
 | **Scope** | Multiple tables (database/schema level) | Single table |
 | **Metrics** | Freshness, schema changes, row count | Field-level metrics (null rate, mean, sum, etc.) |
 | **Operator** | AUTO only (anomaly detection) | AUTO or explicit thresholds (GT, LT, EQ, etc.) |
-| **Asset selection** | Database/schema with filters and exclusions | Single table specified by MCON or name |
+| **Asset selection** | Database/schema scoping (see current filter limitation above) | Single table specified by MCON or name |
 | **Timestamp field** | Not required | Required (`aggregate_time_field`) |
 | **Segmentation** | Not available | Available via `segment_fields` |
 | **Best for** | Broad coverage, freshness, schema drift | Targeted field-level data quality checks |

@@ -16,7 +16,7 @@ src/{feature}/
 ## Rules
 
 - DTOs decorated with validation, validated via global pipe (ZodValidationPipe or class-validator).
-- Dynamic/unmodelable body: receive as `unknown` in controller, cast to narrowest concrete interface in service — never `any`.
+- Dynamic/unmodelable body: receive as `unknown` in controller, validate/narrow at the trust boundary before using a concrete interface — never `any`.
 - When splitting a god service, each new service injects only its own dependencies.
 - Services inject the database service from the shared package, not the generated client directly.
 - Role-checking: use enum values directly from the shared package.

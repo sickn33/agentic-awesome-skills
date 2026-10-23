@@ -2,17 +2,19 @@
 
 Adapted from the craft floor in impeccable by Paul Bakaus (Apache-2.0, see THIRD_PARTY_NOTICES.md) and the layout rules in taste-skill (MIT), rewritten and merged. Load it right before the first UI edit. The brief's own words can earn back anything under "Refuse"; your habit cannot.
 
+Local review note: the automated checks are heuristics, and style preferences now report warnings. Their tags describe attempted coverage, not accessibility conformance or proof of correctness.
+
 Rules marked **[gate]** are checked by `scripts/gate.py` on the rendered page. The rest are yours to check in the screenshots.
 
 ## Verify on the built page
 
-- **Contrast [gate]:** body and placeholder text 4.5:1 or better, large text (24px, or 18.7px bold) 3:1. Secondary text on a colored surface is tinted from that surface, not gray.
+- **Contrast [gate]:** visible text (placeholder contrast requires separate inspection) 4.5:1 or better, large text (24px, or 18.7px bold) 3:1. Secondary text on a colored surface is tinted from that surface, not gray.
 - **No sideways scroll [gate]:** at 390px nothing is wider than the screen. Long words, code, tables and images get a wrap or a scroll container.
-- **No text over text [gate]:** no heading under a sticky nav, no badge on a label, no line of copy running into another at any width.
-- **Tap targets [gate]:** buttons and controls at least 44px tall on phones; inline links at least 24px.
+- **No text over text [gate]:** inspect heading/nav collisions and copy overlap; the script compares approximate text boxes at two widths.
+- **Tap targets [gate]:** buttons and controls at least 44px tall on phones; inline links need separate spacing/exception review; the script skips inline sentence links.
 - **Readable size [gate]:** no visible text under 12px on phones.
 - **Hero [gate]:** the H1 and the first call to action are both inside the first desktop screen.
-- **Images [gate]:** every image loads and has alt text (empty alt for decoration).
+- **Images [gate]:** inspect loading and alt quality; the script checks visible image load failures and attribute presence (empty alt for decoration).
 - **Type:** body measure 60-75 characters, display no bigger than about 6rem, tracking no tighter than -0.04em, balanced headings (`text-wrap: balance`), obvious steps in size and weight.
 - **Spacing:** tight inside a group, generous between groups, more space above a heading than below it.
 - **Depth:** shadows have an offset and a soft blur and take their tint from the background. A zero-offset colored glow is decoration.

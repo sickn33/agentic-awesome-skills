@@ -14,9 +14,9 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 1. **Alerts: sparingly, for critical situations.** Errors needing attention, destructive action confirmations, or information requiring acknowledgment. They interrupt flow and demand a response.
 
-2. **Sheets: focused tasks that maintain context.** Slides in from the edge (or attaches to a window on macOS). Use for creating items, editing settings, multi-step forms.
+2. **Sheets: focused tasks that maintain context.** Presentation varies by platform. Prefer a window, full-screen flow or other suitable presentation for complex or prolonged work; iOS and iPadOS also support nonmodal sheets.
 
-3. **Popovers: non-modal on iPad and Mac.** Appear next to the trigger element, dismissed by tapping outside. For additional information, options, or controls without taking over the screen.
+3. **Popovers: transient contextual content.** Anchor them to the trigger in wide layouts; dismissal and modality depend on platform and configuration. Preserve edits when automatically dismissing a nonmodal popover. Adapt compact layouts to a suitable sheet.
 
 4. **Action sheets: choosing among actions.** Present when picking from multiple actions, especially if one is destructive. iPhone: slide up from bottom. iPad: appear as popovers.
 
@@ -24,11 +24,11 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 6. **Concise, actionable alert text.** Short descriptive title. Brief message body if needed. Button labels should be specific verbs ("Delete", "Save"), not "OK".
 
-7. **Mark destructive actions clearly.** Destructive button style (red text). Place destructive buttons where users are less likely to tap reflexively.
+7. **Mark destructive actions according to the component.** Action sheets place destructive choices prominently at the top. Alerts distinguish an unexpected destructive choice from confirmation of an explicitly initiated destructive action; follow the platform default and Cancel behavior in the alert reference.
 
 8. **Provide a cancel option** for alerts and action sheets with multiple actions. On action sheets, cancel appears at the bottom, separated.
 
-9. **Digit entry: focused and accessible.** Appropriately sized input fields, automatic advancement between digits, support for paste and autofill.
+9. **Digit entry views: tvOS-specific.** The bundled reference describes `TVDigitEntryViewController`, not a cross-platform OTP component. Use secure digit fields for sensitive values. For other platforms, design and test a suitable accessible text-input flow, including paste and autofill where supported.
 
 10. **Adapt presentation to platform.** The same interaction may use different components on iPhone, iPad, Mac, and visionOS.
 
@@ -69,13 +69,13 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 *Built by [Raintree Technology](https://raintree.technology) · [More developer tools](https://raintree.technology)*
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+Use when choosing Apple presentation components or reviewing their dismissal, destructive-action and platform behavior.
 
 ## Example
 
 **User request:**
 
-> Use @hig-components-dialogs for this task: Apple HIG guidance for presentation components including alerts, action sheets, popovers, sheets, and digit entry views.
+> Review an iPad note-formatting panel: recommend a nonmodal presentation, preserve edits on outside dismissal, and describe compact-width adaptation and VoiceOver checks.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

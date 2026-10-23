@@ -390,8 +390,7 @@ Right Panel (Form):
 - "Don't have an account? Sign up" link at bottom
 
 Security Indicators:
-- SSL badge
-- "Your data is secure" message
+- Accurate security/privacy information backed by the implemented controls; do not invent certification badges
 
 Style: Professional, trustworthy, enterprise-grade
 Colors: Corporate blue, white, subtle grays

@@ -1,5 +1,7 @@
 # Tuning Metric Monitors
 
+> Modified during local review: detection-signal, evidence and apply-verification constraints clarified; upstream attribution retained.
+
 This reference covers type-specific tuning guidance for metric monitors. Read this file after
 determining the monitor type in Phase 1.5.
 
@@ -39,10 +41,10 @@ For metric monitors using explicit thresholds (`GT`, `LT`, `GTE`, `LTE`, `EQ`, `
 
 **Syntax examples:**
 ```yaml
-where_condition: "event_type NOT IN ('inactive_monitor', 'agent_evaluation_anom')"
+where_condition: "(event_type IS NULL OR event_type NOT IN ('inactive_monitor', 'agent_evaluation_anom'))"
 ```
 ```yaml
-where_condition: "status != 'test'"
+where_condition: "(status IS NULL OR status <> 'test')"
 ```
 
 **IMPORTANT:** Always verify the column name and values exist in the table before recommending a
@@ -69,8 +71,7 @@ normal over a 24-hour window.
 **Trade-off:** You lose hourly granularity and may detect issues later. Always state this.
 
 **CRITICAL:** Do not recommend changing `aggregate_by` without also checking whether the
-`interval_minutes` needs to align. Hourly aggregation requires a schedule ≥60 min; daily
-requires ≥1440 min.
+`interval_minutes` needs to align. Check the installed schema and collection-window semantics; aggregation bucket and execution cadence are distinct and this reference establishes no universal minimum cadence.
 
 ---
 
@@ -111,7 +112,7 @@ Use `create_or_update_metric_monitor` to update the monitor in place.
   replaces the monitor's configuration — fields you omit revert to tool defaults, they are NOT
   left untouched. The full config from Phase 1's `get_monitors(monitor_ids=[<uuid>],
   include_fields=["config"])` call is your source of truth: re-pass every field you want to
-  keep (schedule, audiences, segment_fields, where_condition, sensitivity, collection_lag_hours,
+  keep (schedule, audiences, segment_fields, where_condition, sensitivity, collection lag in the installed schema's exact units,
   notes, priority, tags, etc.) alongside the ones you're changing.
 - **Diff the preview against the original.** Before running `dry_run=False`, compare the
   rendered YAML returned in `result.yaml` against the original config — if anything you meant to

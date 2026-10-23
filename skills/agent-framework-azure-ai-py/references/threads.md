@@ -1,5 +1,7 @@
 # Thread Management Reference
 
+**Compatibility note:** This is preserved legacy-generation reference material, not a verified current SDK recipe. Apply the SDK-generation, authorization, privacy, cost and cleanup gate in the root skill before adapting any snippet.
+
 Patterns for managing conversation state and multi-turn interactions.
 
 ## Overview
@@ -63,6 +65,8 @@ print(f"Service Thread ID: {thread.service_thread_id}")
 
 ## Conversation Persistence
 
+Bind agent/thread IDs to the authenticated tenant and user in server-side storage; possession of a client-supplied ID is not authorization. Serialize turns per conversation, use private storage and a defined expiry/deletion policy. Loading a different user's JSON must fail authorization before contacting the service.
+
 ### Saving Thread ID
 
 ```python
@@ -74,7 +78,7 @@ async def save_conversation(thread, filepath: str):
         "conversation_id": thread.conversation_id,
         "service_thread_id": thread.service_thread_id,
     }
-    with open(filepath, "w") as f:
+    with open(filepath, "x") as f:  # fresh private application-controlled path
         json.dump(data, f)
 
 # Usage
@@ -201,8 +205,8 @@ async def handle_user_session(provider, user_id: str, messages: list[str]):
 
     for message in messages:
         result = await agent.run(message, thread=thread)
-        print(f"[{user_id}] User: {message}")
-        print(f"[{user_id}] Agent: {result.text}")
+        print("User turn processed")
+        print("Agent turn completed")
 
 # Handle multiple users concurrently
 import asyncio

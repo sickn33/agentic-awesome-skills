@@ -2,6 +2,8 @@
 
 Complete templates for lead lifecycle stages, MQL criteria by business type, SLAs, and rejection/recycling workflows.
 
+Stage names, thresholds and timings are templates, not mandatory platform fields. Preserve subscription/opt-out state independently of lifecycle changes; recycling never re-enables suppressed outreach. Confirm fit before automatically promoting a booking to MQL.
+
 ## Stage Templates
 
 ### Subscriber

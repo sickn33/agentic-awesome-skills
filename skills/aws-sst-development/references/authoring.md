@@ -71,8 +71,7 @@ Key points:
 - **Import order is dependency order.** A module that reads another's exports
   (e.g. `observability` referencing function names) must be imported *after* it.
   Put observability last for this reason.
-- **Lazy `await import()`** is deliberate: importing a module has no side effect
-  until its factory runs, so the test harness can `import` it under a Pulumi
+- **Lazy `await import()`** delays evaluation until the import executes; a module with top-level resource declarations still runs those constructors at import time. Only a module exporting an uncalled factory avoids those side effects, so the test harness can `import` it under a Pulumi
   mock. If a module exports a factory function (`export function fooStack() {...}`)
   rather than running at import time, call it explicitly in `run()` and pass
   dependencies as arguments — that creates a real Pulumi dependency edge instead
@@ -193,8 +192,7 @@ Why not the simpler routes:
 Pair the strip with a CI grep gate that fails the build if any
 `.sst/artifacts/*-src/bundle.mjs` still ships `^const __filename`. This is a
 known-class issue; check whether the installed SST version has fixed it upstream
-(Context7 → `sst`) before adding the hook to a *new* project — but if you see the
-cold-start `SyntaxError`, this is the fix.
+(Context7 → `sst`) before adding the hook to a *new* project — but do not assume the error proves this root cause. Test the exact output and dependent code before removing shim bindings.
 
 ## Per-domain `infra/` modules
 
@@ -228,7 +226,7 @@ Conventions worth keeping:
   view type, lifecycle reasoning. These projects treat infra comments as design
   docs. Match that density.
 - **Derive everything from `$app.stage`** — never hardcode a stage into a name,
-  ARN, or SSM path. PR-preview stages (`pr-123`) must work for free.
+  ARN, or SSM path. PR-preview stages (`pr-123`) must work from a cold start and have explicit cost/cleanup limits; they are not free.
 
 ## Declaring resources: typed components vs raw Pulumi
 
@@ -308,9 +306,7 @@ Use `link` as the default for "this Lambda needs that table/bucket" — it's the
 lowest-friction path and keeps the binding + IAM in sync. **But know what it
 grants:** `link` issues resource-scoped (not action-scoped) IAM — e.g. broad
 read/write on that table or bucket, not just `GetItem`. That's fine for most
-workers. When you need *least privilege* (a specific action set, a condition, a
-sub-resource), add an explicit `permissions` entry and scope the actions
-yourself. Adding `permissions` for a resource you already `link` is usually
+workers. When you need *least privilege*, remove or customize the broad link grant and use an explicit action/resource set or a restricted Linkable. Adding a narrower Allow alongside a broad Allow does not reduce effective permissions. Adding `permissions` for a resource you already `link` is usually
 redundant — but it's legitimate when you need an *extra* action the link's grant
 doesn't cover (e.g. `s3:PutObjectTagging` on a linked bucket).
 
@@ -377,7 +373,7 @@ encrypted secret. Declare it, set the value once per stage via the CLI, then
 ```ts
 // infra/secrets.ts — declare (second arg is an optional placeholder default)
 export const slackWebhook = new sst.Secret("SlackWebhookUrl");
-export const hmacKey = new sst.Secret("OauthStateHmacKey", "");
+export const hmacKey = new sst.Secret("OauthStateHmacKey"); // no insecure empty fallback
 ```
 
 ```sh
@@ -387,9 +383,8 @@ npx sst secret list --stage prod          # verify (don't reach for an SSM path)
 ```
 
 ```ts
-// link it into a function: injects the value AND grants the function the IAM to
-// retrieve + decrypt it (secretsmanager:GetSecretValue + the KMS decrypt) — you
-// don't hand-write that permission.
+// Link the SST Secret binding; it is not an AWS Secrets Manager resource.
+// Inspect this SST version's encryption/decryption and generated permissions.
 new sst.aws.Function("Alerter", { handler: "...", link: [slackWebhook] });
 ```
 

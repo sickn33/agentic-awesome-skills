@@ -1,7 +1,7 @@
 /* ===========================================
    VIEWPORT FITTING: MANDATORY BASE STYLES
    Include this ENTIRE file in every presentation.
-   These styles ensure slides fit exactly in the viewport.
+   These styles constrain layout; verify actual content fit and provide a linear accessible view.
    =========================================== */
 
 /* 1. Lock html/body to viewport */
@@ -150,4 +150,14 @@ img, .image-container {
     html {
         scroll-behavior: auto;
     }
+}
+
+/* Accessible linear/print view: preserve content instead of clipping it. */
+body.linear-view .slide, body.linear-view .slide-content {
+    height: auto; min-height: 100vh; max-height: none; overflow: visible;
+}
+@media print {
+    html { scroll-snap-type: none; }
+    .slide, .slide-content { height: auto; max-height: none; overflow: visible; }
+    .reveal { opacity: 1 !important; transform: none !important; }
 }

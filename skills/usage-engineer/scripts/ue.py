@@ -5,10 +5,10 @@
 Design rules (non-negotiable):
 - Read-only toward user data unless a command explicitly writes (prepare-context, summarize-log,
   map, instructions mapping, apply-profile, rollback, bench, audit --json-out).
-- Never read or print credentials, cookies, auth tokens, or raw chat text.
+- Never intentionally open auth/cookie files. Rollout JSONL may contain raw chat text; do not print it.
 - Unknown metric => reported as UNKNOWN (null), never as zero.
 - Failures are never hidden; compact views always keep a local full copy and its path.
-- No network calls anywhere in this tool.
+- No direct network client; opt-in benchmark runners can contact model providers.
 """
 
 from __future__ import annotations
@@ -835,7 +835,9 @@ def build_map(project: Path, max_files: int = 4000, hash_max_bytes: int = 512_00
 
 def check_map(project: Path, map_obj: dict) -> dict:
     old = {e["path"]: e for e in map_obj.get("files", [])}
-    new = {e["path"]: e for e in build_map(project, max_files=max(len(old) + 1000, 4000))["files"]}
+    current_map = build_map(project, max_files=max(len(old) + 1000, 4000))
+    new = {e["path"]: e for e in current_map["files"]}
+    incomplete = bool(map_obj.get("truncated") or current_map.get("truncated"))
     changed, added, removed, meta_only = [], [], [], []
     for rel, ne in new.items():
         oe = old.get(rel)
@@ -852,7 +854,7 @@ def check_map(project: Path, map_obj: dict) -> dict:
             removed.append(rel)
     current_git = _git_snapshot(project)
     git_changed = (map_obj.get("git", {}).get("commit") != current_git.get("commit"))
-    stale = bool(changed or added or removed or meta_only or git_changed)
+    stale = bool(changed or added or removed or meta_only or git_changed or incomplete)
     return {
         "stale": stale,
         "changed": sorted(changed),
@@ -860,6 +862,7 @@ def check_map(project: Path, map_obj: dict) -> dict:
         "removed": sorted(removed),
         "changed_unhashed": sorted(meta_only),
         "git_head_changed": git_changed,
+        "coverage_incomplete": incomplete,
     }
 
 
@@ -893,6 +896,8 @@ def cmd_map(args) -> int:
                 if res[k]:
                     print(f"  {k} ({len(res[k])}): " + ", ".join(res[k][:20])
                           + (" ..." if len(res[k]) > 20 else ""))
+            if res["coverage_incomplete"]:
+                print("  map coverage is truncated; freshness is UNKNOWN.")
             if res["git_head_changed"]:
                 print("  git HEAD changed since map was built.")
             print("Do not trust resume assumptions from this map; re-scan the listed files.")
@@ -1042,8 +1047,14 @@ def cmd_compare(args) -> int:
     if not a or not b:
         print("ERROR: cannot read one of the run records", file=sys.stderr)
         return 2
+    if a.get("meta", {}) != b.get("meta", {}):
+        print("NOT COMPARABLE: model/reasoning metadata differ.")
+        return 2
     ca = {c["id"]: c for c in a.get("cases", [])}
     cb = {c["id"]: c for c in b.get("cases", [])}
+    if not ca or not cb or len(ca) != len(a.get("cases", [])) or len(cb) != len(b.get("cases", [])):
+        print("NOT COMPARABLE: empty records or multiple variants share a case ID; compare individual records.")
+        return 2
     if set(ca) != set(cb):
         print("NOT COMPARABLE: different case sets between the two records.")
         print(f"  only in A: {sorted(set(ca) - set(cb))}")
@@ -1149,11 +1160,14 @@ def cmd_apply_profile(args) -> int:
         return 2
     reg = _registry()
     key = _target_key(args.target, dest)
+    if key in reg and dest.exists() and sha256_file(dest) != reg[key]["sha_applied"]:
+        print("CONFLICT: managed profile was edited after apply; merge manually.", file=sys.stderr)
+        return 3
     if key in reg:
         print(f"NOTE: {dest} is already managed by ue. Re-applying will refresh it (rollback stays "
               "possible to the original backup).")
-    backup = None
-    if dest.exists():
+    backup = Path(reg[key]["backup"]) if key in reg and reg[key].get("backup") else None
+    if dest.exists() and key not in reg:
         backup = STATE_DIR / "backups" / f"{dest.name}-{stamp()}"
         backup.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(dest, backup)
@@ -1176,8 +1190,8 @@ def cmd_apply_profile(args) -> int:
         "sha_applied": sha,
         "backup": str(backup) if backup else None,
         "applied_at": now_iso(),
-        "note": ("codex: activate with `codex --profile usage-efficient`; it layers on top of your "
-                 "config and changes no model/effort values."
+        "note": ("codex: this file is not automatically loaded; inspect and manually merge the profile into your "
+                 "config before using codex --profile usage-efficient."
                  if args.target == "codex" else
                  "opencode reads project opencode.json automatically for that project."),
     }
@@ -1273,6 +1287,9 @@ def _prep_workdir(case: dict, tag: str) -> Path:
 
 def cmd_bench(args) -> int:
     data = _bench_cases()
+    if not data.get("cases") or not data.get("variants"):
+        print("ERROR: benchmark fixtures/variants are absent in this compact bundle", file=sys.stderr)
+        return 2
     cases = {c["id"]: c for c in data.get("cases", [])}
     variants = data.get("variants", {})
     if args.bench_command == "list":

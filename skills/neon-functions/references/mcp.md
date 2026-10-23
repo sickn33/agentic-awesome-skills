@@ -6,6 +6,8 @@ MCP's **streamable HTTP transport** is a plain `POST`/`GET` on a single endpoint
 
 ## The server
 
+This is a non-deployable integration sketch until authentication and per-user row authorization are implemented. A JWT check alone does not scope the demonstrated create/delete tools; enforce tenant filters in every database operation and validate token audience/resource/scope.
+
 Two packages do the work: the official [`@modelcontextprotocol/sdk`](https://github.com/modelcontextprotocol/typescript-sdk) (defines the server and its tools) and [`@hono/mcp`](https://github.com/honojs/middleware/tree/main/packages/mcp) (bridges MCP's streamable HTTP transport to a Hono route). Tools query Postgres through Drizzle on a module-scope `pg` pool, exactly like any other function (see [Connecting to Postgres](../SKILL.md#connecting-to-postgres)).
 
 ```typescript
@@ -62,8 +64,10 @@ mcpServer.registerTool(
 const transport = new StreamableHTTPTransport();
 const app = new Hono();
 
+let connecting: Promise<void> | undefined;
 app.all("/mcp", async (c) => {
-  if (!mcpServer.isConnected()) await mcpServer.connect(transport);
+  // Integration sketch: add auth and tenant/request context before exposing this route.
+  if (!mcpServer.isConnected()) await (connecting ??= mcpServer.connect(transport).catch((error) => { connecting = undefined; throw error; }));
   return transport.handleRequest(c);
 });
 
@@ -72,7 +76,7 @@ export default app;
 
 Key points:
 
-- **Module scope.** Build the `McpServer`, register its tools, create the `StreamableHTTPTransport`, and open the `pg` pool once at module load — they're reused across every request the isolate serves (see [runtime limits](../SKILL.md#timeouts-and-runtime-limits)). Connect the transport lazily with the `isConnected()` guard so it happens once.
+- **Module scope.** Build the `McpServer`, register its tools, create the `StreamableHTTPTransport`, and open the `pg` pool once at module load — they're reused across every request the isolate serves (see [runtime limits](../SKILL.md#timeouts-and-runtime-limits)). Serialize initial transport connection with a shared promise. Stateful sessions require separate per-session transports; do not share request identity in module globals.
 - **State in Postgres.** Module memory doesn't survive isolate eviction, and several isolates run in parallel — so the source of truth for anything a tool reads or writes belongs in Postgres, not an in-memory structure.
 - **The URL.** After `neon deploy`, the server lives at `https://<branch_id>-<slug>.compute.…neon.tech/mcp`. Point any streamable-HTTP MCP client at that `/mcp` path.
 
@@ -130,7 +134,7 @@ app.all("/mcp", async (c) => {
 });
 ```
 
-This keeps the secret server-side, costs nothing to operate, and is trivial to rotate — a solid default until you need third-party clients to self-authorize, at which point reach for Option 1.
+This keeps the secret server-side, has account-dependent operating costs, and is trivial to rotate — a solid default until you need third-party clients to self-authorize, at which point reach for Option 1.
 
 ## Testing
 

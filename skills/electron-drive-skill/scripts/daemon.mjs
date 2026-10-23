@@ -225,6 +225,7 @@ const handlers = {
 
   async wait({ target, timeout }) {
     const page = await getPage()
+    if (timeout !== undefined && (!Number.isFinite(timeout) || timeout <= 0 || timeout > 300_000)) throw new Error('timeout must be 1..300000ms')
     await page.locator(target).first().waitFor({ timeout: timeout ?? 10_000 })
     return `found ${target}`
   },
@@ -249,9 +250,12 @@ const handlers = {
 
   async logs({ lines }) {
     const count = lines ?? 60
+    if (!Number.isInteger(count) || count < 1 || count > 500) throw new Error('lines must be 1..500')
     let fileTail = ''
     if (config.logFile) {
       const file = path.resolve(dataDir, config.logFile)
+      const relative = path.relative(dataDir, file)
+      if (relative.startsWith('..') || path.isAbsolute(relative)) throw new Error('logFile must remain in scratch profile')
       const tail = existsSync(file)
         ? readFileSync(file, 'utf8').split('\n').slice(-count).join('\n')
         : '(not written yet)'
@@ -274,7 +278,10 @@ const main = async () => {
 
   const server = http.createServer((request, response) => {
     let body = ''
+    let bytes = 0
     request.on('data', (chunk) => {
+      bytes += chunk.length
+      if (bytes > 1024 * 1024) { request.destroy(); return }
       body += chunk
     })
     request.on('end', async () => {
@@ -288,6 +295,9 @@ const main = async () => {
       } catch {
         reply(400, { ok: false, error: 'Bad request.' })
         return
+      }
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+        reply(400, { ok: false, error: 'Expected object' }); return
       }
       if (parsed.token !== token) {
         reply(403, { ok: false, error: 'Bad token.' })
@@ -304,7 +314,7 @@ const main = async () => {
         return
       }
 
-      const handler = handlers[parsed.command ?? '']
+      const handler = Object.hasOwn(handlers, parsed.command ?? '') ? handlers[parsed.command] : null
       if (!handler) {
         reply(404, { ok: false, error: `Unknown command '${parsed.command}'.` })
         return

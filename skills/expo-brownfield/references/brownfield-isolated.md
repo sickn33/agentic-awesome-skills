@@ -22,7 +22,7 @@ The JavaScript bundle is **embedded inside the artifact** in release builds, so 
 
 ## Prerequisites
 
-- **Expo SDK 55 or later** — brownfield support, `expo-brownfield`, and the required runtime classes are only available on SDK 55+. Earlier SDKs will not work.
+- **Supported Expo SDK/RN pair** — reconcile this historical SDK-55 example with the current official isolated guide and plugin version; no blanket minimum guarantees every runtime class/flag.
 - **Node.js (LTS)** — runs JavaScript and the Expo CLI.
 - **Yarn** — manages JavaScript dependencies.
 
@@ -38,7 +38,7 @@ Node and Yarn are only needed in the environment that _builds_ the artifact. The
 npx create-expo-app@latest my-project --template default@sdk-55
 ```
 
-**Pin to SDK 55 or later — earlier SDKs do not support brownfield.** The project can live in a separate repo or alongside the native app in a monorepo; it does not need to be inside the native project.
+**Pin a reviewed supported SDK; SDK 55 below is a historical example.** The project can live in a separate repo or alongside the native app in a monorepo; it does not need to be inside the native project.
 
 ### Install expo-brownfield
 
@@ -153,9 +153,9 @@ The plugin's `publishing` option controls where the AAR is published. When unset
 }
 ```
 
-Supported `type` values: `localMaven`, `localDirectory`, `remotePublic`, `remotePrivate`. For private repos, credentials and URL accept either inline strings or `{ "variable": "ENV_VAR_NAME" }` to read from the environment at publish time.
+Supported `type` values: `localMaven`, `localDirectory`, `remotePublic`, `remotePrivate`. For private repos, prefer environment-backed credentials rather than committed inline secrets; credentials and URL support `{ "variable": "ENV_VAR_NAME" }` to read from the environment at publish time.
 
-By default, `build:android` runs every declared publication. To pick specific publications or repositories from the command line, use the CLI flags:
+**Publication side effect:** by default, `build:android` runs every declared publication, including remote ones. Review destinations and use only authorized targets before invoking it. To pick specific publications or repositories from the command line, use the CLI flags:
 
 ```sh
 npx expo-brownfield build:android --task publishReleasePublicationToCompanyRepository
@@ -186,7 +186,7 @@ To force source builds on SDK 56+, add `expo-build-properties` to `app.json`:
 }
 ```
 
-**Every xcframework in the produced set must be embedded in the consuming app** (Embed & Sign). The Swift Package output below (`--package`) wires this for you automatically.
+**Every required artifact must be linked appropriately.** Inspect dynamic versus static linkage; embed/sign dynamic frameworks, and follow generated package instructions for static ones. The Swift Package output below (`--package`) wires this for you automatically.
 
 > **iOS deployment target:** the brownfield artifact inherits the Expo project's iOS deployment target (16.4 on SDK 56+). The consuming app's deployment target must be set to 16.4 or higher; otherwise Xcode will refuse to link the embedded frameworks. If the host app is on an older floor (e.g. iOS 14.0), bump its `IPHONEOS_DEPLOYMENT_TARGET` before adding the artifact.
 
@@ -207,7 +207,8 @@ artifacts/MyAppPackage/
     ├── MyAppPackage.xcframework
     ├── hermesvm.xcframework
     ├── React.xcframework
-    └── ReactNativeDependencies.xcframework
+    ├── ReactNativeDependencies.xcframework
+    └── ExpoModulesJSI.xcframework # where produced by the selected SDK
 ```
 
 When `usePrecompiledModules` is enabled, the package directory is suffixed with the build flavor (e.g. `MyAppPackage-release/`) and includes every prebuilt Expo module xcframework. Run `build:ios --debug --package …` and `build:ios --release --package …` separately, and point your host app at the matching package for each build configuration.
@@ -307,7 +308,7 @@ If you built **standalone XCFrameworks** (default output):
 
 - Drag **every** `.xcframework` produced under `./artifacts` into the Xcode project navigator.
 - In the import dialog, check **Copy items if needed** and add them to your app target.
-- Under the app target's **General** tab → **Frameworks, Libraries, and Embedded Content**, set **every** framework to **Embed & Sign**. Forgetting one (commonly `hermesvm.xcframework`) is a leading cause of runtime "Library not loaded" crashes — see [./troubleshooting.md](./troubleshooting.md#ios-xcframework-signing-isolated-approach).
+- Under the app target's **General** tab → **Frameworks, Libraries, and Embedded Content**, set dynamic frameworks to **Embed & Sign**, while linking static frameworks according to the generated package/template. Forgetting one (commonly `hermesvm.xcframework`) is a leading cause of runtime "Library not loaded" crashes — see [./troubleshooting.md](./troubleshooting.md#ios-xcframework-signing-isolated-approach).
 
 #### Initialize React Native at app launch
 

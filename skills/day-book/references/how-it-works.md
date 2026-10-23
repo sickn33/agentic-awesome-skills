@@ -4,4 +4,4 @@ If any answer is no, fix the model first and then re-derive the artifacts. Do no
 four artifacts that disagree with each other.
 
 
-See the [Field Reference](references/field-reference.md) reference for the full guidance.
+See the [Field Reference](field-reference.md) reference for the full guidance.

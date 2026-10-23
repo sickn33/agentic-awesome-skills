@@ -89,7 +89,7 @@ Edita parte de uma imagem usando mascara.
 | `seed` | int | Nao | Seed |
 | `output_format` | string | Nao | Formato de saida |
 
-Se `mask` nao for enviada, o modelo tenta inferir automaticamente.
+Sem mascara explicita, algumas APIs usam o canal alfa da imagem. Este helper exige uma mascara para evitar editar uma area inesperada; verifique a documentacao do endpoint.
 
 ### POST /stable-image/edit/search-and-replace
 
@@ -187,7 +187,7 @@ Ratios suportados: `1:1`, `2:3`, `3:2`, `4:5`, `5:4`, `9:16`, `16:9`, `9:21`, `2
 
 ### seed
 - Range: 0 a 4294967294
-- Mesma seed + mesmo prompt = mesma imagem (reproducibilidade)
+- A seed ajuda a reproducibilidade, mas prompt, versao do modelo e todos os parametros tambem importam; nao garante bytes identicos.
 - 0 ou omitido = aleatorio
 
 ## Respostas

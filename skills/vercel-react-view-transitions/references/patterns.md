@@ -191,7 +191,7 @@ function cycleSort() {
 }
 
 <button>Sort: {LABELS[optimisticSort]}</button>
-{items.sort(comparators[sort]).map(item => (
+{[...items].sort(comparators[sort]).map(item => (
   <ViewTransition key={item.id}><ItemCard item={item} /></ViewTransition>
 ))}
 ```
@@ -200,7 +200,7 @@ function cycleSort() {
 
 ## View Transition Events
 
-Imperative control via `onEnter`, `onExit`, `onUpdate`, `onShare`. Always return a cleanup function. `onShare` takes precedence over `onEnter`/`onExit`.
+Imperative control via `onEnter`, `onExit`, `onUpdate`, `onShare`. Return cleanup for resources/animations created; also honor reduced motion in JavaScript because the CSS override does not cancel Web Animations API motion. `onShare` takes precedence over `onEnter`/`onExit`.
 
 ```jsx
 <ViewTransition
@@ -239,7 +239,7 @@ The `types` array (second argument) lets you vary animation based on transition 
 
 **"Two ViewTransition components with the same name":** Names must be globally unique. Use IDs: `name={`hero-${item.id}`}`.
 
-**`router.back()` and browser back/forward skip animation:** Use `router.push()` with an explicit URL instead. See SKILL.md "router.back() and Browser Back Button."
+**`router.back()` and browser back/forward skip animation:** Preserve history semantics and accept a nonanimated fallback instead of pushing a new history entry to imitate Back. See SKILL.md "router.back() and Browser Back Button."
 
 **`flushSync` skips animations:** Use `startTransition` instead.
 

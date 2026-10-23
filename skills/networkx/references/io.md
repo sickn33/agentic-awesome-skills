@@ -257,8 +257,8 @@ with open('graph.pkl', 'rb') as f:
     G = pickle.load(f)
 
 # NetworkX convenience functions
-nx.write_gpickle(G, 'graph.gpickle')
-G = nx.read_gpickle('graph.gpickle')
+# NetworkX 3 removed write_gpickle; use explicit trusted pickle.dump if required
+# NetworkX 3 removed read_gpickle; never load an untrusted pickle
 ```
 
 ## CSV Files
@@ -298,7 +298,7 @@ conn.close()
 # Write to SQL database
 df = nx.to_pandas_edgelist(G)
 conn = sqlite3.connect('network.db')
-df.to_sql('edges', conn, if_exists='replace', index=False)
+df.to_sql('edges', conn, if_exists='fail', index=False)
 conn.close()
 ```
 
@@ -352,10 +352,10 @@ mmwrite('graph.mtx', A)
 ```python
 # Requires pyshp library
 # Read geographic network from shapefile
-G = nx.read_shp('roads.shp')
+# Removed in NetworkX 3: use a reviewed GeoPandas/momepy conversion for geographic data
 
 # Write to shapefile
-nx.write_shp(G, 'network')
+# Removed in NetworkX 3; export reviewed geometry through a supported geospatial library
 ```
 
 ## Format Selection Guidelines
@@ -393,14 +393,14 @@ For large graphs, consider:
 ```python
 # Use compressed formats
 import gzip
-with gzip.open('graph.adjlist.gz', 'wt') as f:
+with gzip.open('graph.adjlist.gz', 'wb') as f:
     nx.write_adjlist(G, f)
 
-with gzip.open('graph.adjlist.gz', 'rt') as f:
+with gzip.open('graph.adjlist.gz', 'rb') as f:
     G = nx.read_adjlist(f)
 
 # Use binary formats (faster)
-nx.write_gpickle(G, 'graph.gpickle')  # Faster than text formats
+# NetworkX 3 removed write_gpickle; use explicit trusted pickle.dump if required  # Faster than text formats
 
 # Use sparse matrices for adjacency
 A = nx.to_scipy_sparse_array(G, format='csr')  # Memory efficient

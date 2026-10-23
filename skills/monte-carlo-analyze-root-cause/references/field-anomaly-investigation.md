@@ -43,7 +43,7 @@ Run targeted queries to understand the field's behavior:
 SELECT DATE_TRUNC('day', timestamp_col) AS day,
        COUNT(*) AS total,
        COUNT(field_name) AS non_null,
-       1.0 - COUNT(field_name) / COUNT(*) AS null_rate
+       1.0 - 1.0 * COUNT(field_name) / NULLIF(COUNT(*), 0) AS null_rate
 FROM table
 WHERE timestamp_col >= DATEADD('day', -14, CURRENT_TIMESTAMP())
 GROUP BY 1 ORDER BY 1
@@ -93,7 +93,7 @@ ORDER BY bad_rate DESC
 LIMIT 20
 ```
 
-If one dimension value has a much higher "bad rate" than others, it's likely the root cause — e.g., "all rows from source_system='legacy_api' have NULL revenue, but rows from other sources are fine."
+If one dimension value has a much higher "bad rate" than others, it is a useful localization hypothesis, not proof of causation — e.g., "all rows from source_system='legacy_api' have NULL revenue, but rows from other sources are fine."
 
 Try this across multiple columns (category fields, source identifiers, date partitions) to narrow down the pattern.
 
@@ -105,3 +105,5 @@ Try this across multiple columns (category fields, source identifiers, date part
 - **Schema change** — column type changed, causing implicit conversions
 - **Backfill** — historical data reprocessed with different logic
 - **Null propagation** — upstream NULL values cascading through JOINs
+
+<!-- Modified locally: evidence, SQL safety or paid-run corrections. -->

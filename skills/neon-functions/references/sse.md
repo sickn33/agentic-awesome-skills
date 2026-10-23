@@ -17,18 +17,18 @@ export default {
     const url = new URL(request.url);
     if (url.pathname !== "/events") return new Response("ok");
 
+    let timer: ReturnType<typeof setInterval>;
     const stream = new ReadableStream<Uint8Array>({
       start(controller) {
         // An SSE frame is `data: <payload>\n\n`. A line starting with `:` is a
         // comment — used here as a heartbeat to keep the stream from going idle.
         controller.enqueue(encoder.encode("data: hello\n\n"));
-        const timer = setInterval(
+        timer = setInterval(
           () => controller.enqueue(encoder.encode(": ping\n\n")),
           25_000,
         );
-        // cancel() fires when the client disconnects.
-        return () => clearInterval(timer);
       },
+      cancel() { clearInterval(timer); },
     });
 
     return new Response(stream, {
@@ -42,7 +42,7 @@ export default {
 };
 ```
 
-> `cancel()` is returned from `start()` here for brevity; you can also declare it as a separate `cancel()` method on the stream's underlying source. Either way, use it to drop the client from any broadcast set and clear timers.
+> `start()` return values are not cleanup callbacks. Implement the underlying source's `cancel()` method and also handle the request abort signal as needed in the target runtime. Drop clients and timers on disconnect; enforce backpressure/queue bounds for slow consumers.
 
 ## With Hono
 
@@ -130,7 +130,7 @@ source.onerror = () => {/* EventSource auto-reconnects; nothing to do */};
 // source.close() to stop.
 ```
 
-`EventSource` **reconnects automatically** with the server's `retry:` interval, replaying `Last-Event-ID` if you set `id:` — so unlike WebSockets you don't write a reconnect loop. Its constraints: it's **GET-only and can't set request headers**, so authenticate the same way as a [WebSocket](../SKILL.md#websocket-servers) — a `?token=` query param (verify with `jwtVerify` before streaming) or a cookie. (Use the modern `eventsource` polyfill if you need `Authorization` headers.)
+`EventSource` **reconnects automatically** with the server's `retry:` interval, sending `Last-Event-ID` if you set `id:`; the server must implement durable replay itself — so unlike WebSockets you don't write a reconnect loop. Its constraints: it's **GET-only and can't set request headers**, so authenticate the same way as a [WebSocket](../SKILL.md#websocket-servers) — a `?token=` query param (verify with `jwtVerify` before streaming) or a cookie. (Use the modern `eventsource` polyfill if you need `Authorization` headers.)
 
 ## Caveats
 
@@ -140,4 +140,4 @@ source.onerror = () => {/* EventSource auto-reconnects; nothing to do */};
 - **CORS.** A SPA hits the function cross-origin, so set `Access-Control-Allow-Origin`. `EventSource` sends no credentials by default, so `*` is fine for public streams.
 - **One-way only.** SSE is server → client. For client → server, the browser makes normal `fetch`/`POST` calls (often to the same function); reach for [WebSockets](../SKILL.md#websocket-servers) only when you need bidirectional, low-latency frames.
 
-Together — a Hono `fetch` SSE endpoint, `LISTEN`/`NOTIFY` fan-out, heartbeat, a counter persisted in Postgres, and a client-only TanStack Router SPA consuming it with `EventSource` — these compose into a complete realtime backend on a single function.
+Together — a Hono `fetch` SSE endpoint, `LISTEN`/`NOTIFY` fan-out, heartbeat, a counter persisted in Postgres, and a client-only TanStack Router SPA consuming it with `EventSource` — these illustrate a realtime backend; add auth, tenant isolation, listener reconnection, replay and backpressure before production on a single function.

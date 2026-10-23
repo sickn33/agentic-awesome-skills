@@ -1,5 +1,7 @@
 # Build Systems and Tooling
 
+Version numbers are illustrative pins, not current-version recommendations. Review/pin dependency commits and Actions, provision tools and test project files before adapting these snippets. CI sanitizer/static-analysis jobs also need the project dependencies/toolchain; the sketches do not install them automatically.
+
 ## Modern CMake
 
 ```cmake
@@ -98,6 +100,13 @@ set(CMAKE_CXX_FLAGS_MSAN
     CACHE STRING "Flags for MSan build"
 )
 
+# These are custom single-config build flags. Sanitizers must also link:
+foreach(kind ASAN UBSAN TSAN MSAN)
+    set(CMAKE_EXE_LINKER_FLAGS_${kind} "${CMAKE_CXX_FLAGS_${kind}}")
+    set(CMAKE_SHARED_LINKER_FLAGS_${kind} "${CMAKE_CXX_FLAGS_${kind}}")
+endforeach()
+# Use a supported compiler/platform; MSan needs instrumented dependencies.
+# Keep ASan and TSan in separate builds.
 # Usage: cmake -DCMAKE_BUILD_TYPE=ASAN ..
 ```
 
@@ -149,6 +158,7 @@ include-what-you-use -std=c++20 src/main.cpp
 ```cpp
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include "mylib.h"
 
 TEST_CASE("Vector operations", "[vector]") {
@@ -177,6 +187,7 @@ TEST_CASE("Floating point", "[math]") {
                  Catch::Matchers::WithinAbs(3.14, 0.01));
 }
 
+TEST_CASE("Vector benchmarks", "[benchmark]") {
 BENCHMARK("Vector creation") {
     return std::vector<int>(1000);
 };
@@ -188,6 +199,7 @@ BENCHMARK("Vector fill") {
     }
     return vec;
 };
+}
 ```
 
 ## Testing with GoogleTest
@@ -322,7 +334,7 @@ CMakeDeps
 CMakeToolchain
 
 [options]
-fmt:header_only=True
+fmt/*:header_only=True
 ```
 
 ```cmake
@@ -370,7 +382,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        compiler: [gcc, clang, msvc]
         build_type: [Debug, Release]
 
     steps:
@@ -379,11 +390,12 @@ jobs:
     - name: Install dependencies
       run: |
         pip install conan
-        conan install . --output-folder=build --build=missing
+        conan profile detect
+        conan install . --output-folder=build --build=missing -s build_type=${{ matrix.build_type }}
 
     - name: Configure
       run: |
-        cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake
 
     - name: Build
       run: cmake --build build --config ${{ matrix.build_type }}

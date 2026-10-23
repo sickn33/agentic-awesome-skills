@@ -3,6 +3,8 @@
 `scripts/relay.mjs` wraps Vibe's headless `--prompt` mode, captures its structured stream, and writes
 a `result.json`. Run one command, then read one file.
 
+Fleet lane resolution executes a separate installed helper; review that source and configuration before use. Permission-affecting dials are rejected unless explicitly selected through this relay's CLI. Logs are not size-bounded on disk; use quotas for long runs.
+
 ## Before the first run
 
 ```bash
@@ -45,7 +47,7 @@ node "<skill-dir>/scripts/relay.mjs" --brief brief.txt --cd /path/to/repo
 | `--enabled-tools <tool>` | Enable only this tool (`--enabled-tools`). Repeatable. |
 | `--disabled-tools <tool>` | Disable this tool (`--disabled-tools`). Repeatable. |
 | `--timeout <dur>` | Relay watchdog (default: `30m`; h/m/s strings). Vibe has no timeout flag. |
-| `--out-dir <dir>` | Artifact directory (default: a fresh directory under the system temp dir). |
+| `--out-dir <dir>` | Fresh nonexistent artifact directory (default: a fresh directory under the system temp dir). |
 | `-h`, `--help` | Print the relay's header help. |
 
 `--session` and `--resume-last` are mutually exclusive, as are `--plan-only` and `--full-access`.

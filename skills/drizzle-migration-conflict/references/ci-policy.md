@@ -35,14 +35,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-      - run: pnpm install --frozen-lockfile
+      # Review dependencies/config first; do not expose secrets to untrusted PR code.
+      - run: pnpm install --frozen-lockfile --ignore-scripts
       # Run only with a non-production or disposable DATABASE_URL if the config requires one.
       - run: pnpm exec drizzle-kit check --config drizzle.config.ts
       # Example assumes the helper was copied to scripts/check_drizzle_migrations.py.

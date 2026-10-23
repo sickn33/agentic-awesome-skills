@@ -80,7 +80,7 @@ logScale(1000); // Returns 500
 - Logarithmic axes
 - Exponential growth visualisations
 
-**Important:** Domain values must be strictly positive (>0).
+**Important:** A log domain must stay strictly on one side of zero. D3 also supports entirely negative log domains; mixed-sign/zero domains are invalid.
 
 ### Time scale
 
@@ -403,7 +403,7 @@ const timeScale = d3.scaleTime()
   .domain([new Date(2020, 0, 1), new Date(2024, 0, 1)]);
 
 timeScale.ticks(d3.timeYear);      // Yearly ticks
-timeScale.ticks(d3.timeMonth, 3);  // Every 3 months
+timeScale.ticks(d3.timeMonth.every(3));  // Every 3 months
 timeScale.tickFormat(5, "%Y-%m");  // Format as year-month
 ```
 
@@ -486,7 +486,7 @@ function createAdaptiveScale(data) {
   const range = extent[1] - extent[0];
   
   // Use log scale if data spans >2 orders of magnitude
-  if (extent[1] / extent[0] > 100) {
+  if (extent[0] > 0 && extent[1] / extent[0] > 100) {
     return d3.scaleLog()
       .domain(extent)
       .range([0, width]);

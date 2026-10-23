@@ -85,7 +85,7 @@ node "<skill-dir>/scripts/relay.mjs" --brief brief.txt --cd /path/to/repo
 ```
 
 Implementation runs default to Qoder's `auto` permission mode. The relay never bypasses permissions
-unless the caller explicitly requests it, and it never commits. See
+unless the caller explicitly requests it, and it never directly commits. The child can still invoke git; the brief is a behavioral constraint, not enforcement. Capture the baseline HEAD and inspect the final commit history as well as staged, unstaged and untracked files. See
 [references/dispatch-and-poll.md](references/dispatch-and-poll.md).
 
 ### 3. Wait for completion
@@ -128,6 +128,10 @@ runs only.
 Qoder falls back to `default` when a non-default mode is requested outside a trusted directory. Check
 `actualPermissionMode` in `result.json`; no requested mode replaces diff review.
 
+## Data and execution scope
+
+Delegation sends the brief and accessible workspace context to the configured provider and may incur account charges. Use an isolated checkout and minimal inherited credentials. Avoid sensitive context in briefs, logs and resumed sessions. The optional `--lane` resolver requires the separately installed `delegate-setup` skill and is unavailable without it. Choose a new `--out-dir`; the relay rejects existing paths to preserve evidence. Logs and buffered messages can grow with output; use bounded tasks and monitor disk/memory. A completed status means CLI exit success, not successful gates, an authentic report or an unchanged commit history.
+
 ## Authorization model
 
 Delegation is something the human opts into. Once they ask for it, landing verified, gate-passing work
@@ -152,4 +156,4 @@ non-blocking deviations) and **stop for scope changes** (ask before expanding be
 - Runtime helper `scripts/relay.mjs` is bundled from the revision recorded in `UPSTREAM-NOTICE.md`. Requires the corresponding installed and authenticated CLI, Node 18+, and git.
 - Relay never commits — it only returns structured result JSON; you review and land the commit.
 
-> Adapted from [amElnagdy/delegate-skills](https://github.com/amElnagdy/delegate-skills) (MIT) — docs-only, runtime not bundled.
+> Adapted from [amElnagdy/delegate-skills](https://github.com/amElnagdy/delegate-skills) (MIT). Runtime relay is bundled; local changes are recorded in the upstream notice.

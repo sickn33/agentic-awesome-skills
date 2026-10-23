@@ -12,17 +12,17 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 ## Key Principles
 
-1. **Each platform has a distinct identity.** Do not port designs between platforms. Respect each platform's conventions, interaction models, and user expectations.
+1. **Each platform has a distinct identity.** Adapt shared designs and code to each platform. Respect each platform's conventions, interaction models, and user expectations.
 
 2. **iOS: touch-first.** Direct manipulation on a handheld screen. Optimize for one-handed use. Navigation uses tab bars and push/pop stacks.
 
-3. **iPadOS: expanded canvas.** Support Split View, Slide Over, and Stage Manager. Use sidebars and multi-column layouts. Support pointer and keyboard alongside touch.
+3. **iPadOS: expanded canvas.** Support resizable windows and the multitasking modes available on the target OS and hardware. Use sidebars and multi-column layouts. Support pointer and keyboard alongside touch.
 
 4. **macOS: pointer and keyboard.** Dense information display is acceptable. Use menu bars, toolbars, and keyboard shortcuts extensively. Windows are resizable with precise control.
 
-5. **tvOS: remote and focus.** Viewed from a distance. Design for the Siri Remote with focus-based navigation. Large text, simple layouts, linear navigation.
+5. **tvOS: remote and focus.** Viewed from a distance. Design for the Siri Remote with focus-based navigation. Large text, simple layouts, predictable spatial focus navigation.
 
-6. **visionOS: spatial interaction.** 3D environment using windows, volumes, and spaces. Eye tracking for targeting, indirect gestures for interaction. Respect ergonomic comfort zones.
+6. **visionOS: spatial interaction.** 3D environment using windows, volumes, and spaces. System-managed gaze targeting and indirect gestures for interaction; apps must not assume access to raw eye-tracking data. Respect ergonomic comfort zones.
 
 7. **watchOS: glanceable and brief.** Information consumable at a glance. Brief interactions. Digital Crown, haptics, and complications for timely content.
 
@@ -46,7 +46,7 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 2. **Match input to interaction.** Touch for direct manipulation, pointer for precision, gaze+gesture for spatial, Digital Crown for quick scrolling, remote for focus navigation.
 
-3. **Adapt, don't replicate.** A macOS sidebar becomes a tab bar on iPhone. A visionOS volume has no equivalent on watchOS. Translate intent, not implementation.
+3. **Adapt, don't replicate.** A macOS sidebar may become a tab bar or another compact navigation structure on iPhone, depending on the information hierarchy. A visionOS volume has no equivalent on watchOS. Translate intent, not implementation.
 
 4. **Leverage platform strengths.** Live Activities on iOS, Desktop Widgets on macOS, complications on watchOS, immersive spaces on visionOS.
 
@@ -87,6 +87,9 @@ This skill is applicable to execute the workflow or actions described in the ove
 > Use @hig-platforms for this task: Apple Human Interface Guidelines for platform-specific design.
 
 ## Limitations
+
+- Reference pages are snapshots. Check API availability, device support and current Apple guidance before choosing OS-specific features; sensors, Always On, multitasking and input methods vary by hardware and version.
+- Platform design guidance does not authorize collecting personal, camera, location, health or tracking data. Request only the permissions and data the feature needs.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

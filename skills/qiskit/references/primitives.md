@@ -5,7 +5,7 @@ Primitives are the fundamental building blocks for executing quantum circuits. Q
 ## Primitive Types
 
 ### Sampler
-Calculates probabilities or quasi-probabilities of bitstrings from quantum circuits. Use when you need:
+V2 returns sampled bitstrings/counts; V1 quasi-probability output is a different interface. Use when you need:
 - Measurement outcomes
 - Output probability distributions
 - Sampling from quantum states
@@ -25,7 +25,7 @@ Qiskit uses V2 primitives (BaseSamplerV2, BaseEstimatorV2) as the current standa
 ### StatevectorSampler (Local Simulation)
 
 ```python
-from qiskit import QuantumCircuit
+from qiskit import QuantumCircuit, transpile
 from qiskit.primitives import StatevectorSampler
 
 # Create circuit
@@ -152,15 +152,16 @@ For running on real hardware, use runtime primitives:
 from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as Sampler
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 qc = QuantumCircuit(2)
 qc.h(0)
 qc.cx(0, 1)
 qc.measure_all()
 
-# Run on real hardware
-sampler = Sampler(backend)
+qc = transpile(qc, backend=backend)
+# Run on authorized real hardware
+sampler = Sampler(mode=backend)
 job = sampler.run([qc], shots=1024)
 result = job.result()
 counts = result[0].data.meas.get_counts()
@@ -173,7 +174,7 @@ from qiskit_ibm_runtime import QiskitRuntimeService, EstimatorV2 as Estimator
 from qiskit.quantum_info import SparsePauliOp
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 qc = QuantumCircuit(2)
 qc.h(0)
@@ -182,8 +183,9 @@ qc.cx(0, 1)
 observable = SparsePauliOp(["ZZ"])
 
 # Run on real hardware
-estimator = Estimator(backend)
-job = estimator.run([(qc, observable)])
+estimator = Estimator(mode=backend)
+qc = transpile(qc, backend=backend)
+job = estimator.run([(qc, observable.apply_layout(qc.layout))])
 result = job.result()
 exp_value = result[0].data.evs
 ```
@@ -196,10 +198,10 @@ Sessions group multiple jobs to reduce queue wait times:
 from qiskit_ibm_runtime import Session
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 with Session(backend=backend) as session:
-    sampler = Sampler(session=session)
+    sampler = Sampler(mode=session)
 
     # Run multiple jobs in session
     job1 = sampler.run([qc1], shots=1024)
@@ -217,10 +219,10 @@ Batch mode runs independent jobs in parallel:
 from qiskit_ibm_runtime import Batch
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 with Batch(backend=backend) as batch:
-    sampler = Sampler(session=batch)
+    sampler = Sampler(mode=batch)
 
     # Submit multiple independent jobs
     job1 = sampler.run([qc1], shots=1024)

@@ -47,7 +47,7 @@ def get_tree(path, prefix="", max_depth=3, current_depth=0):
         connector = "└── " if is_last else "├── "
         full_path = os.path.join(path, entry)
         tree_lines.append(f"{prefix}{connector}{entry}")
-        if os.path.isdir(full_path):
+        if os.path.isdir(full_path) and not os.path.islink(full_path):
             extension = "    " if is_last else "│   "
             tree_lines.extend(get_tree(full_path, prefix + extension, max_depth, current_depth + 1))
     return tree_lines
@@ -56,7 +56,7 @@ def get_tree(path, prefix="", max_depth=3, current_depth=0):
 def extract_readme_summary(root):
     """Extract first meaningful paragraph from README as project goal."""
     readme = root / "README.md"
-    if not readme.exists():
+    if not readme.exists() or readme.is_symlink():
         return None
     text = readme.read_text(encoding="utf-8", errors="ignore")
     lines = text.strip().split("\n")
@@ -82,7 +82,7 @@ def extract_tech_stack(root):
 
     # package.json
     pkg = root / "package.json"
-    if pkg.exists():
+    if pkg.exists() and not pkg.is_symlink():
         try:
             data = json.loads(pkg.read_text(encoding="utf-8"))
             deps = list(data.get("dependencies", {}).keys())
@@ -99,7 +99,7 @@ def extract_tech_stack(root):
 
     # pyproject.toml - basic extraction
     pyproject = root / "pyproject.toml"
-    if pyproject.exists():
+    if pyproject.exists() and not pyproject.is_symlink():
         text = pyproject.read_text(encoding="utf-8", errors="ignore")
         stack_info.append(f"* **Python 專案**：使用 pyproject.toml 管理")
         # Simple dependency extraction
@@ -108,7 +108,7 @@ def extract_tech_stack(root):
 
     # requirements.txt
     reqs = root / "requirements.txt"
-    if reqs.exists():
+    if reqs.exists() and not reqs.is_symlink():
         req_lines = [l.strip().split("==")[0].split(">=")[0]
                      for l in reqs.read_text(encoding="utf-8", errors="ignore").strip().split("\n")
                      if l.strip() and not l.startswith("#")]
@@ -121,10 +121,7 @@ def extract_tech_stack(root):
 def extract_latest_diary_todos(root):
     """Find the latest diary file and extract Next Steps / TODO items."""
     # Search common diary locations
-    diary_dirs = [
-        root / "diary",
-        Path(os.path.expanduser("~")) / ".gemini" / "antigravity" / "global_skills" / "auto-skill" / "diary",
-    ]
+    diary_dirs = [root / "diary"]
 
     latest_file = None
     latest_date = ""
@@ -134,6 +131,7 @@ def extract_latest_diary_todos(root):
             continue
         # Glob for markdown files recursively
         for md_file in diary_dir.rglob("*.md"):
+            if md_file.is_symlink(): continue
             name = md_file.stem
             # Try to extract date from filename (YYYY-MM-DD format)
             if len(name) >= 10 and name[:4].isdigit():
@@ -170,9 +168,9 @@ def prepare_context(root_path):
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     print(f"📋 Preparing context for: {root}")
 
-    context_file = root / "AGENT_CONTEXT.md"
+    context_file = root / "AGENT_CONTEXT.generated.md"
 
-    with safe_user_path(context_file).open("w", encoding="utf-8") as f:
+    with safe_user_path(context_file).open("x", encoding="utf-8") as f:
         # Header
         f.write(f"# 專案上下文 (Agent Context)：{root.name}\n\n")
         f.write(f"> **最後更新時間**：{now}\n")
@@ -201,7 +199,7 @@ def prepare_context(root_path):
             f.write("* _（未偵測到 package.json / pyproject.toml / requirements.txt）_\n")
 
         # Also include raw config snippets for AI reference
-        config_files = ["package.json", "pyproject.toml", "requirements.txt", ".env.example", "clasp.json"]
+        config_files = []  # do not copy raw configuration or credential-like values into reports
         has_config = False
         for cfg in config_files:
             cfg_path = root / cfg
@@ -230,7 +228,7 @@ def prepare_context(root_path):
         # Section 4: 架構與設計約定
         f.write("## 🏛️ 4. 架構與設計約定 (Architecture & Conventions)\n")
         local_exp = root / ".auto-skill-local.md"
-        if local_exp.exists():
+        if local_exp.exists() and not local_exp.is_symlink():
             f.write("_(來自專案 L1 快取 `.auto-skill-local.md`)_\n\n")
             f.write(local_exp.read_text(encoding="utf-8", errors="ignore"))
             f.write("\n\n")

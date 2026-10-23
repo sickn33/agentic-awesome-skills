@@ -122,6 +122,10 @@ user the helper script was not found. Use `--config <file>` and `--migrations-di
 project has multiple Drizzle configs or outputs. The script never connects to a database and never
 writes files; it only reads migration directories and reports structural issues.
 
+## Helper limitations
+
+The structural helper is not a sandbox: config out extraction is regex-based, relative out paths can depend on actual CLI cwd, symlinked descendants can escape the requested tree, and snapshot checks do not prove an acyclic single chain or SQL commutativity. Inspect/reject linked paths and use an isolated fixture copy before invoking it on untrusted repositories. The --allow-outside-root option does not override its separate current-working-directory containment check. Preserve already-applied migration history; only regenerate artifacts proven never applied/shared, otherwise design a forward corrective migration.
+
 ## Migration structure decision
 
 Identify the structure before proposing a fix:

@@ -13,13 +13,13 @@ license_source: https://github.com/google-gemini/gemini-skills/blob/main/LICENSE
 # Gemini Omni Flash Skill
 ## When to Use
 
-Use this skill when you need use this skill for generative video editing, text-to-video, image-referenced video generation, and first-frame-to-video transition animations using the official google-genai SDK. Includes workflows for pre-processing/optimizing high-resolution or long source videos with ffmpeg,...
+Use this skill for generative video editing, text-to-video, image-referenced video generation, and first-frame-to-video transition animations using the official google-genai SDK. Includes workflows for pre-processing/optimizing high-resolution or long source videos with ffmpeg.
 
 
 This skill uses the Gemini Omni Flash model (`gemini-omni-flash-preview`) to perform text to video generation, image to video generation and video editing.
 
 > [!WARNING]
-> **Important Regional Restrictions**: Uploading videos to use for video edits is **NOT** available in the EEA, Switzerland, the United Kingdom, and some US states. If a video-to-video edit completes quickly with empty outputs (`total_output_tokens: 0` or no video content), it is likely due to this restriction.
+> **Important Regional Restrictions**: Uploading videos to use for video edits is **NOT** available in the EEA, Switzerland, the United Kingdom, and some US states. If a video-to-video edit completes quickly with empty outputs (`total_output_tokens: 0` or no video content), check the current availability documentation and API error; empty output alone does not identify the cause.
 
 ## Core capabilities
 
@@ -27,6 +27,10 @@ This skill uses the Gemini Omni Flash model (`gemini-omni-flash-preview`) to per
 2. **Text to video**: Generating videos from a text prompt.
 3. **First-frame to video**: Generating videos from a single input image.
 4. **Image-referenced generation**: Using style, character, or object references from images to guide video generation.
+
+## Data and execution boundaries
+
+These scripts upload media and prompts to Google and can incur API charges. Confirm the selected media, remote processing and batch size are within the user request before calling. Use `GEMINI_API_KEY` from the environment; avoid command-line keys in shell history. Work from an isolated project directory; choose new output paths because existing files are refused. Inspect generated media and report missing or partial output honestly. Never infer a regional restriction solely from empty output; inspect API errors and current official availability. Model access, SDK version requirements, limits and pricing must be checked against official documentation before use; this static bundle does not establish them.
 
 ## Workflow
 
@@ -60,7 +64,7 @@ Use the following Python scripts to upload media with the Files API, prepare inp
 1. **[upload_file.py](scripts/upload_file.py)**: Uploads local media (images and videos) to the Files API and polls until `ACTIVE`. If uploading a video larger than 25MB, it prints an informative warning/tip highlighting that Gemini Omni Flash is optimized for editing 10s videos at 720p/24fps, and recommends pre-processing with `prep_video.py` first to speed up the upload.
 
    ```bash
-   ./scripts/upload_file.py path/to/image.png
+   python3 scripts/upload_file.py path/to/image.png
    ```
 
 2. **[generate_video.py](scripts/video/generate_video.py)**: Performs end-to-end video generation and downloads the output video. It detects and uploads local media references (images or videos) before calling the Interactions API. Large video assets (>25MB) will trigger informative pre-processing recommendations without blocking the upload.
@@ -68,13 +72,13 @@ Use the following Python scripts to upload media with the Files API, prepare inp
    * **Text to video**:
 
      ```bash
-     ./scripts/video/generate_video.py "A close-up of a cat drinking tea" --output media/cat_tea.mp4
+     python3 scripts/video/generate_video.py "A close-up of a cat drinking tea" --output media/cat_tea.mp4
      ```
 
    * **Image to video (first frame and reference)**:
 
      ```bash
-     ./scripts/video/generate_video.py "The waves crash against the shore." --image reference.png --output media/waves.mp4
+     python3 scripts/video/generate_video.py "The waves crash against the shore." --image reference.png --output media/waves.mp4
      ```
 
    * **Video interpolation**:
@@ -82,19 +86,19 @@ Use the following Python scripts to upload media with the Files API, prepare inp
      Provide exactly two images as keyframes to generate a transition video between them:
 
      ```bash
-     ./scripts/video/generate_video.py "A smooth timelapse from sunrise to sunset" --image start.png --image end.png --output media/interpolation.mp4
+     python3 scripts/video/generate_video.py "A smooth timelapse from sunrise to sunset" --image start.png --image end.png --output media/interpolation.mp4
      ```
 
    * **Video editing (keep original audio)**:
 
      ```bash
-     ./scripts/video/generate_video.py "Transform the style to Japanese anime" --video input.mp4 --output media/anime_style.mp4
+     python3 scripts/video/generate_video.py "Transform the style to Japanese anime" --video input.mp4 --output media/anime_style.mp4
      ```
 
    * **Video editing (regenerate all audio from scratch)**:
 
      ```bash
-     ./scripts/video/generate_video.py "Transform the style to Japanese anime" --video input.mp4 --strip-audio --output media/anime_style_new_audio.mp4
+     python3 scripts/video/generate_video.py "Transform the style to Japanese anime" --video input.mp4 --strip-audio --output media/anime_style_new_audio.mp4
      ```
 
    * **Turn-by-turn video editing (edit previous interaction)**:
@@ -102,19 +106,19 @@ Use the following Python scripts to upload media with the Files API, prepare inp
      Edit a prior video generation without re-uploading assets by passing the interaction ID:
 
      ```bash
-     ./scripts/video/generate_video.py "Change the setting to a snowy winter wonderland." --previous-interaction-id "abc123xyz..." --output media/winter_wonderland.mp4
+     python3 scripts/video/generate_video.py "Change the setting to a snowy winter wonderland." --previous-interaction-id "abc123xyz..." --output media/winter_wonderland.mp4
      ```
 
    * **Parallel batch execution (prompts file)**: Run multiple prompts from a line-by-line text file concurrently:
 
      ```bash
-     ./scripts/video/generate_video.py --prompts-file prompts.txt --concurrency 3
+     python3 scripts/video/generate_video.py --prompts-file prompts.txt --concurrency 3
      ```
 
    * **Parallel batch execution (JSON config)**: Execute fully configured, distinct generation and editing jobs in parallel:
 
      ```bash
-     ./scripts/video/generate_video.py --batch jobs.json --concurrency 3
+     python3 scripts/video/generate_video.py --batch jobs.json --concurrency 3
      ```
 
      *Example `jobs.json`:*
@@ -139,19 +143,19 @@ Use the following Python scripts to upload media with the Files API, prepare inp
 3. **[inspect_video.py](scripts/video/inspect_video.py)**: Inspects a local video file (using `ffprobe`) to check its duration, resolution, frame rate (FPS), audio stream presence, and format details.
 
    ```bash
-   ./scripts/video/inspect_video.py media/output.mp4
+   python3 scripts/video/inspect_video.py media/output.mp4
    ```
 
    * To get a pre-parsed, structured JSON summary:
 
      ```bash
-     ./scripts/video/inspect_video.py media/output.mp4 --json
+     python3 scripts/video/inspect_video.py media/output.mp4 --json
      ```
 
    * To get the complete, unmodified `ffprobe` raw JSON dump:
 
      ```bash
-     ./scripts/video/inspect_video.py media/output.mp4 --raw
+     python3 scripts/video/inspect_video.py media/output.mp4 --raw
      ```
 
 4. **[prep_video.py](scripts/video/prep_video.py)**: Normalizes, trims, and formats any video file to fit standard Gemini Omni Flash generation and editing limits. It handles timecode-based trimming, optional frame rate conversion, and proportional scaling of large videos (max 1280x720 for landscape, 720x1280 for portrait) to optimize upload times without stretching. If the video is longer than 10 seconds and the script is run interactively (in a TTY), it prompts the user to select the first 10s, last 10s, or enter a custom timecode (defaulting to the first 10s).
@@ -159,37 +163,37 @@ Use the following Python scripts to upload media with the Files API, prepare inp
    * **Trim first 10s (default)**:
 
     ```bash
-     ./scripts/video/prep_video.py path/to/source.mp4
+     python3 scripts/video/prep_video.py path/to/source.mp4
      ```
 
      or explicitly specify the start and duration:
 
      ```bash
-     ./scripts/video/prep_video.py path/to/source.mp4 --start 0 --duration 10
+     python3 scripts/video/prep_video.py path/to/source.mp4 --start 0 --duration 10
      ```
 
    * **Trim last 10s** (automatically calculates starting point based on source length):
 
      ```bash
-     ./scripts/video/prep_video.py path/to/source.mp4 --start last
+     python3 scripts/video/prep_video.py path/to/source.mp4 --start last
      ```
 
    * **Trim 10s starting at specific timecode** (MM:SS or HH:MM:SS):
 
      ```bash
-     ./scripts/video/prep_video.py path/to/source.mp4 --start 00:03 --output media/custom.mp4
+     python3 scripts/video/prep_video.py path/to/source.mp4 --start 00:03 --output media/custom.mp4
      ```
 
    * **Custom frame rate and resolution**:
 
      ```bash
-     ./scripts/video/prep_video.py path/to/source.mp4 --fps 30 --resolution 1920x1080
+     python3 scripts/video/prep_video.py path/to/source.mp4 --fps 30 --resolution 1920x1080
      ```
 
    * **Strip audio for audio regeneration**:
 
      ```bash
-     ./scripts/video/prep_video.py path/to/source.mp4 --strip-audio --output media/video_with_no_audio.mp4
+     python3 scripts/video/prep_video.py path/to/source.mp4 --strip-audio --output media/video_with_no_audio.mp4
      ```
 
 ## Using tags in prompts to set image roles
@@ -239,7 +243,7 @@ When editing a source video that contains audio, you must choose between keeping
 * **Regenerate all audio from scratch**: If you want Gemini Omni Flash to re-create a brand-new audio layer tailored to the new visual style or prompt, you **must** upload the video with its audio stream stripped out. If any audio stream is present, Gemini Omni Flash will attempt to preserve/modify it instead of starting from scratch.
 
   * Use `--strip-audio` (or `-a`) when pre-processing with `scripts/video/prep_video.py` or executing `scripts/video/generate_video.py`.
-  * This forces Gemini Omni Flash to perform full audio generation.
+  * This requests a new audio track; inspect the actual output rather than assuming it is guaranteed.
 
 ## Prompting Gemini Omni Flash
 

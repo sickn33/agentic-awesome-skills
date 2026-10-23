@@ -14,7 +14,7 @@ The library exports differ between SDK versions. Pick the right one for the proj
 | `markInteractive()` API | Global: `AppMetrics.markInteractive()` | Hook: `const { markInteractive } = useObserve()` |
 | Import source | `expo-observe` | `expo-observe` (same package) |
 
-Everything else — package name, build process, dashboard, debug-mode behavior — is the same across versions.
+Verify remaining behavior against the installed package; this table is a version snapshot.
 
 ## Prerequisites
 
@@ -30,8 +30,7 @@ Before installing, confirm all of the following:
 From the project root:
 
 ```sh
-npx expo install --fix
-npx expo install expo-observe
+npx expo install expo-observe  # review dependency diff before committing
 ```
 
 ## Step 2 — Wrap the root layout
@@ -92,7 +91,7 @@ function RootLayout() {
         await authenticateUser();
         await fetchInitialData();
       } catch (e) {
-        console.warn(e);
+        // Handle the error with a safe usable fallback; do not send raw errors to logs.
       } finally {
         setIsReady(true);
       }
@@ -135,7 +134,7 @@ function RootLayout() {
         await authenticateUser();
         await fetchInitialData();
       } catch (e) {
-        console.warn(e);
+        // Handle the error with a safe usable fallback; do not send raw errors to logs.
       } finally {
         setIsReady(true);
       }
@@ -172,7 +171,7 @@ export default ObserveRoot.wrap(RootLayout);
 // SDK 55:  AppMetrics.markInteractive({ ... })
 markInteractive({
   routeName: '/feed',
-  params: { tenant: 'acme', cohort: 'beta', cacheHit: true },
+  params: { cohort: 'beta', cacheHit: true }  // no customer/tenant identifiers,
 });
 ```
 

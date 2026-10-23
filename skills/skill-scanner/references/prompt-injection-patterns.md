@@ -84,7 +84,7 @@ Unicode bidirectional override characters (`U+202E`) can reverse displayed text 
 ### Unicode Tag Characters (U+E0000 block)
 The Tags Unicode block (U+E0001–U+E007F) provides invisible representations of every ASCII character. These are:
 - Invisible in all text editors, GitHub, and terminal output
-- Processed normally by LLM tokenizers
+- Tokenizer and model handling varies; inspect code points rather than assuming the characters are harmless or always interpreted
 - Mapping: `ASCII code point + 0xE0000 = invisible tag character`
 
 Detection: `cat -v` shows escape sequences, or check file size vs visible content (large discrepancy = suspicious). The scanner decodes these automatically.

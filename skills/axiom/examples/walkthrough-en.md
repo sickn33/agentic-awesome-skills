@@ -54,16 +54,16 @@ Here are the hidden assumptions embedded in your framing:
 
 | # | Assumption | Type | Reasoning |
 |---|-----------|------|-----------|
-| A1 | A degree is just a piece of paper | 🟡 Convention | Was increasingly true 2015-2022 in tech; now shifting back as market tightens |
-| A2 | This opportunity won't come again | ⚫ Interest-driven | The CEO benefits from you believing this. Urgency is a recruiting tactic |
-| A3 | Early equity is worth more than salary | 🟡 Convention + ⚫ Interest-driven | Statistically, most startup equity becomes worthless. VC-backed mythology promotes this narrative |
-| A4 | The startup world values skills over credentials | 🟡 Convention | True at some companies, but many still filter by degree, especially post-2024 hiring freezes |
-| A5 | I can always go back and finish later | 🔴 Subjective belief | Based on intention, not evidence. Dropout re-enrollment rates are low |
+| A1 | A degree is just a piece of paper | 🟡 Convention | Check target employers and roles; the example provides no labor-market evidence |
+| A2 | This opportunity won't come again | ⚫ Interest-driven | The CEO may benefit from urgency; verify the actual deadline before inferring motive |
+| A3 | Early equity is worth more than salary | 🟡 Convention + ⚫ Interest-driven | Equity value depends on financials, vesting, dilution, preferences and exit scenarios; no probability is established here |
+| A4 | The startup world values skills over credentials | 🟡 Convention | Check the user’s target employers; credentials and experience requirements vary |
+| A5 | I can always go back and finish later | 🔴 Subjective belief | Based on intention, not evidence. Verify the actual institution’s leave/re-entry terms |
 | A6 | A startup will accelerate my career faster | 🔴 Subjective belief | Survivorship bias — you see dropouts who succeeded, not the majority who struggled |
 | A7 | I'm ready for startup intensity | 🔴 Subjective belief | Self-assessment often overestimates readiness for ambiguity and stress |
 | A8 | The CEO is competent and trustworthy | 🔴 Subjective belief | Based on limited interactions. Have you done due diligence on the founder? |
-| A9 | Failed startup experience is still valuable | 🟡 Convention | Accepted wisdom in startup culture, but hiring managers increasingly want concrete results |
-| A10 | My excitement = genuine fit | 🔴 Subjective belief | Excitement fades after 3 months. How do you distinguish excitement from novelty? |
+| A9 | Failed startup experience is still valuable | 🟡 Convention | Accepted wisdom in startup culture, but ask target employers how they evaluate the experience |
+| A10 | My excitement = genuine fit | 🔴 Subjective belief | Excitement may or may not persist. How do you distinguish excitement from novelty? |
 
 ---
 
@@ -77,7 +77,7 @@ Here are the hidden assumptions embedded in your framing:
 
 **The uncomfortable truth you may not want to hear:**
 
-A3 has the highest risk score. The equity you're being offered is almost certainly worth $0 right now. Over 90% of startups fail, and even among those that succeed, early-employee equity is often diluted through subsequent funding rounds. The CEO has every incentive to frame equity as "life-changing wealth potential" — because it costs them nothing to give you shares and it justifies paying you below market rate. **Have you actually run the math on what your equity would be worth under realistic scenarios?**
+A3 has the highest illustrative priority score, not a measured probability. The offered equity is illiquid and its eventual value is uncertain; it cannot be equated with spendable salary. Examine vesting, strike price, dilution, liquidation preferences, tax treatment and downside scenarios with suitable professional help. The founder’s incentive is a reason to verify terms, not proof of dishonesty.
 
 ---
 
@@ -87,18 +87,18 @@ A3 has the highest risk score. The equity you're being offered is almost certain
 
 **Original thinking:** "I should drop out and join this startup for the equity and the experience."
 
-**Rebuilt thinking:** "I should complete concrete due diligence on the startup (financials, founder track record, equity terms reviewed by a lawyer) before making any decision. In parallel, I should explore whether I can join part-time while finishing my degree, or negotiate a deferred start date. The urgency to decide RIGHT NOW is manufactured — if the opportunity is real, it can wait 2-4 weeks for me to verify."
+**Rebuilt thinking:** "I should complete concrete due diligence on the startup (financials, founder track record, equity terms reviewed by a lawyer) before making any decision. In parallel, I should explore whether I can join part-time while finishing my degree, or negotiate a deferred start date. I should verify the actual deadline and negotiate enough time for due diligence; an employer may have a genuine deadline."
 
 ### Cognitive Shift Comparison:
 
 | Dimension | Original Thinking | Rebuilt Thinking |
 |-----------|-------------------|------------------|
-| Decision urgency | "I need to decide now" | The urgency is manufactured — add 2 weeks of verification |
-| Equity value | "This could be huge" | Almost certainly $0 today; need to verify terms and scenarios |
+| Decision urgency | "I need to decide now" | Verify the deadline and negotiate a feasible diligence window |
+| Equity value | "This could be huge" | Illiquid and uncertain; verify terms and scenarios |
 | Either/or framing | "Drop out OR miss out" | Explore part-time, deferred start, or summer commitment first |
 | Risk assessment | "I can always go back" | Re-enrollment is not guaranteed; quantify the actual cost |
 | Information basis | Excitement + CEO's pitch | Due diligence on founder, financials, legal review of equity |
 
 ### If you don't have time for full reconstruction — the one thing to verify first:
 
-> **Ask the CEO for the company's current revenue, burn rate, and runway. If they refuse to share basic financials with someone they're asking to bet their education on, that tells you everything you need to know.**
+> **Ask the CEO for the company's current revenue, burn rate, and runway. If they cannot share them, ask why and whether an NDA, summary or independent review is possible; treat remaining uncertainty as a decision factor, not definitive evidence of misconduct.**

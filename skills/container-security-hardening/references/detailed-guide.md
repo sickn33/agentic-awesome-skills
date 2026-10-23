@@ -47,6 +47,8 @@ Then adapt recommendations to:
 
 ## Layer 1: Dockerfile Hardening
 
+Version tags and action SHA comments are historical examples, not verified current recommendations. Select supported runtimes, resolve real image digests, and verify each action commit against its official release before use. Security configuration changes require staged validation and rollback. Digest pinning protects identity, not the absence of vulnerabilities.
+
 ### 1.1 Use a Minimal Base Image
 
 ```dockerfile
@@ -66,7 +68,7 @@ FROM gcr.io/distroless/static-debian12   # Go/Rust fully-static binaries
 # ✅ ALSO GREAT — Alpine (musl libc; verify app compatibility first)
 FROM alpine:3.20
 
-# ✅ ZERO ATTACK SURFACE — for fully static binaries only
+# ✅ NO BASE USERSPACE PACKAGES — for fully static binaries only
 FROM scratch
 ```
 
@@ -90,6 +92,7 @@ RUN npm run build && npm prune --production
 # ── Stage 2: Runtime — minimal, no build tools ────────────
 FROM gcr.io/distroless/nodejs20-debian12@sha256:<digest>
 LABEL org.opencontainers.image.source="https://github.com/org/repo"
+ARG BUILD_SHA
 LABEL org.opencontainers.image.revision="${BUILD_SHA}"
 LABEL org.opencontainers.image.licenses="MIT"
 WORKDIR /app
@@ -109,7 +112,7 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o app .
 
-FROM scratch                        # Zero attack surface
+FROM scratch                        # Application/kernel attack surfaces remain
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /build/app /app
 USER 65532:65532
@@ -170,11 +173,11 @@ ENV AWS_SECRET_ACCESS_KEY=supersecret
 RUN curl -H "Authorization: Bearer $TOKEN" https://api.example.com > config.json
 ARG API_KEY                         # Also unsafe — visible in build args history
 
-# ✅ CORRECT — BuildKit secret mount (never persisted in any layer)
+# ✅ BuildKit keeps the mount out of layers; fetched output must also contain no secrets
 # syntax=docker/dockerfile:1
 RUN --mount=type=secret,id=api_token \
     curl -H "Authorization: Bearer $(cat /run/secrets/api_token)" \
-    https://api.example.com/config > config.json
+    https://api.example.com/public-artifact > artifact.bin
 ```
 
 Build with: `docker build --secret id=api_token,src=./token.txt .`
@@ -194,7 +197,7 @@ ENTRYPOINT ["node", "server.js"]    # ✅ exec form
 
 # Define a HEALTHCHECK
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD ["node", "-e", "require('http').get('http://localhost:3000/health', r => process.exit(r.statusCode === 200 ? 0 : 1))"]
+  CMD ["/nodejs/bin/node", "-e", "require('http').get('http://localhost:3000/health', r => process.exit(r.statusCode === 200 ? 0 : 1))"]
 ```
 
 Enforce read-only at runtime (see Layer 3).
@@ -241,6 +244,7 @@ RUN npm run build && npm prune --production
 FROM gcr.io/distroless/nodejs20-debian12@sha256:<pin-digest-here>
 
 LABEL org.opencontainers.image.source="https://github.com/org/repo"
+ARG BUILD_SHA
 LABEL org.opencontainers.image.revision="${BUILD_SHA}"
 LABEL org.opencontainers.image.licenses="MIT"
 
@@ -252,7 +256,7 @@ USER nonroot:nonroot
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD ["node", "-e", "require('http').get('http://localhost:3000/health', r => process.exit(r.statusCode===200?0:1))"]
+  CMD ["/nodejs/bin/node", "-e", "require('http').get('http://localhost:3000/health', r => process.exit(r.statusCode===200?0:1))"]
 
 CMD ["dist/server.js"]
 ```
@@ -272,7 +276,8 @@ tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
   -o "$tmpdir/trivy-install.sh"
-sed -n '1,160p' "$tmpdir/trivy-install.sh"
+cat "$tmpdir/trivy-install.sh"
+# Review the complete script and verify a pinned release/checksum before execution
 sh "$tmpdir/trivy-install.sh"
 
 # Scan an image for CVEs
@@ -312,7 +317,8 @@ tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh \
   -o "$tmpdir/grype-install.sh"
-sed -n '1,160p' "$tmpdir/grype-install.sh"
+cat "$tmpdir/grype-install.sh"
+# Review the complete script and verify a pinned release/checksum before execution
 sh "$tmpdir/grype-install.sh"
 
 # Scan image
@@ -410,23 +416,19 @@ jobs:
 ### 3.1 docker run Hardening Flags
 
 ```bash
+# Select an image containing the configured health-check executable.
 docker run \
-  --read-only \                              # Read-only root filesystem
-  --tmpfs /tmp:noexec,nosuid,size=100m \     # Writable tmpfs for /tmp only
-  --tmpfs /var/run \                         # For PID files if needed
-  --user 10001:10001 \                       # Non-root UID:GID
-  --cap-drop ALL \                           # Drop ALL Linux capabilities
-  --cap-add NET_BIND_SERVICE \               # Re-add only what's truly needed
-  --security-opt no-new-privileges:true \    # Prevent privilege escalation via setuid
-  --security-opt seccomp=seccomp.json \      # Custom seccomp profile
-  --security-opt apparmor=docker-default \   # AppArmor profile
-  --pids-limit 100 \                         # Prevent runaway process spawning
-  --memory 512m \                            # OOM protection
-  --memory-swap 512m \                       # Disable swap
-  --cpus 1.0 \                               # CPU limit
-  --network none \                           # No network (if not needed)
-  --health-cmd "curl -f http://localhost:3000/health || exit 1" \
-  --health-interval 30s \
+  --read-only \
+  --tmpfs /tmp:noexec,nosuid,size=100m \
+  --tmpfs /var/run:noexec,nosuid,size=10m \
+  --user 10001:10001 \
+  --cap-drop ALL \
+  --security-opt no-new-privileges:true \
+  --security-opt seccomp=references/seccomp-profile-template.json \
+  --pids-limit 100 \
+  --memory 512m \
+  --memory-swap 512m \
+  --cpus 1.0 \
   myapp:latest
 ```
 
@@ -443,7 +445,7 @@ Drop ALL, then explicitly add only what your app requires:
 | `NET_ADMIN` | Configure network interfaces | No (only network tools) |
 | `SYS_PTRACE` | Debug/trace processes | No (only debugger containers) |
 | `DAC_OVERRIDE` | Override file permissions | No — runs as correct user |
-| `NET_RAW` | Raw sockets (ping) | No (blocked by default seccomp anyway) |
+| `NET_RAW` | Raw sockets (ping) | No (drop this capability unless specifically justified) |
 
 > **Most web apps need zero capabilities.** `--cap-drop ALL` alone is often sufficient.
 
@@ -512,7 +514,7 @@ sysdig -p "%syscall.type" container.name=audit-run | sort -u
 docker run --security-opt seccomp=references/seccomp-profile-template.json myapp:latest
 ```
 
-See `references/seccomp-profile-template.json` for a minimal starting allowlist for typical web servers.
+The bundled profile is a broad experimental example, not a stricter replacement for the runtime default. Test in an isolated environment with no secrets or production network access; syscall observation is incomplete and architecture/kernel-specific. Prefer RuntimeDefault until a narrower policy has been tested.
 
 ### 3.5 AppArmor Profile (Linux hosts)
 
@@ -641,6 +643,8 @@ spec:
 
 ### 5.1 Pod Security Context
 
+This is a fragment: supply a matching Deployment selector/template labels and application ports/probes before validation.
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -679,7 +683,7 @@ spec:
             seccompProfile:
               type: RuntimeDefault
 
-          # ── Resource limits (required for restricted PSA) ──
+          # ── Resource limits (separate hardening, not required by PSA) ──
           resources:
             requests:
               memory: "128Mi"
@@ -727,7 +731,7 @@ kubectl label namespace production \
 |---|---|
 | `privileged` | No restrictions |
 | `baseline` | Blocks hostNetwork, hostPID, privileged containers, hostPath |
-| `restricted` | Also requires non-root, read-only FS, drops capabilities, seccomp |
+| `restricted` | Also requires non-root, restricted capabilities and seccomp; read-only FS is additional hardening |
 
 ### 5.3 NetworkPolicy — Zero-Trust Networking
 
@@ -913,7 +917,7 @@ spec:
 ## Reference Files
 
 - `references/base-image-comparison.md` — Size, CVE count, shell/pkg-manager trade-offs: distroless vs alpine vs slim vs scratch
-- `references/seccomp-profile-template.json` — Minimal syscall allowlist for typical web servers; start here and extend
+- `references/seccomp-profile-template.json` — Experimental syscall template; audit and narrow before use
 - `references/kubernetes-pod-security.md` — NetworkPolicy, RBAC, OPA/Kyverno policies, service account hardening, PSA
 
 

@@ -107,10 +107,10 @@ Treat pi's final message and gate claims as claims:
 
 See [references/review-and-land.md](references/review-and-land.md).
 
-### 5. Land it
+### 5. Land it within the authorized scope
 
 The implementer edits the working tree; **the orchestrator commits.** Commit only after the gates
-pass and the diff holds. If rework is needed, send a delta brief with `--resume-last` or
+pass and the diff holds, and commit is authorized. If rework is needed, send a delta brief with `--resume-last` or
 `--session <id>`, then review again.
 
 ## Autonomy and permissions
@@ -127,7 +127,7 @@ executes shell commands with no prompts - the controls are:
 ## Authorization model
 
 Delegation is something the human opts into. Once they have ("run this queue", "proceed"),
-committing verified, gate-passing work is the agreed contract. Two limits remain: **surface, don't
+committing verified, gate-passing work is permitted only when included in the user-authorized task; delegation alone does not expand that scope. Two limits remain: **surface, don't
 absorb** (report pi's design decisions, defensible-but-unasked turns, and non-blocking nitpicks)
 and **stop for scope changes** (if correct completion needs going beyond the brief, ask instead of
 expanding the mandate). See [references/review-and-land.md](references/review-and-land.md).
@@ -149,4 +149,4 @@ expanding the mandate). See [references/review-and-land.md](references/review-an
 - Runtime helper `scripts/relay.mjs` is bundled from the revision recorded in `UPSTREAM-NOTICE.md`. Requires the corresponding installed and authenticated CLI, Node 18+, and git.
 - Relay never commits — it only returns structured result JSON; you review and land the commit.
 
-> Adapted from [amElnagdy/delegate-skills](https://github.com/amElnagdy/delegate-skills) (MIT) — docs-only, runtime not bundled.
+> Adapted from [amElnagdy/delegate-skills](https://github.com/amElnagdy/delegate-skills) (MIT) — MIT; the relay runtime is bundled with local changes documented in UPSTREAM-NOTICE.md.

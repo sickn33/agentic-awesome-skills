@@ -31,8 +31,8 @@ show max_connections;  -- 500 (way too high for 4GB RAM)
 alter system set max_connections = 100;
 
 -- Also set work_mem appropriately
--- work_mem * max_connections should not exceed 25% of RAM
-alter system set work_mem = '8MB';  -- 8MB * 100 = 800MB max
+-- work_mem applies per sort/hash operation, potentially per parallel worker; model actual concurrent plans
+alter system set work_mem = '8MB';  -- Illustrative; not a global memory ceiling
 ```
 
 Monitor connection usage:
