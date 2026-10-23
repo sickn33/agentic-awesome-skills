@@ -5,8 +5,8 @@
   "acknowledged_weakest_flow": "evidence",
   "authorized_scope": {
     "may_do": [
-      "Build an internal prototype that drafts replies into a human review queue.",
-      "Run the prototype on the next twenty real tickets with a human reviewing every draft."
+      "Draw a paper prototype of a draft-review queue using synthetic text.",
+      "Inspect twenty synthetic ticket examples without writing product code or contacting customers."
     ],
     "must_not_do": [
       "Send any AI-written reply to a customer without human approval.",
@@ -17,13 +17,13 @@
     ]
   },
   "accountable_owner": "Jordan Lee, founder",
-  "rationale": "A strategic partner demo in three weeks needs a working draft queue. The founder accepts the evidence gap for an internal-only prototype behind a mandatory human review step, and accepts personally owning the outcome if the tripwires fire.",
+  "rationale": "Fictional example: an owner requests a paper-only learning exercise while accepting the evidence gap. This is neither a cryptographic signature nor authority for product code, customer data or external actions.",
   "expires_at": "2099-01-01T00:00:00Z",
   "tripwires": [
     "Any AI-drafted reply reaches a customer without human approval.",
     "The partner demo is cancelled or moved beyond the override window."
   ],
   "renewal_requires": [
-    "Twenty human-reviewed tickets with approval rate and edit distance filed as evidence receipts."
+    "Twenty synthetic paper-prototype observations recorded as explicitly simulated evidence."
   ]
 }

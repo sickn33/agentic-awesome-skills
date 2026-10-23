@@ -99,7 +99,7 @@
       "evidence_tier": "t2"
     }
   },
-  "next_smallest_action": "Release one copy variant and compare first-action completion.",
+  "next_smallest_action": "Draft one copy variant inside the stated edit scope; release and measurement require the separately recorded approval gate.",
   "execution_boundary": {
     "may_do": [
       "Edit the empty-state headline.",

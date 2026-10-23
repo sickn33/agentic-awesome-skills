@@ -129,7 +129,7 @@ def generate_boundary(state):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Offline advisory routing and canonical review boundary validation.")
+    parser = argparse.ArgumentParser(description="Offline heuristic routing and review-contract validation; not the Jev API or execution authorization.")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     route_p = subparsers.add_parser("route")
@@ -148,7 +148,8 @@ def main():
             route = classify_route_baseline(args.prompt)
             print(json.dumps({"route": route, "bypass": False, "review_required": True}))
             return 0
-        state = json.loads(Path(args.task).read_text(encoding="utf-8"))
+        from check_review import load_artifact
+        state = load_artifact(args.task)
         if args.command == "evaluate":
             res = evaluate_three_lanes_baseline(state)
         else:

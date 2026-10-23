@@ -7,7 +7,7 @@ Human-readable companion to `schemas/review-result.schema.json`.
 | Machine field | Answer |
 |---|---|
 | schema_version | 2.1 |
-| working_language | en / zh-TW / zh-CN / ja / ko / es / fr / de / pt |
+| working_language | en / it / zh-TW / zh-CN / ja / ko / es / fr / de / pt |
 | canonical_identifiers | en |
 | fallback_language | en |
 | review_id |  |

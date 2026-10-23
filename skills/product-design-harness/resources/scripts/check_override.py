@@ -10,18 +10,19 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, FormatChecker
+from check_review import check as check_review, load_artifact
 
 ROOT = Path(__file__).resolve().parent.parent
 
 
 def check(override, review, now=None):
-    problems = []
+    problems = ["review: " + problem for problem in check_review(review)]
     schema = json.loads(
         (ROOT / "schemas" / "verdict-override.schema.json").read_text()
     )
-    for error in Draft202012Validator(schema).iter_errors(override):
-        problems.append(f"schema: {error.json_path}: {error.message}")
+    for error in Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(override):
+        problems.append(f"schema: {error.json_path}: failed {error.validator} constraint")
     if problems:
         return problems
 
@@ -53,6 +54,8 @@ def check(override, review, now=None):
     )
     if now is None:
         now = datetime.now(timezone.utc)
+    if now.tzinfo is None or now.utcoffset() is None:
+        return problems + ["Reference time must include a timezone"]
     if expires_at <= now:
         problems.append(
             f"override expired at {override['expires_at']}: the original "
@@ -60,11 +63,14 @@ def check(override, review, now=None):
         )
 
     banned = {
-        entry.casefold()
+        entry.strip().casefold()
         for entry in review["execution_boundary"]["must_not_do"]
     }
+    own_banned = {entry.strip().casefold() for entry in override["authorized_scope"]["must_not_do"]}
     for entry in override["authorized_scope"]["may_do"]:
-        if entry.casefold() in banned:
+        if entry.strip().casefold() in own_banned:
+            problems.append("authorized_scope contains conflicting may_do/must_not_do entries")
+        if entry.strip().casefold() in banned:
             problems.append(
                 "authorized_scope.may_do repeats an entry from the review's "
                 f"execution_boundary.must_not_do: {entry!r}"
@@ -76,9 +82,13 @@ def main():
     if len(sys.argv) != 3:
         print(__doc__, file=sys.stderr)
         raise SystemExit(2)
-    override = json.loads(Path(sys.argv[1]).read_text())
-    review = json.loads(Path(sys.argv[2]).read_text())
-    problems = check(override, review)
+    try:
+        override = load_artifact(sys.argv[1])
+        review = load_artifact(sys.argv[2])
+        problems = check(override, review)
+    except (OSError, ValueError, RecursionError) as error:
+        print(f"cannot validate artifacts: {error}", file=sys.stderr)
+        raise SystemExit(1)
     if problems:
         for problem in problems:
             print(problem, file=sys.stderr)

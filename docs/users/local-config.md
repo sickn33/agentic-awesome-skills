@@ -29,9 +29,7 @@ Essential skills used automatically by the agent:
 
 Skills actively used for your specific projects:
 
-- `docx-official` (+ symlink `docx`) - Official Anthropic Word manipulation
 - `pdf-official` (+ symlink `pdf`) - Official Anthropic PDF manipulation
-- `pptx-official` (+ symlink `pptx`) - Official Anthropic PowerPoint manipulation
 - `xlsx-official` (+ symlink `xlsx`) - Official Anthropic Excel manipulation
 - `react-best-practices` - Vercel's 40+ performance optimization rules
 - `web-design-guidelines` - Vercel's 100+ UI/UX audit rules

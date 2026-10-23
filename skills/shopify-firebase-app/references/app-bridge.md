@@ -1,6 +1,6 @@
 # App Bridge
 
-<!-- Generated from tools/reference/ by `npm run build:reference`. Do not edit. -->
+> Adapted upstream reference snapshot; verify APIs against the installed platform. Examples are not runtime-tested here.
 
 Everything a Nitrogen page can ask of the Shopify admin. `<script src="https://cdn.shopify.com/shopifycloud/app-bridge.js">` in `web/*.html` puts it all on one global object, `shopify`, so there is nothing to import and no `createApp`. It only works inside the Shopify admin. Inside an app, each example runs from its App Bridge page (`web/apis.html`).
 
@@ -10,6 +10,8 @@ Everything a Nitrogen page can ask of the Shopify admin. `<script src="https://c
 - **Device and platform:** Print, Share, Scanner, POS, Web Vitals
 
 ## Authentication and data
+
+These snippets demonstrate API shape, not production error handling or authorization. Feature-detect host-dependent APIs. Never log ID tokens, secrets, complete user records or sensitive scanner payloads in production. Check response status and GraphQL errors; only report “saved/restored” after a successful verified mutation. Merchant interaction with a picker or UI does not grant an agent permission for unrelated actions.
 
 ### Config: `shopify.config`
 
@@ -34,7 +36,7 @@ console.log({ embedded, mobile, pos });
 
 ### ID token: `shopify.idToken()`
 
-A short-lived token that proves to your backend who is calling. It lasts about a minute, so ask for one per request and never store it. `apiFetch()` in js/app.js does this for you.
+A short-lived token whose signature and issuer/audience/time/tenant claims your backend must verify before trusting who is calling. It lasts about a minute, so ask for one per request and never store it. `apiFetch()` in js/app.js does this for you.
 
 ```js
 const token = await shopify.idToken();
@@ -47,7 +49,7 @@ console.log(await response.json());
 
 ### Resource fetching: `fetch()`
 
-App Bridge adds the ID token to every fetch to your own app, so a plain fetch is already authenticated. It can also call the Admin API straight from the page, with no backend, once direct API access is enabled in shopify.app.toml.
+App Bridge adds the ID token to every fetch to your own app, so eligible fetches can carry a token. This does not authenticate or authorize the backend by itself: verify it server-side. It can also call the Admin API straight from the page, with no backend, once direct API access is enabled in shopify.app.toml.
 
 ```js
 // Your own backend: the token is attached for you
@@ -110,7 +112,7 @@ shopify.toast.show("Product saved");
 shopify.toast.show("Product archived", {
   duration: 5000,
   action: "Undo",
-  onAction: () => shopify.toast.show("Restored"),
+  onAction: () => shopify.toast.show("Demo only: implement and verify the actual restore request"),
 });
 
 // For a failure
@@ -217,7 +219,7 @@ console.log(response);
 The admin's Save and Discard bar. Add data-save-bar to a form and it appears as soon as a field changes: Save submits the form, Discard resets it. The Settings page uses this.
 
 ```html
-<form data-save-bar onsubmit="event.preventDefault(); shopify.toast.show('Saved');">
+<form data-save-bar onsubmit="event.preventDefault(); shopify.toast.show('Demo: no data was saved');">
   <s-text-field label="Change me to show the save bar" name="demo" value="Hello"></s-text-field>
 </form>
 ```
@@ -231,7 +233,8 @@ The admin's Save and Discard bar. Add data-save-bar to a form and it appears as 
   const form = document.querySelector("form");
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    // save, then the bar goes away
+    // Persist to the verified backend, check response.ok and validation errors,
+    // then explicitly reset/hide the save bar on success using the supported API.
   });
   form.addEventListener("reset", () => {
     // Discard was pressed
@@ -397,7 +400,7 @@ The loading and responsiveness measurements Shopify takes of your app, so you ca
 
 ```js
 await shopify.webVitals.onReport((report) => {
-  // Send report.metrics wherever you keep measurements
+  // Send only necessary metrics to an approved telemetry destination; exclude tokens and personal data
   console.log(report.metrics);
 });
 console.log("Registered. Reports arrive as the page is measured.");

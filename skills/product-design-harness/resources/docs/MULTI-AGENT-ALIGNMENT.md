@@ -25,7 +25,7 @@ Use the smallest responsible review mode without turning a heuristic into permis
    - The helper is offline. The unused live API client and ignored `--live` options have been removed. No model call or latency guarantee is part of this helper.
 3. **Boundary extraction requires canonical inputs**:
    - `boundary --task` requires a JSON object with `review` containing a complete canonical review result. Raw prompts, evidence tiers, filenames, and proposed proof steps cannot create an execution boundary.
-   - For `continue`, the same JSON object must also contain `context_pack`. The canonical handoff validator checks the review, context pack, identity, evidence references, scope, and controls together.
+   - For `continue`, the same JSON object must also contain `context_pack`. The canonical handoff validator checks review/context-pack structure and equality of selected identifiers, evidence-ID lists, scope and control fields. It does not authenticate identities or resolve evidence IDs to real artifacts.
    - For `verify`, only the reviewed proof boundary and `proof_step` are returned. For `stop_reframe`, the reviewed boundary and `reframed_question` are returned. Neither branch gains implementation permissions from task filenames.
    - Output preserves `may_do`, `must_not_do`, `must_ask`, `stop_conditions`, `human_approval_gates`, and `high_risk_actions`. A valid handoff does not mean a listed human approval has been granted.
    - Invalid JSON, missing reviews, invalid evidence tiers, and mismatched handoffs fail with a nonzero exit status and no execution-boundary output. The helper uses `check_review.py`; it does not establish a second review contract.

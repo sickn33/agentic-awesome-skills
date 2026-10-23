@@ -1,8 +1,8 @@
 # Polaris web components
 
-<!-- Generated from tools/reference/ by `npm run build:reference`. Do not edit. -->
+> Adapted upstream reference snapshot; verify APIs against the installed platform. Examples are not runtime-tested here.
 
-Every component a Nitrogen page can use, each with a working example. They are custom elements loaded by `<script src="https://cdn.shopify.com/shopifycloud/polaris-1.js">` in `web/*.html`: plain HTML, no React, no build step, no imports. Polaris React (`<Page>`, `<Card>`, `@shopify/polaris`) does not apply here. Inside an app, the same examples render live on its Components page (`web/polaris.html`).
+Every component a Nitrogen page can use, with illustrative examples requiring API/version verification. They are custom elements loaded by `<script src="https://cdn.shopify.com/shopifycloud/polaris-1.js">` in `web/*.html`: plain HTML, no React, no build step, no imports. Polaris React (`<Page>`, `<Card>`, `@shopify/polaris`) does not apply here. Inside an app, the same examples render live on its Components page (`web/polaris.html`).
 
 - **Actions:** Button, Button group, Clickable, Clickable chip, Link, Menu
 - **Feedback and status:** Badge, Banner, Empty state, Progress, Spinner
@@ -96,7 +96,7 @@ A list of actions that opens from a button. The button names the menu with comma
 
 ### Badge: `<s-badge>`
 
-A short status label. The tone carries the meaning, so keep the text to a word or two.
+A short status label. Use text to carry status meaning; tone alone must not convey information. Keep the text concise.
 
 ```html
 <s-stack direction="inline" gap="small-200">
@@ -211,7 +211,7 @@ An email address, with the right keyboard on mobile and browser autofill.
 A secret value, hidden as it is typed.
 
 ```html
-<s-password-field label="API secret" name="secret" details="Stored encrypted."></s-password-field>
+<s-password-field label="API secret" name="secret" details="A password field masks display only; secure backend storage must be implemented."></s-password-field>
 ```
 
 ### Number field: `<s-number-field>`
@@ -554,7 +554,7 @@ An icon from the Polaris set, named with `type`. The same names work as `icon` o
 
 ### Image: `<s-image>`
 
-A picture that keeps its shape while it loads. Always give it alt text.
+A picture that keeps its shape while it loads. Provide meaningful alt text, or an empty alternative for a purely decorative image according to the supported accessibility API.
 
 ```html
 <s-box inlineSize="240px">

@@ -20,7 +20,7 @@ describes trust in the interpretation.
 
 ## Contract
 
-Input: `schemas/council-input.schema.json`
+Input: `schemas/product-brief.schema.json`, plus the already completed claim analysis, lane and challenge review artifacts as separate context. Do not require a completed council input containing the uncertainty review that this role has not produced yet.
 
 Output: `schemas/uncertainty-review.schema.json`
 

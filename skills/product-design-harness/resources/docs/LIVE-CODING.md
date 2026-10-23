@@ -4,7 +4,7 @@ Use this workflow when a builder wants a coding agent to implement product work
 inside a reviewed boundary.
 
 The rule is simple: review first, code second. A `continue` verdict plus a
-valid context pack authorizes implementation only inside the named boundary.
+valid context pack records the permitted review scope; actual implementation still requires the user's trusted authorization.
 `verify` authorizes only the proof step. `stop_reframe` blocks coding.
 
 ## Golden Chain
@@ -57,7 +57,7 @@ Use Product Design Harness for this session.
 
 Set session_config to:
 {
-  "working_language": "<en|zh-TW|zh-CN|ja|ko|es|fr|de|pt>",
+  "working_language": "<en|it|zh-TW|zh-CN|ja|ko|es|fr|de|pt>",
   "canonical_identifiers": "en",
   "fallback_language": "en"
 }

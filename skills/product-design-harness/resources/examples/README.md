@@ -1,5 +1,7 @@
 # Examples
 
+All records, named organizations, observations, dates, approvals and evidence URIs here are fictional fixtures. They are not verified research, signed decisions or live permission. Historical timestamps may be stale for real decisions; never relabel them as current.
+
 | File | Purpose |
 |---|---|
 | `quick-gate-review.md` | Small reversible change. |
@@ -17,6 +19,6 @@
 | `ux3-council-review.md` | Extended UX3 council review. |
 | `ux3-council-review.json` | Machine-checkable Council result. |
 | `human-decision.json` | Accountable decision record used by the Council example. |
-| `verdict-override.json` | Signed override of the stop_reframe example; validated by check_override. |
+| `verdict-override.json` | Illustrative unsigned override of the stop_reframe example; validated by check_override. |
 | `verdict-override.md` | Human-readable override walkthrough. |
 | `evidence-response.json` | Evidence receipts with provenance and freshness. |

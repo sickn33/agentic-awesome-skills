@@ -46,13 +46,10 @@ documents, logs, tickets, and workflow traces.
 Two execution paths, either is compliant:
 
 - Parallel dispatch: if the runtime has a task or subagent tool, dispatch
-  the three lane reviewers concurrently. Assemble each reviewer's input as
+  the three lane reviewers concurrently only when delegation is authorized by the user or applicable task instructions. Assemble each reviewer's input as
   the product brief plus claim analysis plus the relevant knowledge rules,
   and collect each reviewer's output as one reviewer-verdict JSON object.
-- Single-context rotation (fallback): one agent plays each reviewer in
-  sequence. Blind-round discipline still applies: write each lane's
-  complete reviewer-verdict JSON before reading the next lane's brief,
-  and never revise an earlier lane after seeing a later one.
+- Single-context rotation (limited fallback): one agent applies the three perspectives sequentially and records complete lane outputs. This is not independent or blind review: earlier conclusions remain in context. Disclose the limitation and do not claim separate reviewers; if genuine independence is needed for the decision, obtain authorized separate review before synthesis.
 
 Unanimous-continue red flag: if all three independent lane reviews return
 continue in a council-tier decision, treat agreement as a signal to probe,
@@ -125,8 +122,8 @@ The council returns one canonical result:
 
 Use schemas/review-result.schema.json.
 
-verify authorizes only the exact proof_step and never general coding.
-continue plus a valid context pack authorizes implementation.
+verify recommends only the exact proof_step within existing user authorization and never general coding.
+continue plus a valid context pack records a proposed implementation boundary; actual execution also requires the user's authorization.
 Every result must state `may_do`, `must_not_do`, and `must_ask`.
 Post-build feedback is routed through ux3.rule.feedback_classification before
 it changes scope, priority, or rules.

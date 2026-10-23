@@ -31,7 +31,7 @@ legitimate?
 
 Require product organization, issuer, stakeholder effects, and accountable
 owner before handoff. A strong business lane cannot average out missing user or
-evidence proof. Reversibility lowers mode, not the review requirement. verify authorizes only the exact proof_step and never general coding. continue plus a valid context pack authorizes implementation.
+evidence proof. Reversibility lowers mode, not the review requirement. verify recommends only the exact proof_step within existing user authorization and never general coding. continue plus a valid context pack records a proposed implementation boundary; actual execution also requires the user's authorization.
 
 ## Contract
 

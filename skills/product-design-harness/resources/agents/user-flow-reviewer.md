@@ -30,8 +30,8 @@ exists now?
 
 Reversibility lowers mode, not the review requirement.
 
-- Boundary: verify authorizes only the exact proof_step and never general coding.
-- Boundary: continue plus a valid context pack authorizes implementation.
+- Boundary: verify recommends only the exact proof_step within existing user authorization and never general coding.
+- Boundary: continue plus a valid context pack records a proposed implementation boundary; actual execution also requires the user's authorization.
 
 If the user boundary is incomplete, put the missing actor facts in `must_ask`;
 do not authorize implementation.

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/verdict-override.schema.json",
   "title": "Product Design Harness Verdict Override",
-  "description": "Authorizes execution despite a verify or stop_reframe verdict. An override never modifies the review-result: the review's verdict stays on record, and this artifact records who chose to execute anyway, within what scope, until when, and what voids the authorization. Validate with scripts/check_override.py, which also cross-checks the referenced review.",
+  "description": "Records a claimed human override without modifying the review. Validation checks structure, date and listed cross-file consistency, not authentic human authorization, policy compliance, signature, tripwire state or natural-language scope equivalence. Trusted authorization and semantic scope review are separate requirements.",
   "type": "object",
   "additionalProperties": false,
   "required": [

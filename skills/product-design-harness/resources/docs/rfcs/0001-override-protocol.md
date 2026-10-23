@@ -1,6 +1,6 @@
 # RFC 0001: The Override Protocol
 
-- Status: Proposal (no schema or contract changes yet)
+- Status: Historical proposal. The current bundle includes the override schema, checker and template; this RFC describes the earlier design, not implemented enforcement guarantees.
 - Scope: how the weakest-flow rule survives the moment it blocks a
   pet feature
 - Follow-up: implementation tracked in the checklist at the end

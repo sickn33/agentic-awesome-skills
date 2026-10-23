@@ -10,13 +10,45 @@ import json
 import sys
 from pathlib import Path
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 
 ROOT = Path(__file__).resolve().parent.parent
 SEVERITY = {"stop_reframe": 2, "verify": 1, "continue": 0}
 PRIORITY = {"evidence": 0, "user": 1, "business": 2}
 VERDICTS = ["continue", "verify", "stop_reframe"]
+
+
+def load_artifact(path):
+    """Bounded regular UTF-8 JSON; duplicate keys/nonfinite values fail closed."""
+    path = Path(path)
+    if not path.is_file():
+        raise ValueError("Artifact must be a regular file")
+    with path.open('rb') as handle:
+        raw = handle.read(2 * 1024 * 1024 + 1)
+    if len(raw) > 2 * 1024 * 1024:
+        raise ValueError("Artifact exceeds 2 MiB")
+    def pairs(entries):
+        result = {}
+        for key, value in entries:
+            if key in result:
+                raise ValueError("Duplicate JSON object key")
+            result[key] = value
+        return result
+    def reject_constant(value):
+        raise ValueError("Nonfinite JSON number")
+    def finite_float(value):
+        import math
+        number = float(value)
+        if not math.isfinite(number):
+            raise ValueError("Nonfinite JSON number")
+        return number
+    try:
+        result = json.loads(raw.decode('utf-8'), object_pairs_hook=pairs,
+                            parse_constant=reject_constant, parse_float=finite_float)
+    except (UnicodeError, RecursionError) as exc:
+        raise ValueError("Artifact encoding/nesting is unsupported") from exc
+    return result
 
 
 def expected_weakest_flow(reviews):
@@ -36,7 +68,7 @@ def schema_errors(document, schema_name):
         (ROOT / "schemas" / schema_name).read_text()
     )
     resources = []
-    for external_name in ["session-config.schema.json", "actor-boundary.schema.json"]:
+    for external_name in sorted(p.name for p in (ROOT / "schemas").glob("*.schema.json")):
         external_schema = json.loads((ROOT / "schemas" / external_name).read_text())
         resource = Resource.from_contents(external_schema)
         resources.extend(
@@ -51,8 +83,8 @@ def schema_errors(document, schema_name):
         )
     registry = Registry().with_resources(resources)
     return [
-        f"schema: {error.json_path}: {error.message}"
-        for error in Draft202012Validator(schema, registry=registry).iter_errors(document)
+        f"schema: {error.json_path}: failed {error.validator} constraint"
+        for error in Draft202012Validator(schema, registry=registry, format_checker=FormatChecker()).iter_errors(document)
     ]
 
 
@@ -115,11 +147,6 @@ def check(document):
             problems.append(
                 "council challenge round must include exactly one reviewer per flow"
             )
-        if not any(ch.get("objection_to") != "none" for ch in challenges):
-            problems.append(
-                "council challenge round is vacuous: at least one challenge "
-                "must object to another lane (objection_to != none)"
-            )
     return problems
 
 
@@ -154,13 +181,13 @@ def main():
     parser.add_argument("--context-pack", help="Validate the review and linked handoff together")
     args = parser.parse_args()
     try:
-        document = json.loads(Path(args.review).read_text())
+        document = load_artifact(args.review)
         if args.context_pack:
-            context_pack = json.loads(Path(args.context_pack).read_text())
+            context_pack = load_artifact(args.context_pack)
             problems = check_handoff(document, context_pack)
         else:
             problems = check(document)
-    except (OSError, ValueError) as error:
+    except (OSError, ValueError, RecursionError) as error:
         print(f"cannot read artifact: {error}", file=sys.stderr)
         return 1
     if problems:

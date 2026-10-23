@@ -28,7 +28,7 @@
     {
       "id": "uncertainty_reviewer",
       "instructions": "agents/uncertainty-reviewer.md",
-      "input_schema": "schemas/council-input.schema.json",
+      "input_schema": "schemas/product-brief.schema.json",
       "output_schema": "schemas/uncertainty-review.schema.json"
     },
     {

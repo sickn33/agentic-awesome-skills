@@ -39,7 +39,7 @@ Adapted from the [upstream skill](https://github.com/mksd0398/nitrogen/tree/mast
 
 ### Step 1: Get what only the user can give
 
-Only the user can supply these. Ask for them; never invent or guess them.
+Inspect existing authorized project configuration and account context first. Ask only for missing decisions; never invent identifiers or request secrets in chat.
 
 | You need | Where the user finds it |
 |---|---|
@@ -49,19 +49,22 @@ Only the user can supply these. Ask for them; never invent or guess them.
 | One store, or any store | One store makes it single-tenant (`--shop=STORE.myshopify.com`). Any store makes it multi-tenant (leave `--shop` out). |
 | Where the data lives | A Firestore location such as `us-central1` or `europe-west1`. It cannot be changed later, so ask. |
 
-Choose the scopes from the feature yourself. Keep `read_products`, which the starter pages use, and add what the feature needs: orders need `read_orders`, and so on. Add `write_` scopes only for what the app changes.
+Choose the scopes from the feature yourself. Keep `read_products` only if the requested starter/product UI actually needs it; remove unused starter pages instead of retaining unnecessary access, and add what the feature needs: orders need `read_orders`, and so on. Add `write_` scopes only for what the app changes.
 
-Two steps open a browser, so the user runs them: `firebase login` now, and `shopify auth login` before the first `shopify app deploy`.
+Use the host's approved interactive authentication flow for: `firebase login` now, and `shopify auth login` before the first `shopify app deploy`.
 
 Ask the user to save the client secret to `secret.txt` in the folder you will run the CLI from, which is outside the app. Do not ask them to paste it into the chat, and never print it. Once it is stored in Secret Manager, they can delete the file.
 
 ### Step 2: Scaffold
 
+The scaffolder is third-party executable code with package-install, cloud-provisioning and Git-commit effects. Review the selected version and its dependency/lifecycle behavior before execution; use an isolated new project directory. `--skip-provision` is only a cloud-provisioning switch, not a sandbox or a guarantee of no local/network side effects. Do not run a provisioning path until the intended Firebase project, region, billing and resource effects are authorized. Store `secret.txt` outside Git/synced folders with owner-only permissions and no tracing; environment variables are not immune to child-process/log disclosure. Unset the secret after use and remove the temporary file once secure storage is verified.
+
+
 There is no terminal to answer the wizard's questions in, so pass every answer as a flag:
 
 ```bash
-export SHOPIFY_API_SECRET="$(cat secret.txt)"  # security-allowlist: process environment loaded from a user-owned secret file
-npx @mksd0398/nitrogen@latest my-app \
+export SHOPIFY_API_SECRET="$(cat secret.txt)"  # Private file; disable shell tracing and unset after setup
+npx "@mksd0398/nitrogen@${NITROGEN_VERSION:?Set the approved reviewed version}" my-app \
   --api-key=CLIENT_ID \
   --project-id=PROJECT_ID \
   --firestore-region=us-central1 \
@@ -99,8 +102,8 @@ firebase functions:secrets:set SHOPIFY_API_SECRET --data-file=../secret.txt --pr
 ```bash
 cd my-app
 cd functions && npm test && cd ..
-firebase deploy --force
-shopify app deploy --allow-updates
+firebase deploy --project PROJECT_ID
+shopify app deploy
 ```
 
 `firebase deploy` ships the functions, the pages and the Firestore rules. `shopify app deploy` sends `shopify.app.toml` to Shopify: the app URL, scopes and webhook subscriptions. The user then installs the app from the Dev Dashboard onto a development store. `https://PROJECT_ID.web.app/auth?shop=STORE.myshopify.com` also works.
@@ -125,8 +128,8 @@ Run `cd functions && npm test` after every change, and before every deploy.
 The user gave the client ID, a new project id, their store and the location `europe-west1`, and saved the secret to `secret.txt`. The feature reads orders.
 
 ```bash
-export SHOPIFY_API_SECRET="$(cat secret.txt)"  # security-allowlist: process environment loaded from a user-owned secret file
-npx @mksd0398/nitrogen@latest my-app \
+export SHOPIFY_API_SECRET="$(cat secret.txt)"  # Private file; disable shell tracing and unset after setup
+npx "@mksd0398/nitrogen@${NITROGEN_VERSION:?Set the approved reviewed version}" my-app \
   --api-key=CLIENT_ID \
   --project-id=PROJECT_ID \
   --create-project \
@@ -147,7 +150,7 @@ Orders are protected customer data: Shopify refuses order webhooks until the use
 
 ```bash
 cd functions && npm test && cd ..
-firebase deploy --force
+firebase deploy --project PROJECT_ID
 ```
 
 ### Example 3: Add a webhook
@@ -173,10 +176,14 @@ shopify app deploy
 - ❌ Don't loosen any check in `functions/src/verify`.
 - ❌ Don't invent the client ID, the secret or the Firebase project, and don't ask for the secret in the chat.
 
+## Deployment and data checks
+
+Before any authorized deploy, inspect the actual generated source and dependencies, not just scaffold success. Test invalid/expired/wrong-audience tokens, raw-body webhook HMAC, replay/idempotent webhook handling, cross-tenant reads/writes and redaction coverage. Verify JWT signature, issuer, audience, time claims and tenant binding server-side; deny-client Firestore rules do not constrain Admin SDK code. Public invocation allows requests to reach the verifier; it is never a replacement for authentication. Confirm requested app/project/store and preserve existing resources. Tests passing does not independently prove these properties or authorize deployment.
+
 ## Limitations
 
 - Cloud Functions and Secret Manager need the Blaze plan. Only the user can upgrade the project.
-- `firebase login` and `shopify auth login` open a browser, so the user runs them.
+- Authentication requires a supported interactive host/browser flow; do not guess account identity or expose credentials.
 - The Firestore location cannot be changed after it is created.
 - Shopify refuses order and customer webhooks until the user selects protected customer data in the Partner Dashboard.
 - Hosting ends a rewritten request at 60 seconds, whatever `timeoutSeconds` says.
@@ -186,11 +193,11 @@ shopify app deploy
 ## Security & Safety Notes
 
 - The scaffold changes the user's Firebase project: with `--firestore-region` it creates Firestore and a Firebase web app, and it stores the client secret in Secret Manager. `--create-project` and `firebase projects:create` create a project; use them only with the user's go-ahead. `--skip-provision` is a trial run that touches nothing in Firebase.
-- `firebase deploy --force` ships functions, pages and Firestore rules to the live project, and `shopify app deploy --allow-updates` sends the URL, scopes and webhook subscriptions to Shopify. Run them when the user has asked for a deploy, after `npm test` passes.
-- `--force` also lets the Firebase CLI delete deployed functions that are not in this app's source without asking. If the project already runs other functions, check with the user first.
+- `firebase deploy --project PROJECT_ID` ships functions, pages and Firestore rules to the live project, and `shopify app deploy --allow-updates` sends the URL, scopes and webhook subscriptions to Shopify. Run them when the user has asked for a deploy, after `npm test` passes.
+- Do not add Firebase `--force`: it can suppress function-deletion confirmation. Inventory existing resources and use `--only` for the intended functions/hosting/rules where possible, with the explicit target project. Review deletions before deployment.
 - `--overwrite` replaces an existing `my-app` folder. Pass it only when the user said to replace it.
-- The secret goes from `secret.txt` into `SHOPIFY_API_SECRET`, which keeps it off the command line and out of the transcript. Never print it.
-- `npx @mksd0398/nitrogen@latest` runs the newest published version. Pin a version for a reproducible run.
+- The secret is loaded through the process environment rather than a CLI argument. It may still be exposed by tracing, child processes or logs; restrict file permissions, avoid output and unset it after setup.
+- Use the approved pinned Nitrogen version; a package name/version pin alone is not a review of its transitive dependencies.
 
 ## Common Pitfalls
 
@@ -203,9 +210,9 @@ shopify app deploy
 | The Dashboard says it could not load store information | `read_products` was dropped from the scopes | Put it back |
 | Deploy asks for `SHOPIFY_API_SECRET` | The secret was never stored | `firebase functions:secrets:set SHOPIFY_API_SECRET --data-file=../secret.txt` |
 | `/api/x` answers 404 from Hosting | The export and rewrite disagree, or the regions do | `npm test` names the mismatch |
-| Google's 403 page instead of JSON | `invoker: "public"` was removed | Restore it in `functions/src/index` |
+| Google's 403 page instead of JSON | `invoker: "public"` was removed | Inspect Hosting/function invocation configuration and application authentication before any IAM/public-exposure change |
 | Every call answers 429 `Rate exceeded.` just after billing was enabled | Google is still applying billing | Wait; it has taken 25 minutes |
-| A GraphQL call says access denied | A scope is missing or not yet approved | Add it as in Step 4. If it persists, delete the shop's `shopSessions` document |
+| A GraphQL call says access denied | A scope is missing or not yet approved | Add it as in Step 4. If it persists, inspect the token/installation state; do not delete sessions as a blind fix |
 | `shopify app deploy` refuses an order or customer webhook | Protected customer data is not selected | The user selects it in the Partner Dashboard |
 
 ## Additional Resources

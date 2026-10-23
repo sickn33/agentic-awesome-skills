@@ -47,10 +47,10 @@ If the request is vague, first fill `templates/product-brief.md`.
 If the mode is UX3 Council, run `prompts/ux3-council.md`.
 
 If the verdict becomes Continue, create `templates/context-pack.md`.
-continue plus a valid context pack authorizes implementation.
+continue plus a valid context pack records a proposed implementation boundary; actual execution also requires the user's authorization.
 
 If the verdict becomes Verify, run only the returned `proof_step`.
-verify authorizes only the exact proof_step and never general coding.
+verify recommends only the exact proof_step within existing user authorization and never general coding.
 
 Every completed review must return
 `schemas/review-result.schema.json`. Do not invent a different output shape.

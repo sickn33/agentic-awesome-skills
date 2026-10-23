@@ -12,8 +12,7 @@ Run a UX3 Product Design Harness council. Do not implement.
    `schemas/evidence-request.schema.json` and
    `schemas/evidence-response.schema.json`.
 4. Fork User, Evidence, and Business reviewers in parallel (or rotate
-   roles in one context, writing each lane's JSON before reading the next
-   brief). If all three lanes return continue, run `red-team.md` and give
+   roles in one context with an explicit limitation: this is sequential perspective analysis, not independent blind review). If all three lanes return continue, run `red-team.md` and give
    its `schemas/red-team-review.schema.json` output to the facilitator as
    council_input.red_team_review before synthesis.
 5. Wait until all three independent reviews validate against

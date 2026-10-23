@@ -1,11 +1,11 @@
 # FootVal MCP tools — reference
 
-Generated from the server's own tool registrations (server v1.0.0). Endpoint:
+Attributed snapshot of server tool registrations (server v1.0.0); verify against the connected server before use. Endpoint:
 `https://api.footval.com/mcp` (Streamable HTTP, OAuth sign-in).
 
-Every tool is read-only: `readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true`.
-`openWorldHint: true` marks the tools that read live match data from API-Football at call time;
-the rest read FootVal's own database. Every result has a one-line text summary, the same data as
+Documented annotations (hints, not enforcement): `readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true`.
+This snapshot associates `openWorldHint: true` with API-Football match tools; `false` is not a general guarantee of no remote interaction or no data disclosure.
+Other tools are documented as reading FootVal's database. Results are documented as having a one-line text summary, the same data as
 `structuredContent`, and an interactive card in clients that support MCP Apps.
 
 ## `search_football` — Search FootVal

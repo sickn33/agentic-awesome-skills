@@ -54,8 +54,8 @@ only the judgment that an agent must be able to trigger, test, challenge, stop,
 and emit in a bounded form.
 
 Every newly distilled rule cites its source as `UX3 chapter X-Y` inside
-`knowledge/rules.json`; `knowledge/source-chapters.json` resolves those chapter
-IDs through a checked-in source manifest and checksum. The chapter remains the
+`knowledge/rules.json`; `knowledge/source-chapters.json` lists chapter
+IDs and a claimed source checksum. The underlying curriculum is not bundled, so that manifest alone cannot verify chapter content or faithful extraction. The chapter remains the
 human teaching source; the rule is the machine-operable projection. Agent-era controls such as minimum
 authority, deterministic verdict reduction, and machine-readable handoff may be
 new extensions rather than claims copied from the original curriculum.

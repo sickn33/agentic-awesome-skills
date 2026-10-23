@@ -73,8 +73,8 @@ evidence_tier, then to the fixed priority evidence, user, business.
 Do not average reviewers. Do not trade away safety or actor clarity because
 another lane looks strong.
 
-verify authorizes only the exact proof_step and never general coding.
-continue plus a valid context pack authorizes implementation. `stop_reframe`
+verify recommends only the exact proof_step within existing user authorization and never general coding.
+continue plus a valid context pack records a proposed implementation boundary; actual execution also requires the user's authorization. `stop_reframe`
 authorizes no execution work. Each branch must preserve `may_do`,
 `must_not_do`, and `must_ask`.
 

@@ -12,7 +12,7 @@
   "properties": {
     "working_language": {
       "type": "string",
-      "enum": ["en", "zh-TW", "zh-CN", "ja", "ko", "es", "fr", "de", "pt"]
+      "enum": ["en", "it", "zh-TW", "zh-CN", "ja", "ko", "es", "fr", "de", "pt"]
     },
     "canonical_identifiers": {
       "type": "string",

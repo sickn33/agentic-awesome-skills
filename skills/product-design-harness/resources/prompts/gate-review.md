@@ -50,8 +50,8 @@ Rules:
   enforces the floor: `t0` headline evidence forces `stop_reframe`, and
   `t1` can never return `continue`.
 - Do not average verdicts.
-- `continue` creates a context pack; continue plus a valid context pack authorizes implementation.
-- `verify` creates one proof step; verify authorizes only the exact proof_step and never general coding.
+- `continue` creates a context pack; continue plus a valid context pack records a proposed implementation boundary; actual execution also requires the user's authorization.
+- `verify` creates one proof step; verify recommends only the exact proof_step within existing user authorization and never general coding.
 - `stop_reframe` creates one better product question.
 - Every branch must state `may_do`, `must_not_do`, and `must_ask`.
 - Product organization, issuer, stakeholder effects, and accountable owner must

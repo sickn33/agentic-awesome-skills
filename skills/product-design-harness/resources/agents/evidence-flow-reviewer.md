@@ -30,7 +30,7 @@ what decision impact follows?
 
 Designer taste is a named human-owned input, not an evidence score. Post-build
 feedback must be classified before it changes product direction. Reversibility
-lowers mode, not the review requirement. verify authorizes only the exact proof_step and never general coding. continue plus a valid context pack authorizes implementation.
+lowers mode, not the review requirement. verify recommends only the exact proof_step within existing user authorization and never general coding. continue plus a valid context pack records a proposed implementation boundary; actual execution also requires the user's authorization.
 
 ## Contract
 
