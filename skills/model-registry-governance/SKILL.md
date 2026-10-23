@@ -47,15 +47,17 @@ Create a trustworthy system of record for model artifacts, prompts, adapters, an
 
 ## MLflow Registry Setup
 
+Local development illustration only: choose a supported pinned MLflow image and compatible backend drivers before use. Do not expose an unauthenticated tracking/artifact server; production needs TLS, authentication, scoped storage credentials and registry write permissions. The Compose service binds inside its container to 0.0.0.0 while only publishing loopback on the host. Supply DB credentials from a secret provider, never commit them. Registry tags and caller-supplied approver names are mutable metadata, not signed authorization. The snippets below do not call OPA or enforce the approval workflow; enforce decisions in a protected service with authenticated approvers and immutable audit records before permitting any state change.
+
 ```bash
 # Install MLflow with required backends
 pip install mlflow[extras] psycopg2-binary boto3
 
 # Start MLflow tracking server with PostgreSQL backend and S3 artifact store
 mlflow server \
-  --backend-store-uri postgresql://mlflow:password@db:5432/mlflow \
+  --backend-store-uri "${MLFLOW_BACKEND_STORE_URI:?Set a secret-backed PostgreSQL URI}" \
   --default-artifact-root s3://mlflow-artifacts/models \
-  --host 0.0.0.0 \
+  --host 127.0.0.1 \
   --port 5000 \
   --serve-artifacts
 ```
@@ -73,7 +75,7 @@ services:
       --port 5000
       --serve-artifacts
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
     environment:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
@@ -176,6 +178,9 @@ def register_model(
     mlflow.set_tracking_uri(mlflow_uri)
     client = MlflowClient()
 
+    # Validate metadata first (Pydantic v2); never treat arbitrary dict fields as approved.
+    metadata = ModelMetadata.model_validate(metadata).model_dump(mode="json")
+
     # Compute artifact checksum
     with open(model_path, "rb") as f:
         checksum = hashlib.sha256(f.read()).hexdigest()
@@ -208,7 +213,10 @@ def register_model(
         mlflow.log_artifact(model_path)
 
         # Register in model registry
-        model_uri = f"runs:/{run.info.run_id}/model"
+        # model_path here is a single-file artifact, not necessarily an MLflow model.
+        # Package/log a real model with its flavor log_model API first, then use its returned URI.
+        raise NotImplementedError("Supply the URI of a flavor-logged MLflow model before registry creation")
+        model_uri = "<flavor-logged-model-uri>"
         result = mlflow.register_model(model_uri, model_name)
 
         # Set lifecycle tags
@@ -287,7 +295,9 @@ def promote_model(
     client.set_model_version_tag(model_name, version, f"promoted_to_{target_stage}_at", now)
     client.set_model_version_tag(model_name, version, f"promoted_to_{target_stage}_by", approver)
 
-    # Transition MLflow stage alias
+    # Legacy MLflow stage API (not an alias); deprecated since MLflow 2.9.
+    # Prefer explicit aliases plus environment access controls for new integrations.
+    # Transition legacy stage
     stage_map = {
         "candidate": "Staging",
         "approved": "Production",
@@ -329,7 +339,7 @@ from datetime import datetime, timedelta
 
 def enforce_lifecycle_policies(mlflow_uri: str = "http://mlflow:5000"):
     """Run periodic lifecycle enforcement."""
-    client = MlflowClient()
+    client = MlflowClient(tracking_uri=mlflow_uri)
 
     for rm in client.search_registered_models():
         for mv in client.search_model_versions(f"name='{rm.name}'"):
@@ -344,6 +354,7 @@ def enforce_lifecycle_policies(mlflow_uri: str = "http://mlflow:5000"):
                     if datetime.utcnow() - approved_date > timedelta(days=90):
                         print(f"Auto-deprecating {rm.name} v{mv.version}: approval expired")
                         client.set_model_version_tag(rm.name, mv.version, "state", "deprecated")
+                        client.set_model_version_tag(rm.name, mv.version, "promoted_to_deprecated_at", datetime.utcnow().isoformat())
                         client.set_model_version_tag(
                             rm.name, mv.version, "auto_deprecated_reason", "approval_expired"
                         )
@@ -362,32 +373,37 @@ def enforce_lifecycle_policies(mlflow_uri: str = "http://mlflow:5000"):
 
             # Flag drafts with no activity for 14 days
             if state == "draft":
-                created = datetime.fromisoformat(mv.creation_timestamp / 1000)
+                created = datetime.utcfromtimestamp(mv.creation_timestamp / 1000)
                 if datetime.utcnow() - created > timedelta(days=14):
                     print(f"Stale draft: {rm.name} v{mv.version}")
 ```
 
+The lifecycle loop only updates registry metadata: it does not stop serving, revoke aliases or prove that consumers migrated. Plan and verify those actions before retirement. Serialize promotions and evaluate fail-closed policy evidence bound to the exact artifact digest; example score thresholds are illustrative, not universal safety certification.
+
 ## Governance Policies (OPA/Rego)
+
+Rego v1 illustration. A production admission service must reject malformed/missing scan, evaluation and approval inputs before evaluating these deny rules. `sbom_uri` must also be part of the chosen metadata schema; the minimal schema above does not yet include it.
 
 ```rego
 # policy/model_governance.rego
 package model.governance
+import rego.v1
 
 # Reject artifacts without SBOM
-deny[msg] {
+deny contains msg if {
     not input.metadata.sbom_uri
     msg := "Model must include SBOM artifact URI"
 }
 
 # Block promotion if critical CVEs remain
-deny[msg] {
+deny contains msg if {
     input.target_state == "approved"
     input.security_scan.critical_cves > 0
     msg := sprintf("Cannot promote: %d critical CVEs unresolved", [input.security_scan.critical_cves])
 }
 
 # Require refreshed evals after prompt changes
-deny[msg] {
+deny contains msg if {
     input.target_state == "approved"
     input.prompt_changed
     not input.eval_refreshed_after_prompt_change
@@ -395,16 +411,16 @@ deny[msg] {
 }
 
 # Require minimum eval scores for production
-deny[msg] {
+deny contains msg if {
     input.target_state == "approved"
     input.metadata.quality_score < 0.85
     msg := sprintf("Quality score %.2f below threshold 0.85", [input.metadata.quality_score])
 }
 
 # Require dual approval for high-risk models
-deny[msg] {
+deny contains msg if {
     input.target_state == "approved"
-    input.metadata.risk_rating == "high"
+    input.metadata.risk_rating in {"high", "critical"}
     count(input.approvals) < 2
     msg := "High-risk models require at least 2 approvals"
 }

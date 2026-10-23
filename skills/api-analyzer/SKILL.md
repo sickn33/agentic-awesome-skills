@@ -60,7 +60,7 @@ User: `POST /orders — Header: Content-Type: application/json — Body: {"item"
 → `No obvious syntax issue; endpoint contract and credential validity are unverified.`
 
 User: `POST /checkout — no body, no headers`
-→ `Is there a request body? POST to /checkout typically requires one.`
+→ `Does the supplied endpoint contract require a body for POST /checkout?`
 
 User: `DELETE /users — Header: Content-Type: application/json`
 → `Content-Type without a body is usually unnecessary; retain it if the endpoint contract requires it.`

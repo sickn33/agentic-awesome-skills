@@ -48,7 +48,7 @@ The skill must always produce output in this exact format:
 | Search Intent      | informational / transactional / commercial |
 | Target Audience    | [audience]                                 |
 | Page Type          | Pillar — comprehensive, high-level guide   |
-| Word Count Target  | 2500–4000 words                            |
+| Word Count Target  | As much as needed to satisfy intent                            |
 | AEO Priority       | High — this page anchors the whole cluster |
 
 ---
@@ -56,7 +56,7 @@ The skill must always produce output in this exact format:
 ## Cluster Articles
 
 ### Priority 1 — Write These First
-These articles build the foundation. High search volume, clear intent.
+These articles build the foundation. State measured volume with source/date or label demand unknown.
 
 | # | Title                        | Target Keyword       | Intent          | Content Type     | Links To         |
 |---|------------------------------|----------------------|-----------------|------------------|------------------|
@@ -116,13 +116,13 @@ Use this section for the first publishing wave. The landing page, foundational p
 |-----|---------------|--------------|---------------|----------------|----------------------|--------------------------------|
 | 1 | [title] | [query] | [intent] | [format] | [page] | [Medium/Hashnode/dev.to/other] |
 
-Create 20 distinct topics after the foundation is mapped. Prefer topics that answer real questions, solve problems, support the product, and can be linked back to a foundational page.
+Propose up to 20 distinct topics after the foundation is mapped; use fewer when intent evidence does not justify more. Prefer topics that answer real questions, solve problems, support the product, and can be linked back to a foundational page.
 
 ---
 
 ## Content Gap Analysis
 
-Topics the cluster covers that competitors likely miss:
+Potential gaps (verify competitor coverage before claiming absence):
 - [Gap 1 — underserved angle on the pillar topic]
 - [Gap 2 — long-tail question with no strong existing answer]
 - [Gap 3 — AEO opportunity: question AI engines commonly surface]
@@ -140,8 +140,7 @@ At least 2 cluster articles must be structured as direct-answer pages:
 - One FAQ page targeting 8–10 questions around the pillar topic
 - One "What Is" explainer with a clean definition as the opening sentence
 
-These two articles have the highest probability of being
-extracted by AI engines.
+Direct answers can improve clarity; there is no guaranteed extraction or citation probability for these formats.
 
 ---
 
@@ -209,5 +208,7 @@ When assigning content types, use only from this list:
 Use when planning a pillar page, foundational pages, and supporting articles around a product, service, or topic.
 
 ## Limitations
+
+- Search volumes, competitor gaps and AI citation opportunities require current observations with sources and dates; otherwise label them hypotheses. Planning does not authorize publishing or external distribution. Do not fabricate case studies, reviews or customer results.
 
 - A content map is a prioritisation aid, not measured demand or a guarantee that every proposed topic will rank.

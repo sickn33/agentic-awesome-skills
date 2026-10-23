@@ -67,9 +67,9 @@ Scope is strictly limited to changes that cannot alter behavior:
 
 - Consistent indentation and whitespace
 - Consistent brace/bracket style matching the surrounding file
-- Removing truly dead code (unreachable blocks) — only when unambiguous, and flagged in the summary
+- Flagging apparently unreachable code for a separate behavior review; do not delete executable statements under a comments-only task
 - Splitting overly long lines for readability
-- Local variable renaming for clarity is allowed **only** for private/local-scope names, and only when the improvement is unambiguous — never rename anything exported, public, or referenced across files without calling it out explicitly first
+- Keep identifiers unchanged. Local names can affect reflection, serialization, closures, debugging contracts or dynamic lookup; propose renames separately rather than treating them as automatically non-semantic.
 
 Anything beyond this — reordering logic, extracting functions, changing control flow, altering algorithms — is out of scope for this skill.
 

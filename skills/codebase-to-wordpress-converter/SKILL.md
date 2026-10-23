@@ -30,7 +30,7 @@ The skill follows a strict 4-phase forensic process:
 4.  **Phase 4: Iterative Fixing**: Executing one safe task at a time with validation after each step.
 
 ### Absolute UI Lock
-Strict enforcement of non-negotiable rules:
+Use these as visual-parity goals. Security, valid markup and accessible navigation may require a documented structural change; report that tradeoff instead of promising impossible parity:
 - No alterations to layout, spacing, typography, or colors.
 - Exact preservation of Tailwind or CSS class names.
 - Zero changes to DOM structure or HTML nesting.
@@ -78,14 +78,14 @@ wp_nav_menu([
 ```php
 // Source: <img src="/images/logo.png" />
 // WP Conversion:
-<img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Logo" />
+<img src="<?php echo esc_url( get_template_directory_uri() . "/assets/images/logo.png" ); ?>" alt="Logo" />
 ```
 
 ## Best Practices
 
 - ✅ **Do:** Use `get_page_by_path()` for robust internal linking.
 - ✅ **Do:** Implement ACF (Advanced Custom Fields) fallbacks in `functions.php`.
-- ✅ **Do:** Keep the Tailwind configuration in the `header.php` to ensure global styles are active.
+- ✅ **Do:** Build Tailwind through the project asset pipeline and enqueue compiled CSS with WordPress hooks; do not rely on a runtime Tailwind configuration in `header.php`. Escape dynamic text, attributes and URLs for their output context; preserve intended rich content through approved WordPress filters.
 - ❌ **Don't:** Add "div" wrappers or rename classes to "clean up" the code.
 - ❌ **Don't:** Use standard WordPress default styles if they conflict with the original design.
 

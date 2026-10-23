@@ -29,7 +29,7 @@ Produce a report whose "conclusions are trustworthy, process is traceable, and t
 2. **Tier your sources** (tier before you search, so you don't believe whatever you find first):
    - Primary: official docs, original papers, original filings, protocol/legal texts, measured data.
    - Secondary: reputable press, industry reports, expert interviews.
-   - Tertiary: social-media posts, forum threads, aggregator sites — leads only, never evidence.
+   - Tertiary: aggregator summaries and unsourced commentary — leads requiring corroboration. A direct author statement, original release or first-hand report on a forum/social platform may be primary evidence for that narrow claim; assess provenance and corroboration rather than classifying by hosting platform alone.
 3. **Cross-verify**: key conclusions need two or more independent sources. Two sources quoting the same origin don't count as independent. If no second source exists, downgrade the conclusion to "single-source claim" and mark it as such.
 4. **Writing structure** (conclusion first):
    - Opening: 3–5 lines stating the core conclusions.
@@ -40,7 +40,7 @@ Produce a report whose "conclusions are trustworthy, process is traceable, and t
 ## Rules
 
 - Mark speculation as speculation. Use "may", "likely", "unverified" — never dress speculation up with "clearly" or "it is well known".
-- No tertiary source supports a core conclusion. A forum thread can point a direction, never serve as evidence.
+- Do not base a core conclusion on unverified commentary. Assess each item’s provenance and what it directly establishes; a genuine primary protocol proposal hosted on a forum can establish the proposal, but not deployment or correctness.
 - Every number in the report has a source. A number without a source is deleted, not rewritten.
 - State "what you don't know" before "what you know" — honest uncertainty beats pretty certainty.
 

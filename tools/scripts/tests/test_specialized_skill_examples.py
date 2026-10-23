@@ -19,7 +19,7 @@ def example_definitions():
     for block in re.findall(r'```python\n(.*?)```', text, re.S):
         tree = ast.parse(block)
         selected.extend(node for node in tree.body if isinstance(node, (ast.FunctionDef, ast.ClassDef))
-                        and node.name in {'chunk_by_tokens', 'recursive_character_splitter', 'LocalEmbedder'})
+                        and node.name in {'chunk_by_tokens', 'recursive_character_splitter', 'LocalEmbedder', 'DomainEmbeddingPipeline'})
     class Model:
         def __init__(self, *args, **kwargs):
             self.texts = None
@@ -29,7 +29,7 @@ def example_definitions():
     class Numpy:
         ndarray = list
     from typing import List
-    namespace = {'List': List, 'np': Numpy, 'SentenceTransformer': Model}
+    namespace = {'List': List, 'np': Numpy, 'SentenceTransformer': Model, 're': re}
     exec(compile(ast.Module(body=selected, type_ignores=[]), '<reviewed-pure-examples>', 'exec'), namespace)
     return namespace
 
@@ -63,6 +63,20 @@ class Examples(unittest.TestCase):
         embedder = cls(query_prefix='query: ')
         self.assertEqual(embedder.embed_query('question'), 'query: question')
         self.assertEqual(embedder.embed_documents(['document']), ['document'])
+
+    def test_domain_pipeline_preserves_code_and_currency_and_returns_records(self):
+        namespace = example_definitions()
+        # Offline adapters isolate transformation from tokenizer/model/provider services.
+        namespace['chunk_by_tokens'] = lambda text, size, overlap: [text]
+        namespace['get_embeddings'] = lambda chunks, model: [[len(c)] for c in chunks]
+        pipeline = namespace['DomainEmbeddingPipeline']()
+        text = 'cost = $42; call(x) -> y / 2'
+        records = pipeline.process_documents([{'id': 'fixture', 'content': text}])
+        self.assertIsInstance(records, list)
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0]['text'], text)
+        self.assertEqual(records[0]['embedding'], [len(text)])
+        self.assertEqual(records[0]['id'], 'fixture_chunk_0')
 
     def test_kpi_queries_keep_cohort_denominator_and_spend_grain(self):
         db = sqlite3.connect(':memory:')

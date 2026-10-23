@@ -94,7 +94,7 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Recommended approach:** Record each obligation with a deadline, an owner and the evidence that proves it, and review the overdue list first.
 
-**Why this one:** Compliance risk concentrates in the few items that are due and unowned. A register with owners and dates is the whole control.
+**Why this one:** Compliance risk concentrates in the few items that are due and unowned. A register supports ownership and reminders; it does not prove legal compliance or replace counsel review.
 
 **Workflow:** Obligation listed → Owner assigned → Evidence linked → Due date tracked → Reviewed or filed
 
@@ -170,6 +170,7 @@ CREATE INDEX idx_legal_compliance_vault_status ON legal_compliance_vault (status
       "Document Type",
       "Effective Date",
       "Expiry Date",
+      "Renewal Required",
       "Confidentiality",
       "Status"
   ]
@@ -309,7 +310,7 @@ We are not sure what our filing deadlines are.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

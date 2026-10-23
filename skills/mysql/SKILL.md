@@ -34,6 +34,10 @@ Administer, optimize, and secure MySQL and MariaDB databases in development and 
 - Root or sudo access for package installation.
 - Familiarity with SQL fundamentals.
 
+## Version and recovery boundaries
+
+MySQL and MariaDB are not interchangeable: select exact server/tool versions and supported replication syntax before adapting these examples. Tuning values are workload examples; some InnoDB options are removed or replaced in newer versions. Real credentials belong in protected option files/secret providers, not command arguments, Compose source or history. Replace sample credentials and bind only the required private interfaces. XtraBackup must match the server version; --move-back consumes the backup files, so preserve an independent copy. --single-transaction consistency depends on transactional tables and no concurrent DDL. Do not skip replication errors or kill blocking transactions without diagnosing consistency/rollback consequences. REPAIR TABLE does not repair InnoDB. A zero lag counter alone does not prove a healthy consistent replica; validate initialization from a matching snapshot/log position and use encrypted replication. Backup pipelines must propagate failures (pipefail) and be restore-tested.
+
 ## Installation and Setup
 
 ```bash
@@ -87,7 +91,7 @@ mysql -u myapp -p mydb < schema.sql
 
 # Export query results to CSV
 mysql -u myapp -p -e "SELECT * FROM users" mydb \
-  | tr '\t' ',' > users.csv
+  > users.tsv  # tabular output, not escaped CSV
 ```
 
 ```
@@ -108,7 +112,7 @@ Edit `/etc/mysql/mysql.conf.d/mysqld.cnf` (or `/etc/my.cnf` on RHEL).
 ```ini
 [mysqld]
 # -- Networking --
-bind-address           = 0.0.0.0
+bind-address           = 127.0.0.1
 max_connections        = 300
 wait_timeout           = 600
 interactive_timeout    = 600
@@ -190,7 +194,8 @@ xtrabackup --prepare --target-dir=/backups/full_2025-01-15
 # Restore (stop MySQL first)
 sudo systemctl stop mysql
 ls /var/lib/mysql/*  # verify this is the correct data dir first
-sudo find /var/lib/mysql -mindepth 1 -delete  # empty the data dir; snapshots must exist (see Limitations)
+# Preserve the stopped data directory in a separately verified recovery location.
+# Do not delete it; prepare an empty destination only after a tested restore plan.
 xtrabackup --move-back --target-dir=/backups/full_2025-01-15
 sudo chown -R mysql:mysql /var/lib/mysql
 sudo systemctl start mysql
@@ -247,7 +252,7 @@ read_only  = ON
 CHANGE REPLICATION SOURCE TO
   SOURCE_HOST     = '10.0.0.1',
   SOURCE_USER     = 'replicator',
-  SOURCE_PASSWORD = '...' # replication secret from your vault,
+  SOURCE_PASSWORD = '...', -- supply the replication secret securely
   SOURCE_LOG_FILE = 'mysql-bin.000003',
   SOURCE_LOG_POS  = 154;
 
@@ -303,7 +308,7 @@ services:
     image: mysql:8.0
     restart: unless-stopped
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: mydb
@@ -329,7 +334,7 @@ services:
     image: phpmyadmin:latest
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "127.0.0.1:8080:80"
     environment:
       PMA_HOST: mysql
       PMA_USER: root

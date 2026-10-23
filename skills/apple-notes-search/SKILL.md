@@ -60,13 +60,13 @@ Disk Access. Steps, in order:
    git clone https://github.com/connerkward/mcp-apple-notes
    cd mcp-apple-notes
    git checkout <reviewed-tag-or-commit>
-   bun install
+   bun install --ignore-scripts
    ```
 3. **Grant Full Disk Access to bun.** Run `which bun`, then open System Settings →
    Privacy & Security → Full Disk Access, click `+`, and add that exact `bun` binary
    path (commonly `/opt/homebrew/bin/bun` or `/usr/local/bin/bun`). Without this the
    server cannot read NoteStore.sqlite and every call fails with a permissions error.
-   (`bun install`'s postinstall tries to open this pane automatically.)
+   (Review all lifecycle scripts before any separate activation; do not run postinstall merely to open a settings pane.)
 4. **Register the MCP server** (pick the user's client):
    - Claude Code: `claude mcp add apple-notes -- bun /absolute/path/to/mcp-apple-notes/index.ts --stdio`
    - Claude Desktop: add to `claude_desktop_config.json`:
@@ -136,3 +136,5 @@ which writes a grounded answer with inline `[n]` citations back to source notes.
 Fork of [RafalWilinski/mcp-apple-notes](https://github.com/RafalWilinski/mcp-apple-notes);
 this fork reads SQLite + protobuf directly and adds bridges, entities, feed, and synthesis.
 Authored by [Conner K Ward](https://github.com/connerkward). License MIT.
+
+Pin and stage the complete external server/dependency tree, inspect executable and lifecycle entry points before activation, and explain the exact process receiving Full Disk Access. Granting broad filesystem permission requires the user’s informed action. Indexes persist note contents/embeddings: choose access, retention and deletion scope. Cloud-assisted synthesis sends selected notes to the configured provider and requires explicit private-data transfer scope; “on-device” indexing does not make cloud queries local.

@@ -60,7 +60,7 @@ Notion template.
 - "Plan our cloud spend and monitoring"
 
 Do not use it when the user has already named one specific asset and just wants it - go
-straight to that module skill.
+straight to that module skill when available.
 
 ## How It Works
 
@@ -146,8 +146,7 @@ design-theme-guide -> logo-image-design -> gbp-local-seo-intent
 
 ## The Dependency Order
 
-Brand decisions travel one way. Nothing later can be built before the token set exists,
-and nothing visual can be finalised before the logo does.
+Brand decisions travel one way. Treat this as a suggested dependency order for visual assets, not a prerequisite for independent governance, research or profile accuracy work.
 
 ```
 free-design-resources          (read-only research, safe to start at any time)
@@ -208,8 +207,7 @@ Being found. The profile, the pages and the citations have to agree with each ot
 
 ### Layer 5: Fulfil
 
-The page register is the only module in this layer, and it is the handoff between brand and
-acquire: it records what each page is for so the citations have something to point at.
+The website module supplies the page register; there is no separate fourteenth page-register module in this router.
 
 ### Layer 6: Engage
 
@@ -239,7 +237,7 @@ What is critical, what is measured, and what wakes a human.
 
 ### Working categories
 
-The 13 arrived under 8 working categories. They are published flat at `skills/<slug>/`,
+The 13 modules are grouped into the six working categories below. They are published flat at `skills/<slug>/`,
 so this grouping is recorded in the catalog rather than in a directory level.
 
 | Working category | Modules | Count |
@@ -295,11 +293,10 @@ needs it is the module being run.
 
 ## Rules Every Module Holds To
 
-- One name, one spelling, one phone number, one address, everywhere - the NAP rule. A
-  variation is a defect, not a local preference.
+- One name, one spelling, one phone number, one address, everywhere - the NAP rule. Distinguish genuine inconsistencies from local address/phone formatting and separate real business locations.
 - A design system is tokens first, components second, and never a one-off. If it is not
   written as a value, it is not part of the system.
-- Contrast is a test, not an opinion. Body text 4.5:1, large text and UI components 3:1,
+- Contrast is a test, not an opinion. Normal text 4.5:1, qualifying large text 3:1; applicable non-text UI boundaries/states 3:1,
   per WCAG 2.2 AA - and the ratio gets recorded in the token file.
 - A Google Business Profile is a completeness and accuracy problem before it is a keyword
   problem. Nobody can buy a better local rank.
@@ -368,3 +365,5 @@ anything about my business. Then recommend the two or three modules that matter 
 the order they depend on each other, and wait for me to pick before you build anything.
 When I pick a module, output only the artifacts I asked for.
 ```
+
+The shared contract and three reference files are external prerequisites, not installed by this router. Resolve sibling modules relative to the actual catalog skills root and report missing ones; do not silently install or claim a handoff ran. Some resource fields/counts may change independently; inspect the selected module rather than treating this table as a schema. If the user already requested a specific artifact, proceed through the appropriate module within that scope instead of requiring a second choice. Directory placement, profile completeness and tokens do not guarantee search rank or WCAG conformance; verify full flows and current platform eligibility before publishing.

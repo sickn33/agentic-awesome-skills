@@ -4,6 +4,8 @@
 
 ## Terraform Configuration
 
+Fragments require a pinned azurerm provider and separately defined resource group, NIC, subnet, LB/probe and tags variable. A rolling upgrade needs verified application health. Pin image versions for reproducible rollout and protect remote state; latest and snapshots are not an application recovery plan.
+
 ```hcl
 resource "azurerm_linux_virtual_machine" "main" {
   name                  = "myapp-vm"
@@ -16,7 +18,7 @@ resource "azurerm_linux_virtual_machine" "main" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = file("~/.ssh/id_rsa.pub")
+    public_key = file(pathexpand("~/.ssh/id_rsa.pub"))
   }
 
   os_disk {
@@ -68,7 +70,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "main" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = file("~/.ssh/id_rsa.pub")
+    public_key = file(pathexpand("~/.ssh/id_rsa.pub"))
   }
 
   source_image_reference {
@@ -93,6 +95,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "main" {
       subnet_id = azurerm_subnet.app.id
     }
   }
+
+  upgrade_mode = "Rolling"
+  health_probe_id = azurerm_lb_probe.app.id # Existing healthy probe; define with the LB.
 
   automatic_os_upgrade_policy {
     disable_automatic_rollback  = false
@@ -120,7 +125,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "main" {
 | VM disk full | OS disk too small or logs not rotated | Resize disk after deallocating; configure log rotation |
 | VM performance is slow | Wrong VM size or disk throttling | Check metrics with `az monitor metrics list`; upgrade size or disk tier |
 | Scale set not scaling out | Autoscale rule threshold not met | Review autoscale settings; verify metric thresholds match workload |
-| Custom image VM boot fails | Image not properly generalized | Re-run `waagent -deprovision` before capturing; check boot diagnostics |
+| Custom image VM boot fails | Image not properly generalized | Inspect boot diagnostics and rebuild from a disposable image-builder clone; do not deprovision a live source VM |
 | VMSS rolling upgrade stuck | Health probe failing on new instances | Fix application health endpoint; check `az vmss rolling-upgrade get-latest` |
 | Spot VM evicted unexpectedly | Azure reclaimed capacity | Use eviction policy `Deallocate` and set up eviction notifications |
 

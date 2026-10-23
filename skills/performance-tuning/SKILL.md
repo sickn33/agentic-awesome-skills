@@ -83,6 +83,8 @@ perf report                      # Analyze recorded data
 echo "=== CPU ===" && mpstat 1 1 && echo "=== MEM ===" && free -h && echo "=== DISK ===" && iostat -x 1 1 && echo "=== NET ===" && ss -s
 ```
 
+All tuning values and profiles below are hypotheses, not safe universal presets. Verify each parameter against the installed kernel/driver, record original values and a tested rollback, and apply one measured change at a time. Do not run sysctl --system or persistent service/rule edits as a baseline check.
+
 ## Sysctl Kernel Parameter Tuning
 
 ### Network Tuning
@@ -132,7 +134,7 @@ net.ipv4.tcp_congestion_control = bbr
 ```bash
 # /etc/sysctl.d/60-memory-performance.conf
 
-# Reduce swappiness (0-100, lower = less swap usage)
+# Tune swappiness within the installed kernel's documented range; modern kernels may support 0-200
 # 10 for general servers, 1 for database servers
 vm.swappiness = 10
 
@@ -211,7 +213,7 @@ EOF
 udevadm control --reload-rules
 
 # Tune read-ahead for sequential workloads (database sequential scans)
-blockdev --setrahead 4096 /dev/sda    # 4096 sectors = 2 MB
+blockdev --setra 4096 /dev/sda    # 4096 sectors = 2 MB
 
 # Enable TRIM for SSDs (weekly via systemd timer)
 systemctl enable --now fstrim.timer
@@ -255,6 +257,7 @@ RemainAfterExit=yes
 WantedBy=multi-user.target
 EOF
 
+systemctl daemon-reload
 systemctl enable --now cpu-governor
 
 # Disable CPU boost (turbo) if consistent latency is needed
@@ -264,6 +267,8 @@ echo 1 > /sys/devices/system/cpu/intel_pstate/no_turbo
 ## Benchmarking Tools
 
 ### fio -- Disk I/O Benchmarking
+
+Writes consume capacity and can disrupt workloads. Use a fresh dedicated scratch directory on an approved test filesystem with sufficient free space and an explicit bounded workload. Never point write tests at raw devices, database files or existing user data. Read tests may create test files unless configured otherwise; inspect fio's actual job plan before execution.
 
 ```bash
 # Install fio
@@ -304,6 +309,8 @@ sysbench memory --threads=4 --time=30 --memory-block-size=1K --memory-total-size
 ```
 
 ### iperf3 -- Network Benchmarking
+
+Use authorized endpoints and a traffic/rate/time budget; a 1 Gbit/s UDP test can saturate shared links. Bind the server only on the intended test interface and stop it afterward.
 
 ```bash
 # Install iperf3

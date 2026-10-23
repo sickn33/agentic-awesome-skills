@@ -46,6 +46,8 @@ or a destructive recovery command without separate, explicit approval.
 
 When in doubt, keep it with the orchestrator.
 
+A prompt/file list is not a security boundary. `--always-approve` also permits shell commands: verify OS/container confinement, minimal environment credentials, network policy and budget before dispatch; if unavailable, do not run this headless path. Review all changed/untracked files and observed side effects, not only spec-listed paths.
+
 ## Session preflight (once, before the first dispatch)
 
 1. `grok update --check --json` — if `updateAvailable` is true, tell the user. Run

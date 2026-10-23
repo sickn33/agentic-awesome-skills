@@ -69,6 +69,8 @@ tokens). It needs a GitHub `user_session` cookie, resolved in this order:
 `--token <value>` flag → `GH_SESSION_TOKEN` env var (use in CI/headless) → a
 logged-in browser's cookie store (default for local use).
 
+Before upload, verify the intended repository, image privacy and explicit transfer scope. Browser cookie access requires the user’s authorization for that credential source; do not scrape unrelated browser profiles or pass a session value via `--token`. Internal attachment endpoints and visibility behavior can change: do not treat an unguessable URL or a private repository alone as proof of attachment confidentiality. Verify access with the intended audience and use a different approved sharing method when confidentiality cannot be established.
+
 ### Step 2: Upload
 
 ```bash
@@ -123,8 +125,7 @@ gh pr view <pr> --repo owner/repo --json body -q .body   # confirm URL present
   (not scoped like a PAT) — treat it like a password; use a bot account in CI.
 - **Write access to the target repo is required**; orgs that enforce SAML SSO need
   the session authorized at `https://github.com/orgs/<org>/sso` first.
-- **Private-repo images stay private:** the `user-attachments` URL inherits repo
-  visibility, so an anonymous fetch on a private repo returns 404/403 by design.
+- **Attachment access must be verified:** do not promise private-repository attachment confidentiality from URL shape alone; check the current GitHub behavior and actual audience before uploading sensitive content.
 - **Windows + Chrome 127+** cannot read cookies (library limitation) — use another
   browser or `GH_SESSION_TOKEN`.
 - The skill embeds the Markdown itself; `gh-image` only prints the URL.

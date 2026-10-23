@@ -18,13 +18,17 @@ Automate LinkedIn operations through Composio's LinkedIn toolkit via Rube MCP.
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Verify current MCP authentication and LinkedIn OAuth scopes; an endpoint alone does not establish an authenticated account.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `linkedin`
 3. If connection is not ACTIVE, follow the returned auth link to complete LinkedIn OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Publication boundary
+
+Read-only profile access does not authorize posting or comments. Resolve the exact person/organization actor, show the content/media/visibility and perform only the user-authorized publication or deletion. Verify returned post identity before reporting success; reconcile timeouts before retrying to avoid duplicate public posts.
 
 ## Core Workflows
 

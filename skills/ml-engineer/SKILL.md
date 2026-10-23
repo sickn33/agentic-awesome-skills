@@ -16,6 +16,10 @@ date_added: '2026-02-27'
 - The task is unrelated to ml engineer
 - You need a different domain or tool outside this scope
 
+## Concrete workflow
+
+For a prediction service, define the target and baseline first; split train/validation/test by time or entity before fitting transforms. Track data/model/dependency versions and tune only on training/validation data. Evaluate the untouched test set with task metrics, uncertainty and subgroup failures; compare against the baseline. Package the exact artifact, run bounded load/correctness checks, then deploy only to an authorized target with rollback and monitoring. Drift alone does not prove accuracy loss or justify automatic promotion. Treat named frameworks as options: check maintenance status and supported versions before choosing one, and never load untrusted pickle/model code in a privileged environment.
+
 ## Instructions
 
 - Clarify goals, constraints, and required inputs.

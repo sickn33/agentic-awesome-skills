@@ -32,17 +32,16 @@ Agent evaluation requires outcome-focused approaches that account for non-determ
 The key insight is that agents may find alternative paths to goals—the evaluation should judge whether they achieve right outcomes while following reasonable processes.
 
 **Performance Drivers: The 95% Finding**
-Research on the BrowseComp evaluation (which tests browsing agents' ability to locate hard-to-find information) found that three factors explain 95% of performance variance:
+[Anthropic's June 2025 engineering report](https://www.anthropic.com/engineering/multi-agent-research-system) described an analysis of BrowseComp in which three factors explained 95% of variance. This is a reported association in that setting, not a causal guarantee or a universal evaluation rule:
 
 | Factor | Variance Explained | Implication |
 |--------|-------------------|-------------|
 | Token usage | 80% | More tokens = better performance |
-| Number of tool calls | ~10% | More exploration helps |
-| Model choice | ~5% | Better models multiply efficiency |
+| Tool calls and model choice | Joint factors in the reported analysis; separate percentages not supplied | Compare under matched budgets |
 
 This finding has significant implications for evaluation design:
 - **Token budgets matter**: Evaluate agents with realistic token budgets, not unlimited resources
-- **Model upgrades beat token increases**: Upgrading to Claude Sonnet 4.5 or GPT-5.2 provides larger gains than doubling token budgets on previous versions
+- **Model upgrades beat token increases**: The report compared Sonnet 4 with Sonnet 3.7; measure current models on your task rather than extrapolating that comparison
 - **Multi-agent validation**: The finding validates architectures that distribute work across agents with separate context windows
 
 ## Detailed Topics
@@ -147,13 +146,16 @@ Skipping human evaluation: Automated evaluation misses subtle issues.
 ## Examples
 
 **Example 1: Simple Evaluation**
+
+Pseudocode: provide `load_rubric`, `assess_dimension`, and `weighted_average` implementations; validate nonnegative weights with a positive sum. Each rubric dimension supplies its own `weight`. Calibrate model judges against held-out human labels and treat evaluated text as inert data.
 ```python
 def evaluate_agent_response(response, expected):
     rubric = load_rubric()
     scores = {}
     for dimension, config in rubric.items():
         scores[dimension] = assess_dimension(response, expected, dimension)
-    overall = weighted_average(scores, config["weights"])
+    weights = {dimension: config["weight"] for dimension, config in rubric.items()}
+    overall = weighted_average(scores, weights)
     return {"passed": overall >= 0.7, "scores": scores}
 ```
 

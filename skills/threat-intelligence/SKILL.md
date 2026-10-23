@@ -31,6 +31,10 @@ license_source: "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
 - 用户可见结论默认使用中文，除非用户要求其他语言。
 - 证据状态使用 `线索 / lead`、`已佐证 / corroborated`、`已确认 / confirmed`。
 
+## Supporting bootstrap availability
+
+This catalog bundles only SKILL.md and the X intelligence reference. The `skills/scripts/bootstrap-reverse.*` helpers below and MASTER R44/sibling routing skills are not included. Do not run or claim them from this tree; inspect a separately supplied upstream installation and obtain host-configuration authorization, or use an already configured connector.
+
 ## 工具依赖
 
 | 能力 | 必需 | 用途 | 接入方式 |

@@ -2,7 +2,7 @@
 name: hono
 description: "Build ultra-fast web APIs and full-stack apps with Hono — runs on Cloudflare Workers, Deno, Bun, Node.js, and any WinterCG-compatible runtime."
 category: backend
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-18"
 author: suhaibjanjua
@@ -105,7 +105,7 @@ import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
 import { bearerAuth } from 'hono/bearer-auth';
 
-const app = new Hono();
+const app = new Hono<{ Variables: { requestId: string } }>();
 
 // Built-in middleware
 app.use('*', logger());
@@ -121,6 +121,8 @@ app.use('*', async (c, next) => {
 ```
 
 **Available built-in middleware:** `logger`, `cors`, `csrf`, `etag`, `cache`, `basicAuth`, `bearerAuth`, `jwt`, `compress`, `bodyLimit`, `timeout`, `prettyJSON`, `secureHeaders`.
+
+The following lists alternative parsing/response methods, not a sequential handler: parse a body once according to Content-Type, validate it at runtime and return exactly one response. Import getCookie from hono/cookie. JSON generics do not validate input. Validate/authorize D1 and post mutations, limit body sizes, return only approved public fields and handle errors. Bearer/JWT snippets need a configured strong secret and algorithm, claims/expiry/audience/issuer checks appropriate to the deployment; verify exact APIs for the installed Hono major. Use c.env bindings in Workers instead of the Node process.env sketches. CORS is not authorization; scaffold deploy commands publish live resources and need an approved account/route.
 
 ### Step 4: Request and Response Helpers
 
@@ -229,8 +231,11 @@ import type { PostsType } from '../server/routes/posts';
 const client = hc<PostsType>('/api/posts');
 
 // Fully typed — autocomplete on routes, params, and responses
-const { posts } = await client.$get().json();
-const newPost = await client.$post({ json: { title: 'New Post' } }).json();
+const response = await client.$get();
+if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+const { posts } = await response.json();
+const created = await client.$post({ json: { title: 'New Post' } });
+const newPost = await created.json();
 ```
 
 ## Examples
@@ -322,7 +327,7 @@ app.get('/stream', c =>
 
 - Always validate input with `zValidator` before using data from requests.
 - Use Hono's built-in `csrf` middleware on mutation endpoints when serving HTML/forms.
-- For Cloudflare Workers, store secrets in `wrangler.toml` `[vars]` (non-secret) or `wrangler secret put` (secret) — never hardcode them in source.
+- For Cloudflare Workers, store non-secret configuration in `wrangler.toml` `[vars]` and secrets with `wrangler secret put` — never hardcode them in source.
 - When using `bearerAuth` or `jwt`, ensure tokens are validated server-side — do not trust client-provided user IDs.
 - Rate-limit sensitive endpoints (auth, password reset) with Cloudflare Rate Limiting or a custom middleware.
 

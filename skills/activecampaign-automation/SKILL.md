@@ -154,7 +154,7 @@ Tool slugs and parameter notes are examples; discovered current schemas take pre
 ```
 1. Call ACTIVE_CAMPAIGN_FIND_CONTACT with email
 2. If found, extract contact ID for subsequent operations
-3. If not found, create contact with ACTIVE_CAMPAIGN_CREATE_CONTACT
+3. If not found, report no match; create with ACTIVE_CAMPAIGN_CREATE_CONTACT only when the user requested creation
 4. Use contact ID for tags, subscriptions, or automations
 ```
 

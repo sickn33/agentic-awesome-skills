@@ -45,14 +45,9 @@ cat > .git/hooks/pre-commit << 'EOF'
 #!/bin/sh
 set -e
 
-# Run linter on staged files only
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|ts|jsx|tsx)$' || true)
-
-if [ -n "$STAGED_FILES" ]; then
-  echo "🔍 Linting staged files..."
-  echo "$STAGED_FILES" | xargs npx eslint --fix
-  echo "$STAGED_FILES" | xargs git add  # Re-stage after fixes
-fi
+# Prefer installed lint-staged: it handles filenames and partially staged files.
+# Do not run whole-file fixes followed by git add: that can stage unrelated edits.
+npx --no -- lint-staged
 EOF
 chmod +x .git/hooks/pre-commit
 ```
@@ -213,6 +208,8 @@ pre-commit run <hook-id>        # Run a specific hook
 pre-commit clean                # Clear cached environments
 ```
 
+Hooks run local code; inspect third-party hooks and pinned revisions before installing. Local hooks are bypassable and are not merge authorization. The portable custom example below is intentionally simplified: line-based paths break unusual filenames, working-tree file sizes differ from staged blob sizes, and diff-context scans can match removed/context lines or expose secrets. Use NUL-safe staged blob inspection and report filenames/rules without printing matched secret values.
+
 ## Custom Hook Scripts (Any Language)
 
 For projects not using Node or Python, write hooks directly in shell.
@@ -237,7 +234,7 @@ fi
 if git diff --cached --diff-filter=ACM | grep -nE '(console\.log|debugger|binding\.pry|import pdb)' > /dev/null 2>&1; then
   echo "⚠️  Debug statements found in staged files:"
   git diff --cached --diff-filter=ACM | grep -nE '(console\.log|debugger|binding\.pry|import pdb)'
-  echo "Remove them or use git commit --no-verify to bypass."
+  echo "Review the staged changes and follow repository policy."
   exit 1
 fi
 
@@ -322,7 +319,7 @@ jobs:
 |---|---|---|
 | Hooks silently skipped | Not installed in `.git/hooks/` | Run `npx husky init` or `pre-commit install` |
 | "Permission denied" | Hook file not executable | `chmod +x .husky/pre-commit` |
-| Hooks run but wrong ones | Stale hooks from old setup | Delete `.git/hooks/` contents, reinstall |
+| Hooks run but wrong ones | Stale hooks from old setup | Inspect `git config core.hooksPath` and preserve unrelated hooks before targeted repair |
 | Works locally, fails in CI | Different Node/Python versions | Pin versions in CI config |
 
 ### Performance Issues
@@ -365,7 +362,7 @@ SKIP=eslint git commit -m "fix: update config"
 ```bash
 # 1. Remove old Husky
 npm uninstall husky
-rm -rf .husky
+# Back up and inspect existing .husky scripts; remove only obsolete generated files
 
 # 2. Remove old config from package.json
 # Delete "husky": { "hooks": { ... } } section

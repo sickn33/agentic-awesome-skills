@@ -103,7 +103,7 @@ def validate(report):
             source_urls.add(normalized_url)
         if not nonempty(source.get("publisher")):
             errors.append(f"{label}.publisher must be a non-empty string")
-        if source.get("source_type") not in SOURCE_TYPES:
+        if not isinstance(source.get("source_type"), str) or source["source_type"] not in SOURCE_TYPES:
             errors.append(f"{label}.source_type must be primary, secondary, or aggregator")
 
     claims = report.get("claims")
@@ -127,10 +127,12 @@ def validate(report):
             claim_ids.add(claim_id)
         if not nonempty(claim.get("text")):
             errors.append(f"{label}.text must be a non-empty string")
-        if claim.get("kind") not in CLAIM_KINDS:
+        if not isinstance(claim.get("kind"), str) or claim["kind"] not in CLAIM_KINDS:
             errors.append(f"{label}.kind must be sourced or inference")
 
         confidence = claim.get("confidence")
+        if not isinstance(confidence, str):
+            confidence = None
         if confidence not in CONFIDENCE_MINIMUMS:
             errors.append(f"{label}.confidence must be low, medium, or high")
         refs = claim.get("source_ids")

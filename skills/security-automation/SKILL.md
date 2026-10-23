@@ -25,11 +25,15 @@ Automate security operations for scale and efficiency.
 
 ## Security Pipeline
 
+Illustrative workflow only: action refs below are historical examples, not vetted pins. Select maintained upstream actions, review their code and pin full commit SHAs before use. Grant `contents: read` only unless a reviewed job needs more; never expose secrets to untrusted pull-request code. Install required CLIs at reviewed versions before their steps and verify each scanner’s failure behavior.
+
 ```yaml
 # .github/workflows/security.yml
 name: Security Pipeline
 
 on: [push, pull_request]
+permissions:
+  contents: read
 
 jobs:
   security:
@@ -59,7 +63,10 @@ jobs:
 ## Automated Remediation
 
 ```python
-# Auto-remediation script
+# Fragment: requires boto3 and approved scoped AWS credentials.
+# Capture existing configuration and an approved rollback plan before mutation.
+import boto3
+
 def remediate_public_s3(bucket_name):
     """Remove public access from S3 bucket."""
     s3 = boto3.client('s3')
@@ -75,6 +82,8 @@ def remediate_public_s3(bucket_name):
 ```
 
 ## SOAR Integration
+
+The YAML is vendor-neutral pseudocode, not an executable playbook schema. Enrichment output is untrusted evidence; require corroboration and scoped approval before blocking an address or disabling an account. Record the prior state, expiry and rollback, and do not automatically notify people without messaging authorization.
 
 ```yaml
 playbook:
@@ -97,22 +106,7 @@ playbook:
 
 ## Compliance as Code
 
-```python
-# Checkov custom check
-from checkov.terraform.checks.resource.base_resource_check import BaseResourceCheck
-
-class S3Encryption(BaseResourceCheck):
-    def __init__(self):
-        name = "Ensure S3 bucket has encryption enabled"
-        id = "CUSTOM_S3_1"
-        supported_resources = ['aws_s3_bucket']
-        super().__init__(name=name, id=id, ...)
-    
-    def scan_resource_conf(self, conf):
-        if 'server_side_encryption_configuration' in conf:
-            return CheckResult.PASSED
-        return CheckResult.FAILED
-```
+A custom Checkov check must target the actual Terraform resource schema in the deployed provider version. Do not assume an inline `server_side_encryption_configuration` on `aws_s3_bucket` covers separate encryption resources or effective cloud defaults. Inspect the installed Checkov API, select the appropriate resource or graph check, and add fixtures for encrypted, unencrypted and unknown configurations. Treat unknown values explicitly; a static pass does not establish live encryption state. The check implementation is not bundled.
 
 ## Best Practices
 

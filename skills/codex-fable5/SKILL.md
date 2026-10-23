@@ -160,3 +160,5 @@ Agent behavior:
 - `@codex-review` - Use when the primary task is a code review pass.
 - `@skill-issue` - Use when diagnosing whether a skill will trigger for a prompt.
 - `@open-dynamic-workflows` - Use when the task needs multi-agent planning and adversarial verification.
+
+Before optional plugin/helper activation, resolve an immutable full commit, stage the complete artifact/dependencies outside active agent directories with lifecycle scripts disabled and inspect every executable/hook. A reviewed tag name or marketplace listing alone does not establish reviewed installed bytes. Record actual host compatibility and activation results; do not infer them from successful download.

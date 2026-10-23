@@ -1,0 +1,104 @@
+{
+  "schema_version": "2.1",
+  "session_config": {
+    "working_language": "en",
+    "canonical_identifiers": "en",
+    "fallback_language": "en"
+  },
+  "review_id": "example-quick-001",
+  "goal": "Increase first-action completion by clarifying the empty state.",
+  "stage": "prototype",
+  "combined_verdict": "continue",
+  "actor_boundary": {
+    "target_population": [
+      "New workspace admins"
+    ],
+    "operator": "Workspace admin",
+    "beneficiary": "Workspace team",
+    "machine_actor": "Not applicable",
+    "affected_people": [
+      "Invited team members"
+    ],
+    "excluded_groups": [
+      "Existing configured workspaces"
+    ]
+  },
+  "product_organization": {
+    "organization": "Example Product Co.",
+    "project_owner": "Activation team",
+    "issuer": "Example Product Co."
+  },
+  "stakeholder_effects": [
+    {
+      "stakeholder": "Invited team members",
+      "effect": "Clearer setup can reduce delayed invitations."
+    }
+  ],
+  "human_judgment_boundary": {
+    "human_owned_decisions": [
+      "Final copy tone"
+    ],
+    "machine_supported_inputs": [
+      "Support notes",
+      "Session replays"
+    ],
+    "not_mechanized": [
+      "Taste and brand judgment"
+    ],
+    "approval_gates": [
+      {
+        "gate_id": "product-owner-release-approval",
+        "accountable_owner": "Product owner",
+        "condition": "Before release to users."
+      }
+    ]
+  },
+  "unresolved_assumptions": [
+    "Whether copy or missing product guidance causes the hesitation."
+  ],
+  "scope": [
+    "Edit the empty-state headline.",
+    "Edit one action label."
+  ],
+  "non_goals": [
+    "Do not change layout.",
+    "Do not change onboarding steps.",
+    "Do not change permissions or data handling."
+  ],
+  "acceptance_criteria": [
+    "The new copy names the next action.",
+    "The first-action event distinguishes the released variant."
+  ],
+  "measurement_hooks": [
+    "Compare first-action completion with the prior copy."
+  ],
+  "evidence_snapshot_ids": [
+    "support-pattern-001",
+    "session-replay-pattern-001"
+  ],
+  "rollback_plan": "Restore the prior copy.",
+  "human_approval_gates": [
+    {
+      "gate_id": "product-owner-release-approval",
+      "accountable_owner": "Product owner",
+      "condition": "Before release to users."
+    }
+  ],
+  "high_risk_actions": [],
+  "stop_conditions": [
+    "People still hesitate after the copy change.",
+    "The change requires onboarding scope expansion."
+  ],
+  "execution_boundary": {
+    "may_do": [
+      "Edit the empty-state headline.",
+      "Edit one action label."
+    ],
+    "must_not_do": [
+      "Change layout, permissions, data handling, or onboarding steps."
+    ],
+    "must_ask": [
+      "A material scope, risk, data, or stakeholder impact changes."
+    ]
+  }
+}

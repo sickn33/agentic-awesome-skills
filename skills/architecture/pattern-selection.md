@@ -30,11 +30,11 @@ START: What's your MAIN concern?
 ├─ Independent Scaling Needed?
 │  ├─ YES (different components scale differently)
 │  │  → Microservices WORTH the complexity
-│  │  REQUIREMENTS (ALL must be true):
+│  │  CONSIDERATIONS (not mandatory numeric thresholds):
 │  │    - Clear domain boundaries
 │  │    - Team > 10 developers
 │  │    - Different scaling needs per service
-│  │  IF NOT ALL MET → Modular Monolith instead
+│  │  Compare the operational cost with a Modular Monolith before deciding
 │  └─ NO (everything scales together)
 │     → Modular Monolith
 │     Can extract services later when proven needed

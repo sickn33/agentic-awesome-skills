@@ -37,6 +37,8 @@ disable-model-invocation: true
 4. **Write the report** to `~/Documents/security-audits/YYYY-MM-DD-<short-kebab-slug>.md`. Use today's date from the environment header.
 5. **Tell the user** the verdict in one line + path to the report.
 
+The advisory must be provided or already available locally under this no-network contract; mark currency unverified if a live authoritative lookup is unavailable. Search only user-authorized project/install roots, not the whole home directory by default. Use filename-safe NUL transport for find/xargs or rg file lists; do not substitute untrusted package names as shell syntax. Never dump environment/config lines or process arguments that can contain credentials; report sanitized paths/versions/booleans. Do not invoke an untrusted/suspected compromised binary just to ask its version.
+
 ## Check menu (pick what's relevant)
 
 ```bash
@@ -100,27 +102,28 @@ File: `~/Documents/security-audits/YYYY-MM-DD-<short-kebab-slug>.md`
 
 ## Verdict
 
-**<Not affected. | Affected. | Partially affected.>**
+**<Not observed in checked scope. | Affected. | Mitigated exposure. | Inconclusive.>**
 
 - <Rationale bullet 1>
 - <Rationale bullet 2>
 
 ## Action taken
 
-None — diagnostic only, no files modified, no <packages installed/removed | services started/stopped | firewall rules changed>.
+Diagnostic only; this report was written, no other files modified, no <packages installed/removed | services started/stopped | firewall rules changed>.
 
 ## Follow-ups
 
 - <Actionable item, or "None" if truly nothing>
 ```
 
-Match the tone of the two existing reports in `~/Documents/security-audits/` — terse, factual, bulleted, no hedging.
+Use terse, factual language while preserving uncertainty. Do not assume example reports exist or read unrelated private reports merely to imitate style.
 
 ## Verdict wording
 
-- **Not affected.** — package/binary absent, or installed but patched, or not running and not exposed.
+- **Not observed in checked scope.** — absent/patched within the explicitly searched paths; state coverage gaps. A stopped process alone does not prove absence of vulnerability.
 - **Affected.** — vulnerable version present *and* reachable by the attack vector.
-- **Partially affected.** — present but mitigated (e.g. binary installed but service not running, or listener bound to loopback only). Spell out the mitigation in the bullets.
+- **Mitigated exposure.** — affected version present with an observed mitigation; stopped services or loopback listeners may still be reachable by another attack path. State conditions and gaps.
+- **Inconclusive.** — advisory/version/coverage evidence missing. Do not infer safety from empty output or suppressed errors.
 
 ## When to break the read-only rule
 

@@ -4,6 +4,8 @@
 
 ## Quick Start
 
+Pin Three.js and its addons/decoder assets to compatible versions. Remote models can reference more URLs and contain huge/decompression-heavy geometry/textures: allowlist resource origins, bound file/dimension/decode budgets and avoid forwarding credentials. Review decoder JS/WASM provenance or self-host pinned files. Examples assume an initialized renderer/scene and are separate snippets, not one program. Keep animation mixers alive and update with frame delta.
+
 ```javascript
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -26,6 +28,7 @@ Coordinate multiple loaders and track progress.
 
 ```javascript
 const manager = new THREE.LoadingManager();
+const failedAssets = new Set();
 
 // Callbacks
 manager.onStart = (url, loaded, total) => {
@@ -34,7 +37,8 @@ manager.onStart = (url, loaded, total) => {
 
 manager.onLoad = () => {
   console.log("All assets loaded!");
-  startGame();
+  if (failedAssets.size === 0) startGame();
+  else showLoadFailure([...failedAssets]); // application-defined UI
 };
 
 manager.onProgress = (url, loaded, total) => {
@@ -44,6 +48,7 @@ manager.onProgress = (url, loaded, total) => {
 };
 
 manager.onError = (url) => {
+  failedAssets.add(url);
   console.error(`Error loading: ${url}`);
 };
 
@@ -92,7 +97,7 @@ material.map = texture;
 const texture = loader.load("texture.jpg", (tex) => {
   // Color space (important for color accuracy)
   tex.colorSpace = THREE.SRGBColorSpace; // For color/albedo maps
-  // tex.colorSpace = THREE.LinearSRGBColorSpace;  // For data maps (normal, roughness)
+  // tex.colorSpace = THREE.NoColorSpace;  // Non-color data maps (normal, roughness)
 
   // Wrapping
   tex.wrapS = THREE.RepeatWrapping;
@@ -301,7 +306,10 @@ loader.load("model.glb", (gltf) => {
   // Adjust materials
   model.traverse((child) => {
     if (child.isMesh && child.material) {
-      child.material.envMapIntensity = 0.5;
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      for (const material of materials) {
+        if ("envMapIntensity" in material) material.envMapIntensity = 0.5;
+      }
     }
   });
 
@@ -312,6 +320,7 @@ loader.load("model.glb", (gltf) => {
 
   model.position.sub(center);
   const maxDim = Math.max(size.x, size.y, size.z);
+  if (!Number.isFinite(maxDim) || maxDim <= 0) throw new Error("Empty/invalid model bounds");
   model.scale.setScalar(1 / maxDim);
 
   scene.add(model);
@@ -455,6 +464,8 @@ function loadTexture(url) {
 
 ## Caching
 
+Object3D.clone shares geometries/materials/textures and is insufficient for independent skinned skeletons: use SkeletonUtils.clone for skinned models and explicitly clone mutable materials as needed. Clearing model Maps does not dispose GPU resources; keep reference counts and dispose unique geometries/materials/textures/render targets only after every clone releases them. The simple cache below has no in-flight deduplication and can double-load concurrent requests.
+
 ### Built-in Cache
 
 ```javascript
@@ -535,9 +546,8 @@ const texture = loader.load("data:image/png;base64,iVBORw0KGgo...");
 ```javascript
 async function loadFromBlob(blob) {
   const url = URL.createObjectURL(blob);
-  const texture = await loadTexture(url);
-  URL.revokeObjectURL(url);
-  return texture;
+  try { return await loadTexture(url); }
+  finally { URL.revokeObjectURL(url); }
 }
 ```
 
@@ -604,13 +614,15 @@ async function loadWithTimeout(url, timeout = 30000) {
 
   try {
     const response = await fetch(url, { signal: controller.signal });
-    clearTimeout(timeoutId);
-    return response;
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return await response.arrayBuffer(); // usable bytes; timeout covers body transfer as well as headers
   } catch (error) {
     if (error.name === "AbortError") {
       throw new Error("Loading timed out");
     }
     throw error;
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 ```

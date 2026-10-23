@@ -1,6 +1,6 @@
 ---
 name: qrx
-description: "Make branded, print-ready art QR codes that always scan with QRX (qrx.codes). Use when a link needs a QR code that looks like artwork or matches a brand for print, packaging, signs, slides or event badges, and to list or re-point QRX codes. Not for plain QR codes the agent makes locally."
+description: "Make branded, print-ready art QR codes to validate before use with QRX (qrx.codes). Use when a link needs a QR code that looks like artwork or matches a brand for print, packaging, signs, slides or event badges, and to list or re-point QRX codes. Not for plain QR codes the agent makes locally."
 category: design
 risk: critical
 source: https://github.com/qrxcodes/qrx-mcp/tree/main/skills/qrx
@@ -14,9 +14,9 @@ license: MIT
 license_source: https://github.com/qrxcodes/qrx-mcp/blob/main/LICENSE
 ---
 
-# QRX: art QR codes that always scan
+# QRX: art QR codes to validate before use
 
-QRX turns a short picture description (the prompt) and a destination link into an artistic QR code. Every code is checked to decode before it is returned, and it encodes a hosted short link, `https://qrx.to/<id>` on qrx.codes, which forwards scans to the destination. Treat the result as a design asset: a PNG the user can drop into print or digital layouts.
+QRX turns a short picture description (the prompt) and a destination link into an artistic QR code. The service states it checks decoding before return; this does not guarantee scanning after resizing, printing, damage or under every camera/lighting condition, and it encodes a hosted short link, `https://qrx.to/<id>` on qrx.codes, which forwards scans to the destination. Treat the result as a design asset: a PNG the user can drop into print or digital layouts.
 
 ## When to Use
 
@@ -45,8 +45,8 @@ The server needs the user to sign in to QRX (or an API key) before it connects. 
 
 1. **Get the destination.** It must be an absolute URL starting with `https://` or `http://` (add `https://` if the user gave a bare domain, and confirm the exact link if it is ambiguous). The MCP tools make link codes only; for a Wi-Fi code, send the user to https://qrx.codes, and never ask them for a Wi-Fi password.
 2. **Write the prompt** (see "Writing a good prompt"). If the user named a look, call `list_styles` and pick the closest style id; otherwise leave `style` out.
-3. **Call `generate_qr_code` once.** Keep the returned `id`; it never changes. Painting usually takes under a minute.
-4. **Poll with `get_qr_code`** using that `id` until `status` is `succeeded` or `failed`. Each call waits up to 25 seconds, so two or three calls are normal.
+3. **Check `get_account` and confirm the requested generation count/cost within existing authorization, then call `generate_qr_code` once.** Keep the returned `id`; it never changes. Painting usually takes under a minute.
+4. **Poll with `get_qr_code`** using that `id` until `status` is `succeeded` or `failed`. Each call waits up to 25 seconds. Bound the monitoring window; on a persistent processing state, retain the ID and report it without generating a replacement.
    - Never call `generate_qr_code` again while a code is still processing: every generate counts against the user's allowance.
 5. **Show the result:** the image (`imageUrl`, a PNG), the short link the code encodes (`shortUrl`, `https://qrx.to/<id>` on qrx.codes), the destination, and the code's page (`pageUrl`). Tell the user to test-scan it with a phone before printing.
 6. **On `failed`:** read `error.message`, simplify the prompt (fewer elements, more contrast), and offer one retry. Ask before making more than one extra attempt.
@@ -81,7 +81,7 @@ The code encodes its short link (`https://qrx.to/<id>` on qrx.codes), not the de
 
 Share the relevant points when the code is for print:
 - **Test-scan** the downloaded PNG on at least two phones (iPhone camera and an Android camera) before sending to print, and again on a printed proof.
-- **Minimum size:** about 2.5 cm (1 inch) square for handheld items such as cards and menus; scale up roughly 1 cm of code width per 10 cm of scanning distance for posters and signs.
+- **Size:** 2.5 cm square is only an initial proofing heuristic for handheld use, not a guaranteed minimum. Validate the actual code density, resolution, scanning distance, substrate and lighting on the final proof.
 - **Quiet zone:** keep a clear margin around the code, and do not crop, overlap or place text over the artwork's edges.
 - **Do not recolour, stretch, add filters or vectorise** the image; resize proportionally only.
 - **Contrast with the background:** place it on a calm area, not on a busy photo.
@@ -106,7 +106,7 @@ A café wants a menu QR code in watercolours:
 
 ```text
 1. Destination: https://example.com/menu (confirm the exact link).
-2. find_ui style: list_styles, then pick the closest watercolour-style id.
+2. Select style: list_styles, then pick the closest watercolour-style id.
 3. generate_qr_code({"prompt": "a steaming flat white on a timber bench, watercolour, warm cream and espresso brown", "destination": "https://example.com/menu", "style": "<id>"})
 4. Poll get_qr_code with the returned id until status is succeeded.
 5. Show imageUrl, shortUrl, destination and pageUrl, and ask the owner to test-scan before printing.
@@ -114,11 +114,13 @@ A café wants a menu QR code in watercolours:
 
 REST fallback when the MCP server is not connected:
 
+Create `QRX_REQUEST_ID` once (for example with `uuidgen`) and retain it with the identical payload for every uncertain retry; do not regenerate it on rerun. Read the API key from a non-echoed local input or existing secret environment.
+
 ```bash
 curl -sS -X POST "https://qrx.codes/v1/codes?wait=45" \
   -H "Authorization: Bearer $QRX_API_KEY" \
   -H "Content-Type: application/json" \
-  -H "Idempotency-Key: $(uuidgen 2>/dev/null || date +%s)" \
+  -H "Idempotency-Key: $QRX_REQUEST_ID" \
   -d '{"prompt":"a lighthouse on a cliff at sunset, watercolour, navy and coral","destination":"https://example.com/menu"}'
 ```
 
@@ -128,4 +130,5 @@ curl -sS -X POST "https://qrx.codes/v1/codes?wait=45" \
 - Codes consume the account's allowance, and changing a code's destination depends on the account's plan; call `get_account` before promising either.
 - Looks codes up by the QRX account only: it cannot manage codes owned by another account.
 - Generated art is returned as a hosted PNG and a hosted short link; QRX does not return the code as a local editable vector.
+- The redirect depends on QRX domain/service availability and the account’s retained rights; a successful PNG does not guarantee long-term destination availability. Do not put secret-bearing or signed private URLs in the destination.
 - The model provider's data-handling policy still applies to any prompt text that passes through the connected tools.

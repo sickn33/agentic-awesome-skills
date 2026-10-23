@@ -28,11 +28,9 @@ installations require the manual setup below.
 
 These are two different things and they are not equal today:
 
-- **Current release: `v0.8.0`.** It declares and ships fifteen tool names, and the
+- **Historical referenced release: `v0.8.0`.** It declares and ships fifteen tool names, and the
   [60-second demo command](https://github.com/happy520ai/unified-ai-system#try-it-in-60-seconds)
-  in the README names that version. Read it live with
-  `node tools/verify-image-roster.mjs 0.8.0`, which reports the roster from the
-  image bytes rather than from this file.
+  in the README names that version. The upstream tools/verify-image-roster.mjs is not bundled; retrieve and review it before any use. Do not execute it merely to establish source review.
 - **Reviewed and pinned below: `0.4.9`.** The inspection procedure in this file
   pins that image's recorded digests because `0.4.9` is the newest version with a
   completed [content review](https://github.com/happy520ai/unified-ai-system/blob/8561ec5c9e9d1ecf499c1be5aba0ba3720219074/docs/security/mcp-image-review-0.4.9.md).
@@ -62,6 +60,7 @@ required first, and the pinned identity is only as good as the review that backs
 ```bash
 IMAGE='ghcr.io/happy520ai/unified-ai-system/mcp-server@sha256:751a0d32acd2d6b1da6ad9ac67987fbd1ff36ce26b7160014d8605f18b7907b3'
 PLATFORM='linux/amd64' # Use linux/arm64 only on a reviewed ARM64 engine.
+umask 077
 REVIEW_DIR="$(mktemp -d)"
 
 docker pull --platform "$PLATFORM" "$IMAGE"
@@ -74,7 +73,11 @@ docker rm "$REVIEW_CONTAINER"
 
 tar -tf "$REVIEW_DIR/rootfs.tar" > "$REVIEW_DIR/rootfs-files.txt"
 mkdir -p "$REVIEW_DIR/rootfs"
-tar --same-permissions -xf "$REVIEW_DIR/rootfs.tar" -C "$REVIEW_DIR/rootfs"
+# STOP before extraction unless a reviewed safe extractor is available.
+exit 1 # Deliberate gate: run later inventory only after separately validated extraction.
+# Reject absolute/traversal paths, device/FIFO entries, link escapes and duplicate entries; bound expanded size/count.
+# Extract as an unprivileged user, never preserve owner/setuid permissions, into this private empty directory.
+# The remaining commands require that validated extraction; ordinary tar -xf is not the safety check.
 find "$REVIEW_DIR/rootfs/app" -type f -print > "$REVIEW_DIR/app-files.txt"
 : > "$REVIEW_DIR/app-links.txt"
 while IFS= read -r -d '' APP_LINK; do
@@ -100,9 +103,9 @@ find \
 
 If `sha256sum` is unavailable, use the platform's SHA-256 utility and preserve
 the same report. Keep the review directory until the report is accepted; its
-deletion is another filesystem change and requires approval for the exact path.
+delete only the task-owned review directory when cleanup is covered by the authorized inspection; otherwise preserve it for review.
 
-5. Read every generated inventory and report the inspection before proceeding.
+5. Inventories/pattern scans are navigation aids only. Read all application source, entrypoints, dependency/lifecycle code and security-relevant configuration, and compare the actual immutable image/source identities before claiming content review. Do not activate from grep output alone. Read every generated inventory and report the inspection before proceeding.
    Compare it with the versioned
    [image content review](https://github.com/happy520ai/unified-ai-system/blob/8561ec5c9e9d1ecf499c1be5aba0ba3720219074/docs/security/mcp-image-review-0.4.9.md).
    Require OCI index digest

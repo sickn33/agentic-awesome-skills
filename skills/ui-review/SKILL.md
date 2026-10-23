@@ -25,6 +25,8 @@ Use this skill when you need review UI code for design system compliance, access
 
 Review the file: **$ARGUMENTS**
 
+This checklist targets the upstream StyleSeed conventions. Verify the actual project design system first; font/spacing/radius rules and referenced CLAUDE.md/VISUAL-CRAFT.md are project conventions, not universal accessibility requirements, and those files are not bundled here. Mark unavailable context rather than imposing it on another project.
+
 ## Checklist
 
 ### 1. Design Token Compliance
@@ -42,7 +44,7 @@ Review the file: **$ARGUMENTS**
 - [ ] No wrapper components that only add a className
 
 ### 3. Accessibility (a11y)
-- [ ] Touch targets >= 44x44px for interactive elements
+- [ ] Prefer 44x44 CSS pixel pointer targets as a design goal; WCAG 2.2 AA SC 2.5.8 is 24x24 or an applicable exception, so smaller controls are not automatically AA failures ([W3C](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum))
 - [ ] `focus-visible` styles on all interactive elements
 - [ ] Proper `aria-*` attributes where needed
 - [ ] Color contrast meets WCAG AA (4.5:1 for text, 3:1 for large text)
@@ -59,7 +61,7 @@ Review the file: **$ARGUMENTS**
 
 ### 5. Performance
 - [ ] No unnecessary re-renders (stable references, memoization where needed)
-- [ ] Images are lazy-loaded
+- [ ] Offscreen images are lazy-loaded where beneficial; do not defer a critical above-the-fold/LCP image automatically
 - [ ] Heavy components are code-split
 
 ### 6. Typography

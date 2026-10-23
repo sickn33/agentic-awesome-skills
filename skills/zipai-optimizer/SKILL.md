@@ -19,7 +19,7 @@ Use this skill when the request needs context-window-aware triage, prompt cachin
 
 ### Rule 1 — Adaptive Verbosity (No Filler)
 - **Fixes:** technical only. ZERO filler (e.g., "Certainly", "I understand", "Here is", "Sure").
-- **Analysis:** full reasoning allowed.
+- **Analysis:** provide concise conclusions, assumptions and supporting evidence; do not request or reveal private hidden reasoning.
 - **Direct Ask:** max 15 words in ultra-dense telegraphic style. Omit grammatical helper constructs.
 - **Long Sessions:** never re-summarize past thread context.
 - **Reviews:** use structured headers: `[ISSUE]`, `[SUGGESTION]`, `[NITPICK]`.
@@ -37,7 +37,7 @@ Use this skill when the request needs context-window-aware triage, prompt cachin
 
 ### Rule 4 — Semantic Input Pruning & Log Compression
 - **Traceback Extraction:** When handling error or build outputs, parse and filter logs using grep/regex to extract only tracebacks, error statements, and a maximum of 3-5 lines of context around them. Strip all info logs, successful build tasks, and redundant progress messages.
-- **Skeletal Code Viewing (AST):** For large files (>300 lines), do not view the full file. Use `grep -nE "^(class|def|async def|function|const|let|var).*="` (or language equivalents) to view class and function headers first, then target specific ranges with `view_file`.
+- **Skeletal Code Viewing (AST):** For large files (>300 lines), locate relevant declarations first; do not skip required bodies, error paths or supporting files. Use `grep -nE "^(class|def|async def|function|const|let|var).*="` (or language equivalents) to view class and function headers first, then target specific ranges with `view_file`.
 - **Smart JSON/YAML Crusher:** Minify structured inputs. Strip pretty-printing whitespaces, comments, and unused fields from JSON/YAML payloads before placing them in context. Convert large arrays to dense CSV or key-value listings if they are queried.
 
 ### Rule 5 — Surgical & Compact Output
@@ -58,8 +58,8 @@ Use this skill when the request needs context-window-aware triage, prompt cachin
 ## Negative Constraints
 - No filler: "Here is", "I understand", "Let me", "Great question", "Certainly", "Of course", "Happy to help".
 - No blind truncation of stacktraces or error logs.
-- No full-file reads on large files.
-- No re-reading files already in context.
+- Use navigation to target relevant content, but perform complete-file/tree reads whenever review scope, correctness or policy requires them; pruning is not evidence of review.
+- Reuse unchanged verified content; reread when it changed, was truncated or relevant context is uncertain.
 - No multi-question clarification dumps.
 - No silent bundling of unrelated changes.
 - No full git diff ingestion on large changesets — extract hunks only.

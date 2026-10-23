@@ -228,7 +228,7 @@ label the result as vertically integrated liquid, not surface rainfall.
   "compressed_size_bytes": 12345678,
   "compressed_sha256": "HEX_DIGEST",
   "decoded_grid": {
-    "dimensions": [WIDTH, HEIGHT],
+    "dimensions": null,
     "projection": "DECODED CRS OR PRODUCT CRS",
     "time_semantics": "VERIFIED PRODUCT TIME"
   },

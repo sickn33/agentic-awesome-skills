@@ -139,7 +139,7 @@ result = large_df.join(
 # Requires shuffle, but handles any size
 result = large_df1.join(large_df2, on="key", how="inner")
 
-# 3. Bucket Join - Pre-sorted, no shuffle at join time
+# 3. Compatible bucketed tables may avoid a shuffle; inspect the actual plan
 # Write bucketed tables
 (df.write
     .bucketBy(200, "customer_id")
@@ -147,7 +147,7 @@ result = large_df1.join(large_df2, on="key", how="inner")
     .mode("overwrite")
     .saveAsTable("bucketed_orders"))
 
-# Join bucketed tables (no shuffle!)
+# Join compatible bucketed tables (verify chosen physical plan)
 orders = spark.table("bucketed_orders")
 customers = spark.table("bucketed_customers")  # Same bucket count
 result = orders.join(customers, on="customer_id")
@@ -191,11 +191,11 @@ from pyspark import StorageLevel
 df = spark.read.parquet("s3://bucket/data/")
 df_filtered = df.filter(F.col("status") == "active")
 
-# Cache in memory (MEMORY_AND_DISK is default)
+# DataFrame cache default is version-dependent (modern Spark uses MEMORY_AND_DISK_DESER)
 df_filtered.cache()
 
 # Or with specific storage level
-df_filtered.persist(StorageLevel.MEMORY_AND_DISK_SER)
+df_filtered.persist(StorageLevel.MEMORY_AND_DISK)
 
 # Force materialization
 df_filtered.count()
@@ -203,6 +203,9 @@ df_filtered.count()
 # Use in multiple actions
 agg1 = df_filtered.groupBy("category").count()
 agg2 = df_filtered.groupBy("region").sum("amount")
+# Materialize consumers before unpersist (use bounded results or writes as appropriate).
+agg1.show(20)
+agg2.show(20)
 
 # Unpersist when done
 df_filtered.unpersist()
@@ -220,7 +223,7 @@ df_complex = (df
     .join(other_df, "key")
     .groupBy("category")
     .agg(F.sum("amount")))
-df_complex.checkpoint()  # Breaks lineage, materializes
+df_complex = df_complex.checkpoint()  # Use the returned DataFrame with truncated lineage
 ```
 
 ### Pattern 4: Memory Tuning
@@ -262,7 +265,7 @@ def print_memory_usage(spark):
 
 ```python
 # Reduce shuffle data size
-spark.conf.set("spark.sql.shuffle.partitions", "auto")  # With AQE
+spark.conf.set("spark.sql.shuffle.partitions", "200")  # Integer in Apache Spark; AQE may coalesce
 spark.conf.set("spark.shuffle.compress", "true")
 spark.conf.set("spark.shuffle.spill.compress", "true")
 
@@ -279,7 +282,7 @@ df_optimized = (df
 # BAD: Shuffle for each distinct
 distinct_count = df.select("category").distinct().count()
 
-# GOOD: Approximate distinct (no shuffle)
+# Approximate distinct reduces aggregation state; it can still involve an exchange
 approx_count = df.select(F.approx_count_distinct("category")).collect()[0][0]
 
 # Use coalesce instead of repartition when reducing partitions
@@ -324,7 +327,7 @@ spark.sql("""
 ### Pattern 7: Monitoring and Debugging
 
 ```python
-# Enable detailed metrics
+# These enable execution features, not detailed telemetry
 spark.conf.set("spark.sql.codegen.wholeStage", "true")
 spark.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
 
@@ -332,7 +335,7 @@ spark.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
 df.explain(mode="extended")
 # Modes: simple, extended, codegen, cost, formatted
 
-# Get physical plan statistics
+# Show available optimizer estimates, not actual runtime statistics
 df.explain(mode="cost")
 
 # Monitor task metrics
@@ -365,7 +368,10 @@ def check_partition_skew(df):
         F.stddev("count").alias("stddev")
     ).collect()[0]
 
-    skew_ratio = stats["max"] / stats["avg"]
+    skew_ratio = stats["max"] / stats["avg"] if stats["avg"] else None
+    if skew_ratio is None:
+        print("No rows; skew not assessed")
+        return
     print(f"Skew ratio: {skew_ratio:.2f}x (>2x indicates skew)")
 ```
 
@@ -432,3 +438,5 @@ spark_configs = {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+All values are workload hypotheses, not universal optimal settings. Validate with Spark UI and correctness checks; overwrite writes can delete existing output. Executor configuration often must be set before context creation. The memory-status helper uses private JVM APIs and requires unwrapping the Scala Option; prefer supported monitoring instead. File split size does not bound shuffle partitions or prevent OOM. Salting joins should use typed original key plus salt rather than concatenated string keys, and test nulls, output schema and duplicate multiplicity. Delta/Databricks-specific options and OPTIMIZE require a compatible installed runtime. Preserve caches until actual actions finish, and account for cache-storage state vs SQL execution memory.

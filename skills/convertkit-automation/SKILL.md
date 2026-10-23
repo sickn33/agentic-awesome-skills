@@ -18,7 +18,7 @@ Automate ConvertKit (now known as Kit) email marketing operations through Compos
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. The endpoint must be connected and authenticated according to the host; each service connection still needs its own authorized account and scopes.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
@@ -202,3 +202,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Before tagging, unsubscribing or deleting, resolve the exact account, subscriber/tag or broadcast ID and verify the requested scope. Tag changes can trigger automations. Reading campaign data does not authorize sending broadcasts, changing consent or deleting history. After an uncertain write, inspect current state before retrying.

@@ -11,7 +11,7 @@
 - Environment (macOS, Linux, Windows, cloud)
 - Why they're learning (job, side project, curiosity)
 
-If the context file doesn't exist, run the `developer-audience-context` skill first.
+If the context file or named skill is unavailable, infer the audience from the request and ask only for consequential missing requirements. Do not claim to have loaded absent context.
 
 ---
 
@@ -109,7 +109,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.listen(3000, () => {
+app.listen(3000, "127.0.0.1", () => {
   console.log('Server running on http://localhost:3000');
 });
 ```
@@ -129,7 +129,7 @@ app.get('/api/users', (req, res) => {
 
 ### The Copy-Paste Checklist
 
-Every code block must pass these tests:
+Runnable examples must pass these tests. Clearly label incremental fragments and template placeholders with their file context; they are not standalone programs:
 
 | Test | How to Verify |
 |------|---------------|
@@ -183,7 +183,7 @@ const userRoutes = require('./routes/users');
 // ✅ ADD THIS: Use the route
 app.use('/api/users', userRoutes);
 
-app.listen(3000);
+app.listen(3000, "127.0.0.1");
 ```
 
 ---
@@ -261,8 +261,8 @@ npm install
 # Find the process
 lsof -i :3000
 
-# Kill it (replace PID with actual number)
-kill -9 PID
+# Confirm it belongs to this tutorial, then stop it with Ctrl-C in its terminal.
+# Do not terminate an unrelated service; choose another port instead.
 \`\`\`
 
 **Or use a different port:**
@@ -287,17 +287,8 @@ app.listen(process.env.PORT || 3001);
 Add warnings before common pitfalls:
 
 ```markdown
-⚠️ **Windows users:** Use `set` instead of `export`:
-\`\`\`bash
-# macOS/Linux
-export API_KEY=your_key
+⚠️ **Credentials:** Have the user enter the key through a non-echoed local prompt or an existing secret manager. Do not paste secret assignments into shell history, chat, screenshots or a committed tutorial. A PowerShell SecureString is not directly usable as an environment-variable value. Supply shell-specific non-echoed input instructions, and discard the temporary input after the request.
 
-# Windows Command Prompt
-set API_KEY=your_key
-
-# Windows PowerShell
-$env:API_KEY = Read-Host -AsSecureString "API key"
-\`\`\`
 ```
 
 ---
@@ -325,10 +316,7 @@ npm install your-package
 
 ## Step 2: Configure
 
-Create a `.env` file:
-\`\`\`
-API_KEY=your_key_here
-\`\`\`
+Read the required credential from a non-echoed local input or existing secret manager; document its environment-variable name without putting a literal secret assignment in the tutorial. If a local `.env` is chosen, exclude it from Git and show the actual loader configuration.
 
 ## Step 3: Write Code
 
@@ -369,7 +357,7 @@ Learn how to [outcome] by building [specific project].
 |---|---|
 | **Time** | 30 minutes |
 | **Level** | Intermediate |
-| **Prerequisites** | Node.js 18+, basic JavaScript |
+| **Prerequisites** | a supported Node.js LTS version verified against the project, basic JavaScript |
 
 ## What You'll Build
 
@@ -386,7 +374,7 @@ By the end, you'll have:
 
 | Tool | Version | Verify |
 |------|---------|--------|
-| Node.js | 18+ | `node -v` |
+| Node.js | supported project LTS | `node -v` |
 
 ### Required Knowledge
 
@@ -452,7 +440,7 @@ Here's everything together:
 Before publishing, verify:
 
 ### Code Quality
-- [ ] Every code block runs without modification
+- [ ] Every claimed runnable final example was tested; fragments/placeholders are labeled
 - [ ] All imports/requires are included
 - [ ] Expected output is shown
 - [ ] Error handling is included
@@ -467,7 +455,7 @@ Before publishing, verify:
 
 ### Accessibility
 - [ ] Works on Mac, Linux, AND Windows
-- [ ] Commands work in bash/zsh/PowerShell
+- [ ] Commands are labeled for the shells actually tested; provide equivalents where required
 - [ ] File paths use correct separators
 - [ ] No assumptions about installed tools
 
@@ -494,3 +482,5 @@ Before publishing, verify:
 - `devrel-content` — General technical writing principles
 - `developer-onboarding` — Optimize time to first success
 - `developer-seo` — Get tutorials found via search
+
+Do not claim a tutorial was executed or cross-platform verified from inspection alone. These templates contain placeholders and are not a tested SDK integration. Use synthetic data and local-only demo listeners; avoid logging credentials or real user payloads.

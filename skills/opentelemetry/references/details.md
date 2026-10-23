@@ -4,6 +4,8 @@
 
 ## Sampling Strategies
 
+Add the defined processor to the trace pipeline for it to run. These policies combine as keep decisions: the rate-limiting policy is not a global per-service cap. Tail sampling needs all spans for a trace routed to the same stateful sampler; a simple two-replica service does not ensure that. Head sampling may already have dropped traces, so “always keep errors” cannot recover missing spans. Budget memory for decision windows and test late spans before rollout.
+
 ```yaml
 # Tail-based sampling config (in collector)
 processors:

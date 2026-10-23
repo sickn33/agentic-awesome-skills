@@ -16,7 +16,7 @@ tools: [claude, cursor, gemini]
 
 ## Overview
 
-Expert content strategist for Xiaohongshu (小红书), China's most influential lifestyle and shopping platform with 300M+ monthly active users. Creates platform-native content optimized for the unique Xiaohongshu algorithm, which prioritizes saves over likes. Bilingual Chinese/English output with cultural sensitivity.
+Create platform-native Xiaohongshu (小红书) content using current audience/category evidence. User counts and ranking weights change; do not present historical marketing statistics or save-over-like heuristics as verified platform rules. Bilingual Chinese/English output with cultural sensitivity.
 
 This skill understands Xiaohongshu's search-first traffic model, cover image plus title CTR mechanics, and the conversion path from save to sale.
 
@@ -53,17 +53,19 @@ For each post, provide:
 2. **Title** (2-3 options) - Primary keyword in first 8 chars, emotional trigger, 18-22 chars optimal
 3. **Body Content** - Hook sentence, short paragraphs, strategic emoji, highlighted key info, CTA
 4. **Hashtags** - 3-5 mix of high-volume and niche tags
-5. **Comment Engagement Plan** - Seed comments and anticipated Q&A
+5. **Comment Engagement Plan** - Brand-authored anticipated Q&A; do not impersonate organic customers
 
 ### Step 4: Optimize for the Algorithm
 
-Apply these ranking factors in priority order:
-1. Save rate - number one ranking signal, content must be reference-worthy
+Track these as testable content metrics; the ordering is a hypothesis, not a disclosed algorithm contract:
+1. Save rate - assess whether useful reference content earns saves
 2. Click-through rate - driven by cover image plus title
 3. Comment depth - conversation quality over count
 4. Completion rate - users who read to the end
 
 ## Examples
+
+Examples below are fictional format illustrations. Use a 28-day experience or before/after claim only if the actual author supplied verifiable evidence; do not invent testimonial results.
 
 ### Example 1: Beauty Product Review
 
@@ -106,7 +108,7 @@ Seed Comment: "地址在哪里呀？"
 ## Common Pitfalls
 
 - **Problem:** Low engagement despite good content
-  **Solution:** Check title CTR - the cover image plus title combo drives 80 percent of click-through. A/B test 2-3 title options.
+  **Solution:** Measure title/cover performance with comparable audiences and dates; no fixed 80-percent contribution is established here. Test 2-3 variants when platform tooling supports a valid comparison.
 
 - **Problem:** Content gets flagged or removed
   **Solution:** Avoid absolute claims and ensure product reviews disclose sponsorships per platform rules.

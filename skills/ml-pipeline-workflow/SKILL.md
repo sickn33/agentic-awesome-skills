@@ -80,7 +80,7 @@ This skill provides comprehensive guidance for building production ML pipelines 
 
 ### Reference Documentation
 
-See the `references/` directory for detailed guides:
+The following upstream reference guides are not bundled in this catalog tree; obtain and inspect them before relying on their procedures:
 - **data-preparation.md** - Data cleaning, validation, and feature engineering
 - **model-training.md** - Training workflows and best practices
 - **model-validation.md** - Validation strategies and metrics
@@ -88,7 +88,7 @@ See the `references/` directory for detailed guides:
 
 ### Assets and Templates
 
-The `assets/` directory contains:
+The following upstream assets are not bundled in this catalog tree:
 - **pipeline-dag.yaml.template** - DAG template for workflow orchestration
 - **training-config.yaml** - Training configuration template
 - **validation-checklist.md** - Pre-deployment validation checklist
@@ -137,6 +137,10 @@ stages = [
    - Deploy to serving infrastructure
    - Configure monitoring
    - Validate production traffic
+
+## Evaluation boundaries
+
+Split by the actual independence unit (for example entity/time), fit preprocessing only on training data, and keep the final test set out of tuning. Pin datasets/code/model artifacts and record baseline metrics plus uncertainty. Cloud training, external experiment tracking and deployment require data-sharing/cost authorization. Treat the inline YAML as a conceptual DAG, not a directly executable Airflow/Kubeflow schema.
 
 ## Best Practices
 

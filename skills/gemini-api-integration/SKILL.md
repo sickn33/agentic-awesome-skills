@@ -23,173 +23,54 @@ This skill guides AI agents through integrating Google Gemini API into applicati
 
 ## Step-by-Step Guide
 
-### 1. Installation & Setup
+### 1. Select the supported SDK and model
 
-**Node.js / TypeScript:**
-```bash
-npm install @google/generative-ai
-```
+Use the Google GenAI SDK (`@google/genai` for JavaScript, `google-genai` for Python), pin a tested package version, and select an available model for the account. The older `@google/generative-ai` / `google-generativeai` APIs and historical 1.5/2.0 model table are not current setup guidance. Check model availability, deprecations, pricing and feature support in official documentation before choosing; do not assume a universal cheapest or most capable model.
 
-**Python:**
-```bash
-pip install google-generativeai
-```
+### 2. Server-side generation
 
-Set your API key securely:
-```bash
-read -rsp "Gemini API key: " GEMINI_API_KEY
-echo
-export GEMINI_API_KEY
-```
-
-### 2. Basic Text Generation
-
-**Node.js:**
-```javascript
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-const result = await model.generateContent("Explain async/await in JavaScript");
-console.log(result.response.text());
-```
-
-**Python:**
-```python
-import google.generativeai as genai
-import os
-
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-model = genai.GenerativeModel("gemini-1.5-flash")
-
-response = model.generate_content("Explain async/await in JavaScript")
-print(response.text)
-```
-
-### 3. Streaming Responses
+Set `GEMINI_API_KEY` through a secret manager or protected environment and `GEMINI_MODEL` to the verified model ID. Never ship a long-lived key in browser code.
 
 ```javascript
-const result = await model.generateContentStream("Write a detailed blog post about AI");
-
-for await (const chunk of result.stream) {
-  process.stdout.write(chunk.text());
-}
-```
-
-### 4. Multimodal Input (Text + Image)
-
-```javascript
-import fs from "fs";
-
-const imageData = fs.readFileSync("screenshot.png");
-const imagePart = {
-  inlineData: {
-    data: imageData.toString("base64"),
-    mimeType: "image/png",
-  },
-};
-
-const result = await model.generateContent(["Describe this image:", imagePart]);
-console.log(result.response.text());
-```
-
-### 5. Function Calling / Tool Use
-
-```javascript
-const tools = [{
-  functionDeclarations: [{
-    name: "get_weather",
-    description: "Get current weather for a city",
-    parameters: {
-      type: "OBJECT",
-      properties: {
-        city: { type: "STRING", description: "City name" },
-      },
-      required: ["city"],
-    },
-  }],
-}];
-
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro", tools });
-const result = await model.generateContent("What's the weather in Mumbai?");
-
-const call = result.response.functionCalls()?.[0];
-if (call) {
-  // Execute the actual function
-  const weatherData = await getWeather(call.args.city);
-  // Send result back to model
-}
-```
-
-### 6. Multi-turn Chat
-
-```javascript
-const chat = model.startChat({
-  history: [
-    { role: "user", parts: [{ text: "You are a helpful coding assistant." }] },
-    { role: "model", parts: [{ text: "Sure! I'm ready to help with code." }] },
-  ],
+import { GoogleGenAI } from "@google/genai";
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const response = await ai.models.generateContent({
+  model: process.env.GEMINI_MODEL,
+  contents: "Explain async/await in JavaScript"
 });
-
-const response = await chat.sendMessage("How do I reverse a string in Python?");
-console.log(response.response.text());
+console.log(response.text);
 ```
 
-### 7. Model Selection Guide
-
-| Model | Best For | Speed | Cost |
-|-------|----------|-------|------|
-| `gemini-1.5-flash` | High-throughput, cost-sensitive tasks | Fast | Low |
-| `gemini-1.5-pro` | Complex reasoning, long context | Medium | Medium |
-| `gemini-2.0-flash` | Latest fast model, multimodal | Very Fast | Low |
-| `gemini-2.0-pro` | Most capable, advanced tasks | Slow | High |
-
-## Best Practices
-
-- ✅ **Do:** Use `gemini-1.5-flash` for most tasks — it's fast and cost-effective
-- ✅ **Do:** Always stream responses for user-facing chat UIs to reduce perceived latency
-- ✅ **Do:** Store API keys in environment variables, never hard-code them
-- ✅ **Do:** Implement exponential backoff for rate limit (429) errors
-- ✅ **Do:** Use `systemInstruction` to set persistent model behavior
-- ❌ **Don't:** Use `gemini-pro` for simple tasks — Flash is cheaper and faster
-- ❌ **Don't:** Send large base64 images inline for files > 20MB — use File API instead
-- ❌ **Don't:** Ignore safety ratings in responses for production apps
-
-## Error Handling
-
-```javascript
-try {
-  const result = await model.generateContent(prompt);
-  return result.response.text();
-} catch (error) {
-  if (error.status === 429) {
-    // Rate limited — wait and retry with exponential backoff
-    await new Promise(r => setTimeout(r, 2 ** retryCount * 1000));
-  } else if (error.status === 400) {
-    // Invalid request — check prompt or parameters
-    console.error("Invalid request:", error.message);
-  } else {
-    throw error;
-  }
-}
+```python
+import os
+from google import genai
+with genai.Client(api_key=os.environ["GEMINI_API_KEY"]) as client:
+    response = client.models.generate_content(
+        model=os.environ["GEMINI_MODEL"], contents="Explain async/await")
+    print(response.text)
 ```
 
-## Troubleshooting
+### 3. Streaming and multimodal inputs
 
-**Problem:** `API_KEY_INVALID` error
-**Solution:** Ensure `GEMINI_API_KEY` environment variable is set and the key is active in Google AI Studio.
+Use the pinned SDK's `models.generateContentStream` / `models.generate_content_stream` interfaces and handle partial output, cancellation and empty/blocked responses. Verify MIME types, model limits and file retention before transmitting images/audio/video. Obtain permission for sensitive content; do not put private inputs or access URLs in logs. File uploads and generation may incur charges.
 
-**Problem:** Response blocked by safety filters
-**Solution:** Check `result.response.promptFeedback.blockReason` and adjust your prompt or safety settings.
+### 4. Function calling and chat
 
-**Problem:** Slow response times
-**Solution:** Switch to `gemini-1.5-flash` and enable streaming. Consider caching repeated prompts.
+A model's function call is an untrusted proposal. Validate the name against a fixed allowlist and arguments against a schema, enforce user authorization, and limit calls/time/cost before dispatch. Return actual tool results through the pinned SDK's documented function-response format; never fabricate results. Preserve the required conversation turns and function-call identifiers. A chat history entry is not a privileged system instruction; use the supported configuration field for system instructions.
 
-**Problem:** `RESOURCE_EXHAUSTED` (quota exceeded)
-**Solution:** Check your quota in Google Cloud Console. Implement request queuing and exponential backoff.
+### 5. Failure handling
+
+Inspect structured errors, block reasons and finish reasons without assuming every response has text. Retry only transient errors with bounded exponential backoff, jitter and any retry-after guidance; enforce deadlines and a retry budget. A failed network request may already have incurred usage. Do not retry invalid credentials or malformed requests indefinitely, and do not weaken safety settings merely to bypass a blocked response.
+
+## Examples
+
+For a production integration, first run a small non-sensitive prompt against a test project, record the SDK/model version and response status, then test streaming cancellation, blocked output, quota exhaustion and rejected tool arguments. Report what was actually exercised.
+
+## Sources
+
+- [Google GenAI migration guide](https://ai.google.dev/gemini-api/docs/migrate)
+- [Content generation API](https://ai.google.dev/api/generate-content)
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+SDK syntax, model availability, quotas and pricing change. These examples are unexecuted integration templates and do not establish account access, model quality or production readiness.

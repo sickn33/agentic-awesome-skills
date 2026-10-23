@@ -24,7 +24,7 @@ disable-model-invocation: true
 
 Codex CLI is OpenAI's terminal coding agent. `codex exec` runs it non-interactively:
 it works autonomously in a sandbox, streams progress to stderr, and prints only the
-final message to stdout. Auth reuses the user's ChatGPT subscription — never an API key.
+final message to stdout. Confirm the user's intended authentication mode and account; this workflow assumes ChatGPT login and must not silently switch to billable API-key authentication.
 
 ## When to delegate
 
@@ -102,6 +102,7 @@ codex exec --cd /tmp/wt-taskA --sandbox workspace-write -o /tmp/outA.md "task A"
 
 ## Rules
 
+- Delegate only when the user or applicable project instructions authorize it. Installing this skill alone does not authorize new agents, external disclosure, or extra spending.
 - One task per launch. Split big jobs into multiple launches.
 - Review Codex's diff yourself before declaring the task done.
 

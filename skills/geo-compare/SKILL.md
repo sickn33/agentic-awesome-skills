@@ -29,8 +29,7 @@ allowed-tools: Read, Write, Bash, Glob
 ## Purpose
 
 The single most powerful retention tool for a GEO agency: show clients **exactly**
-what improved since they started working with you. Every point gained on the GEO
-score is proof of value. This skill generates the "here's your progress" report.
+what improved since they started working with you. GEO score changes are heuristic audit signals, not proof of business value. This skill generates the "here's your progress" report.
 
 ---
 
@@ -49,6 +48,10 @@ score is proof of value. This skill generates the "here's your progress" report.
 ```
 
 ---
+
+## Comparable evidence only
+
+The /geo commands are external runtime prerequisites, not bundled implementations. Confirm the intended month/date pair and exact domain; oldest/newest is not automatically a monthly comparison. Preserve scoring rubric/version, page sample, crawler definitions, query set/platform, region and collection timestamps across audits; otherwise mark non-comparable. All numeric gains, ranks, targets, citation probabilities and 4–8 week timing in the template are fictional examples, not platform guarantees. Do not infer traffic/revenue/citation uplift from a score: use actual attributed analytics with assumptions and uncertainty. Baseline zero makes relative percentage undefined. Allowing robots access or publishing llms.txt does not guarantee search inclusion/citation, and training crawler access differs from search retrieval. Request authorization before crawler-policy/site changes or client sharing; protect client audits and validate domain-derived output paths. Wikipedia/Reddit actions require independent community-policy and conflict-of-interest review, not automatic promotion.
 
 ## Workflow
 
@@ -284,8 +287,7 @@ Score markers to extract:
 - "ClaudeBot: Allowed/Blocked"
 ```
 
-If exact scores are not found in audit files, use contextual analysis of the
-written findings to estimate approximate scores based on issues described.
+If exact scores or a compatible scoring method are absent, report the metric as unavailable and compare qualitative evidence separately; never invent baseline scores.
 
 ---
 
@@ -300,7 +302,7 @@ written findings to estimate approximate scores based on issues described.
 | -5 or more | ▼▼ | Significant decline — needs discussion |
 
 A decline is not necessarily bad — it can mean new issues were discovered in the
-fresh audit that weren't visible before. Frame declines as "newly discovered opportunities."
+fresh audit that weren't visible before. Report declines neutrally with evidence; distinguish changed methodology, newly discovered issues and actual regressions without concealing negative results.
 
 ---
 

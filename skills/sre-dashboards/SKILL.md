@@ -87,17 +87,14 @@ histogram_quantile(0.95,
 ```
 
 ```promql
-# Fast burn rate (5m / 1h)
+# 5-minute burn rate for an illustrative 99.9% availability SLO
 (
   sum(rate(http_requests_total{status=~"5.."}[5m]))
   / sum(rate(http_requests_total[5m]))
-)
-/
-(
-  sum(rate(http_requests_total{status=~"5.."}[1h]))
-  / sum(rate(http_requests_total[1h]))
-)
+) / (1 - 0.999)
 ```
+
+Burn rate divides the bad-event ratio by the allowed bad-event ratio `(1 - SLO)`, not by another window’s observed errors. Compute the 1h window separately and combine short/long threshold conditions for an alert. Scope both numerator and denominator to the same service/environment; distinguish missing/no-traffic data from healthy zero errors. See [Google SRE alerting guidance](https://sre.google/workbook/alerting-on-slos/).
 
 ## Operational Guidelines
 

@@ -27,7 +27,7 @@ Securely store and manage secrets, keys, and certificates in Azure.
 
 - Azure subscription with appropriate permissions
 - Azure CLI installed (`az` command)
-- Contributor or Key Vault Administrator role for vault management
+- Control-plane vault-management permission and separate least-privilege data-plane roles; assigning roles additionally needs authorized role-assignment permission
 - Managed identity configured for application access
 - Understanding of Azure RBAC vs. Key Vault access policies
 
@@ -48,15 +48,18 @@ az keyvault create \
   --enable-purge-protection true \
   --sku premium  # Use premium for HSM-backed keys
 
+# Legacy policy mode must be explicitly selected; modern new vaults default to RBAC.
 # Create Key Vault with access policies (legacy)
 az keyvault create \
   --name myapp-vault-dev \
+  --enable-rbac-authorization false \
   --resource-group rg-secrets \
   --location eastus \
   --enable-soft-delete true \
   --retention-days 30
 
-# Enable private endpoint (no public access)
+# Disable public access only AFTER creating/approving a private endpoint and DNS path;
+# this update does not create an endpoint and otherwise locks out clients.
 az keyvault update \
   --name myapp-vault-prod \
   --resource-group rg-secrets \
@@ -72,12 +75,14 @@ az monitor diagnostic-settings create \
 
 ## Secret Management
 
+Create referenced secret files via protected local input with mode0600, never commit them or expose values in argv/logs. Secret set responses include values unless output is suppressed. Confirm subscription/vault/object IDs and recovery before mutation/purge; purge protection cannot be disabled after enabling. Read-only `show` also exposes secret values, so use only for a concrete authorized need. Expiry metadata does not rotate downstream application credentials. Public-access disablement is not private-endpoint provisioning.
+
 ```bash
 # Set a secret
 az keyvault secret set \
   --vault-name myapp-vault-prod \
   --name db-password \
-  --value "S3cur3P@ssw0rd!" \
+  --file db-password.txt --output none \
   --content-type "text/plain" \
   --tags Environment=production Team=platform
 
@@ -85,7 +90,7 @@ az keyvault secret set \
 az keyvault secret set \
   --vault-name myapp-vault-prod \
   --name db-credentials \
-  --value '{"username":"dbadmin","password":"S3cur3P@ss!","host":"db.postgres.database.azure.com","port":5432}'
+  --file db-credentials.json --output none
 
 # Get secret value
 az keyvault secret show \
@@ -260,7 +265,7 @@ az role assignment create \
   --scope "/subscriptions/{sub}/resourceGroups/rg-secrets/providers/Microsoft.KeyVault/vaults/myapp-vault-prod"
 
 # Available Key Vault RBAC roles:
-# - Key Vault Administrator (full management)
+# - Key Vault Administrator (data-plane objects; not control-plane vault management or role assignments)
 # - Key Vault Secrets Officer (manage secrets)
 # - Key Vault Secrets User (read secrets)
 # - Key Vault Certificates Officer (manage certs)
@@ -271,22 +276,24 @@ az role assignment create \
 
 ### Access Policies (Legacy)
 
+Use set-policy only on the explicitly created legacy-policy dev vault; it does not grant access to RBAC-enabled production vaults. Do not switch a live vault’s access model without a migration plan and verified roles.
+
 ```bash
 # Grant secret access via access policy
 az keyvault set-policy \
-  --name myapp-vault-prod \
+  --name myapp-vault-dev \
   --object-id "$(az identity show -g rg-app -n myapp-identity --query principalId -o tsv)" \
   --secret-permissions get list
 
 # Grant key access
 az keyvault set-policy \
-  --name myapp-vault-prod \
+  --name myapp-vault-dev \
   --object-id "$OBJECT_ID" \
   --key-permissions get unwrapKey wrapKey
 
 # Grant certificate access
 az keyvault set-policy \
-  --name myapp-vault-prod \
+  --name myapp-vault-dev \
   --object-id "$OBJECT_ID" \
   --certificate-permissions get list
 ```
@@ -309,7 +316,7 @@ vault_url = "https://myapp-vault-prod.vault.azure.net/"
 # Secrets
 secret_client = SecretClient(vault_url=vault_url, credential=credential)
 db_password = secret_client.get_secret("db-password")
-print(f"Secret value: {db_password.value}")
+# Consume db_password.value in memory; never print/log it.
 
 # Get specific version
 specific = secret_client.get_secret("db-password", version="abc123")
@@ -350,6 +357,8 @@ string password = secret.Value;
 ## Kubernetes Integration (AKS)
 
 ### Secrets Store CSI Driver
+
+Install the matching Azure provider/CSI driver and configure node-identity scope or workload identity deliberately. For a kubernetes.io/tls secret, the mapped certificate secret must contain compatible PEM certificate+private key; PFX/default content cannot be assumed. Mount rotation does not refresh environment variables in an already running container. Secret synchronization also creates Kubernetes Secret copies with their own RBAC/at-rest controls.
 
 ```yaml
 # SecretProviderClass for AKS with managed identity
@@ -392,6 +401,8 @@ spec:
       data:
         - objectName: app-tls-cert
           key: tls.crt
+        - objectName: app-tls-cert
+          key: tls.key
 ---
 # Pod using the secrets
 apiVersion: v1

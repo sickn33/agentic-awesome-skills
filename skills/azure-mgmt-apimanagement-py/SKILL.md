@@ -36,6 +36,10 @@ client = ApiManagementClient(
 )
 ```
 
+## Write and policy boundary
+
+Examples create paid infrastructure, publish access products and replace API policies. Confirm subscription/resource/API and authorized effects before execution. Preserve existing policy XML and inherited base policies, review the exact diff, and validate authentication/routing afterward; a sample full-policy replacement can remove existing protections. Do not use placeholder secret values or expose subscription keys.
+
 ## Create APIM Service
 
 ```python
@@ -164,7 +168,7 @@ subscription = client.subscription.create_or_update(
     )
 )
 
-print(f"Subscription key: {subscription.primary_key}")
+print(f"Created subscription: {subscription.name}")  # Never log subscription keys.
 ```
 
 ## Set API Policy

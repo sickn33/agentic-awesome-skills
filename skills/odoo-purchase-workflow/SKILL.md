@@ -46,9 +46,10 @@ Step 4: Receive Goods
   (partial receipts are supported; PO stays open for remaining qty)
 
 Step 5: Match Vendor Bill (3-Way Match)
-  Click "Create Bill" → Bill pre-filled from PO quantities
-  Verify: PO qty = Received qty = Billed qty
-  Post Bill → Register Payment
+  Click "Create Bill" → Draft quantities follow the product bill-control policy
+  Verify ordered, received and billed quantities, allowing documented partial receipts
+  Enable 3-way matching with received-quantity bill control; inspect Should Be Paid
+  Resolve discrepancies and obtain authorized approval before posting/payment
 ```
 
 ### Example 2: Enable 2-Level Purchase Approval
@@ -61,9 +62,9 @@ Purchase Order Approval:
   Minimum Order Amount: $5,000
 
 Result:
-  Orders ≤ $5,000  → Confirm directly to PO
-  Orders > $5,000  → Status: "Waiting for Approval"
-                     A purchase manager must click "Approve"
+  Orders below the configured threshold → Confirm directly (subject to access rights)
+  Orders at/above the threshold → Status: "Waiting for Approval"
+                     A purchase manager can approve (manager rights can also permit direct confirmation)
 ```
 
 ### Example 3: Vendor Price List (Quantity Breaks on a Product)
@@ -94,8 +95,10 @@ based on the ordered quantity for this vendor.
 - ✅ **Do:** Set a **vendor lead time** on products (Purchase tab) so Odoo can schedule arrival dates accurately.
 - ✅ **Do:** Set the **Bill Control** policy to "Based on received quantities" (not ordered qty) for accurate 3-way matching.
 - ❌ **Don't:** Confirm a PO before prices are agreed — use Draft/RFQ status to negotiate first.
-- ❌ **Don't:** Post a vendor bill without linking it to a receipt — bypassing 3-way matching creates accounting discrepancies.
+- ✅ **Do:** Distinguish goods billed on receipts from ordered-quantity/service flows. Reconcile applicable PO/receipt/bill evidence; do not assume 3-way matching is an unbypassable payment block.
 - ❌ **Don't:** Delete a PO that has received quantities — archive it instead to preserve the stock and accounting trail.
+
+Reference: [Odoo 17 bill control and 3-way matching](https://www.odoo.com/documentation/17.0/applications/inventory_and_mrp/purchase/manage_deals/control_bills.html). Confirm the deployed version, modules, company currency and access rights before configuring approvals. Sending RFQs, confirming orders, validating receipts and posting/paying bills require the user's operational authorization; a setup request alone does not authorize these transactions.
 
 ## Limitations
 

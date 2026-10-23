@@ -13,6 +13,8 @@ This skill defines distinct behavioral modes that optimize AI performance for sp
 
 ---
 
+Modes are communication/workflow preferences, not client capability switches or new permissions. Respect the user's requested scope and repository rules in every mode. Ship/orchestrate labels do not authorize publication, deployment or new agents, and terse implementation output must still report actual checks, failures and limitations. Named slash commands/roles work only if the host supports them.
+
 ## Available Modes
 
 ### 1. 🧠 BRAINSTORM Mode

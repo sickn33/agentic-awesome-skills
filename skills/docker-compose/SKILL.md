@@ -118,7 +118,7 @@ services:
     ports:
       - "127.0.0.1:3000:3000"           # HOST:CONTAINER
       - "127.0.0.1:9229:9229" # Bind to localhost only
-      - "8080-8090:8080-8090" # Port range
+      - "127.0.0.1:8080-8090:8080-8090" # Local development port range
     expose:
       - "3000"                # Internal only (no host binding)
 ```
@@ -219,6 +219,8 @@ services:
           cpus: '0.5'
           memory: 256M
 ```
+
+The replicas fragment below cannot scale a service whose merged config binds every replica to one fixed host port. Use an explicitly configured reverse proxy/load balancer and remove conflicting published ports; verify the resolved config and effective resource limits for the installed Compose implementation. `depends_on` without a health condition controls start order, not application readiness or runtime recovery.
 
 ## Multiple Compose Files
 

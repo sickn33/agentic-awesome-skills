@@ -18,6 +18,10 @@ Scoped memory system that gives AI coding agents a cheat sheet for each director
 - Use when you want a dashboard to visualize token savings, session history, and context health
 - Use when setting up a new project and want structured agent memory from day one
 
+## Availability and evidence
+
+This tree contains the guide only; it does not bundle a HAM CLI, dashboard or tokenizer. `go ham` and `ham ...` are upstream workflow conventions; discover an actually installed reviewed implementation before invoking them or claiming files/dashboard/savings exist. Preserve existing project instructions when adding context, keep inferred items unconfirmed, and obtain scope before reading private session history. Report measured token usage separately from modeled savings/cost/carbon examples; do not compare unlike tasks as a proven improvement.
+
 ## How It Works
 
 ### Step 1: Setup ("go ham")

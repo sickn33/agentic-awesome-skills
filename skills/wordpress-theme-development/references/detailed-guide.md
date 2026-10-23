@@ -7,7 +7,7 @@
 Specialized workflow for creating custom WordPress themes from scratch, including modern block editor (Gutenberg) support, template hierarchy, responsive design, and WordPress 7.0 enhancements.
 
 
-## WordPress 7.0 Theme Features
+## Version-dependent feature ideas (verify target release)
 
 1. **Admin Refresh**
    - New default color scheme
@@ -126,8 +126,8 @@ Use @frontend-developer to create WordPress template files
       "backgroundImage": true
     },
     "typography": {
-      "fontFamilies": true,
-      "fontSizes": true
+      "fontFamilies": [],
+      "fontSizes": []
     },
     "spacing": {
       "margin": true,
@@ -136,7 +136,11 @@ Use @frontend-developer to create WordPress template files
     "blocks": {
       "core/heading": {
         "typography": {
-          "fontSizes": ["24px", "32px", "48px"]
+          "fontSizes": [
+            {"name": "Small", "slug": "small", "size": "24px"},
+            {"name": "Medium", "slug": "medium", "size": "32px"},
+            {"name": "Large", "slug": "large", "size": "48px"}
+          ]
         }
       }
     }
@@ -179,7 +183,7 @@ Use @backend-dev-guidelines to create theme functions
 ### Phase 4: Custom Post Types
 
 #### Skills to Invoke
-- `wordpress-penetration-testing` - WordPress patterns
+- WordPress developer handbook - content registration patterns
 
 #### Actions
 1. Register custom post types
@@ -213,7 +217,7 @@ register_post_meta('portfolio', 'client_name', [
 
 #### Copy-Paste Prompts
 ```
-Use @wordpress-penetration-testing to understand WordPress CPT patterns
+Use the WordPress developer handbook to implement CPT patterns
 ```
 
 ### Phase 5: Block Editor Support
@@ -234,7 +238,7 @@ Use @wordpress-penetration-testing to understand WordPress CPT patterns
 - Per-instance custom CSS
 - Block visibility controls (viewport-based)
 
-#### Block Pattern with ContentOnly (WP 7.0)
+#### Conceptual Block Pattern Data (not register_block_pattern input)
 ```json
 {
     "name": "my-theme/hero-section",
@@ -351,7 +355,7 @@ Use @frontend-design to create responsive theme design
 
 ### Phase 7: WordPress 7.0 Features Integration
 
-#### Breadcrumbs Block Support
+#### Plugin-specific Breadcrumb Sketch (hooks not established core APIs)
 ```php
 // Add breadcrumb filters for custom post types
 add_filter('wp_breadcrumb_args', function($args) {
@@ -488,3 +492,5 @@ theme-name/
 - `wordpress` - WordPress development
 - `wordpress-plugin-development` - Plugin development
 - `wordpress-woocommerce` - WooCommerce
+
+The PHP template tree is a classic-theme example; block themes use HTML templates and template parts. The feature list, breadcrumb hooks and admin CSS variables above are historical suggestions, not verified WordPress core contracts. Confirm each API in the target-version developer handbook; do not claim 7.0 compatibility from this checklist. Register CPTs on `init` and generally put persistent content types in a plugin. REST exposure is not collaboration support or authorization; add appropriate capability checks for editable meta. Block-pattern registration takes serialized block markup as `content`, not the conceptual JSON object above. Validate theme.json against a target-version schema, use a supported PHP version, and test escaping, nonces, capabilities, keyboard/focus behavior and upgrades on staging before activation. See [typography presets](https://developer.wordpress.org/themes/global-settings-and-styles/settings/typography/) and [pattern registration](https://developer.wordpress.org/themes/patterns/registering-patterns/).

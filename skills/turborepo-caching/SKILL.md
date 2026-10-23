@@ -60,6 +60,10 @@ Workspace Root/
 | **inputs** | Files that affect cache key |
 | **persistent** | Long-running tasks (dev servers) |
 
+## Version and cache correctness
+
+The JSON below is Turbo 1.x-style (`pipeline`, matching the illustrative `^1.10.0` dependency); Turbo 2 uses `tasks`. Use the installed version’s schema/migration docs. Explicit `inputs` replace defaults: include `$TURBO_DEFAULT$` or all actual source/config/dependency inputs to avoid stale test/build success. Never cache outputs containing secrets, and do not reuse cached success when required external state is unbound.
+
 ## Templates
 
 ### Template 1: turbo.json Configuration
@@ -92,6 +96,7 @@ Workspace Root/
       "dependsOn": ["build"],
       "outputs": ["coverage/**"],
       "inputs": [
+        "$TURBO_DEFAULT$",
         "src/**/*.tsx",
         "src/**/*.ts",
         "test/**/*.ts"
@@ -134,6 +139,7 @@ Workspace Root/
     "test": {
       "outputs": ["coverage/**"],
       "inputs": [
+        "$TURBO_DEFAULT$",
         "src/**",
         "tests/**",
         "jest.config.js"
@@ -196,77 +202,7 @@ jobs:
 
 ### Template 4: Self-Hosted Remote Cache
 
-```typescript
-// Custom remote cache server (Express)
-import express from 'express';
-import { createReadStream, createWriteStream } from 'fs';
-import { mkdir } from 'fs/promises';
-import { join } from 'path';
-
-const app = express();
-const CACHE_DIR = './cache';
-
-// Get artifact
-app.get('/v8/artifacts/:hash', async (req, res) => {
-  const { hash } = req.params;
-  const team = req.query.teamId || 'default';
-  const filePath = join(CACHE_DIR, team, hash);
-
-  try {
-    const stream = createReadStream(filePath);
-    stream.pipe(res);
-  } catch {
-    res.status(404).send('Not found');
-  }
-});
-
-// Put artifact
-app.put('/v8/artifacts/:hash', async (req, res) => {
-  const { hash } = req.params;
-  const team = req.query.teamId || 'default';
-  const dir = join(CACHE_DIR, team);
-  const filePath = join(dir, hash);
-
-  await mkdir(dir, { recursive: true });
-
-  const stream = createWriteStream(filePath);
-  req.pipe(stream);
-
-  stream.on('finish', () => {
-    res.json({ urls: [`${req.protocol}://${req.get('host')}/v8/artifacts/${hash}`] });
-  });
-});
-
-// Check artifact exists
-app.head('/v8/artifacts/:hash', async (req, res) => {
-  const { hash } = req.params;
-  const team = req.query.teamId || 'default';
-  const filePath = join(CACHE_DIR, team, hash);
-
-  try {
-    await fs.access(filePath);
-    res.status(200).end();
-  } catch {
-    res.status(404).end();
-  }
-});
-
-app.listen(3000);
-```
-
-```json
-// turbo.json for self-hosted cache
-{
-  "remoteCache": {
-    "signature": false
-  }
-}
-```
-
-```bash
-# Use self-hosted cache
-turbo build --api="http://localhost:3000" --token="my-token" --team="my-team"
-```
+Use a reviewed server implementing the installed Turbo remote-cache protocol. Require authentication, server-derived tenant authorization, bounded artifact sizes, safe hash/path validation, atomic writes, stream error handling and retention. Do not build a production cache by joining untrusted `teamId`/`hash` values into filesystem paths. Enable supported artifact signing and verify it end-to-end; a shared cache can supply executable build outputs. Keep tokens out of command arguments/logs and do not grant write access to untrusted PRs.
 
 ### Template 5: Filtering and Scoping
 
@@ -315,6 +251,7 @@ turbo build --filter='...[HEAD^1]...'
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
       "inputs": [
+        "$TURBO_DEFAULT$",
         "src/**",
         "tests/**",
         "*.config.*"

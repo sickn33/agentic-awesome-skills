@@ -33,6 +33,8 @@ Use this skill when:
 
 ## Prerequisites
 
+These are version-dependent sketches, not a complete cluster installation. Pin chart/image versions and check installed CRD schemas and serving mode (Knative versus standard). Canary fields and KEDA targets depend on that mode; target an actual scalable workload supported by the chosen operator, not an assumed InferenceService scale subresource. Configure ingress authentication/TLS, least-privilege model-store access and resource/cost bounds. Remove or implement the placeholder transformer; arbitrary models and “-v2” IDs must exist and be licensed.
+
 - Kubernetes 1.28+ with GPU nodes
 - KServe installed (or Triton standalone)
 - `kubectl` and `helm` configured
@@ -106,6 +108,8 @@ spec:
     - name: vllm-container
       image: vllm/vllm-openai:latest
       args:
+      - "--port"
+      - "8080"
       - "--model"
       - "meta-llama/Llama-3.1-8B-Instruct"
       - "--tensor-parallel-size"
@@ -286,12 +290,12 @@ instance_group [
 
 ```bash
 # List loaded models (Triton)
-curl http://triton:8000/v2/models
+curl -X POST http://triton:8000/v2/repository/index
 
-# Load a new model version
+# Load a model (requires explicit model-control mode, unlike poll mode above)
 curl -X POST http://triton:8000/v2/repository/models/text-classifier/load
 
-# Unload a model
+# Unload a model (requires explicit model-control mode)
 curl -X POST http://triton:8000/v2/repository/models/text-classifier/unload
 
 # KServe — watch rollout status
@@ -312,7 +316,7 @@ kubectl get inferenceservice llama-3-8b -n models -w
 ## Best Practices
 
 - Use canary deployments for all model updates — roll back in seconds if metrics degrade.
-- Enable Triton dynamic batching — it can increase GPU throughput 5–10× for small models.
+- Enable Triton dynamic batching — benchmark throughput and latency for your model and request distribution.
 - Store models in S3/GCS with versioned paths (`s3://bucket/model/v1/`, `v2/`).
 - Pin GPU node selectors to prevent model pods landing on CPU-only nodes.
 - Monitor p99 latency and error rates per model version during canary rollouts.

@@ -15,7 +15,7 @@ license: "MIT"
 
 # Marlin Bed Leveling: Deterministic Calibration & First-Layer Mesh Engineering
 
-Master Marlin 2.x bed leveling architectures (Unified Bed Leveling UBL, Bilinear ABL, Manual Mesh MBL) to guarantee flawless first-layer adhesion through rigorous G-code phase workflows, probe offset math, and persistent EEPROM compensation.
+Master Marlin 2.x bed leveling architectures (Unified Bed Leveling UBL, Bilinear ABL, Manual Mesh MBL) to improve first-layer consistency through rigorous G-code phase workflows, probe offset math, and persistent EEPROM compensation.
 
 ## Operator approval
 
@@ -34,22 +34,24 @@ Do NOT use this skill when:
 - Fixing gross mechanical skew: loose V-slot rollers, bent Z leadscrews, or wobbly gantry arms (hardware faults cannot be solved by software leveling).
 - Delta printer kinematics setup requiring radius and tower endstop adjustments before mesh probing.
 
-## Core Mental Models & Non-Negotiable Rules
+The rules, numeric tolerances and presets below are historical examples, not universal requirements. Verify firmware-enabled commands, probe geometry, mesh mode/slot, material limits and slicer syntax. `M420 S1` enables the current valid mesh; it does not itself load an EEPROM mesh. For UBL, explicitly load the verified slot (for example G29 L1) before activation. G28 can restore/enable leveling when configured. A missing M420 is not proof that compensation is off. Z offset sign comes from measured probe/nozzle geometry, never probe direction alone; do not blindly command Z0 or copy negative values.
+
+## Core Mental Models
 
 1. **The Post-Homing Enable Mandate (`G28` Disables Leveling)**:
    - In Marlin firmware, executing `G28` (Home All Axes) automatically **DISABLES bed leveling compensation by default** (`RESTORE_LEVELING_AFTER_G28` is often disabled in vendor firmware).
    - In every print start G-code, the leveling restoration command MUST be issued **strictly AFTER `G28`**:
      ```gcode
      G28      ; Home all axes (silently turns leveling OFF)
-     M420 S1  ; Re-enable bed leveling compensation from EEPROM mesh
+     M420 S1  ; Re-enable bed leveling compensation using the current valid mesh
      ```
-   - Failing to include `M420 S1` (or `G29 A` for UBL) after `G28` causes the printer to execute the entire print with zero leveling compensation.
+   - Failing to include `M420 S1` (or `G29 A` for UBL) after `G28` can leave compensation disabled depending on firmware configuration; query and verify the actual state.
 
 2. **The 5-Phase UBL Calibration Loop**:
    Unified Bed Leveling (UBL) is a state machine requiring five sequential phases:
    - **Phase 1 (Probe Reachable Grid)**: `G29 P1` probes all coordinates physically reachable by the probe offset.
    - **Phase 2 (Manual Edge Probing)**: `G29 P2` uses a paper feeler gauge for points the BLTouch cannot reach due to gantry geometry.
-   - **Phase 3 (Mathematical Extrapolation)**: `G29 P3 T0.0` fills unprobed edge coordinates by extrapolating slopes from adjacent measured points.
+   - **Phase 3 (Mathematical Extrapolation)**: `G29 P3 T0` fills unprobed edge coordinates by extrapolating slopes from adjacent measured points.
    - **Phase 4 (Validation & Micro-Tuning)**: `G26 B60 H210 F1.75` prints a single-layer validation test pattern; inspect and edit coordinates with `M421 I... J... Q...`.
    - **Phase 5 (Storage & Activation)**: `G29 S1` saves to EEPROM mesh slot 1; `G29 A` activates UBL; `M500` commits to permanent EEPROM storage.
 
@@ -61,7 +63,7 @@ Do NOT use this skill when:
 4. **Z-Probe Offset Sign Convention (`M851 Z...`)**:
    - For downward-deploying probes (BLTouch, CRTouch, inductive sensors) where the probe trigger point triggers *below* the nozzle tip:
      $$\mathbf{Z\text{-}Offset\ is\ strictly\ NEGATIVE}\ (e.g.,\ \text{M851 Z-1.85})$$
-   - A *positive* Z-offset on a downward-deploying probe instructs the firmware that the nozzle is lower than the probe trigger, driving the nozzle directly into the bed on the first move.
+   - Verify the measured offset and trigger geometry using the printer's documented supervised procedure; a sign cannot be declared unsafe independently of that geometry.
    - Adjusting Z-offset with paper gauge:
      - More resistance / tighter squish $\implies$ more negative (e.g., `-1.80` $\to$ `-1.85`).
      - Less resistance / looser gap $\implies$ less negative (e.g., `-1.80` $\to$ `-1.75`).
@@ -101,8 +103,8 @@ M117 Probing Reachable Points...
 G29 P1           ; Phase 1: Automated probe of reachable grid points
 
 M117 Extrapolating Mesh Edges...
-G29 P3 T0.0      ; Phase 3: Mathematically extrapolate unprobed perimeter points
-G29 P3 T0.0      ; Second pass to ensure corner fill
+G29 P3 T0      ; Phase 3: Mathematically extrapolate unprobed perimeter points
+G29 P3 T0      ; Second pass to ensure corner fill
 
 G29 T            ; Print ASCII topology matrix to terminal for verification
 G29 S1           ; Save calibrated mesh to EEPROM slot 1
@@ -111,7 +113,9 @@ M500             ; Save EEPROM permanently to board flash
 M117 UBL Mesh 1 Saved and Activated!
 ```
 
-### Archetype 2: Production Slicer Start G-Code (Cura / PrusaSlicer / Orca)
+### Archetype 2: Illustrative Slicer Start G-Code
+
+Do not paste this across slicers: Cura and Prusa-derived placeholders differ. Set units, absolute/relative axis/extruder modes, valid purge coordinates and travel limits explicitly for the actual machine before transmitting any sequence.
 ```gcode
 ; ==============================================================================
 ; PRODUCTION SLICER START G-CODE (MARLIN UBL / BILINEAR)
@@ -121,7 +125,7 @@ M104 S150                              ; Pre-heat nozzle to 150°C (prevent oozi
 M190 S[first_layer_bed_temperature]    ; Wait for bed to stabilize
 
 G28                                    ; Home all axes (turns leveling OFF)
-M420 S1 Z10.0                          ; Restore mesh from EEPROM & set 10mm fade
+M420 S1 Z10.0                          ; Enable current valid mesh & set example 10mm fade
 ; (OR for UBL: G29 A followed by G29 L1)
 
 G1 Z50 F3000                           ; Move nozzle up to safe clearance
@@ -175,7 +179,7 @@ Before emitting any Marlin leveling advice, macro, or slicer start code:
 > 1. Tram the four bed corners manually using `G35` or thumb screws to get mechanical variance under $\pm 0.1\text{mm}$.
 > 2. Heat bed to 60°C and nozzle to 150°C; let soak for 5 minutes so thermal expansion stabilizes.
 > 3. Verify probe repeatability using `M48 P10` (standard deviation must be $\le 0.005\text{mm}$).
-> 4. Probe grid with `G29 P1`, extrapolate unprobed corners with `G29 P3 T0.0`, save to slot 1 with `G29 S1`, and commit to flash with `M500`.
+> 4. Probe grid with `G29 P1`, extrapolate unprobed corners with `G29 P3 T0`, save to slot 1 with `G29 S1`, and commit to flash with `M500`.
 > 5. In your slicer start G-code, place `M420 S1 Z10.0` immediately after `G28` to restore the active mesh with a 10mm fade height.
 
 ## Limitations

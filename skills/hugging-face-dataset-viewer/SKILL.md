@@ -110,11 +110,11 @@ The Hub supports raw agent session traces from Claude Code, Codex, and Pi Agent.
 - Codex: `~/.codex/sessions`
 - Pi: `~/.pi/agent/sessions`
 
-Default to private dataset repos because traces can contain prompts, file paths, tool outputs, secrets, or PII. Preserve the raw `.jsonl` files and nest them by project/cwd instead of uploading every session at the dataset root.
+Session traces can contain private prompts, files, secrets and third-party data. A Dataset Viewer request does not authorize uploading history. For an explicitly requested trace upload, select only named sessions, create a redacted export, verify permission/retention and the actual destination visibility, and keep raw originals private. An existing repo may remain public even when a create command includes --private/--exist-ok; inspect visibility before transmission.
 
 ```bash
 hf repos create <namespace>/<repo> --type dataset --private --exist-ok
-hf upload <namespace>/<repo> ~/.codex/sessions codex/<project-or-cwd> --type dataset
+hf upload <namespace>/<repo> /absolute/reviewed-redacted-export codex/<selected-project> --type dataset
 ```
 
 ## Limitations

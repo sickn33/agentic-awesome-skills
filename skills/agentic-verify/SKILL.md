@@ -37,7 +37,7 @@ Arguments: `$ARGUMENTS`. `--base` is the git revision to compare with: `HEAD` (d
 uncommitted work, a branch such as `main` checks a whole branch. Other options go to the runner.
 
 The goal is that the user can trust the change from evidence, without reading every line. A
-change is verified when the tests fail if any part of it is wrong. Passing tests alone do not
+runner verdict describes coverage and the supported mutants tested; it cannot establish that every possible defect would fail a test. Passing tests alone do not
 show that: our study found 71% of the calls that could be deleted unnoticed sat in functions
 that looked well tested.
 
@@ -145,7 +145,7 @@ $AV replay --run .test-suite-audit/<run-dir> --mutant <id> --all
 ## Security & Safety Notes
 
 - The runner is fetched with `uvx` from GitHub at tag `v0.3.0` (commit `07608b3b9e4e359bc0b93b3eca94bb78d67e369e`). Review it before first use.
-- It copies the project to a temporary directory and writes only to `.test-suite-audit/` in the project. It does not stash, revert or edit production files.
+- The runner uses a temporary copy and report directory, but project tests/plugins and the fetched runner execute code. A copy is not a security sandbox: inspect them first and isolate network, credentials and external services. Do not assume test side effects are confined to temporary files.
 - The agent adds test files; it must not weaken, skip or delete existing tests.
 
 ## Related Skills

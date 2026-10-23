@@ -45,6 +45,10 @@ Implement proven methodologies and tool workflows from top security researchers 
 - Automated recon pipeline outputs
 - Documented findings for reporting
 
+## Scope and evidence boundaries
+
+Acquisitions, discovered subdomains, third-party integrations and redirect destinations are not automatically in scope. Filter every discovery output against the approved target list before active probes. Set request/concurrency/time budgets and stop on instability or unexpected sensitive data. Review scanner templates before use; a reflected marker or scanner hit alone is not confirmed XSS/CVE impact. The script is illustrative and lacks this scope enforcement: do not run it unchanged against real targets.
+
 ## Core Workflow
 
 ### 1. Project Tracking and Acquisitions
@@ -210,9 +214,9 @@ ffuf -u https://target.com/api/v1/FUZZ -w api_wordlist.txt
 ffuf -u https://target.com/api/v2/FUZZ -w api_wordlist.txt
 
 # Check for hidden methods
-for method in GET POST PUT DELETE PATCH; do
-    curl -X $method https://target.com/api/users -v
-done
+# Review allowed methods non-destructively first; state-changing methods
+# require an explicitly approved disposable test resource.
+curl -X OPTIONS https://target.com/api/users -v
 ```
 
 ### 10. Automated Recon Script
@@ -234,7 +238,7 @@ subfinder -d "$domain" -silent > "$domain/subs.txt"
 
 # Live host discovery
 echo "[*] Finding live hosts..."
-cat "$domain/subs.txt" | httpx -title -tech-detect -status-code > "$domain/live.txt"
+cat "$domain/subs.txt" | httpx -silent > "$domain/live.txt"
 
 # URL collection
 echo "[*] Collecting URLs..."
@@ -319,7 +323,7 @@ amass enum -d target.com | httpx | nuclei -t ~/nuclei-templates/
 
 | Issue | Solution |
 |-------|----------|
-| Rate limited | Use proxy rotation, reduce concurrency |
+| Rate limited | Stop/back off, reduce concurrency and follow the program limits; do not rotate identities to evade controls |
 | Too many results | Focus on specific technology stacks |
 | False positives | Manually verify findings before reporting |
 | Missing subdomains | Combine multiple enumeration sources |

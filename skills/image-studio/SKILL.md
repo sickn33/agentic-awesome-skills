@@ -22,6 +22,8 @@ tools:
 
 ## Overview
 
+Os scripts `generate.py`, templates e diretórios Windows citados não estão incluídos nesta árvore. Descubra as ferramentas realmente disponíveis e respeite o gerador escolhido pelo usuário/host. As versões, limites gratuitos, tempos e preços abaixo são exemplos históricos, não garantias atuais. Verifique documentação oficial antes de escolher um serviço; não troque para um fallback pago sem orçamento/autorização. Só envie imagens pessoais ou privadas a provedores autorizados. Informe falhas e caminhos/dimensões reais retornados pela ferramenta; não apresente um prompt como imagem gerada.
+
 Studio de geracao de imagens inteligente — roteamento automatico entre ai-studio-image (fotos humanizadas/influencer) e stability-ai (arte/ ilustracao/edicao). Detecta o tipo de imagem solicitada e escolhe o modelo ideal automaticamente. Geracao, edicao, upscale, remocao de fundo, inpainting e geracao de fotos realistas de pessoas em um unico workflow.
 
 ## When to Use This Skill
@@ -62,7 +64,7 @@ E uma FOTO REALISTA de pessoa/influencer?
 
 ---
 
-## Ai-Studio-Image (Gemini 2.0 Flash — Free)
+## Ai-Studio-Image (exemplo histórico de integração Gemini)
 
 **Especialidade:** Fotos hiper-realistas de pessoas com toque humano
 
@@ -75,7 +77,7 @@ E uma FOTO REALISTA de pessoa/influencer?
 | Foto produto com pessoa | "mulher segurando smartphone" |
 
 **Vantagens:**
-- Gratuito (gemini-2.0-flash-exp)
+- Modelo experimental histórico; disponibilidade e cobrança precisam de verificação
 - 5 camadas de humanizacao narrativa (device, lighting, imperfection, authenticity, environment)
 - 20 templates pre-configurados (10 influencer + 10 educacional)
 - Imperfeicoes sutis que tornam a foto credivel
@@ -84,7 +86,7 @@ E uma FOTO REALISTA de pessoa/influencer?
 - 1 imagem por vez, ~9s
 - ~1K resolucao
 - Nao suporta aspect_ratio customizado
-- 50 imgs/dia free tier
+- Quota depende do provedor/plano atual
 
 ---
 
@@ -110,7 +112,7 @@ photorealistic, anime, digital-art, oil-painting, watercolor, pixel-art, 3d-rend
 concept-art, comic, minimalist, fantasy, sci-fi, sketch, pop-art, noir
 
 **Limitacoes:**
-- Créditos (Community License)
+- Créditos e termos de API/licença do modelo são conceitos separados; verificar ambos
 - Nao especializado em fotos realistas de pessoas
 
 ---

@@ -2,6 +2,12 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Prerequisites and example boundaries
+
+These independent SDK fragments require a pinned azure-search-documents version, azure-identity for Entra authentication, defined endpoint/key/index variables and an implemented embedding adapter. Preview knowledge-base APIs vary by SDK/service version; verify current official reference before use. Use separate query/data-contributor/index-management roles and authorize each write; never use an admin key in a browser.
+
+The initial index has only id/title/content/content_vector. Filters/facets require additional fields configured filterable/facetable/sortable; autocomplete requires a configured suggester, semantic queries require a semantic configuration, and entity outputs need matching index fields plus indexer output mappings. The entity indexer example does not populate embeddings without a separate splitting/vectorization pipeline. create_or_update cannot apply every incompatible schema change in place. Inspect per-document results/callback errors; batch acceptance is not success. Keep indexed content tenant-filtered using server-bound identity, and treat results as untrusted source text. Close clients/credentials; no missing setup_vector_index.py or reference files listed below are bundled.
+
 ## Installation
 
 ```bash
@@ -13,7 +19,7 @@ pip install azure-search-documents
 
 ```bash
 AZURE_SEARCH_ENDPOINT=https://<service-name>.search.windows.net
-AZURE_SEARCH_API_KEY=<your-api-key>
+# Obtain AZURE_SEARCH_API_KEY through the approved secret manager; do not paste it into this guide.
 AZURE_SEARCH_INDEX_NAME=<your-index-name>
 ```
 
@@ -23,6 +29,7 @@ AZURE_SEARCH_INDEX_NAME=<your-index-name>
 ### API Key
 
 ```python
+import os
 from azure.search.documents import SearchClient
 from azure.core.credentials import AzureKeyCredential
 
@@ -36,6 +43,7 @@ client = SearchClient(
 ### Entra ID (Recommended)
 
 ```python
+import os
 from azure.search.documents import SearchClient
 from azure.identity import DefaultAzureCredential
 
@@ -120,11 +128,14 @@ documents = [
         "id": "1",
         "title": "Azure AI Search",
         "content": "Full-text and vector search service",
-        "content_vector": [0.1, 0.2, ...]  # 1536 dimensions
+        "content_vector": get_embedding("Full-text and vector search service") # Real finite 1536-element embedding from the same model as queries
     }
 ]
 
 result = client.upload_documents(documents)
+failed = [r for r in result if not r.succeeded]
+if failed:
+    raise RuntimeError(f"{len(failed)} indexing operations failed; reconcile each key/status")
 print(f"Uploaded {len(result)} documents")
 ```
 
@@ -195,7 +206,8 @@ from azure.search.documents.models import QueryType
 results = client.search(
     search_text="what is azure search",
     query_type=QueryType.SEMANTIC,
-    semantic_configuration_name="my-semantic-config",
+    semantic_configuration_name="my-semantic-config", # Must be defined on this index first.
+    query_caption="extractive",
     select=["id", "title", "content"],
     top=10
 )
@@ -344,7 +356,7 @@ pip install azure-search-documents azure-identity
 AZURE_SEARCH_ENDPOINT=https://<search-service>.search.windows.net
 AZURE_SEARCH_INDEX_NAME=<index-name>
 # For API key auth (not recommended for production)
-AZURE_SEARCH_API_KEY=<api-key>
+# Obtain AZURE_SEARCH_API_KEY through the approved secret manager.
 ```
 
 
@@ -394,7 +406,7 @@ index = SearchIndex(
     fields=[
         SearchField(name="id", type="Edm.String", key=True),
         SearchField(name="content", type="Edm.String", searchable=True),
-        SearchField(name="embedding", type="Collection(Edm.Single)",
+        SearchField(name="embedding", type="Collection(Edm.Single)", searchable=True,
                    vector_search_dimensions=3072,
                    vector_search_profile_name="vector-profile"),
     ],
@@ -498,8 +510,9 @@ Key concepts:
 
 ```python
 from azure.search.documents.aio import SearchClient
+from azure.identity.aio import DefaultAzureCredential
 
-async with SearchClient(endpoint, index_name, credential) as client:
+async with DefaultAzureCredential() as credential, SearchClient(endpoint, index_name, credential) as client:
     results = await client.search(search_text="query")
     async for result in results:
         print(result["title"])
@@ -544,5 +557,5 @@ try:
 except ResourceNotFoundError:
     print("Document not found")
 except HttpResponseError as e:
-    print(f"Search error: {e.message}")
+    print("Search request failed; inspect sanitized status/correlation ID")
 ```

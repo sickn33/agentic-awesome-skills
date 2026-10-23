@@ -46,7 +46,7 @@ Use this skill when:
 | Threat | Description | Property Violated | Mitigation Examples |
 |--------|-------------|-------------------|---------------------|
 | **S**poofing | Pretending to be another user or system | Authentication | MFA, mTLS, API key validation, certificate pinning |
-| **T**ampering | Modifying data in transit or at rest | Integrity | HMAC, digital signatures, checksums, immutable logs |
+| **T**ampering | Modifying data in transit or at rest | Integrity | HMAC, digital signatures, authenticated integrity checks, tamper-evident logs |
 | **R**epudiation | Denying having performed an action | Non-repudiation | Audit logging, digital signatures, tamper-evident logs |
 | **I**nformation Disclosure | Exposing data to unauthorized parties | Confidentiality | Encryption (TLS, AES), access controls, data masking |
 | **D**enial of Service | Making service unavailable | Availability | Rate limiting, autoscaling, CDN, circuit breakers |
@@ -76,7 +76,7 @@ threats:
     gaps:
       - "No token binding to device/IP"
     recommended_mitigations:
-      - "Add token binding claims"
+      - "Use a supported proof-of-possession protocol when required; a copied claim alone does not bind a token"
       - "Implement short-lived tokens (15 min) with refresh"
       - "Monitor for token reuse from different IPs"
     status: "Mitigated (partial)"
@@ -147,7 +147,7 @@ threats:
       - "Authorization checks inconsistent across endpoints"
     recommended_mitigations:
       - "Enforce ownership checks on all resource access"
-      - "Use opaque IDs instead of sequential integers"
+      - "Opaque IDs reduce guessing but never replace object-level authorization"
       - "Add authorization integration tests"
     status: "Open"
     owner: "Backend Team"
@@ -199,7 +199,7 @@ Legend:
   --->      = Data flow
 ```
 
-### Threat Dragon Model (JSON)
+### Threat Model Concept Sketch (JSON; not an importable Threat Dragon model)
 
 ```json
 {
@@ -379,68 +379,23 @@ risk_treatment:
     approval: "Team Lead"
 ```
 
-## OWASP Threat Dragon Setup
+## Tool setup and review automation
 
-```bash
-# Run Threat Dragon locally with Docker
-docker run -d \
-  --name threat-dragon \
-  -p 3000:3000 \
-  -e ENCRYPTION_KEYS='["threat-dragon-encryption-key-change-me"]' \
-  -e NODE_ENV=production \
-  owasp/threat-dragon:v2.2.0
+Use the version-matched [Threat Dragon documentation](https://www.threatdragon.com/)
+and verified official release artifacts for local installation. Bind any web
+interface to loopback; supply private generated configuration secrets through an
+approved secret mechanism. The worksheet and JSON above are conceptual inputs,
+not a complete Threat Dragon import schema or container configuration.
 
-# Access at http://localhost:3000
-
-# Or install as desktop application
-# Download from: https://github.com/OWASP/threat-dragon/releases
-```
-
-### Integration with CI/CD
-
-```yaml
-# .github/workflows/threat-model-review.yml
-name: Threat Model Review
-on:
-  pull_request:
-    paths:
-      - 'docs/threat-model/**'
-      - 'architecture/**'
-
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Validate threat model files
-        run: |
-          for model in docs/threat-model/*.yaml; do
-            echo "Validating $model..."
-            python -c "
-          import yaml, sys
-          with open('$model') as f:
-              data = yaml.safe_load(f)
-          required = ['component', 'threats']
-          for r in required:
-              if r not in data:
-                  print(f'ERROR: Missing required field: {r}')
-                  sys.exit(1)
-          for t in data.get('threats', []):
-              if t.get('status') == 'Open' and t.get('risk_score', 0) >= 12:
-                  print(f'WARNING: High-risk open threat: {t[\"id\"]} - {t[\"description\"]}')
-          print(f'OK: {len(data[\"threats\"])} threats documented')
-          "
-          done
-
-      - name: Check for unaddressed critical threats
-        run: |
-          CRITICAL=$(grep -r "risk_score: \(1[5-9]\|2[0-5]\)" docs/threat-model/*.yaml | grep "status: \"Open\"" | wc -l)
-          if [ "$CRITICAL" -gt 0 ]; then
-            echo "WARNING: $CRITICAL critical/high-risk threats still open"
-            echo "Review required before merging architectural changes"
-          fi
-```
+For CI, use a trusted parser implementation with a pinned YAML dependency and
+read-only token. Discover model files with a safe file API rather than interpolating
+filenames into Python source. Validate object/list types, unique threat IDs, numeric
+likelihood/impact bounds, calculated scores, owners, evidence and status enums.
+Fail on malformed files and an unexpectedly empty inventory. Evaluate status and
+score from the same parsed threat record: grepping separate YAML lines cannot
+associate them. Publish only aggregate counts; threat descriptions and model files
+may expose internal architecture. Required human review must be enforced by branch
+policy, not a warning-only shell exit. Do not execute embedded model contents.
 
 ## Troubleshooting
 
@@ -485,3 +440,7 @@ which <tool> && <tool> --help | head -n 20
 ```
 
 > Adapted from [BagelHole/DevOps-Security-Agent-Skills](https://github.com/BagelHole/DevOps-Security-Agent-Skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: helper scripts and templates not bundled.
+
+## Scoring and control limitations
+
+Use one agreed numeric scale (likelihood and impact 1–5, product 1–25); the qualitative matrix and remediation dates are illustrative policy suggestions and must be reconciled before use. Worksheet likelihood labels are not consistently the matrix labels; explicitly map them before calculating scores. A claim of mitigation needs evidence and residual risk/acceptance owner, not a status field. TLS/HSTS, signatures and audit logs address different properties; plain checksums do not resist an attacker who can replace both data and checksum, and logs alone do not establish legal non-repudiation. PKCE protects authorization-code exchange, not an already stolen bearer access token. Include repudiation threats as well as all other STRIDE categories, assets, trust boundaries and abuse cases; a tool diagram or a sample risk score is not an exhaustive assessment.

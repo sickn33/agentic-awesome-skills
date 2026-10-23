@@ -56,7 +56,7 @@ r2 -w sample.exe
 s 0x401000
 wa nop
 wx 9090
-wq
+q
 ```
 
 ## 非交互模式
@@ -108,7 +108,7 @@ r2xsql -s sample.exe -q "SELECT addr, content FROM strings WHERE content LIKE '%
 ### r2http / r2mcp 会话
 
 ```powershell
-r2 -N -e http.bind=localhost -e http.port=9393 -e http.sandbox=false -q -c=h sample.exe
+r2 -N -e http.bind=localhost -e http.port=9393 -q -c=h sample.exe
 curl.exe -sS --data-binary 'aaa' http://127.0.0.1:9393/cmd
 curl.exe -sS --data-binary 'aflj' http://127.0.0.1:9393/cmd
 ```
@@ -127,3 +127,5 @@ r2pm -ci r2ghidra
 r2pm -ci r2dec
 r2pm -l
 ```
+
+HTTP command access and plugin installation are optional privileged operations, not static reconnaissance. Verify installed-version help, authentication and loopback binding before an authorized server launch. Keep sandboxing enabled; use a static CLI session if a command needs it disabled. Patch only a copy; writes are immediate.

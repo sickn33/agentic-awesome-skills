@@ -77,7 +77,7 @@ trivy image --format json -o results.json myapp:latest
 # Filter by severity
 trivy image --severity HIGH,CRITICAL myapp:latest
 
-# Ignore unfixed vulnerabilities
+# Optional filtered view; retain an unfiltered report of unfixed risk too.
 trivy image --ignore-unfixed myapp:latest
 
 # Exit code on vulnerability
@@ -261,10 +261,8 @@ az security pricing create \
   --name Containers \
   --tier Standard
 
-# View scan results in Azure Portal or:
-az acr repository show \
-  --name myregistry \
-  --image myapp:latest
+# Read Defender vulnerability findings through its supported findings API/portal.
+# az acr repository show returns image metadata, not a vulnerability report.
 ```
 
 ### Google Artifact Registry
@@ -280,6 +278,10 @@ gcloud artifacts docker images describe \
   us-central1-docker.pkg.dev/project/myrepo/myapp:latest \
   --show-package-vulnerability
 ```
+
+## Admission example boundaries
+
+The Gatekeeper/Kyverno snippets are incomplete/version-specific sketches, not enforceable proof of scan policy. Pin actual CRDs/Rego syntax, supply required Constraint/trusted attestor configuration, and test accept/reject cases before cluster admission. Repository prefix checks require a normalized boundary (for example an approved registry/path plus `/`), not an attacker-lookalike prefix; cover init and ephemeral containers. A `verifyImages` predicate needs a verified signer/issuer and actual predicate schema, not an invented `scanner` variable. The `scan-policy.yaml` below is conceptual, with no bundled consumer. Record image digest, scanner/DB versions, date, exclusions and residual unfixed findings; a clean scan is not certification.
 
 ## Admission Controllers
 

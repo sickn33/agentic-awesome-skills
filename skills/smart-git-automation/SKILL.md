@@ -19,6 +19,8 @@ date_added: "2026-06-05"
 ## When to Use
 Use this when you want a faster, smarter git workflow that groups changes logically and reduces manual confirmation overhead.
 
+Before grouping, preserve existing staged changes and read repository instructions. Inspect full unstaged/staged diffs and untracked files, not just names/stats; file grouping is advisory and must not absorb unrelated user work. Use the repository branch prefix/template and required checks. For forks, distinguish the upstream PR base from the fork head/remote; verify owner/repo and full head SHA before creation. An amend rewrites history and is not implied by a routine commit request.
+
 ## Workflow Steps
 
 ### 1. Smart Detection & Grouping

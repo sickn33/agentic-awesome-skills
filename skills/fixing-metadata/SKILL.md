@@ -67,7 +67,7 @@ Reference these guidelines when:
 ### 3. canonical and indexing (high)
 
 - canonical must point to the preferred URL for the page
-- use noindex only for private, duplicate, or non-public pages
+- use noindex only for the intended indexing policy; it is not access control for private pages, which require authentication/authorization
 - robots meta must match actual access intent
 - previews or staging pages should be noindex by default when possible
 - paginated pages must have correct canonical behavior
@@ -113,7 +113,7 @@ Reference these guidelines when:
 
 - fix critical issues first (duplicates, canonical, indexing)
 - ensure title, description, canonical, and og:url agree
-- verify social cards on a real URL, not localhost
+- verify social cards on an authorized real URL; an external debugger may fetch and expose the submitted URL, so do not submit private/staging content without authorization
 - prefer stable, boring metadata over clever or dynamic
 - keep diffs minimal and scoped to metadata only
 

@@ -1,6 +1,6 @@
 # Architecture Examples
 
-> Real-world architecture decisions by project type.
+> Illustrative architecture decisions, not verified production case studies. User/team thresholds are prompts for reassessment, not automatic migration rules.
 
 ---
 
@@ -17,14 +17,14 @@ Architecture Decisions:
   App Structure: Monolith (simpler for solo)
   Framework: Next.js (full-stack, fast)
   Data Layer: Prisma direct (no over-abstraction)
-  Authentication: JWT (simpler than OAuth)
+  Authentication: Reviewed session or OIDC implementation suited to requirements
   Payment: Stripe (hosted solution)
   Database: PostgreSQL (ACID for orders)
 
 Trade-offs Accepted:
   - Monolith → Can't scale independently (team doesn't justify it)
   - No Repository → Less testable (simple CRUD doesn't need it)
-  - JWT → No social login initially (can add later)
+  - Authentication design must cover session expiry, revocation, CSRF and account recovery; JWT is a token format, not an alternative authentication protocol to OAuth/OIDC
 
 Future Migration Path:
   - Users > 10K → Extract payment service
@@ -48,7 +48,7 @@ Architecture Decisions:
   Framework: NestJS (modular by design)
   Data Layer: Repository pattern (testing, flexibility)
   Domain Model: Partial DDD (rich entities)
-  Authentication: OAuth + JWT
+  Authentication: OIDC for user identity; OAuth for delegated authorization where required
   Caching: Redis
   Database: PostgreSQL
 

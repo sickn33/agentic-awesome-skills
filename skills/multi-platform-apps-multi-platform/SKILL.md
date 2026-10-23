@@ -82,7 +82,7 @@ Build and deploy the same feature consistently across web, mobile, and desktop p
   - Tailwind CSS with design system: [design specs]
   - Progressive Web App capabilities
   - SSR/SSG optimization where appropriate
-  - Web vitals optimization (LCP < 2.5s, FID < 100ms)
+  - Web vitals optimization (LCP < 2.5s, INP ≤ 200ms)
   Follow shared business logic: [architecture doc]"
 - Context from previous: API contracts, design system, shared logic patterns
 - Expected output: Complete web implementation with tests
@@ -188,12 +188,12 @@ Build and deploy the same feature consistently across web, mobile, and desktop p
 ## Success Criteria
 
 - API contract defined and validated before implementation
-- All platforms achieve feature parity with <5% variance
+- All platforms pass the agreed observable behavior matrix; document intentional differences
 - Performance metrics meet platform-specific standards
 - Accessibility standards met (WCAG 2.2 AA minimum)
 - Cross-platform testing shows consistent behavior
 - Documentation complete for all platforms
-- Code reuse >40% between platforms where applicable
+- Measure code reuse only where useful; do not sacrifice native behavior to reach an arbitrary percentage
 - User experience optimized for each platform's conventions
 
 ## Platform-Specific Considerations

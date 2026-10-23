@@ -17,7 +17,12 @@
 ```python
 import struct
 def parse_frame(buf: bytes):
+    if len(buf) < 10:
+        raise ValueError("Incomplete frame header")
     magic, length, msg_type = struct.unpack_from(">IHI", buf, 0)
+    # Illustrative format: length counts body bytes, not header bytes.
+    if len(buf) != 10 + length:
+        raise ValueError("Incomplete frame or trailing bytes; reassemble/split first")
     body = buf[10:10+length]
     return {"magic": magic, "type": msg_type, "body": body}
 ```

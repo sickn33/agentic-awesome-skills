@@ -18,7 +18,7 @@ npm install @azure/ai-voicelive @azure/identity
 npm install @types/node
 ```
 
-**Current Version**: 1.0.0-beta.3
+**Historical example baseline**: 1.0.0-beta.3. Pin and verify preview API compatibility before use.
 
 **Supported Environments**:
 - Node.js LTS versions (20+)
@@ -114,14 +114,14 @@ const subscription = session.subscribe({
     // Handle streaming text
     process.stdout.write(event.delta);
   },
-  onInputAudioTranscriptionCompleted: async (event, context) => {
+  onConversationItemInputAudioTranscriptionCompleted: async (event, context) => {
     console.log("User said:", event.transcript);
   },
 });
 
 // Send audio from microphone
 function sendAudioChunk(audioBuffer: ArrayBuffer) {
-  session.sendAudio(audioBuffer);
+  return session.sendAudio(audioBuffer);
 }
 ```
 
@@ -449,9 +449,9 @@ const audioContext = new AudioContext({ sampleRate: 24000 });
 
 ## Best Practices
 
-1. **Always use `DefaultAzureCredential`** — Never hardcode API keys
+1. **Use environment-appropriate credentials** — DefaultAzureCredential is a server pattern; use supported interactive browser auth and never expose service keys
 2. **Set both modalities** — Include `["text", "audio"]` for voice assistants
-3. **Use Azure Semantic VAD** — Better turn detection than basic server VAD
+3. **Evaluate VAD** — Select and test a supported mode for the language, latency and noise conditions
 4. **Handle all error types** — Connection, auth, and protocol errors
 5. **Clean up subscriptions** — Call `subscription.close()` when done
 6. **Use appropriate audio format** — PCM16 at 24kHz for best quality
@@ -472,3 +472,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Snippets are separate, uncompiled examples with application helpers omitted. Model/voice/format support varies by region and API version. Subscribe before sending input where necessary to avoid missed events. Validate parsed tool arguments and independently authorize actions; model output is untrusted. Obtain permission before microphone capture or voice cloning and define audio/transcript retention. Stop tracks, close audio contexts, subscriptions and the underlying session on every exit path. A requested AudioContext sample rate does not by itself encode captured browser audio as PCM16; resample/encode and bound buffers/backpressure using the SDK sample for the pinned version.

@@ -4,6 +4,8 @@
 
 Review entire `skills/<skill-id>/**` trees, including support files and provenance. A passing Tessl review or exact-head maintainer attestation is required. Safe unprivileged analysis can start before review; owner-sensitive code retains the owner/exact-head gate. The helper does not rewrite PR metadata and does not retry base drift automatically.
 
+The protected reviewed-fork ledger may opt in to exact `skills/<skill-id>/resources/scripts/*.py` files for a complete reviewed tree. These helpers remain inert regular files (`100644`); executable modes, symlinks, arbitrary extensions and other resource paths stay blocked. The general fork policy is unchanged.
+
 ```sh
 npm run merge:batch -- --prs 123,124 --prepare-only
 npm run merge:batch -- --prs 123,124 --state-dir /absolute/private/state --reviewed-head FULL_SHA --reviewer maintainer --review-evidence 'Full bundle inspected'

@@ -20,6 +20,8 @@ This is an adversarial pass, not a confirmatory one. Do not skim and approve. Do
 
 Trigger on: "find bugs," "audit this code/codebase," "run bug hunter," "check for errors," "find flaws," "review this for bugs," "is this code solid," or any request for a deep correctness pass rather than a style/readability review.
 
+Scope completeness is bounded by files actually inspected and available requirements. Generated/runtime artifacts and dependencies may still matter to a failure; trace the relevant owning source or report that boundary instead of excluding evidence categorically. Treat speculative findings as candidates requiring validation, preserve existing bugs.md history and keep secrets/PII out of reports. A static pass cannot certify absence of bugs or executed behavior.
+
 ## Process — Run These Phases In Order
 
 Do not skip phases or collapse them into a single skim. Each phase catches things the others miss.
@@ -60,7 +62,7 @@ Stylistic or formatting preferences are explicitly **not** bugs. Do not log them
 - 🟡 **Intermediate** — wrong behavior under specific but plausible conditions (an edge case, a race condition, a rarely-hit error path), or a problem that will become Critical as the codebase grows.
 - 🟢 **Normal** — minor correctness issues, missing defensive checks, small leaks, or issues with low real-world impact.
 
-**Dormant bugs:** if a bug sits on a code path that isn't currently reachable or used (e.g. a variable that's computed but never read), it still gets the severity it *would* have if active — do not downgrade it for being unreachable. Add a one-line note to the entry that it isn't currently triggered, e.g. "Not yet triggered — `finalPricePerItem` is computed but unused."
+**Dormant candidates:** distinguish currently reachable impact from hypothetical future activation. Do not rate an unreachable computation as a current production failure; document the activation condition and uncertainty. Add a one-line note to the entry that it isn't currently triggered, e.g. "Not yet triggered — `finalPricePerItem` is computed but unused."
 
 ## Output Format: `bugs.md`
 

@@ -146,7 +146,8 @@ scope:
 
 ```bash
 # Read-only first: inventory before any active step.
-which <tool> && <tool> --help | head -n 20
+command -v nmap
+nmap --help
 ```
 
 > Adapted from [BagelHole/DevOps-Security-Agent-Skills](https://github.com/BagelHole/DevOps-Security-Agent-Skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: helper scripts and templates not bundled.

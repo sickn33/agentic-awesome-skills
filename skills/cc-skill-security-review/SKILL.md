@@ -1,6 +1,6 @@
 ---
 name: cc-skill-security-review
-description: "This skill ensures all code follows security best practices and identifies potential vulnerabilities. Use when implementing authentication or authorization, handling user input or file uploads, or creating new API endpoints."
+description: "This skill guides review of security practices and potential vulnerabilities; no checklist ensures all code is secure. Use when implementing authentication or authorization, handling user input or file uploads, or creating new API endpoints."
 risk: critical
 source: community
 date_added: "2026-02-27"
@@ -8,7 +8,7 @@ date_added: "2026-02-27"
 
 # Security Review Skill
 
-This skill ensures all code follows security best practices and identifies potential vulnerabilities.
+This skill guides review of security practices and potential vulnerabilities; no checklist ensures all code is secure.
 
 ## Detailed Guide
 
@@ -161,7 +161,7 @@ export async function deleteUser(userId: string, requesterId: string) {
     where: { id: requesterId }
   })
 
-  if (requester.role !== 'admin') {
+  if (!requester || requester.role !== 'admin') {
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 403 }
@@ -220,7 +220,7 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: `
       default-src 'self';
-      script-src 'self' 'unsafe-eval' 'unsafe-inline';
+      script-src 'self';
       style-src 'self' 'unsafe-inline';
       img-src 'self' data: https:;
       font-src 'self';
@@ -264,8 +264,8 @@ res.setHeader('Set-Cookie',
 
 #### Verification Steps
 - [ ] CSRF tokens on state-changing operations
-- [ ] SameSite=Strict on all cookies
-- [ ] Double-submit cookie pattern implemented
+- [ ] SameSite policy fits the flow; test OAuth redirects and CSRF controls
+- [ ] Use a vetted synchronizer or signed session-bound double-submit pattern where required
 
 ### 7. Rate Limiting
 
@@ -310,7 +310,7 @@ console.log('User login:', { email, password })
 console.log('Payment:', { cardNumber, cvv })
 
 // ✅ CORRECT: Redact sensitive data
-console.log('User login:', { email, userId })
+console.log('User login event:', { userId })
 console.log('Payment:', { last4: card.last4, userId })
 ```
 
@@ -344,7 +344,8 @@ catch (error) {
 
 #### Wallet Verification
 ```typescript
-import { verify } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
+import nacl from 'tweetnacl'
 
 async function verifyWalletOwnership(
   publicKey: string,
@@ -352,10 +353,10 @@ async function verifyWalletOwnership(
   message: string
 ) {
   try {
-    const isValid = verify(
+    const isValid = nacl.sign.detached.verify(
       Buffer.from(message),
       Buffer.from(signature, 'base64'),
-      Buffer.from(publicKey, 'base64')
+      new PublicKey(publicKey).toBytes()
     )
     return isValid
   } catch (error) {
@@ -364,9 +365,9 @@ async function verifyWalletOwnership(
 }
 ```
 
-#### Transaction Verification
+#### Application Intent Validation (not a Solana Transaction API)
 ```typescript
-async function verifyTransaction(transaction: Transaction) {
+async function verifyTransactionIntent(transaction: {to: string; amount: bigint; from: string}) {
   // Verify recipient
   if (transaction.to !== expectedRecipient) {
     throw new Error('Invalid recipient')
@@ -470,3 +471,5 @@ test('enforces rate limits', async () => {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Derive requester identity from a verified server session, never a caller-supplied requesterId. Browser MIME/extension checks are only usability filters: enforce server byte limits, inspect/decode file content, and store with safe names/origins. Use a cookie serializer and deliberate Path/Domain; HttpOnly does not prevent XSS from issuing requests. Adapt CSP with per-response nonces/hashes and real Next.js header wiring rather than adding unsafe-inline/eval. For wallet login, bind a server-issued single-use nonce, domain, purpose and expiry and consume it atomically; signature validity alone permits replay. The transaction-intent sketch does not decode or validate actual Solana instructions, fees, programs, token mints or confirmation. Pin dependencies, validate codemods/audit fixes on a branch, and report accepted findings rather than equating audit-clean with security. Tests are illustrative and rate tests require bounded authorized fixtures.

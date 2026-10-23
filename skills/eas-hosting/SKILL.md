@@ -7,13 +7,15 @@ source_repo: expo/skills
 source_type: official
 source: expo
 date_added: '2026-09-21'
-risk: unknown
+risk: critical
 ---
 # EAS Hosting
 
 > **EAS service - costs apply.** EAS Hosting is a paid Expo Application Services product with free-tier limits; production deploys use your plan's request and bandwidth allowance. See https://expo.dev/pricing. Authoring API routes and exporting the web bundle are free and open source, and you can self-host the exported server output instead of EAS Hosting.
 
 EAS Hosting deploys your Expo **web app and API routes** to Expo's managed edge (Cloudflare Workers). Export the web bundle with `npx expo export -p web` and ship it with `eas deploy` - the same command deploys any Expo Router API routes bundled alongside it. This skill covers deploying a website, authoring API routes, and the hosting runtime; see the Deployment section below for the deploy workflow.
+
+These are partial route examples, not production authentication or data-access implementations. Presence of an Authorization header is not verification: validate issuer, audience, signature and expiry with the chosen provider, derive tenant identity server-side and enforce object ownership. Return 401 until a real verifier is implemented. Bound request bodies, upstream timeouts and paid AI calls; rate-limit and redact upstream errors. Public CORS is only for intentionally public endpoints, not access control. Native clients need a configured absolute HTTPS API origin; browser-relative fetch examples are not universally valid in React Native. Verify Expo runtime limits against current EAS docs; Workers capabilities are not all exposed by EAS Hosting.
 
 ## When to Use API Routes
 
@@ -119,7 +121,7 @@ export function GET(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  return Response.json({ authenticated: true });
+  return Response.json({ error: "Token verification not implemented" }, { status: 401 });
 }
 ```
 
@@ -208,7 +210,7 @@ export async function POST(request: Request) {
 Start the development server with API routes:
 
 ```bash
-npx expo serve
+npx expo start
 ```
 
 This starts a local server at `http://localhost:8081` with full API route support.
@@ -250,7 +252,8 @@ Everything lands on EAS Hosting (Cloudflare Workers).
 
 ```bash
 # Create a secret
-eas env:create --name OPENAI_API_KEY --value sk-xxx --environment production
+eas env:create --name OPENAI_API_KEY --environment production
+# Enter the value through the CLI secure prompt; do not put it in shell history.
 
 # Or use the Expo dashboard
 ```
@@ -307,8 +310,8 @@ API routes run on Cloudflare Workers. Key limitations:
 
 - **No Node.js filesystem** — `fs` module unavailable
 - **No native Node modules** — Use Web APIs or polyfills
-- **Limited execution time** — 30 second timeout for CPU-intensive tasks
-- **No persistent connections** — WebSockets require Durable Objects
+- **Limited execution time** — provider/plan-specific CPU and wall-clock limits; verify current EAS documentation
+- **No assumed persistent connections** — verify EAS-specific streaming/WebSocket support
 - **fetch is available** — Use standard fetch for HTTP requests
 
 ### Use Web APIs Instead
@@ -387,8 +390,8 @@ export async function requireAuth(request: Request) {
     });
   }
 
-  // Verify token...
-  return { userId: "123" };
+  // Configure a real verifier and return its verified subject; fail closed meanwhile.
+  throw new Response("Unauthorized", { status: 401 });
 }
 
 // app/api/protected+api.ts

@@ -30,9 +30,9 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 ## Constraints and Limitations
 
 ### Operational Boundaries
-- Rate limited to 1 request per second
+- Check current endpoint/account rate limits and honor retry guidance
 - Scan results not immediate (asynchronous)
-- Cannot re-scan same IP within 24 hours (non-Enterprise)
+- Rescan eligibility depends on current account and endpoint policy
 - Free accounts have limited credits
 - Some data requires paid subscription
 
@@ -69,7 +69,7 @@ shodan parse --fields ip_str,port,product target_data.json.gz
 # Find hosts vulnerable to BlueKeep (RDP CVE)
 shodan search 'vuln:CVE-2019-0708 country:US'
 
-# Find exposed Elasticsearch with no auth
+# Find Elasticsearch banner candidates; absence of an authentication keyword does not prove no auth
 shodan search 'product:elastic port:9200 -authentication'
 
 # Find Log4j vulnerable systems
@@ -100,7 +100,7 @@ shodan search 'ssl.cert.subject.cn:*.example.com'
 shodan search 'ssl.cert.expired:true org:"Company"'
 
 # Find self-signed certificates
-shodan search 'ssl.cert.issuer.cn:self-signed'
+# Inspect issuer/subject and verify signature; issuer CN text alone cannot establish self-signing.
 ```
 
 ### Example 5: Python Automation Script
@@ -120,7 +120,7 @@ def recon_organization(org_name):
         query = f'org:"{org_name}"'
         results = api.search(query)
         
-        print(f"[*] Found {results['total']} hosts for {org_name}")
+        print(f"[*] Found {results['total']} matching banners; this response is one page")
         
         # Collect unique IPs and ports
         hosts = {}
@@ -131,13 +131,13 @@ def recon_organization(org_name):
             
             if ip not in hosts:
                 hosts[ip] = []
-            hosts[ip].append({'port': port, 'product': product})
+            hosts[ip].append({'port': port, 'product': product, 'transport': result.get('transport', 'unknown')})
         
         # Output findings
         for ip, services in hosts.items():
             print(f"\n[+] {ip}")
             for svc in services:
-                print(f"    - {svc['port']}/tcp ({svc['product']})")
+                print(f"    - {svc['port']}/{svc['transport']} ({svc['product']})")
         
         return hosts
         
@@ -152,16 +152,16 @@ if __name__ == '__main__':
 ### Example 6: Network Range Assessment
 ```bash
 # Scan a /24 network range
-shodan search 'net:192.168.1.0/24'
+shodan search 'net:203.0.113.0/24'
 
 # Get port distribution
-shodan stats --facets port 'net:192.168.1.0/24'
+shodan stats --facets port 'net:203.0.113.0/24'
 
 # Find specific vulnerabilities in range
-shodan search 'net:192.168.1.0/24 vuln:CVE-2021-44228'
+shodan search 'net:203.0.113.0/24 vuln:CVE-2021-44228'
 
 # Export all data for range
-shodan download network_scan.json.gz 'net:192.168.1.0/24'
+shodan download network_scan.json.gz 'net:203.0.113.0/24'
 ```
 
 ## When to Use

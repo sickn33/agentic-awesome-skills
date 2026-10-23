@@ -15,6 +15,8 @@ Analyze this repository and generate recommended Claude Code `settings.json` per
 - You need to infer a safe read-only allow list from the repo's tech stack, tooling, and monorepo structure.
 - You want to review or replace an existing Claude permissions baseline with something evidence-based.
 
+The broad prefixes in legacy examples are not a read-only sandbox: find can execute/delete, gh api can POST/PATCH/DELETE, and git branch/remote/tag have mutating forms. Recommend narrow reviewed commands or purpose-built read tools; never auto-allow arbitrary arguments merely because a command is usually observational. Build tools (make -n, Gradle, Maven, package managers) may evaluate project code or download/write caches. Redact settings/MCP secret values before displaying them, preserve existing deny/ask rules, and produce a proposal rather than silently installing permissions or servers. Skill invocation permissions can authorize mutating workflows and are not read-only by name.
+
 ## Phase 1: Detect Tech Stack
 
 Run these commands to detect the repository structure:
@@ -64,13 +66,12 @@ cat .claude/settings.json 2>/dev/null || echo "No existing settings"
 
 Build the allow list by combining:
 
-### Baseline Commands (Always Include)
+### Candidate Baseline (Review Each Permission)
 
 ```json
 [
   "Bash(ls:*)",
   "Bash(pwd:*)",
-  "Bash(find:*)",
   "Bash(file:*)",
   "Bash(stat:*)",
   "Bash(wc:*)",
@@ -82,9 +83,9 @@ Build the allow list by combining:
   "Bash(git log:*)",
   "Bash(git diff:*)",
   "Bash(git show:*)",
-  "Bash(git branch:*)",
-  "Bash(git remote:*)",
-  "Bash(git tag:*)",
+  "Bash(git branch --list)",
+  "Bash(git remote -v)",
+  "Bash(git tag --list)",
   "Bash(git stash list:*)",
   "Bash(git rev-parse:*)",
   "Bash(gh pr view:*)",
@@ -97,7 +98,7 @@ Build the allow list by combining:
   "Bash(gh run list:*)",
   "Bash(gh run logs:*)",
   "Bash(gh repo view:*)",
-  "Bash(gh api:*)"
+  "Bash(gh repo view --json nameWithOwner)"
 ]
 ```
 
@@ -248,7 +249,7 @@ Add to `.mcp.json`:
 }
 ```
 
-**Note**: Never suggest GitHub MCP. Always use `gh` CLI commands for GitHub.
+**Note**: Use the client’s approved GitHub connector or narrowly scoped CLI commands according to user preference.
 
 ## Output Format
 
@@ -278,7 +279,7 @@ Example output structure:
 {
 "permissions": {
 "allow": [
-// ... grouped by category with comments
+"Bash(pwd)"
 ],
 "deny": []
 }
@@ -297,7 +298,7 @@ If you use Sentry or Linear, add the MCP config to `.mcp.json`...
 - Only READ-ONLY commands that cannot modify state
 - Only tools that are actually used by the project (detected via lock files)
 - Standard system commands (ls, cat, find, etc.)
-- The `:*` suffix allows any arguments to the base command
+- The `:*` suffix is broad; verify current host matching semantics and all allowed argument effects
 
 ### What to NEVER Include
 

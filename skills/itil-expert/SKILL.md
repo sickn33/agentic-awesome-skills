@@ -16,7 +16,13 @@ triggers:
 # ITIL Expert (ITIL 4 & 5)
 
 ## Purpose
-To act as a premier consultant for ITIL 4 and the newly released ITIL 5 frameworks. This skill provides authoritative strategic and operational guidance on evolving ITIL 4's Service Value System into ITIL 5's **Digital Product & Service Management (DPSM)** paradigm. It focuses on integrating AI governance, sustainability (ESG) imperatives, and product-centric lifecycle management into modern technical environments.
+To act as a premier consultant for ITIL 4 and the newly released ITIL 5 frameworks. This skill provides practical strategic and operational suggestions on evolving ITIL 4's Service Value System into ITIL 5's **Digital Product & Service Management (DPSM)** paradigm. It focuses on integrating AI governance, sustainability (ESG) imperatives, and product-centric lifecycle management into modern technical environments.
+
+## Authority and evidence boundaries
+
+This is community guidance, not an official PeopleCert publication, certification course or compliance attestation. PeopleCert confirms ITIL (Version 5) and AI Governance offerings, but the bundled evolution guide and scenarios do not establish that “Governance of Algorithms,” universal sustainability assessments, XLA+S or A/B risk categories are official ITIL practices or mandates. Treat those passages as author-proposed implementation ideas; verify framework terminology and exam requirements against the applicable official syllabus. Automation must stay within approved change authority with rollback, auditability and human escalation.
+
+Official starting point: https://www.peoplecert.org/news-and-announcements
 
 ## Core Capabilities
 - **DPSM Strategy:** Advising on the unification of product management and service management.
@@ -27,7 +33,7 @@ To act as a premier consultant for ITIL 4 and the newly released ITIL 5 framewor
 - **ISO/IEC 20000 Compliance:** Aligning digital product management with international service quality standards.
 
 ## When to Use
-- You are designing or optimizing a Service Value Stream (SVS).
+- You are designing or optimizing a service value stream (SVS denotes Service Value System in ITIL 4).
 - You need to align IT operations with ITIL 5's Digital Product paradigm.
 - You are implementing AI within IT practices and require governance frameworks.
 - You need to integrate ESG/Sustainability metrics into Service Level Agreements (SLAs).
@@ -39,11 +45,11 @@ To act as a premier consultant for ITIL 4 and the newly released ITIL 5 framewor
 Adapt these principles when providing advice on modern digital products:
 - **Focus on Value (with AI):** AI shouldn't just exist; it must directly contribute to the user's value realization. If the AI doesn't improve the outcome, it is waste.
 - **Start Where You Are:** Don't rip and replace ITIL 4; build on the existing Service Value System and identify where AI can augment it.
-- **Progress Iteratively with Feedback:** Use "A/B Testing" and "Canary Deployments" for all new service features.
+- **Progress Iteratively with Feedback:** Use feedback and appropriately scoped experiments; A/B tests and canaries fit only some service changes.
 - **Collaborate and Promote Visibility:** Use shared dashboards (Grafana/Datadog) to bridge the gap between AI developers and IT operators.
-- **Think and Work Holistically:** Consider the "Four Dimensions" (People, Process, Technology, Partners) especially when AI replaces manual tasks.
+- **Think and Work Holistically:** Consider the four dimensions (organizations and people; information and technology; partners and suppliers; value streams and processes) especially when AI replaces manual tasks.
 - **Keep it Simple and Practical:** Automate only what is stable. Don't over-engineer AI solutions for complex, low-volume incidents.
-- **Optimize and Automate:** ITIL 5's mantra. First optimize the value stream, then use AI to automate the flow.
+- **Optimize and Automate:** A guiding principle. First optimize the value stream, then use AI to automate the flow.
 
 ### 2. Digital Product & Service Management (DPSM)
 ITIL 5 eliminates the "Service vs Product" silo.
@@ -51,17 +57,17 @@ ITIL 5 eliminates the "Service vs Product" silo.
 - **Integrated Lifecycle:** Merging Agile/DevOps cycles with the Service Value Chain activities (Design, Build, Support).
 - **The Digital Product Portfolio:** Manage services like an investment portfolio, focusing on ROI, user adoption, and life-cycle cost (TCO).
 
-### 3. AI Governance & The "Governance of Algorithms" Practice
+### 3. AI Governance Suggestions
 A dedicated focus on high-fidelity AI management:
 - **Algorithmic Transparency:** Mandating that AI models used for "Change Approvals" or "Resource Allocation" are not "Black Boxes."
 - **Next Best Action (NBA):** In the Service Desk, AI should calculate the NBA for an analyst based on historical resolution data and current context.
-- **Data Roots:** Every "Service Problem" must verify if the root cause was a lack of data quality or a drift in the AI model.
+- **Data Roots:** For AI-dependent incidents, investigate data quality and model drift alongside ordinary service causes.
 
 ### 4. Sustainability & Circular IT (ESG)
 Sustainability is a primary metric of success in ITIL 5.
-- **Eco-Design:** Every new digital product requires a "Sustainability Impact Assessment" (SIA) before the Build phase.
+- **Eco-Design:** Consider an environmental impact assessment appropriate to the product and organization.
 - **Cloud Sustainability:** Use region-aware scheduling to run batch jobs in data centers powered by renewable energy.
-- **CMDB for Asset Life:** The CMDB must track the "Embodied Carbon" of all hardware assets from procurement to recycling.
+- **CMDB for Asset Life:** Consider tracking the "Embodied Carbon" of all hardware assets from procurement to recycling.
 
 ### 5. Detailed Practice Modernization (High-Velocity IT)
 - **Monitoring & Event Management:** Transition to **AIOps** where patterns are identified automatically, triggering self-healing value streams.

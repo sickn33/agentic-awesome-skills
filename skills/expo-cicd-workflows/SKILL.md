@@ -18,6 +18,10 @@ Use this skill when you need helps understand and write EAS workflow YAML files 
 
 Help developers write and edit EAS CI/CD workflow YAML files.
 
+## Local helper behavior and deployment scope
+
+This tree bundles fetch.js, validate.js and package.json, not installed dependencies. Inspect them before execution: fetch accepts arbitrary URLs, follows platform redirects, caches text in a runtime-generated .cache directory beside the fetch helper and has no built-in timeout/response-size limit. Use only the fixed official resources below over HTTPS within a bounded network environment; never pass untrusted/private URLs or credentials. Validation fetches live schema and parses local YAML; record retrieval time/schema identity because results can change. Node must support import.meta.dirname/main, and installation needs reviewed compatible dependencies. Structural validation does not run the workflow, prove secret isolation, or authorize billable builds, submission, deployment or recurring triggers.
+
 ## Reference Documentation
 
 Fetch these resources before generating or validating workflow files. First resolve this skill's directory, then use the fetch script in its `scripts/` directory. It is implemented using Node.js and caches responses using ETags for efficiency:

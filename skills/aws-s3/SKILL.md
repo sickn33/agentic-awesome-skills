@@ -34,7 +34,7 @@ Manage Amazon S3 object storage with production-grade security, lifecycle polici
 ## Prerequisites
 
 - AWS CLI v2 installed and configured
-- IAM permissions: `s3:*`, `s3-object-lambda:*`, `kms:*` (for SSE-KMS)
+- Least-privilege IAM permissions for the selected bucket/object operations; grant only the required KMS actions for SSE-KMS. Do not grant wildcard service permissions as a default.
 - For replication: IAM role with replication permissions and destination bucket in target region
 - For logging: a separate logging bucket with appropriate ACL
 
@@ -268,26 +268,26 @@ aws s3api head-object \
 aws s3 presign s3://my-app-data-prod/reports/quarterly.pdf \
   --expires-in 3600
 
-# Generate a presigned URL for uploading
-aws s3 presign s3://my-app-data-prod/uploads/user-file.zip \
-  --expires-in 3600
-
-# Presigned URL with specific content type (using the API directly)
-aws s3api generate-presigned-url \
-  --client-method put_object \
-  --params '{"Bucket":"my-app-data-prod","Key":"uploads/photo.jpg","ContentType":"image/jpeg"}' \
-  --expires-in 3600
+# Upload signing requires an SDK configured for PutObject, not `aws s3 presign`.
+# See the SDK procedure linked below; no s3api generate-presigned-url command exists.
 ```
+
+The [AWS CLI presign command](https://docs.aws.amazon.com/cli/latest/reference/s3/presign.html) signs GET requests. For PUT uploads, use the installed SDK's documented presigner with PutObject, a bounded expiry and the required content headers. Treat signed URLs as bearer secrets and do not print or persist them unnecessarily.
 
 ## Common S3 Operations
 
 ```bash
+# Preview a sync first; --delete removes remote objects absent locally.
+# Use long cache lifetimes only for immutable, versioned assets.
+aws s3 sync ./build s3://my-app-data-prod/static/ --dryrun
+
+# Apply only after reviewing the preview within authorized scope.
+# Do not set Content-Encoding: gzip unless source bytes are actually compressed.
 # Sync a local directory to S3
 aws s3 sync ./build s3://my-app-data-prod/static/ \
   --delete \
   --exclude "*.tmp" \
-  --cache-control "max-age=31536000" \
-  --content-encoding "gzip"
+  --cache-control "max-age=31536000"
 
 # Copy with storage class
 aws s3 cp large-archive.tar.gz s3://my-app-data-prod/archives/ \
@@ -414,10 +414,10 @@ resource "aws_s3_bucket_policy" "enforce_https" {
 | 403 on presigned URL | URL expired or wrong region | Regenerate; ensure region matches bucket region |
 | Replication not working | Versioning disabled on source or dest | Enable versioning on both buckets |
 | Lifecycle not transitioning | Rule filter does not match objects | Verify prefix and tag filters; check rule status |
-| Bucket delete fails | Bucket not empty or has versioned objects | Delete all objects and versions first; disable versioning |
+| Bucket delete fails | Bucket not empty or has versioned objects | Inspect retained versions and retention requirements; emptying versions is destructive and needs explicit scope. Versioning can be suspended, not disabled |
 | Slow uploads for large files | Single-part upload | Use `aws s3 cp` (auto multipart) or set multipart threshold |
 | Cross-account access denied | Both bucket policy AND IAM policy needed | Grant in bucket policy and in caller's IAM policy |
-| Object Lock prevents deletion | Governance or compliance mode active | Use governance bypass (with permission) or wait for retention |
+| Object Lock prevents deletion | Governance or compliance mode active | Respect retention; governance bypass needs separate authorization and required permission. Compliance retention cannot be bypassed |
 
 ## Related Skills
 
@@ -429,6 +429,7 @@ resource "aws_s3_bucket_policy" "enforce_https" {
 
 ## Limitations
 
+- VPC-endpoint deny policies can lock out console/admin access; verify the endpoint and a recovery path before applying. Policy, lifecycle and tagging PUTs replace existing configurations: inspect and preserve required entries.
 - Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
 - Docs-only import: upstream scripts and templates not bundled.
 

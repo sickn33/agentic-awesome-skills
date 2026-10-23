@@ -16,7 +16,7 @@ license_source: "https://github.com/davidondrej/skills/blob/main/LICENSE"
 
 # Interview-Style Doc Building
 
-The user's preferred mode for creating durable strategic docs. AI does NOT propose content — AI asks one question, the user answers, AI patches the file, AI asks the next question. The file IS the conversation's output, updated incrementally.
+Use this mode when the current user explicitly chooses interview-led authoring; the upstream author's preferences are not facts about every user. AI does NOT propose content — AI asks one question, the user answers, AI patches the file, AI asks the next question. The file IS the conversation's output, updated incrementally.
 
 ## When to Use
 
@@ -28,7 +28,7 @@ The user's preferred mode for creating durable strategic docs. AI does NOT propo
 
 ## The Loop
 
-1. **Create the file** with a skeleton (header, sections, "to be filled in" placeholders). Single `write_file` for the new file. After this, NEVER overwrite — only `patch`.
+1. **Create the file** with a skeleton (header, sections, "to be filled in" placeholders). Use available file tools for a new authorized destination; preserve existing content and use targeted edits afterward. Tool names vary by host.
 2. **Ask ONE question.** Concise. Specific. Single-faceted. Open-ended where possible.
 3. **Wait for the answer.** Don't ask the next question yet.
 4. **Patch the file** with the user's answer in the correct section.

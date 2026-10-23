@@ -31,6 +31,8 @@ Use this skill when:
 - Implementing a mesh VPN for distributed infrastructure
 - Providing secure access to internal services without exposing them publicly
 
+Confirm routing/subnet overlap, client reachability, management fallback and maintenance scope before changing tunnels/firewalls. Full-tunnel IPv4 does not provide IPv6 or DNS leak protection automatically. The WireGuard server DNS line does not push DNS to peers: configure an actual reachable resolver in each client. Peer script is illustrative and needs serialized allocation, symlink-safe storage, per-peer PSKs and rollback before production. QR codes contain private keys: never log or share them publicly. Protect CA keys offline and prefer passphrase protection; nopass examples are not a production CA policy.
+
 ## Prerequisites
 
 - Linux server with a public IP for VPN endpoint
@@ -48,6 +50,7 @@ Use this skill when:
 apt update && apt install -y wireguard
 
 # Generate server keys
+umask 077
 wg genkey | tee /etc/wireguard/server_private.key | wg pubkey > /etc/wireguard/server_public.key
 chmod 600 /etc/wireguard/server_private.key
 
@@ -109,7 +112,8 @@ DNS = 10.0.0.1
 PublicKey = <server-public-key>
 PresharedKey = <preshared-key>
 Endpoint = vpn.example.com:51820
-AllowedIPs = 0.0.0.0/0, ::/0
+AllowedIPs = 0.0.0.0/0
+# IPv6 requires separately configured tunnel addressing/forwarding and leak tests.
 PersistentKeepalive = 25
 ```
 
@@ -155,7 +159,7 @@ wg set wg0 peer <public-key> remove
 wg show wg0 transfer
 
 # Generate QR code for mobile clients
-apt install -y qr-encode
+apt install -y qrencode
 qrencode -t ansiutf8 < alice-mobile.conf
 ```
 
@@ -165,8 +169,10 @@ qrencode -t ansiutf8 < alice-mobile.conf
 #!/bin/bash
 # wg-add-peer.sh - Add a new WireGuard peer
 set -euo pipefail
+umask 077
 
 PEER_NAME="${1:?Usage: $0 <peer-name>}"
+[[ "$PEER_NAME" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || exit 1
 SERVER_CONF="/etc/wireguard/wg0.conf"
 CLIENTS_DIR="/etc/wireguard/clients"
 SERVER_PUBKEY=$(cat /etc/wireguard/server_public.key)
@@ -177,7 +183,9 @@ PSK=$(cat /etc/wireguard/psk.key)
 LAST_IP=$(grep -oP 'AllowedIPs = 10\.0\.0\.\K[0-9]+' "$SERVER_CONF" | sort -n | tail -1)
 NEXT_IP=$((LAST_IP + 1))
 
+[[ "$NEXT_IP" -ge 2 && "$NEXT_IP" -le 254 ]] || { echo "Address pool exhausted"; exit 1; }
 mkdir -p "$CLIENTS_DIR"
+[[ ! -e "$CLIENTS_DIR/${PEER_NAME}.conf" ]] || { echo "Peer exists"; exit 1; }
 
 # Generate client keys
 wg genkey | tee "$CLIENTS_DIR/${PEER_NAME}_private.key" | wg pubkey > "$CLIENTS_DIR/${PEER_NAME}_public.key"
@@ -207,7 +215,8 @@ DNS = 10.0.0.1
 PublicKey = ${SERVER_PUBKEY}
 PresharedKey = ${PSK}
 Endpoint = ${SERVER_ENDPOINT}
-AllowedIPs = 0.0.0.0/0, ::/0
+AllowedIPs = 0.0.0.0/0
+# IPv6 requires separately configured tunnel addressing/forwarding and leak tests.
 PersistentKeepalive = 25
 EOF
 
@@ -291,8 +300,7 @@ verb 3
 # Max clients
 max-clients 100
 
-# Client isolation (clients cannot see each other)
-client-to-client
+# Omit client-to-client; enforce peer isolation with verified firewall policy.
 ```
 
 ### Client Configuration
@@ -323,7 +331,11 @@ verb 3
 
 ```bash
 # Install Tailscale
-curl -fsSL https://tailscale.com/install.sh -o /tmp/install-tailscale.sh && sh /tmp/install-tailscale.sh && rm /tmp/install-tailscale.sh
+tmpdir="$(mktemp -d)"
+curl -fsSL https://tailscale.com/install.sh -o "$tmpdir/install.sh"
+cat "$tmpdir/install.sh"  # inspect complete script before executing
+sh "$tmpdir/install.sh"
+rm -rf "$tmpdir"
 
 # Authenticate and connect
 tailscale up

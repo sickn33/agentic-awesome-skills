@@ -11,7 +11,7 @@
  */
 
 import { parseArgs } from 'node:util';
-import { writeFileSync, statSync } from 'node:fs';
+import { writeFileSync, statSync, existsSync } from 'node:fs';
 
 // User-Agent for tracking skill usage in Apify analytics
 const USER_AGENT = 'apify-agent-skills/apify-market-research-1.0.0';
@@ -25,6 +25,7 @@ function parseCliArgs() {
         format: { type: 'string', short: 'f', default: 'csv' },
         timeout: { type: 'string', short: 't', default: '600' },
         'poll-interval': { type: 'string', default: '5' },
+        'max-items': { type: 'string', default: '1000' },
         help: { type: 'boolean', short: 'h' },
     };
 
@@ -47,7 +48,16 @@ function parseCliArgs() {
         process.exit(1);
     }
 
+    if (!/^[a-zA-Z0-9_-]+(?:[\/~][a-zA-Z0-9_-]+)?$/.test(values.actor)) throw new Error('Invalid Actor ID');
+    for (const key of ['timeout', 'poll-interval', 'max-items']) {
+        if (!/^[1-9][0-9]*$/.test(values[key]) || Number(values[key]) > 86400) throw new Error(`Invalid --${key} (1..86400)`);
+    }
+    if (!['csv', 'json'].includes(values.format)) throw new Error('Format must be csv or json');
+    const input = JSON.parse(values.input);
+    if (!input || Array.isArray(input) || typeof input !== 'object') throw new Error('Input must be a JSON object');
+    if (values.output && existsSync(values.output)) throw new Error('Output already exists; choose a new path');
     return {
+        maxItems: Number(values['max-items']),
         actor: values.actor,
         input: values.input,
         output: values.output,
@@ -71,11 +81,12 @@ Options:
   --format, -f      Output format: csv, json (default: csv)
   --timeout, -t     Max wait time in seconds (default: 600)
   --poll-interval   Seconds between status checks (default: 5)
+  --max-items      Maximum exported records, 1..86400 (default: 1000; not a run cost cap)
   --help, -h        Show this help message
 
 Output Formats:
-  JSON (all data)     --output file.json --format json
-  CSV (all data)      --output file.csv --format csv
+  JSON (bounded export)     --output file.json --format json
+  CSV (bounded export)      --output file.csv --format csv
   Quick answer        (no --output) - displays top 5 in chat
 
 Examples:
@@ -84,7 +95,7 @@ Examples:
     --actor "compass/crawler-google-places" \\
     --input '{"searchStringsArray": ["coffee shops"], "locationQuery": "Seattle, USA"}'
 
-  # Export all data to CSV
+  # Export up to the configured record cap to CSV
   node --env-file=.env scripts/run_actor.js \\
     --actor "compass/crawler-google-places" \\
     --input '{"searchStringsArray": ["coffee shops"], "locationQuery": "Seattle, USA"}' \\
@@ -96,7 +107,7 @@ Examples:
 async function startActor(token, actorId, inputJson) {
     // Convert "author/actor" format to "author~actor" for API compatibility
     const apiActorId = actorId.replace('/', '~');
-    const url = `https://api.apify.com/v2/acts/${apiActorId}/runs?token=${encodeURIComponent(token)}`;
+    const url = `https://api.apify.com/v2/acts/${apiActorId}/runs`;
 
     let data;
     try {
@@ -108,8 +119,11 @@ async function startActor(token, actorId, inputJson) {
 
     const response = await fetch(url, {
         method: 'POST',
+        redirect: 'error',
+        signal: AbortSignal.timeout(30000),
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
             'User-Agent': `${USER_AGENT}/start_actor`,
         },
         body: JSON.stringify(data),
@@ -121,12 +135,12 @@ async function startActor(token, actorId, inputJson) {
     }
 
     if (!response.ok) {
-        const text = await response.text();
-        console.error(`Error: API request failed (${response.status}): ${text}`);
+        console.error(`Error: API request failed (${response.status}): ${response.status}`);
         process.exit(1);
     }
 
     const result = await response.json();
+    if (!/^[a-zA-Z0-9]+$/.test(result.data?.id || "") || !/^[a-zA-Z0-9]+$/.test(result.data?.defaultDatasetId || "")) throw new Error("Invalid run response IDs");
     return {
         runId: result.data.id,
         datasetId: result.data.defaultDatasetId,
@@ -135,15 +149,14 @@ async function startActor(token, actorId, inputJson) {
 
 // Poll run status until complete or timeout
 async function pollUntilComplete(token, runId, timeout, interval) {
-    const url = `https://api.apify.com/v2/actor-runs/${runId}?token=${encodeURIComponent(token)}`;
+    const url = `https://api.apify.com/v2/actor-runs/${runId}`;
     const startTime = Date.now();
     let lastStatus = null;
 
     while (true) {
-        const response = await fetch(url);
+        const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, redirect: 'error', signal: AbortSignal.timeout(30000) });
         if (!response.ok) {
-            const text = await response.text();
-            console.error(`Error: Failed to get run status: ${text}`);
+                console.error(`Error: Failed to get run status: ${response.status}`);
             process.exit(1);
         }
 
@@ -178,39 +191,39 @@ function csvCell(value) {
 }
 
 // Download dataset items
-async function downloadResults(token, datasetId, outputPath, format) {
-    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${encodeURIComponent(token)}&format=json`;
+async function downloadResults(token, datasetId, outputPath, format, maxItems) {
+    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?format=json&limit=${maxItems}`;
 
     const response = await fetch(url, {
+        redirect: 'error',
+        signal: AbortSignal.timeout(30000),
         headers: {
+            Authorization: `Bearer ${token}`,
             'User-Agent': `${USER_AGENT}/download_${format}`,
         },
     });
 
     if (!response.ok) {
-        const text = await response.text();
-        console.error(`Error: Failed to download results: ${text}`);
+        console.error(`Error: Failed to download results: ${response.status}`);
         process.exit(1);
     }
 
     const data = await response.json();
+    if (!Array.isArray(data) || data.some(row => !row || typeof row !== "object" || Array.isArray(row))) throw new Error("Expected object dataset items");
 
     if (format === 'json') {
-        writeFileSync(outputPath, JSON.stringify(data, null, 2));
+        writeFileSync(outputPath, JSON.stringify(data, null, 2), { flag: 'wx', mode: 0o600 });
     } else {
         // CSV output
         if (data.length > 0) {
-            const fieldnames = Object.keys(data[0]);
+            const fieldnames = [...new Set(data.flatMap(row => Object.keys(row)))];
             const csvLines = [fieldnames.map(csvCell).join(',')];
 
             for (const row of data) {
                 const values = fieldnames.map((key) => {
                     let value = row[key];
 
-                    // Truncate long text fields
-                    if (typeof value === 'string' && value.length > 200) {
-                        value = value.slice(0, 200) + '...';
-                    } else if (Array.isArray(value) || (typeof value === 'object' && value !== null)) {
+                    if (Array.isArray(value) || (typeof value === 'object' && value !== null)) {
                         value = JSON.stringify(value) || '';
                     }
 
@@ -219,32 +232,37 @@ async function downloadResults(token, datasetId, outputPath, format) {
                 csvLines.push(values.join(','));
             }
 
-            writeFileSync(outputPath, csvLines.join('\n'));
+            writeFileSync(outputPath, csvLines.join('\n'), { flag: 'wx', mode: 0o600 });
         } else {
-            writeFileSync(outputPath, '');
+            writeFileSync(outputPath, '', { flag: 'wx', mode: 0o600 });
         }
     }
 
     console.log(`Saved to: ${outputPath}`);
+    return data.length;
 }
 
 // Display top 5 results in chat format
 async function displayQuickAnswer(token, datasetId) {
-    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${encodeURIComponent(token)}&format=json`;
+    const maxItems = 5;
+    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?format=json&limit=${maxItems}`;
 
     const response = await fetch(url, {
+        redirect: 'error',
+        signal: AbortSignal.timeout(30000),
         headers: {
+            Authorization: `Bearer ${token}`,
             'User-Agent': `${USER_AGENT}/quick_answer`,
         },
     });
 
     if (!response.ok) {
-        const text = await response.text();
-        console.error(`Error: Failed to download results: ${text}`);
+        console.error(`Error: Failed to download results: ${response.status}`);
         process.exit(1);
     }
 
     const data = await response.json();
+    if (!Array.isArray(data) || data.some(row => !row || typeof row !== "object" || Array.isArray(row))) throw new Error("Expected object dataset items");
     const total = data.length;
 
     if (total === 0) {
@@ -254,7 +272,7 @@ async function displayQuickAnswer(token, datasetId) {
 
     // Display top 5
     console.log(`\n${'='.repeat(60)}`);
-    console.log(`TOP 5 RESULTS (of ${total} total)`);
+    console.log(`PREVIEW (${total} returned, at most 5)`);
     console.log('='.repeat(60));
 
     for (let i = 0; i < Math.min(5, data.length); i++) {
@@ -278,31 +296,16 @@ async function displayQuickAnswer(token, datasetId) {
 
     console.log(`\n${'='.repeat(60)}`);
     if (total > 5) {
-        console.log(`Showing 5 of ${total} results.`);
+        console.log(`Showing 5 returned records.`);
     }
     console.log(`Full data available at: https://console.apify.com/storage/datasets/${datasetId}`);
     console.log('='.repeat(60));
 }
 
 // Report summary of downloaded data
-function reportSummary(outputPath, format) {
+function reportSummary(outputPath, count) {
     const stats = statSync(outputPath);
     const size = stats.size;
-
-    let count;
-    try {
-        const content = require('fs').readFileSync(outputPath, 'utf-8');
-        if (format === 'json') {
-            const data = JSON.parse(content);
-            count = Array.isArray(data) ? data.length : 1;
-        } else {
-            // CSV - count lines minus header
-            const lines = content.split('\n').filter((line) => line.trim());
-            count = Math.max(0, lines.length - 1);
-        }
-    } catch {
-        count = 'unknown';
-    }
 
     console.log(`Records: ${count}`);
     console.log(`Size: ${size.toLocaleString()} bytes`);
@@ -348,8 +351,9 @@ async function main() {
     // Determine output mode
     if (args.output) {
         // File output mode
-        await downloadResults(token, datasetId, args.output, args.format);
-        reportSummary(args.output, args.format);
+        const count = await downloadResults(token, datasetId, args.output, args.format, args.maxItems);
+        reportSummary(args.output, count);
+        console.log(`Export capped at ${args.maxItems}; consult the dataset for additional records.`);
     } else {
         // Quick answer mode - display in chat
         await displayQuickAnswer(token, datasetId);
@@ -357,6 +361,6 @@ async function main() {
 }
 
 main().catch((err) => {
-    console.error(`Error: ${err.message}`);
+    console.error(`Error: ${String(err.message).replaceAll(process.env.APIFY_TOKEN || '\0', '[redacted]')}`);
     process.exit(1);
 });

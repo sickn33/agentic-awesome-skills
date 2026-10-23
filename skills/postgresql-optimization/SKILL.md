@@ -49,7 +49,7 @@ Use @database-optimizer to assess PostgreSQL performance
 - `postgres-best-practices` - PostgreSQL patterns
 
 #### Actions
-1. Run EXPLAIN ANALYZE
+1. Start with EXPLAIN; EXPLAIN ANALYZE executes the statement. Use a representative staging copy for writes or expensive queries, and set appropriate timeouts before an authorized production run.
 2. Identify scan types
 3. Check join strategies
 4. Analyze execution time
@@ -172,6 +172,12 @@ Use @grafana-dashboards to create PostgreSQL monitoring
 - `database` - Database operations
 - `cloud-devops` - Infrastructure
 - `performance-optimization` - Performance
+
+## Operational boundaries
+
+Record baseline latency, rows, plan and workload before changing one variable at a time. Index creation and configuration changes can consume disk, take locks or require restart; agree on a maintenance window and rollback first. Prefer routine autovacuum monitoring over indiscriminate manual maintenance; VACUUM FULL rewrites and locks tables. Validate result equivalence as well as latency.
+
+Reference: [PostgreSQL EXPLAIN guidance](https://www.postgresql.org/docs/current/using-explain.html).
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

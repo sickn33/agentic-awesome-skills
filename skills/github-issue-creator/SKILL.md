@@ -86,7 +86,7 @@ Agent deployment fails silently - no error displayed, agent disappears from list
 ## Reproduction Steps
 1. Navigate to agent deployment
 2. Configure and deploy agent
-3. Observe workflow completes
+3. Observe the reported workflow run (completion status unconfirmed)
 4. Check agent list
 
 ## Expected Behavior
@@ -99,7 +99,7 @@ Agent disappears from list. No error message. Requires page refresh and retry.
 **High** - Blocks agent deployment workflow, no feedback on failure cause
 
 ## Additional Context
-Required 3 retry attempts before successful deployment
+Reporter refreshed and retried three times; final success is unconfirmed
 ````
 
 ---
@@ -117,7 +117,7 @@ Required 3 retry attempts before successful deployment
 - **Region/Version**: [REGION]
 
 ## Reproduction Steps
-1. Configure agent for Teams channel
+1. Use the existing Teams publishing configuration (setup details unconfirmed)
 2. Attempt to publish
 
 ## Expected Behavior

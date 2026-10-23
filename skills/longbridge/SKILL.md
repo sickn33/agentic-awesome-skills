@@ -94,6 +94,6 @@ If the `longbridge` CLI binary is not installed, fall back to MCP tools. Inspect
 
 ## Security & Safety Notes
 
-- All market data queries are read-only (no side effects).
-- Watchlist mutations and order-related features follow a preview + confirm two-step protocol.
-- Credentials are handled by the Longbridge auth system; this skill does not store or transmit tokens.
+- Inspect the actual command schema and effects before execution. Data retrieval may use network requests, rate limits and paid entitlements even when it does not mutate an account.
+- Require an authorized preview and confirmation for watchlist or order mutations; do not assume the installed integration enforces a two-step protocol.
+- Use the installed auth system and verify its credential storage. This guide does not establish how a separate CLI stores or transmits tokens.

@@ -42,11 +42,9 @@ than not replying.
 
 ## Step 2: timing is a real factor here, unlike almost anywhere else
 
-Replies are ordered partly by when they arrived and how they did. A good reply
-an hour late is read by almost nobody. A good reply in the first few minutes
-sits where people are still looking.
+Timing can affect the opportunity to join a conversation, but ranking and reach depend on current platform behavior, audience and content. An hour-old post is not automatically worthless.
 
-So say plainly when a tweet is too old to be worth replying to for reach. It is
+Use observed timestamps/engagement only when available; do not invent a reach cutoff. It is
 still worth replying to for the person, which is a different reason and a
 perfectly good one.
 
@@ -59,6 +57,8 @@ Read the tweet for one of these, and name which you found:
 - A case where your own experience went the other way
 - The specific example it stayed general about
 - The next step it stops short of
+
+Use the user's verified experience/evidence for specific cases; never invent a personal anecdote or number to create a gap. A hypothetical example must be identified as such.
 
 ## Step 4: write it as a tweet, not as a comment
 

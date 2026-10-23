@@ -30,6 +30,10 @@ Use this skill when:
 - Implementing S2I (Source-to-Image) builds
 - Working with OpenShift Operators
 
+## Cluster and privilege scope
+
+Confirm `oc` context, project, version and authorized writes before running these independent fragments. Prefer a standard Deployment for new workloads; legacy DeploymentConfig examples require checking support in the target version. Source builds execute repository/build scripts: review and pin source/images first. Never paste real passwords, tokens or secret values into commands, manifests, chat or logs; use an approved secret-injection workflow. Review the full effect of project deletion, SCC grants, operator installation and public route exposure; preserve recovery access. See [OpenShift SCC guidance](https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/authentication_and_authorization/managing-pod-security-policies).
+
 ## Prerequisites
 
 - OpenShift cluster access
@@ -42,7 +46,8 @@ Use this skill when:
 
 ```bash
 # Login to cluster
-oc login https://api.cluster.example.com:6443 -u admin -p password
+oc login https://api.cluster.example.com:6443 -u YOUR_APPROVED_USER
+# Enter credentials interactively; do not place passwords in shell history.
 
 # Login with token
 oc login --token=sha256~xxxx --server=https://api.cluster.example.com:6443
@@ -356,8 +361,8 @@ oc get scc
 # View SCC details
 oc describe scc restricted
 
-# Grant SCC to service account
-oc adm policy add-scc-to-user anyuid -z myapp-sa -n myproject
+# Do not grant anyuid as a startup workaround. Review the image and current
+# restricted SCC requirements first; exceptions require specific security approval.
 
 # Create service account
 oc create serviceaccount myapp-sa

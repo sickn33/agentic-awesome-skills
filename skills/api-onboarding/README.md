@@ -21,9 +21,9 @@ Reduce time-to-first-API-call (TTFAC) by optimizing every step of the developer 
 
 ## Key Principle
 
-Time-to-first-API-call is the most predictive metric for developer adoption. Every minute of friction costs you users. Optimize ruthlessly.
+Time-to-first-API-call is a useful onboarding metric to compare with activation and retention. Every minute of friction costs you users. Optimize ruthlessly.
 
-## TTFAC Benchmarks
+## Illustrative TTFAC Targets
 
 | Rating | Time | Experience |
 |--------|------|------------|
@@ -36,7 +36,7 @@ Time-to-first-API-call is the most predictive metric for developer adoption. Eve
 
 1. Show API key immediately after signup (not buried in settings)
 2. Add copy buttons to all code examples
-3. Pre-fill examples with the developer's actual API key
+3. Use environment-variable references in copyable examples; never inject real secrets into docs or analytics
 4. Provide generous sandbox rate limits
 5. Add "Try it" buttons to API reference pages
 

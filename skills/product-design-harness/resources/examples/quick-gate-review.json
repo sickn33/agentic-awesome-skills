@@ -1,0 +1,128 @@
+{
+  "schema_version": "2.1",
+  "session_config": {
+    "working_language": "en",
+    "canonical_identifiers": "en",
+    "fallback_language": "en"
+  },
+  "review_id": "example-quick-001",
+  "product_direction": "Clarify the empty-state action on the setup page.",
+  "mode": "quick_gate",
+  "stage": "prototype",
+  "actor_boundary": {
+    "target_population": [
+      "New workspace admins"
+    ],
+    "operator": "Workspace admin",
+    "beneficiary": "Workspace team",
+    "machine_actor": "Not applicable",
+    "affected_people": [
+      "Invited team members"
+    ],
+    "excluded_groups": [
+      "Existing configured workspaces"
+    ]
+  },
+  "product_organization": {
+    "organization": "Example Product Co.",
+    "project_owner": "Activation team",
+    "issuer": "Example Product Co."
+  },
+  "stakeholder_effects": [
+    {
+      "stakeholder": "Invited team members",
+      "effect": "Clearer setup can reduce delayed invitations."
+    }
+  ],
+  "human_judgment_boundary": {
+    "human_owned_decisions": [
+      "Final copy tone"
+    ],
+    "machine_supported_inputs": [
+      "Support notes",
+      "Session replays"
+    ],
+    "not_mechanized": [
+      "Taste and brand judgment"
+    ],
+    "approval_gates": [
+      {
+        "gate_id": "product-owner-release-approval",
+        "accountable_owner": "Product owner",
+        "condition": "Before release to users."
+      }
+    ]
+  },
+  "unresolved_assumptions": [
+    "Whether copy or missing product guidance causes the hesitation."
+  ],
+  "combined_verdict": "continue",
+  "weakest_flow": "evidence",
+  "strongest_signal": "Support notes and session replays show repeated hesitation at the same empty state.",
+  "riskiest_claim": "Clearer copy will improve first-action completion.",
+  "main_uncertainty": "Whether copy or missing product guidance causes the hesitation.",
+  "confidence_level": "medium",
+  "evidence_tier": "t2",
+  "main_trade_off": "Limit the change to copy so the team can learn without expanding onboarding scope.",
+  "human_owned_decision": "none",
+  "human_decision_record_id": null,
+  "evidence_receipt_ids": [
+    "support-pattern-001",
+    "session-replay-pattern-001"
+  ],
+  "reviews": {
+    "user": {
+      "verdict": "continue",
+      "strongest_signal": "People repeatedly pause before the first setup action.",
+      "weakest_assumption": "The action label is the primary source of confusion.",
+      "missing_evidence": "Post-change completion behavior.",
+      "disconfirming_evidence": "People still pause after the copy change.",
+      "stop_condition": "The change reduces comprehension in a five-person check.",
+      "evidence_tier": "t2"
+    },
+    "evidence": {
+      "verdict": "continue",
+      "strongest_signal": "Two independent internal sources show the same hesitation.",
+      "weakest_assumption": "The replay sample represents new users.",
+      "missing_evidence": "Segmented first-action completion.",
+      "disconfirming_evidence": "Completion does not move after release.",
+      "stop_condition": "No measurable event can distinguish the old and new copy.",
+      "evidence_tier": "t2"
+    },
+    "business": {
+      "verdict": "continue",
+      "strongest_signal": "The change is reversible and may improve activation.",
+      "weakest_assumption": "First-action completion predicts later value.",
+      "missing_evidence": "Activation-to-retention link.",
+      "disconfirming_evidence": "Completion rises while retained setup does not.",
+      "stop_condition": "The change expands beyond copy and one action label.",
+      "evidence_tier": "t2"
+    }
+  },
+  "next_smallest_action": "Release one copy variant and compare first-action completion.",
+  "execution_boundary": {
+    "may_do": [
+      "Edit the empty-state headline.",
+      "Edit one action label."
+    ],
+    "must_not_do": [
+      "Change layout, permissions, data handling, or onboarding steps."
+    ],
+    "must_ask": [
+      "A material scope, risk, data, or stakeholder impact changes."
+    ]
+  },
+  "human_approval_gates": [
+    {
+      "gate_id": "product-owner-release-approval",
+      "accountable_owner": "Product owner",
+      "condition": "Before release to users."
+    }
+  ],
+  "high_risk_actions": [],
+  "stop_conditions": [
+    "People still hesitate after the copy change.",
+    "The change requires onboarding scope expansion."
+  ],
+  "context_pack_required": true
+}

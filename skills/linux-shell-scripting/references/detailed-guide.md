@@ -47,13 +47,10 @@ echo "Files backed up to remote server."
 backup_dir="/path/to/backups"
 max_backups=5
 
-# Rotate backups by deleting the oldest if more than max_backups
-while [ $(ls -1 "$backup_dir" | wc -l) -gt "$max_backups" ]; do
-    oldest_backup=$(ls -1t "$backup_dir" | tail -n 1)
-    rm -r "$backup_dir/$oldest_backup"
-    echo "Removed old backup: $oldest_backup"
-done
-echo "Backup rotation completed."
+# Preview only files matching this job's backup naming convention.
+# Review retention requirements and verified restore points before removal.
+find "$backup_dir" -maxdepth 1 -type f -name 'backup_*.tar.gz' -printf '%T@ %p\n' | sort -n
+# Deliberately no automatic deletion: ls parsing can delete unrelated files.
 ```
 
 **Database Backup Script**
@@ -61,12 +58,12 @@ echo "Backup rotation completed."
 #!/bin/bash
 database_name="your_database"
 db_user="username"
-db_pass="password"
+defaults_file="/private/path/mysql-backup.cnf" # mode 0600; [client] credentials
 output_file="database_backup_$(date +%Y%m%d).sql"
 
 # Perform database backup using mysqldump
-mysqldump -u "$db_user" -p"$db_pass" "$database_name" > "$output_file"
-gzip "$output_file"
+mysqldump --defaults-extra-file="$defaults_file" -u "$db_user" "$database_name" > "$output_file" || exit 1
+gzip "$output_file" || exit 1
 echo "Database backup created: $output_file.gz"
 ```
 
@@ -355,20 +352,22 @@ source_dir="/path/to/source"
 destination_dir="/path/to/destination"
 
 # Synchronize directories using rsync
-rsync -avz --delete "$source_dir/" "$destination_dir/"
+rsync -avzn --delete "$source_dir/" "$destination_dir/"
+# Inspect dry-run output before explicitly applying the destructive sync.
 echo "Directories synchronized successfully."
 ```
 
 **Data Cleanup Script**
 ```bash
 #!/bin/bash
-directory="${1:-/tmp}"
+directory="${1:?Provide the exact authorized application-owned cleanup directory}"
 days="${2:-7}"
 
 echo "Cleaning files older than $days days in $directory"
 
 # Remove files older than specified days
-find "$directory" -type f -mtime +"$days" -exec rm -v {} \;
+find "$directory" -xdev -type f -mtime +"$days" -print
+# Inspect this list first; apply deletion only within the agreed scope.
 echo "Cleanup completed."
 ```
 
@@ -431,9 +430,9 @@ git_repos=("/path/to/repo1" "/path/to/repo2")
 for repo in "${git_repos[@]}"; do
     if [ -d "$repo/.git" ]; then
         echo "Updating repository: $repo"
-        cd "$repo"
+        cd "$repo" || continue
         git fetch --all
-        git pull origin "$(git branch --show-current)"
+        git pull --ff-only origin "$(git branch --show-current)" || continue
         echo "Updated: $repo"
     else
         echo "Not a git repository: $repo"
@@ -479,3 +478,5 @@ echo "Remote script executed on $remote_server"
 
 ### Cron Format
 Minute(0-59) Hour(0-23) Day(1-31) Month(1-12) Weekday(0-7, 0/7=Sun)
+
+These are illustrative Linux fragments, not production certification. Explicitly check command failures before printing success, use private output directories and restrictive permissions, verify backup restoration and consistency, and preserve cron entries without duplicates. Locale-specific top/chage parsing and ping/HEAD failure do not conclusively measure CPU utilization or service availability. CBC encryption does not authenticate ciphertext; use an approved authenticated encryption tool for adversarial storage. The password example filters a finite random sample and cannot promise arbitrary requested length; validate positive bounded lengths and avoid logging generated secrets. Never enable shell tracing around credentials.

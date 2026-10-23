@@ -47,7 +47,7 @@ What works:
 - Direct announcement: "v2.0 is here: async/await support"
 - Number + topic: "7 TypeScript tricks senior devs use"
 
-### Benchmarks
+### Illustrative planning ranges (not verified benchmarks)
 
 | Metric | Target |
 |--------|--------|

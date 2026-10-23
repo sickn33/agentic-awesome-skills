@@ -25,7 +25,7 @@ Use this skill when you need dynamic multi-agent workflows — plan first, then 
 
 
 Same canonical skill as the Codex adapter — only the install path differs
-(`~/.gemini/skills/odw/`). The bridge scripts live next to this skill in `scripts/`.
+(`~/.gemini/skills/odw/`). The upstream adapter expects bridge scripts alongside its installed skill; they are absent from this AAS tree.
 
 ## Model & API key (read this first)
 
@@ -38,7 +38,7 @@ If Antigravity later ships a documented model-invocation API (or MCP sampling), 
 
 ## Step 0 — Daemon check
 
-Run: `node scripts/daemon-bridge.js --check`
+Only after verifying the separately reviewed installation, run its absolute path: `node /absolute/reviewed/odw/scripts/daemon-bridge.js --check`. Do not resolve this command against the current project.
 - Exit 0 → daemon is up; use the daemon path below.
 - Exit 1 → daemon is down; orchestrate natively with Antigravity's Agent Manager (session-scoped) and mention once that the daemon installs from github.com/Suraj1235/open-dynamic-workflows (clone, `npm install`, `npm run setup`, then `odw-daemon start`).
 

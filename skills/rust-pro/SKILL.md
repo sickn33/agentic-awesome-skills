@@ -64,7 +64,7 @@ Expert Rust developer mastering Rust 1.75+ features, advanced type system usage,
 ### Type System & Traits
 - Advanced trait implementations and trait bounds
 - Associated types and generic associated types
-- Higher-kinded types and type-level programming
+- Higher-kinded type patterns emulated with traits/GATs and type-level programming
 - Phantom types and marker traits
 - Orphan rule navigation and newtype patterns
 - Derive macros and custom derive implementations
@@ -179,3 +179,5 @@ Expert Rust developer mastering Rust 1.75+ features, advanced type system usage,
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Distinguish stable Rust APIs from nightly experiments: portable SIMD may require nightly/feature gates for the pinned compiler, and GATs do not provide general higher-kinded types. Safe Rust guarantees do not automatically validate unsafe blocks, FFI contracts or logical/concurrency correctness; test the relevant boundaries and state the toolchain used.

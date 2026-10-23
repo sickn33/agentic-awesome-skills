@@ -38,6 +38,10 @@ Do **not** use for:
 
 ---
 
+## Catalog scope and evidence discipline
+
+This tree does not bundle FUNCTION_MICRO_ANALYSIS_EXAMPLE.md, OUTPUT_REQUIREMENTS.md, COMPLETENESS_CHECKLIST.md or a function-analyzer agent definition. Use the inline structure below and report missing upstream material; do not claim those files/agents were read or run. Numeric depth targets are prompts for inquiry, not permission to invent invariants or assumptions. Explicitly mark unknown behavior and uninspected external code; unresolved uncertainty is a valid result and must not be erased to satisfy a completion checklist.
+
 ## 2. How This Skill Behaves
 
 When active, Claude will:
@@ -196,7 +200,7 @@ Before concluding micro-analysis of a function, verify against the COMPLETENESS_
 - **Continuity & Integration**: Cross-references, propagated assumptions, invariant couplings
 - **Anti-Hallucination**: Line number citations, no vague statements, evidence-based claims
 
-Analysis is complete when all checklist items are satisfied and no unresolved "unclear" items remain.
+Report the inspected scope, supported invariants and all unresolved questions. Do not claim complete understanding merely because the output has the requested sections.
 
 ---
 

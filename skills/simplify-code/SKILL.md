@@ -55,7 +55,9 @@ Before reviewing standards or applying fixes, read the repo's local instruction 
 
 Use those instructions to distinguish real issues from intentional local patterns.
 
-## Step 2: Launch Four Review Sub-Agents in Parallel
+## Step 2: Use Four Review Lenses
+
+Launch sub-agents only when current user or repository instructions explicitly authorize delegation. Otherwise apply the four lenses locally. Agent role names are host-dependent; do not override the user’s selected model or disclose code to an external reviewer without authorization.
 
 Use Codex sub-agents when the scope is large enough for parallel review to help. For a tiny diff or one very small file, it is acceptable to review locally instead.
 

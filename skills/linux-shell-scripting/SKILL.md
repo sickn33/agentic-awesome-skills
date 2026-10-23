@@ -31,7 +31,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use absolute paths to avoid errors
 - Quote variables to handle spaces properly
 - Many scripts require root/sudo privileges
-- Use `bash -x script.sh` for debugging
+- Use shell tracing only on nonsecret test inputs; it logs expanded credentials and arguments
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

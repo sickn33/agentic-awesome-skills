@@ -100,13 +100,9 @@ npx agentic-awesome-skills --claude
 - Review the CRITICAL and HIGH findings first; LOW findings can be deferred
 - Use `@logic-lens` on legacy code you are about to modify to understand risk surface
 
-## Benchmark Results
+## Evidence and limits
 
-Logic Lens was tested against real-world codebases and caught issues missed by ESLint, TypeScript strict mode, and Snyk:
-
-- **47% of critical bugs** found were invisible to linters
-- **Race conditions** detected in async code that static analysis missed
-- **Security vulnerabilities** identified before deployment in CI pipeline
+The upstream contributor reports benchmark benefits, but this tree bundles no corpus, evaluation protocol or reproducible benchmark artifacts. Do not repeat a “47%” detection advantage as verified evidence. Produce concrete findings with source locations, reachable data/control flow, assumptions and a validating test or reproduction plan. An AI logic review is not a formal proof or complete security scan; an empty finding list is scoped absence of evidence.
 
 ## Related Skills
 

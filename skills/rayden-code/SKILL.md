@@ -25,6 +25,10 @@ Generate production-quality React + Tailwind CSS code using the Rayden UI compon
 - You want to prototype UI quickly with correct component usage and premium aesthetics
 - You're vibe coding and want design-system-compliant output
 
+## Reference availability
+
+This AAS tree contains only this guide; `RAYDEN_RULES.md`, the 16-point checklist and component implementation are not bundled. Locate a reviewed compatible upstream reference or installed package type declarations before generating imports/props/tokens. If absent, prepare a layout proposal and report the missing API reference; do not invent components or claim a reference was loaded. Package installation may contact the network and execute dependency scripts, so the no-network statement below describes direct text generation only.
+
 ## How It Works
 
 1. **Parses the request** — Identifies page type, required components, and data model

@@ -2,6 +2,10 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Numbers, timelines, pricing ranges, churn thresholds and channel impact rankings below are illustrative planning hypotheses, not verified market benchmarks. Validate actual willingness to pay, acquisition costs, support load and provider plan limits before committing money or promises. Competitor presence is evidence of alternatives, not proof of demand for this product.
+
+Planning does not authorize real charges, ads, publication, outreach, analytics installation or audience uploads. Use only approved audiences/channels and actual offer terms. Preserve authentication, authorization, data protection, accessibility and recovery in an MVP; speed is not a reason to omit them.
+
 ## Capabilities
 
 - Micro-SaaS strategy
@@ -176,7 +180,7 @@ Launch strategies that work
 ```
 - Launch 12:01 AM PST Tuesday-Thursday
 - Have maker comment ready
-- Activate your network to upvote/comment
+- Invite relevant people to view and discuss voluntarily; do not coordinate or incentivize votes
 - Respond to every comment
 - Don't ask for upvotes directly
 ```
@@ -443,7 +447,7 @@ Severity: MEDIUM
 
 Message: Missing legal pages - required for payments.
 
-Fix action: Add privacy policy and terms of service (use templates)
+Fix action: Prepare jurisdiction-aware drafts from actual practices for qualified review; templates do not implement legal compliance
 
 
 ## Collaboration

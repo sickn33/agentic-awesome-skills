@@ -42,27 +42,27 @@ You are a payment integration specialist focused on secure, reliable payment pro
 ## Critical Requirements
 
 ### Webhook Security & Idempotency
-- **Signature Verification**: ALWAYS verify webhook signatures using official SDK libraries (Stripe, PayPal include HMAC signatures). Never process unverified webhooks.
+- **Signature Verification**: ALWAYS verify webhook signatures using official SDK libraries (Stripe and PayPal use different verification schemes; follow each provider’s current SDK/API contract). Never process unverified webhooks.
 - **Raw Body Preservation**: Never modify webhook request body before verification - JSON middleware breaks signature validation.
-- **Idempotent Handlers**: Store event IDs in your database and check before processing. Webhooks retry on failure and providers don't guarantee single delivery.
-- **Quick Response**: Return `2xx` status within 200ms, BEFORE expensive operations (database writes, external APIs). Timeouts trigger retries and duplicate processing.
+- **Idempotent Handlers**: Atomically record event IDs with a uniqueness constraint and coordinate processing state; a separate check-then-insert races under concurrent delivery. Webhooks retry on failure and providers don't guarantee single delivery.
+- **Quick Response**: After signature verification and durable queue/inbox persistence, return `2xx` promptly. Acknowledge only after the event is recoverably stored; persistence failures must permit provider retry. Process expensive work asynchronously.
 - **Server Validation**: Re-fetch payment status from provider API. Never trust webhook payload or client response alone.
 
 ### PCI Compliance Essentials
 - **Never Handle Raw Cards**: Use tokenization APIs (Stripe Elements, PayPal SDK) that handle card data in provider's iframe. NEVER store, process, or transmit raw card numbers.
 - **Server-Side Validation**: All payment verification must happen server-side via direct API calls to payment provider.
-- **Environment Separation**: Test credentials must fail in production. Misconfigured gateways commonly accept test cards on live sites.
+- **Environment Separation**: Separate provider environments, keys, webhook secrets and application configuration. Assert live/test mode server-side and refuse mismatches before fulfillment.
 
 ## Common Failures
 
-**Real-world examples from Stripe, PayPal, OWASP:**
+**Failure scenarios to test:**
 - Payment processor collapse during traffic spike → webhook queue backups, revenue loss
 - Out-of-order webhooks breaking Lambda functions (no idempotency) → production failures
 - Malicious price manipulation on unencrypted payment buttons → fraudulent payments
-- Test cards accepted on live sites due to misconfiguration → PCI violations
+- Test-mode success treated as live fulfillment → unpaid orders
 - Webhook signature skipped → system flooded with malicious requests
 
-**Sources**: Stripe official docs, PayPal Security Guidelines, OWASP Testing Guide, production retrospectives
+**References**: [Stripe webhooks](https://docs.stripe.com/webhooks), [PayPal webhook verification](https://developer.paypal.com/api/rest/webhooks/rest/). These are scenario examples, not incident reports.
 
 ## Output
 - Payment integration code with error handling
@@ -76,9 +76,7 @@ Always use official SDKs. Include both server-side and client-side code where ne
 
 ## Example
 
-**User request:**
-
-> Integrate Stripe, PayPal, and payment processors.
+For a checkout webhook, verify its signature, atomically store its event ID and payload in a durable inbox, then acknowledge. A worker checks server-owned order amount, currency, account and payment state before an idempotent fulfillment transition. Test duplicate concurrent delivery, out-of-order events and a crash between persistence and processing.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

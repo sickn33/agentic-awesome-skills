@@ -90,10 +90,11 @@ const result = items.reduce((acc, item) => ({
 }), {});
 
 // CLEAR: Named intermediate step
-const countById = new Map<string, number>();
-for (const item of items) {
-  countById.set(item.id, (countById.get(item.id) ?? 0) + 1);
-}
+const result = items.reduce((acc, item) => {
+  const count = (acc[item.id]?.count ?? 0) + 1;
+  return { ...acc, [item.id]: { ...acc[item.id], count } };
+}, {});
+// Preserve the object-of-records result; a Map<string, number> changes the API.
 ```
 
 ### 4. Maintain Balance
@@ -196,7 +197,9 @@ If the "simplified" version is harder to understand or review, revert. Not every
 ### TypeScript / JavaScript
 
 ```typescript
-// SIMPLIFY: Unnecessary async wrapper
+// Conditional simplification: only if findById always returns a Promise and
+// never throws synchronously; otherwise removing async changes thrown errors
+// into synchronous exceptions instead of rejected Promises. Preserve async if uncertain.
 // Before
 async function getUser(id: string): Promise<User> {
   return await userService.findById(id);

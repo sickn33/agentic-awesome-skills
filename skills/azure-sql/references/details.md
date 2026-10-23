@@ -4,20 +4,22 @@
 
 ## Terraform Configuration
 
+Pin a reviewed provider version and define all referenced resource groups, subnet, secondary server, storage and variables. This fragment lacks a private DNS zone/link/zone group; add those before claiming private connectivity. Protect Terraform state because audit account keys are stored there; prefer supported managed-identity policies. A sensitive variable alone does not encrypt state.
+
+
 ```hcl
 resource "azurerm_mssql_server" "main" {
   name                         = "myapp-sqlserver"
   resource_group_name          = azurerm_resource_group.main.name
   location                     = azurerm_resource_group.main.location
   version                      = "12.0"
-  administrator_login          = "sqladmin"
-  administrator_login_password = var.sql_admin_password
   minimum_tls_version          = "1.2"
   public_network_access_enabled = false
 
   azuread_administrator {
     login_username = "SQL Admins"
     object_id      = var.sql_admin_aad_group_id
+    azuread_authentication_only = true
   }
 
   tags = var.tags
@@ -94,7 +96,7 @@ resource "azurerm_private_endpoint" "sql" {
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| Cannot connect to SQL server | Firewall rule missing or public access disabled | Add client IP with `az sql server firewall-rule create` or use private endpoint |
+| Cannot connect to SQL server | Firewall rule missing or public access disabled | For a private-only server verify private endpoint and DNS; firewall rules do not enable public networking |
 | Login failed for user | Incorrect credentials or Azure AD not configured | Verify admin credentials; enable Azure AD auth on the server |
 | Database DTU at 100% | Under-provisioned tier or inefficient queries | Scale up service objective; review Query Store for expensive queries |
 | Geo-replication lag is high | Large transaction volumes or network latency | Monitor with `sys.dm_geo_replication_link_status`; consider Hyperscale |

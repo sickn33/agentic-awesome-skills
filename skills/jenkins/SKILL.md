@@ -31,6 +31,10 @@ Use this skill when:
 - Creating shared libraries for pipeline reuse
 - Integrating Jenkins with external tools
 
+## Controller, agent and secret scope
+
+Verify the current Jenkins release's supported Java version and plugin compatibility; Java 11 is not a universal current requirement. Isolate untrusted PR builds from controller/admin credentials and production-capable agents. The privileged docker:dind example is an exceptional host-risk configuration, not a secure default; prefer a reviewed isolated builder. Branch conditions alone are not deploy authorization or proof the source is trusted. Scope credentials to the smallest trusted stage, never interpolate secrets into URLs/arguments or shared logs, and obtain applicable deployment/notification authority. Pin reviewed agent images and shared-library revisions.
+
 ## Prerequisites
 
 - Jenkins server (2.x or later)
@@ -211,7 +215,8 @@ pipeline {
                         passwordVariable: 'GH_TOKEN'
                     )
                 ]) {
-                    sh 'git push https://${GH_USER}:${GH_TOKEN}@github.com/repo.git'
+                    // Use the reviewed Jenkins SCM credential binding for an approved push.
+                    // Never put the token into a remote URL or process arguments.
                 }
             }
         }

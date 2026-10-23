@@ -33,4 +33,4 @@ Pattern: gather examples -> identify deltas -> patch instructions -> test agains
 
 Use when the skill must produce public artifacts.
 
-Pattern: preflight -> changelog or notes -> version/tag/release -> publish -> close linked work.
+Pattern: inspect the repository’s release workflow -> preflight -> prepare reviewable changelog/artifacts -> obtain any required publication authorization -> use its protected version/tag/publish process -> verify live alignment -> close linked work only when authorized. Skill authoring by itself does not authorize publication or release.

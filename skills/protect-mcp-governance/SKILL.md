@@ -1,7 +1,7 @@
 ---
 name: protect-mcp-governance
 description: "Agent governance skill for MCP tool calls — Cedar policy authoring, shadow-to-enforce rollout, and Ed25519 receipt verification."
-risk: safe
+risk: critical
 source: community
 source_repo: scopeblind/scopeblind-gateway
 source_type: official
@@ -30,7 +30,7 @@ Guidance for governing AI agent tool calls using Cedar policies and Ed25519 sign
 
 ## How It Works
 
-protect-mcp intercepts MCP tool calls, evaluates them against Cedar policies (the same policy engine used by AWS Verified Permissions), and signs every decision as an Ed25519 receipt. The receipt is a cryptographic proof that a specific policy was evaluated against a specific tool call at a specific time.
+protect-mcp intercepts MCP tool calls, evaluates them against Cedar policies (the same policy engine used by AWS Verified Permissions), and signs every decision as an Ed25519 receipt. A valid receipt authenticates the signer’s assertion; it does not independently prove policy execution, timestamp accuracy or execution success.
 
 ```
 Agent → protect-mcp → Cedar policy evaluation → MCP Server
@@ -45,6 +45,8 @@ Three modes of operation:
 3. **Hooks mode** — integrates with Claude Code hooks for pre/post tool-call governance.
 
 ## Core Concepts
+
+Use an approved pinned package version and confirm its actual CLI/config schema before installation. The examples depend on the gateway’s entity schema: validate attribute types and allowed/denied/error cases. Canonicalize paths and resolve symlinks in trusted gateway code before policy evaluation; a `src/*` string match alone does not prevent traversal. Shadow mode supplies observation, not protection. Changing hooks or enforcement requires the project owner’s authorization.
 
 ### Cedar Policies
 
@@ -156,12 +158,8 @@ permit(
   && resource.args.path like "src/*"
 };
 
-// Deny everything else
-forbid(
-  principal,
-  action == Action::"call_tool",
-  resource
-);
+// No matching permit means deny by default. Do not add an unconditional forbid:
+// it would override both permits above.
 ```
 
 Switch to enforce mode:
@@ -183,7 +181,7 @@ npx @veritasacta/verify bundle.json --bundle
 npx @veritasacta/verify --self-test
 ```
 
-Exit codes: `0` = signature valid (proven authentic), `1` = signature invalid (proven tampered), `2` = verifier error (malformed input).
+Exit codes: `0` = signature valid (proven authentic), `1` = signature invalid (investigate key/input mismatch or tampering), `2` = verifier error (malformed input).
 
 ## Examples
 
@@ -202,7 +200,7 @@ npx protect-mcp init-hooks
 ### Example 2: Restrict a Production MCP Server
 
 ```cedar
-// Only allow approved tools with rate limiting
+// Only allow approved tools; rate limiting requires separate gateway controls
 permit(
   principal,
   action == Action::"call_tool",
@@ -246,7 +244,7 @@ npx @veritasacta/verify audit.json --bundle
 #   Failed:   0
 ```
 
-**Explanation:** After an incident, export the audit bundle and verify that no receipts have been tampered with. The bundle contains all receipts from the session plus the signing keys needed for verification.
+**Explanation:** After an incident, export the audit bundle and verify that no receipts have been tampered with. The bundle contains all receipts from the session plus the public verification keys (never private signing keys).
 
 ## Best Practices
 
@@ -266,11 +264,11 @@ npx @veritasacta/verify audit.json --bundle
 
 ### Problem: Shadow mode shows unexpected denials
 **Symptoms:** Shadow log shows `deny` decisions for tools you expected to be allowed
-**Solution:** Check your Cedar policy ordering. Cedar evaluates `forbid` rules before `permit` rules — a broad `forbid` will override specific `permit` rules.
+**Solution:** Cedar policy order does not resolve conflicts: any matching `forbid` overrides a `permit`. Inspect determining policies and schema errors.
 
 ### Problem: Enforce mode blocks a legitimate tool call
 **Symptoms:** Agent reports a tool call was denied after switching to enforce mode
-**Solution:** Add the tool to your permit policy or switch back to shadow mode: remove `--enforce` flag. Review the receipt's `deny_reason` field for the specific policy violation.
+**Solution:** Inspect the denial and intended authorization first. A new permit cannot override a matching forbid. Have the policy owner approve the narrow correction; do not disable enforcement merely to get a call through.
 
 ## Related Skills
 

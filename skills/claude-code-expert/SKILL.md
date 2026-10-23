@@ -1,7 +1,7 @@
 ---
 name: claude-code-expert
 description: "Especialista profundo em Claude Code - CLI da Anthropic. Maximiza produtividade com atalhos, hooks, MCPs, configuracoes avancadas, workflows, CLAUDE.md, memoria, sub-agentes, permissoes e integracao com ecossistemas."
-risk: none
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -26,7 +26,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 ## When to Use This Skill
 
-- When you need specialized assistance with this domain
+- Configure or troubleshoot Claude Code CLI, project instructions, hooks, MCP connections, permissions and supported automation using the installed version’s documentation.
 
 ## Do Not Use This Skill When
 

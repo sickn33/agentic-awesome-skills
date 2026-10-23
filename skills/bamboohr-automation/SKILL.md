@@ -26,6 +26,10 @@ Automate BambooHR human resources operations through Composio's BambooHR toolkit
 3. If connection is not ACTIVE, follow the returned auth link to complete BambooHR authentication
 4. Confirm connection status shows ACTIVE before running any workflows
 
+## HR data boundaries
+
+Verify the exact company and employee IDs using more than an ambiguous name match. Request only fields needed for the task; do not export SSNs, dependent/benefits details or whole directories unnecessarily. Requesting leave does not authorize approving it: stop after creation unless approval/denial was explicitly requested by an authorized decision-maker. Preview field changes and reconcile existing request IDs before retrying uncertain writes. External sync requires an approved destination and retention boundary; advance its watermark only after all changes/deletions are durably reconciled.
+
 ## Core Workflows
 
 ### 1. List and Search Employees
@@ -168,7 +172,7 @@ For keeping external systems in sync with BambooHR:
 1. GET_META_TIME_OFF_TYPES -> find type ID
 2. GET_TIME_OFF_BALANCES -> verify available balance
 3. CREATE_TIME_OFF_REQUEST -> submit request
-4. UPDATE_TIME_OFF_REQUEST -> approve/deny (manager action)
+4. Only if separately authorized: UPDATE_TIME_OFF_REQUEST -> approve/deny (manager action)
 ```
 
 ## Known Pitfalls

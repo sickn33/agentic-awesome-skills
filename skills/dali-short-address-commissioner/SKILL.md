@@ -34,6 +34,8 @@ Do NOT use this skill when:
 - Diagnosing dead ballasts or physical wiring faults before basic DALI bus voltage (12V–20.5V DC) and current limits (<= 250mA) are confirmed.
 - Programming building-wide KNX logic (this skill covers the DALI protocol domain strictly).
 
+Protocol constants and command bytes below are illustrative and must not be emitted as frames without checking the exact IEC edition and gateway API. Repetition is command-specific; do not assume every addressing command uses identical send-twice semantics. A binary search cannot separate two devices with the same random address: detect duplicate responders, re-randomize the affected set using the verified commissioning procedure, then verify unique short-address responses. Timer refresh behavior also requires the exact gear contract.
+
 ## Core Mental Models & Non-Negotiable Rules
 
 1. **The 64-Address Bus Capacity Law**:
@@ -146,17 +148,16 @@ def replace_single_failed_ballast(expected_short_addr: int):
     send_dali_cmd(0xA1, 0x00)  # TERMINATE
 ```
 
-### Archetype 3: Group & DT8 Tunable White Configuration
-```python
-def configure_dt8_tunable_white(short_addr: int, mirek: int, group_id: int):
-    # Mirek = 1,000,000 / Kelvin (e.g. 2700K = 370 mirek, 6500K = 153 mirek)
-    send_dali_cmd(0x01, 0x00)  # DTR0: low byte of mirek
-    send_dali_cmd(0x03, 0x00)  # DTR1: high byte of mirek
-    send_dali_double_cmd(0xE7, 0x20)  # SET TEMP COLOUR (DT8 Part 209)
-    # Add to group (0-15)
-    group_payload = 0x60 | (group_id & 0x0F)
-    send_dali_double_cmd(0x01 | (short_addr << 1), group_payload)
-```
+### Archetype 3: Group & DT8 Tunable White Plan
+
+Use the gateway's typed DT8 API rather than the previous unverified raw frame bytes:
+
+1. Validate short address 0–63, group 0–15 and the gear's supported colour-temperature range.
+2. Compute mirek from the requested Kelvin value and set both DTR bytes through the documented commands.
+3. Select device type 8 and issue the gear-supported temporary colour-temperature and activation sequence.
+4. Add the addressed gear to the requested group, then query and physically verify the result.
+
+The raw-byte example was not a working driver: it ignored `mirek`, did not encode the selected device address for colour control and did not implement device-type enable/activation. Do not transmit guessed replacements.
 
 ## The Pre-Emit Quality Gate Checklist
 

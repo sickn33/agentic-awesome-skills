@@ -29,7 +29,7 @@ Use this skill when the user asks for dependency analysis using Ontoly evidence.
 
 ## Required Workflow
 
-Follow [the shared Ontoly workflow. Also read [graph evidence rules, [MCP usage, [best practices, and [fallback rules when the task requires detail.
+Follow [the shared Ontoly workflow](reference/workflow.md). Also read [graph evidence rules](reference/graph.md), [MCP usage](reference/mcp.md), [best practices](reference/best-practices.md), and [fallback rules](reference/fallbacks.md) when the task requires detail. Version requirements in this SKILL.md frontmatter take precedence over older 1.0.0 labels in companion notes; verify the installed CLI capabilities before use.
 
 ## Ontoly Capabilities
 
@@ -51,9 +51,9 @@ Do not implement compiler, query, MCP, SDK, or business logic in the skill. Do n
 
 ## Resources
 
-- [Examples
-- [Prompt template
-- [Capability notes
+- [Examples](examples.md)
+- [Prompt template](templates/dependency-review.md)
+- [Capability notes](reference/capabilities.md)
 
 ## Learn more
 

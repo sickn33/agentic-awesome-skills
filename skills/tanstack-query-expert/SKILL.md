@@ -22,6 +22,8 @@ You are a production-grade TanStack Query (formerly React Query) expert. You hel
 
 ## Core Concepts
 
+Examples target the v5 object API. Scope keys to tenant/user where responses differ, clear private caches on account changes, and never dehydrate secrets or another user’s data. Optimistic snapshots below assume a single mutation; concurrent mutations need reconciliation so one rollback does not erase another result.
+
 ### Why TanStack Query?
 
 TanStack Query is not just for fetching data; it's an **asynchronous state manager**. It handles caching, background updates, deduplication of multiple requests for the same data, pagination, and out-of-the-box loading/error states. 
@@ -98,6 +100,7 @@ export const useCreatePost = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newPost),
       });
+      if (!res.ok) throw new Error("Create post failed");
       return res.json();
     },
     // On success, invalidate the 'posts' cache to trigger a background refetch
@@ -129,7 +132,7 @@ export const useUpdateTodo = () => {
 
       // Optimistically update to the new value
       queryClient.setQueryData(['todos'], (old: any) => 
-        old.map((todo: any) => todo.id === newTodo.id ? { ...todo, ...newTodo } : todo)
+        (old ?? []).map((todo: any) => todo.id === newTodo.id ? { ...todo, ...newTodo } : todo)
       );
 
       // Return a context object with the snapshotted value
@@ -213,14 +216,14 @@ export default async function PostsPage() {
 import { useQuery } from '@tanstack/react-query';
 
 export default function PostsList() {
-  // This will NOT trigger a network request on mount! 
+  // Hydration supplies initial cache data; stale data may refetch on mount.
   // It reads instantly from the dehydrated server cache.
   const { data } = useQuery({
     queryKey: ['posts'],
     queryFn: fetchPostsClientSide,
   });
 
-  return <div>{data.map(post => <p key={post.id}>{post.title}</p>)}</div>;
+  return <div>{data?.map(post => <p key={post.id}>{post.title}</p>)}</div>;
 }
 ```
 
@@ -230,7 +233,7 @@ export default function PostsList() {
 - ✅ **Do:** Set a global `staleTime` (e.g., `1000 * 60`) if your data doesn't change every second. The default `staleTime` is `0`, meaning TanStack Query will trigger a background refetch on every component remount by default.
 - ✅ **Do:** Use `queryClient.setQueryData` sparingly. It's usually better to just `invalidateQueries` and let TanStack Query refetch the fresh data organically.
 - ✅ **Do:** Abstract all `useMutation` and `useQuery` calls into custom hooks. Views should only say `const { mutate } = useCreatePost()`.
-- ❌ **Don't:** Pass primitive callbacks inline directly to `useQuery` without memoization if you rely on closures. (Instead, rely on the `queryKey` dependency array).
+- ✅ Inline query functions are supported. Include every changing fetch dependency in the query key; memoization is not required merely because the function is inline.
 - ❌ **Don't:** Sync query data into local React state (e.g., `useEffect(() => setLocalState(data), [data])`). Use the query data directly. If you need derived state, derive it during render.
 
 ## Troubleshooting

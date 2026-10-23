@@ -26,6 +26,10 @@ Automate Mixpanel product analytics through Composio's Mixpanel toolkit via Rube
 3. If connection is not ACTIVE, follow the returned auth link to complete Mixpanel authentication
 4. Confirm connection status shows ACTIVE before running any workflows
 
+## Data and mutation scope
+
+Confirm the exact project, data region, reporting timezone, identity/unique-user rules and date boundaries before comparing counts. State caps, freshness and unavailable dimensions; segmented unique counts are not generally additive and funnel correlations do not establish causation. A query request does not authorize profile updates. Preview exact distinct IDs/operations for batch writes, protect PII and reconcile results before retrying additive/append updates. Discovered live schemas override this static reference.
+
 ## Core Workflows
 
 ### 1. Aggregate Event Data

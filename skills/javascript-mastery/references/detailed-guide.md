@@ -58,7 +58,7 @@ Boolean([]); // true (!)
 "5" === 5; // false (strict)
 ```
 
-**Falsy values** (8 total):
+**Ordinary falsy values** (the legacy browser document.all object is a special additional case):
 `false`, `0`, `-0`, `0n`, `""`, `null`, `undefined`, `NaN`
 
 ### 1.3 Equality Operators
@@ -196,7 +196,7 @@ infinite(); // RangeError: Maximum call stack size exceeded
 
 ```javascript
 // Variable hoisting
-console.log(a); // undefined (hoisted, not initialized)
+console.log(a); // undefined (binding initialized to undefined before assignment)
 var a = 5;
 
 console.log(b); // ReferenceError (TDZ)
@@ -219,7 +219,7 @@ var sayBye = function () {
 
 ```javascript
 // Global context
-console.log(this); // window (browser) or global (Node)
+console.log(this); // browser script: window; ES module: undefined; Node CommonJS: module.exports
 
 // Object method
 const obj = {
@@ -233,7 +233,7 @@ const obj = {
 const obj2 = {
   name: "Bob",
   greet: () => {
-    console.log(this.name); // undefined (inherits outer this)
+    console.log(this.name); // inherits outer this; result depends on script/module environment
   },
 };
 
@@ -436,7 +436,7 @@ const curry = (fn) => {
     if (args.length >= fn.length) {
       return fn.apply(this, args);
     }
-    return (...moreArgs) => curried(...args, ...moreArgs);
+    return (...moreArgs) => curried.apply(this, [...args, ...moreArgs]);
   };
 };
 
@@ -517,7 +517,7 @@ Object.entries(obj); // [["a", 1], ["b", 2]]
 const copy = { ...obj };
 const copy2 = Object.assign({}, obj);
 
-// Freeze (immutable)
+// Freeze is shallow; nested objects remain mutable
 const frozen = Object.freeze({ x: 1 });
 frozen.x = 2; // Silently fails (or throws in strict mode)
 
@@ -634,3 +634,5 @@ const value2 = 0 || "default"; // "default" (0 is falsy)
 - [JavaScript.info](https://javascript.info/)
 - [MDN JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide)
 - [You Don't Know JS](https://github.com/getify/You-Dont-Know-JS)
+
+Examples are independent teaching blocks; concatenating them causes duplicate declarations and intentional errors stop later statements. Event-loop ordering describes the simple example, not all browser/Node phases. Promise.all returns response objects here, does not parse JSON or reject HTTP error statuses, and does not cancel other operations on rejection.

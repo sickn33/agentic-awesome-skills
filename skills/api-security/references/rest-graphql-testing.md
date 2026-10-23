@@ -85,7 +85,7 @@ GET /api/users?role=user&role=admin
 
 ```bash
 # 从无头浏览器爬取
-vespasian crawl --url https://target.com --depth 3
+vespasian crawl --url https://target.invalid --depth 3
 
 # 从 Burp/HAR 导入
 vespasian import --file traffic.har
@@ -115,23 +115,25 @@ entropy --spec api-spec.yaml --ci --watch
 
 ```bash
 # Phase 1-3: GraphQL 侦察 → 利用 → 爆破
-./api.sh graphql-recon https://target.com/graphql
-./api.sh graphql-exploit https://target.com/graphql
+./api.sh graphql-recon https://target.invalid/graphql
+./api.sh graphql-exploit https://target.invalid/graphql
 
 # Phase 4: REST 滥用
-./api.sh rest-abuse https://target.com/api
+./api.sh rest-abuse https://target.invalid/api
 
 # Phase 5: WebSocket
-./api.sh ws-test wss://target.com/ws
+./api.sh ws-test wss://target.invalid/ws
 
 # Phase 6: SOAP/XXE
-./api.sh soap-xxe https://target.com/soap
+./api.sh soap-xxe https://target.invalid/soap
 
 # Phase 7: 限速绕过
-./api.sh rate-bypass https://target.com/api
+./api.sh rate-bypass https://target.invalid/api
 
 # Phase 8: Schema 收割
-./api.sh schema-harvest https://target.com
+./api.sh schema-harvest https://target.invalid
 ```
 
 Source: OWASP API Top 10, Praetorian Vespasian, Entropy, FireTail GraphQL
+
+GraphQL examples containing ellipses or query arrays are pseudocode, not standalone valid requests. Use schema-valid queries and small bounded trials; do not infer DoS from a numeric alias count. Private-network/metadata probes require separate explicit permission and should use controlled endpoints instead of retrieving credentials.

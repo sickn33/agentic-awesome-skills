@@ -20,7 +20,7 @@ Project uses pnpm, not npm. Stated by the user on 2026-08-11 after a lockfile co
 
 ## Closing an entry that stopped being true
 
-Do not delete it. Add an end date and a pointer to what replaced it, then write the new entry alongside.
+Where continued retention is authorized, preserve historical context. Explicit user deletion requests take precedence: delete rather than closing. Add an end date and a pointer to what replaced it, then write the new entry alongside.
 
 ```text
 [closed 2026-06-30, replaced by "State management uses Zustand"] State management uses Redux. Decided in the January architecture review.

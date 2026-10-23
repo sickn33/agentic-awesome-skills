@@ -40,7 +40,7 @@ Refer to the local files for detailed documentation:
 
 ## Advanced Patterns
 
-For production-ready animation patterns, see the `_base/` directory:
+The upstream `_base/` patterns below are not bundled; obtain and inspect them before relying on them:
 
 | Pattern | Description |
 |---------|-------------|
@@ -54,8 +54,8 @@ For production-ready animation patterns, see the `_base/` directory:
 
 1. Read the relevant reference file(s) listed above
 2. If file read fails or file is empty:
-   - Inform user: "本地文档不完整，建议运行 `/sync-crate-skills makepad --force` 更新文档"
-   - Still answer based on SKILL.md patterns + built-in knowledge
+   - Inform the user that supporting documentation is missing; `/sync-crate-skills` is not supplied by this catalog.
+   - Explain only inline patterns with explicit version uncertainty; verify actual crate source/docs before generating dependent APIs.
 3. If reference file exists, incorporate its content into the answer
 
 ## Key Patterns
@@ -268,6 +268,10 @@ Most `draw_*` shader uniforms can be animated:
 - Sizes: `border_size`, `border_radius`, `shadow_radius`
 - Transforms: `scale`, `rotation`, `offset`
 - Opacity: `opacity`
+
+## Integration requirements
+
+The snippets are Live DSL/trait fragments, not standalone Rust. Confirm the pinned makepad-widgets API and the actual widget shader fields; arbitrary `draw_bg.scale`/border fields need not exist. Wire animator event handling/redraw and preserve keyboard focus/disabled behavior. Provide reduced-motion/instant-state behavior where needed and test on the actual renderer before claiming transitions work.
 
 ## When Writing Code
 

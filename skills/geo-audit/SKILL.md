@@ -29,7 +29,7 @@ This skill performs a comprehensive Generative Engine Optimization (GEO) audit o
 
 ## Key Insight
 
-Traditional SEO optimizes for search engine rankings. GEO optimizes for AI citation and recommendation. Sites that score high on GEO metrics see 30-115% more visibility in AI-generated responses (Georgia Tech / Princeton / IIT Delhi 2024 study). The two disciplines overlap but have distinct requirements.
+Traditional SEO optimizes for search engine rankings. GEO optimizes for AI citation and recommendation. No validated relationship between this skill's heuristic score and real platform visibility is established here. Research results from controlled benchmarks do not guarantee gains for a live site. The two disciplines overlap but have distinct requirements.
 
 ---
 
@@ -95,7 +95,7 @@ For each page in the crawl set, record:
 
 ### Phase 2: Parallel Subagent Delegation
 
-Delegate analysis to 5 specialized subagents. Each subagent operates on the collected page data and produces a category score (0-100) plus findings.
+When authorized parallel agents and companion skills are available, delegate analysis to 5 specialized subagents; otherwise perform the same bounded analyses sequentially and disclose missing coverage. Each subagent operates on the collected page data and produces a category score (0-100) plus findings.
 
 **Subagent 1: AI Visibility Analysis** (invoke skill `geo-citability`)
 - Analyze content blocks for quotability by AI systems (citability scoring)
@@ -151,11 +151,11 @@ GEO_Score = (Citability * 0.25) + (Brand * 0.20) + (EEAT * 0.20) + (Technical * 
 
 | Score Range | Rating | Interpretation |
 |---|---|---|
-| 90-100 | Excellent | Top-tier GEO optimization; site is highly likely to be cited by AI |
+| 90-100 | Excellent | Top-tier GEO optimization; strong performance on this local rubric; citation likelihood unmeasured |
 | 75-89 | Good | Strong GEO foundation with room for improvement |
 | 60-74 | Fair | Moderate GEO presence; significant optimization opportunities exist |
 | 40-59 | Poor | Weak GEO signals; AI systems may struggle to cite or recommend |
-| 0-39 | Critical | Minimal GEO optimization; site is largely invisible to AI systems |
+| 0-39 | Critical | Minimal GEO optimization; many rubric items unmet; actual AI visibility unmeasured |
 
 ---
 
@@ -164,16 +164,16 @@ GEO_Score = (Citability * 0.25) + (Brand * 0.20) + (EEAT * 0.20) + (Technical * 
 Every issue found during the audit is classified by severity:
 
 ### Critical (Fix Immediately)
-- All AI crawlers blocked in robots.txt
-- No indexable content (JavaScript-rendered only with no SSR)
+- Unintended crawler blocking conflicting with the site owner's documented access policy
+- Verified failure to render/index important content; JavaScript-only delivery is not automatically nonindexable
 - Domain-level noindex directive
 - Site returns 5xx errors on key pages
-- Complete absence of any structured data
+- Proven material accessibility/data-integrity defect (schema absence alone is not critical)
 - Brand not recognized as an entity by any AI system
 
 ### High (Fix Within 1 Week)
-- Key AI crawlers (GPTBot, ClaudeBot, PerplexityBot) blocked
-- No llms.txt file present
+- Unintended blocking of a specifically desired supported crawler; training and search crawlers serve different purposes
+- Missing useful machine-readable documentation where a specific consumer demonstrably requires it; llms.txt absence alone is not a known ranking defect
 - Zero question-answering content blocks on key pages
 - Missing Organization or LocalBusiness schema
 - No author attribution on content pages
@@ -183,9 +183,9 @@ Every issue found during the audit is classified by severity:
 - Partial AI crawler blocking (some allowed, some blocked)
 - llms.txt exists but is incomplete or malformed
 - Content blocks average under 50 citability score
-- Missing FAQ schema on pages with FAQ content
+- Inaccurate supported structured data; FAQ markup alone does not establish AI visibility or Google feature eligibility
 - Thin author bios without credentials
-- No Wikipedia or Reddit brand presence
+- Missing relevant independent evidence, where justified; never create inauthentic platform presence
 
 ### Low (Optimize When Possible)
 - Minor schema validation errors
@@ -366,3 +366,5 @@ curl -s https://example.com/llms.txt
 ```
 
 > Adapted from [zubair-trabzada/geo-seo-claude](https://github.com/zubair-trabzada/geo-seo-claude) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: upstream runtime helpers not bundled.
+
+Treat this as a sampled audit, not whole-site certification. Report fetch failures and unassessed categories as unknown rather than zero; use consistent scoring criteria and disclose reweighted denominators. Homepage fetches cannot measure real-user Core Web Vitals. Respect explicit exclusions before following sitemaps/redirects, remain within authorized public origins, and do not collapse distinct URLs merely because host/scheme/slash forms look similar without redirect/canonical evidence. Querying AI platforms or third-party services requires available tools, documented probes and any relevant spending/data scope. llms.txt is an emerging convention, not a guaranteed ranking signal; schema recommendations require supported current eligibility and accurate page content.

@@ -18,7 +18,7 @@ disable-model-invocation: true
 # Pi custom / variant model
 
 ## When to Use
-Pi's saved default only loads if the exact `provider/id` exists in its model registry. Pi ships a static bundled list per provider — so OpenRouter **routing-shortcut variants** (`:nitro` = sort by throughput, `:floor` = cheapest, `:exacto` = quality tool-use) and any brand-new slug are NOT in it. When the default doesn't resolve, Pi silently falls through to its built-in per-provider default (for openrouter that's `moonshotai/kimi-k2.6`) — looking like Pi "reset" your model. Fix = register the slug as a custom model so `find(provider, id)` matches.
+Use when a requested provider/model ID is unavailable or a saved selection resolves unexpectedly. Verify the installed Pi version and catalog first: current Pi can overlay its bundled catalog with newer data, and `pi update --models` refreshes it. Do not assume a particular fallback model or that every variant needs manual registration. Check the provider's actual supported ID and routing options.
 
 ## Files (global)
 - `~/.pi/agent/settings.json` — `defaultProvider`, `defaultModel`, `defaultThinkingLevel`
@@ -26,6 +26,8 @@ Pi's saved default only loads if the exact `provider/id` exists in its model reg
 - `~/.pi/agent/auth.json` — provider credentials (check the provider key exists)
 
 ## Steps
+
+Preserve existing provider entries, keep a backup, and never print credential values or copy `auth.json` into reports.
 1. **Confirm the slug is real** before adding it (e.g. check the OpenRouter model/variant exists). A typo'd id also silently falls back.
 2. **Confirm auth.** The provider must have a key in `auth.json` (or an env var like `OPENROUTER_API_KEY`). No auth → the model is registered but unavailable → still falls back.
 3. **Add the model to `models.json`** under `providers.<provider>.models`. For a **built-in provider** (openrouter, anthropic, etc.) you only supply metadata — `api`, `baseUrl`, and auth are inherited from the bundled defaults. Example:
@@ -50,17 +52,17 @@ Pi's saved default only loads if the exact `provider/id` exists in its model reg
      }
    }
    ```
-   Copy `cost`/`contextWindow`/`compat` from the base model (the variant shares them) — find the bundled entry in `<pi-pkg>/node_modules/@earendil-works/pi-ai/dist/providers/<provider>.models.js`. Don't hardcode generic 128k/16k if the real model is bigger.
+   The JSON above is illustrative, not a verified model advertisement. Replace the ID and every capability/limit/cost field with verified provider metadata and the installed Pi schema; variant routing can change pricing. Prefer a minimal entry when overrides are unnecessary. See [Pi model configuration](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/models.md).
 4. **Set the default** in `settings.json`: `defaultProvider` + `defaultModel` = the exact id. Leave `defaultThinkingLevel` as the user has it.
-5. **Verify:** `pi --list-models | grep <id>` shows it, and JSON parses. Optionally smoke-test: `pi --provider <p> --model "<id>" "which model are you?"`.
+5. **Verify:** `pi --list-models | grep <id>` shows it, and JSON parses. An authorized smoke test may incur provider charges; verify the selected model through client/provider metadata, not the model's self-identification.
 
 ## Quirks
 - **Exact match only.** `find()` is exact `provider`+`id` — no fuzzy/colon-stripping for the *saved default* path. The slug in `settings.json` and `models.json` must be byte-identical.
-- **Silent fallback.** Pi prints no error when the default doesn't resolve; it just shows a different model in the footer. That's the tell.
+- **Resolution behavior varies by version.** Inspect the selected provider/model and diagnostics rather than assuming silent fallback.
 - **Don't edit `settings.json` alone.** Setting `defaultModel` to an unregistered slug does nothing — `models.json` is the actual fix.
 - **`enabledModels`** (optional) pins the model picker so Ctrl+P cycling can't drift back: `"enabledModels": ["<provider>/<id>:<thinking>"]`.
 - **Project override.** A repo's `.pi/settings.json` overrides global. If a default reverts only inside one project, check that file first.
-- Restart Pi fully — the registry loads at startup.
+- Current Pi reloads `models.json` when opening `/model`; verify behavior for the installed version. Restart only if needed.
 
 ## Example
 

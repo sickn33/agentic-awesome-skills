@@ -1,7 +1,7 @@
 ---
 name: aws-cost-cleanup
 description: "Automated cleanup of unused AWS resources to reduce costs"
-risk: safe
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -86,7 +86,8 @@ done
 ### S3 Lifecycle Automation
 
 ```bash
-# Apply lifecycle policy to transition old objects to cheaper storage
+# Prepare a lifecycle proposal. This replaces bucket lifecycle configuration;
+# retrieve/merge existing rules and scope the prefix before any authorized apply.
 cat > lifecycle-policy.json <<EOF
 {
   "Rules": [
@@ -114,9 +115,7 @@ cat > lifecycle-policy.json <<EOF
 }
 EOF
 
-aws s3api put-bucket-lifecycle-configuration \
-  --bucket my-bucket \
-  --lifecycle-configuration file://lifecycle-policy.json
+# After explicit review only, apply the merged policy to the confirmed bucket.
 ```
 
 ## Cost Impact Calculator
@@ -136,7 +135,7 @@ volumes = ec2.describe_volumes(
 )
 
 total_size = sum(v['Size'] for v in volumes['Volumes'])
-monthly_cost = total_size * 0.10  # $0.10/GB-month for gp3
+monthly_cost = total_size * 0.10  # illustrative input, not a verified gp3 rate
 
 print(f"Unattached EBS Volumes: {len(volumes['Volumes'])}")
 print(f"Total Size: {total_size} GB")
@@ -163,7 +162,7 @@ from datetime import datetime, timedelta
 def lambda_handler(event, context):
     ec2 = boto3.client('ec2')
     
-    # Delete unattached volumes older than 7 days
+    # Discover candidates only; creation age is not detachment age.
     volumes = ec2.describe_volumes(
         Filters=[{'Name': 'status', 'Values': ['available']}]
     )
@@ -175,15 +174,13 @@ def lambda_handler(event, context):
         create_time = vol['CreateTime'].replace(tzinfo=None)
         if create_time < cutoff:
             try:
-                ec2.delete_volume(VolumeId=vol['VolumeId'])
-                deleted += 1
-                print(f"Deleted volume: {vol['VolumeId']}")
+                print(f"Candidate only (not deleted): {vol['VolumeId']}")
             except Exception as e:
                 print(f"Error deleting {vol['VolumeId']}: {e}")
     
     return {
         'statusCode': 200,
-        'body': f'Deleted {deleted} volumes'
+        'body': 'Dry run only; no volumes deleted'
     }
 ```
 
@@ -313,3 +310,5 @@ kiro-cli chat "Set up weekly automated cleanup using aws-cost-cleanup"
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+An unattached/stopped/old resource can still be a required recovery asset. Establish account/region, ownership, explicit candidate IDs, dependency checks, retention requirements and a tested backup/restore plan before deletion. Creation time does not show when a volume became unused. Keep dry-run as default; a separate approved execution must recheck state/tags and scope IAM. Paginate discovery across intended regions, use current region/type/IOPS/throughput/IPv4 pricing and distinguish estimated avoided cost from realized billed savings. GNU `date -d` is not portable to macOS.

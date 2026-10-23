@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "agents": [
+    {
+      "id": "claim_analyst",
+      "instructions": "agents/claim-analyst.md",
+      "input_schema": "schemas/product-brief.schema.json",
+      "output_schema": "schemas/claim-analysis.schema.json"
+    },
+    {
+      "id": "user_flow_reviewer",
+      "instructions": "agents/user-flow-reviewer.md",
+      "input_schema": "schemas/product-brief.schema.json",
+      "output_schema": "schemas/reviewer-verdict.schema.json"
+    },
+    {
+      "id": "evidence_flow_reviewer",
+      "instructions": "agents/evidence-flow-reviewer.md",
+      "input_schema": "schemas/product-brief.schema.json",
+      "output_schema": "schemas/reviewer-verdict.schema.json"
+    },
+    {
+      "id": "business_flow_reviewer",
+      "instructions": "agents/business-flow-reviewer.md",
+      "input_schema": "schemas/product-brief.schema.json",
+      "output_schema": "schemas/reviewer-verdict.schema.json"
+    },
+    {
+      "id": "uncertainty_reviewer",
+      "instructions": "agents/uncertainty-reviewer.md",
+      "input_schema": "schemas/council-input.schema.json",
+      "output_schema": "schemas/uncertainty-review.schema.json"
+    },
+    {
+      "id": "council_facilitator",
+      "instructions": "agents/council-facilitator.md",
+      "input_schema": "schemas/council-input.schema.json",
+      "output_schema": "schemas/review-result.schema.json"
+    }
+  ]
+}

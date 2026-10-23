@@ -37,7 +37,7 @@ my-skill/
 └── assets/           # Optional: templates, fonts, static files
 ```
 
-Skills are an open standard (agentskills.io), originally created by Anthropic and adopted by OpenAI Codex, Cursor, Gemini CLI, Microsoft Agent Framework, Google ADK, and 40+ other agent products. A skill written once works across all compatible agents.
+Skills are an open standard (agentskills.io), originally created by Anthropic and adopted by OpenAI Codex, Cursor, Gemini CLI, Microsoft Agent Framework, Google ADK, and 40+ other agent products. The format is portable, but discovery paths, tool names, invocation controls and permissions require testing in each target host.
 
 ---
 
@@ -73,10 +73,10 @@ Only `name` + `description` from frontmatter are injected into the system prompt
 **Level 2 — Activation (<5,000 tokens, loaded on match):**
 When the user's request matches a skill's description, the agent reads the full `SKILL.md` body into context.
 
-**Level 3 — Execution (unbounded, on demand):**
+**Level 3 — Execution (bounded by host resources, on demand):**
 The agent reads referenced files (`references/foo.md`) or runs scripts (`scripts/validate.py`) only as needed. Scripts can execute without their source being loaded into context at all.
 
-This is why bundled content has no practical limit. Files don't consume tokens until accessed.
+Bundled files avoid eager token loading, but size, trust, runtime and packaging limits still apply. Read/review scripts before granting execution; loading on demand is not a security guarantee.
 
 ---
 
@@ -104,12 +104,12 @@ description: What this skill does AND when to use it. Include trigger phrases th
 ```
 
 Frontmatter constraints:
-- `name` is lowercase, hyphens only, 1–64 chars, **exactly matches the parent folder name**
+- `name` uses lowercase letters, digits and hyphens, 1–64 chars, matches its parent directory, and has no leading/trailing or consecutive hyphens
 - Avoid `<` and `>` in frontmatter (they can inject into the system prompt)
 - Invalid YAML silently prevents loading
 
 Optional standard fields:
-- `disable-model-invocation: true` — stops the agent from auto-loading the skill based on the conversation; it can only be triggered manually (e.g. `/skill-name`). Now a standard Agent Skills spec field, so it works across spec-compliant clients (Claude Code, Copilot, etc.), not just Claude. Caveat: it prevents auto-invocation, but some clients (Claude Code, open bug) still inject the `description` into context, so it doesn't always save the discovery-level tokens. Use for manual-only utilities you don't want firing automatically.
+- Invocation controls such as `disable-model-invocation` are host-specific extensions, not guaranteed core-spec fields. Check the target host’s current documentation and actual discovery behavior before relying on manual-only activation.
 
 ---
 
@@ -139,7 +139,7 @@ A mature setup uses both. Pattern A gives the agent better tools. Pattern B give
 ## 6. How to write effective skills — do this
 
 ### Description as routing contract
-The description is the only thing the agent sees before deciding to load the skill. If your skill doesn't trigger, the description is wrong 95% of the time, not the body.
+The description is the only thing the agent sees before deciding to load the skill. If a skill does not trigger, inspect the description alongside installation, discovery, host settings and model routing; no universal failure percentage is established.
 
 Include three elements:
 1. **What** the skill does (one phrase)
@@ -212,7 +212,7 @@ Skills can write to repo-level files (CONTEXT.md, ADRs, decision logs) that futu
 Every line in SKILL.md should provide context the model doesn't already have. No Python syntax tutorials. No "what is git." Challenge every paragraph.
 
 ### Don't include human-facing docs
-No README.md, no CHANGELOG.md, no INSTALLATION_GUIDE.md inside the skill folder. Skills are for agents.
+Keep agent instructions focused. Supporting READMEs, changelogs and licenses are allowed by the format and may be necessary for humans or provenance; do not delete them solely for this preference.
 
 ### Don't write vague descriptions
 - Bad: "A helpful skill for documents"
@@ -265,7 +265,7 @@ Skills can execute arbitrary code and steer agent behavior. A malicious skill is
 - **"Which skill did you use?"** — ask the agent post-task. Fastest routing debug.
 - **Routing fails → description problem.** Add specific trigger phrases.
 - **Execution fails → body problem.** Add explicit steps, examples, or validation.
-- **Skills snapshot at session start.** Edits during a session require a restart.
+- **Discovery/reload is host-specific.** Verify the actual host mechanism before restarting or claiming active-session uptake.
 - **Test against the weakest model you'll deploy on.** Stronger models forgive vague skills; weaker models expose them.
 - **Run an eval suite.** A handful of representative prompts that should and shouldn't trigger the skill, with expected outputs.
 
@@ -302,7 +302,7 @@ Before publishing a skill:
 - [ ] Frontmatter `name` matches folder name
 - [ ] Description includes what + when + differentiator
 - [ ] Description includes likely user trigger phrases
-- [ ] No human-facing docs inside the skill folder
+- [ ] Human-facing support/provenance files retained when useful; no duplicate instructions
 - [ ] No time-sensitive information
 - [ ] Relative paths only
 - [ ] State-check before action where applicable

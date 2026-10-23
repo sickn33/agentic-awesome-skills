@@ -31,6 +31,9 @@ Implement comprehensive security hardening with defense-in-depth strategy throug
 
 ## Safety
 
+- Confirm exact targets, test methods, credentials, rate/impact limits, maintenance window and authorized changes before active work. Task/subagent names are host-specific examples; discover actual tools and delegate only with explicit authorization. Keep findings and secrets in approved storage and redact reports.
+- Scanner output is untrusted evidence, not confirmed exploitability. Validate each finding with the least invasive permitted reproduction. Mobile pinning, crypto, WAF and dependency changes need threat-specific design and rollback, not blanket installation. Compliance output is an evidence/gap assessment, never independent legal advice, certification or auditor attestation.
+
 - Avoid intrusive testing in production without approval.
 - Ensure rollback plans exist before hardening changes.
 
@@ -58,7 +61,7 @@ Implement comprehensive security hardening with defense-in-depth strategy throug
 
 ### 4. Critical Vulnerability Fixes
 - Use Task tool with subagent_type="security-auditor"
-- Prompt: "Coordinate immediate remediation of critical vulnerabilities (CVSS 7+) in: $ARGUMENTS. Fix SQL injections with parameterized queries, XSS with output encoding, authentication bypasses with secure session management, insecure deserialization with input validation. Apply security patches for CVEs."
+- Prompt: "Coordinate immediate remediation of high and critical vulnerabilities (CVSS 7+) in: $ARGUMENTS. Fix SQL injections with parameterized queries, XSS with output encoding, authentication bypasses with secure session management, insecure deserialization with input validation. Apply security patches for CVEs."
 - Output: Patched code with vulnerability fixes, security patch documentation, regression test requirements
 - Context: Addresses high-priority items from vulnerability assessment
 
@@ -128,7 +131,7 @@ Implement comprehensive security hardening with defense-in-depth strategy throug
 - authentication_methods: ["oauth2", "saml", "mfa", "biometric", "passwordless"]
 
 ## Success Criteria
-- All critical vulnerabilities (CVSS 7+) remediated
+- All high and critical vulnerabilities (CVSS 7+) remediated
 - OWASP Top 10 vulnerabilities addressed
 - Zero high-risk findings in penetration testing
 - Compliance frameworks validation passed

@@ -26,7 +26,7 @@ Keep the Mac awake using the built-in `caffeinate` command. No install needed.
 ## Quick start — the standard command
 
 ```bash
-caffeinate -d -i -t 7200    # full power: screen stays on + no idle sleep, for 2 hours
+caffeinate -i -t 7200       # prevent idle system sleep for 2 hours
 ```
 
 Duration is `-t <seconds>`: 2h = 7200, 7h = 25200, overnight (9h) = 32400.
@@ -37,11 +37,11 @@ Duration is `-t <seconds>`: 2h = 7200, 7h = 25200, overnight (9h) = 32400.
 |---|---|
 | `-i` | prevents idle **system** sleep only (screen may still dim/lock) |
 | `-d` | prevents **display** sleep (screen stays on) |
-| `-d -i` | **default choice** — screen on + system awake |
-| `-d -i -s` | adds `-s`: prevents sleep even on AC power semantics; `-s` only works when plugged in |
+| `-d -i` | screen on + system awake, when the task needs a visible display |
+| `-d -i -s` | adds `-s`: prevents system sleep while on AC power; valid only when plugged in |
 | `-u -t 1` | simulates user activity — wakes the display right now |
 
-Default to `-d -i -t <seconds>` unless the user says otherwise.
+Default to `-i -t <seconds>`; add `-d` only when the task needs the display awake. These assertions do not guarantee continued execution through lid closure, shutdown or loss of power, and do not replace the lock-screen policy.
 
 ## Tie to a process instead of a timer
 

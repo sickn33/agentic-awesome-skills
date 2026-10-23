@@ -12,12 +12,15 @@ $ARGUMENTS
 
 ## Instructions
 
+The examples are independent architecture fragments, not complete applications. Missing helpers (ignore/type/environment detection, secret heuristic, config loading and envelope detection) must be implemented and reviewed before use; do not claim a scan or runtime reload from these stubs. Never execute config.js to inspect untrusted configuration. Bound file size/depth, refuse symlink escapes, deduplicate discovery and parse YAML safely. Runtime watching needs serialized/debounced reloads and a stored watcher closed on shutdown. Schemas validate shape, not TLS connectivity, password strength or secret absence; environment encryption/password rules need explicit checks before claiming enforcement. Redact examples and documentation defaults.
+
 ### 1. Configuration Analysis
 
 Analyze existing configuration structure and identify validation needs:
 
 ```python
 import os
+import re
 import yaml
 import json
 from pathlib import Path
@@ -96,11 +99,12 @@ export class ConfigValidator {
   constructor() {
     this.ajv = new Ajv({
       allErrors: true,
-      strict: false,
-      coerceTypes: true
+      strict: true,
+      coerceTypes: false
     });
     ajvFormats(this.ajv);
     this.addCustomFormats();
+    for (const [name, schema] of Object.entries(schemas)) this.ajv.addSchema(schema, name);
   }
 
   private addCustomFormats() {
@@ -115,10 +119,10 @@ export class ConfigValidator {
 
     this.ajv.addFormat('port', {
       type: 'number',
-      validate: (data: number) => data >= 1 && data <= 65535
+      validate: (data: number) => Number.isInteger(data) && data >= 1 && data <= 65535
     });
 
-    this.ajv.addFormat('duration', {
+    this.ajv.addFormat('simple-duration', {
       type: 'string',
       validate: /^\d+[smhd]$/
     });
@@ -171,10 +175,11 @@ export const schemas = {
 
 ```python
 from typing import Dict, List, Any
+from urllib.parse import urlparse
 
 class EnvironmentValidator:
     def __init__(self):
-        self.environments = ['development', 'staging', 'production']
+        self.environments = ['development', 'production'] # Add explicit reviewed staging policy before accepting it.
         self.environment_rules = {
             'development': {
                 'allow_debug': True,
@@ -206,7 +211,7 @@ class EnvironmentValidator:
         if rules['require_https']:
             urls = self._extract_urls(config)
             for url_path, url in urls:
-                if url.startswith('http://') and 'localhost' not in url:
+                if urlparse(url).scheme != 'https':
                     violations.append({
                         'rule': 'require_https',
                         'message': f'HTTPS required for {url_path}',
@@ -219,7 +224,7 @@ class EnvironmentValidator:
 ### 4. Configuration Testing
 
 ```typescript
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect, beforeEach } from '@jest/globals';
 import { ConfigValidator } from './config-validator';
 
 describe('Configuration Validation', () => {
@@ -264,8 +269,8 @@ import { EventEmitter } from 'events';
 import * as chokidar from 'chokidar';
 
 export class RuntimeConfigValidator extends EventEmitter {
-  private validator: ConfigValidator;
   private currentConfig: any;
+  constructor(private validator: ConfigValidator, private schemaName: string) { super(); }
 
   async initialize(configPath: string): Promise<void> {
     this.currentConfig = await this.loadAndValidate(configPath);
@@ -277,7 +282,7 @@ export class RuntimeConfigValidator extends EventEmitter {
 
     const validationResult = this.validator.validate(
       config,
-      this.detectEnvironment()
+      this.schemaName
     );
 
     if (!validationResult.valid) {
@@ -286,9 +291,7 @@ export class RuntimeConfigValidator extends EventEmitter {
         errors: validationResult.errors
       });
 
-      if (!this.isDevelopment()) {
-        throw new Error('Configuration validation failed');
-      }
+      throw new Error('Configuration validation failed'); // Never install invalid config, including development.
     }
 
     return config;
@@ -306,8 +309,7 @@ export class RuntimeConfigValidator extends EventEmitter {
 
         if (JSON.stringify(newConfig) !== JSON.stringify(this.currentConfig)) {
           this.emit('config:changed', {
-            oldConfig: this.currentConfig,
-            newConfig
+            changed: true // Do not emit raw configs containing secrets.
           });
           this.currentConfig = newConfig;
         }
@@ -322,7 +324,8 @@ export class RuntimeConfigValidator extends EventEmitter {
 ### 6. Configuration Migration
 
 ```python
-from typing import Dict
+from typing import Dict, List
+from copy import deepcopy
 from abc import ABC, abstractmethod
 import semver
 
@@ -350,13 +353,17 @@ class ConfigMigrator:
         if semver.compare(current_version, target_version) == 0:
             return config
 
-        result = config.copy()
-        for migration in self.migrations:
+        if semver.compare(current_version, target_version) > 0:
+            raise ValueError('Downgrade not implemented; refusing silent no-op')
+        result = deepcopy(config)
+        for migration in sorted(self.migrations, key=lambda m: semver.Version.parse(m.version)):
             if (semver.compare(migration.version, current_version) > 0 and
                 semver.compare(migration.version, target_version) <= 0):
                 result = migration.up(result)
                 result['_version'] = migration.version
 
+        if result.get('_version', '0.0.0') != target_version:
+            raise ValueError('Migration path does not reach requested version')
         return result
 ```
 
@@ -370,14 +377,15 @@ interface EncryptedValue {
   value: string;
   algorithm: string;
   iv: string;
-  authTag?: string;
+  authTag: string;
 }
 
 export class SecureConfigManager {
   private encryptionKey: Buffer;
 
-  constructor(masterKey: string) {
-    this.encryptionKey = crypto.pbkdf2Sync(masterKey, 'config-salt', 100000, 32, 'sha256');
+  constructor(key: Buffer) {
+    if (key.length !== 32) throw new Error('Require a 32-byte key from an approved secret manager');
+    this.encryptionKey = Buffer.from(key);
   }
 
   encrypt(value: any): EncryptedValue {
@@ -398,8 +406,9 @@ export class SecureConfigManager {
   }
 
   decrypt(encryptedValue: EncryptedValue): any {
+    if (encryptedValue.algorithm !== 'aes-256-gcm' || !/^[a-f0-9]{32}$/i.test(encryptedValue.iv) || !/^[a-f0-9]{32}$/i.test(encryptedValue.authTag)) throw new Error('Invalid encrypted envelope');
     const decipher = crypto.createDecipheriv(
-      encryptedValue.algorithm,
+      'aes-256-gcm',
       this.encryptionKey,
       Buffer.from(encryptedValue.iv, 'hex')
     );
@@ -415,7 +424,9 @@ export class SecureConfigManager {
   }
 
   async processConfig(config: any): Promise<any> {
-    const processed = {};
+    if (Array.isArray(config)) return Promise.all(config.map(v => this.processConfig(v)));
+    if (config === null || typeof config !== 'object') return config;
+    const processed: Record<string, unknown> = Object.create(null);
 
     for (const [key, value] of Object.entries(config)) {
       if (this.isEncryptedValue(value)) {

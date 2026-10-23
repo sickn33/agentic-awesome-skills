@@ -44,6 +44,10 @@ Implement systematic cost optimization strategies to reduce cloud spending while
 - Optimize multi-cloud costs
 - Meet budget constraints
 
+## Evidence and irreversible commitments
+
+All discount percentages/terms and example instance sizes below are historical illustrations, not current quotes or workload recommendations. Verify provider/region/service eligibility and actual effective utilization before buying commitments; reservations/discount plans are financial commitments with changing exchange/cancellation rules. Use read-only billing/utilization first, compare equal workload/reliability windows and include egress, storage minimums, retrieval, taxes and idle costs. Deletion/lifecycle expiry, downsizing and alert subscriptions require exact-target authorization and tested recovery. Budget alerts are notifications, not a spending cap; serverless can retain baseline/storage/provisioned costs.
+
 ## Cost Optimization Framework
 
 ### 1. Visibility

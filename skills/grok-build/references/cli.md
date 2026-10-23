@@ -42,9 +42,7 @@ Verified 2026-07-09: `--permission-mode acceptEdits` FAILS headlessly — the ed
 hits a permission gate with no interactive approver, and the run returns
 `stopReason: "Cancelled"` with no file change. `--always-approve` auto-approves BOTH
 edits AND shell commands in one flag (Grok ran the acceptance test itself in the same
-run). This is safe in the grok-build workflow because dispatch happens on a clean tree,
-the task spec constrains scope, and the orchestrator reviews the full diff before
-committing.
+run). A clean tree, prompt constraints and later diff review are not a sandbox. The flag also authorizes shell commands and their side effects, including access outside the worktree. Require a separately verified OS/container sandbox, minimal credentials/network and explicit approval for the whole effective capability scope; otherwise do not dispatch headlessly.
 
 Optional hardening: `--sandbox <profile>` (env `GROK_SANDBOX`) restricts filesystem and
 network access — layer it on for untrusted repos.

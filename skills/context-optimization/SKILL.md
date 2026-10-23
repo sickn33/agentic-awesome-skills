@@ -8,7 +8,7 @@ date_added: "2026-01-30"
 
 # Context Optimization Techniques
 
-Context optimization extends the effective capacity of limited context windows through strategic compression, masking, caching, and partitioning. The goal is not to magically increase context windows but to make better use of available capacity. Effective optimization can double or triple effective context capacity without requiring larger models or longer contexts.
+Context optimization extends the effective capacity of limited context windows through strategic compression, masking, caching, and partitioning. The goal is not to magically increase context windows but to make better use of available capacity. Effectiveness depends on task/workload and must be measured; compression can lose critical information.
 
 ## When to Use
 Activate this skill when:
@@ -44,7 +44,7 @@ Tool outputs: Preserve key findings, metrics, and conclusions. Remove verbose ra
 
 Conversational turns: Preserve key decisions, commitments, and context shifts. Remove filler and back-and-forth.
 
-Retrieved documents: Preserve key facts and claims. Remove supporting evidence and elaboration.
+Retrieved documents: Preserve key facts, uncertainty and source pointers so claims remain auditable; retain exact evidence needed for current decisions.
 
 ### Observation Masking
 
@@ -92,6 +92,10 @@ Design explicit context budgets. Allocate tokens to categories: system prompt, t
 **Trigger-Based Optimization**
 Monitor signals for optimization triggers: token utilization above 80%, degradation indicators, and performance drops. Apply appropriate optimization techniques based on context composition.
 
+## Preservation boundaries
+
+Do not discard authorization, user constraints, unresolved blockers, failed checks or source identities when summarizing. Keep stable references to full evidence and distinguish files actually read from summaries. Honor host instruction hierarchy and data retention; context optimization cannot rewrite system/developer rules or authorize extra agents. Provider prompt caching may reduce billed/compute work without increasing the model context limit.
+
 ## Practical Guidance
 
 ### Optimization Decision Framework
@@ -110,7 +114,7 @@ What to apply:
 
 ### Performance Considerations
 
-Compaction should achieve 50-70% token reduction with less than 5% quality degradation. Masking should achieve 60-80% reduction in masked observations. Cache optimization should achieve 70%+ hit rate for stable workloads.
+Set workload-specific token, latency and quality targets from a measured baseline. No fixed reduction, quality-loss or cache-hit target is established by this file.
 
 Monitor and iterate on optimization strategies based on measured effectiveness.
 

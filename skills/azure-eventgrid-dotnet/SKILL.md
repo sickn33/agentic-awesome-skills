@@ -5,13 +5,9 @@ risk: critical
 source: community
 date_added: '2026-02-27'
 ---
-
 # Azure.Messaging.EventGrid (.NET)
-
 Client library for publishing events to Azure Event Grid topics, domains, and namespaces.
-
 ## Installation
-
 ```bash
 # For topics and domains (push delivery)
 dotnet add package Azure.Messaging.EventGrid
@@ -23,7 +19,7 @@ dotnet add package Azure.Messaging.EventGrid.Namespaces
 dotnet add package Microsoft.Azure.Messaging.EventGrid.CloudNativeCloudEvents
 ```
 
-**Current Version**: 4.28.0 (stable)
+**Historical example version**: 4.28.0; verify and pin compatible SDK/Functions packages.
 
 ## Environment Variables
 
@@ -187,6 +183,7 @@ await client.SendEventsAsync(events);
 
 ```csharp
 using System.Text.Json;
+using Azure.Core.Serialization;
 
 var serializerOptions = new JsonSerializerOptions
 {
@@ -254,7 +251,7 @@ foreach (ReceiveDetails detail in result.Details)
     try
     {
         // Process the event
-        Console.WriteLine($"Event: {cloudEvent.Type}, Data: {cloudEvent.Data}");
+        await ProcessEventIdempotentlyAsync(cloudEvent); // application helper; durable success before ack
         lockTokensToAck.Add(lockToken);
     }
     catch (Exception)
@@ -277,7 +274,7 @@ if (lockTokensToRelease.Any())
 }
 ```
 
-### Reject Events (Dead Letter)
+### Reject Events (dead-letter behavior depends on subscription configuration)
 
 ```csharp
 // Reject events that cannot be processed
@@ -411,7 +408,7 @@ IotHubDeviceCreatedEventData deviceCreated;
 | Feature | EventGridEvent | CloudEvent |
 |---------|----------------|------------|
 | Standard | Azure-specific | CNCF standard |
-| Required fields | subject, eventType, dataVersion, data | source, type |
+| Required fields | Verify the selected Event Grid schema | specversion, id, source, type (SDK may initialize some) |
 | Extensibility | Limited | Extension attributes |
 | Interoperability | Azure only | Cross-platform |
 
@@ -461,8 +458,9 @@ try
     var primaryClient = new EventGridPublisherClient(primaryUri, primaryKey);
     await primaryClient.SendEventsAsync(events);
 }
-catch (RequestFailedException)
+catch (RequestFailedException ex) when (ex.Status >= 500 || ex.Status == 408)
 {
+    // Explicitly configured failover only; primary acceptance may be unknown.
     // Failover to secondary region
     var secondaryClient = new EventGridPublisherClient(secondaryUri, secondaryKey);
     await secondaryClient.SendEventsAsync(events);
@@ -495,3 +493,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Snippets are separate fragments, not a compiled application. Use the actual topic input schema, endpoint and subscription mode; do not mix Functions in-process and isolated-worker imports/packages. Protect event payloads and SAS/lock tokens from logs. Verify per-event acknowledgement failures and lock expiry; reject can discard events when dead-lettering is not configured. Cross-region publishing may duplicate accepted events and does not transfer subscriptions or guarantee ordering; retain stable event IDs and deduplicate durably. Validate webhook authentication/subscription challenges and schemas before processing. Limits vary by topic/namespace API and must be verified.

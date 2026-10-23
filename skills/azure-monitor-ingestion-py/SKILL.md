@@ -52,6 +52,8 @@ client = LogsIngestionClient(
 )
 ```
 
+Use an authorized endpoint/DCR/stream and schema, with scoped identity permissions; DCE versus DCR ingestion endpoints depend on setup. The 2024 timestamps below are historical sample data, not a current live-ingestion probe. Use approved synthetic current timestamps for validation, redact PII/secrets before upload and confirm retention/charges. Close both client and credential, including failure paths; no logs should be uploaded simply to validate this guide.
+
 ## Upload Custom Logs
 
 ```python
@@ -111,19 +113,9 @@ if failed_logs:
     client.upload(rule_id=rule_id, stream_name=stream_name, logs=failed_logs)
 ```
 
-## Ignore Errors
+## Incomplete uploads
 
-```python
-def ignore_errors(error):
-    pass  # Silently ignore upload failures
-
-client.upload(
-    rule_id=rule_id,
-    stream_name=stream_name,
-    logs=logs,
-    on_error=ignore_errors
-)
-```
+An on_error callback can suppress the default exception. Persist a bounded, protected failure summary and report the upload as partial/failed; never silently discard failed logs or label the whole batch successful. Retry only classified transient failures with bounded backoff, reconciling ambiguous outcomes and duplicate-ingestion impact.
 
 ## Async Client
 
@@ -168,7 +160,7 @@ The SDK automatically:
 - Compresses each chunk with gzip
 - Uploads chunks in parallel
 
-No manual batching needed for large log sets.
+SDK chunking does not bound the application's input memory or total ingestion cost. Limit input bytes/rows, confirm the installed version's batching/concurrency and handle partial success.
 
 ## Client Types
 

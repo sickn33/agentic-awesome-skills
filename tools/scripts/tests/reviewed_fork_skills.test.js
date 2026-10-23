@@ -33,6 +33,13 @@ const supportLedger = {schema_version:1, entries:[supportEntry]};
 const resolveSupport = (custom=supportLedger, tree=entry.tree_oid) =>
   resolveReviewedSupportPaths('.', identity, {ledger:custom, resolveTree:()=>tree});
 assert.deepEqual(resolveSupport(), [root+'/README.md', root+'/.gitignore', root+'/scripts/report.py']);
+const resourceSupportEntry = {...entry, reviewed_support_paths:[root+'/resources/scripts/report.py']};
+assert.deepEqual(resolveSupport({schema_version:1, entries:[resourceSupportEntry]}),
+  [root+'/resources/scripts/report.py'], 'reviewed resources/scripts Python helpers are explicit');
+assert.throws(()=>resolveSupport({schema_version:1, entries:[{...entry,
+  reviewed_support_paths:[root+'/resources/scripts/report.sh']}]}), /Invalid/);
+assert.throws(()=>resolveSupport({schema_version:1, entries:[{...entry,
+  reviewed_support_paths:[root+'/resources/other/report.py']}]}), /Invalid/);
 assert.deepEqual(resolveReviewedSkillRoots('.', identity, {ledger:supportLedger, resolveTree:()=>entry.tree_oid}), [root]);
 for (const bad of [
   [root+'/../outside.md'], [root+'/assets/tool.sh'], [root+'/scripts/tool.sh'],
@@ -49,6 +56,11 @@ assert.equal(checkSupport(root+'/scripts/other.py', [root], [root+'/README.md'])
 assert.equal(checkSupport(root+'/scripts/other.sh', [root], [root+'/README.md']), false);
 assert.equal(classifyChangeRecords([{...record, new_path:root+'/README.md'}],
   {reviewedSkillRoots:[root], reviewedSupportPaths:[root+'/README.md']}).approvalSafe, true);
+assert.equal(classifyChangeRecords([{...record, new_path:root+'/resources/scripts/report.py'}],
+  {reviewedSkillRoots:[root], reviewedSupportPaths:[root+'/resources/scripts/report.py']}).approvalSafe, true);
+assert.equal(classifyChangeRecords([{...record, new_path:root+'/resources/scripts/report.py', new_mode:'100755'}],
+  {reviewedSkillRoots:[root], reviewedSupportPaths:[root+'/resources/scripts/report.py']}).approvalSafe, false,
+  'reviewed resources/scripts helper cannot be executable');
 assert.equal(classifyChangeRecords([{...record, new_path:root+'/README.md'}], {reviewedSkillRoots:[root]}).approvalSafe, false);
 assert.equal(classifyChangeRecords([{...record, new_path:root+'/scripts/check.py', new_mode:'100755'}],
   {reviewedSkillRoots:[root], reviewedSupportPaths:[root+'/README.md']}).approvalSafe, false, 'mode gate still applies');

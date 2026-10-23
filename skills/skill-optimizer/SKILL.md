@@ -42,7 +42,7 @@ Auto-detect the current agent platform and scan the corresponding paths:
 | Session transcripts | `~/.claude/projects/**/*.jsonl` | `~/.codex/sessions/**/*.jsonl` | — |
 | Skill files | `~/.claude/skills/*/SKILL.md` | `~/.codex/skills/*/SKILL.md` | `~/.agents/skills/*/SKILL.md` |
 
-**Platform detection:** Check which directories exist. Scan all available sources — a user may have both Claude Code and Codex installed.
+**Platform detection:** Check which directories exist. Use only user-authorized platforms, date ranges and transcripts. Directory existence does not authorize reading unrelated chat histories. Redact private messages and secrets from reports; prefer minimal excerpts and local analysis.
 
 ## Workflow
 
@@ -60,7 +60,7 @@ Output report with P0/P1/P2
 
 ### Step 1: Identify Target Skills
 
-Scan skill directories in order: `~/.claude/skills/`, `~/.codex/skills/`, `~/.agents/skills/`. Deduplicate by skill name (same name in multiple locations = same skill). For each, read `SKILL.md` and extract:
+Scan skill directories in order: `~/.claude/skills/`, `~/.codex/skills/`, `~/.agents/skills/`. Identify copies by resolved path and content hash; the same name in multiple locations may contain different versions and must not be merged silently. For each, read `SKILL.md` and extract:
 - name, description (from YAML frontmatter)
 - trigger keywords (from description field)
 - defined workflow steps (Step 1/2/3... or ### sections under Workflow)
@@ -84,7 +84,7 @@ Use python3 scripts via Bash to scan session JSONL files. Extract:
 - `event_msg` events → tool execution and skill-related events
 - User messages from `turn_context` events (for reaction analysis)
 
-**Note:** Codex injects skills via context rather than explicit `Skill` tool calls. Skill loading (present in `base_instructions`) does NOT equal active invocation. To detect actual use, search for skill-specific workflow markers (step headers, output formats) in `response_item` content within that session. A skill is "invoked" only if the agent produced output following the skill's defined workflow.
+**Note:** Codex injects skills via context rather than explicit `Skill` tool calls. Skill loading (present in `base_instructions`) does NOT equal active invocation. To detect actual use, search for skill-specific workflow markers (step headers, output formats) in `response_item` content within that session. Workflow markers are indirect evidence of possible use, not proof of invocation; report confirmed calls separately from inferred matches and record uncertainty. Transcript schemas differ by client version; inspect actual event shapes before extracting messages.
 
 **Aggregated:**
 - Per-skill: invocation count, trigger keyword match count
@@ -117,7 +117,7 @@ After a skill is invoked in a session, read the user's next 3 messages. Classify
 - **Positive**: "good", "ok", "continue", "nice", user follows the workflow
 - **Silent switch**: user changes topic entirely (likely false positive trigger)
 
-Report per-skill satisfaction rate.
+Report observed reaction categories with sample counts; silence, interruption and topic changes do not prove dissatisfaction or false triggering.
 
 #### 4.3 Workflow Completion Rate
 
@@ -138,7 +138,7 @@ Check each SKILL.md against these 14 rules:
 
 | Check | Pass Criteria |
 |-------|--------------|
-| Frontmatter format | Only `name` + `description`, total < 1024 chars |
+| Frontmatter format | Validate against the target host/repository schema; additional supported metadata is allowed |
 | Name format | Letters, numbers, hyphens only |
 | Description trigger | Starts with "Use when..." or has explicit trigger conditions |
 | Description workflow leak | Description does NOT summarize the skill's workflow steps (CSO violation) |
@@ -257,6 +257,8 @@ Rate each skill on a 5-point scale:
 ```
 
 ## Research Background
+
+The cited studies concern specific models/tasks and do not establish universal skill-routing improvement, word-count limits or causal effects. Verify each paper and its experimental setting before quoting a numerical effect. Treat static scores, undertrigger matches and token ratios as advisory heuristics, not functionality, safety or merge certification. If a dimension lacks reliable evidence, report N/A rather than imputing it into a composite score.
 
 The analysis dimensions in this report are grounded in the following research:
 - **Undertrigger detection**: Memento-Skills (arXiv:2603.18743) — skills as structured files require accurate routing; unrouted skills cannot self-improve via the read-write learning loop

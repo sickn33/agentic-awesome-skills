@@ -37,7 +37,7 @@ What are you building?
 │   └── Hono (zero-dependency, ultra-fast cold starts)
 │
 ├── High Performance API
-│   └── Fastify (2-3x faster than Express)
+│   └── Fastify (benchmark the actual workload)
 │
 ├── Enterprise/Team familiarity
 │   └── NestJS (structured, DI, decorators)
@@ -72,7 +72,7 @@ What are you building?
 ### Native TypeScript
 
 ```
-Node.js 22+: --experimental-strip-types
+Node.js TypeScript support depends on the exact runtime version and syntax; verify the installed release before using type stripping
 ├── Run .ts files directly
 ├── No build step needed for simple projects
 └── Consider for: scripts, simple APIs
@@ -176,7 +176,7 @@ Logs get:
 | Not found | 404 | Resource doesn't exist |
 | Conflict | 409 | Duplicate or state conflict |
 | Validation | 422 | Schema valid but business rules fail |
-| Server error | 500 | Our fault, log everything |
+| Server error | 500 | Internal failure; log redacted diagnostic context |
 
 ---
 
@@ -189,7 +189,7 @@ Logs get:
 | `async/await` | Sequential async operations |
 | `Promise.all` | Parallel independent operations |
 | `Promise.allSettled` | Parallel where some can fail |
-| `Promise.race` | Timeout or first response wins |
+| `Promise.race` | First settled result; a timeout race does not cancel underlying work |
 
 ### Event Loop Awareness
 
@@ -256,7 +256,7 @@ Where to validate:
 - [ ] **Security headers**: Helmet.js or equivalent
 - [ ] **HTTPS**: Everywhere in production
 - [ ] **CORS**: Properly configured
-- [ ] **Secrets**: Environment variables only
+- [ ] **Secrets**: Approved secret store or protected runtime injection; never source-control secrets
 - [ ] **Dependencies**: Regularly audited
 
 ### Security Mindset
@@ -338,6 +338,7 @@ Before implementing:
 > **Remember**: Node.js best practices are about decision-making, not memorizing patterns. Every project deserves fresh consideration based on its requirements.
 
 ## Limitations
+- Framework comparisons are qualitative and version/workload dependent. Examples are not benchmark evidence. Use explicit cancellation/deadlines for underlying I/O and redact secrets/PII from diagnostic context.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

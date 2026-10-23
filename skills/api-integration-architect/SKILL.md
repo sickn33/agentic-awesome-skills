@@ -98,7 +98,7 @@ class APIClient:
         api_key: str,
         timeout: float = 30.0,
         max_retries: int = 3,
-        rate_limit_rps: float = 10.0,
+        max_concurrency: int = 10,
     ):
         self.base_url = base_url.rstrip("/")
         self.max_retries = max_retries
@@ -111,7 +111,9 @@ class APIClient:
             },
             timeout=httpx.Timeout(timeout, connect=5.0),
         )
-        self._rate_limiter = asyncio.Semaphore(int(rate_limit_rps))
+        if max_concurrency < 1 or max_retries < 1:
+            raise ValueError("concurrency and attempts must be positive")
+        self._rate_limiter = asyncio.Semaphore(max_concurrency)  # concurrency cap, not requests/sec
     
     async def _request(
         self,
@@ -126,7 +128,11 @@ class APIClient:
         import uuid
         cid = correlation_id or str(uuid.uuid4())[:8]
         
-        for attempt in range(self.max_retries):
+        # Restrict this example to same-origin relative API paths.
+        if not path.startswith("/") or path.startswith("//") or "://" in path:
+            raise ValueError("Expected same-origin API path")
+        attempts = self.max_retries if method.upper() in {"GET", "HEAD", "OPTIONS"} else 1
+        for attempt in range(attempts):
             async with self._rate_limiter:
                 try:
                     logger.info(
@@ -151,15 +157,15 @@ class APIClient:
                             "status_code": response.status_code,
                         },
                     )
-                    return response.json()
+                    return None if response.status_code == 204 or not response.content else response.json()
                     
                 except httpx.HTTPStatusError as e:
-                    if e.response.status_code == 429:
+                    if e.response.status_code == 429 and attempt < attempts - 1:
                         retry_after = float(e.response.headers.get("Retry-After", 2 ** attempt))
                         logger.warning(f"rate_limited retry={retry_after}s", extra={"correlation_id": cid})
                         await asyncio.sleep(retry_after)
                         continue
-                    if e.response.status_code >= 500 and attempt < self.max_retries - 1:
+                    if e.response.status_code >= 500 and attempt < attempts - 1:
                         wait = 2 ** attempt
                         logger.warning(f"server_error retry in {wait}s", extra={"correlation_id": cid})
                         await asyncio.sleep(wait)
@@ -167,7 +173,7 @@ class APIClient:
                     logger.error(f"api_error {e.response.status_code}", extra={"correlation_id": cid})
                     raise
                 except httpx.TimeoutException:
-                    if attempt < self.max_retries - 1:
+                    if attempt < attempts - 1:
                         wait = 2 ** attempt
                         logger.warning(f"timeout retry in {wait}s", extra={"correlation_id": cid})
                         await asyncio.sleep(wait)
@@ -219,6 +225,10 @@ Check for these common anti-patterns:
 | Missing connection pooling | New client per request | Singleton httpx client |
 | No caching | Repeated identical requests | Cache with TTL |
 | Oversized payloads | Requesting all fields | Use field selection (`?fields=id,name`) |
+
+## Template limitations
+
+The semaphore caps concurrency, not request rate; add a tested token bucket/scheduler for an actual RPS limit. Bound total deadlines/retry waits, parse both numeric and HTTP-date Retry-After safely, and add jitter. Never retry a state-changing request without a documented idempotency key/reconciliation strategy. Validate response schemas and redact sensitive path/query/body data in diagnostics; do not disable TLS verification to repair trust. Close the async client reliably.
 
 ## Output Standards
 

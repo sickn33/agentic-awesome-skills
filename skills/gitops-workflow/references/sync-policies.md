@@ -1,5 +1,7 @@
 # GitOps Sync Policies
 
+Illustrative fragments, not complete apply-ready resources. Pruning deletes resources; force can recreate them. Review resource diffs and obtain the required scope before enabling either. Match CRD/API versions to installed controllers.
+
 ## ArgoCD Sync Policies
 
 ### Automated Sync

@@ -78,7 +78,7 @@ export const useStore = create<AppState>()(
           theme: state.theme === 'light' ? 'dark' : 'light'
         })),
       }),
-      { name: 'app-storage' }
+      { name: 'app-storage', partialize: (state) => ({ theme: state.theme }) }
     )
   )
 )
@@ -247,6 +247,8 @@ export const useCart = () => useStore((state) => state.cart)
 
 ### Pattern 3: Jotai for Atomic State
 
+Place Suspense outside the component that calls the async atom hook (for example, wrap `<Profile />` in `<Suspense>` at its parent); a boundary returned after a suspending hook cannot catch that suspension.
+
 ```typescript
 // atoms/userAtoms.ts
 import { atom } from 'jotai'
@@ -389,6 +391,8 @@ function Dashboard() {
 }
 ```
 
+These are partial client-side fragments. Do not persist credentials/private user records in localStorage or expose them through devtools. Create request-isolated stores/caches for SSR and clear tenant/user data on sign-out. Include authorization context in server query keys; frontend isAuthenticated flags do not authorize APIs. Validate fetched JSON at runtime. Optimistic snapshots can overwrite concurrent mutations: serialize conflicting writes or reconcile from the server; invalidate affected lists as well as detail queries.
+
 ## Best Practices
 
 ### Do's
@@ -425,7 +429,7 @@ function todosReducer(state = [], action) {
 // After (Redux Toolkit)
 const todosSlice = createSlice({
   name: 'todos',
-  initialState: [],
+  initialState: [] as { text: string; completed: boolean }[],
   reducers: {
     addTodo: (state, action: PayloadAction<string>) => {
       // Immer allows "mutations"

@@ -1,0 +1,3045 @@
+{
+  "schemaVersion": 1,
+  "batch": "08",
+  "reviewDate": "2026-10-23",
+  "baseCommit": "dee7acce0658c35cb276154892700811affcfdb2",
+  "scope": {
+    "rootSkillTrees": 150,
+    "trackedFilesReadInFull": 180,
+    "method": "Individual static complete-tree semantic review. Every listed tracked file was read in full as inert source data. No bundled commands/scripts were executed.",
+    "excluded": "All unassigned skill trees; generated registry/plugin mirrors; merge, release and runtime/service certification."
+  },
+  "reviewer": "GPT-6.1 Sol; low reasoning; delegated campaign batch08",
+  "limitations": [
+    "Review is bounded to the exact listed base/final file bytes. It is not whole-catalog certification, formal verification, runtime validation, a license/legal certification or a Tessl review.",
+    "Existing upstream authorship and license declarations were preserved; source attribution is not upstream endorsement. No missing helpers were invented or imported.",
+    "Third-party SDK examples and service operations were not compiled or run. Compatibility, billing, quotas, security and clinical outcomes require environment-specific verification.",
+    "Automated skill-review remains pending the PR workflow; merge requires truthful Tessl result or exact-full-head maintainer attestation."
+  ],
+  "validation": {
+    "status": "Pending final committed-head checks; results will be recorded in PR and external campaign receipt."
+  },
+  "records": [
+    {
+      "id": "developer-listening",
+      "disposition": "corrected",
+      "reviewNote": "Read README and complete skill; repaired truncated trigger text and private-community/export, inferred-sentiment and outreach authority boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/developer-listening/README.md",
+          "gitMode": "100644",
+          "beforeSha256": "a930ce7b4fc60a91db2f6d8e6c544e0f66d0f93a87520dc5b19b67e363924890",
+          "afterSha256": "a930ce7b4fc60a91db2f6d8e6c544e0f66d0f93a87520dc5b19b67e363924890",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/developer-listening/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "89f5f79260f00d1b7d701f314fcd2335489198155fc4255dc6ce6bf609447f78",
+          "afterSha256": "d7a4a13aef6e21dbed0788b37fc89c23501c492a029c226478113a9a95f27a63",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "wrike-automation",
+      "disposition": "corrected",
+      "reviewNote": "Read complete workflow; corrected endpoint-only authentication assurance and added precise write, asynchronous-result and historical deletion/schema boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/wrike-automation/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "cf8634b8893114a44fa5351cd47901a968d8c1252682d41c829a786fdda78a49",
+          "afterSha256": "37eb74ee89f7932e82954b96dab9f47d8f305219f8922ecb26815b787cbb0713",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "favicon",
+      "disposition": "corrected",
+      "reviewNote": "Read complete procedure; removed false maskable declaration and added square-size, SVG external-resource, manifest preservation and deployed-base requirements.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/favicon/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "dae4bd10c5a123d92dd515160948f3fe2e3bd69a6a60b74c80e02448634ec1b7",
+          "afterSha256": "82f5128d8dd1e890f36fa926c34d36e1e9e18eed66d16e30b00063bfee661a95",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Define_app_icons"
+      ]
+    },
+    {
+      "id": "skeleton-first",
+      "disposition": "corrected",
+      "reviewNote": "Retained cost-rung workflow; corrected unconditional subagent delegation and deterministic/free-cache overclaim.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/skeleton-first/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "2168c347180b552d852dc479839ec07f0580386a129b0912589efad4cc9e76d0",
+          "afterSha256": "9065d1ccaf0f43f68646d767a504a74bccbdc0708f5d968d61710aeb4fe51be9",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "selenium-skill",
+      "disposition": "corrected",
+      "reviewNote": "Read complete Java and cloud examples; repaired truncated triggers and clarified absent reference files, unsupported browser combinations, cloud data/cost authority and captured-secret boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/selenium-skill/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "43a7b8771f00264c59ab6e390af53ae3716d929370c6480456dd9375384ee984",
+          "afterSha256": "5b343079e488944d58f3124136bfc74206491b10dc8652e52359fa6465f3f6de",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "openshift",
+      "disposition": "corrected",
+      "reviewNote": "Read complete deployment/SCC examples; replaced password-in-argument login and routine anyuid grant with least-privilege review; clarified context, legacy API, source build and secret boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/openshift/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "8db4b1022f8acc7ac77f98b8a16c78f5964302e745ce0faa81e7cbf6b12dac05",
+          "afterSha256": "c5688d631197643bc8dfb632dedd3040390f54b16a58a70872fdca202cacc69e",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/authentication_and_authorization/managing-pod-security-policies"
+      ]
+    },
+    {
+      "id": "speckit-updater",
+      "disposition": "corrected",
+      "reviewNote": "Read complete updater description; repaired empty missing-support inventory so named PowerShell entrypoint and implementation are explicitly unavailable in this single-file catalog copy.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/speckit-updater/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "e00f2de055205f7adba3052521342b190ae9724ec2776b65a7a153ffbd21651b",
+          "afterSha256": "0625b6bb2a4cca77e2717ee43bf9ef73523392bd67806f970ac4bb283de41722",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "travel-health-analyzer",
+      "disposition": "corrected",
+      "reviewNote": "Read full Chinese medical templates; distinguished examples from current evidence and unbundled software capabilities, corrected vaccine consultation timing and fixed drug-spacing/no-interaction assertions.",
+      "limitations": "No medical assessment or live destination risk determination; clinician/pharmacist review and current official guidance required.",
+      "files": [
+        {
+          "path": "skills/travel-health-analyzer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "1e123d0c1bcf9c49ebfd100091b664eb79600b81fa1fe3361e1be043c87ae06e",
+          "afterSha256": "084ac2564a1e5db22bced9aab2794c4d8055611b43cdc7af3a61d67bb944a3a5",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://wwwnc.cdc.gov/travel/page/travel-vaccines"
+      ]
+    },
+    {
+      "id": "conductor-status",
+      "disposition": "corrected",
+      "reviewNote": "Read complete status formats and calculation logic; repaired zero-denominator case and recorded-versus-verified status ambiguity; kept status operation read-only.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/conductor-status/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "ca72f3aabe5e39082a3fe75b279dd291178c40f1d2d55691771eac7efa6444d9",
+          "afterSha256": "9eff1eefeffe81f8f28913df2342015b003a69375b95b849dd77e9ed2cbd433f",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "docker-management",
+      "disposition": "retained",
+      "reviewNote": "Read complete Dockerfile, runtime, cleanup and Compose fragments. Retained existing context, source-execution, exact cleanup authorization and credential-log limitations; examples already distinguish independent fragments from deployment.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/docker-management/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "2ad5d0c9a765693183f1fdcbd946bad52b54c6ff8981792eb7bd87b34a11a7b9",
+          "afterSha256": "2ad5d0c9a765693183f1fdcbd946bad52b54c6ff8981792eb7bd87b34a11a7b9",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "systemd-services",
+      "disposition": "corrected",
+      "reviewNote": "Read complete service/timer/socket/drop-in examples; moved start limits to Unit, corrected OOMPolicy description and documented application notify/watchdog/socket prerequisites.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/systemd-services/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "89fc2e65e1471bac676224c336492a0406beeec284a3aa1f99a7b0656b2e99e9",
+          "afterSha256": "d8a5bd1dc344d3a919b438a23ba9ee257ccfb1633ffab9ae933cf09b75ef3bdf",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html"
+      ]
+    },
+    {
+      "id": "azure-communication-chat-java",
+      "disposition": "corrected",
+      "reviewNote": "Read all SDK operations; added explicit participant/history/receipt write authority, message/identifier logging privacy and received-HTML handling boundaries.",
+      "limitations": "SDK fragments not compiled; package signatures/version compatibility require project validation.",
+      "files": [
+        {
+          "path": "skills/azure-communication-chat-java/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "1aebed9af6ee2004bddb88bbfbd2e420da52b14df65286be89e81074e3cc51c3",
+          "afterSha256": "8d7d83369463ccb152f59c7c428f1e2206a3d744db5f2b4f974b66389cb057d2",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "code-polish",
+      "disposition": "corrected",
+      "reviewNote": "Read full protocol; removed executable dead-code deletion and local-name renaming exceptions that contradicted the non-semantic/comments-only promise.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/code-polish/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "14c23221d41da6d429d4b7c534fc2b377a5aed0548fe628bcd5b1fbfc8b6da66",
+          "afterSha256": "f53550c75844c63c036753aad62606e957a32b09004963458a2ea6602fcda0b2",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "ollama-stack",
+      "disposition": "corrected",
+      "reviewNote": "Read full stack; repaired malformed OpenAI constructor, public host binds, fallback secrets, hardcoded proxy key/zero-budget claim, automatic installer execution and insecure-TLS fallback.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/ollama-stack/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "71babbe97d4bb64d183f80006ed07a937152f627001731fac943820c222c2008",
+          "afterSha256": "2a34e3a63b1b4c24c40b56f648fd98f83bd22f7e800c1b718698967481f07a6d",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://docs.ollama.com/faq"
+      ]
+    },
+    {
+      "id": "deployment-engineer",
+      "disposition": "corrected",
+      "reviewNote": "Read complete capability/response scope; removed blanket no-human-intervention directive that contradicted required production approvals and rollback governance.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/deployment-engineer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "e79e68bf1aec9b12a3657aaf066aea133618009b1495ac12e3bf4f30291234c1",
+          "afterSha256": "24b093ca5fbbd724d8048746fed5fbdaa0008b53bc8d0e35d490d70087e348a8",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "occupational-health-analyzer",
+      "disposition": "corrected",
+      "reviewNote": "Read full Chinese scoring/screening/report template; explicitly marked invented cutoffs as unvalidated and undefined subscores unknown, separated clinical/legal screening from templates and protected health data.",
+      "limitations": "No clinical assessment, validated instrument or current legal screening determination performed.",
+      "files": [
+        {
+          "path": "skills/occupational-health-analyzer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "fbd6863f6631c0409d2f7bce08d4a811615f0dd6de162ac1f0657e2cc1274ea2",
+          "afterSha256": "8284dd2ceb6093efb488cc15b14f2930b82a842765eab3028b3bf83303cf2c3e",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "azure-resource-manager-playwright-dotnet",
+      "disposition": "corrected",
+      "reviewNote": "Read complete ARM hierarchy and provisioning examples; replaced stale current-version claim with service-lifecycle/provider compatibility and credential/subscription/budget/deletion checks.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/azure-resource-manager-playwright-dotnet/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "8596648f812fe42b4e6895479b99776ec0cd77491614ad85ee28e91e341cd2bc",
+          "afterSha256": "04c72492606f1f5c68da9f2485f72e6c5d075f130592cc49f9e2a090ba0e4fc1",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://learn.microsoft.com/en-us/azure/playwright-testing/overview-what-is-microsoft-playwright-testing"
+      ]
+    },
+    {
+      "id": "firmware-analyst",
+      "disposition": "corrected",
+      "reviewNote": "Read full offensive workflow and missing-script boundaries; repaired missing acquisition fence and malformed trigger scope, replaced HTTP vendor example and added untrusted extraction/rootful chroot isolation.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/firmware-analyst/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "6b7afff44316d1e2527dba0120cf26a32de12b1976430441866f40a66e759f0a",
+          "afterSha256": "9ae92b9ecd9617c19d1710c641d2d1fd500e23e860e0c371df92cb2ba68b8709",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "hugging-face-papers",
+      "disposition": "corrected",
+      "reviewNote": "Read all read/write API descriptions; clarified authorship/public-metadata write authority, exact-version citation and abstract/AI-summary fallback evidence limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/hugging-face-papers/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "06d3522c79e5c65222f85fc1df178be5640b3f085f3eee9bc7ec803e883c642e",
+          "afterSha256": "b09e6480128f7e3d17bf144d200651e60dfdf04acaef5a7ddd495fec3c26933f",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "hubspot-automation",
+      "disposition": "corrected",
+      "reviewNote": "Read full CRM tool workflow; corrected endpoint-only access claim and search-before-create guarantee, added account/PII/batch-partial-failure and write boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/hubspot-automation/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "31757fd996467186f69388f4955e5e7c659a00207a99089c67632b644dd7d56d",
+          "afterSha256": "56fdd4b308d1072ebe32d87aae888e542433a96a3e4ea0053fccbad1fe310ac8",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "network-engineer",
+      "disposition": "corrected",
+      "reviewNote": "Read full networking capability scope; added exact-target active-test, sensitive capture, change rollback and isolation/compliance proof boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/network-engineer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "4e064dfb728ce0578d949522cc6b3bf96bdb2dbad411e0bcc3b297e3149af3c4",
+          "afterSha256": "c7d5f7fdc6446a7f4b47e8c63b2ef48443173d55f32ebe7ead21a8113534cc87",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "hybrid-cloud-architect",
+      "disposition": "retained",
+      "reviewNote": "Read complete hybrid architecture and provider/cost/migration response guidance; retained as architecture decision guidance with current-service verification and environment-specific limitations.",
+      "limitations": "No infrastructure provisioned, cost model validated or compliance certification established; provider availability/pricing must be checked for an actual design.",
+      "files": [
+        {
+          "path": "skills/hybrid-cloud-architect/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "18c82ca5a905106195981992850d03ad0a5209c4d4a76a9863f82ed8ac14b5df",
+          "afterSha256": "18c82ca5a905106195981992850d03ad0a5209c4d4a76a9863f82ed8ac14b5df",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "faf-go",
+      "disposition": "corrected",
+      "reviewNote": "Read all interview/CLI templates; distinguished slot score from knowledge quality and constrained instruction-file sync, secrets and unavailable host tools.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/faf-go/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "9b88cfc0c704216c8a477ba99be268f9a6a9b99da5645cb05247b7c850ead9d5",
+          "afterSha256": "cfc685edd2bf691fb84f2cdf42da11ff9043a271edcc061e168e1a2380e61d4d",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "remotion-interactivity",
+      "disposition": "corrected",
+      "reviewNote": "Read skill, openai.yaml and SVG in full; repaired async-useMemo metadata callback and clarified installed-version/import/helper/static-dimension requirements.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/remotion-interactivity/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "0653dd5d4969e77fc8a46a49d842fc7f628aabbbb207a198a41b78387405b83f",
+          "afterSha256": "52e6f20a845a7d300a531f40952b8846bf2eaa6c7c9e7457a7912d20648e94e7",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/remotion-interactivity/agents/openai.yaml",
+          "gitMode": "100644",
+          "beforeSha256": "84cd86b0b10e1f8b5be97bbd46677d5f618304303d922f1016ce0ea6a015d4b9",
+          "afterSha256": "84cd86b0b10e1f8b5be97bbd46677d5f618304303d922f1016ce0ea6a015d4b9",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/remotion-interactivity/assets/remotion-icon.svg",
+          "gitMode": "100644",
+          "beforeSha256": "5007669bd0555b0f4565b4e7176fa191310ab0039b2ed09d867a9270f5b0ce58",
+          "afterSha256": "5007669bd0555b0f4565b4e7176fa191310ab0039b2ed09d867a9270f5b0ce58",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://www.remotion.dev/docs/calculate-metadata"
+      ]
+    },
+    {
+      "id": "documentation-and-adrs",
+      "disposition": "retained",
+      "reviewNote": "Read all ADR/API/README/changelog examples; retained actual-convention, fictional decision, evidence-based acceptance and excerpt limitations.",
+      "limitations": "No project ADR accepted or application code tested; generic platform comparisons remain illustrative decision context.",
+      "files": [
+        {
+          "path": "skills/documentation-and-adrs/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "fee8998ec052b42890647121a5e0105beafa27cf605747afbc59770dc2dd369a",
+          "afterSha256": "fee8998ec052b42890647121a5e0105beafa27cf605747afbc59770dc2dd369a",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "weather-model-run-discovery",
+      "disposition": "corrected",
+      "reviewNote": "Read complete resolver; corrected naive-datetime ambiguity, lookback truncation and empty-sentinel false completion. Retained metadata/probe/provider safety limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/weather-model-run-discovery/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "fba384d164667ee3a529a16dcafcb11bc9290fc0992a0ee86917593a71d234f3",
+          "afterSha256": "08d2845cd657073adeed2173b8d02d840aa3cdb790911592a607ae4940b0ed07",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "zod-validation-expert",
+      "disposition": "corrected",
+      "reviewNote": "Read full schema/integration examples; removed password logging, corrected FormData File handling and checkbox parsing, clarified Zod-major compatibility and authorization.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/zod-validation-expert/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "f9cf273af5e72825d66f6c6f36d75c3e98a35e6a8cee0cbbc2d1a2c33319bceb",
+          "afterSha256": "1711ed6675d79fbce82ec6f7977801123eaf3b441c8bb2c1df2ab14b266052d6",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://zod.dev/api?id=coercion"
+      ]
+    },
+    {
+      "id": "ssh-configuration",
+      "disposition": "corrected",
+      "reviewNote": "Read full client/server/tunnel guidance; corrected invalid PermitOpen CIDRs, false read-only/chroot key label and host-key-removal-first advice, preserved recovery and private-key boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/ssh-configuration/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "9c10d3d1ecf0273ffdc81e0a9e9a34b5f4970fcd66b0c428de702e7fd30e4da7",
+          "afterSha256": "34503ee8f850ff0fd1e6e185f728cf48483ae5847cec685a9254aef125f7d465",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://man.openbsd.org/sshd_config"
+      ]
+    },
+    {
+      "id": "neon-postgres-egress-optimizer",
+      "disposition": "corrected",
+      "reviewNote": "Read full SQL/IaC guidance; repaired truncated trigger, distinguished affected-row counts from egress bytes, preserved shared stats and scoped TTL/config writes.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/neon-postgres-egress-optimizer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "8212c3db4dc905efe9198389183b7614326d2c1c9c6a937b41a8694cc70cc225",
+          "afterSha256": "675f8541c06b9d8545970c6b28fe7b567fedd123d4c217826932001ea9eb7e5b",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "python-patterns",
+      "disposition": "corrected",
+      "reviewNote": "Read all architecture/library/test guidance; corrected removed AsyncClient app shortcut, lifespan caveat and misleading Django/Flask async table.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/python-patterns/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "feba490b666581bf07b7b673e5de4cd3260827b78aae35a6ae80cc0c0334ce06",
+          "afterSha256": "b09044d7aa5c33684062c12d77115b6d30875ced31810bfbc14dd7079ed3bf81",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://www.python-httpx.org/advanced/transports/"
+      ]
+    },
+    {
+      "id": "data-structure-protocol",
+      "disposition": "corrected",
+      "reviewNote": "Read complete graph/CLI protocol; corrected nonhex UID example and unreviewed moving-download execution risk; clarified stale graph and persistent metadata authority.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/data-structure-protocol/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "8253699188e1c92ea2eb2ba480dcaa318b14ca06ef2bfea73f980a5a8a70eade",
+          "afterSha256": "112f6c318b6c0c5eb14763e4b2b3b47d0aa047b96d0cec36f4c55aa7198037e5",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "llm-cost-optimization",
+      "disposition": "corrected",
+      "reviewNote": "Read all provider/cache/batch/calculator fragments; removed guaranteed savings, corrected GPU billing-versus-utilization arithmetic/zero-spend division and unsafe cross-tenant semantic-cache implication.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/llm-cost-optimization/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "d689f980db6bece230a498f911e18c42905d30d58e7176915303ce07db4a4e8f",
+          "afterSha256": "5a7017ec13761abb60b0059f8d8a23f63df36d953cff3b8f04b1d85b9e3e0935",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "database-admin",
+      "disposition": "retained",
+      "reviewNote": "Read entire database operations architecture/capability guidance; retained recovery testing, RPO/RTO, least-privilege and environment-specific validation scope.",
+      "limitations": "No database changes, resilience tests, backup restores or compliance certification performed; actual plan requires exact database/roles/maintenance window.",
+      "files": [
+        {
+          "path": "skills/database-admin/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "da95a097f8125c1b682354eda3063325d39104a987e0f7bd86897d3f7f7fb4fe",
+          "afterSha256": "da95a097f8125c1b682354eda3063325d39104a987e0f7bd86897d3f7f7fb4fe",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "azure-identity-dotnet",
+      "disposition": "corrected",
+      "reviewNote": "Read full identity examples; corrected PFX loader to private-key-bearing PKCS12 API, removed stale current-version framing and clarified chain/broker/tenant/diagnostic boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/azure-identity-dotnet/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "b4c73f9bf0407ae160eeaf6b190cc73febc44fec0259c18144d7273edf1e4cf0",
+          "afterSha256": "61b6e078bbbbcf7004050d11560ebf9cfb185c662d6abecf60274d8414944a52",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509certificateloader.loadpkcs12fromfile",
+        "https://learn.microsoft.com/en-us/dotnet/azure/sdk/authentication/credential-chains"
+      ]
+    },
+    {
+      "id": "azure-mgmt-botservice-dotnet",
+      "disposition": "corrected",
+      "reviewNote": "Read full provisioning/channel/key examples; corrected stale version framing and scoped subscription, app-type lifecycle, messaging exposure and disruptive key rotation/deletion.",
+      "limitations": "No SDK compilation, cloud provisioning or channel lifecycle check executed; current vendor documentation required before operations.",
+      "files": [
+        {
+          "path": "skills/azure-mgmt-botservice-dotnet/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "2087d04a9f4821bad54044f0e9439f172cad5ecbda322eb17c88985a49688072",
+          "afterSha256": "a1f258b073decc4ec56fc5df38ed3ce26c9fd31af3b3302c4ca27e5eab23fdf5",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "blockchain-developer",
+      "disposition": "corrected",
+      "reviewNote": "Read complete Web3 capability guidance; added exact transaction/signing authority and key isolation, testnet proof and static-analysis-versus-formal-verification limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/blockchain-developer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "714a094703ed02d28366c7b3ffc33841edf75413d634425542885722489d9652",
+          "afterSha256": "1d6ce59ec4ce30fdd3c27d06bcea87b86b95e0df064f7e6690a549c724d00e27",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "audit-context-building",
+      "disposition": "corrected",
+      "reviewNote": "Read entire pure-context protocol; identified absent supporting files/agent and removed pressure to fabricate minimum invariants or eliminate honest uncertainty.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/audit-context-building/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "e1b0cbe2e398fac224b9659f33a341525630d6c884f13bd6b7275f9d4b5b5a35",
+          "afterSha256": "6cd86f6ef2da5eab23f39771ba3402f68caab8bcf45e7c05afc31abb03d03c49",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "ui-visual-validator",
+      "disposition": "corrected",
+      "reviewNote": "Read full visual protocol; corrected screenshot-only semantic/accessibility proof and rotation/measurement assumptions while retaining visual regression rigor.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/ui-visual-validator/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "0570bd0338344183a258f7d971af3920291aa4b621d5851929602f03b5921c32",
+          "afterSha256": "551f3871e81762d5e7f611fdd67c6eaf2ec9e7bedc4755117cfa2afd6422a7e8",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "gcp-gke",
+      "disposition": "corrected",
+      "reviewNote": "Read all cluster/node/workload/IaC examples; clarified regional node-count costs, exact-project writes, least-privilege identities and private-node/policy enforcement limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/gcp-gke/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "1fd1ea95cf62a5b53676e07305463308a62e6a9ccc1094cc88c7e7c63a8afea4",
+          "afterSha256": "7eb736209b9da5d9758f8abcfe5ff7ca408a81af621eda55d02cd0ce63a6d71d",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "azure-communication-common-java",
+      "disposition": "corrected",
+      "reviewNote": "Read all identity/token examples; removed token-prefix logging and clarified blocking refresh, backend issuance authority and incomplete raw-ID parsing.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/azure-communication-common-java/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "2f5da3909896b2beb6d96851757103fd6c27d7c5848609d724f4dca40e2a3bb0",
+          "afterSha256": "4d5ebd28ac599700cb944b07ae89e97f518abd55aa70107cfe53fcf0cd4ece71",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "docker-compose",
+      "disposition": "corrected",
+      "reviewNote": "Read complete Compose examples; loopback-bound port-range fragment and clarified fixed-port replica conflict, readiness and implementation-specific resource enforcement.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/docker-compose/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "5e2d0d6730b3c04763ddb35b03989d50a2266c489b979b9e4552f3072f59edc4",
+          "afterSha256": "a5891b6cad526dc2aae64171262687b1d2244fc152bb73484b863df3f55d9894",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "rag-engineer",
+      "disposition": "corrected",
+      "reviewNote": "Read complete retrieval/chunking patterns; added document ACL/tenant isolation, prompt-injection, external embedding privacy, token-bound and abstention evidence limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/rag-engineer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "a9ad3dcd76ed7645f80b0bd3115f081e706950f7eacbbebd1699109264a0b622",
+          "afterSha256": "0b8b96a385815e1d90287fd370f7c199308be9ad062d6d1433bd98220f8b06d7",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "binary-analysis-patterns",
+      "disposition": "corrected",
+      "reviewNote": "Read complete assembly/Ghidra/IDA examples; corrected signed-modulo and zero-BSR claims and clarified ABI/layout/snippet and untrusted binary-execution limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/binary-analysis-patterns/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "e9545c9203f93d38449f27c6b762da5cc7a06a1a3b2dd0c36b9ac5c7e4abd0d9",
+          "afterSha256": "6dcb7e965eb694cfa61aea11214abd4b7b95b565e3f04373eea9d1c69347edf3",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "intercom-automation",
+      "disposition": "corrected",
+      "reviewNote": "Read all conversation/contact workflows; corrected endpoint authentication claim, message/note/closure authority, untrusted customer content and uncertain-send duplication handling.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/intercom-automation/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "75ac76eb2725cce81b48dee7e0de251942dbdcd746b6f695e9b9116743e2a2c9",
+          "afterSha256": "c181699539dea527515ea4d2af418895e0f67048541d6599a955ff717183aa2f",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "postgresql-devsec",
+      "disposition": "corrected",
+      "reviewNote": "Read complete SQL/config/backup/replica/Compose guidance; defaulted loopback, scoped destructive restore/data deletion, protected credentials, distinguished stats from bloat and EXPLAIN from executing ANALYZE.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/postgresql-devsec/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "753c0633426c729dae17f3bd9906d8ffc59ac6f29b32d3e32386818afd206214",
+          "afterSha256": "1db7e11c46ab4f197dd22410490899f83fad557549f507588f0e3baeacd2c7e8",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://www.postgresql.org/docs/current/sql-explain.html"
+      ]
+    },
+    {
+      "id": "outlook-calendar-automation",
+      "disposition": "corrected",
+      "reviewNote": "Read full event/free-busy workflow; corrected endpoint-only access and scoped notification/series writes, adapter-specific date handling and uncertain-write reconciliation.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/outlook-calendar-automation/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "c9df5ad16247b62fc0671c39b85405f4d0c5767ff7ecf7631ac1d63e1f9d03fc",
+          "afterSha256": "20dfd6284cfa9beb89f5cd692887427632421aa100c2b30bde6ef41e00c63559",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "slack-automation",
+      "disposition": "corrected",
+      "reviewNote": "Read full messaging/search/channel workflow; corrected false Slack text/blocks deprecation and endpoint-only access, added exact communication authority, private/shared-channel scope and uncertain-send handling.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/slack-automation/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "2828979b6c8fda92fec13d7ea3694be62beb22027b9b30fd1ace8a2dfe5e8063",
+          "afterSha256": "f119ea9b08d3850e693deb2725972ad6f73418c1d1a1075abad15e72a5485191",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://api.slack.com/methods/chat.postMessage"
+      ]
+    },
+    {
+      "id": "agentmail",
+      "disposition": "retained",
+      "reviewNote": "Read complete service-specific REST/SDK/webhook examples; retained existing fixed-origin, explicit send/signup authority, raw-body signing, replay deduplication and billing uncertainty boundaries.",
+      "limitations": "No email/account/webhook or billing operation performed; provider/package compatibility still requires current official confirmation.",
+      "files": [
+        {
+          "path": "skills/agentmail/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "0c772ef0b37ef84fe0664a246825fe6ea065b2439f18b9a79d5fc68fb93b0fcb",
+          "afterSha256": "0c772ef0b37ef84fe0664a246825fe6ea065b2439f18b9a79d5fc68fb93b0fcb",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "expo-cicd-workflows",
+      "disposition": "corrected",
+      "reviewNote": "Read skill, agent YAML, fetch.js, validate.js and package.json in full. Documented arbitrary-URL/cache/unbounded-fetch behavior, Node feature prerequisites and schema-validation-versus-deployment proof.",
+      "limitations": "Bundled helpers were inspected inertly, not executed; no dependency installation or EAS workflow run performed.",
+      "files": [
+        {
+          "path": "skills/expo-cicd-workflows/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "0cdccf93b5a9976ff917d85df3cab682d3600615e2e24f7708c44a956c4afed1",
+          "afterSha256": "e4eb3cb705369572edd3b51566b21558513299b98925253a539814b3fcf5bfac",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/expo-cicd-workflows/agents/openai.yaml",
+          "gitMode": "100644",
+          "beforeSha256": "3254670525cef0edd1a97e081a07cb16885eb4752c40fa3e167570836797696b",
+          "afterSha256": "3254670525cef0edd1a97e081a07cb16885eb4752c40fa3e167570836797696b",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/expo-cicd-workflows/scripts/fetch.js",
+          "gitMode": "100644",
+          "beforeSha256": "6e00c6fa7277c429c18ae211d1b6515caf2fdf500136cf297921c05d27447483",
+          "afterSha256": "6e00c6fa7277c429c18ae211d1b6515caf2fdf500136cf297921c05d27447483",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/expo-cicd-workflows/scripts/package.json",
+          "gitMode": "100644",
+          "beforeSha256": "c405e32c72836c09697b19e326ac56786b6d06d830fce577d0785c9382a69daf",
+          "afterSha256": "c405e32c72836c09697b19e326ac56786b6d06d830fce577d0785c9382a69daf",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/expo-cicd-workflows/scripts/validate.js",
+          "gitMode": "100644",
+          "beforeSha256": "6cae9885ca926a450dc8ad08775d80334f551ed5192c7d1acadf89d34201bd4c",
+          "afterSha256": "6cae9885ca926a450dc8ad08775d80334f551ed5192c7d1acadf89d34201bd4c",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "hunt-shadow-api",
+      "disposition": "corrected",
+      "reviewNote": "Read complete offensive discovery/diff workflow; corrected status-code existence and missing-429 control conclusions, retained mandatory target/authorization gate and bounded rate testing.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/hunt-shadow-api/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "cffb9708e71bde61410194698bc1729e68e6d4e41998e01c9a1dc50d283b6556",
+          "afterSha256": "768cbf7579eaac687ff99486306ffbab035cc4637ad6050f522aefb45bff4a98",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "resumable-implementation-contracts",
+      "disposition": "retained",
+      "reviewNote": "Read complete five-document ownership/checkpoint/evidence protocol; retained existing instruction precedence, no-silent-scope-expansion, actual-check evidence and sensitive-data limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/resumable-implementation-contracts/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "37aec1c56b6701ef8fe9519a867c2ae6ebf90bd1b988a4e8fdfb4822ec0cf3de",
+          "afterSha256": "37aec1c56b6701ef8fe9519a867c2ae6ebf90bd1b988a4e8fdfb4822ec0cf3de",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "dependency-scanning",
+      "disposition": "corrected",
+      "reviewNote": "Read all scanners/configs; fixed invalid XML declaration ordering and added nested-manifest coverage, fixed-tool/data scope and evidence-bound exception/fix boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/dependency-scanning/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "eadd835061e773cfcf4c36f3a51c5b6167c3f3028619de59587a5721780f7b3d",
+          "afterSha256": "b721d296c03103df368dd4ac955abe3b26fcaf02f700ff7201af3e67768dbe93",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "cloudflare-r2",
+      "disposition": "corrected",
+      "reviewNote": "Read full CLI/SDK/Worker/lifecycle examples; disabled unauthenticated PUT/DELETE and signing handlers pending real authorization; clarified public assets, bearer URL leakage, encoded keys, expiry and costs.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/cloudflare-r2/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "d3c55b3e2a7a68c4185c83f960d2f50768a742c9d781e3e7b85ed24febe4c51c",
+          "afterSha256": "97ede3189c1427a571e36ec4aa51752089752837a3d5799a3a8779dd7fd71fee",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://developers.cloudflare.com/r2/api/s3/presigned-urls/"
+      ]
+    },
+    {
+      "id": "cc-skill-project-guidelines-example",
+      "disposition": "corrected",
+      "reviewNote": "Read complete template; repaired sync Anthropic call in async function, unverifiable model ID and HTTPX/pytest async fixture, clarified illustrative policy/auth/RLS and deployment scope.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/cc-skill-project-guidelines-example/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "479f1a6b2bf7f0ffc891123662a606280c703f2dd477d3abb841074218ff65c0",
+          "afterSha256": "683e8373043413b08d36a168a78da0e76e8d09710f0dddf9e5740afe84ad16b3",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://www.python-httpx.org/advanced/transports/"
+      ]
+    },
+    {
+      "id": "signup-flow-cro",
+      "disposition": "corrected",
+      "reviewNote": "Read full CRO/experiment guidance; added field-value minimization, enumeration-resistant recovery, factual claims and security/consent guardrails to conversion experiments.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/signup-flow-cro/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "ad79b99ec6ca9725a8e55243c2914755d34c4b702c7a9a7440cf1e51a420093c",
+          "afterSha256": "00b6bbdad8cee04b7b2524b3d5d90702eccd01a87f83ed6944840cfd61c623c6",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "mobile-developer",
+      "disposition": "retained",
+      "reviewNote": "Read full capability guidance and implementation-playbook; retained concrete offline duplicate/conflict test and actual-device/untested-target evidence limits.",
+      "limitations": "No app built or device tested; version-specific SDK/store/deprecation claims need current documentation before implementation.",
+      "files": [
+        {
+          "path": "skills/mobile-developer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "99b015328ab94f446c6928c4101d540867722f4ee223003668b32a81014039ec",
+          "afterSha256": "99b015328ab94f446c6928c4101d540867722f4ee223003668b32a81014039ec",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/mobile-developer/resources/implementation-playbook.md",
+          "gitMode": "100644",
+          "beforeSha256": "2ad17352c03cc67d31baf277ec675befe3b2840f097543097020808fe65a1a3a",
+          "afterSha256": "2ad17352c03cc67d31baf277ec675befe3b2840f097543097020808fe65a1a3a",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "bullmq-specialist",
+      "disposition": "corrected",
+      "reviewNote": "Read complete queue/flow/dashboard guidance; corrected fire-and-forget acceptance, producer/worker retry distinction, parallel sibling payment flow and exposed dashboard; risk reflects consequential queued effects.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/bullmq-specialist/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "a7dc3cbc4fa44805cd0ce68622f7b45d4a8ea53e8667dc839c9a738b45ad88a4",
+          "afterSha256": "e920488da031e9acc65142fb28702c81c124c3da8f704313dfe13644cbe0cbd0",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://docs.bullmq.io/guide/connections",
+        "https://docs.bullmq.io/guide/flows"
+      ]
+    },
+    {
+      "id": "traderspy-position-check",
+      "disposition": "corrected",
+      "reviewNote": "Read full skill and risk-math reference; corrected worked-example distance band and constrained inaccurate current-liquidation/funding/P&L assumptions. Removed leverage-only liquidation estimate and universal ATR safety bands; fixed percent-unit funding conversion and notional versus margin annualization.",
+      "limitations": "No live position or market data retrieved; hosted quotas/product support unverified, approximate liquidation excluded without exchange value.",
+      "files": [
+        {
+          "path": "skills/traderspy-position-check/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "ec32009c79ece7afbb0a2ab158fcf1178d96c5490809be9c00caa8c737932448",
+          "afterSha256": "ffd28fe6d32acd210d1e9e1da9686e9044bf127cc88415130369281f94dc71b0",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/traderspy-position-check/references/risk-math.md",
+          "gitMode": "100644",
+          "beforeSha256": "670d5a4319497d8f021a3361b7920c652a356886d7f13f4bfd0ab96e0eb32aab",
+          "afterSha256": "f4c2d5c914ca6f52744d0abfba87c7ac953a00092532f1c8a537cc551497bfdf",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "jenkins",
+      "disposition": "corrected",
+      "reviewNote": "Read complete pipeline/agent/credential/JCasC examples; removed token-in-URL push and clarified current-Java, privileged-builder, untrusted-PR and branch-versus-deploy authority limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/jenkins/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "52f5132bc717b8454e3e637744a7f3a6c04634df9f6b02c76c540d528fef6892",
+          "afterSha256": "9231ae32c37ce90c4b17bc834b934c7922fc53dd1234accb5dd83d627513793a",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "review-multi-agent-orchestration",
+      "disposition": "retained",
+      "reviewNote": "Read complete state-machine/lease/join/failure/memory review; retained review-only boundary, bounded budgets, evidence gates and explicit inability of static review to prove exactly-once effects.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/review-multi-agent-orchestration/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "a3f31b208d4a089acadd07522a8608b7dee32c6efaf7d648c9a1f71bb46bddb9",
+          "afterSha256": "a3f31b208d4a089acadd07522a8608b7dee32c6efaf7d648c9a1f71bb46bddb9",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "shellcheck-configuration",
+      "disposition": "corrected",
+      "reviewNote": "Read complete ShellCheck guide; replaced wrong diagnostics/nonexistent environment controls, corrected quoted-array solution and CI failure propagation, identified stale hash-only cache and staged-byte mismatch.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/shellcheck-configuration/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "4caae4feab7fc2b51211952156a5e7df847b35398a975863afa41306d6fb282f",
+          "afterSha256": "05ec3cc9eb103faacdd2f69e5cf56abb1abe560030317808bea92cc9392706f9",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://www.shellcheck.net/wiki/SC2086",
+        "https://github.com/koalaman/shellcheck"
+      ]
+    },
+    {
+      "id": "kubernetes-architect",
+      "disposition": "retained",
+      "reviewNote": "Read complete architecture/GitOps/cloud policy guidance; retained staging-first policy/production approval and rollback requirements.",
+      "limitations": "Architecture expertise list is not cluster validation or a current supported-provider/tool matrix; no cluster operations performed.",
+      "files": [
+        {
+          "path": "skills/kubernetes-architect/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "554bfcef85a961c19b56902cdbfc756260cfc41d64c219009c3e00b98265c2fd",
+          "afterSha256": "554bfcef85a961c19b56902cdbfc756260cfc41d64c219009c3e00b98265c2fd",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "hunt-nodejs",
+      "disposition": "corrected",
+      "reviewNote": "Read all offensive payloads; added actual-version/reachable-gadget evidence, isolated persistent-pollution cleanup, harmless marker and credential/OOB scope limits while retaining explicit authorization gate.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/hunt-nodejs/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "f21af747411e09675ff58c68ffb5e2f4c0c0322847d58da21c17d383208f9fc2",
+          "afterSha256": "3fd780b07fcb74875dd9e487973cbf9a52f968f86bcd592d56750addec82159b",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "ai-engineer",
+      "disposition": "retained",
+      "reviewNote": "Read complete AI integration/RAG/agent guidance; retained current-primary-model verification, tenant/tool isolation, prompt injection, hidden-reasoning and held-out completion-evidence boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/ai-engineer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "e82e82a30da4440d18940dc67796fa5f9d3df55fce22da0394a2105a7ed779fc",
+          "afterSha256": "e82e82a30da4440d18940dc67796fa5f9d3df55fce22da0394a2105a7ed779fc",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "elk-stack",
+      "disposition": "corrected",
+      "reviewNote": "Read full ELK config/ILM/log/Watcher examples; loopback-bound unauthenticated lab and clarified production auth/TLS, Docker socket, retention/PII, rollover and scheduled-webhook authority.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/elk-stack/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "9a63f8e0eae7f1234fda33bdc54c5437810337ca78315172c2efbf4f7c1a3d9f",
+          "afterSha256": "1b723a02bf62f794e9215ae825668bb00c05d1267f3c85d2bf0cda7b1f92a099",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "hunt-ssti",
+      "disposition": "corrected",
+      "reviewNote": "Read all SSTI payload/matrix/chains; replaced automatic-RCE-first instructions with harmless fingerprint/negative control and least-invasive authorized proof, scoped stored/email/OOB effects.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/hunt-ssti/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "f5bf34da8394a8e3a566685ca5af97442045f46f5a2039b055c681dfbaba7143",
+          "afterSha256": "888fcbe39a4ed16a9b373f9bfa855338e9ba77c2188a98506fdeb66a4564ed24",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "feature-tracking",
+      "disposition": "retained",
+      "reviewNote": "Read entire tracking/index/examples/security guidance; retained existing user authority, source evidence versus stale plans, sensitive data exclusion and preservation of unrelated docs.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/feature-tracking/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "6ca652513c7ee93a71802b2bc84af3b1516cb02529fa0f4057ab258acc309a52",
+          "afterSha256": "6ca652513c7ee93a71802b2bc84af3b1516cb02529fa0f4057ab258acc309a52",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "unpaid-intern",
+      "disposition": "retained",
+      "reviewNote": "Read entire kit summary, installation prerequisites, commands, privacy and send/retention boundaries; retained reviewed-local-kit requirement and explicit missing components.",
+      "limitations": "Only single-file summary reviewed; upstream brain.py/hooks/templates not bundled or audited, no kit installation or external messages performed.",
+      "files": [
+        {
+          "path": "skills/unpaid-intern/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "5306e3e07fbb5f3929a0bb7b22f07a23b62ad7c5cd068c7a6fa25e4082b79798",
+          "afterSha256": "5306e3e07fbb5f3929a0bb7b22f07a23b62ad7c5cd068c7a6fa25e4082b79798",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "hunt-laravel",
+      "disposition": "corrected",
+      "reviewNote": "Read complete Laravel payload workflow; corrected debug-mode-equals-RCE and APP_KEY automatic-ATO implications, required package advisory proof and reviewed exploit tooling/test-account/secret boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/hunt-laravel/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "7b401e040f61b384587de79180c8a6a77b30d58b2d61228d47d7798dd176505a",
+          "afterSha256": "af7e9e4c3760a3190f898160f29e616c092b3d13b214d3a318d4002c51e51367",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "ai-analyzer",
+      "disposition": "retained",
+      "reviewNote": "Read complete Chinese health-analysis schema and report workflow; retained explicit unvalidated algorithms, missing data/scripts, model applicability, correlation limits, private-record opt-in and no diagnosis/dosing requirements.",
+      "limitations": "No clinical model executed, medical diagnosis generated or health data uploaded; actual risk calculations require current applicable validated model and clinician review.",
+      "files": [
+        {
+          "path": "skills/ai-analyzer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "40f885e5e6e2e26e2f8887fceec81e8adb3cda4001687e205b8977f7524dd8dc",
+          "afterSha256": "40f885e5e6e2e26e2f8887fceec81e8adb3cda4001687e205b8977f7524dd8dc",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "devcontainers-nix",
+      "disposition": "corrected",
+      "reviewNote": "Read complete environment/CI examples; loopback-bound database ports, removed hidden ignored install failures and clarified auto-execution, integrity mismatch, offline cache and missing Nix outputs.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/devcontainers-nix/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "05a5f9b641260d275b6e419e98e6b827ff918418a48ae2aa97fc92174e32c266",
+          "afterSha256": "90cf92954cfb79ddba5d0c6a1914ed7866a0fb3feac8a9b3174a1d41d4dae2bb",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "database-optimizer",
+      "disposition": "corrected",
+      "reviewNote": "Read full tuning/architecture guidance; added executing-ANALYZE, DDL/load/rollback, sensitive statistics and comparable-workload evidence boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/database-optimizer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "a908e1e406504f3bab6d83d4105259e7c51bc5e9884d664d2f9bee9c32fc43b1",
+          "afterSha256": "780e3fdac7a7037627c0427aabdfa6ada01126668985ad239b0744b8fa870a41",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "bazel-build-optimization",
+      "disposition": "corrected",
+      "reviewNote": "Read all rules/workspace/query/remote templates; clarified missing rule/toolchain definitions, placeholder hashes, major-version migration and remote artifact/execution trust boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/bazel-build-optimization/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "4fcef5dc3463351292a1fdbc22cc820049772d246893f67221c0ad5f9c127329",
+          "afterSha256": "a86dcc959beb229eece100666a99325dab3e7e4fb52dea54eb15902e3698392c",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "gcp-networking",
+      "disposition": "corrected",
+      "reviewNote": "Read complete networking/IaC/Armor examples; documented broad-rule segmentation, regional/global health-check mismatch, invalid compact HCL and NAT/version/recovery constraints.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/gcp-networking/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "858b7cfc5d69f184e11ed37dfe89a85b1eacbcd71e5216aa9e0acadb3c1c3888",
+          "afterSha256": "da0b0c0d46a6eabf7608b8408b3cd7716ed2c85d5eb9b55e55c19019aa7cfd03",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "gcp-compute",
+      "disposition": "corrected",
+      "reviewNote": "Read complete VM/MIG/IaC operations; corrected nonexistent storage-auto-increase disk advice, startup health-route mismatch and clarified privileged scripts, snapshots, identities and shared-core CPU semantics.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/gcp-compute/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "d72576b7afff792877fbbbedee9e88b69d46c7d30495c21ab058c34d1ab953d1",
+          "afterSha256": "dc7710ed7403e49f8dbe376c4dbc074ec40fd6f963487bc4de337e1da4fe6654",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "azure-storage-blob-java",
+      "disposition": "corrected",
+      "reviewNote": "Read complete storage/lease/SAS examples; corrected character-count versus UTF8-byte upload length and clarified signing-credential, overwrite/delete/metadata concurrency and bounded download scope.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/azure-storage-blob-java/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "19e09d37b6d80c000efa6b3ddd95f70e2b3d06dbc1c3e01bcba8199adff332a6",
+          "afterSha256": "84f3aee11decb58ecee2944ce4c6dfdbe341cf9b4a71294d158962c3c897e4f8",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "sentry-automation",
+      "disposition": "corrected",
+      "reviewNote": "Read all issue/release/alert workflows; corrected endpoint-only access and distinguished sensitive event retrieval, alert/monitor external effects and recorded-deploy metadata from observed deployment.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/sentry-automation/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "e096141a912e9016537939d745f2c14ca617c309dff2b558644fa410f435bcc5",
+          "afterSha256": "4c417fc31c16acce1bf68bd60e1abf4130b907cf54eada2c151f971befaad161",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "comprehensive-review-full-review",
+      "disposition": "corrected",
+      "reviewNote": "Read full multi-phase agent review; constrained unavailable agent/tool assumptions, unauthorized delegation/scans and exhaustive/metric/compliance completion overclaims.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/comprehensive-review-full-review/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "b9671b7a2b643364555b9333884265f44faa3925361ebc51e2a4a3b6cd727bb6",
+          "afterSha256": "ebc3c90875329fd2c98549b71225a98966e97589cea289956fc7212f232da1e3",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "goal-loop",
+      "disposition": "corrected",
+      "reviewNote": "Read entire goal lifecycle/prompt guide; qualified stale cross-client command/auth claims and constrained native goal creation, explicit budgets, pause/completion and delegation authority.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/goal-loop/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "326b99c4ef15bff7df5658b610838c50404ea0f2144c8426af65592d6b0238bb",
+          "afterSha256": "32d8ca33b1d0f927fa79daca5bff97c6ddeaa7a556c8b2ecb8d15b0987ec8388",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "redis",
+      "disposition": "corrected",
+      "reviewNote": "Read all configuration/queue/rate/lock/Sentinel examples; loopback-bound services, corrected false Redlock label and documented ACL/TLS, eviction, durability and non-atomic limiter boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/redis/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "2a1f2e63506fded1d67124541102b1e4d4c8cdfdbcb03179e5efcb025dd6e451",
+          "afterSha256": "d7876fa54695c037fb64695b76a272fba7d2ff33b1d5f13af92d54e22f02b628",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "openapi-spec-generator",
+      "disposition": "corrected",
+      "reviewNote": "Read entire generator; repaired truncated triggers and clarified missing references, dangling skeleton refs, actual-contract evidence and 3.1-nullability/parser boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/openapi-spec-generator/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "79998d5f79e5c152ef3f64164aee3c09cbd665d3c3c8f2001c75edbba46428ef",
+          "afterSha256": "6257389ff289da3b5248682c4cd7ccc1e628c50ed129e0f86def0ea566c66fc7",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://spec.openapis.org/oas/v3.1.0.html"
+      ]
+    },
+    {
+      "id": "bugs-are-annoying",
+      "disposition": "corrected",
+      "reviewNote": "Read complete static bug protocol; corrected hypothetical dormant-impact severity and clarified inspected-scope, dependency evidence and no-bug-certification limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/bugs-are-annoying/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "a44cf4e4110b7d96d46fbc2effad8e3a9b3252daf1d2233e54b39f7d53140e2c",
+          "afterSha256": "a6a3427c12f01827a67415cb51b8a87a31a1e3176885ecd751b2ec6f28167140",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "azure-eventhub-dotnet",
+      "disposition": "corrected",
+      "reviewNote": "Read all sender/processor examples; repaired reassigned using-variable compilation issue and ignored TryAdd failure, documented disposal, at-least-once/partition-checkpoint and cancellation shutdown gaps.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/azure-eventhub-dotnet/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "996eff1f956196439dfdfdea7466aee0e7e8c6813d9957541887bc9e17b760ed",
+          "afterSha256": "a1f510e8c4dbeb76a09922fb062e70c49218596b36d0825d55e863f7b6b10240",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "hunt-spa-api",
+      "disposition": "corrected",
+      "reviewNote": "Read full bundle/recon/auth workflow; corrected 400-validation-equals-bypass and unbounded bundle assumptions, constrained unknown POST effects, CORS and discovered-secret validation.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/hunt-spa-api/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "9ceed189efab991235aa2166f8ff0192e1ce6ccec16b3aba1d84a2bd502497da",
+          "afterSha256": "392c41a571053938ccca1dfce7bebaf211c37979596ccfddfdc6e1275329a0c8",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "firebase-app-platform",
+      "disposition": "corrected",
+      "reviewNote": "Read full rules/functions/hosting guidance; removed writable-profile admin escalation, constrained message-owner updates, added missing FieldValue import and removed message-body logging; documented Admin SDK/triggers/privacy.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/firebase-app-platform/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "b8c8fb1031624400ac76baca9ade0f324aee54956e62e4ce8352b3e470d6b04a",
+          "afterSha256": "d49a75b2b5ef19b9346e24b08313e9983251533611cd8fa0330a761deb74ac2c",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://firebase.google.com/docs/firestore/security/rules-conditions"
+      ]
+    },
+    {
+      "id": "cost-optimization",
+      "disposition": "corrected",
+      "reviewNote": "Read skill, pinned upstream notice/license and tagging reference in full; qualified historical financial/pricing assertions and scoped lifecycle/delete/commitment/alert effects.",
+      "limitations": "No prices quoted as current, resources changed or financial commitments made; workbook remains explicitly unbundled.",
+      "files": [
+        {
+          "path": "skills/cost-optimization/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "0f42a02a6fbb39b9ddefa23263c33cd6f867cc707b73bdae4538addb2967eb04",
+          "afterSha256": "2dc3e5b43d95b850edf4122e3e3930b66fe6f2cadbf2262e62dad1debc64bac9",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/cost-optimization/UPSTREAM-LICENSE.txt",
+          "gitMode": "100644",
+          "beforeSha256": "8ceaab71b527eb5db43810b74afc618ee36556197d2d51c45fd00aac483988c1",
+          "afterSha256": "8ceaab71b527eb5db43810b74afc618ee36556197d2d51c45fd00aac483988c1",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/cost-optimization/UPSTREAM-NOTICE.md",
+          "gitMode": "100644",
+          "beforeSha256": "7a31c9e4c407c48d8b2fb5e0d5271e9b31630af7e658cf8579a23e579dd29490",
+          "afterSha256": "7a31c9e4c407c48d8b2fb5e0d5271e9b31630af7e658cf8579a23e579dd29490",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/cost-optimization/references/tagging-standards.md",
+          "gitMode": "100644",
+          "beforeSha256": "79e557818a8c0a700fbc9389ee4f78404ba9c7fdc72b1b12ffec0abfba6ac1af",
+          "afterSha256": "79e557818a8c0a700fbc9389ee4f78404ba9c7fdc72b1b12ffec0abfba6ac1af",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "helm-charts",
+      "disposition": "corrected",
+      "reviewNote": "Read complete values/templates/hooks/OCI examples; clarified missing chart assets, hook execution/migration effects, secret-output privacy and rollback/readiness/dependency evidence.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/helm-charts/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "265578a221c279b1024d4d863173ba566874d605b21be3e8707233c438735b95",
+          "afterSha256": "7b490d8a51f47a2ce861b0a71564e0ca4c536d83156959cecc42ee6f85e4140f",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "ui-motion",
+      "disposition": "corrected",
+      "reviewNote": "Read entire seed/motion workflow; repaired truncated triggers and false automatic reduced-motion claim, clarified unbundled recipes/exports and syntax-versus-runtime proof.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/ui-motion/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "fce656e3128c0041048b378ad3d3cf1c7ab627835ad1b47ebb39d7e98c39808a",
+          "afterSha256": "7b44b01962d414d3aa01adb95e62d717144b04d0837de89105bef97bf0512218",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "bdi-mental-states",
+      "disposition": "corrected",
+      "reviewNote": "Read full RDF/SPARQL/pseudocode ontology guide; clarified unbundled vocabulary/references, evidence versus belief/action authority and corrected temporal node-versus-literal comparison.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/bdi-mental-states/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "d86a66e0c618223a0fb1cb9af3742d1a8fe4ed2c234365d9df1262000e65f5c2",
+          "afterSha256": "65a19530c19565641ed0910725a71b0d1ade2efc8b27c1978e9a5eb1663c7d89",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "cc-skill-clickhouse-io",
+      "disposition": "corrected",
+      "reviewNote": "Read all SQL/TypeScript/analytics examples; replaced injectable SQL string inserts with official structured client, guarded funnel division and documented wrong retention/cohort and eventual-dedup/index assumptions.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/cc-skill-clickhouse-io/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "9629f18d726b1e890718bed158b8710aed8e1dcc43c40d3645a920f421bebeaf",
+          "afterSha256": "5b7850c0cc45e0fdb0ada49c719cf54f7b2162287fe9d8a3cc89300b010a7471",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://clickhouse.com/docs/integrations/javascript"
+      ]
+    },
+    {
+      "id": "googlesheets-automation",
+      "disposition": "corrected",
+      "reviewNote": "Added explicit account/scope, range and write reconciliation boundaries; corrected filtered-read assumption and formula interpretation risks.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/googlesheets-automation/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "d6eeaf2a87db8b028219d00b7e2ffc3cb8b538eb762b10a0ebcaf9a1214acc1e",
+          "afterSha256": "9d07fa021f2b5e54797b726775fae47852cb1f7290dcb9991388208ac6537b43",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "git-advanced-workflows",
+      "disposition": "retained",
+      "reviewNote": "Retained concrete branching, recovery, bisect and rewrite procedures with existing dirty-worktree preservation and explicit rewrite authorization boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/git-advanced-workflows/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "0fcb4726dc987f1a07ff44998299c85ec54c7120ac1326107d4bba38e234f265",
+          "afterSha256": "0fcb4726dc987f1a07ff44998299c85ec54c7120ac1326107d4bba38e234f265",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "linkedin-profile-optimizer",
+      "disposition": "retained",
+      "reviewNote": "Retained evidence-based profile workflow, metric provenance and optional pacing; supplied material is distinguished from unsupported inferred experience.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/linkedin-profile-optimizer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "1b9a28ae7aa7534a98724c948511b8f4e59a7443fefc2b636400eab50a1f0c66",
+          "afterSha256": "1b9a28ae7aa7534a98724c948511b8f4e59a7443fefc2b636400eab50a1f0c66",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "pentest-commands",
+      "disposition": "corrected",
+      "reviewNote": "Corrected Hashcat versus John mode labeling, removed stealth implication and automatic aggressive timing; clarified intrusive script/data/credential and wireless boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/pentest-commands/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "296d606d7061b5a2306905e29d596bed53da50d3d643aaf609c7a2b6e06d07ec",
+          "afterSha256": "04f6a8504da719bcdfc22ad0e09ce5bf007d33ea5db3098f9021fe819b4f7c19",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "tdd-orchestrator",
+      "disposition": "corrected",
+      "reviewNote": "Added actionable red/green/refactor example, failure-reason verification, honest execution evidence and delegation/coverage limitations to capability-heavy entrypoint.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/tdd-orchestrator/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "295da64733a92ad9381d08816ae5fa97e22f6f4751716633f1fea78b4b21f3c9",
+          "afterSha256": "c323a995458fa068fdf69c71c45ec7ed1b7cd19e94e2fa6bb5636c1d614b5a3b",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "kubernetes-ops",
+      "disposition": "corrected",
+      "reviewNote": "Reviewed entrypoint and details reference; corrected misleading PostgreSQL StatefulSet HA implication and documented missing initialization/service, secret handling and network/exposure dependencies.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/kubernetes-ops/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "a25f846d21cd8a2a599b66fa5d5063beaf1e78859a7476025b1b2e78c779b359",
+          "afterSha256": "cb9976954639e40be6402613fe1333de8d631d47ecd3960f32e39fd8bd7781af",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/kubernetes-ops/references/details.md",
+          "gitMode": "100644",
+          "beforeSha256": "ba7d15ceb29fb96caa8e4cc9f2f2f7c1e074e9bf44696afdf25e9773048bb56f",
+          "afterSha256": "ba7d15ceb29fb96caa8e4cc9f2f2f7c1e074e9bf44696afdf25e9773048bb56f",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "markstream-install",
+      "disposition": "retained",
+      "reviewNote": "Retained complete entrypoint and package scenario reference: minimal peers, framework/SSR selection and safe untrusted-rendering defaults; current lockfile/documentation verification is already required.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/markstream-install/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "4cab4b427bac39f2572fa5ac0f03655c8f912a2071208e06b541010ddc2c5890",
+          "afterSha256": "4cab4b427bac39f2572fa5ac0f03655c8f912a2071208e06b541010ddc2c5890",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/markstream-install/references/scenarios.md",
+          "gitMode": "100644",
+          "beforeSha256": "829bf10239f94816c6284a2fc9e4bed666f34065dc3eee8668a8a007e223955f",
+          "afterSha256": "829bf10239f94816c6284a2fc9e4bed666f34065dc3eee8668a8a007e223955f",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "hunt-mfa-bypass",
+      "disposition": "corrected",
+      "reviewNote": "Corrected false race proof, token-only proof, indefinite replay and IP/UA trust assumptions; bounded brute-force/concurrency guidance and severity claims.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/hunt-mfa-bypass/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "cc83a1565651710a7b2bd97b3c272fa6038cb51876756d9971bc80474ddc56ba",
+          "afterSha256": "120983c85be22015539b71f0352bfa4d5bdd59033b8114d15afe72a7be9b48b6",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "fitness-analyzer",
+      "disposition": "corrected",
+      "reviewNote": "Removed causal/effect-size inference from correlation and inconsistent strength label; identified fictional reports, absent commands/data, statistical and sensitive-data limits and symptom-based escalation.",
+      "limitations": "No medical exercise prescription or validated clinical algorithm supplied; clinical numerical examples remain illustrative and need current primary guidance before actual advice.",
+      "files": [
+        {
+          "path": "skills/fitness-analyzer/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "ab952badcaeb026945d7a08e7a32324dea803a820743eb55a599786bf25e5e20",
+          "afterSha256": "8a745ae42469ce05106bae850f87b86aae4c9e21d3e92aaf2ce234654debee0b",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "astro",
+      "disposition": "corrected",
+      "reviewNote": "Corrected removed hybrid mode/adapter subpath and ClientRouter rename; labeled legacy collection API, fixed query encoding and React state type, and corrected misleading secret-exposure guarantee.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/astro/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "6229a3c98861a28d8f1c48b048e21f17b3b8ab61a9f8cf35bf8fc9f87aac9b53",
+          "afterSha256": "05dae5f9b32736187dcc6cfb86a2cda64688c02a67f09ffd4c0cced12a3b34be",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://docs.astro.build/en/guides/upgrade-to/v5/"
+      ]
+    },
+    {
+      "id": "varlock",
+      "disposition": "corrected",
+      "reviewNote": "Corrected absolute masking guarantees, secret expansion into process arguments, swallowed validation failure, AWS JSON versus SecretString and parent-shell injection assumption; identified schema/default and installer review risks.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/varlock/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "0e2af55b959dfd7ac0f39aea64d7a778e78c5ff94faf67aea518b6817f497b6c",
+          "afterSha256": "eaed626360aff74b7e77b3de956f78a094a270deaf57678120d668d07fbad1f9",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "argocd-gitops",
+      "disposition": "corrected",
+      "reviewNote": "Corrected force-sync semantics and explained automated prune/self-heal, bootstrap credential exposure, immutable installer review, project scope and durable Git rollback.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/argocd-gitops/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "b1100bb899a6f0ebefed4cc2dd6cbde9cb637b084e1c9258deffb7a68edf3489",
+          "afterSha256": "cea78268ef3cc00e5baf78a659028e48f21b80782e8741764e991d3aa71f138d",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "molykit",
+      "disposition": "corrected",
+      "reviewNote": "Identified absent local API reference, partial/version-specific snippets, thread-token safety and SSE chunk handling; corrected mutable client and browser credential boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/molykit/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "edb15998442c781fbb32c6fec3a396da8dc5115012585592cfe5775807c08ed9",
+          "afterSha256": "27f01ddf17a556640b6b27dd4cd8507e51114fb4242003d1fc262024ff6b470e",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "object-storage",
+      "disposition": "corrected",
+      "reviewNote": "Corrected public MinIO binds/default password, flagged conflicting VPC/public/encryption policy, destructive sync/lifecycle and incomplete GCS/HA scope; preserved upstream credit.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/object-storage/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "d199d16dedb0df7a571500f775eb938f22d42f3ed8fc3136590564934d0a5659",
+          "afterSha256": "f37b8dd9d9615b8e0bbad01f6ae74ad68e517cc1922f007a2d3fe86f06a8671b",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "azure-ai-formrecognizer-java",
+      "disposition": "corrected",
+      "reviewNote": "Added legacy/prerelease compatibility boundary, nested nullable OCR field validation, sensitive-document/SAS handling and poll/build/delete consequences.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/azure-ai-formrecognizer-java/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "f90834226c351fa1ebd340c99b91f21acb4ee7744a54412da7ecd59951087b90",
+          "afterSha256": "d229b646d4f744f08d5e21949e8d7f477b0fdedeb76cfdea22d8f4743fe459b8",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "m365-agents-dotnet",
+      "disposition": "corrected",
+      "reviewNote": "Removed exception disclosure to users; clarified development authentication exposure, credential/configuration boundaries, MSAL client cache lifetime and incomplete application scaffolding.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/m365-agents-dotnet/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "cc6499b28053d2dc9f9438ef5b94797879833ae770235c953799a3185d7c297a",
+          "afterSha256": "1662f6c4de270b6fd6ce9fe1eb014eef46cf6b5d22f9646ff372c14550e6dbf9",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "data-scientist",
+      "disposition": "corrected",
+      "reviewNote": "Added concrete churn analysis procedure with temporal/entity leakage control, baseline/holdout and causal-identification, privacy and reproducibility limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/data-scientist/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "82548ce5e58ced5dccbb428d10734f9cd4f29072418f18b89a70e31323998156",
+          "afterSha256": "83d05c10927d24e7e69e059f2ea315d428549e0810a8b167d097fc165ad99708",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "poka-yoke",
+      "disposition": "retained",
+      "reviewNote": "Retained complete mistake-proofing method and worked tenant deletion example; limitations already distinguish control coverage, compatibility and guard failure risks.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/poka-yoke/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "0cc927cae6fca9c433588b1cbc5a19954afb8ad44f605a2bc147289247f4a2ee",
+          "afterSha256": "0cc927cae6fca9c433588b1cbc5a19954afb8ad44f605a2bc147289247f4a2ee",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "jev-use",
+      "disposition": "corrected",
+      "reviewNote": "Resolved install step conflicting with reviewed-install prerequisite and reinforced advisory-only verdicts, execution/merge evidence and provider budget boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/jev-use/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "f1364e26d72a7f266ba462ad8359c11419aaf2dd94017d6e30f973c8c8eb8bb8",
+          "afterSha256": "d21d9982bae7a7706d658992f4b459c8d3afa6f809a30ec371a6e8da10589f9e",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "claude-in-chrome-troubleshooting",
+      "disposition": "corrected",
+      "reviewNote": "Removed broad process killing/socket directory deletion and mtime-selected wrapper overwrite; scoped historical coexistence claims and reversible registration/restart workflow.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/claude-in-chrome-troubleshooting/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "f925650ea15e0ed70fa96ca6a3f61358bb61cde4cbe645fa5225ae7af2924067",
+          "afterSha256": "6e19389132da7107e0e90422670ff7e68cedf786a9a35f2cab8b710d7a15945e",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "service-mesh",
+      "disposition": "corrected",
+      "reviewNote": "Separated installer download from execution and qualified retired/version-specific CLI/SMI, compatibility, mTLS migration, retry duplication and unsafe troubleshooting assumptions.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/service-mesh/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "84538eadc296ebdc26ecc22d2a348e419f603308779200f90bead8eaa5d76ad7",
+          "afterSha256": "231e85174c6a1fa909b28f55cf41076d4a45acc32840573f266e55ac4172f9e8",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "prisma-expert",
+      "disposition": "corrected",
+      "reviewNote": "Fixed raw SQL column mapping for shown schema and qualified version-specific CLI/pooling, incomplete Profile/version scaffolding, destructive reset and migrate-resolve semantics.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/prisma-expert/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "65a5937545d8dba9493cee1ee0c7615d6e7ea561a9c90d582982ced0fbef3e33",
+          "afterSha256": "1e3aa820830a73ee6b29fe96ebbfc5328194ddde9fa3a308da03418d955c1492",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "use-dom",
+      "disposition": "corrected",
+      "reviewNote": "Reviewed SKILL and agent metadata; resolved serializable-props contradiction with supported async callbacks and added native-bridge authorization, untrusted embed and WebView compatibility boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/use-dom/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "233b13dfc7a1c685e6fda9f966e78a93d3bebbc988574491c8bef1de044981ff",
+          "afterSha256": "c1d97b3b6d47aa18ca335a39fae459a43ad7587ce562a16ce63ac624d4de9dda",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/use-dom/agents/openai.yaml",
+          "gitMode": "100644",
+          "beforeSha256": "bd4ef942149c5483bf319bb7660e138e1cb2d52f48d160f3dd9fff7197141772",
+          "afterSha256": "bd4ef942149c5483bf319bb7660e138e1cb2d52f48d160f3dd9fff7197141772",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "azure-servicebus-dotnet",
+      "disposition": "corrected",
+      "reviewNote": "Prevented silently omitted batch messages and null receive dereference; qualified historical version, session/non-session examples, settlement/idempotency, poison handling and missing imports.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/azure-servicebus-dotnet/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "966b7e02187ab59d1648677f08e31da8ad5d6071eb7a5898ed51b9b34a6dc5bc",
+          "afterSha256": "22d08ad3d9e79832f13f9516130cfe91bc124a6c046e8768c8acbcef07a0a374",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "diagnosing-bugs",
+      "disposition": "corrected",
+      "reviewNote": "Reviewed entrypoint and complete HITL shell template; clarified interactive-terminal prerequisite, capture privacy, bounded stress and truthful static-only diagnosis.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/diagnosing-bugs/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "d4f3010a0bf688b76b4ccae15cd543f2b4b54d129a1523a09d4b1514de0eab14",
+          "afterSha256": "c1ebf521812e7c2004ab6e09dce520362fcfa90e9b64a0170248e79b64144b56",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/diagnosing-bugs/scripts/hitl-loop.template.sh",
+          "gitMode": "100644",
+          "beforeSha256": "b2932630950e5210075bcd6f850e5accf30c101c5367b29eac3a29b4dd8084c8",
+          "afterSha256": "b2932630950e5210075bcd6f850e5accf30c101c5367b29eac3a29b4dd8084c8",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "mysql",
+      "disposition": "corrected",
+      "reviewNote": "Corrected broken replication SQL comma, false CSV export and broad database deletion; loopback binds plus exact version/backup/replication and credential limitations.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/mysql/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "eb12732accd03c96bf97948533b74c70a57af9de774c80a7d96f5e942abd928c",
+          "afterSha256": "36a3668396149586fde353d75b52e3add49d222d6538020bc01fec19d27d7e78",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "mongodb",
+      "disposition": "corrected",
+      "reviewNote": "Removed stale support claim, incorrect three-member minimum and obsolete journal switch; corrected destructive resync default and local-lab authentication/replica discovery/backup limitations.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/mongodb/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "ac47ac4a267242fcd4c2e77afbf5dc4d88b2c949c7b26f6d2ab4311c5467ac88",
+          "afterSha256": "303133fb8f2d3c3444f4f08e1887536012010607aaf253050e987211ad20850b",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "drizzle-orm-expert",
+      "disposition": "corrected",
+      "reviewNote": "Corrected runtime/zero-dependency claims and risk, identified Neon HTTP interactive-transaction incompatibility, missing relation exports/updatedAt semantics and unsafe FormData action.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/drizzle-orm-expert/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "034a8a6b6a1a6be19de26591361bf41a604e3e3bb339e9bd8131855c1ce5a4ca",
+          "afterSha256": "48bc32893b47f7b545ef09c31ff1826a582db2e0982dbb98f03d2b4229235622",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "n8n-expression-syntax",
+      "disposition": "corrected",
+      "reviewNote": "Reviewed full detailed guide; clarified current input/item-linking and Code modes, absent example guides, env-secret disclosure and downstream untrusted data boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/n8n-expression-syntax/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "864bd4ea1e229241366d0cb6edf76bf562c6d2b12df597919c6610e6a9c8ce44",
+          "afterSha256": "dcf4a4f734860579b0711cc6d42db901784a361581ada47b769ce18ee396df0d",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/n8n-expression-syntax/references/detailed-guide.md",
+          "gitMode": "100644",
+          "beforeSha256": "eaa1e1c060ad2d49690981b04444915fd6fc1cde26d25aafeafd130b2c2264aa",
+          "afterSha256": "eaa1e1c060ad2d49690981b04444915fd6fc1cde26d25aafeafd130b2c2264aa",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "hono",
+      "disposition": "corrected",
+      "reviewNote": "Fixed Promise misuse in RPC response parsing, missing middleware Variables typing and misleading secret-vars guidance; qualified body alternatives, runtime validation and public mutation/auth examples.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/hono/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "4df675e996fce9e6a0b059231db36b0b53eeb937201c447ccccceaeb561748e5",
+          "afterSha256": "2e49beeb402a8cda75042201072d1492eb9c6f892d30a48599f9aae8485a131f",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "cloudflare-workers",
+      "disposition": "corrected",
+      "reviewNote": "Corrected remote-dev label and dropped proxy query; qualified non-atomic KV limiter, background durability/CPU limits, quota claims and incomplete cron/DO/mutation sketches.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/cloudflare-workers/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "e3ddb7d3642d46dc1c74a808dde4e7b2657072ebba99a6b887b5580cfadd6f49",
+          "afterSha256": "29417a5d2643297922527b8da536f15884d4d2bda102931b2ab6b9647ec02b04",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "pipecat-friday-agent",
+      "disposition": "corrected",
+      "reviewNote": "Read full bundled Python prototype; corrected risk and identified immediate mic/provider egress, hardcoded device, absent test helper, unverified provider shim and fictional nominal-status claim.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/pipecat-friday-agent/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "870cea5cdac4f20d2d0a8f6d0d7544c69ce69d8c429063c1b9394c6bb4e63520",
+          "afterSha256": "80ea13ee0ce6185d80c952e8967d6885370b0cff53becb1250875a29d578b64a",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/pipecat-friday-agent/scripts/friday_agent.py",
+          "gitMode": "100644",
+          "beforeSha256": "87f51156a4064d0496411d99e9ab64443f7722f8a89f56e58eb4d7e5a319edef",
+          "afterSha256": "87f51156a4064d0496411d99e9ab64443f7722f8a89f56e58eb4d7e5a319edef",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "multi-cloud-architecture",
+      "disposition": "corrected",
+      "reviewNote": "Reviewed all five files including pinned notice/license and references; clarified non-equivalent database/streaming mappings, consistency/DR/compliance and illustrative savings limitations.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/multi-cloud-architecture/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "8b4d4db9a85a0481f657cb83f68fc2e1415ddc016fd8e8234cbac80c35c0b5c1",
+          "afterSha256": "119692773a5549c491cd207e35f01e89d5a9e3c0fad3727f89afa55ae2d2c2ea",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/multi-cloud-architecture/UPSTREAM-LICENSE.txt",
+          "gitMode": "100644",
+          "beforeSha256": "8ceaab71b527eb5db43810b74afc618ee36556197d2d51c45fd00aac483988c1",
+          "afterSha256": "8ceaab71b527eb5db43810b74afc618ee36556197d2d51c45fd00aac483988c1",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/multi-cloud-architecture/UPSTREAM-NOTICE.md",
+          "gitMode": "100644",
+          "beforeSha256": "90f046592977aea2fdc5454a529fc18c557e5134c98d51047cb45f0aec792291",
+          "afterSha256": "90f046592977aea2fdc5454a529fc18c557e5134c98d51047cb45f0aec792291",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/multi-cloud-architecture/references/multi-cloud-patterns.md",
+          "gitMode": "100644",
+          "beforeSha256": "fb562097b7ed5a6e9a7206a55db4e0a9b24d8c9ad2cdd80e5d8bd1fc9ed777ac",
+          "afterSha256": "fb562097b7ed5a6e9a7206a55db4e0a9b24d8c9ad2cdd80e5d8bd1fc9ed777ac",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/multi-cloud-architecture/references/service-comparison.md",
+          "gitMode": "100644",
+          "beforeSha256": "e8a5a06937fce3233c99054128ae02b6c5883e3195e13ef05f6b5b70a9070257",
+          "afterSha256": "e8a5a06937fce3233c99054128ae02b6c5883e3195e13ef05f6b5b70a9070257",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "datadog",
+      "disposition": "corrected",
+      "reviewNote": "Separated remote installer execution, restricted APM/StatsD binds and fixed ratio-percent mismatch; clarified telemetry/credential/cardinality cost and partial SDK/monitor validation.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/datadog/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "b9e5fc4bfef17c55ee0197615d5c9476d82c733dcbbd9dabb9cd188c388f3905",
+          "afterSha256": "3250d7c7de69489269b5da7e9d63c855457ef697946a368280919035e5a90844",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "incremental-implementation",
+      "disposition": "corrected",
+      "reviewNote": "Clarified project-specific commands, feature-flag effects, nonreversible migrations and compatible intermediate commits; retained existing absent-reference notice.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/incremental-implementation/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "e16d6ecd57ad4ec2ffe9f2b282262b012d0ec5ead7c0f2bd1a35267bdba4ef42",
+          "afterSha256": "cc80d66ff58891fd1b4fccc7a79b41db66445c83075df56cfd857bf4c2acd366",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "azure-eventhub-java",
+      "disposition": "corrected",
+      "reviewNote": "Prevented silently dropped oversized events and false no-reprocessing guarantee; clarified checkpoint durability/replay, nullable partition errors and lifecycle/version prerequisites.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/azure-eventhub-java/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "1a53a041424e8274d76c96c899811b3dc43a8daae23d3e4db1484ab41460c07d",
+          "afterSha256": "43100aa70125b038fbc026a783394bd6a7ce1db3babd9e566329a0160173757b",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "full-stack-orchestration-full-stack-feature",
+      "disposition": "corrected",
+      "reviewNote": "Clarified tool/delegation scope and distinguished planned artifacts from test, accessibility, security/compliance and deployment evidence.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/full-stack-orchestration-full-stack-feature/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "7a8fd81fbaaa24af6c28c2eb0d7efa8bcc3f8152a9559630e5af6455c014024a",
+          "afterSha256": "0419b07306beaf5fcdc0fde8c4f2ec96b48124c05805f01d75aa7b04df63c8ed",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "debug-buttercup",
+      "disposition": "corrected",
+      "reviewNote": "Corrected XLEN pending interpretation and identified absent diagnostic helpers, deployment assumptions, multi-container scope and sensitive operational output.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/debug-buttercup/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "96a8415b355ea7537ead881d7af9c12bb61c1835e0093a725bf45c316194fd17",
+          "afterSha256": "33a66df05a170503bbc6678f94881742fb3988cb111dadd8d8aafd2540a51443",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "new-relic",
+      "disposition": "corrected",
+      "reviewNote": "Removed remote pipe-to-shell installer, explained host-privileged agent/secret/telemetry costs and qualified partial/version-specific metrics, logging and alert configuration.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/new-relic/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "698055b9539c9447bfc1b505f38a7e9e1077e9a142321eb16ddd5fec7dfe13bc",
+          "afterSha256": "c6e4d3181b64c53ce2cf8e9f5cc3e91c0e3f9d080002a134c92a7faa2c25ee0b",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "spec-to-code-compliance",
+      "disposition": "corrected",
+      "reviewNote": "Resolved implied-invariant contradiction; identified absent standards/agent and bounded exhaustive/confidence/severity/compliance claims with exact-version inventory and impact evidence.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/spec-to-code-compliance/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "f863e7c8943d9a7fcdbd86305bde08ff0eed7fcad10d952b1c795000af2142da",
+          "afterSha256": "d658e4c48b5e5f487e34441b0ea1d2c007d63a308e1b0ff3244839cde5d6b79f",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "weather-observation-fetching",
+      "disposition": "retained",
+      "reviewNote": "Retained complete acquisition/QC/provenance workflow, public-source selection, bounded narrow example and explicit changing-provider limitations; no observations fetched or scientific suitability certified.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/weather-observation-fetching/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "f173e59bf66a90f42205cb595663ddf16597ea21674d6b757c31deec819b0988",
+          "afterSha256": "f173e59bf66a90f42205cb595663ddf16597ea21674d6b757c31deec819b0988",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "dependency-upgrade",
+      "disposition": "corrected",
+      "reviewNote": "Replaced destructive stash/branch-deletion rollback, disabled unsolicited automerge and clarified mutating audit tools, unverified codemods/regex, SemVer/peer and test evidence limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/dependency-upgrade/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "4c7edbb2bf960183fd3174da1a17ee4695a9a1832d959506afa160b508843882",
+          "afterSha256": "897afc79df8f7fd6304b10e746faa9431229b0900f82bb8ff3832bd3ae2046ea",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "idea-evaluator",
+      "disposition": "corrected",
+      "reviewNote": "Reviewed all three nested entrypoints; aligned orchestrator with persona authorization/evidence boundaries and made verdict provisional with falsifiable validation test.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/idea-evaluator/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "4ec77835581f3874dff0f32d8c68511b9a218f5ad43f8d19f4fe2f7cd0ec70ad",
+          "afterSha256": "b74abc9c72714a1402a6e1442e6fb05114db60ff3867ab0fa20da788947b2dbe",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/idea-evaluator/idea-evaluator-con/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "923e044d8221958997e6a00b7f537d5777124cc22494d51ec29ccb3ceb71a59d",
+          "afterSha256": "923e044d8221958997e6a00b7f537d5777124cc22494d51ec29ccb3ceb71a59d",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/idea-evaluator/idea-evaluator-pro/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "0787b82a6e73a576b23c1ecbe8aded3cd0dd18b52a09b2cd0d6aba598cb822bd",
+          "afterSha256": "0787b82a6e73a576b23c1ecbe8aded3cd0dd18b52a09b2cd0d6aba598cb822bd",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "nika",
+      "disposition": "corrected",
+      "reviewNote": "Corrected static-check safe-to-run authority and mock-offline implication; clarified host wrappers, historical version/model claims, nondeterministic outputs, budget/tool costs, trace truth and distinct licenses.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/nika/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "67edaf758f66b86bac086e21cb89dc57c76fc18bc0c01f7c48ef6580ebe95dbb",
+          "afterSha256": "526bab718b8b4ff0f9b485497c31ac1d214d440404bc76c849b777e07f662ddb",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "avalonia-layout-zafiro",
+      "disposition": "corrected",
+      "reviewNote": "Read all six files; identified local-only solution, missing namespaces/behavior/icon prerequisites, MultiBinding logic and Styles versus ResourceDictionary inclusion mismatch plus accessibility limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/avalonia-layout-zafiro/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "6549479285b6e80341f0f4c10ae710ca1f73a0f4de37cbbaeb99082112cae85d",
+          "afterSha256": "db8e7f9b8e4c60226280317090771dd8c2a3c02b78d690292dd40645c3aea6a7",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/avalonia-layout-zafiro/behaviors.md",
+          "gitMode": "100644",
+          "beforeSha256": "392138c43ea796ce352a20c9ab1dd940bebcabed7a3876eb6d3c1fe3285a54b4",
+          "afterSha256": "392138c43ea796ce352a20c9ab1dd940bebcabed7a3876eb6d3c1fe3285a54b4",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/avalonia-layout-zafiro/components.md",
+          "gitMode": "100644",
+          "beforeSha256": "bc37e1f6445d1e64b47560b14f7435890dd29ece101fb1f5ec2a3d5a18d708e3",
+          "afterSha256": "bc37e1f6445d1e64b47560b14f7435890dd29ece101fb1f5ec2a3d5a18d708e3",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/avalonia-layout-zafiro/containers.md",
+          "gitMode": "100644",
+          "beforeSha256": "815f69e8b76593158799e0bb7c3e4e1c3c1ba314ba46f7e8e5305c90b528c849",
+          "afterSha256": "815f69e8b76593158799e0bb7c3e4e1c3c1ba314ba46f7e8e5305c90b528c849",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/avalonia-layout-zafiro/icons.md",
+          "gitMode": "100644",
+          "beforeSha256": "6da1f1baa21ea256aaff6e7a17f62898cab34e0bdf10cabb5c47f6010738a18e",
+          "afterSha256": "6da1f1baa21ea256aaff6e7a17f62898cab34e0bdf10cabb5c47f6010738a18e",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/avalonia-layout-zafiro/themes.md",
+          "gitMode": "100644",
+          "beforeSha256": "7c75d2f788390c607235f4d96b178f45659267db7942870a9b7e7ad49d4d2262",
+          "afterSha256": "7c75d2f788390c607235f4d96b178f45659267db7942870a9b7e7ad49d4d2262",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "noaa-radar-satellite-fetching",
+      "disposition": "retained",
+      "reviewNote": "Retained complete source/time/product contract, decoder/QC/projection checks and cache cleanup boundaries; current route/role verification already explicitly required. No data fetched or decoded.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/noaa-radar-satellite-fetching/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "fa5a6d4d5154aaedb91bdbc78abab16f6050dd8f44817508d2478198f0ab09f0",
+          "afterSha256": "fa5a6d4d5154aaedb91bdbc78abab16f6050dd8f44817508d2478198f0ab09f0",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "dns-management",
+      "disposition": "corrected",
+      "reviewNote": "Corrected DNSSEC request-versus-validation and apex alias/flattening advice; added exact zone/delegation rollback, Cloudflare response/schema and mail/TTL limitations.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/dns-management/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "68cdb09d1e080991c49cf41a70918e50e2500348225818fc15f6603f63ff88a4",
+          "afterSha256": "db4e9abff855285e1ecfd9d2512ede62088d52b875140d50350a1d597df51ed2",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "pagerduty-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected endpoint authentication guarantee; scoped real paging/suppression and uncertain retries, schedule timezone and simplified status/enum assumptions.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/pagerduty-automation/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "ac82b8a67c3ef03669c1663a1f271cde2525019e13bd1264a776097fd4461592",
+          "afterSha256": "67633af7297014e054c574b371a45d42d24179b53926fc23046865841e40c13b",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "machine-learning-ops-ml-pipeline",
+      "disposition": "corrected",
+      "reviewNote": "Added concrete ML acceptance/data leakage/evaluation contract and bounded pseudocode delegation, provider/cost effects, drift promotion and numerical success claims.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/machine-learning-ops-ml-pipeline/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "3e76f7a7aebd87d0fcd9d6fe48c90258659707a2e040faec06bcb08120af437d",
+          "afterSha256": "6d55212c97537cd04310272b868067ef5fa93110d4c093df54bd4156deb5dc64",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "git-pushing",
+      "disposition": "retained",
+      "reviewNote": "Read complete helper and entrypoint; retained isolated-index/ref locking, explicit path selection, remote precedence and failure behavior. Existing maintainer/release exclusion remains clear.",
+      "limitations": "Static review of shell/helper only; no hooks, staging, commit or push behavior executed for this skill.",
+      "files": [
+        {
+          "path": "skills/git-pushing/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "95b670b112b1a7742d5eeb8bf369a4eafedc7f0cdd9e38bd4cf56b149a14e4a2",
+          "afterSha256": "95b670b112b1a7742d5eeb8bf369a4eafedc7f0cdd9e38bd4cf56b149a14e4a2",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/git-pushing/scripts/smart_commit.sh",
+          "gitMode": "100644",
+          "beforeSha256": "d6bd181dc261debf05d02915ff6cff7b2fd18b19b8654b6987b3802d70359b50",
+          "afterSha256": "d6bd181dc261debf05d02915ff6cff7b2fd18b19b8654b6987b3802d70359b50",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "loki-logging",
+      "disposition": "corrected",
+      "reviewNote": "Verified Promtail EOL from primary docs; qualified legacy schema/retention and deployment gaps, removed high-cardinality user label and corrected count-versus-rate label.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/loki-logging/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "2cf21785a459eb56579706a80e125b3cbc6c4c2e8f9a15cc4b88fc88f339fef1",
+          "afterSha256": "ab3bfc8fb798113eb6195c3bea29099c3ed82796fe67a06501e2a465c46d5170",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://grafana.com/docs/loki/latest/send-data/promtail/"
+      ]
+    },
+    {
+      "id": "dast-scanning",
+      "disposition": "corrected",
+      "reviewNote": "Fixed ZAP baseline auth flags using primary docs and loopback API bind, removed obsolete header expectation; bounded active scans, CI scheduling, Burp sketch and report/coverage claims.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/dast-scanning/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "536cc7a7c9eac550619a0f94559960ebe0eb1d02e9836c9c7bf8a0f4e4c5c92b",
+          "afterSha256": "e4637d91a62965be98cc54e78e119db200bc9bd24ee085cbf9d5a4154d8ff363",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://www.zaproxy.org/docs/docker/baseline-scan/"
+      ]
+    },
+    {
+      "id": "block-storage",
+      "disposition": "corrected",
+      "reviewNote": "Corrected partitioned EBS resize path and impossible merge-after-snapshot-removal sequence; added stable device identity, alternative/destructive steps and backup/consistency boundaries.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/block-storage/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "aca86bdf43edb10c7c68cd0403e112eed580be603764a1fc61ecc73f5dee9122",
+          "afterSha256": "ea3568e65bc064735aade83f4743c580810ecc54b4d188c541e948e7b60c076c",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "ask-human-expert",
+      "disposition": "corrected",
+      "reviewNote": "Preserved explicit live-send preview/approval; added fail-closed unknown mode, private sandbox token parsing/storage and current pricing/schema, bounded jobs and simulated-evidence limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/ask-human-expert/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "9c76cd7e28a25f0f50acb3f5c9bc583467494fa44a5a126d63614d96f0e748df",
+          "afterSha256": "7a38f79734a0bd7040611b65dd1427f127541b2d9a3563e16c00de80de247a2d",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "production-audit",
+      "disposition": "corrected",
+      "reviewNote": "Removed advice to publicize private repos and unsupported offline fallback; corrected safe-sidecar guarantee, pin-equals-reviewed claim and destructive output overwrite; qualified remote score/deployed evidence.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/production-audit/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "2f94161129eeca90f3dd9b987a06357db14626aefcbb3ee59b41c3c902b85130",
+          "afterSha256": "329cc6e0764a21292b8793889e8c0edd99971b3921c7e6327cd452da568bfc3a",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "temporal-python-pro",
+      "disposition": "corrected",
+      "reviewNote": "Corrected non-Python get_version API from official versioning docs and added concrete idempotent order/compensation/replay procedure with payload/privacy and exactly-once limits.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/temporal-python-pro/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "df1f1290f5e803d10b92872cc396b72a50bdcce917c3001988ce3a7159c3c839",
+          "afterSha256": "53cefa1c07ba9b219d71f5ea001e76fbb108c383749d5dbd31612631e2419ce9",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": [
+        "https://docs.temporal.io/develop/python/workflows/versioning"
+      ]
+    },
+    {
+      "id": "prometheus-grafana",
+      "disposition": "corrected",
+      "reviewNote": "Fixed CPU counter/aggregation and lifetime latency math, reset-unsafe counter delta, status-label inconsistency and default exposed credentials; qualified missing services/selectors and monitoring evidence.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/prometheus-grafana/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "2632f904333b2c37f7a036dee5b3d9c0f1e87bae35e62d62dab5f0d72f96b43e",
+          "afterSha256": "678917ad43a41ee2c73a123c51e3d4df55a2213a1530b4b1362b71d4159bcad9",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "api-and-interface-design",
+      "disposition": "corrected",
+      "reviewNote": "Added explicit tenant/field authorization and runtime database trust exceptions, branded-ID limits, stable bounded pagination, PATCH/concurrency/idempotency and serialization/compatibility constraints.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/api-and-interface-design/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "9e0ed660e3b9249e77cd55bb43cfc7279e3ec0567db6c66b89c581763264963e",
+          "afterSha256": "6ca09527e10da789a6e644979a5f3f05f879fa9ff6e2fd68d3cb9d1372e54f62",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "azure-mgmt-weightsandbiases-dotnet",
+      "disposition": "corrected",
+      "reviewNote": "Fixed sync-over-async resource group lookup and false global name availability result; scoped preview SDK, Marketplace billing/region/SSO and actual W&B endpoint/data prerequisites.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/azure-mgmt-weightsandbiases-dotnet/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "3043bc6610b6f35a1711aaeb5f8618a379ac85e4d4b4845008907e6788fc6282",
+          "afterSha256": "bff5eefa798fe032266e12c4b3c5adbcd5636b6a216e789e04f412a702e629bb",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    },
+    {
+      "id": "geo-compare",
+      "disposition": "corrected",
+      "reviewNote": "Removed fabricated score fallback/value proof and positive spin on declines; constrained monthly comparability and invented citation/traffic/revenue/template claims, crawler/search and publication effects.",
+      "limitations": "Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.",
+      "files": [
+        {
+          "path": "skills/geo-compare/SKILL.md",
+          "gitMode": "100644",
+          "beforeSha256": "c838de0a43a31b3b01145b3f7b9f59baddc1a230f999469393116d532e53b3ea",
+          "afterSha256": "86d1859b7860cb63b87f293f7df04584ce3bd8a5d2e06c0d18213cda44cadcc4",
+          "readInFull": true,
+          "beforeGitMode": "100644",
+          "afterGitMode": "100644"
+        }
+      ],
+      "sources": []
+    }
+  ]
+}

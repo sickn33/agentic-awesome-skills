@@ -22,7 +22,7 @@ Recommendation shape: *"Define a port at the seam, implement an HTTP adapter for
 
 ### 4. True external (Mock)
 
-Third-party services (Stripe, Twilio, etc.) you don't control. The deepened module takes the external dependency as an injected port; tests provide a mock adapter.
+Third-party services (Stripe, Twilio, etc.) you don't control. The deepened module takes the external dependency as an injected port; tests provide a mock adapter. Mock success does not establish provider compatibility: retain version-specific contract/integration checks in an authorized test environment.
 
 ## Seam discipline
 
@@ -31,7 +31,7 @@ Third-party services (Stripe, Twilio, etc.) you don't control. The deepened modu
 
 ## Testing strategy: replace, don't layer
 
-- Old unit tests on shallow modules become waste once tests at the deepened module's interface exist — delete them.
+- Review old tests before removal. Replace a test only when the new interface tests demonstrably preserve its behavior, edge-case and regression coverage; retain unique tests and contract/integration checks. A structural refactor alone does not make tests waste.
 - Write new tests at the deepened module's interface. The **interface is the test surface**.
 - Tests assert on observable outcomes through the interface, not internal state.
 - Tests should survive internal refactors — they describe behaviour, not implementation. If a test has to change when the implementation changes, it's testing past the interface.

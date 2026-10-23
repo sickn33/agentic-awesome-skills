@@ -59,21 +59,20 @@ Which would you prefer?
 
 ```bash
 # Check if directory is ignored (respects local, global, and system gitignore)
-git check-ignore -q .worktrees 2>/dev/null || git check-ignore -q worktrees 2>/dev/null
+git check-ignore -q -- "$LOCATION/"
 ```
 
 **If NOT ignored:**
 
-Per Jesse's rule "Fix broken things immediately":
-1. Add appropriate line to .gitignore
-2. Commit the change
-3. Proceed with worktree creation
+Prefer an approved external worktree location. If project-local storage is required, propose the exact ignore change and follow the repository commit policy; do not create an unrelated automatic commit.
 
 **Why critical:** Prevents accidentally committing worktree contents to repository.
 
 ### For Global Directory (~/.config/superpowers/worktrees)
 
 No .gitignore verification needed - outside project entirely.
+
+Prefer the host's managed worktree creation/archive API when provided. Resolve and record the explicitly intended base commit before creation; current HEAD and remote default are different choices. Validate branch/path values and preserve existing dirty work.
 
 ## Creation Steps
 
@@ -92,7 +91,7 @@ case $LOCATION in
     path="$LOCATION/$BRANCH_NAME"
     ;;
   ~/.config/superpowers/worktrees/*)
-    path="~/.config/superpowers/worktrees/$project/$BRANCH_NAME"
+    path="$HOME/.config/superpowers/worktrees/$project/$BRANCH_NAME"
     ;;
 esac
 
@@ -103,11 +102,11 @@ cd "$path"
 
 ### 3. Run Project Setup
 
-Auto-detect and run appropriate setup:
+Inspect exact-base AGENTS.md, maintainer docs, package/lockfile and lifecycle/build scripts before setup. The following are alternative examples, not a run-all procedure; use locked dependencies and the project's authorized setup rather than automatically executing unknown code:
 
 ```bash
 # Node.js
-if [ -f package.json ]; then npm install; fi
+if [ -f package-lock.json ]; then npm ci --ignore-scripts; fi
 
 # Rust
 if [ -f Cargo.toml ]; then cargo build; fi
@@ -152,7 +151,7 @@ Ready to implement <feature-name>
 | `worktrees/` exists | Use it (verify ignored) |
 | Both exist | Use `.worktrees/` |
 | Neither exists | Check CLAUDE.md → Ask user |
-| Directory not ignored | Add to .gitignore + commit |
+| Directory not ignored | Prefer external path or propose scoped ignore change |
 | Tests fail during baseline | Report failures + ask |
 | No package.json/Cargo.toml | Skip dependency install |
 
@@ -206,7 +205,7 @@ Ready to implement auth feature
 **Always:**
 - Follow directory priority: existing > CLAUDE.md > ask
 - Verify directory is ignored for project-local
-- Auto-detect and run project setup
+- Review exact-base instructions/scripts and use authorized project setup
 - Verify clean test baseline
 
 ## Integration

@@ -212,7 +212,7 @@ Here's how to find out quickly:
 2. Find 5 people who match that description. Not friends — people who'd actually pay.
 3. Ask them: "Do you have this problem? How do you currently deal with it?"
 4. Do NOT pitch your solution yet. Just listen. If they describe your problem unprompted, that's signal.
-5. After 5 conversations, you'll know if this is real. If 3+ people have the problem badly, keep going.
+5. After 5 conversations, summarize patterns and contradictions. This small convenience sample is exploratory, not proof of demand or willingness to pay; choose a further test before committing major time or money.
 
 ---
 

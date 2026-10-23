@@ -55,13 +55,13 @@ mini-swe-agent has a native OpenRouter model class. Both routes below use `OPENR
 
 **Route A — native OpenRouter class (preferred, hits openrouter.ai/api/v1 directly):**
 ```bash
-pier run -p deep-swe/tasks --agent mini-swe-agent \
+pier run -p tasks --agent mini-swe-agent \
   --model minimax/minimax-m3 --model-class openrouter
 ```
 
 **Route B — LiteLLM provider prefix (fallback; same key):**
 ```bash
-pier run -p deep-swe/tasks --agent mini-swe-agent \
+pier run -p tasks --agent mini-swe-agent \
   --model openrouter/minimax/minimax-m3
 ```
 
@@ -75,10 +75,10 @@ Notes:
 Always validate end-to-end wiring on a single task before spending tokens on the corpus:
 
 ```bash
-pier run -p deep-swe/tasks/<task-id> --agent mini-swe-agent \
+pier run -p tasks/<task-id> --agent mini-swe-agent \
   --model minimax/minimax-m3 --model-class openrouter
 # list available task ids:
-ls deep-swe/tasks
+ls tasks
 ```
 
 Pass criteria: run completes, model returns actions (not auth/format errors), a score/trajectory is emitted. If it 401s → key wrong. If "provider not provided"/"model not mapped" → fix slug or switch route.
@@ -86,7 +86,7 @@ Pass criteria: run completes, model returns actions (not auth/format errors), a 
 ## Subset run (deterministic sample)
 
 ```bash
-pier run -p deep-swe/tasks --agent mini-swe-agent \
+pier run -p tasks --agent mini-swe-agent \
   --model minimax/minimax-m3 --model-class openrouter \
   --n-tasks 10 --sample-seed 0
 ```
@@ -94,7 +94,7 @@ pier run -p deep-swe/tasks --agent mini-swe-agent \
 ## Full 113-task corpus (costs tokens + time — confirm with user first)
 
 ```bash
-pier run -p deep-swe/tasks --agent mini-swe-agent \
+pier run -p tasks --agent mini-swe-agent \
   --model minimax/minimax-m3 --model-class openrouter
 # add `--env modal` to run in parallel Modal sandboxes (needs Modal configured)
 ```
@@ -103,7 +103,7 @@ pier run -p deep-swe/tasks --agent mini-swe-agent \
 
 - Trials land in `jobs/<run>/<trial_id>/`. Inspect with `pier view jobs/<run>`, `pier analyze jobs/<run>`, or `pier critique run jobs/<run>`.
 - Report: the exact command used, pass/fail, score, and any blockers.
-- Submit results for the official leaderboard to: **<email-address>**
+- Leaderboard submission is separate from evaluation. Verify the current official submission destination and obtain authorization before sending trajectories or results; no submission address is bundled here.
 
 ## Failure modes
 

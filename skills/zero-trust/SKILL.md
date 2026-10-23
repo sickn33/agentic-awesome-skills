@@ -70,6 +70,10 @@ zero_trust_principles:
       - Blast radius containment
 ```
 
+These are version-sensitive sketches, not a complete zero-trust deployment or compliance proof. Confirm account/cluster/namespace, identity/group IDs, break-glass access and rollback before changing policies. A created posture rule has no effect unless referenced by an enforced access policy. Only trusted server/IdP/device-attestation sources may populate OPA inputs; missing risk/posture data must deny. Test allow/deny/step-up and revocation cases.
+
+NetworkPolicy needs an enforcing CNI and actual DNS/controller labels; DNS-to-all-destinations is not resolver isolation. mTLS authenticates transport peers, not per-user/object authorization. Pin reviewed provider/operator versions and validate rendered schemas, including Cloudflare group rules, before provisioning.
+
 ## BeyondCorp Implementation
 
 ### Cloudflare Access Configuration
@@ -311,7 +315,13 @@ spec:
   policyTypes:
     - Egress
   egress:
-    - to: []
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
       ports:
         - protocol: UDP
           port: 53
@@ -386,6 +396,7 @@ allow if {
     device_compliant
     authorized_for_resource
     risk_acceptable
+    not step_up_required
 }
 
 identity_verified if {
@@ -408,8 +419,9 @@ authorized_for_resource if {
 }
 
 risk_acceptable if {
+    input.risk.score >= 0
     input.risk.score < 70
-    not input.risk.active_threat
+    input.risk.active_threat == false
 }
 
 step_up_required if {

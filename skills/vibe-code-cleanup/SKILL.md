@@ -58,7 +58,7 @@ npx tsc --noEmit 2>&1 | head -80
 npx ts-prune 2>/dev/null | head -40
 
 # Check for console.log / debug leftovers
-grep -r "console\.log\|debugger\|TODO\|FIXME\|HACK" --include="*.{js,ts,jsx,tsx}" -l
+rg -l -g '*.js' -g '*.ts' -g '*.jsx' -g '*.tsx' 'console\.log|debugger|TODO|FIXME|HACK'
 ```
 
 Document what you find. Do NOT change yet.
@@ -85,7 +85,7 @@ npx tsc --noEmit 2>&1
 
 ## Step 3 — Identify Dead Code (verify before removing)
 
-A file/export is safe to remove **only if**:
+These checks identify candidates, not proof of dead code. Also inspect dynamic imports, framework conventions, runtime strings, package exports and external consumers before removal. A file/export is a candidate **only if**:
 1. No other file imports it (grep-confirmed)
 2. It's not referenced in config, sitemap, or route manifest
 3. It's not a public-facing URL (page.js, route.js)
@@ -152,7 +152,8 @@ export function buildPageMetadata({ title, description, path, image }) {
 grep -r "process\.env\." --include="*.{js,ts,jsx,tsx}" . | grep -oP 'process\.env\.\w+' | sort -u
 
 # Compare against .env.example or .env.local
-cat .env.example 2>/dev/null || cat .env.local 2>/dev/null
+test -f .env.example && sed -n '1,160p' .env.example
+# Compare variable names only through a local parser; never print .env.local values.
 ```
 
 Flag any env vars used in code but missing from `.env.example`. Never add secrets to version control.

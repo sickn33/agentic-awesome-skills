@@ -133,27 +133,27 @@ import { NextRequest } from 'next/server';
 export const runtime = 'edge';
 
 export function GET(request: NextRequest) {
-  const country = request.geo?.country || 'US';
-  const city = request.geo?.city || 'Unknown';
+  const country = request.headers.get('x-vercel-ip-country') || 'US';
+  const city = request.headers.get('x-vercel-ip-city') || 'Unknown';
 
   return Response.json({
     country,
     city,
-    region: request.geo?.region,
+    region: request.headers.get('x-vercel-ip-country-region'),
     timestamp: new Date().toISOString(),
   });
 }
 ```
 
 ```typescript
-// middleware.ts — Edge middleware for auth/redirects
+// middleware.ts — Deployment geolocation routing example (not authentication)
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   // Block non-US traffic from admin
   if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (request.geo?.country !== 'US') {
+    if (request.headers.get('x-vercel-ip-country') !== 'US') {
       return NextResponse.redirect(new URL('/blocked', request.url));
     }
   }
@@ -192,20 +192,24 @@ jobs:
 
       - name: Deploy to Vercel Preview
         id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          npm i -g vercel
-          URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --yes)
+          # Prerequisite: reviewed pinned Vercel CLI installed by the job.
+          URL=$(vercel --token "$VERCEL_TOKEN" --yes)
           echo "url=$URL" >> "$GITHUB_OUTPUT"
 
       - name: Comment PR with preview URL
         uses: actions/github-script@v7
+        env:
+          PREVIEW_URL: ${{ steps.deploy.outputs.url }}
         with:
           script: |
-            github.rest.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `Preview deployed: ${{ steps.deploy.outputs.url }}`
+              body: `Preview deployed: ${process.env.PREVIEW_URL}`
             });
 ```
 
@@ -294,3 +298,4 @@ export default function RootLayout({ children }) {
 - Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
 - Docs-only import: upstream scripts and templates not bundled.
 
+`NextRequest.geo` was removed in Next.js 15; the sample uses Vercel deployment headers and must run behind the trusted platform ingress. Geolocation is approximate and is not user authentication or authorization. Validate preview URLs and use a trusted-branch job with least-privilege credentials; do not expose deployment secrets to untrusted fork code. Production deploy, promote, rollback and domain commands require the exact authorized project/target.
