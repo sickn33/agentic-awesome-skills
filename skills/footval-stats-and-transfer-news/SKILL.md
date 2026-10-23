@@ -17,7 +17,7 @@ license_source: "https://github.com/target1m/footval-mcp/blob/e852de8dd9b714a8b1
 # Leaderboards and the transfer wire
 
 Full argument list:
-[`../footval-value-and-compare-players/references/tools.md`](../footval-value-and-compare-players/references/tools.md).
+[`references/tools.md`](references/tools.md).
 
 ## When to Use
 

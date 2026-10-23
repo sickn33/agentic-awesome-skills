@@ -33,7 +33,7 @@ license_source: "https://github.com/target1m/footval-mcp/blob/e852de8dd9b714a8b1
 - A table → `get_standings` (current season by default; `season` is the start year).
 
 Full argument list:
-[`../footval-value-and-compare-players/references/tools.md`](../footval-value-and-compare-players/references/tools.md).
+[`references/tools.md`](references/tools.md).
 
 ## Time and dates
 

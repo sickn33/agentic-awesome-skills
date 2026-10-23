@@ -33,7 +33,7 @@ license_source: "https://github.com/target1m/footval-mcp/blob/e852de8dd9b714a8b1
   `get_standings`). A nation → `get_national_team`. What is covered → `list_leagues`.
 
 Full argument list:
-[`../footval-value-and-compare-players/references/tools.md`](../footval-value-and-compare-players/references/tools.md).
+[`references/tools.md`](references/tools.md).
 
 ## Turning a brief into `find_players` filters
 
