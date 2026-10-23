@@ -1,6 +1,6 @@
 # dbos-typescript
 
-> **Note:** `CLAUDE.md` mirrors this navigation guide in this distribution.
+> **Note:** `CLAUDE.md` is a regular navigation file linking to this guide.
 
 ## Overview
 
@@ -12,7 +12,7 @@ DBOS TypeScript SDK for building reliable, fault-tolerant applications with dura
 dbos-typescript/
   SKILL.md       # Main skill file - read this first
   AGENTS.md      # This navigation guide
-  CLAUDE.md      # Mirror of AGENTS.md
+  CLAUDE.md      # Navigation link to AGENTS.md
   references/    # Detailed reference files
 ```
 

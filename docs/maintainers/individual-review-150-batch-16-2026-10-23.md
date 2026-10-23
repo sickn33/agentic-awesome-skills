@@ -926,3 +926,5 @@ Static complete-tree review only; no documented setup, remote operation or runti
 
 
 GitHub review follow-up: replaced the reviewed internal `dbos-golang/CLAUDE.md` symlink with a regular navigation file, preserving its target and existing instructions. The trusted fingerprint gate rejects symlinks; no gate or policy was relaxed.
+
+The same DBOS navigation correction also covers Python and TypeScript aliases; all three reviewed trees now use regular navigation files. Other catalog aliases outside this batch are untouched.

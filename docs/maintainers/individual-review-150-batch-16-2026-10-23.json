@@ -4805,14 +4805,14 @@
     {
       "id": "dbos-python",
       "disposition": "corrected",
-      "reviewNote": "Read complete36-entry tracked tree: root/navigation, internal CLAUDE symlink and32 reference files. Corrected safe risk label, workflow versus external exactly-once claim, unsafe webhook/payment authority, replay-unsafe raw streaming assumption, disposable-system-DB reset/cleanup and unknown-worker fallback.",
+      "reviewNote": "Read complete36-entry tracked tree: root/navigation, internal CLAUDE symlink and32 reference files. Corrected safe risk label, workflow versus external exactly-once claim, unsafe webhook/payment authority, replay-unsafe raw streaming assumption, disposable-system-DB reset/cleanup and unknown-worker fallback. Replaced internal CLAUDE symlink with a regular navigation file for trusted review fingerprint compatibility.",
       "limitations": "Static complete-tree review only; no DBOS/database/reset/workflow examples executed. API/retry/queue/version behavior requires installed SDK verification. CLAUDE.md link target read and preserved; examples remain partial application sketches.",
       "files": [
         {
           "path": "skills/dbos-python/AGENTS.md",
           "gitMode": "100644",
           "beforeSha256": "82ad2273f109d471047b616012d0aa859e6d34ddcc033bdcd6e4f3caebf1f23b",
-          "afterSha256": "82ad2273f109d471047b616012d0aa859e6d34ddcc033bdcd6e4f3caebf1f23b",
+          "afterSha256": "a8d9bb5ab05a3f696b447b15489e1a33221d9ed823e73e7a541a904a1ace7269",
           "readInFull": true,
           "afterGitMode": "100644"
         },
@@ -4820,9 +4820,9 @@
           "path": "skills/dbos-python/CLAUDE.md",
           "gitMode": "120000",
           "beforeSha256": "a54ff182c7e8acf56acfd6e4b9c3ff41e2c41a31c9b211b2deb9df75d9a478f9",
-          "afterSha256": "a54ff182c7e8acf56acfd6e4b9c3ff41e2c41a31c9b211b2deb9df75d9a478f9",
+          "afterSha256": "9d0678f4926e601c0a0b37c99d3103464eb8a3f94b5b12f83745bc8ce3c1d768",
           "readInFull": true,
-          "afterGitMode": "120000"
+          "afterGitMode": "100644"
         },
         {
           "path": "skills/dbos-python/SKILL.md",
@@ -7300,7 +7300,7 @@
     {
       "id": "dbos-typescript",
       "disposition": "corrected",
-      "reviewNote": "Read all 35 files, including nested AGENTS/CLAUDE guides and 31 references. Fixed destructive SQL reset target/identifier handling, false workflow-id payment guarantee, queue concurrency/no-limit contradiction, swallowed queue errors, retry counts, Express JSON validation and process failure exit. Corrected automatic-versioning, handles, concurrency and symlink claims; added SDK/side-effect operational boundaries.",
+      "reviewNote": "Read all 35 files, including nested AGENTS/CLAUDE guides and 31 references. Fixed destructive SQL reset target/identifier handling, false workflow-id payment guarantee, queue concurrency/no-limit contradiction, swallowed queue errors, retry counts, Express JSON validation and process failure exit. Corrected automatic-versioning, handles, concurrency and symlink claims; added SDK/side-effect operational boundaries. Replaced internal CLAUDE symlink with a regular navigation file for trusted review fingerprint compatibility.",
       "limitations": "Static complete-tree review only; no dependencies, Postgres reset, SDK examples or services executed. Version-specific DBOS APIs require installed-SDK validation.",
       "files": [
         {
@@ -7308,15 +7308,15 @@
           "gitMode": "100644",
           "afterGitMode": "100644",
           "beforeSha256": "6ef25d14db9650c17286089ae53e0e35060310e7b833778c3f4a197772ec64e3",
-          "afterSha256": "4c1d4a12ff541007b62b85ab175336cc337344e94b598ee0820df35e1effaba6",
+          "afterSha256": "39c6ebc5acfda7c7f2cded7746dc32bc7d1c217fe178782c09c072d15c82f6e6",
           "readInFull": true
         },
         {
           "path": "skills/dbos-typescript/CLAUDE.md",
           "gitMode": "120000",
-          "afterGitMode": "120000",
+          "afterGitMode": "100644",
           "beforeSha256": "a54ff182c7e8acf56acfd6e4b9c3ff41e2c41a31c9b211b2deb9df75d9a478f9",
-          "afterSha256": "a54ff182c7e8acf56acfd6e4b9c3ff41e2c41a31c9b211b2deb9df75d9a478f9",
+          "afterSha256": "a16bc26d2fbead6a778b95afb208609a2b73c00d987d1221f3bc1d4bdecac76b",
           "readInFull": true
         },
         {
