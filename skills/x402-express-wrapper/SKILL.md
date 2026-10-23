@@ -35,7 +35,7 @@ un wrapper, contrato desplegado ni una API verificada del paquete npm.
 6. Firmar, financiar o transmitir transacciones reales requiere autorización
    explícita separada y controles de producción; una petición de diseño no basta.
 
-## Ejemplo
+## Example / Ejemplo
 
 > Diseña una ruta Express de pago para una red de pruebas. Entrega los contratos
 > de entrada y los casos negativos; no instales paquetes no verificados ni uses mainnet.
