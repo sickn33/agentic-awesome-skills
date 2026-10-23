@@ -46,7 +46,7 @@ Refer to the local files for detailed documentation:
 
 1. Read the relevant reference file(s) listed above
 2. If file read fails or file is empty:
-   - Inform user: "本地文档不完整，建议运行 `/sync-crate-skills makepad --force` 更新文档"
+   - Report missing references; the sync command is not bundled and --force is not an authorized automatic fallback.
    - Still answer based on SKILL.md patterns + built-in knowledge
 3. If reference file exists, incorporate its content into the answer
 
@@ -167,7 +167,7 @@ Child = <Parent> {
 
 1. Explain inheritance as "eager copy" - properties are copied at definition time
 2. Emphasize that DSL is embedded in Rust via `live_design!` macro
-3. Highlight that changes to DSL are live-reloaded without recompilation
+3. Check the pinned revision and development tooling before promising live reload; Rust type/code changes may require recompilation
 4. Distinguish between named objects (prototypes) and widget instances
 
 ## Limitations

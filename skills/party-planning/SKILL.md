@@ -12,7 +12,7 @@ date_added: "2026-10-21"
 
 # Party Planning
 
-A complete party-planning workflow: pick the right games, calculate exactly
+A complete party-planning workflow: pick the right games, estimate
 how much food and drink to buy, and pace the event so energy stays up.
 
 **Data source:** this skill draws on [HostPartyPlay](https://hostpartyplay.com),
@@ -31,9 +31,9 @@ standalone; the site's calculators and game pages provide the full detail.
 
 ## Instructions
 
-### 1. Food & drink quantities — answer with the tested formulas
+### 1. Food & drink quantities — use disclosed planning heuristics
 
-Use these host-tested formulas directly (they are the same ones the source
+Use these author-supplied heuristics as estimates (they are the same ones the source
 calculators use), then link the matching calculator so the user can adjust
 adults/kids, appetite, and duration themselves.
 
@@ -41,7 +41,7 @@ adults/kids, appetite, and duration themselves.
 - Slices: 3 per adult, 2 per child. A large 14" pizza = 8 slices.
 - Pies = (Adults × 3 + Kids × 2) ÷ 8, always round up.
 - Flavor mix: 50% pepperoni, 30% cheese, 10% meat lovers, 10% veggie/specialty.
-- Add 1 gluten-free or vegan crust per 15–20 guests.
+- Ask for actual gluten-free/vegan/allergy requirements; do not infer special-diet servings from a fixed guest ratio.
 
 **Drinks** — https://hostpartyplay.com/tools/drinks
 - 2 drinks per guest in the first hour, then 1 per guest per hour.

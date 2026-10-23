@@ -2,7 +2,7 @@
 name: cloud-devops
 description: "Cloud infrastructure and DevOps workflow covering AWS, Azure, GCP, Kubernetes, Terraform, CI/CD, monitoring, and cloud-native development."
 category: workflow-bundle
-risk: safe
+risk: critical
 source: personal
 date_added: "2026-02-27"
 ---
@@ -22,6 +22,8 @@ Use this workflow when:
 - Configuring monitoring and observability
 - Managing cloud costs
 - Implementing DevOps practices
+
+Select only the phases requested. Before provisioning, deployment, IAM/network changes, failover or deletion, confirm provider account/tenant, region, project/cluster/namespace, exact resource scope, cost cap, reviewed change preview and rollback/restore. Account billing, reserved commitments, security testing and external notifications each need corresponding authorization. Prefer isolated staging, short-lived scoped identity and secret-free state/logs; do not disable protection to clear a blocker. Checklist completion requires actual evidence, not the existence of a dashboard or template.
 
 ## Workflow Phases
 

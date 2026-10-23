@@ -96,12 +96,12 @@ StyleSeed Update Report:
 
 Current state:
 - DESIGN-LANGUAGE.md: [location] — [old/current version indicator]
-- Skills: [count] found (latest: 12)
+- Skills: [count] found (reviewed candidate: [candidate count])
 - Golden Rules: [yes/no]
 - .cursorrules: [yes/no]
 
 Recommended updates:
-1. ✅ [safe] Update skills (X → 12)
+1. ✅ [safe] Update skills ([old count] → [candidate count])
 2. ✅ [safe] Add .cursorrules
 3. ⚠️ [review] Update DESIGN-LANGUAGE.md ([old line count] → [new line count])
 4. ⚠️ [merge] Add Golden Rules to CLAUDE.md (won't overwrite existing content)
@@ -127,7 +127,7 @@ For DESIGN-LANGUAGE.md:
 
 For CLAUDE.md (Golden Rules):
 - Check if Golden Rules section already exists
-- If not: ask "Add Golden Rules section to your CLAUDE.md? This adds 10 lines at the top. Your existing content stays untouched."
+- If not: ask "Add Golden Rules section to your CLAUDE.md? Review the exact section diff and insertion point; existing content is preserved only after verification."
 - If yes: insert Golden Rules after the first heading
 
 **Never touch:**
@@ -139,9 +139,9 @@ For CLAUDE.md (Golden Rules):
 ```
 Update complete!
 
-✅ Skills: 12 (added X new)
+✅ Skills: [verified count] (added [verified new count])
 ✅ .cursorrules: added
-✅ DESIGN-LANGUAGE.md: updated to latest
+✅ DESIGN-LANGUAGE.md: updated to [reviewed commit/version]
 ✅ Golden Rules: added to CLAUDE.md
 
 Not touched:

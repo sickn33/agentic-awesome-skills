@@ -116,8 +116,8 @@ while let Some(key) = pager.try_next().await? {
 ### Backup Key
 
 ```rust
-let backup = client.backup_key("key-name", None).await?;
-// Store backup.value safely
+let backup = client.backup_key("key-name", None).await?.into_model()?;
+// Store the returned encrypted backup securely; do not print it.
 ```
 
 ### Restore Key

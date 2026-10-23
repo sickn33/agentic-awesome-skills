@@ -31,6 +31,8 @@ Source: https://github.com/Slashworks-biz/idea-os — full skill, 11 reference f
 - Use when a non-technical founder, PM, or hobbyist needs structure to bridge the gap between "idea" and "Monday morning's build queue".
 - Do **not** use for quick sanity-check feedback on a half-formed idea (use `idea-refine` instead) or for editing an existing PRD (use `product-management` instead).
 
+The external reference/template/example files are not bundled. Use the inline workflow without claiming those materials were loaded. Save the four linked files in a new dedicated authorized output folder and preserve existing documents; do not overwrite root files blindly. Search counts are a process heuristic, not evidence of research quality. Separate observed demand, community anecdotes and market-size assumptions, use compatible geography/time/customer definitions, and label unvalidated retention/paid-pilot targets as hypotheses.
+
 ## How It Works
 
 ### Phase 1 — Triage

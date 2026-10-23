@@ -26,7 +26,7 @@ A comprehensive guide for building production-quality Android applications using
 
 Ensure your `libs.versions.toml` includes the necessary Compose BOM and libraries.
 
-```kotlin
+```toml
 [versions]
 composeBom = "2024.02.01"
 activityCompose = "1.8.2"
@@ -62,10 +62,12 @@ class UserViewModel @Inject constructor(
 
     fun loadUser() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(isLoading = true, error = null) }
             try {
                 val user = userRepository.getUser()
                 _uiState.update { it.copy(user = user, isLoading = false) }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = e.message, isLoading = false) }
             }
@@ -108,6 +110,8 @@ fun UserContent(
 }
 ```
 
+The dependency versions above are historical examples, not a current recommended stack. Type-safe navigation additionally needs compatible Navigation Compose and Kotlin serialization plugin/dependency; lifecycle collection and Hilt need their own dependencies/imports/setup. Fragments require project User/Repository/View components. Trigger initial loading deliberately (for example in ViewModel init or a keyed effect); onRetry alone does not load the first user. Avoid overlapping load jobs and exposing raw server exception messages in UI.
+
 ## Examples
 
 ### Example 1: Type-Safe Navigation
@@ -142,7 +146,7 @@ fun AppNavHost(navController: NavHostController) {
 ## Best Practices
 
 - ✅ **Do:** Use `remember` and `derivedStateOf` to minimize unnecessary calculations during recomposition.
-- ✅ **Do:** Mark data classes used in UI state as `@Immutable` or `@Stable` if they contain `List` or other unstable types to enable smart recomposition skipping.
+- ✅ **Do:** Use `@Immutable`/`@Stable` only when the type actually honors that contract; do not annotate a mutable collection to hide instability. Prefer immutable data and inspect compiler reports ([Android guidance](https://developer.android.com/develop/ui/compose/performance/stability/fix)).
 - ✅ **Do:** Use `LaunchedEffect` for one-off side effects (like showing a Snackbar) triggered by state changes.
 - ❌ **Don't:** Perform expensive operations (like sorting a list) directly inside the Composable function body without `remember`.
 - ❌ **Don't:** Pass `ViewModel` instances down to child components. Pass only the data (state) and lambda callbacks (events).
@@ -150,7 +154,7 @@ fun AppNavHost(navController: NavHostController) {
 ## Troubleshooting
 
 **Problem:** Infinite Recomposition loop.
-**Solution:** Check if you are creating new object instances (like `List` or `Modifier`) inside the composition without `remember`, or if you are updating state inside the composition phase instead of a side-effect or callback. Use Layout Inspector to debug recomposition counts.
+**Solution:** New object allocation alone is not an infinite loop. Check for a feedback cycle updating observed state inside the composition phase instead of a side-effect or callback. Use Layout Inspector to debug recomposition counts.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

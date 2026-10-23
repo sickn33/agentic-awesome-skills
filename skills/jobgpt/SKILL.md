@@ -1,7 +1,7 @@
 ---
 name: jobgpt
 description: "Job search automation, auto apply, resume generation, application tracking, salary intelligence, and recruiter outreach using the JobGPT MCP server."
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-23"
 ---
@@ -35,6 +35,8 @@ This skill requires the JobGPT MCP server:
    - Other tools: Add `jobgpt-mcp-server` as an MCP server with env var `JOBGPT_API_KEY` set. Install via `npx jobgpt-mcp-server`.
 
 Set the `JOBGPT_API_KEY` environment variable when you are running the local `npx jobgpt-mcp-server` path.
+
+Discover current MCP schemas/account/credit costs before calls; this file does not bundle the server. Keep API keys out of shell history, chat and committed configuration. Resume/profile uploads disclose personal data: use approved files and destination, preserve factual qualifications and never invent experience or screening answers. Before an apply batch, show exact jobs, resume/version, answers, account and cost cap and obtain authorization for that set; reconcile uncertain application outcomes before retry. Searching/matching does not authorize auto-apply, continuous job hunts, profile mutation, outreach or credit purchases.
 
 ## Examples
 

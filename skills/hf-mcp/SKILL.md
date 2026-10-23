@@ -18,6 +18,8 @@ Use this skill when you need use Hugging Face Hub via MCP server tools. Search m
 
 Connect AI assistants to the Hugging Face Hub. Setup: https://huggingface.co/settings/mcp
 
+Discover actual tool schemas and account permissions first; named Space tools and job operations are examples, not guaranteed installed functions. Popularity/downloads are discovery signals, not evidence of task quality or safety. Review model/data/code licenses, revision and gated terms before use. Space invocation uploads input to its operator; show destination/payload/retention and obtain authorization for private media or paid compute. Jobs need a bounded runtime/cost, reviewed pinned image/dependency/script inputs, scoped secret references and a cancellation path; status/logs must confirm the actual job. A request to search does not authorize model execution, downloads, jobs or recurring schedules.
+
 ## Use Cases & Examples
 
 ### Find the Best Model for a Task
@@ -182,7 +184,7 @@ hf_jobs(operation="scheduled uv", args={
 ## Tips
 
 - Use `sort="trendingScore"` to find what's popular now
-- Use `sort="downloads"` to find battle-tested options
+- Use `sort="downloads"` to discover popular options; benchmark fit and inspect provenance independently
 - Set `mcp=true` in `space_search` to find Spaces usable as tools
 - Use `include_readme=true` in `hub_repo_details` for full model/dataset documentation
 - For jobs accessing private repos, always include `secrets: {"HF_TOKEN": "$HF_TOKEN"}`

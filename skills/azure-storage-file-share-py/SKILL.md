@@ -18,7 +18,7 @@ pip install azure-storage-file-share
 
 ## Environment Variables
 
-```bash
+```dotenv
 AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https;AccountName=...;AccountKey=...
 # Or
 AZURE_STORAGE_ACCOUNT_URL=https://<account>.file.core.windows.net
@@ -29,6 +29,7 @@ AZURE_STORAGE_ACCOUNT_URL=https://<account>.file.core.windows.net
 ### Connection String
 
 ```python
+import os
 from azure.storage.fileshare import ShareServiceClient
 
 service = ShareServiceClient.from_connection_string(
@@ -44,9 +45,12 @@ from azure.identity import DefaultAzureCredential
 
 service = ShareServiceClient(
     account_url=os.environ["AZURE_STORAGE_ACCOUNT_URL"],
-    credential=DefaultAzureCredential()
+    credential=DefaultAzureCredential(),
+    token_intent="backup",
 )
 ```
+
+For OAuth, review [token_intent and backup permissions](https://learn.microsoft.com/en-us/python/api/azure-storage-file-share/azure.storage.fileshare.shareserviceclient?view=azure-python); backup intent can bypass file/directory ACL checks and needs an explicitly authorized role. Examples are independent fragments requiring account_url, os and compatible packages. Writes/uploads can replace content; confirm exact share/path, protect existing files, limit download bytes and delete only disposable resources. Never print connection strings or SAS URLs. Copy start is asynchronous: poll destination copy status before reporting success. Use try/finally or async context managers to close clients/credentials on failure.
 
 ## Share Operations
 
@@ -208,7 +212,7 @@ from azure.identity.aio import DefaultAzureCredential
 
 async def upload_file():
     credential = DefaultAzureCredential()
-    service = ShareServiceClient(account_url, credential=credential)
+    service = ShareServiceClient(account_url, credential=credential, token_intent="backup")
     
     share = service.get_share_client("my-share")
     file_client = share.get_file_client("test.txt")
@@ -230,7 +234,7 @@ async def upload_file():
 
 ## Best Practices
 
-1. **Use connection string** for simplest setup
+1. **Prefer scoped identity** where supported; connection strings contain account credentials
 2. **Use Entra ID** for production with RBAC
 3. **Stream large files** using chunks() to avoid memory issues
 4. **Create snapshots** before major changes

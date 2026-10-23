@@ -59,6 +59,8 @@ gdb -nx -q -batch -ex "python print('OK')"
 - GDB 9.0+ with Python support enabled
 - Linux OS
 
+Review/pin gdb-cli and dependencies before installation. For untrusted binaries/cores, disable GDB auto-loading and initialization before loading, use patched tools and resource isolation, and never run the inferior or evaluate function calls just to inspect data. A live attach pauses/changes process timing and requires authorization for that exact PID/service. Backtraces/locals/memory can contain secrets; collect only necessary redacted evidence and retain core files privately. Do not change ptrace/system policy or use sudo as an automatic workaround; verify stop detaches/resumes the intended target.
+
 ## How It Works
 
 ### Step 1: Initialize Debug Session
@@ -109,7 +111,9 @@ Source code shows:
 Variables show:
   node = 0x0 (NULL)
 
-Analysis: The NULL check on line 86 didn't catch the issue.
+Analysis: This evidence is inconsistent with the apparent source path. Verify the exact
+binary/debug-symbol/source build, optimization and frame accuracy; investigate races
+or corruption rather than declaring that a valid NULL check failed.
 ```
 
 ### Step 4: Deep Investigation

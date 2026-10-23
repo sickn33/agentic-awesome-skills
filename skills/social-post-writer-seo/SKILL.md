@@ -78,12 +78,12 @@ Create a post that is easy to understand, useful, and encourages engagement.
 - **Platform**: Instagram
 - **Tone**: Insightful
 
-**Output**:
+**Illustrative concept copy (not a real product or verified launch):**
 ☕️ Your morning coffee just got a clean energy upgrade! 
 Meet SolMug, a solar powered coffee mug concept for busy commutes.
-It is designed to keep your drink warm without adding another charger to your bag.
+The concept explores using sunlight to help keep a drink warm; performance and environmental benefits need validation.
 A small change for your morning routine, with sustainability in mind.
-Check the link in bio to pre-order! 
+Follow for concept updates.
 #ecofriendly #coffee #sustainability #tech #morningroutine
 
 ## Best Practices
@@ -93,22 +93,6 @@ Check the link in bio to pre-order!
 - ❌ Avoid using more than 10 hashtags; it can look like spam.
 - ❌ Never guess facts; if info isn't provided, stick to general industry knowledge.
 
-## Examples
-
-### Example: New Product Launch
-- **Topic**: Solar Powered Coffee Mug
-- **Keyword**: eco-friendly coffee
-- **Target**: Commuters
-- **Platform**: Instagram
-- **Tone**: Insightful
-
-**Output**:
-☕️ Your morning coffee just got a clean energy upgrade! 
-Your commute just got smarter and greener. 
-The SolMug keeps your brew hot using only sunlight. 
-A small change for your bag, a big win for the planet. 
-Check the link in bio to pre-order! 
-#ecofriendly #coffee #sustainability #tech #morningroutine
 
 ---
 

@@ -16,6 +16,8 @@ license_source: https://github.com/LambdaTest/agent-skills/blob/main/LICENSE
 Use this skill when you need generates Jest unit and integration tests in JavaScript or TypeScript. Covers mocking, snapshots, async testing, and React component testing. Use when user mentions "Jest", "describe/it/expect", "jest.mock", "toMatchSnapshot". Triggers on: "Jest", "expect().toBe()", "jest.mock",...
 
 
+Examples are separate fragments needing actual implementation imports and the project Jest environment/transforms. The reference/playbook.md file is not bundled. CommonJS jest.mock examples do not directly apply to native ESM; inspect the installed version. Restore spies/timers in afterEach/finally even on assertion failure; remove test.only before committing. Update snapshots only after reviewing the intended semantic change, never to silence failures.
+
 ## Core Patterns
 
 ### Basic Test
@@ -59,6 +61,7 @@ expect(() => fn()).toThrow(CustomError);
 const mockFn = jest.fn();
 mockFn.mockReturnValue(42);
 mockFn.mockResolvedValue({ data: 'test' });
+mockFn('arg1');
 expect(mockFn).toHaveBeenCalledWith('arg1');
 expect(mockFn).toHaveBeenCalledTimes(1);
 
@@ -74,6 +77,7 @@ jest.mock('./api', () => ({
 
 // Spy
 const spy = jest.spyOn(console, 'log').mockImplementation();
+console.log('expected');
 expect(spy).toHaveBeenCalledWith('expected');
 spy.mockRestore();
 

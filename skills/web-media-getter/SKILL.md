@@ -34,7 +34,7 @@ _Source: [connerkward/web-media-getter-skill](https://github.com/connerkward/web
 Query many free image/video sources in one fan-out, get a normalized result list,
 optionally download top-K with an attribution sidecar. Zero-dep stdlib script.
 
-**Script:** `webmedia.py` (in this dir). **Keys:** `PEXELS_API_KEY`, `PIXABAY_API_KEY`
+**Script prerequisite:** `webmedia.py` is not bundled in this catalog copy. The named central/scripts helpers and central/.env location are also external prerequisites; use only a separately reviewed upstream installation. **Keys:** `PEXELS_API_KEY`, `PIXABAY_API_KEY`
 in `central/.env` (optional — the 5 no-key sources work without them).
 
 ## Sources
@@ -53,7 +53,7 @@ in `central/.env` (optional — the 5 no-key sources work without them).
 
 GIF sources fire only with `--type gif`. Keys: `KLIPY_API_KEY`, `GIPHY_API_KEY`
 in `central/.env`. (tenor adapter removed — Google EOL'd the API 2026-06-30.)
-**klipy** is the one to get (free + unlimited);
+Verify current provider pricing, quotas and API schema; no unlimited/free tier is established here.
 its adapter is **unverified — assumes Tenor-compatible** request/response;
 verify against docs.klipy.com when you key it. `webmedia.py "shrug" --type gif --count 6 --json`
 
@@ -98,12 +98,13 @@ not single shots. So:
   (token-based read; full originals would need OAuth — previews suffice for SFX).
 - **`audio-judge.py <file> "<target>"`** — sends the clip to OpenAI `gpt-audio`
   (audio-native) and returns JSON `{heard, score, matches, suggestion}`, enabling a
-  generate/fetch → judge → iterate loop. Auto-sources a real `sk-` `OPENAI_API_KEY`
-  from `.env` (ignores a local `lm-studio` stub env var). Pads sub-2s clips so the
+  generate/fetch → judge → iterate loop. Use only the explicitly configured provider key/source; never search unrelated .env files for a usable key or override a local endpoint/key to force paid cloud usage. Pads sub-2s clips so the
   speech-tuned model doesn't refuse. **Caveat:** it reliably *describes* audio and
   filters obvious mismatches, but it is NOT a trustworthy judge of subjective qualities
   like "grating" — it labels nearly any beep "sharp/high-pitched". Use it to cull, not
   to make the final aesthetic call; confirm by ear.
+
+Downloads need an authorized output directory, HTTPS allowlisted destinations, bounded redirects/bytes/time and non-overwriting filenames. Verify the original asset page/license, commercial/redistribution/attribution and subject rights; preview availability is not a license. Hosted semantic search/audio judging transmits media and can incur costs, requiring destination/payload/budget authorization. Promotional credits and model hearing claims are historical, not verified capabilities.
 
 ## Where this fits
 
