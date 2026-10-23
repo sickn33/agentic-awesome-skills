@@ -136,6 +136,19 @@
         "skills/goal-instruction-writer/agents/openai.yaml",
         "skills/goal-instruction-writer/walkthrough.md"
       ]
+    },
+    {
+      "pr": 2064,
+      "base_repository": "sickn33/agentic-awesome-skills",
+      "head_repository": "cis2042/agentic-awesome-skills",
+      "skill_root": "skills/product-design-harness",
+      "reviewed_head": "aff9032c3a77967e35f0daaeea4319bf4743d88d",
+      "tree_oid": "101425c81cd004a124964ee5c53958496df06c17",
+      "reviewed_support_paths": [
+        "skills/product-design-harness/resources/scripts/check_override.py",
+        "skills/product-design-harness/resources/scripts/check_review.py",
+        "skills/product-design-harness/resources/scripts/jev_gate.py"
+      ]
     }
   ]
 }

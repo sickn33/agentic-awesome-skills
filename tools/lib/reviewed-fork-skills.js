@@ -7,6 +7,7 @@ const SHA = /^[0-9a-f]{40}$/;
 const ROOT = /^skills\/[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const SUPPORT_FILE_NAME = /^(?:README\.md|walkthrough\.md|\.gitignore|LICENSE)$/;
 const SUPPORT_SCRIPT_NAME = /^scripts\/[A-Za-z0-9._-]+\.py$/;
+const RESOURCE_SCRIPT_NAME = /^resources\/scripts\/[A-Za-z0-9._-]+\.py$/;
 const MAX_REVIEWED_SUPPORT_PATHS = 16;
 
 // A reviewed entry may opt in to a short, closed list of extra exact paths
@@ -17,7 +18,8 @@ function isValidReviewedSupportPath(skillRoot, filePath) {
   const relative = filePath.slice(skillRoot.length + 1);
   if (!relative || relative.split('/').some((segment) => !segment || segment === '.' || segment === '..')) return false;
   if (path.posix.normalize(relative) !== relative) return false;
-  return SUPPORT_FILE_NAME.test(relative) || SUPPORT_SCRIPT_NAME.test(relative) || relative === "agents/openai.yaml";
+  return SUPPORT_FILE_NAME.test(relative) || SUPPORT_SCRIPT_NAME.test(relative)
+    || RESOURCE_SCRIPT_NAME.test(relative) || relative === "agents/openai.yaml";
 }
 
 function readSupportPaths(entry) {
