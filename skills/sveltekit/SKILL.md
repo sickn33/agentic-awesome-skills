@@ -14,7 +14,7 @@ tools: [claude, cursor, gemini]
 
 ## Overview
 
-SvelteKit is the official full-stack framework built on top of Svelte. It provides file-based routing, server-side rendering (SSR), static site generation (SSG), API routes, and progressive form actions — all with Svelte's compile-time reactivity model that ships zero runtime overhead to the browser. Use this skill when building fast, modern web apps where both DX and performance matter.
+SvelteKit is the official full-stack framework built on top of Svelte. It provides file-based routing, server-side rendering (SSR), static site generation (SSG), API routes, and progressive form actions — all with Svelte's compile-time reactivity model that reduces some runtime work through compilation; client-side features still ship runtime JavaScript. Use this skill when building fast, modern web apps where both DX and performance matter.
 
 ## When to Use This Skill
 
@@ -23,6 +23,10 @@ SvelteKit is the official full-stack framework built on top of Svelte. It provid
 - Use when migrating a SPA to a framework with server capabilities
 - Use when working on a project that needs file-based routing and collocated API endpoints
 - Use when the user asks about `+page.svelte`, `+layout.svelte`, `load` functions, or form actions
+
+## Version and integration scope
+
+Examples use legacy Svelte component syntax and omit DB/email/auth implementations. Use the scaffold and docs matching installed Svelte/SvelteKit versions. Validate/allowlist POST fields and authorize mutations before DB writes; `data: body` is not a production mass-assignment pattern. Handle failed fetch status before parsing JSON, and do not treat built-in form origin checks as complete authorization.
 
 ## How It Works
 
@@ -64,7 +68,7 @@ src/routes/shop/[...path]/+page.svelte → /shop/* (catch-all)
 ```
 
 **Route groups** (no URL segment): wrap in `(group)/` folder.
-**Private routes** (not accessible as URLs): prefix with `_` or `(group)`.
+**Route groups are not private routes.** Parentheses affect URL/layout organization, not authorization. Guard sensitive loads, actions and endpoints on the server.
 
 ### Step 3: Loading Data with `load` Functions
 
@@ -94,7 +98,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 </script>
 
 <h1>{data.post.title}</h1>
-<article>{@html data.post.content}</article>
+<article>{data.post.content}</article> <!-- Escaped text; use @html only for trusted/sanitized HTML. -->
 ```
 
 ### Step 4: API Routes (Server Endpoints)
@@ -108,6 +112,9 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
   const limit = Number(url.searchParams.get('limit') ?? 10);
+  if (!Number.isInteger(limit) || limit < 1 || limit > 100) {
+    return json({ error: "Invalid limit" }, { status: 400 });
+  }
   const posts = await db.post.findMany({ take: limit });
   return json(posts);
 };
@@ -200,7 +207,9 @@ export const csr = false;        // Disable client-side hydration entirely
 
 ## Examples
 
-### Example 1: Protected Dashboard Route
+### Example 1: Dashboard Redirect (not complete authorization)
+
+A layout redirect is useful navigation behavior but is not a substitute for authorization at every protected server data/action/endpoint boundary. Return only public user fields from server loads; their data is serialized to the client. See [SvelteKit auth](https://svelte.dev/docs/kit/auth), [route groups](https://svelte.dev/docs/kit/advanced-routing) and [raw HTML safety](https://svelte.dev/docs/svelte/@html).
 
 ```typescript
 // src/routes/dashboard/+layout.server.ts

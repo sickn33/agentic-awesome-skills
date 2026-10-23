@@ -36,6 +36,10 @@ tools: [claude, cursor, codex, antigravity]
 **Name:** Industrial Brutalism & Tactical Telemetry Interface Engineering
 **Description:** Advanced proficiency in architecting web interfaces that synthesize mid-century Swiss Typographic design, industrial manufacturing manuals, and retro-futuristic aerospace/military terminal interfaces. This discipline requires absolute mastery over rigid modular grids, extreme typographic scale contrast, purely utilitarian color palettes, and the programmatic simulation of analog degradation (halftones, CRT scanlines, bitmap dithering). The objective is to construct digital environments that project raw functionality, mechanical precision, and high data density, deliberately discarding conventional consumer UI patterns.
 
+## Accessibility and truthful data
+
+Visual severity never overrides keyboard access, readable text, zoom/reflow, focus visibility or reduced-motion preferences. Use scalable text and test the proposed small uppercase labels; decorative CRT/noise layers must not obscure content or capture input. Status must use text/icons as well as color. Mark simulated telemetry as demo data; do not invent live readings or use ®/©/™ to imply rights/registration that do not exist. Confirm font licenses before embedding.
+
 ## 2. Visual Archetypes
 The design system operates by merging two distinct but highly compatible visual paradigms. **Pick ONE per project and commit to it. Do not alternate or mix both modes within the same interface.**
 

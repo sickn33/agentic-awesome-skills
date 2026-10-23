@@ -188,11 +188,12 @@ mmx vision describe --image photo.jpg --prompt "What breed?" --output json
 
 ```bash
 # Chain: generate image → describe it
-URL=$(mmx image generate --prompt "A sunset" --quiet)
-mmx vision describe --image "$URL" --quiet
+# Request JSON, inspect the installed response schema, then extract exactly
+# one approved image URL before passing it to vision describe.
 
 # Async video workflow
-TASK=$(mmx video generate --prompt "A robot" --async --quiet | jq -r '.taskId')
+# Submit once with --output json, inspect the documented response field,
+# and preserve its task ID as TASK. Do not assume taskId versus task_id.
 mmx video task get --task-id "$TASK" --output json
 mmx video download --task-id "$TASK" --out robot.mp4
 ```

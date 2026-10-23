@@ -26,6 +26,10 @@ Write a structured specification before writing any code. The spec is the shared
 
 **When NOT to use:** Single-line fixes, typo corrections, or changes where requirements are unambiguous and self-contained.
 
+## Scope and existing artifacts
+
+Use the actual repository scripts and installed tool versions; commands below are examples, not verified prerequisites. Preserve supplied specs/plans when the user asks to execute them without edits, and use existing acceptance criteria rather than creating duplicate process documents. Explicit user/repository workflow constraints control required checkpoints and commits. A written spec supports review but is not proof of correctness.
+
 ## The Gated Workflow
 
 Spec-driven development has four phases. Do not advance to the next phase until the current one is validated.

@@ -30,7 +30,7 @@ Use PlanetScale for serverless MySQL-compatible databases with non-blocking sche
 
 ## Prerequisites
 
-- A PlanetScale account (free tier available).
+- A PlanetScale account and approved budget; check current pricing (the Hobby free plan was retired in 2024).
 - The `pscale` CLI installed locally.
 - Node.js 18+ if using Prisma or other ORM integrations.
 
@@ -106,7 +106,7 @@ CREATE TABLE orders (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-> PlanetScale does not enforce foreign keys at the database level. Use application-level constraints or Vitess-level routing rules instead.
+> PlanetScale supports opt-in foreign-key constraints on eligible unsharded Vitess databases. Inspect the database setting and documented limitations; if disabled, enforce integrity deliberately in the application. See [foreign-key availability](https://planetscale.com/changelog/foreign-key-constraints-ga).
 
 ## Deploy Requests
 
@@ -162,7 +162,7 @@ DATABASE_URL="mysql://USERNAME:PASSWORD@us-east.connect.psdb.cloud/my-app?sslacc
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
-  relationMode = "prisma"   // required — PlanetScale does not support foreign keys
+  relationMode = "prisma"   // choose only when DB foreign-key constraints are disabled
 }
 
 model User {
@@ -241,7 +241,7 @@ services:
     image: mysql:8.0
     restart: unless-stopped
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: my-app
@@ -261,7 +261,7 @@ volumes:
 
 ```bash
 docker compose up -d
-mysql -h 127.0.0.1 -u myapp -psecret my-app
+mysql -h 127.0.0.1 -u myapp -p my-app
 ```
 
 ## Production Best Practices
@@ -278,10 +278,10 @@ mysql -h 127.0.0.1 -u myapp -psecret my-app
 | Symptom | Likely Cause | Fix |
 |---|---|---|
 | `Access denied` on `pscale connect` | CLI not authenticated | Run `pscale auth login` |
-| Deploy request shows "schema conflict" | Concurrent branch changes to the same table | Rebase: delete branch, recreate from current `main`, reapply changes |
-| `foreign key constraint` error | PlanetScale does not support foreign keys | Use `relationMode = "prisma"` or remove FK definitions |
+| Deploy request shows "schema conflict" | Concurrent branch changes to the same table | Inspect/reconcile the schema diff against current main; preserve branch work before any authorized recreation |
+| `foreign key constraint` error | Foreign-key setting or feature limitations | Inspect supported constraints/settings; do not remove integrity guarantees blindly |
 | High latency on reads | No index on queried column | Add index via a new branch and deploy request |
-| `max connections` exceeded | Connection pooling not enabled | Use `@planetscale/database` serverless driver or PgBouncer-style proxy |
+| `max connections` exceeded | Connection pooling not enabled | Use a supported MySQL/Vitess connection strategy; PgBouncer is a PostgreSQL pooler |
 | `pscale connect` hangs | Firewall blocking outbound TLS | Allow outbound 443 to `*.psdb.cloud` |
 
 ## Related Skills

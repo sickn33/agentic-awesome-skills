@@ -34,7 +34,7 @@ XML sitemap implementations.
 ### 1. Self-Referencing Tags
 - Every page must include an hreflang tag pointing to itself
 - The self-referencing URL must exactly match the page's canonical URL
-- Missing self-referencing tags cause Google to ignore the entire hreflang set
+- Missing self-references are an implementation defect; report affected URLs rather than asserting the whole set is always ignored
 
 ### 2. Return Tags
 - If page A links to page B with hreflang, page B must link back to page A
@@ -43,7 +43,7 @@ XML sitemap implementations.
 - Check all language versions reference each other (full mesh)
 
 ### 3. x-default Tag
-- Required: designates the fallback page for unmatched languages/regions
+- Optional: designates the fallback page for unmatched languages/regions
 - Typically points to the language selector page or English version
 - Only one x-default per set of alternates
 - Must also have return tags from all other language versions
@@ -53,7 +53,7 @@ XML sitemap implementations.
 - Common errors:
   - `eng` instead of `en` (ISO 639-2, not valid for hreflang)
   - `jp` instead of `ja` (incorrect code for Japanese)
-  - `zh` without region qualifier (ambiguous; use `zh-Hans` or `zh-Hant`)
+  - `zh` is valid for generic Chinese; use `zh-Hans` or `zh-Hant` when script distinctions match the pages
 
 ### 5. Region Code Validation
 - Optional region qualifier uses ISO 3166-1 Alpha-2 (e.g., `en-US`, `en-GB`, `pt-BR`)
@@ -70,14 +70,15 @@ XML sitemap implementations.
 - Non-canonical pages should not be in any hreflang set
 
 ### 7. Protocol Consistency
+Google supports fully-qualified alternate URLs; consistent HTTPS is a deployment recommendation, not a blanket hreflang validity rule.
 - All URLs in an hreflang set must use the same protocol (HTTPS or HTTP)
-- Mixed HTTP/HTTPS in hreflang sets causes validation failures
+- Check redirects and canonical targets when HTTP/HTTPS versions differ
 - After HTTPS migration, update all hreflang tags to HTTPS
 
 ### 8. Cross-Domain Support
 - Hreflang works across different domains (e.g., example.com and example.de)
 - Cross-domain hreflang requires return tags on both domains
-- Verify both domains are verified in Google Search Console
+- Search Console access helps diagnostics but is not a prerequisite for cross-domain hreflang
 - Sitemap-based implementation recommended for cross-domain setups
 
 ## Common Mistakes
@@ -86,13 +87,13 @@ XML sitemap implementations.
 |-------|----------|-----|
 | Missing self-referencing tag | Critical | Add hreflang pointing to same page URL |
 | Missing return tags (A→B but no B→A) | Critical | Add matching return tags on all alternates |
-| Missing x-default | High | Add x-default pointing to fallback/selector page |
+| Missing x-default | Optional improvement | Add x-default pointing to fallback/selector page |
 | Invalid language code (e.g., `eng`) | High | Use ISO 639-1 two-letter codes |
 | Invalid region code (e.g., `en-uk`) | High | Use ISO 3166-1 Alpha-2 codes |
 | Hreflang on non-canonical URL | High | Move hreflang to canonical URL only |
 | HTTP/HTTPS mismatch in URLs | Medium | Standardize all URLs to HTTPS |
 | Trailing slash inconsistency | Medium | Match canonical URL format exactly |
-| Hreflang in both HTML and sitemap | Low | Choose one method (sitemap preferred for large sites) |
+| Hreflang in both HTML and sitemap | Maintenance consideration | Both are valid; keep sets consistent or use one method |
 | Language without region when needed | Low | Add region qualifier for geo-targeted content |
 
 ## Implementation Methods
@@ -140,7 +141,7 @@ See Hreflang Sitemap Generation section below.
 3. **Validate language codes**: Verify all codes against ISO 639-1 and ISO 3166-1
 4. **Generate tags**: Create hreflang tags for each page including self-referencing
 5. **Verify return tags**: Confirm all relationships are bidirectional
-6. **Add x-default**: Set fallback for each page set
+6. **Consider x-default**: Set an appropriate fallback when useful
 7. **Output**: Generate implementation code (HTML, HTTP headers, or sitemap XML)
 
 ## Hreflang Sitemap Generation

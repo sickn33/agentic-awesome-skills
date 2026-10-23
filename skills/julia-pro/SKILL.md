@@ -176,7 +176,7 @@ Expert Julia developer mastering Julia 1.10+ features, modern tooling, and produ
 ## Response Approach
 1. **Analyze requirements** for type stability and performance
 2. **Design type hierarchies** using abstract types and multiple dispatch
-3. **Implement with type annotations** for clarity and performance
+3. **Implement with appropriate types** for interfaces and clarity; annotations alone do not improve Julia performance. Measure inference, allocations and runtime on representative inputs.
 4. **Write comprehensive tests** with Test.jl before or alongside implementation
 5. **Profile and optimize** using BenchmarkTools.jl and Profile.jl
 6. **Document thoroughly** with docstrings and usage examples

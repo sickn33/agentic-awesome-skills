@@ -51,13 +51,17 @@ gcloud services enable cloudfunctions.googleapis.com cloudbuild.googleapis.com \
 | Traffic splitting | No | Yes |
 | Eventarc triggers | No | Yes |
 
+## Deployment and event boundaries
+
+Select exact project/region/generation, approved service accounts and current supported runtime/quotas. Do not grant broad public access or extra IAM roles simply to clear an error. Deployment can replace code/config and incur costs; preview source exclusions so secrets are not uploaded. Event delivery/retries can duplicate effects: validate payloads, derive authorized resource IDs and make order/file processing idempotent using durable event IDs/state transitions. Set total resource/cost limits and inspect the actual deployed URL for Scheduler rather than constructing it blindly.
+
 ## Deploy an HTTP Function (Gen2)
 
 ```bash
 # Python HTTP function
 gcloud functions deploy hello-http \
   --gen2 --region=us-central1 --runtime=python312 \
-  --trigger-http --allow-unauthenticated \
+  --trigger-http --no-allow-unauthenticated \
   --entry-point=hello_http \
   --memory=256Mi --timeout=60s \
   --min-instances=0 --max-instances=100 \
@@ -66,7 +70,7 @@ gcloud functions deploy hello-http \
 # Node.js HTTP function
 gcloud functions deploy hello-node \
   --gen2 --region=us-central1 --runtime=nodejs20 \
-  --trigger-http --allow-unauthenticated \
+  --trigger-http --no-allow-unauthenticated \
   --entry-point=helloNode --memory=256Mi --source=.
 ```
 
@@ -185,7 +189,7 @@ gcloud functions describe hello-http --gen2 --region=us-central1
 gcloud functions logs read hello-http --gen2 --region=us-central1 --limit=50
 gcloud functions delete hello-http --gen2 --region=us-central1 --quiet
 
-# Update env vars without redeploying code
+# Update configuration via deploy (inspect source/config behavior before running)
 gcloud functions deploy hello-http --gen2 --region=us-central1 \
   --update-env-vars=APP_ENV=staging
 
@@ -225,7 +229,7 @@ resource "google_cloud_run_service_iam_member" "invoker" {
   location = google_cloudfunctions2_function.api.location
   service  = google_cloudfunctions2_function.api.name
   role     = "roles/run.invoker"
-  member   = "allUsers"
+  member   = "serviceAccount:approved-caller@PROJECT_ID.iam.gserviceaccount.com"
 }
 
 resource "google_cloudfunctions2_function" "processor" {
@@ -264,7 +268,7 @@ resource "google_cloudfunctions2_function" "processor" {
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | `PERMISSION_DENIED` on deploy | Missing Cloud Build or Artifact Registry perms | Grant `roles/cloudbuild.builds.builder` to Cloud Build SA |
-| Function deploys but returns 403 | Missing `roles/run.invoker` for Gen2 | Add `--allow-unauthenticated` or grant invoker role |
+| Function deploys but returns 403 | Missing `roles/run.invoker` for Gen2 | Grant the intended authenticated caller invoker access; public access requires explicit design approval |
 | Cold start latency > 5s | Large dependencies or no min instances | Set `--min-instances=1`; reduce deps; use lazy imports |
 | Pub/Sub messages redelivered | Function errors or times out | Increase `--timeout`; fix error handling; add dead-letter topic |
 | `Build failed` during deploy | Syntax error or missing dependency | Check `gcloud builds log`; verify requirements.txt |

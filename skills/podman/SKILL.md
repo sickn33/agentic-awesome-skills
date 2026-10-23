@@ -87,6 +87,10 @@ podman push myapp:latest registry.example.com/myapp:latest
 podman rmi nginx:latest
 ```
 
+## Host-change boundaries
+
+The sysctl and subuid/subgid commands below are Linux examples, not portable setup for macOS/Windows. Inspect existing allocations first: never assign the same subordinate ID range to multiple users or overwrite host policy blindly. Prefer high local-only published ports; lowering the unprivileged-port threshold changes host-wide policy. Pin trusted image digests for reproducibility, protect registry credentials, and inspect mounts before running/removing containers.
+
 ## Rootless Containers
 
 ### Setup
@@ -147,7 +151,7 @@ podman run -d --pod mypod --name db postgres:15
 podman pod ps
 
 # Containers share network namespace
-podman exec web curl localhost:5432
+podman exec db pg_isready -h localhost -p 5432
 ```
 
 ### Pod Management

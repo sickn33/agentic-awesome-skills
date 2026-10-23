@@ -1,7 +1,7 @@
 ---
 name: multi-advisor
 description: "Conselho de especialistas — consulta multiplos agentes do ecossistema em paralelo para analise multi-perspectiva de qualquer topico. Ativa personas, especialistas e agentes tecnicos simultaneamente, cada um pela sua otica unica, e consolida em sintese decisoria final."
-risk: none
+risk: safe
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -21,6 +21,8 @@ tools:
 # MULTI-ADVISOR: Board de Especialistas em Paralelo
 
 ## Overview
+
+As personas são simulações de perspectivas públicas, não consultas reais, opiniões atuais ou endosso das pessoas nomeadas. Identifique isso na saída e não invente citações. Só use agentes realmente disponíveis e autorizados pelo host; se não houver delegação, apresente lentes de análise numa única resposta. Compartilhe apenas o contexto necessário, sem segredos. Consenso entre respostas do mesmo modelo não é validação independente; decisões financeiras/jurídicas exigem evidências atuais e revisão adequada.
 
 Conselho de especialistas — consulta multiplos agentes do ecossistema em paralelo para analise multi-perspectiva de qualquer topico. Ativa personas, especialistas e agentes tecnicos simultaneamente, cada um pela sua otica unica, e consolida em sintese decisoria final.
 
@@ -144,14 +146,14 @@ Para cada membro do board, adote completamente a perspectiva daquela persona:
 
 ## [Persona 1] — [Angulo Principal]
 
-[Perspectiva completa, na voz autentica da persona]
+[Perspectiva completa, como simulação claramente identificada da perspectiva]
 **Posicao:** [Favoravel/Contrario/Neutro + por que]
 
 ---
 
 ## [Persona 2] — [Angulo Principal]
 
-[Perspectiva completa, na voz autentica da persona]
+[Perspectiva completa, como simulação claramente identificada da perspectiva]
 **Posicao:** [Favoravel/Contrario/Neutro + por que]
 
 ---
@@ -222,7 +224,7 @@ Board: AI_BOARD (Sam + Karpathy + LeCun + Ilya)
 2. **Tensao e saudavel** — Se todo board concorda, investigar mais fundo.
 3. **Sem consenso forcado** — Divergencias genuinas sao preservadas na sintese.
 4. **Acao > Teoria** — Toda consulta termina com proxima acao concreta.
-5. **Contexto completo** — Cada persona recebe o contexto completo da questao.
+5. **Contexto completo** — Cada persona recebe apenas o contexto necessário e autorizado.
 6. **Humor na medida certa** — Algumas personas tem voz especifica (Elon: direto; Jobs: intransigente; Buffett: calmo e metaforico).
 
 ---
