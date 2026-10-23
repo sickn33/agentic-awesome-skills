@@ -33,7 +33,7 @@ Don't use when the user needs per-user crash detail or device-level reporting; t
 
 ## Prerequisites
 
-- `eas-cli` installed (`npm install -g eas-cli`).
+- A project-approved, pinned eas-cli version exposing these commands. Check eas --version and each command’s --help before use; command availability can change.
 - Logged in: `eas login`.
 - For `channel:insights`: run from an Expo project directory (the command resolves the project ID from `app.json`). `update:insights` only needs a login.
 
@@ -54,10 +54,10 @@ Before querying insights for an update group, you need its `group` ID. Use `eas 
 
 ```bash
 # Latest group id across all branches
-eas update:list --all --json --non-interactive | jq -r '.currentPage[0].group'
+eas update:list --all --json --non-interactive | jq -er '.currentPage[0].group // error("No update group returned")'
 
 # Latest group id on a specific branch
-eas update:list --branch production --json --non-interactive | jq -r '.currentPage[0].group'
+eas update:list --branch production --json --non-interactive | jq -er '.currentPage[0].group // error("No update group returned")'
 ```
 
 The JSON response has a `currentPage` array with one entry per update group (both platforms of the same publish are collapsed into one entry):
@@ -109,7 +109,7 @@ For the complete schema and field reference, see [references/update-insights-sch
 
 Fields that matter for health assessment:
 
-- `platforms[].totals.crashRatePercent`, computed as `failedInstalls / (installs + failedInstalls) * 100`. Zero when there are no installs.
+- `platforms[].totals.crashRatePercent`, computed as `failedInstalls / (installs + failedInstalls) * 100`. Zero by CLI convention when installs + failedInstalls is zero; this is no exposure, not proof of health.
 - `platforms[].totals.installs` and `uniqueUsers` give the adoption signal.
 - `platforms[].daily` is a time series, useful for spotting a sudden spike in failures.
 
@@ -117,7 +117,7 @@ Fields that matter for health assessment:
 
 - `Could not find any updates with group ID: "<id>"` — group doesn't exist or you lack access.
 - `Update group "<id>" has no ios update (available platforms: android)` — `--platform ios` was used but the group wasn't published for iOS.
-- `EAS Update insights is not supported by this version of eas-cli. Please upgrade ...` — the server deprecated a field the CLI relies on. Run `npm install -g eas-cli@latest`.
+- `EAS Update insights is not supported by this version of eas-cli. Please upgrade ...` — the server deprecated a field the CLI relies on. Check the project’s runtime constraints and changelog, then upgrade to a reviewed compatible CLI version; do not mutate the global environment automatically.
 
 ## `eas update:view <groupId> --insights`
 
@@ -169,16 +169,18 @@ Fields that matter:
 ### Errors
 
 - `Could not find channel with the name <name>` — typo or wrong account.
-- "No update launches recorded" in the table / empty `mostPopularUpdates` in JSON — no OTA update has been launched for that channel + runtime yet. Usually means the channel is still serving the embedded build only.
+- "No update launches recorded" in the table / empty `mostPopularUpdates` in JSON — no OTA update has been launched for that channel + runtime yet. This can reflect no exposure, telemetry lag, wrong runtime/project/channel or absent OTA traffic; do not infer embedded-only service from an empty list.
 
 ## Common workflows
+
+Resolve the actual channel→branch mapping and intended group/runtime before selecting a release. A branch named production is an example, not proof it serves the production channel. Across all branches, the first returned group need not be the intended production release. Keep account/project/group/platform, UTC window and collection time with the report.
 
 ### Verify the update I just published is healthy
 
 ```bash
 # 1. Grab the latest publish on production
 GROUP_ID=$(eas update:list --branch production --json --non-interactive \
-  | jq -r '.currentPage[0].group')
+  | jq -er '.currentPage[0].group // error("No update group returned")')
 
 # 2. Give it some adoption time (minutes to hours), then check crash rate
 eas update:insights "$GROUP_ID" --json --non-interactive \
@@ -202,7 +204,9 @@ for channel in production staging; do
 done
 ```
 
-### Detect a rollout regression in the last 24 hours
+A failure-rate threshold is an investigation trigger, not a release gate by itself. Require meaningful sample size and comparable observation windows, and inspect independent crash reporting. No launch/failure telemetry or successful metric query can certify an app is healthy. Do not rollback, republish or change rollout percentage from this read-only analysis unless separately authorized.
+
+### Detect an investigation signal in a one-day window
 
 ```bash
 eas update:insights "$GROUP_ID" --days 1 --json --non-interactive \
@@ -226,6 +230,7 @@ Human-readable group details plus 30 days of launches/failures per platform — 
 
 ## Limitations
 
+- **Summed OTA users** can also double-count one user across multiple active updates within the window, while the top-N list may omit updates. The sum is not a globally deduplicated reach count.
 - **Unique users across platforms** may double-count users who run the same publish on both iOS and Android. The same caveat applies to `otaTotalUniqueUsers` in channel insights, which is a sum over `mostPopularUpdates`.
 - **Fresh publishes** may show zeros for a short period while the metrics pipeline catches up.
 - **Installs are downloads, not launches**: the `installs` / "Launches" field counts users who downloaded the manifest and launch asset. A confirmed run only registers on the user's *next* update check (typically up to 24h later, depending on the app's update policy). So metrics lag the real-world state slightly.

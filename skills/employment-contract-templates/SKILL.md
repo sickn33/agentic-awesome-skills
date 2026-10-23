@@ -1,14 +1,14 @@
 ---
 name: employment-contract-templates
-description: "Templates and patterns for creating legally sound employment documentation including contracts, offer letters, and HR policies."
-risk: safe
+description: "Templates and patterns for creating draft employment documentation for jurisdiction-specific legal review including contracts, offer letters, and HR policies."
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
 
 # Employment Contract Templates
 
-Templates and patterns for creating legally sound employment documentation including contracts, offer letters, and HR policies.
+Templates and patterns for creating draft employment documentation for jurisdiction-specific legal review including contracts, offer letters, and HR policies.
 
 ## Use this skill when
 

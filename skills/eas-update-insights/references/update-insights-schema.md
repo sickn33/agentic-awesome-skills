@@ -1,6 +1,6 @@
 # `eas update:insights` JSON schema
 
-Complete JSON output shape returned by `eas update:insights <groupId> --json --non-interactive`.
+Illustrative JSON output shape; validate against the installed CLI/server contract. This is an example, not a machine-enforceable JSON Schema. returned by `eas update:insights <groupId> --json --non-interactive`.
 
 ```json
 {
@@ -32,7 +32,7 @@ Complete JSON output shape returned by `eas update:insights <groupId> --json --n
     {
       "platform": "ios",
       "updateId": "019d72ca-...",
-      "totals": { "uniqueUsers": 100, "installs": 1, "failedInstalls": 0, "crashRatePercent": 0 },
+      "totals": { "uniqueUsers": 1, "installs": 1, "failedInstalls": 0, "crashRatePercent": 0 },
       "payload": { "launchAssetCount": 4, "averageUpdatePayloadBytes": 1115771 },
       "daily": [ { "date": "2026-04-10T00:00:00.000Z", "installs": 1, "failedInstalls": 0 } ]
     }
@@ -52,7 +52,7 @@ Complete JSON output shape returned by `eas update:insights <groupId> --json --n
 | `platforms[].totals.uniqueUsers` | Distinct users who ran this update in the window. |
 | `platforms[].totals.installs` | Launches / successful installs in the window. |
 | `platforms[].totals.failedInstalls` | Crashes / failed installs in the window. |
-| `platforms[].totals.crashRatePercent` | `failedInstalls / (installs + failedInstalls) * 100`. Zero when no installs. |
+| `platforms[].totals.crashRatePercent` | `failedInstalls / (installs + failedInstalls) * 100`. Zero by convention only when installs + failedInstalls is zero; no exposure is not health. |
 | `platforms[].payload.launchAssetCount` | Number of assets the manifest references. |
 | `platforms[].payload.averageUpdatePayloadBytes` | Mean bundle size for the window. |
 | `platforms[].daily[]` | Per-day time series of installs and failed installs. |
@@ -61,7 +61,7 @@ Complete JSON output shape returned by `eas update:insights <groupId> --json --n
 
 The `update:view --insights --json` command wraps the same insights payload:
 
-```json
+```jsonc
 {
   "updates": [ /* standard update:view entries */ ],
   "insights": { /* same shape as eas update:insights above */ }

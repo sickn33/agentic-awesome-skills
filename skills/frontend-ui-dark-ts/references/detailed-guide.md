@@ -18,11 +18,13 @@
 
 ## Quick Start
 
+The configuration below targets Tailwind 3, React 18, Router 6 and Motion 11; it is not a current dependency recommendation. A latest Vite scaffold can choose different majors: align dependencies deliberately, review lockfile/advisories and use the matching major’s setup. Only scaffold into a new authorized directory. Font files/components/pages in the tree are examples, not bundled assets. Use system fonts or properly licensed webfonts; do not copy Segoe UI font binaries from an OS installation without redistribution rights.
+
 ```bash
 npm create vite@latest my-app -- --template react-ts
 cd my-app
 npm install framer-motion clsx react-router-dom
-npm install -D tailwindcss postcss autoprefixer
+npm install -D tailwindcss@3 postcss autoprefixer
 npx tailwindcss init -p
 ```
 
@@ -535,6 +537,8 @@ export function PageTransition({ children }: PageTransitionProps) {
 
 ### Glass Modal Overlay
 
+Visual shell only. A real modal needs an accessible name, dialog semantics, focus trap/return, Escape dismissal, background inertness and keyboard testing; prefer an accessible dialog primitive. Honor reduced-motion preferences in Motion (`useReducedMotion`) and CSS. Check text/control contrast on actual composited glass backgrounds rather than assuming these tokens pass.
+
 ```tsx
 <motion.div
   className="fixed inset-0 glass-overlay flex items-center justify-center z-50"
@@ -565,6 +569,8 @@ export function PageTransition({ children }: PageTransitionProps) {
 | Caption | `text-xs text-text-muted` |
 | Label | `text-sm font-medium text-text-secondary` |
 
+
+For route exit animations, give `Routes` the current `location` and a changing route key under `AnimatePresence`, and wrap pages in the motion component. The basic App snippet above alone does not implement route exit animations. `.animate-in` currently combines two animations that both write opacity; prefer one keyframe owning both opacity and transform. A manifest alone does not provide offline/PWA behavior.
 
 ## Related Files
 

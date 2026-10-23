@@ -32,6 +32,8 @@ Develop and maintain business continuity capabilities including Business Impact 
 
 ## BCP Framework
 
+The example downtime bands, response times and exercise cadence are illustrative, not universal compliance obligations. Have process owners approve maximum tolerable disruption, RTO (restoration target) and RPO (tolerable data-loss interval) based on actual impacts/dependencies; RTO must fit within tolerable disruption. Plan clean restore, reconciliation and failback evidence. Real failover, isolation, contact notifications and drills require explicit scope, change approval, rollback/abort criteria and communications marked as exercise. A document/tabletop alone does not prove recovery capability. Protect contact lists and accessible offline copies without exposing personal data.
+
 ```yaml
 bcp_phases:
   1_governance:
@@ -257,7 +259,7 @@ communication_plan:
 
     regulatory:
       who: "Applicable regulatory bodies"
-      when: "Per regulatory requirements (e.g., 72 hours for GDPR breach)"
+      when: "Legal/privacy counsel determines applicable trigger, recipients, deadline and required content; do not apply a blanket72-hour rule to every disruption"
       method: "Formal notification per regulatory procedure"
 
     media:
@@ -406,34 +408,34 @@ testing_schedule:
 ```yaml
 bcp_maintenance_checklist:
   quarterly:
-    - [ ] Contact lists verified and updated
-    - [ ] Tabletop exercise conducted
-    - [ ] BCP team roster reviewed
-    - [ ] Vendor contact information verified
-    - [ ] Communication channels tested
+    - "[ ] Contact lists verified and updated"
+    - "[ ] Tabletop exercise conducted"
+    - "[ ] BCP team roster reviewed"
+    - "[ ] Vendor contact information verified"
+    - "[ ] Communication channels tested"
 
   semi_annually:
-    - [ ] Functional exercise conducted
-    - [ ] Recovery procedures reviewed for accuracy
-    - [ ] Technology dependencies verified
-    - [ ] Vendor continuity capabilities confirmed
+    - "[ ] Functional exercise conducted"
+    - "[ ] Recovery procedures reviewed for accuracy"
+    - "[ ] Technology dependencies verified"
+    - "[ ] Vendor continuity capabilities confirmed"
 
   annually:
-    - [ ] Full-scale exercise conducted
-    - [ ] Business Impact Analysis refreshed
-    - [ ] Risk assessment updated
-    - [ ] BCP document fully reviewed and updated
-    - [ ] Executive review and sign-off obtained
-    - [ ] Training completed for all BCP team members
-    - [ ] Lessons learned from all exercises incorporated
+    - "[ ] Full-scale exercise conducted"
+    - "[ ] Business Impact Analysis refreshed"
+    - "[ ] Risk assessment updated"
+    - "[ ] BCP document fully reviewed and updated"
+    - "[ ] Executive review and sign-off obtained"
+    - "[ ] Training completed for all BCP team members"
+    - "[ ] Lessons learned from all exercises incorporated"
 
   triggered_by_change:
-    - [ ] New critical business process added
-    - [ ] Major organizational restructuring
-    - [ ] Technology platform migration
-    - [ ] New regulatory requirement
-    - [ ] Significant vendor change
-    - [ ] Actual disruption event (post-event update)
+    - "[ ] New critical business process added"
+    - "[ ] Major organizational restructuring"
+    - "[ ] Technology platform migration"
+    - "[ ] New regulatory requirement"
+    - "[ ] Significant vendor change"
+    - "[ ] Actual disruption event (post-event update)"
 ```
 
 ## Best Practices

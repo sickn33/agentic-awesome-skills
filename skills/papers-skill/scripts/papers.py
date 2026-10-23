@@ -16,6 +16,8 @@ Dependencies: httpx, arxiv, PyMuPDF
 from __future__ import annotations
 
 import argparse
+import re
+from urllib.parse import quote
 import sys
 import time
 from pathlib import Path
@@ -47,14 +49,14 @@ def _s2_get(url: str, params: dict) -> dict:
                 headers={"User-Agent": "papers-skill/1.0"},
             )
             if r.status_code == 429:
-                time.sleep(S2_WAIT * (attempt + 1))
+                time.sleep(S2_WAIT * (2 ** attempt))
                 continue
             r.raise_for_status()
             return r.json()
         except httpx.HTTPError as e:
             if attempt == S2_RETRIES - 1:
                 return {"error": f"HTTP error: {e}"}
-            time.sleep(S2_WAIT * (attempt + 1))
+            time.sleep(S2_WAIT * (2 ** attempt))
     return {"error": "rate limit, retries exhausted"}
 
 
@@ -99,15 +101,14 @@ def cmd_search(args) -> str:
     return "\n".join(out)
 
 
+def normalize_id(value):
+    if re.fullmatch(r"(?:\d{4}\.\d{4,5}|[a-z-]+(?:\.[A-Z]{2})?/\d{7})(?:v\d+)?", value):
+        return "ARXIV:" + value
+    return value
+
+
 def cmd_detail(args) -> str:
-    pid = args.paper_id
-    # Auto-detect ID type
-    if pid.startswith(("10.", "ARXIV:", "DOI:", "MAG:", "PMID:", "PMCID:")):
-        lookup = pid
-    elif pid.isdigit() and len(pid) >= 10:
-        lookup = f"ARXIV:{pid}"
-    else:
-        lookup = pid  # assume raw S2 paperId
+    lookup = quote(normalize_id(args.paper_id), safe="")
     fields = S2_FIELDS + ",references.title,references.year,tldr"
     data = _s2_get(f"{S2_BASE}/paper/{lookup}", {"fields": fields})
     if "error" in data:
@@ -141,7 +142,7 @@ def cmd_detail(args) -> str:
 
 def cmd_citations(args) -> str:
     data = _s2_get(
-        f"{S2_BASE}/paper/{args.paper_id}/citations",
+        f"{S2_BASE}/paper/{quote(normalize_id(args.paper_id), safe='')}/citations",
         {
             "limit": min(args.limit, 20),
             "fields": "title,year,authors",
@@ -199,7 +200,33 @@ def cmd_download(args) -> str:
     paper = next(arxiv.Client().results(search), None)
     if paper is None:
         return f"找不到 arXiv ID: {args.arxiv_id}"
-    path = paper.download_pdf(dirpath=str(save_dir))
+    identifier = args.arxiv_id
+    if not re.fullmatch(r"\d{4}\.\d{4,5}(?:v\d+)?", identifier):
+        raise ValueError("Download accepts a modern numeric arXiv ID only")
+    path = save_dir / (identifier + ".pdf")
+    # Refuse redirects rather than trusting metadata-controlled hosts; no overwrite.
+    with httpx.stream("GET", "https://arxiv.org/pdf/" + identifier, timeout=30, follow_redirects=False) as response:
+        response.raise_for_status()
+        if response.is_redirect:
+            raise ValueError("Redirect refused; inspect the official destination manually")
+        created = False
+        try:
+            with path.open("xb") as output:
+                created = True
+                size = 0
+                prefix = b""
+                for chunk in response.iter_bytes():
+                    size += len(chunk)
+                    if size > 50 * 1024 * 1024:
+                        raise ValueError("PDF exceeds 50 MiB limit")
+                    prefix = (prefix + chunk)[:5]
+                    output.write(chunk)
+                if prefix != b"%PDF-":
+                    raise ValueError("Response is not a PDF")
+        except Exception:
+            if created:
+                path.unlink(missing_ok=True)
+            raise
     return f"已下载: {path}"
 
 
@@ -211,11 +238,13 @@ def cmd_read(args) -> str:
     pdf = Path(args.pdf_path)
     if not pdf.exists():
         return f"PDF 不存在: {pdf}"
+    if not pdf.is_file() or pdf.stat().st_size > 50 * 1024 * 1024:
+        raise ValueError("Read requires a regular PDF <= 50 MiB")
     doc = fitz.open(str(pdf))
     pages = min(args.max_pages, doc.page_count)
     chunks = []
     for i in range(pages):
-        text = doc.load_page(i).get_text().strip()
+        text = doc.load_page(i).get_text().strip()[:20000]
         if text:
             chunks.append(f"--- Page {i + 1} ---\n{text}")
     doc.close()
@@ -260,10 +289,14 @@ def main():
     p.set_defaults(fn=cmd_read)
 
     args = parser.parse_args()
+    for key in ("limit", "max_results", "max_pages"):
+        value = getattr(args, key, None)
+        if value is not None and not 1 <= value <= (100 if key == "max_pages" else 20):
+            parser.error(f"--{key.replace('_', '-')} out of range")
     try:
         print(args.fn(args))
     except Exception as e:
-        print(f"错误: {type(e).__name__}: {e}", file=sys.stderr)
+        print(f"错误: {type(e).__name__}; inspect private local diagnostics", file=sys.stderr)
         sys.exit(1)
 
 

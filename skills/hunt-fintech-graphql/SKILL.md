@@ -36,7 +36,7 @@ still apply here, but the blast radius changes completely: a resolver bug in a S
 data, the same class of bug in a ledger mutation **moves money**. Three properties make fintech
 GraphQL backends a distinct hunting surface:
 
-- **Money-movement mutations are almost always resolvers over a double-entry ledger.** A single
+- **Money-movement mutations may resolve over a double-entry ledger.** A single
   GraphQL mutation (`transferFunds`, `redeemRewards`, `withdrawToBank`) can trigger multiple
   ledger writes (debit + credit + fee) that must be atomic. GraphQL's flexible input shape and
   alias batching make it easy to desynchronize those writes.
@@ -82,6 +82,8 @@ below assumes you already have (or have partially enumerated) a schema with mone
 ---
 
 ## Step-by-Step Hunting Methodology
+
+Use synthetic accounts and non-settling sandbox balances. Real-money transfers, settlement, KYC collection and repeated/race traffic need explicit owner-approved amounts, request caps, stop conditions and recovery; ordinary bounty scope does not imply those permissions. Stop at the smallest evidence of an invariant failure. Reproduce from clean state only in a resettable lab, never by repeatedly debiting a live account. A safe inconclusive report is preferable to moving value to prove impact.
 
 1. **Map every mutation that touches balance, whether directly or as a side effect.** Not just
    `transfer*`/`withdraw*` — also `redeemRewards`, `applyCoupon`, `upgradeTier`,
@@ -142,8 +144,7 @@ mutation {
   }) { transactionId status }
 }
 ```
-Send twice with the identical `idempotencyKey`. Two successful, distinct `transactionId` values
-= idempotency not enforced.
+Send twice with the identical `idempotencyKey`. Two responses/IDs alone are not proof: compare committed sandbox ledger effects and the documented idempotency-key scope/expiry. Duplicate financial effects within that contract establish a failure.
 
 **Decimal-precision / rounding probes:**
 ```graphql
@@ -165,8 +166,7 @@ mutation {
   r3: redeemRewards(input: {rewardId: "rwd_1", accountId: "acc_1"}) { success }
 }
 ```
-If more than one alias succeeds against a single-use reward/coupon, the resolver doesn't
-serialize per-account/per-resource writes within a batched request — see `hunt-race-condition`
+Top-level mutation fields execute serially under the GraphQL specification. If more than one alias reports success, inspect committed sandbox ledger effects: this can show missing single-use validation/idempotency, but does not by itself prove concurrency or a race — see `hunt-race-condition`
 for combining this with parallel HTTP POSTs to confirm real double-spend impact.
 
 **Source-account authorization probe (asymmetric IDOR check):**
@@ -202,8 +202,7 @@ mutation {
   updateTransaction(input: {id: "txn_123", status: "COMPLETED", amount: "0.01"}) { id status }
 }
 ```
-Send as a non-admin user against a mutation the client UI never exposes these fields for; a
-schema that accepts them anyway is mass assignment onto ledger state.
+Send as a non-admin user against a mutation the client UI never exposes these fields for; schema accepting fields is not alone a finding: show an unauthorized committed sandbox state change inconsistent with documented permissions.
 
 ---
 

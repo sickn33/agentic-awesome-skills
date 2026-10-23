@@ -54,7 +54,7 @@ Skip everything else. Do not load all sections for a focused request.
 
 | Level | Signal Words | Student Goal |
 |-------|-------------|--------------|
-| 🟩 Easy | define, state, list, name, identify, what is | Guaranteed marks — study first |
+| 🟩 Easy | define, state, list, name, identify, what is | Foundational recall — often useful first |
 | 🟨 Medium | explain, describe, compare, calculate, implement, trace | Mid-paper marks |
 | 🟥 Hard | derive, prove, optimize, analyze, evaluate, design, why | Score separators — study last |
 
@@ -63,7 +63,7 @@ Skip everything else. Do not load all sections for a focused request.
 ### Intake (ask once, then proceed)
 
 1. Collect at least one of: syllabus, past question papers, notes, or subject name + university.
-2. Confirm course code if OCR confidence < 80%: *"I detected [X] — is this correct?"*
+2. Confirm course code when OCR is uncertain; do not invent a calibrated confidence percentage: *"I detected [X] — is this correct?"*
 3. Ask time available. If no answer → default **Standard Mode (6–12 hrs)** and state the assumption.
 
 ### Study Modes
@@ -77,11 +77,11 @@ Skip everything else. Do not load all sections for a focused request.
 
 ### Syllabus Guardrail
 
-- Map every question to a syllabus unit (≥ 70% match → `[IN SYLLABUS]`).
+- Map every question to a specific syllabus unit using an actual topic match; label ambiguous mappings unconfirmed rather than inventing a 70% similarity threshold.
 - Never generate content for topics absent from the uploaded syllabus.
 - Out-of-syllabus items → flag, ask student before including.
 
-### Probability Score
+### Priority Score (not a probability)
 
 ```
 Score = (Frequency × 0.40) + (Recency × 0.30) + (Unit Weight × 0.20) + (Marks × 0.10)
@@ -95,7 +95,7 @@ Score = (Frequency × 0.40) + (Recency × 0.30) + (Unit Weight × 0.20) + (Marks
 
 - This skill supports study planning and revision, but it cannot guarantee
   exam questions, marks, grading outcomes, or instructor expectations.
-- Probability scores are heuristics based on supplied syllabi, notes, and past
+- Priority scores are heuristics based on supplied syllabi, notes, and past
   papers; sparse, outdated, or incomplete inputs reduce reliability.
 - The skill should not fabricate syllabus coverage. If source material is
   missing, ambiguous, or out of scope, ask the student to confirm before
@@ -399,7 +399,7 @@ TYPE          EASY    MEDIUM   HARD    OVERALL
 🧪 Lab        [X]%    [X]%     [X]%    [X]%
 ──────────────────────────────────────────────────────
 PREPAREDNESS  : [X]%
-MARKS RANGE   : [Low]–[High] out of [Total]
+PRACTICE RESULT: [correct]/[attempted], timed conditions and date
 ──────────────────────────────────────────────────────
 STRONG        : [types + topics]
 WEAK → FOCUS  : [types + topics]
@@ -436,7 +436,7 @@ Confidence: [High/Medium/Low]  |  Based on: [N] papers
 | Numerical accuracy | Worked examples compute correctly |
 | Code validity | Snippets are syntactically correct |
 | Note length | Readable in ≤ 2–5 min per note |
-| No hallucination | No facts absent from uploaded materials |
+| No hallucination | Distinguish source-supported facts, explanations and synthetic practice; cite source sections and do not invent paper frequency or marks |
 | Course code confirmed | OCR-detected code verified by student |
 
 ---
@@ -446,9 +446,13 @@ Confidence: [High/Medium/Low]  |  Based on: [N] papers
 | Situation | Say |
 |-----------|-----|
 | No syllabus | "Without a syllabus I can't guarantee on-topic notes. Paste your unit list as text?" |
-| 1 past paper only | "One paper = lower prediction confidence. More papers = better accuracy." |
+| 1 past paper only | "One paper supports only a limited historical sample; more papers do not guarantee prediction accuracy." |
 | OCR failure | "Couldn't read part of the image. Can you retype those questions?" |
 | Out-of-syllabus question | "This doesn't match your syllabus — skipping it. Want me to include it anyway?" |
 | Mixed subjects | "Found questions from two subjects. Should I separate them?" |
 | No time given | "Defaulting to Standard Mode (6–12 hrs). Tell me if you have less time." |
 | No numericals/coding found | "No numerical/coding questions found. Share a paper that includes them if your exam has these."
+
+## Using the ranking honestly
+
+If no papers exist, frequency/recency are unknown; omit the weighted score or renormalize only stated available components, never set missing evidence to zero silently. Core/elective status is not exam weighting; prefer the official marking scheme. Equal values or no observations need explicit denominator handling. Difficulty and verb labels are provisional: adapt to prerequisites, rubric and available time, including essential hard topics. Dashboard percentages require actual attempted practice with denominators; paper counts alone cannot estimate readiness or a marks interval. Worked-example counts above are synthetic, not extracted from an unseen upload. Use only lawfully supplied study materials and respect assessment rules; distinguish predicted practice from leaked or official exam questions.

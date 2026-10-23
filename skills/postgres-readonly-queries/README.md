@@ -21,7 +21,7 @@ cp connections.example.json connections.json
       "database": "app_prod",
       "user": "readonly",
       "password": "secret",
-      "sslmode": "require"
+      "sslmode": "verify-full"
     }
   ]
 }
@@ -59,15 +59,15 @@ python3 scripts/query.py --db prod --query "SELECT * FROM users" --limit 100
 | database | Yes | - | Database name |
 | user | Yes | - | Username |
 | password | Yes | - | Password |
-| sslmode | No | prefer | disable, allow, prefer, require, verify-ca, verify-full |
+| sslmode | No | verify-full | disable, allow, prefer, require, verify-ca, verify-full |
 
 ## Safety Features
 
 - **Read-only sessions**: PostgreSQL `readonly=True` mode blocks writes at database level
-- **Query validation**: Only SELECT, SHOW, EXPLAIN, WITH allowed
+- **Query validation**: Conservative keyword/semicolon checks, not a SQL parser or authorization boundary
 - **Single statement**: No multi-statement queries (prevents `SELECT 1; DROP TABLE`)
 - **Timeouts**: 30s query timeout, 10s connection timeout
-- **Memory cap**: Max 10,000 rows per query
+- **Display cap**: Max 10,000 rows printed; not a memory or execution-work cap
 - **Credential protection**: Passwords sanitized from error messages
 
 ## Requirements

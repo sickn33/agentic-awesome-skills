@@ -16,11 +16,12 @@ Conduct market research using Apify Actors to extract data from multiple platfor
 - You need structured market data plus a synthesized view of opportunities or risks.
 
 ## Prerequisites
-(No need to check it upfront)
+Verify prerequisites before any paid run.
 
 - `.env` file with `APIFY_TOKEN`
 - Node.js 20.6+ (for native `--env-file` support)
-- `mcpc` CLI tool: `npm install -g @apify/mcpc`
+- An approved Apify connector or Console access to inspect the chosen Actor and its schema; the bundled runner uses REST directly.
+- Keep `.env` untracked and private; configure the token locally without pasting it into chat or command arguments.
 
 ## Workflow
 
@@ -29,7 +30,7 @@ Copy this checklist and track progress:
 ```
 Task Progress:
 - [ ] Step 1: Identify market research type (select Actor)
-- [ ] Step 2: Fetch Actor schema via mcpc
+- [ ] Step 2: Fetch Actor schema via an approved connector or Console
 - [ ] Step 3: Ask user preferences (format, filename)
 - [ ] Step 4: Run the analysis script
 - [ ] Step 5: Summarize findings
@@ -60,13 +61,7 @@ Select the appropriate Actor based on research needs:
 
 ### Step 2: Fetch Actor Schema
 
-Fetch the Actor's input schema and details dynamically using mcpc:
-
-```bash
-export $(grep APIFY_TOKEN .env | xargs) && mcpc --json mcp.apify.com --header "Authorization: Bearer $APIFY_TOKEN" tools-call fetch-actor-details actor:="ACTOR_ID" | jq -r ".content"
-```
-
-Replace `ACTOR_ID` with the selected Actor (e.g., `compass/crawler-google-places`).
+Inspect the current Actor details and input schema using the authenticated Apify connector available in the session, or its Console page. Discover actual tool names and parameters before calling them. Do not parse `.env` with shell substitution or pass a token as a CLI header argument. Treat the Actor table as discovery candidates, not verified availability or schemas.
 
 This returns:
 - Actor description and README
@@ -78,22 +73,22 @@ This returns:
 Before running, ask:
 1. **Output format**:
    - **Quick answer** - Display top few results in chat (no file saved)
-   - **CSV** - Full export with all fields
-   - **JSON** - Full export in JSON format
+   - **CSV** - Bounded export, union of returned fields
+   - **JSON** - Bounded export in JSON format
 2. **Number of results**: Based on character of use case
 
 ### Step 4: Run the Script
 
 **Quick answer (display in chat, no file):**
 ```bash
-node --env-file=.env ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
+node --env-file=.env "<resolved-skill-directory>/reference/scripts/run_actor.js" \
   --actor "ACTOR_ID" \
   --input 'JSON_INPUT'
 ```
 
 **CSV:**
 ```bash
-node --env-file=.env ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
+node --env-file=.env "<resolved-skill-directory>/reference/scripts/run_actor.js" \
   --actor "ACTOR_ID" \
   --input 'JSON_INPUT' \
   --output YYYY-MM-DD_OUTPUT_FILE.csv \
@@ -102,7 +97,7 @@ node --env-file=.env ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
 
 **JSON:**
 ```bash
-node --env-file=.env ${CLAUDE_PLUGIN_ROOT}/reference/scripts/run_actor.js \
+node --env-file=.env "<resolved-skill-directory>/reference/scripts/run_actor.js" \
   --actor "ACTOR_ID" \
   --input 'JSON_INPUT' \
   --output YYYY-MM-DD_OUTPUT_FILE.json \
@@ -120,10 +115,14 @@ After completion, report:
 ## Error Handling
 
 `APIFY_TOKEN not found` - Ask user to create `.env` with `APIFY_TOKEN=your_token`
-`mcpc not found` - Ask user to install `npm install -g @apify/mcpc`
+`Connector unavailable` - Inspect the schema through the Console; do not claim an unavailable tool was called.
 `Actor not found` - Check Actor ID spelling
 `Run FAILED` - Ask user to check Apify console link in error output
-`Timeout` - Reduce input size or increase `--timeout`
+`Timeout` - The local timeout does not abort the remote run. Inspect the printed run ID in Console before retrying to avoid duplicate charges.
+
+## Run Boundaries
+
+Before launch, confirm the selected Actor, authorized public-data scope, current input schema, result limits and pricing with the user’s request. Respect source terms and access controls; do not collect private group data or unnecessary personal contact information. Start with a small Actor-supported input limit. `--max-items` limits downloaded output only (default 1000); it does not cap Actor work or billing. The helper sends a skill-identifying User-Agent to Apify. Resolve the installed skill directory in the command placeholders. Output files must be new paths; exports preserve long values and heterogeneous fields. Quick answers fetch at most five records; minimize or redact personal fields before sharing.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

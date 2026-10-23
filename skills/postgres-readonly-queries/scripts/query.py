@@ -34,9 +34,7 @@ NULL_DISPLAY = "<NULL>"
 
 def is_read_only(query: str) -> bool:
     """Basic client-side check. Primary protection is readonly=True session."""
-    query_upper = query.upper().strip()
-    safe_starts = ('SELECT', 'SHOW', 'DESCRIBE', 'EXPLAIN', 'WITH', '\\D')
-    return any(query_upper.startswith(cmd) for cmd in safe_starts)
+    return re.match(r"^(SELECT|SHOW|EXPLAIN|WITH)\b", query.strip(), re.IGNORECASE) is not None
 
 
 def validate_single_statement(query: str) -> bool:
@@ -122,9 +120,11 @@ def execute_query(db_config: dict, query: str, limit: Optional[int] = None) -> N
         print("Error: Multiple statements not allowed. Execute queries separately.")
         sys.exit(1)
 
-    # Apply limit using regex to avoid false positives from string content
-    if limit and not re.search(r'\bLIMIT\s+\d+', query, re.IGNORECASE):
-        query = f"{query.rstrip(';')} LIMIT {limit}"
+    # A display cap cannot safely be appended as SQL to arbitrary SHOW/EXPLAIN/CTEs.
+    row_limit = MAX_ROWS if limit is None else limit
+    if not 1 <= row_limit <= MAX_ROWS:
+        print(f"Error: --limit must be between 1 and {MAX_ROWS}")
+        sys.exit(1)
 
     conn = None
     try:
@@ -134,7 +134,7 @@ def execute_query(db_config: dict, query: str, limit: Optional[int] = None) -> N
             database=db_config['database'],
             user=db_config['user'],
             password=db_config['password'],
-            sslmode=db_config.get('sslmode', 'prefer'),
+            sslmode=db_config.get('sslmode', 'verify-full'),
             connect_timeout=CONNECTION_TIMEOUT_SEC,
             options=f'-c statement_timeout={QUERY_TIMEOUT_MS}'
         )
@@ -145,8 +145,9 @@ def execute_query(db_config: dict, query: str, limit: Optional[int] = None) -> N
             cur.execute(query)
             if cur.description:
                 columns = [desc[0] for desc in cur.description]
-                rows = cur.fetchmany(MAX_ROWS)
-                truncated = len(rows) == MAX_ROWS
+                rows = cur.fetchmany(row_limit + 1)
+                truncated = len(rows) > row_limit
+                rows = rows[:row_limit]
 
                 # Calculate column widths with cap
                 widths = [min(len(col), MAX_COLUMN_WIDTH) for col in columns]
@@ -172,17 +173,14 @@ def execute_query(db_config: dict, query: str, limit: Optional[int] = None) -> N
 
                 msg = f"\n({len(rows)} rows)"
                 if truncated:
-                    msg += f" [truncated at {MAX_ROWS}]"
+                    msg += f" [truncated at {row_limit}]"
                 print(msg)
             else:
                 print("Query executed (no result set returned)")
 
     except psycopg2.Error as e:
-        error_msg = str(e)
-        # Sanitize to avoid leaking credentials
-        if 'password' in error_msg.lower() or 'authentication' in error_msg.lower():
-            error_msg = "Authentication failed. Check credentials in connections.json"
-        print(f"Database error: {error_msg}")
+        # Server messages can contain query text, credentials or returned private data.
+        print("Database error; inspect restricted server diagnostics locally.")
         sys.exit(1)
     finally:
         if conn:

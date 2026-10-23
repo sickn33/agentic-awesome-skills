@@ -8,7 +8,7 @@ date_added: "2026-03-06"
 
 # Skill Writer
 
-Use this as the single canonical workflow for skill creation and improvement.
+Use this workflow for skill creation and improvement, subject to the target repository’s current instructions.
 Primary success condition: maximize high-value input coverage before authoring so the resulting skill has minimal blind spots.
 
 Load only the path(s) required for the task:
@@ -44,7 +44,7 @@ Read `references/synthesis-path.md`.
 2. Apply trust and safety rules when ingesting external content.
 3. Produce source-backed decisions and coverage/gap status.
 4. Load one or more profiles from `references/examples/*.md` when the skill is hybrid.
-5. Enforce baseline source pack for skill-authoring workflows.
+5. Record the primary source pack needed for the actual skill; do not imply a fixed external pack exists.
 6. Enforce depth gates before moving to authoring.
 
 ## Step 3: Run iteration first when improving from outcomes/examples
@@ -106,7 +106,7 @@ Return:
 4. `Open Gaps`
 
 ## When to Use
-Use this skill when tackling tasks related to its primary domain or functionality as described above.
+Use to create a reusable skill, update an existing skill, synthesize source material into one, or iterate from observed outcomes. Do not use to install an existing skill or replace a one-off task with unnecessary authoring.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

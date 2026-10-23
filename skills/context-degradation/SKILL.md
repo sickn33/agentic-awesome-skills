@@ -29,10 +29,10 @@ These patterns are predictable and can be mitigated through architectural patter
 
 ### The Lost-in-Middle Phenomenon
 
-The most well-documented degradation pattern is the "lost-in-middle" effect, where models demonstrate U-shaped attention curves. Information at the beginning and end of context receives reliable attention, while information buried in the middle suffers from dramatically reduced recall accuracy.
+The most well-documented degradation pattern is the "lost-in-middle" effect, where evaluated models can show U-shaped task-performance curves. Information at the beginning and end of context receives reliable attention, while information buried in the middle suffers from dramatically reduced recall accuracy.
 
 **Empirical Evidence**
-Research demonstrates that relevant information placed in the middle of context experiences 10-40% lower recall accuracy compared to the same information at the beginning or end. This is not a failure of the model but a consequence of attention mechanics and training data distributions.
+The Lost in the Middle paper reports position-sensitive performance on its evaluated retrieval/question-answering tasks. The magnitude depends on the model/task; it does not establish a universal 10–40% loss or a single causal mechanism.
 
 Models allocate massive attention to the first token (often the BOS token) to stabilize internal states. This creates an "attention sink" that soaks up attention budget. As context grows, the limited budget is stretched thinner, and middle tokens fail to garner sufficient attention weight for reliable retrieval.
 
@@ -62,7 +62,7 @@ Context distraction emerges when context grows so long that models over-focus on
 **The Distractor Effect**
 Research shows that even a single irrelevant document in context reduces performance on tasks involving relevant documents. Multiple distractors compound degradation. The effect is not about noise in absolute terms but about attention allocation—irrelevant information competes with relevant information for limited attention budget.
 
-Models do not have a mechanism to "skip" irrelevant context. They must attend to everything provided, and this obligation creates distraction even when the irrelevant information is clearly not useful.
+Irrelevant tokens can interfere with retrieval and reasoning, but the extent depends on architecture and inference implementation; do not infer a mandatory equal allocation of attention to every token.
 
 **Mitigation Strategies**
 Mitigate distraction through careful curation of what enters context. Apply relevance filtering before loading retrieved documents. Use namespacing and organization to make irrelevant sections easy to ignore structurally. Consider whether information truly needs to be in context or can be accessed through tool calls instead.
@@ -94,25 +94,10 @@ Resolution approaches include explicit conflict marking that identifies contradi
 Research provides concrete data on degradation patterns that inform design decisions.
 
 **RULER Benchmark Findings**
-The RULER benchmark delivers sobering findings: only 50% of models claiming 32K+ context maintain satisfactory performance at 32K tokens. GPT-5.2 shows the least degradation among current models, while many still drop 30+ points at extended contexts. Near-perfect scores on simple needle-in-haystack tests do not translate to real long-context understanding.
+The RULER benchmark delivers sobering findings: only 50% of models claiming 32K+ context maintain satisfactory performance at 32K tokens. This is a result for the paper’s 2024 evaluated models/tasks, not a ranking of current models. Near-perfect scores on simple needle-in-haystack tests do not translate to real long-context understanding.
 
-**Model-Specific Degradation Thresholds**
-| Model | Degradation Onset | Severe Degradation | Notes |
-|-------|-------------------|-------------------|-------|
-| GPT-5.2 | ~64K tokens | ~200K tokens | Best overall degradation resistance with thinking mode |
-| Claude Opus 4.5 | ~100K tokens | ~180K tokens | 200K context window, strong attention management |
-| Claude Sonnet 4.5 | ~80K tokens | ~150K tokens | Optimized for agents and coding tasks |
-| Gemini 3 Pro | ~500K tokens | ~800K tokens | 1M context window, native multimodality |
-| Gemini 3 Flash | ~300K tokens | ~600K tokens | 3x speed of Gemini 2.5, 81.2% MMMU-Pro |
-
-**Model-Specific Behavior Patterns**
-Different models exhibit distinct failure modes under context pressure:
-
-- **Claude 4.5 series**: Lowest hallucination rates with calibrated uncertainty. Claude Opus 4.5 achieves 80.9% on SWE-bench Verified. Tends to refuse or ask clarification rather than fabricate.
-- **GPT-5.2**: Two modes available - instant (fast) and thinking (reasoning). Thinking mode reduces hallucination through step-by-step verification but increases latency.
-- **Gemini 3 Pro/Flash**: Native multimodality with 1M context window. Gemini 3 Flash offers 3x speed improvement over previous generation. Strong at multi-modal reasoning across text, code, images, audio, and video.
-
-These patterns inform model selection for different use cases. High-stakes tasks benefit from Claude 4.5's conservative approach or GPT-5.2's thinking mode; speed-critical tasks may use instant modes.
+**Measure the deployed model and workload**
+Do not use uncited universal onset thresholds or vendor leaderboard scores as long-context evidence. Sweep input length, relevant-fact position, distractor count and task complexity while holding the prompt, model snapshot, decoding settings and ground truth fixed. Record accuracy, refusal/error rate, latency and billed tokens; repeat enough cases to expose variation. Select an operational limit from the acceptable error budget, not the advertised context maximum.
 
 ### Counterintuitive Findings
 
@@ -135,7 +120,7 @@ Larger context windows do not uniformly improve performance. In many cases, larg
 Models exhibit non-linear degradation with context length. Performance remains stable up to a threshold, then degrades rapidly. The threshold varies by model and task complexity. For many models, meaningful degradation begins around 8,000-16,000 tokens even when context windows support much larger sizes.
 
 **Cost Implications**
-Processing cost grows disproportionately with context length. The cost to process a 400K token context is not double the cost of 200K—it increases exponentially in both time and computing resources. For many applications, this makes large-context processing economically impractical.
+Processing cost grows disproportionately with context length. Standard dense attention has quadratic attention-computation scaling in sequence length, not exponential scaling; end-to-end cost depends on caching, architecture and provider pricing. A 400K request’s bill cannot be inferred solely from that complexity. For many applications, this makes large-context processing economically impractical.
 
 **Cognitive Load Metaphor**
 Even with an infinite context, asking a single model to maintain consistent quality across dozens of independent tasks creates a cognitive bottleneck. The model must constantly switch context between items, maintain a comparative framework, and ensure stylistic consistency. This is not a problem that more context solves.
@@ -210,8 +195,11 @@ This skill builds on context-fundamentals and should be studied after understand
 
 ## References
 
-Internal reference:
-- Degradation Patterns Reference - Detailed technical reference
+Primary evidence:
+- [Lost in the Middle](https://arxiv.org/abs/2307.03172)
+- [RULER](https://arxiv.org/abs/2404.06654)
+
+No separate internal Degradation Patterns Reference is bundled.
 
 Related skills in this collection:
 - context-fundamentals - Context basics

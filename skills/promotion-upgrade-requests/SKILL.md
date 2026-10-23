@@ -125,7 +125,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Request Title,Employee Name,Department,Request Type,Current Job Title,Current Grade,Requested Job Title,Requested Grade,Requested By,Justification,Linked Performance Review,OKR Score,Behaviour Score,Courses Completed,Time in Role (Months),Criteria Met,Current Salary,Proposed Salary,Currency,Increase %,Approver,Decision,Effective Date,Status,Upgrade ID
-Promotion to L3,Aarav Sharma,Delivery,Promotion,HR Executive,L2,Finance Analyst,L3,Rohit Verma,Consistent delivery over 12 months,REV-2026-Q1,0.7,4,"Advanced SQL, Workplace Safety",18,FALSE,1450000.00,1624000.00,INR,12,Sneha Iyer,Approved,2026-01-15,Under Review,
+Promotion to L3,Example Employee,Delivery,Promotion,HR Executive,L2,Finance Analyst,L3,Example Manager,Consistent delivery over 12 months,REV-2026-Q1,0.7,4,"Advanced SQL, Workplace Safety",18,FALSE,1450000.00,1624000.00,INR,12,Example Approver,Pending,,Under Review,
 ```
 
 ```sql
@@ -141,18 +141,18 @@ CREATE TABLE promotion_upgrade_requests (
   requested_by VARCHAR(255),
   justification VARCHAR(255),
   linked_performance_review VARCHAR(255),  -- relation -> target record
-  okr_score NUMERIC NOT NULL,
-  behaviour_score NUMERIC NOT NULL,
+  okr_score NUMERIC,
+  behaviour_score NUMERIC,
   courses_completed VARCHAR(255),
-  time_in_role_months NUMERIC NOT NULL,
-  criteria_met BOOLEAN NOT NULL,
-  current_salary NUMERIC(14,2) NOT NULL,
-  proposed_salary NUMERIC(14,2) NOT NULL,
+  time_in_role_months INTEGER CHECK (time_in_role_months >= 0),
+  criteria_met BOOLEAN,
+  current_salary NUMERIC(14,2) CHECK (current_salary >= 0),
+  proposed_salary NUMERIC(14,2) CHECK (proposed_salary >= 0),
   currency VARCHAR(255),
-  increase_pct NUMERIC NOT NULL,
+  increase_pct NUMERIC,
   approver VARCHAR(255),
   decision VARCHAR(255),
-  effective_date DATE NOT NULL,
+  effective_date DATE,
   status VARCHAR(100) NOT NULL,
   upgrade_id SERIAL PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
@@ -180,30 +180,23 @@ CREATE INDEX idx_promotion_upgrade_requests_status ON promotion_upgrade_requests
       "Requested By": { "type": "string" },
       "Justification": { "type": "string" },
       "Linked Performance Review": { "type": "string" },
-      "OKR Score": { "type": "number" },
-      "Behaviour Score": { "type": "number" },
+      "OKR Score": { "type": ["number", "null"] },
+      "Behaviour Score": { "type": ["number", "null"] },
       "Courses Completed": { "type": "string" },
-      "Time in Role (Months)": { "type": "number" },
+      "Time in Role (Months)": { "type": ["integer", "null"], "minimum": 0 },
       "Criteria Met": { "type": "boolean" },
-      "Current Salary": { "type": "number" },
-      "Proposed Salary": { "type": "number" },
+      "Current Salary": { "type": ["number", "null"] },
+      "Proposed Salary": { "type": ["number", "null"] },
       "Currency": { "type": "string" },
-      "Increase %": { "type": "number" },
+      "Increase %": { "type": ["number", "null"] },
       "Approver": { "type": "string" },
       "Decision": { "type": "string" },
-      "Effective Date": { "type": "string", "format": "date" },
+      "Effective Date": { "type": ["string", "null"], "format": "date" },
       "Status": { "type": "string" },
       "Upgrade ID": { "type": "integer" }
   },
   "required": [
       "Request Type",
-      "OKR Score",
-      "Behaviour Score",
-      "Time in Role (Months)",
-      "Current Salary",
-      "Proposed Salary",
-      "Increase %",
-      "Effective Date",
       "Status"
   ]
 }
@@ -247,14 +240,14 @@ and anything pointing at another table stays `relation`.
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
 | 1 | Request Title | `text` | `VARCHAR(255)` | `string` | Text | `Promotion to L3` |
-| 2 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
+| 2 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Example Employee` |
 | 3 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 4 | Request Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Promotion` |
 | 5 | Current Job Title | `text` | `VARCHAR(255)` | `string` | Text | `HR Executive` |
 | 6 | Current Grade | `text` | `VARCHAR(255)` | `string` | Text | `L2` |
 | 7 | Requested Job Title | `text` | `VARCHAR(255)` | `string` | Text | `Finance Analyst` |
 | 8 | Requested Grade | `text` | `VARCHAR(255)` | `string` | Text | `L3` |
-| 9 | Requested By | `text` | `VARCHAR(255)` | `string` | Text | `Rohit Verma` |
+| 9 | Requested By | `text` | `VARCHAR(255)` | `string` | Text | `Example Manager` |
 | 10 | Justification | `text` | `VARCHAR(255)` | `string` | Text | `Consistent delivery over 12 months` |
 | 11 | Linked Performance Review | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `REV-2026-Q1` |
 | 12 | OKR Score | `number` | `NUMERIC` | `number` | Number | `0.7` |
@@ -266,8 +259,8 @@ and anything pointing at another table stays `relation`.
 | 18 | Proposed Salary | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1624000.00` |
 | 19 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |
 | 20 | Increase % | `number` | `NUMERIC` | `number` | Number | `12` |
-| 21 | Approver | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
-| 22 | Decision | `text` | `VARCHAR(255)` | `string` | Text | `Approved` |
+| 21 | Approver | `text` | `VARCHAR(255)` | `string` | Text | `Example Approver` |
+| 22 | Decision | `text` | `VARCHAR(255)` | `string` | Text | `Pending` |
 | 23 | Effective Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 24 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Under Review` |
 | 25 | Upgrade ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
@@ -375,3 +368,5 @@ Ask me one short question at a time, and only about what I have not already told
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
+
+Draft requests may have unknown scores, salary proposal, criteria or effective date; do not force fabricated values. Increase % is `100 * (proposed - current) / current`, only for the same currency/pay period and current > 0; otherwise null/unknown. Record score scale and rubric separately (0.7 and 4 are not comparable units). Enforce nonnegative salary and months during imports; Notion checkbox cannot represent unknown criteria. Decision/criteria conflicts require a documented exception owner, not an automated recommendation. Approval metadata does not authorize payroll changes. The performance-review reference is a logical relation requiring a real target key/mapping; companion import skills are optional and unbundled.

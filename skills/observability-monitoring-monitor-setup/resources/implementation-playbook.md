@@ -50,21 +50,23 @@ scrape_configs:
     relabel_configs:
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
         action: keep
-        regex: true
+        regex: 'true'
 ```
 
 **Custom Metrics Implementation**
 ```typescript
 // metrics.ts
-import { Counter, Histogram, Gauge, Registry } from 'prom-client';
+import type { Request, Response, NextFunction } from 'express';
+import { Counter, Histogram, Registry } from 'prom-client';
 
 export class MetricsCollector {
     private registry: Registry;
-    private httpRequestDuration: Histogram<string>;
-    private httpRequestTotal: Counter<string>;
+    private httpRequestDuration!: Histogram<string>;
+    private httpRequestTotal!: Counter<string>;
 
     constructor() {
         this.registry = new Registry();
+        this.registry.setDefaultLabels({ service: process.env.OTEL_SERVICE_NAME || "application" });
         this.initializeMetrics();
     }
 
@@ -89,13 +91,12 @@ export class MetricsCollector {
     httpMetricsMiddleware() {
         return (req: Request, res: Response, next: NextFunction) => {
             const start = Date.now();
-            const route = req.route?.path || req.path;
 
             res.on('finish', () => {
                 const duration = (Date.now() - start) / 1000;
                 const labels = {
                     method: req.method,
-                    route,
+                    route: typeof req.route?.path === "string" ? req.baseUrl + req.route.path : "unmatched",
                     status_code: res.statusCode.toString()
                 };
 
@@ -177,53 +178,24 @@ export const createServiceDashboard = (serviceName: string) => {
 // tracing.ts
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
-import { Resource } from '@opentelemetry/resources';
-import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
-import { JaegerExporter } from '@opentelemetry/exporter-jaeger';
-import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 
-export class TracingSetup {
-    private sdk: NodeSDK;
-
-    constructor(serviceName: string, environment: string) {
-        const jaegerExporter = new JaegerExporter({
-            endpoint: process.env.JAEGER_ENDPOINT || 'http://localhost:14268/api/traces',
-        });
-
-        this.sdk = new NodeSDK({
-            resource: new Resource({
-                [SemanticResourceAttributes.SERVICE_NAME]: serviceName,
-                [SemanticResourceAttributes.SERVICE_VERSION]: process.env.SERVICE_VERSION || '1.0.0',
-                [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: environment,
-            }),
-
-            traceExporter: jaegerExporter,
-            spanProcessor: new BatchSpanProcessor(jaegerExporter),
-
-            instrumentations: [
-                getNodeAutoInstrumentations({
-                    '@opentelemetry/instrumentation-fs': { enabled: false },
-                }),
-            ],
-        });
-    }
-
-    start() {
-        this.sdk.start()
-            .then(() => console.log('Tracing initialized'))
-            .catch((error) => console.error('Error initializing tracing', error));
-    }
-
-    shutdown() {
-        return this.sdk.shutdown();
-    }
-}
+// Set OTEL_SERVICE_NAME and OTEL_EXPORTER_OTLP_TRACES_ENDPOINT for your collector.
+// Load this module before importing the application's instrumented libraries.
+const sdk = new NodeSDK({
+    traceExporter: new OTLPTraceExporter(),
+    instrumentations: [getNodeAutoInstrumentations()],
+});
+sdk.start();
+process.once('SIGTERM', () => {
+    sdk.shutdown().catch(() => { process.exitCode = 1; });
+});
 ```
 
 ### 4. Log Aggregation
 
 **Fluentd Configuration**
-```yaml
+```text
 # fluent.conf
 <source>
   @type tail
@@ -270,7 +242,9 @@ export class TracingSetup {
 # structured_logging.py
 import json
 import logging
-from datetime import datetime
+import os
+import traceback
+from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
 class StructuredLogger:
@@ -284,9 +258,13 @@ class StructuredLogger:
             'environment': os.getenv('ENVIRONMENT', 'development')
         }
 
+    def _get_trace_context(self):
+        # Supply an OpenTelemetry adapter if correlation is configured.
+        return None
+
     def _format_log(self, level: str, message: str, context: Dict[str, Any]) -> str:
         log_entry = {
-            '@timestamp': datetime.utcnow().isoformat() + 'Z',
+            '@timestamp': datetime.now(timezone.utc).isoformat(),
             'level': level,
             'message': message,
             **self.default_context,
@@ -367,14 +345,14 @@ groups:
 # alertmanager.yml
 global:
   resolve_timeout: 5m
-  slack_api_url: '$SLACK_API_URL'
+  slack_api_url_file: '/run/secrets/slack_webhook'
 
 route:
   group_by: ['alertname', 'cluster', 'service']
   group_wait: 10s
   group_interval: 10s
   repeat_interval: 12h
-  receiver: 'default'
+  receiver: 'slack'
 
   routes:
     - match:
@@ -396,7 +374,7 @@ receivers:
 
   - name: 'pagerduty'
     pagerduty_configs:
-      - service_key: '$PAGERDUTY_SERVICE_KEY'
+      - routing_key_file: '/run/secrets/pagerduty_routing_key'
         description: '{{ .GroupLabels.alertname }}: {{ .Annotations.summary }}'
 ```
 
@@ -405,6 +383,7 @@ receivers:
 **SLO Configuration**
 ```typescript
 // slo-manager.ts
+interface BurnRate { window: string; threshold: number; severity: string; }
 interface SLO {
     name: string;
     target: number; // e.g., 99.9
@@ -430,6 +409,10 @@ export class SLOManager {
         return this.slos.map(slo => this.generateSLOQuery(slo)).join('\n\n');
     }
 
+    private sanitizeName(name: string): string {
+        return name.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+    }
+
     private generateSLOQuery(slo: SLO): string {
         const errorBudget = 1 - (slo.target / 100);
 
@@ -438,7 +421,7 @@ export class SLOManager {
 - record: slo:${this.sanitizeName(slo.name)}:error_budget
   expr: ${errorBudget}
 
-- record: slo:${this.sanitizeName(slo.name)}:consumed_error_budget
+- record: slo:${this.sanitizeName(slo.name)}:bad_event_fraction
   expr: |
     1 - (sum(rate(successful_requests[${slo.window}])) / sum(rate(total_requests[${slo.window}])))
         `;
@@ -503,3 +486,32 @@ module "alertmanager" {
 8. **Integration Guide**: Service instrumentation instructions
 
 Focus on creating a monitoring system that provides actionable insights, reduces MTTR, and enables proactive issue detection.
+
+## Deployment boundaries and verification
+
+These are illustrative fragments, not a ready-to-apply stack. The Terraform
+modules are project-specific and are not bundled. The SLO helper only emits
+recording rules; its burn-rate settings do not implement alerts. Define event
+eligibility and handle absent/zero traffic separately before paging.
+
+Use pinned compatible package versions and a staging collector. Validate rules
+with `promtool check rules`, configuration with `promtool check config`, and
+Alertmanager configuration with `amtool check-config` for the installed versions.
+Send one synthetic trace, request and redacted log; confirm service labels,
+latency units, alert routing and recovery. Grafana panels use an older graph
+schema and need adaptation/import validation for the target Grafana version.
+CPU usage above measures cores, not percentage of a container's CPU limit;
+exclude unlimited/zero limits from memory ratios and choose resource-aware alerts.
+
+Do not use raw URLs, user IDs or query parameters as metric labels. Restrict
+scrape endpoints and dashboards; redact tokens, request bodies and personal data
+before logging/export, including exception messages. Bound log buffer disk use,
+retention and export volume. The Fluentd parser must match the actual runtime's
+CRI or JSON log format and its metadata/output plugins, TLS and authentication.
+Secret file paths above refer to private mounts supplied by the operator;
+Alertmanager does not expand shell-style environment variables in plain YAML.
+The Terraform template variables must actually be referenced by the template;
+secrets passed through Terraform may remain in state and need protected storage.
+
+References: [OpenTelemetry Node.js](https://opentelemetry.io/docs/languages/js/getting-started/nodejs/),
+[Alertmanager configuration](https://prometheus.io/docs/alerting/latest/configuration/).

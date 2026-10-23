@@ -25,14 +25,14 @@ metadata:
 
 # Animated GitHub Profile Skill
 
-A comprehensive guide and agent instruction set for designing, generating, and deploying animated GitHub profile READMEs that bypass GitHub's JavaScript restrictions using pure SVG and CSS/SMIL animations.
+A comprehensive guide and agent instruction set for designing, generating, and deploying animated GitHub profile READMEs that work within GitHub's JavaScript restrictions using pure SVG and CSS/SMIL animations.
 
 ---
 
 ## When to Use This Skill
 
 - Use when designing, revamping, or generating an animated GitHub profile README (`username/username`).
-- Use when bypassing GitHub's Markdown HTML sanitization to render interactive or motion elements using pure SVG, CSS `@keyframes`, and SMIL.
+- Use when working within GitHub's Markdown HTML sanitization to render interactive or motion elements using pure SVG, CSS `@keyframes`, and SMIL.
 - Use when creating theme-adaptive assets (dark/light mode) using `<picture>` elements.
 - Use when automating dynamic contribution graphs, snakes, or 3D cityscapes via GitHub Actions.
 
@@ -41,8 +41,8 @@ A comprehensive guide and agent instruction set for designing, generating, and d
 ## Why SVG Animations?
 
 1. **GitHub Security Model**: GitHub sanitizes all Markdown files and strips out all `<script>` tags, inline JavaScript, and iframes. Normal web motion libraries (Framer Motion, GSAP, Three.js) cannot execute in a GitHub README.
-2. **Native SVG Motion**: Pure SVG with `@keyframes` CSS and SMIL (`<animate>`, `<animateTransform>`) is **the only animated format natively supported** across all browsers without external dependencies.
-3. **Zero Third-Party Downtime**: Unlike external status generators (e.g., `github-readme-stats`, `shields.io`) that frequently fail when GitHub API rate-limits are reached, self-contained SVGs committed to the profile repository render with 100% reliability.
+2. **Native SVG Motion**: Pure SVG with `@keyframes` CSS and SMIL (`<animate>`, `<animateTransform>`) is one animation option; animated GIFs are another, and SVG animation support varies by browser and image context.
+3. **Zero Third-Party Downtime**: Unlike external status generators (e.g., `github-readme-stats`, `shields.io`) that frequently fail when GitHub API rate-limits are reached, self-contained SVGs committed to the profile repository avoid a live third-party generator dependency, though rendering and cache behavior still need testing.
 
 ---
 
@@ -214,6 +214,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: true # Required only for this authorized generated-asset push.
       - uses: yoshi389111/github-profile-3d-contrib@f4cf497614310d7b45ab3e000a523e47c524b14f
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -222,8 +224,9 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add -A .
-          git commit -m "Generated 3D Profile Calendar" || exit 0
+          git add -- profile-3d-contrib
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Generated 3D Profile Calendar"
           git push
 ```
 
@@ -302,7 +305,7 @@ Use HTML `<picture>` elements for native dark/light mode switching and add cache
 ## Critical Rules & Technical Gotchas
 
 ### 1. The GitHub CDN Cache-Busting Rule (`?v=1` ➔ `?v=2`)
-* GitHub proxies and caches all images through Camo CDN (`camo.githubusercontent.com`).
+* GitHub can proxy and cache externally hosted images through Camo (`camo.githubusercontent.com`).
 * **Symptom**: You update an SVG file, push to GitHub, and the profile displays the old version.
 * **Fix**: Always append a query version parameter to local links in `README.md` (`banner.svg?v=1`). Whenever you edit an SVG, bump the parameter (`?v=2`).
 * **Order of Operations**:
@@ -315,7 +318,7 @@ Use HTML `<picture>` elements for native dark/light mode switching and add cache
 
 ### 3. XML Entity Escaping
 * Standalone SVGs are strictly parsed as XML documents.
-* **Forbidden**: Unescaped ampersands (`&`), less-thans (`<`), or greater-thans (`>`) anywhere in the document—including inside CSS comments.
+* Escape ampersands and less-than signs in XML text/attributes; greater-than usually need not be escaped except in restricted sequences. XML comments cannot contain `--`. CSS inside XML style text still needs escaping or CDATA.
 * Always escape them (`&amp;`, `&lt;`, `&gt;`) or wrap `<style>` blocks in `<![CDATA[ ... ]]>`.
 
 ### 4. Generous Text Reveal Windows (No Font Clipping)
@@ -324,10 +327,10 @@ Use HTML `<picture>` elements for native dark/light mode switching and add cache
 
 ### 5. Fallback States for Animation-Disabled Environments
 * Some clients disable CSS animations (e.g. `prefers-reduced-motion` or static vector viewers).
-* Always apply `animation-fill-mode: both` and ensure initial SVG elements define valid default coordinates and opacities so the card displays complete information even without animation.
+* Define a complete visible static state, then animate from it. `animation-fill-mode` alone does not disable motion. Add `@media (prefers-reduced-motion: reduce)` rules to disable CSS animations; SMIL requires its own static fallback/version.
 
 ### 6. Unique ID Namespacing
-* If multiple SVGs share identical gradient IDs (e.g. `<linearGradient id="bg-grad">`), browsers can cross-contaminate styles when rendered together on the same HTML page.
+* If multiple SVGs share identical gradient IDs (e.g. `<linearGradient id="bg-grad">`), IDs can collide when SVGs are inlined into one document; separate `<img>` documents isolate them.
 * Namespace all IDs per file: e.g. `banner-bg-grad`, `lanyard-card-grad`, `orbit-core-grad`.
 
 ---
@@ -354,7 +357,7 @@ Use HTML `<picture>` elements for native dark/light mode switching and add cache
 - [ ] `banner.svg` and `banner-light.svg` tested locally in both dark and light modes.
 - [ ] All SVGs validated through an XML parser with 0 syntax errors.
 - [ ] All IDs in SVGs properly namespaced to prevent style collisions.
-- [ ] GitHub Actions workflow permission toggled to **Read and write permissions** in repo settings.
+- [ ] Write permissions limited to the generation job; repository branch rules and third-party action revisions reviewed before enabling the workflow.
 - [ ] Contribution workflow executed successfully and `output` branch populated.
 - [ ] Version query parameter (`?v=1`) verified on all image links in `README.md`.
 - [ ] Profile links (LinkedIn, Email, featured repos) verified with active URLs.
@@ -365,3 +368,5 @@ Use HTML `<picture>` elements for native dark/light mode switching and add cache
 
 - `@github-presence` — Comprehensive README structure, SEO, and discoverability.
 - `@github-actions` — Building and debugging automated CI/CD workflows.
+
+The SVG prompts are design specifications, not bundled working assets. Test through the hosted README image path, not only a locally opened SVG. Keep descriptive alt text and a static readable fallback. Do not fabricate clearance, employment or contribution claims. The city example writes to its current branch and may be blocked by protection; publish generated assets through an approved branch/PR workflow instead of weakening protection. Review each pinned third-party action and its output paths before granting write access; a pinned SHA alone is not a safety audit.

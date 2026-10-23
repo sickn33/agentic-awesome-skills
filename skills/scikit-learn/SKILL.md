@@ -29,14 +29,16 @@ Use the scikit-learn skill when:
 - Working with both structured (tabular) and text data
 - Need interpretable, classical machine learning approaches
 
-## Example Scripts
+## Example Workflows
+
+The named classification/clustering scripts and expanded per-topic reference files are not bundled in this catalog tree. Do not run those paths or claim their results. Use the inline examples in the detailed guide, or request/review the actual upstream assets before depending on them. Example snippets assume user-provided feature/target data and are not production certifications.
 
 ### Classification Pipeline
 
 Run a complete classification workflow with preprocessing, model comparison, hyperparameter tuning, and evaluation:
 
 ```bash
-python scripts/classification_pipeline.py
+# Not bundled: obtain and review classification_pipeline.py before execution.
 ```
 
 This script demonstrates:
@@ -51,7 +53,7 @@ This script demonstrates:
 Perform clustering analysis with algorithm comparison and visualization:
 
 ```bash
-python scripts/clustering_analysis.py
+# Not bundled: obtain and review clustering_analysis.py before execution.
 ```
 
 This script demonstrates:

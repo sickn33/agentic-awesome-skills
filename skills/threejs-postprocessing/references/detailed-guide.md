@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Examples target Three.js r183 unless stated otherwise. Pin core and addons to the same release; WebGL and WebGPU pipelines use different APIs. Assume an existing renderer, scene, camera and animation setup. Profile on target devices and dispose composers, passes, render targets and event listeners when replacing a pipeline. These snippets are not browser-tested here.
+
 ## Quick Start
 
 ```javascript
@@ -9,6 +11,7 @@ import * as THREE from "three";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
 // Setup composer
 const composer = new EffectComposer(renderer);
@@ -25,6 +28,7 @@ const bloomPass = new UnrealBloomPass(
   0.85, // threshold
 );
 composer.addPass(bloomPass);
+composer.addPass(new OutputPass()); // Tone mapping and output color conversion
 
 // Animation loop - use composer instead of renderer
 function animate() {
@@ -122,16 +126,31 @@ function restoreMaterial(obj) {
   }
 }
 
-// Custom render loop
+// Use a separate offscreen bloom composer (RenderPass + UnrealBloomPass).
+const bloomComposer = new EffectComposer(renderer);
+bloomComposer.renderToScreen = false;
+bloomComposer.addPass(new RenderPass(scene, camera));
+bloomComposer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 1.5, 0.4, 0.85));
+const mixPass = new ShaderPass({
+  uniforms: { tDiffuse: { value: null }, bloomTexture: { value: null } },
+  vertexShader: `varying vec2 vUv; void main(){vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+  fragmentShader: `uniform sampler2D tDiffuse; uniform sampler2D bloomTexture; varying vec2 vUv;
+    void main(){gl_FragColor=texture2D(tDiffuse,vUv)+texture2D(bloomTexture,vUv);}`,
+});
+const finalComposer = new EffectComposer(renderer);
+finalComposer.addPass(new RenderPass(scene, camera));
+finalComposer.addPass(mixPass);
+finalComposer.addPass(new OutputPass());
 function render() {
-  // Render bloom pass
   scene.traverse(darkenNonBloomed);
-  composer.render();
-  scene.traverse(restoreMaterial);
-
-  // Render final scene over bloom
-  renderer.render(scene, camera);
+  try { bloomComposer.render(); }
+  finally { scene.traverse(restoreMaterial); }
+  mixPass.uniforms.bloomTexture.value = bloomComposer.readBuffer.texture;
+  finalComposer.render();
 }
+// Import EffectComposer, RenderPass and OutputPass as in Quick Start.
+// Resize both composers. A direct renderer.render() here would overwrite bloom.
+
 ```
 
 ### FXAA (Anti-Aliasing)
@@ -142,8 +161,8 @@ import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
 
 const fxaaPass = new ShaderPass(FXAAShader);
 fxaaPass.material.uniforms["resolution"].value.set(
-  1 / window.innerWidth,
-  1 / window.innerHeight,
+  1 / (window.innerWidth * renderer.getPixelRatio()),
+  1 / (window.innerHeight * renderer.getPixelRatio()),
 );
 
 composer.addPass(fxaaPass);
@@ -151,8 +170,8 @@ composer.addPass(fxaaPass);
 // Update on resize
 function onResize() {
   fxaaPass.material.uniforms["resolution"].value.set(
-    1 / window.innerWidth,
-    1 / window.innerHeight,
+    1 / (window.innerWidth * renderer.getPixelRatio()),
+    1 / (window.innerHeight * renderer.getPixelRatio()),
   );
 }
 ```
@@ -162,10 +181,7 @@ function onResize() {
 ```javascript
 import { SMAAPass } from "three/addons/postprocessing/SMAAPass.js";
 
-const smaaPass = new SMAAPass(
-  window.innerWidth * renderer.getPixelRatio(),
-  window.innerHeight * renderer.getPixelRatio(),
-);
+const smaaPass = new SMAAPass(); // Composer supplies size; place before OutputPass.
 
 composer.addPass(smaaPass);
 ```
@@ -218,12 +234,7 @@ bokehPass.uniforms["focus"].value = distanceToTarget;
 ```javascript
 import { FilmPass } from "three/addons/postprocessing/FilmPass.js";
 
-const filmPass = new FilmPass(
-  0.35, // noise intensity
-  0.5, // scanline intensity
-  648, // scanline count
-  false, // grayscale
-);
+const filmPass = new FilmPass(0.35, false); // r183: intensity, grayscale
 
 composer.addPass(filmPass);
 ```
@@ -254,14 +265,9 @@ colorPass.uniforms["mulRGB"].value = new THREE.Vector3(1.0, 1.0, 1.0); // Multip
 composer.addPass(colorPass);
 ```
 
-### Gamma Correction
+### Output Color Conversion
 
-```javascript
-import { GammaCorrectionShader } from "three/addons/shaders/GammaCorrectionShader.js";
-
-const gammaPass = new ShaderPass(GammaCorrectionShader);
-composer.addPass(gammaPass);
-```
+Use `OutputPass` once after linear-space effects for tone mapping and output conversion. Do not stack a legacy GammaCorrectionShader with OutputPass. FXAA operates on display-referred color, so place it after OutputPass; SMAA operates before OutputPass in r183.
 
 ### Pixelation
 
@@ -445,7 +451,7 @@ import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
 import { VignetteShader } from "three/addons/shaders/VignetteShader.js";
-import { GammaCorrectionShader } from "three/addons/shaders/GammaCorrectionShader.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
 const composer = new EffectComposer(renderer);
 
@@ -467,14 +473,14 @@ vignettePass.uniforms["offset"].value = 0.95;
 vignettePass.uniforms["darkness"].value = 1.0;
 composer.addPass(vignettePass);
 
-// 4. Gamma correction
-composer.addPass(new ShaderPass(GammaCorrectionShader));
+// 4. Tone mapping and output color conversion
+composer.addPass(new OutputPass());
 
 // 5. Anti-aliasing (always last before output)
 const fxaaPass = new ShaderPass(FXAAShader);
 fxaaPass.uniforms["resolution"].value.set(
-  1 / window.innerWidth,
-  1 / window.innerHeight,
+  1 / (window.innerWidth * renderer.getPixelRatio()),
+  1 / (window.innerHeight * renderer.getPixelRatio()),
 );
 composer.addPass(fxaaPass);
 ```
@@ -499,53 +505,32 @@ otherMaterial.map = texture;
 
 ## Multi-Pass Rendering
 
-```javascript
-// Multiple composers for different scenes/layers
-const bgComposer = new EffectComposer(renderer);
-bgComposer.addPass(new RenderPass(bgScene, camera));
-
-const fgComposer = new EffectComposer(renderer);
-fgComposer.addPass(new RenderPass(fgScene, camera));
-fgComposer.addPass(bloomPass);
-
-// Combine in render loop
-function animate() {
-  // Render background without clearing
-  renderer.autoClear = false;
-  renderer.clear();
-
-  bgComposer.render();
-
-  // Render foreground over it
-  renderer.clearDepth();
-  fgComposer.render();
-}
-```
-
+Two composers that both render to screen do not automatically blend their images; RenderPass may clear, and transparent pixels do not define the desired composition. Render each branch to its own target, then combine its textures in a final fullscreen shader with an explicit alpha/additive rule and one output conversion. The selective bloom example above is a concrete two-branch additive composition. Preserve occlusion/depth deliberately when scenes need to interact.
 
 ## WebGPU Post-Processing (Three.js r183)
 
-The WebGPU renderer uses a node-based `PostProcessing` class instead of `EffectComposer`. Note that `EffectComposer` is **WebGL-only**.
+The WebGPU renderer uses a node-based `RenderPipeline` class instead of `EffectComposer`. Note that `EffectComposer` is **WebGL-only**.
 
 ```javascript
-import * as THREE from "three";
-import { pass, bloom, dof } from "three/tsl";
-import { WebGPURenderer } from "three/addons/renderers/webgpu/WebGPURenderer.js";
+import * as THREE from "three/webgpu";
+import { pass } from "three/tsl";
+import { bloom } from "three/addons/tsl/display/BloomNode.js";
 
-const renderer = new WebGPURenderer({ antialias: true });
+const renderer = new THREE.WebGPURenderer({ antialias: true });
 await renderer.init();
 
 // Create post-processing
-const postProcessing = new THREE.PostProcessing(renderer);
+const postProcessing = new THREE.RenderPipeline(renderer);
 
 // Scene pass
 const scenePass = pass(scene, camera);
 
 // Add bloom
-const bloomPass = bloom(scenePass, 0.5, 0.4, 0.85);
+const sceneColor = scenePass.getTextureNode("output");
+const bloomPass = bloom(sceneColor, 0.5, 0.4, 0.85);
 
 // Set output
-postProcessing.outputNode = bloomPass;
+postProcessing.outputNode = sceneColor.add(bloomPass);
 
 // Render
 renderer.setAnimationLoop(() => {
@@ -555,7 +540,7 @@ renderer.setAnimationLoop(() => {
 
 ### Key Differences from EffectComposer
 
-| EffectComposer (WebGL)          | PostProcessing (WebGPU)          |
+| EffectComposer (WebGL)          | RenderPipeline (WebGPU)          |
 | ------------------------------- | -------------------------------- |
 | `addPass(new RenderPass(...))`  | `pass(scene, camera)`            |
 | `addPass(new UnrealBloomPass)` | `bloom(scenePass, ...)`          |
@@ -576,19 +561,12 @@ renderer.setAnimationLoop(() => {
 // Disable pass
 bloomPass.enabled = false;
 
-// Reduce bloom resolution
-const bloomPass = new UnrealBloomPass(
-  new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2),
-  strength,
-  radius,
-  threshold,
-);
+// Reduce the whole composer's resolution for a measured performance tradeoff.
+// Constructor dimensions on a pass can be overwritten when a composer resizes it.
+composer.setPixelRatio(Math.min(renderer.getPixelRatio(), 1));
+// Use measured GPU time and a user quality setting, not UA detection alone.
+expensivePass.enabled = qualitySetting === 'high';
 
-// Only apply effects in high-performance scenarios
-const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
-if (!isMobile) {
-  composer.addPass(expensivePass);
-}
 ```
 
 
@@ -614,9 +592,7 @@ function onWindowResize() {
     );
   }
 
-  if (bloomPass) {
-    bloomPass.resolution.set(width, height);
-  }
+  // composer.setSize() propagates sizes to its passes, including bloom.
 }
 
 window.addEventListener("resize", onWindowResize);
