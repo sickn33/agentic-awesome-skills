@@ -14,7 +14,7 @@ Review updates to GitHub SpecKit on Windows 11 with PowerShell, preserving local
 
 ## When to Use This Skill
 
-Use this skill when you need to work with windows 11 system management.
+Use when reviewing a SpecKit project update on Windows 11 while preserving local templates and customizations; not for general Windows administration.
 
 ## Instructions
 

@@ -115,3 +115,7 @@ Focus on clear, direct answers. Format content to maximize featured snippet elig
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Execution boundaries
+
+Numeric lengths, counts and wording patterns are editorial heuristics, not search-engine eligibility or ranking guarantees. Preserve accurate titles and user intent; do not add a year merely to imply freshness. Search engines may rewrite titles/snippets. Verify current structured-data support and eligibility in Google Search Central before proposing FAQPage or HowTo enhancements. Do not rename existing URLs without a migration/redirect plan. Source: https://developers.google.com/search/docs/appearance/snippet and https://developers.google.com/search/docs/appearance/title-link .

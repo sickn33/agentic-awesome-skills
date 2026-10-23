@@ -69,3 +69,7 @@ Read and display the requested token file in a formatted table.
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+## Execution boundaries
+
+This guide targets an existing StyleSeed project. The listed project paths, components, tokens and /ss-* commands are not bundled in this single-file entrypoint. Discover the actual project root and verify those prerequisites before edits; report absent resources instead of inventing them. Use host-supported invocation and existing project conventions. Layout numbers are design-system choices, not universal usability guarantees. Test keyboard access, responsive overflow and reduced motion on the actual interface.

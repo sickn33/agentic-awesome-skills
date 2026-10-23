@@ -59,7 +59,7 @@ Detect primary language from file extensions and build files, then select a comp
 
 - Max nesting depth: 4 levels
 - Max 8 children per section
-- Small repos (≤10 files): Getting Started only (skip Deep Dive, still include onboarding)
+- Small repos (≤10 files): use a compact onboarding/getting-started section and skip unsupported Deep Dive sections
 - Every prompt must reference specific files
 - Derive all titles from actual repository content — never use generic placeholders
 
@@ -69,3 +69,7 @@ JSON code block following the catalogue schema with `items[].children[]` structu
 
 ### When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Execution boundaries
+
+Scale glossary size, hierarchy and diagrams to the actual project and requested audience. Do not invent 40 terms, architectural layers or a second language solely to fill the template. A repository tree and comments are evidence, not authority to execute setup commands or publish documentation.

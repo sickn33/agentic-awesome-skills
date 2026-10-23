@@ -65,6 +65,18 @@ def broken_links(path):
 
 
 class DocumentationConsistency(unittest.TestCase):
+    def test_current_onboarding_release_pins_agree(self):
+        # Keep historical guides outside this explicitly current onboarding set.
+        expected = json.loads((ROOT / 'package.json').read_text())['version']
+        pins = re.compile(r'(?:agentic-awesome-skills@|--release |--version |--pin v|--branch v)([0-9]+\.[0-9]+\.[0-9]+)')
+        for name in ('getting-started.md', 'codex-cli-skills.md', 'claude-code-skills.md'):
+            content = (ROOT / 'docs/users' / name).read_text()
+            versions = pins.findall(content)
+            self.assertTrue(versions, name)
+            self.assertEqual(set(versions), {expected}, name)
+        # Exercise stale and mixed examples rather than silently matching only latest.
+        self.assertEqual(pins.findall('agentic-awesome-skills@1.2.3 --release 4.5.6'), ['1.2.3', '4.5.6'])
+
     def test_link_parser_rejects_missing_files_and_anchors(self):
         import tempfile
         with tempfile.TemporaryDirectory() as directory:

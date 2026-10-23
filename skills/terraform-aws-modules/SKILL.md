@@ -35,7 +35,10 @@ You are an expert in Terraform for AWS specializing in reusable module design, s
 ```hcl
 # modules/vpc/variables.tf
 variable "name" { type = string }
-variable "cidr" { type = string, default = "10.0.0.0/16" }
+variable "cidr" {
+  type    = string
+  default = "10.0.0.0/16"
+}
 variable "azs" { type = list(string) }
 
 # modules/vpc/main.tf
@@ -81,3 +84,7 @@ terraform {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Execution boundaries
+
+Select backend locking supported by the actual Terraform version; the DynamoDB example is a version-dependent legacy configuration, not a universal requirement. Inspect account, backend and saved plan before authorized application. Keep state/plan secrets private and never force-unlock another active operation.

@@ -37,6 +37,10 @@ Current operational guidance lives in `users/`, `contributors/`, and the current
 
 ## Maintainers
 
+- [150-skill static review and repairs](maintainers/skill-review-150-2026-10-23.md) — exact cohort, findings and limitations
+
+- [Catalog audit batches](maintainers/catalog-audit-batches-2026-10-23.md) — bounded queue and truthful progress tracking
+
 - [`maintainers/merge-batch.md`](maintainers/merge-batch.md)
 - [`maintainers/maintainer-sweep.md`](maintainers/maintainer-sweep.md) — one-shot triage before merge batches (`npm run maintainer:sweep`)
 - [`maintainers/jev-hints.md`](maintainers/jev-hints.md) — optional TypeSafe Jev triage (`maintainer:jev-batch` for open PRs; local only)
