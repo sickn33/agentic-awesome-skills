@@ -1,6 +1,6 @@
 # Individual skill review — batch13 (150 roots)
 
-Date:2026-10-23. Original inventory base: `dee7acce0658c35cb276154892700811affcfdb2`. PR preparation base: `4ee14f625d13dbe97b116be83c9cb5f44f1d0fab`.
+Date:2026-10-23. Original inventory base: `dee7acce0658c35cb276154892700811affcfdb2`. PR preparation base: `740db8bc2fa6fd62aac9303c8356d6a3b87151ac`.
 
 Reviewed150 assigned roots /331 tracked files: 149 corrected, 0 retained, 1 removed.
 

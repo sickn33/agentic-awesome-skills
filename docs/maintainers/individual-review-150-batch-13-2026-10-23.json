@@ -2,7 +2,7 @@
   "batch": 13,
   "date": "2026-10-23",
   "base": "dee7acce0658c35cb276154892700811affcfdb2",
-  "prBase": "4ee14f625d13dbe97b116be83c9cb5f44f1d0fab",
+  "prBase": "740db8bc2fa6fd62aac9303c8356d6a3b87151ac",
   "counts": {
     "reviewedRootTrees": 150,
     "trackedFiles": 331,
@@ -10,7 +10,7 @@
     "retained": 0,
     "removed": 1
   },
-  "method": "Resumed full-tree semantic review from121 persistent records; remaining29 trees fully read as inert files. Original frozen inventory base retained; current-main integration changed no assigned tree and preserved the auxiliary skill-router verification notice. Complete bytes/modes bound per file.",
+  "method": "Resumed full-tree semantic review from121 persistent records; remaining29 trees fully read as inert files. Original frozen inventory base retained; current-main integration changed no assigned tree and preserved the auxiliary skill-router verification notice. Complete bytes/modes bound per file. Before final checks, source-only lockfile repair2090 was integrated; none of the150 assigned trees or evaluator/instruction files changed.",
   "validation": {
     "completed": [
       "All150 assigned root records complete; every bundled tracked file read, except removed xlsx helper content is inventory-only per owner-approved license removal disposition",
